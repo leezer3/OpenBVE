@@ -3,6 +3,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -434,7 +435,7 @@ namespace Bve5RouteParser
 				Transformation TrackGroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
 				Transformation TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
 				Transformation NullTransformation = new Transformation(0.0, 0.0, 0.0);
-				//Add repeating objects into arrays
+				//Create final repeater objects and add to arrays
 				if (!PreviewOnly)
 				{
 					if (Data.Blocks[i].Repeaters == null || Data.Blocks[i].Repeaters.Length == 0)
@@ -447,314 +448,41 @@ namespace Bve5RouteParser
 						{
 							continue;
 						}
-						switch (Data.Blocks[i].Repeaters[j].Type)
+						StaticObject curvedObject = new StaticObject(Plugin.CurrentHost);
+									
+						int numSegments = (int)(Data.BlockInterval / Data.Blocks[i].Repeaters[j].RepetitionInterval);
+						for (int k = 0; k < numSegments; k++)
 						{
-							case RailTransformationTypes.Flat:
-								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0 && Data.Blocks[i].Repeaters[j].RepetitionInterval != Data.BlockInterval)
-								{
-									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
-									if (idx >= Data.Blocks[i].RailFreeObj.Length)
-									{
-										Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
-									}
-									double nextRepetition = Data.Blocks[i].Repeaters[j].TrackPosition;
-									//If the repetition interval is not 0.0 then this may repeat within a block
-									if (i > 0)
-									{
-										for (int k = 0; k < Data.Blocks[i - 1].Repeaters.Length; k++)
-										{
-											if (Data.Blocks[i - 1].Repeaters[k].Name == Data.Blocks[i].Repeaters[j].Name)
-											{
-												//We've found our repeater in the last block, so we must add the repetition interval
-												nextRepetition = Data.Blocks[i - 1].Repeaters[k].TrackPosition +
-																 Data.Blocks[i - 1].Repeaters[k].RepetitionInterval;
-
-												int ol = 0;
-												if (Data.Blocks[i].RailFreeObj[idx] == null)
-												{
-													Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-													ol = 0;
-												}
-												else
-												{
-													ol = Data.Blocks[i].RailFreeObj[idx].Length;
-													Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-												}
-												Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.Flat);
-											}
-										}
-									}
-									while (nextRepetition < Data.Blocks[i].Repeaters[j].TrackPosition + Data.BlockInterval)
-									{
-										int ol = 0;
-										if (Data.Blocks[i].RailFreeObj[idx] == null)
-										{
-											Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-											ol = 0;
-										}
-										else
-										{
-											ol = Data.Blocks[i].RailFreeObj[idx].Length;
-											Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-										}
-										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
-										Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.Flat);
-									}
-									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
-
-								}
-								else
-								{
-									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
-									if (idx >= Data.Blocks[i].RailFreeObj.Length)
-									{
-										Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
-									}
-									int ol = 0;
-									if (Data.Blocks[i].RailFreeObj[idx] == null)
-									{
-										Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-										ol = 0;
-									}
-									else
-									{
-										ol = Data.Blocks[i].RailFreeObj[idx].Length;
-										Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-									}
-									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.Flat);
-								}
-								break;
-							case RailTransformationTypes.FollowsPitch:
-								//The repeater follows the gradient of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
-								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0 && Data.Blocks[i].Repeaters[j].RepetitionInterval != Data.BlockInterval)
-								{
-									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
-									if (idx >= Data.Blocks[i].RailFreeObj.Length)
-									{
-										Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
-									}
-									double nextRepetition = Data.Blocks[i].Repeaters[j].TrackPosition;
-									//If the repetition interval is not 0.0 then this may repeat within a block
-									if (i > 0)
-									{
-										for (int k = 0; k < Data.Blocks[i - 1].Repeaters.Length; k++)
-										{
-											if (Data.Blocks[i - 1].Repeaters[k].Name == Data.Blocks[i].Repeaters[j].Name)
-											{
-												//We've found our repeater in the last block, so we must add the repetition interval
-												nextRepetition = Data.Blocks[i - 1].Repeaters[k].TrackPosition +
-																 Data.Blocks[i - 1].Repeaters[k].RepetitionInterval;
-
-												int ol = 0;
-												if (Data.Blocks[i].RailFreeObj[idx] == null)
-												{
-													Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-													ol = 0;
-												}
-												else
-												{
-													ol = Data.Blocks[i].RailFreeObj[idx].Length;
-													Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-												}
-												Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsPitch);
-											}
-										}
-									}
-									while (nextRepetition < Data.Blocks[i].Repeaters[j].TrackPosition + Data.BlockInterval)
-									{
-										int ol = 0;
-										if (Data.Blocks[i].RailFreeObj[idx] == null)
-										{
-											Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-											ol = 0;
-										}
-										else
-										{
-											ol = Data.Blocks[i].RailFreeObj[idx].Length;
-											Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-										}
-										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
-										Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsPitch);
-									}
-									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
-
-								}
-								else
-								{
-									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
-									if (idx >= Data.Blocks[i].RailFreeObj.Length)
-									{
-										Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
-									}
-									int ol = 0;
-									if (Data.Blocks[i].RailFreeObj[idx] == null)
-									{
-										Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-										ol = 0;
-									}
-									else
-									{
-										ol = Data.Blocks[i].RailFreeObj[idx].Length;
-										Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-									}
-									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsPitch);
-								}
-								break;
-							case RailTransformationTypes.FollowsCant:
-								//The repeater follows the cant of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
-								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0 && Data.Blocks[i].Repeaters[j].RepetitionInterval != Data.BlockInterval)
-								{
-									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
-									if (idx >= Data.Blocks[i].RailFreeObj.Length)
-									{
-										Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
-									}
-									double nextRepetition = Data.Blocks[i].Repeaters[j].TrackPosition;
-									//If the repetition interval is not 0.0 then this may repeat within a block
-									if (i > 0)
-									{
-										for (int k = 0; k < Data.Blocks[i - 1].Repeaters.Length; k++)
-										{
-											if (Data.Blocks[i - 1].Repeaters[k].Name == Data.Blocks[i].Repeaters[j].Name)
-											{
-												//We've found our repeater in the last block, so we must add the repetition interval
-												nextRepetition = Data.Blocks[i - 1].Repeaters[k].TrackPosition +
-																 Data.Blocks[i - 1].Repeaters[k].RepetitionInterval;
-
-												int ol = 0;
-												if (Data.Blocks[i].RailFreeObj[idx] == null)
-												{
-													Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-													ol = 0;
-												}
-												else
-												{
-													ol = Data.Blocks[i].RailFreeObj[idx].Length;
-													Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-												}
-												Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
-											}
-										}
-									}
-									while (nextRepetition < Data.Blocks[i].Repeaters[j].TrackPosition + Data.BlockInterval)
-									{
-										int ol = 0;
-										if (Data.Blocks[i].RailFreeObj[idx] == null)
-										{
-											Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-											ol = 0;
-										}
-										else
-										{
-											ol = Data.Blocks[i].RailFreeObj[idx].Length;
-											Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-										}
-										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
-										Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
-									}
-									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
-
-								}
-								else
-								{
-									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
-									if (idx >= Data.Blocks[i].RailFreeObj.Length)
-									{
-										Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
-									}
-									int ol = 0;
-									if (Data.Blocks[i].RailFreeObj[idx] == null)
-									{
-										Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-										ol = 0;
-									}
-									else
-									{
-										ol = Data.Blocks[i].RailFreeObj[idx].Length;
-										Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-									}
-									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
-								}
-								break;
-							case RailTransformationTypes.FollowsBoth:
-								//The repeater follows the gradient & cant of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
-								double CantAngle = Math.Tan((Math.Atan(Data.Blocks[i].CurrentTrackState.CurveCant)));
-								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0)
-								{
-									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
-									if (idx >= Data.Blocks[i].RailFreeObj.Length)
-									{
-										Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
-									}
-									double nextRepetition = Data.Blocks[i].Repeaters[j].TrackPosition;
-
-									//If the repetition interval is not 0.0 then this may repeat within a block
-									if (i > 0)
-									{
-										for (int k = 0; k < Data.Blocks[i - 1].Repeaters.Length; k++)
-										{
-											if (Data.Blocks[i - 1].Repeaters[k].Name == Data.Blocks[i].Repeaters[j].Name)
-											{
-												//We've found our repeater in the last block, so we must add the repetition interval
-												nextRepetition = Data.Blocks[i - 1].Repeaters[k].TrackPosition +
-																 Data.Blocks[i - 1].Repeaters[k].RepetitionInterval;
-
-												int ol = 0;
-												if (Data.Blocks[i].RailFreeObj[idx] == null)
-												{
-													Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-													ol = 0;
-												}
-												else
-												{
-													ol = Data.Blocks[i].RailFreeObj[idx].Length;
-													Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-												}
-												Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsBoth);
-											}
-										}
-									}
-									while (nextRepetition < Data.Blocks[i].Repeaters[j].TrackPosition + Data.BlockInterval)
-									{
-										int ol = 0;
-										if (Data.Blocks[i].RailFreeObj[idx] == null)
-										{
-											Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-											ol = 0;
-										}
-										else
-										{
-											ol = Data.Blocks[i].RailFreeObj[idx].Length;
-											Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-										}
-										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
-										Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsBoth);
-									}
-									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
-
-								}
-								else
-								{
-									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
-									if (idx >= Data.Blocks[i].RailFreeObj.Length)
-									{
-										Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
-									}
-									int ol = 0;
-									if (Data.Blocks[i].RailFreeObj[idx] == null)
-									{
-										Data.Blocks[i].RailFreeObj[idx] = new Object[1];
-										ol = 0;
-									}
-									else
-									{
-										ol = Data.Blocks[i].RailFreeObj[idx].Length;
-										Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
-									}
-									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
-								}
-								break;
+							StaticObject Segment = (StaticObject)Data.Structure.Objects[Data.Blocks[i].Repeaters[j].StructureTypes[0]].Clone();
+							Segment.ApplyTranslation(0,0, k * Data.Blocks[i].Repeaters[j].RepetitionInterval);
+							Segment.ApplyCurve(Data.Blocks[i].CurrentTrackState.CurveRadius);
+							curvedObject.JoinObjects(Segment);
 						}
+						Array.Resize(ref Data.Structure.Objects, Data.Structure.Objects.Length + 1);
+						Data.Structure.Objects[Data.Structure.Objects.Length - 1] = curvedObject;
+						int idx = Data.Blocks[i].Repeaters[j].RailIndex;
+						if (idx >= Data.Blocks[i].RailFreeObj.Length)
+						{
+							Array.Resize(ref Data.Blocks[i].RailFreeObj, idx + 1);
+						}
+						int ol = 0;
+						if (Data.Blocks[i].RailFreeObj[idx] == null)
+						{
+							Data.Blocks[i].RailFreeObj[idx] = new Object[1];
+							ol = 0;
+						}
+						else
+						{
+							ol = Data.Blocks[i].RailFreeObj[idx].Length;
+							Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
+						}
+
+						double rot = 0;
+						if (Data.Blocks[i].CurrentTrackState.CurveRadius != 0)
+						{
+							rot = 0.5 * (180 * Data.BlockInterval / (Math.PI * Data.Blocks[i].CurrentTrackState.CurveRadius));
+						}
+						Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j].TrackPosition, "",Data.Structure.Objects.Length - 1, Data.Blocks[i].Repeaters[j].Position, -rot.ToRadians(),0,0, Data.Blocks[i].Repeaters[j].Type);
 					}
 				}
 				// ground-aligned free objects
