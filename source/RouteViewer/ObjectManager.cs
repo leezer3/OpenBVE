@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -59,9 +60,7 @@ namespace OpenBve {
 		}
 
 		internal static StaticObject LoadStaticObject(string FileName, Encoding Encoding, bool PreserveVertices) {
-			#if !DEBUG
 			try {
-				#endif
 				if (!System.IO.Path.HasExtension(FileName)) {
 					while (true) {
 						string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
@@ -111,12 +110,10 @@ namespace OpenBve {
 					Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
 				}
 				return Result;
-				#if !DEBUG
 			} catch (Exception ex) {
 				Interface.AddMessage(MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
 				return null;
 			}
-			#endif
 		}
 	}
 }
