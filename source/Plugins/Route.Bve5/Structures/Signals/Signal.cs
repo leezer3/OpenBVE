@@ -20,7 +20,7 @@ namespace Bve5RouteParser
 			ShowPost = showPost;
 		}
 
-		internal void Create(Vector3 wpos, Transformation RailTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockInterval, double Brightness, StaticObject SignalPost)
+		internal void Create(Vector3 wpos, Transformation RailTransformation, double StartingDistance, double EndingDistance, double Brightness, StaticObject SignalPost)
 		{
 			double dz = TrackPosition - StartingDistance;
 			if (ShowPost)
@@ -28,7 +28,7 @@ namespace Bve5RouteParser
 				// post
 				double dx = Position.X;
 				wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
-				SignalPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, Brightness, false);
+				SignalPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, Brightness);
 			}
 			if (ShowObject)
 			{
@@ -36,7 +36,7 @@ namespace Bve5RouteParser
 				double dx = Position.X;
 				double dy = Position.Y;
 				wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
-				SignalObject.Create(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), SectionIndex, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, Brightness);
+				SignalObject.Create(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), SectionIndex, StartingDistance, EndingDistance, TrackPosition, Brightness);
 			}
 		}
 

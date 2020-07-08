@@ -61,6 +61,8 @@ namespace Bve5RouteParser
 			int BlocksUsed = Data.Blocks.Length;
 			CreateMissingBlocks(ref Data, ref BlocksUsed, LastBlock, PreviewOnly);
 			Array.Resize(ref Data.Blocks, BlocksUsed);
+			CurrentRoute.AccurateObjectDisposal = true;
+			CurrentRoute.BlockLength = 25;
 			// interpolate height
 			if (!PreviewOnly)
 			{
@@ -477,12 +479,13 @@ namespace Bve5RouteParser
 							Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 						}
 
-						double rot = 0;
 						if (Data.Blocks[i].CurrentTrackState.CurveRadius != 0)
 						{
-							rot = 0.5 * (180 * Data.BlockInterval / (Math.PI * Data.Blocks[i].CurrentTrackState.CurveRadius));
+							//Turn object back on itself for use as railtype
+							double rot = 0.5 * (180 * Data.BlockInterval / (Math.PI * Data.Blocks[i].CurrentTrackState.CurveRadius));
+							curvedObject.ApplyRotation(new Vector3(0,1,0), -rot.ToRadians());
 						}
-						Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j].TrackPosition, "",Data.Structure.Objects.Length - 1, Data.Blocks[i].Repeaters[j].Position, -rot.ToRadians(),0,0, Data.Blocks[i].Repeaters[j].Type);
+						Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j].TrackPosition, "",Data.Structure.Objects.Length - 1, Data.Blocks[i].Repeaters[j].Position, 0,0,0, Data.Blocks[i].Repeaters[j].Type);
 					}
 				}
 				// ground-aligned free objects
@@ -500,7 +503,7 @@ namespace Bve5RouteParser
 						{
 							continue;
 						}
-						Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation, new Transformation(Data.Blocks[i].GroundFreeObj[j].Yaw, Data.Blocks[i].GroundFreeObj[j].Pitch, Data.Blocks[i].GroundFreeObj[j].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
+						Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation, new Transformation(Data.Blocks[i].GroundFreeObj[j].Yaw, Data.Blocks[i].GroundFreeObj[j].Pitch, Data.Blocks[i].GroundFreeObj[j].Roll), StartingDistance, EndingDistance, tpos);
 					}
 				}
 				// rail-aligned objects
@@ -662,7 +665,7 @@ namespace Bve5RouteParser
 										else
 										{
 											StaticObject Crack = (StaticObject)Data.Structure.Objects[Data.Blocks[i].Crack[k].Type].Transform(d0, d1);
-											Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+											Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 										}
 									}
 									else if (d0 > 0.0)
@@ -674,7 +677,7 @@ namespace Bve5RouteParser
 										else
 										{
 											StaticObject Crack = (StaticObject)Data.Structure.Objects[Data.Blocks[i].Crack[k].Type].Transform(d0, d1);
-											Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+											Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 										}
 									}
 								}
@@ -712,26 +715,22 @@ namespace Bve5RouteParser
 											//Sounds remarkably like the ground transform, but this doesn't appear to work....
 											Data.Structure.Objects[sttype].CreateObject(wpos, RailNullTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-												Data.BlockInterval, tpos, 1.0, false);
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
 											break;
 										case RailTransformationTypes.FollowsPitch:
 											Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-												Data.BlockInterval, tpos, 1.0, false);
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
 											break;
 										case RailTransformationTypes.FollowsCant:
 											Data.Structure.Objects[sttype].CreateObject(wpos, TrackGroundTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-												Data.BlockInterval, tpos, 1.0, false);
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
 											break;
 										case RailTransformationTypes.FollowsBoth:
 											Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-												Data.BlockInterval, tpos, 1.0, false);
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
 											break;
 									}
 								}
@@ -743,7 +742,7 @@ namespace Bve5RouteParser
 							// signals
 							for (int k = 0; k < Data.Blocks[i].Signal.Length; k++)
 							{
-								Data.Blocks[i].Signal[k].Create(new Vector3(pos), RailTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signal[k].TrackPosition), SignalPost);
+								Data.Blocks[i].Signal[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signal[k].TrackPosition), SignalPost);
 							}
 							// sections
 							for (int k = 0; k < Data.Blocks[i].Section.Length; k++)
@@ -770,21 +769,21 @@ namespace Bve5RouteParser
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 									if (Data.Blocks[i].Limit[k].Speed <= 0.0 | Data.Blocks[i].Limit[k].Speed >= 1000.0)
 									{
-										Plugin.CurrentHost.CreateStaticObject(LimitPostInfinite, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+										Plugin.CurrentHost.CreateStaticObject(LimitPostInfinite, wpos, RailTransformation, NullTransformation, 0.0, StartingDistance, EndingDistance, tpos, b);
 									}
 									else
 									{
 										if (Data.Blocks[i].Limit[k].Cource < 0)
 										{
-											Plugin.CurrentHost.CreateStaticObject(LimitPostLeft, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											Plugin.CurrentHost.CreateStaticObject(LimitPostLeft, wpos, RailTransformation, NullTransformation, 0.0, StartingDistance, EndingDistance, tpos, b);
 										}
 										else if (Data.Blocks[i].Limit[k].Cource > 0)
 										{
-											Plugin.CurrentHost.CreateStaticObject(LimitPostRight, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											Plugin.CurrentHost.CreateStaticObject(LimitPostRight, wpos, RailTransformation, NullTransformation, 0.0, StartingDistance, EndingDistance, tpos, b);
 										}
 										else
 										{
-											Plugin.CurrentHost.CreateStaticObject(LimitPostStraight, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											Plugin.CurrentHost.CreateStaticObject(LimitPostStraight, wpos, RailTransformation, NullTransformation, 0.0, StartingDistance, EndingDistance,  tpos, b);
 										}
 										double lim = Data.Blocks[i].Limit[k].Speed / Data.UnitOfSpeed;
 										if (lim < 10.0)
@@ -795,7 +794,7 @@ namespace Bve5RouteParser
 											{
 												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
 											}
-											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
+											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b, false);
 										}
 										else if (lim < 100.0)
 										{
@@ -811,7 +810,7 @@ namespace Bve5RouteParser
 											{
 												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
 											}
-											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
+											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1,  StartingDistance, EndingDistance,  tpos, b, false);
 										}
 										else
 										{
@@ -832,7 +831,7 @@ namespace Bve5RouteParser
 											{
 												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[2].DaytimeTexture);
 											}
-											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
+											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b, false);
 										}
 									}
 								}
