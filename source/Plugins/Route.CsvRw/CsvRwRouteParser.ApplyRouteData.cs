@@ -1060,7 +1060,7 @@ namespace CsvRwRouteParser
 						{
 							for (int k = 0; k < Data.Blocks[i].StopPositions.Length; k++)
 							{
-								double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Limits[k].TrackPosition);
+								double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].StopPositions[k].TrackPosition);
 								Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
 							}
 						}
