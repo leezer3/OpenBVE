@@ -600,6 +600,7 @@ namespace Bve5RouteParser
 								 */
 								Vector3 pos2 = Position2 + offset2;
 								Vector3 r = new Vector3(pos2 - pos);
+								r.Normalize();
 								RailTransformation.Z = r;
 								RailTransformation.X = new Vector3(r.Z, 0.0, -r.X);
 								Normalize(ref RailTransformation.X.X, ref RailTransformation.X.Z);
