@@ -16,7 +16,6 @@ namespace Bve5RouteParser
 		/// </summary>
 		internal bool AccurateObjectDisposal;
 		internal bool SignedCant;
-		internal bool FogTransitionMode;
 		internal StructureData Structure;
 		internal SignalObject[] SignalData;
 		internal CompatibilitySignalData[] CompatibilitySignalData;

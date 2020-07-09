@@ -291,6 +291,43 @@ namespace Bve5RouteParser
 			}
 		}
 
+		/// <summary>Changes the current accuracy value</summary>
+		/// <param name="Arguments">The command arguments</param>
+		/// <param name="Data">The RouteData (updated via 'ref')</param>
+		/// <param name="BlockIndex">The index of the current block</param>
+		static void SetAccuracy(string[] Arguments, ref RouteData Data, int BlockIndex)
+		{
+			switch (Arguments.Length)
+			{
+				case 5:
+					double leftRight = 0, upDown = 0, roll = 0, maxLeftRight = 0, maxUpDown = 0, maxRoll = 0;
+					NumberFormats.TryParseDoubleVb6(Arguments[0], out leftRight);
+					NumberFormats.TryParseDoubleVb6(Arguments[1], out upDown);
+					NumberFormats.TryParseDoubleVb6(Arguments[2], out roll);
+					NumberFormats.TryParseDoubleVb6(Arguments[2], out maxLeftRight);
+					NumberFormats.TryParseDoubleVb6(Arguments[2], out maxUpDown);
+					NumberFormats.TryParseDoubleVb6(Arguments[2], out maxRoll);
+					/*
+					 * If this is a converted BVE4 routefile:
+					 * leftRight = Accuracy * 0.0008
+					 * upDown = Accuracy * 0.0005
+					 * roll = Accuracy * 0.000315
+					 * maxUpDown = 50
+					 * maxLeftRight = 50
+					 * maxRoll = 50
+					 *
+					 * All units are in M other than roll which is in radians (mackoy states that this is equal to the total displacement divided by gauge??)
+					 *
+					 * At the minute we don't support anything fancy, so just convert the leftRight figure by the BVE4 accuracy constant
+					 */
+					Data.Blocks[BlockIndex].Accuracy = leftRight / 0.0008;
+					break;
+				default:
+					//Must be 5
+					return;
+			}
+		}
+
 		/// <summary>Places a structure in the world</summary>
 		/// <param name="key">The structure key</param>
 		/// <param name="Arguments">The command arguments</param>
@@ -996,6 +1033,61 @@ namespace Bve5RouteParser
 				return;
 			}
 			//Add error message NaN
+		}
+
+		/// <summary>Changes the fog conditions for the current block</summary>
+		/// <param name="Arguments">The command arguments</param>
+		/// <param name="Data">The RouteData (updated via 'ref')</param>
+		/// <param name="BlockIndex">The index of the current block</param>
+		static void ChangeFog(string[] Arguments, ref RouteData Data, int BlockIndex)
+		{
+			float fogDensity;
+			switch (Arguments.Length)
+			{
+				case 0:
+					//Presumably this is equivilant to setting the current fog value twice (hence no interpolation from this point onwards?)
+					Data.Blocks[BlockIndex].FogDefined = true;
+					Data.Blocks[BlockIndex].Fog.TrackPosition = Data.TrackPosition;
+					break;
+				case 1:
+					//Changes the density but not the color
+					if (!NumberFormats.TryParseFloatVb6(Arguments[0], out fogDensity))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at block " + BlockIndex);
+						break;
+					}
+					Data.Blocks[BlockIndex].FogDefined = true;
+					Data.Blocks[BlockIndex].Fog.TrackPosition = Data.TrackPosition;
+					Data.Blocks[BlockIndex].Fog.Density = fogDensity;
+					break;
+				case 4:
+					//Changes the density and the color
+					if (!NumberFormats.TryParseFloatVb6(Arguments[0], out fogDensity))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at block " + BlockIndex);
+					}
+					float r = 1.0f, g = 1.0f, b = 1.0f;
+					if (!NumberFormats.TryParseFloatVb6(Arguments[1], out r))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor R value at block " + BlockIndex);
+					}
+					if (!NumberFormats.TryParseFloatVb6(Arguments[2], out g))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor G value at block " + BlockIndex);
+					}
+					if (!NumberFormats.TryParseFloatVb6(Arguments[3], out b))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor B value at block " + BlockIndex);
+					}
+					Data.Blocks[BlockIndex].FogDefined = true;
+					Data.Blocks[BlockIndex].Fog.TrackPosition = Data.TrackPosition;
+					Data.Blocks[BlockIndex].Fog.Density = fogDensity;
+					Data.Blocks[BlockIndex].Fog.Color = new Color24((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+					break;
+				default:
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid number of arguments supplied in Fog command at block " + BlockIndex);
+					break;
+			}
 		}
 
 		/// <summary>Changes the current track run sound</summary>

@@ -129,8 +129,8 @@ namespace Bve5RouteParser
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
-			Fog PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, new Color24(128, 128, 128), -Data.BlockInterval);
-			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, new Color24(128, 128, 128), 0.0);
+			Fog PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, new Color24(128, 128, 128), -Data.BlockInterval, false);
+			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, new Color24(128, 128, 128), 0.0, false);
 			// process blocks
 			double progressFactor = Data.Blocks.Length - Data.FirstUsedBlock == 0 ? 0.5 : 0.5 / (double)(Data.Blocks.Length - Data.FirstUsedBlock);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
@@ -230,38 +230,26 @@ namespace Bve5RouteParser
 				// fog
 				if (!PreviewOnly)
 				{
-					if (Data.FogTransitionMode)
+					if (Data.Blocks[i].FogDefined)
 					{
-						if (Data.Blocks[i].FogDefined)
-						{
-							Data.Blocks[i].Fog.TrackPosition = StartingDistance;
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
-							if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
-							{
-								FogChangeEvent e = (FogChangeEvent)CurrentRoute.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
-								e.NextFog = Data.Blocks[i].Fog;
-							}
-							else
-							{
-								CurrentRoute.PreviousFog = PreviousFog;
-								CurrentRoute.CurrentFog = PreviousFog;
-								CurrentRoute.NextFog = Data.Blocks[i].Fog;
-							}
-							PreviousFog = Data.Blocks[i].Fog;
-							PreviousFogElement = n;
-							PreviousFogEvent = m;
-						}
-					}
-					else
-					{
-						Data.Blocks[i].Fog.TrackPosition = StartingDistance + Data.BlockInterval;
+						Data.Blocks[i].Fog.TrackPosition = StartingDistance;
 						int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(CurrentRoute, 0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
-						PreviousFog = CurrentFog;
-						CurrentFog = Data.Blocks[i].Fog;
+						CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
+						if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
+						{
+							FogChangeEvent e = (FogChangeEvent)CurrentRoute.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
+							e.NextFog = Data.Blocks[i].Fog;
+						}
+						else
+						{
+							CurrentRoute.PreviousFog = PreviousFog;
+							CurrentRoute.CurrentFog = PreviousFog;
+							CurrentRoute.NextFog = Data.Blocks[i].Fog;
+						}
+						PreviousFog = Data.Blocks[i].Fog;
+						PreviousFogElement = n;
+						PreviousFogEvent = m;
 					}
 				}
 				// rail sounds

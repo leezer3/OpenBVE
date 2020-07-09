@@ -8,6 +8,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using RouteManager2;
+using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 
@@ -51,14 +52,12 @@ namespace Bve5RouteParser
 			Data.ObjectList = new ObjectPointer[0];
 			Data.StationList = new Station[0];
 			Data.LastBrightness = 1.0f;
-			
+			Data.FogTransitionMode = true;
 			if (!PreviewOnly)
 			{
 				Data.Blocks[0].Background = 0;
 				Data.Blocks[0].Brightness = new Brightness[] { };
-				Data.Blocks[0].Fog.Start = CurrentRoute.NoFogStart;
-				Data.Blocks[0].Fog.End = CurrentRoute.NoFogEnd;
-				Data.Blocks[0].Fog.Color = new Color24(128, 128, 128);
+				Data.Blocks[0].Fog = new Fog(0,1, Color24.Grey, 0, false);
 				Data.Blocks[0].Cycle = new int[] { -1 };
 				Data.Blocks[0].Height = 0.0;
 				Data.Blocks[0].RailFreeObj = new Object[][] { };
@@ -215,6 +214,11 @@ namespace Bve5RouteParser
 							//Horrible hack, but we've already validated parenthesis when we split into expressions......
 							string[] Arguments = Commands[c].Substring(idx + 1, Commands[c].Length - idx - 2).Split(',');
 							string command = Commands[c].Substring(0, idx).ToLowerInvariant();
+							if (command.EndsWith(".load"))
+							{
+								//Handled elsewhere
+								continue;
+							}
 							if (command.StartsWith("legacy."))
 							{
 								command = command.Substring(7, command.Length - 7);
@@ -490,16 +494,25 @@ namespace Bve5RouteParser
 							}
 							if (command.StartsWith("adhesion.") && !PreviewOnly)
 							{
-								//Changes the current background
+								//Changes the current adhesion value
 								int ida = Commands[c].IndexOf('.');
 								int idb = Commands[c].IndexOf('(');
 								string key = Commands[c].Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
 								SetAdhesion(Arguments, ref Data, BlockIndex);
 								continue;
 							}
+							if (command.StartsWith("irregularity.") && !PreviewOnly)
+							{
+								//Changes the current track accuracy values
+								int ida = Commands[c].IndexOf('.');
+								int idb = Commands[c].IndexOf('(');
+								string key = Commands[c].Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
+								SetAccuracy(Arguments, ref Data, BlockIndex);
+								continue;
+							}
 							if (command.StartsWith("jointnoise.") && !PreviewOnly)
 							{
-								//Changes the current background
+								//Changes the current point sounds index
 								int ida = Commands[c].IndexOf('.');
 								int idb = Commands[c].IndexOf('(');
 								string key = Commands[c].Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
@@ -519,6 +532,21 @@ namespace Bve5RouteParser
 										break;
 									case "interpolate":
 										ChangeBrightness(false, Arguments, ref Data, BlockIndex);
+										break;
+								}
+								continue;
+							}
+							if (command.StartsWith("fog.") && !PreviewOnly)
+							{
+								//Sets the current fog
+								int ida = Commands[c].IndexOf('.');
+								int idb = Commands[c].IndexOf('(');
+								string key = Commands[c].Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
+								switch (key)
+								{
+									case "interpolate":
+									case "set":
+										ChangeFog(Arguments, ref Data, BlockIndex);
 										break;
 								}
 								continue;
