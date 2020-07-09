@@ -54,6 +54,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PixelProperties.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Plugin.Parser.cs">
       <DependentUpon>Plugin.cs</DependentUpon>
