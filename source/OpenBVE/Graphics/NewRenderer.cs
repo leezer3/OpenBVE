@@ -284,6 +284,10 @@ namespace OpenBve.Graphics
 				Program.CurrentRoute.CurrentFog.Color.R = (byte)(Program.CurrentRoute.PreviousFog.Color.R * frc + Program.CurrentRoute.NextFog.Color.R * fr);
 				Program.CurrentRoute.CurrentFog.Color.G = (byte)(Program.CurrentRoute.PreviousFog.Color.G * frc + Program.CurrentRoute.NextFog.Color.G * fr);
 				Program.CurrentRoute.CurrentFog.Color.B = (byte)(Program.CurrentRoute.PreviousFog.Color.B * frc + Program.CurrentRoute.NextFog.Color.B * fr);
+				if (!Program.CurrentRoute.CurrentFog.IsLinear)
+				{
+					Program.CurrentRoute.CurrentFog.Density = (byte)(Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr);
+				}
 			}
 			else
 			{
@@ -306,7 +310,9 @@ namespace OpenBve.Graphics
 				Fog.Start = aa;
 				Fog.End = bb;
 				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
-				SetFogForImmediateMode();
+				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
+				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;
+				Fog.SetForImmediateMode();
 			}
 			else
 			{
@@ -332,9 +338,7 @@ namespace OpenBve.Graphics
 				if (OptionFog)
 				{
 					DefaultShader.SetIsFog(true);
-					DefaultShader.SetFogStart(Fog.Start);
-					DefaultShader.SetFogEnd(Fog.End);
-					DefaultShader.SetFogColor(Fog.Color);
+					DefaultShader.SetFog(Fog);
 				}
 				DefaultShader.SetTexture(0);
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);

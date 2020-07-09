@@ -743,24 +743,13 @@ namespace LibRender2
 			lastColor = Color32.White;
 			Shader.SetMaterialShininess(1.0f);
 			Shader.SetIsFog(false);
-			Shader.SetFogStart(0.0f);
-			Shader.SetFogEnd(0.0f);
-			Shader.SetFogColor(Color24.White);
 			Shader.SetIsTexture(false);
 			Shader.SetTexture(0);
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
 		}
-
-		public void SetFogForImmediateMode()
-		{
-			GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
-			GL.Fog(FogParameter.FogStart, Fog.Start);
-			GL.Fog(FogParameter.FogEnd, Fog.End);
-			GL.Fog(FogParameter.FogColor, new[] { inv255 * Fog.Color.R, inv255 * Fog.Color.G, inv255 * Fog.Color.B, 1.0f });
-		}
-
+		
 		public void SetBlendFunc()
 		{
 			SetBlendFunc(blendSrcFactor, blendDestFactor);

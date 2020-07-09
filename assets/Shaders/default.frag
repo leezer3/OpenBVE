@@ -13,6 +13,8 @@ uniform bool uIsFog;
 uniform float uFogStart;
 uniform float uFogEnd;
 uniform vec3  uFogColor;
+uniform float uFogDensity;
+uniform bool uFogIsLinear;
 uniform int uMaterialFlags;
 
 void main(void)
@@ -40,7 +42,14 @@ void main(void)
 
 	if (uIsFog)
 	{
-		fogFactor *= clamp((uFogEnd - length(oViewPos)) / (uFogEnd - uFogStart), 0.0, 1.0);
+		if(uFogIsLinear)
+		{
+			fogFactor *= clamp((uFogEnd - length(oViewPos)) / (uFogEnd - uFogStart), 0.0, 1.0);
+		}
+		else
+		{
+			fogFactor = exp(-pow((uFogDensity * (gl_FragCoord.z / gl_FragCoord.w)), 2.0));
+		}
 	}
 
 	gl_FragData[0] = vec4(mix(uFogColor, finalColor.rgb, fogFactor), finalColor.a);

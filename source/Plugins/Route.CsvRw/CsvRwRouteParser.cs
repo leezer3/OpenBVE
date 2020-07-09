@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
+using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 
@@ -67,9 +68,7 @@ namespace CsvRwRouteParser {
 			if (!PreviewOnly)
 			{
 				Data.Blocks[0].Background = 0;
-				Data.Blocks[0].Fog.Start = CurrentRoute.NoFogStart;
-				Data.Blocks[0].Fog.End = CurrentRoute.NoFogEnd;
-				Data.Blocks[0].Fog.Color = Color24.Grey;
+				Data.Blocks[0].Fog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0);
 				Data.Blocks[0].Cycle = new[] {-1};
 				Data.Blocks[0].RailCycles = new RailCycle[1];
 				Data.Blocks[0].RailCycles[0].RailCycleIndex = -1;

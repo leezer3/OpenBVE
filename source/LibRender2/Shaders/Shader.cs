@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using LibRender2.Fogs;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -176,6 +177,8 @@ namespace LibRender2.Shaders
 				FogStart = (short)GL.GetUniformLocation(handle, "uFogStart"),
 				FogEnd = (short)GL.GetUniformLocation(handle, "uFogEnd"),
 				FogColor = (short)GL.GetUniformLocation(handle, "uFogColor"),
+				FogIsLinear = (short)GL.GetUniformLocation(handle, "uFogIsLinear"),
+				FogDensity = (short)GL.GetUniformLocation(handle, "uFogDensity"),
 				IsTexture = (short)GL.GetUniformLocation(handle, "uIsTexture"),
 				Texture = (short)GL.GetUniformLocation(handle, "uTexture"),
 				Brightness = (short)GL.GetUniformLocation(handle, "uBrightness"),
@@ -310,21 +313,15 @@ namespace LibRender2.Shaders
 			GL.Uniform1(UniformLayout.IsFog, IsFog ? 1 : 0);
 		}
 
-		public void SetFogStart(float FogStart)
+		public void SetFog(Fog Fog)
 		{
-			GL.Uniform1(UniformLayout.FogStart, FogStart);
+			GL.Uniform1(UniformLayout.FogStart, Fog.Start);
+			GL.Uniform1(UniformLayout.FogEnd, Fog.End);
+			GL.Uniform3(UniformLayout.FogColor, Fog.Color.R / 255.0f, Fog.Color.G / 255.0f, Fog.Color.B / 255.0f);
+			GL.Uniform1(UniformLayout.FogIsLinear, Fog.IsLinear ? 1 : 0);
+			GL.Uniform1(UniformLayout.FogDensity, Fog.Density);
 		}
-
-		public void SetFogEnd(float FogEnd)
-		{
-			GL.Uniform1(UniformLayout.FogEnd, FogEnd);
-		}
-
-		public void SetFogColor(Color24 FogColor)
-		{
-			GL.Uniform3(UniformLayout.FogColor, FogColor.R / 255.0f, FogColor.G / 255.0f, FogColor.B / 255.0f);
-		}
-
+		
 		public void SetIsTexture(bool IsTexture)
 		{
 			GL.Uniform1(UniformLayout.IsTexture, IsTexture ? 1 : 0);
