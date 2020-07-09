@@ -677,6 +677,10 @@ namespace Bve5RouteParser
 						{
 							for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Length; k++)
 							{
+								if (Data.Blocks[i].RailFreeObj[j][k] == null)
+								{
+									continue;
+								}
 								int sttype = Data.Blocks[i].RailFreeObj[j][k].Type;
 								if (sttype != -1)
 								{
@@ -704,22 +708,22 @@ namespace Bve5RouteParser
 											//Sounds remarkably like the ground transform, but this doesn't appear to work....
 											Data.Structure.Objects[sttype].CreateObject(wpos, RailNullTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 											break;
 										case RailTransformationTypes.FollowsPitch:
 											Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 											break;
 										case RailTransformationTypes.FollowsCant:
 											Data.Structure.Objects[sttype].CreateObject(wpos, TrackGroundTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 											break;
 										case RailTransformationTypes.FollowsBoth:
 											Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 											break;
 									}
 								}
@@ -1076,7 +1080,6 @@ namespace Bve5RouteParser
 				int subdivisions = (int)Math.Floor(Data.BlockInterval / 5.0);
 				if (subdivisions >= 2)
 				{
-					CurrentRoute.Tracks[0].SmoothTurns(subdivisions, Plugin.CurrentHost);
 					ComputeCantTangents();
 				}
 			}

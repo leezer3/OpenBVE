@@ -52,7 +52,6 @@ namespace Bve5RouteParser
 			Data.ObjectList = new ObjectPointer[0];
 			Data.StationList = new Station[0];
 			Data.LastBrightness = 1.0f;
-			Data.FogTransitionMode = true;
 			if (!PreviewOnly)
 			{
 				Data.Blocks[0].Background = 0;
