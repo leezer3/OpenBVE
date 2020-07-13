@@ -11,6 +11,7 @@ using RouteManager2.Climate;
 using RouteManager2.Events;
 using OpenBveApi.World;
 using OpenBveApi.Interface;
+using OpenBveApi.Sounds;
 using RouteManager2;
 using RouteManager2.SignalManager;
 using OpenBveApi.Textures;
@@ -724,6 +725,28 @@ namespace Bve5RouteParser
 											Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
 												new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
 													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
+											break;
+									}
+								}
+							}
+						}
+						if (j == 0)
+						{
+							for (int k = 0; k < Data.Blocks[i].SoundEvents.Length; k++)
+							{
+								Data.Blocks[i].SoundEvents[k].Create(pos, StartingDistance, Direction, planar, updown);
+								if (Data.Blocks[i].SoundEvents[j].Type == SoundType.TrainStatic | Data.Blocks[i].SoundEvents[j].Type == SoundType.TrainDynamic)
+								{
+									int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
+									Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+									double d = Data.Blocks[i].SoundEvents[j].TrackPosition - StartingDistance;
+									switch (Data.Blocks[i].SoundEvents[j].Type)
+									{
+										case SoundType.TrainStatic:
+											CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero, Plugin.CurrentHost);
+											break;
+										case SoundType.TrainDynamic:
+											CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed, Plugin.CurrentHost);
 											break;
 									}
 								}

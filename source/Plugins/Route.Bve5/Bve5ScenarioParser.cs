@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using OpenBveApi.Colors;
@@ -6,6 +7,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using RouteManager2;
 using RouteManager2.Climate;
@@ -50,6 +52,8 @@ namespace Bve5RouteParser
 			Data.Blocks[0].AdhesionMultiplier = 1.0;
 			Data.Blocks[0].CurrentTrackState = new TrackElement(0.0);
 			Data.ObjectList = new ObjectPointer[0];
+			Data.SoundList = new List<ObjectPointer>();
+			Data.Sound3DList = new List<ObjectPointer>();
 			Data.StationList = new Station[0];
 			Data.LastBrightness = 1.0f;
 			if (!PreviewOnly)
@@ -72,6 +76,8 @@ namespace Bve5RouteParser
 				Data.TimetableDaytime = new Texture[] { null, null, null, null };
 				Data.TimetableNighttime = new Texture[] { null, null, null, null };
 				Data.Structure.Objects = new UnifiedObject[] { };
+				Data.Structure.Sounds = new List<SoundHandle>();
+				Data.Structure.Sounds3D = new List<SoundHandle>();
 				Data.UnitOfSpeed = 0.277777777777778;
 
 				Data.CompatibilitySignalData = new CompatibilitySignalData[0];
@@ -247,6 +253,54 @@ namespace Bve5RouteParser
 										case "putbetween":
 											//Equivilant to the Track.Crack command
 											PutStructureBetween(key, Arguments, ref Data, BlockIndex, UnitOfLength);
+											break;
+										default:
+											//Unrecognised command, so break out of the loop and continue
+											continue;
+									}
+								}
+								continue;
+							}
+							if (command.StartsWith("sound3d[") && !PreviewOnly)
+							{
+								//Rough equivilant of the FreeObj command
+								int ida = Commands[c].IndexOf('[');
+								int idb = Commands[c].IndexOf(']');
+								int idc = Commands[c].IndexOf('(');
+								string key = Commands[c].Substring(ida + 1, idb - ida - 1);
+								string type = Commands[c].Substring(idb + 2, idc - idb - 2).ToLowerInvariant();
+								//Remove the single quotes BVE5 uses to surround names
+								key = key.RemoveEnclosingQuotes();
+								if (!PreviewOnly)
+								{
+									switch (type)
+									{
+										case "put":
+											PutSound(key, Arguments, ref Data, BlockIndex, UnitOfLength, true);
+											break;
+										default:
+											//Unrecognised command, so break out of the loop and continue
+											continue;
+									}
+								}
+								continue;
+							}
+							if (command.StartsWith("sound[") && !PreviewOnly)
+							{
+								//Rough equivilant of the FreeObj command
+								int ida = Commands[c].IndexOf('[');
+								int idb = Commands[c].IndexOf(']');
+								int idc = Commands[c].IndexOf('(');
+								string key = Commands[c].Substring(ida + 1, idb - ida - 1);
+								string type = Commands[c].Substring(idb + 2, idc - idb - 2).ToLowerInvariant();
+								//Remove the single quotes BVE5 uses to surround names
+								key = key.RemoveEnclosingQuotes();
+								if (!PreviewOnly)
+								{
+									switch (type)
+									{
+										case "play":
+											PutSound(key, Arguments, ref Data, BlockIndex, UnitOfLength, false);
 											break;
 										default:
 											//Unrecognised command, so break out of the loop and continue

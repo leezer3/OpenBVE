@@ -54,6 +54,7 @@
     <Compile Include="Structures\Block.cs" />
     <Compile Include="Structures\Expression.cs" />
     <Compile Include="Structures\Miscellaneous\ObjectPointer.cs" />
+    <Compile Include="Structures\Miscellaneous\Sound.cs" />
     <Compile Include="Structures\RouteData.cs" />
     <Compile Include="Structures\Route\Background.cs" />
     <Compile Include="Structures\Route\Crack.cs" />

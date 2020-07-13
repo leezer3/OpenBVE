@@ -207,6 +207,51 @@ namespace Bve5RouteParser
 											}
 										}
 									} break;
+								//BVE5 sound definition files
+								case "sound.load":
+								{
+									if (Arguments.Length == 0)
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "At least 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										for (int i = 0; i < Arguments.Length; i++)
+										{
+											//Remove the single quotes BVE5 uses to surround names
+											if (Arguments[i].StartsWith("'") && Arguments[i].EndsWith("'"))
+											{
+												Arguments[i] = Arguments[i].Substring(1, Arguments[i].Length - 2);
+											}
+											//Call the loader method
+											var SoundFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]);
+											Encoding enc = DetermineFileEncoding(SoundFile);
+											LoadSounds(SoundFile, ref Data.SoundList, ref Data.Structure.Sounds, enc, PreviewOnly);
+										}
+									}
+								} break;
+								case "sound3d.load":
+								{
+									if (Arguments.Length == 0)
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "At least 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										for (int i = 0; i < Arguments.Length; i++)
+										{
+											//Remove the single quotes BVE5 uses to surround names
+											if (Arguments[i].StartsWith("'") && Arguments[i].EndsWith("'"))
+											{
+												Arguments[i] = Arguments[i].Substring(1, Arguments[i].Length - 2);
+											}
+											//Call the loader method
+											var SoundFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]);
+											Encoding enc = DetermineFileEncoding(SoundFile);
+											LoadSounds(SoundFile, ref Data.Sound3DList, ref Data.Structure.Sounds3D, enc, PreviewOnly);
+										}
+									}
+								} break;
 								//BVE5 station definition files
 								case "station.load":
 									{

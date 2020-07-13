@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Textures;
+﻿using System.Collections.Generic;
+using OpenBveApi.Textures;
 using RouteManager2.SignalManager;
 
 namespace Bve5RouteParser
@@ -27,10 +28,14 @@ namespace Bve5RouteParser
 		//internal Marker[] Markers;
 		internal int FirstUsedBlock;
 
+		internal List<ObjectPointer> SoundList;
+		internal List<ObjectPointer> Sound3DList;
 		internal ObjectPointer[] ObjectList;
 		internal Station[] StationList;
 
 		internal int UsedObjects;
+		internal int UsedSounds;
+		internal int UsedSounds3D;
 		internal float LastBrightness;
 	}
 }

@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using RouteManager2.Stations;
+using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace Bve5RouteParser
 {
@@ -97,6 +98,101 @@ namespace Bve5RouteParser
 				}
 				Data.UsedObjects++;
 				
+			}
+		}
+
+		/// <summary>Loads the list of sounds for a BVE5 map</summary>
+		/// <param name="SoundList">The absolute on-disk path to the sound list</param>
+		/// <param name="SoundListing"></param>
+		/// <param name="Sounds"></param>
+		/// <param name="Encoding">The text encoding to use whilst parsing the file</param>
+		/// <param name="PreviewOnly">Whether this is a preview only</param>
+		
+		private void LoadSounds(string SoundList, ref List<ObjectPointer> SoundListing, ref List<SoundHandle> Sounds, System.Text.Encoding Encoding, bool PreviewOnly)
+		{
+			//Read object list file into memory
+			string[] Lines = File.ReadAllLines(SoundList, Encoding);
+			string b = String.Empty;
+			if (!Lines[0].ToLowerInvariant().StartsWith("bvets sound list"))
+			{
+				throw new Exception("File " + SoundList + " is not a sound list file");
+			}
+			for (int i = 17; i < Lines[0].Length; i++)
+			{
+				if (Char.IsDigit(Lines[0][i]) || Lines[0][i] == '.')
+				{
+					b = b + Lines[0][i];
+				}
+				else
+				{
+					break;
+				}
+			}
+			if (b.Length > 0)
+			{
+				double version = 0;
+				NumberFormats.TryParseDoubleVb6(b, out version);
+				if (version > 1.0)
+				{
+					throw new Exception(version + " is not a supported BVE5 sound list version");
+				}
+			}
+			else
+			{
+				throw new Exception("File " + SoundList + " does not contain a BVE5 sound list version");
+			}
+			
+			for (int i = 1; i < Lines.Length; i++)
+			{
+				//Cycle through the list of objects
+				//An object index is formatted as follows:
+				// --KEY USED BY ROUTEFILE-- , --PATH TO SOUND RELATIVE TO SOUND FILE-- , --MAX PLAYING BUFFERS--
+
+				//Remove comments
+				Lines[i] = Lines[i].TrimBVE5Comments();
+				if (Lines[i].Length == 0)
+				{
+					continue;
+				}
+
+				int maxPlayingBuffers = -1;
+
+				string[] Arguments = Lines[i].Split(',');
+				if (Arguments.Length < 2)
+				{
+					Plugin.CurrentHost.AddMessage("At least 2 arguments must be supplied in the SoundsList file " + SoundList + " at line " + i);
+					return;
+				}
+
+				if (Arguments.Length >= 3)
+				{
+					if (!NumberFormats.TryParseIntVb6(Arguments[2], out maxPlayingBuffers))
+					{
+						Plugin.CurrentHost.AddMessage("Maximum playing buffers is invalid in the SoundsList file " + SoundList + " at line " + i);
+					}
+				}
+
+				string soundFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(SoundList), Arguments[1]);
+				if (!System.IO.File.Exists(soundFile))
+				{
+					//If our path does not exist, set it to a null reference in order for the sim to display nothing
+					Plugin.CurrentHost.AddMessage("Sound file file " + Arguments[1] + " does not exist in SoundsList file "+ SoundList + " at line " + i);
+					soundFile = string.Empty;
+					
+				}
+
+
+				SoundListing.Add(new ObjectPointer(Arguments[0], soundFile));
+				
+				if (!PreviewOnly)
+				{
+					if (!string.IsNullOrEmpty(soundFile))
+					{
+						SoundHandle h;
+						Plugin.CurrentHost.RegisterSound(soundFile, 15.0, out h);
+						Sounds.Add(h);
+					}
+				}
 			}
 		}
 

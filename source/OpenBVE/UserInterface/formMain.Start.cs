@@ -146,6 +146,7 @@ namespace OpenBve
 		/// <param name="packages">Whether this is a packaged content folder</param>
 		private void populateRouteList(string Folder, ListView listView, bool packages)
 		{
+			Plugins.LoadPlugins();
 			try
 			{
 				if (Folder.Length == 0)
@@ -288,6 +289,21 @@ namespace OpenBve
 											Item = listView.Items.Add(fileName);
 											Item.ImageKey = @"mechanik";
 											Item.Tag = Files[i];
+										}
+									}
+									break;
+								case ".txt":
+									fileName = System.IO.Path.GetFileName(Files[i]);
+									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
+									{
+										for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+										{
+											if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
+											{
+												ListViewItem Item = listviewRouteFiles.Items.Add(fileName);
+												Item.ImageKey = @"route";
+												Item.Tag = Files[i];
+											}
 										}
 									}
 									break;

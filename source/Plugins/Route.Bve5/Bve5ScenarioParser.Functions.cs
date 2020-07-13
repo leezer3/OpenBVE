@@ -76,6 +76,36 @@ namespace Bve5RouteParser
 			return sttype;
 		}
 
+		/// <summary>Finds the sound index for the given key</summary>
+		static int FindSoundIndex(string key, RouteData Data)
+		{
+			int sttype = -1;
+			for (int k = 0; k < Data.SoundList.Count; k++)
+			{
+				if (Data.SoundList[k].Name.ToLowerInvariant() == key.ToLowerInvariant())
+				{
+					sttype = k;
+					break;
+				}
+			}
+			return sttype;
+		}
+
+		/// <summary>Finds the sound index for the given key</summary>
+		static int FindSound3DIndex(string key, RouteData Data)
+		{
+			int sttype = -1;
+			for (int k = 0; k < Data.Sound3DList.Count; k++)
+			{
+				if (Data.Sound3DList[k].Name.ToLowerInvariant() == key.ToLowerInvariant())
+				{
+					sttype = k;
+					break;
+				}
+			}
+			return sttype;
+		}
+
 		/// <summary>Finds the structure path for the given key</summary>
 		static string FindStructurePath(string key, RouteData Data)
 		{

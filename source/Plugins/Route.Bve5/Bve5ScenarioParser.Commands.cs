@@ -4,6 +4,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using RouteManager2.SignalManager;
 
 namespace Bve5RouteParser
@@ -592,6 +593,51 @@ namespace Bve5RouteParser
 				}
 			}
 			//TODO: Add error message stating that the station's key has not been found
+		}
+
+		/// <summary>Places a sound effect</summary>
+		/// <param name="key">The sound effect key</param>
+		/// <param name="Arguments">The command arguments</param>
+		/// <param name="Data">The RouteData (updated via 'ref')</param>
+		/// <param name="BlockIndex">The index of the current block</param>
+		/// <param name="UnitOfLength">The current unit of length</param>
+		/// <param name="Doppler">Whether this is a doppler or a cab based sound</param>
+		internal void PutSound(string key, string[] Arguments, ref RouteData Data, int BlockIndex, double[] UnitOfLength, bool Doppler)
+		{
+			int sttype = Doppler ? FindSound3DIndex(key, Data) : FindSoundIndex(key, Data);
+			if (Doppler)
+			{
+				if (sttype == -1 || Data.Structure.Sounds3D[sttype] == null)
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Sound3D with key " + key + " was not found in Block " + BlockIndex);
+					return;
+				}
+				double x = 0.0, y = 0.0;
+				if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out x))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Sound3D " + key + " in Block " + BlockIndex);
+					x = 0.0;
+				}
+				if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out y))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Sound3D " + key + " in Block " + BlockIndex);
+					y = 0.0;
+				}
+				int n = Data.Blocks[BlockIndex].SoundEvents.Length;
+				Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+				Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, Data.Structure.Sounds3D[sttype], -1, new Vector2(x, y));
+			}
+			else
+			{
+				if (sttype == -1 || Data.Structure.Sounds3D[sttype] == null)
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Sound with key " + key + " was not found in Block " + BlockIndex);
+					return;
+				}
+				int n = Data.Blocks[BlockIndex].SoundEvents.Length;
+				Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+				Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, Data.Structure.Sounds[sttype], 0);
+			}
 		}
 
 		/// <summary>Starts a repeating object</summary>

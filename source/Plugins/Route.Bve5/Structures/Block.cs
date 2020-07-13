@@ -32,5 +32,11 @@ namespace Bve5RouteParser
 		internal double AdhesionMultiplier;
 		internal bool JointNoise = false;
 		internal bool BeginInterpolation = false;
+		internal Sound[] SoundEvents;
+
+		internal Block()
+		{
+			SoundEvents = new Sound[] { };
+		}
 	}
 }
