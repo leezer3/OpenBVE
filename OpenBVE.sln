@@ -176,6 +176,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win32PluginProxy", "source\Plugins\Win32PluginProxy\Win32PluginProxy.csproj", "{B9014791-7170-4DCD-B3F1-2B7518A85C83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Route.Bve5", "Source\Plugins\Route.Bve5\Route.Bve5.csproj", "{59857BBC-F8FB-41B7-ADEF-5DE5041FA98C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Route.Bve5", "source\Plugins\Route.Bve5\Route.Bve5.csproj", "{59857BBC-F8FB-41B7-ADEF-5DE5041FA98C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
