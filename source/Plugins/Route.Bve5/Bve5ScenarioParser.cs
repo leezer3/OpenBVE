@@ -66,8 +66,6 @@ namespace Bve5RouteParser
 				Data.Blocks[0].RailFreeObj = new Object[][] { };
 				Data.Blocks[0].GroundFreeObj = new Object[] { };
 				Data.Blocks[0].Crack = new Crack[] { };
-				Data.Blocks[0].Signal = new Signal[] { };
-				Data.Blocks[0].Section = new Section[] { };
 				Data.Blocks[0].RunSounds = new TrackSound[] { new TrackSound(0.0, 0, 0) };
 				Data.Structure.Cycle = new int[][] { };
 				Data.Structure.Run = new int[] { };
@@ -389,7 +387,11 @@ namespace Bve5RouteParser
 								switch (key)
 								{
 									case "begin":
-										StartSection(Arguments, ref Data, BlockIndex, ref CurrentSection, UnitOfLength);
+										if (Arguments.Length > 0)
+										{
+											Data.Blocks[BlockIndex].Section.Add(new Section(Data.TrackPosition, Arguments));
+											CurrentSection++;
+										}
 										break;
 									default:
 										//Unsupported section statement

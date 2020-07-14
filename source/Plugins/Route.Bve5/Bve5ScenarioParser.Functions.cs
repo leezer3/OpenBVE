@@ -187,8 +187,6 @@ namespace Bve5RouteParser
 						Data.Blocks[i].RailFreeObj = new Object[][] { };
 						Data.Blocks[i].GroundFreeObj = new Object[] { };
 						Data.Blocks[i].Crack = new Crack[] { };
-						Data.Blocks[i].Signal = new Signal[] { };
-						Data.Blocks[i].Section = new Section[] { };
 						CreateMissingRepeaters(ref Data, i);
 
 					}

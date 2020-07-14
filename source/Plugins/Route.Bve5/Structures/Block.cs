@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Routes;
+﻿using System.Collections.Generic;
+using OpenBveApi.Routes;
 using RouteManager2.Climate;
 
 namespace Bve5RouteParser
@@ -17,8 +18,8 @@ namespace Bve5RouteParser
 		internal Rail[] Rail;
 		internal Crack[] Crack;
 		internal int[] RailType;
-		internal Signal[] Signal;
-		internal Section[] Section;
+		internal List<Signal> Signal;
+		internal List<Section> Section;
 		internal Limit[] Limit;
 		internal Stop[] Stop;
 		internal TrackSound[] RunSounds;
@@ -36,6 +37,8 @@ namespace Bve5RouteParser
 
 		internal Block()
 		{
+			Signal = new List<Signal>();
+			Section = new List<Section>();
 			SoundEvents = new Sound[] { };
 		}
 	}

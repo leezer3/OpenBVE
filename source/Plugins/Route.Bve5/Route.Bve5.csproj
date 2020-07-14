@@ -65,7 +65,7 @@
     <Compile Include="Structures\Route\Station.Stop.cs" />
     <Compile Include="Structures\Signals\Section.cs" />
     <Compile Include="Structures\Signals\Signal.cs" />
-    <Compile Include="Structures\Signals\SignalData.BVE4.cs" />
+    <Compile Include="Structures\Signals\SignalData.BVE5.cs" />
     <Compile Include="Structures\StructureData.cs" />
     <Compile Include="Structures\Trains\Brightness.cs" />
     <Compile Include="Structures\Trains\Limit.cs" />

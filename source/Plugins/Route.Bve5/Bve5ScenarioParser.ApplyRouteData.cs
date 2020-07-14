@@ -756,12 +756,12 @@ namespace Bve5RouteParser
 						if (j == 0)
 						{
 							// signals
-							for (int k = 0; k < Data.Blocks[i].Signal.Length; k++)
+							for (int k = 0; k < Data.Blocks[i].Signal.Count; k++)
 							{
 								Data.Blocks[i].Signal[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signal[k].TrackPosition), SignalPost);
 							}
 							// sections
-							for (int k = 0; k < Data.Blocks[i].Section.Length; k++)
+							for (int k = 0; k < Data.Blocks[i].Section.Count; k++)
 							{
 								Data.Blocks[i].Section[k].Create(CurrentRoute, Data.Blocks, i, n, Data.SignalSpeeds, StartingDistance, Data.BlockInterval);
 							}

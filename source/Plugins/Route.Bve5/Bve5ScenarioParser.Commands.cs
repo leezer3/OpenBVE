@@ -204,7 +204,7 @@ namespace Bve5RouteParser
 			}
 			else
 			{
-				for (int i = 0; i > Data.Backgrounds.Length; i++)
+				for (int i = 0; i < Data.Backgrounds.Length; i++)
 				{
 					if (Data.Backgrounds[i].Key == Arguments[0])
 					{
@@ -913,52 +913,6 @@ namespace Bve5RouteParser
 
 		}
 
-		/// <summary>Starts a new signalling section</summary>
-		/// <param name="Arguments">The command arguments</param>
-		/// <param name="Data">The RouteData (updated via 'ref')</param>
-		/// <param name="BlockIndex">The index of the current block</param>
-		/// <param name="CurrentSection">The zero-based index of the current section (updated via 'ref')</param>
-		/// <param name="UnitOfLength">The current unit of length</param>
-		static void StartSection(string[] Arguments, ref RouteData Data, int BlockIndex, ref int CurrentSection, double[] UnitOfLength)
-		{
-			if (Arguments.Length == 0)
-			{
-				//Interface.AddMessage(Interface.MessageType.Error, false,"At least one argument is required in " + Command + "at line " + Expressions[j].Line.ToString(Culture) +", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-			}
-			else
-			{
-				int[] aspects = new int[Arguments.Length];
-				for (int i = 0; i < Arguments.Length; i++)
-				{
-					if (!NumberFormats.TryParseIntVb6(Arguments[i], out aspects[i]))
-					{
-						//Interface.AddMessage(Interface.MessageType.Error, false,"Aspect" + i.ToString(Culture) + " is invalid in " + Command + "at line " +Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " +Expressions[j].File);
-						aspects[i] = -1;
-					}
-					else if (aspects[i] < 0)
-					{
-						//Interface.AddMessage(Interface.MessageType.Error, false,"Aspect" + i.ToString(Culture) + " is expected to be non-negative in " + Command + "at line " +Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " +Expressions[j].File);
-						aspects[i] = -1;
-					}
-				}
-				int n = Data.Blocks[BlockIndex].Section.Length;
-				Array.Resize(ref Data.Blocks[BlockIndex].Section, n + 1);
-				Data.Blocks[BlockIndex].Section[n] = new Section(Data.TrackPosition, aspects, -1, SectionType.IndexBased);
-				/*
-					if (CurrentStation >= 0 && Game.Stations[CurrentStation].ForceStopSignal)
-					{
-						if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed)
-						{
-							Data.Blocks[BlockIndex].Section[n].DepartureStationIndex = CurrentStation;
-							DepartureSignalUsed = true;
-						}
-					}
-					 */
-				CurrentSection++;
-			}
-
-		}
-
 		/// <summary>Places an in-game signal</summary>
 		/// <param name="Arguments">The command arguments</param>
 		/// <param name="Data">The RouteData (updated via 'ref')</param>
@@ -1017,9 +971,7 @@ namespace Bve5RouteParser
 			}
 
 
-			int n = Data.Blocks[BlockIndex].Section.Length;
-			Array.Resize(ref Data.Blocks[BlockIndex].Section, n + 1);
-			Data.Blocks[BlockIndex].Section[n] = new Section(Data.TrackPosition, aspects, -1, SectionType.ValueBased, x == 0.0);
+			Data.Blocks[BlockIndex].Section.Add(new Section(Data.TrackPosition, aspects, -1, SectionType.ValueBased, x == 0.0));
 			/*
 			if (CurrentStation >= 0 && Game.Stations[CurrentStation].ForceStopSignal)
 			{
@@ -1031,9 +983,7 @@ namespace Bve5RouteParser
 			}
 			*/
 			CurrentSection++;
-			n = Data.Blocks[BlockIndex].Signal.Length;
-			Array.Resize(ref Data.Blocks[BlockIndex].Signal, n + 1);
-			Data.Blocks[BlockIndex].Signal[n] = new Signal(Data.TrackPosition, CurrentSection, Data.CompatibilitySignalData[comp], new Vector2(x, y < 0.0 ? 4.8 : y),0.0174532925199433*yaw, 0.0174532925199433*pitch, 0.0174532925199433*roll, x != 0.0,  x != 0.0 & y < 0.0);
+			Data.Blocks[BlockIndex].Signal.Add(new Signal(Data.TrackPosition, CurrentSection, Data.CompatibilitySignalData[comp], new Vector2(x, y < 0.0 ? 4.8 : y), 0.0174532925199433 * yaw, 0.0174532925199433 * pitch, 0.0174532925199433 * roll, x != 0.0, x != 0.0 & y < 0.0));
 		}
 
 		/// <summary>Plays the points sound for the current block</summary>
