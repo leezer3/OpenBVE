@@ -383,6 +383,7 @@ namespace OpenBve {
 				if (TrainManager.Trains[k].State != TrainState.Bogus)
 				{
 					bool LoadObjects = false;
+					bool[] VisibleFromInterior = new bool[TrainManager.Trains[k].Cars.Length];
 					if (CarObjects == null)
 					{
 						CarObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length];
@@ -393,11 +394,11 @@ namespace OpenBve {
 					string tXml = OpenBveApi.Path.CombineFile(TrainManager.Trains[k].TrainFolder, "train.xml");
 					if (System.IO.File.Exists(tXml))
 					{
-						TrainXmlParser.Parse(tXml, TrainManager.Trains[k], ref CarObjects, ref BogieObjects, ref CouplerObjects);
+						TrainXmlParser.Parse(tXml, TrainManager.Trains[k], ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior);
 					}
 					else
 					{
-						ExtensionsCfgParser.ParseExtensionsConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, TrainManager.Trains[k], LoadObjects);
+						ExtensionsCfgParser.ParseExtensionsConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior, TrainManager.Trains[k], LoadObjects);
 					}
 					TrainManager.PlayerTrain.CameraCar = TrainManager.Trains[k].DriverCar;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
@@ -424,22 +425,22 @@ namespace OpenBve {
 						}
 						if (CarObjects[i] != null) {
 							// add object
-							TrainManager.Trains[k].Cars[i].LoadCarSections(CarObjects[i]);
+							TrainManager.Trains[k].Cars[i].LoadCarSections(CarObjects[i], VisibleFromInterior[i]);
 						}
 
 						if (CouplerObjects[i] != null)
 						{
-							TrainManager.Trains[k].Cars[i].Coupler.LoadCarSections(CouplerObjects[i]);
+							TrainManager.Trains[k].Cars[i].Coupler.LoadCarSections(CouplerObjects[i], VisibleFromInterior[i]);
 						}
 						//Load bogie objects
 						if (BogieObjects[currentBogieObject] != null)
 						{
-							TrainManager.Trains[k].Cars[i].FrontBogie.LoadCarSections(BogieObjects[currentBogieObject]);
+							TrainManager.Trains[k].Cars[i].FrontBogie.LoadCarSections(BogieObjects[currentBogieObject], VisibleFromInterior[i]);
 						}
 						currentBogieObject++;
 						if (BogieObjects[currentBogieObject] != null)
 						{
-							TrainManager.Trains[k].Cars[i].RearBogie.LoadCarSections(BogieObjects[currentBogieObject]);
+							TrainManager.Trains[k].Cars[i].RearBogie.LoadCarSections(BogieObjects[currentBogieObject], VisibleFromInterior[i]);
 						}
 						currentBogieObject++;
 					}

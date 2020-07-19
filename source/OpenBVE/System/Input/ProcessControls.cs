@@ -64,13 +64,13 @@ namespace OpenBve
 							}
 							else
 							{
-								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 								returnToCab = true;
 							}
 						}
 						else
 						{
-							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 						}
 					}
 
@@ -693,13 +693,13 @@ namespace OpenBve
 													}
 													else
 													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 														returnToCab = true;
 													}
 												}
 												else
 												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 												}
 											}
 											if (returnToCab)
@@ -766,13 +766,13 @@ namespace OpenBve
 													}
 													else
 													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 														returnToCab = true;
 													}
 												}
 												else
 												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 												}
 											}
 											if (returnToCab)
@@ -785,7 +785,7 @@ namespace OpenBve
 											//Hide interior and bogies
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(-1);

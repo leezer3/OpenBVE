@@ -390,7 +390,7 @@ namespace OpenBve
 										this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 										if (IsPlayerTrain)
 										{
-											this.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+											this.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 
 										}
 									}

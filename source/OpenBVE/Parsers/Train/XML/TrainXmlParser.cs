@@ -15,7 +15,7 @@ namespace OpenBve.Parsers.Train
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
 		private static TrainManager.BveAccelerationCurve[] AccelerationCurves;
-		internal static void Parse(string fileName, TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects)
+		internal static void Parse(string fileName, TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, ref bool[] interiorVisible)
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
@@ -39,6 +39,7 @@ namespace OpenBve.Parsers.Train
 			}
 			CarObjectsReversed = new bool[Train.Cars.Length];
 			BogieObjectsReversed = new bool[Train.Cars.Length * 2];
+			interiorVisible = new bool[Train.Cars.Length];
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Car or self::Coupler]");
@@ -62,7 +63,7 @@ namespace OpenBve.Parsers.Train
 					{
 						if (DocumentNodes[i].Name == "Car")
 						{
-							ParseCarNode(DocumentNodes[i], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects);
+							ParseCarNode(DocumentNodes[i], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 						}
 						else
 						{
@@ -115,7 +116,7 @@ namespace OpenBve.Parsers.Train
 							//We need to save and restore the current path to make relative paths within the child file work correctly
 							string savedPath = currentPath;
 							currentPath = System.IO.Path.GetDirectoryName(childFile);
-							ParseCarNode(childNodes[0], fileName, i, ref Train, ref CarObjects, ref BogieObjects);
+							ParseCarNode(childNodes[0], fileName, i, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 							currentPath = savedPath;
 						}
 						catch

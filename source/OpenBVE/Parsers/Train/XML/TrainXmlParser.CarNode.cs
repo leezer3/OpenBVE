@@ -16,7 +16,7 @@ namespace OpenBve.Parsers.Train
 {
 	partial class TrainXmlParser
 	{
-		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects)
+		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
 		{
 			string interiorFile = string.Empty;
 			TrainManager.ReadhesionDeviceType readhesionDevice = Train.Cars[0].Specs.ReAdhesionDevice.DeviceType;
@@ -343,13 +343,18 @@ namespace OpenBve.Parsers.Train
 								break;
 						}
 						break;
+					case "visiblefrominterior":
+						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
+						{
+							visibleFromInterior = true;
+						}
+						break;
 				}
 			}
 			/*
 			 * As there is no set order for XML tags to be presented in, these must be
 			 * done after the end of the loop			 *
 			 */
-
 			//Assign interior view
 			if (interiorFile != String.Empty)
 			{

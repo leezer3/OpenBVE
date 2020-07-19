@@ -455,11 +455,13 @@ namespace OpenBve
 
 			/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>
 			/// <param name="currentObject">The object to add to the car sections array</param>
-			internal void LoadCarSections(UnifiedObject currentObject)
+			/// <param name="visibleFromInterior">Wether this is visible from the interior of other cars</param>
+			internal void LoadCarSections(UnifiedObject currentObject, bool visibleFromInterior)
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
 				CarSections[j] = new CarSection(Program.Renderer, false);
+				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;
@@ -484,8 +486,16 @@ namespace OpenBve
 
 			/// <summary>Changes the currently visible car section</summary>
 			/// <param name="newCarSection">The type of new car section to display</param>
-			internal void ChangeCarSection(CarSectionType newCarSection)
+			/// <param name="trainVisible">Whether the train is visible</param>
+			internal void ChangeCarSection(CarSectionType newCarSection, bool trainVisible = false)
 			{
+				if (trainVisible)
+				{
+					if (CarSections[CurrentCarSection].VisibleFromInterior)
+					{
+						return;
+					}
+				}
 				for (int i = 0; i < CarSections.Length; i++)
 				{
 					for (int j = 0; j < CarSections[i].Groups.Length; j++)
