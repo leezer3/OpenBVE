@@ -1593,10 +1593,12 @@
 					  <target>Sporveikamera</target>
 					</trans-unit>
 					<trans-unit id="flybynormal">
-						<source>Fly-by camera (normal)</source>
+					  <source>Fly-by camera (normal)</source>
+					  <target>Fly-by kamera (normal)</target>
 					</trans-unit>
 					<trans-unit id="flybyzooming">
-						<source>Fly-by camera (zooming)</source>
+					  <source>Fly-by camera (zooming)</source>
+					  <target>Fly-by kamera (med zoom)</target>
 					</trans-unit>
 					<trans-unit id="cpu_normal">
 					  <source>CPU: normal</source>
@@ -1741,7 +1743,7 @@
 					</trans-unit>
 					<trans-unit id="quit_question">
 					  <source>Do you really want to quit?</source>
-					  <target>Vil du virkelig slutte?</target>
+					  <target>Vil du virkelig avslutte?</target>
 					</trans-unit>
 					<trans-unit id="quit_no">
 					  <source>No</source>
@@ -1783,7 +1785,8 @@
 					  <target>Negativ</target>
 					</trans-unit>
 					<trans-unit id="assignment_current">
-						<source>Current assignment:</source>
+					  <source>Current assignment:</source>
+					  <target>Nåværende oppdrag:</target>
 					</trans-unit>
 				</group>
 				<group id="lamps">
