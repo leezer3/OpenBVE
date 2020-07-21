@@ -17,7 +17,7 @@
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2016-02-21</source>
-					<target>2020-07-20</target>
+					<target>2020-07-21</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -154,19 +154,24 @@
 					  <target>En feil oppstod mens programmet prøvde å bytte til fullskjermsmodus.</target>
 					</trans-unit>
 					<trans-unit id="fullscreen_switch2">
-						<source>Please check your fullscreen resolution settings.</source>
+					  <source>Please check your fullscreen resolution settings.</source>
+					  <target>Sjekk fullskjermsinnstillingene.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
-						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
+					  <source>The selected route is corrupt: \r\n WithTrack section missing.</source>
+					  <target>Den valgte ruten er korrupt: \r\n WithTrack seksjonen mangler.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_nostations">
-						<source>The selected route is corrupt: \r\n No stations defined.</source>
+					  <source>The selected route is corrupt: \r\n No stations defined.</source>
+					  <target>Den valgte ruten er korrupt: \r\n Ingen stasjoner er definert.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_noobjects">
-						<source>The selected route is corrupt: \r\n No objects defined.</source>
+					  <source>The selected route is corrupt: \r\n No objects defined.</source>
+					  <target>Den valgte ruten er korrupt: \r\n Ingen objekter er definert.</target>
 					</trans-unit>
 					<trans-unit id="plugin_failure1">
-						<source>The train plugin [plugin] failed to load.</source>
+					  <source>The train plugin [plugin] failed to load.</source>
+					  <target>Tog-plugin [plugin] kunne ikke laste inn.</target>
 					</trans-unit>
 					<trans-unit id="plugin_failure2">
 						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
@@ -189,8 +194,9 @@
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 					</trans-unit>
-				</group>
-				<group id="start">
+				      </group>
+				      
+				      <group id="start">
 					<trans-unit id="title">
 					  <source>Start new game</source>
 					  <target>Start nytt spill</target>
@@ -200,13 +206,16 @@
 					  <target>Rute</target>
 					</trans-unit>
 					<trans-unit id="route_selection">
-						<source>Selection</source>
+					  <source>Selection</source>
+					  <target>Rutevalg</target>
 					</trans-unit>
 					<trans-unit id="route_addons">
-						<source>Add-ons</source>
+					  <source>Add-ons</source>
+					  <target>Add-ons</target>
 					</trans-unit>
 					<trans-unit id="route_browse">
-						<source>Browse manually</source>
+					  <source>Browse manually</source>
+					  <target>Filutforsker</target>
 					</trans-unit>
 					<trans-unit id="route_recently">
 					  <source>Recently used</source>
@@ -217,82 +226,104 @@
 					  <target>Detaljer</target>
 					</trans-unit>
 					<trans-unit id="route_description">
-						<source>Description</source>
+					  <source>Description</source>
+					  <target>Beskrivelse</target>
 					</trans-unit>
 					<trans-unit id="route_map">
 					  <source>Map</source>
 					  <target>Kart</target>
 					</trans-unit>
 					<trans-unit id="route_gradient">
-						<source>Gradient profile</source>
+					  <source>Gradient profile</source>
+					  <target>Høydeprofil</target>
 					</trans-unit>
 					<trans-unit id="route_settings">
-						<source>Settings</source>
+					  <source>Settings</source>
+					  <target>Valg</target>
 					</trans-unit>
 					<trans-unit id="route_settings_encoding">
-						<source>Encoding:</source>
+					  <source>Encoding:</source>
+					  <target>Tegnsett:</target>
 					</trans-unit>
 					<trans-unit id="route_settings_encoding_preview">
-						<source>Preview:</source>
-					</trans-unit>
-					<trans-unit id="route_processing">
-						<source>Processing route, please wait.....</source>
-					</trans-unit>
-					<trans-unit id="train">
-					  <source>Train</source>
-					  <target>Tog</target>
-					</trans-unit>
-					<trans-unit id="train_selection">
-						<source>Selection</source>
-					</trans-unit>
-					<trans-unit id="train_addons">
-						<source>Add-ons</source>
-					</trans-unit>
-					<trans-unit id="train_browse">
-						<source>Browse manually</source>
-					</trans-unit>
-					<trans-unit id="train_recently">
-						<source>Recently used</source>
-					</trans-unit>
-					<trans-unit id="train_default">
-						<source>Route default</source>
-					</trans-unit>
-					<trans-unit id="train_usedefault">
-						<source>Use the train suggested by the route</source>
-					</trans-unit>
-					<trans-unit id="train_details">
-						<source>Details</source>
-					</trans-unit>
-					<trans-unit id="train_description">
-						<source>Description</source>
-					</trans-unit>
-					<trans-unit id="train_settings">
-						<source>Settings</source>
-					</trans-unit>
-					<trans-unit id="train_settings_encoding">
-						<source>Encoding:</source>
-					</trans-unit>
-					<trans-unit id="train_settings_reverseconsist">
-						<source>Reverse Consist:</source>
-					</trans-unit>
-					<trans-unit id="train_settings_encoding_preview">
-						<source>Preview:</source>
-					</trans-unit>
-					<trans-unit id="train_notfound">
-						<source>The default train could not be found:\r\n\r\n</source>
-					</trans-unit>
-					<trans-unit id="train_pluginnotsupported">
-						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
-					</trans-unit>
-					<trans-unit id="start">
-						<source>Start</source>
-					</trans-unit>
-					<trans-unit id="start_mode">
-						<source>Mode of driving:</source>
-					</trans-unit>
-					<trans-unit id="start_start">
-						<source>Start</source>
-					</trans-unit>
+					    <source>Preview:</source>
+					    <target>Forhåndsvisning:</target>
+					  </trans-unit>
+					  <trans-unit id="route_processing">
+					    <source>Processing route, please wait.....</source>
+					    <target>Prosesserer rute, vennligst vent.....</target>
+					  </trans-unit>
+					  <trans-unit id="train">
+					    <source>Train</source>
+					    <target>Tog</target>
+					  </trans-unit>
+					  <trans-unit id="train_selection">
+					    <source>Selection</source>
+					    <target>Togvalg</target>
+					  </trans-unit>
+					  <trans-unit id="train_addons">
+					    <source>Add-ons</source>
+					    <target>Add-ons</target>
+					  </trans-unit>
+					  <trans-unit id="train_browse">
+					    <source>Browse manually</source>
+					    <target>Filutforsker</target>
+					  </trans-unit>
+					  <trans-unit id="train_recently">
+					    <source>Recently used</source>
+					    <target>Nylig brukt</target>
+					  </trans-unit>
+					  <trans-unit id="train_default">
+					    <source>Route default</source>
+					    <target>Standard for rute</target>
+					  </trans-unit>
+					  <trans-unit id="train_usedefault">
+					    <source>Use the train suggested by the route</source>
+					    <target>Bruk toget som er standard for rute</target>
+					  </trans-unit>
+					  <trans-unit id="train_details">
+					    <source>Details</source>
+					    <target>Detaljer</target>
+					  </trans-unit>
+					  <trans-unit id="train_description">
+					    <source>Description</source>
+					    <target>Beskrivelse</target>
+					  </trans-unit>
+					  <trans-unit id="train_settings">
+					    <source>Settings</source>
+					    <target>Valg</target>
+					  </trans-unit>
+					  <trans-unit id="train_settings_encoding">
+					    <source>Encoding:</source>
+					    <target>Tegnsett:</target>
+					  </trans-unit>
+					  <trans-unit id="train_settings_reverseconsist">
+					    <source>Reverse Consist:</source>
+					    <target>Snu toget</target>
+					  </trans-unit>
+					  <trans-unit id="train_settings_encoding_preview">
+					    <source>Preview:</source>
+					    <target>Forhåndsvisning:</target>
+					  </trans-unit>
+					  <trans-unit id="train_notfound">
+					    <source>The default train could not be found:\r\n\r\n</source>
+					    <target>Det forhåndsvalgte toget kunne ikke bli funnet:\r\n\r\n</target>
+					  </trans-unit>
+					  <trans-unit id="train_pluginnotsupported">
+					    <source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
+					  </trans-unit>
+					  <trans-unit id="start">
+					    <source>Start</source>
+					    <target>Start</target>
+					  </trans-unit>
+					  <trans-unit id="start_mode">
+					    <source>Mode of driving:</source>
+					    <target>Kjøremodus:</target>
+					  </trans-unit>
+					  <trans-unit id="start_start">
+					    <source>Start</source>
+					  </trans-unit>
+					  
 				</group>
 				<group id="review">
 					<trans-unit id="title">
@@ -1480,28 +1511,36 @@
 					  <target>Du har kjørt forbi et stop-signal. Vennligst slå på nødbrems umiddelbart og stopp toget.</target>
 					</trans-unit>
 					<trans-unit id="signal_overspeed">
-						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+					  <source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+					  <target>Signalet indikerer fartsgrense på [limit] [unit]. Du kjører nå i [speed] [unit]. Vennligst senk farten.</target>
 					</trans-unit>
 					<trans-unit id="route_overspeed">
-						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+					  <source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+					  <target>Fartsgrensen er på [limit] [unit]. Du kjører nå i [speed] [unit]. Vennligst senk farten.</target>
 					</trans-unit>
 					<trans-unit id="station_arrival">
-						<source>You have arrived at [name].</source>
+					  <source>You have arrived at [name].</source>
+					  <target>Du har ankommet [name].</target>
 					</trans-unit>
 					<trans-unit id="station_arrival_late">
-						<source>You have arrived at [name] and are [time] late.</source>
+					  <source>You have arrived at [name] and are [time] late.</source>
+					  <target>Du har ankommet [name] og er [time] for sen.</target>
 					</trans-unit>
 					<trans-unit id="station_arrival_early">
-						<source>You have arrived at [name] and are [time] early.</source>
+					  <source>You have arrived at [name] and are [time] early.</source>
+					  <target>Du har ankommet [name] og er [time] for tidlig.</target>
 					</trans-unit>
 					<trans-unit id="station_overrun">
-						<source>Overrun: [difference] m.</source>
+					  <source>Overrun: [difference] m.</source>
+					  <target>Du har stoppet [difference] m for sent.</target>
 					</trans-unit>
 					<trans-unit id="station_underrun">
-						<source>Underrun: [difference] m.</source>
+					  <source>Underrun: [difference] m.</source>
+					  <target>Du har stoppet [difference] m for tidlig.</target>
 					</trans-unit>
 					<trans-unit id="station_terminal">
-						<source>This is the terminal station.</source>
+					  <source>This is the terminal station.</source>
+					  <target>Dette er siste stasjon.</target>
 					</trans-unit>
 					<trans-unit id="station_deadline">
 					  <source>Departure is expected in [time].</source>
@@ -1512,15 +1551,16 @@
 					  <target>Vennligst aktivert [system].</target>
 					</trans-unit>
 					<trans-unit id="station_correct">
-						<source>Please correct your stop position.</source>
+					  <source>Please correct your stop position.</source>
+					  <target>Vennligst stopp på rett plass.</target>
 					</trans-unit>
 					<trans-unit id="station_depart_closedoors">
 					  <source>Boarding complete. You may close the doors now.</source>
-					  <target>På- og avstigning ferdig. Du kan lukke dørene nå.</target>
+					  <target>Ombordstigning er ferdig. Du kan lukke dørene nå.</target>
 					</trans-unit>
 					<trans-unit id="station_depart">
 					  <source>Boarding complete.</source>
-					  <target>På- og avstigning ferdig.</target>
+					  <target>Ombordstigning ferdig.</target>
 					</trans-unit>
 					<trans-unit id="station_passed">
 					  <source>You have passed [name] where you should have stopped.</source>
@@ -1672,58 +1712,75 @@
 				</group>
 				<group id="menu">
 					<trans-unit id="resume">
-						<source>Resume simulation</source>
+					  <source>Resume simulation</source>
+					  <target>Fortsett simulartor</target>
 					</trans-unit>
 					<trans-unit id="jump">
-						<source>Jump to station</source>
+					  <source>Jump to station</source>
+					  <target>Hopp til stasjon</target>
 					</trans-unit>
 					<trans-unit id="exit">
-						<source>Exit to main menu</source>
+					  <source>Exit to main menu</source>
+					  <target>Avslutt til menyen</target>
 					</trans-unit>
 					<trans-unit id="exit_question">
-						<source>Do you really want to exit to the main menu?</source>
+					  <source>Do you really want to exit to the main menu?</source>
+					  <target>Vil du virkelig avslutte til menyen?</target>
 					</trans-unit>
 					<trans-unit id="exit_no">
-						<source>No</source>
+					  <source>No</source>
+					  <target>Nei</target>
 					</trans-unit>
 					<trans-unit id="exit_yes">
-						<source>Yes</source>
+					  <source>Yes</source>
+					  <target>Ja</target>
 					</trans-unit>
 					<trans-unit id="quit">
-						<source>Quit</source>
+					  <source>Quit</source>
+					  <target>Avslutt</target>
 					</trans-unit>
 					<trans-unit id="quit_question">
-						<source>Do you really want to quit?</source>
+					  <source>Do you really want to quit?</source>
+					  <target>Vil du virkelig slutte?</target>
 					</trans-unit>
 					<trans-unit id="quit_no">
-						<source>No</source>
+					  <source>No</source>
+					  <target>Nei</target>
 					</trans-unit>
 					<trans-unit id="quit_yes">
-						<source>Yes</source>
+					  <source>Yes</source>
+					  <target>Ja</target>
 					</trans-unit>
 					<trans-unit id="back">
-						<source>← Back</source>
+					  <source>← Back</source>
+					  <target>← Tilbake</target>
 					</trans-unit>
 					<trans-unit id="customize_controls">
-						<source>Customise controls</source>
+					  <source>Customise controls</source>
+					  <target>Tilpass kontroller</target>
 					</trans-unit>
 					<trans-unit id="assign">
 						<source>Please press any key or move a joystick axis to set this control...</source>
 					</trans-unit>
 					<trans-unit id="keyboard">
-						<source>Keyboard</source>
+					  <source>Keyboard</source>
+					  <target>Tastatur</target>
 					</trans-unit>
 					<trans-unit id="joystick">
-						<source>Joystick</source>
+					  <source>Joystick</source>
+					  <target>Joystick</target>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
-						<source>N/A</source>
+					  <source>N/A</source>
+					  <target>-- ikke der --</target>
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
-						<source>Positive</source>
+					  <source>Positive</source>
+					  <target>Positiv</target>
 					</trans-unit>
 					<trans-unit id="joystickdirection_negative">
-						<source>Negative</source>
+					  <source>Negative</source>
+					  <target>Negativ</target>
 					</trans-unit>
 					<trans-unit id="assignment_current">
 						<source>Current assignment:</source>
@@ -4322,28 +4379,36 @@
 				</group>
 				<group id="message">
 					<trans-unit id="error">
-						<source>Error</source>
+					  <source>Error</source>
+					  <target>Feil</target>
 					</trans-unit>
 					<trans-unit id="warning">
-						<source>Warning</source>
+					  <source>Warning</source>
+					  <target>Advarsel</target>
 					</trans-unit>
 					<trans-unit id="info">
-						<source>Information</source>
+					  <source>Information</source>
+					  <target>Informasjon</target>
 					</trans-unit>
 					<trans-unit id="positive">
-						<source>positive</source>
+					  <source>positive</source>
+					  <target>positiv</target>
 					</trans-unit>
 					<trans-unit id="non_negative">
-						<source>non-negative</source>
+					  <source>non-negative</source>
+					  <target>ikke-negativ</target>
 					</trans-unit>
 					<trans-unit id="non_zero">
-						<source>non-zero</source>
+					  <source>non-zero</source>
+					  <target>ikke-null</target>
 					</trans-unit>
 					<trans-unit id="invalid_float">
-						<source>This value must be a {0}floating-point number.</source>
+					  <source>This value must be a {0}floating-point number.</source>
+					  <target>Denne verdien må være en {0}flyttallsnummer.</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
-						<source>invalid_color</source>
+					  <source>invalid_color</source>
+					  <target>invalid farge</target>
 					</trans-unit>
 				</group>
 			</group>
