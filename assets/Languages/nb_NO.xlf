@@ -905,31 +905,40 @@
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
-						<source>Customize controls</source>
+					  <source>Customize controls</source>
+					  <target>Endre knapper / kontroller</target>
 					</trans-unit>
 					<trans-unit id="list_command">
-						<source>Command</source>
+					  <source>Command</source>
+					  <target>Kommando</target>
 					</trans-unit>
 					<trans-unit id="list_type">
-						<source>Type</source>
+					  <source>Type</source>
+					  <target>Type</target>
 					</trans-unit>
 					<trans-unit id="list_type_digital">
-						<source>Digital</source>
+					  <source>Digital</source>
+					  <target>Digital</target>
 					</trans-unit>
 					<trans-unit id="list_type_analoghalf">
-						<source>Analog (half axis)</source>
+					  <source>Analog (half axis)</source>
+					  <target>Analog (halv akse)</target>
 					</trans-unit>
 					<trans-unit id="list_type_analogfull">
-						<source>Analog (full axis)</source>
+					  <source>Analog (full axis)</source>
+					  <target>Analog (full akse)</target>
 					</trans-unit>
 					<trans-unit id="list_description">
-						<source>Description</source>
+					  <source>Description</source>
+					  <target>Beskrivelse</target>
 					</trans-unit>
 					<trans-unit id="list_assignment">
-						<source>Assignment</source>
+					  <source>Assignment</source>
+					  <target>Tilordning</target>
 					</trans-unit>
 					<trans-unit id="list_option">
-						<source>Command Option</source>
+					  <source>Command Option</source>
+					  <target>Kommandovalg</target>
 					</trans-unit>
 					<trans-unit id="add">
 					  <source>Add control</source>
@@ -952,34 +961,44 @@
 					  <target>Tilbakestill</target>
 					</trans-unit>
 					<trans-unit id="up">
-						<source>Move up</source>
+					  <source>Move up</source>
+					  <target>Flytt opp</target>
 					</trans-unit>
 					<trans-unit id="down">
-						<source>Move down</source>
+					  <source>Move down</source>
+					  <target>Flytt ned</target>
 					</trans-unit>
 					<trans-unit id="selection">
-						<source>Currently selected command</source>
+					  <source>Currently selected command</source>
+					  <target>Valgte kommando</target>
 					</trans-unit>
 					<trans-unit id="selection_command">
-						<source>Command:</source>
+					  <source>Command:</source>
+					  <target>Kommando:</target>
 					</trans-unit>
 					<trans-unit id="selection_command_option">
-						<source>Command Option:</source>
+					  <source>Command Option:</source>
+					  <target>Kommandovalg:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard">
-						<source>Keyboard:</source>
+					  <source>Keyboard:</source>
+					  <target>Tastatur:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_assignment_grab">
-						<source>Click here to enable keyboard grab to automatically select the desired key.</source>
+					  <source>Click here to enable keyboard grab to automatically select the desired key.</source>
+					  <target>Trykk her for å velge ønsket knapp på tastaturet.</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_assignment_grabbing">
-						<source>Please press any key...</source>
+					  <source>Please press any key...</source>
+					  <target>Trykk hvilken som helst knapp...</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_key">
-						<source>Key:</source>
+					  <source>Key:</source>
+					  <target>Knapp:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_modifiers">
-						<source>Modifiers:</source>
+					  <source>Modifiers:</source>
+					  <target>Kombinasjonsknapp:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_modifiers_shift">
 						<source>Shift</source>
@@ -994,22 +1013,28 @@
 						<source>Joystick:</source>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment">
-						<source>Assignment:</source>
+					  <source>Assignment:</source>
+					  <target>Tilordning:</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab">
-						<source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
+					  <source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
+					  <target>Trykk her for å velge ønsket knapp på joysticken.</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_normal">
-						<source>Press a button or move an axis or hat into the desired direction...</source>
+					  <source>Press a button or move an axis or hat into the desired direction...</source>
+					  <target>Trykk en knapp eller beveg en akse inn i ønsket retning...</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
-						<source>Move an axis into the direction of "increase" or "power"...</source>
+					  <source>Move an axis into the direction of "increase" or "power"...</source>
+					  <target>Flytt en akse inn i ønsket retning "øke akselerasjon"...</target>
 					</trans-unit>
 					<trans-unit id="attached">
-						<source>Attached joysticks</source>
+					  <source>Attached joysticks</source>
+					  <target>Tilkoblede joysticker</target>
 					</trans-unit>
 					<trans-unit id="assignment_keyboard">
-						<source>Keyboard</source>
+					  <source>Keyboard</source>
+					  <target>Tastatur</target>
 					</trans-unit>
 					<trans-unit id="assignment_keyboard_shift">
 						<source>Shift +\x20</source>
@@ -1027,49 +1052,63 @@
 						<source>axis [index]</source>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_negative">
-						<source>negative direction</source>
+					  <source>negative direction</source>
+					  <target>negativ retning</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_positive">
-						<source>positive direction</source>
+					  <source>positive direction</source>
+					  <target>positiv retning</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_invalid">
-						<source>invalid direction</source>
+					  <source>invalid direction</source>
+					  <target>ugyldig retning</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_button">
-						<source>button [index]</source>
+					  <source>button [index]</source>
+					  <target>knapp [index]</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat">
 						<source>hat [index]</source>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_left">
-						<source>left</source>
+					  <source>left</source>
+					  <target>venstre</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_upleft">
-						<source>up-left</source>
+					  <source>up-left</source>
+					  <target>opp-venstre</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_up">
-						<source>up</source>
+					  <source>up</source>
+					  <target>opp</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_upright">
-						<source>up-right</source>
+					  <source>up-right</source>
+					  <target>opp-høyre</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_right">
-						<source>right</source>
+					  <source>right</source>
+					  <target>høyre</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_downright">
-						<source>down-right</source>
+					  <source>down-right</source>
+					  <target>ned-høyre</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_down">
-						<source>down</source>
+					  <source>down</source>
+					  <target>ned</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_downleft">
-						<source>down-left</source>
+					  <source>down-left</source>
+					  <target>ned-venstre</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_invalid">
-						<source>invalid</source>
+					  <source>invalid</source>
+					  <target>ugyldig</target>
 					</trans-unit>
 					<trans-unit id="assignment_invalid">
-						<source>Not assigned</source>
+					  <source>Not assigned</source>
+					  <target>Ikke tilordnet</target>
 					</trans-unit>
 					<trans-unit id="assignment_separator">
 						<source>,\x20</source>
