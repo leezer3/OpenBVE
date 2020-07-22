@@ -131,19 +131,23 @@
 					</trans-unit>
 					<trans-unit id="controls_default_oldversion">
 					  <source>The default key assingment file is an older version or corrupt.</source>
+					  <target>Filen med standard-knappeoppsettet oppsettet er en gammel versjon eller korrupt.</target>
 					</trans-unit>
 					<trans-unit id="controls_default_missing">
-						<source>The default key assignment file does not exist.</source>
+					  <source>The default key assignment file does not exist.</source>
+					  <target>Filen med standard-knappeoppsettet fins ike.</target>
 					</trans-unit>
 					<trans-unit id="controls_ingame">
-						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
+					  <source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
+					  <target>Du kjører nå [platform] backend. Bruk spill-menyen for å konfigurere joystick baserte kontroller.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_version">
 					  <source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
 					  <target>OpenAL 1.1 er påkrevd. Du ser ut til å ha versjon 1.0.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_context">
-						<source>The OpenAL context could not be created.</source>
+					  <source>The OpenAL context could not be created.</source>
+					  <target>OpenAL-konteksten kunne ikke bli opprettet.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_device">
 					  <source>The OpenAL sound device could not be opened.</source>
@@ -177,22 +181,28 @@
 						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
 					</trans-unit>
 					<trans-unit id="package_filename_empty">
-						<source>Attempted to create a package with an empty filename.</source>
+					  <source>Attempted to create a package with an empty filename.</source>
+					  <target>Forsøkte å opprette en pakke med tomt filnavn.</target>
 					</trans-unit>
 					<trans-unit id="package_directory_missing">
-						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+					  <source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+					  <target>Mappen du prøvde å lagre filen til pakken eksisterer ikke: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_directory_nowrite">
-						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+					  <source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+					  <target>Mappen du prøvde å lagre filen til pakken til kan ikke skrives til: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_file_generic">
-						<source>Failed to create the following file: \r \n</source>
+					  <source>Failed to create the following file: \r \n</source>
+					  <target>Det gikk ikke å lage følgende fil: \r \n</target>
 					</trans-unit>
 					<trans-unit id="security_checkaccess">
-						<source>Please check that this path is accessible.</source>
+					  <source>Please check that this path is accessible.</source>
+					  <target>Vennligst sjekk om denne fil-stien er tilgjengelig.</target>
 					</trans-unit>
 					<trans-unit id="security_badlocation">
-						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+					  <source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+					  <target>Hvis du prøver å installere addons i Programfiler eller Programdata mappene, kan det hende at det krever administrator rettigheter. \r\n\r\n Dette er ikke anbefalt av sikkerhetsmessige grunner.</target>
 					</trans-unit>
 				      </group>
 				      
@@ -311,6 +321,7 @@
 					  </trans-unit>
 					  <trans-unit id="train_pluginnotsupported">
 					    <source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
+					    <target>--- Dette toget bruker en plugin for sikkerhets-systemer som ikke kan bli benyttet på ditt operativsystem. Det innebygde sikkerhetssystemet ATS/ATC vil bli brukt i stede for. Dette kan forårsake problemer. ---</target>
 					  </trans-unit>
 					  <trans-unit id="start">
 					    <source>Start</source>
@@ -322,15 +333,18 @@
 					  </trans-unit>
 					  <trans-unit id="start_start">
 					    <source>Start</source>
+					    <target>Start</target>
 					  </trans-unit>
 					  
 				</group>
 				<group id="review">
 					<trans-unit id="title">
-						<source>Review last game</source>
+					  <source>Review last game</source>
+					  <target>Gå gjennom siste spill</target>
 					</trans-unit>
 					<trans-unit id="conditions">
-						<source>Conditions</source>
+					  <source>Conditions</source>
+					  <target>Forhold</target>
 					</trans-unit>
 					<trans-unit id="conditions_route">
 					  <source>Route</source>
@@ -365,16 +379,20 @@
 					  <target>Poeng</target>
 					</trans-unit>
 					<trans-unit id="score_rating">
-						<source>Rating</source>
+					  <source>Rating</source>
+					  <target>Vurdering</target>
 					</trans-unit>
 					<trans-unit id="score_rating_mode">
-						<source>Mode:</source>
+					  <source>Mode:</source>
+					  <target>Modus:</target>
 					</trans-unit>
 					<trans-unit id="score_rating_achieved">
-						<source>Achieved:</source>
+					  <source>Achieved:</source>
+					  <target>Oppnådd:</target>
 					</trans-unit>
 					<trans-unit id="score_rating_maximum">
-						<source>Maximum:</source>
+					  <source>Maximum:</source>
+					  <target>Maksimum:</target>
 					</trans-unit>
 					<trans-unit id="score_rating_ratio">
 						<source>Ratio:</source>
@@ -383,142 +401,186 @@
 						<source>Log</source>
 					</trans-unit>
 					<trans-unit id="score_log_list_time">
-						<source>Time</source>
+					  <source>Time</source>
+					  <target>Tid</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_position">
-						<source>Position (m)</source>
+					  <source>Position (m)</source>
+					  <target>Posisjon (m)</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_value">
-						<source>Value</source>
+					  <source>Value</source>
+					  <target>Verdi</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_cumulative">
-						<source>Cumulative</source>
+					  <source>Cumulative</source>
+					  <target>Kumulative</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_reason">
-						<source>Reason</source>
+					  <source>Reason</source>
+					  <target>Årsak</target>
 					</trans-unit>
 					<trans-unit id="score_log_penalties">
-						<source>Show penalties only</source>
+					  <source>Show penalties only</source>
+					  <target>Se bare straffer</target>
 					</trans-unit>
 					<trans-unit id="score_log_export">
-						<source>Export...</source>
+					  <source>Export...</source>
+					  <target>Eksporter...</target>
 					</trans-unit>
 					<trans-unit id="blackbox">
-						<source>Black box</source>
+					  <source>Black box</source>
+					  <target>Blackbox</target>
 					</trans-unit>
 					<trans-unit id="blackbox_format">
-						<source>Format:</source>
+					  <source>Format:</source>
+					  <target>Format:</target>
 					</trans-unit>
 					<trans-unit id="blackbox_format_csv">
-						<source>Comma-separated value</source>
+					  <source>Comma-separated value</source>
+					  <target>Komma-separerte verdier</target>
 					</trans-unit>
 					<trans-unit id="blackbox_format_text">
-						<source>Formatted text</source>
+					  <source>Formatted text</source>
+					  <target>Formatert tekst</target>
 					</trans-unit>
 					<trans-unit id="blackbox_export">
-						<source>Export...</source>
+					  <source>Export...</source>
+					  <target>Eksport...</target>
 					</trans-unit>
 				</group>
 				<group id="packages">
 					<trans-unit id="title">
-						<source>Package Management</source>
+					  <source>Package Management</source>
+					  <target>Pakkehåndtering</target>
 					</trans-unit>
 					<trans-unit id="proceed">
-						<source>Proceed...</source>
+					  <source>Proceed...</source>
+					  <target>Fortsett...</target>
 					</trans-unit>
 					<trans-unit id="proceed_anyway">
-						<source>Proceed Anyway</source>
+					  <source>Proceed Anyway</source>
+					  <target>Fortsett uansett...</target>
 					</trans-unit>
 					<trans-unit id="processing">
-						<source>Processing, please wait...</source>
+					  <source>Processing, please wait...</source>
+					  <target>Prosesserer, vennligst vent...</target>
 					</trans-unit>
 					<trans-unit id="unknown_file">
-						<source>Unknown File...</source>
+					  <source>Unknown File...</source>
+					  <target>Ukjent fil...</target>
 					</trans-unit>
 					<trans-unit id="shownlist">
-						<source>These are shown in the list below:</source>
+					  <source>These are shown in the list below:</source>
+					  <target>Disse er vist i listen under:</target>
 					</trans-unit>
 					<trans-unit id="selection_none">
-						<source>No package selected.</source>
+					  <source>No package selected.</source>
+					  <target>Ingen pakker er valgt.</target>
 					</trans-unit>
 					<trans-unit id="selection_none_website">
-						<source>No website provided.</source>
+					  <source>No website provided.</source>
+					  <target>Ingen nettside er registrert.</target>
 					</trans-unit>
 					<trans-unit id="list">
-						<source>Installed Packages</source>
+					  <source>Installed Packages</source>
+					  <target>Installerte pakker</target>
 					</trans-unit>
 					<trans-unit id="list_type">
-						<source>Select the type of packages you wish to view:</source>
+					  <source>Select the type of packages you wish to view:</source>
+					  <target>Velg type pakker du ønsker å se:</target>
 					</trans-unit>
 					<trans-unit id="list_name">
-						<source>Name</source>
+					  <source>Name</source>
+					  <target>Navn</target>
 					</trans-unit>
 					<trans-unit id="list_version">
-						<source>Version</source>
+					  <source>Version</source>
+					  <target>Versjon</target>
 					</trans-unit>
 					<trans-unit id="list_minimum">
-						<source>Minimum Version</source>
+					  <source>Minimum Version</source>
+					  <target>Minimums-versjon</target>
 					</trans-unit>
 					<trans-unit id="list_maximum">
-						<source>Maximum Version</source>
+					  <source>Maximum Version</source>
+					  <target>Maksimums-versjon</target>
 					</trans-unit>
 					<trans-unit id="list_author">
-						<source>Author</source>
+					  <source>Author</source>
+					  <target>Forfatter</target>
 					</trans-unit>
 					<trans-unit id="list_website">
-						<source>Website</source>
+					  <source>Website</source>
+					  <target>Nettside</target>
 					</trans-unit>
 					<trans-unit id="list_packagetype">
-						<source>Type</source>
+					  <source>Type</source>
+					  <target>Type</target>
 					</trans-unit>
 					<trans-unit id="install">
-						<source>Install</source>
+					  <source>Install</source>
+					  <target>Installer</target>
 					</trans-unit>
 					<trans-unit id="install_button">
-						<source>Install Package</source>
+					  <source>Install Package</source>
+					  <target>Installer pakke</target>
 					</trans-unit>
 					<trans-unit id="install_header">
-						<source>Install a Package</source>
+					  <source>Install a Package</source>
+					  <target>Installer en pakke</target>
 					</trans-unit>
 					<trans-unit id="install_invalid">
-						<source>This file does not appear to be a valid openBVE package.</source>
+					  <source>This file does not appear to be a valid openBVE package.</source>
+					  <target>Filen ser ikke ut til å være en valid openBVE pakke.</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
-						<source>Package Version Error</source>
+					  <source>Package Version Error</source>
+					  <target>Pakkeversjonsfeil</target>
 					</trans-unit>
 					<trans-unit id="install_version_new">
-						<source>The selected package is already installed, and is a newer version.</source>
+					  <source>The selected package is already installed, and is a newer version.</source>
+					  <target>Den valgte pakken er allerede installert og er en nyere versjon.</target>
 					</trans-unit>
 					<trans-unit id="install_version_old">
-						<source>The selected package is already installed, and is an older version.</source>
+					  <source>The selected package is already installed, and is an older version.</source>
+					  <target>Den valgte pakken er allerede installert og er en eldre versjon.</target>
 					</trans-unit>
 					<trans-unit id="install_version_same">
-						<source>The selected package is already installed, and is an identical version.</source>
+					  <source>The selected package is already installed, and is an identical version.</source>
+					  <target>Den valgte pakken er allerede installert og er en lik versjon.</target>
 					</trans-unit>
 					<trans-unit id="install_success">
-						<source>Package installation was successful.</source>
+					  <source>Package installation was successful.</source>
+					  <target>Pakkeinstallasjonen var velykket.</target>
 					</trans-unit>
 					<trans-unit id="install_success_header">
-						<source>Installation Successful</source>
+					  <source>Installation Successful</source>
+					  <target>Installasjon velykket</target>
 					</trans-unit>
 					<trans-unit id="install_success_files">
-						<source>A list of files installed is shown below:</source>
+					  <source>A list of files installed is shown below:</source>
+					  <target>En liste over filer installert vises under:</target>
 					</trans-unit>
 					<trans-unit id="install_failure">
-						<source>Unfortunately, package installation failed.</source>
+					  <source>Unfortunately, package installation failed.</source>
+					  <target>Dessverre feilet pakkeinstallasjonen.</target>
 					</trans-unit>
 					<trans-unit id="install_failure_header">
-						<source>Package Installation Failed</source>
+					  <source>Package Installation Failed</source>
+					  <target>Pakkeinstallasjonen feilet</target>
 					</trans-unit>
 					<trans-unit id="install_select">
 					  <source>Select Package......</source>
 					  <target>Velg en pakke......</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_unmet">
-						<source>The current package has unmet dependancies.</source>
+					  <source>The current package has unmet dependancies.</source>
+					  <target>Den valgte pakken har avhengigheter som ikke er oppfylt.</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_unmet_header">
-						<source>Dependancy Error</source>
+					  <source>Dependancy Error</source>
+					  <target>Avhengighetsfeil</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_broken">
 						<source>The following dependancies may be broken by this action:</source>
