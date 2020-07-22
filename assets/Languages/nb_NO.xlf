@@ -583,124 +583,165 @@
 					  <target>Avhengighetsfeil</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_broken">
-						<source>The following dependancies may be broken by this action:</source>
+					  <source>The following dependancies may be broken by this action:</source>
+					  <target>Følgende avhengigheter blir ødelagt av denne handlingen:</target>
 					</trans-unit>
 					<trans-unit id="install_reccomends_unmet">
-						<source>The following packages are recommended, but not installed:</source>
+					  <source>The following packages are recommended, but not installed:</source>
+					  <target>Følgende pakker er anbefalt men ikke installert:</target>
 					</trans-unit>
 					<trans-unit id="install_reccomends_unmet_header">
-						<source>Recommended Packages</source>
+					  <source>Recommended Packages</source>
+					  <target>Anbefalte pakker</target>
 					</trans-unit>
 					<trans-unit id="install_name">
-						<source>Package Name:</source>
+					  <source>Package Name:</source>
+					  <target>Pakkens navn:</target>
 					</trans-unit>
 					<trans-unit id="install_author">
-						<source>Package Author:</source>
+					  <source>Package Author:</source>
+					  <target>Pakkens forfatter:</target>
 					</trans-unit>
 					<trans-unit id="install_version">
-						<source>Package Version:</source>
+					  <source>Package Version:</source>
+					  <target>Pakkens versjon:</target>
 					</trans-unit>
 					<trans-unit id="install_website">
-						<source>Package Website:</source>
+					  <source>Package Website:</source>
+					  <target>Pakkens nettside:</target>
 					</trans-unit>
 					<trans-unit id="install_description">
-						<source>Package Description:</source>
+					  <source>Package Description:</source>
+					  <target>Pakkens beskrivelse:</target>
 					</trans-unit>
 					<trans-unit id="creation_button">
-						<source>Create Package</source>
+					  <source>Create Package</source>
+					  <target>Lag pakke</target>
 					</trans-unit>
 					<trans-unit id="creation_header">
-						<source>Create a Package</source>
+					  <source>Create a Package</source>
+					  <target>Lag en pakke</target>
+					  
 					</trans-unit>
 					<trans-unit id="creation_saveas_button">
-						<source>Save As...</source>
+					  <source>Save As...</source>
+					  <target>Lagre som...</target>
 					</trans-unit>
 					<trans-unit id="creation_saveas_label">
-						<source>Save package as:</source>
+					  <source>Save package as:</source>
+					  <target>Lagre pakke som:</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies">
-						<source>Select Dependancies</source>
+					  <source>Select Dependancies</source>
+					  <target>Velg avhengigheter</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_add">
-						<source>Add Dependancy</source>
+					  <source>Add Dependancy</source>
+					  <target>Legg til avhengighet</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_remove">
-						<source>Remove</source>
+					  <source>Remove</source>
+					  <target>Fjern</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
-						<source>Package details and dependancies may be assigned in the following steps.</source>
+					  <source>Package details and dependancies may be assigned in the following steps.</source>
+					  <target>Pakke detaljer og avhengigheter vil bli lagt til i følgende steg.</target>
 					</trans-unit>
 					<trans-unit id="creation_reccommends_add">
-						<source>Add Recommendation</source>
+					  <source>Add Recommendation</source>
+					  <target>Legg til anbefaling</target>
 					</trans-unit>
 					<trans-unit id="creation_clearselection">
-						<source>Clear Selection</source>
+					  <source>Clear Selection</source>
+					  <target>Fjern utvalgte</target>
 					</trans-unit>
 					<trans-unit id="creation_additems">
-						<source>Add Item(s)</source>
+					  <source>Add Item(s)</source>
+					  <target>Legg til elementer</target>
 					</trans-unit>
 					<trans-unit id="creation_selecteditems">
-						<source>The following files and folders will be packaged:</source>
+					  <source>The following files and folders will be packaged:</source>
+					  <target>Følgende filer og pakker vil bli pakket:</target>
 					</trans-unit>
 					<trans-unit id="creation_new_guid">
-						<source>The new package has been assigned the following GUID:</source>
+					  <source>The new package has been assigned the following GUID:</source>
+					  <target>Den nye pakken har fått følgende GUID:</target>
 					</trans-unit>
 					<trans-unit id="creation_header">
-						<source>Enter Package Details</source>
+					  <source>Enter Package Details</source>
+					  <target>Legg inn pakkedetaljer</target>
 					</trans-unit>
 					<trans-unit id="creation_name">
-						<source>Please enter a package name.</source>
+					  <source>Please enter a package name.</source>
+					  <target>Legg til navn på pakken.</target>
 					</trans-unit>
 					<trans-unit id="creation_author">
-						<source>Please enter a package author.</source>
+					  <source>Please enter a package author.</source>
+					  <target>Legg til pakkens forfatter.</target>
 					</trans-unit>
 					<trans-unit id="creation_description">
-						<source>Please enter a package description.</source>
+					  <source>Please enter a package description.</source>
+					  <target>Legg til beskrivelse på pakke.</target>
 					</trans-unit>
 					<trans-unit id="creation_version">
-						<source>Please enter a valid package version number in the following format: \r\n 1.0.0</source>
+					  <source>Please enter a valid package version number in the following format: \r\n 1.0.0</source>
+					  <target>Legg til en gyldig pakkeversjonsnummer på følgende format: \r\n 1.0.0</target>
 					</trans-unit>
 					<trans-unit id="creation_version_invalid">
-						<source>You have entered an invalid version number. \r\n Please try again.</source>
+					  <source>You have entered an invalid version number. \r\n Please try again.</source>
+					  <target>Du har skrevet inn et ikke gyldig versjonsnummer. \r\n Prøv igjen.</target>
 					</trans-unit>
 					<trans-unit id="creation_success">
-						<source>Package creation was successful.</source>
+					  <source>Package creation was successful.</source>
+					  <target>Pakken ble velykket laget.</target>
 					</trans-unit>
 					<trans-unit id="creation_success_header">
-						<source>Package Creation Successful</source>
+					  <source>Package Creation Successful</source>
+					  <target>Laging av pakken er vellykket.</target>
 					</trans-unit>
 					<trans-unit id="creation_success_files">
-						<source>The following files were added to your package:</source>
+					  <source>The following files were added to your package:</source>
+					  <target>Følgende filer ble lagt til din pakke:</target>
 					</trans-unit>
 					<trans-unit id="creation_failure">
-						<source>Unfortunately, creation of your package failed.</source>
+					  <source>Unfortunately, creation of your package failed.</source>
+					  <target>Dessverre feilet opprettelsen av pakken din. </target>
 					</trans-unit>
 					<trans-unit id="creation_failure_header">
-						<source>Package Creation Failed</source>
+					  <source>Package Creation Failed</source>
+					  <target>Laging av pakken feilet</target>
 					</trans-unit>
 					<trans-unit id="creation_failure_error">
-						<source>The following error was encountered:</source>
+					  <source>The following error was encountered:</source>
+					  <target>Følgende feil oppstod:</target>
 					</trans-unit>
 					<trans-unit id="creation_proceed">
-						<source>Proceed......</source>
+					  <source>Proceed......</source>
+					  <target>Fortsett.....</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_nofiles">
-						<source>No files were selected to package- Please retry.</source>
+					  <source>No files were selected to package- Please retry.</source>
+					  <target>Ingen filer ble lagt til i pakken. Prøv igjen.</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
-						<source>The selected filename is invalid- Please retry.</source>
+					  <source>The selected filename is invalid- Please retry.</source>
+					  <target>Valgt filnavn er ikke gyldig. Prøv igjen.</target>
 					</trans-unit>
 					<trans-unit id="creation_new_id">
-						<source>The new package has been assigned the following GUID:</source>
+					  <source>The new package has been assigned the following GUID:</source>
+					  <target>Pakken har blitt tildelt følgende GUID:</target>
 					</trans-unit>
 					<trans-unit id="creation_replace_id">
-						<source>Replacing the package with the following GUID:</source>
+					  <source>Replacing the package with the following GUID:</source>
+					  <target>Bytter ut pakken med følgende GUID:</target>
 					</trans-unit>
 					<trans-unit id="creation_save">
-						<source>Save Package</source>
+					  <source>Save Package</source>
+					  <target>Lagre pakke</target>
 					</trans-unit>
 					<trans-unit id="creation_replace">
-						<source>Is this to replace an existing package?</source>
+					  <source>Is this to replace an existing package?</source>
+					  <target>Er dette en oppdatering av en eksisterende pakke?</target>
 					</trans-unit>
 					<trans-unit id="creation_yes">
 					  <source>Yes</source>
@@ -723,110 +764,143 @@
 					  <target>Ingen pakker er foreløpig installert.</target>
 					</trans-unit>
 					<trans-unit id="type_route">
-						<source>Route</source>
+					  <source>Route</source>
+					  <target>Ruter</target>
 					</trans-unit>
 					<trans-unit id="type_train">
-						<source>Train</source>
+					  <source>Train</source>
+					  <target>Tog</target>
 					</trans-unit>
 					<trans-unit id="type_other">
-						<source>Other</source>
+					  <source>Other</source>
+					  <target>Andre</target>
 					</trans-unit>
 					<trans-unit id="type_select">
-						<source>Please select the package type:</source>
+					  <source>Please select the package type:</source>
+					  <target>Velg en pakketype:</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure">
-						<source>Unfortunately, uninstallation of this package failed.</source>
+					  <source>Unfortunately, uninstallation of this package failed.</source>
+					  <target>Avinstallering av denne pakken feilet.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure_header">
-						<source>Uninstallation Failed</source>
+					  <source>Uninstallation Failed</source>
+					  <target>Avinstallering feilet</target>
 					</trans-unit>
 					<trans-unit id="uninstall_success">
-						<source>Uninstallation of this package was successful.</source>
+					  <source>Uninstallation of this package was successful.</source>
+					  <target>Avinstalleringen av denne pakken var vellykket.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_success_header">
-						<source>Uninstallation Successful</source>
+					  <source>Uninstallation Successful</source>
+					  <target>Avinstallering vellykket</target>
 					</trans-unit>
 					<trans-unit id="uninstall_log">
-						<source>A log is shown below:</source>
+					  <source>A log is shown below:</source>
+					  <target>Loggen vises nedenfor:</target>
 					</trans-unit>
 					<trans-unit id="uninstall_button">
-						<source>Uninstall Package</source>
+					  <source>Uninstall Package</source>
+					  <target>Avinstaller pakker</target>
 					</trans-unit>
 					<trans-unit id="uninstall_broken">
-						<source>Some existing packages may be broken by this action.</source>
+					  <source>Some existing packages may be broken by this action.</source>
+					  <target>Eksisterende pakker kan bli skadet av denne handlingen.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_missing_xml">
-						<source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
+					  <source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
+					  <target>Ikke mulig å avinstallere den valgte pakken. \r\n XML listefil mangler.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_database_remove">
-						<source>Do you wish to remove this package from the database?</source>
+					  <source>Do you wish to remove this package from the database?</source>
+					  <target>Ønsker du å fjerne denne pakken helt fra databasen?</target>
 					</trans-unit>
 					<trans-unit id="database_save_error">
-						<source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
+					  <source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
+					  <target>En feil oppstod mens pakken prøvde å lagres til databasen. \r\n Vennligst sjekk om du har skriverettigheter.</target>
 					</trans-unit>
 					<trans-unit id="version_new">
-						<source>New version:</source>
+					  <source>New version:</source>
+					  <target>Ny versjon:</target>
 					</trans-unit>
 					<trans-unit id="version_current">
-						<source>Current version:</source>
+					  <source>Current version:</source>
+					  <target>Nåværende versjon:</target>
 					</trans-unit>
 					<trans-unit id="success">
 					  <source>Finished!</source>
 					  <target>Ferdig!</target>
 					</trans-unit>
 					<trans-unit id="selected">
-						<source>Selected Packages</source>
+					  <source>Selected Packages</source>
+					  <target>Valgte pakker</target>
 					</trans-unit>
 					<trans-unit id="dependancy">
-						<source>Dependancy</source>
+					  <source>Dependancy</source>
+					  <target>Avhengigheter</target>
 					</trans-unit>
 					<trans-unit id="recommendation">
 						<source>Recommendation</source>
 					</trans-unit>
 					<trans-unit id="error_action">
-						<source>Please select the action you wish to take:</source>
+					  <source>Please select the action you wish to take:</source>
+					  <target>Velg handlingen du ønsker å ta:</target>
 					</trans-unit>
 					<trans-unit id="error_overwrite">
-						<source>Overwrite</source>
+					  <source>Overwrite</source>
+					  <target>Skriv over</target>
 					</trans-unit>
 					<trans-unit id="error_replace">
-						<source>Replace</source>
+					  <source>Replace</source>
+					  <target>Bytt ut</target>
 					</trans-unit>
 					<trans-unit id="button_next">
-						<source>Next &gt;</source>
+					  <source>Next &gt;</source>
+					  <target>Neste &gt;</target>
 					</trans-unit>
 					<trans-unit id="button_back">
-						<source>&lt; Back</source>
+					  <source>&lt; Back</source>
+					  <target>&lt; Tilbake</target>
 					</trans-unit>
 					<trans-unit id="button_cancel">
-						<source>Cancel</source>
+					  <source>Cancel</source>
+					  <target>Avbryt</target>
 					</trans-unit>
 					<trans-unit id="button_ok">
-						<source>OK</source>
+					  <source>OK</source>
+					  <target>OK</target>
 					</trans-unit>
 					<trans-unit id="button_install">
-						<source>Install</source>
+					  <source>Install</source>
+					  <target>Installer</target>
 					</trans-unit>
 					<trans-unit id="button_create">
-						<source>Create</source>
+					  <source>Create</source>
+					  <target>Lag</target>
 					</trans-unit>
 					<trans-unit id="button_ignore">
-						<source>Ignore</source>
+					  <source>Ignore</source>
+					  <target>Ignorer</target>
 					</trans-unit>
 					<trans-unit id="button_abort">
-						<source>Abort</source>
+					  <source>Abort</source>
+					  <target>Avbryt</target>
 					</trans-unit>
 					<trans-unit id="filename_empty">
-						<source>Attempted to create a package with an empty filename.</source>
+					  <source>Attempted to create a package with an empty filename.</source>
+					  <target>Prøvde å lage en pakke med tomt filnavn.</target>
 					</trans-unit>
 					<trans-unit id="directory_missing">
-						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+					  <source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+					  <target>Mappen hvor du prøvede å skrive pakken til fins ikke: \r \n</target>
 					</trans-unit>
 					<trans-unit id="directory_nowrite">
-						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+					  <source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+					  <target>Det er ikke skrivetilgang i mappen hvor du prøver å lagre pakkefilen til: \r \n</target>
 					</trans-unit>
 					<trans-unit id="file_generic">
-						<source>Failed to create the following file: \r \n</source>
+					  <source>Failed to create the following file: \r \n</source>
+					  <target>Klarte ikke å lage følgende fil: \r \n</target>
 					</trans-unit>
 				</group>
 				<group id="controls">
