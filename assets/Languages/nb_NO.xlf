@@ -3076,51 +3076,66 @@
 			<group id="train_editor">
 				<group id="general">
 					<trans-unit id="new">
-						<source>New</source>
+					  <source>New</source>
+					  <target>Ny</target>
 					</trans-unit>
 					<trans-unit id="open">
-						<source>Open...</source>
+					  <source>Open...</source>
+					  <target>Åpne...</target>
 					</trans-unit>
 					<trans-unit id="save">
-						<source>Save</source>
+					  <source>Save</source>
+					  <target>Lagre</target>
 					</trans-unit>
 					<trans-unit id="save_as">
-						<source>Save as...</source>
+					  <source>Save as...</source>
+					  <target>Lagre som...</target>
 					</trans-unit>
 					<trans-unit id="close">
-						<source>Close</source>
+					  <source>Close</source>
+					  <target>Lukk</target>
 					</trans-unit>
 					<trans-unit id="new_message">
-						<source>Do you want to save data before creating a new train?</source>
+					  <source>Do you want to save data before creating a new train?</source>
+					  <target>Ønsker du å lagre før du lager et nytt tog?</target>
 					</trans-unit>
 					<trans-unit id="open_message">
-						<source>Do you want to save data before opening another train?</source>
+					  <source>Do you want to save data before opening another train?</source>
+					  <target>Ønsker du å lagre data før åpne ett nytt tog?</target>
 					</trans-unit>
 					<trans-unit id="close_message">
-						<source>Do you want to save data before closing?</source>
+					  <source>Do you want to save data before closing?</source>
+					  <target>Ønsker du å lagre data før du lukker?</target>
 					</trans-unit>
 					<trans-unit id="properties_one">
-						<source>Properties (1)</source>
+					  <source>Properties (1)</source>
+					  <target>Egenskaper (1)</target>
 					</trans-unit>
 					<trans-unit id="properties_two">
-						<source>Properties (2)</source>
+					  <source>Properties (2)</source>
+					  <target>Egenskaper (2)</target>
 					</trans-unit>
 				</group>
 				<group id="performance">
 					<trans-unit id="performance">
-						<source>Performance</source>
+					  <source>Performance</source>
+					  <target>Ytelse</target>
 					</trans-unit>
 					<trans-unit id="deceleration">
-						<source>Deceleration:</source>
+					  <source>Deceleration:</source>
+					  <target>Fartsreduksjon:</target>
 					</trans-unit>
 					<trans-unit id="static_friction">
-						<source>CoefficientOfStaticFriction:</source>
+					  <source>CoefficientOfStaticFriction:</source>
+					  <target>Koeffisient for statisk friksjon</target>
 					</trans-unit>
 					<trans-unit id="rolling_resistance">
-						<source>CoefficientOfRollingResistance:</source>
+					  <source>CoefficientOfRollingResistance:</source>
+					  <target>Koeffisient for rullemotstand</target>
 					</trans-unit>
 					<trans-unit id="aerodynamic_drag">
-						<source>AerodynamicDragCoefficient:</source>
+					  <source>AerodynamicDragCoefficient:</source>
+					  <target>Koeffisient for luftmotstand</target>
 					</trans-unit>
 				</group>
 				<group id="delay">
