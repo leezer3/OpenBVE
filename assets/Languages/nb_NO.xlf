@@ -840,7 +840,8 @@
 					  <target>Avhengigheter</target>
 					</trans-unit>
 					<trans-unit id="recommendation">
-						<source>Recommendation</source>
+					  <source>Recommendation</source>
+					  <target>Anbefaling</target>
 					</trans-unit>
 					<trans-unit id="error_action">
 					  <source>Please select the action you wish to take:</source>
@@ -1335,13 +1336,14 @@
 					</trans-unit>
 					<trans-unit id="quality_distance_viewingdistance">
 					  <source>Viewing distance:</source>
-					  <target>Utsiktsnivå:</target>
+					  <target>Utsiktsavstand:</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_viewingdistance_meters">
 						<source>m</source>
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur">
-						<source>Motion blur:</source>
+					  <source>Motion blur:</source>
+					  <target>Bevegelsesuskarphet:</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur_none">
 					  <source>Disabled</source>
@@ -1368,7 +1370,8 @@
 					  <target>Simuleringsdetalj</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_toppling">
-					  <source>Velting</source>
+					  <source>Toppling</source>
+					  <target>Velting</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_collisions">
 					  <source>Collisions</source>
@@ -1887,101 +1890,132 @@
 						<source>Backface culling: off</source>
 					</trans-unit>
 					<trans-unit id="notavailableexpert">
-						<source>This feature is not available in Expert mode.</source>
+					  <source>This feature is not available in Expert mode.</source>
+					  <target>Denne funksjonen er ikke tilgjengelig i ekspert modus.</target>
 					</trans-unit>
 					<trans-unit id="aiunable">
-						<source>The AI might be unable to fully operate this train.</source>
+					  <source>The AI might be unable to fully operate this train.</source>
+					  <target>Den kunstige intelligensen klarer kanskje ikke å kjøre dette toget.</target>
 					</trans-unit>
 					<trans-unit id="camerarestriction_on">
-						<source>Camera restriction: on</source>
+					  <source>Camera restriction: on</source>
+					  <target>Kamerabegrensning: på</target>
 					</trans-unit>
 					<trans-unit id="camerarestriction_off">
-						<source>Camera restriction: off</source>
+					  <source>Camera restriction: off</source>
+					  <target>Kamerabegrensning: av</target>
 					</trans-unit>
 					<trans-unit id="mousegrab_on">
-						<source>Mouse grab: on</source>
+					  <source>Mouse grab: on</source>
+					  <target>"Mouse grab": på</target>
 					</trans-unit>
 					<trans-unit id="mousegrab_off">
-						<source>Mouse grab: off</source>
+					  <source>Mouse grab: off</source>
+					  <target>"Mouse grab": av</target>
 					</trans-unit>
 				</group>
 				<group id="score">
 					<trans-unit id="overspeed">
-						<source>Overspeed</source>
+					  <source>Overspeed</source>
+					  <target>Forfortkjøring</target>
 					</trans-unit>
 					<trans-unit id="redsignal">
-						<source>Passed red signal</source>
+					  <source>Passed red signal</source>
+					  <target>Forbikjørt rødt signal</target>
 					</trans-unit>
 					<trans-unit id="toppling">
-						<source>Toppling</source>
+					  <source>Toppling</source
+					  <target>Velting</target>>
 					</trans-unit>
 					<trans-unit id="derailed">
-						<source>Derailed</source>
+					  <source>Derailed</source>
+					  <target>Avsporing</target>
 					</trans-unit>
 					<trans-unit id="discomfort">
-						<source>Passenger discomfort</source>
+					  <source>Passenger discomfort</source>
+					  <target>Ukomfortabelhet blant passasjerene</target>
 					</trans-unit>
 					<trans-unit id="doors">
-						<source>Doors opened</source>
+					  <source>Doors opened</source>
+					  <target>Dørene åpnet</target>
 					</trans-unit>
 					<trans-unit id="station_arrived">
-						<source>Arrived at station</source>
+					  <source>Arrived at station</source>
+					  <target>Ankom på stasjon</target>
 					</trans-unit>
 					<trans-unit id="station_perfecttime">
-						<source>Perfect time bonus</source>
+					  <source>Perfect time bonus</source>
+					  <target>Perfekt på tiden bonus</target>
 					</trans-unit>
 					<trans-unit id="station_late">
-						<source>Late</source>
+					  <source>Late</source>
+					  <target>For sen</target>
 					</trans-unit>
 					<trans-unit id="station_perfectstop">
-						<source>Perfect stop bonus</source>
+					  <source>Perfect stop bonus</source>
+					  <target>Prefekt stopp bonus</target>
 					</trans-unit>
 					<trans-unit id="station_stop">
-						<source>Stop</source>
+					  <source>Stop</source>
+					  <target>Stop</target>
 					</trans-unit>
 					<trans-unit id="station_departure">
-						<source>Premature departure</source>
+					  <source>Premature departure</source>
+					  <target>For tidlig avgang</target>
 					</trans-unit>
 					<trans-unit id="station_total">
-						<source>Total</source>
+					  <source>Total</source>
+					  <target>Totalt</target>
 					</trans-unit>
 					<trans-unit id="rating">
-						<source>Your rating:</source>
+					  <source>Your rating:</source>
+					  <target>Din vurdering:</target>
 					</trans-unit>
 				</group>
 				<group id="rating">
 					<trans-unit id="0">
-						<source>Abysmal</source>
+					  <source>Abysmal</source>
+					  <target>Grusomt</target>
 					</trans-unit>
 					<trans-unit id="1">
-						<source>Terrible</source>
+					  <source>Terrible</source>
+					  <target>Forferdelig</target>
 					</trans-unit>
 					<trans-unit id="2">
-						<source>Bad</source>
+					  <source>Bad</source>
+					  <target>Dårlig</target>
 					</trans-unit>
 					<trans-unit id="3">
-						<source>Poor</source>
+					  <source>Poor</source>
+					  <target>Stakkarslig</target>
 					</trans-unit>
 					<trans-unit id="4">
-						<source>Fair</source>
+					  <source>Fair</source>
+					  <target>Adekvat</target>
 					</trans-unit>
 					<trans-unit id="5">
-						<source>Mediocre</source>
+					  <source>Mediocre</source>
+					  <target>Gjennomsnittlig</target>
 					</trans-unit>
 					<trans-unit id="6">
-						<source>Good</source>
+					  <source>Good</source>
+					  <target>Bra</target>
 					</trans-unit>
 					<trans-unit id="7">
-						<source>Great</source>
+					  <source>Great</source>
+					  <target>Flott</target>
 					</trans-unit>
 					<trans-unit id="8">
-						<source>Superb</source>
+					  <source>Superb</source>
+					  <target>Utmerket</target>
 					</trans-unit>
 					<trans-unit id="9">
-						<source>Excellent</source>
+					  <source>Excellent</source>
+					  <target>Perfekt</target>
 					</trans-unit>
 					<trans-unit id="unknown">
-						<source>Unknown</source>
+					  <source>Unknown</source>
+					  <target>Uvisst</target>
 					</trans-unit>
 				</group>
 				<group id="menu">
