@@ -1170,7 +1170,7 @@
 					</trans-unit>
 					<trans-unit id="calibration_f">
 					  <source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
-					  <target>Dytt den regenerative bremsen til kriseposisjon og trykk 'Neste'</target>
+					  <target>Dytt den regenerative bremsen til nødbrems og trykk 'Neste'</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
 					  <source>Move the independant brake lever to the release position and press 'Next'.</source>
@@ -1924,8 +1924,8 @@
 					  <target>Forbikjørt rødt signal</target>
 					</trans-unit>
 					<trans-unit id="toppling">
-					  <source>Toppling</source
-					  <target>Velting</target>>
+					  <source>Toppling</source>
+					  <target>Velting</target>
 					</trans-unit>
 					<trans-unit id="derailed">
 					  <source>Derailed</source>
@@ -2139,6 +2139,7 @@
 						<source>CONST SPEED</source>
 					</trans-unit>
 				</group>
+				<!-- I do not know if these needs translations -->
 				<group id="handles">
 					<trans-unit id="forward">
 						<source>F</source>
@@ -2194,366 +2195,478 @@
 					</trans-unit>
 				</group>
 				<group id="commands">
-					<trans-unit id="power_increase">
-						<source>Increases power by one notch for trains with two handles</source>
-					</trans-unit>
-					<trans-unit id="power_decrease">
-						<source>Decreases power by one notch for trains with two handles</source>
-					</trans-unit>
-					<trans-unit id="power_halfaxis">
-						<source>Controls power for trains with two handles on half of a joystick axis</source>
-					</trans-unit>
-					<trans-unit id="power_fullaxis">
-						<source>Controls power for trains with two handles on a full joystick axis</source>
-					</trans-unit>
-					<trans-unit id="brake_decrease">
-						<source>Decreases brake by one notch for trains with two handles</source>
-					</trans-unit>
-					<trans-unit id="brake_increase">
-						<source>Increases brake by one notch for trains with two handles</source>
-					</trans-unit>
-					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
-					</trans-unit>
-					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
-					</trans-unit>
-					<trans-unit id="brake_halfaxis">
-						<source>Controls brake for trains with two handles on half of a joystick axis</source>
-					</trans-unit>
-					<trans-unit id="brake_fullaxis">
-						<source>Controls brake for trains with two handles on a full joystick axis</source>
-					</trans-unit>
-					<trans-unit id="brake_emergency">
-						<source>Activates emergency brakes for trains with two handles</source>
-					</trans-unit>
-					<trans-unit id="single_power">
-						<source>Moves handle toward power by one notch for trains with one handle</source>
-					</trans-unit>
-					<trans-unit id="single_neutral">
-						<source>Moves handle toward neutral by one notch for trains with one handle</source>
-					</trans-unit>
-					<trans-unit id="single_brake">
-						<source>Moves handle toward brake by one notch for trains with one handle</source>
-					</trans-unit>
-					<trans-unit id="single_emergency">
-						<source>Activates emergency brake for trains with one handle</source>
-					</trans-unit>
-					<trans-unit id="single_fullaxis">
-						<source>Controls power and brake for trains with one handle on a full joystick axis</source>
-					</trans-unit>
-					<trans-unit id="power_any_notch">
-						<source>Adjusts the power notch directly from a command option value.</source>
-					</trans-unit>
-					<trans-unit id="brake_any_notch">
-						<source>Adjusts the brake notch directly from a command option value.</source>
-					</trans-unit>
-					<trans-unit id="reverser_any_position">
-						<source>Adjusts the reverser directly from a command option value.</source>
-					</trans-unit>
-					<trans-unit id="hold_brake">
-						<source>Hold Brake</source>
-					</trans-unit>
-					<trans-unit id="reverser_forward">
-						<source>Moves reverser forward by one notch</source>
-					</trans-unit>
-					<trans-unit id="reverser_backward">
-						<source>Moves reverser backward by one notch</source>
-					</trans-unit>
-					<trans-unit id="reverser_fullaxis">
-						<source>Controls reverser on a full joystick axis</source>
-					</trans-unit>
-					<trans-unit id="doors_left">
-						<source>Opens or closes the left doors</source>
-					</trans-unit>
-					<trans-unit id="doors_right">
-						<source>Opens or closes the right doors</source>
-					</trans-unit>
-					<trans-unit id="horn_primary">
-						<source>Plays the primary horn</source>
-					</trans-unit>
-					<trans-unit id="horn_secondary">
-						<source>Plays the secondary horn</source>
-					</trans-unit>
-					<trans-unit id="horn_music">
-						<source>Plays or stops the music horn</source>
-					</trans-unit>
-					<trans-unit id="device_constspeed">
-						<source>Activates or deactivates the constant speed device</source>
-					</trans-unit>
-					<trans-unit id="security_power">
-						<source>Activates or deactivates the security system on some trains</source>
-					</trans-unit>
-					<trans-unit id="security_s">
-						<source>The S function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_a1">
-						<source>The A1 function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_a2">
-						<source>The A2 function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_b1">
-						<source>The B1 function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_b2">
-						<source>The B2 function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_c1">
-						<source>The C1 function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_c2">
-						<source>The C2 function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_d">
-						<source>The D function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_e">
-						<source>The E function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_f">
-						<source>The F function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_g">
-						<source>The G function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_h">
-						<source>The H function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_i">
-						<source>The I function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_j">
-						<source>The J function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_k">
-						<source>The K function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_l">
-						<source>The L function of the security system</source>
-					</trans-unit>
-					<trans-unit id="security_m">
-						<source>N/A</source>
-					</trans-unit>
-					<trans-unit id="security_n">
-						<source>N/A</source>
-					</trans-unit>
-					<trans-unit id="security_o">
-						<source>N/A</source>
-					</trans-unit>
-					<trans-unit id="security_p">
-						<source>N/A</source>
-					</trans-unit>
-					<trans-unit id="camera_interior">
-						<source>Switches to the train's interior view</source>
-					</trans-unit>
-					<trans-unit id="camera_interior_nopanel">
-						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
-					</trans-unit>
-					<trans-unit id="camera_exterior">
-						<source>Switches to the train's exterior view</source>
-					</trans-unit>
-					<trans-unit id="camera_track">
-						<source>Switches to the track view</source>
-					</trans-unit>
-					<trans-unit id="camera_flyby">
-						<source>Switches between different fly-by views</source>
-					</trans-unit>
-					<trans-unit id="camera_move_forward">
-						<source>Moves the camera forward</source>
-					</trans-unit>
-					<trans-unit id="camera_move_backward">
-						<source>Moves the camera backward</source>
-					</trans-unit>
-					<trans-unit id="camera_move_left">
-						<source>Moves the camera left</source>
-					</trans-unit>
-					<trans-unit id="camera_move_right">
-						<source>Moves the camera right</source>
-					</trans-unit>
-					<trans-unit id="camera_move_up">
-						<source>Moves the camera up</source>
-					</trans-unit>
-					<trans-unit id="camera_move_down">
-						<source>Moves the camera down</source>
-					</trans-unit>
-					<trans-unit id="camera_rotate_left">
-						<source>Rotates the camera left</source>
-					</trans-unit>
-					<trans-unit id="camera_rotate_right">
-						<source>Rotates the camera right</source>
-					</trans-unit>
-					<trans-unit id="camera_rotate_up">
-						<source>Rotates the camera up</source>
-					</trans-unit>
-					<trans-unit id="camera_rotate_down">
-						<source>Rotates the camera down</source>
-					</trans-unit>
-					<trans-unit id="camera_rotate_ccw">
-						<source>Rotates the camera counter-clockwise</source>
-					</trans-unit>
-					<trans-unit id="camera_rotate_cw">
-						<source>Rotates the camera clockwise</source>
-					</trans-unit>
-					<trans-unit id="camera_zoom_in">
-						<source>Zooms the camera in</source>
-					</trans-unit>
-					<trans-unit id="camera_zoom_out">
-						<source>Zooms the camera out</source>
-					</trans-unit>
-					<trans-unit id="camera_poi_previous">
-						<source>Jumps to the previous point of interest in the route.</source>
-					</trans-unit>
-					<trans-unit id="camera_poi_next">
-						<source>Jumps to the next point of interest in the route.</source>
-					</trans-unit>
-					<trans-unit id="camera_reset">
-						<source>Resets the camera view to default values</source>
-					</trans-unit>
-					<trans-unit id="camera_restriction">
-						<source>Activates or deactivates interior view camera restriction</source>
-					</trans-unit>
-					<trans-unit id="timetable_toggle">
-						<source>Toggles through different timetable modes</source>
-					</trans-unit>
-					<trans-unit id="timetable_up">
-						<source>Scrolls the timetable up</source>
-					</trans-unit>
-					<trans-unit id="timetable_down">
-						<source>Scrolls the timetable down</source>
-					</trans-unit>
-					<trans-unit id="menu_activate">
-						<source>Displays the in-game menu</source>
-					</trans-unit>
-					<trans-unit id="menu_up">
-						<source>Moves the cursor up within the in-game menu</source>
-					</trans-unit>
-					<trans-unit id="menu_down">
-						<source>Moves the cursor down within the in-game menu</source>
-					</trans-unit>
-					<trans-unit id="menu_enter">
-						<source>Performs the selected command within the in-game menu</source>
-					</trans-unit>
-					<trans-unit id="menu_back">
-						<source>Goes back within the in-game menu</source>
-					</trans-unit>
-					<trans-unit id="misc_clock">
-						<source>Shows or hides the clock</source>
-					</trans-unit>
-					<trans-unit id="misc_speed">
-						<source>Toggles through different speed display modes</source>
-					</trans-unit>
-					<trans-unit id="misc_gradient">
-						<source>Toggles through different gradient display modes</source>
-					</trans-unit>
-					<trans-unit id="misc_dist_next_station">
-						<source>Toggles through different next station remain distance display modes</source>
-					</trans-unit>
-					<trans-unit id="misc_timefactor">
-						<source>Toggles through different time acceleration factors</source>
-					</trans-unit>
-					<trans-unit id="misc_fps">
-						<source>Shows or hides the frame rate display</source>
-					</trans-unit>
-					<trans-unit id="misc_ai">
-						<source>Activates or deactivates the virtual driver (AI)</source>
-					</trans-unit>
-					<trans-unit id="misc_pause">
-						<source>Pauses or resumes the simulation</source>
-					</trans-unit>
-					<trans-unit id="misc_fullscreen">
-						<source>Toggles to or from fullscreen mode</source>
-					</trans-unit>
-					<trans-unit id="misc_mute">
-						<source>Mutes sound or resumes playing sounds</source>
-					</trans-unit>
-					<trans-unit id="misc_quit">
-						<source>Quits the simulation</source>
-					</trans-unit>
-					<trans-unit id="misc_interface">
-						<source>Toggles through different interface modes</source>
-					</trans-unit>
-					<trans-unit id="misc_backface">
-						<source>Activates or deactivates backface culling</source>
-					</trans-unit>
-					<trans-unit id="misc_cpumode">
-						<source>Switches to or from reduced CPU mode</source>
-					</trans-unit>
-					<trans-unit id="debug_wireframe">
-						<source>Activates or deactivates wireframe mode</source>
-					</trans-unit>
-					<trans-unit id="debug_normals">
-						<source>Shows or hides vertex normals</source>
-					</trans-unit>
-					<trans-unit id="debug_brake">
-						<source>Shows or hides brake system debug output</source>
-					</trans-unit>
-					<trans-unit id="debug_ats">
-						<source>Shows or hides plugin debug output</source>
-					</trans-unit>
-					<trans-unit id="debug_touch_mode">
-						<source>Shows or hides the touch range</source>
-					</trans-unit>
-					<trans-unit id="route_information">
-						<source>Shows or hides the route information window</source>
-					</trans-unit>
-					<trans-unit id="show_events">
-						<source>Shows or hides event markers (For developers)</source>
-					</trans-unit>
-					<trans-unit id="debug_renderer_mode">
-						<source>Toggles the renderer</source>
-					</trans-unit>
-					<trans-unit id="wiper_speed_up">
-						<source>Increases the speed of the windscreen wipers</source>
-					</trans-unit>
-					<trans-unit id="wiper_speed_down">
-						<source>Decreases the speed of the windscreen wipers</source>
-					</trans-unit>
-					<trans-unit id="fill_fuel">
-						<source>Fills fuel</source>
-					</trans-unit>
-					<trans-unit id="headlights">
-						<source>Toggles the train headlights</source>
-					</trans-unit>
-					<trans-unit id="live_steam_injector">
-						<source>Activates or deactivates the live steam injector</source>
-					</trans-unit>
-					<trans-unit id="exhaust_steam_injector">
-						<source>Activates or deactivates the exhaust steam injector</source>
-					</trans-unit>
-					<trans-unit id="increase_cutoff">
-						<source>Increases the cutoff</source>
-					</trans-unit>
-					<trans-unit id="decrease_cutoff">
-						<source>Decreases the cutoff</source>
-					</trans-unit>
-					<trans-unit id="blowers">
-						<source>Activates or deactivates the blowers</source>
-					</trans-unit>
-					<trans-unit id="engine_start">
-						<source>Starts the engine</source>
-					</trans-unit>
-					<trans-unit id="engine_stop">
-						<source>Stops the engine</source>
-					</trans-unit>
-					<trans-unit id="gear_up">
-						<source>Shifts up a gear in a train fitted with a gearbox</source>
-					</trans-unit>
-					<trans-unit id="gear_down">
-						<source>Shifts down a gear in a train fitted with a gearbox</source>
-					</trans-unit>
-					<trans-unit id="raise_pantograph">
-						<source>Raises the pantograph</source>
-					</trans-unit>
-					<trans-unit id="lower_pantograph">
-						<source>Lowers the pantograph</source>
-					</trans-unit>
-					<trans-unit id="main_breaker">
-						<source>Toggles the main breaker</source>
-					</trans-unit>
-					<trans-unit id="raildriver_speed_units">
-						<source>Toggles the RailDriver speed display units.</source>
-					</trans-unit>
+				  <trans-unit id="power_increase">
+				    <source>Increases power by one notch for trains with two handles</source>
+				    <target>Øker turtallet med et hakk for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="power_decrease">
+				    <source>Decreases power by one notch for trains with two handles</source>
+				    <target>Minster turtallet med et hakk for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="power_halfaxis">
+				    <source>Controls power for trains with two handles on half of a joystick axis</source>
+				    <target>Kontrollerer turtallet for tog med to håndtak på en halv joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="power_fullaxis">
+				    <source>Controls power for trains with two handles on a full joystick axis</source>
+				    <target>Kontrollerer turtallet på tog med to håndtak på en full joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="brake_decrease">
+				    <source>Decreases brake by one notch for trains with two handles</source>
+				    <target>Slepp opp bremsen med et hakk for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="brake_increase">
+				    <source>Increases brake by one notch for trains with two handles</source>
+				    <target>Øk bremsen med et hakk for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="locobrake_decrease">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="locobrake_increase">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="brake_halfaxis">
+				    <source>Controls brake for trains with two handles on half of a joystick axis</source>
+				    <target>Kontrollerer bremsen for tog med to håndtak på en halv joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="brake_fullaxis">
+				    <source>Controls brake for trains with two handles on a full joystick axis</source>
+				    <target>Kontrollerer bremsen for tog med to håndtak på en hel joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="brake_emergency">
+				    <source>Activates emergency brakes for trains with two handles</source>
+				    <target>Aktiverer nødbrems for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_power">
+				    <source>Moves handle toward power by one notch for trains with one handle</source>
+				    <target>Dytter håndtaket et trinn mot høyere turtall for tog med et håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_neutral">
+				    <source>Moves handle toward neutral by one notch for trains with one handle</source>
+				    <target>Dytter håndtaket ett trinn mot nøytral stilling for tog med et håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_brake">
+				    <source>Moves handle toward brake by one notch for trains with one handle</source>
+				    <target>Dytter håndtaket ett trinn mot brems for tog med et håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_emergency">
+				    <source>Activates emergency brake for trains with one handle</source>
+				    <target>Aktiverer nødbrems for tog med et håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_fullaxis">
+				    <source>Controls power and brake for trains with one handle on a full joystick axis</source>
+				    <target>Kontrollerer turtall og brems for tog med ett håndtak på en full joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="power_any_notch">
+				    <source>Adjusts the power notch directly from a command option value.</source>
+				    <target>Juster turtallet til en direkte posisjon via en gitt verdi</target>
+				  </trans-unit>
+				  <trans-unit id="brake_any_notch">
+				    <source>Adjusts the brake notch directly from a command option value.</source>
+				    <target>Juster bremsen til en direkte posisjon via en gitt verdi</target>
+				  </trans-unit>
+				  <trans-unit id="reverser_any_position">
+				    <source>Adjusts the reverser directly from a command option value.</source>
+				    <target>Juster vendegiret til en direkte posisjon via en gitt verdi</target>
+				  </trans-unit>
+				  <trans-unit id="hold_brake">
+				    <source>Hold Brake</source>
+				    <target>Parkeringsbrems</target>
+				  </trans-unit>
+				  <trans-unit id="reverser_forward">
+				    <source>Moves reverser forward by one notch</source>
+				    <target>Dytter vendegiret et hakk frem</target>
+				  </trans-unit>
+				  <trans-unit id="reverser_backward">
+				    <source>Moves reverser backward by one notch</source>
+				    <target>Dytter vendegiret et hakk bakover</target>
+				  </trans-unit>
+				  <trans-unit id="reverser_fullaxis">
+				    <source>Controls reverser on a full joystick axis</source>
+				    <target>Kontrollerer vendegiret på en full joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="doors_left">
+				    <source>Opens or closes the left doors</source>
+				    <target>Åpner og lukker venstre dør</target>
+				  </trans-unit>
+				  <trans-unit id="doors_right">
+				    <source>Opens or closes the right doors</source>
+				    <target>Åpner og lukker høyre dør</target>
+				  </trans-unit>
+				  <trans-unit id="horn_primary">
+				    <source>Plays the primary horn</source>
+				    <target>Tut med primærhornet</target>
+				  </trans-unit>
+				  <trans-unit id="horn_secondary">
+				    <source>Plays the secondary horn</source>
+				    <target>Tut med sekundærhornet</target>
+				  </trans-unit>
+				  <trans-unit id="horn_music">
+				    <source>Plays or stops the music horn</source>
+				    <target>Starter og stopper musikkhornet</target>
+				  </trans-unit>
+				  <trans-unit id="device_constspeed">
+				    <source>Activates or deactivates the constant speed device</source>
+				    <target>Aktiverer eller deaktiverer kruskontroll</target>
+				  </trans-unit>
+				  <trans-unit id="security_power">
+				    <source>Activates or deactivates the security system on some trains</source>
+				    <target>Aktiverer eller deaktiverer sikkerhetssystemet på noen tog</target>
+				  </trans-unit>
+				  <trans-unit id="security_s">
+				    <source>The S function of the security system</source>
+				    <target>S funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_a1">
+				    <source>The A1 function of the security system</source>
+				    <target>A1 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_a2">
+				    <source>The A2 function of the security system</source>
+				    <target>A2 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_b1">
+				    <source>The B1 function of the security system</source>
+				    <target>B1 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_b2">
+				    <source>The B2 function of the security system</source>
+				    <target>B2 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_c1">
+				    <source>The C1 function of the security system</source>
+				    <target>C1 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_c2">
+				    <source>The C2 function of the security system</source>
+				    <target>C2 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_d">
+				    <source>The D function of the security system</source>
+				    <target>D funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_e">
+				    <source>The E function of the security system</source>
+				    <target>E funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_f">
+				    <source>The F function of the security system</source>
+				    <target>F funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_g">
+				    <source>The G function of the security system</source>
+				    <target>G funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_h">
+				    <source>The H function of the security system</source>
+				    <target>H funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_i">
+				    <source>The I function of the security system</source>
+				    <target>I funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_j">
+				    <source>The J function of the security system</source>
+				    <target>J funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_k">
+				    <source>The K function of the security system</source>
+				    <target>K funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_l">
+				    <source>The L function of the security system</source>
+				    <target>L funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_m">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="security_n">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="security_o">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="security_p">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="camera_interior">
+				    <source>Switches to the train's interior view</source>
+				    <target>Bytt til togets interiørvisning</target>
+				  </trans-unit>
+				  <trans-unit id="camera_interior_nopanel">
+				    <source>Switches to the train's interior view. However, the panel is not displayed.</source>
+				    <target>Bytt til togets interiørvisning. Panelt vises ikke.</target>					  
+				  </trans-unit>
+				  <trans-unit id="camera_exterior">
+				    <source>Switches to the train's exterior view</source>
+				    <target>Bytt til togets eksteriørvisning.</target>
+				  </trans-unit>
+				  <trans-unit id="camera_track">
+				    <source>Switches to the track view</source>
+				    <target>Bytt til skinnegangvisning</target>
+				  </trans-unit>
+				  <trans-unit id="camera_flyby">
+				    <source>Switches between different fly-by views</source>
+				    <target>Bytt mellom forskjellige fly-by visninger</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_forward">
+				    <source>Moves the camera forward</source>
+				    <target>Flytter kamera forover</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_backward">
+				    <source>Moves the camera backward</source>
+				    <target>Flytter kamera bakover</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_left">
+				    <source>Moves the camera left</source>
+				    <target>Flytter kamera venstre</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_right">
+				    <source>Moves the camera right</source>
+				    <target>Flytter kamera høyre</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_up">
+				    <source>Moves the camera up</source>
+				    <target>Flytter kamera opp</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_down">
+				    <source>Moves the camera down</source>
+				    <target>Flytter kamera ned</target>
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_left">
+				    <source>Rotates the camera left</source>
+				    <target>Roterer kamera venstre</target>
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_right">
+				    <source>Rotates the camera right</source>
+				    <target>Roterer kamera høyre</target>					  
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_up">
+				    <source>Rotates the camera up</source>
+				    <target>Roterer kamera oppover</target>					  			  
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_down">
+				    <source>Rotates the camera down</source>
+				    <target>Roterer kamera nedover</target>		  
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_ccw">
+				    <source>Rotates the camera counter-clockwise</source>
+				    <target>Roterer kamera mot klokken</target>	  
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_cw">
+				    <source>Rotates the camera clockwise</source>
+				    <target>Roterer kamera med klokken</target>	  
+				  </trans-unit>
+				  <trans-unit id="camera_zoom_in">
+				    <source>Zooms the camera in</source>
+				    <target>Zoomer kamera inn</target>
+				  </trans-unit>
+				  <trans-unit id="camera_zoom_out">
+				    <source>Zooms the camera out</source>
+				    <target>Zoomer kamera ut</target>
+				  </trans-unit>
+				  <trans-unit id="camera_poi_previous">
+				    <source>Jumps to the previous point of interest in the route.</source>
+				    <target>Hopper til forrige punkt av interesse på denne ruten.</target>
+				  </trans-unit>
+				  <trans-unit id="camera_poi_next">
+				    <source>Jumps to the next point of interest in the route.</source>
+				    <target>Hopper til neste punkt av interesse på denne ruten.</target>				    
+				  </trans-unit>
+				  <trans-unit id="camera_reset">
+				    <source>Resets the camera view to default values</source>
+				    <target>Resetter kamera til forhåndsdefinerte innstillinger</target>
+				  </trans-unit>
+				  <trans-unit id="camera_restriction">
+				    <source>Activates or deactivates interior view camera restriction</source>
+				    <target>Aktiverer eller deaktiverer interiørvisningskamerarestriksjoner</target>
+				  </trans-unit>
+				  <trans-unit id="timetable_toggle">
+				    <source>Toggles through different timetable modes</source>
+				    <target>Bytter mellom forskjellige tidtabellsmoduser</target>
+				  </trans-unit>
+				  <trans-unit id="timetable_up">
+				    <source>Scrolls the timetable up</source>
+				    <target>Flytt tidtabell opp</target>
+				  </trans-unit>
+				  <trans-unit id="timetable_down">
+				    <source>Scrolls the timetable down</source>
+				    <target>Flytt tidtabell ned</target>
+				  </trans-unit>
+				  <trans-unit id="menu_activate">
+				    <source>Displays the in-game menu</source>
+				    <target>Viser menyen i spillet</target>
+				  </trans-unit>
+				  <trans-unit id="menu_up">
+				    <source>Moves the cursor up within the in-game menu</source>
+				    <target>Flytter markøren opp i spillmenyen</target>
+				  </trans-unit>
+				  <trans-unit id="menu_down">
+				    <source>Moves the cursor down within the in-game menu</source>
+				    <target>Flytter markøren ned i spillmenyen</target>
+				  </trans-unit>
+				  <trans-unit id="menu_enter">
+				    <source>Performs the selected command within the in-game menu</source>
+				    <target>Velger den valgte kommandoen i spillmenyen</target>
+				  </trans-unit>
+				  <trans-unit id="menu_back">
+				    <source>Goes back within the in-game menu</source>
+				    <target>Går tilbake inni spillmenyen</target>
+				  </trans-unit>
+				  <trans-unit id="misc_clock">
+				    <source>Shows or hides the clock</source>
+				    <target>Viser eller skjuler klokken</target>
+				  </trans-unit>
+				  <trans-unit id="misc_speed">
+				    <source>Toggles through different speed display modes</source>
+				    <target>Itererer gjennom forskjellige speedometermoduser</target>
+				  </trans-unit>
+				  <trans-unit id="misc_gradient">
+				    <source>Toggles through different gradient display modes</source>
+				    <target>Itererer gjennom forskjellige gradientvisningsmoduser</target>
+				  </trans-unit>
+				  <trans-unit id="misc_dist_next_station">
+				    <source>Toggles through different next station remain distance display modes</source>
+				    <target>Iterer gjennom forskjellige "av stand til neste stasjon" moduser</target>
+				  </trans-unit>
+				  <trans-unit id="misc_timefactor">
+				    <source>Toggles through different time acceleration factors</source>
+				    <target>Iterer gjennom forskjellige tidsakselerasjonsfaktorer</target>
+				  </trans-unit>
+				  <trans-unit id="misc_fps">
+				    <source>Shows or hides the frame rate display</source>
+				    <target>Viser eller skjuler bilde per sekund visningen</target>
+				  </trans-unit>
+				  <trans-unit id="misc_ai">
+				    <source>Activates or deactivates the virtual driver (AI)</source>
+				    <target>Aktiverer eller deaktiverer virtuell konduktør (AI)</target>
+				  </trans-unit>
+				  <trans-unit id="misc_pause">
+				    <source>Pauses or resumes the simulation</source>
+				    <target>Pause eller forsette simulatoren</target>
+				  </trans-unit>
+				  <trans-unit id="misc_fullscreen">
+				    <source>Toggles to or from fullscreen mode</source>
+				    <target>Setter av og på fullskjemsmodus</target>
+				  </trans-unit>
+				  <trans-unit id="misc_mute">
+				    <source>Mutes sound or resumes playing sounds</source>
+				    <target>Slår av og på lyd</target>
+				  </trans-unit>
+				  <trans-unit id="misc_quit">
+				    <source>Quits the simulation</source>
+				    <target>Avslutter simulatoren</target>
+				  </trans-unit>
+				  <trans-unit id="misc_interface">
+				    <source>Toggles through different interface modes</source>
+				    <target>Iterer gjennom forskjellige brukergrensesnitt</target>
+				  </trans-unit>
+				  <trans-unit id="misc_backface">
+				    <source>Activates or deactivates backface culling</source>
+				    <target>Aktiverer eller deaktiverer baksideavskjæring</target>
+				  </trans-unit>
+				  <trans-unit id="misc_cpumode">
+				    <source>Switches to or from reduced CPU mode</source>
+				    <target>Bytter til og fra redusert CPU modus</target>
+				  </trans-unit>
+				  <trans-unit id="debug_wireframe">
+				    <source>Activates or deactivates wireframe mode</source>
+				    <target>Aktiverer eller deaktiverer "wireframe" modus</target>
+				  </trans-unit>
+				  <trans-unit id="debug_normals">
+				    <source>Shows or hides vertex normals</source>
+				    <target>Vis eller skjul 3D hjelpe linjer</target>
+				  </trans-unit>
+				  <trans-unit id="debug_brake">
+				    <source>Shows or hides brake system debug output</source>
+				    <target>Vis eller skjul utskrift fra bremsesystem</target>
+				  </trans-unit>
+				  <trans-unit id="debug_ats">
+				    <source>Shows or hides plugin debug output</source>
+				    <target>Vis eller skjul utskrift fra plugins</target>
+				  </trans-unit>
+				  <trans-unit id="debug_touch_mode">
+				    <source>Shows or hides the touch range</source>
+				    <target>Vis eller skjul avstand man kan nå / ta til</target>
+				  </trans-unit>
+				  <trans-unit id="route_information">
+				    <source>Shows or hides the route information window</source>
+				    <target>Vis eller skjul informasjon om ruten</target>
+				  </trans-unit>
+				  <trans-unit id="show_events">
+				    <source>Shows or hides event markers (For developers)</source>
+				    <target>Vis eller skjul hendelesmarkører (for utviklere)</target>
+				  </trans-unit>
+				  <trans-unit id="debug_renderer_mode">
+				    <source>Toggles the renderer</source>
+				    <target>Slå på "renderer-mode"</target>
+				  </trans-unit>
+				  <trans-unit id="wiper_speed_up">
+				    <source>Increases the speed of the windscreen wipers</source>
+				    <target>Øk hastigheten på store viskere</target>
+				  </trans-unit>
+				  <trans-unit id="wiper_speed_down">
+				    <source>Decreases the speed of the windscreen wipers</source>
+				    <target>Senk hastigheten på store viskere</target>
+				  </trans-unit>
+				  <trans-unit id="fill_fuel">
+				    <source>Fills fuel</source>
+				    <target>Fyller drivstoff</target>
+				  </trans-unit>
+				  <trans-unit id="headlights">
+				    <source>Toggles the train headlights</source>
+				    <target>Slå på storlysene</target>
+				  </trans-unit>
+				  <trans-unit id="live_steam_injector">
+				    <source>Activates or deactivates the live steam injector</source>
+				  </trans-unit>
+				  <trans-unit id="exhaust_steam_injector">
+				    <source>Activates or deactivates the exhaust steam injector</source>
+				  </trans-unit>
+				  <trans-unit id="increase_cutoff">
+				    <source>Increases the cutoff</source>
+				    <target>Øker momentum</target>
+				  </trans-unit>
+				  <trans-unit id="decrease_cutoff">
+				    <source>Decreases the cutoff</source>
+				    <target>Senker momentum</target>
+				  </trans-unit>
+				  <trans-unit id="blowers">
+				    <source>Activates or deactivates the blowers</source>
+				    <target>Aktiverer eller deaktiverer blåsere</target>
+				  </trans-unit>
+				  <trans-unit id="engine_start">
+				    <source>Starts the engine</source>
+				    <target>Starter motoren</target>
+				  </trans-unit>
+				  <trans-unit id="engine_stop">
+				    <source>Stops the engine</source>
+				    <target>Stopper motoren</target>
+				  </trans-unit>
+				  <trans-unit id="gear_up">
+				    <source>Shifts up a gear in a train fitted with a gearbox</source>
+				    <target>Skifter opp et gir i et tog utstyrt med girkasse</target>
+				  </trans-unit>
+				  <trans-unit id="gear_down">
+				    <source>Shifts down a gear in a train fitted with a gearbox</source>
+				    <target>Skifter ned et gir i et tog utstyrt med girkasse</target>
+				  </trans-unit>
+				  <trans-unit id="raise_pantograph">
+				    <source>Raises the pantograph</source>
+				    <target>Reiser pantografen</target>
+				  </trans-unit>
+				  <trans-unit id="lower_pantograph">
+				    <source>Lowers the pantograph</source>
+				    <target>Senker pantografen</target>
+				  </trans-unit>
+				  <trans-unit id="main_breaker">
+				    <source>Toggles the main breaker</source>
+				    <target>Slår på hovedbremsen</target>
+				  </trans-unit>
+				  <trans-unit id="raildriver_speed_units">
+				    <source>Toggles the RailDriver speed display units.</source>
+				    <target>Slår på RailDriver speedometerenheter</target>
+				  </trans-unit>
 				</group>
 				<group id="keys">
 					<trans-unit id="0">
