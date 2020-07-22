@@ -1209,26 +1209,33 @@
 					</trans-unit>
 				</group>
 				<group id="options">
-					<trans-unit id="title">
-						<source>Innstillinger</source>
+				  <trans-unit id="title">
+				    <source>Options</source>
+				    <target>Innstillinger</target>
 					</trans-unit>
 					<trans-unit id="language">
-						<source>Språk</source>
+					  <source>Language</source>
+					  <target>Språk</target>
 					</trans-unit>
 					<trans-unit id="display">
-						<source>Skjerm</source>
+					  <source>Display</source>
+					  <target>Skjerm</target>
 					</trans-unit>
 					<trans-unit id="display_mode">
-						<source>Skjermmodus</source>
+					  <source>Display mode</source>
+					  <target>Skjermmodus</target>
 					</trans-unit>
 					<trans-unit id="display_mode_window">
-						<source>Vindusmodus</source>
+					  <source>Window mode</source>
+					  <target>Vindusmodus</target>
 					</trans-unit>
 					<trans-unit id="display_mode_fullscreen">
-						<source>Fullskjermsmodus</source>
+					  <source>Fullscreen mode</source>
+					  <target>Fullskjermsmodus</target>
 					</trans-unit>
 					<trans-unit id="display_vsync">
-						<source>Vertical synchronization:</source>
+					  <source>Vertical synchronization:</source>
+					  <target>Vertikal synkronisering::</target>
 					</trans-unit>
 					<trans-unit id="display_vsync_off">
 					  <source>Disabled</source>
@@ -1295,31 +1302,40 @@
 					  <target>Bilineær (mipmapping)</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode_trilinearmipmap">
-						<source>Trilinear (mipmapping)</source>
+					  <source>Trilinear (mipmapping)</source>
+					  <target>Trilineær (mipmapping)</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode_anisotropic">
-						<source>Anisotropic filtering</source>
+					  <source>Anisotropic filtering</source>
+					  <target>Anisotropisk filtrering</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_anisotropic_level">
-						<source>Level of anisotropic filtering:</source>
+					  <source>Level of anisotropic filtering:</source>
+					  <target>Nivå av anisotropisk filtrering:</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_antialiasing_level">
-						<source>Level of anti-aliasing:</source>
+					  <source>Level of anti-aliasing:</source>
+					  <target>Nivå av kantutjevning (anti-aliasing):</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_transparency">
-						<source>Transparency:</source>
+					  <source>Transparency:</source>
+					  <target>Transparens</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_transparency_sharp">
-						<source>Sharp</source>
+					  <source>Sharp</source>
+					  <target>Skarp</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_transparency_smooth">
-						<source>Smooth</source>
+					  <source>Smooth</source>
+					  <target>Myk</target>
 					</trans-unit>
 					<trans-unit id="quality_distance">
-						<source>Distance effects</source>
+					  <source>Distance effects</source>
+					  <target>Avstandseffekter</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_viewingdistance">
-						<source>Viewing distance:</source>
+					  <source>Viewing distance:</source>
+					  <target>Utsiktsnivå:</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_viewingdistance_meters">
 						<source>m</source>
@@ -1345,193 +1361,251 @@
 					</trans-unit>
 					<trans-unit id="misc">
 					  <source>Miscellaneous</source>
+					  <target>Diverse</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation">
 					  <source>Detail of simulation</source>
 					  <target>Simuleringsdetalj</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_toppling">
-						<source>Toppling</source>
+					  <source>Velting</source>
 					</trans-unit>
 					<trans-unit id="misc_simulation_collisions">
-						<source>Collisions</source>
+					  <source>Collisions</source>
+					  <target>Kolisjoner</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_derailments">
-						<source>Derailments</source>
+					  <source>Derailments</source>
+					  <target>Avsporinger</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_blackbox">
-						<source>Enable black box</source>
+					  <source>Enable black box</source>
+					  <target>Slå på blackbox</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_loadingsway">
-						<source>Enable loading sway</source>
+					  <source>Enable loading sway</source>
+					  <target>Slå på laste svai</target>
 					</trans-unit>
 					<trans-unit id="misc_controls">
-						<source>Controls</source>
+					  <source>Controls</source>
+					  <target>Kontroller</target>
 					</trans-unit>
 					<trans-unit id="misc_controls_joysticks">
-						<source>Joysticks enabled</source>
+					  <source>Joysticks enabled</source>
+					  <target>Joysticker påslått</target>
 					</trans-unit>
 					<trans-unit id="misc_controls_threshold">
-						<source>Joystick threshold:</source>
+					  <source>Joystick threshold:</source>
+					  <target>Joystick terskel:</target>
 					</trans-unit>
 					<trans-unit id="misc_controls_ebaxis">
-						<source>Allow EB on brake axis</source>
+					  <source>Allow EB on brake axis</source>
 					</trans-unit>
 					<trans-unit id="misc_sound">
-						<source>Sound</source>
+					  <source>Sound</source>
+					  <target>Lyd</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_range">
-						<source>Effective range:</source>
+					  <source>Effective range:</source>
+					  <target>Effektiv avstand:</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_range_low">
-						<source>Low</source>
+					  <source>Low</source>
+					  <target>Lav</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_range_medium">
-						<source>Medium</source>
+					  <source>Medium</source>
+					  <target>Medium</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_range_high">
-						<source>High</source>
+					  <source>High</source>
+					  <target>Høy</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_number">
-						<source>Number of allowed sounds:</source>
+					  <source>Number of allowed sounds:</source>
+					  <target>Antall lyder som kan spilles på en gang:</target>
 					</trans-unit>
 					<trans-unit id="verbosity">
-						<source>Verbosity</source>
+					  <source>Verbosity</source>
+					  <target>Detaljnivå</target>
 					</trans-unit>
 					<trans-unit id="verbosity_warningmessages">
-						<source>Show warning messages</source>
+					  <source>Show warning messages</source>
+					  <target>Vis varselmeldinger</target>
 					</trans-unit>
 					<trans-unit id="verbosity_errormessages">
-						<source>Show error messages</source>
+					  <source>Show error messages</source>
+					  <target>Vis feilmeldinger</target>
 					</trans-unit>
 					<trans-unit id="advanced">
-						<source>Advanced Options</source>
+					  <source>Advanced Options</source>
+					  <target>Avanserte valg</target>
 					</trans-unit>
 					<trans-unit id="advanced_load_advance">
-						<source>Load in advance</source>
+					  <source>Load in advance</source>
+					  <target>Last in råd</target>
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
-						<source>Enable the new renderer</source>
+					  <source>Enable the new renderer</source>
+					  <target>Slå på den nye rendereren</target>
 					</trans-unit>
 					<trans-unit id="advanced_timefactor">
-						<source>Accelerated Time Factor</source>
+					  <source>Accelerated Time Factor</source>
+					  <target>Akselerert tidsfaktor</target>
 					</trans-unit>
 					<trans-unit id="advanced_unload_textures">
-						<source>Unload unused textures</source>
+					  <source>Unload unused textures</source>
+					  <target>Last av ubrukte teksturer</target>
 					</trans-unit>
 					<trans-unit id="other">
-						<source>Other</source>
+					  <source>Other</source>
+					  <target>Annet</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode">
-						<source>Timetable mode:</source>
+					  <source>Timetable mode:</source>
+					  <target>Tidstabell modus:</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_none">
-						<source>None</source>
+					  <source>None</source>
+					  <target>Ingen</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_default">
-						<source>Default</source>
+					  <source>Default</source>
+					  <target>Forholdsvalgete</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_autogenerated">
-						<source>Auto-generated timetable</source>
+					  <source>Auto-generated timetable</source>
+					  <target>Automatisk generert tidstabell</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_prefercustom">
-						<source>Prefer custom timetable</source>
+					  <source>Prefer custom timetable</source>
+					  <target>Foretrekk egenlaget tidstabell</target>
 					</trans-unit>
 					<trans-unit id="package_choose">
-						<source>Choose...</source>
+					  <source>Choose...</source>
+					  <target>Velg...</target>
 					</trans-unit>
 					<trans-unit id="package_route_directory">
-						<source>Route installation directory:</source>
+					  <source>Route installation directory:</source>
+					  <target>Mappe for installasjon av ruter:</target>
 					</trans-unit>
 					<trans-unit id="package_train_directory">
-						<source>Train installation directory:</source>
+					  <source>Train installation directory:</source>
+					  <target>Mappe for installasjon av tog:</target>
 					</trans-unit>
 					<trans-unit id="package_other_directory">
-						<source>Other items installation directory:</source>
+					  <source>Other items installation directory:</source>
+					  <target>Mappe for installasjon av andre ting:</target>
 					</trans-unit>
 					<trans-unit id="package_compression">
-						<source>Package compression format:</source>
+					  <source>Package compression format:</source>
+					  <target>Pakke kompresjonsformat:</target>
 					</trans-unit>
 					<trans-unit id="page_previous">
-						<source>Previous Page...</source>
+					  <source>Previous Page...</source>
+					  <target>Forrige side...</target>
 					</trans-unit>
 					<trans-unit id="page_next">
-						<source>Next Page...</source>
+					  <source>Next Page...</source>
+					  <target>Neste side...</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode">
-						<source>Kiosk Mode</source>
+					  <source>Kiosk Mode</source>
+					  <target>Kioskmodus</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode_enable">
-						<source>Enable Kiosk Mode</source>
+					  <source>Enable Kiosk Mode</source>
+					  <target>Slå på kioskmodus</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode_timer">
-						<source>Control Timeout (s)</source>
+					  <source>Control Timeout (s)</source>
+					  <target>Kontrolltimeout (s)</target>
 					</trans-unit>
 					<trans-unit id="hud_size">
-						<source>HUD Size</source>
+					  <source>HUD Size</source>
+					  <target>HUD størrelse</target>
 					</trans-unit>
 					<trans-unit id="hud_size_small">
-						<source>Small</source>
+					  <source>Small</source>
+					  <target>Liten</target>
 					</trans-unit>
 					<trans-unit id="hud_size_normal">
-						<source>Normal</source>
+					  <source>Normal</source>
+					  <target>Normal</target>
 					</trans-unit>
 					<trans-unit id="hud_size_large">
-						<source>Large</source>
+					  <source>Large</source>
+					  <target>Stor</target>
 					</trans-unit>
 					<trans-unit id="transparencyfix">
-						<source>Attempt to fix transparency issues in older content.</source>
+					  <source>Attempt to fix transparency issues in older content.</source>
+					  <target>Prøver å fiske feil med gjennomsiktighet for gammelt innhold.</target>
 					</trans-unit>
 					<trans-unit id="hacks_enable">
-						<source>Enable hacks for buggy older content.</source>
+					  <source>Enable hacks for buggy older content.</source>
+					  <target>Slå på "hacks" for buggy gammelt innhold.</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin">
-						<source>Input Device Plugin</source>
+					  <source>Input Device Plugin</source>
+					  <target>Inndataenhetplugin</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_warning">
-						<source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
+					  <source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
+					  <target>ADVARSEL: Hvis du slår på Inndataenhetplugin kan de skape konflikt med andre kontrollenheter.</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_name">
-						<source>Name</source>
+					  <source>Name</source>
+					  <target>Navn</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status">
-						<source>Status</source>
+					  <source>Status</source>
+					  <target>Status</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_failure">
-						<source>Failure</source>
+					  <source>Failure</source>
+					  <target>Feil</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_disable">
-						<source>Disable</source>
+					  <source>Disable</source>
+					  <target>Slå av</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_enable">
-						<source>Enable</source>
+					  <source>Enable</source>
+					  <target>Slå på</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_version">
-						<source>Version</source>
+					  <source>Version</source>
+					  <target>Versjon</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_provider">
-						<source>Provider</source>
+					  <source>Provider</source>
+					  <target>Leverandør</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_file_name">
-						<source>File Name</source>
+					  <source>File Name</source>
+					  <target>Filnavn</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_switch">
-						<source>Enable this Input Device Plugin</source>
+					  <source>Enable this Input Device Plugin</source>
+					  <target>Slå på denne inndata plugin</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_config">
-						<source>Config</source>
+					  <source>Config</source>
+					  <target>Konfigurer</target>
 					</trans-unit>
 					<trans-unit id="panel2_extended">
-						<source>Enable Panel2 Extended Mode</source>
+					  <source>Enable Panel2 Extended Mode</source>
+					  <target>Slå på panel2 utvidet modus</target>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
-						<source>X Object Parser</source>
+					  <source>X Object Parser</source>
 					</trans-unit>
 					<trans-unit id="objobject_parser">
 						<source>OBJ Object Parser</source>
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
-						<source>Default Signals:</source>
+					  <source>Default Signals:</source>
+					  <target>Forhåndsvalgte signaler (stillverk):</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">
