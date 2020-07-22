@@ -1116,53 +1116,71 @@
 				</group>
 				<group id="raildriver">
 					<trans-unit id="speedunits">
-						<source>LED Display speed units</source>
+					  <source>LED Display speed units</source>
+					  <target>LED Display hastighetsenhet</target>
 					</trans-unit>
 					<trans-unit id="milesperhour">
-						<source>Miles per Hour (MPH)</source>
+					  <source>Miles per Hour (MPH)</source>
+					  <target>Engelsk mil i timen (MPH)</target>
 					</trans-unit>
 					<trans-unit id="kilometersperhour">
-						<source>Kilometers per Hour (KPH)</source>
+					  <source>Kilometers per Hour (KPH)</source>
+					  <target>Kilometer i timen (Km/H)</target>
 					</trans-unit>
 					<trans-unit id="setcalibration">
-						<source>Set Calibration:</source>
+					  <source>Set Calibration:</source>
+					  <target>Sett kalibrering</target>
 					</trans-unit>
 					<trans-unit id="launch">
-						<source>Launch</source>
+					  <source>Launch</source>
+					  <!-- unshure of this-->
+					  <target>Start</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+					  <source>No RailDriver conrollers detected.</source>
+					  <target>Ingen RailDriver kontroller oppdaget.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
-						<source>Error loading RailDriver calibration file.</source>
+					  <source>Error loading RailDriver calibration file.</source>
+					  <target>Feil ved lasting av RailDriver kalibreringsfil.</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
-						<source>Please press 'Next' to start calibration.</source>
+					  <source>Please press 'Next' to start calibration.</source>
+					  <target>Trykk 'Neste' for å starte kalibrering.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
-						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+					  <source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+					  <target>Dytt vendegir-spaken til fullstendig revers og trykk 'Neste'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
-						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
+					  <source>Move the reverser lever to the full forward position and press 'Next'.</source>
+					  <target>Dytt vendegir-spaken til fullstendig forover og trykk 'Neste'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
-						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
-					</trans-unit>
+					  <source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+					<target>Dytt kombinasjonsbremsen til full akselerasjon og trykk 'Neste'.</target>								</trans-unit>
 					<trans-unit id="calibration_d">
-						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
-					</trans-unit>
+					  <source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+					<target>Dytt kombinasjonsbremsen til full brems og trykk 'Neste'.</target>										</trans-unit>
+				      
 					<trans-unit id="calibration_e">
-						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+					  <source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+					  <target>Dytt den regenerative bremsen til fullstendig av og trykk 'Neste'</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
-						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+					  <source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+					  <target>Dytt den regenerative bremsen til kriseposisjon og trykk 'Neste'</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
-						<source>Move the independant brake lever to the release position and press 'Next'.</source>
+					  <source>Move the independant brake lever to the release position and press 'Next'.</source>
+					  <target>Dytt lokomotiv bremsen til fullstendig av og trykk 'Neste'</target>
+					  
 					</trans-unit>
 					<trans-unit id="calibration_h">
-						<source>Move the independant brake lever to the full position and press 'Next'.</source>
+					  <source>Move the independant brake lever to the full position and press 'Next'.</source>
+					  <target>Dytt lokomotiv bremsen til fullstendig på og trykk 'Neste'</target>
 					</trans-unit>
+					<!-- unshure of this -->
 					<trans-unit id="calibration_i">
 						<source>Move the bail-off lever to the release position and press 'Next'.</source>
 					</trans-unit>
@@ -1170,19 +1188,24 @@
 						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
 					</trans-unit>
 					<trans-unit id="calibration_k">
-						<source>Move the wiper switch to OFF and press 'Next'.</source>
+					  <source>Move the wiper switch to OFF and press 'Next'.</source>
+					  <target>Flytt vindusvisker til AV og trykk 'Neste'</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
-						<source>Move the wiper switch to FULL and press 'Next'.</source>
+					  <source>Move the wiper switch to FULL and press 'Next'.</source>
+					  <target>Flytt vindusvisker til FULL og trykk 'Neste'</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
-						<source>Move the lights switch to OFF and press 'Next'.</source>
+					  <source>Move the lights switch to OFF and press 'Next'.</source>
+					  <target>Flytt lysbryteren til AV og trykk 'Neste'</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
-						<source>Move the lights switch to FULL and press 'Next'.</source>
+					  <source>Move the lights switch to FULL and press 'Next'.</source>
+					  <target>Flytt lysbryteren til FULL og trykk 'Neste'</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
-						<source>Calibration complete.</source>
+					  <source>Calibration complete.</source>
+					  <target>Kalibrering ferdig.</target>
 					</trans-unit>
 				</group>
 				<group id="options">
@@ -2051,10 +2074,10 @@
 				</group>
 				<group id="doors">
 					<trans-unit id="left">
-						<source>L</source>
+						<source>V</source>
 					</trans-unit>
 					<trans-unit id="right">
-						<source>R</source>
+						<source>H</source>
 					</trans-unit>
 				</group>
 				<group id="misc">
