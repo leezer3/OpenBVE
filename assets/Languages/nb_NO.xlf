@@ -3610,113 +3610,145 @@
 				</group>
 				<group id="navigation">
 					<trans-unit id="up">
-						<source>Up</source>
+					  <source>Up</source>
+					  <target>Opp</target>
 					</trans-unit>
 					<trans-unit id="down">
-						<source>Down</source>
+					  <source>Down</source>
+					  <target>Ned</target>
 					</trans-unit>
 					<trans-unit id="add">
-						<source>Add</source>
+					  <source>Add</source>
+					  <target>Legg til</target>
 					</trans-unit>
 					<trans-unit id="remove">
-						<source>Remove</source>
+					  <source>Remove</source>
+					  <target>Fjern</target>
 					</trans-unit>
 					<trans-unit id="copy">
-						<source>Copy</source>
+					  <source>Copy</source>
+					  <target>Kopier</target>
 					</trans-unit>
 					<trans-unit id="set">
-						<source>Set...</source>
+					  <source>Set...</source>
+					  <target>Set...</target>
 					</trans-unit>
 					<trans-unit id="open">
-						<source>Open...</source>
+					  <source>Open...</source>
+					  <target>Åpne...</target>
 					</trans-unit>
 				</group>
 				<group id="tree_cars">
 					<trans-unit id="train">
-						<source>Train</source>
+					  <source>Train</source>
+					  <target>Tog</target>
 					</trans-unit>
 					<trans-unit id="general">
-						<source>General</source>
+					  <source>General</source>
+					  <target>Generelt</target>
 					</trans-unit>
 					<trans-unit id="cars">
-						<source>Cars</source>
+					  <source>Cars</source>
+					  <target>Vogner</target>
 					</trans-unit>
 					<trans-unit id="couplers">
-						<source>Couplers</source>
+					  <source>Couplers</source>
+					  <target>Koblere</target>
 					</trans-unit>
 				</group>
 				<group id="general_settings">
 					<trans-unit id="name">
-						<source>General settings</source>
+					  <source>General settings</source>
+					  <target>Generelle settinger</target>
 					</trans-unit>
 					<group id="handle">
 						<trans-unit id="name">
-							<source>Handle</source>
+						  <source>Handle</source>
+						  <target>Spaktype</target>
 						</trans-unit>
 						<group id="handle_type">
 							<trans-unit id="name">
-								<source>HandleType</source>
+							  <source>HandleType</source>
+							  <target>Spaktype</target>
 							</trans-unit>
 							<trans-unit id="separated">
-								<source>Separated</source>
+							  <source>Separated</source>
+							  <target>Separert</target>
 							</trans-unit>
 							<trans-unit id="combined">
-								<source>Combined</source>
+							  <source>Combined</source>
+							  <target>Kombinert</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="power_notches">
-							<source>PowerNotches</source>
+						  <source>PowerNotches</source>
+						  <target>Turtallhakk</target>
 						</trans-unit>
 						<trans-unit id="brake_notches">
-							<source>BrakeNotches</source>
+						  <source>BrakeNotches</source>
+						  <target>Bremsetakk</target>
 						</trans-unit>
 						<trans-unit id="power_notch_reduce_steps">
-							<source>PowerNotchReduceSteps</source>
+						  <source>PowerNotchReduceSteps</source>
+						  <target>Bremsehakk reduserende steg</target>
 						</trans-unit>
 						<trans-unit id="driver_power_notches">
-							<source>DriverPowerNotches</source>
+						  <source>DriverPowerNotches</source>
+						  <target>Turtall hakk</target>
 						</trans-unit>
 						<trans-unit id="driver_brake_notches">
-							<source>DriverBrakeNotches</source>
+						  <source>DriverBrakeNotches</source>
+						  <target>Bremse hakk</target>
 						</trans-unit>
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
-								<source>EbHandleBehaviour</source>
+							  <source>EbHandleBehaviour</source>
+							  <target>Eb spak oppførsel</target>
 							</trans-unit>
 							<trans-unit id="no">
-								<source>No action</source>
+							  <source>No action</source>
+							  <target>Ingen handling</target>
 							</trans-unit>
 							<trans-unit id="power">
-								<source>Return power to neutral</source>
+							  <source>Return power to neutral</source>
+							  <target>Sett turtall i nøytral</target>
 							</trans-unit>
 							<trans-unit id="reverser">
-								<source>Return reverser to neutral</source>
+							  <source>Return reverser to neutral</source>
+							  <target>Sett vendegir til nøytral</target>
 							</trans-unit>
 							<trans-unit id="power_reverser">
-								<source>Return power and reverser to neutral</source>
+							  <source>Return power and reverser to neutral</source>
+							  <target>Sett turtall og vendegir til nøytral</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_handle_type">
 							<trans-unit id="name">
-								<source>LocoBrakeHandleType</source>
+							  <source>LocoBrakeHandleType</source>
+							  <target>Lokomotivbrems type</target>
 							</trans-unit>
 							<trans-unit id="combined">
-								<source>Combined</source>
+							  <source>Combined</source>
+							  <target>Kombinert</target>
 							</trans-unit>
 							<trans-unit id="independent">
-								<source>Independent</source>
+							  <source>Independent</source>
+							  <target>Uavhengig</target>
 							</trans-unit>
 							<trans-unit id="blocking">
-								<source>Blocking</source>
+							  <source>Blocking</source>
+							  <target>Blokkerende</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="loco_brake_notches">
-							<source>LocoBrakeNotches</source>
+						  <source>LocoBrakeNotches</source>
+						  <target>Lokomotivbremshakk</target>
 						</trans-unit>
 					</group>
 					<group id="cab">
 						<trans-unit id="name">
-							<source>Cab</source>
+						  <source>Cab</source>
+						  <target>Førerhytte</target>
 						</trans-unit>
 						<trans-unit id="x">
 							<source>X</source>
@@ -3780,16 +3812,20 @@
 								<source>None</source>
 							</trans-unit>
 							<trans-unit id="type_a">
-								<source>Type A (instant)</source>
+							  <source>Type A (instant)</source>
+							  <target>Type A (umiddelbart)</target>
 							</trans-unit>
 							<trans-unit id="type_b">
-								<source>Type B (slow)</source>
+							  <source>Type B (slow)</source>
+							  <target>Type B (sein)</target>
 							</trans-unit>
 							<trans-unit id="type_c">
-								<source>Type C (medium)</source>
+							  <source>Type C (medium)</source>
+							  <target>Type C (medium)</target>
 							</trans-unit>
 							<trans-unit id="type_d">
-								<source>Type D (fast)</source>
+							  <source>Type D (fast)</source>
+							  <target>Type D (rask)</target>
 							</trans-unit>
 						</group>
 						<group id="pass_alarm">
@@ -3837,61 +3873,79 @@
 					</trans-unit>
 					<group id="general">
 						<trans-unit id="name">
-							<source>General</source>
+						  <source>General</source>
+						  <target>Generelt</target>
 						</trans-unit>
 						<trans-unit id="is_motor_car">
-							<source>IsMotorCar</source>
+						  <source>IsMotorCar</source>
+						  <target>Er motorvogn</target>
 						</trans-unit>
 						<trans-unit id="mass">
-							<source>Mass</source>
+						  <source>Mass</source>
+						  <target>Masse</target>
 						</trans-unit>
 						<trans-unit id="length">
-							<source>Length</source>
+						  <source>Length</source>
+						  <target>Lengde</target>
 						</trans-unit>
 						<trans-unit id="width">
 						  <source>Width</source>
 						  <target>Bredde</target>
 						</trans-unit>
 						<trans-unit id="height">
-							<source>Height</source>
+						  <source>Height</source>
+						  <target>Høyde</target>
 						</trans-unit>
 						<trans-unit id="center_of_gravity_height">
-							<source>CenterOfGravityHeight</source>
+						  <source>CenterOfGravityHeight</source>
+						  <target>Senter for høyden på gravitasjon</target>
 						</trans-unit>
 						<trans-unit id="exposed_frontal_area">
-							<source>ExposedFrontalArea</source>
+						  <source>ExposedFrontalArea</source>
+						  <target>Eksponert frontalområde</target>
 						</trans-unit>
 						<trans-unit id="unexposed_frontal_area">
-							<source>UnexposedFrontalArea</source>
+						  <source>UnexposedFrontalArea</source>
+						  <target>Ikke-eksponert frontalområde</target>
+						  
 						</trans-unit>
 						<trans-unit id="defined_axles">
-							<source>DefinedAxles</source>
+						  <source>DefinedAxles</source>
+						  <target>Definerte aksler</target>
 						</trans-unit>
 						<group id="axles">
 							<trans-unit id="name">
-								<source>Axles</source>
+							  <source>Axles</source>
+							  <target>Aksler</target>
 							</trans-unit>
 							<trans-unit id="front">
-								<source>FrontAxle</source>
+							  <source>FrontAxle</source>
+							  <target>Fram aksle</target>
 							</trans-unit>
 							<trans-unit id="rear">
-								<source>RearAxle</source>
+							  <source>RearAxle</source>
+							  <target>Bak aksle</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="front_bogie">
-							<source>FrontBogie</source>
+						  <source>FrontBogie</source>
+						  <target>Fremre bogie</target>
 						</trans-unit>
 						<trans-unit id="rear_bogie">
-							<source>RearBogie</source>
+						  <source>RearBogie</source>
+						  <target>Bakre bogie</target>
 						</trans-unit>
 						<trans-unit id="loading_sway">
-							<source>LoadingSway</source>
+						  <source>LoadingSway</source>
+						  <target>Laste svai</target>
 						</trans-unit>
 						<trans-unit id="reversed">
-							<source>Reversed</source>
+						  <source>Reversed</source>
+						  <target>Reversert</target>
 						</trans-unit>
 						<trans-unit id="object">
-							<source>Object</source>
+						  <source>Object</source>
+						  <target>Objekt</target>
 						</trans-unit>
 					</group>
 					<group id="performance">
