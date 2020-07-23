@@ -4457,72 +4457,89 @@
 							<source>y-max(Pitch)</source>
 						</trans-unit>
 						<trans-unit id="min_volume">
-							<source>y-min(Volume)</source>
+						  <source>y-min(Volume)</source>
+						  <target>y-min(Nivå)</target>
 						</trans-unit>
 						<trans-unit id="max_volume">
-							<source>y-max(Volume)</source>
+						  <source>y-max(Volume)</source>
+						  <target>y-max(Nivå)</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
-							<source>Zoom In</source>
+						  <source>Zoom In</source>
+						  <target>Zoom inn</target>
 						</trans-unit>
 						<trans-unit id="zoom_out">
-							<source>Zoom Out</source>
+						  <source>Zoom Out</source>
+						  <target>Zoom ut</target>
 						</trans-unit>
 						<trans-unit id="reset">
-							<source>Reset</source>
+						  <source>Reset</source>
 						</trans-unit>
 					</group>
 					<group id="direct_input">
 						<trans-unit id="name">
-							<source>Direct input</source>
+						  <source>Direct input</source>
+						  <target>Direkte innputt</target>
 						</trans-unit>
 						<trans-unit id="x">
-							<source>x coordinate</source>
+						  <source>x coordinate</source>
+						  <target>x koordinat</target>
 						</trans-unit>
 						<trans-unit id="y">
-							<source>y coordinate</source>
+						  <source>y coordinate</source>
+						  <target>y koordinat</target>
 						</trans-unit>
 						<trans-unit id="dot">
 							<source>Dot</source>
 						</trans-unit>
 						<trans-unit id="move">
-							<source>Move</source>
+						  <source>Move</source>
+						  <target>Flytt</target>
 						</trans-unit>
 					</group>
 					<group id="play_setting">
 						<trans-unit id="name">
-							<source>Playback setting</source>
+						  <source>Playback setting</source>
+						  <target>Avspillingsvalg</target>
 						</trans-unit>
 						<group id="source">
 							<trans-unit id="name">
-								<source>Sound source setting</source>
+							  <source>Sound source setting</source>
+							  <target>Lydkildevalg</target>
 							</trans-unit>
 							<trans-unit id="run">
-								<source>Running sound</source>
+							  <source>Running sound</source>
+							  <target>Trillelyd</target>
 							</trans-unit>
 							<trans-unit id="track">
-								<source>Track</source>
+							  <source>Track</source>
+							  <target>Skinne</target>
 							</trans-unit>
 						</group>
 						<group id="area">
 							<trans-unit id="name">
-								<source>Area setting</source>
+							  <source>Area setting</source>
 							</trans-unit>
 							<trans-unit id="loop">
-								<source>Loop playback</source>
+							  <source>Loop playback</source>
+							  <target>Løkke avspilling</target>
 							</trans-unit>
 							<trans-unit id="constant">
-								<source>Constant speed</source>
+							  <source>Constant speed</source>
+							  <target>Konstant fart</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
-								<source>Acceleration:</source>
+							  <source>Acceleration:</source>
+							  <target>Akselerasjon:</target>
 							</trans-unit>
 							<trans-unit id="swap">
-								<source>Swap</source>
+							  <source>Swap</source>
+							  <target>Swap</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="play">
-							<source>Playback</source>
+						  <source>Playback</source>
+						  <target>Avspilling</target>
 						</trans-unit>
 						<trans-unit id="pause">
 							<source>Pause</source>
@@ -4533,7 +4550,8 @@
 					</group>
 					<group id="vertex_info">
 						<trans-unit id="name">
-							<source>Vertex information</source>
+						  <source>Vertex information</source>
+						  <target>Vertex informasjon</target>
 						</trans-unit>
 						<trans-unit id="velocity">
 							<source>Velocity</source>
@@ -4542,10 +4560,12 @@
 							<source>Pitch</source>
 						</trans-unit>
 						<trans-unit id="volume">
-							<source>Volume</source>
+						  <source>Volume</source>
+						  <target>Nivå</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
-							<source>Sound source index</source>
+						  <source>Sound source index</source>
+						  <target>Lydkildeindeks</target>
 						</trans-unit>
 					</group>
 					<group id="status">
@@ -4554,20 +4574,24 @@
 								<source>Type</source>
 							</trans-unit>
 							<trans-unit id="power">
-								<source>Power</source>
+							  <source>Power</source>
+							  <target>Turtall</target>
 							</trans-unit>
 							<trans-unit id="brake">
-								<source>Brake</source>
+							  <source>Brake</source>
+							  <target>Bremse</target>
 							</trans-unit>
 						</group>
 						<group id="track">
 							<trans-unit id="name">
-								<source>Track</source>
+							  <source>Track</source>
+							  <target>Skinne</target>
 							</trans-unit>
 						</group>
 						<group id="mode">
 							<trans-unit id="name">
-								<source>Mode</source>
+							  <source>Mode</source>
+							  <target>Modus</target>
 							</trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
@@ -4576,24 +4600,29 @@
 								<source>Volume</source>
 							</trans-unit>
 							<trans-unit id="sound_index">
-								<source>Sound source index</source>
+							  <source>Sound source index</source>
+							  <target>Lydkildekindeks</target>
 							</trans-unit>
 						</group>
 						<group id="tool">
 							<trans-unit id="name">
-								<source>Tool</source>
+							  <source>Tool</source>
+							  <target>Verktøy</target>
 							</trans-unit>
 							<trans-unit id="select">
-								<source>Select</source>
+							  <source>Select</source>
+							  <target>Velg</target>
 							</trans-unit>
 							<trans-unit id="move">
-								<source>Move</source>
+							  <source>Move</source>
+							  <target>Flytt</target>
 							</trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
 							</trans-unit>
 							<trans-unit id="line">
-								<source>Line</source>
+							  <source>Line</source>
+							  <target>Linje</target>
 							</trans-unit>
 						</group>
 						<group id="xy">
@@ -4610,61 +4639,77 @@
 					</group>
 					<group id="message">
 						<trans-unit id="vertex_exist">
-							<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
+						  <source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
+						  <target>Et punkt eksisterer allerede i samme x koordinat, ønsker du å skrive over?</target>
 						</trans-unit>
 					</group>
 				</group>
 				<group id="coupler_settings">
 					<trans-unit id="name">
-						<source>Coupler settings</source>
+					  <source>Coupler settings</source>
+					  <target>Kobleegenskaper</target>
 					</trans-unit>
 					<group id="general">
 						<trans-unit id="name">
-							<source>General</source>
+						  <source>General</source>
+						  <target>Generelt</target>
 						</trans-unit>
 						<trans-unit id="min">
-							<source>Min</source>
+						  <source>Min</source>
+						  <target>Min</target>
 						</trans-unit>
 						<trans-unit id="max">
-							<source>Max</source>
+						  <source>Max</source>
+						  <target>Maks</target>
 						</trans-unit>
 					</group>
 				</group>
 				<group id="panel_settings">
 					<trans-unit id="name">
-						<source>Panel settings</source>
+					  <source>Panel settings</source>
+					  <target>Panel egenskaper</target>
 					</trans-unit>
 					<group id="this">
 						<trans-unit id="name">
-							<source>This</source>
+						  <source>This</source>
+						  <target>Denne</target>
 						</trans-unit>
 						<trans-unit id="resolution">
-							<source>Resolution</source>
+						  <source>Resolution</source>
+						  <target>Oppløsning</target>
 						</trans-unit>
 						<trans-unit id="left">
-							<source>Left</source>
+						  <source>Left</source>
+						  <target>Venstre</target>
 						</trans-unit>
 						<trans-unit id="right">
-							<source>Right</source>
+						  <source>Right</source>
+						  <target>Høyre</target>
 						</trans-unit>
 						<trans-unit id="top">
-							<source>Top</source>
+						  <source>Top</source>
+						  <target>Topp</target>
 						</trans-unit>
 						<trans-unit id="bottom">
-							<source>Bottom</source>
+						  <source>Bottom</source>
+						  <target>Bunn</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
 						</trans-unit>
 						<group id="center">
 							<trans-unit id="name">
-								<source>Center</source>
+							  <source>Center</source>
+							  <target>Senter</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4675,7 +4720,8 @@
 						</group>
 						<group id="origin">
 							<trans-unit id="name">
-								<source>Origin</source>
+							  <source>Origin</source>
+							  <target>Opprinnelsespunkt</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4687,25 +4733,31 @@
 					</group>
 					<group id="screen">
 						<trans-unit id="name">
-							<source>Screen</source>
+						  <source>Screen</source>
+						  <target>Skjerm</target>
 						</trans-unit>
 						<trans-unit id="number">
-							<source>Number</source>
+						  <source>Number</source>
+						  <target>Tall</target>
 						</trans-unit>
 						<trans-unit id="layer">
-							<source>Layer</source>
+						  <source>Layer</source>
+						  <target>Lag</target>
 						</trans-unit>
 					</group>
 					<group id="pilot_lamp">
 						<trans-unit id="name">
-							<source>PilotLamp</source>
+						  <source>PilotLamp</source>
+						  <target>Pilotlampe</target>
 						</trans-unit>
 						<trans-unit id="subject">
-							<source>Subject</source>
+						  <source>Subject</source>
+						  <target>Subjekt</target>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
-								<source>Location</source>
+							  <source>Location</source>
+							  <target>Lokasjon</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4715,28 +4767,34 @@
 							</trans-unit>
 						</group>
 						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
 						</trans-unit>
 						<trans-unit id="layer">
-							<source>Layer</source>
+						  <source>Layer</source>
+						  <target>Lag</target>
 						</trans-unit>
 					</group>
 					<group id="needle">
 						<trans-unit id="name">
-							<source>Needle</source>
+						  <source>Needle</source>
+						  <target>Nål</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
-								<source>Location</source>
+							  <source>Location</source>
+							  <target>Lokasjon</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4746,29 +4804,37 @@
 							</trans-unit>
 						</group>
 						<trans-unit id="defined_radius">
-							<source>DefinedRadius</source>
+						  <source>DefinedRadius</source>
+						  <target>Definert radius</target>
 						</trans-unit>
 						<trans-unit id="radius">
-							<source>Radius</source>
+						  <source>Radius</source>
+						  <target>Radius</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
 						</trans-unit>
 						<trans-unit id="color">
-							<source>Color</source>
+						  <source>Color</source>
+						  <target>Farge</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
 						</trans-unit>
 						<trans-unit id="defined_origin">
-							<source>DefinedOrigin</source>
+						  <source>DefinedOrigin</source>
+						  <target>Definert origo</target>
 						</trans-unit>
 						<group id="origin">
 							<trans-unit id="name">
-								<source>Origin</source>
+							  <source>Origin</source>
+							  <target>Origo</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4778,49 +4844,62 @@
 							</trans-unit>
 						</group>
 						<trans-unit id="initial_angle">
-							<source>InitialAngle</source>
+						  <source>InitialAngle</source>
+						  <target>Initiell vinkel</target>
 						</trans-unit>
 						<trans-unit id="last_angle">
-							<source>LastAngle</source>
+						  <source>LastAngle</source>
+						  <target>Siste vinkel</target>
 						</trans-unit>
 						<trans-unit id="minimum">
-							<source>Minimum</source>
+						  <source>Minimum</source>
+						  <target>Minimum</target>
 						</trans-unit>
 						<trans-unit id="maximum">
-							<source>Maximum</source>
+						  <source>Maximum</source>
+						  <target>Maksimum</target>
 						</trans-unit>
 						<trans-unit id="defined_natural_freq">
-							<source>DefinedNaturalFreq</source>
+						  <source>DefinedNaturalFreq</source>
+						  <target>Definert nøytral frekvens</target>
 						</trans-unit>
 						<trans-unit id="natural_freq">
-							<source>NaturalFreq</source>
+						  <source>NaturalFreq</source>
+						  <target>Nøytral frekvens</target>
 						</trans-unit>
 						<trans-unit id="defined_damping_ratio">
-							<source>DefiedDampingRatio</source>
+						  <source>DefiedDampingRatio</source>
+						  <target>Definert dempingsforhold</target>
 						</trans-unit>
 						<trans-unit id="damping_ratio">
-							<source>DampingRatio</source>
+						  <source>DampingRatio</source>
+						  <target>Dempingsforhold</target>
 						</trans-unit>
 						<trans-unit id="backstop">
-							<source>Backstop</source>
+						  <source>Backstop</source>
+						  <target>Bakstopp</target>
 						</trans-unit>
 						<trans-unit id="smoothed">
-							<source>smoothed</source>
+						  <source>smoothed</source>
+						  <target>utgjenvet</target>
 						</trans-unit>
 						<trans-unit id="layer">
-							<source>Layer</source>
+						  <source>Layer</source>
+						  <target>Lag</target>
 						</trans-unit>
 					</group>
 					<group id="digital_number">
 						<trans-unit id="name">
-							<source>DigitalNumber</source>
+						  <source>DigitalNumber</source>
+						  <target>Digitalt nummer</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
-								<source>Location</source>
+							  <source>Location</source>
+							  <target>Lokasjon</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4830,31 +4909,38 @@
 							</trans-unit>
 						</group>
 						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
 						</trans-unit>
 						<trans-unit id="layer">
-							<source>Layer</source>
+						  <source>Layer</source>
+						  <target>Lag</target>
 						</trans-unit>
 						<trans-unit id="interval">
-							<source>Interval</source>
+						  <source>Interval</source>
+						  <target>Intervall</target>
 						</trans-unit>
 					</group>
 					<group id="digital_gauge">
 						<trans-unit id="name">
-							<source>DigitalGauge</source>
+						  <source>DigitalGauge</source>
+						  <target>Digital måleenhet</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
-								<source>Location</source>
+							  <source>Location</source>
+							  <target>Lokasjon</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4864,40 +4950,50 @@
 							</trans-unit>
 						</group>
 						<trans-unit id="radius">
-							<source>Radius</source>
+						  <source>Radius</source>
+						  <target>Radius</target>
 						</trans-unit>
 						<trans-unit id="color">
-							<source>Color</source>
+						  <source>Color</source>
+						  <target>Farge</target>
 						</trans-unit>
 						<trans-unit id="initial_angle">
-							<source>InitialAngle</source>
+						  <source>InitialAngle</source>
+						  <target>Initiell vinkel</target>
 						</trans-unit>
 						<trans-unit id="last_angle">
-							<source>LastAngle</source>
+						  <source>LastAngle</source>
+						  <target>Siste vinkel</target>
 						</trans-unit>
 						<trans-unit id="minimum">
-							<source>Minimum</source>
+						  <source>Minimum</source>
+						  <target>Minimum</target>
 						</trans-unit>
 						<trans-unit id="maximum">
-							<source>Maximum</source>
+						  <source>Maximum</source>
+						  <target>Maksimum</target>
 						</trans-unit>
 						<trans-unit id="step">
-							<source>Step</source>
+						  <source>Step</source>
+						  <target>Steg</target>
 						</trans-unit>
 						<trans-unit id="layer">
-							<source>Layer</source>
+						  <source>Layer</source>
+						  <target>Lag</target>
 						</trans-unit>
 					</group>
 					<group id="linear_gauge">
 						<trans-unit id="name">
-							<source>LinearGauge</source>
+						  <source>LinearGauge</source>
+						  <target>Lineær måleenhet</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
-								<source>Location</source>
+							  <source>Location</source>
+							  <target>Lokasjon</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4907,23 +5003,29 @@
 							</trans-unit>
 						</group>
 						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
 						</trans-unit>
 						<trans-unit id="minimum">
-							<source>Minimum</source>
+						  <source>Minimum</source>
+						  <target>Minimum</target>
 						</trans-unit>
 						<trans-unit id="maximum">
-							<source>Maximum</source>
+						  <source>Maximum</source>
+						  <target>Maksimum</target>
 						</trans-unit>
 						<group id="direction">
 							<trans-unit id="name">
-								<source>Direction</source>
+							  <source>Direction</source>
+							  <target>Retning</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4933,19 +5035,23 @@
 							</trans-unit>
 						</group>
 						<trans-unit id="width">
-							<source>Width</source>
+						  <source>Width</source>
+						  <target>Bredde</target>
 						</trans-unit>
 						<trans-unit id="layer">
-							<source>Layer</source>
+						  <source>Layer</source>
+						  <target>Lag</target>
 						</trans-unit>
 					</group>
 					<group id="timetable">
 						<trans-unit id="name">
-							<source>Timetable</source>
+						  <source>Timetable</source>
+						  <target>Tidstabell</target>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
-								<source>Location</source>
+							  <source>Location</source>
+							  <target>Lokasjon</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4955,16 +5061,20 @@
 							</trans-unit>
 						</group>
 						<trans-unit id="height">
-							<source>Height</source>
+						  <source>Height</source>
+						  <target>Høyde</target>
 						</trans-unit>
 						<trans-unit id="width">
-							<source>Width</source>
+						  <source>Width</source>
+						  <target>Bredde</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
 						</trans-unit>
 						<trans-unit id="layer">
-							<source>Layer</source>
+						  <source>Layer</source>
+						  <target>Lag</target>
 						</trans-unit>
 					</group>
 					<group id="touch">
@@ -5009,95 +5119,119 @@
 				</group>
 				<group id="sound_settings">
 					<trans-unit id="name">
-						<source>Sound settings</source>
+					  <source>Sound settings</source>
+					  <target>Lydegenskaper</target>
 					</trans-unit>
 					<trans-unit id="key">
-						<source>Key</source>
+					  <source>Key</source>
+					  <target>Knapp</target>
 					</trans-unit>
 					<trans-unit id="filename">
-						<source>Filename</source>
+					  <source>Filename</source>
+					  <target>Filnavn</target>
 					</trans-unit>
 					<trans-unit id="position">
-						<source>Position</source>
+					  <source>Position</source>
+					  <target>Posisjon</target>
 					</trans-unit>
 					<trans-unit id="radius">
 						<source>Radius</source>
 					</trans-unit>
 					<group id="edit_entry">
 						<trans-unit id="name">
-							<source>Edit entry</source>
+						  <source>Edit entry</source>
+						  <target>Endre valgt</target>
 						</trans-unit>
 						<group id="section">
 							<trans-unit id="name">
-								<source>Section select</source>
+							  <source>Section select</source>
+							  <target>Velg seksjon</target>
 							</trans-unit>
 						</group>
 						<group id="key">
 							<trans-unit id="name">
-								<source>Key type select</source>
+							  <source>Key type select</source>
+							  <target>Knappetypevalg</target>
 							</trans-unit>
 						</group>
 						<group id="value">
 							<trans-unit id="name">
-								<source>Input value</source>
+							  <source>Input value</source>
+							  <target>Innputtverdi</target>
 							</trans-unit>
 							<trans-unit id="filename">
-								<source>Filename</source>
+							  <source>Filename</source>
+							  <target>Filnavn</target>
 							</trans-unit>
 							<trans-unit id="radius">
 								<source>Radius</source>
 							</trans-unit>
 							<trans-unit id="position">
-								<source>Position setting</source>
+							  <source>Position setting</source>
+							  <target>Posisjonsvalg</target>
 							</trans-unit>
 							<group id="position">
 								<trans-unit id="name">
-									<source>Position</source>
+								  <source>Position</source>
+								  <target>Posisjon</target>
 								</trans-unit>
 								<trans-unit id="x">
-									<source>x coordinate</source>
+								  <source>x coordinate</source>
+								  <target>x koordinat</target>
 								</trans-unit>
+								
 								<trans-unit id="y">
-									<source>y coordinate</source>
+								  <source>y coordinate</source>
+								  <target>y koordinat</target>
 								</trans-unit>
 								<trans-unit id="z">
-									<source>z coordinate</source>
+								  <source>z coordinate</source>
+								  <target>z koordinat</target>
 								</trans-unit>
 							</group>
 						</group>
 					</group>
 					<group id="message">
 						<trans-unit id="empty_filename">
-							<source>File name has not been entered.</source>
+						  <source>File name has not been entered.</source>
+						  <target>Filnavn har ikke blitt skrevet inn.</target>
 						</trans-unit>
 						<trans-unit id="key_exist">
-							<source>The specified key is already set.</source>
+						  <source>The specified key is already set.</source>
+						  <target>Knappen er allerede satt til noe.</target>
 						</trans-unit>
 					</group>
 				</group>
 				<group id="status">
 					<trans-unit id="name">
-						<source>Status</source>
+					  <source>Status</source>
+					  <target>Status</target>
 					</trans-unit>
 					<group id="menu">
 						<trans-unit id="error">
-							<source>Error</source>
+						  <source>Error</source>
+						  <target>Feil</target>
 						</trans-unit>
 						<trans-unit id="warning">
-							<source>Warning</source>
+						  <source>Warning</source>
+						  <target>Advarsel</target>
 						</trans-unit>
 						<trans-unit id="info">
-							<source>Information</source>
+						  <source>Information</source>
+						  <target>Informasjon</target>
 						</trans-unit>
 						<trans-unit id="clear">
-							<source>Clear</source>
+						  <source>Clear</source>
+						  <target>Vask bort</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="level">
-						<source>Level</source>
+					  <source>Level</source>
+					  <target>Nivå</target>
 					</trans-unit>
 					<trans-unit id="description">
-						<source>Description</source>
+					  <source>Description</source>
+					  <target>Beskrivelse</target>
 					</trans-unit>
 				</group>
 				<group id="message">
