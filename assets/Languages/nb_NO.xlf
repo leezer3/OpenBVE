@@ -1602,9 +1602,11 @@
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 					  <source>X Object Parser</source>
+					  <target>X Objekt parser</target>
 					</trans-unit>
 					<trans-unit id="objobject_parser">
-						<source>OBJ Object Parser</source>
+					  <source>OBJ Object Parser</source>
+					  <target>OBJ objekt parser</target>
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
 					  <source>Default Signals:</source>
@@ -1644,6 +1646,7 @@
 					</trans-unit>
 					<trans-unit id="cumulative">
 					  <source>Cumulative</source>
+					  <target>Kumulativ</target>
 					</trans-unit>
 					<trans-unit id="reason">
 					  <source>Reason</source>
@@ -1755,10 +1758,12 @@
 				</group>
 				<group id="timetable">
 					<trans-unit id="highestspeed">
-						<source>Max.\r\nspd.</source>
+					  <source>Max.\r\nspd.</source>
+					  <target>MAx.\r\nfart</target>
 					</trans-unit>
 					<trans-unit id="drivingtime">
-						<source>Drv.\r\ntime</source>
+					  <source>Drv.\r\ntime</source>
+					  <target>Kjr.\r\ntid</target>
 					</trans-unit>
 					<trans-unit id="stationname">
 					  <source>Station name</source>
@@ -3141,411 +3146,540 @@
 				<group id="delay">
 					<trans-unit id="delay">
 					  <source>Delay</source>
+					  <target>Forsinkelse</target>
 					</trans-unit>
 					<trans-unit id="power_up">
 					  <source>DelayPowerUp</source>
-
+					  <target>Forsinkelse turtall opp</target>
 					</trans-unit>
 					<trans-unit id="power_down">
-						<source>DelayPowerDown</source>
+					  <source>DelayPowerDown</source>
+					  <target>Forsinkelse turtall ned</target>
 					</trans-unit>
 					<trans-unit id="brake_up">
-						<source>DelayBrakeUp</source>
+					  <source>DelayBrakeUp</source>
+					  <target>Forsinkelse bremse på</target>
 					</trans-unit>
 					<trans-unit id="brake_down">
-						<source>DelayBrakeDown</source>
+					  <source>DelayBrakeDown</source>
+					  <target>Forsinkelse bremse av</target>
 					</trans-unit>
 					<trans-unit id="set">
-						<source>Set</source>
+					  <source>Set</source>
+					  <target>Set</target>
 					</trans-unit>
 					<trans-unit id="notch">
-						<source>Notch</source>
+					  <source>Notch</source>
+					  <target>Hakk</target>
 					</trans-unit>
 					<trans-unit id="save">
-						<source>Save</source>
+					  <source>Save</source>
+					  <target>Lagre</target>
 					</trans-unit>
 					<trans-unit id="cancel">
-						<source>Cancel</source>
+					  <source>Cancel</source>
+					  <target>Avbryt</target>
 					</trans-unit>
 				</group>
 				<group id="move">
 					<trans-unit id="move">
 					  <source>Move</source>
+					  <target>Bevegelse</target>
 					</trans-unit>
 					<trans-unit id="jerk_power_up">
-						<source>JerkPowerUp:</source>
+					  <source>JerkPowerUp:</source>
+					  <target>Dytt aksl. opp</target>
 					</trans-unit>
 					<trans-unit id="jerk_power_down">
-						<source>JerkPowerDown:</source>
+					  <source>JerkPowerDown:</source>
+					  <target>Dytt aksl. ned</target>
 					</trans-unit>
 					<trans-unit id="jerk_brake_up">
-						<source>JerkBrakeUp:</source>
+					  <source>JerkBrakeUp:</source>
+					  <target>Dytt brems på</target>
 					</trans-unit>
 					<trans-unit id="jerk_brake_down">
-						<source>JerkBrakeDown:</source>
+					  <source>JerkBrakeDown:</source>
+					  <target>Dytt brems av</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_up">
-						<source>BrakeCylinderUp:</source>
+					  <source>BrakeCylinderUp:</source>
+					  <target>Bremsesylinder opp</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_down">
-						<source>BrakeCylinderDown:</source>
+					  <source>BrakeCylinderDown:</source>
+					  <target>Bremsesylinder ned</target>
 					</trans-unit>
 				</group>
 				<group id="brake">
 					<trans-unit id="brake">
-						<source>Brake</source>
+					  <source>Brake</source>
+					  <target>Bremse</target>
 					</trans-unit>
 					<trans-unit id="type">
-						<source>BrakeType:</source>
+					  <source>BrakeType:</source>
+					  <target>Bremsetype</target>
 					</trans-unit>
 					<trans-unit id="control_system">
-						<source>BrakeControlSystem:</source>
+					  <source>BrakeControlSystem:</source>
+					  <target>Bremsekontrollsystem:</target>
 					</trans-unit>
 					<trans-unit id="control_speed">
-						<source>BrakeControlSpeed:</source>
+					  <source>BrakeControlSpeed:</source>
+					  <target>Bremsekontrollfart</target>
 					</trans-unit>
 					<trans-unit id="smee">
-						<source>Electromagnetic straight air brake</source>
+					  <source>Electromagnetic straight air brake</source>
+					  <target>Elektromagnetisk rett luftbremse</target>
 					</trans-unit>
 					<trans-unit id="ecb">
-						<source>Electro-pneumatic air brake without brake pipe</source>
+					  <source>Electro-pneumatic air brake without brake pipe</source>
+					  <target>Elekronisk pneumatisk luftbremse uten bremserør</target>
 					</trans-unit>
 					<trans-unit id="cl">
-						<source>Air brake with partial release feature</source>
+					  <source>Air brake with partial release feature</source>
+					  <target>Luftbrems med delvis utslipp</target>
 					</trans-unit>
 					<trans-unit id="control_system_none">
-						<source>None</source>
+					  <source>None</source>
+					  <target>Ingen</target>
 					</trans-unit>
 					<trans-unit id="lock_out_valve">
-						<source>Closing electromagnetic valve</source>
+					  <source>Closing electromagnetic valve</source>
+					  <target>Lukket elektromagnetisk hvelv</target>
 					</trans-unit>
 					<trans-unit id="delay_including_control">
-						<source>Delay-including control</source>
+					  <source>Delay-including control</source>
+					  <target>Inkludert forsinkelses kontroll</target>
 					</trans-unit>
 				</group>
 				<group id="pressure">
 					<trans-unit id="pressure">
-						<source>Pressure</source>
+					  <source>Pressure</source>
+					  <target>Trykk</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_service_max">
-						<source>BrakeCylinderServiceMaximumPressure:</source>
+					  <source>BrakeCylinderServiceMaximumPressure:</source>
+					  <target>Bremsesylinder maks operasjonelt trykk:</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_emergency_max">
-						<source>BrakeCylinderEmergencyMaximumPressure:</source>
+					  <source>BrakeCylinderEmergencyMaximumPressure:</source>
+					  <target>Bremsesylinder maks nødstopp trykk:</target>
+					  <target></target>
 					</trans-unit>
 					<trans-unit id="main_reservoir_min">
-						<source>MainReservoirMinimumPressure:</source>
+					  <source>MainReservoirMinimumPressure:</source>
+					  <target>Hoved reservoar minimumstrykk:</target>
 					</trans-unit>
 					<trans-unit id="main_reservoir_max">
-						<source>MainReservoirMaximumPressure:</source>
+					  <source>MainReservoirMaximumPressure:</source>
+					  <target>Hoved reservoar maksimumstrykk:</target>
 					</trans-unit>
 					<trans-unit id="brake_pipe_normal">
-						<source>BrakePipeNormalPressure:</source>
+					  <source>BrakePipeNormalPressure:</source>
+					  <target>Bremserørets normale trykk:</target>
 					</trans-unit>
 				</group>
 				<group id="handle">
 					<trans-unit id="handle">
-						<source>Handle</source>
+					  <source>Handle</source>
+					  <target>Spaker</target>
 					</trans-unit>
 					<trans-unit id="type">
-						<source>HandleType:</source>
+					  <source>HandleType:</source>
+					  <target>Spak type:</target>
 					</trans-unit>
 					<trans-unit id="power_notches">
-						<source>PowerNotches:</source>
+					  <source>PowerNotches:</source>
+					  <target>Turtallhakk</target>
 					</trans-unit>
 					<trans-unit id="brake_notches">
-						<source>BrakeNotches:</source>
+					  <source>BrakeNotches:</source>
+					  <target>Bremsehakk</target>
 					</trans-unit>
 					<trans-unit id="driver_power_notches">
-						<source>DriverPowerNotches:</source>
+					  <source>DriverPowerNotches:</source>
+					  <target>Fører turtall hakk:</target>
 					</trans-unit>
 					<trans-unit id="driver_brake_notches">
-						<source>DriverBrakeNotches:</source>
+					  <source>DriverBrakeNotches:</source>
+					  <target>Fører bremse hakk:</target>
 					</trans-unit>
 					<trans-unit id="power_notch_reduce_steps">
-						<source>PowerNotchReduceSteps:</source>
+					  <source>PowerNotchReduceSteps:</source>
+					  <target>Fører reduserende hakk</target>
 					</trans-unit>
 					<trans-unit id="separated">
-						<source>Separated</source>
+					  <source>Separated</source>
+					  <target>Separat</target>
 					</trans-unit>
 					<trans-unit id="combined">
-						<source>Combined</source>
+					  <source>Combined</source>
+					  <target>Kombinert</target>
 					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
-						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+					  <source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+					  <target>Bremsehakk må være minst 1 hvis parkeringsbremsen er satt.</target>
 					</trans-unit>
 					<trans-unit id="driver_power_notches_error_message">
-						<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+					  <source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+					  <target>Førerbremsen må være mindre eller lik turtallshakkene.</target>
 					</trans-unit>
 					<trans-unit id="driver_brake_notches_error_message">
-						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
+					  <source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
+					  <target>Førers bremsehakk må være mindre eller lik bremsehakkene</target>
 					</trans-unit>
 				</group>
 				<group id="cab">
 					<trans-unit id="cab">
-						<source>Cab</source>
+					  <source>Cab</source>
+					  <target>Førerhytten</target>
 					</trans-unit>
 					<trans-unit id="driver_car">
-						<source>DriverCar:</source>
+					  <source>DriverCar:</source>
+					  <target>Førervogna:</target>
 					</trans-unit>
 					<trans-unit id="driver_car_error_message">
-						<source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
+					  <source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
+
 					</trans-unit>
 				</group>
 				<group id="car">
 					<trans-unit id="car">
-						<source>Car</source>
+					  <source>Car</source>
+					  <target>Vogner</target>
 					</trans-unit>
 					<trans-unit id="motor_car_mass">
-						<source>MotorCarMass:</source>
+					  <source>MotorCarMass:</source>
+					  <target>Motorvognmasse:</target>
 					</trans-unit>
 					<trans-unit id="number_of_motor_cars">
-						<source>NumberOfMotorCars:</source>
+					  <source>NumberOfMotorCars:</source>
+					  <target>Antall motorvogner:</target>
 					</trans-unit>
 					<trans-unit id="trailer_car_mass">
-						<source>TrailerCarMass:</source>
+					  <source>TrailerCarMass:</source>
+					  <target>Trekkvognmasse:</target>
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars">
-						<source>NumberOfTrailerCars:</source>
+					  <source>NumberOfTrailerCars:</source>
+					  <target>Antall trekkvogner:</target>
 					</trans-unit>
 					<trans-unit id="length_of_a_car">
-						<source>LengthOfACar:</source>
+					  <source>LengthOfACar:</source>
+					  <target>Lengde på vogn:</target>
 					</trans-unit>
 					<trans-unit id="front_car_is_motor_car">
-						<source>FrontCarIsMotorCar:</source>
+					  <source>FrontCarIsMotorCar:</source>
+					  <target>Fremste vogn har motor:</target>
 					</trans-unit>
 					<trans-unit id="width_of_a_car">
-						<source>WidthOfACar:</source>
+					  <source>WidthOfACar:</source>
+					  <target>Vognbredde:</target>
 					</trans-unit>
 					<trans-unit id="height_of_a_car">
-						<source>HeightOfACar:</source>
+					  <source>HeightOfACar:</source>
+					  <target>Vognhøyde</target>
 					</trans-unit>
 					<trans-unit id="center_of_gravity_height">
-						<source>CenterOfGravityHeight:</source>
+					  <source>CenterOfGravityHeight:</source>
+					  <target>Senter for gravitasjon høyde:</target>
 					</trans-unit>
 					<trans-unit id="exposed_frontal_area">
-						<source>ExposedFrontalArea:</source>
+					  <source>ExposedFrontalArea:</source>
+					  <target>Eksponert frontalområde</target>
 					</trans-unit>
 					<trans-unit id="unexposed_frontal_area">
-						<source>UnexposedFrontalArea:</source>
+					  <source>UnexposedFrontalArea:</source>
+					  <target>Ikke-eksponert frontalområde</target>
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars_error_message">
-						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
+					  <source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
+					  <target>Antall trekkvogner må være minst 1 hvis første vogn ikke er satt til motorvogn.</target>
 					</trans-unit>
 				</group>
 				<group id="device">
 					<trans-unit id="device">
-						<source>Device</source>
+					  <source>Device</source>
+					  <target>Enheter</target>
 					</trans-unit>
 					<trans-unit id="const_speed">
-						<source>ConstSpeed:</source>
+					  <source>ConstSpeed:</source>
+					  <target>Kruskontroll:</target>
 					</trans-unit>
 					<trans-unit id="hold_brake">
-						<source>HoldBrake:</source>
+					  <source>HoldBrake:</source>
+					  <target>Parkeringsbrems:</target>
 					</trans-unit>
 					<trans-unit id="readhesion_device">
-						<source>ReAdhesionDevice:</source>
+					  <source>ReAdhesionDevice:</source>
+					  <target>Re-adhesjonenhet:</target>
+					  <target></target>
 					</trans-unit>
 					<trans-unit id="pass_alarm">
-						<source>PassAlarm:</source>
+					  <source>PassAlarm:</source>
+					  <target>Passeringsalarm:</target>
 					</trans-unit>
 					<trans-unit id="door_open_mode">
-						<source>DoorOpenMode:</source>
+					  <source>DoorOpenMode:</source>
+					  <target>Døråpningsmetode:</target>
 					</trans-unit>
 					<trans-unit id="door_close_mode">
-						<source>DoorCloseMode:</source>
+					  <source>DoorCloseMode:</source>
+					  <target>Dørlukkingsmetode:</target>
 					</trans-unit>
 					<trans-unit id="door_width">
-						<source>DoorWidth:</source>
+					  <source>DoorWidth:</source>
+					  <target>Dørbredde:</target>
 					</trans-unit>
 					<trans-unit id="door_max_tolerance">
-						<source>DoorMaxTolerance:</source>
+					  <source>DoorMaxTolerance:</source>
+					  <target>Dørens makstoleranse:</target>
 					</trans-unit>
 					<trans-unit id="none">
-						<source>None</source>
+					  <source>None</source>
+					  <target>Ingen</target>
 					</trans-unit>
 					<trans-unit id="manual_switching">
-						<source>Manual switching</source>
+					  <source>Manual switching</source>
+					  <target>Manuell switching</target>
 					</trans-unit>
 					<trans-unit id="automatic_switching">
-						<source>Automatic switching</source>
+					  <source>Automatic switching</source>
+					  <target>Automatisk switching</target>
 					</trans-unit>
 					<trans-unit id="type_a">
-						<source>Type A (instant)</source>
+					  <source>Type A (instant)</source>
+					  <target>Type A (umiddelbart)</target>
 					</trans-unit>
 					<trans-unit id="type_b">
-						<source>Type B (slow)</source>
+					  <source>Type B (slow)</source>
+					  <target>Type B (sein)</target>
 					</trans-unit>
 					<trans-unit id="type_c">
-						<source>Type C (medium)</source>
+					  <source>Type C (medium)</source>
+					  <target>Type C (medium)</target>
 					</trans-unit>
 					<trans-unit id="type_d">
-						<source>Type D (fast)</source>
+					  <source>Type D (fast)</source>
+					  <target>Type D (rask)</target>
 					</trans-unit>
 					<trans-unit id="single">
-						<source>Single</source>
+					  <source>Single</source>
+					  <target>Enkel alarm</target>
 					</trans-unit>
 					<trans-unit id="looping">
-						<source>Looping</source>
+					  <source>Looping</source>
+					  <target>Repeterende</target>
 					</trans-unit>
 					<trans-unit id="semi_automatic">
-						<source>Semi-automatic</source>
+					  <source>Semi-automatic</source>
+					  <target>Semi-automatisk</target>
 					</trans-unit>
 					<trans-unit id="automatic">
-						<source>Automatic</source>
+					  <source>Automatic</source>
+					  <target>Automatisk</target>
 					</trans-unit>
 					<trans-unit id="manual">
-						<source>Manual</source>
+					  <source>Manual</source>
+					  <target>Manuell</target>
 					</trans-unit>
 				</group>
 				<group id="acceleration">
 					<trans-unit id="acceleration">
-						<source>Acceleration</source>
+					  <source>Acceleration</source>
+					  <target>Akselerasjon</target>
 					</trans-unit>
 					<trans-unit id="notch">
-						<source>Notch:</source>
+					  <source>Notch:</source>
+					  <target>Hakk / Trinn:</target>
 					</trans-unit>
 					<trans-unit id="data">
-						<source>Data</source>
+					  <source>Data</source>
+					  <target>Data</target>
 					</trans-unit>
 					<trans-unit id="preview">
-						<source>Preview</source>
+					  <source>Preview</source>
+					  <target>Forhåndsvis</target>
 					</trans-unit>
 					<trans-unit id="subtract_deceleration">
-						<source>Subtract deceleration due to air and rolling resistance</source>
+					  <source>Subtract deceleration due to air and rolling resistance</source>
+					  <target>Trekk fra deselerasjon på grunn av luft- og rullemotstand</target>
 					</trans-unit>
 					<trans-unit id="max_x">
-						<source>Xmax:</source>
+					  <source>Xmax:</source>
+					  <target>XMaks:</target>
 					</trans-unit>
 					<trans-unit id="max_y">
-						<source>Ymax:</source>
+					  <source>Ymax:</source>
+					  <target>YMax:</target>
 					</trans-unit>
 				</group>
 				<group id="motor">
 					<trans-unit id="sound">
-						<source>Motor Sound</source>
+					  <source>Motor Sound</source>
+					  <target>Motorlyd</target>
 					</trans-unit>
 					<trans-unit id="edit">
-						<source>Edit mode</source>
+					  <source>Edit mode</source>
+					  <target>Redigeringsmodus</target>
 					</trans-unit>
 					<trans-unit id="sound_index">
-						<source>SoundIndex:</source>
+					  <source>SoundIndex:</source>
+					  <target>Lydindeks:</target>
 					</trans-unit>
 					<trans-unit id="pitch">
-						<source>Pitch</source>
+					  <source>Pitch</source>
+					  <target>Pitch</target>
 					</trans-unit>
 					<trans-unit id="volume">
-						<source>Volume</source>
+					  <source>Volume</source>
+					  <target>Nivå</target>
 					</trans-unit>
 					<trans-unit id="sound_none">
-						<source>None</source>
+					  <source>None</source>
+					  <target>Ingen</target>
 					</trans-unit>
 					<trans-unit id="preview">
-						<source>Preview</source>
+					  <source>Preview</source>
+					  <target>Forhåndsvis</target>
 					</trans-unit>
 					<trans-unit id="y_pitch">
-						<source>Ypitch</source>
+					  <source>Ypitch</source>
+					  <target>Y-pitch</target>
 					</trans-unit>
 					<trans-unit id="y_volume">
-						<source>Yvolume</source>
+					  <source>Yvolume</source>
+					  <target>Y-nivå</target>
 					</trans-unit>
 					<trans-unit id="min_x">
-						<source>Xmin:</source>
+					  <source>Xmin:</source>
+					  <target>Xmin:</target>
 					</trans-unit>
 					<trans-unit id="max_x">
-						<source>Xmax:</source>
+					  <source>Xmax:</source>
+					  <target>Xmaks:</target>
 					</trans-unit>
 					<trans-unit id="left">
-						<source>Left</source>
+					  <source>Left</source>
+					  <target>Venstre</target>
 					</trans-unit>
 					<trans-unit id="right">
-						<source>Right</source>
+					  <source>Right</source>
+					  <target>Høyre</target>
 					</trans-unit>
 					<trans-unit id="in">
-						<source>In</source>
+					  <source>In</source>
+					  <target>Inne</target>
 					</trans-unit>
 					<trans-unit id="out">
-						<source>Out</source>
+					  <source>Out</source>
+					  <target>Ute</target>
 					</trans-unit>
 					<trans-unit id="max_y_pitch">
-						<source>YmaxPitch:</source>
+					  <source>YmaxPitch:</source>
+					  <target>Maks y pitch:</target>
 					</trans-unit>
 					<trans-unit id="max_y_volume">
-						<source>YmaxVolume:</source>
+					  <source>YmaxVolume:</source>
+					  <target>Maks y nivå:</target>
 					</trans-unit>
 				</group>
 				<group id="extended">
 					<trans-unit id="features">
-						<source>Extended Features</source>
+					  <source>Extended Features</source>
+					  <target>Utvidede funksjoner</target>
 					</trans-unit>
 					<trans-unit id="note">
-						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
+					  <source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
+					  <target>Obs: Disse funksjonene krever minimum denne versjonen av openBVE:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
-						<source>Locomotive Brake</source>
+					  <source>Locomotive Brake</source>
+					  <target>Lokomotivbremse</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_system_type">
-						<source>BrakeType:</source>
+					  <source>BrakeType:</source>
+					  <target>Bremsetype</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_notches">
-						<source>Notches:</source>
+					  <source>Notches:</source>
+					  <target>Hakk:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_delay_up">
-						<source>DelayUp:</source>
+					  <source>DelayUp:</source>
+					  <target>Forsinkelse opp:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_delay_down">
-						<source>DelayDown:</source>
+					  <source>DelayDown:</source>
+					  <target>Forsinkelse ned:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_type">
-						<source>Type:</source>
+					  <source>Type:</source>
+					  <target>Type:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_set">
 						<source>Set</source>
 					</trans-unit>
 					<trans-unit id="loco_brake_none">
-						<source>Not fitted</source>
+					  <source>Not fitted</source>
+					  <target>Ikke tilpasset</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_notched_air_brake">
-						<source>Notched air brake</source>
+					  <source>Notched air brake</source>
+					  <target>Trinnvis luftbrems</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_cl">
-						<source>Air brake with partial release</source>
+					  <source>Air brake with partial release</source>
+					  <target>Luftbrems med delvis utslipp</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_combined">
-						<source>Combined</source>
+					  <source>Combined</source>
+					  <target>Kombinert</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_independant">
-						<source>Independent</source>
+					  <source>Independent</source>
+					  <target>Uavhengig</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_blocking">
-						<source>Blocking</source>
+					  <source>Blocking</source>
+					  <target>Blokerende</target>
 					</trans-unit>
 					<trans-unit id="delay_loco_brake_up">
-						<source>DelayLocoBrakeUp</source>
+					  <source>DelayLocoBrakeUp</source>
+					  <target>Forsinkelse lokomotivbrems opp</target>
 					</trans-unit>
 					<trans-unit id="delay_loco_brake_down">
-						<source>DelayLocoBrakeDown</source>
+					  <source>DelayLocoBrakeDown</source>
+					  <target>Forsinkelse lokomotivbrems ned</target>
 					</trans-unit>
 					<trans-unit id="misc">
-						<source>Miscellaneous Features</source>
+					  <source>Miscellaneous Features</source>
+					  <target>Diverse egenskaper</target>>
 					</trans-unit>
 					<trans-unit id="misc_eb">
-						<source>Handle behaviour on EB:</source>
+					  <source>Handle behaviour on EB:</source>
+					  <target>Spakoppførsel ved NB:</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_no">
-						<source>No Action</source>
+					  <source>No Action</source>
+					  <target>Ingen handling</target>					  
 					</trans-unit>
 					<trans-unit id="misc_eb_power">
-						<source>Return Power to neutral</source>
+					  <source>Return Power to neutral</source>
+					  <target>Sett turtall i nøytral</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_reverser">
-						<source>Return Reverser to neutral</source>
+					  <source>Return Reverser to neutral</source>
+					  <target>Sett vendegir til nøytral</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_power_reverser">
-						<source>Return Power and Reverser to neutral</source>
+					  <source>Return Power and Reverser to neutral</source>
+					  <target>Sett turtall og vendegir til nøytral</target>
 					</trans-unit>
 					<trans-unit id="language">
-						<source>Language</source>
+					  <source>Language</source>
+					  <target>Språk</target>
 					</trans-unit>
 				</group>
 			</group>
@@ -3703,7 +3837,7 @@
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
 							  <source>EbHandleBehaviour</source>
-							  <target>Eb spak oppførsel</target>
+							  <target>Nødbrems spak oppførsel</target>
 							</trans-unit>
 							<trans-unit id="no">
 							  <source>No action</source>
@@ -3830,21 +3964,26 @@
 						</group>
 						<group id="pass_alarm">
 							<trans-unit id="name">
-								<source>PassAlarm</source>
+							  <source>PassAlarm</source>
+							  <target>Passeringsalarm</target>
 							</trans-unit>
 							<trans-unit id="none">
-								<source>None</source>
+							  <source>None</source>
+							  <target>Ingen</target>
 							</trans-unit>
 							<trans-unit id="single">
-								<source>Single</source>
+							  <source>Single</source>
+							  <target>Enkel</target>
 							</trans-unit>
 							<trans-unit id="looping">
-								<source>Looping</source>
+							  <source>Looping</source>
+							  <target>Repeterende</target>
 							</trans-unit>
 						</group>
 						<group id="door_mode">
 							<trans-unit id="open">
-								<source>DoorOpenMode</source>
+							  <source>DoorOpenMode</source>
+							  <target>Døråpningsmetode:</target>
 							</trans-unit>
 							<trans-unit id="close">
 								<source>DoorCloseMode</source>
