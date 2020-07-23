@@ -2033,7 +2033,7 @@
 					</trans-unit>
 					<trans-unit id="exit_question">
 					  <source>Do you really want to exit to the main menu?</source>
-					  <target>Vil du virkelig avslutte til menyen?</target>
+					  <target>Er du sikker på at du vil avslutte til menyen?</target>
 					</trans-unit>
 					<trans-unit id="exit_no">
 					  <source>No</source>
@@ -2049,7 +2049,7 @@
 					</trans-unit>
 					<trans-unit id="quit_question">
 					  <source>Do you really want to quit?</source>
-					  <target>Vil du virkelig avslutte?</target>
+					  <target>Er du sikker på at du vil avslutte?</target>
 					</trans-unit>
 					<trans-unit id="quit_no">
 					  <source>No</source>
@@ -3140,10 +3140,11 @@
 				</group>
 				<group id="delay">
 					<trans-unit id="delay">
-						<source>Delay</source>
+					  <source>Delay</source>
 					</trans-unit>
 					<trans-unit id="power_up">
-						<source>DelayPowerUp</source>
+					  <source>DelayPowerUp</source>
+
 					</trans-unit>
 					<trans-unit id="power_down">
 						<source>DelayPowerDown</source>
@@ -3169,7 +3170,7 @@
 				</group>
 				<group id="move">
 					<trans-unit id="move">
-						<source>Move</source>
+					  <source>Move</source>
 					</trans-unit>
 					<trans-unit id="jerk_power_up">
 						<source>JerkPowerUp:</source>
@@ -3552,45 +3553,58 @@
 				<group id="menu">
 					<group id="file">
 						<trans-unit id="name">
-							<source>File</source>
+						  <source>File</source>
+						  <target>Fil</target>
 						</trans-unit>
 						<trans-unit id="new">
-							<source>New</source>
+						  <source>New</source>
+						  <target>Ny</target>
 						</trans-unit>
 						<trans-unit id="open">
-							<source>Open...</source>
+						  <source>Open...</source>
+						  <target>Åpne...</target>
 						</trans-unit>
 						<trans-unit id="save">
-							<source>Save</source>
+						  <source>Save</source>
+						  <target>Lagre</target>
 						</trans-unit>
 						<trans-unit id="save_as">
-							<source>Save as...</source>
+						  <source>Save as...</source>
+						  <target>Lagre som...</target>
 						</trans-unit>
 						<trans-unit id="import">
-							<source>Import...</source>
+						  <source>Import...</source>
+						  <target>Importer...</target>
 						</trans-unit>
 						<trans-unit id="export">
-							<source>Export...</source>
+						  <source>Export...</source>
+						  <target>Eksporter...</target>
 						</trans-unit>
 						<trans-unit id="exit">
-							<source>Exit</source>
+						  <source>Exit</source>
+						  <target>Avslutt</target>
 						</trans-unit>
 						<trans-unit id="wrongtype">
-							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+						  <source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+						  <target>Du har forsøkt å åpnet et tog \n\n Disse kan ikke åpnes direkte. \n\n Bruk importfunksjonen for å importere toget til TrainEditor2</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
-						<source>Language</source>
+					  <source>Language</source>
+					  <target>Språk</target>
 					</trans-unit>
 					<group id="message">
 						<trans-unit id="new">
-							<source>Do you want to save the current file before creating a new one?</source>
+						  <source>Do you want to save the current file before creating a new one?</source>
+						  <target>Ønsker du å lagre den nåværende filen før du lager en ny en?</target>
 						</trans-unit>
 						<trans-unit id="open">
-							<source>Do you want to save the current file before opening another file?</source>
+						  <source>Do you want to save the current file before opening another file?</source>
+						  <target>Ønsker du å lagre den nåværende filen før du åpner en ny en?</target>
 						</trans-unit>
 						<trans-unit id="exit">
-							<source>Do you want to save the current file before closing?</source>
+						  <source>Do you want to save the current file before closing?</source>
+						  <target>Ønsker du å lagre den nåværende filen før du lukker?</target>
 						</trans-unit>
 					</group>
 				</group>
