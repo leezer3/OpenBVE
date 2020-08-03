@@ -44,8 +44,6 @@ namespace OpenBve {
 			internal System.Text.Encoding RouteEncoding;
 			/// <summary>The absolute on-disk path of the train folder to start the simulation with</summary>
 			internal string TrainFolder;
-			/// <summary>The absolute on-disk path of the current compatibility signal set</summary>
-			internal string CompatabilitySignalSet;
 			/// <summary>The text encoding of the selected train</summary>
 			internal System.Text.Encoding TrainEncoding;
 			/// <summary>Whether the consist of the train is to be reversed on start</summary>
@@ -1789,7 +1787,7 @@ namespace OpenBve {
 
 		private void comboBoxCompatibilitySignals_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Result.CompatabilitySignalSet = compatibilitySignals[comboBoxCompatibilitySignals.GetItemText(comboBoxCompatibilitySignals.SelectedItem)]; //Cheat by using the name as the dictionary key!
+			Interface.CurrentOptions.CurrentCompatibilitySignalSet = compatibilitySignals[comboBoxCompatibilitySignals.GetItemText(comboBoxCompatibilitySignals.SelectedItem)]; //Cheat by using the name as the dictionary key!
 		}
 	}
 }

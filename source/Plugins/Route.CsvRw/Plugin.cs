@@ -80,7 +80,7 @@ namespace CsvRwRouteParser
 		    try
 		    {
 				Parser parser = new Parser();
-				parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, null, PreviewOnly, this);  //FIXME: Doesn't pass the new signal set parameter yet
+				parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, CurrentOptions.CurrentCompatibilitySignalSet, PreviewOnly, this);
 				IsLoading = false;
 			    return true;
 		    }

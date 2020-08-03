@@ -58,8 +58,6 @@ namespace OpenBve {
 		private static Encoding CurrentRouteEncoding;
 		/// <summary>The current train folder</summary>
 		private static string CurrentTrainFolder;
-		/// <summary>The current compatibility signal set</summary>
-		private static string CurrentCompatibilitySignalSet;
 		/// <summary>The character encoding of this train</summary>
 		private static Encoding CurrentTrainEncoding;
 		internal static double TrainProgressCurrentSum;
@@ -69,7 +67,7 @@ namespace OpenBve {
 
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>
-		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string CompatibilitySignalSet, string TrainFolder, Encoding TrainEncoding) {
+		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string TrainFolder, Encoding TrainEncoding) {
 			//Deliberately purge all plugins and reload in case a preview thread is running
 			Plugins.UnloadPlugins();
 			Plugins.LoadPlugins();
@@ -83,8 +81,6 @@ namespace OpenBve {
 			CurrentRouteEncoding = RouteEncoding;
 			CurrentTrainFolder = TrainFolder;
 			CurrentTrainEncoding = TrainEncoding;
-			CurrentCompatibilitySignalSet = CompatibilitySignalSet;
-
 			//Set the route and train folders in the info class
 			Program.CurrentRoute.Information.RouteFile = RouteFile;
 			Program.CurrentRoute.Information.TrainFolder = TrainFolder;

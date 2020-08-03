@@ -339,7 +339,7 @@ namespace OpenBve
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
-			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.CompatabilitySignalSet, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
+			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 			LoadingScreenLoop();
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues

@@ -61,6 +61,8 @@ namespace OpenBveApi
 		public double PrecedingTrainSpeedLimit = double.PositiveInfinity;
 		/// <summary>The name of the current train</summary>
 		public string TrainName = "";
+		/// <summary>The current compatibility signal set</summary>
+		public string CurrentCompatibilitySignalSet;
 
 		/*
 		 * Note: Object optimisation takes time whilst loading, but may increase the render performance of an
