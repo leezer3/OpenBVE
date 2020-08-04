@@ -1,0 +1,24 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<Patch>
+		<Hash>83EE400BA3A9FE0112AD5146D12968B8BE981B28E5D27449027EFBBB6583B68A</Hash>
+		<FileName>Zwolle-Vlissingen.rw</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>BBB3E085320FDC847A36E80C34A6820EEE4E7A76F9FCDC2F411911B61E0CE222</Hash>
+		<FileName>Amsterdam-Schiphol.rw</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>48B0870AEEA7D8779AFF77E06D0C43D01CDC6B1C2A2ED822055CFE84DAC2ABB0</Hash>
+		<FileName>Amsterdam-Antwerpen-v3.rw</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>72108E9FBA951DEB47E18CFE11F336145E4E7C3DAA0BD0C2F3911B509254D13A</Hash>
+		<FileName>Amsterdam-Antwerpen (Thalys PBKA).rw</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+  </RoutePatches>
+</openBVE>

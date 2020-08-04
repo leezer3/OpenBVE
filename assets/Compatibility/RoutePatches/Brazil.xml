@@ -1,0 +1,9 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<Patch>
+		<Hash>F0D6AC84D94F63144F9ED5497CDF7697BDB45FF11223E2C001CF8BDA943D4E66</Hash>
+		<FileName>Jundiai-Francisco Morato.rw</FileName>
+		<LineEndingFix>true</LineEndingFix>
+	</Patch>
+  </RoutePatches>
+</openBVE>

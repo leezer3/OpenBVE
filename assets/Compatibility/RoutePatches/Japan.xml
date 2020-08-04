@@ -1,0 +1,24 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<Patch>
+		<Hash>DDBE5CFDE20F0AD7D03AFC187F70B1B6044B637109758B392B9EBA61FA169F69</Hash>
+		<FileName>目蒲線普.csv</FileName>
+		<Expression Number="596">.rail 1;7.5;0</Expression>
+		<Expression Number="600">.rail 1;5.5;0</Expression>
+	</Patch>
+	<Patch>
+		<Hash>CCF88CCB0C1345746406F7E98798D8924FDA93888788E596601C55E3C7C35C8A</Hash>
+		<FileName>B1649ﾃｼiﾄ・ﾄｺJﾃｼﾄ佚架・ｹﾃ嘉ｼj.csv</FileName>
+		<Expression Number="1441">.curve 1000;20</Expression>
+	</Patch>
+	<Patch>
+		<Hash>99CE7D39513ECA681D9A8E6D23647FB161DAE50BF9E7540C2395596547A4ACE5</Hash>
+		<FileName>all2000.csv</FileName>
+		<Expression Number="376">.freeobj 2;17;1.6;0;0</Expression>
+		<Expression Number="396">.freeobj 2;17;1.6;0;0</Expression>
+		<Expression Number="415">.freeobj 0;15;2;0;0</Expression>
+		<DummyRailTypes>1</DummyRailTypes>
+		<DummyGroundTypes>16</DummyGroundTypes>
+	</Patch>
+  </RoutePatches>
+</openBVE>

@@ -1,0 +1,27 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+  <!-- 737 Test Flight -->
+	<Patch>
+		<Hash>FBF4399E04B769BDD416CEB6CC3D3C5EC4803E158997D5D75A76C423B6DA45ED</Hash>
+		<FileName>Arrive Night.csv</FileName>
+		<Derailments>false</Derailments>
+	</Patch>
+	<Patch>
+		<Hash>49630A77BE1AB513BD58962795DC38846451A3E44C4E6770DF78EE71C5EF226E</Hash>
+		<FileName>Arrive.csv</FileName>
+		<Derailments>false</Derailments>
+	</Patch>
+	<!-- Iiyama 2060 -->
+	<Patch>
+		<Hash>471C1CC06E55D1B40E7B992028FA25200E480A37778E51B1B0F36BE475B250AF</Hash>
+		<FileName>9001.csv</FileName>
+		<XParser>new</XParser>
+	</Patch>
+	<Patch>
+		<Hash>5E976BA173F3267271746FB161730FFC205FAC85A38DB369BDC2FB25297B05E1</Hash>
+		<FileName>spaceroute1.csv</FileName>
+		<Toppling>false</Toppling>
+		<Derailments>false</Derailments>
+	</Patch>
+  </RoutePatches>
+</openBVE>

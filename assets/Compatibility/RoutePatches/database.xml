@@ -1,0 +1,13 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<PatchList>America.xml</PatchList>
+	<PatchList>Australia.xml</PatchList>
+	<PatchList>Brazil.xml</PatchList>
+	<PatchList>Holland.xml</PatchList>
+	<PatchList>Hungary.xml</PatchList>
+	<PatchList>Italy.xml</PatchList>
+	<PatchList>Japan.xml</PatchList>
+	<PatchList>Misc.xml</PatchList>
+	<PatchList>UnitedKingdom.xml</PatchList>
+  </RoutePatches>
+</openBVE>

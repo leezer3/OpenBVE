@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compatability\RoutefilePatch.cs" />
     <Compile Include="CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="CsvRwRouteParser.cs" />
@@ -52,7 +53,6 @@
     <Compile Include="CsvRwRouteParser.Preprocess.cs" />
     <Compile Include="CsvRwRouteParser.PreprocessOptions.cs" />
     <Compile Include="CsvRwRouteParser.RouteData.cs" />
-    <Compile Include="CsvRwRouteParser.RouteFixes.cs" />
     <Compile Include="Namespaces\NameSpaces.cs" />
     <Compile Include="Namespaces\NonTrack\Cycle.cs" />
     <Compile Include="Namespaces\NonTrack\Options.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Structures\Trains\Limit.cs" />
     <Compile Include="Structures\Trains\Marker.cs" />
     <Compile Include="Structures\Trains\StopRequest.cs" />
+    <Compile Include="XML\RoutePatchDatabase.cs" />
     <Compile Include="XML\DynamicBackground.cs" />
     <Compile Include="XML\DynamicLight.cs" />
     <Compile Include="XML\MarkerScript.cs" />

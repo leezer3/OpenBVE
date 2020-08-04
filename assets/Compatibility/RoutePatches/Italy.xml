@@ -1,0 +1,92 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<Patch>
+		<Hash>FD99B78D5A1847070A3ED3DFEE3E3B6BD56CE578DE1CEB056AFDA799989BF14B</Hash>
+		<FileName>FVES3.rw</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>54281BEA1964A11925E3B1E9F6CF8DBFF39156CBE6272977150A2B7F08799DD1</Hash>
+		<FileName>Sanbie-663-bve4.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+	<Patch>
+		<Hash>D8B88EE63CF98D271EC8A75577539752E84A8B74A46EF1B49D57FCA6A53BDBB4</Hash>
+		<FileName>Sanbie-663-nonstop-bve4.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+	<Patch>
+		<Hash>FD63747CDD10E501D68E7A3FAB193B191F818CE950FB714B2FF79439A11AD427</Hash>
+		<FileName>Sanbie-663-rain-nonstop-bve4.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+	<Patch>
+		<Hash>661C2E3EEE663192529A761631F02C0F0288340DCF69AB80622CA7E1B37BB126</Hash>
+		<FileName>Sanbie-773-bve4.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+	<Patch>
+		<Hash>18A7BD8BB969E79D140112C4246B62EED8111A82509720C466174248674B20B6</Hash>
+		<FileName>Sanbie-773-nonstop-bve4.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+	<Patch>
+		<Hash>A29A91698F03A3C0F258A4E6C6DC72C4A15F3828849C929F25AF67FD0747A3FF</Hash>
+		<FileName>Sanbie-773-rain-nonstop-bve4.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+	<Patch>
+		<Hash>C4061E0E53862BA4951A76746B2AB1AFA3A7D4126F375D5EF96E4DEBDFC969EF</Hash>
+		<FileName>citta2.csv</FileName>
+		<Expression Number="737">2550</Expression>
+		<Expression Number="767">2925</Expression>
+	</Patch>
+	<!-- Ferrovia Genova-Casella -->
+	<Patch>
+		<Hash>64F6EECA5B5976F271DC9686C585026A1A5732E743A1BA1DB6DC57C6672E9F3B</Hash>
+		<FileName>TR_203_A6.rw</FileName>
+		<Expression Number="803">Freeobj(0,50,0,0,168.075)</Expression>
+	</Patch>
+	<Patch>
+		<Hash>FEFAF4332990CDDBC8F563010B539320AD00FB49CC6EFB14546FE30A65752752</Hash>
+		<FileName>TR_3_A5.rw</FileName>
+		<Expression Number="803">Freeobj(0,50,0,0,168.075)</Expression>
+	</Patch>
+	<Patch>
+		<Hash>E734848C90A964904907AB3FCFAB2BE01F352D44B5D3C66A65E9A28AB70B920B</Hash>
+		<FileName>TR_207_A9.rw</FileName>
+		<Expression Number="802">Freeobj(0,50,0,0,168.075)</Expression>
+	</Patch>
+	<Patch>
+		<Hash>C49103E985BD256ACC38E8373652F9B963F2AA7144FE66CCAC769FDD16053B79</Hash>
+		<FileName>TR_217_A1.rw</FileName>
+		<Expression Number="799">Freeobj(0,50,0,0,168.075)</Expression>
+	</Patch>
+	<Patch>
+		<Hash>AFC9586954ED7867860EB167A1CE2718D9D49AA9AE4905B2A24E49F49295F07D</Hash>
+		<FileName>TR_3_A11.rw</FileName>
+		<Expression Number="1316">5025</Expression>
+	</Patch>
+	<Patch>
+		<Hash>A2FA01331674992B4E1AB935F496590B4CD7D083BF659109C28B0BF603AB93DB</Hash>
+		<FileName>TR_207_A1.rw</FileName>
+		<Expression Number="1329">5025</Expression>
+	</Patch>
+	<Patch>
+		<Hash>9EC666169C5B5E1AFFEAD1C7753FD67F54632E51C7FB64450D4B9A0329CFF9F9</Hash>
+		<FileName>TR_207_A9.rw</FileName>
+		<Expression Number="1323">5025</Expression>
+	</Patch>
+	<Patch>
+		<Hash>097B3ACC33FA9CB33A9D35023EE24F977657875D9C79DCFE1CC8655A2EEB67CA</Hash>
+		<FileName>TR_spec_L29.rw</FileName>
+		<Expression Number="1318">5025</Expression>
+	</Patch>
+  </RoutePatches>
+</openBVE>
