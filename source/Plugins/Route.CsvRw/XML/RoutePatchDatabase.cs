@@ -181,6 +181,13 @@ namespace CsvRwRouteParser
 							currentPatch.Derailments = true;
 						}
 						break;
+					case "SignalSet":
+						string signalFile = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility\\Signals"), childNode.InnerText.Trim());
+						if (File.Exists(signalFile))
+						{
+							currentPatch.CompatibilitySignalSet = signalFile;
+						}
+						break;
 				}
 			}
 

@@ -22,7 +22,7 @@ namespace CsvRwRouteParser {
 
 		internal CurrentRoute CurrentRoute;
 		// parse route
-		internal void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, string compatibilitySignalSet, bool PreviewOnly, Plugin hostPlugin)
+		internal void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, Plugin hostPlugin)
 		{
 			Plugin = hostPlugin;
 			CurrentRoute = Plugin.CurrentRoute;
@@ -122,11 +122,11 @@ namespace CsvRwRouteParser {
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				// signals
 				Data.Signals = new SignalDictionary();
-				if (compatibilitySignalSet == null) //not selected via main form
+				if (Plugin.CurrentOptions.CurrentCompatibilitySignalSet == null) //not selected via main form
 				{
-					compatibilitySignalSet = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
+					Plugin.CurrentOptions.CurrentCompatibilitySignalSet = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
 				}
-				CompatibilitySignalObject.ReadCompatibilitySignalXML(Plugin.CurrentHost, compatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
+				CompatibilitySignalObject.ReadCompatibilitySignalXML(Plugin.CurrentHost, Plugin.CurrentOptions.CurrentCompatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
 				// game data
 				CurrentRoute.Sections = new[]
 				{
@@ -179,7 +179,7 @@ namespace CsvRwRouteParser {
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / Expressions.Length;
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
-			CheckForAvailablePatch(FileName, ref Data, ref Expressions);
+			CheckForAvailablePatch(FileName, ref Data, ref Expressions, PreviewOnly);
 			//Apply parameters to object loaders
 			if (!PreviewOnly)
 			{

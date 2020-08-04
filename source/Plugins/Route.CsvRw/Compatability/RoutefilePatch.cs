@@ -1,50 +1,62 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using RouteManager2.SignalManager;
 
 namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
 		internal Dictionary<string, RoutefilePatch> availableRoutefilePatches = new Dictionary<string, RoutefilePatch>();
-		private void CheckForAvailablePatch(string FileName, ref RouteData Data, ref Expression[] Expressions)
+
+		private void CheckForAvailablePatch(string FileName, ref RouteData Data, ref Expression[] Expressions, bool PreviewOnly)
+		{
+			if (Plugin.CurrentOptions.EnableBveTsHacks == false)
 			{
-				if (Plugin.CurrentOptions.EnableBveTsHacks == false)
+				return;
+			}
+
+			string fileHash = GetChecksum(FileName);
+			if (availableRoutefilePatches.ContainsKey(fileHash))
+			{
+				RoutefilePatch patch = availableRoutefilePatches[fileHash];
+				Data.LineEndingFix = patch.LineEndingFix;
+				Data.IgnorePitchRoll = patch.IgnorePitchRoll;
+				if (!string.IsNullOrEmpty(patch.LogMessage))
 				{
-					return;
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, patch.LogMessage);
 				}
-				string fileHash = GetChecksum(FileName);
-				if (availableRoutefilePatches.ContainsKey(fileHash))
+
+				CylinderHack = patch.CylinderHack;
+				for (int i = 0; i < patch.ExpressionFixes.Count; i++)
 				{
-					RoutefilePatch patch = availableRoutefilePatches[fileHash];
-					Data.LineEndingFix = patch.LineEndingFix;
-					Data.IgnorePitchRoll = patch.IgnorePitchRoll;
-					if (!string.IsNullOrEmpty(patch.LogMessage))
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, patch.LogMessage);
-					}
-					CylinderHack = patch.CylinderHack;
-					for (int i = 0; i < patch.ExpressionFixes.Count; i++)
-					{
-						Expressions[patch.ExpressionFixes.ElementAt(i).Key].Text = patch.ExpressionFixes.ElementAt(i).Value;
-					}
-					if (patch.XParser != null)
-					{
-						Plugin.CurrentOptions.CurrentXParser = (XParsers)patch.XParser;
-					}
-					Plugin.CurrentOptions.Derailments = patch.Derailments;
-					Plugin.CurrentOptions.Toppling = patch.Toppling;
-					foreach (int i in patch.DummyRailTypes)
-					{
-						Data.Structure.RailObjects.Add(i, new StaticObject(Plugin.CurrentHost));
-					}
-					foreach (int i in patch.DummyGroundTypes)
-					{
-						Data.Structure.Ground.Add(i, new StaticObject(Plugin.CurrentHost));
-					}
+					Expressions[patch.ExpressionFixes.ElementAt(i).Key].Text = patch.ExpressionFixes.ElementAt(i).Value;
+				}
+
+				if (patch.XParser != null)
+				{
+					Plugin.CurrentOptions.CurrentXParser = (XParsers) patch.XParser;
+				}
+
+				Plugin.CurrentOptions.Derailments = patch.Derailments;
+				Plugin.CurrentOptions.Toppling = patch.Toppling;
+				foreach (int i in patch.DummyRailTypes)
+				{
+					Data.Structure.RailObjects.Add(i, new StaticObject(Plugin.CurrentHost));
+				}
+				foreach (int i in patch.DummyGroundTypes)
+				{
+					Data.Structure.Ground.Add(i, new StaticObject(Plugin.CurrentHost));
+				}
+
+				if (!string.IsNullOrEmpty(patch.CompatibilitySignalSet) && !PreviewOnly)
+				{
+					CompatibilitySignalObject.ReadCompatibilitySignalXML(Plugin.CurrentHost, patch.CompatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
 				}
 			}
+		}
 	}
 
 	/// <summary>Describes a set of patches to be applied to a routefile</summary>
@@ -75,6 +87,8 @@ namespace CsvRwRouteParser
 		internal List<int> DummyRailTypes = new List<int>();
 		/// <summary>Dummy ground types to be added to fix broken cycles</summary>
 		internal List<int> DummyGroundTypes = new List<int>();
+		/// <summary>The compatability signal file to use</summary>
+		internal string CompatibilitySignalSet;
 
 	}
 }

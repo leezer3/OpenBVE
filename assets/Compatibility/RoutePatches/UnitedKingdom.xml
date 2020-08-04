@@ -87,6 +87,47 @@
 		<FileName>Hyde Pk Cnr to Wood Green.csv</FileName>
 		<CylinderHack>true</CylinderHack>
 		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
-	</Patch>	
+	</Patch>
+	<!-- Sandymill- Invernay -->
+	<Patch>
+		<Hash>5B2A2AD999FA955FDA5DCB2A7DFFDE8C6856194EC5D040C8C34748D039EECDD4</Hash>
+		<FileName>Clear Sandymill-Invermay - 158 Aft.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>E6644FA372526EAF5975CA32BA3F6E64EA2631AC9BA311A7E5CE3AF56E2869A0</Hash>
+		<FileName>Clear Sandymill-Invermay - 158 Morn.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>974FE77BCF91D11B2C647AB001A4F888F4134C49BE8DE892ED013846B942AD5D</Hash>
+		<FileName>Clear Sandymill-Invermay - HST LA.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>7A1163DA300A8E5029C72D4E7EFB9356A7EFD35F3151E86AB92D5963886D2ED8</Hash>
+		<FileName>Clear Sandymill-Invermay - Sprinter Aft.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>9D42BF16E01A40A2EDD46BE1B4C746198CDD5DD578C6D68649CECBCB04413445</Hash>
+		<FileName>Clear Sandymill-Invermay - Sprinter Morn.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>A3B2AB67C58557C1CD431FEA1209A8F06A9019BEC8ED7DDC3A0033FDF3663B44</Hash>
+		<FileName>Fog Sandymill-Invermay - 158 Aft.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>8A348FD7ED2AF78EC4C65B4020D88B50E873EA083469E8B32D53885E1C2BBE3F</Hash>
+		<FileName>Fog Sandymill-Invermay - HST LA.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>167C0A2EF1631C829785C14332627CF21DC0C137CEC6D666B4B001029D1BA887</Hash>
+		<FileName>Sandymill to Invermay\\Sandymill-Invermay - HST Late Train .rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>
