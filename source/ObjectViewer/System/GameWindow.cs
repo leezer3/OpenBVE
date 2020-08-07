@@ -39,14 +39,6 @@ namespace OpenBve
             {
                 ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
             }
-            if (Program.ReducedMode)
-            {
-                System.Threading.Thread.Sleep(125);
-            }
-            else
-            {
-                System.Threading.Thread.Sleep(1);
-            }
             bool updatelight = false;
             bool keep = false;
             // rotate x
@@ -244,29 +236,6 @@ namespace OpenBve
                 }
             }
             // continue
-            if (Program.ReducedMode)
-            {
-                ReducedModeEnteringTime = 3.0;
-            }
-            else
-            {
-                if (keep)
-                {
-                    ReducedModeEnteringTime =3.0;
-                }
-                else if (ReducedModeEnteringTime <= 0)
-                {
-                    Program.ReducedMode = true;
-                    Program.Renderer.Camera.AbsoluteSide.Y = 0.0;
-                    Program.Renderer.Camera.AbsoluteSide.Normalize();
-                    Program.Renderer.Camera.AbsoluteDirection.Normalize();
-                    Program.Renderer.Camera.AbsoluteUp = Vector3.Cross(Program.Renderer.Camera.AbsoluteDirection, Program.Renderer.Camera.AbsoluteSide);
-                }
-                else
-                {
-                    ReducedModeEnteringTime -= timeElapsed;
-                }
-            }
             if (updatelight)
             {
 				Program.Renderer.Lighting.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));

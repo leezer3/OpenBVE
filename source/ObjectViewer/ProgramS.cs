@@ -45,7 +45,6 @@ namespace OpenBve {
         internal static int LightingTarget = 1;
         internal static double LightingRelative = 1.0;
         private static bool ShiftPressed = false;
-        internal static bool ReducedMode = true;
 
 
         internal static GameWindow currentGameWindow;
@@ -147,7 +146,6 @@ namespace OpenBve {
 			{
 				double dx = -0.025 * e.Delta;
 				Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteDirection;
-				ReducedMode = false;
 			}
 		}
 
@@ -178,7 +176,6 @@ namespace OpenBve {
 			Array.Resize<string>(ref Files, n + 1);
 			Files[n] = e.FileName;
 			// reset
-			ReducedMode = false;
 			LightingRelative = -1.0;
 			Game.Reset();
 			Renderer.TextureManager.UnloadAllTextures();
@@ -294,7 +291,6 @@ namespace OpenBve {
                         Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, cosa, sina);
                         Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, cosa, sina);
                     }
-                    ReducedMode = false;
 	            }
 	            else if(MouseButton == 2)
 	            {
@@ -303,7 +299,6 @@ namespace OpenBve {
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
                     double dy = 0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dy * Renderer.Camera.AbsoluteUp;
-                    ReducedMode = false;
 	            }
 	            else
 	            {
@@ -312,7 +307,6 @@ namespace OpenBve {
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
                     double dz = -0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dz * Renderer.Camera.AbsoluteDirection;
-                    ReducedMode = false;
 	            }
 	        }
 	    }
@@ -331,7 +325,6 @@ namespace OpenBve {
 	                // reset
 					CurrentHost.AnimatedObjectCollectionCache.Clear();
 					CurrentHost.StaticObjectCache.Clear();
-	                ReducedMode = false;
 	                LightingRelative = -1.0;
 	                Game.Reset();
 	                Renderer.TextureManager.UnloadAllTextures();
@@ -430,7 +423,6 @@ namespace OpenBve {
 				            Files[n + i] = f[i];
 			            }
 			            // reset
-			            ReducedMode = false;
 			            LightingRelative = -1.0;
 			            Game.Reset();
 			            Renderer.TextureManager.UnloadAllTextures();
@@ -535,8 +527,7 @@ namespace OpenBve {
 	                }
 	                break;
 	            case Key.Delete:
-	                ReducedMode = false;
-	                LightingRelative = -1.0;
+		            LightingRelative = -1.0;
 	                Game.Reset();
 	                Renderer.TextureManager.UnloadAllTextures();
 	                Interface.ClearMessages();
@@ -545,47 +536,37 @@ namespace OpenBve {
 	                break;
 	            case Key.Left:
 	                RotateX = -1;
-	                ReducedMode = false;
 	                break;
 	            case Key.Right:
 	                RotateX = 1;
-	                ReducedMode = false;
 	                break;
 	            case Key.Up:
 	                RotateY = -1;
-	                ReducedMode = false;
 	                break;
 	            case Key.Down:
 	                RotateY = 1;
-	                ReducedMode = false;
 	                break;
 	            case Key.A:
 	            case Key.Keypad4:
 	                MoveX = -1;
-	                ReducedMode = false;
 	                break;
 	            case Key.D:
 	            case Key.Keypad6:
 	                MoveX = 1;
-	                ReducedMode = false;
 	                break;
 	            case Key.Keypad8:
 	                MoveY = 1;
-	                ReducedMode = false;
 	                break;
 	            case Key.Keypad2:
 	                MoveY = -1;
-	                ReducedMode = false;
 	                break;
 	            case Key.W:
 	            case Key.Keypad9:
 	                MoveZ = 1;
-	                ReducedMode = false;
 	                break;
 	            case Key.S:
 	            case Key.Keypad3:
 	                MoveZ = -1;
-	                ReducedMode = false;
 	                break;
 	            case Key.Keypad5:
 	                Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
@@ -601,12 +582,10 @@ namespace OpenBve {
 	            case Key.L:
 	            case Key.F3:
 	                LightingTarget = 1 - LightingTarget;
-	                ReducedMode = false;
 	                break;
 	            case Key.I:
 	            case Key.F4:
 	                Renderer.OptionInterface = !Renderer.OptionInterface;
-	                ReducedMode = false;
 	                break;
                 case Key.F8:
                     formOptions.ShowOptions();
@@ -618,7 +597,6 @@ namespace OpenBve {
 	            case Key.G:
 	            case Key.C:
 	                Renderer.OptionCoordinateSystem = !Renderer.OptionCoordinateSystem;
-	                ReducedMode = false;
 	                break;
 	            case Key.B:
 	                if (ShiftPressed)
@@ -640,7 +618,6 @@ namespace OpenBve {
 	                    }
 	                    Renderer.ApplyBackgroundColor();
 	                }
-	                ReducedMode = false;
 	                break;
 				case Key.R:
 					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
