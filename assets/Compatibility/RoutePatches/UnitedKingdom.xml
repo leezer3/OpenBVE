@@ -172,5 +172,88 @@
 		<FileName>HST_SM-Invermay.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
 	</Patch>
+	<!--Sandymill - Balfearn -->
+	<Patch>
+		<Hash>1EF0756168A0CA139450BB2EA1DC9C2C9AC64E14222BE8289339404E2E7132D0</Hash>
+		<FileName>Sandymill_Morning.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>BFCA0158A5D0168365C770F0B6888774D8E9974216E02914E78925EA91039EE6</Hash>
+		<FileName>Sandymill_Night - Clear.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>62EE92C7533F73DD4122F079F922C47D9BECFA29241BBAD8BFDC939B65183058</Hash>
+		<FileName>Sandymill_Night - Dark.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>2E205B001B3E0699840AEDE7924BE568194B9FD1B309453F3BE0B673FE230F5C</Hash>
+		<FileName>Sandymill_Original.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>B3C6E90AB97F65E733C7CA4376C7B8E1A2F779392E7D69AE2F415A8AF5804F88</Hash>
+		<FileName>Sandymill_Snow.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>B77AA9070629AD379A3B342FBBA177FC3392C9994ECF545827B426624766A28A</Hash>
+		<FileName>Sandymill_HST.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>95EA69BB178CA23839FE3E8172E9F28ED062BB20EACC7820A6EEF7122BC867DA</Hash>
+		<FileName>Sandymill_Sprinter.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- Bay Park -->
+	<Patch>
+		<Hash>09285CB0E873848E1E79A070EF8D51B20502B5FE07FA7FCCED55AF9485127A10</Hash>
+		<FileName>Bay_Park CL158.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>CDA148AF28C3F1A54F02F13F38BCB923110836E7FEE6A5B053649C8FDBDAA900</Hash>
+		<FileName>Bay_Park HST.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- Blackbrook - Cheddingham -->
+	<Patch>
+		<Hash>8C6BEC133FF3BD99B45C0CE1EFE273511D5E6C877CE8448C6326DF49091709B0</Hash>
+		<FileName>01-Blackbrook - Cheddingham.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>27009581473948AEF86A732DF901C4338F1A3F55F828AD4C67C78305F7EF42B6</Hash>
+		<FileName>02-Cheddingham - Appleford.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>877A3D79EBADDBA4CAF9E6E74F82CAACA52A65158A73A5AC2758F48731EC8580</Hash>
+		<FileName>03a-Appleford - Blackbrook Express.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>8BA9A7933DC6B95E7E71A6D72878090B578294DADFF3881D86FDA231C964ADC6</Hash>
+		<FileName>03-Appleford - Blackbrook.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>7355841785A1049182F966BAC5F1B78A24BFC6EEFBA947C9C2C17F8A82137D54</Hash>
+		<FileName>04-Blackbrook - Cheddingham.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>4571D4FEC90ADA7771D6DDC0683FD1E38A035C29D1B8015BC88C7A44F2DF8CE5</Hash>
+		<FileName>05-Cheddingham - Appleford.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>7751ECA40F964985F7C381BB2EE46AC6907DBDA1BE0923E3149E71D2A7A495F9</Hash>
+		<FileName>06-Appleford - Blackbrook.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>
