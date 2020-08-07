@@ -129,5 +129,48 @@
 		<FileName>Sandymill to Invermay\\Sandymill-Invermay - HST Late Train .rw</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
 	</Patch>
+	<!-- Sandymill Electric -->
+	<!-- Day -->
+	<Patch>
+		<Hash>7E327966DE62D5441CCD03171876D129E5BAB247390FB6D487DB6DD314AE6662</Hash>
+		<FileName>311_SM-Balfearn.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>1C6B71F3D1FDCB59C4CCCE2B79D1A5CA303078F160D9D9AD08353A9F3BEB14E0</Hash>
+		<FileName>47_PW-Invermay.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>BD6AB73AA955A47C8303F2CB9F1A2674F0649669E42A245BE656C7D559856281</Hash>
+		<FileName>87_SM-Pinwhirrie.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>DA556F1FCFAE115829982F53809FA3103290B29524CEFAD8B37DA3003B06CA17</Hash>
+		<FileName>HST_SM-Invermay.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- Night -->
+	<Patch>
+		<Hash>5679353768B5D07109E32C02A0443539E76F60DA5AAD077CD97303245C1D7FC9</Hash>
+		<FileName>311_SM-Balfearn.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>9694EF802953F7262A5D6475C6A443BA06E79506428F3FDD1E404E201DEF464C</Hash>
+		<FileName>47_PW-Invermay.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>1ECBE7D13C920441B5983DFA25C6FD954B03A9E7499614947143B8F5FC889CA6</Hash>
+		<FileName>87_SM-Pinwhirrie.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>38D0D107E21F163FBE1DD5ED21D26730CC14374AD84FCA4B16D460EFFDAC6F3A</Hash>
+		<FileName>HST_SM-Invermay.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>
