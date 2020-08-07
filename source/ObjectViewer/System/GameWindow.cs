@@ -21,8 +21,6 @@ namespace OpenBve
             }
         }
         
-        private static double ReducedModeEnteringTime = 0;
-        
         private static double RotateXSpeed = 0.0;
         private static double RotateYSpeed = 0.0;
         
@@ -40,7 +38,6 @@ namespace OpenBve
                 ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
             }
             bool updatelight = false;
-            bool keep = false;
             // rotate x
             if (Program.RotateX == 0)
             {
@@ -75,7 +72,6 @@ namespace OpenBve
                 Program.Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
                 Program.Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
                 Program.Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
-                keep = true;
             }
             // rotate y
             if (Program.RotateY == 0)
@@ -110,7 +106,6 @@ namespace OpenBve
                 double sina = Math.Sin(RotateYSpeed * timeElapsed);
                 Program.Renderer.Camera.AbsoluteDirection.Rotate(Program.Renderer.Camera.AbsoluteSide, cosa, sina);
                 Program.Renderer.Camera.AbsoluteUp.Rotate(Program.Renderer.Camera.AbsoluteSide, cosa, sina);
-                keep = true;
             }
             // move x
             if (Program.MoveX == 0)
@@ -142,7 +137,6 @@ namespace OpenBve
             if (MoveXSpeed != 0.0)
             {
 	            Program.Renderer.Camera.AbsolutePosition += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide;
-	            keep = true;
             }
             // move y
             if (Program.MoveY == 0)
@@ -174,7 +168,6 @@ namespace OpenBve
             if (MoveYSpeed != 0.0)
             {
 	            Program.Renderer.Camera.AbsolutePosition += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp;
-	            keep = true;
             }
             // move z
             if (Program.MoveZ == 0)
@@ -206,8 +199,6 @@ namespace OpenBve
             if (MoveZSpeed != 0.0)
             {
 	            Program.Renderer.Camera.AbsolutePosition += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection;
-
-                keep = true;
             }
             // lighting
             if (Program.LightingRelative == -1)
@@ -222,7 +213,6 @@ namespace OpenBve
                     Program.LightingRelative -= 0.5 * timeElapsed;
                     if (Program.LightingRelative < 0.0) Program.LightingRelative = 0.0;
                     updatelight = true;
-                    keep = true;
                 }
             }
             else
@@ -232,7 +222,6 @@ namespace OpenBve
                     Program.LightingRelative += 0.5 * timeElapsed;
                     if (Program.LightingRelative > 1.0) Program.LightingRelative = 1.0;
                     updatelight = true;
-                    keep = true;
                 }
             }
             // continue

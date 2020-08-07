@@ -31,7 +31,7 @@ namespace OpenBve
             return Result;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
             int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;

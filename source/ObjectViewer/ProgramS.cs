@@ -115,9 +115,11 @@ namespace OpenBve {
 	                if (Skips == args.Length) return;
 	            }
 	        }
-			
-	        var options = new ToolkitOptions();
-	        options.Backend = PlatformBackend.PreferX11;
+
+	        var options = new ToolkitOptions
+	        {
+		        Backend = PlatformBackend.PreferX11
+	        };
 	        Toolkit.Init(options);
             Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
@@ -601,9 +603,11 @@ namespace OpenBve {
 	            case Key.B:
 	                if (ShiftPressed)
 	                {
-	                    ColorDialog dialog = new ColorDialog();
-	                    dialog.FullOpen = true;
-	                    if (dialog.ShowDialog() == DialogResult.OK)
+		                ColorDialog dialog = new ColorDialog
+		                {
+			                FullOpen = true
+		                };
+		                if (dialog.ShowDialog() == DialogResult.OK)
 	                    {
 	                        Renderer.BackgroundColor = -1;
 	                        Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
