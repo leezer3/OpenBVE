@@ -9,6 +9,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.Text;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Cameras;
@@ -146,8 +147,10 @@ namespace OpenBve {
 			Game.Reset();
 			Renderer.UpdateViewport();
 			bool result;
-			try {
-				Loading.Load(CurrentRouteFile, System.Text.Encoding.UTF8);
+			try
+			{
+				Encoding encoding = TextEncoding.GetSystemEncodingFromFile(CurrentRouteFile);
+				Loading.Load(CurrentRouteFile, encoding);
 				result = true;
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);

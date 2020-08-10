@@ -68,7 +68,7 @@ namespace OpenBve {
 			CurrentRouteFile = RouteFile;
 			CurrentRouteEncoding = RouteEncoding;
 			// thread
-			Loading.LoadAsynchronously(CurrentRouteFile, Encoding.UTF8);
+			Loading.LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
 			RouteViewer.LoadingScreenLoop();
 		}
 
