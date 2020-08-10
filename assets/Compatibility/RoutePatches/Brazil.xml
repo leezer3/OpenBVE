@@ -10,5 +10,16 @@
 		<FileName>Caldas_Grama.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<Patch>
+		<Hash>A308E6413F546DBCE8BB9852444417552FFCD4BEFC10A9C5529EC8E9F8471C6A</Hash>
+		<FileName>jc_Caldas_Grama.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>1BAD8567BB211FD064E0DABD329B75601C4F0CF32274B7AC8160F7D293CF746F</Hash>
+		<FileName>jc3-Jacarei_Taubate_v3.csv</FileName>
+		<Expression Number="169">.sta Sao Silvestre;16.30;16.301;0;1;0;;;10;50;</Expression>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>
