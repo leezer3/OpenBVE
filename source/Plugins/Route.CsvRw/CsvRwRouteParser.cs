@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -16,6 +18,7 @@ namespace CsvRwRouteParser {
 		internal string TrainPath;
 		internal string CompatibilityFolder;
 		internal bool CylinderHack = false;
+		internal bool SplitLineHack = true;
 		internal bool IsRW;
 
 		internal Plugin Plugin;
@@ -147,7 +150,7 @@ namespace CsvRwRouteParser {
 
 		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
 			//Read the entire routefile into memory
-			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
+			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
 			Expression[] Expressions;
 			PreprocessSplitIntoExpressions(FileName, Lines, out Expressions, true);
 			PreprocessChrRndSub(FileName, Encoding, ref Expressions);

@@ -43,6 +43,7 @@ namespace CsvRwRouteParser
 
 				Plugin.CurrentOptions.Derailments = patch.Derailments;
 				Plugin.CurrentOptions.Toppling = patch.Toppling;
+				SplitLineHack = patch.SplitLineHack;
 				foreach (int i in patch.DummyRailTypes)
 				{
 					if (Data.Structure.RailObjects == null)
@@ -100,5 +101,7 @@ namespace CsvRwRouteParser
 		internal string CompatibilitySignalSet;
 		/// <summary>Forces accurate object disposal on or off</summary>
 		internal bool AccurateObjectDisposal;
+		/// <summary>Whether certain lines should be split</summary>
+		internal bool SplitLineHack;
 	}
 }

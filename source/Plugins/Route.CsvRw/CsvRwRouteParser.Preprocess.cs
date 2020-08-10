@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -8,12 +11,12 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void PreprocessSplitIntoExpressions(string FileName, string[] Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
+		private void PreprocessSplitIntoExpressions(string FileName, List<string> Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
 			Expressions = new Expression[4096];
 			int e = 0;
 			// full-line rw comments
 			if (IsRW) {
-				for (int i = 0; i < Lines.Length; i++) {
+				for (int i = 0; i < Lines.Count; i++) {
 					int Level = 0;
 					for (int j = 0; j < Lines[i].Length; j++) {
 						switch (Lines[i][j]) {
@@ -40,7 +43,7 @@ namespace CsvRwRouteParser
 				}
 			}
 			// parse
-			for (int i = 0; i < Lines.Length; i++) {
+			for (int i = 0; i < Lines.Count; i++) {
 				//Remove empty null characters
 				//Found these in a couple of older routes, harmless but generate errors
 				//Possibly caused by BVE-RR (DOS version)
@@ -78,6 +81,24 @@ namespace CsvRwRouteParser
 							case '@':
 								if (IsRW & Level == 0) n++;
 								break;
+						}
+					}
+
+					if (SplitLineHack)
+					{
+						MatchCollection matches = Regex.Matches(Lines[i], ".Load", RegexOptions.IgnoreCase);
+						if (matches.Count > 1)
+						{
+							string[] splitLine = Lines[i].Split(',');
+							Lines.RemoveAt(i);
+							for (int j = 0; j < splitLine.Length; j++)
+							{
+								string newLine = splitLine[j].Trim();
+								if (newLine.Length > 0)
+								{
+									Lines.Insert(i, newLine);
+								}
+							}
 						}
 					}
 					// create expressions
@@ -406,7 +427,7 @@ namespace CsvRwRouteParser
 											//This is not critical, but it's a bad idea to mix and match character encodings within a routefile, as the auto-detection may sometimes be wrong
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The text encoding of the $Include file " + files[chosenIndex] + " does not match that of the base routefile.");
 										}
-										string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], includeEncoding);
+										List<string> lines = System.IO.File.ReadAllLines(files[chosenIndex], includeEncoding).ToList();
 										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
 										int length = Expressions.Length;
 										if (expr.Length == 0) {

@@ -199,6 +199,17 @@ namespace CsvRwRouteParser
 							currentPatch.AccurateObjectDisposal = false;
 						}
 						break;
+					case "SplitLineHack":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.SplitLineHack = true;
+						}
+						else
+						{
+							currentPatch.SplitLineHack = false;
+						}
+						break;
 				}
 			}
 

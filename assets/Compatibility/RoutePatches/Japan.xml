@@ -20,5 +20,11 @@
 		<DummyRailTypes>1</DummyRailTypes>
 		<DummyGroundTypes>16</DummyGroundTypes>
 	</Patch>
+	<Patch>
+		<Hash>678CD94DC50B919ABF581D875032D74049D429D787FA0433D4F0343765566AB6</Hash>
+		<FileName>KT Nara.csv</FileName>
+		<XParser>new</XParser>
+		<SplitLineHack>true</SplitLineHack>
+	</Patch>
   </RoutePatches>
 </openBVE>
