@@ -45,10 +45,18 @@ namespace CsvRwRouteParser
 				Plugin.CurrentOptions.Toppling = patch.Toppling;
 				foreach (int i in patch.DummyRailTypes)
 				{
+					if (Data.Structure.RailObjects == null)
+					{
+						Data.Structure.RailObjects = new ObjectDictionary();
+					}
 					Data.Structure.RailObjects.Add(i, new StaticObject(Plugin.CurrentHost));
 				}
 				foreach (int i in patch.DummyGroundTypes)
 				{
+					if (Data.Structure.Ground == null)
+					{
+						Data.Structure.Ground = new ObjectDictionary();
+					}
 					Data.Structure.Ground.Add(i, new StaticObject(Plugin.CurrentHost));
 				}
 
