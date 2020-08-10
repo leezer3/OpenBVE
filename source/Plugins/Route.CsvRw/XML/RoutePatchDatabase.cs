@@ -188,6 +188,17 @@ namespace CsvRwRouteParser
 							currentPatch.CompatibilitySignalSet = signalFile;
 						}
 						break;
+					case "AccurateObjectDisposal":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.AccurateObjectDisposal = true;
+						}
+						else
+						{
+							currentPatch.AccurateObjectDisposal = false;
+						}
+						break;
 				}
 			}
 

@@ -30,6 +30,7 @@ namespace CsvRwRouteParser
 				}
 
 				CylinderHack = patch.CylinderHack;
+				Data.AccurateObjectDisposal = patch.AccurateObjectDisposal;
 				for (int i = 0; i < patch.ExpressionFixes.Count; i++)
 				{
 					Expressions[patch.ExpressionFixes.ElementAt(i).Key].Text = patch.ExpressionFixes.ElementAt(i).Value;
@@ -89,6 +90,7 @@ namespace CsvRwRouteParser
 		internal List<int> DummyGroundTypes = new List<int>();
 		/// <summary>The compatability signal file to use</summary>
 		internal string CompatibilitySignalSet;
-
+		/// <summary>Forces accurate object disposal on or off</summary>
+		internal bool AccurateObjectDisposal;
 	}
 }

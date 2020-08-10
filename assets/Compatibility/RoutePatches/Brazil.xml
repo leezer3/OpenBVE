@@ -5,5 +5,10 @@
 		<FileName>Jundiai-Francisco Morato.rw</FileName>
 		<LineEndingFix>true</LineEndingFix>
 	</Patch>
+	<Patch>
+		<Hash>F92E0E2DFF6DCBB71E47B0083FD33B42104C2FA544BFD0DA04BEB78094D9836E</Hash>
+		<FileName>Caldas_Grama.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

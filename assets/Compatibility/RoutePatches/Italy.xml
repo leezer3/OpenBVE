@@ -88,5 +88,12 @@
 		<FileName>TR_spec_L29.rw</FileName>
 		<Expression Number="1318">5025</Expression>
 	</Patch>
+	<!-- Domodossola - Trontano -->
+	<Patch>
+		<Hash>0E2E305092A297BBF02277F504A5983E7AB83C4C95644CBE4C9EA5FC1A3E644E</Hash>
+		<FileName>Domodossola_Trontano.csv</FileName>
+		<!-- Trees and stuff disappearing at first station -->
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>
