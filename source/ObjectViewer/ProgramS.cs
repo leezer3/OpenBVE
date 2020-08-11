@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
@@ -325,10 +326,21 @@ namespace OpenBve {
 	                break;
 	            case Key.F5:
 	                // reset
+	                for (int i = 0; i < CurrentHost.AnimatedObjectCollectionCache.Count; i++)
+	                {
+		                AnimatedObjectCollection aoc = CurrentHost.AnimatedObjectCollectionCache.ElementAt(i).Value;
+						aoc.Dispose();
+	                }
 					CurrentHost.AnimatedObjectCollectionCache.Clear();
+	                for (int i = 0; i < CurrentHost.StaticObjectCache.Count; i++)
+	                {
+		                StaticObject so = CurrentHost.StaticObjectCache.ElementAt(i).Value;
+						so.Dispose();
+	                }
 					CurrentHost.StaticObjectCache.Clear();
 	                LightingRelative = -1.0;
 	                Game.Reset();
+					GC.Collect();
 	                Renderer.TextureManager.UnloadAllTextures();
 	                Interface.ClearMessages();
 	                for (int i = 0; i < Files.Length; i++)
@@ -529,6 +541,18 @@ namespace OpenBve {
 	                }
 	                break;
 	            case Key.Delete:
+		            for (int i = 0; i < CurrentHost.AnimatedObjectCollectionCache.Count; i++)
+		            {
+			            AnimatedObjectCollection aoc = CurrentHost.AnimatedObjectCollectionCache.ElementAt(i).Value;
+			            aoc.Dispose();
+		            }
+		            CurrentHost.AnimatedObjectCollectionCache.Clear();
+		            for (int i = 0; i < CurrentHost.StaticObjectCache.Count; i++)
+		            {
+			            StaticObject so = CurrentHost.StaticObjectCache.ElementAt(i).Value;
+			            so.Dispose();
+		            }
+		            CurrentHost.StaticObjectCache.Clear();
 		            LightingRelative = -1.0;
 	                Game.Reset();
 	                Renderer.TextureManager.UnloadAllTextures();

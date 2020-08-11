@@ -4,7 +4,7 @@ using OpenBveApi.Math;
 namespace OpenBveApi.Objects
 {
 	/// <summary>A single internal state of an Object</summary>
-	public class ObjectState : ICloneable
+	public class ObjectState : ICloneable, IDisposable
 	{
 		/// <summary>The prototype static object</summary>
 		public StaticObject Prototype;
@@ -107,6 +107,12 @@ namespace OpenBveApi.Objects
 		public object Clone()
 		{
 			return MemberwiseClone();
+		}
+
+		/// <summary>Disposes of the object state</summary>
+		public void Dispose()
+		{
+			Prototype.Dispose();
 		}
 	}
 }

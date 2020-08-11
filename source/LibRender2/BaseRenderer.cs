@@ -232,10 +232,25 @@ namespace LibRender2
 			Loading = new Loading(this);
 			Keys = new Keys(this);
 			MotionBlur = new MotionBlur(this);
+			if (StaticObjectStates == null)
+			{
+				StaticObjectStates = new List<ObjectState>();
+			}
 
-			StaticObjectStates = new List<ObjectState>();
-			DynamicObjectStates = new List<ObjectState>();
-			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
+			if (DynamicObjectStates == null)
+			{
+				DynamicObjectStates = new List<ObjectState>();
+			}
+			
+			if (VisibleObjects == null)
+			{
+				VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
+			}
+			else
+			{
+				VisibleObjects.Clear();
+			}
+			
 
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -326,6 +341,18 @@ namespace LibRender2
 		public void Reset()
 		{
 			Initialize(currentHost, currentOptions);
+			for (int i = 0; i < StaticObjectStates.Count; i++)
+			{
+				ObjectState os = StaticObjectStates.ElementAt(i);
+				os.Dispose();
+			}
+			StaticObjectStates.Clear();
+			for (int i = 0; i < DynamicObjectStates.Count; i++)
+			{
+				ObjectState os = DynamicObjectStates.ElementAt(i);
+				os.Dispose();
+			}
+			DynamicObjectStates.Clear();
 		}
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)

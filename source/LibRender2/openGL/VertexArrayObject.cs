@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -13,7 +14,7 @@ namespace LibRender2
 	/// <summary>
 	/// Class representing an OpenGL/OpenTK VAO
 	/// </summary>
-	public class VertexArrayObject : IDisposable
+	public class VertexArrayObject : AbstractVAO
 	{
 		public static readonly List<VertexArrayObject> Disposable = new List<VertexArrayObject>();
 
@@ -134,13 +135,14 @@ namespace LibRender2
 		/// <summary>
 		/// Dispose method to clean up the VAO releases the OpenGL Buffer
 		/// </summary>
-		public void Dispose()
+		public override void Dispose()
 		{
 			if (!disposed)
 			{
 				ibo?.Dispose();
 				vbo?.Dispose();
-
+				ibo = null;
+				vbo = null;
 				GL.DeleteVertexArray(handle);
 				GC.SuppressFinalize(this);
 				disposed = true;

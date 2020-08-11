@@ -81,6 +81,7 @@ namespace LibRender2.Objects
 			myAlphaFaces.Clear();
 			myOverlayOpaqueFaces.Clear();
 			myOverlayAlphaFaces.Clear();
+			GC.Collect();
 		}
 
 		public void ShowObject(ObjectState State, ObjectType Type)

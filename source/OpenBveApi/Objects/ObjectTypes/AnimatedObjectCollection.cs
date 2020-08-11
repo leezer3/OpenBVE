@@ -7,7 +7,7 @@ using OpenBveApi.World;
 namespace OpenBveApi.Objects
 {
 	/// <summary>The AnimatedObjectCollection is a simple container class containing one or more animated objects</summary>
-		public class AnimatedObjectCollection : UnifiedObject
+		public class AnimatedObjectCollection : UnifiedObject, IDisposable
 		{
 
 			private readonly HostInterface currentHost;
@@ -155,6 +155,16 @@ namespace OpenBveApi.Objects
 			public override UnifiedObject Transform(double NearDistance, double FarDistance)
 			{
 				throw new NotSupportedException();
+			}
+
+			public void Dispose()
+			{
+				for (int i = 0; i < Objects.Length; i++)
+				{
+					Objects[i].Dispose();
+				}
+				Objects = null;
+				Sounds = null;
 			}
 		}
 }

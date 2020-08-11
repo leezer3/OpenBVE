@@ -1,9 +1,10 @@
-﻿using OpenBveApi.Objects;
+﻿using System;
+using OpenBveApi.Objects;
 
 namespace LibRender2.Objects
 {
 	/// <summary>Represents a face state within the renderer</summary>
-	public class FaceState
+	public class FaceState : IDisposable
 	{
 		/// <summary>The containing object</summary>
 		public readonly ObjectState Object;
@@ -29,6 +30,11 @@ namespace LibRender2.Objects
 			{
 				Renderer.RenderFaceImmediateMode(this);
 			}
+		}
+
+		public void Dispose()
+		{
+			Object?.Dispose();
 		}
 	}
 }

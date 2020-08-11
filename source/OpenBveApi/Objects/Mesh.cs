@@ -16,9 +16,9 @@ namespace OpenBveApi.Objects
 		/// <remarks>Not currently implemented</remarks>
 		public Vector3[] BoundingBox;
 		/// <summary>The OpenGL/OpenTK VAO for the mesh</summary>
-		public object VAO;
+		public AbstractVAO VAO;
 		/// <summary>The OpenGL/OpenTK VAO for the normals</summary>
-		public object NormalsVAO;
+		public AbstractVAO NormalsVAO;
 
 		/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 		/// <param name="Vertices">The vertices that make up one face.</param>

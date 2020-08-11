@@ -6,7 +6,7 @@ namespace OpenBveApi.Objects
 {
 	// <summary>Represents a static (e.g. non-animated) object within the world</summary>
 	/// <inheritdoc />
-	public class StaticObject : UnifiedObject
+	public class StaticObject : UnifiedObject, IDisposable
 	{
 		/// <summary>The mesh of the object</summary>
 		public Mesh Mesh;
@@ -858,6 +858,14 @@ namespace OpenBveApi.Objects
 			{
 				Array.Resize<MeshFace>(ref Mesh.Faces, f);
 			}
+		}
+
+		public void Dispose()
+		{
+			Mesh.VAO?.Dispose();
+			Mesh.VAO = null;
+			Mesh.NormalsVAO?.Dispose();
+			Mesh.NormalsVAO = null;
 		}
 	}
 }

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using CSScriptLibrary;
@@ -12,7 +13,7 @@ using OpenBveApi.World;
 namespace OpenBveApi.Objects
 {
 	/// <summary>The base type for an animated object</summary>
-	public class AnimatedObject
+	public class AnimatedObject : IDisposable
 	{
 		/// <summary>The array of states</summary>
 		public ObjectState[] States;
@@ -958,6 +959,11 @@ namespace OpenBveApi.Objects
 			}
 
 			currentHost.AnimatedWorldObjectsUsed++;
+		}
+
+		public void Dispose()
+		{
+			internalObject?.Dispose();
 		}
 	}
 }

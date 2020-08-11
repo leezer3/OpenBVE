@@ -152,6 +152,7 @@
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundSourceState.cs" />
     <Compile Include="Sounds\Sounds.SoundType.cs" />
+    <Compile Include="System\AbstractVAO.cs" />
     <Compile Include="System\BaseOptions.cs" />
     <Compile Include="System\Files.cs" />
     <Compile Include="System\FileSystem.cs" />
