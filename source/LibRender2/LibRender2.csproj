@@ -55,6 +55,7 @@
     <Compile Include="MotionBlur\MotionBlurMode.cs" />
     <Compile Include="Objects\FaceState.cs" />
     <Compile Include="Objects\ObjectLibrary.cs" />
+    <Compile Include="Objects\ObjectLibrary.ListExtensions.cs" />
     <Compile Include="openGL\FrameBufferObject.cs" />
     <Compile Include="openGL\IndexBufferObject.cs" />
     <Compile Include="openGL\ShaderLayout.cs" />

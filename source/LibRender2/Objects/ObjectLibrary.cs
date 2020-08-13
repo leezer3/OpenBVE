@@ -76,11 +76,11 @@ namespace LibRender2.Objects
 
 		public void Clear()
 		{
-			myObjects.Clear();
-			myOpaqueFaces.Clear();
-			myAlphaFaces.Clear();
-			myOverlayOpaqueFaces.Clear();
-			myOverlayAlphaFaces.Clear();
+			myObjects.DisposeAndClear();
+			myOpaqueFaces.DisposeAndClear();
+			myAlphaFaces.DisposeAndClear();
+			myOverlayOpaqueFaces.DisposeAndClear();
+			myOverlayAlphaFaces.DisposeAndClear();
 		}
 
 		public void ShowObject(ObjectState State, ObjectType Type)

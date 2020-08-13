@@ -341,18 +341,8 @@ namespace LibRender2
 		public void Reset()
 		{
 			Initialize(currentHost, currentOptions);
-			for (int i = 0; i < StaticObjectStates.Count; i++)
-			{
-				ObjectState os = StaticObjectStates.ElementAt(i);
-				os.Dispose();
-			}
-			StaticObjectStates.Clear();
-			for (int i = 0; i < DynamicObjectStates.Count; i++)
-			{
-				ObjectState os = DynamicObjectStates.ElementAt(i);
-				os.Dispose();
-			}
-			DynamicObjectStates.Clear();
+			StaticObjectStates.DisposeAndClear();
+			DynamicObjectStates.DisposeAndClear();
 		}
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
