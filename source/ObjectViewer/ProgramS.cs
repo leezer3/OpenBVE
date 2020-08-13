@@ -340,7 +340,6 @@ namespace OpenBve {
 					CurrentHost.StaticObjectCache.Clear();
 	                LightingRelative = -1.0;
 	                Game.Reset();
-					GC.Collect();
 	                Renderer.TextureManager.UnloadAllTextures();
 	                Interface.ClearMessages();
 	                for (int i = 0; i < Files.Length; i++)

@@ -9,6 +9,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2;
@@ -17,6 +18,7 @@ using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -300,7 +302,17 @@ namespace OpenBve {
 					AltPressed = true;
 					break;
 				case Key.F5:
+					for (int i = 0; i < CurrentHost.AnimatedObjectCollectionCache.Count; i++)
+					{
+						AnimatedObjectCollection aoc = CurrentHost.AnimatedObjectCollectionCache.ElementAt(i).Value;
+						aoc.Dispose();
+					}
 					CurrentHost.AnimatedObjectCollectionCache.Clear();
+					for (int i = 0; i < CurrentHost.StaticObjectCache.Count; i++)
+					{
+						StaticObject so = CurrentHost.StaticObjectCache.ElementAt(i).Value;
+						so.Dispose();
+					}
 					CurrentHost.StaticObjectCache.Clear();
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
@@ -352,6 +364,18 @@ namespace OpenBve {
 						Application.DoEvents();
 						CurrentlyLoading = true;
 						CurrentRouteFile = Dialog.FileName;
+						for (int i = 0; i < CurrentHost.AnimatedObjectCollectionCache.Count; i++)
+						{
+							AnimatedObjectCollection aoc = CurrentHost.AnimatedObjectCollectionCache.ElementAt(i).Value;
+							aoc.Dispose();
+						}
+						CurrentHost.AnimatedObjectCollectionCache.Clear();
+						for (int i = 0; i < CurrentHost.StaticObjectCache.Count; i++)
+						{
+							StaticObject so = CurrentHost.StaticObjectCache.ElementAt(i).Value;
+							so.Dispose();
+						}
+						CurrentHost.StaticObjectCache.Clear();
 						LoadRoute();
 						ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						CurrentlyLoading = false;
