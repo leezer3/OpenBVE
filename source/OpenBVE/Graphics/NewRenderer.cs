@@ -58,7 +58,10 @@ namespace OpenBve.Graphics
 
 			try
 			{
-				pickingShader = new Shader(this, "default", "picking", true);
+				if (pickingShader == null)
+				{
+					pickingShader = new Shader(this, "default", "picking", true);
+				}
 				pickingShader.Activate();
 				pickingShader.Deactivate();
 			}
