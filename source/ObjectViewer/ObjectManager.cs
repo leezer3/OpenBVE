@@ -1,6 +1,3 @@
-using System;
-using System.Text;
-using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 
@@ -59,6 +56,16 @@ namespace OpenBve
 				}
 				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
 			}
+        }
+
+        internal static void Reset()
+        {
+	        for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
+	        {
+		        AnimatedWorldObjects[i].Dispose();
+	        }
+	        AnimatedWorldObjects = new WorldObject[4];
+	        AnimatedWorldObjectsUsed = 0;
         }
     }
 }

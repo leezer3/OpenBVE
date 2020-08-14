@@ -12,7 +12,6 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -38,9 +37,19 @@ namespace OpenBve
 
 			if (!ForceLegacyOpenGL)
 			{
-				redAxisVAO = RegisterBox(Color128.Red);
-				greenAxisVAO = RegisterBox(Color128.Green);
-				blueAxisVAO = RegisterBox(Color128.Blue);
+				if (redAxisVAO == null)
+				{
+					redAxisVAO = RegisterBox(Color128.Red);
+				}
+				if (greenAxisVAO == null)
+				{
+					greenAxisVAO = RegisterBox(Color128.Green);
+				}
+				if (blueAxisVAO == null)
+				{
+					blueAxisVAO = RegisterBox(Color128.Blue);
+				}
+				
 			}
 		}
 

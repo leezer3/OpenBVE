@@ -1,6 +1,3 @@
-using System;
-using System.Text;
-using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 
@@ -59,61 +56,14 @@ namespace OpenBve {
 			}
 		}
 
-		internal static StaticObject LoadStaticObject(string FileName, Encoding Encoding, bool PreserveVertices) {
-			try {
-				if (!System.IO.Path.HasExtension(FileName)) {
-					while (true) {
-						string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".csv");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						break;
-					}
-				}
-				StaticObject Result;
-				UnifiedObject obj;
-				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
-					case ".csv":
-					case ".b3d":
-					case ".x":
-					case ".obj":
-					case ".animated":
-					case ".l3dobj":
-					case ".l3dgrp":
-					case ".s":
-						Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
-						if (obj is AnimatedObjectCollection)
-						{
-							Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
-							return null;
-						}
-						Result = (StaticObject)obj;
-						break;
-					default:
-						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
-						return null;
-				}
-
-				if (Result != null)
-				{
-					Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
-				}
-				return Result;
-			} catch (Exception ex) {
-				Interface.AddMessage(MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
-				return null;
+		internal static void Reset()
+		{
+			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
+			{
+				AnimatedWorldObjects[i].Dispose();
 			}
+			AnimatedWorldObjects = new WorldObject[4];
+			AnimatedWorldObjectsUsed = 0;
 		}
 	}
 }

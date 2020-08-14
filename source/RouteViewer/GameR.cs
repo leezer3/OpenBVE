@@ -71,8 +71,7 @@ namespace OpenBve {
 			Program.Renderer.InfoTotalPolygon = 0;
 			// object manager
 			Program.Renderer.InitializeVisibility();
-			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
-			ObjectManager.AnimatedWorldObjectsUsed = 0;
+			ObjectManager.Reset();
 			// renderer / sound
 			Program.Sounds.StopAllSounds();
 			GC.Collect();

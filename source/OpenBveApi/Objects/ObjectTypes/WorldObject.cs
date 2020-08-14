@@ -1,10 +1,11 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
 {
 	/// <summary>Represents an abstract object or sound placed within the game world</summary>
-	public abstract class WorldObject
+	public abstract class WorldObject : IDisposable
 	{
 		/// <summary>Holds a reference to the host application</summary>
 		protected readonly Hosts.HostInterface currentHost;
@@ -56,5 +57,10 @@ namespace OpenBveApi.Objects
 		/// <param name="ForceUpdate">Whether this is a forced update (e.g. Change of viewpoint) or periodic</param>
 		/// <param name="CurrentlyVisible">Whether the object is currently visble to the player</param>
 		public abstract void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool CurrentlyVisible);
+
+		public void Dispose()
+		{
+			Object?.Dispose();
+		}
 	}
 }

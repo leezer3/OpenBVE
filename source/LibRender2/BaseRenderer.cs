@@ -230,8 +230,14 @@ namespace LibRender2
 			Fog = new Fog();
 			OpenGlString = new OpenGlString(this);
 			TextureManager = new TextureManager(currentHost, this);
-			Cube = new Cube(this);
-			Rectangle = new Rectangle(this);
+			if (Cube == null)
+			{
+				Cube = new Cube(this);
+			}
+			if (Rectangle == null)
+			{
+				Rectangle = new Rectangle(this);
+			}
 			Loading = new Loading(this);
 			Keys = new Keys(this);
 			MotionBlur = new MotionBlur(this);

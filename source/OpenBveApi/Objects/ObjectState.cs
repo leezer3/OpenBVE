@@ -112,7 +112,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Disposes of the object state</summary>
 		public void Dispose()
 		{
-			Prototype.Dispose();
+			Prototype?.Dispose();
 		}
 	}
 }

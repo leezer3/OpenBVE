@@ -35,8 +35,7 @@ namespace OpenBve {
 		internal static void Reset() {
 			Program.Renderer.Reset();
 			Program.Renderer.InitializeVisibility();
-			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
-			ObjectManager.AnimatedWorldObjectsUsed = 0;
+			ObjectManager.Reset();
 		}
 	}
 	
