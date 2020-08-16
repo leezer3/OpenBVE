@@ -132,7 +132,8 @@ namespace CsvRwRouteParser
 								{
 									UnifiedObject obj;
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
-									Data.Structure.Poles[commandIndices[0]].Add(commandIndices[1], obj);
+									bool overwriteDefault = commandIndices[1] >= 0 && commandIndices[1] >= 3;
+									Data.Structure.Poles[commandIndices[0]].Add(commandIndices[1], obj, overwriteDefault);
 								}
 							}
 						}

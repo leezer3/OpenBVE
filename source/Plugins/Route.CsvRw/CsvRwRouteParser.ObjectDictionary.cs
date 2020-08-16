@@ -44,12 +44,17 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		internal new void Add(int key, UnifiedObject unifiedObject)
+		internal new void Add(int key, UnifiedObject unifiedObject, bool overwriteWarning = true)
 		{
 			if (this.ContainsKey(key))
 			{
 				this[key] = unifiedObject;
-				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				if (overwriteWarning)
+				{
+					//Poles contain 4 default objects
+					//Don't complain about overwriting these
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
 			}
 			else
 			{
@@ -123,7 +128,7 @@ namespace CsvRwRouteParser
 			if (this.ContainsKey(key))
 			{
 				this[key] = dict;
-				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The Background with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The Pole with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{
