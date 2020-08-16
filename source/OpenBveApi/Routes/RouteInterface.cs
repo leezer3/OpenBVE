@@ -25,7 +25,7 @@
 		/// <param name="soundPath">The base sound folder path</param>
 		/// <param name="PreviewOnly">Whether this is a preview</param>
 		/// <param name="route">Receives the route.</param>
-		/// <returns>Whether loading the sound was successful.</returns>
+		/// <returns>Whether loading the route was successful.</returns>
 		public abstract bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route);
 
 		/// <summary>Holds whether loading is currently in progress</summary>
