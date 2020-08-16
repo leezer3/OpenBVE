@@ -379,12 +379,18 @@ namespace OpenBve {
 						UpdateGraphicsSettings();
 					}
 					Application.DoEvents();
+					Renderer.Camera.AlignmentDirection.TrackPosition = 0;
+					Renderer.Camera.AlignmentDirection.Position.X = 0;
+					Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					break;
 				case Key.F9:
 					if (Interface.MessageCount != 0)
 					{
 						formMessages.ShowMessages();
 						Application.DoEvents();
+						Renderer.Camera.AlignmentDirection.TrackPosition = 0;
+						Renderer.Camera.AlignmentDirection.Position.X = 0;
+						Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					}
 					break;
 				case Key.F10:
