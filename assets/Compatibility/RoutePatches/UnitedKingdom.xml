@@ -255,5 +255,53 @@
 		<FileName>06-Appleford - Blackbrook.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
 	</Patch>
+	<!-- Tinsford -->
+	<Patch>
+		<Hash>1B0ADA299CC4E1A1500AFE6510D6103DF958C2746DF6FA236476D9DF6115D3A3</Hash>
+		<FileName>Tinsford.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- Milngavie - Springburn -->
+	<Patch>
+		<Hash>798F942EC6C227149D32957B78F3B9E635276A2B462A07B338F313FAF62E500E</Hash>
+		<FileName>Milngavie - Springburn 6 Car Evening Rush Hour.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>798F942EC6C227149D32957B78F3B9E635276A2B462A07B338F313FAF62E500E</Hash>
+		<FileName>Milngavie - Springburn 6 Car Evening Rush Hour.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>2BC570375D5DC0209612309EBF20CA5F12C6B6E811B63428832296148F6A8ED5</Hash>
+		<FileName>Milngavie - Springburn Daytime Local.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>9DDB119D0316B37CA2C98A37B50C134B47CF044809D0D47DB31621A0FAA7F597</Hash>
+		<FileName>Milngavie - Springburn Express.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>52F841DFB59E83D95FC8F1CBCC14F38682E65411F2A099977B66F0ACE801DDE6</Hash>
+		<FileName>Milngavie to Springburn First Train.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>72B9A0BD4548E3983836C51C36BAAE3A19697BE779AFCA520AACF49F1B886DB1</Hash>
+		<FileName>Milngavie to Springburn Last Train.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>B742B9CDEDB61F0B8927541551EEC9CA9782ED7034E57CAE2B2AA9E631FBC97A</Hash>
+		<FileName>Milngavie to Springburn Mid-day Train.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>A72ED12D6F376800AF38072B7203786B36B66742847899B2E1F073BD61E24FAE</Hash>
+		<FileName>Milngavie to Springburn FOGGY.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>
