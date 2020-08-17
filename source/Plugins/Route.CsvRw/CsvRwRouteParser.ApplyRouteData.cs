@@ -257,6 +257,15 @@ namespace CsvRwRouteParser
 								}
 							}
 						}
+
+						if (!Data.Backgrounds.ContainsKey(typ) && Data.Backgrounds.ContainsKey(Data.Blocks[0].Background))
+						{
+							/*
+							 * Rare case where Background zero is not defined & the first .Back command is at
+							 * position zero
+							 */
+							typ = Data.Blocks[0].Background;
+						}
 						if (typ >= 0 & Data.Backgrounds.ContainsKey(typ))
 						{
 							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
