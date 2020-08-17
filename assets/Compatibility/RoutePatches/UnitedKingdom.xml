@@ -269,11 +269,6 @@
 		<SignalSet>BritishRail.xml</SignalSet>
 	</Patch>
 	<Patch>
-		<Hash>798F942EC6C227149D32957B78F3B9E635276A2B462A07B338F313FAF62E500E</Hash>
-		<FileName>Milngavie - Springburn 6 Car Evening Rush Hour.csv</FileName>
-		<SignalSet>BritishRail.xml</SignalSet>
-	</Patch>
-	<Patch>
 		<Hash>2BC570375D5DC0209612309EBF20CA5F12C6B6E811B63428832296148F6A8ED5</Hash>
 		<FileName>Milngavie - Springburn Daytime Local.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
