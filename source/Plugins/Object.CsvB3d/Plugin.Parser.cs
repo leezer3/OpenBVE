@@ -319,13 +319,25 @@ namespace Plugin
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
-											if (BveTsHacks && IsB3D && j == 0 && Arguments[j] == string.Empty)
+											if (BveTsHacks)
 											{
-												/*
-												 * Face ,1,2,3
-												 * is interpreted by BVE as Face 0,1,2,3
-												 */
-												a[j] = 0;
+												if (IsB3D && j == 0 && Arguments[j] == string.Empty)
+												{
+													/*
+													* Face ,1,2,3
+													* is interpreted by BVE as Face 0,1,2,3
+													*/
+													a[j] = 0;
+												}
+												else if (a.Length > 2)
+												{
+													/*
+													 * AddFace,0,3,2,1,,,,,,1
+													 * Viable face command, but junk / comments added at the end													 *
+													 */
+													currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													break;
+												}
 												continue;
 											}
 											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
