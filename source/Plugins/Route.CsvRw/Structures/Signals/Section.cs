@@ -34,10 +34,19 @@ namespace CsvRwRouteParser
 				{
 					if (Blocks[g].Transponders[l].Type != -1 & Blocks[g].Transponders[l].SectionIndex == m)
 					{
-						int o = CurrentRoute.Tracks[0].Elements[CurrentTrackElement - CurrentBlock + g].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[CurrentTrackElement - CurrentBlock + g].Events, o + 1);
+						int blockIdx = CurrentTrackElement - CurrentBlock + g;
+						if (blockIdx < 0)
+						{
+							/*
+							 * Section created at track position zero attempts to create
+							 * the associated transponders in the preceeding block
+							 */
+							blockIdx = 0;
+						}
+						int o = CurrentRoute.Tracks[0].Elements[blockIdx].Events.Length;
+						Array.Resize(ref CurrentRoute.Tracks[0].Elements[blockIdx].Events, o + 1);
 						double dt = Blocks[g].Transponders[l].TrackPosition - StartingDistance + (CurrentBlock - g) * BlockInterval;
-						CurrentRoute.Tracks[0].Elements[CurrentTrackElement - CurrentBlock + g].Events[o] = new TransponderEvent(CurrentRoute, dt, Blocks[g].Transponders[l].Type, Blocks[g].Transponders[l].Data, m, Blocks[g].Transponders[l].ClipToFirstRedSection);
+						CurrentRoute.Tracks[0].Elements[blockIdx].Events[o] = new TransponderEvent(CurrentRoute, dt, Blocks[g].Transponders[l].Type, Blocks[g].Transponders[l].Data, m, Blocks[g].Transponders[l].ClipToFirstRedSection);
 						Blocks[g].Transponders[l].Type = -1;
 					}
 				}
