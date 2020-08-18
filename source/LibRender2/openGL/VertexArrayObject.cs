@@ -133,20 +133,27 @@ namespace LibRender2
 		/// </summary>
 		public void Dispose()
 		{
-			if (!disposed)
+			if (disposed)
 			{
-				ibo?.Dispose();
-				vbo?.Dispose();
-
-				GL.DeleteVertexArray(handle);
-				GC.SuppressFinalize(this);
-				disposed = true;
+				return;
 			}
+
+			ibo?.Dispose();
+			vbo?.Dispose();
+
+			GL.DeleteVertexArray(handle);
+			GC.SuppressFinalize(this);
+			disposed = true;
 		}
 
 		~VertexArrayObject()
 		{
-			if (!disposed)
+			if (disposed)
+			{
+				return;
+			}
+
+			lock (BaseRenderer.vaoToDelete)
 			{
 				BaseRenderer.vaoToDelete.Add(handle);
 			}

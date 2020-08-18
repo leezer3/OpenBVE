@@ -180,7 +180,6 @@ namespace OpenBve {
 			// reset
 			LightingRelative = -1.0;
 			Game.Reset();
-			Renderer.TextureManager.UnloadAllTextures();
 			//Fonts.Initialize();
 			Interface.ClearMessages();
 			for (int i = 0; i < Files.Length; i++)
@@ -325,11 +324,8 @@ namespace OpenBve {
 	                break;
 	            case Key.F5:
 	                // reset
-					CurrentHost.AnimatedObjectCollectionCache.Clear();
-					CurrentHost.StaticObjectCache.Clear();
 	                LightingRelative = -1.0;
 	                Game.Reset();
-	                Renderer.TextureManager.UnloadAllTextures();
 	                Interface.ClearMessages();
 	                for (int i = 0; i < Files.Length; i++)
 	                {
@@ -427,7 +423,6 @@ namespace OpenBve {
 			            // reset
 			            LightingRelative = -1.0;
 			            Game.Reset();
-			            Renderer.TextureManager.UnloadAllTextures();
 			            Interface.ClearMessages();
 			            for (int i = 0; i < Files.Length; i++)
 			            {
@@ -531,7 +526,6 @@ namespace OpenBve {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-	                Renderer.TextureManager.UnloadAllTextures();
 	                Interface.ClearMessages();
 	                Files = new string[] {};
 					Renderer.ApplyBackgroundColor();

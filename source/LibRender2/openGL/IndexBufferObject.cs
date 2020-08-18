@@ -54,17 +54,24 @@ namespace LibRender2
 		/// </summary>
 		public void Dispose()
 		{
-			if (!disposed)
+			if (disposed)
 			{
-				GL.DeleteBuffer(handle);
-				GC.SuppressFinalize(this);
-				disposed = true;
+				return;
 			}
+
+			GL.DeleteBuffer(handle);
+			GC.SuppressFinalize(this);
+			disposed = true;
 		}
 
 		~IndexBufferObject()
 		{
-			if (!disposed)
+			if (disposed)
+			{
+				return;
+			}
+
+			lock (BaseRenderer.iboToDelete)
 			{
 				BaseRenderer.iboToDelete.Add(handle);
 			}
