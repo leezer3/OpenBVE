@@ -603,7 +603,6 @@ namespace TrainEditor2.Views
 					}
 
 					glControlMotor.MakeCurrent();
-					Program.Renderer.Finalization();
 					break;
 			}
 

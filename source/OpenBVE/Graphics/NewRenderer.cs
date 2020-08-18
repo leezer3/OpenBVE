@@ -235,6 +235,7 @@ namespace OpenBve.Graphics
 		// render scene
 		internal void RenderScene(double TimeElapsed)
 		{
+			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
 

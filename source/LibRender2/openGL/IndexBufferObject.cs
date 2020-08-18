@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2
@@ -59,6 +59,14 @@ namespace LibRender2
 				GL.DeleteBuffer(handle);
 				GC.SuppressFinalize(this);
 				disposed = true;
+			}
+		}
+
+		~IndexBufferObject()
+		{
+			if (!disposed)
+			{
+				BaseRenderer.iboToDelete.Add(handle);
 			}
 		}
 	}

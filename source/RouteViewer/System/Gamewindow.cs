@@ -241,8 +241,6 @@ namespace OpenBve
 
 		public override void Dispose()
 		{
-			Program.Renderer.Finalization();
-
 			base.Dispose();
 		}
     }

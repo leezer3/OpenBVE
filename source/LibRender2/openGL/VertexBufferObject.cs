@@ -145,5 +145,13 @@ namespace LibRender2
 				disposed = true;
 			}
 		}
+
+		~VertexBufferObject()
+		{
+			if (!disposed)
+			{
+				BaseRenderer.vboToDelete.Add(handle);
+			}
+		}
 	}
 }
