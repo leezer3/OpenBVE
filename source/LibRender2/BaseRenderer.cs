@@ -216,7 +216,10 @@ namespace LibRender2
 
 			try
 			{
-				DefaultShader = new Shader(this, "default", "default", true);
+				if (DefaultShader == null)
+				{
+					DefaultShader = new Shader(this, "default", "default", true);
+				}
 				DefaultShader.Activate();
 				DefaultShader.SetMaterialAmbient(Color32.White);
 				DefaultShader.SetMaterialDiffuse(Color32.White);
