@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using LibRender2;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -21,9 +20,6 @@ using RouteManager2.Stations;
 
 namespace OpenBve {
 	internal static class Game {
-
-		// random numbers
-		internal static readonly Random Generator = new Random();
 
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
