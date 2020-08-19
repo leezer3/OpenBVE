@@ -113,12 +113,12 @@ namespace Plugin
 					int k = Lines[i].IndexOf("//", StringComparison.Ordinal);
 					if (k >= 0)
 					{
-						if (IsPotentialPath(Lines[i]))
+						if (!IsPotentialPath(Lines[i]))
 						{
 							//HACK: Handles malformed potential paths
-							continue;
+							Lines[i] = Lines[i].Substring(0, k);
 						}
-						Lines[i] = Lines[i].Substring(0, k);
+						
 					}
 					//Strip star backslash comments
 					if (!CommentStarted)
