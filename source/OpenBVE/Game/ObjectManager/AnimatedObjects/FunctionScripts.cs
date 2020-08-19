@@ -1,4 +1,5 @@
 using System;
+using LibRender2.Overlays;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -1124,7 +1125,16 @@ namespace OpenBve {
 						} break;
 						// timetable
 					case Instructions.TimetableVisible:
-						Function.Stack[s] = Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
+						switch (Program.Renderer.CurrentTimetable)
+						{
+							case DisplayedTimetable.Custom:
+							case DisplayedTimetable.Default:
+								Function.Stack[s] = 1.0;
+								break;
+							case DisplayedTimetable.None:
+								Function.Stack[s] = 0.0;
+								break;
+						}
 						s++; break;
 					case Instructions.DistanceNextStation:
 						if (Train == null)

@@ -6,19 +6,11 @@
 // ╚══════════════════════════════════════════════════════════════╝
 
 using System;
-using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
 namespace OpenBve {
-
-	// --- TimeTable.cs ---
-	internal static class Timetable {
-		internal static TimeTableMode CurrentTimetable = TimeTableMode.None;
-		internal static bool CustomTimetableAvailable = false;
-	}
-
 	// --- PluginManager.cs ---
 	internal static class PluginManager {
 		internal static class CurrentPlugin {

@@ -949,7 +949,16 @@ namespace OpenBve {
 						break;
 						// timetable
 					case Instructions.TimetableVisible:
-						Function.Stack[s] = Timetable.CurrentTimetable == TimeTableMode.PreferCustom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
+						switch (Program.Renderer.CurrentTimetable)
+						{
+							case DisplayedTimetable.Custom:
+							case DisplayedTimetable.Default:
+								Function.Stack[s] = 1.0;
+								break;
+							case DisplayedTimetable.None:
+								Function.Stack[s] = 0.0;
+								break;
+						}
 						s++; break;
 					case Instructions.DistanceNextStation:
 					case Instructions.StopsNextStation:

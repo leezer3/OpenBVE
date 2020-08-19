@@ -23,15 +23,6 @@ namespace OpenBve {
 		internal static Texture CurrentCustomTimetableNighttimeTexture;
 		internal static double CustomTimetablePosition = 0.0;
 		
-		// members (interface)
-		internal enum TimetableState {
-			None = 0,
-			Custom = 1,
-			Default = 2
-		}
-		/// <summary>Holds the currently displayed timetable state</summary>
-		internal static TimetableState CurrentTimetable = TimetableState.None;
-
 		// data
 		internal struct Time {
 			internal string Hour;

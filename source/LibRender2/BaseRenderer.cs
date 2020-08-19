@@ -137,6 +137,9 @@ namespace LibRender2
 		/// <summary>The previous debug output mode</summary>
 		public OutputMode PreviousOutputMode = OutputMode.Default;
 
+		/// <summary>The currently displayed timetable</summary>
+		public DisplayedTimetable CurrentTimetable = DisplayedTimetable.None;
+
 		/// <summary>The total number of OpenGL triangles in the current frame</summary>
 		public int InfoTotalTriangles;
 

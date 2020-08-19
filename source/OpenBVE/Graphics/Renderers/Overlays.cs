@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LibRender2.Overlays;
 using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -88,7 +89,7 @@ namespace OpenBve.Graphics.Renderers
 
 					//Timetable overlay
 					//NOTE: Only affects auto-generated timetable, possibly change this inconsistant behaviour
-					if (Timetable.CurrentTimetable == Timetable.TimetableState.Default)
+					if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
 					{
 						// default
 						if (Program.CurrentHost.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
@@ -98,7 +99,7 @@ namespace OpenBve.Graphics.Renderers
 							renderer.Rectangle.Draw(Timetable.DefaultTimetableTexture, new OpenBveApi.Math.Vector2(renderer.Screen.Width - w, Timetable.DefaultTimetablePosition), new Vector2(w, h), Color128.White);
 						}
 					}
-					else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomObjectsUsed == 0)
+					else if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom & Timetable.CustomObjectsUsed == 0)
 					{
 						// custom
 						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))

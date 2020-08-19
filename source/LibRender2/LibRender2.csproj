@@ -63,6 +63,7 @@
     <Compile Include="openGL\ShaderLayout.cs" />
     <Compile Include="openGL\VertexArrayObject.cs" />
     <Compile Include="openGL\VertexBufferObject.cs" />
+    <Compile Include="Overlays\DisplayedTimetable.cs" />
     <Compile Include="Overlays\Keys.cs" />
     <Compile Include="Overlays\Marker.cs" />
     <Compile Include="Overlays\TimeTableMode.cs" />
