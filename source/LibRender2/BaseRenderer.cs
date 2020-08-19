@@ -295,9 +295,8 @@ namespace LibRender2
 				}
 				iboToDelete.Clear();
 			}
-			
 		}
-		
+
 		/// <summary>
 		/// Performs a reset of OpenGL to the default state
 		/// </summary>
@@ -348,6 +347,10 @@ namespace LibRender2
 
 		public void Reset()
 		{
+			currentHost.AnimatedObjectCollectionCache.Clear();
+			currentHost.StaticObjectCache.Clear();
+			TextureManager.UnloadAllTextures();
+
 			Initialize(currentHost, currentOptions);
 		}
 
@@ -772,7 +775,7 @@ namespace LibRender2
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
 		}
-		
+
 		public void SetBlendFunc()
 		{
 			SetBlendFunc(blendSrcFactor, blendDestFactor);
