@@ -58,7 +58,10 @@ namespace OpenBve.Graphics
 
 			try
 			{
-				pickingShader = new Shader(this, "default", "picking", true);
+				if (pickingShader == null)
+				{
+					pickingShader = new Shader(this, "default", "picking", true);
+				}
 				pickingShader.Activate();
 				pickingShader.Deactivate();
 			}
@@ -235,6 +238,7 @@ namespace OpenBve.Graphics
 		// render scene
 		internal void RenderScene(double TimeElapsed)
 		{
+			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
 

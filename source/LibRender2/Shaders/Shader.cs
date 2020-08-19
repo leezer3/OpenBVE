@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -19,8 +19,6 @@ namespace LibRender2.Shaders
 	/// </summary>
 	public class Shader : IDisposable
 	{
-		public static List<Shader> Disposable = new List<Shader>();
-
 		private readonly int handle;
 		private int vertexShader;
 		private int fragmentShader;
@@ -89,8 +87,6 @@ namespace LibRender2.Shaders
 
 			VertexLayout = GetVertexLayout();
 			UniformLayout = GetUniformLayout();
-
-			Disposable.Add(this);
 		}
 
 		/// <summary>Loads the shader source and compiles the shader</summary>

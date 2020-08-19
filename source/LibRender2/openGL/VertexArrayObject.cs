@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Colors;
@@ -15,8 +15,6 @@ namespace LibRender2
 	/// </summary>
 	public class VertexArrayObject : IDisposable
 	{
-		public static readonly List<VertexArrayObject> Disposable = new List<VertexArrayObject>();
-
 		internal readonly int handle;
 		private VertexBufferObject vbo;
 		private IndexBufferObject ibo;
@@ -32,7 +30,6 @@ namespace LibRender2
 			{
 				throw new InvalidOperationException("Failed to generate the required vertex array handle- No openGL context.");
 			}
-			Disposable.Add(this);
 		}
 
 		/// <summary>
@@ -136,14 +133,29 @@ namespace LibRender2
 		/// </summary>
 		public void Dispose()
 		{
-			if (!disposed)
+			if (disposed)
 			{
-				ibo?.Dispose();
-				vbo?.Dispose();
+				return;
+			}
 
-				GL.DeleteVertexArray(handle);
-				GC.SuppressFinalize(this);
-				disposed = true;
+			ibo?.Dispose();
+			vbo?.Dispose();
+
+			GL.DeleteVertexArray(handle);
+			GC.SuppressFinalize(this);
+			disposed = true;
+		}
+
+		~VertexArrayObject()
+		{
+			if (disposed)
+			{
+				return;
+			}
+
+			lock (BaseRenderer.vaoToDelete)
+			{
+				BaseRenderer.vaoToDelete.Add(handle);
 			}
 		}
 	}

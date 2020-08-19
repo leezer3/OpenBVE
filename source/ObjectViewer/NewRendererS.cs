@@ -124,6 +124,7 @@ namespace OpenBve
 		// render scene
 		internal void RenderScene()
 		{
+			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
 

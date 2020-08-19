@@ -185,6 +185,14 @@ namespace LibRender2
 			set;
 		}
 
+		/*
+		 * List of VBO and IBO to delete on the next frame pass
+		 * This needs to be done here as opposed to in the finalizer
+		 */
+		internal static readonly List<int> vaoToDelete = new List<int>();
+		internal static readonly List<int> vboToDelete = new List<int>();
+		internal static readonly List<int> iboToDelete = new List<int>();
+
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
 
 		protected BaseRenderer()
@@ -208,7 +216,10 @@ namespace LibRender2
 
 			try
 			{
-				DefaultShader = new Shader(this, "default", "default", true);
+				if (DefaultShader == null)
+				{
+					DefaultShader = new Shader(this, "default", "default", true);
+				}
 				DefaultShader.Activate();
 				DefaultShader.SetMaterialAmbient(Color32.White);
 				DefaultShader.SetMaterialDiffuse(Color32.White);
@@ -257,21 +268,35 @@ namespace LibRender2
 			GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 		}
 
-		public void Finalization()
+		/// <summary>Performs cleanup of disposed resources</summary>
+		public void ReleaseResources()
 		{
-			foreach (FrameBufferObject fbo in FrameBufferObject.Disposable)
+			//Must remember to lock on the lists as the destructor is in a different thread
+			lock (vaoToDelete)
 			{
-				fbo.Dispose();
+				foreach (int VAO in vaoToDelete)
+				{
+					GL.DeleteVertexArray(VAO);
+				}
+				vaoToDelete.Clear();
 			}
 
-			foreach (VertexArrayObject vao in VertexArrayObject.Disposable)
+			lock (vboToDelete)
 			{
-				vao.Dispose();
+				foreach (int VBO in vboToDelete)
+				{
+					GL.DeleteBuffer(VBO);
+				}
+				vboToDelete.Clear();
 			}
 
-			foreach (Shader shader in Shader.Disposable)
+			lock (iboToDelete)
 			{
-				shader.Dispose();
+				foreach (int IBO in iboToDelete)
+				{
+					GL.DeleteBuffer(IBO);
+				}
+				iboToDelete.Clear();
 			}
 		}
 
@@ -325,6 +350,10 @@ namespace LibRender2
 
 		public void Reset()
 		{
+			currentHost.AnimatedObjectCollectionCache.Clear();
+			currentHost.StaticObjectCache.Clear();
+			TextureManager.UnloadAllTextures();
+
 			Initialize(currentHost, currentOptions);
 		}
 
@@ -749,7 +778,7 @@ namespace LibRender2
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
 		}
-		
+
 		public void SetBlendFunc()
 		{
 			SetBlendFunc(blendSrcFactor, blendDestFactor);
