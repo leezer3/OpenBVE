@@ -180,8 +180,7 @@ namespace OpenBve {
 			// reset
 			LightingRelative = -1.0;
 			Game.Reset();
-			//Fonts.Initialize();
-			Interface.ClearMessages();
+			Interface.LogMessages.Clear();
 			for (int i = 0; i < Files.Length; i++)
 			{
 #if !DEBUG
@@ -326,7 +325,7 @@ namespace OpenBve {
 	                // reset
 	                LightingRelative = -1.0;
 	                Game.Reset();
-	                Interface.ClearMessages();
+	                Interface.LogMessages.Clear();
 	                for (int i = 0; i < Files.Length; i++)
 	                {
 #if !DEBUG
@@ -423,7 +422,7 @@ namespace OpenBve {
 			            // reset
 			            LightingRelative = -1.0;
 			            Game.Reset();
-			            Interface.ClearMessages();
+			            Interface.LogMessages.Clear();
 			            for (int i = 0; i < Files.Length; i++)
 			            {
 #if !DEBUG
@@ -517,7 +516,7 @@ namespace OpenBve {
 					Renderer.ApplyBackgroundColor();
 	                break;
 	            case Key.F9:
-	                if (Interface.MessageCount != 0)
+	                if (Interface.LogMessages.Count != 0)
 	                {
 	                    formMessages.ShowMessages();
                         Application.DoEvents();
@@ -526,7 +525,7 @@ namespace OpenBve {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-	                Interface.ClearMessages();
+	                Interface.LogMessages.Clear();
 	                Files = new string[] {};
 					Renderer.ApplyBackgroundColor();
 	                break;

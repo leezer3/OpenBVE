@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Interface;
 
@@ -24,20 +25,10 @@ namespace OpenBve {
 		/// <summary>The current options in use</summary>
 		internal static Options CurrentOptions;
 
-		internal static LogMessage[] LogMessages = new LogMessage[] { };
+		internal static readonly List<LogMessage> LogMessages = new List<LogMessage>();
 		internal static int MessageCount = 0;
 		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
-			if (MessageCount == 0) {
-				LogMessages = new LogMessage[16];
-			} else if (MessageCount >= LogMessages.Length) {
-				Array.Resize<LogMessage>(ref LogMessages, LogMessages.Length << 1);
-			}
-			LogMessages[MessageCount] = new LogMessage(Type, FileNotFound, Text);
-			MessageCount++;
-		}
-		internal static void ClearMessages() {
-			LogMessages = new LogMessage[] { };
-			MessageCount = 0;
+			LogMessages.Add(new LogMessage(Type, FileNotFound, Text));
 		}
 	}
 }

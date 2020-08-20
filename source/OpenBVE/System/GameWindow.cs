@@ -464,7 +464,7 @@ namespace OpenBve
 				Timetable.CreateTimetable();
 			}
 			//Check if any critical errors have occured during the route or train loading
-			for (int i = 0; i < Interface.MessageCount; i++)
+			for (int i = 0; i < Interface.LogMessages.Count; i++)
 			{
 				if (Interface.LogMessages[i].Type == MessageType.Critical)
 				{
@@ -813,12 +813,12 @@ namespace OpenBve
 			}
 			
 			// warnings / errors
-			if (Interface.MessageCount != 0)
+			if (Interface.LogMessages.Count != 0)
 			{
 				int filesNotFound = 0;
 				int errors = 0;
 				int warnings = 0;
-				for (int i = 0; i < Interface.MessageCount; i++)
+				for (int i = 0; i < Interface.LogMessages.Count; i++)
 				{
 					if (Interface.LogMessages[i].FileNotFound)
 					{

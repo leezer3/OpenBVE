@@ -97,7 +97,7 @@ namespace OpenBve
             {
 	            Program.LightingRelative = -1.0;
                     Game.Reset();
-                    Interface.ClearMessages();
+                    Interface.LogMessages.Clear();
                     for (int i = 0; i < Program.Files.Length; i++)
                     {
 #if !DEBUG
