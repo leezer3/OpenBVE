@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#pragma warning disable 660,661
 using System.Runtime.InteropServices;
 
 namespace OpenBveApi.Math
@@ -418,3 +419,4 @@ namespace OpenBveApi.Math
 		public static readonly Quaternion Identity = new Quaternion(0, 0, 0, 1);
 	}
 }
+#pragma warning restore 660,661

@@ -378,15 +378,5 @@ namespace OpenBve {
 				Program.Renderer.Camera.AbsoluteSide = sF;
 			}
 		}
-		
-		// normalize
-		internal static void Normalize(ref double x, ref double y) {
-			double t = x * x + y * y;
-			if (t != 0.0) {
-				t = 1.0 / Math.Sqrt(t);
-				x *= t;
-				y *= t;
-			}
-		}
 	}
 }

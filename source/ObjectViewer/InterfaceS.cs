@@ -5,7 +5,6 @@
 // ║ The files from the openBVE main program cannot be used here. ║
 // ╚══════════════════════════════════════════════════════════════╝
 
-using System;
 using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -18,8 +17,6 @@ namespace OpenBve {
 			internal static int[] Panel = new int[] { };
 		}
 	}
-
-#pragma warning disable 0649
 
 	// --- Game.cs ---
 	internal static class Game {
@@ -47,9 +44,5 @@ namespace OpenBve {
 
 		/// <summary>The current options in use</summary>
 		internal static Options CurrentOptions;
-
-		// ================================
-
-#pragma warning restore 0649
 	}
 }

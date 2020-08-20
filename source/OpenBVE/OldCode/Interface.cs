@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -40,7 +39,7 @@ namespace OpenBve {
 						} else if (n >= 3) {
 							if (n > 4)
 							{
-								Interface.AddMessage(MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
+								Program.CurrentHost.AddMessage(MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
 								n = 4;
 							}
 							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m)) {
