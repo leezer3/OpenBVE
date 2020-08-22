@@ -144,7 +144,6 @@ namespace OpenBve {
 		internal static bool LoadRoute() {
 			
 			CurrentStation = -1;
-			Game.Reset();
 			Renderer.UpdateViewport();
 			bool result;
 			try
@@ -160,7 +159,6 @@ namespace OpenBve {
 			}
 			Renderer.Lighting.Initialize();
 			Renderer.InitializeVisibility();
-			Renderer.TextureManager.UnloadAllTextures();
 			return result;
 		}
 
@@ -201,7 +199,6 @@ namespace OpenBve {
 				Renderer.RenderScene(0.0);
 				Program.currentGameWindow.SwapBuffers();
 				CameraAlignment a = Renderer.Camera.Alignment;
-				Renderer.TextureManager.UnloadAllTextures();
 				if (Program.LoadRoute())
 				{
 					Renderer.Camera.Alignment = a;
