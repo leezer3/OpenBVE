@@ -12,6 +12,7 @@ using OpenBveApi.World;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
@@ -69,6 +70,7 @@ namespace OpenBve {
 	        FileSystem.CreateFileSystem();
 	        Renderer = new NewRenderer();
 	        CurrentRoute = new CurrentRoute(Renderer);
+	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        Options.LoadOptions();
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {

@@ -479,14 +479,14 @@ namespace LibRender2
 		/// <summary>Initializes the visibility of all objects within the game world</summary>
 		/// <remarks>If the new renderer is enabled, this must be run in a thread processing an openGL context in order to successfully create
 		/// the required VAO objects</remarks>
-		public virtual void InitializeVisibility()
+		public void InitializeVisibility()
 		{
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 
-			double p = Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
 			{
@@ -494,11 +494,11 @@ namespace LibRender2
 			}
 		}
 
-		public virtual void UpdateVisibility(double TrackPosition)
+		public void UpdateVisibility(double TrackPosition)
 		{
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			if (d < 0.0)
 			{
