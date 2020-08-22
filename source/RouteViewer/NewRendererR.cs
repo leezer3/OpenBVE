@@ -66,21 +66,6 @@ namespace OpenBve
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 		}
 
-		public override void InitializeVisibility()
-		{
-			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
-			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
-			ObjectsSortedByStartPointer = 0;
-			ObjectsSortedByEndPointer = 0;
-
-			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-
-			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
-			{
-				VisibleObjects.ShowObject(state, ObjectType.Static);
-			}
-		}
-
 		// render scene
 		internal void RenderScene(double TimeElapsed)
 		{
