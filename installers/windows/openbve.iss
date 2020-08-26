@@ -2,10 +2,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openBVE"
-#define MyAppVersion "1.7.1.3"
+#define MyAppVersion "1.7.1.8"
 #define MyAppPublisher "The OpenBVE Project"
 #define MyAppURL "http://www.openbve-project.net"
-#define MyAppExeName "OpenBve.exe"
+#define OpenBVEExecutable "OpenBve.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -69,9 +69,12 @@ Source: "InstallerData\filesystem_programfolder.cfg"; DestDir: "{app}\";
 ;MS .NET 4.6.1 Web Installer.
 Source: "InstallerData\NDP461-KB3102438-Web.exe"; DestDir: "{app}"; Flags: deleteafterinstall; AfterInstall: AfterMyProgInstall('AllFilesCopy')
 [Icons]
-Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#OpenBVEExecutable}"; Tasks: desktopicon
 Name: "{userdesktop}\openBVE Addons"; Filename:"{code:GetDataDir}"; Tasks: desktopicon2
 Name: "{group}\{#MyAppName}"; Filename: "{app}\OpenBVE.exe"
+Name: "{group}\Developer Tools\Route Viewer"; Filename: "{app}\RouteViewer.exe"
+Name: "{group}\Developer Tools\Object Viewer"; Filename: "{app}\ObjectViewer.exe"
+Name: "{group}\Developer Tools\Train Editor"; Filename: "{app}\TrainEditor2.exe"
 Name: "{group}\openBVE Addons"; Filename: "{code:GetDataDir}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{app}\openBVE Addons"; Filename: "{code:GetDataDir}"; Flags: uninsneveruninstall
@@ -80,7 +83,7 @@ Name: "{app}\openBVE Addons"; Filename: "{code:GetDataDir}"; Flags: uninsneverun
 Name: {code:GetDataDir}; Flags: uninsneveruninstall
 
 [Run]
- Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: postinstall shellexec skipifsilent runascurrentuser
+ Filename: "{app}\{#OpenBVEExecutable}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: postinstall shellexec skipifsilent runascurrentuser
  Filename: "{code:GetDataDir}"; Description: "Open the openBVE Addons Folder" ; Flags: postinstall shellexec waituntilterminated skipifsilent unchecked
 
 [Code]
