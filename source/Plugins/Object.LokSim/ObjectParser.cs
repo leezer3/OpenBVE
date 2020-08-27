@@ -405,7 +405,7 @@ namespace Plugin
 					for (int j = 0; j < Builder.Materials.Length; j++)
 					{
 						Builder.Materials[j].TransparentColor = FirstPxTransparent ? FirstPxColor : transparentColor;
-						Builder.Materials[j].TransparentColorUsed = true;
+						Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 					}
 				}
 

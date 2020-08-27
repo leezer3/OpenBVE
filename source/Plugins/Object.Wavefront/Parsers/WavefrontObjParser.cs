@@ -465,21 +465,13 @@ namespace Plugin
 				}
 				for (int i = 0; i < Builder.Materials.Length; i++)
 				{
-					Object.Mesh.Materials[mm + i].Flags = new MaterialFlags();
-					if (Builder.Materials[i].EmissiveColorUsed)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.Emissive;
-					}
-					if (Builder.Materials[i].TransparentColorUsed)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.TransparentColor;
-					}
+					Object.Mesh.Materials[mm + i].Flags = Builder.Materials[i].Flags;
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
 					if (Builder.Materials[i].DaytimeTexture != null)
 					{
 						Texture tday;
-						if (Builder.Materials[i].TransparentColorUsed)
+						if ((Builder.Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 						{
 							Plugin.currentHost.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
 						}
@@ -497,7 +489,7 @@ namespace Plugin
 					if (Builder.Materials[i].NighttimeTexture != null)
 					{
 						Texture tnight;
-						if (Builder.Materials[i].TransparentColorUsed)
+						if ((Builder.Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 						{
 							Plugin.currentHost.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
 						}

@@ -80,23 +80,11 @@ namespace OpenBveApi.Objects
 							* The new GL 3.2 renderer corrects this behaviour
 							 * Horrid workaround....
 							 */
-							Materials[i].DisableLighting = true;
+							Materials[i].Flags |= MaterialFlags.DisableLighting;
 						}
 					}
 
-					Object.Mesh.Materials[mm + i].Flags = new MaterialFlags();
-					if (Materials[i].EmissiveColorUsed)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.Emissive;
-					}
-					if (Materials[i].TransparentColorUsed)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.TransparentColor;
-					}
-					if (Materials[i].DisableLighting)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.DisableLighting;
-					}
+					Object.Mesh.Materials[mm + i].Flags = Materials[i].Flags;
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
@@ -115,7 +103,7 @@ namespace OpenBveApi.Objects
 						}
 						else
 						{
-							if (Materials[i].TransparentColorUsed)
+							if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 							{
 								currentHost.RegisterTexture(Materials[i].DaytimeTexture, new TextureParameters(null,
 										new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G,
@@ -138,7 +126,7 @@ namespace OpenBveApi.Objects
 					if (Materials[i].NighttimeTexture != null)
 					{
 						Textures.Texture tnight;
-						if (Materials[i].TransparentColorUsed)
+						if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 						{
 							currentHost.RegisterTexture(Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
 						}
@@ -148,7 +136,10 @@ namespace OpenBveApi.Objects
 						}
 
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
-						Object.Mesh.Materials[mm + i].EnableCrossfading = Materials[i].EnableCrossfading;
+						if ((Materials[i].Flags & MaterialFlags.CrossFadeTexture) != 0)
+						{
+							Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.CrossFadeTexture;
+						}
 					}
 					else
 					{

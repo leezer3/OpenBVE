@@ -678,7 +678,7 @@ namespace Plugin
 										DaytimeTexture = Builder.Materials[0].DaytimeTexture,
 										NighttimeTexture = Builder.Materials[0].NighttimeTexture,
 										TransparentColor = Builder.Materials[0].TransparentColor,
-										TransparentColorUsed = Builder.Materials[0].TransparentColorUsed,
+										Flags =  Builder.Materials[0].Flags,
 										WrapMode = Builder.Materials[0].WrapMode,
 										EnableCrossfading = Builder.Materials[0].EnableCrossfading
 									};
@@ -725,13 +725,13 @@ namespace Plugin
 								for (int j = m; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j] = new Material(Builder.Materials[j - m]);
 									Builder.Materials[j].EmissiveColor = new Color24((byte)r, (byte)g, (byte)b);
-									Builder.Materials[j].EmissiveColorUsed = true;
+									Builder.Materials[j].Flags |= MaterialFlags.Emissive;
 									Builder.Materials[j].BlendMode = Builder.Materials[0].BlendMode;
 									Builder.Materials[j].GlowAttenuationData = Builder.Materials[0].GlowAttenuationData;
 									Builder.Materials[j].DaytimeTexture = Builder.Materials[0].DaytimeTexture;
 									Builder.Materials[j].NighttimeTexture = Builder.Materials[0].NighttimeTexture;
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
-									Builder.Materials[j].TransparentColorUsed = Builder.Materials[0].TransparentColorUsed;
+									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
 									Builder.Materials[j].EnableCrossfading = Builder.Materials[0].EnableCrossfading;
 								}
@@ -774,7 +774,7 @@ namespace Plugin
 								}
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].TransparentColor = new Color24((byte)r, (byte)g, (byte)b);
-									Builder.Materials[j].TransparentColorUsed = true;
+									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 								}
 							} break;
 						case "setblendingmode":

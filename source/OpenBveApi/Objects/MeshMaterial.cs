@@ -30,8 +30,6 @@ namespace OpenBveApi.Objects
 		public ushort GlowAttenuationData;
 		/// <summary>The wrap mode, or null to allow the renderer to decide</summary>
 		public OpenGlTextureWrapMode? WrapMode;
-		/// <summary>Whether cross-fading is enabled</summary>
-		public bool EnableCrossfading;
 
 		/// <summary>Returns whether two MeshMaterial structs are equal</summary>
 		public static bool operator ==(MeshMaterial A, MeshMaterial B)
