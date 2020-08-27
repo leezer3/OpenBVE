@@ -679,8 +679,7 @@ namespace Plugin
 										NighttimeTexture = Builder.Materials[0].NighttimeTexture,
 										TransparentColor = Builder.Materials[0].TransparentColor,
 										Flags =  Builder.Materials[0].Flags,
-										WrapMode = Builder.Materials[0].WrapMode,
-										EnableCrossfading = Builder.Materials[0].EnableCrossfading
+										WrapMode = Builder.Materials[0].WrapMode
 									};
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
@@ -733,7 +732,6 @@ namespace Plugin
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
 									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
-									Builder.Materials[j].EnableCrossfading = Builder.Materials[0].EnableCrossfading;
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
 									Builder.Faces[j].Material += (ushort)m;
@@ -1185,7 +1183,14 @@ namespace Plugin
 
 								foreach (Material material in Builder.Materials)
 								{
-									material.EnableCrossfading = value;
+									if (value)
+									{
+										material.Flags |= MaterialFlags.CrossFadeTexture;
+									}
+									else
+									{
+										material.Flags &= ~MaterialFlags.CrossFadeTexture;
+									}
 								}
 							}
 							break;
