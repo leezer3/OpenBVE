@@ -6,7 +6,6 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
@@ -598,15 +597,14 @@ namespace OpenBve {
 	            case Key.B:
 	                if (ShiftPressed)
 	                {
-		                ColorDialog dialog = new ColorDialog
+		                using (ColorDialog dialog = new ColorDialog {FullOpen = true})
 		                {
-			                FullOpen = true
-		                };
-		                if (dialog.ShowDialog() == DialogResult.OK)
-	                    {
-	                        Renderer.BackgroundColor = -1;
-	                        Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
-	                    }
+			                if (dialog.ShowDialog() == DialogResult.OK)
+			                {
+				                Renderer.BackgroundColor = -1;
+				                Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
+			                }
+		                }
 	                }
 	                else
 	                {

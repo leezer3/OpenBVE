@@ -1709,32 +1709,38 @@ namespace OpenBve {
 
 		private void buttonSetRouteDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void buttonTrainInstallationDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void buttonOtherDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void comboBoxCompressionFormat_SelectedIndexChanged(object sender, EventArgs e)
