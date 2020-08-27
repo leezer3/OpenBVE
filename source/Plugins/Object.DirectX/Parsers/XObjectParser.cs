@@ -664,19 +664,19 @@ namespace Plugin {
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
-							while (Position <= Content.Length)
+							while (Position < Content.Length)
 							{
 								if (Content[Position] == ';')
 								{
 									SF = true;
 									break;
 								}
-								else if (Content[Position] == '}')
+								if (Content[Position] == '}')
 								{
 									SF = true;
 									break;
 								}
-								else if (Content[Position] == ',')
+								if (Content[Position] == ',')
 								{
 									break;
 								}
