@@ -182,7 +182,7 @@ namespace LibRender2.Primitives
 				defaultVAO = new VertexArrayObject();
 				defaultVAO.Bind();
 				defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-				defaultVAO.SetIBO(new IndexBufferObjectUS(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
+				defaultVAO.SetIBO(new IndexBufferObjectUS(Enumerable.Range(0, vertexData.Length).Select(x => (ushort)x).ToArray(), BufferUsageHint.StaticDraw));
 				defaultVAO.SetAttributes(renderer.DefaultShader.VertexLayout);
 				defaultVAO.UnBind();
 			}
@@ -206,7 +206,6 @@ namespace LibRender2.Primitives
 			{
 				DrawImmediate(Position, Direction, Up, Side, new Vector3(Size, Size, Size), Camera, TextureIndex);
 			}
-			
 		}
 
 		/// <summary>Draws a 3D cube</summary>
@@ -327,6 +326,10 @@ namespace LibRender2.Primitives
 					}
 					GL.End();
 				}
+				GL.PopMatrix();
+
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.PopMatrix();
 				return;
 			}
 			GL.Enable(EnableCap.Texture2D);
