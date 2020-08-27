@@ -40,8 +40,6 @@ namespace OpenBveApi.Objects
 		public string Font;
 		/// <summary>The text padding to apply</summary>
 		public Vector2 TextPadding;
-		/// <summary>Whether cross-fading is enabled</summary>
-		public bool EnableCrossfading;
 
 		/// <summary>Creates a new Material with default properties</summary>
 		public Material() {
