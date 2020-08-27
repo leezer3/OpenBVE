@@ -42,7 +42,8 @@ namespace Plugin
 			"loadtexture",
 			"settexturecoordinates",
 			"setemissivecolor",
-			"setdecaltransparentcolor"
+			"setdecaltransparentcolor",
+			"enablecrossfading"
 		};
 
 		private static int SecondIndexOfAny(string testString, string[] values)
@@ -677,7 +678,7 @@ namespace Plugin
 										DaytimeTexture = Builder.Materials[0].DaytimeTexture,
 										NighttimeTexture = Builder.Materials[0].NighttimeTexture,
 										TransparentColor = Builder.Materials[0].TransparentColor,
-										TransparentColorUsed = Builder.Materials[0].TransparentColorUsed,
+										Flags =  Builder.Materials[0].Flags,
 										WrapMode = Builder.Materials[0].WrapMode
 									};
 								}
@@ -723,13 +724,13 @@ namespace Plugin
 								for (int j = m; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j] = new Material(Builder.Materials[j - m]);
 									Builder.Materials[j].EmissiveColor = new Color24((byte)r, (byte)g, (byte)b);
-									Builder.Materials[j].EmissiveColorUsed = true;
+									Builder.Materials[j].Flags |= MaterialFlags.Emissive;
 									Builder.Materials[j].BlendMode = Builder.Materials[0].BlendMode;
 									Builder.Materials[j].GlowAttenuationData = Builder.Materials[0].GlowAttenuationData;
 									Builder.Materials[j].DaytimeTexture = Builder.Materials[0].DaytimeTexture;
 									Builder.Materials[j].NighttimeTexture = Builder.Materials[0].NighttimeTexture;
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
-									Builder.Materials[j].TransparentColorUsed = Builder.Materials[0].TransparentColorUsed;
+									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
@@ -771,7 +772,7 @@ namespace Plugin
 								}
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].TransparentColor = new Color24((byte)r, (byte)g, (byte)b);
-									Builder.Materials[j].TransparentColorUsed = true;
+									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 								}
 							} break;
 						case "setblendingmode":
@@ -1164,6 +1165,35 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "VertexIndex references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 							} break;
+						case "enablecrossfading":
+						case "crossfading":
+							{
+								if (Arguments.Length > 1)
+								{
+									currentHost.AddMessage(MessageType.Warning, false, $"At most 1 arguments are expected in {Command} at line {(i + 1).ToString(Culture)} in file {FileName}");
+								}
+
+								bool value = false;
+
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !bool.TryParse(Arguments[0], out value))
+								{
+									currentHost.AddMessage(MessageType.Error, false, $"Invalid argument Value in {Command} at line {(i + 1).ToString(Culture)} in file {FileName}");
+									value = false;
+								}
+
+								foreach (Material material in Builder.Materials)
+								{
+									if (value)
+									{
+										material.Flags |= MaterialFlags.CrossFadeTexture;
+									}
+									else
+									{
+										material.Flags &= ~MaterialFlags.CrossFadeTexture;
+									}
+								}
+							}
+							break;
 						default:
 							if (Command.Length != 0) {
 								if (IsUtf(Encoding))

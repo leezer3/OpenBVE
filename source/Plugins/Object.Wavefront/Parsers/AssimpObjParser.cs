@@ -85,9 +85,9 @@ namespace Plugin
 							Color24 mSpecular = new Color24((byte)material.Specular.R, (byte)material.Specular.G, (byte)material.Specular.B);
 #pragma warning restore 0219
 							builder.Materials[m].EmissiveColor = new Color24((byte)(255 * material.Emissive.R), (byte)(255 * material.Emissive.G), (byte)(255 * material.Emissive.B));
-							builder.Materials[m].EmissiveColorUsed = true; //TODO: Check exact behaviour
+							builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
 							builder.Materials[m].TransparentColor = new Color24((byte)(255 * material.Transparent.R), (byte)(255 * material.Transparent.G), (byte)(255 * material.Transparent.B));
-							builder.Materials[m].TransparentColorUsed = true;
+							builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
 
 							if (material.Texture != null)
 							{

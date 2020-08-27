@@ -755,7 +755,7 @@ namespace LibRender2
 
 			if (lastError != ErrorCode.NoError)
 			{
-				throw new InvalidOperationException($"OpenGL Error: {lastError.ToString()}");
+				throw new InvalidOperationException($"OpenGL Error: {lastError}");
 			}
 #endif
 
@@ -959,6 +959,23 @@ namespace LibRender2
 					break;
 			}
 
+			// blend factor
+			float distanceFactor;
+			if (material.GlowAttenuationData != 0)
+			{
+				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
+			}
+			else
+			{
+				distanceFactor = 1.0f;
+			}
+
+			float blendFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+			if (blendFactor > 1.0)
+			{
+				blendFactor = 1.0f;
+			}
+
 			// daytime polygon
 			{
 				// texture
@@ -989,13 +1006,7 @@ namespace LibRender2
 				else if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
 				{
 					//No nighttime texture or both are identical- Darken the polygon to match the light conditions
-					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (blend > 1.0f)
-					{
-						blend = 1.0f;
-					}
-
-					factor = 1.0f - 0.7f * blend;
+					factor = 1.0f - 0.7f * blendFactor;
 				}
 				else
 				{
@@ -1004,15 +1015,10 @@ namespace LibRender2
 				}
 				Shader.SetBrightness(factor);
 
-				float alphaFactor;
-				if (material.GlowAttenuationData != 0)
+				float alphaFactor = distanceFactor;
+				if ((material.Flags & MaterialFlags.CrossFadeTexture) != 0)
 				{
-					GlowAttenuationMode mode;
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData, out mode);
-				}
-				else
-				{
-					alphaFactor = 1.0f;
+					alphaFactor *= 1.0f - blendFactor;
 				}
 
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
@@ -1040,26 +1046,7 @@ namespace LibRender2
 				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
 
 				// blend mode
-				float alphaFactor;
-				if (material.GlowAttenuationData != 0)
-				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
-					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (blend > 1.0f)
-					{
-						blend = 1.0f;
-					}
-
-					alphaFactor *= blend;
-				}
-				else
-				{
-					alphaFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (alphaFactor > 1.0f)
-					{
-						alphaFactor = 1.0f;
-					}
-				}
+				float alphaFactor = distanceFactor * blendFactor;
 
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
@@ -1208,6 +1195,23 @@ namespace LibRender2
 					break;
 			}
 
+			// blend factor
+			float distanceFactor;
+			if (material.GlowAttenuationData != 0)
+			{
+				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
+			}
+			else
+			{
+				distanceFactor = 1.0f;
+			}
+
+			float blendFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+			if (blendFactor > 1.0)
+			{
+				blendFactor = 1.0f;
+			}
+
 			// daytime polygon
 			{
 				// texture
@@ -1235,14 +1239,7 @@ namespace LibRender2
 				}
 				else if (material.NighttimeTexture == null)
 				{
-					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-
-					if (blend > 1.0f)
-					{
-						blend = 1.0f;
-					}
-
-					factor = 1.0f - 0.7f * blend;
+					factor = 1.0f - 0.7f * blendFactor;
 				}
 				else
 				{
@@ -1253,14 +1250,11 @@ namespace LibRender2
 				{
 					GL.Disable(EnableCap.Lighting);
 				}
-				float alphaFactor;
-				if (material.GlowAttenuationData != 0)
+
+				float alphaFactor = distanceFactor;
+				if ((material.Flags & MaterialFlags.CrossFadeTexture) != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
-				}
-				else
-				{
-					alphaFactor = 1.0f;
+					alphaFactor *= 1.0f - blendFactor;
 				}
 
 				GL.Begin(DrawMode);
@@ -1309,26 +1303,7 @@ namespace LibRender2
 				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
 
 				// blend mode
-				float alphaFactor;
-				if (material.GlowAttenuationData != 0)
-				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
-					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (blend > 1.0f)
-					{
-						blend = 1.0f;
-					}
-
-					alphaFactor *= blend;
-				}
-				else
-				{
-					alphaFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (alphaFactor > 1.0f)
-					{
-						alphaFactor = 1.0f;
-					}
-				}
+				float alphaFactor = distanceFactor * blendFactor;
 
 				GL.Begin(DrawMode);
 

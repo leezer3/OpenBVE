@@ -11,12 +11,10 @@ namespace OpenBveApi.Objects
 		public Color32 Color;
 		/// <summary>The emissive color</summary>
 		public Color24 EmissiveColor;
-		/// <summary>Whether the emissive color is in use</summary>
-		public bool EmissiveColorUsed;
 		/// <summary>The transparent color</summary>
 		public Color24 TransparentColor;
-		/// <summary>Whether the transparent color is in use</summary>
-		public bool TransparentColorUsed;
+		/// <summary>Describes the special properties (if any) of the material</summary>
+		public MaterialFlags Flags;
 		/// <summary>The absolute on-disk path to the daytime texture</summary>
 		public string DaytimeTexture;
 		/// <summary>The absolute on-disk path to the nighttime texture</summary>
@@ -42,16 +40,13 @@ namespace OpenBveApi.Objects
 		public string Font;
 		/// <summary>The text padding to apply</summary>
 		public Vector2 TextPadding;
-		/// <summary>Whether lighting is disabled by the renderer</summary>
-		internal bool DisableLighting;
 
 		/// <summary>Creates a new Material with default properties</summary>
 		public Material() {
 			this.Color = Color32.White;
 			this.EmissiveColor = Color24.Black;
-			this.EmissiveColorUsed = false;
 			this.TransparentColor = Color24.Black;
-			this.TransparentColorUsed = false;
+			this.Flags = MaterialFlags.None;
 			this.DaytimeTexture = null;
 			this.NighttimeTexture = null;
 			this.BlendMode = MeshMaterialBlendMode.Normal;
@@ -68,9 +63,8 @@ namespace OpenBveApi.Objects
 		public Material(string Texture) {
 			this.Color = Color32.White;
 			this.EmissiveColor = Color24.Black;
-			this.EmissiveColorUsed = false;
 			this.TransparentColor = Color24.Black;
-			this.TransparentColorUsed = false;
+			this.Flags = MaterialFlags.None;
 			this.DaytimeTexture = null;
 			this.NighttimeTexture = null;
 			this.BlendMode = MeshMaterialBlendMode.Normal;
@@ -87,9 +81,8 @@ namespace OpenBveApi.Objects
 		public Material(Material Prototype) {
 			this.Color = Prototype.Color;
 			this.EmissiveColor = Prototype.EmissiveColor;
-			this.EmissiveColorUsed = Prototype.EmissiveColorUsed;
 			this.TransparentColor = Prototype.TransparentColor;
-			this.TransparentColorUsed = Prototype.TransparentColorUsed;
+			this.Flags = Prototype.Flags;
 			this.DaytimeTexture = Prototype.DaytimeTexture;
 			this.NighttimeTexture = Prototype.NighttimeTexture;
 			this.BlendMode = Prototype.BlendMode;
