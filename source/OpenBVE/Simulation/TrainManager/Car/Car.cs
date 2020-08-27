@@ -602,7 +602,7 @@ namespace OpenBve
 				}
 				// update current section
 				int cs = CurrentCarSection;
-				if (cs >= 0 && CarSections.Length > 0 && CarSections.Length >= cs)
+				if (cs >= 0 && cs < CarSections.Length)
 				{
 					if (CarSections[cs].Groups.Length > 0)
 					{
