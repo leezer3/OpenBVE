@@ -148,6 +148,7 @@ namespace OpenBveApi.Objects
 						}
 
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
+						Object.Mesh.Materials[mm + i].EnableCrossfading = Materials[i].EnableCrossfading;
 					}
 					else
 					{

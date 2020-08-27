@@ -42,7 +42,8 @@ namespace Plugin
 			"loadtexture",
 			"settexturecoordinates",
 			"setemissivecolor",
-			"setdecaltransparentcolor"
+			"setdecaltransparentcolor",
+			"enablecrossfading"
 		};
 
 		private static int SecondIndexOfAny(string testString, string[] values)
@@ -678,7 +679,8 @@ namespace Plugin
 										NighttimeTexture = Builder.Materials[0].NighttimeTexture,
 										TransparentColor = Builder.Materials[0].TransparentColor,
 										TransparentColorUsed = Builder.Materials[0].TransparentColorUsed,
-										WrapMode = Builder.Materials[0].WrapMode
+										WrapMode = Builder.Materials[0].WrapMode,
+										EnableCrossfading = Builder.Materials[0].EnableCrossfading
 									};
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
@@ -731,6 +733,7 @@ namespace Plugin
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
 									Builder.Materials[j].TransparentColorUsed = Builder.Materials[0].TransparentColorUsed;
 									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
+									Builder.Materials[j].EnableCrossfading = Builder.Materials[0].EnableCrossfading;
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
 									Builder.Faces[j].Material += (ushort)m;
@@ -1164,6 +1167,28 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "VertexIndex references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 							} break;
+						case "enablecrossfading":
+						case "crossfading":
+							{
+								if (Arguments.Length > 1)
+								{
+									currentHost.AddMessage(MessageType.Warning, false, $"At most 1 arguments are expected in {Command} at line {(i + 1).ToString(Culture)} in file {FileName}");
+								}
+
+								bool value = false;
+
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !bool.TryParse(Arguments[0], out value))
+								{
+									currentHost.AddMessage(MessageType.Error, false, $"Invalid argument Value in {Command} at line {(i + 1).ToString(Culture)} in file {FileName}");
+									value = false;
+								}
+
+								foreach (Material material in Builder.Materials)
+								{
+									material.EnableCrossfading = value;
+								}
+							}
+							break;
 						default:
 							if (Command.Length != 0) {
 								if (IsUtf(Encoding))

@@ -44,6 +44,8 @@ namespace OpenBveApi.Objects
 		public Vector2 TextPadding;
 		/// <summary>Whether lighting is disabled by the renderer</summary>
 		internal bool DisableLighting;
+		/// <summary>Whether cross-fading is enabled</summary>
+		public bool EnableCrossfading;
 
 		/// <summary>Creates a new Material with default properties</summary>
 		public Material() {
