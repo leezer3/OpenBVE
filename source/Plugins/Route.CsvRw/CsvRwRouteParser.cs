@@ -208,7 +208,7 @@ namespace CsvRwRouteParser {
 						return;
 					}
 				}
-				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
+				if (Expressions[j].Text.StartsWith("[") && Expressions[j].Text.EndsWith("]")) {
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
 					if (string.Compare(Section, "object", StringComparison.OrdinalIgnoreCase) == 0) {
 						Section = "Structure";
@@ -250,45 +250,45 @@ namespace CsvRwRouteParser {
 								Command = Section + "." + Command;
 							}
 							Command = Command.Replace(".Void", "");
-							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
+							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = "texture.background.x" + Command.Substring(18, Command.Length - 20).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = "texture.background.aspect" + Command.Substring(18, Command.Length - 25).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = "texture.background.x" + Command.Substring(14, Command.Length - 16).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = "texture.background.aspect" + Command.Substring(14, Command.Length - 21).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("cycle", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".params", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("cycle", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".params", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 7).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("signal", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("signal", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("train.run", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("train.run", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("train.flange", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
+							} else if (Command.StartsWith("train.flange", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
-							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".day.load", StringComparison.OrdinalIgnoreCase)) {
+							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".day.load", StringComparison.OrdinalIgnoreCase)) {
 								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 24).Trim(new char[] { });
-							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".night.load", StringComparison.OrdinalIgnoreCase)) {
+							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".night.load", StringComparison.OrdinalIgnoreCase)) {
 								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 26).Trim(new char[] { });
-							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".day", StringComparison.OrdinalIgnoreCase)) {
+							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".day", StringComparison.OrdinalIgnoreCase)) {
 								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 19).Trim(new char[] { });
-							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".night", StringComparison.OrdinalIgnoreCase)) {
+							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".night", StringComparison.OrdinalIgnoreCase)) {
 								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 21).Trim(new char[] { });
-							} else if (Command.StartsWith("route.signal", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))  {
+							} else if (Command.StartsWith("route.signal", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))  {
 								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("route.runinterval", StringComparison.OrdinalIgnoreCase)) {
 								Command = "train.interval" + Command.Substring(17, Command.Length - 17);
@@ -366,7 +366,7 @@ namespace CsvRwRouteParser {
 						Expressions[j].Text = Expressions[j].Text.Substring(0, Expressions[j].Text.Length - 1).Trim(new char[] { });
 					}
 				}
-				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
+				if (Expressions[j].Text.StartsWith("[") && Expressions[j].Text.EndsWith("]")) {
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
 					if (string.Compare(Section, "object", StringComparison.OrdinalIgnoreCase) == 0) {
 						Section = "Structure";

@@ -49,7 +49,7 @@ namespace CsvRwRouteParser
 							int n = 0;
 							for (int k = 0; k < ArgumentSequence.Length; k++)
 							{
-								if (IsRW & ArgumentSequence[k] == ',')
+								if (IsRW && ArgumentSequence[k] == ',')
 								{
 									n++;
 								}
@@ -62,7 +62,7 @@ namespace CsvRwRouteParser
 							int a = 0, h = 0;
 							for (int k = 0; k < ArgumentSequence.Length; k++)
 							{
-								if (IsRW & ArgumentSequence[k] == ',')
+								if (IsRW && ArgumentSequence[k] == ',')
 								{
 									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
 									a = k + 1; h++;
