@@ -611,13 +611,13 @@ namespace OpenBve
 								case "recentlyusedroutes":
 									{
 										int n = Interface.CurrentOptions.RecentlyUsedRoutes.Length;
-										Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedRoutes, n + 1);
+										Array.Resize(ref Interface.CurrentOptions.RecentlyUsedRoutes, n + 1);
 										Interface.CurrentOptions.RecentlyUsedRoutes[n] = Value;
 									} break;
 								case "recentlyusedtrains":
 									{
 										int n = Interface.CurrentOptions.RecentlyUsedTrains.Length;
-										Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedTrains, n + 1);
+										Array.Resize(ref Interface.CurrentOptions.RecentlyUsedTrains, n + 1);
 										Interface.CurrentOptions.RecentlyUsedTrains[n] = Value;
 									} break;
 								case "routeencodings":
@@ -640,7 +640,7 @@ namespace OpenBve
 											a = System.Text.Encoding.UTF8.CodePage;
 										}
 										int n = Interface.CurrentOptions.RouteEncodings.Length;
-										Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, n + 1);
+										Array.Resize(ref Interface.CurrentOptions.RouteEncodings, n + 1);
 										Interface.CurrentOptions.RouteEncodings[n].Codepage = a;
 										Interface.CurrentOptions.RouteEncodings[n].Value = Value;
 									} break;
@@ -664,14 +664,14 @@ namespace OpenBve
 											a = System.Text.Encoding.UTF8.CodePage;
 										}
 										int n = Interface.CurrentOptions.TrainEncodings.Length;
-										Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, n + 1);
+										Array.Resize(ref Interface.CurrentOptions.TrainEncodings, n + 1);
 										Interface.CurrentOptions.TrainEncodings[n].Codepage = a;
 										Interface.CurrentOptions.TrainEncodings[n].Value = Value;
 									} break;
 								case "enableinputdeviceplugins":
 									{
 										int n = Interface.CurrentOptions.EnableInputDevicePlugins.Length;
-										Array.Resize<string>(ref Interface.CurrentOptions.EnableInputDevicePlugins, n + 1);
+										Array.Resize(ref Interface.CurrentOptions.EnableInputDevicePlugins, n + 1);
 										Interface.CurrentOptions.EnableInputDevicePlugins[n] = Value;
 									} break;
 								case "parsers":

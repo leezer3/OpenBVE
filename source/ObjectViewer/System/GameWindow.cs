@@ -280,7 +280,7 @@ namespace OpenBve
 			//             {
 			//                 Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
 			//             }
-			//             Array.Resize<string>(ref Program.Files, Program.Files.Length + 1);
+			//             Array.Resize(ref Program.Files, Program.Files.Length + 1);
 			//             Program.Files[Program.Files.Length - 1] = commandLineArgs[i];
 			//         }
 			//     }

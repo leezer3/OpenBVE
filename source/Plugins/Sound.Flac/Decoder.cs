@@ -207,7 +207,7 @@ namespace Flac {
 					while (samplesUsed + blockNumberOfSamples > sampleCount) {
 						sampleCount <<= 1;
 						for (int i = 0; i < numberOfChannels; i++) {
-							Array.Resize<int>(ref samples[i], (int)sampleCount);
+							Array.Resize(ref samples[i], (int)sampleCount);
 						}
 					}
 					for (int i = 0; i < numberOfChannels; i++) {
@@ -493,7 +493,7 @@ namespace Flac {
 				// --- end of file ---
 				if (sampleCount != samplesUsed) {
 					for (int i = 0; i < numberOfChannels; i++) {
-						Array.Resize<int>(ref samples[i], samplesUsed);
+						Array.Resize(ref samples[i], samplesUsed);
 					}
 				}
 				return samples;

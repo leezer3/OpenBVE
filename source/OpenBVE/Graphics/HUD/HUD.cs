@@ -41,7 +41,7 @@ namespace OpenBve
 								Length++;
 								if (Length > CurrentHudElements.Length)
 								{
-									Array.Resize<Element>(ref CurrentHudElements, CurrentHudElements.Length << 1);
+									Array.Resize(ref CurrentHudElements, CurrentHudElements.Length << 1);
 								}
 
 								CurrentHudElements[Length - 1] = new Element();
@@ -584,7 +584,7 @@ namespace OpenBve
 				}
 			}
 
-			Array.Resize<Element>(ref CurrentHudElements, Length);
+			Array.Resize(ref CurrentHudElements, Length);
 		}
 	}
 }

@@ -421,7 +421,7 @@ namespace Plugin
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
+				Array.Resize(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
 				if (mm == 0)
 				{
 					if (Object.Mesh.Materials.Length == 0)
@@ -440,7 +440,7 @@ namespace Plugin
 				}
 				if (Builder.Materials.Length > 0)
 				{
-					Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
+					Array.Resize(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
 				}
 				else
 				{
@@ -449,7 +449,7 @@ namespace Plugin
 					 */
 					mm -= 1;
 				}
-				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
+				Array.Resize(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
 				for (int i = 0; i < Builder.Vertices.Count; i++)
 				{
 					Object.Mesh.Vertices[mv + i] = new Vertex((Vertex)Builder.Vertices[i]);

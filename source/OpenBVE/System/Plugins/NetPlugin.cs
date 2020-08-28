@@ -310,7 +310,7 @@ namespace OpenBve {
 			Game.CurrentScore.CurrentValue += Score;
 
 			int n = Game.ScoreMessages.Length;
-			Array.Resize<Game.ScoreMessage>(ref Game.ScoreMessages, n + 1);
+			Array.Resize(ref Game.ScoreMessages, n + 1);
 			Game.ScoreMessages[n] = new Game.ScoreMessage
 			{
 				Value = Score,
@@ -335,7 +335,7 @@ namespace OpenBve {
 				OpenBveApi.Math.Vector3 position = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Position;
 				SoundSource source = Program.Sounds.PlaySound(buffer, pitch, volume, position, Train.Cars[Train.DriverCar], looped);
 				if (this.SoundHandlesCount == this.SoundHandles.Length) {
-					Array.Resize<SoundHandleEx>(ref this.SoundHandles, this.SoundHandles.Length << 1);
+					Array.Resize(ref this.SoundHandles, this.SoundHandles.Length << 1);
 				}
 				this.SoundHandles[this.SoundHandlesCount] = new SoundHandleEx(volume, pitch, source);
 				this.SoundHandlesCount++;
@@ -360,7 +360,7 @@ namespace OpenBve {
 				SoundSource source = Program.Sounds.PlaySound(buffer, pitch, volume, position, Train.Cars[CarIndex], looped);
 				if (this.SoundHandlesCount == this.SoundHandles.Length)
 				{
-					Array.Resize<SoundHandleEx>(ref this.SoundHandles, this.SoundHandles.Length << 1);
+					Array.Resize(ref this.SoundHandles, this.SoundHandles.Length << 1);
 				}
 				this.SoundHandles[this.SoundHandlesCount] = new SoundHandleEx(volume, pitch, source);
 				this.SoundHandlesCount++;

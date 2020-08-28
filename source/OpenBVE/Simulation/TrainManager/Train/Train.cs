@@ -847,7 +847,7 @@ namespace OpenBve
 						SignalData signal = Program.CurrentRoute.Sections[i].GetPluginSignal(this);
 						if (data.Length == count)
 						{
-							Array.Resize<SignalData>(ref data, data.Length << 1);
+							Array.Resize(ref data, data.Length << 1);
 						}
 						data[count] = signal;
 						count++;
@@ -856,7 +856,7 @@ namespace OpenBve
 							break;
 						}
 					}
-					Array.Resize<SignalData>(ref data, count);
+					Array.Resize(ref data, count);
 					Plugin.UpdateSignals(data);
 					Plugin.LastSection = CurrentSectionIndex;
 					Plugin.UpdatePlugin();

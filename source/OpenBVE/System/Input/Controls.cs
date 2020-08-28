@@ -159,7 +159,7 @@ namespace OpenBve
 					{
 						if (Length >= Controls.Length)
 						{
-							Array.Resize<Control>(ref Controls, Controls.Length << 1);
+							Array.Resize(ref Controls, Controls.Length << 1);
 						}
 
 						int j;
@@ -401,7 +401,7 @@ namespace OpenBve
 					}
 				}
 			}
-			Array.Resize<Control>(ref Controls, Length);
+			Array.Resize(ref Controls, Length);
 		}
 
 
@@ -415,7 +415,7 @@ namespace OpenBve
 					if (Add[i].Command == Base[j].Command) break;
 				}
 				if (j == Base.Length) {
-					Array.Resize<Control>(ref Base, Base.Length + 1);
+					Array.Resize(ref Base, Base.Length + 1);
 					Base[Base.Length - 1] = Add[i];
 				}
 			}

@@ -87,11 +87,11 @@ namespace OpenBveApi.FunctionScripting
 				double d; if (double.TryParse(Arguments[i], System.Globalization.NumberStyles.Float, Culture, out d)) {
 					if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 					InstructionSet[n] = Instructions.SystemConstant;
-					if (c >= Constants.Length) Array.Resize<double>(ref Constants, Constants.Length << 1);
+					if (c >= Constants.Length) Array.Resize(ref Constants, Constants.Length << 1);
 					Constants[c] = d;
 					n++; c++; s++; if (s >= m) m = s;
 				} else if (Time.TryParseTime(Arguments[i], out d) && InstructionSet[n -1] == Instructions.TimeSecondsSinceMidnight) {
-					if (c >= Constants.Length) Array.Resize<double>(ref Constants, Constants.Length << 1);
+					if (c >= Constants.Length) Array.Resize(ref Constants, Constants.Length << 1);
 					Constants[c] = d;
 					n++;
 					c++;

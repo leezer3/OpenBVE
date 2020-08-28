@@ -367,7 +367,7 @@ namespace OpenBve
 						{
 							Interface.CurrentOptions.RouteEncodings[j] =
 								Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
-							Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings,
+							Array.Resize(ref Interface.CurrentOptions.RouteEncodings,
 								Interface.CurrentOptions.RouteEncodings.Length - 1);
 							break;
 						}
@@ -387,7 +387,7 @@ namespace OpenBve
 					}
 					if (j == Interface.CurrentOptions.RouteEncodings.Length)
 					{
-						Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
+						Array.Resize(ref Interface.CurrentOptions.RouteEncodings, j + 1);
 						Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
 						Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
 					}
@@ -702,7 +702,7 @@ namespace OpenBve
 						for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
 							if (Interface.CurrentOptions.TrainEncodings[j].Value == Result.TrainFolder) {
 								Interface.CurrentOptions.TrainEncodings[j] = Interface.CurrentOptions.TrainEncodings[Interface.CurrentOptions.TrainEncodings.Length - 1];
-								Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, Interface.CurrentOptions.TrainEncodings.Length - 1);
+								Array.Resize(ref Interface.CurrentOptions.TrainEncodings, Interface.CurrentOptions.TrainEncodings.Length - 1);
 								break;
 							}
 						}
@@ -714,7 +714,7 @@ namespace OpenBve
 								break;
 							}
 						} if (j == Interface.CurrentOptions.TrainEncodings.Length) {
-							Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, j + 1);
+							Array.Resize(ref Interface.CurrentOptions.TrainEncodings, j + 1);
 							Interface.CurrentOptions.TrainEncodings[j].Codepage = EncodingCodepages[i];
 							Interface.CurrentOptions.TrainEncodings[j].Value = Result.TrainFolder;
 						}

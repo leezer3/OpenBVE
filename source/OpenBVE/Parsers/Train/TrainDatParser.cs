@@ -174,7 +174,7 @@ namespace OpenBve {
 				switch (Lines[i].ToLowerInvariant()) {
 					case "#acceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							Array.Resize<TrainManager.BveAccelerationCurve>(ref AccelerationCurves, n + 1);
+							Array.Resize(ref AccelerationCurves, n + 1);
 							AccelerationCurves[n] = new TrainManager.BveAccelerationCurve();
 							string t = Lines[i] + ",";
 							int m = 0;
@@ -777,7 +777,7 @@ namespace OpenBve {
 							while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 								int u = Tables[msi].Entries.Length;
 								if (n >= u) {
-									Array.Resize<TrainManager.MotorSoundTableEntry>(ref Tables[msi].Entries, 2 * u);
+									Array.Resize(ref Tables[msi].Entries, 2 * u);
 									for (int j = u; j < 2 * u; j++) {
 										Tables[msi].Entries[j].SoundIndex = -1;
 										Tables[msi].Entries[j].Pitch = 1.0f;
@@ -815,7 +815,7 @@ namespace OpenBve {
 								 * Handle duplicated section header:
 								 * If no entries, don't resize
 								 */
-								Array.Resize<TrainManager.MotorSoundTableEntry>(ref Tables[msi].Entries, n);
+								Array.Resize(ref Tables[msi].Entries, n);
 							}
 							i--;
 						} break;

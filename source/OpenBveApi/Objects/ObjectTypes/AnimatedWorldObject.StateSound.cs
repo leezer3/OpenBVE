@@ -131,24 +131,24 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Creates the animated object within the game world</summary>
-		/// <param name="Position">The absolute position</param>
+		/// <param name="WorldPosition">The absolute position</param>
 		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>
 		/// <param name="AuxTransformation">The auxilary transformation (Placed rail)</param>
-		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
-		/// <param name="TrackPosition">The absolute track position</param>
+		/// <param name="FinalSectionIndex">The index of the section if placed using a SigF command</param>
+		/// <param name="FinalTrackPosition">The absolute track position</param>
 		/// <param name="Brightness">The brightness value at the track position</param>
-		public void Create(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
+		public void Create(Vector3 WorldPosition, Transformation BaseTransformation, Transformation AuxTransformation, int FinalSectionIndex, double FinalTrackPosition, double Brightness)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
 			AnimatedWorldObjectStateSound currentObject = (AnimatedWorldObjectStateSound)Clone();
-			currentObject.Position = Position;
+			currentObject.Position = WorldPosition;
 			currentObject.Direction = FinalTransformation.Z;
 			currentObject.Up = FinalTransformation.Y;
 			currentObject.Side = FinalTransformation.X;
-			currentObject.SectionIndex = SectionIndex;
-			currentObject.TrackPosition = TrackPosition;
+			currentObject.SectionIndex = FinalSectionIndex;
+			currentObject.TrackPosition = FinalTrackPosition;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{
 				if (currentObject.Object.States[i].Prototype == null)
