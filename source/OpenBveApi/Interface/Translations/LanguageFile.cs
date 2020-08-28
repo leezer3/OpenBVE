@@ -25,14 +25,17 @@ namespace OpenBveApi.Interface {
                 foreach (var File in LanguageFiles) {
 	                try
 	                {
-						using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
-						using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-						{
-							Language l = new Language(reader, System.IO.Path.GetFileNameWithoutExtension(File));
-							AvailableLanguages.Add(l);
-						}
+		                using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
+		                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+		                {
+			                Language l = new Language(reader, System.IO.Path.GetFileNameWithoutExtension(File));
+			                AvailableLanguages.Add(l);
+		                }
 	                }
-	                catch { }
+	                catch
+	                {
+						//Corrupt language file? Just ignore
+	                }
                 }
             } catch {
                 MessageBox.Show(@"An error occured whilst attempting to load the default language files.");

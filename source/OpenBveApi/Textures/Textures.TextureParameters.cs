@@ -1,6 +1,4 @@
 ﻿#pragma warning disable 0659, 0661
-
-using System;
 using OpenBveApi.Colors;
 
 namespace OpenBveApi.Textures
@@ -12,7 +10,7 @@ namespace OpenBveApi.Textures
 		/// <summary>The region in the texture to be extracted, or a null reference for the entire texture.</summary>
 		private readonly TextureClipRegion MyClipRegion;
 		/// <summary>The color in the texture that should become transparent, or a null reference for no transparent color.</summary>
-		private readonly Nullable<Color24> MyTransparentColor;
+		private readonly Color24? MyTransparentColor;
 		// --- properties ---
 		/// <summary>Gets the region in the texture to be extracted, or a null reference for the entire texture.</summary>
 		public TextureClipRegion ClipRegion
@@ -35,7 +33,7 @@ namespace OpenBveApi.Textures
 		/// <summary>Creates new texture parameters.</summary>
 		/// <param name="clipRegion">The region in the texture to be extracted, or a null reference for the entire texture.</param>
 		/// <param name="transparentColor">The color in the texture that should become transparent, or a null reference for no transparent color.</param>
-		public TextureParameters(TextureClipRegion clipRegion, Nullable<Color24> transparentColor)
+		public TextureParameters(TextureClipRegion clipRegion, Color24? transparentColor)
 		{
 			this.MyClipRegion = clipRegion;
 			this.MyTransparentColor = transparentColor;
@@ -48,9 +46,9 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two texture parameters are equal.</returns>
 		public static bool operator ==(TextureParameters a, TextureParameters b)
 		{
-			if (object.ReferenceEquals(a, b)) return true;
-			if (object.ReferenceEquals(a, null)) return false;
-			if (object.ReferenceEquals(b, null)) return false;
+			if (ReferenceEquals(a, b)) return true;
+			if (ReferenceEquals(a, null)) return false;
+			if (ReferenceEquals(b, null)) return false;
 			if (a.MyClipRegion != b.MyClipRegion) return false;
 			if (a.MyTransparentColor != b.MyTransparentColor) return false;
 			return true;
@@ -62,9 +60,9 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two texture parameters are unequal.</returns>
 		public static bool operator !=(TextureParameters a, TextureParameters b)
 		{
-			if (object.ReferenceEquals(a, b)) return false;
-			if (object.ReferenceEquals(a, null)) return true;
-			if (object.ReferenceEquals(b, null)) return true;
+			if (ReferenceEquals(a, b)) return false;
+			if (ReferenceEquals(a, null)) return true;
+			if (ReferenceEquals(b, null)) return true;
 			if (a.MyClipRegion != b.MyClipRegion) return true;
 			if (a.MyTransparentColor != b.MyTransparentColor) return true;
 			return false;
@@ -75,9 +73,9 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether this instance is equal to the specified object.</returns>
 		public override bool Equals(object obj)
 		{
-			if (object.ReferenceEquals(this, obj)) return true;
-			if (object.ReferenceEquals(this, null)) return false;
-			if (object.ReferenceEquals(obj, null)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(this, null)) return false;
+			if (ReferenceEquals(obj, null)) return false;
 			if (!(obj is TextureParameters)) return false;
 			TextureParameters x = (TextureParameters) obj;
 			if (this.MyClipRegion != x.MyClipRegion) return false;
