@@ -1463,6 +1463,12 @@ namespace OpenBve {
 			if (DaytimeTexture != null)
 			{
 				Object.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
+
+				if (NighttimeTexture != null)
+				{
+					// In BVE4 and versions of OpenBVE prior to v1.7.1.0, elements with NighttimeImage defined are rendered with lighting disabled.
+					Object.Mesh.Materials[0].Flags |= MaterialFlags.DisableLighting;
+				}
 			}
 			Object.Mesh.Materials[0].Color = Color;
 			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
