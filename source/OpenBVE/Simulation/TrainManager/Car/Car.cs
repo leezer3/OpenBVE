@@ -491,7 +491,7 @@ namespace OpenBve
 			{
 				if (trainVisible)
 				{
-					if (CarSections[CurrentCarSection].VisibleFromInterior)
+					if (CurrentCarSection != -1 && CarSections[CurrentCarSection].VisibleFromInterior)
 					{
 						return;
 					}
