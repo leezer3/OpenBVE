@@ -1016,7 +1016,7 @@ namespace LibRender2
 				Shader.SetBrightness(factor);
 
 				float alphaFactor = distanceFactor;
-				if ((material.Flags & MaterialFlags.CrossFadeTexture) != 0)
+				if (material.NighttimeTexture != null && (material.Flags & MaterialFlags.CrossFadeTexture) != 0)
 				{
 					alphaFactor *= 1.0f - blendFactor;
 				}
@@ -1252,7 +1252,7 @@ namespace LibRender2
 				}
 
 				float alphaFactor = distanceFactor;
-				if ((material.Flags & MaterialFlags.CrossFadeTexture) != 0)
+				if (material.NighttimeTexture != null && (material.Flags & MaterialFlags.CrossFadeTexture) != 0)
 				{
 					alphaFactor *= 1.0f - blendFactor;
 				}

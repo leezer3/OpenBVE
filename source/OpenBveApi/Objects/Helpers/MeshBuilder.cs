@@ -77,7 +77,7 @@ namespace OpenBveApi.Objects
 						{
 							/*
 							 * Versions of openBVE prior to 1.7.0 rendered polygons with two defined textures as unlit
-							* The new GL 3.2 renderer corrects this behaviour
+							 * The new GL 3.2 renderer corrects this behaviour
 							 * Horrid workaround....
 							 */
 							Materials[i].Flags |= MaterialFlags.DisableLighting;
@@ -136,10 +136,6 @@ namespace OpenBveApi.Objects
 						}
 
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
-						if ((Materials[i].Flags & MaterialFlags.CrossFadeTexture) != 0)
-						{
-							Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.CrossFadeTexture;
-						}
 					}
 					else
 					{
