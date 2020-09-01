@@ -25,6 +25,30 @@ namespace OpenBve
 
 				string Text = System.IO.File.ReadAllText(config, encoding);
 				Text = Text.Replace("\r", "").Replace("\n", "");
+				if (Text.Length > 260)
+				{
+					/*
+					 * String length is over max Windows path length, so
+					 * comments or ATS plugin docs have been included in here
+					 * e.g dlg70v40
+					 */
+					string[] fileLines = System.IO.File.ReadAllLines(config);
+					for (int i = 0; i < fileLines.Length; i++)
+					{
+						int commentStart = fileLines[i].IndexOf(';');
+						if (commentStart != -1)
+						{
+							fileLines[i] = fileLines[i].Substring(0, commentStart);
+						}
+
+						fileLines[i] = fileLines[i].Trim();
+						if (fileLines[i].Length != 0)
+						{
+							Text = fileLines[i];
+							break;
+						}
+					}
+				}
 				string file;
 				try
 				{
