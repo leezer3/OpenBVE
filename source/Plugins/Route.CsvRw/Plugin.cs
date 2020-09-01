@@ -67,6 +67,7 @@ namespace CsvRwRouteParser
 	    /// <returns>Whether loading the sound was successful.</returns>
 	    public override bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
 	    {
+		    LastException = null;
 		    Cancel = false;
 		    CurrentProgress = 0.0;
 		    IsLoading = true;
@@ -84,11 +85,12 @@ namespace CsvRwRouteParser
 				IsLoading = false;
 			    return true;
 		    }
-		    catch
+		    catch(Exception ex)
 		    {
 			    route = null;
 			    CurrentHost.AddMessage(MessageType.Error, false, "An unexpected error occured whilst attempting to load the following routefile: " + path);
 			    IsLoading = false;
+			    LastException = ex;
 			    return false;
 		    }
 	    }

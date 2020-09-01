@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using OpenBveApi;
@@ -96,6 +96,11 @@ namespace RouteManager2
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
 		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame)
 		{
+			if (CurrentRoute.Tracks[0].Elements == null)
+			{
+				//Usually caused by selecting another route before preview has finished
+				return new Bitmap(1,1);
+			}
 			int n, n0, n1;
 			RouteRange(out n, out n0, out n1);
 			// find dimensions
@@ -366,6 +371,10 @@ namespace RouteManager2
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
 		public static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame)
 		{
+			if (CurrentRoute.Tracks[0].Elements == null)
+			{
+				return new Bitmap(1,1);
+			}
 			if (CurrentRoute.Tracks[0].Elements.Length > 36 && CurrentRoute.Stations.Length == 0)
 			{
 				// If we have track elements, but no stations, show a specific error message, rather

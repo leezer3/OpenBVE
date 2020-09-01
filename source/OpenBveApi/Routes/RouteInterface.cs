@@ -1,4 +1,6 @@
-﻿namespace OpenBveApi.Routes
+﻿using System;
+
+namespace OpenBveApi.Routes
 {
 	/// <summary>Represents the interface for loading routes. Plugins must implement this interface if they wish to expose routes.</summary>
 	public abstract class RouteInterface {
@@ -30,6 +32,9 @@
 
 		/// <summary>Holds whether loading is currently in progress</summary>
 		public bool IsLoading;
+
+		/// <summary>The last exception encountered by the plugin</summary>
+		public Exception LastException;
 		
 		/// <summary>Set if loading is to be cancelled</summary>
 		public bool Cancel;
