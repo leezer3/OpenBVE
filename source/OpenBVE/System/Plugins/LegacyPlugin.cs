@@ -187,7 +187,8 @@ namespace OpenBve {
 				base.LastException = ex;
 				throw;
 			}
-			if (version != 131072) {
+			
+			if (version == 0 && System.IO.Path.GetFileName(PluginFile).ToLowerInvariant() != "ats2.dll" || version != 131072) {
 				Interface.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " is of an unsupported version.");
 				try {
 					Win32Dispose();
