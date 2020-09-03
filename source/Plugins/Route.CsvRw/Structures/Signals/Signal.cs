@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 using OpenBveApi.World;
 using RouteManager2.SignalManager;
 
@@ -24,17 +25,19 @@ namespace CsvRwRouteParser
 			double dz = TrackPosition - StartingDistance;
 			if (ShowPost)
 			{
-				// post
-				double dx = Position.X;
-				wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
-				CompatibilityObjects.SignalPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, Brightness);
+				/*
+				 * Post-
+				 * Need to clone a copy of the vector for transform
+				 * Do it in the post as this is the lesser used option
+				 */
+				Vector3 wpos2 = new Vector3(wpos);
+				wpos2 += Position.X * RailTransformation.X + dz * RailTransformation.Z;
+				CompatibilityObjects.SignalPost.CreateObject(wpos2, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, Brightness);
 			}
 			if (ShowObject)
 			{
 				// signal object
-				double dx = Position.X;
-				double dy = Position.Y;
-				wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
+				wpos += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
 				SignalObject.Create(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), SectionIndex, StartingDistance, EndingDistance, TrackPosition, Brightness);
 			}
 		}
