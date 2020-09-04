@@ -1555,14 +1555,7 @@ namespace OpenBve
 										if (Interface.CurrentOptions.TimeTableStyle == TimeTableMode.PreferCustom)
 										{
 											//We have already determined that a custom timetable is available in the if above
-											if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom)
-											{
-												Program.Renderer.CurrentTimetable = DisplayedTimetable.Custom;
-											}
-											else
-											{
-												Program.Renderer.CurrentTimetable = DisplayedTimetable.None;
-											}
+											Program.Renderer.CurrentTimetable = Program.Renderer.CurrentTimetable != DisplayedTimetable.Custom ? DisplayedTimetable.Custom : DisplayedTimetable.None;
 											break;
 										}
 										//Fallback legacy behaviour- Cycles between custom, default and none
