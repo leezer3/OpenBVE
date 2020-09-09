@@ -669,6 +669,12 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TimetableVisible;
 							n++; s++; if (s >= m) m = s; break;
+						case "panel2timetable":
+							//This is an internal function, and does not form part of the documented API
+							//Used for the [Timetable] section in panel2 trains
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.Panel2Timetable;
+							n++; s++; if (s >= m) m = s; break;
 						case "distancenextstation":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.DistanceNextStation;

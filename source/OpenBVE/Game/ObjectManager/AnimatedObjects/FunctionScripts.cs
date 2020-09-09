@@ -1136,6 +1136,18 @@ namespace OpenBve {
 								break;
 						}
 						s++; break;
+					case Instructions.Panel2Timetable:
+						//Internal instruction used to show / hide custom timetable overlay on Panel2 trains
+						switch (Program.Renderer.CurrentTimetable)
+						{
+							case DisplayedTimetable.Custom:
+								Function.Stack[s] = 0.0;
+								break;
+							default:
+								Function.Stack[s] = -1.0;
+								break;
+						}
+						s++; break;
 					case Instructions.DistanceNextStation:
 						if (Train == null)
 						{
