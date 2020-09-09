@@ -17,7 +17,7 @@ namespace OpenBveApi.Routes
 			this.Object = Object;
 
 			//As we are using an object based background, calculate the minimum clip distance
-			for (int i = 0; i > Object.Mesh.Vertices.Length; i++)
+			for (int i = 0; i < Object.Mesh.Vertices.Length; i++)
 			{
 				double X = System.Math.Abs(Object.Mesh.Vertices[i].Coordinates.X);
 				double Z = System.Math.Abs(Object.Mesh.Vertices[i].Coordinates.Z);

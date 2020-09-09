@@ -37,7 +37,7 @@ namespace OpenBve
             }
             if (RepeatControls.Length == RepeatControlsUsed)
             {
-                Array.Resize<ControlRepeat>(ref RepeatControls, RepeatControls.Length << 1);
+                Array.Resize(ref RepeatControls, RepeatControls.Length << 1);
             }
             RepeatControls[RepeatControlsUsed] = new ControlRepeat(controlIndex, Interface.CurrentOptions.KeyRepeatDelay);
             RepeatControlsUsed++;

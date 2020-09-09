@@ -22,7 +22,7 @@ namespace OpenBveApi.Interface
 			internal int InterfaceStringCount => InterfaceStrings.Length;
 
 			/// <summary>The language name</summary>
-			internal readonly string Name;
+			private readonly string Name;
 			/// <summary>The language flag</summary>
 			internal readonly string Flag;
 			/// <summary>The language code</summary>

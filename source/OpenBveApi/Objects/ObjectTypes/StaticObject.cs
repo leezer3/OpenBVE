@@ -748,7 +748,7 @@ namespace OpenBveApi.Objects
 						int n = (Mesh.Faces[i].Vertices.Length - face_count) / face_count;
 						while (f + n > Mesh.Faces.Length)
 						{
-							Array.Resize<MeshFace>(ref Mesh.Faces, Mesh.Faces.Length << 1);
+							Array.Resize(ref Mesh.Faces, Mesh.Faces.Length << 1);
 						}
 
 						for (int j = 0; j < n; j++)
@@ -768,7 +768,7 @@ namespace OpenBveApi.Objects
 							}
 						}
 
-						Array.Resize<MeshFaceVertex>(ref Mesh.Faces[i].Vertices, face_count);
+						Array.Resize(ref Mesh.Faces[i].Vertices, face_count);
 						f += n;
 					}
 				}
@@ -846,17 +846,17 @@ namespace OpenBveApi.Objects
 			// finalize arrays
 			if (v != Mesh.Vertices.Length)
 			{
-				Array.Resize<VertexTemplate>(ref Mesh.Vertices, v);
+				Array.Resize(ref Mesh.Vertices, v);
 			}
 
 			if (m != Mesh.Materials.Length)
 			{
-				Array.Resize<MeshMaterial>(ref Mesh.Materials, m);
+				Array.Resize(ref Mesh.Materials, m);
 			}
 
 			if (f != Mesh.Faces.Length)
 			{
-				Array.Resize<MeshFace>(ref Mesh.Faces, f);
+				Array.Resize(ref Mesh.Faces, f);
 			}
 		}
 	}

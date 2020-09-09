@@ -254,7 +254,7 @@ namespace OpenBve {
 				listviewControls.Items[i].Selected = false;
 			}
 			int n = Interface.CurrentControls.Length;
-			Array.Resize<Interface.Control>(ref Interface.CurrentControls, n + 1);
+			Array.Resize(ref Interface.CurrentControls, n + 1);
 			Interface.CurrentControls[n].Command = Translations.Command.None;
 			ListViewItem Item = new ListViewItem(new string[] { "", "", "", "", "" });
 			UpdateControlListElement(Item, n, true);
@@ -269,7 +269,7 @@ namespace OpenBve {
 				for (int i = j; i < Interface.CurrentControls.Length - 1; i++) {
 					Interface.CurrentControls[i] = Interface.CurrentControls[i + 1];
 				}
-				Array.Resize<Interface.Control>(ref Interface.CurrentControls, Interface.CurrentControls.Length - 1);
+				Array.Resize(ref Interface.CurrentControls, Interface.CurrentControls.Length - 1);
 				listviewControls.Items[j].Remove();
 			}
 		}

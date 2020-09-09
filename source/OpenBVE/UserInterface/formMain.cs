@@ -976,7 +976,7 @@ namespace OpenBve {
 					{
 						if (Interface.CurrentOptions.RecentlyUsedRoutes.Length < Interface.CurrentOptions.RecentlyUsedLimit)
 						{
-							Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedRoutes, i + 1);
+							Array.Resize(ref Interface.CurrentOptions.RecentlyUsedRoutes, i + 1);
 						}
 						else {
 							i--;
@@ -1002,7 +1002,7 @@ namespace OpenBve {
 					{
 						if (Interface.CurrentOptions.RecentlyUsedTrains.Length < Interface.CurrentOptions.RecentlyUsedLimit)
 						{
-							Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedTrains, i + 1);
+							Array.Resize(ref Interface.CurrentOptions.RecentlyUsedTrains, i + 1);
 						}
 						else {
 							i--;
@@ -1027,7 +1027,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<string>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.RecentlyUsedRoutes = a;
 			}
 			// remove non-existing recently used trains
@@ -1042,7 +1042,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<string>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.RecentlyUsedTrains = a;
 			}
 			// remove non-existing route encoding mappings
@@ -1057,7 +1057,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.RouteEncodings = a;
 			}
 			// remove non-existing train encoding mappings
@@ -1072,7 +1072,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
 			{
@@ -1091,7 +1091,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<string>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}
 			Program.Sounds.Deinitialize();
@@ -1709,32 +1709,38 @@ namespace OpenBve {
 
 		private void buttonSetRouteDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void buttonTrainInstallationDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void buttonOtherDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void comboBoxCompressionFormat_SelectedIndexChanged(object sender, EventArgs e)

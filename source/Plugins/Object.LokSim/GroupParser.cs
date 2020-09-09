@@ -190,7 +190,7 @@ namespace Plugin
 											}
 											if (Object.Name != null)
 											{
-												Array.Resize<GruppenObject>(ref CurrentObjects, CurrentObjects.Length + 1);
+												Array.Resize(ref CurrentObjects, CurrentObjects.Length + 1);
 												CurrentObjects[CurrentObjects.Length - 1] = Object;
 											}
 										}
@@ -243,7 +243,7 @@ namespace Plugin
 							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
 								//If the function script is not empty, this is a new animated object bit
-								Array.Resize<UnifiedObject>(ref obj, obj.Length + 1);
+								Array.Resize(ref obj, obj.Length + 1);
 								obj[obj.Length - 1] = Object;
 								int aL = Result.Objects.Length;
 								Array.Resize(ref Result.Objects, aL + 1);

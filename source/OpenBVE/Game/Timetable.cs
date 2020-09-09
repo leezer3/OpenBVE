@@ -68,7 +68,7 @@ namespace OpenBve {
 							// update station
 							if (n == Stations.Length)
 							{
-								Array.Resize<Station>(ref Stations, Stations.Length << 1);
+								Array.Resize(ref Stations, Stations.Length << 1);
 							}
 
 							Stations[n].Name = Program.CurrentRoute.Stations[sse.StationIndex].Name;
@@ -124,7 +124,7 @@ namespace OpenBve {
 								int m = n - 1;
 								if (m == Tracks.Length)
 								{
-									Array.Resize<Track>(ref Tracks, Tracks.Length << 1);
+									Array.Resize(ref Tracks, Tracks.Length << 1);
 								}
 
 								// speed
@@ -200,10 +200,10 @@ namespace OpenBve {
 					}
 				}
 
-				Array.Resize<Station>(ref Stations, n);
+				Array.Resize(ref Stations, n);
 				if (n >= 2)
 				{
-					Array.Resize<Track>(ref Tracks, n - 1);
+					Array.Resize(ref Tracks, n - 1);
 				}
 				else
 				{

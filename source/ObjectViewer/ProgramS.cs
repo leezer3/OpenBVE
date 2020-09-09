@@ -6,7 +6,6 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
@@ -177,7 +176,7 @@ namespace OpenBve {
 		internal static void DragFile(object sender, FileDropEventArgs e)
 		{
 			int n = Files.Length;
-			Array.Resize<string>(ref Files, n + 1);
+			Array.Resize(ref Files, n + 1);
 			Files[n] = e.FileName;
 			// reset
 			LightingRelative = -1.0;
@@ -416,7 +415,7 @@ namespace OpenBve {
 			            Application.DoEvents();
 			            string[] f = Dialog.FileNames;
 			            int n = Files.Length;
-			            Array.Resize<string>(ref Files, n + f.Length);
+			            Array.Resize(ref Files, n + f.Length);
 			            for (int i = 0; i < f.Length; i++)
 			            {
 				            Files[n + i] = f[i];
@@ -598,15 +597,14 @@ namespace OpenBve {
 	            case Key.B:
 	                if (ShiftPressed)
 	                {
-		                ColorDialog dialog = new ColorDialog
+		                using (ColorDialog dialog = new ColorDialog {FullOpen = true})
 		                {
-			                FullOpen = true
-		                };
-		                if (dialog.ShowDialog() == DialogResult.OK)
-	                    {
-	                        Renderer.BackgroundColor = -1;
-	                        Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
-	                    }
+			                if (dialog.ShowDialog() == DialogResult.OK)
+			                {
+				                Renderer.BackgroundColor = -1;
+				                Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
+			                }
+		                }
 	                }
 	                else
 	                {

@@ -51,7 +51,7 @@ namespace CsvRwRouteParser
 				if (IsRW & AllowRwRouteDescription) {
 					// ignore rw route description
 					if (
-						Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].IndexOf("]", StringComparison.Ordinal) > 0 |
+						Lines[i].StartsWith("[", StringComparison.Ordinal) && Lines[i].IndexOf("]", StringComparison.Ordinal) > 0 ||
 						Lines[i].StartsWith("$")
 					) {
 						AllowRwRouteDescription = false;
@@ -146,12 +146,12 @@ namespace CsvRwRouteParser
 								}
 								break;
 							case '@':
-								if (Level == 1 & IsRW & Plugin.CurrentOptions.EnableBveTsHacks)
+								if (Level == 1 && IsRW && Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 									//BVE2 doesn't care if a bracket is unclosed, fixes various routefiles
 									Level--;
 								}
-								else if (Level == 2 && IsRW & Plugin.CurrentOptions.EnableBveTsHacks)
+								else if (Level == 2 && IsRW && Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 									int k = j;
 									while (k > 0)
@@ -209,7 +209,8 @@ namespace CsvRwRouteParser
 						for (k = j + 1; k < Expressions[i].Text.Length; k++) {
 							if (Expressions[i].Text[k] == '(') {
 								break;
-							} else if (Expressions[i].Text[k] == '/' | Expressions[i].Text[k] == '\\') {
+							}
+							if (Expressions[i].Text[k] == '/' || Expressions[i].Text[k] == '\\') {
 								k = Expressions[i].Text.Length + 1;
 								break;
 							}
@@ -566,7 +567,7 @@ namespace CsvRwRouteParser
 										} else {
 											int x;
 											if (NumberFormats.TryParseIntVb6(s, out x)) {
-												if (x >= 0 & x < Subs.Length && Subs[x] != null) {
+												if (x >= 0 && x < Subs.Length && Subs[x] != null) {
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Subs[x] + Expressions[i].Text.Substring(h + 1);
 												} else {
 													continueWithNextExpression = true;
@@ -623,7 +624,7 @@ namespace CsvRwRouteParser
 			for (int i = 0; i < Expressions.Length; i++) {
 				if (IsRW) {
 					// only check for track positions in the railway section for RW routes
-					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) & Expressions[i].Text.EndsWith("]", StringComparison.Ordinal))
+					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) && Expressions[i].Text.EndsWith("]", StringComparison.Ordinal))
 					{
 						string s = Expressions[i].Text.Substring(1, Expressions[i].Text.Length - 2).Trim(new char[] { });
 						NumberCheck = string.Compare(s, "Railway", StringComparison.OrdinalIgnoreCase) == 0;

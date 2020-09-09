@@ -80,7 +80,7 @@ namespace CsvRwRouteParser
 			else
 			{
 				int b = BeaconStructureIndex;
-				if (b >= 0 & Beacon.ContainsKey(b))
+				if (Beacon.ContainsKey(b))
 				{
 					obj = Beacon[b];
 				}
@@ -108,7 +108,7 @@ namespace CsvRwRouteParser
 			if (Type != -1)
 			{
 				int t = SectionIndex;
-				if (t >= 0 & t < Plugin.CurrentRoute.Sections.Length)
+				if (t >= 0 && t < Plugin.CurrentRoute.Sections.Length)
 				{
 					int m = Element.Events.Length;
 					Array.Resize(ref Element.Events, m + 1);

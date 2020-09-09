@@ -366,7 +366,7 @@ namespace OpenBve
 				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
-					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
+					Array.Resize(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = Value;
 					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
 					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + Duration;
@@ -389,7 +389,7 @@ namespace OpenBve
 				{
 					if (ScoreLogCount == ScoreLogs.Length)
 					{
-						Array.Resize<ScoreLog>(ref ScoreLogs, ScoreLogs.Length << 1);
+						Array.Resize(ref ScoreLogs, ScoreLogs.Length << 1);
 					}
 					ScoreLogs[ScoreLogCount].Value = Value;
 					ScoreLogs[ScoreLogCount].TextToken = TextToken;
@@ -407,7 +407,7 @@ namespace OpenBve
 				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
-					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
+					Array.Resize(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = 0;
 					ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
 					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + Duration;
@@ -432,7 +432,7 @@ namespace OpenBve
 						{
 							ScoreMessages[j] = ScoreMessages[j + 1];
 						}
-						Array.Resize<ScoreMessage>(ref ScoreMessages, ScoreMessages.Length - 1);
+						Array.Resize(ref ScoreMessages, ScoreMessages.Length - 1);
 						i--;
 					}
 				}

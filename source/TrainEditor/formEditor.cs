@@ -509,7 +509,7 @@ namespace TrainEditor {
 				SaveControlContent();
 				int n = Train.Acceleration.Entries.Length;
 				if (Train.Handle.PowerNotches > n) {
-					Array.Resize<TrainDat.Acceleration.Entry>(ref Train.Acceleration.Entries, Train.Handle.PowerNotches);
+					Array.Resize(ref Train.Acceleration.Entries, Train.Handle.PowerNotches);
 					for (int i = n; i < Train.Handle.PowerNotches; i++) {
 						Train.Acceleration.Entries[i].a0 = 1.0;
 						Train.Acceleration.Entries[i].a1 = 1.0;
@@ -1098,8 +1098,8 @@ namespace TrainEditor {
 					pointsPitch[length] = new PointF(x, pointsPitch[length - 1].Y);
 					pointsVolume[length] = new PointF(x, pointsVolume[length - 1].Y);
 					length++;
-					Array.Resize<PointF>(ref pointsPitch, length);
-					Array.Resize<PointF>(ref pointsVolume, length);
+					Array.Resize(ref pointsPitch, length);
+					Array.Resize(ref pointsVolume, length);
 					Color colorPitch, colorVolume;
 					if (soundIndex >= 0) {
 						double hue = huefactor * (double)soundIndex;
@@ -1127,8 +1127,8 @@ namespace TrainEditor {
 				pointsPitch[length] = new PointF(x, pointsPitch[length - 1].Y);
 				pointsVolume[length] = new PointF(x, pointsVolume[length - 1].Y);
 				length++;
-				Array.Resize<PointF>(ref pointsPitch, length);
-				Array.Resize<PointF>(ref pointsVolume, length);
+				Array.Resize(ref pointsPitch, length);
+				Array.Resize(ref pointsVolume, length);
 				Color colorPitch, colorVolume;
 				if (soundIndex >= 0) {
 					double hue = huefactor * (double)soundIndex;
@@ -1274,7 +1274,7 @@ namespace TrainEditor {
 				}
 				if (ib >= Motor.Entries.Length) {
 					int n = Motor.Entries.Length;
-					Array.Resize<TrainDat.Motor.Entry>(ref Motor.Entries, ib + 1);
+					Array.Resize(ref Motor.Entries, ib + 1);
 					for (int i = n; i < Motor.Entries.Length; i++) {
 						Motor.Entries[i].SoundIndex = -1;
 						Motor.Entries[i].Pitch = 100.0;

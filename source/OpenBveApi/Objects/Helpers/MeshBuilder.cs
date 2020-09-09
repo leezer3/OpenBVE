@@ -31,7 +31,7 @@ namespace OpenBveApi.Objects
 			this.currentHost = Host;
 			this.Vertices = new VertexTemplate[] {};
 			this.Faces = new MeshFace[] { };
-			this.Materials = new Material[] {new Material()};
+			this.Materials = new[] {new Material()};
 			this.isCylinder = false;
 		}
 
@@ -50,9 +50,9 @@ namespace OpenBveApi.Objects
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
-				Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
-				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
+				Array.Resize(ref Object.Mesh.Faces, mf + Faces.Length);
+				Array.Resize(ref Object.Mesh.Materials, mm + Materials.Length);
+				Array.Resize(ref Object.Mesh.Vertices, mv + Vertices.Length);
 				for (int i = 0; i < Vertices.Length; i++)
 				{
 					Object.Mesh.Vertices[mv + i] = Vertices[i];

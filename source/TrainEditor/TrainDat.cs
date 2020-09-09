@@ -56,12 +56,12 @@ namespace TrainEditor {
 			internal double[] DelayLocoBrakeUp;
 			internal double[] DelayLocoBrakeDown;
 			internal Delay() {
-				this.DelayPowerUp = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
-				this.DelayPowerDown = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
-				this.DelayBrakeUp = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
-				this.DelayBrakeDown = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
-				this.DelayLocoBrakeUp = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
-				this.DelayLocoBrakeDown = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayPowerUp = new[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayPowerDown = new[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayBrakeUp = new[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayBrakeDown = new[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayLocoBrakeUp = new[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayLocoBrakeDown = new[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
 			}
 		}
 		
@@ -396,7 +396,7 @@ namespace TrainEditor {
 						i++;
 						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase)) {
 							if (n == t.Acceleration.Entries.Length) {
-								Array.Resize<Acceleration.Entry>(ref t.Acceleration.Entries, t.Acceleration.Entries.Length << 1);
+								Array.Resize(ref t.Acceleration.Entries, t.Acceleration.Entries.Length << 1);
 							}
 							string u = Lines[i] + ",";
 							int m = 0;
@@ -445,7 +445,7 @@ namespace TrainEditor {
 							i++;
 							n++;
 						}
-						Array.Resize<Acceleration.Entry>(ref t.Acceleration.Entries, n);
+						Array.Resize(ref t.Acceleration.Entries, n);
 						i--;
 						break;
 					case "#performance":
@@ -474,16 +474,16 @@ namespace TrainEditor {
 							if (double.TryParse(Lines[i], System.Globalization.NumberStyles.Float, Culture, out a)) {
 								switch (n) {
 									case 0:
-										if(a >= 0.0) t.Delay.DelayPowerUp = new double[] { a };
+										if(a >= 0.0) t.Delay.DelayPowerUp = new[] { a };
 										break;
 									case 1:
-										if(a >= 0.0) t.Delay.DelayPowerDown = new double[] { a };
+										if(a >= 0.0) t.Delay.DelayPowerDown = new[] { a };
 										break;
 									case 2:
-										if(a >= 0.0) t.Delay.DelayBrakeUp = new double[] { a };
+										if(a >= 0.0) t.Delay.DelayBrakeUp = new[] { a };
 										break;
 									case 3:
-										if(a >= 0.0) t.Delay.DelayBrakeDown = new double[] { a };
+										if(a >= 0.0) t.Delay.DelayBrakeDown = new[] { a };
 										break;
 								}
 							}
@@ -730,7 +730,7 @@ namespace TrainEditor {
 							Motor m = new Motor();
 							while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase)) {
 								if (n == m.Entries.Length) {
-									Array.Resize<Motor.Entry>(ref m.Entries, m.Entries.Length << 1);
+									Array.Resize(ref m.Entries, m.Entries.Length << 1);
 								}
 								string u = Lines[i] + ",";
 								int k = 0;
@@ -757,7 +757,7 @@ namespace TrainEditor {
 								i++;
 								n++;
 							}
-							Array.Resize<Motor.Entry>(ref m.Entries, n);
+							Array.Resize(ref m.Entries, n);
 							i--;
 							switch (section) {
 								case "#motor_p1":
@@ -832,7 +832,7 @@ namespace TrainEditor {
 			b.AppendLine("OPENBVE" + currentVersion);
 			b.AppendLine("#ACCELERATION");
 			if (t.Acceleration.Entries.Length > t.Handle.PowerNotches) {
-				Array.Resize<Acceleration.Entry>(ref t.Acceleration.Entries, t.Handle.PowerNotches);
+				Array.Resize(ref t.Acceleration.Entries, t.Handle.PowerNotches);
 			}
 			for (int i = 0; i < t.Acceleration.Entries.Length; i++) {
 				b.Append(t.Acceleration.Entries[i].a0.ToString(Culture) + ",");
@@ -938,7 +938,7 @@ namespace TrainEditor {
 					if (m.Entries[k].SoundIndex >= 0) break;
 				}
 				k = Math.Min(k + 2, m.Entries.Length);
-				Array.Resize<Motor.Entry>(ref m.Entries, k);
+				Array.Resize(ref m.Entries, k);
 				for (int j = 0; j < m.Entries.Length; j++) {
 					b.Append(m.Entries[j].SoundIndex.ToString(Culture) + ",");
 					b.Append(m.Entries[j].Pitch.ToString(Culture) + ",");

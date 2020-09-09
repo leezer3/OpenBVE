@@ -1156,20 +1156,20 @@ namespace OpenBve {
 			int Start = 0;
 			for (int i = 0; i < Expression.Length; i++) {
 				if (Expression[i] == ',' | Expression[i] == ':') {
-					if (UsedArguments >= Arguments.Length) Array.Resize<string>(ref Arguments, Arguments.Length << 1);
+					if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
 					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart(new char[] { });
 					UsedArguments++; Start = i + 1;
 				} else if (Expression[i] == ';') {
-					if (UsedArguments >= Arguments.Length) Array.Resize<string>(ref Arguments, Arguments.Length << 1);
+					if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
 					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart(new char[] { });
 					UsedArguments++; Start = Expression.Length; break;
 				}
 			} if (Start < Expression.Length) {
-				if (UsedArguments >= Arguments.Length) Array.Resize<string>(ref Arguments, Arguments.Length << 1);
+				if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
 				Arguments[UsedArguments] = Expression.Substring(Start).Trim(new char[] { });
 				UsedArguments++;
 			}
-			Array.Resize<string>(ref Arguments, UsedArguments);
+			Array.Resize(ref Arguments, UsedArguments);
 			return Arguments;
 		}
 

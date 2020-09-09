@@ -173,7 +173,7 @@ namespace OpenBveApi.Colors {
 		/// <summary>Returns a string representation of this Color24</summary>
 		public override string ToString()
 		{
-			return string.Format("#{0}", BitConverter.ToString(new byte[] { R, G, B }).Replace("-", string.Empty));
+			return string.Format("#{0}", BitConverter.ToString(new[] { R, G, B }).Replace("-", string.Empty));
 		}
 	}
 	

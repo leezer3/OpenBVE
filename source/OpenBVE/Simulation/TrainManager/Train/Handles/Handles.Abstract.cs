@@ -67,7 +67,7 @@ namespace OpenBve
 			internal void AddChange(int Value, double Delay)
 			{
 				int n = DelayedChanges.Length;
-				Array.Resize<HandleChange>(ref DelayedChanges, n + 1);
+				Array.Resize(ref DelayedChanges, n + 1);
 				DelayedChanges[n].Value = Value;
 				DelayedChanges[n].Time = Program.CurrentRoute.SecondsSinceMidnight + Delay;
 			}
@@ -80,7 +80,7 @@ namespace OpenBve
 				{
 					DelayedChanges[i] = DelayedChanges[i + Count];
 				}
-				Array.Resize<HandleChange>(ref DelayedChanges, n - Count);
+				Array.Resize(ref DelayedChanges, n - Count);
 			}
 
 

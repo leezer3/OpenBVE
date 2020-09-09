@@ -332,7 +332,7 @@ namespace Plugin {
 								} Position--;
 								if (!IsDefaultTemplate(s))
 								{
-									Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+									Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 									Structure.Data[Structure.Data.Length - 1] = o;
 								}
 								i = Position + 1;
@@ -433,7 +433,7 @@ namespace Plugin {
 								}
 							}
 						}
-						Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+						Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 						Structure.Data[Structure.Data.Length - 1] = o;
 					} else if (r == "float") {
 						// float array
@@ -483,7 +483,7 @@ namespace Plugin {
 								}
 							}
 						}
-						Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+						Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 						Structure.Data[Structure.Data.Length - 1] = o;
 					} else {
 						// non-primitive array
@@ -549,7 +549,7 @@ namespace Plugin {
 								return false;
 							}
 						}
-						Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+						Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 						Structure.Data[Structure.Data.Length - 1] = o;
 					}
 					i = Position;
@@ -567,7 +567,7 @@ namespace Plugin {
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "DWORD could not be parsed in template " + Template.Name + " in textual X object file " + FileName);
 										return false;
 									}
-									Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+									Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 									Structure.Data[Structure.Data.Length - 1] = a;
 									Position++;
 									i = Position;
@@ -594,7 +594,7 @@ namespace Plugin {
 											a = 0.0;
 										}
 									}
-									Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+									Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 									Structure.Data[Structure.Data.Length - 1] = a;
 									Position++;
 									i = Position;
@@ -643,7 +643,7 @@ namespace Plugin {
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
-							Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+							Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 							Structure.Data[Structure.Data.Length - 1] = t;
 							i = Position;
 							break;
@@ -664,19 +664,19 @@ namespace Plugin {
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
-							while (Position <= Content.Length)
+							while (Position < Content.Length)
 							{
 								if (Content[Position] == ';')
 								{
 									SF = true;
 									break;
 								}
-								else if (Content[Position] == '}')
+								if (Content[Position] == '}')
 								{
 									SF = true;
 									break;
 								}
-								else if (Content[Position] == ',')
+								if (Content[Position] == ',')
 								{
 									break;
 								}
@@ -700,7 +700,7 @@ namespace Plugin {
 								}
 								else
 								{
-									Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+									Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 									Structure.Data[Structure.Data.Length - 1] = t;
 								}
 							}
@@ -748,7 +748,7 @@ namespace Plugin {
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing an inlined template in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								}
-								Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+								Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 								Structure.Data[Structure.Data.Length - 1] = o;
 								i = Position;
 							} break;
@@ -947,7 +947,7 @@ namespace Plugin {
 							if (!ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Name), false, ref Cache, out o)) {
 								return false;
 							}
-							Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+							Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 							Structure.Data[Structure.Data.Length - 1] = o;
 							break;
 						case TokenID.CBRACE:
@@ -1023,7 +1023,7 @@ namespace Plugin {
 								}
 							}
 						}
-						Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+						Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 						Structure.Data[Structure.Data.Length - 1] = o;
 					} else if (r == "float") {
 						// float array
@@ -1068,7 +1068,7 @@ namespace Plugin {
 								}
 							}
 						}
-						Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+						Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 						Structure.Data[Structure.Data.Length - 1] = o;
 					} else {
 						// template array
@@ -1076,7 +1076,7 @@ namespace Plugin {
 						for (int i = 0; i < h; i++) {
 							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(r), true, ref Cache, out o[i]);
 						}
-						Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+						Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 						Structure.Data[Structure.Data.Length - 1] = o;
 					}
 				} else {
@@ -1088,7 +1088,7 @@ namespace Plugin {
 								// use cached integer
 								int a = Cache.Integers[Cache.IntegersRemaining - 1];
 								Cache.IntegersRemaining--;
-								Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+								Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 								Structure.Data[Structure.Data.Length - 1] = a;
 							} else if (Cache.FloatsRemaining != 0) {
 								// cannot use cached float
@@ -1100,7 +1100,7 @@ namespace Plugin {
 									TokenID Token = (TokenID)Reader.ReadInt16();
 									if (Token == TokenID.INT) {
 										int a = Reader.ReadInt32();
-										Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+										Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 										Structure.Data[Structure.Data.Length - 1] = a;
 										break;
 									} else if (Token == TokenID.INT_LIST) {
@@ -1116,7 +1116,7 @@ namespace Plugin {
 											}
 											Cache.IntegersRemaining = n - 1;
 											int a = Cache.Integers[Cache.IntegersRemaining];
-											Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+											Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 											Structure.Data[Structure.Data.Length - 1] = a;
 											break;
 										}
@@ -1136,7 +1136,7 @@ namespace Plugin {
 								// use cached float
 								double a = Cache.Floats[Cache.FloatsRemaining - 1];
 								Cache.FloatsRemaining--;
-								Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+								Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 								Structure.Data[Structure.Data.Length - 1] = a;
 							} else {
 								// read new data
@@ -1159,7 +1159,7 @@ namespace Plugin {
 											}
 											Cache.FloatsRemaining = n - 1;
 											double a = Cache.Floats[Cache.FloatsRemaining];
-											Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+											Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 											Structure.Data[Structure.Data.Length - 1] = a;
 											break;
 										}
@@ -1185,7 +1185,7 @@ namespace Plugin {
 										return false;
 									}
 									string s = new string(Ascii.GetChars(Reader.ReadBytes(n)));
-									Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+									Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 									Structure.Data[Structure.Data.Length - 1] = s;
 									Token = (TokenID)Reader.ReadInt16();
 									if (Token != TokenID.SEMICOLON) {
@@ -1201,7 +1201,7 @@ namespace Plugin {
 							// inlined template expected
 							Structure o;
 							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Template.Members[m]), true, ref Cache, out o);
-							Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
+							Array.Resize(ref Structure.Data, Structure.Data.Length + 1);
 							Structure.Data[Structure.Data.Length - 1] = o;
 							break;
 					}
@@ -1540,7 +1540,7 @@ namespace Plugin {
 											{
 												// collect material templates
 												int mn = Materials.Length;
-												Array.Resize<Material>(ref Materials, mn + nMaterials);
+												Array.Resize(ref Materials, mn + nMaterials);
 												for (int k = 0; k < nMaterials; k++)
 												{
 													Materials[mn + k].faceColor = Color32.White;
@@ -2136,9 +2136,9 @@ namespace Plugin {
 							int mf = Object.Mesh.Faces.Length;
 							int mm = Object.Mesh.Materials.Length;
 							int mv = Object.Mesh.Vertices.Length;
-							Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + nFaces);
-							Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
-							Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
+							Array.Resize(ref Object.Mesh.Faces, mf + nFaces);
+							Array.Resize(ref Object.Mesh.Materials, mm + Materials.Length);
+							Array.Resize(ref Object.Mesh.Vertices, mv + Vertices.Length);
 							for (int j = 0; j < Materials.Length; j++)
 							{
 								bool emissive = Materials[j].emissiveColor.R != 0 | Materials[j].emissiveColor.G != 0 | Materials[j].emissiveColor.B != 0;

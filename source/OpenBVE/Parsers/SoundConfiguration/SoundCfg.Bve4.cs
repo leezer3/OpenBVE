@@ -193,7 +193,7 @@ namespace OpenBve
 									{
 										if (k >= MotorFiles.Length)
 										{
-											Array.Resize<string>(ref MotorFiles, k + 1);
+											Array.Resize(ref MotorFiles, k + 1);
 										}
 										MotorFiles[k] = OpenBveApi.Path.CombineFile(trainFolder, b);
 										if (!System.IO.File.Exists(MotorFiles[k]))

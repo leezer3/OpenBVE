@@ -111,7 +111,7 @@ namespace OpenBve
 		internal static void AddBlackBoxEntry(BlackBoxEventToken EventToken) {
 			if (Interface.CurrentOptions.BlackBox) {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
-					Array.Resize<BlackBoxEntry>(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
+					Array.Resize(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
 				}
 				BlackBoxEntries[BlackBoxEntryCount].Time = Program.CurrentRoute.SecondsSinceMidnight;
 				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;

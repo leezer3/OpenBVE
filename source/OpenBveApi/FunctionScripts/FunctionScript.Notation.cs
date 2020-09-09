@@ -70,7 +70,7 @@ namespace OpenBveApi.FunctionScripting
 						throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
 					case ',':
 						if (n == a.Length) {
-							Array.Resize<string>(ref a, n << 1);
+							Array.Resize(ref a, n << 1);
 						}
 						a[n] = s.Substring(b, i - b).Trim(new char[] { });
 						n++;
@@ -79,7 +79,7 @@ namespace OpenBveApi.FunctionScripting
 				}
 			}
 			if (n == a.Length) {
-				Array.Resize<string>(ref a, n << 1);
+				Array.Resize(ref a, n << 1);
 			}
 			a[n] = s.Substring(b).Trim(new char[] { });
 			n++;
@@ -849,7 +849,7 @@ namespace OpenBveApi.FunctionScripting
 									}
 									if (m == 0)
 									{
-										if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
+										if (n >= p.Length) Array.Resize(ref p, n << 1);
 										p[n] = Expression.Substring(t, j - t);
 										n++;
 										string a = Expression.Substring(0, i).Trim(new char[] { });
@@ -868,7 +868,7 @@ namespace OpenBveApi.FunctionScripting
 									break;
 								case ',':
 									if (m == 1) {
-										if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
+										if (n >= p.Length) Array.Resize(ref p, n << 1);
 										p[n] = Expression.Substring(t, j - t);
 										n++;
 										t = j + 1;

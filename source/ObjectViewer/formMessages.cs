@@ -102,17 +102,19 @@ namespace OpenBve
 				Builder.AppendLine(Interface.LogMessages[i].Text);
 			}
 			// save
-			SaveFileDialog Dialog = new SaveFileDialog();
-			Dialog.Filter = @"Text files|*.txt|All files|*";
-			if (Dialog.ShowDialog() == DialogResult.OK)
+			using (SaveFileDialog Dialog = new SaveFileDialog())
 			{
-				try
+				Dialog.Filter = @"Text files|*.txt|All files|*";
+				if (Dialog.ShowDialog() == DialogResult.OK)
 				{
-					System.IO.File.WriteAllText(Dialog.FileName, Builder.ToString(), System.Text.Encoding.UTF8);
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					try
+					{
+						System.IO.File.WriteAllText(Dialog.FileName, Builder.ToString(), System.Text.Encoding.UTF8);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					}
 				}
 			}
 		}
