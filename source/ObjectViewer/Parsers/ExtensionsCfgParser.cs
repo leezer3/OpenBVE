@@ -585,24 +585,8 @@ namespace OpenBve
 						}
 						else if (carObjects[i] is AnimatedObjectCollection)
 						{
-							AnimatedObjectCollection obj = (AnimatedObjectCollection)carObjects[i];
-							foreach (AnimatedObject animatedObj in obj.Objects)
-							{
-								foreach (ObjectState state in animatedObj.States)
-								{
-									state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
-									Matrix4D t = state.Translation;
-									t.Row3.X *= -1.0f;
-									t.Row3.Z *= -1.0f;
-									state.Translation = t;
-								}
-								animatedObj.TranslateXDirection.X *= -1.0;
-								animatedObj.TranslateXDirection.Z *= -1.0;
-								animatedObj.TranslateYDirection.X *= -1.0;
-								animatedObj.TranslateYDirection.Z *= -1.0;
-								animatedObj.TranslateZDirection.X *= -1.0;
-								animatedObj.TranslateZDirection.Z *= -1.0;
-							}
+							AnimatedObjectCollection obj = (AnimatedObjectCollection) carObjects[i];
+							obj.Reverse();
 						}
 						else
 						{
@@ -629,23 +613,7 @@ namespace OpenBve
 						else if (bogieObjects[i] is AnimatedObjectCollection)
 						{
 							AnimatedObjectCollection obj = (AnimatedObjectCollection)bogieObjects[i];
-							foreach (AnimatedObject animatedObj in obj.Objects)
-							{
-								foreach (ObjectState state in animatedObj.States)
-								{
-									state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
-									Matrix4D t = state.Translation;
-									t.Row3.X *= -1.0f;
-									t.Row3.Z *= -1.0f;
-									state.Translation = t;
-								}
-								animatedObj.TranslateXDirection.X *= -1.0;
-								animatedObj.TranslateXDirection.Z *= -1.0;
-								animatedObj.TranslateYDirection.X *= -1.0;
-								animatedObj.TranslateYDirection.Z *= -1.0;
-								animatedObj.TranslateZDirection.X *= -1.0;
-								animatedObj.TranslateZDirection.Z *= -1.0;
-							}
+							obj.Reverse();
 						}
 						else
 						{
