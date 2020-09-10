@@ -61,9 +61,9 @@ namespace CsvRwRouteParser
 				double lim = Speed / UnitOfSpeed;
 				if (lim < 10.0)
 				{
-					int d0 = (int) Math.Round(lim);
 					if (CompatibilityObjects.LimitOneDigit is StaticObject)
 					{
+						int d0 = (int) Math.Round(lim);
 						StaticObject o = (StaticObject) CompatibilityObjects.LimitOneDigit.Clone();
 						if (o.Mesh.Materials.Length >= 1)
 						{
@@ -80,11 +80,11 @@ namespace CsvRwRouteParser
 				}
 				else if (lim < 100.0)
 				{
-					int d1 = (int) Math.Round(lim);
-					int d0 = d1 % 10;
-					d1 /= 10;
 					if (CompatibilityObjects.LimitTwoDigits is StaticObject)
 					{
+						int d1 = (int) Math.Round(lim);
+						int d0 = d1 % 10;
+						d1 /= 10;
 						StaticObject o = (StaticObject) CompatibilityObjects.LimitTwoDigits.Clone();
 						if (o.Mesh.Materials.Length >= 1)
 						{
@@ -105,12 +105,12 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					int d2 = (int) Math.Round(lim);
-					int d0 = d2 % 10;
-					int d1 = (d2 / 10) % 10;
-					d2 /= 100;
 					if (CompatibilityObjects.LimitThreeDigits is StaticObject)
 					{
+						int d2 = (int) Math.Round(lim);
+						int d0 = d2 % 10;
+						int d1 = (d2 / 10) % 10;
+						d2 /= 100;
 						StaticObject o = (StaticObject) CompatibilityObjects.LimitThreeDigits.Clone();
 						if (o.Mesh.Materials.Length >= 1)
 						{

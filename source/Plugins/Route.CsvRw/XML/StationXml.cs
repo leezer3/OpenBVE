@@ -124,40 +124,13 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "doors":
-										int door = 0;
-										bool doorboth = false;
+										Direction door = Direction.Both;
 										if (!string.IsNullOrEmpty(c.InnerText))
 										{
-											switch (c.InnerText.ToLowerInvariant())
-											{
-												case "l":
-												case "left":
-													door = -1;
-													break;
-												case "r":
-												case "right":
-													door = 1;
-													break;
-												case "n":
-												case "none":
-												case "neither":
-													door = 0;
-													break;
-												case "b":
-												case "both":
-													doorboth = true;
-													break;
-												default:
-													if (!NumberFormats.TryParseIntVb6(c.InnerText, out door))
-													{
-														Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Door side was invalid in XML file " + fileName);
-														door = 0;
-													}
-													break;
-											}
+											door = Parser.FindDirection(c.InnerText, "StationXML:Doors", -1, System.IO.Path.GetFileName(fileName))
 										}
-										station.OpenLeftDoors = door < 0.0 | doorboth;
-										station.OpenRightDoors = door > 0.0 | doorboth;
+										station.OpenLeftDoors = door == Direction.Left | door == Direction.Both;
+										station.OpenRightDoors = door == Direction.Right | door == Direction.Both;
 										break;
 									case "forcedredsignal":
 										if (!string.IsNullOrEmpty(c.InnerText))

@@ -7,9 +7,9 @@
 		/// <summary>The routefile index of the object</summary>
 		internal readonly int Type;
 		/// <summary>The direction the object(s) are placed in: -1 for left, 0 for both, 1 for right</summary>
-		internal readonly int Direction;
+		internal readonly Direction Direction;
 
-		internal WallDike(int type, int direction, bool exists = true)
+		internal WallDike(int type, Direction direction, bool exists = true)
 		{
 			Exists = exists;
 			Type = type;

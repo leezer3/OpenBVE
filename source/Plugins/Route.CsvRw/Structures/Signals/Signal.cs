@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Math;
+﻿using OpenBveApi.Math;
 using OpenBveApi.World;
 using RouteManager2.SignalManager;
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.Events;
 
 namespace CsvRwRouteParser

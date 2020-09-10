@@ -76,14 +76,11 @@ namespace CsvRwRouteParser
 						{
 							if (Arguments[1].Length > 0)
 							{
-								double x;
-								if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x))
+								if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out currentRail.RailStart.X))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									x = 0.0;
+									currentRail.RailStart.X = 0.0;
 								}
-
-								currentRail.RailStart.X = x;
 							}
 
 							if (!currentRail.RailEnded)
@@ -96,14 +93,11 @@ namespace CsvRwRouteParser
 						{
 							if (Arguments[2].Length > 0)
 							{
-								double y;
-								if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y))
+								if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out currentRail.RailStart.Y))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									y = 0.0;
+									currentRail.RailStart.Y = 0.0;
 								}
-
-								currentRail.RailStart.Y = y;
 							}
 
 							if (!currentRail.RailEnded)
@@ -198,26 +192,20 @@ namespace CsvRwRouteParser
 						currentRail.RailEnded = true;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							double x;
-							if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x))
+							if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out currentRail.RailEnd.X))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								x = 0.0;
+								currentRail.RailEnd.X = 0.0;
 							}
-
-							currentRail.RailEnd.X = x;
 						}
 
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0)
 						{
-							double y;
-							if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y))
+							if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out currentRail.RailEnd.Y))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								y = 0.0;
+								currentRail.RailEnd.Y = 0.0;
 							}
-
-							currentRail.RailEnd.Y = y;
 						}
 
 						Data.Blocks[BlockIndex].Rails[idx] = currentRail;
@@ -1329,32 +1317,13 @@ namespace CsvRwRouteParser
 						passalarm = 0;
 					}
 
-					int door = 0;
-					bool doorboth = false;
+					Direction door = Direction.Both;
 					if (Arguments.Length >= 5 && Arguments[4].Length != 0)
 					{
-						switch (Arguments[4].ToUpperInvariant())
+						door = FindDirection(Arguments[4], "Track.Sta", Expression.Line, Expression.File);
+						if (door == Direction.Invalid)
 						{
-							case "L":
-								door = -1;
-								break;
-							case "R":
-								door = 1;
-								break;
-							case "N":
-								door = 0;
-								break;
-							case "B":
-								doorboth = true;
-								break;
-							default:
-								if (!NumberFormats.TryParseIntVb6(Arguments[4], out door))
-								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Doors is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									door = 0;
-								}
-
-								break;
+							door = Direction.Both;
 						}
 					}
 
@@ -1589,8 +1558,8 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
 					CurrentRoute.Stations[CurrentStation].StopTime = halt;
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
-					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door < 0.0 | doorboth;
-					CurrentRoute.Stations[CurrentStation].OpenRightDoors = door > 0.0 | doorboth;
+					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door == Direction.Left | door == Direction.Both;
+					CurrentRoute.Stations[CurrentStation].OpenRightDoors = door == Direction.Right | door == Direction.Both;
 					CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
 					CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
 					CurrentRoute.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
@@ -2045,33 +2014,15 @@ namespace CsvRwRouteParser
 							idx = 0;
 						}
 
-						int dir = 0;
+						Direction dir = Direction.Invalid;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							switch (Arguments[1].ToUpperInvariant().Trim(new char[] { }))
-							{
-								case "L":
-								case "-1":
-									dir = -1;
-									break;
-								case "0":
-									dir = 0;
-									break;
-								case "R":
-								case "1":
-									dir = 1;
-									break;
-								default:
-									if (!NumberFormats.TryParseIntVb6(Arguments[1], out dir))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-										dir = 0;
-									}
-
-									break;
-							}
+							dir = FindDirection(Arguments[1], "Track.Wall", Expression.Line, Expression.File);
 						}
-
+						if (dir == Direction.Invalid || dir == Direction.None)
+						{
+							break;
+						}
 						int sttype = 0;
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype))
 						{
@@ -2102,18 +2053,18 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							if (dir == 0)
+							if (dir == Direction.Both)
 							{
 								if (!Data.Structure.WallL.ContainsKey(sttype))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									dir = 1;
+									dir = Direction.Right;
 								}
 
 								if (!Data.Structure.WallR.ContainsKey(sttype))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									dir = -1;
+									dir = Direction.Left;
 								}
 							}
 
@@ -2180,33 +2131,16 @@ namespace CsvRwRouteParser
 							idx = 0;
 						}
 
-						int dir = 0;
+						Direction dir = Direction.Invalid;
+						
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							switch (Arguments[1].ToUpperInvariant().Trim(new char[] { }))
-							{
-								case "L":
-								case "-1":
-									dir = -1;
-									break;
-								case "0":
-									dir = 0;
-									break;
-								case "R":
-								case "1":
-									dir = 1;
-									break;
-								default:
-									if (!NumberFormats.TryParseIntVb6(Arguments[1], out dir))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-										dir = 0;
-									}
-
-									break;
-							}
+							dir = FindDirection(Arguments[1], "Track.Dike", Expression.Line, Expression.File);
 						}
-
+						if (dir == Direction.Invalid || dir == Direction.None)
+						{
+							break;
+						}
 						int sttype = 0;
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype))
 						{
@@ -2239,18 +2173,18 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							if (dir == 0)
+							if (dir == Direction.Both)
 							{
 								if (!Data.Structure.DikeL.ContainsKey(sttype))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									dir = 1;
+									dir = Direction.Right;
 								}
 
 								if (!Data.Structure.DikeR.ContainsKey(sttype))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									dir = -1;
+									dir = Direction.Left;
 								}
 							}
 

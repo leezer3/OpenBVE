@@ -177,9 +177,9 @@ namespace CsvRwRouteParser
 		internal static UnifiedObject LimitPostLeft = null;
 		internal static UnifiedObject LimitPostRight = null;
 		internal static UnifiedObject LimitPostInfinite = null;
-		internal static StaticObject LimitOneDigit = null;
-		internal static StaticObject LimitTwoDigits = null;
-		internal static StaticObject LimitThreeDigits = null;
+		internal static UnifiedObject LimitOneDigit = null;
+		internal static UnifiedObject LimitTwoDigits = null;
+		internal static UnifiedObject LimitThreeDigits = null;
 		internal static UnifiedObject StopPost = null;
 		internal static UnifiedObject TransponderS = null;
 		internal static UnifiedObject TransponderSN = null;
@@ -197,9 +197,9 @@ namespace CsvRwRouteParser
 			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_left.csv"), System.Text.Encoding.UTF8, out LimitPostLeft);
 			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_right.csv"), System.Text.Encoding.UTF8, out LimitPostRight);
 			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_infinite.csv"), System.Text.Encoding.UTF8, out LimitPostInfinite);
-			Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), System.Text.Encoding.UTF8, false, out LimitOneDigit);
-			Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), System.Text.Encoding.UTF8, false, out LimitTwoDigits);
-			Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), System.Text.Encoding.UTF8, false, out LimitThreeDigits);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), System.Text.Encoding.UTF8, out LimitOneDigit);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), System.Text.Encoding.UTF8, out LimitTwoDigits);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), System.Text.Encoding.UTF8, out LimitThreeDigits);
 			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(CompatibilityFolder, "stop.csv"), System.Text.Encoding.UTF8, out StopPost);
 			string TransponderPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Transponders");
 			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "s.csv"), System.Text.Encoding.UTF8, out TransponderS);

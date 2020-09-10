@@ -3,7 +3,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.World;
-using RouteManager2;
 using RouteManager2.Events;
 
 namespace CsvRwRouteParser
