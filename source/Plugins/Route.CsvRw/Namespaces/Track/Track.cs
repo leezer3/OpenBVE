@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -2508,18 +2509,16 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								double x = 0.0, y = 0.0;
+								Vector2 objectPosition = new Vector2();
 								double yaw = 0.0, pitch = 0.0, roll = 0.0;
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x))
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out objectPosition.X))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									x = 0.0;
 								}
 
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out y))
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out objectPosition.Y))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									y = 0.0;
 								}
 
 								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out yaw))
@@ -2542,43 +2541,29 @@ namespace CsvRwRouteParser
 
 								if (idx == -1)
 								{
-									int n = Data.Blocks[BlockIndex].GroundFreeObj.Length;
-									Array.Resize(ref Data.Blocks[BlockIndex].GroundFreeObj, n + 1);
+									
 									if (!Data.IgnorePitchRoll)
 									{
-										Data.Blocks[BlockIndex].GroundFreeObj[n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
+										Data.Blocks[BlockIndex].GroundFreeObj.Add(new FreeObj(Data.TrackPosition, sttype, objectPosition, yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians()));
 									}
 									else
 									{
-										Data.Blocks[BlockIndex].GroundFreeObj[n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians());
+										Data.Blocks[BlockIndex].GroundFreeObj.Add(new FreeObj(Data.TrackPosition, sttype, objectPosition, yaw.ToRadians()));
 									}
 								}
 								else
 								{
-									if (idx >= Data.Blocks[BlockIndex].RailFreeObj.Length)
+									if (!Data.Blocks[BlockIndex].RailFreeObj.ContainsKey(idx))
 									{
-										Array.Resize(ref Data.Blocks[BlockIndex].RailFreeObj, idx + 1);
+										Data.Blocks[BlockIndex].RailFreeObj.Add(idx, new List<FreeObj>());
 									}
-
-									int n;
-									if (Data.Blocks[BlockIndex].RailFreeObj[idx] == null)
-									{
-										Data.Blocks[BlockIndex].RailFreeObj[idx] = new FreeObj[1];
-										n = 0;
-									}
-									else
-									{
-										n = Data.Blocks[BlockIndex].RailFreeObj[idx].Length;
-										Array.Resize(ref Data.Blocks[BlockIndex].RailFreeObj[idx], n + 1);
-									}
-
 									if (!Data.IgnorePitchRoll)
 									{
-										Data.Blocks[BlockIndex].RailFreeObj[idx][n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
+										Data.Blocks[BlockIndex].RailFreeObj[idx].Add(new FreeObj(Data.TrackPosition, sttype, objectPosition, yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians()));
 									}
 									else
 									{
-										Data.Blocks[BlockIndex].RailFreeObj[idx][n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians());
+										Data.Blocks[BlockIndex].RailFreeObj[idx].Add(new FreeObj(Data.TrackPosition, sttype, objectPosition, yaw.ToRadians()));
 									}
 								}
 							}

@@ -20,8 +20,8 @@ namespace CsvRwRouteParser
 		internal WallDike[] RailWall;
 		internal WallDike[] RailDike;
 		internal Pole[] RailPole;
-		internal FreeObj[][] RailFreeObj;
-		internal FreeObj[] GroundFreeObj;
+		internal Dictionary<int,List<FreeObj>> RailFreeObj;
+		internal List<FreeObj> GroundFreeObj;
 		internal Form[] Forms;
 		internal Crack[] Cracks;
 		internal Signal[] Signals;
@@ -57,8 +57,8 @@ namespace CsvRwRouteParser
 				SoundEvents = new Sound[] { };
 				Transponders = new Transponder[] { };
 				DestinationChanges = new DestinationEvent[] { };
-				RailFreeObj = new FreeObj[][] { };
-				GroundFreeObj = new FreeObj[] { };
+				RailFreeObj = new Dictionary<int, List<FreeObj>>();
+				GroundFreeObj = new List<FreeObj>();
 				PointsOfInterest = new PointOfInterest[] { };
 			}
 		}

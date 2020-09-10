@@ -552,7 +552,7 @@ namespace CsvRwRouteParser
 				// ground-aligned free objects
 				if (!PreviewOnly)
 				{
-					for (int j = 0; j < Data.Blocks[i].GroundFreeObj.Length; j++)
+					for (int j = 0; j < Data.Blocks[i].GroundFreeObj.Count; j++)
 					{
 						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance);
 					}
@@ -1014,9 +1014,9 @@ namespace CsvRwRouteParser
 							Data.Blocks[i].Cracks[k].Create(j, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, StartingDistance, EndingDistance, FileName);
 						}
 						// free objects
-						if (Data.Blocks[i].RailFreeObj.Length > j && Data.Blocks[i].RailFreeObj[j] != null)
+						if (Data.Blocks[i].RailFreeObj.ContainsKey(j) && Data.Blocks[i].RailFreeObj[j] != null)
 						{
-							for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Length; k++)
+							for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Count; k++)
 							{
 								Data.Blocks[i].RailFreeObj[j][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
 							}

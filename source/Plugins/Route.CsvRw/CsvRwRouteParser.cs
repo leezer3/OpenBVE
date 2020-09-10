@@ -79,8 +79,8 @@ namespace CsvRwRouteParser {
 				Data.Blocks[0].RailCycles = new RailCycle[1];
 				Data.Blocks[0].RailCycles[0].RailCycleIndex = -1;
 				Data.Blocks[0].Height = IsRW ? 0.3 : 0.0;
-				Data.Blocks[0].RailFreeObj = new FreeObj[][] {};
-				Data.Blocks[0].GroundFreeObj = new FreeObj[] {};
+				Data.Blocks[0].RailFreeObj = new Dictionary<int, List<FreeObj>>();
+				Data.Blocks[0].GroundFreeObj = new List<FreeObj>();
 				Data.Blocks[0].RailWall = new WallDike[] {};
 				Data.Blocks[0].RailDike = new WallDike[] {};
 				Data.Blocks[0].RailPole = new Pole[] {};
