@@ -2074,13 +2074,14 @@ namespace CsvRwRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 
-							if (idx >= Data.Blocks[BlockIndex].RailWall.Length)
+							if (Data.Blocks[BlockIndex].RailWall.ContainsKey(idx))
 							{
-								Array.Resize(ref Data.Blocks[BlockIndex].RailWall, idx + 1);
+								Data.Blocks[BlockIndex].RailWall[idx] = new WallDike(sttype, dir);
 							}
-
-							Data.Blocks[BlockIndex].RailWall[idx] = new WallDike(sttype, dir);
-
+							else
+							{
+								Data.Blocks[BlockIndex].RailWall.Add(idx, new WallDike(sttype, dir));
+							}
 						}
 					}
 				}
@@ -2096,7 +2097,7 @@ namespace CsvRwRouteParser
 							idx = 0;
 						}
 
-						if (idx < 0 | idx >= Data.Blocks[BlockIndex].RailWall.Length)
+						if (!Data.Blocks[BlockIndex].RailWall.ContainsKey(idx))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " does not reference an existing wall in Track.WallEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -2107,7 +2108,7 @@ namespace CsvRwRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.WallEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 
-							if (Data.Blocks[BlockIndex].RailWall[idx] != null)
+							if (Data.Blocks[BlockIndex].RailWall.ContainsKey(idx))
 							{
 								Data.Blocks[BlockIndex].RailWall[idx].Exists = false;
 							}
@@ -2194,12 +2195,14 @@ namespace CsvRwRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 
-							if (idx >= Data.Blocks[BlockIndex].RailDike.Length)
+							if (Data.Blocks[BlockIndex].RailDike.ContainsKey(idx))
 							{
-								Array.Resize(ref Data.Blocks[BlockIndex].RailDike, idx + 1);
+								Data.Blocks[BlockIndex].RailDike[idx] = new WallDike(sttype, dir);
 							}
-
-							Data.Blocks[BlockIndex].RailDike[idx] = new WallDike(sttype, dir);
+							else
+							{
+								Data.Blocks[BlockIndex].RailDike.Add(idx, new WallDike(sttype, dir));
+							}
 						}
 
 					}
@@ -2216,7 +2219,7 @@ namespace CsvRwRouteParser
 							idx = 0;
 						}
 
-						if (idx < 0 | idx >= Data.Blocks[BlockIndex].RailDike.Length)
+						if (!Data.Blocks[BlockIndex].RailDike.ContainsKey(idx))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " does not reference an existing dike in Track.DikeEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -2227,7 +2230,7 @@ namespace CsvRwRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.DikeEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 
-							if (Data.Blocks[BlockIndex].RailDike[idx] != null)
+							if (Data.Blocks[BlockIndex].RailDike.ContainsKey(idx))
 							{
 								Data.Blocks[BlockIndex].RailDike[idx].Exists = false;
 							}
@@ -2599,7 +2602,7 @@ namespace CsvRwRouteParser
 							else
 							{
 								Data.Blocks[BlockIndex].Background = typ;
-								if (Plugin.CurrentOptions.EnableBveTsHacks && Data.Blocks.Length == 2 && Data.Blocks[0].Background == 0)
+								if (Plugin.CurrentOptions.EnableBveTsHacks && Data.Blocks.Count == 2 && Data.Blocks[0].Background == 0)
 								{
 									//The initial background for block 0 is always set to zero
 									//This handles the case where background idx #0 is not used

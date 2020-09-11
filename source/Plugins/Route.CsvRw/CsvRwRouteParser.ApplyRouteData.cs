@@ -38,26 +38,25 @@ namespace CsvRwRouteParser
 			
 			// initialize
 			int LastBlock = (int)Math.Floor((Data.TrackPosition + 600.0) / Data.BlockInterval + 0.001) + 1;
-			if (Data.Blocks[Data.Blocks.Length - 1].CurrentTrackState.CurveRadius < 300)
+			if (Data.Blocks[Data.Blocks.Count - 1].CurrentTrackState.CurveRadius < 300)
 			{
 				/*
 				 * The track end event is placed 600m after the end of the final block
 				 * If our curve radius in the final block is < 300, then our train will
 				 * re-appear erroneously if the player is watching the final block
 				 */
-				Data.Blocks[Data.Blocks.Length - 1].CurrentTrackState.CurveRadius = 0.0;
+				Data.Blocks[Data.Blocks.Count - 1].CurrentTrackState.CurveRadius = 0.0;
 			}
 
 			CurrentRoute.BlockLength = Data.BlockInterval;
 			CurrentRoute.AccurateObjectDisposal = Data.AccurateObjectDisposal;
-			int BlocksUsed = Data.Blocks.Length;
-			Data.CreateMissingBlocks(ref BlocksUsed, LastBlock, PreviewOnly);
-			Array.Resize(ref Data.Blocks, BlocksUsed);
+			int BlocksUsed = Data.Blocks.Count;
+			Data.CreateMissingBlocks(LastBlock, PreviewOnly);
 			// interpolate height
 			if (!PreviewOnly)
 			{
 				int z = 0;
-				for (int i = 0; i < Data.Blocks.Length; i++)
+				for (int i = 0; i < Data.Blocks.Count; i++)
 				{
 					if (!double.IsNaN(Data.Blocks[i].Height))
 					{
@@ -79,7 +78,7 @@ namespace CsvRwRouteParser
 						z = i;
 					}
 				}
-				for (int i = z + 1; i < Data.Blocks.Length; i++)
+				for (int i = z + 1; i < Data.Blocks.Count; i++)
 				{
 					Data.Blocks[i].Height = Data.Blocks[z].Height;
 				}
@@ -129,7 +128,7 @@ namespace CsvRwRouteParser
 			double CurrentBrightnessTrackPosition = Data.FirstUsedBlock * Data.BlockInterval;
 			if (!PreviewOnly)
 			{
-				for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
+				for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
 				{
 					if (Data.Blocks[i].BrightnessChanges != null && Data.Blocks[i].BrightnessChanges.Length != 0)
 					{
@@ -151,7 +150,7 @@ namespace CsvRwRouteParser
 			int PreviousFogEvent = -1;
 			Fog PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, -Data.BlockInterval);
 			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
-			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
+			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
 			{
 				if (Data.Blocks[i].Rails.Count > CurrentRoute.Tracks.Count)
 				{
@@ -167,8 +166,8 @@ namespace CsvRwRouteParser
 				}
 			}
 			// process blocks
-			double progressFactor = Data.Blocks.Length - Data.FirstUsedBlock == 0 ? 0.5 : 0.5 / (Data.Blocks.Length - Data.FirstUsedBlock);
-			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
+			double progressFactor = Data.Blocks.Count - Data.FirstUsedBlock == 0 ? 0.5 : 0.5 / (Data.Blocks.Count - Data.FirstUsedBlock);
+			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
 			{
 				Plugin.CurrentProgress = 0.6667 + (i - Data.FirstUsedBlock) * progressFactor;
 				if ((i & 15) == 0)
@@ -357,7 +356,7 @@ namespace CsvRwRouteParser
 				// point sound
 				if (!PreviewOnly)
 				{
-					if (i < Data.Blocks.Length - 1)
+					if (i < Data.Blocks.Count - 1)
 					{
 						for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
 						{
@@ -587,7 +586,7 @@ namespace CsvRwRouteParser
 							double y = Data.Blocks[i].Rails[j].RailStart.Y;
 							Vector3 offset = new Vector3(Direction.Y * x, y, -Direction.X * x);
 							pos = Position + offset;
-							if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
+							if (i < Data.Blocks.Count - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
 							{
 								// take orientation of upcoming block into account
 								Vector2 Direction2 = Direction;
@@ -694,7 +693,7 @@ namespace CsvRwRouteParser
 								int m = CurrentRoute.PointsOfInterest.Length;
 								Array.Resize(ref CurrentRoute.PointsOfInterest, m + 1);
 								CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
-								if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
+								if (i < Data.Blocks.Count - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
 								{
 									double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
 									double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;
@@ -720,7 +719,7 @@ namespace CsvRwRouteParser
 							Data.Blocks[i].RailPole[j].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance);
 						}
 						// walls
-						if (Data.Blocks[i].RailWall.Length > j && Data.Blocks[i].RailWall[j] != null && Data.Blocks[i].RailWall[j].Exists)
+						if (Data.Blocks[i].RailWall.ContainsKey(j) && Data.Blocks[i].RailWall[j] != null && Data.Blocks[i].RailWall[j].Exists)
 						{
 							if (Data.Blocks[i].RailWall[j].Direction <= 0)
 							{
@@ -732,7 +731,7 @@ namespace CsvRwRouteParser
 							}
 						}
 						// dikes
-						if (Data.Blocks[i].RailDike.Length > j && Data.Blocks[i].RailDike[j] != null && Data.Blocks[i].RailDike[j].Exists)
+						if (Data.Blocks[i].RailDike.ContainsKey(j) && Data.Blocks[i].RailDike[j] != null && Data.Blocks[i].RailDike[j].Exists)
 						{
 							if (Data.Blocks[i].RailDike[j].Direction <= 0)
 							{
@@ -1085,7 +1084,7 @@ namespace CsvRwRouteParser
 			// orphaned transponders
 			if (!PreviewOnly)
 			{
-				for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
+				for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
 				{
 					for (int j = 0; j < Data.Blocks[i].Transponders.Length; j++)
 					{
@@ -1120,7 +1119,7 @@ namespace CsvRwRouteParser
 				{
 					double p = CurrentRoute.Stations[i].Stops[j].TrackPosition + CurrentRoute.Stations[i].Stops[j].ForwardTolerance + Data.BlockInterval;
 					int k = (int)Math.Floor(p / Data.BlockInterval) - Data.FirstUsedBlock;
-					if (k >= 0 && k < Data.Blocks.Length)
+					if (k >= 0 && k < Data.Blocks.Count)
 					{
 						double d = p - (k + Data.FirstUsedBlock) * Data.BlockInterval;
 						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;

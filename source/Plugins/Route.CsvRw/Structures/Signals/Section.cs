@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RouteManager2;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
@@ -23,7 +24,7 @@ namespace CsvRwRouteParser
 		private readonly bool Invisible;
 		private readonly SectionType Type;
 
-		internal void Create(CurrentRoute CurrentRoute, Block[] Blocks, int CurrentBlock, int CurrentTrackElement, double[] SignalSpeeds, double StartingDistance, double BlockInterval)
+		internal void Create(CurrentRoute CurrentRoute, List<Block> Blocks, int CurrentBlock, int CurrentTrackElement, double[] SignalSpeeds, double StartingDistance, double BlockInterval)
 		{
 			int m = CurrentRoute.Sections.Length;
 			Array.Resize(ref CurrentRoute.Sections, m + 1);

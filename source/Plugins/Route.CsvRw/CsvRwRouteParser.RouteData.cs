@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
@@ -27,7 +27,7 @@ namespace CsvRwRouteParser
 			internal Texture[] TimetableNighttime;
 			internal BackgroundDictionary Backgrounds;
 			internal double[] SignalSpeeds;
-			internal Block[] Blocks;
+			internal List<Block> Blocks;
 			internal Marker[] Markers;
 			internal StopRequest[] RequestStops;
 			internal int FirstUsedBlock;
@@ -35,20 +35,15 @@ namespace CsvRwRouteParser
 			internal bool LineEndingFix;
 			internal bool ValueBasedSections = false;
 			/// <summary>Creates any missing blocks</summary>
-			/// <param name="BlocksUsed">The total number of blocks currently used (Will be updated via ref)</param>
 			/// <param name="ToIndex">The block index to process until</param>
 			/// <param name="PreviewOnly">Whether this is a preview only</param>
-			internal void CreateMissingBlocks(ref int BlocksUsed, int ToIndex, bool PreviewOnly)
+			internal void CreateMissingBlocks(int ToIndex, bool PreviewOnly)
 			{
-				if (ToIndex >= BlocksUsed)
+				if (ToIndex >= Blocks.Count)
 				{
-					while (Blocks.Length <= ToIndex)
+					for (int i = Blocks.Count; i <= ToIndex; i++)
 					{
-						Array.Resize(ref Blocks, Blocks.Length << 1);
-					}
-					for (int i = BlocksUsed; i <= ToIndex; i++)
-					{
-						Blocks[i] = new Block(PreviewOnly);
+						Blocks.Add(new Block(PreviewOnly));
 						if (!PreviewOnly)
 						{
 							Blocks[i].Background = -1;
@@ -105,23 +100,25 @@ namespace CsvRwRouteParser
 						}
 						if (!PreviewOnly)
 						{
-							Blocks[i].RailWall = new WallDike[Blocks[i - 1].RailWall.Length];
-							for (int j = 0; j < Blocks[i].RailWall.Length; j++)
+							Blocks[i].RailWall = new Dictionary<int, WallDike>();
+							for (int j = 0; j < Blocks[i - 1].RailWall.Count; j++)
 							{
-								if (Blocks[i - 1].RailWall[j] == null || !Blocks[i - 1].RailWall[j].Exists)
+								int key = Blocks[i - 1].RailWall.ElementAt(j).Key;
+								if (Blocks[i - 1].RailWall[key] == null || !Blocks[i - 1].RailWall[key].Exists)
 								{
 									continue;
 								}
-								Blocks[i].RailWall[j] = Blocks[i - 1].RailWall[j].Clone();
+								Blocks[i].RailWall.Add(key, Blocks[i - 1].RailWall[key].Clone());
 							}
-							Blocks[i].RailDike = new WallDike[Blocks[i - 1].RailDike.Length];
-							for (int j = 0; j < Blocks[i].RailDike.Length; j++)
+							Blocks[i].RailDike = new Dictionary<int, WallDike>();
+							for (int j = 0; j < Blocks[i - 1].RailDike.Count; j++)
 							{
-								if (Blocks[i - 1].RailDike[j] == null || !Blocks[i - 1].RailDike[j].Exists)
+								int key = Blocks[i - 1].RailDike.ElementAt(j).Key;
+								if (Blocks[i - 1].RailDike[key] == null || !Blocks[i - 1].RailDike[key].Exists)
 								{
 									continue;
 								}
-								Blocks[i].RailDike[j] = Blocks[i - 1].RailDike[j].Clone();
+								Blocks[i].RailDike.Add(key, Blocks[i - 1].RailDike[key].Clone());
 							}
 							Blocks[i].RailPole = new Pole[Blocks[i - 1].RailPole.Length];
 							for (int j = 0; j < Blocks[i].RailPole.Length; j++)
@@ -135,7 +132,6 @@ namespace CsvRwRouteParser
 						Blocks[i].Accuracy = Blocks[i - 1].Accuracy;
 						Blocks[i].AdhesionMultiplier = Blocks[i - 1].AdhesionMultiplier;
 					}
-					BlocksUsed = ToIndex + 1;
 				}
 			}
 		}

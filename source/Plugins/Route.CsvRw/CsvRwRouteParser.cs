@@ -63,9 +63,9 @@ namespace CsvRwRouteParser {
 				BlockInterval = 25.0,
 				AccurateObjectDisposal = false,
 				FirstUsedBlock = -1,
-				Blocks = new Block[1]
+				Blocks = new List<Block>()
 			};
-			Data.Blocks[0] = new Block(PreviewOnly);
+			Data.Blocks.Add(new Block(PreviewOnly));
 			Data.Blocks[0].Rails.Add(0, new Rail { RailStarted =  true });
 			Data.Blocks[0].RailType = new[] { 0 };
 			Data.Blocks[0].Accuracy = 2.0;
@@ -81,8 +81,8 @@ namespace CsvRwRouteParser {
 				Data.Blocks[0].Height = IsRW ? 0.3 : 0.0;
 				Data.Blocks[0].RailFreeObj = new Dictionary<int, List<FreeObj>>();
 				Data.Blocks[0].GroundFreeObj = new List<FreeObj>();
-				Data.Blocks[0].RailWall = new WallDike[] {};
-				Data.Blocks[0].RailDike = new WallDike[] {};
+				Data.Blocks[0].RailWall = new Dictionary<int, WallDike>();
+				Data.Blocks[0].RailDike = new Dictionary<int, WallDike>();
 				Data.Blocks[0].RailPole = new Pole[] {};
 				Data.Markers = new Marker[] {};
 				Data.RequestStops = new StopRequest[] { };
@@ -176,7 +176,6 @@ namespace CsvRwRouteParser {
 			
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
-			int BlocksUsed = Data.Blocks.Length;
 			CurrentRoute.Stations = new RouteStation[] { };
 			Data.RequestStops = new StopRequest[] { };
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / Expressions.Length;
@@ -400,7 +399,7 @@ namespace CsvRwRouteParser {
 							Data.TrackPosition = currentTrackPosition;
 							BlockIndex = (int)Math.Floor(currentTrackPosition / Data.BlockInterval + 0.001);
 							if (Data.FirstUsedBlock == -1) Data.FirstUsedBlock = BlockIndex;
-							Data.CreateMissingBlocks(ref BlocksUsed, BlockIndex, PreviewOnly);
+							Data.CreateMissingBlocks(BlockIndex, PreviewOnly);
 						}
 					} else {
 						string[] Arguments = SplitArguments(ArgumentSequence);
@@ -461,8 +460,6 @@ namespace CsvRwRouteParser {
 					}
 				}
 			}
-			// blocks
-			Array.Resize(ref Data.Blocks, BlocksUsed);
 		}
 	}
 }

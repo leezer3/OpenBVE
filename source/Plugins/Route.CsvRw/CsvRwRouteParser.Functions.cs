@@ -27,7 +27,7 @@ namespace CsvRwRouteParser
 			double tmin = double.PositiveInfinity;
 			double tmax = double.NegativeInfinity;
 			double bmin = 1.0, bmax = 1.0;
-			for (int i = 0; i < Data.Blocks.Length; i++)
+			for (int i = 0; i < Data.Blocks.Count; i++)
 			{
 				for (int j = 0; j < Data.Blocks[i].BrightnessChanges.Length; j++)
 				{
@@ -38,7 +38,7 @@ namespace CsvRwRouteParser
 					}
 				}
 			}
-			for (int i = Data.Blocks.Length - 1; i >= 0; i--)
+			for (int i = Data.Blocks.Count - 1; i >= 0; i--)
 			{
 				for (int j = Data.Blocks[i].BrightnessChanges.Length - 1; j >= 0; j--)
 				{

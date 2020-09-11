@@ -17,8 +17,8 @@ namespace CsvRwRouteParser
 		internal double Height;
 		internal Dictionary<int, Rail> Rails;
 		internal int[] RailType;
-		internal WallDike[] RailWall;
-		internal WallDike[] RailDike;
+		internal Dictionary<int, WallDike> RailWall;
+		internal Dictionary<int, WallDike> RailDike;
 		internal Pole[] RailPole;
 		internal Dictionary<int,List<FreeObj>> RailFreeObj;
 		internal List<FreeObj> GroundFreeObj;
