@@ -73,12 +73,15 @@ namespace OpenBveApi.Objects
 				{
 					if (EnableHacks && !string.IsNullOrEmpty(Materials[i].DaytimeTexture))
 					{
-						if (!string.IsNullOrEmpty(Materials[i].NighttimeTexture))
+						if (!string.IsNullOrEmpty(Materials[i].NighttimeTexture) && (Materials[i].Flags & MaterialFlags.Emissive) != 0)
 						{
 							/*
 							 * Versions of openBVE prior to 1.7.0 rendered polygons with two defined textures as unlit
 							 * The new GL 3.2 renderer corrects this behaviour
 							 * Horrid workaround....
+							 *
+							 * If the poly is emitting light, this appears to override this
+							 * https://bveworldwide.forumotion.com/t1974-object-brightness-issues#20014
 							 */
 							Materials[i].Flags |= MaterialFlags.DisableLighting;
 						}
