@@ -23,11 +23,11 @@ void main(void)
 	if(uIsTexture)
 	{
 		textureColor *= texture2D(uTexture, oUv);
-		if((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
-		{
-			//Material is not emissive and lighting is enabled, so multiply by brightness
-			textureColor.rgb *= uBrightness;
-		}
+	}
+	if((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
+	{
+		//Material is not emissive and lighting is enabled, so multiply by brightness
+		textureColor.rgb *= uBrightness;
 	}
 	
 	vec4 finalColor = vec4(((textureColor.rgb) * 1.0) + (oColor.rgb * (1 - textureColor.a)), textureColor.a * uOpacity);
