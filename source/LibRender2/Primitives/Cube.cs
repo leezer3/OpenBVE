@@ -1,8 +1,6 @@
-using System.Drawing;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
@@ -16,10 +14,12 @@ namespace LibRender2.Primitives
 		private readonly BaseRenderer renderer;
 		private readonly VertexArrayObject defaultVAO;
 
+		/// <summary>Creates a new cube</summary>
 		public Cube(BaseRenderer renderer) : this(renderer, Color128.White)
 		{
 		}
 
+		/// <summary>Creates a new colored cube</summary>
 		public Cube(BaseRenderer renderer, Color128 color)
 		{
 			this.renderer = renderer;
@@ -101,7 +101,7 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Null,
-					Color = Color128.White
+					Color = color
 				},
 
 				// front
@@ -243,11 +243,10 @@ namespace LibRender2.Primitives
 		/// <param name="Size">A 3D vector describing the size of the cube</param>
 		/// <param name="Camera">The camera position</param>
 		/// <param name="TextureIndex">The texture to apply</param>
-		public void DrawRetained(VertexArrayObject VAO, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
+		private void DrawRetained(VertexArrayObject VAO, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
 		{
 			renderer.DefaultShader.Activate();
 			renderer.ResetShader(renderer.DefaultShader);
-			renderer.DefaultShader.SetMaterialFlags(MaterialFlags.DisableLighting);
 			// matrix
 			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale(Size) * (Matrix4D)new Transformation(Direction, Up, Side) * Matrix4D.CreateTranslation(Position.X - Camera.X, Position.Y - Camera.Y, -Position.Z + Camera.Z) * renderer.CurrentViewMatrix);
@@ -282,7 +281,7 @@ namespace LibRender2.Primitives
 		/// <param name="Size">A 3D vector describing the size of the cube</param>
 		/// <param name="Camera">The camera position</param>
 		/// <param name="TextureIndex">The texture to apply</param>
-		public void DrawImmediate(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
+		private void DrawImmediate(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
 		{
 			renderer.LastBoundTexture = null;
 			GL.MatrixMode(MatrixMode.Projection);

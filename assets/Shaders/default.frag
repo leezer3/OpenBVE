@@ -19,7 +19,7 @@ uniform int uMaterialFlags;
 
 void main(void)
 {
-	vec4 textureColor = vec4(1.0);
+	vec4 textureColor = vec4(oColor);
 	if(uIsTexture)
 	{
 		textureColor *= texture2D(uTexture, oUv);
