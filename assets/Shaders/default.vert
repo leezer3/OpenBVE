@@ -101,7 +101,7 @@ void main()
 
 	oColor = iColor;
 	
-	if (uIsLight)
+	if (uIsLight && (uMaterialFlags & 4) == 0)
 	{
 		lightResult = getLightResult(eyeNormal, oViewPos);
 	}
