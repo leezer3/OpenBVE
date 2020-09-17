@@ -5,18 +5,10 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Globalization;
-using System.Text;
-using System.Windows.Forms;
-using LibRender2;
 using LibRender2.Cameras;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -24,10 +16,17 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using RouteManager2;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.Text;
+using System.Windows.Forms;
 using ButtonState = OpenTK.Input.ButtonState;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve {
+namespace OpenBve
+{
 	internal static class Program {
 
 		// system
@@ -43,9 +42,7 @@ namespace OpenBve {
 		internal static string JumpToPositionValue = "";
 		internal static double MinimumJumpToPositionValue =  0;
 		internal static bool processCommandLineArgs;
-		internal static string[] commandLineArguments;
-		internal static bool[] SkipArgs;
-		
+
 		// keys
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
@@ -71,7 +68,6 @@ namespace OpenBve {
 		internal static void Main(string[] args)
 		{
 			CurrentHost = new Host();
-			commandLineArguments = args;
 			// platform and mono
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			// file system
@@ -81,37 +77,67 @@ namespace OpenBve {
 			CurrentRoute = new CurrentRoute(Renderer);
 			Sounds = new Sounds();
 			
-			// command line arguments
-			SkipArgs = new bool[args.Length];
-			if (args.Length != 0) {
-				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
-				if (System.IO.File.Exists(File)) {
-					int Skips = 0;
-					System.Text.StringBuilder NewArgs = new System.Text.StringBuilder();
-					for (int i = 0; i < args.Length; i++) {
-						if (args[i] != null && System.IO.File.Exists(args[i])) {
-							if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase)) {
-								string Text = System.IO.File.ReadAllText(args[i], System.Text.Encoding.UTF8);
-								if (Text.Length == 0 || Text.IndexOf("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) >= 0) {
-									if (NewArgs.Length != 0) NewArgs.Append(" ");
-									NewArgs.Append("\"" + args[i] + "\"");
-									SkipArgs[i] = true;
-									Skips++;
-								}
-							}
-						} else {
-							SkipArgs[i] = true;
-							Skips++;
-						}
-					}
-					if (NewArgs.Length != 0) {
-						System.Diagnostics.Process.Start(File, NewArgs.ToString());
-					}
-					if (Skips == args.Length) return;
-				}
-			}
 			Options.LoadOptions();
 			Plugins.LoadPlugins();
+			// command line arguments
+			StringBuilder objectsToLoad = new StringBuilder();
+			if (args.Length != 0)
+			{
+				for (int i = 0; i < args.Length; i++)
+				{
+					if (args[i] != null)
+					{
+						if (System.IO.File.Exists(args[i]))
+						{
+							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+							{
+								if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
+								{
+									objectsToLoad.Append(args[i] + " ");
+									continue;
+								}
+
+								if (CurrentHost.Plugins[j].Route != null && CurrentHost.Plugins[j].Route.CanLoadRoute(args[i]))
+								{
+									if (string.IsNullOrEmpty(CurrentRouteFile))
+									{
+										CurrentRouteFile = args[i];
+										processCommandLineArgs = true;
+									}
+								}
+							}
+						}
+						else if (args[i].ToLowerInvariant() == "/enablehacks")
+						{
+							//Deliberately undocumented option for debugging use
+							Interface.CurrentOptions.EnableBveTsHacks = true;
+							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+							{
+								if (CurrentHost.Plugins[j].Object != null)
+								{
+									CurrentHost.Plugins[j].Object.SetCompatibilityHacks(true, false);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (objectsToLoad.Length != 0)
+			{
+				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
+				if (System.IO.File.Exists(File))
+				{
+					System.Diagnostics.Process.Start(File, objectsToLoad.ToString());
+					if (string.IsNullOrEmpty(CurrentRouteFile))
+					{
+						//We only supplied objects, so launch Object Viewer instead
+						Environment.Exit(0);
+					}
+				}
+
+			}
+
 			var options = new ToolkitOptions();
 			Plugins.LoadPlugins();
 			options.Backend = PlatformBackend.PreferX11;
@@ -142,7 +168,10 @@ namespace OpenBve {
 		
 		// load route
 		internal static bool LoadRoute() {
-			
+			if (string.IsNullOrEmpty(CurrentRouteFile))
+			{
+				return false;
+			}
 			CurrentStation = -1;
 			Renderer.UpdateViewport();
 			bool result;

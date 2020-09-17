@@ -125,17 +125,8 @@ namespace OpenBve
             if (Program.processCommandLineArgs)
             {
                 Program.processCommandLineArgs = false;
-                for (int i = 0; i < Program.commandLineArguments.Length; i++)
-                {
-                    if (!Program.SkipArgs[i] && System.IO.File.Exists(Program.commandLineArguments[i]))
-                    {
-                        currentlyLoading = true;
-                        Program.CurrentRouteFile = Program.commandLineArguments[i];
-                        Program.LoadRoute();
-                        Program.UpdateCaption();
-                        break;
-                    }
-                }
+                Program.LoadRoute();
+                Program.UpdateCaption();
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Input;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
@@ -258,36 +259,11 @@ namespace OpenBve
 	        Program.Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
             Program.Renderer.Initialize(Program.CurrentHost,Interface.CurrentOptions);
             Program.Renderer.Lighting.Initialize();
-            //SwapBuffers();
-            //Fonts.Initialize();
             Program.Renderer.UpdateViewport();
-			// command line arguments
-			// if (commandLineArgs != null)
-			// {
-			//     for (int i = 0; i < commandLineArgs.Length; i++)
-			//     {
-			//         if (!Program.SkipArgs[i] && System.IO.File.Exists(commandLineArgs[i]))
-			//         {
-			//             try
-			//             {
-			//                 UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
-			//                     System.Text.Encoding.UTF8, false, false, false,0,0,0);
-			//                 ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
-			//                     new Transformation(), new Transformation(), true,
-			//                     0.0, 0.0, 25.0, 0.0);
-			//             }
-			//             catch (Exception ex)
-			//             {
-			//                 Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
-			//             }
-			//             Array.Resize(ref Program.Files, Program.Files.Length + 1);
-			//             Program.Files[Program.Files.Length - 1] = commandLineArgs[i];
-			//         }
-			//     }
-			// }
 			Program.Renderer.InitializeVisibility();
             Program.Renderer.UpdateVisibility(0.0, true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
+			Program.RefreshObjects();
         }
 
         public override void Dispose()
