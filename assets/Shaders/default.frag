@@ -3,10 +3,11 @@
 in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
-in vec4 lightResult;
+in vec4 oLightResult;
 
 uniform bool uIsTexture;
 uniform sampler2D uTexture;
+uniform int uMaterialFlags;
 uniform float uBrightness;
 uniform float uOpacity;
 uniform bool uIsFog;
@@ -15,24 +16,23 @@ uniform float uFogEnd;
 uniform vec3  uFogColor;
 uniform float uFogDensity;
 uniform bool uFogIsLinear;
-uniform int uMaterialFlags;
 
 void main(void)
 {
-	vec4 textureColor = vec4(oColor);
+	vec4 finalColor = vec4(oColor.rgb, 1.0);
 	if(uIsTexture)
 	{
-		textureColor *= texture2D(uTexture, oUv);
+		finalColor *= texture2D(uTexture, oUv);
 	}
 	if((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
 	{
 		//Material is not emissive and lighting is enabled, so multiply by brightness
-		textureColor.rgb *= uBrightness;
+		finalColor.rgb *= uBrightness;
 	}
-	
-	vec4 finalColor = vec4(((textureColor.rgb) * 1.0) + (oColor.rgb * (1 - textureColor.a)), textureColor.a * uOpacity);
+	finalColor.a *= uOpacity;
 	//Apply the lighting results *after* the final color has been calculated
-	finalColor *= lightResult;	
+	finalColor *= oLightResult;
+
 	// Fog
 	float fogFactor = 1.0;
 
@@ -40,11 +40,11 @@ void main(void)
 	{
 		if(uFogIsLinear)
 		{
-			fogFactor *= clamp((uFogEnd - length(oViewPos)) / (uFogEnd - uFogStart), 0.0, 1.0);
+			fogFactor = clamp((uFogEnd - length(oViewPos)) / (uFogEnd - uFogStart), 0.0, 1.0);
 		}
 		else
 		{
-			fogFactor = exp(-pow((uFogDensity * (gl_FragCoord.z / gl_FragCoord.w)), 2.0));
+			fogFactor = exp(-pow(uFogDensity * (gl_FragCoord.z / gl_FragCoord.w), 2.0));
 		}
 	}
 
