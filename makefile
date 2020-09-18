@@ -3,6 +3,9 @@ MSBUILD := msbuild
 MIN_MONO_VERSION:= "5.18.0"
 MONO_VERSION:= $(shell mono --version | awk '/version/ { print $$5 }')
 MONO_MEETS_MINVERSION := $(shell expr "$(MONO_VERSION)" ">=" "$(MIN_MONO_VERSION)")
+MIN_NUGET_VERSION:= "2.16.0"
+NUGET_VERSION:= $(shell nuget help | awk '/Version\:/ { print $$3 }')
+NUGET_MEETS_MINVERSION := $(shell expr "$(NUGET_VERSION)" ">=" "$(MIN_NUGET_VERSION)")
 
 # Directories
 DEBUG_DIR   := bin_debug
@@ -117,6 +120,12 @@ prequisite-check:
  $(info Checking for nuget....)
  ifeq (, $(shell which nuget))
  $(error "nuget does not appear to be installed on this system.")
+ endif
+ $(info nuget Version $(NUGET_VERSION) found.)
+ ifeq "$(NUGET_MEETS_MINVERSION)" "1"
+ #Nothing
+ else
+ $(error "OpenBVE requires a minimum nuget version of 2.16")
  endif
  $(info Attempting to restore nuget packages (This may take a while)....)
 	
