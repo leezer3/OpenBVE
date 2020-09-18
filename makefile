@@ -34,6 +34,9 @@ COLOR_MAGENTA := "\033[1;35m"
 COLOR_CYAN    := "\033[1;36m"
 COLOR_WHITE   := "\033[1;37m"
 COLOR_END     := "\033[0m"
+#Literal sequences don't work in the info command....
+red:=$(shell tput setaf 1)
+reset:=$(shell tput sgr0)
 
 .PHONY: all 
 .PHONY: all-debug
@@ -105,27 +108,29 @@ prequisite-check:
  $(info Checking for prequisite system libraries.)
  $(info Checking for Mono....)
  ifeq (, $(shell which mono))
- $(error "Mono does not appear to be installed on this system.")
+ $(error Mono does not appear to be installed on this system.)
  endif
  $(info Mono Version $(MONO_VERSION) found.)
  ifeq "$(MONO_MEETS_MINVERSION)" "1"
  #Nothing
  else
- $(error "OpenBVE requires a minimum Mono version of 5.20")
+ $(error OpenBVE requires a minimum Mono version of 5.20)
  endif
  $(info Checking for MSBuild....)
  ifeq (, $(shell which msbuild))
- $(error "msbuild does not appear to be installed on this system.")
+ $(error msbuild does not appear to be installed on this system.)
  endif
  $(info Checking for nuget....)
  ifeq (, $(shell which nuget))
- $(error "nuget does not appear to be installed on this system.")
+ $(error nuget does not appear to be installed on this system.)
  endif
  $(info nuget Version $(NUGET_VERSION) found.)
  ifeq "$(NUGET_MEETS_MINVERSION)" "1"
  #Nothing
  else
- $(error "OpenBVE requires a minimum nuget version of 2.16")
+ $(info OpenBVE requires a minimum nuget version of 2.16)
+ $(info Please run $(red)nuget update -self$(reset) with administrative priveledges.)
+ $(error )
  endif
  $(info Attempting to restore nuget packages (This may take a while)....)
 	
