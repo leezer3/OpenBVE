@@ -1,13 +1,8 @@
-# C-Sharp Compiler
-HAS_MSBUILD := $(shell command -v msbuild 2> /dev/null)
-
-ifdef HAS_MSBUILD
-	MSBUILD := msbuild
-endif
-
-ifndef HAS_MSBUILD
-	MSBUILD := xbuild
-endif
+# Version checking
+MSBUILD := msbuild
+MIN_MONO_VERSION:= "5.18.0"
+MONO_VERSION:= $(shell mono --version | awk '/version/ { print $$5 }')
+MONO_MEETS_MINVERSION := $(shell expr "$(MONO_VERSION)" ">=" "$(MIN_MONO_VERSION)")
 
 # Directories
 DEBUG_DIR   := bin_debug
@@ -50,6 +45,7 @@ COLOR_END     := "\033[0m"
 .PHONY: publish
 .PHONY: debian
 .PHONY: restore
+.PHONY: prequisite-check
 
 restore:
 	nuget restore OpenBVE.sln
@@ -59,22 +55,27 @@ release: openbve-release
 openbve: openbve-debug
 
 openbve-debug: restore
+	$(info Building OpenBVE in debug mode....)
 	$(MSBUILD) /t:OpenBve /p:Configuration=Debug OpenBVE.sln
 
 openbve-release: restore
+	$(info Building OpenBVE in release mode....)
 	$(MSBUILD) /t:OpenBve /p:Configuration=Release OpenBVE.sln
 
 all: all-debug
 
 all-debug: restore
+	$(info Building OpenBVE and developer tools in debug mode....)
 	$(MSBUILD) /t:build /p:Configuration=Debug OpenBVE.sln
 
 all-release: restore
+	$(info Building OpenBVE and developer tools in release mode....)
 	$(MSBUILD) /t:build /p:Configuration=Release OpenBVE.sln
 
 clean-all: clean
 
 clean:
+	$(info Runing solution clean....)
 	$(MSBUILD) /t:clean /p:Configuration=Debug OpenBVE.sln
 	$(MSBUILD) /t:clean /p:Configuration=Release OpenBVE.sln
 
@@ -96,6 +97,29 @@ endif
 
 debian: $(DEBIAN_BUILD_RESULT)
 
+prequisite-check:
+ #Very basic prequisite check function
+ $(info Checking for prequisite system libraries.)
+ $(info Checking for Mono....)
+ ifeq (, $(shell which mono))
+ $(error "Mono does not appear to be installed on this system.")
+ endif
+ $(info Mono Version $(MONO_VERSION) found.)
+ ifeq "$(MONO_MEETS_MINVERSION)" "1"
+ #Nothing
+ else
+ $(error "OpenBVE requires a minimum Mono version of 5.20")
+ endif
+ $(info Checking for MSBuild....)
+ ifeq (, $(shell which msbuild))
+ $(error "msbuild does not appear to be installed on this system.")
+ endif
+ $(info Checking for nuget....)
+ ifeq (, $(shell which nuget))
+ $(error "nuget does not appear to be installed on this system.")
+ endif
+ $(info Attempting to restore nuget packages (This may take a while)....)
+	
 $(MAC_BUILD_RESULT): all-release
 	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)installers/mac/MacBundle.tgz$(COLOR_END)
