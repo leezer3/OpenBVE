@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -21,11 +22,32 @@ namespace OpenBveApi.FunctionScripting
 		public double Maximum = Double.NaN;
 		/// <summary>The maximum pinned result or NaN to set no maximum</summary>
 		public double Minimum = Double.NaN;
+		/// <summary>We caught an exception on the last execution of the script, so further execution has been stopped</summary> 
+		private bool exceptionCaught;
 
 		/// <summary>Performs the function script, and returns the current result</summary>
 		public double Perform(AbstractTrain Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
-			currentHost.ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+			if (exceptionCaught)
+			{
+				return 0;
+			}
+			try
+			{
+				currentHost.ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+			}
+			catch(Exception ex)
+			{
+				if (!exceptionCaught)
+				{
+					currentHost.AddMessage(MessageType.Error, false, ex.Message);
+					exceptionCaught = true;
+				}
+				
+				this.LastResult = 0;
+				return 0;
+			}
+			
 
 			//Allows us to pin the result, but keep the underlying figure
 			if (this.Minimum != Double.NaN & this.LastResult < Minimum)
