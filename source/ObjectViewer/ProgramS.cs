@@ -6,6 +6,8 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
@@ -28,8 +30,7 @@ namespace OpenBve {
 
 		// members
 	    internal static string[] Files = new string[] { };
-	    internal static bool[] SkipArgs;
-
+		
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
 		internal static Vector3 MouseCameraDirection = Vector3.Forward;
@@ -62,7 +63,7 @@ namespace OpenBve {
 	    [STAThread]
 	    internal static void Main(string[] args)
 	    {
-			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
+		    CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			CurrentHost = new Host();
 			// file system
 	        FileSystem = FileSystem.FromCommandLineArgs(args);
@@ -78,43 +79,53 @@ namespace OpenBve {
 	        }
 		    Plugins.LoadPlugins();
 	        // command line arguments
-	        SkipArgs = new bool[args.Length];
+	        List<string> filesToLoad = new List<string>();
+	        
 	        if (args.Length != 0)
 	        {
-	            string File = System.IO.Path.Combine(Application.StartupPath, "RouteViewer.exe");
-	            if (System.IO.File.Exists(File))
-	            {
-	                int Skips = 0;
-	                System.Text.StringBuilder NewArgs = new System.Text.StringBuilder();
-	                for (int i = 0; i < args.Length; i++)
-	                {
-	                    if (args[i] != null && System.IO.File.Exists(args[i]))
-	                    {
-	                        if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase))
-	                        {
-	                            string Text = System.IO.File.ReadAllText(args[i], System.Text.Encoding.UTF8);
-	                            if (Text.Length != -1 &&
-	                                Text.IndexOf("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) == -1)
-	                            {
-	                                if (NewArgs.Length != 0) NewArgs.Append(" ");
-	                                NewArgs.Append("\"" + args[i] + "\"");
-	                                SkipArgs[i] = true;
-	                                Skips++;
-	                            }
-	                        }
-	                    }
-	                    else
-	                    {
-	                        SkipArgs[i] = true;
-	                        Skips++;
-	                    }
-	                }
-	                if (NewArgs.Length != 0)
-	                {
-	                    System.Diagnostics.Process.Start(File, NewArgs.ToString());
-	                }
-	                if (Skips == args.Length) return;
-	            }
+				for (int i = 0; i < args.Length; i++)
+		        {
+			        if (args[i] != null)
+			        {
+				        if (System.IO.File.Exists(args[i]))
+				        {
+					        for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+					        {
+						        if (CurrentHost.Plugins[j].Route != null && CurrentHost.Plugins[j].Route.CanLoadRoute(args[i]))
+						        {
+							        string File = System.IO.Path.Combine(Application.StartupPath, "RouteViewer.exe");
+							        if (System.IO.File.Exists(File))
+							        {
+								        System.Diagnostics.Process.Start(File, args[i]);
+							        }
+							        continue;
+						        }
+
+						        if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
+						        {
+							        filesToLoad.Add(args[i]);
+						        }
+					        }
+				        }
+				        else if (args[i].ToLowerInvariant() == "/enablehacks")
+				        {
+					        //Deliberately undocumented option for debugging use
+					        Interface.CurrentOptions.EnableBveTsHacks = true;
+					        for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+					        {
+						        if (CurrentHost.Plugins[j].Object != null)
+						        {
+							        CurrentHost.Plugins[j].Object.SetCompatibilityHacks(true, false);
+						        }
+					        }
+				        }
+			        }
+		        }
+
+				if (filesToLoad.Count != 0)
+				{
+					Files = filesToLoad.ToArray();
+				}
 	        }
 
 	        var options = new ToolkitOptions
@@ -182,81 +193,7 @@ namespace OpenBve {
 			LightingRelative = -1.0;
 			Game.Reset();
 			Interface.LogMessages.Clear();
-			for (int i = 0; i < Files.Length; i++)
-			{
-#if !DEBUG
-				            try
-				            {
-#endif
-				if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
-				{
-					UnifiedObject[] carObjects, bogieObjects, couplerObjects;
-					double[] axleLocations, couplerDistances;
-					TrainManager.Train train;
-					ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
-					double z = 0.0;
-					for (int j = 0; j < carObjects.Length; j++)
-					{
-						carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						if (j < train.Cars.Length - 1)
-						{
-							z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
-							z -= couplerDistances[j];
-						}
-					}
-					z = 0.0;
-					int trainCar = 0;
-					for (int j = 0; j < bogieObjects.Length; j++)
-					{
-						if (bogieObjects[j] == null)
-						{
-							continue;
-						}
-						bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						j++;
-						if (bogieObjects[j] == null)
-						{
-							continue;
-						}
-						bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						if (trainCar < train.Cars.Length - 1)
-						{
-							z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
-							z -= couplerDistances[trainCar];
-						}
-						trainCar++;
-					}
-					z = 0.0;
-					for (int j = 0; j < couplerObjects.Length; j++)
-					{
-						z -= train.Cars[j].Length / 2.0;
-						z -= couplerDistances[j] / 2.0;
-						if (couplerObjects[j] == null)
-						{
-							continue;
-						}
-						couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-
-						z -= couplerDistances[j] / 2.0;
-						z -= train.Cars[j + 1].Length / 2.0;
-					}
-				}
-				else
-				{
-					UnifiedObject o;
-					Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-					o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-				}
-#if !DEBUG
-				            }
-				            catch (Exception ex)
-				            {
-					            Interface.AddMessage(MessageType.Critical, false,
-						            "Unhandled error (" + ex.Message + ") encountered while processing the file " +
-						            Files[i] + ".");
-				            }
-#endif
-			}
+			RefreshObjects();
 			Renderer.InitializeVisibility();
 			Renderer.UpdateVisibility(0.0, true);
 			ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
@@ -312,7 +249,96 @@ namespace OpenBve {
 	        }
 	    }
 
-		// process events
+	    internal static void RefreshObjects()
+	    {
+		    LightingRelative = -1.0;
+		    Game.Reset();
+		    Interface.LogMessages.Clear();
+		    for (int i = 0; i < Files.Length; i++)
+		    {
+#if !DEBUG
+									try {
+#endif
+			    if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
+			    {
+				    UnifiedObject[] carObjects, bogieObjects, couplerObjects;
+				    double[] axleLocations, couplerDistances;
+				    TrainManager.Train train;
+				    ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
+				    double z = 0.0;
+				    for (int j = 0; j < carObjects.Length; j++)
+				    {
+					    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+					    if (j < train.Cars.Length - 1)
+					    {
+						    z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
+						    z -= couplerDistances[j];
+					    }
+				    }
+
+				    z = 0.0;
+				    int trainCar = 0;
+				    for (int j = 0; j < bogieObjects.Length; j++)
+				    {
+					    if (bogieObjects[j] == null)
+					    {
+						    continue;
+					    }
+
+					    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+					    j++;
+					    if (bogieObjects[j] == null)
+					    {
+						    continue;
+					    }
+
+					    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+					    if (trainCar < train.Cars.Length - 1)
+					    {
+						    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
+						    z -= couplerDistances[trainCar];
+					    }
+
+					    trainCar++;
+				    }
+
+				    z = 0.0;
+				    for (int j = 0; j < couplerObjects.Length; j++)
+				    {
+					    z -= train.Cars[j].Length / 2.0;
+					    z -= couplerDistances[j] / 2.0;
+					    if (couplerObjects[j] == null)
+					    {
+						    continue;
+					    }
+
+					    couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+
+					    z -= couplerDistances[j] / 2.0;
+					    z -= train.Cars[j + 1].Length / 2.0;
+				    }
+			    }
+			    else
+			    {
+				    UnifiedObject o;
+				    Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
+				    o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+			    }
+#if !DEBUG
+									} catch (Exception ex) {
+										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
+									}
+#endif
+		    }
+
+		    Renderer.InitializeVisibility();
+		    Renderer.UpdateVisibility(0.0, true);
+		    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
+		    Renderer.ApplyBackgroundColor();
+	    }
+
+
+	    // process events
 	    internal static void KeyDown(object sender, KeyboardKeyEventArgs e)
 	    {
 	        switch (e.Key)
@@ -324,198 +350,40 @@ namespace OpenBve {
 	                break;
 	            case Key.F5:
 	                // reset
-	                LightingRelative = -1.0;
-	                Game.Reset();
-	                Interface.LogMessages.Clear();
-	                for (int i = 0; i < Files.Length; i++)
-	                {
-#if !DEBUG
-									try {
-										#endif
-		                if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
-		                {
-			                UnifiedObject[] carObjects, bogieObjects, couplerObjects;
-			                double[] axleLocations, couplerDistances;
-			                TrainManager.Train train;
-			                ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
-		                	double z = 0.0;
-		                    for (int j = 0; j < carObjects.Length; j++)
-		                	{
-			                    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-		                		if (j < train.Cars.Length - 1)
-		                		{
-		                			z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
-		                            z -= couplerDistances[j];
-		                		}
-							}
-		                    z = 0.0;
-		                    int trainCar = 0;
-		                    for (int j = 0; j < bogieObjects.Length; j++)
-		                    {
-			                    if (bogieObjects[j] == null)
-			                    {
-				                    continue;
-			                    }
-			                    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-			                    j++;
-			                    if (bogieObjects[j] == null)
-			                    {
-				                    continue;
-			                    }
-			                    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-			                    if (trainCar < train.Cars.Length - 1)
-			                    {
-				                    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
-				                    z -= couplerDistances[trainCar];
-			                    }
-								trainCar++;
-		                    }
-		                    z = 0.0;
-		                    for (int j = 0; j < couplerObjects.Length; j++)
-		                    {
-			                    z -= train.Cars[j].Length / 2.0;
-			                    z -= couplerDistances[j] / 2.0;
-			                    if (couplerObjects[j] == null)
-			                    {
-				                    continue;
-			                    }
-			                    couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-
-			                    z -= couplerDistances[j] / 2.0;
-			                    z -= train.Cars[j + 1].Length / 2.0;
-							}
-						}
-						else
-		                {
-		                	UnifiedObject o;
-			                Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-		                    o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-		                }
-#if !DEBUG
-									} catch (Exception ex) {
-										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
-									}
-									#endif
-	                }
-	                Renderer.InitializeVisibility();
-	                Renderer.UpdateVisibility(0.0, true);
-	                ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
-					Renderer.ApplyBackgroundColor();
+	                RefreshObjects();
 	                break;
 	            case Key.F7:
-	            {
-		            OpenFileDialog Dialog = new OpenFileDialog
-		            {
-			            CheckFileExists = true,
-			            Multiselect = true,
-			            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;extensions.cfg;*.l3dobj;*.l3dgrp;*.obj;*.s|openBVE Objects|*.csv;*.b3d;*.x;*.animated;extensions.cfg|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Objects|*.s|All files|*"
-		            };
-		            if (Dialog.ShowDialog() == DialogResult.OK)
-		            {
-			            Application.DoEvents();
-			            string[] f = Dialog.FileNames;
-			            int n = Files.Length;
-			            Array.Resize(ref Files, n + f.Length);
-			            for (int i = 0; i < f.Length; i++)
-			            {
-				            Files[n + i] = f[i];
-			            }
-			            // reset
-			            LightingRelative = -1.0;
-			            Game.Reset();
-			            Interface.LogMessages.Clear();
-			            for (int i = 0; i < Files.Length; i++)
-			            {
-#if !DEBUG
-				            try
+					{
+						OpenFileDialog Dialog = new OpenFileDialog
+					    {
+				            CheckFileExists = true,
+				            Multiselect = true,
+				            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;extensions.cfg;*.l3dobj;*.l3dgrp;*.obj;*.s|openBVE Objects|*.csv;*.b3d;*.x;*.animated;extensions.cfg|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Objects|*.s|All files|*"
+			            };
+						if (Dialog.ShowDialog() == DialogResult.OK)
+						{
+							Application.DoEvents();
+							string[] f = Dialog.FileNames;
+							int n = Files.Length;
+						    Array.Resize(ref Files, n + f.Length);
+							for (int i = 0; i < f.Length; i++)
 				            {
-#endif
-				            if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
+					            Files[n + i] = f[i];
+				            }
+						}
+						else
+						{
+					        if (Program.CurrentlyRunOnMono)
 				            {
-					            UnifiedObject[] carObjects, bogieObjects, couplerObjects;
-					            double[] axleLocations, couplerDistances;
-					            TrainManager.Train train;
-					            ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
-					            double z = 0.0;
-					            for (int j = 0; j < carObjects.Length; j++)
-					            {
-						            carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						            if (j < train.Cars.Length - 1)
-						            {
-							            z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
-							            z -= couplerDistances[j];
-						            }
-								}
-					            z = 0.0;
-					            int trainCar = 0;
-					            for (int j = 0; j < bogieObjects.Length; j++)
-					            {
-						            if (bogieObjects[j] == null)
-						            {
-							            continue;
-						            }
-						            bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						            j++;
-						            if (bogieObjects[j] == null)
-						            {
-							            continue;
-						            }
-						            bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						            if (trainCar < train.Cars.Length - 1)
-						            {
-							            z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
-							            z -= couplerDistances[trainCar];
-						            }
-										trainCar++;
-					            }
-					            z = 0.0;
-					            for (int j = 0; j < couplerObjects.Length; j++)
-					            {
-						            z -= train.Cars[j].Length / 2.0;
-						            z -= couplerDistances[j] / 2.0;
-						            if (couplerObjects[j] == null)
-						            {
-							            continue;
-						            }
-						            couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-
-						            z -= couplerDistances[j] / 2.0;
-						            z -= train.Cars[j + 1].Length / 2.0;
-					            }
+					            //HACK: Dialog doesn't close properly when pressing the ESC key under Mono
+					            //Avoid calling Application.DoEvents() unless absolutely necessary though!
+					            Application.DoEvents();
 							}
-				            else
-				            {
-				            	UnifiedObject o;
-					            Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-				                o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-				            }
-#if !DEBUG
-				            }
-				            catch (Exception ex)
-				            {
-					            Interface.AddMessage(MessageType.Critical, false,
-						            "Unhandled error (" + ex.Message + ") encountered while processing the file " +
-						            Files[i] + ".");
-				            }
-#endif
-			            }
-			            Renderer.InitializeVisibility();
-			            Renderer.UpdateVisibility(0.0, true);
-			            ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
-		            }
-		            else
-		            {
-			            if (Program.CurrentlyRunOnMono)
-			            {
-							//HACK: Dialog doesn't close properly when pressing the ESC key under Mono
-							//Avoid calling Application.DoEvents() unless absolutely necessary though!
-				            Application.DoEvents();
-			            }
-		            }
-					Dialog.Dispose();
-	            }
-					Renderer.ApplyBackgroundColor();
-	                break;
+						}
+						Dialog.Dispose();
+						RefreshObjects();
+					} 
+					break;
 	            case Key.F9:
 	                if (Interface.LogMessages.Count != 0)
 	                {

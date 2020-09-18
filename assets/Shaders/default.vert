@@ -1,5 +1,6 @@
 #version 150
 precision highp int;
+
 struct Light
 {
 	vec3 position;
@@ -16,7 +17,7 @@ struct MaterialColor
 	vec4 specular;
 	vec3 emission;
 	float shininess;
-}; 
+};
 
 in vec3 iPosition;
 in vec3 iNormal;
@@ -35,79 +36,30 @@ uniform int uMaterialFlags;
 out vec4 oViewPos;
 out vec2 oUv;
 out vec4 oColor;
-out vec4 lightResult;
+out vec4 oLightResult;
 
-
-//Temp working colors
-vec4 Ambient;
-vec4 Diffuse;
-vec4 Specular;
-
-void findDirectionalLight(in vec3 normal)
+vec4 getLightResult()
 {
-   float pf;
-   float nDotVP = max(0.0, dot(normal, normalize(vec3 (uLight.position))));
-   float nDotHV = max(0.0, dot(normal, normalize(vec3(oViewPos.xyz + uLight.position))));
+	vec3 normal = normalize(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
+	float nDotVP = max(0.0, dot(normal, normalize(vec3(uLight.position))));
+	float nDotHV = max(0.0, dot(normal, normalize(vec3(oViewPos.xyz + uLight.position))));
+	float pf = nDotVP == 0.0 ? 0.0 : pow(nDotHV, uMaterial.shininess);
 
-   if (nDotVP == 0.0)
-   {
-       pf = 0.0;
-   }
-   else
-   {
-       pf = pow(nDotHV, uMaterial.shininess);
-   }
-   
-   Ambient  += vec4(uLight.ambient, 1.0);
-   Diffuse  += vec4(uLight.diffuse, 1.0) * nDotVP;
-   Specular += vec4(uLight.specular, 1.0) * pf;
+	vec4 ambient = vec4(uLight.ambient, 1.0);
+	vec4 diffuse = vec4(uLight.diffuse, 1.0) * nDotVP;
+	vec4 specular = vec4(uLight.specular, 1.0) * pf;
+
+	vec4 sceneColor = (uMaterialFlags & 1) != 0 ? vec4(uMaterial.emission, 1.0) + uMaterial.ambient * uLight.lightModel : uLight.lightModel;
+	vec4 finalColor = sceneColor + ambient * uMaterial.ambient + diffuse * uMaterial.specular + specular * uMaterial.specular;
+	return clamp(finalColor, 0.0, 1.0);
 }
-
-vec4 getLightResult(in vec3 normal, in vec4 ecPosition)
-{
-    vec4 color;
-    vec3 ecPosition3;
-    vec3 eye;
-
-    ecPosition3 = (vec3 (ecPosition)) / ecPosition.w;
-    eye = vec3 (0.0, 0.0, 1.0);
-
-    Ambient  = vec4 (0.0);
-    Diffuse  = vec4 (0.0);
-    Specular = vec4 (0.0);
-
-    findDirectionalLight(normal);
-	vec4 sceneColor = uLight.lightModel;
-	if((uMaterialFlags & 1) != 0)
-	{
-		sceneColor = vec4(uMaterial.emission, 1.0) + uMaterial.ambient * uLight.lightModel;
-	}
-    color = sceneColor + Ambient  * uMaterial.ambient + Diffuse  * uMaterial.specular;
-    color += Specular * uMaterial.specular;
-    color = clamp(color, 0.0, 1.0);
-	return color;
-}
-
 
 void main()
 {
 	oViewPos = uCurrentModelViewMatrix * vec4(vec3(iPosition.x, iPosition.y, -iPosition.z), 1.0);
 	gl_Position = uCurrentProjectionMatrix * oViewPos;
 
-	vec3 eyeNormal = normalize(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
-	vec3 eyePosition = vec3(uCurrentModelViewMatrix * vec4(iPosition.x, iPosition.y, -iPosition.z, 1.0));
-
 	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
-
 	oColor = iColor;
-	
-	if (uIsLight)
-	{
-		lightResult = getLightResult(eyeNormal, oViewPos);
-	}
-	else
-	{
-		lightResult = uMaterial.ambient;
-	}
-	oColor.rgb *= oColor.a;
+	oLightResult = uIsLight && (uMaterialFlags & 4) == 0 ? getLightResult() : uMaterial.ambient;
 }

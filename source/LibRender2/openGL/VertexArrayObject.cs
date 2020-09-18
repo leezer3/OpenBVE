@@ -188,7 +188,7 @@ namespace LibRender2
 							Position = mesh.Vertices[vertex.Index].Coordinates,
 							Normal = vertex.Normal,
 							UV = new Vector2f(mesh.Vertices[vertex.Index].TextureCoordinates),
-							Color = (mesh.Vertices[vertex.Index] as ColoredVertex)?.Color ?? Color128.Transparent
+							Color = (mesh.Vertices[vertex.Index] as ColoredVertex)?.Color ?? Color128.White
 						};
 
 						vertexData.Add(data);

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
@@ -44,12 +45,36 @@ namespace CsvRwRouteParser
 
 	    /// <summary>Checks whether the plugin can load the specified route.</summary>
 	    /// <param name="path">The path to the file or folder that contains the route.</param>
-	    /// <returns>Whether the plugin can load the specified sound.</returns>
+	    /// <returns>Whether the plugin can load the specified route.</returns>
 	    public override bool CanLoadRoute(string path)
 	    {
-		    path = path.ToLowerInvariant();
-		    if (path.EndsWith(".csv") || path.EndsWith(".rw"))
+		    if (path.EndsWith(".rw", StringComparison.InvariantCultureIgnoreCase))
 		    {
+			    return true;
+		    }
+			if (path.EndsWith(".csv", StringComparison.InvariantCultureIgnoreCase))
+		    {
+			    using (StreamReader fileReader = new StreamReader(path))
+			    {
+				    for (int i = 0; i < 30; i++)
+				    {
+					    try
+					    {
+						    string readLine = fileReader.ReadLine();
+						    if (!string.IsNullOrEmpty(readLine) && readLine.IndexOf("meshbuilder", StringComparison.InvariantCultureIgnoreCase) != -1)
+						    {
+								//We have found the MeshBuilder statement within the first 30 lines
+								//This must be an object (we hope)
+							    return false;
+						    }
+					    }
+					    catch
+					    {
+						    //ignored
+					    }
+						
+				    }
+			    }
 			    return true;
 		    }
 

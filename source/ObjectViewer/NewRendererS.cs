@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
+using LibRender2.Primitives;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -28,9 +29,9 @@ namespace OpenBve
 		internal Color128 TextColor = Color128.White;
 		internal const int MaxBackgroundColor = 4;
 
-		private VertexArrayObject redAxisVAO;
-		private VertexArrayObject greenAxisVAO;
-		private VertexArrayObject blueAxisVAO;
+		private Cube redAxisVAO;
+		private Cube greenAxisVAO;
+		private Cube blueAxisVAO;
 
 		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
 		{
@@ -38,9 +39,9 @@ namespace OpenBve
 
 			if (!ForceLegacyOpenGL)
 			{
-				redAxisVAO = RegisterBox(Color128.Red);
-				greenAxisVAO = RegisterBox(Color128.Green);
-				blueAxisVAO = RegisterBox(Color128.Blue);
+				redAxisVAO = new Cube(this, Color128.Red);
+				greenAxisVAO = new Cube(this, Color128.Green);
+				blueAxisVAO = new Cube(this, Color128.Blue);
 			}
 		}
 
@@ -151,18 +152,18 @@ namespace OpenBve
 
 				if (AvailableNewRenderer)
 				{
-					Cube.DrawRetained(redAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
-					Cube.DrawRetained(greenAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
-					Cube.DrawRetained(blueAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
+					redAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
+					greenAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
+					blueAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 				}
 				else
 				{
 					GL.Color4(1.0, 0.0, 0.0, 0.2);
-					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
+					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
 					GL.Color4(0.0, 1.0, 0.0, 0.2);
-					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
+					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
 					GL.Color4(0.0, 0.0, 1.0, 0.2);
-					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
+					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 				}
 			}
 			GL.Disable(EnableCap.DepthTest);
