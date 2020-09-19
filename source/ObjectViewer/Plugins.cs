@@ -17,14 +17,14 @@ namespace OpenBve {
 		internal static bool LoadPlugins() {
 			UnloadPlugins();
 			string folder = Program.FileSystem.GetDataFolder("Plugins");
-			string[] files = {};
+			string[] files;
 			try
 			{
 				files = Directory.GetFiles(folder);
 			}
 			catch
 			{
-				
+				return false;
 			}
 			List<ContentLoadingPlugin> list = new List<ContentLoadingPlugin>();
 			StringBuilder builder = new StringBuilder();

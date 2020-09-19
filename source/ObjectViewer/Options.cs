@@ -205,7 +205,7 @@ namespace OpenBve
             }
             catch
             {
-                MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
+                MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
                                 "Please check you have write permission.");
             }
         }

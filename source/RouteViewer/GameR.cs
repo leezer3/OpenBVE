@@ -24,10 +24,7 @@ namespace OpenBve {
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
 		internal static double StartupTime = 0.0;
-
-		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-		internal static string TrainName = "";
-
+		
 		// ================================
 
 		internal static void Reset() {
@@ -53,8 +50,8 @@ namespace OpenBve {
 			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
-			TrainName = "";
-			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
+			Interface.CurrentOptions.TrainName = "";
+			Interface.CurrentOptions.TrainStart = TrainStartMode.EmergencyBrakesNoAts;
 			Program.CurrentRoute.PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
 			Program.CurrentRoute.CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
 			Program.CurrentRoute.NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);

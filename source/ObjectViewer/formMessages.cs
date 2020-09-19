@@ -23,7 +23,7 @@ namespace OpenBve
 				}
 			};
 			string Folder = Program.FileSystem.GetDataFolder("Menu");
-
+			// ReSharper disable EmptyGeneralCatchClause
 			try
 			{
 				Dialog.listviewMessages.SmallImageList.Images.Add("information", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_information.png")));
@@ -44,6 +44,7 @@ namespace OpenBve
 				Dialog.listviewMessages.SmallImageList.Images.Add("critical", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_critical.png")));
 			}
 			catch { }
+			// ReSharper restore EmptyGeneralCatchClause
 			for (int i = 0; i < Interface.LogMessages.Count; i++)
 			{
 				string t = "Unknown";

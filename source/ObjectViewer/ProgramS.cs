@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
@@ -29,7 +28,7 @@ namespace OpenBve {
 		internal static FileSystem FileSystem = null;
 
 		// members
-	    internal static string[] Files = new string[] { };
+	    internal static string[] Files = { };
 		
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
@@ -140,11 +139,13 @@ namespace OpenBve {
 	        // initialize camera
 
 	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
-	        currentGameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
-	        currentGameWindow.Visible = true;
-	        currentGameWindow.TargetUpdateFrequency = 0;
-	        currentGameWindow.TargetRenderFrequency = 0;
-	        currentGameWindow.Title = "Object Viewer";
+	        currentGameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode, "Object Viewer", GameWindowFlags.Default)
+	        {
+		        Visible = true,
+		        TargetUpdateFrequency = 0,
+		        TargetRenderFrequency = 0,
+		        Title = "Object Viewer"
+	        };
 	        currentGameWindow.Run();
 			// quit
 			Renderer.TextureManager.UnloadAllTextures();
@@ -256,79 +257,79 @@ namespace OpenBve {
 		    Interface.LogMessages.Clear();
 		    for (int i = 0; i < Files.Length; i++)
 		    {
-#if !DEBUG
-									try {
-#endif
-			    if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
+			    try
 			    {
-				    UnifiedObject[] carObjects, bogieObjects, couplerObjects;
-				    double[] axleLocations, couplerDistances;
-				    TrainManager.Train train;
-				    ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
-				    double z = 0.0;
-				    for (int j = 0; j < carObjects.Length; j++)
+				    if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 				    {
-					    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-					    if (j < train.Cars.Length - 1)
+					    UnifiedObject[] carObjects, bogieObjects, couplerObjects;
+					    double[] axleLocations, couplerDistances;
+					    TrainManager.Train train;
+					    ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
+					    double z = 0.0;
+					    for (int j = 0; j < carObjects.Length; j++)
 					    {
-						    z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
-						    z -= couplerDistances[j];
+						    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+						    if (j < train.Cars.Length - 1)
+						    {
+							    z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
+							    z -= couplerDistances[j];
+						    }
+					    }
+
+					    z = 0.0;
+					    int trainCar = 0;
+					    for (int j = 0; j < bogieObjects.Length; j++)
+					    {
+						    if (bogieObjects[j] == null)
+						    {
+							    continue;
+						    }
+
+						    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+						    j++;
+						    if (bogieObjects[j] == null)
+						    {
+							    continue;
+						    }
+
+						    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+						    if (trainCar < train.Cars.Length - 1)
+						    {
+							    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
+							    z -= couplerDistances[trainCar];
+						    }
+
+						    trainCar++;
+					    }
+
+					    z = 0.0;
+					    for (int j = 0; j < couplerObjects.Length; j++)
+					    {
+						    z -= train.Cars[j].Length / 2.0;
+						    z -= couplerDistances[j] / 2.0;
+						    if (couplerObjects[j] == null)
+						    {
+							    continue;
+						    }
+
+						    couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+
+						    z -= couplerDistances[j] / 2.0;
+						    z -= train.Cars[j + 1].Length / 2.0;
 					    }
 				    }
-
-				    z = 0.0;
-				    int trainCar = 0;
-				    for (int j = 0; j < bogieObjects.Length; j++)
+				    else
 				    {
-					    if (bogieObjects[j] == null)
-					    {
-						    continue;
-					    }
-
-					    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-					    j++;
-					    if (bogieObjects[j] == null)
-					    {
-						    continue;
-					    }
-
-					    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-					    if (trainCar < train.Cars.Length - 1)
-					    {
-						    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
-						    z -= couplerDistances[trainCar];
-					    }
-
-					    trainCar++;
-				    }
-
-				    z = 0.0;
-				    for (int j = 0; j < couplerObjects.Length; j++)
-				    {
-					    z -= train.Cars[j].Length / 2.0;
-					    z -= couplerDistances[j] / 2.0;
-					    if (couplerObjects[j] == null)
-					    {
-						    continue;
-					    }
-
-					    couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-
-					    z -= couplerDistances[j] / 2.0;
-					    z -= train.Cars[j + 1].Length / 2.0;
+					    UnifiedObject o;
+					    Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
+					    o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 				    }
 			    }
-			    else
+			    catch (Exception ex)
 			    {
-				    UnifiedObject o;
-				    Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-				    o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+				    Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
 			    }
-#if !DEBUG
-									} catch (Exception ex) {
-										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
-									}
-#endif
+
 		    }
 
 		    Renderer.InitializeVisibility();

@@ -180,7 +180,7 @@ namespace OpenBve
 			ListViewItem[] items = new ListViewItem[PluginStates.Count];
 			for (int i = 0; i < items.Length; i++)
 			{
-				items[i] = new ListViewItem(new string[] { "", "" });
+				items[i] = new ListViewItem(new[] { "", "" });
 				UpdatePluginListViewItem(items[i], i, false);
 			}
 			listViewPlugin.Items.AddRange(items);
@@ -244,7 +244,7 @@ namespace OpenBve
 				listViewPlugin.Items[i].Selected = false;
 			}
 			PluginStates.Add(new PluginState(0, 0));
-			ListViewItem item = new ListViewItem(new string[] { "", "" });
+			ListViewItem item = new ListViewItem(new[] { "", "" });
 			UpdatePluginListViewItem(item, n, true);
 			listViewPlugin.Items.Add(item);
 			item.Selected = true;
@@ -305,7 +305,7 @@ namespace OpenBve
 						TrainManager.Trains[0].Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = (int)numericUpDownCylinder.Value * 1000;
 						TrainManager.Trains[0].Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = (int)numericUpDownAirPipe.Value * 1000;
 
-						TrainManager.Trains[0].Cars[i].Specs.Doors = new TrainManager.Door[] { new TrainManager.Door(), new TrainManager.Door() };
+						TrainManager.Trains[0].Cars[i].Specs.Doors = new[] { new TrainManager.Door(), new TrainManager.Door() };
 						TrainManager.Trains[0].Cars[i].Specs.Doors[0].Direction = -1;
 						TrainManager.Trains[0].Cars[i].Specs.Doors[0].State = (double)numericUpDownLeft.Value;
 						TrainManager.Trains[0].Cars[i].Specs.Doors[1].Direction = 1;

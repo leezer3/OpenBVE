@@ -13,7 +13,6 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -83,43 +82,6 @@ namespace OpenBve
 		internal void ApplyBackgroundColor(byte red, byte green, byte blue)
 		{
 			GL.ClearColor(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f);
-		}
-
-		private VertexArrayObject RegisterBox(Color128 Color)
-		{
-			LibRenderVertex[] vertexData = new LibRenderVertex[8];
-			vertexData[0].Position = new Vector3f(1.0f, 1.0f, 1.0f);
-			vertexData[1].Position = new Vector3f(1.0f, -1.0f, 1.0f);
-			vertexData[2].Position = new Vector3f(-1.0f, -1.0f, 1.0f);
-			vertexData[3].Position = new Vector3f(-1.0f, 1.0f, 1.0f);
-			vertexData[4].Position = new Vector3f(1.0f, 1.0f, -1.0f);
-			vertexData[5].Position = new Vector3f(1.0f, -1.0f, -1.0f);
-			vertexData[6].Position = new Vector3f(-1.0f, -1.0f, -1.0f);
-			vertexData[7].Position = new Vector3f(-1.0f, 1.0f, -1.0f);
-
-			for (int i = 0; i < vertexData.Length; i++)
-			{
-				vertexData[i].Color = Color;
-			}
-
-			ushort[] indexData =
-			{
-				0, 1, 2, 3,
-				0, 4, 5, 1,
-				0, 3, 7, 4,
-				6, 5, 4, 7,
-				6, 7, 3, 2,
-				6, 2, 1, 5
-			};
-
-			VertexArrayObject vao = new VertexArrayObject();
-			vao.Bind();
-			vao.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-			vao.SetIBO(new IndexBufferObjectUS(indexData, BufferUsageHint.StaticDraw));
-			vao.SetAttributes(DefaultShader.VertexLayout);
-			vao.UnBind();
-
-			return vao;
 		}
 
 		// render scene

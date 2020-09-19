@@ -5,7 +5,6 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBve {

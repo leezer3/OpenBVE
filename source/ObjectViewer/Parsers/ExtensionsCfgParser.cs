@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using OpenBveApi;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using Path = OpenBveApi.Path;
 

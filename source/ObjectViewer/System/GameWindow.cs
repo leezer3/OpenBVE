@@ -1,12 +1,11 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Input;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
-    class ObjectViewer : OpenTK.GameWindow
+    class ObjectViewer : GameWindow
     {
         //Deliberately specify the default constructor with various overrides
         public ObjectViewer(int width, int height, GraphicsMode currentGraphicsMode, string openbve,
@@ -19,6 +18,7 @@ namespace OpenBve
             }
             catch
             {
+	            //Ignored
             }
         }
         
@@ -264,11 +264,6 @@ namespace OpenBve
             Program.Renderer.UpdateVisibility(0.0, true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Program.RefreshObjects();
-        }
-
-        public override void Dispose()
-        {
-	        base.Dispose();
         }
     }
 }
