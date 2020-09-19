@@ -167,7 +167,7 @@ namespace OpenBve
 		}
 		
 		// load route
-		internal static bool LoadRoute() {
+		internal static bool LoadRoute(Bitmap bitmap = null) {
 			if (string.IsNullOrEmpty(CurrentRouteFile))
 			{
 				return false;
@@ -178,7 +178,7 @@ namespace OpenBve
 			try
 			{
 				Encoding encoding = TextEncoding.GetSystemEncodingFromFile(CurrentRouteFile);
-				Loading.Load(CurrentRouteFile, encoding);
+				Loading.Load(CurrentRouteFile, encoding, bitmap);
 				result = true;
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -340,10 +340,9 @@ namespace OpenBve
 							GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-							Renderer.Loading.SetLoadingBkg(Renderer.TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null)));
 						}
 						CameraAlignment a = Renderer.Camera.Alignment;
-						if (LoadRoute())
+						if (LoadRoute(bitmap))
 						{
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
@@ -353,7 +352,6 @@ namespace OpenBve
 							Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
-						
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
 						if (bitmap != null)

@@ -27,6 +27,8 @@ namespace LibRender2.Loadings
 		private const int numOfLoadingBkgs = 7;
 
 		private bool customLoadScreen;
+		private bool showLogo;
+		private bool showProgress;
 		private Texture TextureLoadingBkg;
 		private Texture TextureLogo;
 		private string ProgramVersion = "1.0";
@@ -38,8 +40,10 @@ namespace LibRender2.Loadings
 		}
 
 		/// <summary>Initializes the textures used for the loading screen</summary>
-		public void InitLoading(string Path, string Version)
+		public void InitLoading(string Path, string Version, bool ShowLogo = true, bool ShowProgress = true)
 		{
+			showLogo = ShowLogo;
+			showProgress = ShowProgress;
 			ProgramVersion = Version;
 			customLoadScreen = false;
 
@@ -138,7 +142,7 @@ namespace LibRender2.Loadings
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
 			if (!customLoadScreen)
 			{
-				if (TextureLogo != null && renderer.currentHost.LoadTexture(TextureLogo, OpenGlTextureWrapMode.ClampClamp))
+				if (showLogo && TextureLogo != null && renderer.currentHost.LoadTexture(TextureLogo, OpenGlTextureWrapMode.ClampClamp))
 				{
 					// place the centre of the logo at from the screen top
 					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - TextureLogo.Height / 2.0);
@@ -159,52 +163,54 @@ namespace LibRender2.Loadings
 				// if custom route image, no logo and leave a conventional black area below the potential logo
 			}
 
-			logoBottom = renderer.Screen.Height / 2;
-
-			// take the height remaining below the logo and divide in 3 horiz. parts
-			int blankHeight = (renderer.Screen.Height - logoBottom) / 3;
-
-			// VERSION NUMBER
-			// place the version above the first division
-			int versionTop = logoBottom + blankHeight - fontHeight;
-			renderer.OpenGlString.Draw(Font, "Version " + ProgramVersion, new Point(halfWidth, versionTop), TextAlignment.TopMiddle, Color128.White);
-			// for the moment, do not show any URL; would go right below the first division
-			//			DrawString(Fonts.SmallFont, "https://openbve-project.net",
-			//				new Point(halfWidth, versionTop + fontHeight+2),
-			//				TextAlignment.TopMiddle, Color128.White);
-
-			// PROGRESS MESSAGE AND BAR
-			// place progress bar right below the second division
-			int progressTop = renderer.Screen.Height - blankHeight;
-			int progressWidth = renderer.Screen.Width - progrMargin * 2;
-			double routeProgress = Math.Max(0.0, Math.Min(1.0, RouteProgress));
-			double trainProgress = Math.Max(0.0, Math.Min(1.0, TrainProgress));
-
-			// draw progress message right above the second division
-			string text = Translations.GetInterfaceString(routeProgress < 1.0 ? "loading_loading_route" : trainProgress < 1.0 ? "loading_loading_train" : "message_loading");
-			renderer.OpenGlString.Draw(Font, text, new Point(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
-
-			// sum of route progress and train progress arrives up to 2.0:
-			// => times 50.0 to convert to %
-			double percent;
-			if (TrainProgress != double.MaxValue)
+			if (showProgress)
 			{
-				percent = 50.0 * (routeProgress + trainProgress);
+				logoBottom = renderer.Screen.Height / 2;
+
+				// take the height remaining below the logo and divide in 3 horiz. parts
+				int blankHeight = (renderer.Screen.Height - logoBottom) / 3;
+
+				// VERSION NUMBER
+				// place the version above the first division
+				int versionTop = logoBottom + blankHeight - fontHeight;
+				renderer.OpenGlString.Draw(Font, "Version " + ProgramVersion, new Point(halfWidth, versionTop), TextAlignment.TopMiddle, Color128.White);
+				// for the moment, do not show any URL; would go right below the first division
+				//			DrawString(Fonts.SmallFont, "https://openbve-project.net",
+				//				new Point(halfWidth, versionTop + fontHeight+2),
+				//				TextAlignment.TopMiddle, Color128.White);
+				// PROGRESS MESSAGE AND BAR
+				// place progress bar right below the second division
+				int progressTop = renderer.Screen.Height - blankHeight;
+				int progressWidth = renderer.Screen.Width - progrMargin * 2;
+				double routeProgress = Math.Max(0.0, Math.Min(1.0, RouteProgress));
+				double trainProgress = Math.Max(0.0, Math.Min(1.0, TrainProgress));
+
+				// draw progress message right above the second division
+				string text = Translations.GetInterfaceString(routeProgress < 1.0 ? "loading_loading_route" : trainProgress < 1.0 ? "loading_loading_train" : "message_loading");
+				renderer.OpenGlString.Draw(Font, text, new Point(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
+
+				// sum of route progress and train progress arrives up to 2.0:
+				// => times 50.0 to convert to %
+				double percent;
+				if (TrainProgress != double.MaxValue)
+				{
+					percent = 50.0 * (routeProgress + trainProgress);
+				}
+				else
+				{
+					percent = 100.0 * routeProgress;
+				}
+				string percStr = percent.ToString("0") + "%";
+
+				// progress frame
+				renderer.Rectangle.Draw(null, new Vector2(progrMargin - progrBorder, progressTop - progrBorder), new Vector2(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
+
+				// progress bar
+				renderer.Rectangle.Draw(null, new Vector2(progrMargin, progressTop), new Vector2(progressWidth * (int)percent / 100.0, fontHeight + 4), ColourProgressBar);
+
+				// progress percent
+				renderer.OpenGlString.Draw(Font, percStr, new Point(halfWidth, progressTop), TextAlignment.TopMiddle, Color128.Black);
 			}
-			else
-			{
-				percent = 100.0 * routeProgress;
-			}
-			string percStr = percent.ToString("0") + "%";
-
-			// progress frame
-			renderer.Rectangle.Draw(null, new Vector2(progrMargin - progrBorder, progressTop - progrBorder), new Vector2(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
-
-			// progress bar
-			renderer.Rectangle.Draw(null, new Vector2(progrMargin, progressTop), new Vector2(progressWidth * (int)percent / 100.0, fontHeight + 4), ColourProgressBar);
-
-			// progress percent
-			renderer.OpenGlString.Draw(Font, percStr, new Point(halfWidth, progressTop), TextAlignment.TopMiddle, Color128.Black);
 		}
 	}
 }

@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Text;
@@ -17,6 +18,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using OpenBveApi.Textures;
 using RouteManager2;
 
 namespace OpenBve {
@@ -57,11 +59,14 @@ namespace OpenBve {
 		internal static bool JobAvailable;
 
 		// load
-		internal static void Load(string RouteFile, Encoding RouteEncoding) {
+		internal static void Load(string RouteFile, Encoding RouteEncoding, Bitmap bitmap = null) {
 			// reset
 			Game.Reset();
-			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
-			
+			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
+			if (bitmap != null)
+			{
+				Program.Renderer.Loading.SetLoadingBkg(Program.Renderer.TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null)));
+			}
 			// members
 			Cancel = false;
 			Complete = false;
