@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
 using System;
@@ -11,6 +11,7 @@ using OpenBve.Parsers.Panel;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 
 namespace OpenBve.Parsers.Train
 {
@@ -192,6 +193,38 @@ namespace OpenBve.Parsers.Train
 						{
 							Train.Cars[Car].EnableLoadingSway = false;
 						}
+						break;
+					case "pantograph":
+						bool collectsPower = true;
+						double location = 0;
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "fitted":
+										int cp;
+										NumberFormats.TryParseIntVb6(c.InnerText, out cp);
+										if (cp == 1 || c.InnerText.ToLowerInvariant() == "true")
+										{
+											collectsPower = true;
+										}
+										else
+										{
+											collectsPower = false;
+										}
+										break;
+									case "location":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out location))
+										{
+											Interface.AddMessage(MessageType.Warning, false, "Invalid pantograph location defined for Car " + Car + " in XML file " + fileName);
+										}
+										break;
+								}
+							}
+						}
+						Train.Cars[Car].Pantograph = new Pantograph(Program.CurrentHost, location, collectsPower);
 						break;
 					case "frontbogie":
 						if (c.ChildNodes.OfType<XmlElement>().Any())

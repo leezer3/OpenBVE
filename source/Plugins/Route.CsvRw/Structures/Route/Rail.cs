@@ -1,4 +1,6 @@
-﻿using OpenBveApi.Math;
+﻿using System.Collections.Generic;
+using OpenBveApi.Math;
+using OpenBveApi.Routes;
 
 namespace CsvRwRouteParser
 {
@@ -10,5 +12,6 @@ namespace CsvRwRouteParser
 		internal bool RailEnded;
 		internal Vector2 RailEnd;
 		internal double CurveCant;
+		internal Dictionary<PowerSupplyTypes, PowerSupply> PowerSupplies;
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -40,7 +41,8 @@ namespace OpenBveApi.Routes
 		/// <summary>The track index the follower is currently following</summary>
 		public int TrackIndex;
 		private readonly Hosts.HostInterface currentHost;
-
+		/// <summary>Returns the available power supplies at this track followers location</summary>
+		public Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => currentHost.Tracks[TrackIndex].Elements[LastTrackElement].PowerSupplies;
 
 
 		/// <summary>Clones the TrackFollower</summary>

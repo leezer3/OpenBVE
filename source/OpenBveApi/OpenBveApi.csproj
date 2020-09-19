@@ -144,9 +144,33 @@
     <Compile Include="Routes\LightDefinition.cs" />
     <Compile Include="Routes\RouteInterface.cs" />
     <Compile Include="Routes\StaticBackground.cs" />
-    <Compile Include="Routes\Track.cs" />
-    <Compile Include="Routes\Track.TrackElement.cs" />
-    <Compile Include="Routes\Track.TrackFollower.cs" />
+    <Compile Include="Routes\Track\PowerSupply.cs" />
+    <Compile Include="Routes\Track\PowerSupply.VoltageTypes.cs" />
+    <Compile Include="Routes\Track\Track.cs" />
+    <Compile Include="Routes\Track\Track.TrackElement.cs" />
+    <Compile Include="Routes\Track\Track.TrackFollower.cs" />
+    <Compile Include="Runtime\Runtime.AIData.cs" />
+    <Compile Include="Runtime\Runtime.AIResponse.cs" />
+    <Compile Include="Runtime\Runtime.AISupport.cs" />
+    <Compile Include="Runtime\Runtime.BeaconData.cs" />
+    <Compile Include="Runtime\Runtime.BrakeTypes.cs" />
+    <Compile Include="Runtime\Runtime.CameraViewMode.cs" />
+    <Compile Include="Runtime\Runtime.DoorInterlockStates.cs" />
+    <Compile Include="Runtime\Runtime.DoorStates.cs" />
+    <Compile Include="Runtime\Runtime.ElapseData.cs" />
+    <Compile Include="Runtime\Runtime.Handles.cs" />
+    <Compile Include="Runtime\Runtime.HornTypes.cs" />
+    <Compile Include="Runtime\Runtime.InitializationModes.cs" />
+    <Compile Include="Runtime\Runtime.IRuntime.cs" />
+    <Compile Include="Runtime\Runtime.LoadProperties.cs" />
+    <Compile Include="Runtime\Runtime.PreceedingVehicleState.cs" />
+    <Compile Include="Runtime\Runtime.SignalData.cs" />
+    <Compile Include="Runtime\Runtime.SoundHandle.cs" />
+    <Compile Include="Runtime\Runtime.Speed.cs" />
+    <Compile Include="Runtime\Runtime.Time.cs" />
+    <Compile Include="Runtime\Runtime.VehicleSpecs.cs" />
+    <Compile Include="Runtime\Runtime.VehicleState.cs" />
+    <Compile Include="Runtime\Runtime.VirtualKeys.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />
@@ -176,6 +200,8 @@
     <Compile Include="Train\CarBrightness.cs" />
     <Compile Include="Train\AbstractCoupler.cs" />
     <Compile Include="Train\GeneralAI.cs" />
+    <Compile Include="Routes\Track\PowerSupply.Types.cs" />
+    <Compile Include="Train\Pantograph.cs" />
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\StopSkipMode.cs" />
     <Compile Include="Train\TrainStartMode.cs" />
@@ -224,6 +250,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Target Name="AfterBuild">
     <ItemGroup>
       <DependentFiles Include="$(SolutionDir)dependencies\**\*.*" />

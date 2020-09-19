@@ -60,7 +60,7 @@ namespace OpenBve {
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
-			const int currentVersion = 15311;
+			const int currentVersion = 18000;
 			int myVersion = -1;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
@@ -152,6 +152,7 @@ namespace OpenBve {
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
+			double pantographLocation = double.MaxValue;
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
 			TrainManager.MotorSoundTable[] Tables = new TrainManager.MotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
@@ -675,6 +676,10 @@ namespace OpenBve {
 										} else {
 											CarUnexposedFrontalArea = a;
 										} break;
+									case 11:
+										//Do no validation here, as we don't necessarily yet know the length of a car
+										pantographLocation = a;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -961,6 +966,18 @@ namespace OpenBve {
 					MaximumAcceleration = AccelerationCurves[i].StageOneAcceleration;
 				}
 			}
+
+			if (pantographLocation == double.MaxValue)
+			{
+				pantographLocation = 0.5 * CarLength;
+			}
+			else if (pantographLocation < 0 || pantographLocation > CarLength)
+			{
+				//Pantograph location is relative from the front of the car
+				//Somone will probably want to add one outside the physical model, so just warn...
+				Interface.AddMessage(MessageType.Warning, false, "A PantographLocation of " + pantographLocation.ToString(Culture) + " places it outside the bounds of the car in file " + FileName);
+			}
+			
 			// assign motor cars
 			if (MotorCars == 1) {
 				if (FrontCarIsMotorCar | TrailerCars == 0) {
@@ -1010,6 +1027,7 @@ namespace OpenBve {
 					}
 				}
 			}
+			
 			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
 			// apply brake-specific attributes for all cars
 			for (int i = 0; i < Cars; i++) {
@@ -1184,16 +1202,10 @@ namespace OpenBve {
 				{
 					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
 				}
-				
-				Train.Cars[i].CurrentCarSection = -1;
-				Train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
-				Train.Cars[i].FrontBogie.ChangeSection(-1);
-				Train.Cars[i].RearBogie.ChangeSection(-1);
-				Train.Cars[i].Coupler.ChangeSection(-1);
 				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
-				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
 				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
+				Train.Cars[i].Pantograph = new Pantograph(Program.CurrentHost, pantographLocation, true);
 				Train.Cars[i].FrontAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].RearAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].FrontAxle.Position = AxleDistance;

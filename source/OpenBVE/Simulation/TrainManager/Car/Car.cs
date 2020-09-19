@@ -17,7 +17,7 @@ namespace OpenBve
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal partial class Car : AbstractCar
+		internal class Car : AbstractCar
 		{
 			
 			/// <summary>The front bogie</summary>
@@ -52,7 +52,10 @@ namespace OpenBve
 			internal Coupler Coupler;
 			
 			internal double BeaconReceiverPosition;
+			/// <summary>Recieves all safety system beacons</summary>
 			internal TrackFollower BeaconReceiver;
+			/// <summary>The car's pantograph</summary>
+			internal Pantograph Pantograph;
 			/// <summary>Whether loading sway is enabled for this car</summary>
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
@@ -74,7 +77,10 @@ namespace OpenBve
 				CarSections = new CarSection[] { };
 				FrontAxle = new Axle(Program.CurrentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 				RearAxle = new Axle(Program.CurrentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
-				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
+				BeaconReceiver = new TrackFollower(Program.CurrentHost, train)
+				{
+					TriggerType = index == 0 ? EventTriggerType.TrainFront : EventTriggerType.None
+				};
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
@@ -82,6 +88,8 @@ namespace OpenBve
 				Doors[0].MaxTolerance = 0.0;
 				Doors[1].Width = 1000.0;
 				Doors[1].MaxTolerance = 0.0;
+				CurrentCarSection = -1;
+				ChangeCarSection(CarSectionType.NotVisible);
 			}
 
 			internal Car(Train train, int index)
@@ -91,7 +99,10 @@ namespace OpenBve
 				CarSections = new CarSection[] { };
 				FrontAxle = new Axle(Program.CurrentHost, train, this);
 				RearAxle = new Axle(Program.CurrentHost, train, this);
-				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
+				BeaconReceiver = new TrackFollower(Program.CurrentHost, train)
+				{
+					TriggerType = index == 0 ? EventTriggerType.TrainFront : EventTriggerType.None
+				};
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
@@ -99,6 +110,8 @@ namespace OpenBve
 				Doors[0].MaxTolerance = 0.0;
 				Doors[1].Width = 1000.0;
 				Doors[1].MaxTolerance = 0.0;
+				CurrentCarSection = -1;
+				ChangeCarSection(CarSectionType.NotVisible);
 			}
 
 			/// <summary>Moves the car</summary>
@@ -118,6 +131,10 @@ namespace OpenBve
 						if (baseTrain.State != TrainState.Disposed)
 						{
 							BeaconReceiver.UpdateRelative(Delta, true, true);
+							if (Pantograph != null)
+							{
+								Pantograph.Update(Delta, false);
+							}
 						}
 					}
 				}
@@ -167,8 +184,12 @@ namespace OpenBve
 				double d = 0.5 * (FrontAxle.Follower.TrackPosition - RearAxle.Follower.TrackPosition);
 				FrontAxle.Follower.UpdateAbsolute(s + d, false, false);
 				RearAxle.Follower.UpdateAbsolute(s - d, false, false);
-				double b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + BeaconReceiverPosition;
-				BeaconReceiver.UpdateAbsolute(b, false, false);
+				double delta = FrontAxle.Follower.TrackPosition - FrontAxle.Position;
+				BeaconReceiver.UpdateAbsolute(delta + BeaconReceiverPosition, false, false);
+				if (Pantograph != null)
+				{
+					Pantograph.Update(delta, true);
+				}
 			}
 
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
@@ -353,8 +374,8 @@ namespace OpenBve
 				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
 				for (int h = 0; h < 2; h++)
 				{
-					int j = h == 0 ? TrainManager.MotorSound.MotorP1 : TrainManager.MotorSound.MotorP2;
-					int k = h == 0 ? TrainManager.MotorSound.MotorB1 : TrainManager.MotorSound.MotorB2;
+					int j = h == 0 ? MotorSound.MotorP1 : MotorSound.MotorP2;
+					int k = h == 0 ? MotorSound.MotorB1 : MotorSound.MotorB2;
 					if (odir > 0 & ndir <= 0)
 					{
 						if (j < Sounds.Motor.Tables.Length)
@@ -541,7 +562,7 @@ namespace OpenBve
 				}
 				//When changing car section, do not apply damping
 				//This stops objects from spinning if the last position before they were hidden is different
-				baseTrain.Cars[Index].UpdateObjects(0.0, true, false);
+				UpdateObjects(0.0, true, false);
 			}
 			
 			/// <summary>Updates the currently displayed objects for this car</summary>
@@ -1184,18 +1205,11 @@ namespace OpenBve
 				}
 				// power
 				double wheelspin = 0.0;
-				double wheelSlipAccelerationMotorFront;
-				double wheelSlipAccelerationMotorRear;
-				double wheelSlipAccelerationBrakeFront;
-				double wheelSlipAccelerationBrakeRear;
-				if (Derailed)
-				{
-					wheelSlipAccelerationMotorFront = 0.0;
-					wheelSlipAccelerationBrakeFront = 0.0;
-					wheelSlipAccelerationMotorRear = 0.0;
-					wheelSlipAccelerationBrakeRear = 0.0;
-				}
-				else
+				double wheelSlipAccelerationMotorFront = 0.0;
+				double wheelSlipAccelerationMotorRear = 0.0;
+				double wheelSlipAccelerationBrakeFront = 0.0;
+				double wheelSlipAccelerationBrakeRear = 0.0;
+				if(!Derailed)
 				{
 					wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 					wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);

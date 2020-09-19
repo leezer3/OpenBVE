@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System.Collections.Generic;
+using OpenBveApi.Math;
 
 namespace OpenBveApi.Routes
 {
@@ -31,6 +32,8 @@ namespace OpenBveApi.Routes
 		public Vector3 WorldSide;
 		/// <summary>An array containing all events attached to this element</summary>
 		public GeneralEvent[] Events;
+		/// <summary>Holds the properties for all available power supplies</summary>
+		public Dictionary<PowerSupplyTypes, PowerSupply> PowerSupplies;
 
 		/// <summary>Creates a new track element</summary>
 		/// <param name="StartingTrackPosition">The starting position (relative to zero)</param>
@@ -49,6 +52,7 @@ namespace OpenBveApi.Routes
 			this.WorldUp = Vector3.Down;
 			this.WorldSide = Vector3.Right;
 			this.Events = new GeneralEvent[] { };
+			PowerSupplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
 		}
 	}
 }

@@ -44,6 +44,7 @@ namespace OpenBve
 				CarSections = new CarSection[] { };
 				FrontAxle = new Axle(Program.CurrentHost, train, car);
 				RearAxle = new Axle(Program.CurrentHost, train, car);
+				ChangeSection(-1);
 			}
 
 			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)

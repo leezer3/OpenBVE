@@ -1374,7 +1374,16 @@ namespace OpenBve {
 					Code = "rightdoorbutton";
 					break;
 				case "routelimit":
-					Code = "routelimit";
+				case "overheadvolts":
+				case "thirdrailvolts":
+				case "fourthrailvolts":
+				case "overheadheight":
+				case "thirdrailheight":
+				case "fourthrailheight":
+				case "overheadamps":
+				case "thirdrailamps":
+				case "fourthrailamps":
+					Code = Subject.ToLowerInvariant();
 					break;
 				default:
 					{
