@@ -2,10 +2,9 @@
 MSBUILD := msbuild
 MIN_MONO_VERSION:= "5.18.0"
 MONO_VERSION:= $(shell mono --version | awk '/version/ { print $$5 }')
-MONO_MEETS_MINVERSION := $(shell expr "$(MONO_VERSION)" ">=" "$(MIN_MONO_VERSION)")
 MIN_NUGET_VERSION:= "2.16.0"
-NUGET_VERSION:= $(shell nuget help | awk '/Version\:/ { print $$3 }')
-NUGET_MEETS_MINVERSION := $(shell expr "$(NUGET_VERSION)" ">=" "$(MIN_NUGET_VERSION)")
+NUGET_VERSION:= $(shell nuget help 2> /dev/null | awk '/Version:/ { print $$3; exit 0}')
+GreaterVersion = $(shell printf '%s\n' $(1) $(2) | sort -rV | head -n 1)
 
 # Directories
 DEBUG_DIR   := bin_debug
@@ -111,7 +110,7 @@ prequisite-check:
  $(error Mono does not appear to be installed on this system.)
  endif
  $(info Mono Version $(MONO_VERSION) found.)
- ifeq "$(MONO_MEETS_MINVERSION)" "1"
+ ifeq "$(call GreaterVersion, $(MONO_VERSION), $(MIN_MONO_VERSION))" "$(MONO_VERSION)"
  #Nothing
  else
  $(error OpenBVE requires a minimum Mono version of 5.20)
@@ -125,7 +124,7 @@ prequisite-check:
  $(error nuget does not appear to be installed on this system.)
  endif
  $(info nuget Version $(NUGET_VERSION) found.)
- ifeq "$(NUGET_MEETS_MINVERSION)" "1"
+ ifeq "$(call GreaterVersion, $(NUGET_VERSION), $(MIN_NUGET_VERSION))" "$(NUGET_VERSION)"
  #Nothing
  else
  $(info OpenBVE requires a minimum nuget version of 2.16)
