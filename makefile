@@ -35,6 +35,8 @@ COLOR_WHITE   := "\033[1;37m"
 COLOR_END     := "\033[0m"
 #Literal sequences don't work in the info command....
 red:=$(shell tput setaf 1)
+green:=$(shell tput setaf 2)
+blue:=$(shell tput setaf 4)
 reset:=$(shell tput sgr0)
 
 .PHONY: all 
@@ -107,21 +109,29 @@ prequisite-check:
  $(info Checking for prequisite system libraries.)
  $(info Checking for Mono....)
  ifeq (, $(shell which mono))
- $(error Mono does not appear to be installed on this system.)
+ $(info Mono does not appear to be installed on this system.)
+ $(info Please install the $(green)mono-complete$(reset) package provided by your distribution, or the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
+ $(error )
  endif
  $(info Mono Version $(MONO_VERSION) found.)
  ifeq "$(call GreaterVersion, $(MONO_VERSION), $(MIN_MONO_VERSION))" "$(MONO_VERSION)"
  #Nothing
  else
- $(error OpenBVE requires a minimum Mono version of 5.20)
+ $(info OpenBVE requires a minimum Mono version of 5.20)
+ $(info Please install the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
+ $(error )
  endif
  $(info Checking for MSBuild....)
  ifeq (, $(shell which msbuild))
- $(error msbuild does not appear to be installed on this system.)
+ $(info msbuild does not appear to be installed on this system.)
+ $(info Please either install the $(green)mono-xbuild$(reset) package provided by your distribution, or the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
+ $(error )
  endif
  $(info Checking for nuget....)
  ifeq (, $(shell which nuget))
- $(error nuget does not appear to be installed on this system.)
+ $(info nuget does not appear to be installed on this system.)
+ $(info Please either install the $(green)nuget$(reset) package provided by your distribution, or the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
+ $(error )
  endif
  $(info nuget Version $(NUGET_VERSION) found.)
  ifeq "$(call GreaterVersion, $(NUGET_VERSION), $(MIN_NUGET_VERSION))" "$(NUGET_VERSION)"
