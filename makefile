@@ -4,7 +4,7 @@ MIN_MONO_VERSION:= "5.18.0"
 MONO_VERSION:= $(shell mono --version | awk '/version/ { print $$5 }')
 MIN_NUGET_VERSION:= "2.16.0"
 NUGET_VERSION:= $(shell nuget help 2> /dev/null | awk '/Version:/ { print $$3; exit 0}')
-GreaterVersion = $(shell printf '%s\n' $(1) $(2) | sort -rV | head -n 1)
+GreaterVersion = $(shell printf '%s\n' $(1) $(2) | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)
 
 # Directories
 DEBUG_DIR   := bin_debug
