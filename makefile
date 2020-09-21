@@ -1,13 +1,10 @@
-# C-Sharp Compiler
-HAS_MSBUILD := $(shell command -v msbuild 2> /dev/null)
-
-ifdef HAS_MSBUILD
-	MSBUILD := msbuild
-endif
-
-ifndef HAS_MSBUILD
-	MSBUILD := xbuild
-endif
+# Version checking
+MSBUILD := msbuild
+MIN_MONO_VERSION:= "5.18.0"
+MONO_VERSION:= $(shell mono --version | awk '/version/ { print $$5 }')
+MIN_NUGET_VERSION:= "2.16.0"
+NUGET_VERSION:= $(shell nuget help 2> /dev/null | awk '/Version:/ { print $$3; exit 0}')
+GreaterVersion = $(shell printf '%s\n' $(1) $(2) | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)
 
 # Directories
 DEBUG_DIR   := bin_debug
@@ -36,6 +33,11 @@ COLOR_MAGENTA := "\033[1;35m"
 COLOR_CYAN    := "\033[1;36m"
 COLOR_WHITE   := "\033[1;37m"
 COLOR_END     := "\033[0m"
+#Literal sequences don't work in the info command....
+red:=$(shell tput setaf 1)
+green:=$(shell tput setaf 2)
+blue:=$(shell tput setaf 4)
+reset:=$(shell tput sgr0)
 
 .PHONY: all 
 .PHONY: all-debug
@@ -50,6 +52,7 @@ COLOR_END     := "\033[0m"
 .PHONY: publish
 .PHONY: debian
 .PHONY: restore
+.PHONY: prequisite-check
 
 restore:
 	nuget restore OpenBVE.sln
@@ -59,22 +62,27 @@ release: openbve-release
 openbve: openbve-debug
 
 openbve-debug: restore
+	$(info Building OpenBVE in debug mode....)
 	$(MSBUILD) /t:OpenBve /p:Configuration=Debug OpenBVE.sln
 
 openbve-release: restore
+	$(info Building OpenBVE in release mode....)
 	$(MSBUILD) /t:OpenBve /p:Configuration=Release OpenBVE.sln
 
 all: all-debug
 
 all-debug: restore
+	$(info Building OpenBVE and developer tools in debug mode....)
 	$(MSBUILD) /t:build /p:Configuration=Debug OpenBVE.sln
 
 all-release: restore
+	$(info Building OpenBVE and developer tools in release mode....)
 	$(MSBUILD) /t:build /p:Configuration=Release OpenBVE.sln
 
 clean-all: clean
 
 clean:
+	$(info Runing solution clean....)
 	$(MSBUILD) /t:clean /p:Configuration=Debug OpenBVE.sln
 	$(MSBUILD) /t:clean /p:Configuration=Release OpenBVE.sln
 
@@ -96,6 +104,45 @@ endif
 
 debian: $(DEBIAN_BUILD_RESULT)
 
+prequisite-check:
+ #Very basic prequisite check function
+ $(info Checking for prequisite system libraries.)
+ $(info Checking for Mono....)
+ ifeq (, $(shell which mono))
+ $(info Mono does not appear to be installed on this system.)
+ $(info Please install the $(green)mono-complete$(reset) package provided by your distribution, or the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
+ $(error )
+ endif
+ $(info Mono Version $(MONO_VERSION) found.)
+ ifeq "$(call GreaterVersion, $(MONO_VERSION), $(MIN_MONO_VERSION))" "$(MONO_VERSION)"
+ #Nothing
+ else
+ $(info OpenBVE requires a minimum Mono version of 5.20)
+ $(info Please install the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
+ $(error )
+ endif
+ $(info Checking for MSBuild....)
+ ifeq (, $(shell which msbuild))
+ $(info msbuild does not appear to be installed on this system.)
+ $(info Please either install the $(green)mono-xbuild$(reset) package provided by your distribution, or the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
+ $(error )
+ endif
+ $(info Checking for nuget....)
+ ifeq (, $(shell which nuget))
+ $(info nuget does not appear to be installed on this system.)
+ $(info Please either install the $(green)nuget$(reset) package provided by your distribution, or the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
+ $(error )
+ endif
+ $(info nuget Version $(NUGET_VERSION) found.)
+ ifeq "$(call GreaterVersion, $(NUGET_VERSION), $(MIN_NUGET_VERSION))" "$(NUGET_VERSION)"
+ #Nothing
+ else
+ $(info OpenBVE requires a minimum nuget version of 2.16)
+ $(info Please run $(red)nuget update -self$(reset) with administrative priveledges.)
+ $(error )
+ endif
+ $(info Attempting to restore nuget packages (This may take a while)....)
+	
 $(MAC_BUILD_RESULT): all-release
 	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)installers/mac/MacBundle.tgz$(COLOR_END)
