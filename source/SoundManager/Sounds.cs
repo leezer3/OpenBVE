@@ -62,7 +62,7 @@ namespace SoundManager
 		/// <summary>Whether sound events are currently suppressed</summary>
 		public static bool SuppressSoundEvents = false;
 
-
+		protected internal int systemMaxSounds = int.MaxValue;
 		// --- linear distance clamp model ---
 
 		/// <summary>The factor by which the inner radius is multiplied to give the outer radius.</summary>
@@ -111,6 +111,17 @@ namespace SoundManager
 			OuterRadiusFactor = Math.Sqrt(OuterRadiusFactorMinimum * OuterRadiusFactorMaximum);
 			OuterRadiusFactorSpeed = 0.0;
 			OpenAlDevice = Alc.OpenDevice(null);
+			string deviceName = Alc.GetString(OpenAlDevice, AlcGetString.DefaultDeviceSpecifier);
+			if ((Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT) && deviceName == "Generic Software")
+			{
+				/*
+				 * Creative OpenAL implementation on Windows seems to be limited to max 16 simulataneous sounds
+				 * Now shipping OpenAL Soft, but detect this and don't glitch
+				 * Further note that the current version of OpenAL Soft (1.20.0 at the time of writing) does not like OpenTK
+				 * The version in use is 1.15.1 found here: https://github.com/opentk/opentk-dependencies
+				 */
+				systemMaxSounds = 16;
+			}
 			try
 			{
 				OpenAlMic = new AudioCapture(AudioCapture.DefaultDevice, SamplingRate, ALFormat.Mono16, BufferSize);
