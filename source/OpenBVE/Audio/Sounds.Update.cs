@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
@@ -473,10 +473,12 @@ namespace OpenBve
 			for (int i = index; i < toBePlayed.Count; i++) {
 				toBePlayed[i].Gain = 0.0;
 			}
+
+			int idx2 = Math.Min(index, toBePlayed.Count);
 			for (int i = 0; i < toBePlayed.Count; i++) {
 				SoundSource source = toBePlayed[i].Source;
 				double gain = toBePlayed[i].Gain - clampFactor * toBePlayed[i].Distance * toBePlayed[i].Distance;
-				if (gain <= 0.0) {
+				if (gain <= 0.0 || i > idx2) {
 					/*
 					 * Stop the sound.
 					 * */
