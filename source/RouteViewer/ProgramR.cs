@@ -183,8 +183,14 @@ namespace OpenBve
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Game.Reset();
-				CurrentRoute = null;
 				result = false;
+				CurrentRouteFile = null;
+			}
+
+			if (Loading.Cancel)
+			{
+				result = false;
+				CurrentRouteFile = null;
 			}
 			Renderer.Lighting.Initialize();
 			Renderer.InitializeVisibility();
@@ -352,6 +358,20 @@ namespace OpenBve
 							Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
+						else
+						{
+							Renderer.Camera.Alignment.Yaw = 0.0;
+							Renderer.Camera.Alignment.Pitch = 0.0;
+							Renderer.Camera.Alignment.Roll = 0.0;
+							Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
+							Renderer.Camera.Alignment.Zoom = 0.0;
+							Renderer.Camera.AlignmentDirection = new CameraAlignment();
+							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
+							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+							Renderer.UpdateViewport();
+							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+						}
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
 						if (bitmap != null)
@@ -374,8 +394,24 @@ namespace OpenBve
 						Application.DoEvents();
 						CurrentlyLoading = true;
 						CurrentRouteFile = Dialog.FileName;
-						LoadRoute();
-						ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+						if (LoadRoute())
+						{
+							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+						}
+						else
+						{
+							Renderer.Camera.Alignment.Yaw = 0.0;
+							Renderer.Camera.Alignment.Pitch = 0.0;
+							Renderer.Camera.Alignment.Roll = 0.0;
+							Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
+							Renderer.Camera.Alignment.Zoom = 0.0;
+							Renderer.Camera.AlignmentDirection = new CameraAlignment();
+							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
+							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+							Renderer.UpdateViewport();
+							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+						}
 						CurrentlyLoading = false;
 						UpdateCaption();
 					}

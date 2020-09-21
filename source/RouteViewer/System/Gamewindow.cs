@@ -201,7 +201,9 @@ namespace OpenBve
 			}
 			else
 			{
-				Program.currentGameWindow.Exit();
+				Game.Reset();
+				currentlyLoading = false;
+				Program.CurrentRouteFile = null;
 			}
 		}
 

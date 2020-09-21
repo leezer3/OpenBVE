@@ -7,18 +7,16 @@
 
 using System;
 using System.Drawing;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LibRender2;
 using LibRender2.Cameras;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using OpenTK.Graphics.ES20;
 using RouteManager2;
 
 namespace OpenBve {
@@ -122,7 +120,8 @@ namespace OpenBve {
 			}
 			catch (Exception ex)
 			{
-				Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+				MessageBox.Show("The route loader encountered the following critical error: " + ex.Message, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Cancel = true;
 			}
 		}
 
@@ -151,13 +150,16 @@ namespace OpenBve {
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
 				{
 					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-					Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, null, ObjectFolder, SoundFolder, false, ref Route);
-					Program.CurrentRoute = (CurrentRoute) Route;
-					Program.Renderer.Lighting.OptionAmbientColor = Program.CurrentRoute.Atmosphere.AmbientLightColor;
-					Program.Renderer.Lighting.OptionDiffuseColor = Program.CurrentRoute.Atmosphere.DiffuseLightColor;
-					Program.Renderer.Lighting.OptionLightPosition = Program.CurrentRoute.Atmosphere.LightPosition;
-					loaded = true;
-					break;
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, null, ObjectFolder, SoundFolder, false, ref Route))
+					{
+						Program.CurrentRoute = (CurrentRoute) Route;
+						Program.Renderer.Lighting.OptionAmbientColor = Program.CurrentRoute.Atmosphere.AmbientLightColor;
+						Program.Renderer.Lighting.OptionDiffuseColor = Program.CurrentRoute.Atmosphere.DiffuseLightColor;
+						Program.Renderer.Lighting.OptionLightPosition = Program.CurrentRoute.Atmosphere.LightPosition;
+						loaded = true;
+						break;
+					}
+					throw Program.CurrentHost.Plugins[i].Route.LastException;
 				}
 			}
 

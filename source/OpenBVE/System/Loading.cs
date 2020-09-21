@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Threading;
 using LibRender2;
 using OpenBve.Parsers.Train;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
@@ -214,13 +215,24 @@ namespace OpenBve {
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
 				{
 					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-					Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false, ref Route);
-					Program.CurrentRoute = (CurrentRoute) Route;
-					Program.Renderer.Lighting.OptionAmbientColor = Program.CurrentRoute.Atmosphere.AmbientLightColor;
-					Program.Renderer.Lighting.OptionDiffuseColor = Program.CurrentRoute.Atmosphere.DiffuseLightColor;
-					Program.Renderer.Lighting.OptionLightPosition = Program.CurrentRoute.Atmosphere.LightPosition;
-					loaded = true;
-					break;
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false, ref Route))
+					{
+						Program.CurrentRoute = (CurrentRoute) Route;
+						Program.Renderer.Lighting.OptionAmbientColor = Program.CurrentRoute.Atmosphere.AmbientLightColor;
+						Program.Renderer.Lighting.OptionDiffuseColor = Program.CurrentRoute.Atmosphere.DiffuseLightColor;
+						Program.Renderer.Lighting.OptionLightPosition = Program.CurrentRoute.Atmosphere.LightPosition;
+						loaded = true;
+						break;
+					}
+					var currentError = Translations.GetInterfaceString("errors_critical_file");
+					currentError = currentError.Replace("[file]", System.IO.Path.GetFileName(CurrentRouteFile));
+					MessageBox.Show(currentError, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + Program.CurrentHost.Plugins[i].Route.LastException.Message);
+					CrashHandler.LoadingCrash(Program.CurrentHost.Plugins[i].Route.LastException.Message, false);
+					Program.RestartArguments = " ";
+					Cancel = true;
+					return;
+
 				}
 			}
 
