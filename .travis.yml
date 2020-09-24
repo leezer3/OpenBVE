@@ -79,3 +79,25 @@ env:
     - secure: "xhY40lPWCokuabAfN7t2gd4DTrNXpxvKiH6Xobo5XkAiDNseBw+MZ/ce4XZeAXnq9jHdeTXVMu1rtcdFlC5St2XCeltNpchS4Km8dv+7ErtTBAawgl+5rGwTTnIF5jUTPsbzfEcIgnL6ud7NWDEqYQm5oeEMpuS3z/gqSc/HKx3Fp5cIPte65Oo37oMuL0dwNh2XIwrogaSOHX+Jwh7B5ZkCMzAe/MOxg0b34A4noAtCHbtc2QmmDhOhdlk+OBx5iSIwqUvmW8YYUX+14mIFAqWQ6E7MOUY9gjDgedXnbfvPsw+gLeXyCoNunc980EMdrIF2KHaPa772TFi7MzOiPwXno2jxlK3INvGylYdymI4YwI97H53oasfT1RiOzG9j1zCqJZv3U1L5KdscX8LKPYXsOeP78okB5lXt2E2jiO7hVJMIhQtJrNiCmlok3/U65jD30WLBsZtIBzZ4RhpESYr2a5QayhFmbHmIeMbfhY6OkRiE/enCMYuCFlnV6twWA4J6gBUVilYj+qjR6Js2xRAtaY0ljnPhK0EE2RIjPOKks3CPlchP3ZbI9jFCaupBfLlT0uBfmMu0aD/q/AZ0wDf1Dp1OdRzGbBcvhDcijpmZ8GatLyZS64Iq27WqUC6XouI17SIj0XftnBkcKTbSXY9UbSXM2bPYuHLIGk61aXU="
 notifications:
       email: false
+#Also deploy new releases to Github Releases
+#zipped build
+deploy:
+  provider: releases
+  api_key: $GITHUB_RELEASE_OAUTH
+  on.tags: true
+  file: "OpenBVE-$TRAVIS_TAG.zip"
+  skip_cleanup: true
+#Debian package
+deploy:
+  provider: releases
+  api_key: $GITHUB_RELEASE_OAUTH
+  on.tags: true
+  file: "OpenBVE-$TRAVIS_TAG.deb"
+  skip_cleanup: true
+#Mac DMG
+deploy:
+  provider: releases
+  api_key: $GITHUB_RELEASE_OAUTH
+  on.tags: true
+  file: "OpenBVE-$TRAVIS_TAG.dmg"
+  skip_cleanup: true
