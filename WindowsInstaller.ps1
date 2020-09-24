@@ -280,4 +280,4 @@ end;
 "@ 
 
 $InstallerOut | Out-File -FilePath $PSScriptRoot\installers\windows\openbve.iss -Encoding UTF8
-& "C:\Program Files (x86)\Inno Setup 5\compil32.exe" /cc $PSScriptRoot\installers\windows\openbve.iss
+& "C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q $PSScriptRoot\installers\windows\openbve.iss
