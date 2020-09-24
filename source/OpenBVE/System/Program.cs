@@ -122,43 +122,6 @@ namespace OpenBve {
 					CurrentlyRunningOnMacOS = true;
 				}
 			}
-			else
-			{
-				if (!System.IO.File.Exists(System.IO.Path.Combine(Environment.SystemDirectory, "OpenAL32.dll")))
-				{
-					
-					MessageBox.Show(
-						"OpenAL was not found on your system, and will now be installed." + System.Environment.NewLine + System.Environment.NewLine +
-						"Please follow the install prompts.", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-
-					ProcessStartInfo info = new ProcessStartInfo(Path.Combine(FileSystem.DataFolder, "Dependencies\\Win32\\oalinst.exe"));
-					info.UseShellExecute = true;
-					if (Environment.OSVersion.Version.Major >= 6)
-					{
-						info.Verb = "runas";
-					}
-					try
-					{
-						Process p = Process.Start(info);
-						if (p != null)
-						{
-							p.WaitForExit();
-						}
-						else
-						{
-							//For unknown reasons, the process failed to trigger, but did not raise an exception itself
-							//Throw one
-							throw new Win32Exception();
-						}
-					}
-					catch (Win32Exception)
-					{
-						MessageBox.Show(
-						"An error occured during OpenAL installation....", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					}
-					
-				}
-			}
 
 
 			// --- load options and controls ---

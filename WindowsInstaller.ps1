@@ -6,7 +6,7 @@ $InstallerOut = @"
 #define MyAppVersion "$args"
 #define MyAppPublisher "The OpenBVE Project"
 #define MyAppURL "http://www.openbve-project.net"
-#define MyAppExeName "OpenBve.exe"
+#define OpenBVEExecutable "OpenBve.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -70,9 +70,12 @@ Source: "InstallerData\filesystem_programfolder.cfg"; DestDir: "{app}\";
 ;MS .NET 4.6.1 Web Installer.
 Source: "InstallerData\NDP461-KB3102438-Web.exe"; DestDir: "{app}"; Flags: deleteafterinstall; AfterInstall: AfterMyProgInstall('AllFilesCopy')
 [Icons]
-Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#OpenBVEExecutable}"; Tasks: desktopicon
 Name: "{userdesktop}\openBVE Addons"; Filename:"{code:GetDataDir}"; Tasks: desktopicon2
 Name: "{group}\{#MyAppName}"; Filename: "{app}\OpenBVE.exe"
+Name: "{group}\Developer Tools\Route Viewer"; Filename: "{app}\RouteViewer.exe"
+Name: "{group}\Developer Tools\Object Viewer"; Filename: "{app}\ObjectViewer.exe"
+Name: "{group}\Developer Tools\Train Editor"; Filename: "{app}\TrainEditor2.exe"
 Name: "{group}\openBVE Addons"; Filename: "{code:GetDataDir}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{app}\openBVE Addons"; Filename: "{code:GetDataDir}"; Flags: uninsneveruninstall
@@ -81,7 +84,7 @@ Name: "{app}\openBVE Addons"; Filename: "{code:GetDataDir}"; Flags: uninsneverun
 Name: {code:GetDataDir}; Flags: uninsneveruninstall
 
 [Run]
- Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: postinstall shellexec skipifsilent runascurrentuser
+ Filename: "{app}\{#OpenBVEExecutable}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: postinstall shellexec skipifsilent runascurrentuser
  Filename: "{code:GetDataDir}"; Description: "Open the openBVE Addons Folder" ; Flags: postinstall shellexec waituntilterminated skipifsilent unchecked
 
 [Code]
@@ -89,9 +92,7 @@ var
   UsagePage: TInputOptionWizardPage;
   DataDirPage: TInputDirWizardPage;
   use_Net4: Cardinal;
-  use_OpenAL: Cardinal;
   ResultCode_Net4: Integer;
-  ResultCode_OpenAL: Integer;
   
 procedure InitializeWizard;
 begin
@@ -202,11 +203,6 @@ FileLines: TArrayOfString;
         use_Net4:=0;
       end;
     end;
-      begin
-        if RegKeyExists(HKLM32,'Software\OpenAL') then begin
-        use_OpenAL:=1
-        end
-      end;
     begin
     if use_Net4 = 1 then begin
     end else begin
@@ -219,19 +215,6 @@ FileLines: TArrayOfString;
         end
       else begin
         // handle failure if necessary; ResultCode contains the error code;
-      end;
-    end;
-    begin
-    if use_OpenAL = 1 then begin
-    end else begin
-    WizardForm.FilenameLabel.Caption := 'Installing OpenAL';
-      if Exec(ExpandConstant('{app}\Data\Dependencies\Win32\oalinst.exe'), '-s', '', SW_SHOW,
-        ewWaitUntilTerminated, ResultCode_OpenAL) then
-        begin
-        Sleep(3000);
-        // handle success if necessary; ResultCode contains the exit code
-        end
-        // handle failure if necessary; ResultCode contains the error code
       end;
     end;
       //OpenBVE filesystem.cfg
@@ -297,4 +280,4 @@ end;
 "@ 
 
 $InstallerOut | Out-File -FilePath $PSScriptRoot\installers\windows\openbve.iss -Encoding UTF8
-& "C:\Program Files (x86)\Inno Setup 5\compil32.exe" /cc $PSScriptRoot\installers\windows\openbve.iss
+& "C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q $PSScriptRoot\installers\windows\openbve.iss

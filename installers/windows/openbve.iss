@@ -91,9 +91,7 @@ var
   UsagePage: TInputOptionWizardPage;
   DataDirPage: TInputDirWizardPage;
   use_Net4: Cardinal;
-  use_OpenAL: Cardinal;
   ResultCode_Net4: Integer;
-  ResultCode_OpenAL: Integer;
   
 procedure InitializeWizard;
 begin
@@ -204,11 +202,6 @@ FileLines: TArrayOfString;
         use_Net4:=0;
       end;
     end;
-      begin
-        if RegKeyExists(HKLM32,'Software\OpenAL') then begin
-        use_OpenAL:=1
-        end
-      end;
     begin
     if use_Net4 = 1 then begin
     end else begin
@@ -221,19 +214,6 @@ FileLines: TArrayOfString;
         end
       else begin
         // handle failure if necessary; ResultCode contains the error code;
-      end;
-    end;
-    begin
-    if use_OpenAL = 1 then begin
-    end else begin
-    WizardForm.FilenameLabel.Caption := 'Installing OpenAL';
-      if Exec(ExpandConstant('{app}\Data\Dependencies\Win32\oalinst.exe'), '-s', '', SW_SHOW,
-        ewWaitUntilTerminated, ResultCode_OpenAL) then
-        begin
-        Sleep(3000);
-        // handle success if necessary; ResultCode contains the exit code
-        end
-        // handle failure if necessary; ResultCode contains the error code
       end;
     end;
       //OpenBVE filesystem.cfg
