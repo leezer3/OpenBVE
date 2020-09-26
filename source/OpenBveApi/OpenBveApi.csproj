@@ -147,6 +147,27 @@
     <Compile Include="Routes\Track.cs" />
     <Compile Include="Routes\Track.TrackElement.cs" />
     <Compile Include="Routes\Track.TrackFollower.cs" />
+    <Compile Include="Runtime\Train\AIData.cs" />
+    <Compile Include="Runtime\Train\AIResponse.cs" />
+    <Compile Include="Runtime\Train\AISupport.cs" />
+    <Compile Include="Runtime\Route\BeaconData.cs" />
+    <Compile Include="Runtime\Train\BrakeTypes.cs" />
+    <Compile Include="Runtime\System\CameraViewMode.cs" />
+    <Compile Include="Runtime\Train\DoorInterlockStates.cs" />
+    <Compile Include="Runtime\Train\DoorStates.cs" />
+    <Compile Include="Runtime\Train\ElapseData.cs" />
+    <Compile Include="Runtime\Train\Handles.cs" />
+    <Compile Include="Runtime\Train\HornTypes.cs" />
+    <Compile Include="Runtime\Train\InitializationModes.cs" />
+    <Compile Include="Runtime\System\LoadProperties.cs" />
+    <Compile Include="Runtime\Train\PreceedingVehicleState.cs" />
+    <Compile Include="Runtime\Route\SignalData.cs" />
+    <Compile Include="Runtime\System\SoundHandle.cs" />
+    <Compile Include="Runtime\System\Speed.cs" />
+    <Compile Include="Runtime\System\Time.cs" />
+    <Compile Include="Runtime\Train\VehicleSpecs.cs" />
+    <Compile Include="Runtime\Train\VehicleState.cs" />
+    <Compile Include="Runtime\System\VirtualKeys.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />
@@ -191,7 +212,7 @@
     <Compile Include="System\Path.Loksim3D.cs" />
     <Compile Include="Runtime\Runtime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runtime\Runtime.Station.cs" />
+    <Compile Include="Runtime\Route\Station.cs" />
     <Compile Include="System\Text.cs" />
     <Compile Include="Textures\Textures.ClipRegion.cs" />
     <Compile Include="Textures\Textures.OpenGLTexture.cs" />
@@ -224,6 +245,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Target Name="AfterBuild">
     <ItemGroup>
       <DependentFiles Include="$(SolutionDir)dependencies\**\*.*" />
