@@ -174,9 +174,7 @@ namespace OpenBve {
 						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 1 : this.Train.Handles.Brake.Driver;
 					}
 				}
-				int locoBrakeNotch = this.Train.Handles.LocoBrake.Driver;
-				bool constSpeed = this.Train.Specs.CurrentConstSpeed;
-				return new Handles(reverser, powerNotch, brakeNotch, locoBrakeNotch, constSpeed);
+				return new Handles(reverser, powerNotch, brakeNotch, this.Train.Handles.LocoBrake.Driver, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);
 			}
 			/// <summary>Sets the driver handles or the virtual handles.</summary>
 			/// <param name="handles">The handles.</param>
@@ -328,6 +326,7 @@ namespace OpenBve {
 				 * Process the const speed system.
 				 * */
 				this.Train.Specs.CurrentConstSpeed = handles.ConstSpeed & this.Train.Specs.HasConstSpeed;
+				this.Train.Handles.HoldBrake.Actual = handles.HoldBrake & this.Train.Handles.HasHoldBrake;
 			}
 			/// <summary>Called every frame to update the plugin.</summary>
 			/// <param name="data">The data passed to the plugin on Elapse.</param>

@@ -497,6 +497,13 @@ namespace OpenBve {
 					} else {
 						TrainManager.Trains[i].LoadDefaultPlugin(TrainManager.Trains[i].TrainFolder);
 					}
+					for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++) {
+						if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePluginInfos[j] is ITrainInputDevice)
+						{
+							ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+							trainInputDevice.SetVehicleSpecs(TrainManager.Trains[i].vehicleSpecs());
+						}
+					}
 				}
 			}
 		}

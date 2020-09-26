@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
+using OpenBveApi.Runtime;
 
 namespace OpenBveApi.Interface
 {
@@ -63,7 +64,7 @@ namespace OpenBveApi.Interface
 		InputControl[] Controls { get; }
 
 		/// <summary>
-		/// A function call when the plugin is loading
+		/// A function called when the plugin is loading
 		/// </summary>
 		/// <param name="fileSystem">The instance of FileSytem class</param>
 		/// <returns>Check the plugin loading process is successfully</returns>
@@ -75,7 +76,7 @@ namespace OpenBveApi.Interface
 		void Unload();
 
 		/// <summary>
-		/// A funciton call when the Config button pressed
+		/// A function called when the Config button is pressed
 		/// </summary>
 		/// <param name="owner">The owner of the window</param>
 		void Config(IWin32Window owner);
@@ -97,6 +98,16 @@ namespace OpenBveApi.Interface
 		/// A function that calls each frame
 		/// </summary>
 		void OnUpdateFrame();
+	}
+
+	/// <summary>An interface for Input Device plugins which require the train properties to function</summary>
+	public interface ITrainInputDevice : IInputDevice
+	{
+		/// <summary>
+		/// Called after the train has loaded in order to inform the plugin of it's specs
+		/// </summary>
+		/// <param name="mySpecs"></param>
+		void SetVehicleSpecs(VehicleSpecs mySpecs);
 	}
 
 	/// <summary>
