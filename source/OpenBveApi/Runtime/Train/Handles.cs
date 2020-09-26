@@ -18,6 +18,9 @@
 		/// <summary>Whether the const speed system is enabled.</summary>
 		private bool MyConstSpeed;
 
+		/// <summary>Whether the hold brake system is enabled.</summary>
+		private bool MyHoldBrake;
+
 		/// <summary>Gets or sets the reverser position.</summary>
 		public int Reverser
 		{
@@ -83,6 +86,19 @@
 			}
 		}
 
+		/// <summary>Gets or sets whether the hold brake system is enabled.</summary>
+		public bool HoldBrake
+		{
+			get
+			{
+				return this.MyHoldBrake;
+			}
+			set
+			{
+				this.MyHoldBrake = value;
+			}
+		}
+
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="reverser">The current reverser position.</param>
 		/// <param name="powerNotch">The current power notch.</param>
@@ -109,6 +125,23 @@
 			this.MyBrakeNotch = brakeNotch;
 			this.MyLocoBrakeNotch = locoBrakeNotch;
 			this.MyConstSpeed = constSpeed;
+		}
+
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="reverser">The current reverser position.</param>
+		/// <param name="powerNotch">The current power notch.</param>
+		/// <param name="brakeNotch">The current brake notch.</param>
+		/// /// <param name="locoBrakeNotch">The current loco brake notch.</param>
+		/// <param name="constSpeed">Whether the const speed system is enabled.</param>
+		/// <param name="holdBrake">Whether the hold brake system is enabled</param>
+		public Handles(int reverser, int powerNotch, int brakeNotch, int locoBrakeNotch, bool constSpeed, bool holdBrake)
+		{
+			this.MyReverser = reverser;
+			this.MyPowerNotch = powerNotch;
+			this.MyBrakeNotch = brakeNotch;
+			this.MyLocoBrakeNotch = locoBrakeNotch;
+			this.MyConstSpeed = constSpeed;
+			this.MyHoldBrake = holdBrake;
 		}
 	}
 }

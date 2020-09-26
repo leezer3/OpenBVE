@@ -107,6 +107,30 @@ namespace OpenBve
 				return success;
 			}
 
+			internal VehicleSpecs vehicleSpecs()
+			{
+				BrakeTypes brakeType = (BrakeTypes) Cars[DriverCar].CarBrake.brakeType;
+				int brakeNotches;
+				int powerNotches;
+				bool hasHoldBrake;
+				if (brakeType == BrakeTypes.AutomaticAirBrake)
+				{
+					brakeNotches = 2;
+					powerNotches = Handles.Power.MaximumNotch;
+					hasHoldBrake = false;
+				}
+				else
+				{
+					brakeNotches = Handles.Brake.MaximumNotch + (Handles.HasHoldBrake ? 1 : 0);
+					powerNotches = Handles.Power.MaximumNotch;
+					hasHoldBrake = Handles.HasHoldBrake;
+				}
+
+				bool hasLocoBrake = Handles.HasLocoBrake;
+				int cars = Cars.Length;
+				return new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, cars);
+			}
+
 			/// <summary>Loads the specified plugin for the specified train.</summary>
 			/// <param name="pluginFile">The file to the plugin.</param>
 			/// <param name="trainFolder">The train folder.</param>
@@ -131,26 +155,7 @@ namespace OpenBve
 				/*
 				 * Prepare initialization data for the plugin.
 				 * */
-				BrakeTypes brakeType = (BrakeTypes) Cars[DriverCar].CarBrake.brakeType;
-				int brakeNotches;
-				int powerNotches;
-				bool hasHoldBrake;
-				if (brakeType == BrakeTypes.AutomaticAirBrake)
-				{
-					brakeNotches = 2;
-					powerNotches = Handles.Power.MaximumNotch;
-					hasHoldBrake = false;
-				}
-				else
-				{
-					brakeNotches = Handles.Brake.MaximumNotch + (Handles.HasHoldBrake ? 1 : 0);
-					powerNotches = Handles.Power.MaximumNotch;
-					hasHoldBrake = Handles.HasHoldBrake;
-				}
-
-				bool hasLocoBrake = Handles.HasLocoBrake;
-				int cars = Cars.Length;
-				VehicleSpecs specs = new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, cars);
+				
 				InitializationModes mode = (InitializationModes) Interface.CurrentOptions.TrainStart;
 				/*
 				 * Check if the plugin is a .NET plugin.
@@ -199,7 +204,7 @@ namespace OpenBve
 
 							IRuntime api = assembly.CreateInstance(type.FullName) as IRuntime;
 							Plugin = new NetPlugin(pluginFile, trainFolder, api, this);
-							if (Plugin.Load(specs, mode))
+							if (Plugin.Load(vehicleSpecs(), mode))
 							{
 								return true;
 							}
@@ -246,7 +251,7 @@ namespace OpenBve
 				}
 
 				Plugin = new Win32Plugin(pluginFile, this);
-				if (Plugin.Load(specs, mode))
+				if (Plugin.Load(vehicleSpecs(), mode))
 				{
 					return true;
 				}
