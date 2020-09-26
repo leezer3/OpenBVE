@@ -168,6 +168,138 @@ namespace Plugin
 								}
 							}
 							break;
+						case "[curve]":
+							{
+								i++;
+								double radius = 0;
+								int segments = 1;
+								double segmentLength = 0;
+								UnifiedObject[] obj = new UnifiedObject[4];
+								int objCount = 0;
+								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
+								{
+									if (Lines[i].Length != 0)
+									{
+										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+										if (j > 0)
+										{
+											string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											switch (a.ToLowerInvariant())
+											{
+												case "radius":
+													if (!double.TryParse(b, NumberStyles.Float, Culture, out radius))
+													{
+														currentHost.AddMessage(MessageType.Error, false, "Invalid curved object radius " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "segments":
+													if (!int.TryParse(b, NumberStyles.Float, Culture, out segments))
+													{
+														currentHost.AddMessage(MessageType.Error, false, "Invalid curved object radius " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "segmentlength":
+													if (!double.TryParse(b, NumberStyles.Float, Culture, out segmentLength))
+													{
+														currentHost.AddMessage(MessageType.Error, false, "Invalid curved object radius " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												default:
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													break;
+											}
+										}
+										else
+										{
+											string Folder = System.IO.Path.GetDirectoryName(FileName);
+											if (OpenBveApi.Path.ContainsInvalidChars(Lines[i]))
+											{
+												currentHost.AddMessage(MessageType.Error, false, Lines[i] + " contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											}
+											else
+											{
+												string file = OpenBveApi.Path.CombineFile(Folder, Lines[i]);
+												if (System.IO.File.Exists(file))
+												{
+													if (obj.Length == objCount)
+													{
+														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
+													}
+													currentHost.LoadObject(file, Encoding, out obj[objCount]);
+													objCount++;
+												}
+												else
+												{
+													currentHost.AddMessage(MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												}
+											}
+										}
+									}
+									i++;
+								}
+								i--;
+								for (int j = 0; j < objCount; j++)
+								{
+									if (obj[j] != null)
+									{
+										if (obj[j] is StaticObject)
+										{
+											StaticObject s = (StaticObject)obj[j];
+											if (segmentLength == 0)
+											{
+												double min = 0, max = 0;
+												for (int k = 0; k < s.Mesh.Vertices.Length; k++)
+												{
+													if (s.Mesh.Vertices[k].Coordinates.Z < min)
+													{
+														min = s.Mesh.Vertices[k].Coordinates.Z;
+													}
+													if (s.Mesh.Vertices[k].Coordinates.Z > max)
+													{
+														max = s.Mesh.Vertices[k].Coordinates.Z;
+													}
+												}
+
+												segmentLength = max - min;
+												if (segmentLength == 0)
+												{
+													currentHost.AddMessage(MessageType.Error, false, "Zero length segment supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													continue;
+												}
+											}
+
+											for (int k = 0; k < segments; k++)
+											{
+												StaticObject ss = (StaticObject) s.Clone();
+												ss.Dynamic = true;
+												ss.ApplyTranslation(0,0,k * segmentLength);
+												ss.ApplyCurve(radius);
+												if (ObjectCount >= Result.Objects.Length)
+												{
+													Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
+												}
+												AnimatedObject a = new AnimatedObject(currentHost);
+												ObjectState aos = new ObjectState
+												{
+													Prototype = ss,
+													Translation = Matrix4D.CreateTranslation(Vector3.Zero)
+												};
+												a.States = new ObjectState[] { aos };
+												Result.Objects[ObjectCount] = a;
+												ObjectCount++;
+											}
+											//s = s.CreateCurvedObject(segments, 5.0, radius);
+											
+										}
+										else if (obj[j] is AnimatedObjectCollection)
+										{
+											currentHost.AddMessage(MessageType.Error, false, "Unable to create a curved object from an animated object collection at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										}
+									}
+								}
+							}
+							break;
 						case "[object]":
 							{
 								i++;

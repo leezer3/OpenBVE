@@ -20,6 +20,14 @@ namespace OpenBveApi.World
 			this.Z = Vector3.Forward;
 		}
 
+		/// <summary>Creates a clone of a transformation</summary>
+		public Transformation(Transformation t)
+		{
+			this.X = t.X;
+			this.Y = t.Y;
+			this.Z = t.Z;
+		}
+
 		/// <summary>Creates a new transformation, based upon yaw pitch and roll values</summary>
 		/// <param name="Yaw">The yaw to apply</param>
 		/// <param name="Pitch">The pitch to apply</param>

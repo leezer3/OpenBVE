@@ -343,6 +343,34 @@ namespace OpenBveApi.Objects
 			}
 		}
 		
+		/// <summary>Moves the vertices to account for a curve radius</summary>
+		/// <param name="Radius">The curve radius in meters</param>
+		public void ApplyCurve(double Radius)
+		{
+			if (Radius == 0)
+			{
+				return;
+			}
+			for (int j = 0; j < Mesh.Vertices.Length; j++)
+			{
+				double a = 0.5 * (Mesh.Vertices[j].Coordinates.Z / Radius);
+				double cosa = System.Math.Cos(a);
+				double sina = System.Math.Sin(a);
+				Mesh.Vertices[j].Coordinates.Rotate(Vector3.Down, cosa, sina);
+			}
+
+			for (int j = 0; j < Mesh.Faces.Length; j++)
+			{
+				for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
+				{
+					double a = 0.5 * (Mesh.Faces[j].Vertices[k].Normal.Z / Radius);
+					double cosa = System.Math.Cos(a);
+					double sina = System.Math.Sin(a);
+					Mesh.Faces[j].Vertices[k].Normal.Rotate(Vector3.Down, cosa, sina);
+				}
+			}
+		}
+
 		/// <summary>Applys translation</summary>
 		public void ApplyTranslation(double x, double y, double z)
 		{

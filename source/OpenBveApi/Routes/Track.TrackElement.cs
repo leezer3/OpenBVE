@@ -31,6 +31,8 @@ namespace OpenBveApi.Routes
 		public Vector3 WorldSide;
 		/// <summary>An array containing all events attached to this element</summary>
 		public GeneralEvent[] Events;
+		/// <summary>Whether interpolation begins at this element</summary>
+		public bool BeginInterpolation;
 
 		/// <summary>Creates a new track element</summary>
 		/// <param name="StartingTrackPosition">The starting position (relative to zero)</param>
@@ -49,6 +51,7 @@ namespace OpenBveApi.Routes
 			this.WorldUp = Vector3.Down;
 			this.WorldSide = Vector3.Right;
 			this.Events = new GeneralEvent[] { };
+			this.BeginInterpolation = false;
 		}
 	}
 }

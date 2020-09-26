@@ -8,6 +8,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -258,6 +259,7 @@ namespace OpenBve
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
 			{
 				handle = Program.Sounds.RegisterBuffer(path, 0.0);
+				return true;
 			}
 			else
 			{
@@ -290,7 +292,7 @@ namespace OpenBve
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool RegisterSound(OpenBveApi.Sounds.Sound sound, out OpenBveApi.Sounds.SoundHandle handle)
 		{
-			handle = Program.Sounds.RegisterBuffer(sound, 0.0);
+			handle = Program.Sounds.RegisterBuffer(sound, 15.0);
 			return true;
 		}
 
@@ -350,7 +352,10 @@ namespace OpenBve
 								{
 									UnifiedObject obj;
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
-										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+										if (obj != null)
+										{
+											obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+										}
 										Object = obj;
 
 										StaticObject staticObject = Object as StaticObject;
@@ -460,6 +465,11 @@ namespace OpenBve
 			{
 				Program.CurrentRoute.Tracks = value;
 			}
+		}
+
+		public override object PlaySound(SoundHandle buffer, double pitch, double volume, Vector3 position, object parent, bool looped)
+		{
+			return Program.Sounds.PlaySound(buffer, pitch, volume, position, parent, looped);
 		}
 
 		public override AbstractTrain ParseTrackFollowingObject(string tfoFile, string objectPath)

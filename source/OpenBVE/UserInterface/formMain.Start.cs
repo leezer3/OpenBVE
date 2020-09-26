@@ -9,6 +9,7 @@ using System.Xml;
 using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenTK.Graphics.ES20;
 using RouteManager2;
 using Path = OpenBveApi.Path;
 
@@ -123,6 +124,7 @@ namespace OpenBve
 		/// <param name="Folder">The folder containing route files</param>
 		private void populateRouteList(string Folder)
 		{
+			Plugins.LoadPlugins();
 			try
 			{
 				if (Folder.Length == 0)
@@ -201,12 +203,13 @@ namespace OpenBve
 						for (int i = 0; i < Files.Length; i++)
 						{
 							if (Files[i] == null) return;
+							string fileName;
 							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
 							switch (Extension)
 							{
 								case ".rw":
 								case ".csv":
-									string fileName = System.IO.Path.GetFileName(Files[i]);
+									fileName = System.IO.Path.GetFileName(Files[i]);
 									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
 									{
 										ListViewItem Item = listviewRouteFiles.Items.Add(fileName);
@@ -237,6 +240,21 @@ namespace OpenBve
 										Item.Tag = Files[i];
 									}
 									break;
+								case ".txt":
+									fileName = System.IO.Path.GetFileName(Files[i]);
+									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
+									{
+										for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+										{
+											if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
+											{
+												ListViewItem Item = listviewRouteFiles.Items.Add(fileName);
+												Item.ImageKey = @"route";
+												Item.Tag = Files[i];
+											}
+										}
+									}
+									break;
 							}
 						}
 					}
@@ -248,6 +266,7 @@ namespace OpenBve
 			catch
 			{
 			}
+			Plugins.UnloadPlugins();
 		}
 
 		// route files
