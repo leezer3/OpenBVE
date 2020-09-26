@@ -38,3 +38,17 @@ notifications:
     on_build_success: false
     on_build_failure: false
     on_build_status_changed: false
+deploy:
+#Must provide description else the GitHub API falls over
+  description: ''
+  provider: GitHub
+  auth_token:
+    secure: $env:GITHUB_DEPLOY_TOKEN
+  artifact: installers\windows\Output\*.exe
+  draft: false
+  prerelease: false
+#Need to update the existing, not overwrite as Travis is also uploading
+  force_update: true
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
