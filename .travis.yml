@@ -84,20 +84,26 @@ notifications:
 deploy:
   provider: releases
   api_key: $GITHUB_RELEASE_OAUTH
-  on.tags: true
+  on:
+    tags: true
+    mono: '5.20.1'
   file: "OpenBVE-$TRAVIS_TAG.zip"
   skip_cleanup: true
 #Debian package
 deploy:
   provider: releases
   api_key: $GITHUB_RELEASE_OAUTH
-  on.tags: true
+  on:
+    tags: true
+    mono: '5.20.1'
   file: "OpenBVE-$TRAVIS_TAG.deb"
   skip_cleanup: true
 #Mac DMG
 deploy:
   provider: releases
   api_key: $GITHUB_RELEASE_OAUTH
-  on.tags: true
+  on:
+    tags: true
+    mono: '5.20.1'
   file: "OpenBVE-$TRAVIS_TAG.dmg"
   skip_cleanup: true
