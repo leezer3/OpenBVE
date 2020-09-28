@@ -65,7 +65,7 @@ namespace TrainEditor2.Systems
 			return false;
 		}
 
-		public override AbstractTrain ParseTrackFollowingObject(string tfoFile, string objectPath)
+		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
 		{
 			throw new NotImplementedException();
 		}
