@@ -50,7 +50,6 @@ namespace CsvRwRouteParser
 
 			CurrentRoute.BlockLength = Data.BlockInterval;
 			CurrentRoute.AccurateObjectDisposal = Data.AccurateObjectDisposal;
-			int BlocksUsed = Data.Blocks.Count;
 			Data.CreateMissingBlocks(LastBlock, PreviewOnly);
 			// interpolate height
 			if (!PreviewOnly)
@@ -655,10 +654,8 @@ namespace CsvRwRouteParser
 								RailTransformation.X = new Vector3(r.Z, 0.0, -r.X);
 								Normalize(ref RailTransformation.X.X, ref RailTransformation.X.Z);
 								RailTransformation.Y = Vector3.Cross(RailTransformation.Z, RailTransformation.X);
-								double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
-								double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;
-								planar = Math.Atan(dx / c);
-								updown = Math.Atan(dy / c);
+								planar = Math.Atan(Data.Blocks[i + 1].Rails[j].MidPoint.X / c);
+								updown = Math.Atan(Data.Blocks[i + 1].Rails[j].MidPoint.Y / c);
 							}
 							else
 							{
@@ -695,11 +692,10 @@ namespace CsvRwRouteParser
 								CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
 								if (i < Data.Blocks.Count - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
 								{
-									double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
-									double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;
-									dx = Data.Blocks[i].Rails[j].RailStart.X + d / Data.BlockInterval * dx;
-									dy = Data.Blocks[i].Rails[j].RailStart.Y + d / Data.BlockInterval * dy;
-									CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
+									Vector2 trackOffset = Data.Blocks[i].Rails[j].MidPoint;
+									trackOffset.X = Data.Blocks[i].Rails[j].RailStart.X + d / Data.BlockInterval * trackOffset.X;
+									trackOffset.Y = Data.Blocks[i].Rails[j].RailStart.Y + d / Data.BlockInterval * trackOffset.Y;
+									CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + trackOffset.X, y + trackOffset.Y, 0.0);
 								}
 								else
 								{
