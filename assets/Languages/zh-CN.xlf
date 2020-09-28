@@ -171,6 +171,9 @@
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
 						<target>选择的线路文件已损坏:  \r\n 该线路没有物件。</target>
 					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 						<target>列车安全系统插件 [plugin] 载入失败。</target>

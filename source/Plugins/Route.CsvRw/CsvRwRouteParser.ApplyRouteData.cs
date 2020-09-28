@@ -28,7 +28,14 @@ namespace CsvRwRouteParser
 			{
 				if (freeObjCount == 0 && railtypeCount == 0)
 				{
-					throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_noobjects"));
+					if (missingObjectCount != 0)
+					{
+						throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_missingobjects"));
+					}
+					else
+					{
+						throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_noobjects"));
+					}
 				}
 			}
 			if (!PreviewOnly)

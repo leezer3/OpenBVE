@@ -137,10 +137,6 @@ namespace CsvRwRouteParser
 							Data.Structure.Run[Index] = val;
 						}
 					}
-					else
-					{
-						railtypeCount++;
-					}
 				}
 					break;
 				case "flange":

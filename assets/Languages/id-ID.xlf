@@ -171,6 +171,9 @@
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
 						<target>Rute error: \r\n Tidak ada objek.</target>
 					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 						<target>Tidak dapat membaca plugin [plugin].</target>

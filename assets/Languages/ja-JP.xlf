@@ -172,6 +172,9 @@
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
 						<target>選択した路線データは壊れている可能性があります。: \r\n オブジェクトが定義されていません。</target>
 					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 						<target>保安装置プラグイン[plugin] の読み込みに失敗しました。</target>

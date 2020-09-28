@@ -172,6 +172,9 @@
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
 						<target state="translated">A kiválasztott pálya hibás: \r\n Nincsenek objektumok.</target>
 					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 						<target>A [plugin] vonat plugin nem töltődött be.</target>

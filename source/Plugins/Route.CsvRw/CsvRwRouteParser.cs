@@ -165,6 +165,7 @@ namespace CsvRwRouteParser {
 		}
 		
 		private int freeObjCount;
+		private int missingObjectCount;
 		private int railtypeCount;
 		private readonly System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
