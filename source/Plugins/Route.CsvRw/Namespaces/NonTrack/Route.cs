@@ -302,7 +302,11 @@ namespace CsvRwRouteParser
 						}
 						else if (a <= -273.15)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInCelsius is expected to be greater than to -273.15 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInCelsius is expected to be greater than -273.15 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (a >= 100.0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInCelsius is expected to be less than 100.0 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 						else
 						{
@@ -326,6 +330,10 @@ namespace CsvRwRouteParser
 						else if (a <= 0.0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInKPa is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (a >= 120.0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInKPa is expected to be less than 120.0 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 						else
 						{
