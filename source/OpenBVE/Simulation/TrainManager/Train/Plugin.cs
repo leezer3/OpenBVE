@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 
@@ -238,13 +239,13 @@ namespace OpenBve
 					return false;
 				}
 
-				if (!Program.CurrentlyRunningOnWindows | IntPtr.Size != 4)
+				if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows | IntPtr.Size != 4)
 				{
 					Interface.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
 					return false;
 				}
 
-				if (Program.CurrentlyRunningOnWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
+				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
 				{
 					Interface.AddMessage(MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
 					return false;

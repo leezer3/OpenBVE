@@ -18,9 +18,6 @@ namespace OpenBve
 	/// <summary>Represents the host application.</summary>
 	internal class Host : OpenBveApi.Hosts.HostInterface
 	{
-
-		// --- functions ---
-
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>

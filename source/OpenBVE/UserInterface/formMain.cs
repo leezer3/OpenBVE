@@ -442,7 +442,7 @@ namespace OpenBve {
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (Decimal)Interface.CurrentOptions.KioskModeTimer;
 			ListInputDevicePlugins();
-			if (Program.CurrentlyRunningOnMono)
+			if (Program.CurrentHost.MonoRuntime)
 			{
 				//HACK: If we're running on Mono, manually select the tabpage at start. This avoids the 'grey tab' bug
 				tabcontrolRouteSelection.SelectedTab = tabpageRouteBrowse;
@@ -1378,7 +1378,7 @@ namespace OpenBve {
 			//This fixes the main form failing to close on Linux
 			formMain_FormClosing();
 			Application.DoEvents();
-			if (Program.CurrentlyRunningOnMono && sender != StartGame)
+			if (Program.CurrentHost.MonoRuntime && sender != StartGame)
 			{
 				//On some systems, the process *still* seems to hang around
 				//https://github.com/leezer3/OpenBVE/issues/213

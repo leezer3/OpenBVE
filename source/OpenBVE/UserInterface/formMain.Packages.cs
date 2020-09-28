@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Packages;
 using System.Text;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -78,7 +79,7 @@ namespace OpenBve
 				//Only set properties after making the checks
 
 				
-				if (Program.CurrentlyRunningOnMono)
+				if (Program.CurrentHost.MonoRuntime)
 				{
 					//HACK: Mono's WinForms implementation appears to be setting the encoding for a textbox to be Encoding.Default
 					//as opposed to UTF-8 under Microsoft .Net 
@@ -381,7 +382,7 @@ namespace OpenBve
 			{
 				//User attempted to install in a directory which requires UAC access
 				textBoxFilesInstalled.Text = e.Exception.Message + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_checkaccess");
-				if (Program.CurrentlyRunningOnWindows)
+				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 				{
 					textBoxFilesInstalled.Text+= Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_badlocation");
 				}
@@ -822,7 +823,7 @@ namespace OpenBve
 				{
 					throw new DirectoryNotFoundException(directory);
 				}
-				if (!Program.CurrentlyRunningOnMono)
+				if (!Program.CurrentHost.MonoRuntime)
 				{
 					//Mono doesn't support System.Security.AccessControl, so this doesn't work....
 					Directory.GetAccessControl(directory);

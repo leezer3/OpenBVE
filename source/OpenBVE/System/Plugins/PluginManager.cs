@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using LibRender2.Cameras;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.Stations;
 
 namespace OpenBve {
@@ -457,7 +455,8 @@ namespace OpenBve {
 			protected abstract void SetBeacon(BeaconData beacon);
 			/// <summary>Updates the AI.</summary>
 			/// <returns>The AI response.</returns>
-			internal AIResponse UpdateAI() {
+			internal AIResponse UpdateAI()
+			{
 				if (this.SupportsAI) {
 					AIData data = new AIData(GetHandles());
 					this.PerformAI(data);
@@ -465,9 +464,8 @@ namespace OpenBve {
 						SetHandles(data.Handles, false);
 					}
 					return data.Response;
-				} else {
-					return AIResponse.None;
 				}
+				return AIResponse.None;
 			}
 			/// <summary>Called when the AI should be performed.</summary>
 			/// <param name="data">The AI data.</param>

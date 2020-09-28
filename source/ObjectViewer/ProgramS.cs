@@ -22,9 +22,6 @@ using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve {
 	internal static class Program {
-
-
-		internal static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
 
 		// members
@@ -62,8 +59,7 @@ namespace OpenBve {
 	    [STAThread]
 	    internal static void Main(string[] args)
 	    {
-		    CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
-			CurrentHost = new Host();
+		    CurrentHost = new Host();
 			// file system
 	        FileSystem = FileSystem.FromCommandLineArgs(args);
 	        FileSystem.CreateFileSystem();
@@ -374,7 +370,7 @@ namespace OpenBve {
 						}
 						else
 						{
-					        if (Program.CurrentlyRunOnMono)
+					        if (Program.CurrentHost.MonoRuntime)
 				            {
 					            //HACK: Dialog doesn't close properly when pressing the ESC key under Mono
 					            //Avoid calling Application.DoEvents() unless absolutely necessary though!

@@ -663,9 +663,9 @@ namespace LibRender2
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
-		public void DetermineMaxAFLevel(bool MacOS)
+		public void DetermineMaxAFLevel()
 		{
-			if (MacOS)
+			if (currentHost.Platform == HostPlatform.AppleOSX)
 			{
 				// Calling GL.GetString in this manner seems to be crashing the OS-X driver (No idea, but probably OpenTK....)
 				// As we only support newer Intel Macs, 16x AF is safe

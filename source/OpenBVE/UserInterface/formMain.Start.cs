@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using LibRender2;
 using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using RouteManager2;
 using Path = OpenBveApi.Path;
@@ -136,7 +137,7 @@ namespace OpenBve
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewRouteFiles.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = Program.CurrentlyRunningOnWindows ? @"disk" : @"folder";
+							Item.ImageKey = Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows ? @"disk" : @"folder";
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewRouteFiles.Tag = null;
 						}
@@ -521,7 +522,7 @@ namespace OpenBve
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewTrainFolders.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = Program.CurrentlyRunningOnWindows ? @"disk" : @"folder";
+							Item.ImageKey = Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows ? @"disk" : @"folder";
 							
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewTrainFolders.Tag = null;

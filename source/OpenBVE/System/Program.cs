@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenBve.Graphics;
 using OpenTK;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using RouteManager2;
@@ -23,18 +24,7 @@ namespace OpenBve {
 #pragma warning disable IDE1006 // Suppress the VS2017 naming style rule, as this is an external syscall
 		private static extern uint getuid();
 #pragma warning restore IDE1006
-
-		// --- members ---
-
-		/// <summary>Whether the program is currently running on Mono. This is of interest for the Windows Forms main menu which behaves differently on Mono than on Microsoft .NET.</summary>
-		internal static bool CurrentlyRunningOnMono = false;
 		
-		/// <summary>Whether the program is currently running on Microsoft Windows or compatible. This is of interest for whether running Win32 plugins is possible.</summary>
-		internal static bool CurrentlyRunningOnWindows = false;
-
-		/// <summary>Whether the program is currently running on MacOS</summary>
-		internal static bool CurrentlyRunningOnMacOS = false;
-
 		/// <summary>Stores the current CPU architecture</summary>
 		internal static ImageFileMachine CurrentCPUArchitecture;
 
@@ -86,13 +76,8 @@ namespace OpenBve {
 			
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			//--- determine the running environment ---
-			//I wonder if disabling this hack will stop the craashing on Linux....
-			CurrentlyRunningOnMono = Type.GetType("Mono.Runtime") != null;
-			//Doesn't appear to, but Mono have fixed the button appearance bug
-			CurrentlyRunningOnWindows = Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT;
-			Joysticks = new JoystickManager();
 			CurrentHost = new Host();
+			Joysticks = new JoystickManager();
 			try {
 				FileSystem = FileSystem.FromCommandLineArgs(args);
 				FileSystem.CreateFileSystem();
@@ -105,22 +90,14 @@ namespace OpenBve {
 			Sounds = new Sounds();
 			CurrentRoute = new CurrentRoute(Renderer);
 
-			//Platform specific startup checks
-			if (CurrentlyRunningOnMono && !CurrentlyRunningOnWindows)
-			{
-				// --- Check if we're running as root, and prompt not to ---
-				if (getuid() == 0)
-				{
-					MessageBox.Show(
-						"You are currently running as the root user." + System.Environment.NewLine +
-						"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				}
 
-				if (File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
-				{
-					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
-					CurrentlyRunningOnMacOS = true;
-				}
+			//Platform specific startup checks
+			// --- Check if we're running as root, and prompt not to ---
+			if (CurrentHost.Platform == HostPlatform.GNULinux && getuid() == 0)
+			{
+				MessageBox.Show(
+					"You are currently running as the root user." + System.Environment.NewLine +
+					"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 
 

@@ -30,7 +30,6 @@ namespace OpenBve
 	internal static class Program {
 
 		// system
-		private static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
 
 		internal static bool CpuReducedMode = false;
@@ -68,8 +67,6 @@ namespace OpenBve
 		internal static void Main(string[] args)
 		{
 			CurrentHost = new Host();
-			// platform and mono
-			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args);
 			FileSystem.CreateFileSystem();
@@ -417,7 +414,7 @@ namespace OpenBve
 					}
 					else
 					{
-						if (Program.CurrentlyRunOnMono)
+						if (Program.CurrentHost.MonoRuntime)
 						{
 							//HACK: Dialog doesn't close properly when pressing the ESC key under Mono
 							//Avoid calling Application.DoEvents() unless absolutely necessary though!

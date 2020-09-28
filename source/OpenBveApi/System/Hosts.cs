@@ -45,9 +45,49 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Train Editor</summary>
 		TrainEditor = 3
 	}
+
+	/// <summary>The host platform</summary>
+	public enum HostPlatform
+	{
+		/// <summary>Microsoft Windows and compatabiles</summary>
+		MicrosoftWindows = 0,
+		/// <summary>Linux</summary>
+		GNULinux = 1,
+		/// <summary>Mac OS-X</summary>
+		AppleOSX = 2
+
+	}
 	
 	/// <summary>Represents the host application and functionality it exposes.</summary>
 	public abstract class HostInterface {
+
+		/// <summary>Returns whether the current host application is running under Mono</summary>
+		public bool MonoRuntime
+		{
+			get
+			{
+				return Type.GetType("Mono.Runtime") != null;
+			}
+		}
+
+		/// <summary>Returns the current host platform</summary>
+		public HostPlatform Platform
+		{
+			get
+			{
+				if (Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT)
+				{
+					return HostPlatform.MicrosoftWindows;
+				}
+				if (System.IO.File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
+				{
+					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
+					return HostPlatform.AppleOSX;
+				}
+
+				return HostPlatform.GNULinux;
+			}
+		}
 
 		/// <summary>The base host interface constructor</summary>
 		protected HostInterface(HostApplication host)

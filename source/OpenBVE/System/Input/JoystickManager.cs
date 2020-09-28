@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Hosts;
 using OpenTK.Input;
 using PIEHid32Net;
 
@@ -35,7 +36,7 @@ namespace OpenBve {
 
 		internal JoystickManager()
 		{
-			if (!Program.CurrentlyRunningOnWindows)
+			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows)
 			{
 				return;
 			}
@@ -69,7 +70,7 @@ namespace OpenBve {
 				//A joystick with 56 buttons and zero axis is likely the RailDriver, which is bugged in openTK
 				if (description.ToString() != "{Axes: 0; Buttons: 56; Hats: 0; IsConnected: True}")
 				{
-					if (Program.CurrentlyRunningOnMono)
+					if (Program.CurrentHost.MonoRuntime)
 					{
 						if (description.AxisCount == 0 && description.ButtonCount == 0 && description.HatCount == 0)
 						{
@@ -106,7 +107,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			if (!Program.CurrentlyRunningOnWindows || devices == null || RailDriverInit == true)
+			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows || devices == null || RailDriverInit == true)
 			{
 				return;
 			}
