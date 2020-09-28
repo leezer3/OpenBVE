@@ -600,7 +600,7 @@ namespace OpenBve
 						OpenGlString.Draw(Fonts.SmallFont, t.ToString(), new Point((int)x, 36), TextAlignment.TopLeft, Color128.White, true);
 					}
 
-					if (Interface.MessageCount == 1)
+					if (Interface.LogMessages.Count == 1)
 					{
 						keys = new[] { new[] { "F9" } };
 						Keys.Render(4, 72, 24, Fonts.SmallFont, keys);
@@ -615,18 +615,18 @@ namespace OpenBve
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
-					else if (Interface.MessageCount > 1)
+					else if (Interface.LogMessages.Count > 1)
 					{
 						Keys.Render(4, 72, 24, Fonts.SmallFont, new[] { new[] { "F9" } });
 						bool error = Interface.LogMessages.Any(m => m.Type != MessageType.Information);
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.MessageCount} error messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.Red, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} error messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.MessageCount} messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
 

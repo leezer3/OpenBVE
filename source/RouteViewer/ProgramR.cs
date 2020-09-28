@@ -439,7 +439,7 @@ namespace OpenBve
 					Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					break;
 				case Key.F9:
-					if (Interface.MessageCount != 0)
+					if (Interface.LogMessages.Count != 0)
 					{
 						formMessages.ShowMessages();
 						Application.DoEvents();

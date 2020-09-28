@@ -44,7 +44,7 @@ namespace OpenBve
                 Dialog.listviewMessages.SmallImageList.Images.Add("critical", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_critical.png")));
             }
             catch { }
-            for (int i = 0; i < Interface.MessageCount; i++)
+            for (int i = 0; i < Interface.LogMessages.Count; i++)
             {
                 string t = "Unknown";
                 string g = "information";
@@ -97,7 +97,7 @@ namespace OpenBve
             // prepare
             System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 
-            for (int i = 0; i < Interface.MessageCount; i++)
+            for (int i = 0; i < Interface.LogMessages.Count; i++)
             {
                 Builder.AppendLine(Interface.LogMessages[i].Text);
             }

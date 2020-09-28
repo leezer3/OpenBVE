@@ -26,7 +26,6 @@ namespace OpenBve {
 		internal static Options CurrentOptions;
 
 		internal static readonly List<LogMessage> LogMessages = new List<LogMessage>();
-		internal static int MessageCount = 0;
 		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
 			LogMessages.Add(new LogMessage(Type, FileNotFound, Text));
 		}
