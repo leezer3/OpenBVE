@@ -286,7 +286,10 @@ namespace OpenBve
 							double dur = Program.Sounds.GetDuration(buffer);
 							if (Program.CurrentRoute.SecondsSinceMidnight >= Train.StationDepartureTime - dur)
 							{
-								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Program.CurrentRoute.Stations[i].SoundOrigin, false);
+								if (!Game.MinimalisticSimulation)
+								{
+									Program.Sounds.PlaySound(buffer, 1.0, 1.0, Program.CurrentRoute.Stations[i].SoundOrigin, false);
+								}
 								Train.StationDepartureSoundPlayed = true;
 							}
 						}
