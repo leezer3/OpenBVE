@@ -799,7 +799,10 @@ namespace OpenBve
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(Result.RouteFile))
 				{
 					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(Result.RouteFile, Result.RouteEncoding, null, null, null, true, ref Route))
+					string RailwayFolder = Loading.GetRailwayFolder(Result.RouteFile);
+					string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
+					string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(Result.RouteFile, Result.RouteEncoding, null, ObjectFolder, SoundFolder, true, ref Route))
 					{
 						Program.CurrentRoute = (CurrentRoute) Route;
 					}

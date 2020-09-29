@@ -93,7 +93,7 @@ namespace OpenBve {
 
 		/// <summary>Gets the absolute Railway folder for a given route file</summary>
 		/// <returns>The absolute on-disk path of the railway folder</returns>
-		private static string GetRailwayFolder(string RouteFile) {
+		internal static string GetRailwayFolder(string RouteFile) {
 			try {
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
 				

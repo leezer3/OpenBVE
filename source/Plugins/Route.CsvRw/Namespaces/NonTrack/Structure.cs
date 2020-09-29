@@ -826,7 +826,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								if (PreviewOnly)
+								if (!PreviewOnly)
 								{
 									UnifiedObject obj;
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
