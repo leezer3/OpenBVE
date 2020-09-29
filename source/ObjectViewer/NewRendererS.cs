@@ -12,7 +12,6 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -153,67 +152,13 @@ namespace OpenBve
 				face.Draw();
 			}
 
+			// partial face
+			ResetOpenGlState();
+			RenderTransparencyFaces(false, true);
+
 			// alpha face
 			ResetOpenGlState();
-			VisibleObjects.SortPolygonsInAlphaFaces();
-
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
-			{
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-				GL.DepthMask(false);
-
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
-				{
-					face.Draw();
-				}
-			}
-			else
-			{
-				UnsetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-				GL.DepthMask(true);
-
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-						{
-							face.Draw();
-						}
-					}
-				}
-
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Less, 1.0f);
-				GL.DepthMask(false);
-				bool additive = false;
-
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						if (!additive)
-						{
-							UnsetAlphaFunc();
-							additive = true;
-						}
-
-						face.Draw();
-					}
-					else
-					{
-						if (additive)
-						{
-							SetAlphaFunc();
-							additive = false;
-						}
-
-						face.Draw();
-					}
-				}
-			}
+			RenderTransparencyFaces(false, false);
 
 			if (AvailableNewRenderer)
 			{

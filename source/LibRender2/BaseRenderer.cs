@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using LibRender2.Backgrounds;
 using LibRender2.Cameras;
@@ -17,6 +18,7 @@ using LibRender2.Textures;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -249,7 +251,7 @@ namespace LibRender2
 
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
-			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
+			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, this);
 
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -1368,6 +1370,74 @@ namespace LibRender2
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PopMatrix();
+		}
+
+		protected void RenderTransparencyFaces(bool isOverlay, bool isPartial)
+		{
+			FaceTransparencyType faceType = isPartial ? FaceTransparencyType.Partial : FaceTransparencyType.Alpha;
+			VisibleObjects.SortPolygons(isOverlay, faceType);
+			ReadOnlyCollection<FaceState> faces = VisibleObjects.GetFaces(isOverlay, faceType);
+
+			if (currentOptions.TransparencyMode == TransparencyMode.Performance)
+			{
+				if (!isPartial)
+				{
+					SetBlendFunc();
+					SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+					GL.DepthMask(false);
+				}
+
+				foreach (FaceState face in faces)
+				{
+					face.Draw();
+				}
+			}
+			else
+			{
+				UnsetBlendFunc();
+				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+				GL.DepthMask(true);
+
+				foreach (FaceState face in faces)
+				{
+					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
+					{
+						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
+						{
+							face.Draw();
+						}
+					}
+				}
+
+				SetBlendFunc();
+				SetAlphaFunc(AlphaFunction.Less, 1.0f);
+				GL.DepthMask(false);
+				bool additive = false;
+
+				foreach (FaceState face in faces)
+				{
+					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
+					{
+						if (!additive)
+						{
+							UnsetAlphaFunc();
+							additive = true;
+						}
+
+						face.Draw();
+					}
+					else
+					{
+						if (additive)
+						{
+							SetAlphaFunc();
+							additive = false;
+						}
+
+						face.Draw();
+					}
+				}
+			}
 		}
 	}
 }

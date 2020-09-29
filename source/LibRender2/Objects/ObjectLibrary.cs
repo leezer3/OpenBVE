@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using LibRender2.Cameras;
-using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -17,37 +16,43 @@ namespace LibRender2.Objects
 	{
 		private readonly HostInterface currentHost;
 		private readonly CameraProperties camera;
-		private readonly BaseOptions currentOptions;
 		private readonly BaseRenderer renderer;
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;
+		private List<FaceState> myPartialFaces;
 		private List<FaceState> myAlphaFaces;
 		private readonly List<FaceState> myOverlayOpaqueFaces;
+		private List<FaceState> myOverlayPartialFaces;
 		private List<FaceState> myOverlayAlphaFaces;
 		public readonly ReadOnlyCollection<ObjectState> Objects;
 		public readonly ReadOnlyCollection<FaceState> OpaqueFaces;  // StaticOpaque and DynamicOpaque
-		public ReadOnlyCollection<FaceState> AlphaFaces;  // DynamicAlpha
+		public ReadOnlyCollection<FaceState> PartialFaces;
+		public ReadOnlyCollection<FaceState> AlphaFaces;            // DynamicAlpha
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
+		public ReadOnlyCollection<FaceState> OverlayPartialFaces;
 		public ReadOnlyCollection<FaceState> OverlayAlphaFaces;
 
-		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseOptions CurrentOptions, BaseRenderer Renderer)
+		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseRenderer Renderer)
 		{
 			currentHost = CurrentHost;
 			camera = Camera;
-			currentOptions = CurrentOptions;
 			renderer = Renderer;
 
 			myObjects = new List<ObjectState>();
 			myOpaqueFaces = new List<FaceState>();
+			myPartialFaces = new List<FaceState>();
 			myAlphaFaces = new List<FaceState>();
 			myOverlayOpaqueFaces = new List<FaceState>();
+			myOverlayPartialFaces = new List<FaceState>();
 			myOverlayAlphaFaces = new List<FaceState>();
 
 			Objects = myObjects.AsReadOnly();
 			OpaqueFaces = myOpaqueFaces.AsReadOnly();
+			PartialFaces = myPartialFaces.AsReadOnly();
 			AlphaFaces = myAlphaFaces.AsReadOnly();
 			OverlayOpaqueFaces = myOverlayOpaqueFaces.AsReadOnly();
+			OverlayPartialFaces = myOverlayPartialFaces.AsReadOnly();
 			OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
 		}
 
@@ -68,8 +73,10 @@ namespace LibRender2.Objects
 			{
 				myObjects.Remove(state);
 				myOpaqueFaces.RemoveAll(x => x.Object == state);
+				myPartialFaces.RemoveAll(x => x.Object == state);
 				myAlphaFaces.RemoveAll(x => x.Object == state);
 				myOverlayOpaqueFaces.RemoveAll(x => x.Object == state);
+				myOverlayPartialFaces.RemoveAll(x => x.Object == state);
 				myOverlayAlphaFaces.RemoveAll(x => x.Object == state);
 			}
 		}
@@ -78,8 +85,10 @@ namespace LibRender2.Objects
 		{
 			myObjects.Clear();
 			myOpaqueFaces.Clear();
+			myPartialFaces.Clear();
 			myAlphaFaces.Clear();
 			myOverlayOpaqueFaces.Clear();
+			myOverlayPartialFaces.Clear();
 			myOverlayAlphaFaces.Clear();
 		}
 
@@ -123,23 +132,23 @@ namespace LibRender2.Objects
 					}
 				}
 
-				bool alpha = false;
+				FaceTransparencyType faceType = FaceTransparencyType.Opaque;
 
 				if (Type == ObjectType.Overlay && camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 				{
-					alpha = true;
+					faceType = FaceTransparencyType.Alpha;
 				}
 				else if (State.Prototype.Mesh.Materials[face.Material].Color.A != 255)
 				{
-					alpha = true;
+					faceType = FaceTransparencyType.Alpha;
 				}
 				else if (State.Prototype.Mesh.Materials[face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 				{
-					alpha = true;
+					faceType = FaceTransparencyType.Alpha;
 				}
 				else if (State.Prototype.Mesh.Materials[face.Material].GlowAttenuationData != 0)
 				{
-					alpha = true;
+					faceType = FaceTransparencyType.Alpha;
 				}
 				else
 				{
@@ -147,13 +156,14 @@ namespace LibRender2.Objects
 					{
 						currentHost.LoadTexture(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture, (OpenGlTextureWrapMode)State.Prototype.Mesh.Materials[face.Material].WrapMode);
 
-						if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
+						switch (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Transparency)
 						{
-							alpha = true;
-						}
-						else if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Transparency == TextureTransparencyType.Partial && currentOptions.TransparencyMode == TransparencyMode.Quality)
-						{
-							alpha = true;
+							case TextureTransparencyType.Alpha:
+								faceType = FaceTransparencyType.Alpha;
+								break;
+							case TextureTransparencyType.Partial:
+								faceType = FaceTransparencyType.Partial;
+								break;
 						}
 					}
 
@@ -161,13 +171,14 @@ namespace LibRender2.Objects
 					{
 						currentHost.LoadTexture(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture, (OpenGlTextureWrapMode)State.Prototype.Mesh.Materials[face.Material].WrapMode);
 
-						if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
+						switch (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Transparency)
 						{
-							alpha = true;
-						}
-						else if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Transparency == TextureTransparencyType.Partial && currentOptions.TransparencyMode == TransparencyMode.Quality)
-						{
-							alpha = true;
+							case TextureTransparencyType.Alpha:
+								faceType = FaceTransparencyType.Alpha;
+								break;
+							case TextureTransparencyType.Partial:
+								faceType = FaceTransparencyType.Partial;
+								break;
 						}
 					}
 				}
@@ -178,52 +189,77 @@ namespace LibRender2.Objects
 				{
 					case ObjectType.Static:
 					case ObjectType.Dynamic:
-						list = alpha ? myAlphaFaces : myOpaqueFaces;
+						switch (faceType)
+						{
+							case FaceTransparencyType.Opaque:
+								list = myOpaqueFaces;
+								break;
+							case FaceTransparencyType.Partial:
+								list = myPartialFaces;
+								break;
+							case FaceTransparencyType.Alpha:
+								list = myAlphaFaces;
+								break;
+							default:
+								throw new ArgumentOutOfRangeException();
+						}
 						break;
 					case ObjectType.Overlay:
-						list = alpha ? myOverlayAlphaFaces : myOverlayOpaqueFaces;
+						switch (faceType)
+						{
+							case FaceTransparencyType.Opaque:
+								list = myOverlayOpaqueFaces;
+								break;
+							case FaceTransparencyType.Partial:
+								list = myOverlayPartialFaces;
+								break;
+							case FaceTransparencyType.Alpha:
+								list = myOverlayAlphaFaces;
+								break;
+							default:
+								throw new ArgumentOutOfRangeException();
+						}
 						break;
 					default:
 						throw new ArgumentOutOfRangeException(nameof(Type), Type, null);
 				}
 
-				if (!alpha)
-				{
-					/*
-					 * If an opaque face, itinerate through the list to see if the prototype is present in the list
-					 * When the new renderer is in use, this prevents re-binding the VBO as it is simply re-drawn with
-					 * a different translation matrix
-					 * NOTE: The shader isn't currently smart enough to do depth discards, so if this changes may need to
-					 * be revisited
-					 */
-					if (list.Count == 0)
-					{
-						list.Add(new FaceState(State, face, renderer));
-					}
-					else
-					{
-						for (int i = 0; i < list.Count; i++)
-						{
-
-							if (list[i].Object.Prototype == State.Prototype)
-							{
-								list.Insert(i, new FaceState(State, face, renderer));
-								break;
-							}
-							if (i == list.Count - 1)
-							{
-								list.Add(new FaceState(State, face, renderer));
-								break;
-							}
-						}
-					}
-				}
-				else
+				if (faceType != FaceTransparencyType.Opaque)
 				{
 					/*
 					 * Alpha faces should be inserted at the end of the list- We're going to sort it anyway so it makes no odds
 					 */
 					list.Add(new FaceState(State, face, renderer));
+					continue;
+				}
+
+				/*
+				 * If an opaque face, itinerate through the list to see if the prototype is present in the list
+				 * When the new renderer is in use, this prevents re-binding the VBO as it is simply re-drawn with
+				 * a different translation matrix
+				 * NOTE: The shader isn't currently smart enough to do depth discards, so if this changes may need to
+				 * be revisited
+				 */
+				if (list.Count == 0)
+				{
+					list.Add(new FaceState(State, face, renderer));
+				}
+				else
+				{
+					for (int i = 0; i < list.Count; i++)
+					{
+						if (list[i].Object.Prototype == State.Prototype)
+						{
+							list.Insert(i, new FaceState(State, face, renderer));
+							break;
+						}
+
+						if (i == list.Count - 1)
+						{
+							list.Add(new FaceState(State, face, renderer));
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -273,16 +309,61 @@ namespace LibRender2.Objects
 			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
 		}
 
-		public void SortPolygonsInAlphaFaces()
+		private void SortPolygons(ref List<FaceState> myFaces, out ReadOnlyCollection<FaceState> faces)
 		{
-			myAlphaFaces = SortPolygons(myAlphaFaces);
-			AlphaFaces = myAlphaFaces.AsReadOnly();
+			myFaces = SortPolygons(myFaces);
+			faces = myFaces.AsReadOnly();
 		}
 
-		public void SortPolygonsInOverlayAlphaFaces()
+		public void SortPolygons(bool IsOverlay, FaceTransparencyType FaceType)
 		{
-			myOverlayAlphaFaces = SortPolygons(myOverlayAlphaFaces);
-			OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
+			if (IsOverlay)
+			{
+				switch (FaceType)
+				{
+					case FaceTransparencyType.Opaque:
+						throw new InvalidOperationException("There is no need to sort Opaque faces.");
+					case FaceTransparencyType.Partial:
+						SortPolygons(ref myPartialFaces, out PartialFaces);
+						break;
+					case FaceTransparencyType.Alpha:
+						SortPolygons(ref myAlphaFaces, out AlphaFaces);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(FaceType), FaceType, null);
+				}
+			}
+			else
+			{
+				switch (FaceType)
+				{
+					case FaceTransparencyType.Opaque:
+						throw new InvalidOperationException("There is no need to sort Opaque faces.");
+					case FaceTransparencyType.Partial:
+						SortPolygons(ref myOverlayPartialFaces, out OverlayPartialFaces);
+						break;
+					case FaceTransparencyType.Alpha:
+						SortPolygons(ref myOverlayAlphaFaces, out OverlayAlphaFaces);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(FaceType), FaceType, null);
+				}
+			}
+		}
+
+		public ReadOnlyCollection<FaceState> GetFaces(bool IsOverlay, FaceTransparencyType FaceType)
+		{
+			switch (FaceType)
+			{
+				case FaceTransparencyType.Opaque:
+					return IsOverlay ? OverlayOpaqueFaces : OpaqueFaces;
+				case FaceTransparencyType.Partial:
+					return IsOverlay ? OverlayPartialFaces : PartialFaces;
+				case FaceTransparencyType.Alpha:
+					return IsOverlay ? OverlayAlphaFaces : AlphaFaces;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(FaceType), FaceType, null);
+			}
 		}
 	}
 }

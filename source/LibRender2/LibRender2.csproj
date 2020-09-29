@@ -57,6 +57,7 @@
     <Compile Include="MotionBlur\MotionBlur.cs" />
     <Compile Include="MotionBlur\MotionBlurMode.cs" />
     <Compile Include="Objects\FaceState.cs" />
+    <Compile Include="Objects\FaceTransparencyType.cs" />
     <Compile Include="Objects\ObjectLibrary.cs" />
     <Compile Include="openGL\FrameBufferObject.cs" />
     <Compile Include="openGL\IndexBufferObject.cs" />

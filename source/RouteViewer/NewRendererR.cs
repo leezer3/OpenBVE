@@ -12,11 +12,9 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
-using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
 using Vector2 = OpenBveApi.Math.Vector2;
@@ -46,7 +44,7 @@ namespace OpenBve
 		private Texture StopTexture;
 		private Texture PointSoundTexture;
 		private Texture RunSoundTexture;
-		
+
 		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
@@ -98,8 +96,8 @@ namespace OpenBve
 			{
 				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z, 0.0f });
 			}
-			
-			
+
+
 			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
 
 			if (Lighting.OptionLightingResultingAmount > 1.0f)
@@ -122,7 +120,7 @@ namespace OpenBve
 				{
 					Program.CurrentRoute.CurrentFog.Density = (byte)(Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr);
 				}
-				
+
 			}
 			else
 			{
@@ -188,67 +186,13 @@ namespace OpenBve
 				face.Draw();
 			}
 
+			// partial face
+			ResetOpenGlState();
+			RenderTransparencyFaces(false, true);
+
 			// alpha face
 			ResetOpenGlState();
-			VisibleObjects.SortPolygonsInAlphaFaces();
-
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
-			{
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-				GL.DepthMask(false);
-
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
-				{
-					face.Draw();
-				}
-			}
-			else
-			{
-				UnsetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-				GL.DepthMask(true);
-
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-						{
-							face.Draw();
-						}
-					}
-				}
-
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Less, 1.0f);
-				GL.DepthMask(false);
-				bool additive = false;
-
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						if (!additive)
-						{
-							UnsetAlphaFunc();
-							additive = true;
-						}
-
-						face.Draw();
-					}
-					else
-					{
-						if (additive)
-						{
-							SetAlphaFunc();
-							additive = false;
-						}
-
-						face.Draw();
-					}
-				}
-			}
+			RenderTransparencyFaces(false, false);
 
 			// render overlays
 			if (AvailableNewRenderer)
@@ -637,7 +581,7 @@ namespace OpenBve
 						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Point(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
 						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Point(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
 						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Point(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Point(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.PartialFaces.Count + VisibleObjects.AlphaFaces.Count}", new Point(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
 					}
 				}
 			}
