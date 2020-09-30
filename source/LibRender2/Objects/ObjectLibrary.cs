@@ -242,27 +242,27 @@ namespace LibRender2.Objects
 			{
 				if (faces[i].Face.Vertices.Length >= 3)
 				{
-					Vector3 v0 = new Vector3(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates);
-					Vector3 v1 = new Vector3(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates);
-					Vector3 v2 = new Vector3(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates);
-					Vector3 w1 = v1 - v0;
-					Vector3 w2 = v2 - v0;
+					Vector4 v0 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
+					Vector4 v1 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
+					Vector4 v2 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
+					Vector4 w1 = v1 - v0;
+					Vector4 w2 = v2 - v0;
 					v0.Z *= -1.0;
 					w1.Z *= -1.0;
 					w2.Z *= -1.0;
-					v0.Transform(faces[i].Object.ModelMatrix);
-					w1.Transform(faces[i].Object.ModelMatrix);
-					w2.Transform(faces[i].Object.ModelMatrix);
+					v0 = Vector4.Transform(v0, faces[i].Object.ModelMatrix);
+					w1 = Vector4.Transform(w1, faces[i].Object.ModelMatrix);
+					w2 = Vector4.Transform(w2, faces[i].Object.ModelMatrix);
 					v0.Z *= -1.0;
 					w1.Z *= -1.0;
 					w2.Z *= -1.0;
-					Vector3 d = Vector3.Cross(w1, w2);
+					Vector3 d = Vector3.Cross(w1.Xyz, w2.Xyz);
 					double t = d.Norm();
 
 					if (t != 0.0)
 					{
 						d /= t;
-						Vector3 w0 = v0 - camera.AbsolutePosition;
+						Vector3 w0 = v0.Xyz - camera.AbsolutePosition;
 						t = Vector3.Dot(d, w0);
 						distances[i] = -t * t;
 					}
