@@ -185,43 +185,19 @@ namespace LibRender2.Objects
 
 				List<FaceState> list;
 
-				switch (Type)
+				switch (faceType)
 				{
-					case ObjectType.Static:
-					case ObjectType.Dynamic:
-						switch (faceType)
-						{
-							case FaceTransparencyType.Opaque:
-								list = myOpaqueFaces;
-								break;
-							case FaceTransparencyType.Partial:
-								list = myPartialFaces;
-								break;
-							case FaceTransparencyType.Alpha:
-								list = myAlphaFaces;
-								break;
-							default:
-								throw new ArgumentOutOfRangeException();
-						}
+					case FaceTransparencyType.Opaque:
+						list = Type == ObjectType.Overlay ? myOverlayOpaqueFaces : myOpaqueFaces;
 						break;
-					case ObjectType.Overlay:
-						switch (faceType)
-						{
-							case FaceTransparencyType.Opaque:
-								list = myOverlayOpaqueFaces;
-								break;
-							case FaceTransparencyType.Partial:
-								list = myOverlayPartialFaces;
-								break;
-							case FaceTransparencyType.Alpha:
-								list = myOverlayAlphaFaces;
-								break;
-							default:
-								throw new ArgumentOutOfRangeException();
-						}
+					case FaceTransparencyType.Partial:
+						list = Type == ObjectType.Overlay ? myOverlayPartialFaces : myPartialFaces;
+						break;
+					case FaceTransparencyType.Alpha:
+						list = Type == ObjectType.Overlay ? myOverlayAlphaFaces : myAlphaFaces;
 						break;
 					default:
-						throw new ArgumentOutOfRangeException(nameof(Type), Type, null);
+						throw new ArgumentOutOfRangeException();
 				}
 
 				if (faceType != FaceTransparencyType.Opaque)
