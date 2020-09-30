@@ -2,31 +2,29 @@ language: csharp
 
 matrix:
   include:
-#Nightly builds for upload. Use lowest possible Mono version for compatibility purposes
+    #Nightly builds for upload. Use lowest possible Mono version for compatibility purposes
     - os: linux
       dist: trusty
       mono: 5.20.1
       script: make publish
     - os: osx
       mono: latest
-      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew tap leezer3/sshpass; brew install leezer3/sshpass/sshpass; fi;
       script: make publish
 
-#Test builds
-##Use makefile##
+    #Test builds
+    ##Use makefile##
     - os: linux
       dist: xenial
       mono: latest
       script: make all-release
     - os: osx
       mono: latest
-      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew tap leezer3/sshpass; brew install leezer3/sshpass/sshpass; fi;
       script: make all-release
     - os: linux
       dist: trusty
       mono: 5.20.1
       script: make all-release
-##Use .sln file##
+    ##Use .sln file##
     - os: linux
       dist: trusty
       mono: latest
@@ -37,39 +35,59 @@ matrix:
       solution: OpenBVE.sln
     - os: osx
       mono: latest
-      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew tap leezer3/sshpass; brew install leezer3/sshpass/sshpass; fi;
       solution: OpenBVE.sln
     - os: linux
       dist: trusty
       mono: 5.20.1
       solution: OpenBVE.sln
- 
-after_success:
-#Export SSH password for whichever platform we are building on
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
-#Nightly build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "OpenBVE-$(date '+%F').zip"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$(date '+%F').zip" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-#Release build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "OpenBVE-$TRAVIS_TAG.zip"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$TRAVIS_TAG.zip" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
-#Create deb and push that too on releases
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && make debian
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "installers/debian.deb" "OpenBVE-$TRAVIS_TAG.deb" 
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$TRAVIS_TAG.deb" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
-##OSX Builds##
-#Nightly build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$(date '+%F').dmg"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$(date '+%F').dmg" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-#Release build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$TRAVIS_TAG.dmg"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$TRAVIS_TAG.dmg" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
+
 addons:
   apt:
     packages:
       - sshpass
       - p7zip-full
       - fakeroot
+  homebrew:
+    taps: leezer3/sshpass
+    packages: sshpass
+    update: true
+
+after_success:
+  #Export SSH password for whichever platform we are building on
+  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
+  #Nightly build
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "OpenBVE-$(date '+%F').zip"
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$(date '+%F').zip" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+  #Release build
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "OpenBVE-$TRAVIS_TAG.zip"
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$TRAVIS_TAG.zip" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
+  #Create deb and push that too on releases
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && make debian
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "installers/debian.deb" "OpenBVE-$TRAVIS_TAG.deb"
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$TRAVIS_TAG.deb" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
+  ##OSX Builds##
+  #Nightly build
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$(date '+%F').dmg"
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$(date '+%F').dmg" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+  #Release build
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$TRAVIS_TAG.dmg"
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 4500 "OpenBVE-$TRAVIS_TAG.dmg" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
+
+#Also deploy new releases to Github Releases
+deploy:
+  provider: releases
+  api_key: $GITHUB_RELEASE_OAUTH
+  on:
+    tags: true
+  file:
+    #zipped build
+    - "OpenBVE-$TRAVIS_TAG.zip"
+    #Debian package
+    - "OpenBVE-$TRAVIS_TAG.deb"
+    #Mac DMG
+    - "OpenBVE-$TRAVIS_TAG.dmg"
+  skip_cleanup: true
+
 env:
   global:
     - secure: "NquGr/vI8CyhAV5itzUxV5gXCtWFn3kqOnAeEz5Niw4fJfrBH5G/TBGyQpyzkpeY+Tox8z8m+a/UdSYutVxI9OYbAuFH8vo75pL3oydFtNOnuO45v4BFaz9KLGB0AEAvNzX7YTUM7qEE4QlX2/jzPXSoJqxC9RWMdENxwjzCvE0CLhBPQvqCSxB6nJ86rRM7xpLkT34t+C66XjdHSLKDcu94dC50o8MxnIchgWAfEV4+d9kv6XZV+rZvz75e8qYzCJKU6wl3GPMpL8JajG3TIkHAiNWPlcH8WbCqd62znZYtFUMvVkFDKOAjnq1sMqMYfFiu3x+AJPYF52Se2g5qDrkOCZhKL2MSofEugvSjlNekkfQzg/SqHJXlToZvvWQWvuZaTcjYwoiFg+O0eFgvN1bjX2Z7Y9Pb85o+DgKn0WFkBkCohbygFw1Iir1tT5+3bnt3uAZWPKH8k7r5+Tbm2KxJ3O0/ietbMW97S9EaU24Gwh6YbPRVskEgp3ym/2It0sgMfEb64GnhbvGG6lPk3uU6AEmmxHsBgxv+E2ZdRVOqEsWVeBs8IDmVwXeG8T1FCL+GtV5hTwmIMH+z+OTuAHEzKR81DohF+z3vXzYOLxzSCx9IBKkTfIiVKpuFl6+l17olIgaGwomN23b6p0Eky0ZRrWupjkoetIJF6A9Ux8M="
@@ -77,33 +95,6 @@ env:
     - secure: "01QIDNccjTagPaT6ZxzBO2qCA65ju6hImlcMia8bZoDT2ufWtxhN94RiZA9WN0jQ8fCnbXFW3HVUWywrb9OblJXAGBW9pxrTGTbSkVm5eMfgEII2RTxW0yWfnWajhm0TnK0wFHVT6eP72gZrv9C2ieAikZdXaNQKa+wlnLPaiEeFUz/8KgaK85ANJ3j1PQ4mhMJ3po9uchAmfF4xsWfoJGth+hXAN16UMCKbbTFqtTdEhecdTh2PiE64O1yJTL9E5WXDD6mxXZi/gsGaFbLQQNS9v+CyGuNafWggTNKI9FwN9/i85MS+0UmD0aParkCoBN6HTiEHqW0KgCH9C3qxLBN5hlB+C+4r92/jeC31NU6OFi/Fh722qBPQs2dmm+O3dKRb1bgJ7KzhGIJRuFa+GhqoyIJejWFmishEouLdDrAPr1hW8h4SP2WtPir+3wTrqoSHIt6VvpF0jy2oKFiSKl5bOdC3UAq1V04gNUeq6giUTL56XfPyLOOimwchGR6VnZ1JTc0TPdaA+R7qaAMZhm26QZI05O6fWkhtiLjOhf1JQVY47oUwIyIJB7nczTeZtYeetWdRCSmAvXUyIMRbTaqy8QsQPtuNfzWj4iuaSPez8G6xUcN1qKZchaOFLOSv9UeNvaq624M0M/nT1JEbhLknASRa6UinJeLAbezNFTk="
     - secure: "A/0AimkzkRNbOW8OjymGx6gR5tbGDvSz3An1Wwco5nqSrDaZebG0viFtYcLX1RmZ9aqS4Hr8v9ksi1Chu1nE9Swp/VQeMgDRUTi4jEzytJpUvIpHJWFJ/Pn7XoXHanLHqDaj2A8oEZSx8doFvTIN8a9ousP/xJYp9a9xo33ulBkTVftalgyCvhYfz+a9BeDVlgL9/IBNfAT3fY+c+P8l/AjgWF6oN0rYAiDQHsxx8kQQxboZihAYTbkSonxbF5BgoLjKpAmPOkMT3oWat5GXKH/6yHfk+JIBaATSQqUik8VNqoyO7rIGz68Jodhs5PDHfENrZ17FIt0/lpjE6l/3oHwzs/RhgyD64x2bEf/KeVqJ7+R0kvgTVdg2pjpb4AHc8SGk1ARoDWvCdRPcM+Sii9iavJQtCuTDir24DNzknHxvnqlR8vUsYFBOhfcMTL1y/2tNJY9NiH39bkJsGLz8NqAipC+IoR7Jm4WhEgemAfnpicrOjZVAUL6sGwHIg99MSKAMpliXvqE/EAlY0aWYnx2W6HuFy3g2cCJ16JJABJFDK/H6a1V485naI9DT4/nHXJjuweN0ijm9jBpDMpIJ9E3uyDXBkjWGkxmIE9HPYdiJIdGqxQ5SzaN8XmRLRo6AQnsDX243TurWld7hXcyktVFXxsHUmAMpN0tR3EJcJQM="
     - secure: "xhY40lPWCokuabAfN7t2gd4DTrNXpxvKiH6Xobo5XkAiDNseBw+MZ/ce4XZeAXnq9jHdeTXVMu1rtcdFlC5St2XCeltNpchS4Km8dv+7ErtTBAawgl+5rGwTTnIF5jUTPsbzfEcIgnL6ud7NWDEqYQm5oeEMpuS3z/gqSc/HKx3Fp5cIPte65Oo37oMuL0dwNh2XIwrogaSOHX+Jwh7B5ZkCMzAe/MOxg0b34A4noAtCHbtc2QmmDhOhdlk+OBx5iSIwqUvmW8YYUX+14mIFAqWQ6E7MOUY9gjDgedXnbfvPsw+gLeXyCoNunc980EMdrIF2KHaPa772TFi7MzOiPwXno2jxlK3INvGylYdymI4YwI97H53oasfT1RiOzG9j1zCqJZv3U1L5KdscX8LKPYXsOeP78okB5lXt2E2jiO7hVJMIhQtJrNiCmlok3/U65jD30WLBsZtIBzZ4RhpESYr2a5QayhFmbHmIeMbfhY6OkRiE/enCMYuCFlnV6twWA4J6gBUVilYj+qjR6Js2xRAtaY0ljnPhK0EE2RIjPOKks3CPlchP3ZbI9jFCaupBfLlT0uBfmMu0aD/q/AZ0wDf1Dp1OdRzGbBcvhDcijpmZ8GatLyZS64Iq27WqUC6XouI17SIj0XftnBkcKTbSXY9UbSXM2bPYuHLIGk61aXU="
+
 notifications:
-      email: false
-#Also deploy new releases to Github Releases
-#zipped build
-deploy:
-  provider: releases
-  api_key: $GITHUB_RELEASE_OAUTH
-  on:
-    tags: true
-    mono: '5.20.1'
-  file: "OpenBVE-$TRAVIS_TAG.zip"
-  skip_cleanup: true
-#Debian package
-deploy:
-  provider: releases
-  api_key: $GITHUB_RELEASE_OAUTH
-  on:
-    tags: true
-    mono: '5.20.1'
-  file: "OpenBVE-$TRAVIS_TAG.deb"
-  skip_cleanup: true
-#Mac DMG
-deploy:
-  provider: releases
-  api_key: $GITHUB_RELEASE_OAUTH
-  on:
-    tags: true
-    mono: '5.20.1'
-  file: "OpenBVE-$TRAVIS_TAG.dmg"
-  skip_cleanup: true
+  email: false
