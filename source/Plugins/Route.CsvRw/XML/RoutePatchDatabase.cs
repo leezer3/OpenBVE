@@ -210,6 +210,17 @@ namespace CsvRwRouteParser
 							currentPatch.SplitLineHack = false;
 						}
 						break;
+					case "AllowTrackPositionArguments":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.AllowTrackPositionArguments = true;
+						}
+						else
+						{
+							currentPatch.AllowTrackPositionArguments = false;
+						}
+						break;
 				}
 			}
 

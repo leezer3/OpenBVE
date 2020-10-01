@@ -19,6 +19,7 @@ namespace CsvRwRouteParser {
 		internal string CompatibilityFolder;
 		internal bool CylinderHack = false;
 		internal bool SplitLineHack = true;
+		internal bool AllowTrackPositionArguments = false;
 		internal bool IsRW;
 
 		internal Plugin Plugin;
@@ -389,6 +390,13 @@ namespace CsvRwRouteParser {
 						// track position
 						if (ArgumentSequence.Length != 0) {
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A track position must not contain any arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+							if (AllowTrackPositionArguments)
+							{
+								Data.TrackPosition = currentTrackPosition;
+								BlockIndex = (int)Math.Floor(currentTrackPosition / Data.BlockInterval + 0.001);
+								if (Data.FirstUsedBlock == -1) Data.FirstUsedBlock = BlockIndex;
+								Data.CreateMissingBlocks(BlockIndex, PreviewOnly);
+							}
 						} else if (currentTrackPosition < 0.0) {
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Negative track position encountered at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 						} else {

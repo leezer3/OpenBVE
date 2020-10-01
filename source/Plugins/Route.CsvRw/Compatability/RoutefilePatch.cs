@@ -43,6 +43,7 @@ namespace CsvRwRouteParser
 				Plugin.CurrentOptions.Derailments = patch.Derailments;
 				Plugin.CurrentOptions.Toppling = patch.Toppling;
 				SplitLineHack = patch.SplitLineHack;
+				AllowTrackPositionArguments = patch.AllowTrackPositionArguments;
 				foreach (int i in patch.DummyRailTypes)
 				{
 					if (Data.Structure.RailObjects == null)
@@ -102,5 +103,8 @@ namespace CsvRwRouteParser
 		internal bool AccurateObjectDisposal;
 		/// <summary>Whether certain lines should be split</summary>
 		internal bool SplitLineHack;
+		/// <summary>Allows arguments after track positions</summary>
+		/// <remarks>Some files use these as comments</remarks>
+		internal bool AllowTrackPositionArguments;
 	}
 }
