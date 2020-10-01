@@ -20,6 +20,10 @@ namespace CsvRwRouteParser
 
 		internal void Create(PoleDictionary Poles, Vector3 WorldPosition, Transformation RailTransformation, Vector2 Direction, double planar, double updown, double StartingDistance, double EndingDistance)
 		{
+			if (!Exists)
+			{
+				return;
+			}
 			double dz = StartingDistance / Interval;
 			dz -= Math.Floor(dz + 0.5);
 			if (dz >= -0.01 & dz <= 0.01)

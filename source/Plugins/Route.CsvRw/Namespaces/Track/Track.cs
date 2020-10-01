@@ -1873,7 +1873,7 @@ namespace CsvRwRouteParser
 
 							int n = Data.Blocks[BlockIndex].Forms.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].Forms, n + 1);
-							Data.Blocks[BlockIndex].Forms[n] = new Form(idx1, idx2, pf, roof);
+							Data.Blocks[BlockIndex].Forms[n] = new Form(idx1, idx2, pf, roof, Data.Structure);
 						}
 					}
 				}
@@ -2076,11 +2076,11 @@ namespace CsvRwRouteParser
 
 							if (Data.Blocks[BlockIndex].RailWall.ContainsKey(idx))
 							{
-								Data.Blocks[BlockIndex].RailWall[idx] = new WallDike(sttype, dir);
+								Data.Blocks[BlockIndex].RailWall[idx] = new WallDike(sttype, dir, Data.Structure.WallL, Data.Structure.WallR);
 							}
 							else
 							{
-								Data.Blocks[BlockIndex].RailWall.Add(idx, new WallDike(sttype, dir));
+								Data.Blocks[BlockIndex].RailWall.Add(idx, new WallDike(sttype, dir, Data.Structure.WallL, Data.Structure.WallR));
 							}
 						}
 					}
@@ -2197,11 +2197,11 @@ namespace CsvRwRouteParser
 
 							if (Data.Blocks[BlockIndex].RailDike.ContainsKey(idx))
 							{
-								Data.Blocks[BlockIndex].RailDike[idx] = new WallDike(sttype, dir);
+								Data.Blocks[BlockIndex].RailDike[idx] = new WallDike(sttype, dir, Data.Structure.DikeL, Data.Structure.DikeR);
 							}
 							else
 							{
-								Data.Blocks[BlockIndex].RailDike.Add(idx, new WallDike(sttype, dir));
+								Data.Blocks[BlockIndex].RailDike.Add(idx, new WallDike(sttype, dir, Data.Structure.DikeL, Data.Structure.DikeR));
 							}
 						}
 

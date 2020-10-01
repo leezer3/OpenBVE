@@ -1,7 +1,7 @@
 ﻿namespace CsvRwRouteParser
 {
 		/// <summary>Holds the base structures for a route: These are cloned and transformed for final world placement</summary>
-		internal struct StructureData
+		internal class StructureData
 		{
 			/// <summary>All currently defined Structure.Rail objects</summary>
 			internal ObjectDictionary RailObjects;

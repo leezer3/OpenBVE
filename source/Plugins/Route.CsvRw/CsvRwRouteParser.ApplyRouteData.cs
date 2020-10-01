@@ -717,33 +717,19 @@ namespace CsvRwRouteParser
 							}
 						}
 						// poles
-						if (Data.Blocks[i].RailPole.Length > j && Data.Blocks[i].RailPole[j].Exists)
+						if (Data.Blocks[i].RailPole.Length > j)
 						{
 							Data.Blocks[i].RailPole[j].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance);
 						}
 						// walls
-						if (Data.Blocks[i].RailWall.ContainsKey(j) && Data.Blocks[i].RailWall[j] != null && Data.Blocks[i].RailWall[j].Exists)
+						if (Data.Blocks[i].RailWall.ContainsKey(j))
 						{
-							if (Data.Blocks[i].RailWall[j].Direction <= 0)
-							{
-								Data.Structure.WallL[Data.Blocks[i].RailWall[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-							}
-							if (Data.Blocks[i].RailWall[j].Direction >= 0)
-							{
-								Data.Structure.WallR[Data.Blocks[i].RailWall[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-							}
+							Data.Blocks[i].RailWall[j].Create(pos, RailTransformation, StartingDistance, EndingDistance);
 						}
 						// dikes
-						if (Data.Blocks[i].RailDike.ContainsKey(j) && Data.Blocks[i].RailDike[j] != null && Data.Blocks[i].RailDike[j].Exists)
+						if (Data.Blocks[i].RailDike.ContainsKey(j))
 						{
-							if (Data.Blocks[i].RailDike[j].Direction <= 0)
-							{
-								Data.Structure.DikeL[Data.Blocks[i].RailDike[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-							}
-							if (Data.Blocks[i].RailDike[j].Direction >= 0)
-							{
-								Data.Structure.DikeR[Data.Blocks[i].RailDike[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-							}
+							Data.Blocks[i].RailDike[j].Create(pos, RailTransformation, StartingDistance, EndingDistance);
 						}
 						// sounds
 						if (j == 0)
@@ -759,255 +745,12 @@ namespace CsvRwRouteParser
 							// primary rail
 							if (Data.Blocks[i].Forms[k].PrimaryRail == j)
 							{
-								if (Data.Blocks[i].Forms[k].SecondaryRail == Form.SecondaryRailStub)
-								{
-									if (!Data.Structure.FormL.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-									}
-									else
-									{
-										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-										if (Data.Blocks[i].Forms[k].RoofType > 0)
-										{
-											if (!Data.Structure.RoofL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-											}
-											else
-											{
-												Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-											}
-										}
-									}
-								}
-								else if (Data.Blocks[i].Forms[k].SecondaryRail == Form.SecondaryRailL)
-								{
-									if (!Data.Structure.FormL.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-									}
-									else
-									{
-										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-									}
-									if (!Data.Structure.FormCL.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-									}
-									else
-									{
-										Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
-									}
-									if (Data.Blocks[i].Forms[k].RoofType > 0)
-									{
-										if (!Data.Structure.RoofL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-										}
-										else
-										{
-											Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-										}
-										if (!Data.Structure.RoofCL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-										}
-										else
-										{
-											Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
-										}
-									}
-								}
-								else if (Data.Blocks[i].Forms[k].SecondaryRail == Form.SecondaryRailR)
-								{
-									if (!Data.Structure.FormR.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-									}
-									else
-									{
-										Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-									}
-									if (!Data.Structure.FormCR.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-									}
-									else
-									{
-										Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
-									}
-									if (Data.Blocks[i].Forms[k].RoofType > 0)
-									{
-										if (!Data.Structure.RoofR.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-										}
-										else
-										{
-											Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-										}
-										if (!Data.Structure.RoofCR.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-										}
-										else
-										{
-											Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
-										}
-									}
-								}
-								else if (Data.Blocks[i].Forms[k].SecondaryRail > 0)
-								{
-									int p = Data.Blocks[i].Forms[k].PrimaryRail;
-									double px0 = p > 0 ? Data.Blocks[i].Rails[p].RailStart.X : 0.0;
-									double px1 = p > 0 ? Data.Blocks[i + 1].Rails[p].RailEnd.X : 0.0;
-									int s = Data.Blocks[i].Forms[k].SecondaryRail;
-									if (s < 0 || !Data.Blocks[i].Rails.ContainsKey(s) || !Data.Blocks[i].Rails[s].RailStarted)
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is out of range in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName);
-									}
-									else
-									{
-										double sx0 = Data.Blocks[i].Rails[s].RailStart.X;
-										double sx1 = Data.Blocks[i + 1].Rails[s].RailEnd.X;
-										double d0 = sx0 - px0;
-										double d1 = sx1 - px1;
-										if (d0 < 0.0)
-										{
-											if (!Data.Structure.FormL.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-											}
-											else
-											{
-												Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-											}
-											if (!Data.Structure.FormCL.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-											}
-											else
-											{
-												StaticObject FormC = (StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType].Transform(d0, d1);
-												Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
-											}
-											if (Data.Blocks[i].Forms[k].RoofType > 0)
-											{
-												if (!Data.Structure.RoofL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-												}
-												else
-												{
-													Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-												}
-												if (!Data.Structure.RoofCL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-												}
-												else
-												{
-													StaticObject RoofC = (StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType].Transform(d0, d1);
-													Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
-												}
-											}
-										}
-										else if (d0 > 0.0)
-										{
-											if (!Data.Structure.FormR.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-											}
-											else
-											{
-												Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-											}
-											if (!Data.Structure.FormCR.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-											}
-											else
-											{
-												StaticObject FormC = (StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType].Transform(d0, d1);
-												Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
-											}
-											if (Data.Blocks[i].Forms[k].RoofType > 0)
-											{
-												if (!Data.Structure.RoofR.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-												}
-												else
-												{
-													Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-												}
-												if (!Data.Structure.RoofCR.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-												}
-												else
-												{
-													StaticObject RoofC = (StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType].Transform(d0, d1);
-													Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
-												}
-											}
-										}
-									}
-								}
+								Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, StartingDistance, EndingDistance, FileName);
 							}
 							// secondary rail
 							if (Data.Blocks[i].Forms[k].SecondaryRail == j)
 							{
-								int p = Data.Blocks[i].Forms[k].PrimaryRail;
-								double px = p > 0 ? Data.Blocks[i].Rails[p].RailStart.X : 0.0;
-								int s = Data.Blocks[i].Forms[k].SecondaryRail;
-								double sx = Data.Blocks[i].Rails[s].RailStart.X;
-								double d = px - sx;
-								if (d < 0.0)
-								{
-									if (!Data.Structure.FormL.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-									}
-									else
-									{
-										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-									}
-									if (Data.Blocks[i].Forms[k].RoofType > 0)
-									{
-										if (!Data.Structure.RoofL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-										}
-										else
-										{
-											Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-										}
-									}
-								}
-								else
-								{
-									if (!Data.Structure.FormR.ContainsKey(Data.Blocks[i].Forms[k].FormType))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-									}
-									else
-									{
-										Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-									}
-									if (Data.Blocks[i].Forms[k].RoofType > 0)
-									{
-										if (!Data.Structure.RoofR.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-										}
-										else
-										{
-											Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
-										}
-									}
-								}
+								Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, StartingDistance, EndingDistance, FileName);
 							}
 						}
 						// cracks
@@ -1016,7 +759,7 @@ namespace CsvRwRouteParser
 							Data.Blocks[i].Cracks[k].Create(j, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, StartingDistance, EndingDistance, FileName);
 						}
 						// free objects
-						if (Data.Blocks[i].RailFreeObj.ContainsKey(j) && Data.Blocks[i].RailFreeObj[j] != null)
+						if (Data.Blocks[i].RailFreeObj.ContainsKey(j))
 						{
 							for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Count; k++)
 							{
