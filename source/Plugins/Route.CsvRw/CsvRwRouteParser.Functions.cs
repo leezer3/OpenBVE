@@ -305,9 +305,14 @@ namespace CsvRwRouteParser
 								Command = null;
 							}
 						} else {
-							if (Indices.Length > 0 && !NumberFormats.TryParseIntVb6(Indices, out commandIndices[0])) {
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File + ".");
-								Command = null;
+							if (Indices.Length > 0 && !NumberFormats.TryParseIntVb6(Indices, out commandIndices[0]))
+							{
+								if (Indices.ToLowerInvariant() != "c" || Command.ToLowerInvariant() != "route.comment")
+								{
+									// (C) used in route comment to represent copyright symbol, so not an error
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File + ".");
+									Command = null;
+								}
 							}
 						}
 						break;
