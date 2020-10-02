@@ -48,6 +48,8 @@
 			this.comboBoxNewXParser = new System.Windows.Forms.ComboBox();
 			this.labelUseNewObjParser = new System.Windows.Forms.Label();
 			this.comboBoxNewObjParser = new System.Windows.Forms.ComboBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.checkBoxOptimizeObjects = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
@@ -108,7 +110,7 @@
 			// 
 			// CloseButton
 			// 
-			this.CloseButton.Location = new System.Drawing.Point(212, 333);
+			this.CloseButton.Location = new System.Drawing.Point(212, 351);
 			this.CloseButton.Name = "CloseButton";
 			this.CloseButton.Size = new System.Drawing.Size(75, 23);
 			this.CloseButton.TabIndex = 9;
@@ -284,11 +286,31 @@
 			this.comboBoxNewObjParser.Size = new System.Drawing.Size(121, 21);
 			this.comboBoxNewObjParser.TabIndex = 23;
 			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(16, 313);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(124, 13);
+			this.label1.TabIndex = 24;
+			this.label1.Text = "Optimize Object Meshes:";
+			// 
+			// checkBoxOptimizeObjects
+			// 
+			this.checkBoxOptimizeObjects.AutoSize = true;
+			this.checkBoxOptimizeObjects.Location = new System.Drawing.Point(271, 313);
+			this.checkBoxOptimizeObjects.Name = "checkBoxOptimizeObjects";
+			this.checkBoxOptimizeObjects.Size = new System.Drawing.Size(15, 14);
+			this.checkBoxOptimizeObjects.TabIndex = 25;
+			this.checkBoxOptimizeObjects.UseVisualStyleBackColor = true;
+			// 
 			// formOptions
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(311, 368);
+			this.ClientSize = new System.Drawing.Size(311, 386);
+			this.Controls.Add(this.checkBoxOptimizeObjects);
+			this.Controls.Add(this.label1);
 			this.Controls.Add(this.comboBoxNewObjParser);
 			this.Controls.Add(this.labelUseNewObjParser);
 			this.Controls.Add(this.comboBoxNewXParser);
@@ -344,5 +366,7 @@
 		private System.Windows.Forms.ComboBox comboBoxNewXParser;
 		private System.Windows.Forms.Label labelUseNewObjParser;
 		private System.Windows.Forms.ComboBox comboBoxNewObjParser;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.CheckBox checkBoxOptimizeObjects;
 	}
 }
