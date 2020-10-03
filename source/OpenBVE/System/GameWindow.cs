@@ -24,7 +24,6 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
-using RouteManager2;
 using RouteManager2.MessageManager;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
@@ -297,12 +296,9 @@ namespace OpenBve
 				MessageManager.UpdateMessages();
 				Game.UpdateScoreMessages(TimeElapsed);
 
-				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+				foreach (InputDevicePlugin.Info info in Program.InputDevicePlugin.AvailableInfos.Where(x => x.Status == InputDevicePlugin.Status.Enable))
 				{
-					if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
-					{
-						InputDevicePlugin.AvailablePlugins[i].OnUpdateFrame();
-					}
+					info.Api.OnUpdateFrame();
 				}
 			}
 			RenderTimeElapsed += TimeElapsed;
@@ -350,32 +346,24 @@ namespace OpenBve
 			MouseMove	+= MainLoop.mouseMoveEvent;
 			MouseWheel  += MainLoop.mouseWheelEvent;
 
-			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+			foreach (InputDevicePlugin.Info info in Program.InputDevicePlugin.AvailableInfos.Where(x => x.Status == InputDevicePlugin.Status.Enable))
 			{
-				if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
+				int addControlsLength = info.Api.Controls.Length;
+				Interface.Control[] addControls = new Interface.Control[addControlsLength];
+
+				for (int i = 0; i < addControlsLength; i++)
 				{
-					int AddControlsLength = InputDevicePlugin.AvailablePlugins[i].Controls.Length;
-					Interface.Control[] AddControls = new Interface.Control[AddControlsLength];
-					for (int j = 0; j < AddControlsLength; j++)
-					{
-						AddControls[j].Command = InputDevicePlugin.AvailablePlugins[i].Controls[j].Command;
-						AddControls[j].Method = Interface.ControlMethod.InputDevicePlugin;
-						AddControls[j].Option = InputDevicePlugin.AvailablePlugins[i].Controls[j].Option;
-					}
-					Interface.CurrentControls = Interface.CurrentControls.Concat(AddControls).ToArray();
-					foreach (var Train in TrainManager.Trains)
-					{
-						if (Train.State != TrainState.Bogus)
-						{
-							if (Train.IsPlayerTrain)
-							{
-								InputDevicePlugin.AvailablePlugins[i].SetMaxNotch(Train.Handles.Power.MaximumDriverNotch, Train.Handles.Brake.MaximumDriverNotch);
-							}
-						}
-					}
-					InputDevicePlugin.AvailablePlugins[i].KeyDown += MainLoop.InputDevicePluginKeyDown;
-					InputDevicePlugin.AvailablePlugins[i].KeyUp += MainLoop.InputDevicePluginKeyUp;
+					addControls[i].Command = info.Api.Controls[i].Command;
+					addControls[i].Method = Interface.ControlMethod.InputDevicePlugin;
+					addControls[i].Option = info.Api.Controls[i].Option;
 				}
+
+				Interface.CurrentControls = Interface.CurrentControls.Concat(addControls).ToArray();
+
+				info.Api.SetMaxNotch(TrainManager.PlayerTrain.Handles.Power.MaximumDriverNotch, TrainManager.PlayerTrain.Handles.Brake.MaximumDriverNotch);
+
+				info.Api.KeyDown += MainLoop.InputDevicePluginKeyDown;
+				info.Api.KeyUp += MainLoop.InputDevicePluginKeyUp;
 			}
 		}
 		protected override void OnClosing(CancelEventArgs e)
@@ -403,14 +391,11 @@ namespace OpenBve
 			{
 				if (TrainManager.Trains[i].State != TrainState.Bogus)
 				{
-					TrainManager.Trains[i].UnloadPlugin();
+					TrainManager.Trains[i].Plugin.Unload();
 				}
 			}
 			Program.Renderer.TextureManager.UnloadAllTextures();
-			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
-			{
-				InputDevicePlugin.CallPluginUnload(i);
-			}
+			Program.InputDevicePlugin.CallPluginUnload();
 			if (MainLoop.Quit == MainLoop.QuitMode.ContinueGame && Program.CurrentHost.MonoRuntime)
 			{
 				//More forcefully close under Mono, stuff *still* hanging around....
@@ -801,11 +786,11 @@ namespace OpenBve
 					Program.Renderer.CurrentTimetable = DisplayedTimetable.Custom;
 				}
 			}
-			//Create AI driver for the player train if specified via the commmand line
-			if (Game.InitialAIDriver == true)
+			//Create AI driver for the player train if specified via the command line
+			if (Game.InitialAIDriver)
 			{
 				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
-				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
+				if (TrainManager.PlayerTrain.Plugin.Enable && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 				{
 					MessageManager.AddMessage(Translations.GetInterfaceString("notification_aiunable"),MessageDependency.None, GameMode.Expert,
 						OpenBveApi.Colors.MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
@@ -858,12 +843,12 @@ namespace OpenBve
 				}
 				Program.CurrentRoute.Information.FilesNotFound = NotFound;
 				Program.CurrentRoute.Information.ErrorsAndWarnings = Messages;
+
 				//Print the plugin error encountered (If any) for 10s
 				//This must be done after the simulation has init, as otherwise the timeout doesn't work
-				if (Loading.PluginError != null)
+				foreach (string pluginError in Loading.PluginErrors)
 				{
-					MessageManager.AddMessage(Loading.PluginError, MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
-					MessageManager.AddMessage(Translations.GetInterfaceString("errors_plugin_failure2"), MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+					MessageManager.AddMessage(pluginError, MessageDependency.None, GameMode.Expert, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 				}
 			}
 			loadComplete = true;

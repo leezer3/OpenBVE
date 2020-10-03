@@ -109,7 +109,7 @@ namespace OpenBve.Graphics.Renderers
 		        Width = 0.0f;
 		        Lamps = new Lamp[17];
 		        int Count;
-		        if (Train.Plugin == null || !Train.Plugin.IsDefault)
+		        if (!Train.Plugin.Enable || !Train.Plugin.IsDefault)
 		        {
 			        Count = 0;
 		        }
@@ -174,7 +174,7 @@ namespace OpenBve.Graphics.Renderers
 			        Count = 0;
 		        }
 
-		        if (Train.Plugin != null && Train.Plugin.IsDefault)
+		        if (Train.Plugin.Enable && Train.Plugin.IsDefault)
 		        {
 			        if (Count != 0 & (eb | Train.Specs.HasConstSpeed))
 			        {

@@ -179,7 +179,7 @@ namespace OpenBve
 				Handles.Brake.Driver = b;
 				Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
 				// plugin
-				if (Plugin != null)
+				if (Plugin.Enable)
 				{
 					Plugin.UpdatePower();
 					Plugin.UpdateBrake();
@@ -275,7 +275,7 @@ namespace OpenBve
 				if (a != r)
 				{
 					Handles.Reverser.Driver = (ReverserPosition)r;
-					if (Plugin != null)
+					if (Plugin.Enable)
 					{
 						Plugin.UpdateReverser();
 					}
@@ -354,7 +354,7 @@ namespace OpenBve
 				}
 
 				// plugin
-				if (Plugin == null) return;
+				if (!Plugin.Enable) return;
 				Plugin.UpdatePower();
 				Plugin.UpdateBrake();
 			}
@@ -393,7 +393,7 @@ namespace OpenBve
 					}
 					Handles.EmergencyBrake.Driver = false;
 					// plugin
-					if (Plugin == null) return;
+					if (!Plugin.Enable) return;
 					Plugin.UpdatePower();
 					Plugin.UpdateBrake();
 				}
@@ -404,7 +404,7 @@ namespace OpenBve
 			internal void ApplyHoldBrake(bool Value)
 			{
 				Handles.HoldBrake.Driver = Value;
-				if (Plugin == null) return;
+				if (!Plugin.Enable) return;
 				Plugin.UpdatePower();
 				Plugin.UpdateBrake();
 			}
@@ -517,7 +517,7 @@ namespace OpenBve
 						Handles.Brake.Driver = (int) newState;
 						Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
 						// plugin
-						if (Plugin != null)
+						if (Plugin.Enable)
 						{
 							Plugin.UpdatePower();
 							Plugin.UpdateBrake();
@@ -602,7 +602,7 @@ namespace OpenBve
 						Handles.LocoBrake.Actual = (int) newState; //TODO: FIXME
 						Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
 						// plugin
-						if (Plugin != null)
+						if (Plugin.Enable)
 						{
 							Plugin.UpdatePower();
 							Plugin.UpdateBrake();

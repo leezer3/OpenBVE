@@ -60,17 +60,25 @@ Please also see the following issue for further discussion on the topic: https:/
 
 **Third-Party Libraries**
 
-- openBVE uses the [**CoreFX**](https://github.com/dotnet/corefx). This is licensed under the _MIT License_, which may be found in [here](licenses/CoreFX.txt).
-- openBVE uses the [**CS Script**](https://github.com/oleg-shilo/cs-script) for animation scripting. This is licensed under the _MIT License_, which may be found in [here](licenses/CS-Script.txt).
-- openBVE uses the [**DotNetZip**](https://github.com/haf/DotNetZip.Semverd) for loading compressed DirectX file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/DotNetZip.txt).
-- openBVE uses the [**NAudio**](https://github.com/naudio/NAudio) for decoding sound file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NAudio.txt).
-- openBVE uses the [**NAudio.Vorbis**](https://github.com/naudio/Vorbis) for decoding Vorbis file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NAudio.Vorbis.txt).
-- openBVE uses the [**NLayer**](https://github.com/naudio/NLayer) for decoding MP3 file. This is licensed under the *MIT License*, which may be found in [here](licenses/NLayer.txt).
-- openBVE uses the [**NVorbis**](https://github.com/NVorbis/NVorbis) for decoding Vorbis file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NVorbis.txt).
-- openBVE uses the [**OpenTK**](https://github.com/opentk/opentk) library for windowing and input handling. This is licensed under the _Open Toolkit Library License_, which may be found in [here](licenses/OpenTK.txt).
-- openBVE uses the [**Prism**](https://github.com/PrismLibrary/Prism). This is licensed under the *MIT License*, which may be found in [here](licenses/Prism.txt).
-- openBVE uses the [**ReactiveProperty**](https://github.com/runceel/ReactiveProperty). This is licensed under the *MIT License*, which may be found in [here](licenses/ReactiveProperty.txt).
-- openBVE uses the [**SharpCompress**](https://github.com/adamhathcock/sharpcompress) for archive handling. This is licensed under the _MIT License_, which may be found in [here](licenses/SharpCompress.txt).
-- openBVE uses the [**Reactive Extensions**](https://github.com/dotnet/reactive). This is licensed under the *Apache License, Version 2.0*, which may be found in [here](licenses/ReactiveExtensions.txt).
-- openBVE uses the [**Ude**](https://github.com/yinyue200/ude) for character set detection. This is tri-licensed under the _Mozilla Public License v1.1_, _GPL 2.0_ and _LGPL 2.0_, which may be found in [here](licenses/Ude.txt).
-- openBVE uses the [**XamlBehaviors for WPF**](https://github.com/microsoft/XamlBehaviorsWpf). This is licensed under the *MIT License*, which may be found in [here](licenses/XamlBehaviorsForWPF.txt).
+openBVE uses the following third party libraries.
+
+| Name                                                                        | License                                                               | Usage                           |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------- |
+| [**CS Script**](https://github.com/oleg-shilo/cs-script)                    | [MIT License](licenses/CS-Script.txt)                                 | Animation scripting             |
+| [**.NET Runtime**](https://github.com/dotnet/runtime)                       | [MIT License](licenses/dotnet_runtime.txt)                            |                                 |
+| [**DotNetZip**](https://github.com/haf/DotNetZip.Semverd)                   | [Microsoft Public License](licenses/DotNetZip.txt)                    | Loading compressed DirectX file |
+| [**Json.NET**](https://github.com/JamesNK/Newtonsoft.Json)                  | [MIT License](licenses/Newtonsoft.Json.txt)                           | Loading JSON file               |
+| [**Namotion.Reflection**](https://github.com/RicoSuter/Namotion.Reflection) | [MIT License](licenses/Namotion.Reflection.txt)                       |                                 |
+| [**NAudio**](https://github.com/naudio/NAudio)                              | [Microsoft Public License](licenses/NAudio.txt)                       | Decoding sound file             |
+| [**NAudio.Vorbis**](https://github.com/naudio/Vorbis)                       | [Microsoft Public License](licenses/NAudio.Vorbis.txt)                | Decoding Vorbis file            |
+| [**NJsonSchema for .NET**](https://github.com/RicoSuter/NJsonSchema)        | [MIT License](licenses/NJsonSchema)                                   | Validating JSON file            |
+| [**NLayer**](https://github.com/naudio/NLayer)                              | [MIT License](licenses/NLayer.txt)                                    | Decoding MP3 file               |
+| [**NVorbis**](https://github.com/NVorbis/NVorbis)                           | [Microsoft Public License](licenses/NVorbis.txt)                      | Decoding Vorbis file            |
+| [**OpenAL Soft**](https://github.com/kcat/openal-soft)                      | [LGPL 2.0](licenses/OpenALSoft.txt)                                   | Playing sound                   |
+| [**OpenTK**](https://github.com/opentk/opentk)                              | [Open Toolkit Library License](licenses/OpenTK.txt)                   | Windowing and input handling    |
+| [**Prism**](https://github.com/PrismLibrary/Prism)                          | [MIT License](licenses/Prism.txt)                                     |                                 |
+| [**Reactive Extensions**](https://github.com/dotnet/reactive)               | [Apache License, Version 2.0](licenses/ReactiveExtensions.txt)        |                                 |
+| [**ReactiveProperty**](https://github.com/runceel/ReactiveProperty)         | [MIT License](licenses/ReactiveProperty.txt)                          |                                 |
+| [**SharpCompress**](https://github.com/adamhathcock/sharpcompress)          | [MIT License](licenses/SharpCompress.txt)                             | Archive handling                |
+| [**Ude**](https://github.com/yinyue200/ude)                                 | [Mozilla Public License v1.1, GPL 2.0 and LGPL 2.0](licenses/Ude.txt) | Character set detection         |
+

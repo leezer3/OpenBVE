@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -608,7 +609,7 @@ namespace OpenBve {
 			listviewInputDevice.Columns[4].Text = Translations.GetInterfaceString("options_input_device_plugin_file_name");
 			{
 				listviewInputDevice.Items.Clear();
-				ListViewItem[] Items = new ListViewItem[InputDevicePlugin.AvailablePluginInfos.Count];
+				ListViewItem[] Items = new ListViewItem[Program.InputDevicePlugin.AvailableInfos.Count];
 				for (int i = 0; i < Items.Length; i++)
 				{
 					Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
@@ -1077,20 +1078,19 @@ namespace OpenBve {
 			}
 			{
 				int n = 0;
-				string[] a = new string[InputDevicePlugin.AvailablePluginInfos.Count];
-				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+				string[] a = new string[Program.InputDevicePlugin.AvailableInfos.Count];
+
+				foreach (InputDevicePlugin.Info info in Program.InputDevicePlugin.AvailableInfos.Where(x => x.Status == InputDevicePlugin.Status.Enable))
 				{
-					InputDevicePlugin.PluginInfo Info = InputDevicePlugin.AvailablePluginInfos[i];
-					if (Info.Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
-						continue;
-					}
-					string PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
-					if (System.IO.File.Exists(PluginPath))
+					string pluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), info.FileName);
+
+					if (System.IO.File.Exists(pluginPath))
 					{
-						a[n] = Info.FileName;
+						a[n] = info.FileName;
 						n++;
 					}
 				}
+
 				Array.Resize(ref a, n);
 				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}

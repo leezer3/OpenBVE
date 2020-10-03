@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows.Forms;
 using OpenBveApi.Runtime;
@@ -16,15 +17,14 @@ namespace OpenBveApi.Interface
 		/// </summary>
 		/// <param name="control">Control's information</param>
 		public InputEventArgs(InputControl control)
-			: base()
 		{
-				this.Control = control;
+			Control = control;
 		}
 
 		/// <summary>
 		/// Control's information
 		/// </summary>
-		public InputControl Control { get; private set; }
+		public InputControl Control { get; }
 	}
 
 	/// <summary>
@@ -66,7 +66,7 @@ namespace OpenBveApi.Interface
 		/// <summary>
 		/// A function called when the plugin is loading
 		/// </summary>
-		/// <param name="fileSystem">The instance of FileSytem class</param>
+		/// <param name="fileSystem">The instance of FileSystem class</param>
 		/// <returns>Check the plugin loading process is successfully</returns>
 		bool Load(FileSystem.FileSystem fileSystem);
 
@@ -92,7 +92,7 @@ namespace OpenBveApi.Interface
 		/// The function what notify to the plugin that the train existing status
 		/// </summary>
 		/// <param name="data">Data</param>
-		void SetElapseData(Runtime.ElapseData data);
+		void SetElapseData(ElapseData data);
 
 		/// <summary>
 		/// A function that calls each frame
@@ -113,197 +113,243 @@ namespace OpenBveApi.Interface
 	/// <summary>
 	/// The class of the input device plugin
 	/// </summary>
-	public static class InputDevicePlugin
+	public class InputDevicePlugin
 	{
+		/// <summary>
+		/// Enumerators of the plugin status
+		/// </summary>
+		public enum Status
+		{
+			/// <summary>
+			/// Failed the loading
+			/// </summary>
+			Failure = 0,
+
+			/// <summary>
+			/// Disabled
+			/// </summary>
+			Disable = 1,
+
+			/// <summary>
+			/// Enabled
+			/// </summary>
+			Enable = 2
+		};
+
 		/// <summary>
 		/// The class of the plugin's information
 		/// </summary>
-		public class PluginInfo
+		public class Info
 		{
-			/// <summary>
-			/// Enumerators of the plugin status
-			/// </summary>
-			public enum PluginStatus
-			{
-				/// <summary>
-				/// Failed the loading
-				/// </summary>
-				Failure = 0,
-
-				/// <summary>
-				/// Disabled
-				/// </summary>
-				Disable = 1,
-
-				/// <summary>
-				/// Enabled
-				/// </summary>
-				Enable = 2
-			};
-
 			/// <summary>
 			/// Plugin's name
 			/// </summary>
-			public AssemblyTitleAttribute Name { get; private set; }
+			public AssemblyTitleAttribute Name { get; }
 
 			/// <summary>
 			/// Plugin's state
 			/// </summary>
-			public PluginStatus Status { get; internal set; }
+			public Status Status { get; internal set; }
 
 			/// <summary>
 			/// Version information of the plugin
 			/// </summary>
-			public AssemblyFileVersionAttribute Version { get; private set; }
+			public AssemblyFileVersionAttribute Version { get; }
 
 			/// <summary>
 			/// Provider of the plugin
 			/// </summary>
-			public AssemblyCopyrightAttribute Provider { get; private set; }
+			public AssemblyCopyrightAttribute Provider { get; }
 
 			/// <summary>
 			/// Filename of the plugin
 			/// </summary>
-			public string FileName { get; private set; }
+			public string FileName { get; }
+
+			/// <summary>
+			/// The instance of the plugin
+			/// </summary>
+			public IInputDevice Api { get; }
 
 			/// <summary>
 			/// Constructor
 			/// </summary>
-			/// <param name="File">Asssembly information of the plugin</param>
-			internal PluginInfo(Assembly File)
+			/// <param name="assembly">Assembly information of the plugin</param>
+			/// <param name="api">The instance of the plugin</param>
+			internal Info(Assembly assembly, IInputDevice api)
 			{
-				Name = (AssemblyTitleAttribute)Attribute.GetCustomAttribute(File, typeof(AssemblyTitleAttribute));
-				Status = PluginStatus.Disable;
-				Version = (AssemblyFileVersionAttribute)Attribute.GetCustomAttribute(File, typeof(AssemblyFileVersionAttribute));
-				Provider = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(File, typeof(AssemblyCopyrightAttribute));
-				FileName = System.IO.Path.GetFileName(File.Location);
+				Name = (AssemblyTitleAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyTitleAttribute));
+				Status = Status.Disable;
+				Version = (AssemblyFileVersionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyFileVersionAttribute));
+				Provider = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
+				FileName = System.IO.Path.GetFileName(assembly.Location);
+				Api = api;
 			}
 		}
 
 		/// <summary>
 		/// The instance of FileSystem class
 		/// </summary>
-		private static FileSystem.FileSystem FileSystem = null;
+		private readonly FileSystem.FileSystem fileSystem;
+
+		/// <summary>
+		/// The entity of AvailableInfos
+		/// </summary>
+		private readonly List<Info> availableInfos;
 
 		/// <summary>
 		/// The storing list of the plugin information that can use
 		/// </summary>
-		public static readonly List<PluginInfo> AvailablePluginInfos = new List<PluginInfo>();
+		public ReadOnlyCollection<Info> AvailableInfos { get; }
 
 		/// <summary>
-		/// The storing list of the plugin instance that can use
+		/// Constructor
 		/// </summary>
-		public static readonly List<IInputDevice> AvailablePlugins = new List<IInputDevice>();
+		/// <param name="fileSystem">The instance of FileSystem class</param>
+		public InputDevicePlugin(FileSystem.FileSystem fileSystem)
+		{
+			this.fileSystem = fileSystem;
+			availableInfos = new List<Info>();
+			AvailableInfos = availableInfos.AsReadOnly();
+		}
 
 		/// <summary>
 		/// The function that is load the plugin what can use
 		/// </summary>
-		/// <param name="fileSystem">The instance of FileSystem class</param>
-		public static void LoadPlugins(FileSystem.FileSystem fileSystem)
+		public void LoadPlugins()
 		{
-			if (fileSystem == null)
+			string pluginsFolder = fileSystem.GetDataFolder("InputDevicePlugins");
+
+			if (!System.IO.Directory.Exists(pluginsFolder))
 			{
 				return;
 			}
-			FileSystem = fileSystem;
-			string PluginsFolder = FileSystem.GetDataFolder("InputDevicePlugins");
-			if (!System.IO.Directory.Exists(PluginsFolder))
+
+			foreach (string File in System.IO.Directory.GetFiles(pluginsFolder, "*.dll"))
 			{
-				return;
-			}
-			string[] PluginFiles = System.IO.Directory.GetFiles(PluginsFolder, "*.dll");
-			foreach (var File in PluginFiles)
-			{
-				Assembly Plugin;
+				Assembly assembly;
 				try
 				{
-					Plugin = Assembly.LoadFrom(File);
+					assembly = Assembly.LoadFrom(File);
 				}
 				catch
 				{
 					continue;
 				}
-				Type[] Types;
+
+				Type[] types;
 				try
 				{
-					Types = Plugin.GetTypes();
+					types = assembly.GetTypes();
 				}
 				catch
 				{
 					continue;
 				}
-				foreach (var Type in Types)
+
+				foreach (Type type in types)
 				{
-					if (typeof(IInputDevice).IsAssignableFrom(Type))
+					if (typeof(IInputDevice).IsAssignableFrom(type))
 					{
-						if (Type.FullName == null)
+						if (type.FullName == null)
 						{
 							continue;
 						}
-						AvailablePluginInfos.Add(new PluginInfo(Plugin));
-						AvailablePlugins.Add(Plugin.CreateInstance(Type.FullName) as IInputDevice);
+
+						availableInfos.Add(new Info(assembly, assembly.CreateInstance(type.FullName) as IInputDevice));
 					}
 				}
 			}
 		}
 
 		/// <summary>
-		/// The function that calls the plugin's load funcion
+		/// The function that calls the plugin's load function
 		/// </summary>
 		/// <param name="index">The index number which can use the plugins</param>
-		public static void CallPluginLoad(int index)
+		public void CallPluginLoad(int index)
 		{
-			if (index < 0 || index >= AvailablePlugins.Count || index >= AvailablePluginInfos.Count)
+			if (index < 0 || index >= AvailableInfos.Count)
 			{
 				return;
 			}
-			if (AvailablePluginInfos[index].Status == PluginInfo.PluginStatus.Enable)
+
+			CallPluginLoad(AvailableInfos[index]);
+		}
+
+		/// <summary>
+		/// The function that calls the plugin's load function
+		/// </summary>
+		/// <param name="info">The instance of Info class</param>
+		public void CallPluginLoad(Info info)
+		{
+			if (info.Status == Status.Enable)
 			{
 				return;
 			}
-			if (AvailablePlugins[index].Load(FileSystem))
+
+			info.Status = info.Api.Load(fileSystem) ? Status.Enable : Status.Failure;
+		}
+
+		/// <summary>
+		/// The function that calls the plugin's unload function
+		/// </summary>
+		public void CallPluginUnload()
+		{
+			foreach (Info info in AvailableInfos)
 			{
-				AvailablePluginInfos[index].Status = PluginInfo.PluginStatus.Enable;
-			}
-			else
-			{
-				AvailablePluginInfos[index].Status = PluginInfo.PluginStatus.Failure;
+				CallPluginUnload(info);
 			}
 		}
 
 		/// <summary>
-		/// The function that calls the plugin's unload funcion
+		/// The function that calls the plugin's unload function
 		/// </summary>
 		/// <param name="index">The index number which can use the plugins</param>
-		public static void CallPluginUnload(int index)
+		public void CallPluginUnload(int index)
 		{
-			if (index < 0 || index >= AvailablePlugins.Count || index >= AvailablePluginInfos.Count)
+			if (index < 0 || index >= AvailableInfos.Count)
 			{
 				return;
 			}
-			if (AvailablePluginInfos[index].Status != PluginInfo.PluginStatus.Enable)
-			{
-				return;
-			}
-			AvailablePlugins[index].Unload();
-			AvailablePluginInfos[index].Status = PluginInfo.PluginStatus.Disable;
+
+			CallPluginUnload(AvailableInfos[index]);
 		}
 
 		/// <summary>
-		/// The function that calls the plugin's configration funcion
+		/// The function that calls the plugin's unload function
+		/// </summary>
+		/// <param name="info">The instance of Info class</param>
+		public void CallPluginUnload(Info info)
+		{
+			if (info.Status != Status.Enable)
+			{
+				return;
+			}
+
+			info.Api.Unload();
+			info.Status = Status.Disable;
+		}
+
+		/// <summary>
+		/// The function that calls the plugin's configuration function
 		/// </summary>
 		/// <param name="owner">The owner of the window</param>
 		/// <param name="index">The index number which can use the plugins</param>
-		public static void CallPluginConfig(IWin32Window owner, int index)
+		public void CallPluginConfig(IWin32Window owner, int index)
 		{
-			if (index < 0 || index >= AvailablePlugins.Count) {
-				return;
-			}
-			if (AvailablePluginInfos[index].Status != PluginInfo.PluginStatus.Enable)
+			if (index < 0 || index >= AvailableInfos.Count)
 			{
 				return;
 			}
-			AvailablePlugins[index].Config(owner);
+
+			Info info = AvailableInfos[index];
+
+			if (info.Status != Status.Enable)
+			{
+				return;
+			}
+
+			info.Api.Config(owner);
 		}
 	}
 }

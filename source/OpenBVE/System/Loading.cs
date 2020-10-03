@@ -1,11 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
-using LibRender2;
 using OpenBve.Parsers.Train;
-using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
@@ -64,7 +63,7 @@ namespace OpenBve {
 		internal static double TrainProgressCurrentSum;
 		internal static double TrainProgressCurrentWeight;
 		/// <summary>Stores the plugin error message string, or a null reference if no error encountered</summary>
-		internal static string PluginError;
+		internal static readonly List<string> PluginErrors = new List<string>();
 
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>
@@ -159,16 +158,32 @@ namespace OpenBve {
 			try {
 				LoadEverythingThreaded();
 			} catch (Exception ex) {
-				for (int i = 0; i < TrainManager.Trains.Length; i++) {
-					if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
-						if (TrainManager.Trains[i].Plugin.LastException != null) {
-							Interface.AddMessage(MessageType.Critical, false, "The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a critical error in the route and train loader: " + TrainManager.Trains[i].Plugin.LastException.Message);
-							CrashHandler.LoadingCrash(TrainManager.Trains[i].Plugin.LastException + Environment.StackTrace, true);
-							 Program.RestartArguments = " ";
-							 Cancel = true;    
-							return;
-						}
+				foreach (TrainManager.Train train in TrainManager.Trains)
+				{
+					if (train == null || !train.Plugin.Enable)
+					{
+						continue;
 					}
+
+					var lastExceptions = train.Plugin.LastExceptions;
+
+					if (lastExceptions.Length == 0)
+					{
+						continue;
+					}
+
+					StringBuilder exceptionTexts = new StringBuilder();
+
+					foreach ((string title, Exception exception) in lastExceptions)
+					{
+						Interface.AddMessage(MessageType.Critical, false, $"The train plugin {title} caused a critical error in the route and train loader: {exception.Message}");
+						exceptionTexts.AppendLine(exception.ToString());
+					}
+
+					CrashHandler.LoadingCrash(exceptionTexts + Environment.StackTrace, true);
+					Program.RestartArguments = " ";
+					Cancel = true;
+					return;
 				}
 				if (ex is System.DllNotFoundException)
 				{
@@ -488,23 +503,9 @@ namespace OpenBve {
 				Program.CurrentRoute.UpdateAllSections();
 			}
 			// load plugin
-			for (int i = 0; i < TrainManager.Trains.Length; i++) {
-				if (TrainManager.Trains[i].State != TrainState.Bogus) {
-					if (TrainManager.Trains[i].IsPlayerTrain) {
-						if (!TrainManager.Trains[i].LoadCustomPlugin(TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
-							TrainManager.Trains[i].LoadDefaultPlugin( TrainManager.Trains[i].TrainFolder);
-						}
-					} else {
-						TrainManager.Trains[i].LoadDefaultPlugin(TrainManager.Trains[i].TrainFolder);
-					}
-					for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++) {
-						if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePluginInfos[j] is ITrainInputDevice)
-						{
-							ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
-							trainInputDevice.SetVehicleSpecs(TrainManager.Trains[i].vehicleSpecs());
-						}
-					}
-				}
+			foreach (TrainManager.Train train in TrainManager.Trains.Where(x => x.State != TrainState.Bogus))
+			{
+				train.Plugin.Load(CurrentTrainEncoding, !train.IsPlayerTrain);
 			}
 		}
 

@@ -176,7 +176,7 @@ namespace OpenBve
 					if (Train.Station >= 0 && Program.CurrentRoute.Stations[Train.Station].Type != StationType.Normal && Program.CurrentRoute.Stations[Train.Station].Type != StationType.RequestStop && Train.IsPlayerTrain)
 					{
 						// player's terminal station
-						if (Train.Plugin == null || Train.Plugin.LastReverser == -2)
+						if (!Train.Plugin.Enable || Train.Plugin.LastReverser == -2)
 						{
 							Train.ApplyReverser(0, false);
 						}
@@ -278,7 +278,7 @@ namespace OpenBve
 				else if (Train.Station >= 0 && stopIndex >= 0 && Program.CurrentRoute.Stations[Train.Station].Type != StationType.Normal && Program.CurrentRoute.Stations[Train.Station].Type != StationType.RequestStop && Train.IsPlayerTrain && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.CurrentSpeed) < 0.25)
 				{
 					// player's terminal station (not boarding any longer)
-					if (Train.Plugin != null || Train.Plugin.LastReverser == -2)
+					if (Train.Plugin.Enable || Train.Plugin.LastReverser == -2)
 					{
 						Train.ApplyReverser(0, false);
 					}
@@ -891,7 +891,7 @@ namespace OpenBve
 				else if (Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{
 					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
-					if (Train.Plugin != null && Train.Plugin.SupportsAI)
+					if (Train.Plugin.Enable && Train.Plugin.SupportsAI)
 					{
 						if (PerformPlugin() != AIResponse.None)
 						{

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Resources;
 
 namespace OpenBveApi.Interface {
 	public static partial class Translations {
@@ -46,7 +47,7 @@ namespace OpenBveApi.Interface {
 		/// <summary>Loads the embedded default language</summary>
 		private static void LoadEmbeddedLanguage()
 		{
-			using (TextReader reader = new StringReader(Resource.en_US))
+			using (TextReader reader = new StringReader(Languages.en_US))
 			{
 				Language l = new Language(reader, "en-US");
 				AvailableLanguages.Add(l);

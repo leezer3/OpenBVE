@@ -1,505 +1,1170 @@
 ﻿using System;
 using System.Collections.Generic;
-using OpenBveApi.Runtime;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NJsonSchema;
+using NJsonSchema.Validation;
+using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Resources;
+using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Stations;
+using Path = System.IO.Path;
 
-namespace OpenBve {
-	internal static class PluginManager {
-		
-		/// <summary>Represents an abstract plugin.</summary>
-		internal abstract class Plugin {
-			
-			// --- members ---
-			/// <summary>The file title of the plugin, including the file extension.</summary>
-			internal string PluginTitle;
-			/// <summary>Whether the plugin is the default ATS/ATC plugin.</summary>
-			internal bool IsDefault;
-			/// <summary>Whether the plugin returned valid information in the last Elapse call.</summary>
-			internal bool PluginValid;
-			/// <summary>The debug message the plugin returned in the last Elapse call.</summary>
-			internal string PluginMessage;
-			/// <summary>The train the plugin is attached to.</summary>
-			internal TrainManager.Train Train;
-			/// <summary>The array of panel variables.</summary>
-			internal int[] Panel;
-			/// <summary>Whether the plugin supports the AI.</summary>
-			internal bool SupportsAI;
-			/// <summary>The last in-game time reported to the plugin.</summary>
-			internal double LastTime;
-			/// <summary>The last reverser reported to the plugin.</summary>
-			internal int LastReverser;
-			/// <summary>The last power notch reported to the plugin.</summary>
-			internal int LastPowerNotch;
-			/// <summary>The last brake notch reported to the plugin.</summary>
-			internal int LastBrakeNotch;
-			/// <summary>The last aspects per relative section reported to the plugin. Section 0 is the current section, section 1 the upcoming section, and so on.</summary>
-			internal int[] LastAspects;
-			/// <summary>The absolute section the train was last.</summary>
-			internal int LastSection;
-			/// <summary>The last exception the plugin raised.</summary>
-			internal Exception LastException;
-			//NEW: Whether this plugin can disable the time acceleration factor
-			/// <summary>Whether this plugin can disable time acceleration.</summary>
-			internal static bool DisableTimeAcceleration;
+namespace OpenBve
+{
+	internal partial class PluginManager
+	{
+		private static readonly JsonSchema jsonSchema;
 
-			private List<Station> currentRouteStations;
-			private bool StationsLoaded;
-			// --- functions ---
-			/// <summary>Called to load and initialize the plugin.</summary>
-			/// <param name="specs">The train specifications.</param>
-			/// <param name="mode">The initialization mode of the train.</param>
-			/// <returns>Whether loading the plugin was successful.</returns>
-			internal abstract bool Load(VehicleSpecs specs, InitializationModes mode);
-			/// <summary>Called to unload the plugin.</summary>
-			internal abstract void Unload();
-			/// <summary>Called before the train jumps to a different location.</summary>
-			/// <param name="mode">The initialization mode of the train.</param>
-			internal abstract void BeginJump(InitializationModes mode);
-			/// <summary>Called when the train has finished jumping to a different location.</summary>
-			internal abstract void EndJump();
-			/// <summary>Called every frame to update the plugin.</summary>
-			internal void UpdatePlugin() {
-				if (Train.Cars == null || Train.Cars.Length == 0)
+		/// <summary>The train plugins is attached to.</summary>
+		private readonly TrainManager.Train train;
+
+		private readonly List<Plugin> plugins;
+
+		/// <summary>The last in-game time reported to plugins.</summary>
+		private double lastTime;
+
+		/// <summary>The last aspects per relative section reported to the plugin. Section 0 is the current section, section 1 the upcoming section, and so on.</summary>
+		private int[] lastAspects;
+
+		private bool stationsLoaded;
+
+		private readonly List<Station> currentRouteStations;
+
+		private Dictionary<int, (int PluginIndex, int SrcPanelIndex)[]> panelIndexDictionary;
+
+		private Dictionary<int, int> panelValueDictionary;
+
+		/// <summary>The file title of the plugin, including the file extension.</summary>
+		internal string Title => string.Join(", ", plugins.Select(x => x.Title));
+
+		internal bool Enable
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>Whether the plugin returned valid information in the last Elapse call.</summary>
+		internal bool Valid
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>The debug message the plugin returned in the last Elapse call.</summary>
+		internal string Message
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>Whether plugins can disable time acceleration.</summary>
+		internal static bool DisableTimeAcceleration
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>The last reverser reported to the plugin.</summary>
+		internal int LastReverser
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>The absolute section the train was last.</summary>
+		internal int LastSection;
+
+		internal int PanelLength
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>Whether the plugin supports the AI.</summary>
+		internal bool SupportsAI
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>Whether the plugin is the default ATS/ATC plugin.</summary>
+		internal bool IsDefault
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>The last exception the plugin raised.</summary>
+		internal (string title, Exception exception)[] LastExceptions => plugins.Where(x => x.LastException != null).Select(x => (x.Title, x.LastException)).ToArray();
+
+		static PluginManager()
+		{
+			jsonSchema = JsonSchema.FromJsonAsync(Schemas.ats).Result;
+		}
+
+		internal PluginManager(TrainManager.Train train)
+		{
+			this.train = train;
+			plugins = new List<Plugin>();
+			currentRouteStations = new List<Station>();
+			panelIndexDictionary = new Dictionary<int, (int, int)[]>();
+			panelValueDictionary = new Dictionary<int, int>();
+		}
+
+		private VehicleSpecs GetVehicleSpecs()
+		{
+			BrakeTypes brakeType = (BrakeTypes)train.Cars[train.DriverCar].CarBrake.brakeType;
+			int brakeNotches;
+			int powerNotches;
+			bool hasHoldBrake;
+			if (brakeType == BrakeTypes.AutomaticAirBrake)
+			{
+				brakeNotches = 2;
+				powerNotches = train.Handles.Power.MaximumNotch;
+				hasHoldBrake = false;
+			}
+			else
+			{
+				brakeNotches = train.Handles.Brake.MaximumNotch + (train.Handles.HasHoldBrake ? 1 : 0);
+				powerNotches = train.Handles.Power.MaximumNotch;
+				hasHoldBrake = train.Handles.HasHoldBrake;
+			}
+
+			bool hasLocoBrake = train.Handles.HasLocoBrake;
+			int cars = train.Cars.Length;
+			return new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, cars);
+		}
+
+		/// <summary>Gets the driver handles.</summary>
+		/// <returns>The driver handles.</returns>
+		private Handles GetHandles()
+		{
+			int reverser = (int)train.Handles.Reverser.Driver;
+			int powerNotch = train.Handles.Power.Driver;
+			int brakeNotch;
+			if (train.Handles.Brake is TrainManager.AirBrakeHandle)
+			{
+				brakeNotch = train.Handles.EmergencyBrake.Driver ? 3 : train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 2 : train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
+			}
+			else
+			{
+				if (train.Handles.HasHoldBrake)
 				{
-					return;
+					brakeNotch = train.Handles.EmergencyBrake.Driver ? train.Handles.Brake.MaximumNotch + 2 : train.Handles.Brake.Driver > 0 ? train.Handles.Brake.Driver + 1 : train.Handles.HoldBrake.Driver ? 1 : 0;
 				}
-				/*
-				 * Prepare the vehicle state.
-				 * */
-				double location = this.Train.Cars[0].FrontAxle.Follower.TrackPosition - this.Train.Cars[0].FrontAxle.Position + 0.5 * this.Train.Cars[0].Length;
-				//Curve Radius, Cant and Pitch Added
-				double CurrentRadius = this.Train.Cars[0].FrontAxle.Follower.CurveRadius;
-				double CurrentCant = this.Train.Cars[0].FrontAxle.Follower.CurveCant;
-				double CurrentPitch = this.Train.Cars[0].FrontAxle.Follower.Pitch;
-				//If the list of stations has not been loaded, do so
-				if (!StationsLoaded)
+				else
 				{
-					currentRouteStations = new List<Station>();
-					int s = 0;
-					foreach (RouteStation selectedStation in Program.CurrentRoute.Stations)
+					brakeNotch = train.Handles.EmergencyBrake.Driver ? train.Handles.Brake.MaximumNotch + 1 : train.Handles.Brake.Driver;
+				}
+			}
+
+			return new Handles(reverser, powerNotch, brakeNotch, train.Handles.LocoBrake.Driver, train.Specs.CurrentConstSpeed, train.Handles.HoldBrake.Driver);
+		}
+
+		/// <summary>Sets the driver handles or the virtual handles.</summary>
+		/// <param name="handles">The handles.</param>
+		/// <param name="virtualHandles">Whether to set the virtual handles.</param>
+		private void SetHandles(Handles handles, bool virtualHandles)
+		{
+			/*
+			 * Process the handles.
+			 */
+			if (train.Handles.SingleHandle & handles.BrakeNotch != 0)
+			{
+				handles.PowerNotch = 0;
+			}
+
+			/*
+			 * Process the reverser.
+			 */
+			if (handles.Reverser >= -1 & handles.Reverser <= 1)
+			{
+				if (virtualHandles)
+				{
+					train.Handles.Reverser.Actual = (TrainManager.ReverserPosition)handles.Reverser;
+				}
+				else
+				{
+					train.ApplyReverser(handles.Reverser, false);
+				}
+			}
+			else
+			{
+				if (virtualHandles)
+				{
+					train.Handles.Reverser.Actual = train.Handles.Reverser.Driver;
+				}
+
+				Valid = false;
+			}
+
+			/*
+			 * Process the power.
+			 * */
+			if (handles.PowerNotch >= 0 & handles.PowerNotch <= train.Handles.Power.MaximumNotch)
+			{
+				if (virtualHandles)
+				{
+					train.Handles.Power.Safety = handles.PowerNotch;
+				}
+				else
+				{
+					train.ApplyNotch(handles.PowerNotch, false, 0, true, true);
+				}
+			}
+			else
+			{
+				if (virtualHandles)
+				{
+					train.Handles.Power.Safety = train.Handles.Power.Driver;
+				}
+
+				Valid = false;
+			}
+
+			/*
+			 * Process the brakes.
+			 * */
+			if (virtualHandles)
+			{
+				train.Handles.EmergencyBrake.Safety = false;
+				train.Handles.HoldBrake.Actual = false;
+			}
+			if (train.Handles.Brake is TrainManager.AirBrakeHandle)
+			{
+				switch (handles.BrakeNotch)
+				{
+					case 0 when virtualHandles:
+						train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Release;
+						break;
+					case 0:
+						train.UnapplyEmergencyBrake();
+						train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+						break;
+					case 1 when virtualHandles:
+						train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Lap;
+						break;
+					case 1:
+						train.UnapplyEmergencyBrake();
+						train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Lap);
+						break;
+					case 2 when virtualHandles:
+						train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
+						break;
+					case 2:
+						train.UnapplyEmergencyBrake();
+						train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+						break;
+					case 3 when virtualHandles:
+						train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
+						train.Handles.EmergencyBrake.Safety = true;
+						break;
+					case 3:
+						train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+						train.ApplyEmergencyBrake();
+						break;
+					default:
+						Valid = false;
+						break;
+				}
+			}
+			else
+			{
+				if (train.Handles.HasHoldBrake)
+				{
+					if (handles.BrakeNotch == train.Handles.Brake.MaximumNotch + 2)
 					{
-						double stopPosition = -1;
-						int stopIdx = Program.CurrentRoute.Stations[s].GetStopIndex(Train.NumberOfCars);
-						if (selectedStation.Stops.Length != 0)
+						if (virtualHandles)
 						{
-							stopPosition = selectedStation.Stops[stopIdx].TrackPosition;
+							train.Handles.EmergencyBrake.Safety = true;
+							train.Handles.Brake.Safety = train.Handles.Brake.MaximumNotch;
 						}
-						Station i = new Station(selectedStation, stopPosition);
-						currentRouteStations.Add(i);
-						s++;
+						else
+						{
+							train.ApplyHoldBrake(false);
+							train.ApplyNotch(0, true, train.Handles.Brake.MaximumNotch, false, true);
+							train.ApplyEmergencyBrake();
+						}
 					}
-					StationsLoaded = true;
-					
+					else if (handles.BrakeNotch >= 2 & handles.BrakeNotch <= train.Handles.Brake.MaximumNotch + 1)
+					{
+						if (virtualHandles)
+						{
+							train.Handles.Brake.Safety = handles.BrakeNotch - 1;
+						}
+						else
+						{
+							train.UnapplyEmergencyBrake();
+							train.ApplyHoldBrake(false);
+							train.ApplyNotch(0, true, handles.BrakeNotch - 1, false, true);
+						}
+					}
+					else if (handles.BrakeNotch == 1)
+					{
+						if (virtualHandles)
+						{
+							train.Handles.Brake.Safety = 0;
+							train.Handles.HoldBrake.Actual = true;
+						}
+						else
+						{
+							train.UnapplyEmergencyBrake();
+							train.ApplyNotch(0, true, 0, false, true);
+							train.ApplyHoldBrake(true);
+						}
+					}
+					else if (handles.BrakeNotch == 0)
+					{
+						if (virtualHandles)
+						{
+							train.Handles.Brake.Safety = 0;
+						}
+						else
+						{
+							train.UnapplyEmergencyBrake();
+							train.ApplyNotch(0, true, 0, false, true);
+							train.ApplyHoldBrake(false);
+						}
+					}
+					else
+					{
+						if (virtualHandles)
+						{
+							train.Handles.Brake.Safety = train.Handles.Brake.Driver;
+						}
+
+						Valid = false;
+					}
 				}
-				//End of additions
-				double speed = this.Train.Cars[this.Train.DriverCar].Specs.CurrentPerceivedSpeed;
-				double bcPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure;
-				double mrPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.mainReservoir.CurrentPressure;
-				double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;
-				double bpPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakePipe.CurrentPressure;
-				double sapPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.straightAirPipe.CurrentPressure;
-				VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, CurrentRadius, CurrentCant, CurrentPitch);
-				/*
-				 * Prepare the preceding vehicle state.
-				 * */
-				double bestLocation = double.MaxValue;
-				double bestSpeed = 0.0;
-				PrecedingVehicleState precedingVehicle;
+				else
+				{
+					if (handles.BrakeNotch == train.Handles.Brake.MaximumNotch + 1)
+					{
+						if (virtualHandles)
+						{
+							train.Handles.EmergencyBrake.Safety = true;
+							train.Handles.Brake.Safety = train.Handles.Brake.MaximumNotch;
+						}
+						else
+						{
+							train.ApplyHoldBrake(false);
+							train.ApplyEmergencyBrake();
+						}
+					}
+					else if (handles.BrakeNotch >= 0 & handles.BrakeNotch <= train.Handles.Brake.MaximumNotch | train.Handles.Brake.DelayedChanges.Length == 0)
+					{
+						if (virtualHandles)
+						{
+							train.Handles.Brake.Safety = handles.BrakeNotch;
+						}
+						else
+						{
+							train.UnapplyEmergencyBrake();
+							train.ApplyNotch(0, true, handles.BrakeNotch, false, true);
+						}
+					}
+					else
+					{
+						if (virtualHandles)
+						{
+							train.Handles.Brake.Safety = train.Handles.Brake.Driver;
+						}
+
+						Valid = false;
+					}
+				}
+			}
+
+			/*
+			 * Process the const speed system.
+			 * */
+			train.Specs.CurrentConstSpeed = handles.ConstSpeed & train.Specs.HasConstSpeed;
+			train.Handles.HoldBrake.Actual = handles.HoldBrake & train.Handles.HasHoldBrake;
+		}
+
+		private bool ParseSetting(Encoding encoding, ICollection<Plugin.Entry> entries)
+		{
+			string jsonFilePath = OpenBveApi.Path.CombineFile(train.TrainFolder, "ats.json");
+
+			if (File.Exists(jsonFilePath))
+			{
+				Program.FileSystem.AppendToLogFile($"Loading train plugin json config file: {jsonFilePath}");
+
+				if (ParseSettingJson(jsonFilePath, entries))
+				{
+					Program.FileSystem.AppendToLogFile("Train plugin json config loaded successfully.");
+					return true;
+				}
+
+				Program.FileSystem.AppendToLogFile("The ats.json file failed to load. Falling back to text config.");
+			}
+
+			string cfgFilePath = OpenBveApi.Path.CombineFile(train.TrainFolder, "ats.cfg");
+
+			if (File.Exists(cfgFilePath))
+			{
+				Program.FileSystem.AppendToLogFile($"Loading train plugin config file: {cfgFilePath}");
+
+				if (ParseSettingCfg(encoding, cfgFilePath, entries))
+				{
+					Program.FileSystem.AppendToLogFile("Train plugin text config loaded successfully.");
+					return true;
+				}
+
+				Program.FileSystem.AppendToLogFile("The ats.cfg file failed to load. Falling back to default plugin.");
+			}
+
+			return false;
+		}
+
+		private bool ParseSettingJson(string filePath, ICollection<Plugin.Entry> entries)
+		{
+			JObject jObject;
+
+			try
+			{
+				jObject = JObject.Parse(File.ReadAllText(filePath));
+			}
+			catch (Exception ex)
+			{
+				Interface.AddMessage(MessageType.Error, false, $"Parse error: {ex.Message}");
+				return false;
+			}
+
+			IEnumerable<ValidationError> validationErrors = jsonSchema.Validate(jObject);
+
+			if (validationErrors.Any())
+			{
+				DisplayValidationErrors(validationErrors);
+				return false;
+			}
+
+			foreach (JToken pluginJToken in jObject["plugins"].Children())
+			{
+				Plugin.Entry entry = JsonConvert.DeserializeObject<Plugin.Entry>(pluginJToken.ToString(), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+				string pluginFilePath;
+
 				try
 				{
-					for (int i = 0; i < TrainManager.Trains.Length; i++)
-					{
-						if (TrainManager.Trains[i] != this.Train & TrainManager.Trains[i].State == TrainState.Available & Train.Cars.Length > 0)
-						{
-							int c = TrainManager.Trains[i].Cars.Length - 1;
-							double z = TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * TrainManager.Trains[i].Cars[c].Length;
-							if (z >= location & z < bestLocation)
-							{
-								bestLocation = z;
-								bestSpeed = TrainManager.Trains[i].CurrentSpeed;
-							}
-						}
-					}
-					precedingVehicle = bestLocation != double.MaxValue ? new PrecedingVehicleState(bestLocation, bestLocation - location, new Speed(bestSpeed)) : null;
+					pluginFilePath = OpenBveApi.Path.CombineFile(train.TrainFolder, entry.FilePath);
 				}
 				catch
 				{
-					precedingVehicle = null;
+					Interface.AddMessage(MessageType.Error, true, $"The train plugin path {entry.FilePath} was malformed in {filePath}. This plugin will be ignored.");
+					continue;
 				}
-				/*
-				 * Get the driver handles.
-				 * */
-				Handles handles = GetHandles();
-				/*
-				 * Update the plugin.
-				 * */
-				double totalTime = Program.CurrentRoute.SecondsSinceMidnight;
-				double elapsedTime = Program.CurrentRoute.SecondsSinceMidnight - LastTime;
 
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, Program.Renderer.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
-				ElapseData inputDevicePluginData = data;
-				LastTime = Program.CurrentRoute.SecondsSinceMidnight;
-				Elapse(data);
-				this.PluginMessage = data.DebugMessage;
-				this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
-				DisableTimeAcceleration = data.DisableTimeAcceleration;
-				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++) {
-					if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
-						InputDevicePlugin.AvailablePlugins[i].SetElapseData(inputDevicePluginData);
-					}
+				if (!File.Exists(pluginFilePath))
+				{
+					Interface.AddMessage(MessageType.Error, true, $"The train plugin {pluginFilePath} could not be found in {filePath}. This plugin will be ignored.");
+					continue;
 				}
-				/*
-				 * Set the virtual handles.
-				 * */
-				this.PluginValid = true;
-				SetHandles(data.Handles, true);
-				this.Train.Destination = data.Destination;
+
+				entry.FilePath = pluginFilePath;
+
+				entries.Add(entry);
 			}
-			/// <summary>Gets the driver handles.</summary>
-			/// <returns>The driver handles.</returns>
-			private Handles GetHandles() {
-				int reverser = (int)this.Train.Handles.Reverser.Driver;
-				int powerNotch = this.Train.Handles.Power.Driver;
-				int brakeNotch;
-				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
-					brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
-				} else {
-					if (this.Train.Handles.HasHoldBrake) {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 2 : this.Train.Handles.Brake.Driver > 0 ? this.Train.Handles.Brake.Driver + 1 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
-					} else {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 1 : this.Train.Handles.Brake.Driver;
-					}
-				}
-				return new Handles(reverser, powerNotch, brakeNotch, this.Train.Handles.LocoBrake.Driver, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);
-			}
-			/// <summary>Sets the driver handles or the virtual handles.</summary>
-			/// <param name="handles">The handles.</param>
-			/// <param name="virtualHandles">Whether to set the virtual handles.</param>
-			private void SetHandles(Handles handles, bool virtualHandles) {
-				/*
-				 * Process the handles.
-				 */
-				if (this.Train.Handles.SingleHandle & handles.BrakeNotch != 0) {
-					handles.PowerNotch = 0;
-				}
-				/*
-				 * Process the reverser.
-				 */
-				if (handles.Reverser >= -1 & handles.Reverser <= 1) {
-					if (virtualHandles) {
-						this.Train.Handles.Reverser.Actual = (TrainManager.ReverserPosition)handles.Reverser;
-					} else {
-						this.Train.ApplyReverser(handles.Reverser, false);
-					}
-				} else {
-					if (virtualHandles) {
-						this.Train.Handles.Reverser.Actual = this.Train.Handles.Reverser.Driver;
-					}
-					this.PluginValid = false;
-				}
-				/*
-				 * Process the power.
-				 * */
-				if (handles.PowerNotch >= 0 & handles.PowerNotch <= this.Train.Handles.Power.MaximumNotch) {
-					if (virtualHandles) {
-						this.Train.Handles.Power.Safety = handles.PowerNotch;
-					} else {
-						Train.ApplyNotch(handles.PowerNotch, false, 0, true, true);
-					}
-				} else {
-					if (virtualHandles) {
-						this.Train.Handles.Power.Safety = this.Train.Handles.Power.Driver;
-					}
-					this.PluginValid = false;
-				}
-				/*
-				 * Process the brakes.
-				 * */
-				if (virtualHandles) {
-					this.Train.Handles.EmergencyBrake.Safety = false;
-					this.Train.Handles.HoldBrake.Actual = false;
-				}
-				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
-					if (handles.BrakeNotch == 0) {
-						if (virtualHandles) {
-							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Release;
-						} else {
-							this.Train.UnapplyEmergencyBrake();
-							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
-						}
-					} else if (handles.BrakeNotch == 1) {
-						if (virtualHandles) {
-							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Lap;
-						} else {
-							this.Train.UnapplyEmergencyBrake();
-							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Lap);
-						}
-					} else if (handles.BrakeNotch == 2) {
-						if (virtualHandles) {
-							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
-						} else {
-							this.Train.UnapplyEmergencyBrake();
-							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
-						}
-					} else if (handles.BrakeNotch == 3) {
-						if (virtualHandles) {
-							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
-							this.Train.Handles.EmergencyBrake.Safety = true;
-						} else {
-							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
-							this.Train.ApplyEmergencyBrake();
-						}
-					} else {
-						this.PluginValid = false;
-					}
-				} else {
-					if (this.Train.Handles.HasHoldBrake) {
-						if (handles.BrakeNotch == this.Train.Handles.Brake.MaximumNotch + 2) {
-							if (virtualHandles) {
-								this.Train.Handles.EmergencyBrake.Safety = true;
-								this.Train.Handles.Brake.Safety = this.Train.Handles.Brake.MaximumNotch;
-							} else {
-								this.Train.ApplyHoldBrake(false);
-								Train.ApplyNotch(0, true, this.Train.Handles.Brake.MaximumNotch, false, true);
-								this.Train.ApplyEmergencyBrake();
-							}
-						} else if (handles.BrakeNotch >= 2 & handles.BrakeNotch <= this.Train.Handles.Brake.MaximumNotch + 1) {
-							if (virtualHandles) {
-								this.Train.Handles.Brake.Safety = handles.BrakeNotch - 1;
-							} else {
-								this.Train.UnapplyEmergencyBrake();
-								this.Train.ApplyHoldBrake(false);
-								Train.ApplyNotch(0, true, handles.BrakeNotch - 1, false, true);
-							}
-						} else if (handles.BrakeNotch == 1) {
-							if (virtualHandles) {
-								this.Train.Handles.Brake.Safety = 0;
-								this.Train.Handles.HoldBrake.Actual = true;
-							} else {
-								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, 0, false, true);
-								this.Train.ApplyHoldBrake(true);
-							}
-						} else if (handles.BrakeNotch == 0) {
-							if (virtualHandles) {
-								this.Train.Handles.Brake.Safety = 0;
-							} else {
-								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, 0, false, true);
-								this.Train.ApplyHoldBrake(false);
-							}
-						} else {
-							if (virtualHandles) {
-								this.Train.Handles.Brake.Safety = this.Train.Handles.Brake.Driver;
-							}
-							this.PluginValid = false;
-						}
-					} else {
-						if (handles.BrakeNotch == this.Train.Handles.Brake.MaximumNotch + 1) {
-							if (virtualHandles) {
-								this.Train.Handles.EmergencyBrake.Safety = true;
-								this.Train.Handles.Brake.Safety = this.Train.Handles.Brake.MaximumNotch;
-							} else {
-								this.Train.ApplyHoldBrake(false);
-								this.Train.ApplyEmergencyBrake();
-							}
-						} else if (handles.BrakeNotch >= 0 & handles.BrakeNotch <= this.Train.Handles.Brake.MaximumNotch | this.Train.Handles.Brake.DelayedChanges.Length == 0) {
-							if (virtualHandles) {
-								this.Train.Handles.Brake.Safety = handles.BrakeNotch;
-							} else {
-								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, handles.BrakeNotch, false, true);
-							}
-						} else {
-							if (virtualHandles) {
-								this.Train.Handles.Brake.Safety = this.Train.Handles.Brake.Driver;
-							}
-							this.PluginValid = false;
-						}
-					}
-				}
-				/*
-				 * Process the const speed system.
-				 * */
-				this.Train.Specs.CurrentConstSpeed = handles.ConstSpeed & this.Train.Specs.HasConstSpeed;
-				this.Train.Handles.HoldBrake.Actual = handles.HoldBrake & this.Train.Handles.HasHoldBrake;
-			}
-			/// <summary>Called every frame to update the plugin.</summary>
-			/// <param name="data">The data passed to the plugin on Elapse.</param>
-			/// <remarks>This function should not be called directly. Call UpdatePlugin instead.</remarks>
-			protected abstract void Elapse(ElapseData data);
-			/// <summary>Called to update the reverser. This invokes a call to SetReverser only if a change actually occured.</summary>
-			internal void UpdateReverser() {
-				int reverser = (int)this.Train.Handles.Reverser.Driver;
-				if (reverser != this.LastReverser) {
-					this.LastReverser = reverser;
-					SetReverser(reverser);
-				}
-			}
-			/// <summary>Called to indicate a change of the reverser.</summary>
-			/// <param name="reverser">The reverser.</param>
-			/// <remarks>This function should not be called directly. Call UpdateReverser instead.</remarks>
-			protected abstract void SetReverser(int reverser);
-			/// <summary>Called to update the power notch. This invokes a call to SetPower only if a change actually occured.</summary>
-			internal void UpdatePower() {
-				int powerNotch = this.Train.Handles.Power.Driver;
-				if (powerNotch != this.LastPowerNotch) {
-					this.LastPowerNotch = powerNotch;
-					SetPower(powerNotch);
-				}
-			}
-			/// <summary>Called to indicate a change of the power notch.</summary>
-			/// <param name="powerNotch">The power notch.</param>
-			/// <remarks>This function should not be called directly. Call UpdatePower instead.</remarks>
-			protected abstract void SetPower(int powerNotch);
-			/// <summary>Called to update the brake notch. This invokes a call to SetBrake only if a change actually occured.</summary>
-			internal void UpdateBrake() {
-				int brakeNotch;
-				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
-					if (this.Train.Handles.HasHoldBrake) {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 4 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 2 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
-					} else {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
-					}
-				} else {
-					if (this.Train.Handles.HasHoldBrake) {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 2 : this.Train.Handles.Brake.Driver > 0 ? this.Train.Handles.Brake.Driver + 1 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
-					} else {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 1 : this.Train.Handles.Brake.Driver;
-					}
-				}
-				if (brakeNotch != this.LastBrakeNotch) {
-					this.LastBrakeNotch = brakeNotch;
-					SetBrake(brakeNotch);
-				}
-			}
-			/// <summary>Called to indicate a change of the brake notch.</summary>
-			/// <param name="brakeNotch">The brake notch.</param>
-			/// <remarks>This function should not be called directly. Call UpdateBrake instead.</remarks>
-			protected abstract void SetBrake(int brakeNotch);
-			/// <summary>Called when a virtual key is pressed.</summary>
-			internal abstract void KeyDown(VirtualKeys key);
-			/// <summary>Called when a virtual key is released.</summary>
-			internal abstract void KeyUp(VirtualKeys key);
-			/// <summary>Called when a horn is played or stopped.</summary>
-			internal abstract void HornBlow(HornTypes type);
-			/// <summary>Called when the state of the doors changes.</summary>
-			internal abstract void DoorChange(DoorStates oldState, DoorStates newState);
-			/// <summary>Called to update the aspects of the section. This invokes a call to SetSignal only if a change in aspect occured or when changing section boundaries.</summary>
-			/// <param name="data">The sections to submit to the plugin.</param>
-			internal void UpdateSignals(SignalData[] data) {
-				if (data.Length != 0) {
-					bool update;
-					if (this.Train.CurrentSectionIndex != this.LastSection) {
-						update = true;
-					} else if (data.Length != this.LastAspects.Length) {
-						update = true;
-					} else {
-						update = false;
-						for (int i = 0; i < data.Length; i++) {
-							if (data[i].Aspect != this.LastAspects[i]) {
-								update = true;
-								break;
-							}
-						}
-					}
-					if (update) {
-						SetSignal(data);
-						this.LastAspects = new int[data.Length];
-						for (int i = 0; i < data.Length; i++) {
-							this.LastAspects[i] = data[i].Aspect;
-						}
-					}
-				}
-			}
-			/// <summary>Is called when the aspect in the current or any of the upcoming sections changes.</summary>
-			/// <param name="signal">Signal information per section. In the array, index 0 is the current section, index 1 the upcoming section, and so on.</param>
-			/// <remarks>This function should not be called directly. Call UpdateSignal instead.</remarks>
-			protected abstract void SetSignal(SignalData[] signal);
-			/// <summary>Called when the train passes a beacon.</summary>
-			/// <param name="type">The beacon type.</param>
-			/// <param name="sectionIndex">The section the beacon is attached to, or -1 for the next red signal.</param>
-			/// <param name="optional">Optional data attached to the beacon.</param>
-			internal void UpdateBeacon(int type, int sectionIndex, int optional) {
-				if (sectionIndex == -1) {
-					sectionIndex = this.Train.CurrentSectionIndex + 1;
-					SignalData signal = null;
-					while (sectionIndex < Program.CurrentRoute.Sections.Length) {
-						signal = Program.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
-						if (signal.Aspect == 0) break;
-						sectionIndex++;
-					}
-					if (sectionIndex < Program.CurrentRoute.Sections.Length) {
-						SetBeacon(new BeaconData(type, optional, signal));
-					} else {
-						SetBeacon(new BeaconData(type, optional, new SignalData(-1, double.MaxValue)));
-					}
-				}
-				if (sectionIndex >= 0) {
-					SignalData signal;
-					if (sectionIndex < Program.CurrentRoute.Sections.Length) {
-						signal = Program.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
-					} else {
-						signal = new SignalData(0, double.MaxValue);
-					}
-					SetBeacon(new BeaconData(type, optional, signal));
-				} else {
-					SetBeacon(new BeaconData(type, optional, new SignalData(-1, double.MaxValue)));
-				}
-			}
-			/// <summary>Called when the train passes a beacon.</summary>
-			/// <param name="beacon">The beacon data.</param>
-			/// <remarks>This function should not be called directly. Call UpdateBeacon instead.</remarks>
-			protected abstract void SetBeacon(BeaconData beacon);
-			/// <summary>Updates the AI.</summary>
-			/// <returns>The AI response.</returns>
-			internal AIResponse UpdateAI()
-			{
-				if (this.SupportsAI) {
-					AIData data = new AIData(GetHandles());
-					this.PerformAI(data);
-					if (data.Response != AIResponse.None) {
-						SetHandles(data.Handles, false);
-					}
-					return data.Response;
-				}
-				return AIResponse.None;
-			}
-			/// <summary>Called when the AI should be performed.</summary>
-			/// <param name="data">The AI data.</param>
-			/// <remarks>This function should not be called directly. Call UpdateAI instead.</remarks>
-			protected abstract void PerformAI(AIData data);
-			
+
+			return true;
 		}
-		
+
+		private bool ParseSettingCfg(Encoding encoding, string filePath, ICollection<Plugin.Entry> entries)
+		{
+			string[] lines = File.ReadAllLines(filePath, TextEncoding.GetSystemEncodingFromFile(filePath, encoding));
+
+			for (int i = 0; i < lines.Length; i++)
+			{
+				int j = lines[i].IndexOf(';');
+
+				if (j >= 0)
+				{
+					lines[i] = lines[i].Substring(0, j).Trim();
+				}
+				else
+				{
+					lines[i] = lines[i].Trim();
+				}
+			}
+
+			foreach (string line in lines.Where(x => !string.IsNullOrEmpty(x)))
+			{
+				string pluginFilePath;
+
+				try
+				{
+					pluginFilePath = OpenBveApi.Path.CombineFile(train.TrainFolder, line);
+				}
+				catch
+				{
+					Interface.AddMessage(MessageType.Error, true, $"The train plugin path {line} was malformed in {filePath}. This plugin will be ignored.");
+					continue;
+				}
+
+				if (!File.Exists(pluginFilePath))
+				{
+					Interface.AddMessage(MessageType.Error, true, $"The train plugin {pluginFilePath} could not be found in {filePath}. This plugin will be ignored.");
+					continue;
+				}
+
+				entries.Add(new Plugin.Entry { FilePath = pluginFilePath });
+			}
+
+			if (entries.Any())
+			{
+				return true;
+			}
+
+			return !encoding.Equals(Encoding.UTF8) && ParseSettingCfg(Encoding.UTF8, filePath, entries);
+		}
+
+		internal void Load(Encoding encoding, bool forcedDefault)
+		{
+			/*
+			 * Unload plugin if already loaded.
+			 * */
+			Unload();
+
+			Valid = true;
+			lastTime = 0.0;
+			LastReverser = -2;
+			lastAspects = new int[] { };
+			LastSection = -1;
+			stationsLoaded = false;
+			currentRouteStations.Clear();
+			panelIndexDictionary.Clear();
+
+			List<Plugin.Entry> entries = new List<Plugin.Entry>();
+
+			if (!forcedDefault && ParseSetting(encoding, entries))
+			{
+				foreach (Plugin.Entry entry in entries)
+				{
+					Program.FileSystem.AppendToLogFile($"Loading train plugin: {entry.FilePath}");
+					Plugin plugin = Load(entry);
+
+					if (plugin == null)
+					{
+						Loading.PluginErrors.Add(Translations.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", entry.FilePath));
+						continue;
+					}
+
+					plugins.Add(plugin);
+					Program.FileSystem.AppendToLogFile($"Train plugin {plugin.Title} loaded successfully.");
+				}
+			}
+
+			if (plugins.Count == 0)
+			{
+				Program.FileSystem.AppendToLogFile("Loading default train plugin.");
+				Plugin.Entry entry = new Plugin.Entry { FilePath = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Plugins"), "OpenBveAts.dll") };
+				Plugin plugin = Load(entry);
+
+				if (plugin == null)
+				{
+					Enable = false;
+					Loading.PluginErrors.Add(Translations.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", entry.FilePath));
+					return;
+				}
+
+				plugins.Add(plugin);
+				IsDefault = true;
+				Loading.PluginErrors.Add(Translations.GetInterfaceString("errors_plugin_failure2"));
+			}
+
+			Enable = true;
+			UpdatePower();
+			UpdateBrake();
+			UpdateReverser();
+			CreatePanelIndexDictionary();
+			SupportsAI = plugins.Any(x => x.SupportsAI);
+
+			if (!train.IsPlayerTrain)
+			{
+				return;
+			}
+
+			foreach (ITrainInputDevice api in Program.InputDevicePlugin.AvailableInfos.Where(x => x.Status == InputDevicePlugin.Status.Enable).Select(x => x.Api).OfType<ITrainInputDevice>())
+			{
+				api.SetVehicleSpecs(GetVehicleSpecs());
+			}
+		}
+
+		private Plugin Load(Plugin.Entry entry)
+		{
+			if (string.IsNullOrEmpty(entry.FilePath))
+			{
+				Interface.AddMessage(MessageType.Error, true, "The train plugin file path is not specified.");
+				return null;
+			}
+
+			string title = Path.GetFileName(entry.FilePath);
+			if (!File.Exists(entry.FilePath))
+			{
+				Interface.AddMessage(MessageType.Error, true, $"The train plugin {title} could not be found.");
+				return null;
+			}
+
+			/*
+			 * Prepare initialization data for the plugin.
+			 * */
+			VehicleSpecs specs = GetVehicleSpecs();
+			InitializationModes mode = (InitializationModes)Interface.CurrentOptions.TrainStart;
+
+			/*
+			 * Check if the plugin is a .NET plugin.
+			 * */
+			IRuntime api;
+			Plugin plugin;
+			Assembly assembly;
+			try
+			{
+				assembly = Assembly.LoadFile(entry.FilePath);
+			}
+			catch (BadImageFormatException)
+			{
+				assembly = null;
+			}
+			catch (Exception ex)
+			{
+				Interface.AddMessage(MessageType.Error, false, $"The train plugin {title} could not be loaded due to the following exception: {ex.Message}");
+				return null;
+			}
+
+			if (assembly != null)
+			{
+				Type[] types;
+				try
+				{
+					types = assembly.GetTypes();
+				}
+				catch (ReflectionTypeLoadException ex)
+				{
+					foreach (Exception e in ex.LoaderExceptions)
+					{
+						Interface.AddMessage(MessageType.Error, false, $"The train plugin {title} raised an exception on loading: {e.Message}");
+					}
+
+					return null;
+				}
+
+				foreach (Type type in types)
+				{
+					if (typeof(IRuntime).IsAssignableFrom(type))
+					{
+						if (type.FullName == null)
+						{
+							//Should never happen, but static code inspection suggests that it's possible....
+							throw new InvalidOperationException();
+						}
+
+						api = assembly.CreateInstance(type.FullName) as IRuntime;
+						plugin = new Plugin(this, entry, api);
+						return plugin.Load(specs, mode) ? plugin : null;
+					}
+				}
+
+				Interface.AddMessage(MessageType.Error, false, $"The train plugin {title} does not export a train interface and therefore cannot be used with openBVE.");
+				return null;
+			}
+
+			/*
+			 * Check if the plugin is a Win32 plugin.
+			 */
+			try
+			{
+				if (!CheckWin32Header(entry.FilePath))
+				{
+					Interface.AddMessage(MessageType.Error, false, $"The train plugin {title} is of an unsupported binary format and therefore cannot be used with openBVE.");
+					return null;
+				}
+			}
+			catch (Exception ex)
+			{
+				Interface.AddMessage(MessageType.Error, false, $"The train plugin {title} could not be read due to the following reason: {ex.Message}");
+				return null;
+			}
+
+			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows | IntPtr.Size != 4)
+			{
+				Interface.AddMessage(MessageType.Warning, false, $"The train plugin {title} can only be used on 32-bit Microsoft Windows or compatible.");
+				return null;
+			}
+
+			try
+			{
+				api = new Win32Runtime(entry.FilePath, lastAspects);
+			}
+			catch (Win32Exception ex)
+			{
+				Interface.AddMessage(MessageType.Error, false, $"The train Win32 plugin {title} raised an exception on loading: {ex.Message} (0x{ex.NativeErrorCode:x})");
+				return null;
+			}
+
+			plugin = new Plugin(this, entry, api);
+			if (plugin.Load(specs, mode))
+			{
+				return plugin;
+			}
+
+			Interface.AddMessage(MessageType.Error, false, $"The train plugin {title} does not export a train interface and therefore cannot be used with openBVE.");
+			return null;
+		}
+
+		internal void Unload()
+		{
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.Unload();
+			}
+
+			plugins.Clear();
+		}
+
+		/// <summary>Called before the train jumps to a different location.</summary>
+		/// <param name="mode">The initialization mode of the train.</param>
+		internal void BeginJump(InitializationModes mode)
+		{
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.BeginJump(mode);
+			}
+		}
+
+		/// <summary>Called when the train has finished jumping to a different location.</summary>
+		internal void EndJump()
+		{
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.EndJump();
+			}
+		}
+
+		/// <summary>Called every frame to update the plugin.</summary>
+		internal void UpdatePlugin()
+		{
+			if (train.Cars == null || train.Cars.Length == 0 || plugins.Count == 0)
+			{
+				return;
+			}
+
+			//If the list of stations has not been loaded, do so
+			if (!stationsLoaded)
+			{
+				foreach (RouteStation selectedStation in Program.CurrentRoute.Stations)
+				{
+					double stopPosition = -1;
+					int stopIdx = selectedStation.GetStopIndex(train.NumberOfCars);
+
+					if (selectedStation.Stops.Length != 0)
+					{
+						stopPosition = selectedStation.Stops[stopIdx].TrackPosition;
+					}
+
+					currentRouteStations.Add(new Station(selectedStation, stopPosition));
+				}
+
+				stationsLoaded = true;
+			}
+
+			/*
+			 * Prepare the vehicle state.
+			 * */
+			double location = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
+			double currentRadius = train.Cars[0].FrontAxle.Follower.CurveRadius;
+			double currentCant = train.Cars[0].FrontAxle.Follower.CurveCant;
+			double currentPitch = train.Cars[0].FrontAxle.Follower.Pitch;
+			double speed = train.Cars[train.DriverCar].Specs.CurrentPerceivedSpeed;
+			double bcPressure = train.Cars[train.DriverCar].CarBrake.brakeCylinder.CurrentPressure;
+			double mrPressure = train.Cars[train.DriverCar].CarBrake.mainReservoir.CurrentPressure;
+			double erPressure = train.Cars[train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;
+			double bpPressure = train.Cars[train.DriverCar].CarBrake.brakePipe.CurrentPressure;
+			double sapPressure = train.Cars[train.DriverCar].CarBrake.straightAirPipe.CurrentPressure;
+			VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, currentRadius, currentCant, currentPitch);
+
+			/*
+			 * Prepare the preceding vehicle state.
+			 * */
+			double bestLocation = double.MaxValue;
+			double bestSpeed = 0.0;
+			PrecedingVehicleState precedingVehicle;
+			try
+			{
+				foreach (TrainManager.Train otherTrain in TrainManager.Trains)
+				{
+					if (otherTrain == train || otherTrain.State != TrainState.Available || train.Cars.Length <= 0)
+					{
+						continue;
+					}
+
+					int c = otherTrain.Cars.Length - 1;
+					double z = otherTrain.Cars[c].RearAxle.Follower.TrackPosition - otherTrain.Cars[c].RearAxle.Position - 0.5 * otherTrain.Cars[c].Length;
+
+					if (z < location || z >= bestLocation)
+					{
+						continue;
+					}
+
+					bestLocation = z;
+					bestSpeed = otherTrain.CurrentSpeed;
+				}
+
+				precedingVehicle = bestLocation < double.MaxValue ? new PrecedingVehicleState(bestLocation, bestLocation - location, new Speed(bestSpeed)) : null;
+			}
+			catch
+			{
+				precedingVehicle = null;
+			}
+
+			/*
+			 * Get the driver handles.
+			 * */
+			Handles handles = GetHandles();
+
+			/*
+			 * Update the plugin.
+			 * */
+			double totalTime = Program.CurrentRoute.SecondsSinceMidnight;
+			double elapsedTime = Program.CurrentRoute.SecondsSinceMidnight - lastTime;
+
+			ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, Program.Renderer.Camera.CurrentMode, Translations.CurrentLanguageCode, train.Destination);
+			lastTime = Program.CurrentRoute.SecondsSinceMidnight;
+
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.SetReverser(handles.Reverser);
+				plugin.SetPower(handles.PowerNotch);
+				plugin.SetBrake(handles.BrakeNotch);
+				plugin.Elapse(data);
+			}
+
+			Message = data.DebugMessage;
+			train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
+			DisableTimeAcceleration = data.DisableTimeAcceleration;
+
+			foreach (var entry in panelIndexDictionary)
+			{
+				var updateValue = entry.Value
+					.Select(x => new { Current = plugins[x.PluginIndex].Panel[x.SrcPanelIndex], Last = plugins[x.PluginIndex].LastPanel[x.SrcPanelIndex] })
+					.LastOrDefault(x => x.Current != x.Last);
+
+				if (updateValue == null)
+				{
+					continue;
+				}
+
+				panelValueDictionary[entry.Key] = updateValue.Current;
+			}
+
+			/*
+			 * Update the input device plugin.
+			 * */
+			foreach (IInputDevice api in Program.InputDevicePlugin.AvailableInfos.Where(x => x.Status == InputDevicePlugin.Status.Enable).Select(x => x.Api))
+			{
+				api.SetElapseData(data);
+			}
+
+			/*
+			 * Set the virtual handles.
+			 * */
+			Valid = true;
+			SetHandles(data.Handles, true);
+			train.Destination = data.Destination;
+		}
+
+		/// <summary>Called to update the reverser. This invokes a call to SetReverser only if a change actually occurred.</summary>
+		internal void UpdateReverser()
+		{
+			int reverser = (int)train.Handles.Reverser.Driver;
+
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.SetReverser(reverser);
+			}
+
+			LastReverser = reverser;
+		}
+
+		/// <summary>Called to update the power notch. This invokes a call to SetPower only if a change actually occurred.</summary>
+		internal void UpdatePower()
+		{
+			int powerNotch = train.Handles.Power.Driver;
+
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.SetPower(powerNotch);
+			}
+		}
+
+		/// <summary>Called to update the brake notch. This invokes a call to SetBrake only if a change actually occurred.</summary>
+		internal void UpdateBrake()
+		{
+			int brakeNotch;
+			if (train.Handles.Brake is TrainManager.AirBrakeHandle)
+			{
+				if (train.Handles.HasHoldBrake)
+				{
+					brakeNotch = train.Handles.EmergencyBrake.Driver ? 4 : train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 3 : train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 2 : train.Handles.HoldBrake.Driver ? 1 : 0;
+				}
+				else
+				{
+					brakeNotch = train.Handles.EmergencyBrake.Driver ? 3 : train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 2 : train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
+				}
+			}
+			else
+			{
+				if (train.Handles.HasHoldBrake)
+				{
+					brakeNotch = train.Handles.EmergencyBrake.Driver ? train.Handles.Brake.MaximumNotch + 2 : train.Handles.Brake.Driver > 0 ? train.Handles.Brake.Driver + 1 : train.Handles.HoldBrake.Driver ? 1 : 0;
+				}
+				else
+				{
+					brakeNotch = train.Handles.EmergencyBrake.Driver ? train.Handles.Brake.MaximumNotch + 1 : train.Handles.Brake.Driver;
+				}
+			}
+
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.SetBrake(brakeNotch);
+			}
+		}
+
+		/// <summary>Called when a virtual key is pressed.</summary>
+		/// <param name="key">The virtual key that was pressed.</param>
+		internal void KeyDown(VirtualKeys key)
+		{
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.KeyDown(key);
+			}
+		}
+
+		/// <summary>Called when a virtual key is released.</summary>
+		/// <param name="key">The virtual key that was released.</param>
+		internal void KeyUp(VirtualKeys key)
+		{
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.KeyUp(key);
+			}
+		}
+
+		/// <summary>Called when a horn is played or stopped.</summary>
+		/// <param name="type">The type of horn.</param>
+		internal void HornBlow(HornTypes type)
+		{
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.HornBlow(type);
+			}
+		}
+
+		/// <summary>Called when the state of the doors changes.</summary>
+		/// <param name="oldState">The old state of the doors.</param>
+		/// <param name="newState">The new state of the doors.</param>
+		internal void DoorChange(DoorStates oldState, DoorStates newState)
+		{
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.DoorChange(oldState, newState);
+			}
+		}
+
+		/// <summary>Called to update the aspects of the section. This invokes a call to SetSignal only if a change in aspect occurred or when changing section boundaries.</summary>
+		/// <param name="data">The sections to submit to the plugin.</param>
+		internal void UpdateSignals(SignalData[] data)
+		{
+			if (data.Length == 0)
+			{
+				return;
+			}
+
+			bool update = false;
+			if (train.CurrentSectionIndex != LastSection)
+			{
+				update = true;
+			}
+			else if (data.Length != lastAspects.Length)
+			{
+				update = true;
+			}
+			else
+			{
+				for (int i = 0; i < data.Length; i++)
+				{
+					if (data[i].Aspect != lastAspects[i])
+					{
+						update = true;
+						break;
+					}
+				}
+			}
+
+			if (!update)
+			{
+				return;
+			}
+
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.SetSignal(data);
+			}
+
+			lastAspects = new int[data.Length];
+			for (int i = 0; i < data.Length; i++)
+			{
+				lastAspects[i] = data[i].Aspect;
+			}
+		}
+
+		/// <summary>Called when the train passes a beacon.</summary>
+		/// <param name="type">The beacon type.</param>
+		/// <param name="sectionIndex">The section the beacon is attached to, or -1 for the next red signal.</param>
+		/// <param name="optional">Optional data attached to the beacon.</param>
+		internal void UpdateBeacon(int type, int sectionIndex, int optional)
+		{
+			SignalData signal = null;
+
+			if (sectionIndex == -1)
+			{
+				sectionIndex = train.CurrentSectionIndex + 1;
+				while (sectionIndex < Program.CurrentRoute.Sections.Length)
+				{
+					signal = Program.CurrentRoute.Sections[sectionIndex].GetPluginSignal(train);
+					if (signal.Aspect == 0) break;
+					sectionIndex++;
+				}
+
+				if (sectionIndex >= Program.CurrentRoute.Sections.Length)
+				{
+					signal = new SignalData(-1, double.MaxValue);
+				}
+			}
+			else if (sectionIndex >= 0)
+			{
+				if (sectionIndex < Program.CurrentRoute.Sections.Length)
+				{
+					signal = Program.CurrentRoute.Sections[sectionIndex].GetPluginSignal(train);
+				}
+				else
+				{
+					signal = new SignalData(0, double.MaxValue);
+				}
+			}
+			else
+			{
+				signal = new SignalData(-1, double.MaxValue);
+			}
+
+			BeaconData beacon = new BeaconData(type, optional, signal);
+
+			foreach (Plugin plugin in plugins)
+			{
+				plugin.SetBeacon(beacon);
+			}
+		}
+
+		/// <summary>Updates the AI.</summary>
+		/// <returns>The AI response.</returns>
+		internal AIResponse UpdateAI()
+		{
+			AIData data = new AIData(GetHandles());
+
+			foreach (Plugin plugin in plugins.Where(x => x.SupportsAI))
+			{
+				plugin.PerformAI(data);
+			}
+
+			if (data.Response != AIResponse.None)
+			{
+				SetHandles(data.Handles, false);
+			}
+
+			return data.Response;
+		}
+
+		private void CreatePanelIndexDictionary()
+		{
+			panelIndexDictionary = plugins
+				.SelectMany((x, i) => x.GetPanelIndexDictionary().Select(y => new { DestIndex = y.Key, PluginIndex = i, SrcIndex = y.Value }))
+				.GroupBy(x => x.DestIndex, x => (x.PluginIndex, x.SrcIndex), (x, y) => new { Key = x, Value = y.ToArray() })
+				.ToDictionary(x => x.Key, x => x.Value);
+
+			panelValueDictionary = panelIndexDictionary.ToDictionary(x => x.Key, _ => 0);
+
+			PanelLength = panelIndexDictionary.Keys.Max() + 1;
+		}
+
+		internal int GetPanelValue(int index)
+		{
+			return panelValueDictionary.ContainsKey(index) ? panelValueDictionary[index] : 0;
+		}
+
+		private static void DisplayValidationErrors(IEnumerable<ValidationError> errors)
+		{
+			foreach (ValidationError error in errors)
+			{
+				switch (error)
+				{
+					case ChildSchemaValidationError childSchemaError:
+						foreach (IEnumerable<ValidationError> childErrors in childSchemaError.Errors.Values)
+						{
+							DisplayValidationErrors(childErrors);
+						}
+						break;
+					case MultiTypeValidationError multiTypeError:
+						foreach (IEnumerable<ValidationError> childErrors in multiTypeError.Errors.Values)
+						{
+							DisplayValidationErrors(childErrors);
+						}
+						break;
+					default:
+						Interface.AddMessage(MessageType.Error, false, $"Validation error: ({error.Kind}: {error.Path}) at character {error.LinePosition} on line {error.LineNumber}");
+						break;
+				}
+			}
+		}
+
 		/// <summary>Checks whether a specified file is a valid Win32 plugin.</summary>
 		/// <param name="file">The file to check.</param>
 		/// <returns>Whether the file is a valid Win32 plugin.</returns>
-		internal static bool CheckWin32Header(string file) {
-			using (System.IO.FileStream stream = new System.IO.FileStream(file, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
-				using (System.IO.BinaryReader reader = new System.IO.BinaryReader(stream)) {
-					if (reader.ReadUInt16() != 0x5A4D) {
-						/* Not MZ signature */
-						return false;
-					}
-					stream.Position = 0x3C;
-					stream.Position = reader.ReadInt32();
-					if (reader.ReadUInt32() != 0x00004550) {
-						/* Not PE signature */
-						return false;
-					}
-					if (reader.ReadUInt16() != 0x014C) {
-						/* Not IMAGE_FILE_MACHINE_I386 */
-						return false;
-					}
+		private static bool CheckWin32Header(string file)
+		{
+			using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read))
+			using (BinaryReader reader = new BinaryReader(stream))
+			{
+				if (reader.ReadUInt16() != 0x5A4D)
+				{
+					/* Not MZ signature */
+					return false;
+				}
+
+				stream.Position = 0x3C;
+				stream.Position = reader.ReadInt32();
+
+				if (reader.ReadUInt32() != 0x00004550)
+				{
+					/* Not PE signature */
+					return false;
+				}
+
+				if (reader.ReadUInt16() != 0x014C)
+				{
+					/* Not IMAGE_FILE_MACHINE_I386 */
+					return false;
 				}
 			}
+
 			return true;
 		}
-		
-		
-		
 	}
 }
