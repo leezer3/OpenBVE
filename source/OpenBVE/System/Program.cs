@@ -1,9 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 using OpenBve.Graphics;
 using OpenTK;
@@ -17,14 +14,6 @@ namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
 	internal static partial class Program {
 
-		/// <summary>Gets the UID of the current user if running on a Unix based system</summary>
-		/// <returns>The UID</returns>
-		/// <remarks>Used for checking if we are running as ROOT (don't!)</remarks>
-		[DllImport("libc")]
-#pragma warning disable IDE1006 // Suppress the VS2017 naming style rule, as this is an external syscall
-		private static extern uint getuid();
-#pragma warning restore IDE1006
-		
 		/// <summary>Stores the current CPU architecture</summary>
 		internal static ImageFileMachine CurrentCPUArchitecture;
 
@@ -52,6 +41,8 @@ namespace OpenBve {
 		internal static Sounds Sounds;
 
 		internal static CurrentRoute CurrentRoute;
+
+		internal static InputDevicePlugin InputDevicePlugin;
 
 		// --- functions ---
 		
@@ -89,11 +80,11 @@ namespace OpenBve {
 			Renderer = new NewRenderer();
 			Sounds = new Sounds();
 			CurrentRoute = new CurrentRoute(Renderer);
-
+			InputDevicePlugin = new InputDevicePlugin(FileSystem);
 
 			//Platform specific startup checks
 			// --- Check if we're running as root, and prompt not to ---
-			if (CurrentHost.Platform == HostPlatform.GNULinux && getuid() == 0)
+			if (CurrentHost.Platform == HostPlatform.GNULinux && NativeMethods.getuid() == 0)
 			{
 				MessageBox.Show(
 					"You are currently running as the root user." + System.Environment.NewLine +
@@ -124,7 +115,7 @@ namespace OpenBve {
 			Interface.LoadControls(file, out controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
 			
-			InputDevicePlugin.LoadPlugins(Program.FileSystem);
+			InputDevicePlugin.LoadPlugins();
 			
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();
@@ -230,16 +221,32 @@ namespace OpenBve {
 						#if !DEBUG
 					} catch (Exception ex) {
 						bool found = false;
-						for (int i = 0; i < TrainManager.Trains.Length; i++) {
-							if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
-								if (TrainManager.Trains[i].Plugin.LastException != null) {
-									CrashHandler.LoadingCrash(ex.Message, true);
-									MessageBox.Show("The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a runtime exception: " + TrainManager.Trains[i].Plugin.LastException.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-									found = true;
-									RestartArguments = "";
-									break;
-								}
+						foreach (TrainManager.Train train in TrainManager.Trains)
+						{
+							if (train == null || !train.Plugin.Enable)
+							{
+								continue;
 							}
+
+							var lastExceptions = train.Plugin.LastExceptions;
+
+							if (lastExceptions.Length == 0)
+							{
+								continue;
+							}
+
+							StringBuilder exceptionTexts = new StringBuilder();
+
+							foreach ((string title, Exception exception) in lastExceptions)
+							{
+								MessageBox.Show($@"The train plugin {title} caused a runtime exception: {exception.Message}", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+								exceptionTexts.AppendLine(exception.ToString());
+							}
+
+							CrashHandler.LoadingCrash(exceptionTexts.ToString(), true);
+							found = true;
+							RestartArguments = "";
+							break;
 						}
 						if (!found)
 						{

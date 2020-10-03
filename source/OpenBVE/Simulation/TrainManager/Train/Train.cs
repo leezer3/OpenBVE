@@ -29,7 +29,7 @@ namespace OpenBve
 			/// <summary>Holds the safety systems for the train</summary>
 			internal TrainSafetySystems SafetySystems;
 			/// <summary>The plugin used by this train.</summary>
-			internal PluginManager.Plugin Plugin;
+			internal readonly PluginManager Plugin;
 			/// <summary>The driver body</summary>
 			internal DriverBody DriverBody;
 
@@ -79,6 +79,8 @@ namespace OpenBve
 				
 				Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
+
+				Plugin = new PluginManager(this);
 			}
 
 
@@ -307,7 +309,7 @@ namespace OpenBve
 			/// <inheritdoc/>
 			public override void UpdateBeacon(int transponderType, int sectionIndex, int optional)
 			{
-				if (Plugin != null)
+				if (Plugin.Enable)
 				{
 					Plugin.UpdateBeacon(transponderType, sectionIndex, optional);
 				}
@@ -524,7 +526,7 @@ namespace OpenBve
 				UpdateTrainStation(this, TimeElapsed);
 				UpdateTrainDoors(this, TimeElapsed);
 				// delayed handles
-				if (Plugin == null)
+				if (!Plugin.Enable)
 				{
 					Handles.Power.Safety = Handles.Power.Driver;
 					Handles.Brake.Safety = Handles.Brake.Driver;
@@ -837,7 +839,7 @@ namespace OpenBve
 			/// <summary>Updates the safety system plugin for this train</summary>
 			internal void UpdateSafetySystem()
 			{
-				if (Plugin != null)
+				if (Plugin.Enable)
 				{
 					SignalData[] data = new SignalData[16];
 					int count = 0;

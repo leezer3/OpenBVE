@@ -47,7 +47,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -62,7 +62,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>..\..\bin_release\OpenBve.XML</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -87,6 +87,15 @@
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Namotion.Reflection, Version=1.0.12.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Namotion.Reflection.1.0.12\lib\net45\Namotion.Reflection.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NJsonSchema, Version=10.1.24.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NJsonSchema.10.1.24\lib\net45\NJsonSchema.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OpenTK.3.2\lib\net20\OpenTK.dll</HintPath>
     </Reference>
@@ -104,6 +113,7 @@
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
@@ -246,7 +256,6 @@
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.Positions.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Plugin.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
@@ -265,7 +274,11 @@
     <Compile Include="System\Input\InputDevicePlugin.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
+    <Compile Include="System\NativeMethods.cs" />
     <Compile Include="System\Options.cs" />
+    <Compile Include="System\Plugins\PluginManager.PluginEntry.cs" />
+    <Compile Include="System\Plugins\PluginManager.cs" />
+    <Compile Include="System\Plugins\PluginManager.Win32Runtime.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
     <Compile Include="UserInterface\formRaildriverCalibration.cs">
       <SubType>Form</SubType>
@@ -343,16 +356,9 @@
     <Compile Include="Game\ObjectManager\AnimatedObjects\FunctionScripts.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="OldCode\Interface.cs" />
-    <Compile Include="System\Plugins\LegacyPlugin.cs">
-      <DependentUpon>PluginManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="System\Loading.cs" />
     <Compile Include="System\MainLoop.cs" />
-    <Compile Include="System\Plugins\NetPlugin.cs">
-      <DependentUpon>PluginManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="System\GameWindow.cs" />
-    <Compile Include="System\Plugins\PluginManager.cs" />
     <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="Game\Timetable.cs" />
     <Compile Include="OldCode\TrainManager.cs" />

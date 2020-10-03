@@ -111,15 +111,15 @@ namespace OpenBve
                 //Route and train
 	            if (Program.CurrentRoute.Information.RouteFile != null)
 	            {
-		            outputFile.WriteLine("Current routefile is: " + Program.CurrentRoute.Information.RouteFile);
+		            outputFile.WriteLine("Current route file is: " + Program.CurrentRoute.Information.RouteFile);
 	            }
 	            if (Program.CurrentRoute.Information.TrainFolder != null)
 	            {
 		            outputFile.WriteLine("Current train is: " + Program.CurrentRoute.Information.TrainFolder);
 	            }
-	            if (TrainManager.PlayerTrain != null && TrainManager.PlayerTrain.Plugin != null)
+	            if (TrainManager.PlayerTrain != null && TrainManager.PlayerTrain.Plugin.Enable)
 	            {
-		            outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
+		            outputFile.WriteLine($"Current train plugin is: {TrainManager.PlayerTrain.Plugin.Title}");
 	            }
 	            //Errors and Warnings
                 if (Program.CurrentRoute.Information.FilesNotFound != null)
@@ -194,9 +194,9 @@ namespace OpenBve
                 {
                     //We need the try/ catch block in order to catch errors which may have occured before initing the current route, train or plugin
                     //These may occur if we feed dud data to the sim
-                    outputFile.WriteLine("Current routefile is: " + Program.CurrentRoute.Information.RouteFile);
+                    outputFile.WriteLine("Current route file is: " + Program.CurrentRoute.Information.RouteFile);
                     outputFile.WriteLine("Current train is: " + Program.CurrentRoute.Information.TrainFolder);
-                    outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
+                    outputFile.WriteLine($"Current train plugin is: {TrainManager.PlayerTrain.Plugin.Title}");
                 }
                 catch
                 {
@@ -216,7 +216,7 @@ namespace OpenBve
                 }
                 else
                 {
-                    outputFile.WriteLine("The current routefile caused the following exception: ");
+                    outputFile.WriteLine("The current route file caused the following exception: ");
                 }
                 outputFile.WriteLine(ExceptionText);
                 double MemoryUsed;

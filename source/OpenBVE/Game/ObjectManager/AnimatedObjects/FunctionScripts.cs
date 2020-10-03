@@ -1106,22 +1106,18 @@ namespace OpenBve {
 						break;
 						// safety
 					case Instructions.SafetyPluginAvailable:
-						if (Train != null && Train.IsPlayerTrain && Train.Plugin != null) {
+						if (Train != null && Train.IsPlayerTrain && Train.Plugin.Enable) {
 							Function.Stack[s] = TrainManager.PlayerTrain.Plugin.IsDefault ? 0.0 : 1.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
 					case Instructions.SafetyPluginState:
-						if (Train == null || Train.Plugin == null) {
+						if (Train == null || !Train.Plugin.Enable) {
 							Function.Stack[s - 1] = 0.0;
 						} else {
 							int n = (int)Math.Round(Function.Stack[s - 1]);
-							if (n >= 0 & n < Train.Plugin.Panel.Length) {
-								Function.Stack[s - 1] = (double)Train.Plugin.Panel[n];
-							} else {
-								Function.Stack[s - 1] = 0.0;
-							}
+							Function.Stack[s - 1] = Train.Plugin.GetPanelValue(n);
 						} break;
 						// timetable
 					case Instructions.TimetableVisible:

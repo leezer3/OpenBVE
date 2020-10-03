@@ -1,0 +1,147 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "definitions": {
+        "index": {
+            "type": "integer",
+            "minimum": -1
+        },
+        "indexMap": {
+            "type": "object",
+            "properties": {
+                "offset": {
+                    "type": "integer"
+                },
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "src": {
+                                "$ref": "#/definitions/index"
+                            },
+                            "dest": {
+                                "$ref": "#/definitions/index"
+                            }
+                        },
+                        "required": [
+                            "src",
+                            "dest"
+                        ],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "key": {
+            "type": "string",
+            "enum": [
+                "None",
+                "S",
+                "A1",
+                "A2",
+                "B1",
+                "B2",
+                "C1",
+                "C2",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "I",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "O",
+                "P",
+                "WiperSpeedUp",
+                "WiperSpeedDown",
+                "FillFuel",
+                "LiveSteamInjector",
+                "ExhaustSteamInjector",
+                "IncreaseCutoff",
+                "DecreaseCutoff",
+                "Blowers",
+                "EngineStart",
+                "EngineStop",
+                "GearUp",
+                "GearDown",
+                "RaisePantograph",
+                "LowerPantograph",
+                "MainBreaker",
+                "LeftDoors",
+                "RightDoors"
+            ]
+        },
+        "keyMap": {
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "src": {
+                                "$ref": "#/definitions/key"
+                            },
+                            "dest": {
+                                "$ref": "#/definitions/key"
+                            }
+                        },
+                        "required": [
+                            "src",
+                            "dest"
+                        ],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string",
+            "const": "Ats"
+        },
+        "version": {
+            "type": "string",
+            "const": "1.0"
+        },
+        "plugins": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "filePath": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "panelIndexMap": {
+                        "$ref": "#/definitions/indexMap"
+                    },
+                    "soundIndexMap": {
+                        "$ref": "#/definitions/indexMap"
+                    },
+                    "keyMap": {
+                        "$ref": "#/definitions/keyMap"
+                    }
+                },
+                "required": [
+                    "filePath"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "type",
+        "version",
+        "plugins"
+    ],
+    "additionalProperties": false
+}

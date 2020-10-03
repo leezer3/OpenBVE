@@ -108,7 +108,7 @@ namespace OpenBve
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
 					}
 					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
-					if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
+					if (TrainManager.PlayerTrain.Plugin.Enable && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 					{
 						MessageManager.AddMessage(Translations.GetInterfaceString("notification_aiunable"), MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					}
@@ -1415,13 +1415,9 @@ namespace OpenBve
 											if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 											{
 												TrainManager.PlayerTrain.Cars[d].Horns[j].Play();
-												if (TrainManager.PlayerTrain.Plugin != null)
+												if (TrainManager.PlayerTrain.Plugin.Enable)
 												{
-													TrainManager.PlayerTrain.Plugin.HornBlow(j == 0
-														? OpenBveApi.Runtime.HornTypes.Primary
-														: j == 1
-															? OpenBveApi.Runtime.HornTypes.Secondary
-															: OpenBveApi.Runtime.HornTypes.Music);
+													TrainManager.PlayerTrain.Plugin.HornBlow((HornTypes)(j + 1));
 												}
 											}
 										}
@@ -1447,7 +1443,7 @@ namespace OpenBve
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
 										}
-										if (TrainManager.PlayerTrain.Plugin != null)
+										if (TrainManager.PlayerTrain.Plugin.Enable)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.LeftDoors);
 										}
@@ -1475,7 +1471,7 @@ namespace OpenBve
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
 										}
-										if (TrainManager.PlayerTrain.Plugin != null)
+										if (TrainManager.PlayerTrain.Plugin.Enable)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.RightDoors);
 										}
@@ -1522,7 +1518,7 @@ namespace OpenBve
 									case Translations.Command.RaisePantograph:
 									case Translations.Command.LowerPantograph:
 									case Translations.Command.MainBreaker:
-										if (TrainManager.PlayerTrain.Plugin != null)
+										if (TrainManager.PlayerTrain.Plugin.Enable)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyDown(
 												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
@@ -1604,7 +1600,7 @@ namespace OpenBve
 											{
 												TrainManager.PlayerTrain.AI =
 													new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
-												if (TrainManager.PlayerTrain.Plugin != null &&
+												if (TrainManager.PlayerTrain.Plugin.Enable &&
 													!TrainManager.PlayerTrain.Plugin.SupportsAI)
 												{
 													MessageManager.AddMessage(
@@ -1700,7 +1696,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.MiscTimeFactor:
 										// time factor
-										if (!PluginManager.Plugin.DisableTimeAcceleration)
+										if (!PluginManager.DisableTimeAcceleration)
 										{
 											if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 											{
@@ -1888,7 +1884,7 @@ namespace OpenBve
 									case Translations.Command.RaisePantograph:
 									case Translations.Command.LowerPantograph:
 									case Translations.Command.MainBreaker:
-										if (TrainManager.PlayerTrain.Plugin != null)
+										if (TrainManager.PlayerTrain.Plugin.Enable)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyUp(
 												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
@@ -1911,14 +1907,14 @@ namespace OpenBve
 										break;
 									case Translations.Command.DoorsLeft:
 										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed = false;
-										if (TrainManager.PlayerTrain.Plugin != null)
+										if (TrainManager.PlayerTrain.Plugin.Enable)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.LeftDoors);
 										}
 										break;
 									case Translations.Command.DoorsRight:
 										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = false;
-										if (TrainManager.PlayerTrain.Plugin != null)
+										if (TrainManager.PlayerTrain.Plugin.Enable)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.RightDoors);
 										}

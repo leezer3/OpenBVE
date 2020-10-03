@@ -57,7 +57,7 @@ namespace OpenBve
 			{
 				if (train.IsPlayerTrain)
 				{
-					if (train.Plugin != null)
+					if (train.Plugin.Enable)
 					{
 						train.Plugin.BeginJump((OpenBveApi.Runtime.InitializationModes)Interface.CurrentOptions.TrainStart);
 					}
@@ -145,7 +145,7 @@ namespace OpenBve
 				TrainManager.UpdateTrainObjects(0.0, true);
 				if (train.IsPlayerTrain)
 				{
-					if (train.Plugin != null)
+					if (train.Plugin.Enable)
 					{
 						train.Plugin.EndJump();
 					}

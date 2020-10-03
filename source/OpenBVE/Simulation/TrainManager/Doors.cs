@@ -153,7 +153,7 @@ namespace OpenBve
 			
 			if (oldState != newState)
 			{
-				if (Train.Plugin != null)
+				if (Train.Plugin.Enable)
 				{
 					Train.Plugin.DoorChange(oldState, newState);
 				}

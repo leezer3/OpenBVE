@@ -183,8 +183,8 @@ namespace OpenBve.Graphics.Renderers
 				"",
 				"=debug",
 				"bvets hacks: " + (Interface.CurrentOptions.EnableBveTsHacks ? "enabled" : "disabled"),
-				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
-				"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
+				"train plugin status: " + (TrainManager.PlayerTrain.Plugin.Enable ? (TrainManager.PlayerTrain.Plugin.Valid ? "ok" : "error") : "n/a"),
+				"train plugin message: " + (TrainManager.PlayerTrain.Plugin.Enable ? (TrainManager.PlayerTrain.Plugin.Message ?? "n/a") : "n/a"),
 				Game.InfoDebugString ?? ""
 			};
 			double x = 4.0;
@@ -223,14 +223,14 @@ namespace OpenBve.Graphics.Renderers
 			// debug
 			renderer.Rectangle.Draw(null, new Vector2(0.0f, 0.0f), new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
 			string[] Lines;
-			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
+			if (TrainManager.PlayerTrain.Plugin.PanelLength > 0)
 			{
-				Lines = new string[TrainManager.PlayerTrain.Plugin.Panel.Length + 2];
+				Lines = new string[TrainManager.PlayerTrain.Plugin.PanelLength + 2];
 				Lines[0] = "=ATS Plugin Variables";
 				Lines[1] = "";
-				for (int i = 2; i < TrainManager.PlayerTrain.Plugin.Panel.Length + 2; i++)
+				for (int i = 2; i < TrainManager.PlayerTrain.Plugin.PanelLength + 2; i++)
 				{
-					Lines[i] = (i - 2).ToString("000") + " : " + TrainManager.PlayerTrain.Plugin.Panel[i - 2];
+					Lines[i] = (i - 2).ToString("000") + " : " + TrainManager.PlayerTrain.Plugin.GetPanelValue(i - 2);
 				}
 			}
 			else
@@ -293,12 +293,12 @@ namespace OpenBve.Graphics.Renderers
 					renderer.Rectangle.Draw(null, new Vector2((float)x, (float)y), new Vector2(r * w, h), Color128.Yellow);
 				}
 				x += w + 8.0;
-				// auxillary reservoir
+				// auxilliary reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake is AutomaticAirBrake | TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake)
 				{
 					if (!heading[1])
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, "Auxillary reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(Fonts.SmallFont, "Auxiliary reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[1] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);

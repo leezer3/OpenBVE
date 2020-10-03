@@ -650,7 +650,7 @@ namespace OpenBve
             public static bool hasPlugin(TrainManager.Train Train)
             {
                 if (Train == null) return false;
-                if (Train.IsPlayerTrain && Train.Plugin != null)
+                if (Train.IsPlayerTrain && Train.Plugin.Enable)
                 {
                     return TrainManager.PlayerTrain.Plugin.IsDefault;
                 }
@@ -663,16 +663,12 @@ namespace OpenBve
             /// <returns>The plugin state value</returns>
             public static int pluginState(TrainManager.Train Train, int pluginState)
             {
-                if (Train == null || Train.Plugin == null)
+                if (Train == null || !Train.Plugin.Enable)
                 {
                     return 0;
                 }
 
-                if (pluginState >= 0 & pluginState < Train.Plugin.Panel.Length)
-                {
-                    return Train.Plugin.Panel[pluginState];
-                }
-                return 0;
+                return Train.Plugin.GetPanelValue(pluginState);
             }
         }
 
