@@ -256,6 +256,10 @@
     <Compile Include="Simulation\TrainManager\Train\Train.RequestStop.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Station.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Windscreen.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Windscreen.Wiper.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Windscreen.WiperPosition.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Windscreen.WiperSpeed.cs" />
     <Compile Include="System\Cursor.cs" />
     <Compile Include="System\Functions\Bve5Shared.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
