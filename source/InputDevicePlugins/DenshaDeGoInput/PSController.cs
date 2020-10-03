@@ -50,9 +50,13 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Checks if a joystick is a Sony PlayStation controller
 		/// </summary>
-		public static bool IsPSController(JoystickState joystick)
+		public static bool IsPSController(JoystickCapabilities joystick)
 		{
-			return true;
+			if (joystick.ButtonCount >= 10 && joystick.ButtonCount <= 20)
+			{
+				return true;
+			}
+			return false;
 		}
 
 		/// <summary>

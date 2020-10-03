@@ -33,9 +33,9 @@ namespace DenshaDeGoInput
 			{
 				JoystickState state = Joystick.GetState(i);
 				JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
-				InputTranslator.ControllerModels model = InputTranslator.GetControllerModel(state);
+				InputTranslator.ControllerModels model = InputTranslator.GetControllerModel(state, capabilities);
 				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
-				if (capabilities.ButtonCount > 0 && model != InputTranslator.ControllerModels.None)
+				if (capabilities.ButtonCount > 0 && model != InputTranslator.ControllerModels.Unsupported)
 				{
 					deviceBox.Items.Add("Joystick " + (i+1));
 				}

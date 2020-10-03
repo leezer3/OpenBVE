@@ -13,7 +13,7 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal enum ControllerModels
 		{
-			None = 0,
+			Unsupported = 0,
 			PlayStation = 1,
 		};
 
@@ -99,13 +99,13 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the controller model.
 		/// </summary>
-		internal static ControllerModels GetControllerModel(JoystickState state)
+		internal static ControllerModels GetControllerModel(JoystickState state, JoystickCapabilities capabilities)
 		{
-			if (PSController.IsPSController(state))
+			if (PSController.IsPSController(capabilities))
 			{
 				return ControllerModels.PlayStation;
 			}
-			return ControllerModels.None;
+			return ControllerModels.Unsupported;
 		}
 
 		/// <summary>
@@ -117,14 +117,13 @@ namespace DenshaDeGoInput
 			{
 				JoystickState state = Joystick.GetState(activeControllerIndex);
 				JoystickCapabilities capabilities = Joystick.GetCapabilities(activeControllerIndex);
+				ControllerModel = GetControllerModel(state, capabilities);
 				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
-				if (capabilities.ButtonCount > 0 && PSController.IsPSController(state))
+				if (capabilities.ButtonCount > 0 && ControllerModel != ControllerModels.Unsupported)
 				{
 					IsControllerConnected = true;
-					ControllerModel = ControllerModels.PlayStation;
 					return;
 				}
-				ControllerModel = ControllerModels.None;
 				activeControllerIndex = -1;
 			}
 			else
