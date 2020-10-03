@@ -76,7 +76,7 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public static bool IsPSController(JoystickCapabilities joystick)
 		{
-			if (joystick.ButtonCount >= 10 && joystick.ButtonCount <= 20)
+			if ((joystick.ButtonCount >= 12 || (joystick.ButtonCount >= 10 && joystick.HatCount > 0)) && joystick.ButtonCount <= 20)
 			{
 				return true;
 			}
