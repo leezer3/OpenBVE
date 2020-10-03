@@ -130,10 +130,20 @@
     <Compile Include="Objects\Parsers\ObjParsers.cs" />
     <Compile Include="Objects\Parsers\XParsers.cs" />
     <Compile Include="Plugins\ContentLoadingPlugin.cs" />
-    <Compile Include="Resource.Designer.cs">
+    <Compile Include="Resources\Languages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
+      <DependentUpon>Languages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Licenses.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Licenses.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Schemas.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Schemas.resx</DependentUpon>
     </Compile>
     <Compile Include="Routes\Background.Handle.cs" />
     <Compile Include="Routes\Background.TransitionModes.cs" />
@@ -236,16 +246,23 @@
     <Compile Include="World\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resource.resx">
+    <EmbeddedResource Include="Resources\Languages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <LastGenOutput>Languages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Licenses.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Licenses.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Schemas.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Schemas.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Target Name="AfterBuild">
     <ItemGroup>
       <DependentFiles Include="$(SolutionDir)dependencies\**\*.*" />
