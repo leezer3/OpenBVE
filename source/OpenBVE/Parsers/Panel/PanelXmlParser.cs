@@ -11,6 +11,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using OpenTK.Input;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve.Parsers.Panel
@@ -184,119 +185,11 @@ namespace OpenBve.Parsers.Panel
 
 										break;
 									case "center":
-										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X))
-												{
-													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenter.Y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (Interface.CurrentOptions.EnableBveTsHacks)
-												{
-													switch ((int)PanelCenter.Y)
-													{
-														case 180:
-															switch (trainName.ToUpperInvariant())
-															{
-																case "LT_C69_77":
-																case "LT_C69_77_V2":
-																	// Broken initial zoom
-																	PanelCenter.Y = 350;
-																	break;
-															}
-															break;
-														case 200:
-															switch (trainName.ToUpperInvariant())
-															{
-																case "HM05":
-																	// Broken initial zoom
-																	PanelCenter.Y = 350;
-																	break;
-															}
-															break;
-														case 229:
-															if (PanelBottom == 768 && PanelResolution == 1024)
-															{
-																// Martin Finken's BVE4 trams: Broken initial zoom
-																PanelCenter.Y = 350;
-															}
-															break;
-														case 255:
-															if (PanelBottom == 1024 && PanelResolution == 1024)
-															{
-																switch (trainName.ToUpperInvariant())
-																{
-																	case "PARIS_MF67":
-																	case "PARIS_MF88":
-																	case "PARIS_MP73":
-																	case "PARIS_MP89":
-																	case "PARIS_MP89AUTO":
-																	case "LT1938":
-																	case "LT1973 UNREFURB":
-																		// Broken initial zoom
-																		PanelCenter.Y = 350;
-																		break;
-																	case "LT_A60_62":
-																	case "LT1972 MKII":
-																		// Broken initial zoom and black patch at bottom of panel
-																		PanelCenter.Y = 350;
-																		PanelBottom = 792;
-																		break;
-																}
-															}
-															break;
-													}
-
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											break;
-										}
+										PanelCenter = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										break;
 									case "origin":
-										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X))
-												{
-													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOrigin.Y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (Interface.CurrentOptions.EnableBveTsHacks)
-												{
-													switch (trainName)
-													{
-														case "8171BETA":
-															if (PanelResolution == 768 && PanelOrigin.Y == 256)
-															{
-																// 81-71: Bust panel origin means a flying cab....
-																PanelOrigin.Y = 0;
-															}
-															break;
-													}
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											break;
-										}
+										PanelOrigin = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										break;
 								}
 							}
 							break;
@@ -352,7 +245,7 @@ namespace OpenBve.Parsers.Panel
 							Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 							//Program.CurrentHost.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
 						});
-						Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+						Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], Vector2.Null, tday.Size, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 					}
 				}
 			}
@@ -432,48 +325,10 @@ namespace OpenBve.Parsers.Panel
 								switch (Key.ToLowerInvariant())
 								{
 									case "location":
-										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Location.X))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Location.Y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
+										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "size":
-										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Size.X))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Size.Y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
+										Size = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "jumpscreen":
 										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out JumpScreen))
@@ -569,7 +424,7 @@ namespace OpenBve.Parsers.Panel
 					case "pilotlamp":
 						{
 							string Subject = "true";
-							double LocationX = 0.0, LocationY = 0.0;
+							Vector2 Location = new Vector2();
 							string DaytimeImage = null, NighttimeImage = null;
 							Color24 TransparentColor = Color24.Blue;
 							int Layer = 0;
@@ -586,24 +441,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Interface.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
-										else
-										{
-											Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -669,9 +507,7 @@ namespace OpenBve.Parsers.Panel
 								{
 									Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 								});
-								int w = tday.Width;
-								int h = tday.Height;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], Location, tday.Size, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 								string f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
 							}
@@ -680,11 +516,11 @@ namespace OpenBve.Parsers.Panel
 					case "needle":
 						{
 							string Subject = "true";
-							double LocationX = 0.0, LocationY = 0.0;
+							Vector2 Location = new Vector2();
 							string DaytimeImage = null, NighttimeImage = null;
 							Color32 Color = Color32.White;
 							Color24 TransparentColor = Color24.Blue;
-							double OriginX = -1.0, OriginY = -1.0;
+							Vector2 Origin = new Vector2(-1.0, -1.0);
 							bool OriginDefined = false;
 							double Layer = 0.0, Radius = 0.0;
 							double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
@@ -704,26 +540,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-												{
-													Interface.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-												{
-													Interface.AddMessage(MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
+										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "radius":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius))
@@ -781,28 +598,8 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "origin":
-										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX))
-												{
-													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out OriginY))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-													OriginX = -OriginX;
-												}
-												OriginDefined = true;
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
+										Origin = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										OriginDefined = true;
 										break;
 									case "initialangle":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out InitialAngle))
@@ -897,15 +694,15 @@ namespace OpenBve.Parsers.Panel
 								double h = (double)tday.Height;
 								if (!OriginDefined)
 								{
-									OriginX = 0.5 * w;
-									OriginY = 0.5 * h;
+									Origin.X = 0.5 * w;
+									Origin.Y = 0.5 * h;
 								}
-								double ox = OriginX / w;
-								double oy = OriginY / h;
-								double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
+								double ox = Origin.X / w;
+								double oy = Origin.Y / h;
+								double n = Radius == 0.0 | Origin.Y == 0.0 ? 1.0 : Radius / Origin.Y;
 								double nx = n * w;
 								double ny = n * h;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], new Vector2(Location.X - ox * nx, Location.Y - oy * ny), new Vector2(nx, ny), new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color, false);
 								CarSection.Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
 								CarSection.Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
 								CarSection.Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(CarSection.Groups[GroupIndex].Elements[j].RotateZDirection, CarSection.Groups[GroupIndex].Elements[j].RotateXDirection);
@@ -948,7 +745,7 @@ namespace OpenBve.Parsers.Panel
 							string Subject = "true";
 							int Width = 0;
 							Vector2 Direction = new Vector2(1, 0);
-							double LocationX = 0.0, LocationY = 0.0;
+							Vector2 Location = new Vector2();
 							string DaytimeImage = null, NighttimeImage = null;
 							double Minimum = 0.0, Maximum = 0.0;
 							Color24 TransparentColor = Color24.Blue;
@@ -966,24 +763,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Interface.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
-										else
-										{
-											Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "minimum":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum))
@@ -1004,29 +784,7 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "direction":
-										{
-											string[] s = Value.Split(new char[] { ',' });
-											if (s.Length == 2)
-											{
-												double x, y;
-												if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
-												{
-													Interface.AddMessage(MessageType.Error, false, "X is invalid in LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
-												}
-												else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Y is invalid in  LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
-												}
-												else
-												{
-													Direction = new Vector2(x, y);
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
-											}
-										}
+										Direction = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -1093,9 +851,7 @@ namespace OpenBve.Parsers.Panel
 								{
 									Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 								});
-								int w = tday.Width;
-								int h = tday.Height;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], Location, tday.Size, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 								if (Maximum < Minimum)
 								{
 									Interface.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -1113,7 +869,7 @@ namespace OpenBve.Parsers.Panel
 					case "digitalnumber":
 						{
 							string Subject = "true";
-							double LocationX = 0.0, LocationY = 0.0;
+							Vector2 Location = new Vector2();
 							string DaytimeImage = null, NighttimeImage = null;
 							Color24 TransparentColor = Color24.Blue;
 							double Layer = 0.0;
@@ -1131,24 +887,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Interface.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
-										else
-										{
-											Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -1303,7 +1042,7 @@ namespace OpenBve.Parsers.Panel
 									int j = -1;
 									for (int k = 0; k < tday.Length; k++)
 									{
-										int l = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
+										int l = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], Location, new Vector2(wday, Interval), new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
 										if (k == 0) j = l;
 									}
 									string f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -1315,7 +1054,7 @@ namespace OpenBve.Parsers.Panel
 					case "digitalgauge":
 						{
 							string Subject = "true";
-							double LocationX = 0.0, LocationY = 0.0;
+							Vector2 Location = new Vector2();
 							Color32 Color = Color32.Black;
 							double Radius = 0.0;
 							int Layer = 0;
@@ -1336,24 +1075,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Interface.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Interface.AddMessage(MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
-										else
-										{
-											Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "radius":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius))
@@ -1435,7 +1157,7 @@ namespace OpenBve.Parsers.Panel
 							if (Radius != 0.0)
 							{
 								// create element
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], Location - Radius, new Vector2(2.0 * Radius, 2.0 * Radius), new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color, false);
 								InitialAngle = InitialAngle + Math.PI;
 								LastAngle = LastAngle + Math.PI;
 								double x0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
@@ -1502,7 +1224,7 @@ namespace OpenBve.Parsers.Panel
 						break;
 					case "timetable":
 						{
-							double LocationX = 0.0, LocationY = 0.0;
+							Vector2 Location = new Vector2();
 							double Width = 0.0, Height = 0.0;
 							//We read the transparent color for the timetable from the config file, but it is never used
 							//TODO: Fix or depreciate??
@@ -1518,24 +1240,7 @@ namespace OpenBve.Parsers.Panel
 								switch (Key.ToLowerInvariant())
 								{
 									case "location":
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-										}
-										else
-										{
-											Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "width":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Width))
@@ -1583,7 +1288,7 @@ namespace OpenBve.Parsers.Panel
 							}
 							if (Width > 0.0 & Height > 0.0)
 							{
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], Location, new Vector2(Width, Height), new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White, false);
 								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
 								Timetable.AddObjectForCustomTimetable(CarSection.Groups[GroupIndex].Elements[j]);
 							}

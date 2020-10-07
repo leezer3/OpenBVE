@@ -261,32 +261,8 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vertex currentVertex = new Vertex();
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out currentVertex.Coordinates.X)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument vX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									currentVertex.Coordinates.X = 0.0;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out currentVertex.Coordinates.Y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument vY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									currentVertex.Coordinates.Y = 0.0;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out currentVertex.Coordinates.Z)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument vZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									currentVertex.Coordinates.Z = 0.0;
-								}
-								Vector3 currentNormal = new Vector3();
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out currentNormal.X)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument nX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									currentNormal.X = 0.0;
-								}
-								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out currentNormal.Y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument nY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									currentNormal.Y = 0.0;
-								}
-								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out currentNormal.Z)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument nZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									currentNormal.Z = 0.0;
-								}
+								Vertex currentVertex = new Vertex(NumberFormats.TryParseVector3(Arguments, Command, "Coordinates", i, FileName));
+								Vector3 currentNormal = NumberFormats.TryParseVector3(Arguments.Skip(3).ToArray(), Command, "Normal", i, FileName);
 								currentNormal.Normalize();
 								Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
 								while (Builder.Vertices.Length >= Normals.Length) {
@@ -383,21 +359,9 @@ namespace Plugin
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								double x = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument HalfWidth in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 1.0;
-								}
-								double y = x, z = x;
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument HalfHeight in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 1.0;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument HalfDepth in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 1.0;
-								}
-								CreateCube(ref Builder, x, y, z);
+
+								Vector3 size = NumberFormats.TryParseVector3(Arguments, Command, "Size", i, FileName);
+								CreateCube(ref Builder, size);
 							} break;
 						case "cylinder":
 							{
@@ -435,22 +399,11 @@ namespace Plugin
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								double x = 0.0, y = 0.0, z = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 0.0;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 0.0;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 0.0;
-								}
-								Builder.ApplyTranslation(x, y, z);
+
+								Vector3 translationValue = NumberFormats.TryParseVector3(Arguments, Command, "TranslationValue", i, FileName);
+								Builder.ApplyTranslation(translationValue);
 								if (cmd == "translateall") {
-									Object.ApplyTranslation(x, y, z);
+									Object.ApplyTranslation(translationValue.X, translationValue.Y, translationValue.Z);
 								}
 							} break;
 						case "scale":
@@ -459,31 +412,11 @@ namespace Plugin
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								double x = 1.0, y = 1.0, z = 1.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 1.0;
-								} else if (x == 0.0) {
-									currentHost.AddMessage(MessageType.Error, false, "X is required to be different from zero in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 1.0;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 1.0;
-								} else if (y == 0.0) {
-									currentHost.AddMessage(MessageType.Error, false, "Y is required to be different from zero in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 1.0;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 1.0;
-								} else if (z == 0.0) {
-									currentHost.AddMessage(MessageType.Error, false, "Z is required to be different from zero in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 1.0;
-								}
-								Builder.ApplyScale(x, y, z);
+
+								Vector3 scalingFactor = NumberFormats.TryParseVector3(Arguments, Command, "ScaleFactor", i, FileName);
+								Builder.ApplyScale(scalingFactor);
 								if (cmd == "scaleall") {
-									Object.ApplyScale(x, y, z);
+									Object.ApplyScale(scalingFactor.X, scalingFactor.Y, scalingFactor.Z);
 								}
 							} break;
 						case "rotate":
@@ -492,24 +425,9 @@ namespace Plugin
 								if (Arguments.Length > 4) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Vector3 r = new Vector3();
+
+								Vector3 r = NumberFormats.TryParseVector3(Arguments, Command, "RotationDirection", i, FileName);
 								double a = 0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out r.X)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r.X = 0.0;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out r.Y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r.Y = 0.0;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out r.Z)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r.Z = 0.0;
-								}
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out a)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Angle in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									a = 0.0;
-								}
 
 								double t = r.NormSquared();
 								if (t == 0.0) {
@@ -532,27 +450,10 @@ namespace Plugin
 								if (Arguments.Length > 7) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 7 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Vector3 d = new Vector3();
-								Vector3 s = new Vector3();
+
+								Vector3 d = NumberFormats.TryParseVector3(Arguments, Command, "ShearDirection", i, FileName);
+								Vector3 s = NumberFormats.TryParseVector3(Arguments.Skip(3).ToArray(), Command, "ShearFactor", i, FileName);
 								double r = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out d.X)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument dX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out d.Y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument dY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out d.Z)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument dZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out s.X)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument sX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
-								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out s.Y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument sY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
-								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out s.Z)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument sZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
 								if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out r)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Ratio in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									r = 0.0;
@@ -572,49 +473,16 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								double vx = 0.0, vy = 0.0, vz = 0.0;
-								double nx = 0.0, ny = 0.0, nz = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out vx))
-								{
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument vX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									vx = 0.0;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out vy))
-								{
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument vY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									vy = 0.0;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out vz))
-								{
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument vZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									vz = 0.0;
-								}
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out nx))
-								{
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument nX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									nx = 0.0;
-								}
-								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out ny))
-								{
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument nY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									ny = 0.0;
-								}
-								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out nz))
-								{
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument nZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									nz = 0.0;
-								}
-
+								Vector3 mirrorVertices = NumberFormats.TryParseVector3(Arguments, Command, "MirrorVertices", i, FileName);
+								Vector3 mirrorNormals = NumberFormats.TryParseVector3(Arguments.Skip(3).ToArray(), Command, "MirrorNormals", i, FileName);
 								if (Arguments.Length < 4)
 								{
-									nx = vx;
-									ny = vy;
-									nz = vz;
+									mirrorNormals = new Vector3(mirrorVertices);
 								}
-								Builder.ApplyMirror(vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+								Builder.ApplyMirror(mirrorVertices.X != 0, mirrorVertices.Y != 0, mirrorVertices.Z != 0, mirrorNormals.X != 0, mirrorNormals.Y != 0, mirrorNormals.Z != 0);
 								if (cmd == "mirrorall")
 								{
-									Object.ApplyMirror(vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+									Object.ApplyMirror(mirrorVertices.X != 0, mirrorVertices.Y != 0, mirrorVertices.Z != 0, mirrorNormals.X != 0, mirrorNormals.Y != 0, mirrorNormals.Z != 0);
 								}
 
 							}
@@ -1260,17 +1128,17 @@ namespace Plugin
 		}
 
 		// create cube
-		private static void CreateCube(ref MeshBuilder Builder, double sx, double sy, double sz) {
+		private static void CreateCube(ref MeshBuilder Builder, Vector3 size) {
 			int v = Builder.Vertices.Length;
 			Array.Resize(ref Builder.Vertices, v + 8);
-			Builder.Vertices[v + 0] = new Vertex(sx, sy, -sz);
-			Builder.Vertices[v + 1] = new Vertex(sx, -sy, -sz);
-			Builder.Vertices[v + 2] = new Vertex(-sx, -sy, -sz);
-			Builder.Vertices[v + 3] = new Vertex(-sx, sy, -sz);
-			Builder.Vertices[v + 4] = new Vertex(sx, sy, sz);
-			Builder.Vertices[v + 5] = new Vertex(sx, -sy, sz);
-			Builder.Vertices[v + 6] = new Vertex(-sx, -sy, sz);
-			Builder.Vertices[v + 7] = new Vertex(-sx, sy, sz);
+			Builder.Vertices[v + 0] = new Vertex(size.X, size.Y, -size.Z);
+			Builder.Vertices[v + 1] = new Vertex(size.X, -size.Y, -size.Z);
+			Builder.Vertices[v + 2] = new Vertex(-size.X, -size.Y, -size.Z);
+			Builder.Vertices[v + 3] = new Vertex(-size.X, size.Y, -size.Z);
+			Builder.Vertices[v + 4] = new Vertex(size.X, size.Y, size.Z);
+			Builder.Vertices[v + 5] = new Vertex(size.X, -size.Y, size.Z);
+			Builder.Vertices[v + 6] = new Vertex(-size.X, -size.Y, size.Z);
+			Builder.Vertices[v + 7] = new Vertex(-size.X, size.Y, size.Z);
 			int f = Builder.Faces.Length;
 			Array.Resize(ref Builder.Faces, f + 6);
 			Builder.Faces[f + 0].Vertices = new[]  { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };

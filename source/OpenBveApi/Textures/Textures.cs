@@ -1,4 +1,4 @@
-﻿#pragma warning disable 0659, 0661
+#pragma warning disable 0659, 0661
 
 using System;
 using System.Drawing;
@@ -147,6 +147,15 @@ namespace OpenBveApi.Textures {
 			set
 			{
 				this.MyHeight = value;
+			}
+		}
+
+		/// <summary>Gets the size of the texture.</summary>
+		public OpenBveApi.Math.Vector2 Size
+		{
+			get
+			{
+				return new OpenBveApi.Math.Vector2(this.MyWidth, this.MyHeight);
 			}
 		}
 		/// <summary>Gets the number of bits per pixel.</summary>

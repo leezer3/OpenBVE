@@ -151,30 +151,26 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Translates the MeshBuilder by the given values</summary>
-		public void ApplyTranslation(double x, double y, double z)
+		public void ApplyTranslation(Vector3 translation)
 		{
 			for (int i = 0; i < Vertices.Length; i++)
 			{
-				Vertices[i].Coordinates.X += x;
-				Vertices[i].Coordinates.Y += y;
-				Vertices[i].Coordinates.Z += z;
+				Vertices[i].Coordinates += translation;
 			}
 		}
 
 		/// <summary>Scales the MeshBuilder by the given values</summary>
-		public void ApplyScale(double x, double y, double z)
+		public void ApplyScale(Vector3 scale)
 		{
-			float rx = (float) (1.0 / x);
-			float ry = (float) (1.0 / y);
-			float rz = (float) (1.0 / z);
+			float rx = (float) (1.0 / scale.X);
+			float ry = (float) (1.0 / scale.Y);
+			float rz = (float) (1.0 / scale.Z);
 			float rx2 = rx * rx;
 			float ry2 = ry * ry;
 			float rz2 = rz * rz;
 			for (int i = 0; i < Vertices.Length; i++)
 			{
-				Vertices[i].Coordinates.X *= x;
-				Vertices[i].Coordinates.Y *= y;
-				Vertices[i].Coordinates.Z *= z;
+				Vertices[i].Coordinates *= scale;
 			}
 
 			for (int i = 0; i < Faces.Length; i++)
@@ -195,7 +191,7 @@ namespace OpenBveApi.Objects
 				}
 			}
 
-			if (x * y * z < 0.0)
+			if (scale.X * scale.Y * scale.Z < 0.0)
 			{
 				for (int i = 0; i < Faces.Length; i++)
 				{

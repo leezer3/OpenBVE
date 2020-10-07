@@ -634,24 +634,7 @@ namespace OpenBve
 						}
 						break;
 					case "position":
-						string[] Arguments = c.InnerText.Split(new char[] { ',' });
-						double x = 0.0, y = 0.0, z = 0.0;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
-						{
-							Interface.AddMessage(MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
-							x = 0.0;
-						}
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y))
-						{
-							Interface.AddMessage(MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
-							y = 0.0;
-						}
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z))
-						{
-							Interface.AddMessage(MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
-							z = 0.0;
-						}
-						Position = new Vector3(x, y, z);
+						Position = NumberFormats.TryParseVector3(c.InnerText, node.Name, "Position", -1, fileName);
 						break;
 					case "radius":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
@@ -705,24 +688,7 @@ namespace OpenBve
 						}
 						break;
 					case "position":
-						string[] Arguments = c.InnerText.Split(new char[] { ',' });
-						double x = 0.0, y = 0.0, z = 0.0;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
-						{
-							Interface.AddMessage(MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
-							x = 0.0;
-						}
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y))
-						{
-							Interface.AddMessage(MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
-							y = 0.0;
-						}
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z))
-						{
-							Interface.AddMessage(MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
-							z = 0.0;
-						}
-						Position = new Vector3(x,y,z);
+						Position = NumberFormats.TryParseVector3(c.InnerText, node.Name, "Position", -1, fileName);
 						break;
 					case "radius":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
