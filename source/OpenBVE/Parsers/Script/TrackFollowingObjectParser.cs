@@ -279,16 +279,10 @@ namespace OpenBve
 						}
 						break;
 					case "appearancestartposition":
-						if (Value.Any() && !NumberFormats.TryParseDoubleVb6(Value, out Train.AppearanceStartPosition))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
-						}
+						Train.AppearanceStartPosition = NumberFormats.ParseDouble(Value, Key, Section, LineNumber, FileName);
 						break;
 					case "appearanceendposition":
-						if (Value.Any() && !NumberFormats.TryParseDoubleVb6(Value, out Train.AppearanceEndPosition))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
-						}
+						Train.AppearanceEndPosition = NumberFormats.ParseDouble(Value, Key, Section, LineNumber, FileName);
 						break;
 					case "leavetime":
 						if (Value.Any() && !Interface.TryParseTime(Value, out Train.LeaveTime))

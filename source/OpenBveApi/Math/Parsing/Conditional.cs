@@ -2,7 +2,7 @@
 
 namespace OpenBveApi.Math
 {
-	/// <summary>Contains methods required for parsing differently formatted numbers</summary>
+	/// <summary>Contains conditional methods required for parsing differently formatted numbers</summary>
 	public static partial class NumberFormats
 	{
 		/// <summary>Parses a double formatted as a Visual Basic 6 string</summary>

@@ -92,20 +92,12 @@ namespace OpenBve {
 										switch (Key.ToLowerInvariant()) {
 											case "yaw":
 												{
-													double yaw = 0.0;
-													if (Value.Length > 0 && !NumberFormats.TryParseDoubleVb6(Value, out yaw)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														yaw = 0.0;
-													}
+													double yaw = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
 													PanelYaw = Math.Atan(yaw);
 												} break;
 											case "pitch":
 												{
-													double pitch = 0.0;
-													if (Value.Length > 0 && !NumberFormats.TryParseDoubleVb6(Value, out pitch)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														pitch = 0.0;
-													}
+													double pitch = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
 													PanelPitch = Math.Atan(pitch) + UpDownAngleConstant;
 												} break;
 										}

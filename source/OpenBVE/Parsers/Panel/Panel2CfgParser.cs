@@ -64,10 +64,7 @@ namespace OpenBve {
 										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 										switch (Key.ToLowerInvariant()) {
 											case "resolution":
-												double pr = 0.0;
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out pr)) {
-													Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
+												double pr = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
 												if (pr > 100)
 												{
 													PanelResolution = pr;
@@ -80,14 +77,10 @@ namespace OpenBve {
 												}
 												break;
 											case "left":
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelLeft)) {
-													Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line" + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
+												PanelLeft = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+												break;
 											case "right":
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelRight)) {
-													Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-
+												PanelRight = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
 												if (Interface.CurrentOptions.EnableBveTsHacks)
 												{
 													switch ((int) PanelRight)
@@ -102,13 +95,11 @@ namespace OpenBve {
 												}
 												break;
 											case "top":
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelTop)) {
-													Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
+												PanelTop = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+												break;
 											case "bottom":
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelBottom)) {
-													Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
+												PanelBottom = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+												break;
 											case "daytimeimage":
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value)) {
@@ -393,9 +384,8 @@ namespace OpenBve {
 													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "radius":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Radius == 0.0) {
+													Radius = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													if (Radius == 0.0) {
 														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is expected to be non-zero in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Radius = 16.0;
 													} break;
@@ -451,39 +441,32 @@ namespace OpenBve {
 														}
 													} break;
 												case "initialangle":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out InitialAngle)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													InitialAngle = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "lastangle":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out LastAngle)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													LastAngle = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "minimum":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum)) {
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Minimum = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "maximum":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Maximum)) {
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Maximum = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "naturalfreq":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out NaturalFrequency)) {
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (NaturalFrequency < 0.0) {
+													NaturalFrequency = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													if (NaturalFrequency < 0.0) {
 														Interface.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														NaturalFrequency = -NaturalFrequency;
 													} break;
 												case "dampingratio":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out DampingRatio)) {
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (DampingRatio < 0.0) {
+													DampingRatio = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													if (DampingRatio < 0.0) {
 														Interface.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														DampingRatio = -DampingRatio;
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Layer)) {
-														Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Layer = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "backstop":
 													if (Value.Length != 0 && Value.ToLowerInvariant() == "true" || Value == "1")
 													{
@@ -596,15 +579,10 @@ namespace OpenBve {
 													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "minimum":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum))
-													{
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Minimum = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "maximum":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Maximum))
-													{
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Maximum = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);break;
 												case "width":
 													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Width))
 													{
@@ -741,9 +719,8 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "Height is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Layer)) {
-														Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Layer = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 											}
 										} i++;
 									} i--;
@@ -897,9 +874,8 @@ namespace OpenBve {
 													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "radius":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Radius == 0.0) {
+													Radius = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													if (Radius == 0.0) {
 														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is expected to be non-zero in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Radius = 16.0;
 													} break;
@@ -908,29 +884,20 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "initialangle":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out InitialAngle)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														InitialAngle = InitialAngle.ToRadians();
-													} break;
+													InitialAngle = NumberFormats.ParseDouble(Value, Key, Section, i, FileName).ToRadians();
+													break;
 												case "lastangle":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out LastAngle)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														LastAngle = LastAngle.ToRadians();
-													} break;
+													LastAngle = NumberFormats.ParseDouble(Value, Key, Section, i, FileName).ToRadians();
+													break;
 												case "minimum":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum)) {
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Minimum = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "maximum":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Maximum)) {
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Maximum = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "step":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Step)) {
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Step = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 												case "layer":
 													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer)) {
 														Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -1049,15 +1016,13 @@ namespace OpenBve {
 													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "width":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Size.X)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Size.X <= 0.0) {
+													Size.X = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													if (Size.X <= 0.0) {
 														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "height":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Size.Y)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Size.X <= 0.0) {
+													Size.Y = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													if (Size.Y <= 0.0) {
 														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "transparentcolor":
@@ -1065,9 +1030,8 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Layer)) {
-														Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Layer = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													break;
 											}
 										} i++;
 									} i--;
