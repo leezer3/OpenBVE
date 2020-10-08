@@ -185,10 +185,10 @@ namespace OpenBve.Parsers.Panel
 
 										break;
 									case "center":
-										PanelCenter = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										PanelCenter = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "origin":
-										PanelOrigin = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										PanelOrigin = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 								}
 							}
@@ -325,10 +325,10 @@ namespace OpenBve.Parsers.Panel
 								switch (Key.ToLowerInvariant())
 								{
 									case "location":
-										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Location = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "size":
-										Size = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Size = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "jumpscreen":
 										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out JumpScreen))
@@ -441,7 +441,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Location = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -540,7 +540,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Location = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "radius":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius))
@@ -598,7 +598,7 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "origin":
-										Origin = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Origin = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										OriginDefined = true;
 										break;
 									case "initialangle":
@@ -763,7 +763,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Location = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "minimum":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum))
@@ -784,7 +784,7 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "direction":
-										Direction = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Direction = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -887,7 +887,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Location = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -1075,7 +1075,7 @@ namespace OpenBve.Parsers.Panel
 										Subject = Value;
 										break;
 									case "location":
-										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Location = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "radius":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius))
@@ -1240,7 +1240,7 @@ namespace OpenBve.Parsers.Panel
 								switch (Key.ToLowerInvariant())
 								{
 									case "location":
-										Location = NumberFormats.TryParseVector2(Value, Key, Section, LineNumber, FileName, true);
+										Location = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "width":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Width))

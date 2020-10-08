@@ -634,7 +634,7 @@ namespace OpenBve
 						}
 						break;
 					case "position":
-						Position = NumberFormats.TryParseVector3(c.InnerText, node.Name, "Position", -1, fileName);
+						Position = NumberFormats.ParseVector3(c.InnerText, node.Name, "Position", -1, fileName);
 						break;
 					case "radius":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
@@ -688,7 +688,7 @@ namespace OpenBve
 						}
 						break;
 					case "position":
-						Position = NumberFormats.TryParseVector3(c.InnerText, node.Name, "Position", -1, fileName);
+						Position = NumberFormats.ParseVector3(c.InnerText, node.Name, "Position", -1, fileName);
 						break;
 					case "radius":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))

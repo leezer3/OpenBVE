@@ -138,7 +138,7 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case "center":
-												PanelOrigin = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+												PanelOrigin = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 												if (Interface.CurrentOptions.EnableBveTsHacks)
 												{
 													switch ((int)PanelCenter.Y)
@@ -197,7 +197,7 @@ namespace OpenBve {
 												}
 												break;
 											case "origin":
-												PanelOrigin = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+												PanelOrigin = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 												if (Interface.CurrentOptions.EnableBveTsHacks)
 												{
 													switch (trainName)
@@ -300,7 +300,7 @@ namespace OpenBve {
 													Subject = Value;
 													break;
 												case "location":
-													Location = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -390,7 +390,7 @@ namespace OpenBve {
 													Subject = Value;
 													break;
 												case "location":
-													Location = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "radius":
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius)) {
@@ -593,7 +593,7 @@ namespace OpenBve {
 													Subject = Value;
 													break;
 												case "location":
-													Location = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "minimum":
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum))
@@ -612,7 +612,7 @@ namespace OpenBve {
 													}
 													break;
 												case "direction":
-													Direction = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+													Direction = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -704,7 +704,7 @@ namespace OpenBve {
 													Subject = Value;
 													break;
 												case "location":
-													Location = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -894,7 +894,7 @@ namespace OpenBve {
 													Subject = Value;
 													break;
 												case "location":
-													Location = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "radius":
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius)) {
@@ -1046,7 +1046,7 @@ namespace OpenBve {
 											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											switch (Key.ToLowerInvariant()) {
 												case "location":
-													Location = NumberFormats.TryParseVector2(Value, Key, Section, i, FileName, true);
+													Location = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
 													break;
 												case "width":
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Size.X)) {

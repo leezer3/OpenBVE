@@ -261,8 +261,8 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vertex currentVertex = new Vertex(NumberFormats.TryParseVector3(Arguments, Command, "Coordinates", i, FileName));
-								Vector3 currentNormal = NumberFormats.TryParseVector3(Arguments.Skip(3).ToArray(), Command, "Normal", i, FileName);
+								Vertex currentVertex = new Vertex(NumberFormats.ParseVector3(Arguments, Command, "Coordinates", i, FileName));
+								Vector3 currentNormal = NumberFormats.ParseVector3(Arguments.Skip(3).ToArray(), Command, "Normal", i, FileName);
 								currentNormal.Normalize();
 								Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
 								while (Builder.Vertices.Length >= Normals.Length) {
@@ -360,7 +360,7 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vector3 size = NumberFormats.TryParseVector3(Arguments, Command, "Size", i, FileName);
+								Vector3 size = NumberFormats.ParseVector3(Arguments, Command, "Size", i, FileName);
 								CreateCube(ref Builder, size);
 							} break;
 						case "cylinder":
@@ -400,7 +400,7 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vector3 translationValue = NumberFormats.TryParseVector3(Arguments, Command, "TranslationValue", i, FileName);
+								Vector3 translationValue = NumberFormats.ParseVector3(Arguments, Command, "TranslationValue", i, FileName);
 								Builder.ApplyTranslation(translationValue);
 								if (cmd == "translateall") {
 									Object.ApplyTranslation(translationValue.X, translationValue.Y, translationValue.Z);
@@ -413,7 +413,7 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vector3 scalingFactor = NumberFormats.TryParseVector3(Arguments, Command, "ScaleFactor", i, FileName);
+								Vector3 scalingFactor = NumberFormats.ParseVector3(Arguments, Command, "ScaleFactor", i, FileName);
 								Builder.ApplyScale(scalingFactor);
 								if (cmd == "scaleall") {
 									Object.ApplyScale(scalingFactor.X, scalingFactor.Y, scalingFactor.Z);
@@ -426,7 +426,7 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vector3 r = NumberFormats.TryParseVector3(Arguments, Command, "RotationDirection", i, FileName);
+								Vector3 r = NumberFormats.ParseVector3(Arguments, Command, "RotationDirection", i, FileName);
 								double a = 0;
 
 								double t = r.NormSquared();
@@ -451,8 +451,8 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 7 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vector3 d = NumberFormats.TryParseVector3(Arguments, Command, "ShearDirection", i, FileName);
-								Vector3 s = NumberFormats.TryParseVector3(Arguments.Skip(3).ToArray(), Command, "ShearFactor", i, FileName);
+								Vector3 d = NumberFormats.ParseVector3(Arguments, Command, "ShearDirection", i, FileName);
+								Vector3 s = NumberFormats.ParseVector3(Arguments.Skip(3).ToArray(), Command, "ShearFactor", i, FileName);
 								double r = 0.0;
 								if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out r)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Ratio in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -473,8 +473,8 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vector3 mirrorVertices = NumberFormats.TryParseVector3(Arguments, Command, "MirrorVertices", i, FileName);
-								Vector3 mirrorNormals = NumberFormats.TryParseVector3(Arguments.Skip(3).ToArray(), Command, "MirrorNormals", i, FileName);
+								Vector3 mirrorVertices = NumberFormats.ParseVector3(Arguments, Command, "MirrorVertices", i, FileName);
+								Vector3 mirrorNormals = NumberFormats.ParseVector3(Arguments.Skip(3).ToArray(), Command, "MirrorNormals", i, FileName);
 								if (Arguments.Length < 4)
 								{
 									mirrorNormals = new Vector3(mirrorVertices);
