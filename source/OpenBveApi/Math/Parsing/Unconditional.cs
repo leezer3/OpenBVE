@@ -12,6 +12,28 @@ namespace OpenBveApi.Math
 		/// <param name="Section">The section</param>
 		/// <param name="Line">The line</param>
 		/// <param name="FileName">The filename</param>
+		public static int ParseInt(string Value, string Key, string Section, int Line, string FileName)
+		{
+			int parsedNumber = 0;
+			if (string.IsNullOrEmpty(Value))
+			{
+				currentHost.AddMessage(MessageType.Error, false, Key + " is empty in " + Section + " at line " + (Line + 1).ToString(Culture) + " in " + FileName);
+				return parsedNumber;
+			}
+			
+			if (!TryParseIntVb6(Value, out parsedNumber))
+			{
+				currentHost.AddMessage(MessageType.Error, false, Key + " is invalid in " + Section + " at line " + (Line + 1).ToString(Culture) + " in " + FileName);
+			}
+			return parsedNumber;
+		}
+
+		/// <summary>Parses a double formatted as a Visual Basic 6 string</summary>
+		/// <param name="Value">The string value</param>
+		/// <param name="Key">The key value</param>
+		/// <param name="Section">The section</param>
+		/// <param name="Line">The line</param>
+		/// <param name="FileName">The filename</param>
 		public static double ParseDouble(string Value, string Key, string Section, int Line, string FileName)
 		{
 			double parsedNumber = 0.0;

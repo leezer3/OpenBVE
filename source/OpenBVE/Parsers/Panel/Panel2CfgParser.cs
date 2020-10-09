@@ -322,9 +322,8 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer)) {
-														Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Layer = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
+													break;
 											}
 										} i++;
 									} i--;
@@ -343,7 +342,7 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 										});
-										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location, new Vector2(tday.Width, tday.Height), new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location, new Vector2(tday.Width, tday.Height), new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 										string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										try
 										{
@@ -365,7 +364,8 @@ namespace OpenBve {
 									Color24 TransparentColor = Color24.Blue;
 									double OriginX = -1.0, OriginY = -1.0;
 									bool OriginDefined = false;
-									double Layer = 0.0, Radius = 0.0;
+									double Radius = 0.0;
+									int Layer = 0;
 									double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
 									double Minimum = 0.0, Maximum = 1000.0;
 									double NaturalFrequency = -1.0, DampingRatio = -1.0;
@@ -463,7 +463,7 @@ namespace OpenBve {
 														DampingRatio = -DampingRatio;
 													} break;
 												case "layer":
-													Layer = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													Layer = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
 													break;
 												case "backstop":
 													if (Value.Length != 0 && Value.ToLowerInvariant() == "true" || Value == "1")
@@ -510,7 +510,7 @@ namespace OpenBve {
 										double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 										double nx = n * w;
 										double ny = n * h;
-										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(Location.X - ox * nx, Location.Y - oy * ny), new Vector2(nx, ny), new Vector2(ox, oy), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(Location.X - ox * nx, Location.Y - oy * ny), new Vector2(nx, ny), new Vector2(ox, oy), Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color, false);
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection, Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection);
@@ -582,10 +582,7 @@ namespace OpenBve {
 												case "maximum":
 													Maximum = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);break;
 												case "width":
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Width))
-													{
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
+													Width = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
 													break;
 												case "direction":
 													Direction = NumberFormats.ParseVector2(Value, Key, Section, i, FileName, true);
@@ -619,9 +616,8 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer)) {
-														Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Layer = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
+													break;
 											}
 										} i++;
 									} i--;
@@ -640,7 +636,7 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 										});
-										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location, new Vector2(tday.Width, tday.Height), new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location, new Vector2(tday.Width, tday.Height), new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 										if (Maximum < Minimum)
 										{
 											Interface.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -668,7 +664,7 @@ namespace OpenBve {
 									Vector2 Location = new Vector2();
 									string DaytimeImage = null, NighttimeImage = null;
 									Color24 TransparentColor = Color24.Blue;
-									double Layer = 0.0; int Interval = 0;
+									int Layer = 0, Interval = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
@@ -711,13 +707,12 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "interval":
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Interval)) {
-														Interface.AddMessage(MessageType.Error, false, "Height is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Interval <= 0) {
+													Interval = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
+													if (Interval <= 0) {
 														Interface.AddMessage(MessageType.Error, false, "Height is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													Layer = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													Layer = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
 													break;
 											}
 										} i++;
@@ -808,7 +803,7 @@ namespace OpenBve {
 											}
 											int j = -1;
 											for (int k = 0; k < tday.Length; k++) {
-												int l = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location, new Vector2(wday, Interval), new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
+												int l = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location, new Vector2(wday, Interval), new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
 												if (k == 0) j = l;
 											}
 											string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -897,9 +892,8 @@ namespace OpenBve {
 													Step = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
 													break;
 												case "layer":
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer)) {
-														Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
+													Layer = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
+													break;
 											}
 										} i++;
 									} i--;
@@ -930,7 +924,7 @@ namespace OpenBve {
 									}
 									if (Radius != 0.0) {
 										// create element
-										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location - Radius, new Vector2(2.0 * Radius, 2.0 * Radius), new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location - Radius, new Vector2(2.0 * Radius, 2.0 * Radius), new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color, false);
 										InitialAngle = InitialAngle + Math.PI;
 										LastAngle = LastAngle + Math.PI;
 										double x0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
@@ -1002,7 +996,7 @@ namespace OpenBve {
 									//We read the transparent color for the timetable from the config file, but it is never used
 									//TODO: Fix or depreciate??
 									Color24 TransparentColor = Color24.Blue;
-									double Layer = 0.0;
+									int Layer = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
@@ -1028,7 +1022,7 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													Layer = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);
+													Layer = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
 													break;
 											}
 										} i++;
@@ -1041,7 +1035,7 @@ namespace OpenBve {
 										Interface.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Size.X > 0.0 & Size.Y > 0.0) {
-										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location, Size, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], Location, Size, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White, false);
 										try
 										{
 											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "panel2timetable", false);

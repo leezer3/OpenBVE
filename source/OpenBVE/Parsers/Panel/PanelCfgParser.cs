@@ -164,10 +164,8 @@ namespace OpenBve {
 											switch (Key.ToLowerInvariant()) {
 												case "type":
 												case "形態":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Type)) {
-														Interface.AddMessage(MessageType.Error, false, "Type is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Type = 0;
-													} else if (Type != 0 & Type != 1) {
+													Type = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
+													if (Type != 0 & Type != 1) {
 														Interface.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Type = 0;
 													} break;
@@ -201,13 +199,8 @@ namespace OpenBve {
 															case "元空気ダメ":
 																NeedleType[k] = 5; break;
 															default:
-																{
-																	int a; if (!NumberFormats.TryParseIntVb6(Arguments[0], out a)) {
-																		Interface.AddMessage(MessageType.Error, false, "Subject is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-																		a = 0;
-																	}
-																	NeedleType[k] = a;
-																} break;
+																NeedleType[k] = NumberFormats.ParseInt(Arguments[0], Key, Section, i, FileName);;
+															break;
 														}
 													}
 													int r = 0, g = 0, b = 0;
@@ -449,10 +442,8 @@ namespace OpenBve {
 											switch (Key.ToLowerInvariant()) {
 												case "type":
 												case "形態":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Type)) {
-														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Type = 0;
-													} else if (Type != 0 & Type != 1) {
+													Type = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
+													if (Type != 0 & Type != 1) {
 														Interface.AddMessage(MessageType.Error, false, "Value must be either 0 or 1 in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Type = 0;
 													} break;
@@ -710,12 +701,12 @@ namespace OpenBve {
 													break;
 												case "size":
 												case "サイズ":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Width)) {
-														Interface.AddMessage(MessageType.Error, false, "Width is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Width = 0;
-													} else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out Height)) {
-														Interface.AddMessage(MessageType.Error, false, "Height is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Height = 0;
+													if (Arguments.Length >= 1)
+													{
+														Width = NumberFormats.ParseInt(Arguments[0], Key, Section, i, FileName);
+													}
+													if (Arguments.Length >= 2) {
+														Height = NumberFormats.ParseInt(Arguments[1], Key, Section, i, FileName);
 													} break;
 												case "unit":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
@@ -733,11 +724,7 @@ namespace OpenBve {
 																Unit = 2;
 																break;
 															default:
-																if (!NumberFormats.TryParseIntVb6(Arguments[0], out Unit))
-																{
-																	Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-																	Unit = 0;
-																}
+																Unit = NumberFormats.ParseInt(Value, Key, Section, i, FileName);
 																break;
 														}
 														if (Unit < 0 | Unit > 2) {
@@ -1050,10 +1037,8 @@ namespace OpenBve {
 													break;
 												case "width":
 												case "幅":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Width)) {
-														Interface.AddMessage(MessageType.Error, false, "Width is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Width = 1;
-													} else if (Width <= 0) {
+													Width = NumberFormats.ParseInt(Key, Key, Section, i, FileName);
+													if (Width <= 0) {
 														Interface.AddMessage(MessageType.Error, false, "Width is expected to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Width = 1;
 													} break;

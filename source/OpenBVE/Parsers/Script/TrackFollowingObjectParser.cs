@@ -12,6 +12,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using OpenTK.Input;
 
 namespace OpenBve
 {
@@ -518,10 +519,7 @@ namespace OpenBve
 									DoorBoth = true;
 									break;
 								default:
-									if (Value.Any() && !NumberFormats.TryParseIntVb6(Value, out Door))
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
-									}
+									Door = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 									break;
 							}
 

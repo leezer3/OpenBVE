@@ -269,16 +269,10 @@ namespace OpenBve.Parsers.Panel
 								switch (Key.ToLowerInvariant())
 								{
 									case "number":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out n))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										n = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 									case "layer":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
-										{
-											Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Layer = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 								}
 							}
@@ -318,10 +312,7 @@ namespace OpenBve.Parsers.Panel
 										Size = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
 										break;
 									case "jumpscreen":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out JumpScreen))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										JumpScreen = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 									case "soundindex":
 										if (Value.Length != 0)
@@ -374,10 +365,7 @@ namespace OpenBve.Parsers.Panel
 											CommandEntries.Add(CommandEntry);
 										}
 
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out CommandEntry.Option))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										CommandEntry.Option = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 									case "soundentries":
 										if (!KeyNode.HasElements)
@@ -398,10 +386,7 @@ namespace OpenBve.Parsers.Panel
 										ParseTouchCommandEntryNode(FileName, KeyNode, CommandEntries);
 										break;
 									case "layer":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
-										{
-											Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Layer = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 								}
 							}
@@ -469,10 +454,7 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "layer":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
-										{
-											Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Layer = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 								}
 							}
@@ -735,10 +717,7 @@ namespace OpenBve.Parsers.Panel
 										Maximum = NumberFormats.ParseDouble(Value, Key, Section, LineNumber, FileName);
 										break;
 									case "width":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Width))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Width = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 									case "direction":
 										Direction = NumberFormats.ParseVector2(Value, Key, Section, LineNumber, FileName, true);
@@ -782,10 +761,7 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "layer":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
-										{
-											Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Layer = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 								}
 							}
@@ -885,11 +861,8 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "interval":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Interval))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Height is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										else if (Interval <= 0)
+										Interval = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
+										if (Interval <= 0)
 										{
 											Interface.AddMessage(MessageType.Error, false, "Height is expected to be non-negative in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
@@ -1061,10 +1034,7 @@ namespace OpenBve.Parsers.Panel
 										Step = NumberFormats.ParseDouble(Value, Key, Section, LineNumber, FileName);
 										break;
 									case "layer":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
-										{
-											Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										Layer = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 								}
 							}
@@ -1245,14 +1215,7 @@ namespace OpenBve.Parsers.Panel
 							case "index":
 								if (value.Any())
 								{
-									int index;
-
-									if (!NumberFormats.TryParseIntVb6(value, out index))
-									{
-										Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-									}
-
-									indices.Add(index);
+									indices.Add(NumberFormats.ParseInt(value, key, section, lineNumber, fileName));
 								}
 								break;
 						}
