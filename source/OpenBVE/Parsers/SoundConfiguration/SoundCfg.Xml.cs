@@ -688,10 +688,7 @@ namespace OpenBve
 						Position = NumberFormats.ParseVector3(c.InnerText, node.Name, "Position", -1, fileName);
 						break;
 					case "radius":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
-						{
-							Interface.AddMessage(MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
-						}
+						Radius = NumberFormats.ParseDouble(c.InnerText, node.Name, "Radius", -1, fileName);
 						break;
 					
 				}

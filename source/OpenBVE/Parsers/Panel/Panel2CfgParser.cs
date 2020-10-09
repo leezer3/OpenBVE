@@ -428,9 +428,7 @@ namespace OpenBve {
 														{
 															string a = Value.Substring(0, k).TrimEnd(new char[] { });
 															string b = Value.Substring(k + 1).TrimStart(new char[] { });
-															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX)) {
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															}
+															OriginX = NumberFormats.ParseDouble(a, Key, Section, i, FileName);
 															if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out OriginY)) {
 																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 																OriginX = -OriginX;

@@ -6,6 +6,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.FunctionScripting;
+using OpenTK.Input;
 
 namespace OpenBve {
 	internal static class PanelCfgParser {
@@ -15,6 +16,8 @@ namespace OpenBve {
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed</remarks>
 		private const double EyeDistance = 1.0;
 
+		private static double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
+		private static double WorldWidth, WorldHeight, WorldLeft, WorldTop;
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Encoding">The train's text encoding</param>
@@ -33,9 +36,9 @@ namespace OpenBve {
 				}
 			}
 			// initialize
-			double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
+			
 			double AspectRatio = FullWidth / FullHeight;
-			double WorldWidth, WorldHeight;
+			
 			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height) {
 				WorldWidth = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / AspectRatio;
@@ -45,8 +48,8 @@ namespace OpenBve {
 			}
 			Train.Cars[Train.DriverCar].CameraRestriction.BottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
 			Train.Cars[Train.DriverCar].CameraRestriction.TopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
-			double WorldLeft = Train.Cars[Train.DriverCar].Driver.X - 0.5 * WorldWidth;
-			double WorldTop = Train.Cars[Train.DriverCar].Driver.Y + 0.5 * WorldHeight;
+			WorldLeft = Train.Cars[Train.DriverCar].Driver.X - 0.5 * WorldWidth;
+			WorldTop = Train.Cars[Train.DriverCar].Driver.Y + 0.5 * WorldHeight;
 			double WorldZ = Train.Cars[Train.DriverCar].Driver.Z;
 			const double UpDownAngleConstant = -0.191986217719376;
 			double PanelYaw = 0.0;
@@ -123,7 +126,7 @@ namespace OpenBve {
 					double w = (double)t.Width;
 					double h = (double)t.Height;
 					SemiHeight = FullHeight - h;
-					CreateElement(Train, 0, SemiHeight, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
+					CreateElement(Train, new Vector2(0, SemiHeight), w, h, WorldZ + EyeDistance, t, Color32.White, false);
 				}
 			}
 			// parse lines for rest
@@ -145,9 +148,10 @@ namespace OpenBve {
 							case "圧力計":
 								{
 									int Type = 0;
-									Color32[] NeedleColor = new Color32[] { Color32.Black, Color32.Black };
-									int[] NeedleType = new int[] { 0, 0 };
-									double CenterX = 0.0, CenterY = 0.0, Radius = 16.0;
+									Color32[] NeedleColor = new[] { Color32.Black, Color32.Black };
+									int[] NeedleType = new[] { 0, 0 };
+									Vector2 Center = new Vector2();
+									double Radius = 16.0;
 									string Background = null, Cover = null;
 									double Angle = 0.785398163397449, Minimum = 0.0, Maximum = 1000.0;
 									double UnitFactor = 1000.0;
@@ -232,19 +236,11 @@ namespace OpenBve {
 													break;
 												case "center":
 												case "中心":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CenterX)) {
-														Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CenterX = 0.0;
-													} else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out CenterY)) {
-														Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CenterY = 0.0;
-													} break;
+													Center = NumberFormats.ParseVector2(Value, Key, Section, i, FileName);
+													break;
 												case "radius":
 												case "半径":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Radius = 1.0;
-													} break;
+													Radius = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);break;
 												case "background":
 												case "背景":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -329,7 +325,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
+										CreateElement(Train, new Vector2(Center.X - 0.5 * w, Center.Y + SemiHeight - 0.5 * h), w, h, WorldZ + EyeDistance - 3.0 * StackDistance, t, Color32.White, false);
 									}
 									// cover
 									if (Cover != null) {
@@ -341,7 +337,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
+										CreateElement(Train, new Vector2(Center.X - 0.5 * w, Center.Y + SemiHeight - 0.5 * h), w, h, WorldZ + EyeDistance - 6.0 * StackDistance, t, Color32.White, false);
 									}
 									if (Type == 0) {
 										// needles
@@ -357,7 +353,7 @@ namespace OpenBve {
 												});
 												double w = (double)t.Width;
 												double h = (double)t.Height;
-												int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - (double)(4 + k) * StackDistance, Train.Cars[Train.DriverCar].Driver, t, NeedleColor[k], false);
+												int j = CreateElement(Train, new Vector2(Center.X - Radius * w / h, Center.Y + SemiHeight - Radius), 2.0 * Radius * w / h, 2.0 * Radius, WorldZ + EyeDistance - (double)(4 + k) * StackDistance, t, NeedleColor[k], false);
 												Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 												Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 												Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -377,7 +373,7 @@ namespace OpenBve {
 									} else if (Type == 1) {
 										// leds
 										if (NeedleType[1] != 0) {
-											int j = CreateElement(Train, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, null, NeedleColor[1], false);
+											int j = CreateElement(Train, new Vector2(Center.X - Radius, Center.Y + SemiHeight - Radius), 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, NeedleColor[1], false);
 											double x0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
 											double y0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
 											double z0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
@@ -440,7 +436,8 @@ namespace OpenBve {
 									int Type = 0;
 									Color32 Needle = Color32.White;
 									bool NeedleOverridden = false;
-									double CenterX = 0.0, CenterY = 0.0, Radius = 16.0;
+									Vector2 Center = new Vector2();
+									double Radius = 16.0;
 									string Background = null, Cover = null, Atc = null;
 									double Angle = 1.0471975511966, Maximum = 33.3333333333333, AtcRadius = 0.0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
@@ -518,25 +515,14 @@ namespace OpenBve {
 													} break;
 												case "atcradius":
 												case "atc半径":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out AtcRadius)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														AtcRadius = 0.0;
-													} break;
+													AtcRadius = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);break;
 												case "center":
 												case "中心":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CenterX)) {
-														Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CenterX = 0.0;
-													} else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out CenterY)) {
-														Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CenterY = 0.0;
-													} break;
+													Center = NumberFormats.ParseVector2(Value, Key, Section, i, FileName);
+													break;
 												case "radius":
 												case "半径":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius)) {
-														Interface.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Radius = 0.0;
-													} break;
+													Radius = NumberFormats.ParseDouble(Value, Key, Section, i, FileName);break;
 												case "angle":
 												case "角度":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Angle)) {
@@ -566,7 +552,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
+										CreateElement(Train, new Vector2(Center.X - 0.5 * w, Center.Y + SemiHeight - 0.5 * h), w, h, WorldZ + EyeDistance - 3.0 * StackDistance, t, Color32.White, false);
 									}
 									if (Cover != null) {
 										// cover
@@ -578,7 +564,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
+										CreateElement(Train, new Vector2(Center.X - 0.5 * w, Center.Y + SemiHeight - 0.5 * h), w, h, WorldZ + EyeDistance - 6.0 * StackDistance, t, Color32.White, false);
 									}
 									if (Atc != null) {
 										// atc
@@ -607,8 +593,7 @@ namespace OpenBve {
 												} else {
 													a = Math.PI;
 												}
-												double x = CenterX - 0.5 * h + Math.Sin(a) * AtcRadius;
-												double y = CenterY - 0.5 * h - Math.Cos(a) * AtcRadius + SemiHeight;
+												Vector2 Corner = new Vector2(Center.X - 0.5 * h + Math.Sin(a) * AtcRadius, Center.Y - 0.5 * h - Math.Cos(a) * AtcRadius + SemiHeight);
 												Texture t;
 												Program.Renderer.TextureManager.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
 												OpenBVEGame.RunInRenderThread(() =>
@@ -616,9 +601,9 @@ namespace OpenBve {
 													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
 												if (j == 0) {
-													k = CreateElement(Train, x, y, (double)h, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
+													k = CreateElement(Train, Corner, (double)h, (double)h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White, false);
 												} else {
-													CreateElement(Train, x, y, (double)h, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, true);
+													CreateElement(Train, Corner, (double)h, (double)h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White, true);
 												}
 											}
 											Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Program.CurrentHost, "271 pluginstate", false);
@@ -636,7 +621,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Needle, false);
+										int j = CreateElement(Train, new Vector2(Center.X - Radius * w / h, Center.Y + SemiHeight - Radius), 2.0 * Radius * w / h, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle, false);
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -646,7 +631,7 @@ namespace OpenBve {
 									} else if (Type == 1) {
 										// led
 										if (!NeedleOverridden) Needle = Color32.Black;
-										int j = CreateElement(Train, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, null, Needle, false);
+										int j = CreateElement(Train, new Vector2(Center.X - Radius, Center.Y + SemiHeight - Radius), 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, Needle, false);
 										double x0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
 										double y0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
 										double z0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
@@ -696,7 +681,7 @@ namespace OpenBve {
 							case "デジタル速度計":
 								{
 									string Number = null;
-									double CornerX = 0.0, CornerY = 0.0;
+									Vector2 Corner = new Vector2();
 									int Width = 0, Height = 0;
 									double UnitFactor = 3.6;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
@@ -721,13 +706,8 @@ namespace OpenBve {
 													break;
 												case "corner":
 												case "左上":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CornerX)) {
-														Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CornerX = 0.0;
-													} else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out CornerY)) {
-														Interface.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CornerY = 0.0;
-													} break;
+													Corner = NumberFormats.ParseVector2(Value, Key, Section, i, FileName);
+													break;
 												case "size":
 												case "サイズ":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Width)) {
@@ -808,9 +788,9 @@ namespace OpenBve {
 												int k = -1;
 												for (int j = 0; j < n; j++) {
 													if (j == 0) {
-														k = CreateElement(Train, CornerX, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t[j], Color32.White, false);
+														k = CreateElement(Train, new Vector2(Corner.X, Corner.Y + SemiHeight), (double)Width, (double)Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, false);
 													} else {
-														CreateElement(Train, CornerX, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t[j], Color32.White, true);
+														CreateElement(Train, new Vector2(Corner.X, Corner.Y + SemiHeight), (double)Width, (double)Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 													}
 												}
 												Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Program.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
@@ -819,9 +799,9 @@ namespace OpenBve {
 												int k = -1;
 												for (int j = 0; j < n; j++) {
 													if (j == 0) {
-														k = CreateElement(Train, CornerX + (double)Width, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t[j], Color32.White, false);
+														k = CreateElement(Train, new Vector2(Corner.X + (double)Width, Corner.Y + SemiHeight), (double)Width, (double)Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, false);
 													} else {
-														CreateElement(Train, CornerX + (double)Width, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t[j], Color32.White, true);
+														CreateElement(Train, new Vector2(Corner.X + (double)Width, Corner.Y + SemiHeight), (double)Width, (double)Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 													}
 												}
 												Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Program.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
@@ -830,9 +810,9 @@ namespace OpenBve {
 												int k = -1;
 												for (int j = 0; j < n; j++) {
 													if (j == 0) {
-														k = CreateElement(Train, CornerX + 2.0 * (double)Width, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t[j], Color32.White, false);
+														k = CreateElement(Train, new Vector2(Corner.X + 2.0 * (double)Width, Corner.Y + SemiHeight), (double)Width, (double)Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, false);
 													} else {
-														CreateElement(Train, CornerX + 2.0 * (double)Width, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t[j], Color32.White, true);
+														CreateElement(Train, new Vector2(Corner.X + 2.0 * (double)Width, Corner.Y + SemiHeight), (double)Width, (double)Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 													}
 												}
 												Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Program.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * floor 10 mod", false);
@@ -843,8 +823,8 @@ namespace OpenBve {
 								// pilotlamp
 							case "pilotlamp":
 							case "知らせ灯":
-								{
-									double CornerX = 0.0, CornerY = 0.0;
+							{
+									Vector2 Corner = new Vector2();
 									string TurnOn = null, TurnOff = null;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('='); if (j >= 0)
@@ -881,13 +861,8 @@ namespace OpenBve {
 													break;
 												case "corner":
 												case "左上":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CornerX)) {
-														Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CornerX = 0.0;
-													} else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out CornerY)) {
-														Interface.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CornerY = 0.0;
-													} break;
+													Corner = NumberFormats.ParseVector2(Value, Key, Section, i, FileName);
+													break;
 											}
 										} i++;
 									} i--;
@@ -902,10 +877,10 @@ namespace OpenBve {
 										});
 										double w = (double)t0.Width;
 										double h = (double)t0.Height;
-										int j = CreateElement(Train, CornerX, CornerY + SemiHeight, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 2.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t0, Color32.White, false);
+										int j = CreateElement(Train, new Vector2(Corner.X, Corner.Y + SemiHeight), w, h, WorldZ + EyeDistance - 2.0 * StackDistance, t0, Color32.White, false);
 										w = (double)t1.Width;
 										h = (double)t1.Height;
-										CreateElement(Train, CornerX, CornerY + SemiHeight, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 2.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t1, Color32.White, true);
+										CreateElement(Train, new Vector2(Corner.X, Corner.Y + SemiHeight), w, h, WorldZ + EyeDistance - 2.0 * StackDistance, t1, Color32.White, true);
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "doors 0 !=", false);
 									}
 								} break;
@@ -914,7 +889,8 @@ namespace OpenBve {
 							case "時計":
 								{
 									Color32 Needle = Color32.Black;
-									double CenterX = 0.0, CenterY = 0.0, Radius = 16.0;
+									Vector2 Center = new Vector2();
+									double Radius = 16.0;
 									string Background = null;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('='); if (j >= 0)
@@ -966,13 +942,8 @@ namespace OpenBve {
 													} break;
 												case "center":
 												case "中心":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CenterX)) {
-														Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CenterX = 0.0;
-													} else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out CenterY)) {
-														Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CenterY = 0.0;
-													} break;
+													Center = NumberFormats.ParseVector2(Value, Key, Section, i, FileName);
+													break;
 												case "radius":
 												case "半径":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius)) {
@@ -991,7 +962,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
+										CreateElement(Train, new Vector2(Center.X - 0.5 * w, Center.Y + SemiHeight - 0.5 * h), w, h, WorldZ + EyeDistance - 3.0 * StackDistance, t, Color32.White, false);
 									}
 									string Folder = Program.FileSystem.GetDataFolder("Compatibility");
 									{ // hour
@@ -1004,7 +975,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Needle, false);
+										int j = CreateElement(Train, new Vector2(Center.X - Radius * w / h, Center.Y + SemiHeight - Radius), 2.0 * Radius * w / h, 2.0 * Radius, WorldZ + EyeDistance - 4.0 * StackDistance, t, Needle, false);
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -1021,7 +992,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Needle, false);
+										int j = CreateElement(Train, new Vector2(Center.X - Radius * w / h, Center.Y + SemiHeight - Radius), 2.0 * Radius * w / h, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle, false);
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -1038,7 +1009,7 @@ namespace OpenBve {
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
-										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Needle, false);
+										int j = CreateElement(Train, new Vector2(Center.X - Radius * w / h, Center.Y + SemiHeight - Radius), 2.0 * Radius * w / h, 2.0 * Radius, WorldZ + EyeDistance - 6.0 * StackDistance, t, Needle, false);
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -1049,8 +1020,8 @@ namespace OpenBve {
 								// brakeindicator
 							case "brakeindicator":
 							case "ハンドルの段表示":
-								{
-									double CornerX = 0.0, CornerY = 0.0;
+							{
+									Vector2 Corner = new Vector2();
 									string Image = null;
 									int Width = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
@@ -1075,13 +1046,8 @@ namespace OpenBve {
 													break;
 												case "corner":
 												case "左上":
-													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CornerX)) {
-														Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CornerX = 0.0;
-													} else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out CornerY)) {
-														Interface.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														CornerY = 0.0;
-													} break;
+													Corner = NumberFormats.ParseVector2(Value, Key, Section, i, FileName);
+													break;
 												case "width":
 												case "幅":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Width)) {
@@ -1111,9 +1077,9 @@ namespace OpenBve {
 												TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
 												Program.Renderer.TextureManager.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
 												if (j == 0) {
-													k = CreateElement(Train, CornerX, CornerY + SemiHeight, (double)Width, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
+													k = CreateElement(Train, new Vector2(Corner.X, Corner.Y + SemiHeight), (double)Width, (double)h, WorldZ + EyeDistance - StackDistance, t, Color32.White, false);
 												} else {
-													CreateElement(Train, CornerX, CornerY + SemiHeight, (double)Width, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, true);
+													CreateElement(Train, new Vector2(Corner.X, Corner.Y + SemiHeight), (double)Width, (double)h, WorldZ + EyeDistance - StackDistance, t, Color32.White, true);
 												}
 											}
 											if (Train.Handles.Brake is TrainManager.AirBrakeHandle) {
@@ -1166,16 +1132,16 @@ namespace OpenBve {
 		}
 
 		// create element
-		private static int CreateElement(TrainManager.Train Train, double Left, double Top, double Width, double Height, double FullWidth, double FullHeight, double WorldLeft, double WorldTop, double WorldWidth, double WorldHeight, double WorldZ, Vector3 Driver, Texture Texture, Color32 Color, bool AddStateToLastElement) {
+		private static int CreateElement(TrainManager.Train Train, Vector2 Corner, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement) {
 			// create object
 			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Vector3[] v = new Vector3[4];
-			double sx = 0.5 * WorldWidth * Width / FullWidth;
-			double sy = 0.5 * WorldHeight * Height / FullHeight;
-			v[0] = new Vector3(-sx, -sy, 0);
-			v[1] = new Vector3(-sx, sy, 0);
-			v[2] = new Vector3(sx, sy, 0);
-			v[3] = new Vector3(sx, -sy, 0);
+			Vector2 s = new Vector2(0.5 * WorldWidth * Width / FullWidth, 0.5 * WorldHeight * Height / FullHeight);
+
+			v[0] = new Vector3(-s.X, -s.Y, 0);
+			v[1] = new Vector3(-s.X, s.Y, 0);
+			v[2] = new Vector3(s.X, s.Y, 0);
+			v[3] = new Vector3(s.X, -s.Y, 0);
 			Vertex t0 = new Vertex(v[0], new Vector2(0.0f, 1.0f));
 			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
@@ -1195,8 +1161,8 @@ namespace OpenBve {
 			Object.Dynamic = true;
 			// calculate offset
 			Vector3 o;
-			o.X = WorldLeft + sx + WorldWidth * Left / FullWidth;
-			o.Y = WorldTop - sy - WorldHeight * Top / FullHeight;
+			o.X = WorldLeft + s.X + WorldWidth * Corner.X / FullWidth;
+			o.Y = WorldTop - s.Y - WorldHeight * Corner.Y / FullHeight;
 			o.Z = WorldZ;
 			// add object
 			if (AddStateToLastElement) {

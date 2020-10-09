@@ -436,10 +436,7 @@ namespace OpenBve
 						break;
 					case "position":
 					case "stopposition":
-						if (Value.Any() && !NumberFormats.TryParseDoubleVb6(Value, out Data.Position))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
-						}
+						Data.Position = NumberFormats.ParseDouble(Value, Key, Section, LineNumber, FileName);
 						break;
 					case "accelerate":
 						if (Value.Any() && !NumberFormats.TryParseDoubleVb6(Value, out Accelerate) || Accelerate < 0.0)
