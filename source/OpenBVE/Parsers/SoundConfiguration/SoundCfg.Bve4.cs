@@ -119,7 +119,7 @@ namespace OpenBve
 									}
 									else
 									{
-										Interface.AddMessage(MessageType.Error, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "RunIndex must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 							}
@@ -163,7 +163,7 @@ namespace OpenBve
 									}
 									else
 									{
-										Interface.AddMessage(MessageType.Error, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "FlangeIndex must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 							}
@@ -204,7 +204,7 @@ namespace OpenBve
 									}
 									else
 									{
-										Interface.AddMessage(MessageType.Error, false, "Index is invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "MotorIndex must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 							}
@@ -219,22 +219,26 @@ namespace OpenBve
 							{
 								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-								int runIndex;
+								int switchIndex;
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								else if (NumberFormats.TryParseIntVb6(a, out runIndex))
+								else if (NumberFormats.TryParseIntVb6(a, out switchIndex))
 								{
-
+									if (switchIndex < 0)
+									{
+										Interface.AddMessage(MessageType.Error, false, "SwitchIndex must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										continue;
+									}
 									for (int c = 0; c < train.Cars.Length; c++)
 									{
 										int n = train.Cars[c].FrontAxle.PointSounds.Length;
-										if (runIndex >= n)
+										if (switchIndex >= n)
 										{
-											Array.Resize(ref train.Cars[c].FrontAxle.PointSounds, runIndex + 1);
-											Array.Resize(ref train.Cars[c].RearAxle.PointSounds, runIndex + 1);
-											for (int h = n; h < runIndex; h++)
+											Array.Resize(ref train.Cars[c].FrontAxle.PointSounds, switchIndex + 1);
+											Array.Resize(ref train.Cars[c].RearAxle.PointSounds, switchIndex + 1);
+											for (int h = n; h < switchIndex; h++)
 											{
 												train.Cars[c].FrontAxle.PointSounds[h] = new CarSound();
 												train.Cars[c].RearAxle.PointSounds[h] = new CarSound();
@@ -242,8 +246,8 @@ namespace OpenBve
 										}
 										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxle.Position);
 										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxle.Position);
-										train.Cars[c].FrontAxle.PointSounds[runIndex] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), frontaxle);
-										train.Cars[c].RearAxle.PointSounds[runIndex] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), rearaxle);
+										train.Cars[c].FrontAxle.PointSounds[switchIndex] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), frontaxle);
+										train.Cars[c].RearAxle.PointSounds[switchIndex] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), rearaxle);
 									}
 								}
 								else
@@ -551,7 +555,7 @@ namespace OpenBve
 										}
 										else
 										{
-											Interface.AddMessage(MessageType.Warning, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Interface.AddMessage(MessageType.Warning, false, "Index must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
 								}
