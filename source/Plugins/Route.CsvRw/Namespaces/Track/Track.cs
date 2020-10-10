@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi;
@@ -398,16 +398,14 @@ namespace CsvRwRouteParser
 					if (!PreviewOnly)
 					{
 						double start = 0.0, end = 0.0;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out start))
+						if (Arguments.Length >= 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StartingDistance is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							start = 0.0;
+							start = NumberFormats.ParseDouble(Arguments[0], Command, "Start", Expression.Line, Expression.File);
 						}
 
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out end))
+						if (Arguments.Length >= 2)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "EndingDistance is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							end = 0.0;
+							end = NumberFormats.ParseDouble(Arguments[1], Command, "End", Expression.Line, Expression.File);
 						}
 						
 						Color24 fogColor = NumberFormats.ParseColor24(Arguments.Skip(2).ToArray(), Command, "Color", Expression.Line, Expression.File);
@@ -811,22 +809,19 @@ namespace CsvRwRouteParser
 								y = 0.0;
 							}
 
-							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out yaw))
+							if (Arguments.Length >= 8)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								yaw = 0.0;
+								pitch = NumberFormats.ParseDouble(Arguments[7], Command, "Yaw", Expression.Line, Expression.File);
 							}
 
-							if (Arguments.Length >= 9 && Arguments[8].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[8], out pitch))
+							if (Arguments.Length >= 9)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								pitch = 0.0;
+								pitch = NumberFormats.ParseDouble(Arguments[8], Command, "Pitch", Expression.Line, Expression.File);
 							}
 
-							if (Arguments.Length >= 10 && Arguments[9].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[9], out roll))
+							if (Arguments.Length >= 10)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								roll = 0.0;
+								roll = NumberFormats.ParseDouble(Arguments[9], Command, "Roll", Expression.Line, Expression.File);
 							}
 
 							int n = Data.Blocks[BlockIndex].DestinationChanges.Length;

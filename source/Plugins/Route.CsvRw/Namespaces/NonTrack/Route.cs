@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using OpenBveApi;
@@ -86,12 +86,8 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						double a;
-						if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out a))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInMillimeters is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						}
-						else if (a <= 0.0)
+						double a = NumberFormats.ParseDouble(Arguments[0], Command, "MilliMeters", Expression.Line, Expression.File);
+						if (a <= 0.0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInMillimeters is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -156,12 +152,8 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						double a;
-						if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out a))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						}
-						else if (a <= 0.0)
+						double a = NumberFormats.ParseDouble(Arguments[0], Command, "m/s²", Expression.Line, Expression.File);
+						if (a <= 0.0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -295,12 +287,8 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						double a;
-						if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out a))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInCelsius is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						}
-						else if (a <= -273.15)
+						double a = NumberFormats.ParseDouble(Arguments[0], Command, "Degrees Celsius", Expression.Line, Expression.File);
+						if (a <= -273.15)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInCelsius is expected to be greater than -273.15 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -322,12 +310,8 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						double a;
-						if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out a))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInKPa is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						}
-						else if (a <= 0.0)
+						double a = NumberFormats.ParseDouble(Arguments[0], Command, "kPa", Expression.Line, Expression.File);
+						if (a <= 0.0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInKPa is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -349,38 +333,7 @@ namespace CsvRwRouteParser
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.AmbientLight will be ignored");
 						break;
 					}
-
-					int r = 255, g = 255, b = 255;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r))
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-					}
-					else if (r < 0 | r > 255)
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						r = r < 0 ? 0 : 255;
-					}
-
-					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g))
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-					}
-					else if (g < 0 | g > 255)
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						g = g < 0 ? 0 : 255;
-					}
-
-					if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b))
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-					}
-					else if (b < 0 | b > 255)
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						b = b < 0 ? 0 : 255;
-					}
-					Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24(r, g, b);
+					Plugin.CurrentRoute.Atmosphere.AmbientLightColor = NumberFormats.ParseColor24(Arguments, Command, "Color", Expression.Line, Expression.File);
 				}
 					break;
 				case "directionallight":
@@ -390,38 +343,7 @@ namespace CsvRwRouteParser
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.DirectionalLight will be ignored");
 						break;
 					}
-
-					int r = 255, g = 255, b = 255;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r))
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-					}
-					else if (r < 0 | r > 255)
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						r = r < 0 ? 0 : 255;
-					}
-
-					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g))
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-					}
-					else if (g < 0 | g > 255)
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						g = g < 0 ? 0 : 255;
-					}
-
-					if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b))
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-					}
-					else if (b < 0 | b > 255)
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						b = b < 0 ? 0 : 255;
-					}
-					Plugin. CurrentRoute.Atmosphere.DiffuseLightColor = new Color24(r, g, b);
+					Plugin. CurrentRoute.Atmosphere.DiffuseLightColor = NumberFormats.ParseColor24(Arguments, Command, "Color", Expression.Line, Expression.File);
 				}
 					break;
 				case "lightdirection":

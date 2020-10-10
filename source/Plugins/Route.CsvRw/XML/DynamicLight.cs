@@ -76,24 +76,17 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "ambientlight":
+
 										if (Arguments.Length == 3)
 										{
-											double R, G, B;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] { }), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] { }), out B))
-											{
-												currentLight.AmbientColor = new Color24((byte)R,(byte)G,(byte)B);
-												al = true;
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
-											}
+											currentLight.AmbientColor = NumberFormats.ParseColor24(Arguments, n.Name, c.Name, -1, fileName);
+											al = true;
 										}
 										else
 										{
 											if (Arguments.Length == 1)
 											{
-												if (Color24.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
+												if (Color24.TryParseHexColor(Arguments[0], out currentLight.AmbientColor))
 												{
 													al = true;
 													break;
@@ -105,16 +98,8 @@ namespace CsvRwRouteParser
 									case "directionallight":
 										if (Arguments.Length == 3)
 										{
-											double R, G, B;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] { }), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] { }), out B))
-											{
-												currentLight.DiffuseColor = new Color24((byte)R, (byte)G, (byte)B);
-												dl = true;
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
-											}
+											currentLight.DiffuseColor = NumberFormats.ParseColor24(Arguments, n.Name, c.Name, -1, fileName);
+											dl = true;
 										}
 										else
 										{
@@ -131,23 +116,8 @@ namespace CsvRwRouteParser
 										break;
 									case "cartesianlightdirection":
 									case "lightdirection":
-										if (Arguments.Length == 3)
-										{
-											double X, Y, Z;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out X) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] { }), out Y) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] { }), out Z))
-											{
-												currentLight.LightPosition = new Vector3(X, Y, Z);
-												ld = true;
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
-											}
-										}
-										else
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
-										}
+										currentLight.LightPosition = NumberFormats.ParseVector3(Arguments, n.Name, c.Name, -1, fileName, true);
+										ld = true;
 										break;
 									case "sphericallightdirection":
 										if (Arguments.Length == 2)
