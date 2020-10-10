@@ -93,7 +93,7 @@ namespace CsvRwRouteParser
 										{
 											if (Arguments.Length == 1)
 											{
-												if (Color24.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
+												if (Color24.TryParseHexColor(Arguments[0], out currentLight.AmbientColor))
 												{
 													al = true;
 													break;
