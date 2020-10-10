@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -303,10 +304,9 @@ namespace CsvRwRouteParser
 				case "pitch":
 				{
 					double p = 0.0;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out p))
+					if (Arguments.Length >= 1)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInPermille is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						p = 0.0;
+						p = NumberFormats.ParseDouble(Arguments[0], Command, "PerMille", Expression.Line, Expression.File);
 					}
 
 					Data.Blocks[BlockIndex].Pitch = 0.001 * p;
@@ -317,20 +317,15 @@ namespace CsvRwRouteParser
 					double radius = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out radius))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						radius = 0.0;
+						radius = NumberFormats.ParseDouble(Arguments[0], Command, "Radius in Meters", Expression.Line, Expression.File);
 					}
 
 					double cant = 0.0;
-					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out cant))
+					if (Arguments.Length >= 2)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						cant = 0.0;
+						cant = NumberFormats.ParseDouble(Arguments[0], Command, "Pitch in MilliMeters", Expression.Line, Expression.File);
 					}
-					else
-					{
-						cant *= 0.001;
-					}
+					cant *= 0.001; //Convert millimeters to meters
 
 					if (Data.SignedCant)
 					{
@@ -352,10 +347,9 @@ namespace CsvRwRouteParser
 				case "turn":
 				{
 					double s = 0.0;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out s))
+					if (Arguments.Length >= 1)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Ratio is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						s = 0.0;
+						s = NumberFormats.ParseDouble(Arguments[0], Command, "Ratio", Expression.Line, Expression.File);
 					}
 
 					Data.Blocks[BlockIndex].Turn = s;
@@ -404,7 +398,6 @@ namespace CsvRwRouteParser
 					if (!PreviewOnly)
 					{
 						double start = 0.0, end = 0.0;
-						int r = 128, g = 128, b = 128;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out start))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StartingDistance is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -416,40 +409,9 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "EndingDistance is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							end = 0.0;
 						}
-
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out r))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							r = 128;
-						}
-						else if (r < 0 | r > 255)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							r = r < 0 ? 0 : 255;
-						}
-
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out g))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							g = 128;
-						}
-						else if (g < 0 | g > 255)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							g = g < 0 ? 0 : 255;
-						}
-
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[4], out b))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							b = 128;
-						}
-						else if (b < 0 | b > 255)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							b = b < 0 ? 0 : 255;
-						}
-
+						
+						Color24 fogColor = NumberFormats.ParseColor24(Arguments.Skip(2).ToArray(), Command, "Color", Expression.Line, Expression.File);
+						
 						if (start < end)
 						{
 							Data.Blocks[BlockIndex].Fog.Start = (float) start;
@@ -461,7 +423,7 @@ namespace CsvRwRouteParser
 							Data.Blocks[BlockIndex].Fog.End = CurrentRoute.NoFogEnd;
 						}
 
-						Data.Blocks[BlockIndex].Fog.Color = new Color24((byte) r, (byte) g, (byte) b);
+						Data.Blocks[BlockIndex].Fog.Color = fogColor;
 						Data.Blocks[BlockIndex].FogDefined = true;
 					}
 				}

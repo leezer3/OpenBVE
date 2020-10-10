@@ -380,8 +380,7 @@ namespace CsvRwRouteParser
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						b = b < 0 ? 0 : 255;
 					}
-
-					Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24((byte) r, (byte) g, (byte) b);
+					Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24(r, g, b);
 				}
 					break;
 				case "directionallight":
@@ -422,8 +421,7 @@ namespace CsvRwRouteParser
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						b = b < 0 ? 0 : 255;
 					}
-
-					Plugin. CurrentRoute.Atmosphere.DiffuseLightColor = new Color24((byte) r, (byte) g, (byte) b);
+					Plugin. CurrentRoute.Atmosphere.DiffuseLightColor = new Color24(r, g, b);
 				}
 					break;
 				case "lightdirection":
@@ -435,14 +433,14 @@ namespace CsvRwRouteParser
 					}
 
 					double theta = 60.0, phi = -26.565051177078;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out theta))
+					if (Arguments.Length >= 1)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Theta is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						theta = NumberFormats.ParseDouble(Arguments[0], Command, "Theta", Expression.Line, FileName);
 					}
 
-					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out phi))
+					if (Arguments.Length >= 2)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Phi is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						phi = NumberFormats.ParseDouble(Arguments[1], Command, "Phi", Expression.Line, FileName);
 					}
 
 					theta = theta.ToRadians();

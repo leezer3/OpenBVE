@@ -140,7 +140,7 @@ namespace OpenBveApi.Colors {
 					int b = x & 0xFF;
 					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255)
 					{
-						Color = new Color24((byte)r, (byte)g, (byte)b);
+						Color = new Color24(r, g, b);
 						return true;
 					}
 				}
@@ -365,7 +365,7 @@ namespace OpenBveApi.Colors {
 					int b = x & 0xFF;
 					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255)
 					{
-						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
+						Color = new Color32(r, g, b, 255);
 						return true;
 					}
 					Color = Blue;

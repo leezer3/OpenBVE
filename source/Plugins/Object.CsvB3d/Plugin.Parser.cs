@@ -454,9 +454,9 @@ namespace Plugin
 								Vector3 d = NumberFormats.ParseVector3(Arguments, Command, "ShearDirection", i, FileName);
 								Vector3 s = NumberFormats.ParseVector3(Arguments.Skip(3).ToArray(), Command, "ShearFactor", i, FileName);
 								double r = 0.0;
-								if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out r)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Ratio in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r = 0.0;
+								if (Arguments.Length >= 7)
+								{
+									r = NumberFormats.ParseDouble(Arguments[6], Command, "ShearRatio", i, FileName);
 								}
 								d.Normalize();
 								s.Normalize();
@@ -604,9 +604,9 @@ namespace Plugin
 									}
 								}
 								double glowhalfdistance = 0.0;
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out glowhalfdistance)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument GlowHalfDistance in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									glowhalfdistance = 0;
+								if (Arguments.Length >= 2)
+								{
+									glowhalfdistance = NumberFormats.ParseDouble(Arguments[1], cmd, "GlowHalfDistance", i, FileName);
 								}
 								GlowAttenuationMode glowmode = GlowAttenuationMode.DivisionExponent4;
 								if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
