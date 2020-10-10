@@ -369,12 +369,12 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								int n = 8;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out n)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument n in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									n = 8;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out n))
+								{
+									n = NumberFormats.ParseInt(Arguments[0], Command, "NumberOfFaces", i, FileName);
 								}
 								if (n < 2) {
-									currentHost.AddMessage(MessageType.Error, false, "n is expected to be at least 2 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									currentHost.AddMessage(MessageType.Error, false, "NumberOfFaces is expected to be at least 2 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									n = 8;
 								}
 								double r1 = 0.0, r2 = 0.0, h = 1.0;
@@ -506,41 +506,14 @@ namespace Plugin
 								if (Arguments.Length > 4) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int r = 0, g = 0, b = 0, a = 255;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r = 0;
-								} else if (r < 0 | r > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r = r < 0 ? 0 : 255;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									g = 0;
-								} else if (g < 0 | g > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									g = g < 0 ? 0 : 255;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									b = 0;
-								} else if (b < 0 | b > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									b = b < 0 ? 0 : 255;
-								}
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out a)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Alpha in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									a = 255;
-								} else if (a < 0 | a > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Alpha is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									a = a < 0 ? 0 : 255;
-								}
+
+								Color32 faceColor = NumberFormats.ParseColor32(Arguments, cmd, "MeshBuilder", i + 1, FileName);
 								int m = Builder.Materials.Length;
 								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j] = new Material(Builder.Materials[j - m])
 									{
-										Color = new Color32((byte) r, (byte) g, (byte) b, (byte) a),
+										Color = faceColor,
 										BlendMode = Builder.Materials[0].BlendMode,
 										GlowAttenuationData = Builder.Materials[0].GlowAttenuationData,
 										DaytimeTexture = Builder.Materials[0].DaytimeTexture,
@@ -565,33 +538,13 @@ namespace Plugin
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int r = 0, g = 0, b = 0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r = 0;
-								} else if (r < 0 | r > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r = r < 0 ? 0 : 255;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									g = 0;
-								} else if (g < 0 | g > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									g = g < 0 ? 0 : 255;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									b = 0;
-								} else if (b < 0 | b > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									b = b < 0 ? 0 : 255;
-								}
+
+								Color24 emissiveColor = NumberFormats.ParseColor24(Arguments, cmd, "MeshBuilder", i, FileName);
 								int m = Builder.Materials.Length;
 								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j] = new Material(Builder.Materials[j - m]);
-									Builder.Materials[j].EmissiveColor = new Color24((byte)r, (byte)g, (byte)b);
+									Builder.Materials[j].EmissiveColor = emissiveColor;
 									Builder.Materials[j].Flags = Builder.Materials[0].Flags | MaterialFlags.Emissive;
 									Builder.Materials[j].BlendMode = Builder.Materials[0].BlendMode;
 									Builder.Materials[j].GlowAttenuationData = Builder.Materials[0].GlowAttenuationData;
@@ -615,30 +568,10 @@ namespace Plugin
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int r = 0, g = 0, b = 0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r = 0;
-								} else if (r < 0 | r > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									r = r < 0 ? 0 : 255;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									g = 0;
-								} else if (g < 0 | g > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									g = g < 0 ? 0 : 255;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									b = 0;
-								} else if (b < 0 | b > 255) {
-									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									b = b < 0 ? 0 : 255;
-								}
+								Color24 transparentColor = NumberFormats.ParseColor24(Arguments, cmd, "Texture", i, FileName);
+								
 								for (int j = 0; j < Builder.Materials.Length; j++) {
-									Builder.Materials[j].TransparentColor = new Color24((byte)r, (byte)g, (byte)b);
+									Builder.Materials[j].TransparentColor = transparentColor;
 									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 								}
 							} break;

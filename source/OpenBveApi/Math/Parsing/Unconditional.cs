@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Interface;
+﻿using OpenBveApi.Colors;
+using OpenBveApi.Interface;
 
 namespace OpenBveApi.Math
 {
@@ -132,6 +133,109 @@ namespace OpenBveApi.Math
 			}
 
 			return parsedVector;
+		}
+
+		/// <summary>Parses a Color32 formatted as a Visual Basic 6 string</summary>
+		/// <param name="Arguments">The color value</param>
+		/// <param name="Key">The key value</param>
+		/// <param name="Section">The section</param>
+		/// <param name="Line">The line</param>
+		/// <param name="FileName">The filename</param>
+		/// <param name="ExpectedArguments">Whether a minimum of three arguments is expected</param>
+		public static Color24 ParseColor24(string[] Arguments, string Key, string Section, int Line, string FileName, bool ExpectedArguments = false)
+		{
+			int r = 0, g = 0, b = 0;
+			if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+			}
+			else if (r < 0 | r > 255)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+				r = r < 0 ? 0 : 255;
+			}
+
+			if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+			}
+			else if (g < 0 | g > 255)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+				g = g < 0 ? 0 : 255;
+			}
+
+			if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+			}
+			else if (b < 0 | b > 255)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+				b = b < 0 ? 0 : 255;
+			}
+
+			if (Arguments.Length < 3 && ExpectedArguments)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Three arguments are expected in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in " + FileName);
+			}
+			return new Color24(r, g, b);
+		}
+
+		/// <summary>Parses a Color32 formatted as a Visual Basic 6 string</summary>
+		/// <param name="Arguments">The color value</param>
+		/// <param name="Key">The key value</param>
+		/// <param name="Section">The section</param>
+		/// <param name="Line">The line</param>
+		/// <param name="FileName">The filename</param>
+		/// <param name="ExpectedArguments">Whether a minimum of three arguments is expected</param>
+		public static Color32 ParseColor32(string[] Arguments, string Key, string Section, int Line, string FileName, bool ExpectedArguments = false)
+		{
+			int r = 0, g = 0, b = 0, a = 255;
+			if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+			}
+			else if (r < 0 | r > 255)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+				r = r < 0 ? 0 : 255;
+			}
+
+			if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+			}
+			else if (g < 0 | g > 255)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+				g = g < 0 ? 0 : 255;
+			}
+
+			if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+			}
+			else if (b < 0 | b > 255)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+				b = b < 0 ? 0 : 255;
+			}
+
+			if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out a))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument Alpha in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+			}
+			else if (a < 0 | a > 255)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Alpha is required to be within the range from 0 to 255 in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in file " + FileName);
+				a = a < 0 ? 0 : 255;
+			}
+			if (Arguments.Length < 4 && ExpectedArguments)
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Three arguments are expected in " + Key + " - " + Section + " at line " + (Line + 1).ToString(Culture) + " in " + FileName);
+			}
+			return new Color32(r, g, b, a);
 		}
 	}
 }

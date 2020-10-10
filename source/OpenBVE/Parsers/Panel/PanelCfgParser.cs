@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -203,29 +204,7 @@ namespace OpenBve {
 															break;
 														}
 													}
-													int r = 0, g = 0, b = 0;
-													if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out r)) {
-														Interface.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														r = 0;
-													} else if (r < 0 | r > 255) {
-														Interface.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														r = r < 0 ? 0 : 255;
-													}
-													if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out g)) {
-														Interface.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Key + " in " + Section + Key + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														g = 0;
-													} else if (g < 0 | g > 255) {
-														Interface.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														g = g < 0 ? 0 : 255;
-													}
-													if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out b)) {
-														Interface.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Key + " in " + Section + Key + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														b = 0;
-													} else if (b < 0 | b > 255) {
-														Interface.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														b = b < 0 ? 0 : 255;
-													}
-													NeedleColor[k] = new Color32((byte)r, (byte)g, (byte)b, 255);
+													NeedleColor[k] = NumberFormats.ParseColor32(Arguments.Skip(1).ToArray(), Key, Section, i, FileName);
 													break;
 												case "center":
 												case "中心":
@@ -463,32 +442,10 @@ namespace OpenBve {
 												case "needle":
 												case "hand":
 												case "針":
-													{
-														int r = 0, g = 0, b = 0;
-														if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
-															Interface.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															r = 255;
-														} else if (r < 0 | r > 255) {
-															Interface.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															r = r < 0 ? 0 : 255;
-														}
-														if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
-															Interface.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															g = 255;
-														} else if (g < 0 | g > 255) {
-															Interface.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															g = g < 0 ? 0 : 255;
-														}
-														if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
-															Interface.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															b = 255;
-														} else if (b < 0 | b > 255) {
-															Interface.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															b = b < 0 ? 0 : 255;
-														}
-														Needle = new Color32((byte)r, (byte)g, (byte)b, 255);
-														NeedleOverridden = true;
-													} break;
+												{
+													Needle = NumberFormats.ParseColor32(Arguments, Key, Section, i, FileName);
+													NeedleOverridden = true;
+												} break;
 												case "cover":
 												case "ふた":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -902,31 +859,9 @@ namespace OpenBve {
 												case "needle":
 												case "hand":
 												case "針":
-													{
-														int r = 0, g = 0, b = 0;
-														if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
-															Interface.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															r = 0;
-														} else if (r < 0 | r > 255) {
-															Interface.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															r = r < 0 ? 0 : 255;
-														}
-														if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
-															Interface.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															g = 0;
-														} else if (g < 0 | g > 255) {
-															Interface.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															g = g < 0 ? 0 : 255;
-														}
-														if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
-															Interface.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															b = 0;
-														} else if (b < 0 | b > 255) {
-															Interface.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															b = b < 0 ? 0 : 255;
-														}
-														Needle = new Color32((byte)r, (byte)g, (byte)b, 255);
-													} break;
+												{
+													Needle = NumberFormats.ParseColor32(Arguments, Key, Section, i, FileName);
+												} break;
 												case "center":
 												case "中心":
 													Center = NumberFormats.ParseVector2(Value, Key, Section, i, FileName);
