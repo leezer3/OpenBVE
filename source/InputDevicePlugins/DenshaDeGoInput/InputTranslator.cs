@@ -28,7 +28,7 @@ using OpenTK.Input;
 namespace DenshaDeGoInput
 {
 	/// <summary>
-	/// The class which converts the input from the controller
+	/// Class which holds generic controller input.
 	/// </summary>
 	internal class InputTranslator
 	{
@@ -118,6 +118,9 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static PowerNotches PreviousPowerNotch;
 
+		/// <summary>
+		/// The state of the controller's buttons.
+		/// </summary>
 		internal static ButtonState ControllerButtons = new ButtonState();
 
 		/// <summary>
@@ -139,15 +142,19 @@ namespace DenshaDeGoInput
 		{
 			if (!IsControllerConnected)
 			{
+				// The controller is apparently not connected; try to connect to it
 				JoystickState state = Joystick.GetState(activeControllerIndex);
 				JoystickCapabilities capabilities = Joystick.GetCapabilities(activeControllerIndex);
 				ControllerModel = GetControllerModel(state, capabilities);
+
 				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
 				if (capabilities.ButtonCount > 0 && ControllerModel != ControllerModels.Unsupported)
 				{
+					// The controller is valid and can be used
 					IsControllerConnected = true;
 					return;
 				}
+				// The controller is not valid; temporarily discard input from the device
 				activeControllerIndex = -1;
 			}
 			else
@@ -155,6 +162,7 @@ namespace DenshaDeGoInput
 				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
 				if (Joystick.GetCapabilities(activeControllerIndex).ButtonCount == 0)
 				{
+					// The controller is apparently not connected
 					IsControllerConnected = false;
 					return;
 				}
@@ -167,9 +175,11 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static void GetInput()
 		{
+			// Store the current notches so we can later tell if they have been moved
 			PreviousBrakeNotch = BrakeNotch;
 			PreviousPowerNotch = PowerNotch;
 
+			// Read the input from the controller according to the type
 			switch (ControllerModel)
 			{
 				case ControllerModels.PlayStation:

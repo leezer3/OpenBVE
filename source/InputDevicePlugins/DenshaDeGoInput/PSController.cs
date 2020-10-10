@@ -28,14 +28,23 @@ using OpenTK.Input;
 namespace DenshaDeGoInput
 {
 	/// <summary>
-	/// Class for Densha de GO! controllers for the Sony PlayStation
+	/// Class for Densha de GO! controllers for the Sony PlayStation.
 	/// </summary>
 	internal class PSController
 	{
+		/// <summary>
+		/// Whether the adapter uses a hat to map the direction buttons.
+		/// </summary>
 		internal static bool UsesHat = false;
 
+		/// <summary>
+		/// The index of the hat used to map the direction buttons.
+		/// </summary>
 		internal static int hatIndex;
 
+		/// <summary>
+		/// Class for the indices of the buttons used by the controller.
+		/// </summary>
 		internal class ButtonIndices
 		{
 			internal int Cross = -1;
@@ -52,6 +61,9 @@ namespace DenshaDeGoInput
 			internal int Right = -1;
 		}
 
+		/// <summary>
+		/// Class for the pressed state of the buttons used by the controller.
+		/// </summary>
 		internal class PressedButtons
 		{
 			internal bool Cross;
@@ -68,11 +80,18 @@ namespace DenshaDeGoInput
 			internal bool Right;
 		}
 
+		/// <summary>
+		/// The button indices of the buttons used by the controller.
+		/// </summary>
 		internal static ButtonIndices ButtonIndex = new ButtonIndices();
+
+		/// <summary>
+		/// The pressed state of the buttons used by the controller.
+		/// </summary>
 		internal static PressedButtons ButtonPressed = new PressedButtons();
 
 		/// <summary>
-		/// Checks if a joystick is a Sony PlayStation controller
+		/// Checks whether a joystick is a Sony PlayStation controller.
 		/// </summary>
 		public static bool IsPSController(JoystickCapabilities joystick)
 		{
@@ -84,7 +103,7 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Reads the buttons from the controller
+		/// Reads the buttons from the controller.
 		/// </summary>
 		public static void ReadButtons(JoystickState joystick)
 		{
@@ -101,11 +120,13 @@ namespace DenshaDeGoInput
 
 			if (UsesHat)
 			{
+				// The adapter uses the hat to map the direction buttons.
 				ButtonPressed.Left = joystick.GetHat((JoystickHat)hatIndex).IsLeft;
 				ButtonPressed.Right = joystick.GetHat((JoystickHat)hatIndex).IsRight;
 			}
 			else
 			{
+				// The adapter maps the direction buttons to independent buttons.
 				ButtonPressed.Left = joystick.IsButtonDown(ButtonIndex.Left);
 				ButtonPressed.Right = joystick.IsButtonDown(ButtonIndex.Right);
 			}
@@ -191,6 +212,9 @@ namespace DenshaDeGoInput
 			InputTranslator.ControllerButtons.Start = (OpenTK.Input.ButtonState)(ButtonPressed.Start ? 1 : 0);
 		}
 
+		/// <summary>
+		/// Launches the calibration wizard to guess the button indices used by the adapter.
+		/// </summary>
 		public static void Calibrate()
 		{
 			string[] input = { "A", "B", "C", "SELECT", "START", "EMG", "B6", "B5", "B4", "B8", "P5", "N", "P2", "P1", "P5" };

@@ -38,9 +38,15 @@ namespace DenshaDeGoInput
 			timer1.Enabled = true;
 
 			// Add connected devices to device list
+
 			ListControllers();
 
-			// Add commands to buttons
+			// Populate command boxes
+			buttonaBox.Items.Add(Translations.GetInterfaceString("None"));
+			buttonbBox.Items.Add(Translations.GetInterfaceString("None"));
+			buttoncBox.Items.Add(Translations.GetInterfaceString("None"));
+			buttonstartBox.Items.Add(Translations.GetInterfaceString("None"));
+			buttonselectBox.Items.Add(Translations.GetInterfaceString("None"));
 			for (int i = 0; i < Translations.CommandInfos.Length; i++)
 			{
 				buttonaBox.Items.Add(Translations.CommandInfos[i].Name);
@@ -177,11 +183,33 @@ namespace DenshaDeGoInput
 			{
 				deviceBox.SelectedIndex = InputTranslator.activeControllerIndex;
 			}
+
+			// Update checkboxes
+			convertnotchesCheck.Checked = DenshaDeGoInput.convertNotches;
+			minmaxCheck.Checked = DenshaDeGoInput.keepMaxMin;
+			holdbrakeCheck.Checked = DenshaDeGoInput.mapHoldBrake;
+			minmaxCheck.Enabled = DenshaDeGoInput.convertNotches;
 		}
 
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			InputTranslator.activeControllerIndex = deviceBox.SelectedIndex;
+		}
+
+		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.convertNotches = convertnotchesCheck.Checked;
+			minmaxCheck.Enabled = DenshaDeGoInput.convertNotches;
+		}
+
+		private void minmaxCheck_CheckedChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.keepMaxMin = minmaxCheck.Checked;
+		}
+
+		private void holdbrakeCheck_CheckedChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.mapHoldBrake = holdbrakeCheck.Checked;
 		}
 
 		private void buttonCalibrate_Click(object sender, EventArgs e)

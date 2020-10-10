@@ -34,7 +34,7 @@ namespace DenshaDeGoInput
 	/// <summary>
 	/// Input Device Plugin class for controllers of the Densha de GO! series
 	/// </summary>
-	public class DenshaDeGoInput : IInputDevice
+	public class DenshaDeGoInput : ITrainInputDevice
 	{
 		public event EventHandler<InputEventArgs> KeyDown;
 		public event EventHandler<InputEventArgs> KeyUp;
@@ -45,49 +45,122 @@ namespace DenshaDeGoInput
 
 		private Config configForm;
 
+		/// <summary>
+		/// Whether the input plugin has just started running.
+		/// </summary>
 		internal bool loading = true;
-		internal bool brakeHandleMoved;
-		internal bool powerHandleMoved;
 
+		/// <summary>
+		/// The specs of the driver's train.
+		/// </summary>
 		internal VehicleSpecs vehicleSpecs = new VehicleSpecs(5, BrakeTypes.AutomaticAirBrake, 8, false, 1);
 
+		/// <summary>
+		/// Whether the brake handle has been moved.
+		/// </summary>
+		internal bool brakeHandleMoved;
+
+		/// <summary>
+		/// Whether the power handle has been moved.
+		/// </summary>
+		internal bool powerHandleMoved;
+
+		/// <summary>
+		/// An array with the command indices configured for each brake notch.
+		/// </summary>
+		internal int[] brakeCommands = new int[10];
+
+		/// <summary>
+		/// An array with the command indices configured for each power notch.
+		/// </summary>
+		internal int[] powerCommands = new int[6];
+
+
+		/// <summary>
+		/// Whether to convert the handle notches to match the driver's train.
+		/// </summary>
+		internal static bool convertNotches;
+
+		/// <summary>
+		/// Whether to assign the maximum and minimum notches to P1/P5 and B1/B8.
+		/// </summary>
+		internal static bool keepMaxMin;
+
+		/// <summary>
+		/// Whether to map the hold brake to B1.
+		/// </summary>
+		internal static bool mapHoldBrake;
+
+		/// <summary>
+		/// A function call when the Config button is pressed.
+		/// </summary>
+		/// <param name="owner">The owner of the window</param>
 		public void Config(IWin32Window owner)
 		{
 			configForm.ShowDialog(owner);
 		}
 
+		/// <summary>
+		/// A function called when the plugin is loaded.
+		/// </summary>
+		/// <param name="fileSystem">The instance of FileSytem class</param>
+		/// <returns>Whether the plugin has been loaded successfully.</returns>
 		public bool Load(FileSystem fileSystem)
 		{
 			configForm = new Config();
 			FileSystem = fileSystem;
 
-			Controls = new InputControl[16];
-			for (int i = 0; i < 9; i++)
+			// Load settings from the config file
+			LoadConfig();
+
+			// Define the list of commands
+			// We allocate 50 slots per handle plus one slot per command
+			int commandCount = Translations.CommandInfos.Length;
+			Controls = new InputControl[100 + commandCount];
+			// Brake notches
+			for (int i = 0; i < 50; i++)
 			{
 				Controls[i].Command = Translations.Command.BrakeAnyNotch;
 				Controls[i].Option = i;
 			}
-			Controls[9].Command = Translations.Command.BrakeEmergency;
-			for (int i = 10; i < 16; i++)
+			// Power notches
+			for (int i = 50; i < 100; i++)
 			{
 				Controls[i].Command = Translations.Command.PowerAnyNotch;
-				Controls[i].Option = i - 10;
+				Controls[i].Option = i - 50;
+			}
+			// Other commands
+			for (int i = 0; i < commandCount; i++)
+			{
+				Controls[i + 100].Command = (Translations.Command)i;
 			}
 
-			LoadConfig();
+			// Configure the mappings for the buttons and notches
+			ConfigureMappings();
+
 			return true;
 		}
 
+		/// <summary>
+		/// A function called when the plugin is unloaded.
+		/// </summary>
+		public void Unload()
+		{
+		}
+
+		/// <summary>
+		/// A function called on each frame.
+		/// </summary>
 		public void OnUpdateFrame()
 		{
 			if (brakeHandleMoved)
 			{
-				KeyUp(this, new InputEventArgs(Controls[(int)InputTranslator.BrakeNotch]));
+				KeyUp(this, new InputEventArgs(Controls[brakeCommands[(int)InputTranslator.BrakeNotch]]));
 				brakeHandleMoved = false;
 			}
 			if (powerHandleMoved)
 			{
-				KeyUp(this, new InputEventArgs(Controls[(int)InputTranslator.PowerNotch + 10]));
+				KeyUp(this, new InputEventArgs(Controls[powerCommands[(int)InputTranslator.PowerNotch]]));
 				powerHandleMoved = false;
 			}
 
@@ -97,12 +170,12 @@ namespace DenshaDeGoInput
 			{
 				if (InputTranslator.BrakeNotch != InputTranslator.PreviousBrakeNotch || loading)
 				{
-					KeyDown(this, new InputEventArgs(Controls[(int)InputTranslator.BrakeNotch]));
+					KeyDown(this, new InputEventArgs(Controls[brakeCommands[(int)InputTranslator.BrakeNotch]]));
 					brakeHandleMoved = true;
 				}
 				if (InputTranslator.PowerNotch != InputTranslator.PreviousPowerNotch || loading)
 				{
-					KeyDown(this, new InputEventArgs(Controls[(int)InputTranslator.PowerNotch + 10]));
+					KeyDown(this, new InputEventArgs(Controls[powerCommands[(int)InputTranslator.PowerNotch]]));
 					powerHandleMoved = true;
 				}
 			}
@@ -110,10 +183,11 @@ namespace DenshaDeGoInput
 			loading = false;
 		}
 
-		public void SetElapseData(ElapseData data) {
-
-			data.DebugMessage = InputTranslator.BrakeNotch.ToString();
-}
+		/// <summary>
+		/// A function notifying the plugin about the train's existing status.
+		/// </summary>
+		/// <param name="data">Data</param>
+		public void SetElapseData(ElapseData data) { }
 
 		public void SetMaxNotch(int powerNotch, int brakeNotch) { }
 
@@ -122,8 +196,114 @@ namespace DenshaDeGoInput
 			vehicleSpecs = specs;
 		}
 
-		public void Unload() { }
+		/// <summary>
+		/// Configures the correct mappings for the buttons and notches according to the settings.
+		/// </summary>
+		internal void ConfigureMappings()
+		{
+			if (!convertNotches)
+			{
+				// The notches are not supposed to be converted
+				// Brake notches
+				if (mapHoldBrake && vehicleSpecs.HasHoldBrake)
+				{
+					brakeCommands[0] = 0;
+					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
+					for (int i = 2; i < 10; i++)
+					{
+						brakeCommands[i] = i - 1;
+					}
+				}
+				else
+				{
+					for (int i = 0; i < 10; i++)
+					{
+						brakeCommands[i] = i;
+					}
+				}
+				// Emergency brake, only if the train has 8 notches or less
+				if (vehicleSpecs.BrakeNotches <= 8)
+				{
+					brakeCommands[9] = 100 + (int)Translations.Command.BrakeEmergency;
+				}
+				// Power notches
+				for (int i = 0; i < 6; i++)
+				{
+					powerCommands[i] = 50 + i;
+				}
+			}
+			else
+			{
+				// The notches are supposed to be converted
+				// Brake notches
+				if (mapHoldBrake && vehicleSpecs.HasHoldBrake)
+				{
+					double brakeStep = vehicleSpecs.BrakeNotches / 7.0;
+					brakeCommands[0] = 0;
+					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
+					for (int i = 2; i < 9; i++)
+					{
+						brakeCommands[i] = (int)Math.Round(brakeStep * (i - 1), MidpointRounding.AwayFromZero);
+						if (i > 0 && brakeCommands[i] == 0)
+						{
+							brakeCommands[i] = 1;
+						}
+						if (keepMaxMin && i == 2)
+						{
+							brakeCommands[i] = 1;
+						}
+						if (keepMaxMin && i == 8)
+						{
+							brakeCommands[i] = vehicleSpecs.BrakeNotches;
+						}
+					}
+				}
+				else
+				{
+					double brakeStep = vehicleSpecs.BrakeNotches / 8.0;
+					for (int i = 0; i < 9; i++)
+					{
+						brakeCommands[i] = (int)Math.Round(brakeStep * i, MidpointRounding.AwayFromZero);
+						if (i > 0 && brakeCommands[i] == 0)
+						{
+							brakeCommands[i] = 1;
+						}
+						if (keepMaxMin && i == 1)
+						{
+							brakeCommands[i] = 1;
+						}
+						if (keepMaxMin && i == 8)
+						{
+							brakeCommands[i] = vehicleSpecs.BrakeNotches;
+						}
+					}
+				}
+				// Emergency brake
+				brakeCommands[9] = 100 + (int)Translations.Command.BrakeEmergency;
+				// Power notches
+				double powerStep = vehicleSpecs.PowerNotches / 5.0;
+				for (int i = 0; i < 6; i++)
+				{
+					powerCommands[i] = 50 + (int)Math.Round(powerStep * i, MidpointRounding.AwayFromZero);
+					if (i > 0 && powerCommands[i] == 50)
+					{
+						powerCommands[i] = 51;
+					}
+					if (keepMaxMin && i == 1)
+					{
+						powerCommands[i] = 51;
+					}
+					if (keepMaxMin && i == 5)
+					{
+						powerCommands[i] = 50 + vehicleSpecs.PowerNotches;
+					}
+				}
+			}
+		}
 
+		/// <summary>
+		/// Loads the plugin settings from the config file.
+		/// </summary>
 		internal static void LoadConfig()
 		{
 			string optionsFolder = OpenBveApi.Path.CombineDirectory(FileSystem.SettingsFolder, "1.5.0");
@@ -174,6 +354,15 @@ namespace DenshaDeGoInput
 													InputTranslator.activeControllerIndex = a;
 												}
 											}
+											break;
+										case "convert_notches":
+											convertNotches = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+										case "keep_max_min":
+											keepMaxMin = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+										case "map_hold_brake":
+											mapHoldBrake = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 									}
 									break;
@@ -309,6 +498,9 @@ namespace DenshaDeGoInput
 			}
 		}
 
+		/// <summary>
+		/// Saves the plugin settings to the config file.
+		/// </summary>
 		internal static void SaveConfig()
 		{
 			try
@@ -322,6 +514,9 @@ namespace DenshaDeGoInput
 				Builder.AppendLine();
 				Builder.AppendLine("[general]");
 				Builder.AppendLine("controller = " + InputTranslator.activeControllerIndex.ToString(Culture));
+				Builder.AppendLine("convert_notches = " + convertNotches.ToString(Culture).ToLower());
+				Builder.AppendLine("keep_max_min = " + keepMaxMin.ToString(Culture).ToLower());
+				Builder.AppendLine("map_hold_brake = " + mapHoldBrake.ToString(Culture).ToLower());
 				Builder.AppendLine();
 				Builder.AppendLine("[playstation]");
 				Builder.AppendLine("hat = " + PSController.UsesHat.ToString(Culture).ToLower());

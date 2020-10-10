@@ -602,6 +602,7 @@ namespace DenshaDeGoInput
 			this.convertnotchesCheck.TabIndex = 0;
 			this.convertnotchesCheck.Text = "Convert notches";
 			this.convertnotchesCheck.UseVisualStyleBackColor = true;
+			this.convertnotchesCheck.CheckedChanged += new System.EventHandler(this.convertnotchesCheck_CheckedChanged);
 			// 
 			// minmaxCheck
 			// 
@@ -611,6 +612,7 @@ namespace DenshaDeGoInput
 			this.minmaxCheck.TabIndex = 1;
 			this.minmaxCheck.Text = "Keep minimum and maximum";
 			this.minmaxCheck.UseVisualStyleBackColor = true;
+			this.minmaxCheck.CheckedChanged += new System.EventHandler(this.minmaxCheck_CheckedChanged);
 			// 
 			// holdbrakeCheck
 			// 
@@ -620,6 +622,7 @@ namespace DenshaDeGoInput
 			this.holdbrakeCheck.TabIndex = 2;
 			this.holdbrakeCheck.Text = "Map hold brake to B1";
 			this.holdbrakeCheck.UseVisualStyleBackColor = true;
+			this.holdbrakeCheck.CheckedChanged += new System.EventHandler(this.holdbrakeCheck_CheckedChanged);
 			// 
 			// label_device
 			// 
