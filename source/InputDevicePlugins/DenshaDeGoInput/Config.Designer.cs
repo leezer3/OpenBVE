@@ -22,8 +22,6 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
-
 namespace DenshaDeGoInput
 {
 	partial class Config
@@ -659,6 +657,7 @@ namespace DenshaDeGoInput
 			this.handleMappingBox.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.Shown += new System.EventHandler(this.Config_Shown);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Config_FormClosed);
 
 		}
 

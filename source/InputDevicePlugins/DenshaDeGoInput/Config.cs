@@ -200,6 +200,12 @@ namespace DenshaDeGoInput
 			minmaxCheck.Enabled = DenshaDeGoInput.convertNotches;
 		}
 
+		private void Config_FormClosed(Object sender, FormClosedEventArgs e)
+		{
+			// Reload the previous config and close the config dialog
+			DenshaDeGoInput.LoadConfig();
+		}
+
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			InputTranslator.activeControllerIndex = deviceBox.SelectedIndex;

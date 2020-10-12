@@ -257,6 +257,7 @@ namespace DenshaDeGoInput
 		public void SetVehicleSpecs(VehicleSpecs specs)
 		{
 			vehicleSpecs = specs;
+			ConfigureMappings();
 		}
 
 		/// <summary>
@@ -301,7 +302,7 @@ namespace DenshaDeGoInput
 				// Brake notches
 				if (mapHoldBrake && vehicleSpecs.HasHoldBrake)
 				{
-					double brakeStep = vehicleSpecs.BrakeNotches / 7.0;
+					double brakeStep = (vehicleSpecs.BrakeNotches - 1) / 7.0;
 					brakeCommands[0] = 0;
 					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
 					for (int i = 2; i < 9; i++)
