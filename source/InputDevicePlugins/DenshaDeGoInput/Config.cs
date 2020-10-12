@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
 using OpenTK.Input;
@@ -47,13 +48,14 @@ namespace DenshaDeGoInput
 			buttoncBox.Items.Add(Translations.GetInterfaceString("None"));
 			buttonstartBox.Items.Add(Translations.GetInterfaceString("None"));
 			buttonselectBox.Items.Add(Translations.GetInterfaceString("None"));
+			Translations.CommandInfo[] commands = Translations.CommandInfos.OrderBy(o=>o.Command).ToArray();
 			for (int i = 0; i < Translations.CommandInfos.Length; i++)
 			{
-				buttonaBox.Items.Add(Translations.CommandInfos[i].Name);
-				buttonbBox.Items.Add(Translations.CommandInfos[i].Name);
-				buttoncBox.Items.Add(Translations.CommandInfos[i].Name);
-				buttonstartBox.Items.Add(Translations.CommandInfos[i].Name);
-				buttonselectBox.Items.Add(Translations.CommandInfos[i].Name);
+				buttonaBox.Items.Add(commands[i].Name);
+				buttonbBox.Items.Add(commands[i].Name);
+				buttoncBox.Items.Add(commands[i].Name);
+				buttonstartBox.Items.Add(commands[i].Name);
+				buttonselectBox.Items.Add(commands[i].Name);
 			}
 		}
 
@@ -184,7 +186,14 @@ namespace DenshaDeGoInput
 				deviceBox.SelectedIndex = InputTranslator.activeControllerIndex;
 			}
 
-			// Update checkboxes
+			// Set command boxes
+			buttonselectBox.SelectedIndex = DenshaDeGoInput.buttonCommands[0];
+			buttonstartBox.SelectedIndex = DenshaDeGoInput.buttonCommands[1];
+			buttonaBox.SelectedIndex = DenshaDeGoInput.buttonCommands[2];
+			buttonbBox.SelectedIndex = DenshaDeGoInput.buttonCommands[3];
+			buttoncBox.SelectedIndex = DenshaDeGoInput.buttonCommands[4];
+
+			// Set checkboxes
 			convertnotchesCheck.Checked = DenshaDeGoInput.convertNotches;
 			minmaxCheck.Checked = DenshaDeGoInput.keepMaxMin;
 			holdbrakeCheck.Checked = DenshaDeGoInput.mapHoldBrake;
@@ -194,6 +203,31 @@ namespace DenshaDeGoInput
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			InputTranslator.activeControllerIndex = deviceBox.SelectedIndex;
+		}
+
+		private void buttonselectBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.buttonCommands[0] = buttonselectBox.SelectedIndex;
+		}
+
+		private void buttonstartBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.buttonCommands[1] = buttonstartBox.SelectedIndex;
+		}
+
+		private void buttonaBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.buttonCommands[2] = buttonaBox.SelectedIndex;
+		}
+
+		private void buttonbBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.buttonCommands[3] = buttonbBox.SelectedIndex;
+		}
+
+		private void buttoncBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.buttonCommands[4] = buttoncBox.SelectedIndex;
 		}
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)

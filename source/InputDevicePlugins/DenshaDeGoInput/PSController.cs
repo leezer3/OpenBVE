@@ -205,11 +205,11 @@ namespace DenshaDeGoInput
 				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P5;
 			}
 
+			InputTranslator.ControllerButtons.Select = (OpenTK.Input.ButtonState)(ButtonPressed.Select ? 1 : 0);
+			InputTranslator.ControllerButtons.Start = (OpenTK.Input.ButtonState)(ButtonPressed.Start ? 1 : 0);
 			InputTranslator.ControllerButtons.A = (OpenTK.Input.ButtonState)(ButtonPressed.Square ? 1 : 0);
 			InputTranslator.ControllerButtons.B = (OpenTK.Input.ButtonState)(ButtonPressed.Cross ? 1 : 0);
 			InputTranslator.ControllerButtons.C = (OpenTK.Input.ButtonState)(ButtonPressed.Circle ? 1 : 0);
-			InputTranslator.ControllerButtons.Select = (OpenTK.Input.ButtonState)(ButtonPressed.Select ? 1 : 0);
-			InputTranslator.ControllerButtons.Start = (OpenTK.Input.ButtonState)(ButtonPressed.Start ? 1 : 0);
 		}
 
 		/// <summary>

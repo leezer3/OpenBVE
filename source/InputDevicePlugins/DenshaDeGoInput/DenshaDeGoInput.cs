@@ -42,6 +42,7 @@ namespace DenshaDeGoInput
 		public InputControl[] Controls { get; private set; }
 
 		private static FileSystem FileSystem;
+		public static string currentLanguage;
 
 		private Config configForm;
 
@@ -68,12 +69,17 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// An array with the command indices configured for each brake notch.
 		/// </summary>
-		internal int[] brakeCommands = new int[10];
+		internal static int[] brakeCommands = new int[10];
 
 		/// <summary>
 		/// An array with the command indices configured for each power notch.
 		/// </summary>
-		internal int[] powerCommands = new int[6];
+		internal static int[] powerCommands = new int[6];
+
+		/// <summary>
+		/// An array with the command indices configured for each button.
+		/// </summary>
+		internal static int[] buttonCommands = new int[5];
 
 
 		/// <summary>
@@ -153,30 +159,84 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public void OnUpdateFrame()
 		{
+			// Brake handle
 			if (brakeHandleMoved)
 			{
 				KeyUp(this, new InputEventArgs(Controls[brakeCommands[(int)InputTranslator.BrakeNotch]]));
 				brakeHandleMoved = false;
 			}
+			// Power handle
 			if (powerHandleMoved)
 			{
-				KeyUp(this, new InputEventArgs(Controls[powerCommands[(int)InputTranslator.PowerNotch]]));
+				KeyUp(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 				powerHandleMoved = false;
+			}
+			// Select button
+			//if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Released)
+			//{
+				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[0]]));
+			//}
+			// Start button
+			if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Released)
+			{
+				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[1]]));
+			}
+			// A button
+			if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Released)
+			{
+				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[2]]));
+			}
+			// B button
+			if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Released)
+			{
+				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[3]]));
+			}
+			// C button
+			if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Released)
+			{
+				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[4]]));
 			}
 
 			InputTranslator.Update();
 
 			if (InputTranslator.IsControllerConnected)
 			{
+				// Brake handle
 				if (InputTranslator.BrakeNotch != InputTranslator.PreviousBrakeNotch || loading)
 				{
 					KeyDown(this, new InputEventArgs(Controls[brakeCommands[(int)InputTranslator.BrakeNotch]]));
 					brakeHandleMoved = true;
 				}
+				// Power handle
 				if (InputTranslator.PowerNotch != InputTranslator.PreviousPowerNotch || loading)
 				{
-					KeyDown(this, new InputEventArgs(Controls[powerCommands[(int)InputTranslator.PowerNotch]]));
+					KeyDown(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 					powerHandleMoved = true;
+				}
+				// Select button
+				if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[0]]));
+				}
+				// Start button
+				if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[1]]));
+				}
+				// A button
+				if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Pressed)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[2]]));
+				}
+				// B button
+				if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Pressed)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[3]]));
+				}
+				// C button
+				if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Pressed)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[4]]));
 				}
 			}
 
@@ -187,7 +247,10 @@ namespace DenshaDeGoInput
 		/// A function notifying the plugin about the train's existing status.
 		/// </summary>
 		/// <param name="data">Data</param>
-		public void SetElapseData(ElapseData data) { }
+		public void SetElapseData(ElapseData data)
+		{
+			currentLanguage = data.CurrentLanguageCode;
+		}
 
 		public void SetMaxNotch(int powerNotch, int brakeNotch) { }
 
@@ -229,7 +292,7 @@ namespace DenshaDeGoInput
 				// Power notches
 				for (int i = 0; i < 6; i++)
 				{
-					powerCommands[i] = 50 + i;
+					powerCommands[i] = i;
 				}
 			}
 			else
@@ -284,18 +347,18 @@ namespace DenshaDeGoInput
 				double powerStep = vehicleSpecs.PowerNotches / 5.0;
 				for (int i = 0; i < 6; i++)
 				{
-					powerCommands[i] = 50 + (int)Math.Round(powerStep * i, MidpointRounding.AwayFromZero);
-					if (i > 0 && powerCommands[i] == 50)
+					powerCommands[i] = (int)Math.Round(powerStep * i, MidpointRounding.AwayFromZero);
+					if (i > 0 && powerCommands[i] == 0)
 					{
-						powerCommands[i] = 51;
+						powerCommands[i] = 1;
 					}
 					if (keepMaxMin && i == 1)
 					{
-						powerCommands[i] = 51;
+						powerCommands[i] = 1;
 					}
 					if (keepMaxMin && i == 5)
 					{
-						powerCommands[i] = 50 + vehicleSpecs.PowerNotches;
+						powerCommands[i] = vehicleSpecs.PowerNotches;
 					}
 				}
 			}
@@ -355,6 +418,11 @@ namespace DenshaDeGoInput
 												}
 											}
 											break;
+									}
+									break;
+								case "handles":
+									switch (Key)
+									{
 										case "convert_notches":
 											convertNotches = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
@@ -363,6 +431,56 @@ namespace DenshaDeGoInput
 											break;
 										case "map_hold_brake":
 											mapHoldBrake = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+									}
+									break;
+								case "buttons":
+									switch (Key)
+									{
+										case "select":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													buttonCommands[0] = a;
+												}
+											}
+											break;
+										case "start":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													buttonCommands[1] = a;
+												}
+											}
+											break;
+										case "a":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													buttonCommands[2] = a;
+												}
+											}
+											break;
+										case "b":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													buttonCommands[3] = a;
+												}
+											}
+											break;
+										case "c":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													buttonCommands[4] = a;
+												}
+											}
 											break;
 									}
 									break;
@@ -514,9 +632,18 @@ namespace DenshaDeGoInput
 				Builder.AppendLine();
 				Builder.AppendLine("[general]");
 				Builder.AppendLine("controller = " + InputTranslator.activeControllerIndex.ToString(Culture));
+				Builder.AppendLine();
+				Builder.AppendLine("[handles]");
 				Builder.AppendLine("convert_notches = " + convertNotches.ToString(Culture).ToLower());
 				Builder.AppendLine("keep_max_min = " + keepMaxMin.ToString(Culture).ToLower());
 				Builder.AppendLine("map_hold_brake = " + mapHoldBrake.ToString(Culture).ToLower());
+				Builder.AppendLine();
+				Builder.AppendLine("[buttons]");
+				Builder.AppendLine("select = " + buttonCommands[0].ToString(Culture));
+				Builder.AppendLine("start = " + buttonCommands[1].ToString(Culture));
+				Builder.AppendLine("a = " + buttonCommands[2].ToString(Culture));
+				Builder.AppendLine("b = " + buttonCommands[3].ToString(Culture));
+				Builder.AppendLine("c = " + buttonCommands[4].ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[playstation]");
 				Builder.AppendLine("hat = " + PSController.UsesHat.ToString(Culture).ToLower());

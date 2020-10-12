@@ -140,7 +140,7 @@ namespace DenshaDeGoInput
 			this.buttonCalibrate.Name = "buttonCalibrate";
 			this.buttonCalibrate.Size = new System.Drawing.Size(146, 24);
 			this.buttonCalibrate.TabIndex = 21;
-			this.buttonCalibrate.Text = "Calibrate";
+			this.buttonCalibrate.Text = "Start calibration";
 			this.buttonCalibrate.UseVisualStyleBackColor = true;
 			this.buttonCalibrate.Click += new System.EventHandler(this.buttonCalibrate_Click);
 			// 
@@ -469,6 +469,7 @@ namespace DenshaDeGoInput
 			this.buttonselectBox.Name = "buttonselectBox";
 			this.buttonselectBox.Size = new System.Drawing.Size(182, 21);
 			this.buttonselectBox.TabIndex = 8;
+			this.buttonselectBox.SelectedIndexChanged += new System.EventHandler(this.buttonselectBox_SelectedIndexChanged);
 			// 
 			// buttonstartBox
 			// 
@@ -478,6 +479,7 @@ namespace DenshaDeGoInput
 			this.buttonstartBox.Name = "buttonstartBox";
 			this.buttonstartBox.Size = new System.Drawing.Size(182, 21);
 			this.buttonstartBox.TabIndex = 6;
+			this.buttonstartBox.SelectedIndexChanged += new System.EventHandler(this.buttonstartBox_SelectedIndexChanged);
 			// 
 			// buttoncBox
 			// 
@@ -487,6 +489,7 @@ namespace DenshaDeGoInput
 			this.buttoncBox.Name = "buttoncBox";
 			this.buttoncBox.Size = new System.Drawing.Size(182, 21);
 			this.buttoncBox.TabIndex = 7;
+			this.buttoncBox.SelectedIndexChanged += new System.EventHandler(this.buttoncBox_SelectedIndexChanged);
 			// 
 			// buttonbBox
 			// 
@@ -496,6 +499,7 @@ namespace DenshaDeGoInput
 			this.buttonbBox.Name = "buttonbBox";
 			this.buttonbBox.Size = new System.Drawing.Size(182, 21);
 			this.buttonbBox.TabIndex = 6;
+			this.buttonbBox.SelectedIndexChanged += new System.EventHandler(this.buttonbBox_SelectedIndexChanged);
 			// 
 			// buttonaBox
 			// 
@@ -505,6 +509,7 @@ namespace DenshaDeGoInput
 			this.buttonaBox.Name = "buttonaBox";
 			this.buttonaBox.Size = new System.Drawing.Size(182, 21);
 			this.buttonaBox.TabIndex = 5;
+			this.buttonaBox.SelectedIndexChanged += new System.EventHandler(this.buttonaBox_SelectedIndexChanged);
 			// 
 			// label_buttonselect
 			// 
@@ -623,6 +628,7 @@ namespace DenshaDeGoInput
 			this.holdbrakeCheck.Text = "Map hold brake to B1";
 			this.holdbrakeCheck.UseVisualStyleBackColor = true;
 			this.holdbrakeCheck.CheckedChanged += new System.EventHandler(this.holdbrakeCheck_CheckedChanged);
+
 			// 
 			// label_device
 			// 
