@@ -9,11 +9,11 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void ParseTrainCommand(string Command, string[] Arguments, int Index, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseTrainCommand(TrainCommand Command, string[] Arguments, int Index, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{
-				case "interval":
+				case TrainCommand.Interval:
 				{
 					if (!PreviewOnly)
 					{
@@ -67,7 +67,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "velocity":
+				case TrainCommand.Velocity:
 				{
 					if (!PreviewOnly)
 					{
@@ -82,8 +82,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "folder":
-				case "file":
+				case TrainCommand.Folder:
+				case TrainCommand.File:
 				{
 					if (PreviewOnly)
 					{
@@ -105,8 +105,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "run":
-				case "rail":
+				case TrainCommand.Run:
+				case TrainCommand.Rail:
 				{
 					if (!PreviewOnly)
 					{
@@ -139,7 +139,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "flange":
+				case TrainCommand.Flange:
 				{
 					if (!PreviewOnly)
 					{
@@ -172,7 +172,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "timetable.day":
+				case TrainCommand.TimetableDay:
 				{
 					if (!PreviewOnly)
 					{
@@ -226,7 +226,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "timetable.night":
+				case TrainCommand.TimetableNight:
 				{
 					if (!PreviewOnly)
 					{
@@ -280,7 +280,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "destination":
+				case TrainCommand.Destination:
 				{
 					if (!PreviewOnly)
 					{

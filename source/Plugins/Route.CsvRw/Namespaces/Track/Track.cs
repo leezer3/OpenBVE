@@ -20,12 +20,12 @@ namespace CsvRwRouteParser
 		private int CurrentStop = -1;
 		private int CurrentSection = 0;
 		private bool DepartureSignalUsed = false;
-		private void ParseTrackCommand(string Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly)
+		private void ParseTrackCommand(TrackCommand Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly)
 		{
 			switch (Command)
 			{
-				case "railstart":
-				case "rail":
+				case TrackCommand.RailStart:
+				case TrackCommand.Rail:
 					if (!PreviewOnly)
 					{
 						int idx = 0;
@@ -41,7 +41,7 @@ namespace CsvRwRouteParser
 							break;
 						}
 
-						if (string.Compare(Command, "railstart", StringComparison.OrdinalIgnoreCase) == 0)
+						if (Command == TrackCommand.RailStart)
 						{
 							if (Data.Blocks[BlockIndex].Rails.ContainsKey(idx) && Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
@@ -165,7 +165,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "railend":
+				case TrackCommand.RailEnd:
 				{
 					if (!PreviewOnly)
 					{
@@ -213,7 +213,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "railtype":
+				case TrackCommand.RailType:
 				{
 					if (!PreviewOnly)
 					{
@@ -279,7 +279,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "accuracy":
+				case TrackCommand.Accuracy:
 				{
 					double r = 2.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out r))
@@ -300,7 +300,7 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].Accuracy = r;
 				}
 					break;
-				case "pitch":
+				case TrackCommand.Pitch:
 				{
 					double p = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out p))
@@ -312,7 +312,7 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].Pitch = 0.001 * p;
 				}
 					break;
-				case "curve":
+				case TrackCommand.Curve:
 				{
 					double radius = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out radius))
@@ -349,7 +349,7 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].CurrentTrackState.CurveCantTangent = 0.0;
 				}
 					break;
-				case "turn":
+				case TrackCommand.Turn:
 				{
 					double s = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out s))
@@ -361,7 +361,7 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].Turn = s;
 				}
 					break;
-				case "adhesion":
+				case TrackCommand.Adhesion:
 				{
 					double a = 100.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out a))
@@ -379,7 +379,7 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].AdhesionMultiplier = 0.01 * a;
 				}
 					break;
-				case "brightness":
+				case TrackCommand.Brightness:
 				{
 					if (!PreviewOnly)
 					{
@@ -399,7 +399,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "fog":
+				case TrackCommand.Fog:
 				{
 					if (!PreviewOnly)
 					{
@@ -466,8 +466,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "section":
-				case "sections":
+				case TrackCommand.Section:
+				case TrackCommand.SectionS:
 				{
 					if (!PreviewOnly)
 					{
@@ -520,7 +520,7 @@ namespace CsvRwRouteParser
 								}
 							}
 
-							bool valueBased = Data.ValueBasedSections | string.Equals(Command, "SectionS", StringComparison.OrdinalIgnoreCase);
+							bool valueBased = Data.ValueBasedSections | Command == TrackCommand.SectionS;
 							if (valueBased)
 							{
 								Array.Sort(aspects);
@@ -545,7 +545,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "sigf":
+				case TrackCommand.SigF:
 				{
 					if (!PreviewOnly)
 					{
@@ -608,8 +608,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "signal":
-				case "sig":
+				case TrackCommand.Signal:
+				case TrackCommand.Sig:
 				{
 					if (!PreviewOnly)
 					{
@@ -734,7 +734,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "relay":
+				case TrackCommand.Relay:
 				{
 					if (!PreviewOnly)
 					{
@@ -776,7 +776,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "destination":
+				case TrackCommand.Destination:
 				{
 					if (!PreviewOnly)
 					{
@@ -874,7 +874,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "beacon":
+				case TrackCommand.Beacon:
 				{
 					if (!PreviewOnly)
 					{
@@ -974,8 +974,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "transponder":
-				case "tr":
+				case TrackCommand.Transponder:
+				case TrackCommand.Tr:
 				{
 					if (!PreviewOnly)
 					{
@@ -1042,7 +1042,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "atssn":
+				case TrackCommand.ATSSn:
 				{
 					if (!PreviewOnly)
 					{
@@ -1052,7 +1052,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "atsp":
+				case TrackCommand.ATSP:
 				{
 					if (!PreviewOnly)
 					{
@@ -1062,7 +1062,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "pattern":
+				case TrackCommand.Pattern:
 				{
 					if (!PreviewOnly)
 					{
@@ -1093,7 +1093,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "plimit":
+				case TrackCommand.PLimit:
 				{
 					if (!PreviewOnly)
 					{
@@ -1110,7 +1110,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "limit":
+				case TrackCommand.Limit:
 				{
 					double limit = 0.0;
 					int direction = 0, cource = 0;
@@ -1137,7 +1137,7 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource);
 				}
 					break;
-				case "stop":
+				case TrackCommand.Stop:
 					if (CurrentStation == -1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A stop without a station is invalid in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -1188,7 +1188,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "sta":
+				case TrackCommand.Sta:
 				{
 					CurrentStation++;
 					Array.Resize(ref CurrentRoute.Stations, CurrentStation + 1);
@@ -1577,7 +1577,7 @@ namespace CsvRwRouteParser
 					DepartureSignalUsed = false;
 				}
 					break;
-				case "station":
+				case TrackCommand.Station:
 				{
 					CurrentStation++;
 					Array.Resize(ref CurrentRoute.Stations, CurrentStation + 1);
@@ -1746,7 +1746,7 @@ namespace CsvRwRouteParser
 					DepartureSignalUsed = false;
 				}
 					break;
-				case "stationxml":
+				case TrackCommand.StationXML:
 					string fn = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 					if (!System.IO.File.Exists(fn))
 					{
@@ -1770,7 +1770,7 @@ namespace CsvRwRouteParser
 
 					Data.Blocks[BlockIndex].Station = CurrentStation;
 					break;
-				case "buffer":
+				case TrackCommand.Buffer:
 				{
 					if (!PreviewOnly)
 					{
@@ -1780,7 +1780,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "form":
+				case TrackCommand.Form:
 				{
 					if (!PreviewOnly)
 					{
@@ -1878,7 +1878,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "pole":
+				case TrackCommand.Pole:
 				{
 					if (!PreviewOnly)
 					{
@@ -1971,7 +1971,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "poleend":
+				case TrackCommand.PoleEnd:
 				{
 					if (!PreviewOnly)
 					{
@@ -1998,7 +1998,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "wall":
+				case TrackCommand.Wall:
 				{
 					if (!PreviewOnly)
 					{
@@ -2086,7 +2086,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "wallend":
+				case TrackCommand.WallEnd:
 				{
 					if (!PreviewOnly)
 					{
@@ -2116,7 +2116,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "dike":
+				case TrackCommand.Dike:
 				{
 					if (!PreviewOnly)
 					{
@@ -2208,7 +2208,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "dikeend":
+				case TrackCommand.DikeEnd:
 				{
 					if (!PreviewOnly)
 					{
@@ -2238,8 +2238,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "marker":
-				case "textmarker":
+				case TrackCommand.Marker:
+				case TrackCommand.TextMarker:
 				{
 					if (!PreviewOnly)
 					{
@@ -2254,7 +2254,7 @@ namespace CsvRwRouteParser
 						else
 						{
 							string f = Path.CombineFile(ObjectPath, Arguments[0]);
-							if (!System.IO.File.Exists(f) && Command.ToLowerInvariant() == "marker")
+							if (!System.IO.File.Exists(f) && Command == TrackCommand.Marker)
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in Track.Marker at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -2298,7 +2298,7 @@ namespace CsvRwRouteParser
 								int n = Data.Markers.Length;
 								Array.Resize(ref Data.Markers, n + 1);
 								AbstractMessage message;
-								if (Command.ToLowerInvariant() == "textmarker")
+								if (Command == TrackCommand.TextMarker)
 								{
 									message = new MarkerText(Arguments[0]);
 									if (Arguments.Length >= 3)
@@ -2356,7 +2356,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "height":
+				case TrackCommand.Height:
 				{
 					if (!PreviewOnly)
 					{
@@ -2371,7 +2371,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "ground":
+				case TrackCommand.Ground:
 				{
 					if (!PreviewOnly)
 					{
@@ -2400,7 +2400,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "crack":
+				case TrackCommand.Crack:
 				{
 					if (!PreviewOnly)
 					{
@@ -2462,7 +2462,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "freeobj":
+				case TrackCommand.FreeObj:
 				{
 					if (!PreviewOnly)
 					{
@@ -2574,8 +2574,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "back":
-				case "background":
+				case TrackCommand.Back:
+				case TrackCommand.Background:
 				{
 					if (!PreviewOnly)
 					{
@@ -2626,7 +2626,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "announce":
+				case TrackCommand.Announce:
+				case TrackCommand.AnnounceAll:
 				{
 					if (!PreviewOnly)
 					{
@@ -2658,14 +2659,23 @@ namespace CsvRwRouteParser
 
 									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
 									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
-									Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed);
+									if (Command == TrackCommand.AnnounceAll)
+									{
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(),0,0, true);
+									}
+									else
+									{
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed);
+									}
+									
 								}
 							}
 						}
 					}
 				}
 					break;
-				case "doppler":
+				case TrackCommand.Doppler:
+				case TrackCommand.DopplerAll:
 				{
 					if (!PreviewOnly)
 					{
@@ -2703,14 +2713,21 @@ namespace CsvRwRouteParser
 
 									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
 									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
-									Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, -1, new Vector2(x, y));
+									if (Command == TrackCommand.DopplerAll)
+									{
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, -1, new Vector2(x, y), 0, 0, true);
+									}
+									else
+									{
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, -1, new Vector2(x, y));
+									}
 								}
 							}
 						}
 					}
 				}
 					break;
-				case "micsound":
+				case TrackCommand.MicSound:
 				{
 					if (!PreviewOnly)
 					{
@@ -2755,7 +2772,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "pretrain":
+				case TrackCommand.PreTrain:
 				{
 					if (!PreviewOnly)
 					{
@@ -2785,8 +2802,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "pointofinterest":
-				case "poi":
+				case TrackCommand.PointOfInterest:
+				case TrackCommand.POI:
 				{
 					if (!PreviewOnly)
 					{

@@ -46,6 +46,12 @@
     <Compile Include="CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="CsvRwRouteParser.cs" />
+    <Compile Include="Namespaces\NonTrack\Cycle.Commands.cs" />
+    <Compile Include="Namespaces\NonTrack\Options.Commands.cs" />
+    <Compile Include="Namespaces\NonTrack\Route.Commands.cs" />
+    <Compile Include="Namespaces\NonTrack\Structure.Commands.cs" />
+    <Compile Include="Namespaces\NonTrack\Train.Commands.cs" />
+    <Compile Include="Namespaces\Track\Track.Commands.cs" />
     <Compile Include="Structures\Block.cs" />
     <Compile Include="Structures\Direction.cs" />
     <Compile Include="Structures\Expression.cs" />

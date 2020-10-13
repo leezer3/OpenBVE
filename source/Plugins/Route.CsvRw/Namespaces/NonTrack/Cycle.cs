@@ -6,11 +6,11 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void ParseCycleCommand(string Command, string[] Arguments, int Index, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseCycleCommand(CycleCommand Command, string[] Arguments, int Index, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{
-				case "ground":
+				case CycleCommand.Ground:
 					if (!PreviewOnly)
 					{
 						if (Index >= Data.Structure.Cycles.Length)
@@ -40,7 +40,7 @@ namespace CsvRwRouteParser
 
 					break;
 				// rail cycle
-				case "rail":
+				case CycleCommand.Rail:
 					if (!PreviewOnly)
 					{
 						if (Index >= Data.Structure.RailCycles.Length)

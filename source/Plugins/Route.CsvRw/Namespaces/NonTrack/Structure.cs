@@ -11,11 +11,11 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void ParseStructureCommand(string Command, string[] Arguments, int[] commandIndices, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseStructureCommand(StructureCommand Command, string[] Arguments, int[] commandIndices, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{
-				case "rail":
+				case StructureCommand.Rail:
 				{
 
 					if (commandIndices[0] < 0)
@@ -61,7 +61,7 @@ namespace CsvRwRouteParser
 
 				}
 				break;
-				case "beacon":
+				case StructureCommand.Beacon:
 				{
 					if (!PreviewOnly)
 					{
@@ -100,7 +100,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "pole":
+				case StructureCommand.Pole:
 				{
 					if (!PreviewOnly)
 					{
@@ -147,7 +147,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "ground":
+				case StructureCommand.Ground:
 				{
 					if (!PreviewOnly)
 					{
@@ -186,7 +186,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "walll":
+				case StructureCommand.WallL:
 				{
 					if (!PreviewOnly)
 					{
@@ -225,7 +225,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "wallr":
+				case StructureCommand.WallR:
 				{
 					if (!PreviewOnly)
 					{
@@ -264,7 +264,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "dikel":
+				case StructureCommand.DikeL:
 				{
 					if (!PreviewOnly)
 					{
@@ -303,7 +303,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "diker":
+				case StructureCommand.DikeR:
 				{
 					if (!PreviewOnly)
 					{
@@ -342,7 +342,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "forml":
+				case StructureCommand.FormL:
 				{
 					if (!PreviewOnly)
 					{
@@ -381,7 +381,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "formr":
+				case StructureCommand.FormR:
 				{
 					if (!PreviewOnly)
 					{
@@ -420,7 +420,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "formcl":
+				case StructureCommand.FormCL:
 				{
 					if (!PreviewOnly)
 					{
@@ -459,7 +459,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "formcr":
+				case StructureCommand.FormCR:
 				{
 					if (!PreviewOnly)
 					{
@@ -498,7 +498,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "roofl":
+				case StructureCommand.RoofL:
 				{
 					if (!PreviewOnly)
 					{
@@ -554,7 +554,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "roofr":
+				case StructureCommand.RoofR:
 				{
 					if (!PreviewOnly)
 					{
@@ -610,7 +610,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "roofcl":
+				case StructureCommand.RoofCL:
 				{
 					if (!PreviewOnly)
 					{
@@ -666,7 +666,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "roofcr":
+				case StructureCommand.RoofCR:
 				{
 					if (!PreviewOnly)
 					{
@@ -722,7 +722,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "crackl":
+				case StructureCommand.CrackL:
 				{
 					if (!PreviewOnly)
 					{
@@ -761,7 +761,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "crackr":
+				case StructureCommand.CrackR:
 				{
 					if (!PreviewOnly)
 					{
@@ -800,7 +800,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "freeobj":
+				case StructureCommand.FreeObj:
 				{
 					if (commandIndices[0] < 0)
 					{
@@ -844,8 +844,8 @@ namespace CsvRwRouteParser
 					}
 				}
 				break;
-				case "background":
-				case "back":
+				case StructureCommand.Background:
+				case StructureCommand.Back:
 				{
 					if (!PreviewOnly)
 					{
@@ -917,8 +917,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "background.x":
-				case "back.x":
+				case StructureCommand.BackgroundX:
+				case StructureCommand.BackX:
 				{
 					if (!PreviewOnly)
 					{
@@ -957,8 +957,8 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
-				case "background.aspect":
-				case "back.aspect":
+				case StructureCommand.BackgroundAspect:
+				case StructureCommand.BackAspect:
 				{
 					if (!PreviewOnly)
 					{

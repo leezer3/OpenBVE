@@ -12,11 +12,11 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void ParseRouteCommand(string Command, string[] Arguments, int Index, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseRouteCommand(RouteCommand Command, string[] Arguments, int Index, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{
-				case "comment":
+				case RouteCommand.Comment:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -27,7 +27,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "image":
+				case RouteCommand.Image:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -46,7 +46,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "timetable":
+				case RouteCommand.TimeTable:
 					if (!PreviewOnly)
 					{
 						if (Arguments.Length < 1)
@@ -60,7 +60,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "change":
+				case RouteCommand.Change:
 					if (!PreviewOnly)
 					{
 						int change = 0;
@@ -79,7 +79,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "gauge":
+				case RouteCommand.Gauge:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -104,9 +104,8 @@ namespace CsvRwRouteParser
 							}
 						}
 					}
-
 					break;
-				case "signal":
+				case RouteCommand.Signal:
 					if (!PreviewOnly)
 					{
 						if (Arguments.Length < 1)
@@ -147,9 +146,8 @@ namespace CsvRwRouteParser
 							}
 						}
 					}
-
 					break;
-				case "accelerationduetogravity":
+				case RouteCommand.AccelerationDueToGravity:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -170,10 +168,8 @@ namespace CsvRwRouteParser
 							CurrentRoute.Atmosphere.AccelerationDueToGravity = a;
 						}
 					}
-
 					break;
-				//Sets the time the game will start at
-				case "starttime":
+				case RouteCommand.StartTime:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -193,10 +189,8 @@ namespace CsvRwRouteParser
 							}
 						}
 					}
-
 					break;
-				//Sets the route's loading screen texture
-				case "loadingscreen":
+				case RouteCommand.LoadingScreen:
 					if (PreviewOnly)
 					{
 						return;
@@ -221,8 +215,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				//Sets a custom unit of speed to to displayed in on-screen messages
-				case "displayspeed":
+				case RouteCommand.DisplaySpeed:
 					if (PreviewOnly)
 					{
 						return;
@@ -244,8 +237,7 @@ namespace CsvRwRouteParser
 						Plugin.CurrentOptions.UnitOfSpeed = "km/h";
 					}
 					break;
-				//Sets the route's briefing data
-				case "briefing":
+				case RouteCommand.Briefing:
 					if (PreviewOnly)
 					{
 						return;
@@ -267,9 +259,8 @@ namespace CsvRwRouteParser
 							CurrentRoute.Information.RouteBriefing = f;
 						}
 					}
-
 					break;
-				case "elevation":
+				case RouteCommand.Elevation:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -286,9 +277,8 @@ namespace CsvRwRouteParser
 							CurrentRoute.Atmosphere.InitialElevation = a;
 						}
 					}
-
 					break;
-				case "temperature":
+				case RouteCommand.Temperature:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -313,9 +303,8 @@ namespace CsvRwRouteParser
 							CurrentRoute.Atmosphere.InitialAirTemperature = a + 273.15;
 						}
 					}
-
 					break;
-				case "pressure":
+				case RouteCommand.Pressure:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -340,9 +329,8 @@ namespace CsvRwRouteParser
 							CurrentRoute.Atmosphere.InitialAirPressure = 1000.0 * a;
 						}
 					}
-
 					break;
-				case "ambientlight":
+				case RouteCommand.AmbientLight:
 				{
 					if (Plugin.CurrentRoute.DynamicLighting)
 					{
@@ -384,7 +372,7 @@ namespace CsvRwRouteParser
 					Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24((byte) r, (byte) g, (byte) b);
 				}
 					break;
-				case "directionallight":
+				case RouteCommand.DirectionalLight:
 				{
 					if (Plugin.CurrentRoute.DynamicLighting)
 					{
@@ -426,7 +414,7 @@ namespace CsvRwRouteParser
 					Plugin. CurrentRoute.Atmosphere.DiffuseLightColor = new Color24((byte) r, (byte) g, (byte) b);
 				}
 					break;
-				case "lightdirection":
+				case RouteCommand.LightDirection:
 				{
 					if (Plugin.CurrentRoute.DynamicLighting)
 					{
@@ -453,7 +441,7 @@ namespace CsvRwRouteParser
 					Plugin.CurrentRoute.Atmosphere.LightPosition = new Vector3((float) -dx, (float) -dy, (float) -dz);
 				}
 					break;
-				case "dynamiclight":
+				case RouteCommand.DynamicLight:
 					//Read the lighting XML file
 					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 					if (System.IO.File.Exists(path))
@@ -471,9 +459,8 @@ namespace CsvRwRouteParser
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Dynamic lighting XML file not found at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 					}
-
 					break;
-				case "initialviewpoint":
+				case RouteCommand.InitialViewPoint:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -516,9 +503,8 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is invalid at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 					}
-
 					break;
-				case "tfoxml":
+				case RouteCommand.TfoXML:
 					if (!PreviewOnly)
 					{
 						string tfoFile = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
@@ -536,7 +522,6 @@ namespace CsvRwRouteParser
 						Array.Resize(ref CurrentRoute.TrackFollowingObjects, n + 1);
 						CurrentRoute.TrackFollowingObjects[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, tfoFile);
 					}
-
 					break;
 			}
 		}

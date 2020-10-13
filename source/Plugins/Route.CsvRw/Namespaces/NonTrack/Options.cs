@@ -6,11 +6,11 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void ParseOptionCommand(string Command, string[] Arguments, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseOptionCommand(OptionsCommand Command, string[] Arguments, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{
-				case "blocklength":
+				case OptionsCommand.BlockLength:
 				{
 					double length = 25.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out length))
@@ -22,7 +22,7 @@ namespace CsvRwRouteParser
 					Data.BlockInterval = length;
 				}
 					break;
-				case "xparser":
+				case OptionsCommand.XParser:
 					if (!PreviewOnly)
 					{
 						int parser = 0;
@@ -44,7 +44,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "objparser":
+				case OptionsCommand.ObjParser:
 					if (!PreviewOnly)
 					{
 						int parser = 0;
@@ -65,11 +65,11 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "unitoflength":
-				case "unitofspeed":
-				case "objectvisibility":
+				case OptionsCommand.UnitOfLength:
+				case OptionsCommand.UnitOfSpeed:
+				case OptionsCommand.ObjectVisibility:
 					break;
-				case "sectionbehavior":
+				case OptionsCommand.SectionBehaviour:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -92,7 +92,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "cantbehavior":
+				case OptionsCommand.CantBehaviour:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -115,7 +115,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case "fogbehavior":
+				case OptionsCommand.FogBehaviour:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);

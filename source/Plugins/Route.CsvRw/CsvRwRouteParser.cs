@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -298,6 +299,9 @@ namespace CsvRwRouteParser {
 							} else if (Command.StartsWith("texture.", StringComparison.OrdinalIgnoreCase)) {
 								Command = "structure." + Command.Substring(8, Command.Length - 8);
 							}
+							//Needed after the initial processing to make the enum parse work
+							Command = Command.Replace("timetable.day", "timetableday");
+							Command = Command.Replace("timetable.night", "timetablenight");
 						}
 
 						int[] commandIndices = FindIndices(ref Command, Expressions[j]);
@@ -311,29 +315,70 @@ namespace CsvRwRouteParser {
 							{
 								nameSpace = Command.Substring(0, period).ToLowerInvariant();
 								Command = Command.Substring(period + 1);
+
 							}
 							Command = Command.ToLowerInvariant();
 							
 							switch (nameSpace)
 							{
 								case "options":
-									ParseOptionCommand(Command, Arguments, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									OptionsCommand parsedOptionCommand;
+									if (Enum.TryParse(Command, true, out parsedOptionCommand))
+									{
+										ParseOptionCommand(parsedOptionCommand, Arguments, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									}
+									else
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised command " + Command + " encountered in the Options namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
 									break;
 								case "route":
-									ParseRouteCommand(Command, Arguments, commandIndices[0], FileName, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									RouteCommand parsedRouteCommand;
+									if (Enum.TryParse(Command, true, out parsedRouteCommand))
+									{
+										ParseRouteCommand(parsedRouteCommand, Arguments, commandIndices[0], FileName, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									}
+									else
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised command " + Command + " encountered in the Route namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
 									break;
 								case "train":
-									ParseTrainCommand(Command, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
+									TrainCommand parsedTrainCommand;
+									if (Enum.TryParse(Command, true, out parsedTrainCommand))
+									{
+										ParseTrainCommand(parsedTrainCommand, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
+									}
+									else
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised command " + Command + " encountered in the Train namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
 									break;
 								case "structure":
 								case "texture":
-									ParseStructureCommand(Command, Arguments, commandIndices, Encoding, Expressions[j], ref Data, PreviewOnly);
+									StructureCommand parsedStructureCommand;
+									if (Enum.TryParse(Command, true, out parsedStructureCommand))
+									{
+										ParseStructureCommand(parsedStructureCommand, Arguments, commandIndices, Encoding, Expressions[j], ref Data, PreviewOnly);
+									}
+									else
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised command " + Command + " encountered in the Structure namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
 									break;
 								case "":
 									ParseSignalCommand(Command, Arguments, commandIndices[0], Encoding, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "cycle":
-									ParseCycleCommand(Command, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
+									CycleCommand parsedCycleCommand;
+									if (Enum.TryParse(Command, true, out parsedCycleCommand))
+									{
+										ParseCycleCommand(parsedCycleCommand, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
+									}
+									else
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised command " + Command + " encountered in the Cycle namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
 									break;
 								case "track":
 									break;
@@ -450,7 +495,15 @@ namespace CsvRwRouteParser {
 							switch (nameSpace)
 							{
 								case "track":
-									ParseTrackCommand(Command, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly);
+									TrackCommand parsedCommand;
+									if (Enum.TryParse(Command, true, out parsedCommand))
+									{
+										ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly);
+									}
+									else
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised command " + Command + " encountered in the Route namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
 									break;
 								case "options":
 								case "route":
