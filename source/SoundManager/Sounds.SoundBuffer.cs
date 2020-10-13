@@ -92,18 +92,18 @@ namespace SoundManager
 		/// <summary>Creates a clone of the specified sound buffer</summary>
 		/// <param name="b">The buffer to clone</param>
 		/// <returns>The new buffer</returns>
-		internal SoundBuffer Clone(SoundBuffer b)
+		public SoundBuffer Clone()
 		{
-			return new SoundBuffer(b.Origin)
+			return new SoundBuffer(this.Origin)
 			{
-				Radius = b.Radius,
+				Radius = this.Radius,
 				Loaded = false,
 				OpenAlBufferName = 0,
-				Duration = b.Duration,
-				InternalVolumeFactor = b.InternalVolumeFactor,
+				Duration = this.Duration,
+				InternalVolumeFactor = this.InternalVolumeFactor,
 				Ignore = false,
-				PitchFunction = b.PitchFunction,
-				VolumeFunction = b.VolumeFunction
+				PitchFunction = this.PitchFunction,
+				VolumeFunction = this.VolumeFunction
 			};
 		}
 	}

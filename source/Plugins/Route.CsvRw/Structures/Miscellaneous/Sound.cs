@@ -25,7 +25,7 @@ namespace CsvRwRouteParser
 		/// <summary>The backwards tolerance for triggering the sound</summary>
 		internal readonly double BackwardTolerance;
 
-		internal Sound(double trackPosition, string fileName, double speed, Vector2 position = new Vector2(), double forwardTolerance = 0, double backwardTolerance = 0)
+		internal Sound(double trackPosition, string fileName, double speed, Vector2 position = new Vector2(), double forwardTolerance = 0, double backwardTolerance = 0, bool allCars = false)
 		{
 			//TODO:
 			//This is always set to a constant 15.0 on loading a sound, and never touched again
@@ -47,10 +47,10 @@ namespace CsvRwRouteParser
 					Type = SoundType.Ambient;
 					break;
 				case 0:
-					Type = SoundType.TrainStatic;
+					Type = allCars ? SoundType.TrainAllCarStatic : SoundType.TrainStatic;
 					break;
 				default:
-					Type = SoundType.TrainDynamic;
+					Type = allCars ? SoundType.TrainAllCarDynamic : SoundType.TrainDynamic;
 					break;
 			}
 			
