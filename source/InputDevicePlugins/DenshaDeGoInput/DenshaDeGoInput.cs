@@ -41,8 +41,7 @@ namespace DenshaDeGoInput
 
 		public InputControl[] Controls { get; private set; }
 
-		private static FileSystem FileSystem;
-		public static string currentLanguage;
+		internal static FileSystem FileSystem;
 
 		private Config configForm;
 
@@ -77,9 +76,19 @@ namespace DenshaDeGoInput
 		internal static int[] powerCommands = new int[6];
 
 		/// <summary>
-		/// An array with the command indices configured for each button.
+		/// Class for the properties of the buttons.
 		/// </summary>
-		internal static int[] buttonCommands = new int[5];
+		internal class ButtonProp
+		{
+			internal int Command;
+			internal double Timer;
+			internal bool Repeats;
+		}
+
+		/// <summary>
+		/// An array with the properties for each button.
+		/// </summary>
+		internal static ButtonProp[] ButtonProperties = new ButtonProp[5];
 
 
 		/// <summary>
@@ -98,6 +107,16 @@ namespace DenshaDeGoInput
 		internal static bool mapHoldBrake;
 
 		/// <summary>
+		/// Initial delay when repeating a button press.
+		/// </summary>
+		internal static int repeatDelay = 500;
+
+		/// <summary>
+		/// Internval for repeating a button press.
+		/// </summary>
+		internal static int repeatInterval = 100;
+
+		/// <summary>
 		/// A function call when the Config button is pressed.
 		/// </summary>
 		/// <param name="owner">The owner of the window</param>
@@ -113,11 +132,19 @@ namespace DenshaDeGoInput
 		/// <returns>Whether the plugin has been loaded successfully.</returns>
 		public bool Load(FileSystem fileSystem)
 		{
-			configForm = new Config();
 			FileSystem = fileSystem;
+
+			// Initialize the array of button properties
+			for (int i = 0; i < ButtonProperties.Length; i++)
+			{
+				ButtonProperties[i] = new ButtonProp();
+			}
 
 			// Load settings from the config file
 			LoadConfig();
+
+			// Create the config form
+			configForm = new Config();
 
 			// Define the list of commands
 			// We allocate 50 slots per handle plus one slot per command
@@ -172,30 +199,15 @@ namespace DenshaDeGoInput
 				powerHandleMoved = false;
 			}
 			// Select button
-			//if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Released)
-			//{
-				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[0]]));
-			//}
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[0].Command]));
 			// Start button
-			if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Released)
-			{
-				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[1]]));
-			}
+            KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[1].Command]));
 			// A button
-			if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Released)
-			{
-				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[2]]));
-			}
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[2].Command]));
 			// B button
-			if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Released)
-			{
-				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[3]]));
-			}
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[3].Command]));
 			// C button
-			if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Released)
-			{
-				KeyUp(this, new InputEventArgs(Controls[100 + buttonCommands[4]]));
-			}
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[4].Command]));
 
 			InputTranslator.Update();
 
@@ -213,30 +225,76 @@ namespace DenshaDeGoInput
 					KeyDown(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 					powerHandleMoved = true;
 				}
+
 				// Select button
-				if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed)
+				if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed && ButtonProperties[0].Timer <= 0)
 				{
-					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[0]]));
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[0].Command]));
+					if (ButtonProperties[0].Repeats)
+					{
+						ButtonProperties[0].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[0].Timer = repeatDelay;
+						ButtonProperties[0].Repeats = true;
+					}
 				}
 				// Start button
-				if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed)
+				if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed && ButtonProperties[1].Timer <= 0)
 				{
-					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[1]]));
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[1].Command]));
+					if (ButtonProperties[1].Repeats)
+					{
+						ButtonProperties[1].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[1].Timer = repeatDelay;
+						ButtonProperties[1].Repeats = true;
+					}
 				}
 				// A button
-				if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Pressed)
+				if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Pressed && ButtonProperties[2].Timer <= 0)
 				{
-					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[2]]));
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[2].Command]));
+					if (ButtonProperties[2].Repeats)
+					{
+						ButtonProperties[2].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[2].Timer = repeatDelay;
+						ButtonProperties[2].Repeats = true;
+					}
 				}
 				// B button
-				if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Pressed)
+				if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Pressed && ButtonProperties[3].Timer <= 0)
 				{
-					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[3]]));
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[3].Command]));
+					if (ButtonProperties[3].Repeats)
+					{
+						ButtonProperties[3].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[3].Timer = repeatDelay;
+						ButtonProperties[3].Repeats = true;
+					}
 				}
 				// C button
-				if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Pressed)
+				if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Pressed && ButtonProperties[4].Timer <= 0)
 				{
-					KeyDown(this, new InputEventArgs(Controls[100 + buttonCommands[4]]));
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[4].Command]));
+					if (ButtonProperties[4].Repeats)
+					{
+						ButtonProperties[4].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[4].Timer = repeatDelay;
+						ButtonProperties[4].Repeats = true;
+					}
 				}
 			}
 
@@ -249,7 +307,53 @@ namespace DenshaDeGoInput
 		/// <param name="data">Data</param>
 		public void SetElapseData(ElapseData data)
 		{
-			currentLanguage = data.CurrentLanguageCode;
+			Translations.CurrentLanguageCode = data.CurrentLanguageCode;
+
+			if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[0].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[0].Timer = 0;
+				ButtonProperties[0].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[1].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[1].Timer = 0;
+				ButtonProperties[1].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[2].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[2].Timer = 0;
+				ButtonProperties[2].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[3].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[3].Timer = 0;
+				ButtonProperties[3].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[4].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[4].Timer = 0;
+				ButtonProperties[4].Repeats = false;
+			}
 		}
 
 		public void SetMaxNotch(int powerNotch, int brakeNotch) { }
@@ -375,6 +479,7 @@ namespace DenshaDeGoInput
 			{
 				System.IO.Directory.CreateDirectory(optionsFolder);
 			}
+			// Plugin options
 			string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_denshadego.cfg");
 			if (System.IO.File.Exists(configFile))
 			{
@@ -443,7 +548,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													buttonCommands[0] = a;
+													ButtonProperties[0].Command = a;
 												}
 											}
 											break;
@@ -452,7 +557,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													buttonCommands[1] = a;
+													ButtonProperties[1].Command = a;
 												}
 											}
 											break;
@@ -461,7 +566,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													buttonCommands[2] = a;
+													ButtonProperties[2].Command = a;
 												}
 											}
 											break;
@@ -470,7 +575,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													buttonCommands[3] = a;
+													ButtonProperties[3].Command = a;
 												}
 											}
 											break;
@@ -479,7 +584,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													buttonCommands[4] = a;
+													ButtonProperties[4].Command = a;
 												}
 											}
 											break;
@@ -615,6 +720,68 @@ namespace DenshaDeGoInput
 					}
 				}
 			}
+
+			// General OpenBVE options
+			string openbveConfigFile = OpenBveApi.Path.CombineFile(optionsFolder, "options.cfg");
+			if (System.IO.File.Exists(openbveConfigFile))
+			{
+				// load options
+				string[] Lines = System.IO.File.ReadAllLines(openbveConfigFile, new System.Text.UTF8Encoding());
+				string Section = "";
+				for (int i = 0; i < Lines.Length; i++)
+				{
+					Lines[i] = Lines[i].Trim(new char[] { });
+					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
+					{
+						if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
+							Lines[i].EndsWith("]", StringComparison.Ordinal))
+						{
+							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
+						}
+						else
+						{
+							int j = Lines[i].IndexOf("=", StringComparison.OrdinalIgnoreCase);
+							string Key, Value;
+							if (j >= 0)
+							{
+								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
+								Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+							}
+							else
+							{
+								Key = "";
+								Value = Lines[i];
+							}
+							switch (Section)
+							{
+								case "controls":
+									switch (Key)
+									{
+										case "keyrepeatdelay":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													repeatDelay = a;
+												}
+											}
+											break;
+										case "keyrepeatinterval":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													repeatInterval = a;
+												}
+											}
+											break;
+									}
+								break;
+							}
+						}
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -640,11 +807,11 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("map_hold_brake = " + mapHoldBrake.ToString(Culture).ToLower());
 				Builder.AppendLine();
 				Builder.AppendLine("[buttons]");
-				Builder.AppendLine("select = " + buttonCommands[0].ToString(Culture));
-				Builder.AppendLine("start = " + buttonCommands[1].ToString(Culture));
-				Builder.AppendLine("a = " + buttonCommands[2].ToString(Culture));
-				Builder.AppendLine("b = " + buttonCommands[3].ToString(Culture));
-				Builder.AppendLine("c = " + buttonCommands[4].ToString(Culture));
+				Builder.AppendLine("select = " + ButtonProperties[0].Command.ToString(Culture));
+				Builder.AppendLine("start = " + ButtonProperties[1].Command.ToString(Culture));
+				Builder.AppendLine("a = " + ButtonProperties[2].Command.ToString(Culture));
+				Builder.AppendLine("b = " + ButtonProperties[3].Command.ToString(Culture));
+				Builder.AppendLine("c = " + ButtonProperties[4].Command.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[playstation]");
 				Builder.AppendLine("hat = " + PSController.UsesHat.ToString(Culture).ToLower());

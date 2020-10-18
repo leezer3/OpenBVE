@@ -25,6 +25,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenTK.Input;
+using OpenBveApi.Interface;
 namespace DenshaDeGoInput
 {
 	/// <summary>
@@ -217,7 +218,7 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public static void Calibrate()
 		{
-			string[] input = { "A", "B", "C", "SELECT", "START", "EMG", "B6", "B5", "B4", "B8", "P5", "N", "P2", "P1", "P5" };
+			string[] input = { "SELECT", "START", "A", "B", "C", "EMG", "B6", "B5", "B4", "B8", "P5", "N", "P2", "P1", "P5" };
 			List<OpenTK.Input.ButtonState> ButtonState = InputTranslator.GetButtonsState();
 			List<OpenTK.Input.ButtonState> PreviousButtonState;
 			List<HatPosition> HatPositions = InputTranslator.GetHatPositions();
@@ -227,7 +228,7 @@ namespace DenshaDeGoInput
 			// Button calibration
 			for (int i = 0; i < 5; i++)
 			{
-				MessageBox.Show($"Hold the {input[i]} button in the controller and press OK.");
+				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_button").Replace("[button]", input[i]));
 				PreviousButtonState = ButtonState;
 				ButtonState = InputTranslator.GetButtonsState();
 				int index = InputTranslator.GetDifferentPressedIndex(PreviousButtonState, ButtonState, ignored);
@@ -235,30 +236,30 @@ namespace DenshaDeGoInput
 				switch (i)
 				{
 					case 0:
-						ButtonIndex.Square = index;
-						break;
-					case 1:
-						ButtonIndex.Cross = index;
-						break;
-					case 2:
-						ButtonIndex.Circle = index;
-						break;
-					case 3:
 						ButtonIndex.Select = index;
 						break;
-					case 4:
+					case 1:
 						ButtonIndex.Start = index;
+						break;
+					case 2:
+						ButtonIndex.Square = index;
+						break;
+					case 3:
+						ButtonIndex.Cross = index;
+						break;
+					case 4:
+						ButtonIndex.Circle = index;
 						break;
 				}
 			}
 
 			// The brake handle needs to be moved to EMG to initialise properly
-			MessageBox.Show($"Move the brake handle to {input[5]} and press OK.");
+			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_brake").Replace("[notch]", input[5]));
 
 			// Brake handle calibration
 			for (int i = 6; i < 10; i++)
 			{
-				MessageBox.Show($"Move the brake handle to {input[i]} and press OK.");
+				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_brake").Replace("[notch]", input[i]));
 				PreviousButtonState = ButtonState;
 				ButtonState = InputTranslator.GetButtonsState();
 				int index = InputTranslator.GetDifferentPressedIndex(PreviousButtonState, ButtonState, ignored);
@@ -281,8 +282,8 @@ namespace DenshaDeGoInput
 			}
 
 			// The power handle needs to be moved to P5 and N to initialise properly
-			MessageBox.Show($"Move the power handle to {input[10]} and press OK.");
-			MessageBox.Show($"Move the power handle to {input[11]} and press OK.");
+			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[10]));
+			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[11]));
 
 			// Clear previous data before calibrating the power handle
 			ignored.Clear();
@@ -292,7 +293,7 @@ namespace DenshaDeGoInput
 			// Power handle calibration
 			for (int i = 12; i < 15; i++)
 			{
-				MessageBox.Show($"Move the power handle to {input[i]} and press OK.");
+				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[i]));
 				PreviousButtonState = ButtonState;
 				PreviousHatPositions = HatPositions;
 				ButtonState = InputTranslator.GetButtonsState();

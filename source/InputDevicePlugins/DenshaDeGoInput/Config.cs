@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
@@ -33,22 +34,25 @@ namespace DenshaDeGoInput
 {
 	public partial class Config : Form
 	{
+		/// <summary>
+		/// Internal list of devices.
+		/// </summary>
+		private List<string> deviceList = new List<string>();
+
 		public Config()
 		{
 			InitializeComponent();
-			timer1.Enabled = true;
 
-			// Add connected devices to device list
-
-			ListControllers();
+			// Load language files
+			Translations.LoadLanguageFiles(OpenBveApi.Path.CombineDirectory(DenshaDeGoInput.FileSystem.DataFolder, "Languages"));
 
 			// Populate command boxes
-			buttonaBox.Items.Add(Translations.GetInterfaceString("None"));
-			buttonbBox.Items.Add(Translations.GetInterfaceString("None"));
-			buttoncBox.Items.Add(Translations.GetInterfaceString("None"));
-			buttonstartBox.Items.Add(Translations.GetInterfaceString("None"));
-			buttonselectBox.Items.Add(Translations.GetInterfaceString("None"));
-			Translations.CommandInfo[] commands = Translations.CommandInfos.OrderBy(o=>o.Command).ToArray();
+			buttonaBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonbBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttoncBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonstartBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonselectBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			Translations.CommandInfo[] commands = Translations.CommandInfos.OrderBy(o => o.Command).ToArray();
 			for (int i = 0; i < Translations.CommandInfos.Length; i++)
 			{
 				buttonaBox.Items.Add(commands[i].Name);
@@ -61,15 +65,20 @@ namespace DenshaDeGoInput
 
 		private void ListControllers()
 		{
+			// Clear the internal and visible lists
+			deviceList.Clear();
+			deviceBox.Items.Clear();
+
 			for (int i = 0; i < 10; i++)
 			{
 				JoystickState state = Joystick.GetState(i);
 				JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
 				InputTranslator.ControllerModels model = InputTranslator.GetControllerModel(state, capabilities);
 				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
+				deviceList.Add(Translations.GetInterfaceString("denshadego_joystick").Replace("[index]", (i + 1).ToString()));
 				if (capabilities.ButtonCount > 0 && model != InputTranslator.ControllerModels.Unsupported)
 				{
-					deviceBox.Items.Add("Joystick " + (i+1));
+					deviceBox.Items.Add(deviceList[i]);
 				}
 			}
 		}
@@ -178,8 +187,32 @@ namespace DenshaDeGoInput
 			}
 		}
 
+		private void UpdateTranslation()
+		{
+			Text = Translations.GetInterfaceString("denshadego_config_title");
+			deviceInputBox.Text = Translations.GetInterfaceString("denshadego_input_section");
+			buttonCalibrate.Text = Translations.GetInterfaceString("denshadego_calibration_button");
+			label_device.Text = Translations.GetInterfaceString("denshadego_device");
+			buttonMappingBox.Text = Translations.GetInterfaceString("denshadego_button_section");
+			handleMappingBox.Text = Translations.GetInterfaceString("denshadego_handle_section");
+			convertnotchesCheck.Text = Translations.GetInterfaceString("denshadego_option_convert");
+			minmaxCheck.Text = Translations.GetInterfaceString("denshadego_option_keep_minmax");
+			holdbrakeCheck.Text = Translations.GetInterfaceString("denshadego_option_holdbrake");
+			buttonSave.Text = Translations.GetInterfaceString("denshadego_save_button");
+			buttonCancel.Text = Translations.GetInterfaceString("denshadego_cancel_button");
+
+			buttonselectBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonstartBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonaBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonbBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttoncBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+		}
+
 		private void Config_Shown(object sender, EventArgs e)
 		{
+			// Add connected devices to device list
+			ListControllers();
+
 			// Try to select the current device
 			if (InputTranslator.activeControllerIndex < deviceBox.Items.Count)
 			{
@@ -187,17 +220,23 @@ namespace DenshaDeGoInput
 			}
 
 			// Set command boxes
-			buttonselectBox.SelectedIndex = DenshaDeGoInput.buttonCommands[0];
-			buttonstartBox.SelectedIndex = DenshaDeGoInput.buttonCommands[1];
-			buttonaBox.SelectedIndex = DenshaDeGoInput.buttonCommands[2];
-			buttonbBox.SelectedIndex = DenshaDeGoInput.buttonCommands[3];
-			buttoncBox.SelectedIndex = DenshaDeGoInput.buttonCommands[4];
+			buttonselectBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[0].Command;
+			buttonstartBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[1].Command;
+			buttonaBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[2].Command;
+			buttonbBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[3].Command;
+			buttoncBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[4].Command;
 
 			// Set checkboxes
 			convertnotchesCheck.Checked = DenshaDeGoInput.convertNotches;
 			minmaxCheck.Checked = DenshaDeGoInput.keepMaxMin;
 			holdbrakeCheck.Checked = DenshaDeGoInput.mapHoldBrake;
 			minmaxCheck.Enabled = DenshaDeGoInput.convertNotches;
+
+			// Start timer
+			timer1.Enabled = true;
+
+			// Translate the interface to the current language
+			UpdateTranslation();
 		}
 
 		private void Config_FormClosed(Object sender, FormClosedEventArgs e)
@@ -208,32 +247,32 @@ namespace DenshaDeGoInput
 
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			InputTranslator.activeControllerIndex = deviceBox.SelectedIndex;
+			InputTranslator.activeControllerIndex = deviceList.IndexOf(deviceBox.Items[deviceBox.SelectedIndex].ToString());
 		}
 
 		private void buttonselectBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.buttonCommands[0] = buttonselectBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[0].Command = buttonselectBox.SelectedIndex;
 		}
 
 		private void buttonstartBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.buttonCommands[1] = buttonstartBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[1].Command = buttonstartBox.SelectedIndex;
 		}
 
 		private void buttonaBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.buttonCommands[2] = buttonaBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[2].Command = buttonaBox.SelectedIndex;
 		}
 
 		private void buttonbBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.buttonCommands[3] = buttonbBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[3].Command = buttonbBox.SelectedIndex;
 		}
 
 		private void buttoncBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.buttonCommands[4] = buttoncBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[4].Command = buttoncBox.SelectedIndex;
 		}
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)
