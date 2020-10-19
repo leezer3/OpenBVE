@@ -21,6 +21,8 @@
 		CantBehaviour,
 		/// <summary>Controls the blending mode used for fog</summary>
 		FogBehaviour,
+		/// <summary>Controls whether BVETS Hacks are forced on / off for this route</summary>
+		EnableBveTsHacks,
 
 	}
 }
