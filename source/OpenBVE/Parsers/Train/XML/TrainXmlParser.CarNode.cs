@@ -174,16 +174,14 @@ namespace OpenBve.Parsers.Train
 						}
 						break;
 					case "reversed":
-						int n;
-						NumberFormats.TryParseIntVb6(c.InnerText, out n);
+						int n = NumberFormats.ParseInt(c.InnerText, c.Name, Node.Name, -1, fileName);
 						if (n == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							CarObjectsReversed[Car] = true;
 						}
 						break;
 					case "loadingsway":
-						int nm;
-						NumberFormats.TryParseIntVb6(c.InnerText, out nm);
+						int nm = NumberFormats.ParseInt(c.InnerText, c.Name, Node.Name, -1, fileName);
 						if (nm == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].EnableLoadingSway = true;
@@ -225,8 +223,7 @@ namespace OpenBve.Parsers.Train
 										}
 										break;
 									case "reversed":
-										int nn;
-										NumberFormats.TryParseIntVb6(cc.InnerText, out nn);
+										int nn = NumberFormats.ParseInt(c.InnerText, c.Name, Node.Name, -1, fileName);
 										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
 										{
 											BogieObjectsReversed[Car * 2] = true;
@@ -268,8 +265,7 @@ namespace OpenBve.Parsers.Train
 										}
 										break;
 									case "reversed":
-										int nn;
-										NumberFormats.TryParseIntVb6(cc.InnerText, out nn);
+										int nn = NumberFormats.ParseInt(c.InnerText, cc.Name, c.Name, -1, fileName);
 										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
 										{
 											BogieObjectsReversed[Car * 2 + 1] = true;

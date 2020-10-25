@@ -12,6 +12,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using OpenTK.Input;
 
 namespace OpenBve
 {
@@ -279,16 +280,10 @@ namespace OpenBve
 						}
 						break;
 					case "appearancestartposition":
-						if (Value.Any() && !NumberFormats.TryParseDoubleVb6(Value, out Train.AppearanceStartPosition))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
-						}
+						Train.AppearanceStartPosition = NumberFormats.ParseDouble(Value, Key, Section, LineNumber, FileName);
 						break;
 					case "appearanceendposition":
-						if (Value.Any() && !NumberFormats.TryParseDoubleVb6(Value, out Train.AppearanceEndPosition))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
-						}
+						Train.AppearanceEndPosition = NumberFormats.ParseDouble(Value, Key, Section, LineNumber, FileName);
 						break;
 					case "leavetime":
 						if (Value.Any() && !Interface.TryParseTime(Value, out Train.LeaveTime))
@@ -442,10 +437,7 @@ namespace OpenBve
 						break;
 					case "position":
 					case "stopposition":
-						if (Value.Any() && !NumberFormats.TryParseDoubleVb6(Value, out Data.Position))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
-						}
+						Data.Position = NumberFormats.ParseDouble(Value, Key, Section, LineNumber, FileName);
 						break;
 					case "accelerate":
 						if (Value.Any() && !NumberFormats.TryParseDoubleVb6(Value, out Accelerate) || Accelerate < 0.0)
@@ -527,10 +519,7 @@ namespace OpenBve
 									DoorBoth = true;
 									break;
 								default:
-									if (Value.Any() && !NumberFormats.TryParseIntVb6(Value, out Door))
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
-									}
+									Door = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 									break;
 							}
 

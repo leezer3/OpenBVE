@@ -90,10 +90,7 @@ namespace OpenBve.Parsers.Panel
 								switch (Key.ToLowerInvariant())
 								{
 									case "number":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out n))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										n = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 								}
 							}
@@ -138,21 +135,12 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "jumpscreen":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out JumpScreen))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										JumpScreen = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 									case "soundindex":
 										if (Value.Length != 0)
 										{
-											int SoundIndex;
-
-											if (!NumberFormats.TryParseIntVb6(Value, out SoundIndex))
-											{
-												Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-
+											int SoundIndex = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 											SoundIndices.Add(SoundIndex);
 										}
 										break;
@@ -191,11 +179,7 @@ namespace OpenBve.Parsers.Panel
 										{
 											CommandEntries.Add(CommandEntry);
 										}
-
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out CommandEntry.Option))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
+										CommandEntry.Option = NumberFormats.ParseInt(Value, Key, Section, LineNumber, FileName);
 										break;
 									case "soundentries":
 										if (!KeyNode.HasElements)
@@ -287,14 +271,7 @@ namespace OpenBve.Parsers.Panel
 							case "index":
 								if (value.Any())
 								{
-									int index;
-
-									if (!NumberFormats.TryParseIntVb6(value, out index))
-									{
-										Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-									}
-
-									indices.Add(index);
+									indices.Add(NumberFormats.ParseInt(value, key, section, lineNumber, fileName));
 								}
 								break;
 						}

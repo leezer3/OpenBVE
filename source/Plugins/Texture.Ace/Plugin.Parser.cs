@@ -14,9 +14,9 @@ namespace Plugin {
 		/// <returns></returns>
 		private static Color32 GetColor(ushort color) {
 			return new Color32(
-				(byte)((color >> 11) << 3),
-				(byte)(((color >> 5) & 0x3F) << 2),
-				(byte)((color & 0x1F) << 3),
+				((color >> 11) << 3),
+				(((color >> 5) & 0x3F) << 2),
+				((color & 0x1F) << 3),
 				255
 			);
 		}

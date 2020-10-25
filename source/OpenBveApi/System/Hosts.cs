@@ -95,6 +95,13 @@ namespace OpenBveApi.Hosts {
 			Application = host;
 			StaticObjectCache = new Dictionary<ValueTuple<string, bool>, StaticObject>();
 			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
+			/*
+			 * Let's cheat a little-
+			 * When we parse a number, we may want to add a message that it's invalid
+			 * We can assume that only one host interface is ever present, hence assign it here
+			 * as it's in the same API
+			 */
+			NumberFormats.currentHost = this;
 		}
 
 		/// <summary></summary>

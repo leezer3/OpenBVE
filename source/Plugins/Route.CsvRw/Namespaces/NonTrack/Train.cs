@@ -72,10 +72,9 @@ namespace CsvRwRouteParser
 					if (!PreviewOnly)
 					{
 						double limit = 0.0;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out limit))
+						if (Arguments.Length >= 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in Train.Velocity at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							limit = 0.0;
+							limit = NumberFormats.ParseDouble(Arguments[0], "Train", Command, Expression.Line, Expression.File);
 						}
 
 						Plugin.CurrentOptions.PrecedingTrainSpeedLimit = limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit;

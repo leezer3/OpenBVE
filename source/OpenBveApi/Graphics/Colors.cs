@@ -24,6 +24,16 @@ namespace OpenBveApi.Colors {
 		/// <param name="r">The red component.</param>
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
+		public Color24(int r, int g, int b) {
+			this.R = (byte)r;
+			this.G = (byte)g;
+			this.B = (byte)b;
+		}
+
+		/// <summary>Creates a new color.</summary>
+		/// <param name="r">The red component.</param>
+		/// <param name="g">The green component.</param>
+		/// <param name="b">The blue component.</param>
 		public Color24(byte r, byte g, byte b) {
 			this.R = r;
 			this.G = g;
@@ -130,7 +140,7 @@ namespace OpenBveApi.Colors {
 					int b = x & 0xFF;
 					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255)
 					{
-						Color = new Color24((byte)r, (byte)g, (byte)b);
+						Color = new Color24(r, g, b);
 						return true;
 					}
 				}
@@ -192,6 +202,17 @@ namespace OpenBveApi.Colors {
 		/// <summary>The alpha component.</summary>
 		public byte A;
 		// --- constructors ---
+		/// <summary>Creates a new color.</summary>
+		/// <param name="r">The red component.</param>
+		/// <param name="g">The green component.</param>
+		/// <param name="b">The blue component.</param>
+		/// <param name="a">The alpha component.</param>
+		public Color32(int r, int g, int b, int a) {
+			this.R = (byte)r;
+			this.G = (byte)g;
+			this.B = (byte)b;
+			this.A = (byte)a;
+		}
 		/// <summary>Creates a new color.</summary>
 		/// <param name="r">The red component.</param>
 		/// <param name="g">The green component.</param>
@@ -344,7 +365,7 @@ namespace OpenBveApi.Colors {
 					int b = x & 0xFF;
 					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255)
 					{
-						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
+						Color = new Color32(r, g, b, 255);
 						return true;
 					}
 					Color = Blue;
