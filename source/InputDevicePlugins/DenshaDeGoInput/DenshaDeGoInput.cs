@@ -88,7 +88,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// An array with the properties for each button.
 		/// </summary>
-		internal static ButtonProp[] ButtonProperties = new ButtonProp[5];
+		internal static ButtonProp[] ButtonProperties = new ButtonProp[6];
 
 
 		/// <summary>
@@ -208,6 +208,8 @@ namespace DenshaDeGoInput
 			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[3].Command]));
 			// C button
 			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[4].Command]));
+			// D button
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[5].Command]));
 
 			InputTranslator.Update();
 
@@ -296,6 +298,20 @@ namespace DenshaDeGoInput
 						ButtonProperties[4].Repeats = true;
 					}
 				}
+				// D button
+				if (InputTranslator.ControllerButtons.D == OpenTK.Input.ButtonState.Pressed && ButtonProperties[5].Timer <= 0)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[5].Command]));
+					if (ButtonProperties[5].Repeats)
+					{
+						ButtonProperties[5].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[5].Timer = repeatDelay;
+						ButtonProperties[5].Repeats = true;
+					}
+				}
 			}
 
 			loading = false;
@@ -353,6 +369,15 @@ namespace DenshaDeGoInput
 			{
 				ButtonProperties[4].Timer = 0;
 				ButtonProperties[4].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.D == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[5].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[5].Timer = 0;
+				ButtonProperties[5].Repeats = false;
 			}
 		}
 
@@ -588,92 +613,29 @@ namespace DenshaDeGoInput
 												}
 											}
 											break;
+										case "d":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ButtonProperties[5].Command = a;
+												}
+											}
+											break;
 									}
 									break;
-								case "playstation":
+								case "classic":
 									switch (Key)
 									{
 										case "hat":
-											PSController.UsesHat = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											ControllerClassic.usesHat = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "hat_index":
 											{
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													PSController.hatIndex = a;
-												}
-											}
-											break;
-										case "cross":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													PSController.ButtonIndex.Cross = a;
-												}
-											}
-											break;
-										case "square":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													PSController.ButtonIndex.Square = a;
-												}
-											}
-											break;
-										case "triangle":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													PSController.ButtonIndex.Triangle = a;
-												}
-											}
-											break;
-										case "circle":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													PSController.ButtonIndex.Circle = a;
-												}
-											}
-											break;
-										case "l1":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													PSController.ButtonIndex.L1 = a;
-												}
-											}
-											break;
-										case "l2":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													PSController.ButtonIndex.L2 = a;
-												}
-											}
-											break;
-										case "r1":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													PSController.ButtonIndex.R1 = a;
-												}
-											}
-											break;
-										case "r2":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													PSController.ButtonIndex.R2 = a;
+													ControllerClassic.hatIndex = a;
 												}
 											}
 											break;
@@ -682,7 +644,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													PSController.ButtonIndex.Select = a;
+													ControllerClassic.ButtonIndex.Select = a;
 												}
 											}
 											break;
@@ -691,25 +653,97 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													PSController.ButtonIndex.Start = a;
+													ControllerClassic.ButtonIndex.Start = a;
 												}
 											}
 											break;
-										case "left":
+										case "a":
 											{
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													PSController.ButtonIndex.Left = a;
+													ControllerClassic.ButtonIndex.A = a;
 												}
 											}
 											break;
-										case "right":
+										case "b":
 											{
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													PSController.ButtonIndex.Right = a;
+													ControllerClassic.ButtonIndex.B = a;
+												}
+											}
+											break;
+										case "c":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ControllerClassic.ButtonIndex.C = a;
+												}
+											}
+											break;
+										case "power1":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ControllerClassic.ButtonIndex.Power1 = a;
+												}
+											}
+											break;
+										case "power2":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ControllerClassic.ButtonIndex.Power2 = a;
+												}
+											}
+											break;
+										case "power3":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ControllerClassic.ButtonIndex.Power3 = a;
+												}
+											}
+											break;
+										case "brake1":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ControllerClassic.ButtonIndex.Brake1 = a;
+												}
+											}
+											break;
+										case "brake2":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ControllerClassic.ButtonIndex.Brake2 = a;
+												}
+											}
+											break;
+										case "brake3":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ControllerClassic.ButtonIndex.Brake3 = a;
+												}
+											}
+											break;
+										case "brake4":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ControllerClassic.ButtonIndex.Brake4 = a;
 												}
 											}
 											break;
@@ -812,22 +846,24 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("a = " + ButtonProperties[2].Command.ToString(Culture));
 				Builder.AppendLine("b = " + ButtonProperties[3].Command.ToString(Culture));
 				Builder.AppendLine("c = " + ButtonProperties[4].Command.ToString(Culture));
+				Builder.AppendLine("d = " + ButtonProperties[5].Command.ToString(Culture));
 				Builder.AppendLine();
-				Builder.AppendLine("[playstation]");
-				Builder.AppendLine("hat = " + PSController.UsesHat.ToString(Culture).ToLower());
-				Builder.AppendLine("hat_index = " + PSController.hatIndex.ToString(Culture));
-				Builder.AppendLine("cross = " + PSController.ButtonIndex.Cross.ToString(Culture));
-				Builder.AppendLine("square = " + PSController.ButtonIndex.Square.ToString(Culture));
-				Builder.AppendLine("triangle = " + PSController.ButtonIndex.Triangle.ToString(Culture));
-				Builder.AppendLine("circle = " + PSController.ButtonIndex.Circle.ToString(Culture));
-				Builder.AppendLine("l1 = " + PSController.ButtonIndex.L1.ToString(Culture));
-				Builder.AppendLine("l2 = " + PSController.ButtonIndex.L2.ToString(Culture));
-				Builder.AppendLine("r1 = " + PSController.ButtonIndex.R1.ToString(Culture));
-				Builder.AppendLine("r2 = " + PSController.ButtonIndex.R2.ToString(Culture));
-				Builder.AppendLine("select = " + PSController.ButtonIndex.Select.ToString(Culture));
-				Builder.AppendLine("start = " + PSController.ButtonIndex.Start.ToString(Culture));
-				Builder.AppendLine("left = " + PSController.ButtonIndex.Left.ToString(Culture));
-				Builder.AppendLine("right = " + PSController.ButtonIndex.Right.ToString(Culture));
+				Builder.AppendLine("[classic]");
+				Builder.AppendLine("hat = " + ControllerClassic.usesHat.ToString(Culture).ToLower());
+				Builder.AppendLine("hat_index = " + ControllerClassic.hatIndex.ToString(Culture));
+				Builder.AppendLine("select = " + ControllerClassic.ButtonIndex.Select.ToString(Culture));
+				Builder.AppendLine("start = " + ControllerClassic.ButtonIndex.Start.ToString(Culture));
+				Builder.AppendLine("a = " + ControllerClassic.ButtonIndex.A.ToString(Culture));
+				Builder.AppendLine("b = " + ControllerClassic.ButtonIndex.B.ToString(Culture));
+				Builder.AppendLine("c = " + ControllerClassic.ButtonIndex.C.ToString(Culture));
+				Builder.AppendLine("power1 = " + ControllerClassic.ButtonIndex.Power1.ToString(Culture));
+				Builder.AppendLine("power2 = " + ControllerClassic.ButtonIndex.Power2.ToString(Culture));
+				Builder.AppendLine("power3 = " + ControllerClassic.ButtonIndex.Power3.ToString(Culture));
+				Builder.AppendLine("brake1 = " + ControllerClassic.ButtonIndex.Brake1.ToString(Culture));
+				Builder.AppendLine("brake2 = " + ControllerClassic.ButtonIndex.Brake2.ToString(Culture));
+				Builder.AppendLine("brake3 = " + ControllerClassic.ButtonIndex.Brake3.ToString(Culture));
+				Builder.AppendLine("brake4 = " + ControllerClassic.ButtonIndex.Brake4.ToString(Culture));
+
 				string optionsFolder = OpenBveApi.Path.CombineDirectory(FileSystem.SettingsFolder, "1.5.0");
 				string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_denshadego.cfg");
 				System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));

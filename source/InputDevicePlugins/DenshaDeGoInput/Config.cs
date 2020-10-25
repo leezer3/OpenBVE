@@ -104,9 +104,9 @@ namespace DenshaDeGoInput
 			label_a.ForeColor = Color.Black;
 			label_b.ForeColor = Color.Black;
 			label_c.ForeColor = Color.Black;
+			label_d.ForeColor = Color.Black;
 			label_start.ForeColor = Color.Black;
 			label_select.ForeColor = Color.Black;
-
 
 			if (InputTranslator.IsControllerConnected)
 			{
@@ -164,6 +164,14 @@ namespace DenshaDeGoInput
 						label_powern.ForeColor = Color.White;
 						break;
 				}
+				if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed)
+				{
+					label_select.ForeColor = Color.White;
+				}
+				if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed)
+				{
+					label_start.ForeColor = Color.White;
+				}
 				if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Pressed)
 				{
 					label_a.ForeColor = Color.White;
@@ -176,14 +184,21 @@ namespace DenshaDeGoInput
 				{
 					label_c.ForeColor = Color.White;
 				}
-				if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed)
+				if (InputTranslator.ControllerButtons.D == OpenTK.Input.ButtonState.Pressed)
 				{
-					label_start.ForeColor = Color.White;
+					label_d.ForeColor = Color.White;
 				}
-				if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_select.ForeColor = Color.White;
-				}
+			}
+
+			if (InputTranslator.ControllerModel == InputTranslator.ControllerModels.Classic)
+			{
+				buttonCalibrate.Visible = true;
+				label_d.Visible = false;
+			}
+			else
+			{
+				buttonCalibrate.Visible = false;
+				label_d.Visible = true;
 			}
 		}
 
@@ -206,6 +221,23 @@ namespace DenshaDeGoInput
 			buttonaBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 			buttonbBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 			buttoncBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+
+			label_brakeemg.Text = Translations.QuickReferences.HandleEmergency;
+			label_brake8.Text = Translations.QuickReferences.HandleBrake + "8";
+			label_brake7.Text = Translations.QuickReferences.HandleBrake + "7";
+			label_brake6.Text = Translations.QuickReferences.HandleBrake + "6";
+			label_brake5.Text = Translations.QuickReferences.HandleBrake + "5";
+			label_brake4.Text = Translations.QuickReferences.HandleBrake + "4";
+			label_brake3.Text = Translations.QuickReferences.HandleBrake + "3";
+			label_brake2.Text = Translations.QuickReferences.HandleBrake + "2";
+			label_brake1.Text = Translations.QuickReferences.HandleBrake + "1";
+			label_braken.Text = Translations.QuickReferences.HandleBrakeNull;
+			label_power5.Text = Translations.QuickReferences.HandlePower + "5";
+			label_power4.Text = Translations.QuickReferences.HandlePower + "4";
+			label_power3.Text = Translations.QuickReferences.HandlePower + "3";
+			label_power2.Text = Translations.QuickReferences.HandlePower + "2";
+			label_power1.Text = Translations.QuickReferences.HandlePower + "1";
+			label_powern.Text = Translations.QuickReferences.HandlePowerNull;
 		}
 
 		private void Config_Shown(object sender, EventArgs e)
@@ -294,7 +326,7 @@ namespace DenshaDeGoInput
 		private void buttonCalibrate_Click(object sender, EventArgs e)
 		{
 			timer1.Stop();
-			PSController.Calibrate();
+			ControllerClassic.Calibrate();
 			timer1.Start();
 		}
 

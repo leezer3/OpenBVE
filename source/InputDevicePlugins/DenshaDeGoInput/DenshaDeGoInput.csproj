@@ -55,7 +55,8 @@
     <Compile Include="DenshaDeGoInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InputTranslator.cs" />
-    <Compile Include="PSController.cs" />
+    <Compile Include="ControllerClassic.cs" />
+    <Compile Include="ControllerUnbalance.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config.resx">

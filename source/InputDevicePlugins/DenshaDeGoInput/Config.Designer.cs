@@ -61,6 +61,7 @@ namespace DenshaDeGoInput
 			this.label_start = new System.Windows.Forms.Label();
 			this.label_brake1 = new System.Windows.Forms.Label();
 			this.label_brake2 = new System.Windows.Forms.Label();
+			this.label_d = new System.Windows.Forms.Label();
 			this.label_c = new System.Windows.Forms.Label();
 			this.label_brake3 = new System.Windows.Forms.Label();
 			this.label_b = new System.Windows.Forms.Label();
@@ -110,6 +111,7 @@ namespace DenshaDeGoInput
 			this.deviceInputBox.Controls.Add(this.label_start);
 			this.deviceInputBox.Controls.Add(this.label_brake1);
 			this.deviceInputBox.Controls.Add(this.label_brake2);
+			this.deviceInputBox.Controls.Add(this.label_d);
 			this.deviceInputBox.Controls.Add(this.label_c);
 			this.deviceInputBox.Controls.Add(this.label_brake3);
 			this.deviceInputBox.Controls.Add(this.label_b);
@@ -226,13 +228,27 @@ namespace DenshaDeGoInput
 			this.label_brake2.Text = "B2";
 			this.label_brake2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
+			// label_d
+			// 
+			this.label_d.BackColor = System.Drawing.Color.Plum;
+			this.label_d.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.label_d.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label_d.ForeColor = System.Drawing.Color.Black;
+			this.label_d.Location = new System.Drawing.Point(158, 166);
+			this.label_d.Margin = new System.Windows.Forms.Padding(3);
+			this.label_d.Name = "label_d";
+			this.label_d.Size = new System.Drawing.Size(70, 24);
+			this.label_d.TabIndex = 18;
+			this.label_d.Text = "D";
+			this.label_d.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
 			// label_c
 			// 
 			this.label_c.BackColor = System.Drawing.Color.Plum;
 			this.label_c.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.label_c.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label_c.ForeColor = System.Drawing.Color.Black;
-			this.label_c.Location = new System.Drawing.Point(158, 166);
+			this.label_c.Location = new System.Drawing.Point(158, 136);
 			this.label_c.Margin = new System.Windows.Forms.Padding(3);
 			this.label_c.Name = "label_c";
 			this.label_c.Size = new System.Drawing.Size(70, 24);
@@ -260,7 +276,7 @@ namespace DenshaDeGoInput
 			this.label_b.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.label_b.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label_b.ForeColor = System.Drawing.Color.Black;
-			this.label_b.Location = new System.Drawing.Point(158, 136);
+			this.label_b.Location = new System.Drawing.Point(158, 106);
 			this.label_b.Margin = new System.Windows.Forms.Padding(3);
 			this.label_b.Name = "label_b";
 			this.label_b.Size = new System.Drawing.Size(70, 24);
@@ -288,7 +304,7 @@ namespace DenshaDeGoInput
 			this.label_a.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.label_a.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label_a.ForeColor = System.Drawing.Color.Black;
-			this.label_a.Location = new System.Drawing.Point(158, 106);
+			this.label_a.Location = new System.Drawing.Point(158, 76);
 			this.label_a.Margin = new System.Windows.Forms.Padding(3);
 			this.label_a.Name = "label_a";
 			this.label_a.Size = new System.Drawing.Size(70, 24);
@@ -463,7 +479,7 @@ namespace DenshaDeGoInput
 			// 
 			this.buttonselectBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.buttonselectBox.FormattingEnabled = true;
-			this.buttonselectBox.Location = new System.Drawing.Point(62, 101);
+			this.buttonselectBox.Location = new System.Drawing.Point(62, 20);
 			this.buttonselectBox.Name = "buttonselectBox";
 			this.buttonselectBox.Size = new System.Drawing.Size(182, 21);
 			this.buttonselectBox.TabIndex = 8;
@@ -473,7 +489,7 @@ namespace DenshaDeGoInput
 			// 
 			this.buttonstartBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.buttonstartBox.FormattingEnabled = true;
-			this.buttonstartBox.Location = new System.Drawing.Point(62, 128);
+			this.buttonstartBox.Location = new System.Drawing.Point(62, 47);
 			this.buttonstartBox.Name = "buttonstartBox";
 			this.buttonstartBox.Size = new System.Drawing.Size(182, 21);
 			this.buttonstartBox.TabIndex = 6;
@@ -483,7 +499,7 @@ namespace DenshaDeGoInput
 			// 
 			this.buttoncBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.buttoncBox.FormattingEnabled = true;
-			this.buttoncBox.Location = new System.Drawing.Point(62, 74);
+			this.buttoncBox.Location = new System.Drawing.Point(62, 128);
 			this.buttoncBox.Name = "buttoncBox";
 			this.buttoncBox.Size = new System.Drawing.Size(182, 21);
 			this.buttoncBox.TabIndex = 7;
@@ -493,7 +509,7 @@ namespace DenshaDeGoInput
 			// 
 			this.buttonbBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.buttonbBox.FormattingEnabled = true;
-			this.buttonbBox.Location = new System.Drawing.Point(62, 47);
+			this.buttonbBox.Location = new System.Drawing.Point(62, 101);
 			this.buttonbBox.Name = "buttonbBox";
 			this.buttonbBox.Size = new System.Drawing.Size(182, 21);
 			this.buttonbBox.TabIndex = 6;
@@ -503,7 +519,7 @@ namespace DenshaDeGoInput
 			// 
 			this.buttonaBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.buttonaBox.FormattingEnabled = true;
-			this.buttonaBox.Location = new System.Drawing.Point(62, 20);
+			this.buttonaBox.Location = new System.Drawing.Point(62, 74);
 			this.buttonaBox.Name = "buttonaBox";
 			this.buttonaBox.Size = new System.Drawing.Size(182, 21);
 			this.buttonaBox.TabIndex = 5;
@@ -511,7 +527,7 @@ namespace DenshaDeGoInput
 			// 
 			// label_buttonselect
 			// 
-			this.label_buttonselect.Location = new System.Drawing.Point(6, 104);
+			this.label_buttonselect.Location = new System.Drawing.Point(6, 23);
 			this.label_buttonselect.Margin = new System.Windows.Forms.Padding(3);
 			this.label_buttonselect.Name = "label_buttonselect";
 			this.label_buttonselect.Size = new System.Drawing.Size(50, 15);
@@ -520,7 +536,7 @@ namespace DenshaDeGoInput
 			// 
 			// label_buttonstart
 			// 
-			this.label_buttonstart.Location = new System.Drawing.Point(6, 131);
+			this.label_buttonstart.Location = new System.Drawing.Point(6, 50);
 			this.label_buttonstart.Margin = new System.Windows.Forms.Padding(3);
 			this.label_buttonstart.Name = "label_buttonstart";
 			this.label_buttonstart.Size = new System.Drawing.Size(50, 15);
@@ -529,7 +545,7 @@ namespace DenshaDeGoInput
 			// 
 			// label_buttonc
 			// 
-			this.label_buttonc.Location = new System.Drawing.Point(6, 77);
+			this.label_buttonc.Location = new System.Drawing.Point(6, 131);
 			this.label_buttonc.Margin = new System.Windows.Forms.Padding(3);
 			this.label_buttonc.Name = "label_buttonc";
 			this.label_buttonc.Size = new System.Drawing.Size(50, 15);
@@ -538,7 +554,7 @@ namespace DenshaDeGoInput
 			// 
 			// label_buttonb
 			// 
-			this.label_buttonb.Location = new System.Drawing.Point(6, 50);
+			this.label_buttonb.Location = new System.Drawing.Point(6, 104);
 			this.label_buttonb.Margin = new System.Windows.Forms.Padding(3);
 			this.label_buttonb.Name = "label_buttonb";
 			this.label_buttonb.Size = new System.Drawing.Size(50, 15);
@@ -547,7 +563,7 @@ namespace DenshaDeGoInput
 			// 
 			// label_buttona
 			// 
-			this.label_buttona.Location = new System.Drawing.Point(6, 23);
+			this.label_buttona.Location = new System.Drawing.Point(6, 77);
 			this.label_buttona.Margin = new System.Windows.Forms.Padding(3);
 			this.label_buttona.Name = "label_buttona";
 			this.label_buttona.Size = new System.Drawing.Size(50, 15);
@@ -666,6 +682,7 @@ namespace DenshaDeGoInput
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.Label label_select;
 		private System.Windows.Forms.Label label_start;
+		private System.Windows.Forms.Label label_d;
 		private System.Windows.Forms.Label label_c;
 		private System.Windows.Forms.Label label_b;
 		private System.Windows.Forms.Label label_a;

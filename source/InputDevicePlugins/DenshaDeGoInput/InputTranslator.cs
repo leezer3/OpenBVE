@@ -30,7 +30,7 @@ namespace DenshaDeGoInput
 	/// <summary>
 	/// Class which holds generic controller input.
 	/// </summary>
-	internal class InputTranslator
+	internal static class InputTranslator
 	{
 		/// <summary>
 		/// Enumeration representing controller models.
@@ -38,7 +38,8 @@ namespace DenshaDeGoInput
 		internal enum ControllerModels
 		{
 			Unsupported = 0,
-			PlayStation = 1,
+			Classic = 1,
+			Unbalance = 2,
 		};
 
 		/// <summary>
@@ -76,11 +77,16 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal class ButtonState
 		{
+			internal OpenTK.Input.ButtonState Select;
+			internal OpenTK.Input.ButtonState Start;
 			internal OpenTK.Input.ButtonState A;
 			internal OpenTK.Input.ButtonState B;
 			internal OpenTK.Input.ButtonState C;
-			internal OpenTK.Input.ButtonState Start;
-			internal OpenTK.Input.ButtonState Select;
+			internal OpenTK.Input.ButtonState D;
+			internal OpenTK.Input.ButtonState Up;
+			internal OpenTK.Input.ButtonState Down;
+			internal OpenTK.Input.ButtonState Left;
+			internal OpenTK.Input.ButtonState Right;
 		}
 
 		/// <summary>
@@ -128,9 +134,13 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static ControllerModels GetControllerModel(JoystickState state, JoystickCapabilities capabilities)
 		{
-			if (PSController.IsPSController(capabilities))
+			if (ControllerUnbalance.IsCompatibleController(capabilities))
 			{
-				return ControllerModels.PlayStation;
+				return ControllerModels.Unbalance;
+			}
+			if (ControllerClassic.IsCompatibleController(capabilities))
+			{
+				return ControllerModels.Classic;
 			}
 			return ControllerModels.Unsupported;
 		}
@@ -182,8 +192,11 @@ namespace DenshaDeGoInput
 			// Read the input from the controller according to the type
 			switch (ControllerModel)
 			{
-				case ControllerModels.PlayStation:
-					PSController.ReadButtons(Joystick.GetState(activeControllerIndex));
+				case ControllerModels.Classic:
+					ControllerClassic.ReadInput(Joystick.GetState(activeControllerIndex));
+					return;
+				case ControllerModels.Unbalance:
+					ControllerUnbalance.ReadInput(Joystick.GetState(activeControllerIndex));
 					return;
 			}
 		}

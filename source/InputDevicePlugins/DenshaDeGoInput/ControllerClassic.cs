@@ -24,19 +24,20 @@
 
 using System.Collections.Generic;
 using System.Windows.Forms;
-using OpenTK.Input;
 using OpenBveApi.Interface;
+using OpenTK.Input;
+
 namespace DenshaDeGoInput
 {
 	/// <summary>
-	/// Class for Densha de GO! controllers for the Sony PlayStation.
+	/// Class for Densha de GO! controllers for classic consoles.
 	/// </summary>
-	internal class PSController
+	internal static class ControllerClassic
 	{
 		/// <summary>
 		/// Whether the adapter uses a hat to map the direction buttons.
 		/// </summary>
-		internal static bool UsesHat = false;
+		internal static bool usesHat;
 
 		/// <summary>
 		/// The index of the hat used to map the direction buttons.
@@ -48,18 +49,18 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal class ButtonIndices
 		{
-			internal int Cross = -1;
-			internal int Circle = -1;
-			internal int Square = -1;
-			internal int Triangle = -1;
-			internal int L1 = -1;
-			internal int R1 = -1;
-			internal int L2 = -1;
-			internal int R2 = -1;
 			internal int Select = -1;
 			internal int Start = -1;
-			internal int Left = -1;
-			internal int Right = -1;
+			internal int A = -1;
+			internal int B = -1;
+			internal int C = -1;
+			internal int Power1 = -1;
+			internal int Power2 = -1;
+			internal int Power3 = -1;
+			internal int Brake1 = -1;
+			internal int Brake2 = -1;
+			internal int Brake3 = -1;
+			internal int Brake4 = -1;
 		}
 
 		/// <summary>
@@ -67,18 +68,20 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal class PressedButtons
 		{
-			internal bool Cross;
-			internal bool Circle;
-			internal bool Square;
-			internal bool Triangle;
-			internal bool L1;
-			internal bool R1;
-			internal bool L2;
-			internal bool R2;
 			internal bool Select;
 			internal bool Start;
-			internal bool Left;
-			internal bool Right;
+			internal bool A;
+			internal bool B;
+			internal bool C;
+			internal bool Power1;
+			internal bool Power2;
+			internal bool Power3;
+			internal bool Brake1;
+			internal bool Brake3;
+			internal bool Brake2;
+			internal bool Brake4;
+
+
 		}
 
 		/// <summary>
@@ -92,9 +95,9 @@ namespace DenshaDeGoInput
 		internal static PressedButtons ButtonPressed = new PressedButtons();
 
 		/// <summary>
-		/// Checks whether a joystick is a Sony PlayStation controller.
+		/// Checks whether a joystick is a classic console controller.
 		/// </summary>
-		public static bool IsPSController(JoystickCapabilities joystick)
+		public static bool IsCompatibleController(JoystickCapabilities joystick)
 		{
 			if ((joystick.ButtonCount >= 12 || (joystick.ButtonCount >= 10 && joystick.HatCount > 0)) && joystick.ButtonCount <= 20)
 			{
@@ -104,94 +107,95 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Reads the buttons from the controller.
+		/// Reads the input from the controller.
 		/// </summary>
-		public static void ReadButtons(JoystickState joystick)
+		public static void ReadInput(JoystickState joystick)
 		{
-			ButtonPressed.Cross = joystick.IsButtonDown(ButtonIndex.Cross);
-			ButtonPressed.Circle = joystick.IsButtonDown(ButtonIndex.Circle);
-			ButtonPressed.Square = joystick.IsButtonDown(ButtonIndex.Square);
-			ButtonPressed.Triangle = joystick.IsButtonDown(ButtonIndex.Triangle);
-			ButtonPressed.L1 = joystick.IsButtonDown(ButtonIndex.L1);
-			ButtonPressed.L2 = joystick.IsButtonDown(ButtonIndex.L2);
-			ButtonPressed.R1 = joystick.IsButtonDown(ButtonIndex.R1);
-			ButtonPressed.R2 = joystick.IsButtonDown(ButtonIndex.R2);
 			ButtonPressed.Select = joystick.IsButtonDown(ButtonIndex.Select);
 			ButtonPressed.Start = joystick.IsButtonDown(ButtonIndex.Start);
+			ButtonPressed.A = joystick.IsButtonDown(ButtonIndex.A);
+			ButtonPressed.B = joystick.IsButtonDown(ButtonIndex.B);
+			ButtonPressed.C = joystick.IsButtonDown(ButtonIndex.C);
+			ButtonPressed.Power1 = joystick.IsButtonDown(ButtonIndex.Power1);
+			ButtonPressed.Brake1 = joystick.IsButtonDown(ButtonIndex.Brake1);
+			ButtonPressed.Brake2 = joystick.IsButtonDown(ButtonIndex.Brake2);
+			ButtonPressed.Brake3 = joystick.IsButtonDown(ButtonIndex.Brake3);
+			ButtonPressed.Brake4 = joystick.IsButtonDown(ButtonIndex.Brake4);
 
-			if (UsesHat)
+			if (usesHat)
 			{
 				// The adapter uses the hat to map the direction buttons.
-				ButtonPressed.Left = joystick.GetHat((JoystickHat)hatIndex).IsLeft;
-				ButtonPressed.Right = joystick.GetHat((JoystickHat)hatIndex).IsRight;
+				// This is the case of some PlayStation adapters.
+				ButtonPressed.Power2 = joystick.GetHat((JoystickHat)hatIndex).IsLeft;
+				ButtonPressed.Power3 = joystick.GetHat((JoystickHat)hatIndex).IsRight;
 			}
 			else
 			{
 				// The adapter maps the direction buttons to independent buttons.
-				ButtonPressed.Left = joystick.IsButtonDown(ButtonIndex.Left);
-				ButtonPressed.Right = joystick.IsButtonDown(ButtonIndex.Right);
+				ButtonPressed.Power2 = joystick.IsButtonDown(ButtonIndex.Power2);
+				ButtonPressed.Power3 = joystick.IsButtonDown(ButtonIndex.Power3);
 			}
 
-			if (!ButtonPressed.L2 && !ButtonPressed.R2 && !ButtonPressed.L1 && !ButtonPressed.R1)
+			if (!ButtonPressed.Brake1 && !ButtonPressed.Brake2 && !ButtonPressed.Brake3 && !ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.Emergency;
 			}
-			if (ButtonPressed.L2 && !ButtonPressed.R2 && !ButtonPressed.L1 && ButtonPressed.R1)
+			if (!ButtonPressed.Brake1 && ButtonPressed.Brake2 && ButtonPressed.Brake3 && !ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B8;
 			}
-			if (ButtonPressed.L2 && !ButtonPressed.R2 && ButtonPressed.L1 && ButtonPressed.R1)
+			if (ButtonPressed.Brake1 && ButtonPressed.Brake2 && ButtonPressed.Brake3 && !ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B7;
 			}
-			if (!ButtonPressed.L2 && ButtonPressed.R2 && !ButtonPressed.L1 && !ButtonPressed.R1)
+			if (!ButtonPressed.Brake1 && !ButtonPressed.Brake2 && !ButtonPressed.Brake3 && ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B6;
 			}
-			if (!ButtonPressed.L2 && ButtonPressed.R2 && ButtonPressed.L1 && !ButtonPressed.R1)
+			if (ButtonPressed.Brake1 && !ButtonPressed.Brake2 && !ButtonPressed.Brake3 && ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B5;
 			}
-			if (ButtonPressed.L2 && ButtonPressed.R2 && !ButtonPressed.L1 && !ButtonPressed.R1)
+			if (!ButtonPressed.Brake1 && ButtonPressed.Brake2 && !ButtonPressed.Brake3 && ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B4;
 			}
-			if (ButtonPressed.L2 && ButtonPressed.R2 && ButtonPressed.L1 && !ButtonPressed.R1)
+			if (ButtonPressed.Brake1 && ButtonPressed.Brake2 && !ButtonPressed.Brake3 && ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B3;
 			}
-			if (!ButtonPressed.L2 && ButtonPressed.R2 && !ButtonPressed.L1 && ButtonPressed.R1)
+			if (!ButtonPressed.Brake1 && !ButtonPressed.Brake2 && ButtonPressed.Brake3 && ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B2;
 			}
-			if (!ButtonPressed.L2 && ButtonPressed.R2 && ButtonPressed.L1 && ButtonPressed.R1)
+			if (ButtonPressed.Brake1 && !ButtonPressed.Brake2 && ButtonPressed.Brake3 && ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B1;
 			}
-			if (ButtonPressed.L2 && ButtonPressed.R2 && !ButtonPressed.L1 && ButtonPressed.R1)
+			if (!ButtonPressed.Brake1 && ButtonPressed.Brake2 && ButtonPressed.Brake3 && ButtonPressed.Brake4)
 			{
 				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.Released;
 			}
 
-			if (ButtonPressed.Right && ButtonPressed.Left && !ButtonPressed.Triangle)
+			if (!ButtonPressed.Power1 && ButtonPressed.Power2 && ButtonPressed.Power3)
 			{
 				InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
 			}
-			if (ButtonPressed.Right && !ButtonPressed.Left && ButtonPressed.Triangle)
+			if (ButtonPressed.Power1 && !ButtonPressed.Power2 && ButtonPressed.Power3)
 			{
 				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P1;
 			}
-			if (ButtonPressed.Right && !ButtonPressed.Left && !ButtonPressed.Triangle)
+			if (!ButtonPressed.Power1 && !ButtonPressed.Power2 && ButtonPressed.Power3)
 			{
 				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P2;
 			}
-			if (!ButtonPressed.Right && ButtonPressed.Left && ButtonPressed.Triangle)
+			if (ButtonPressed.Power1 && ButtonPressed.Power2 && !ButtonPressed.Power3)
 			{
 				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P3;
 			}
-			if (!ButtonPressed.Right && ButtonPressed.Left && !ButtonPressed.Triangle)
+			if (!ButtonPressed.Power1 && ButtonPressed.Power2 && !ButtonPressed.Power3)
 			{
-				if (UsesHat && InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
+				if (usesHat && InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
 				{
 					// Hack for adapters which map the direction buttons to a hat and confuse N with P4
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
@@ -201,16 +205,16 @@ namespace DenshaDeGoInput
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.P4;
 				}
 			}
-			if (!ButtonPressed.Right && !ButtonPressed.Left && ButtonPressed.Triangle)
+			if (ButtonPressed.Power1 && !ButtonPressed.Power2 && !ButtonPressed.Power3)
 			{
 				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P5;
 			}
 
 			InputTranslator.ControllerButtons.Select = (OpenTK.Input.ButtonState)(ButtonPressed.Select ? 1 : 0);
 			InputTranslator.ControllerButtons.Start = (OpenTK.Input.ButtonState)(ButtonPressed.Start ? 1 : 0);
-			InputTranslator.ControllerButtons.A = (OpenTK.Input.ButtonState)(ButtonPressed.Square ? 1 : 0);
-			InputTranslator.ControllerButtons.B = (OpenTK.Input.ButtonState)(ButtonPressed.Cross ? 1 : 0);
-			InputTranslator.ControllerButtons.C = (OpenTK.Input.ButtonState)(ButtonPressed.Circle ? 1 : 0);
+			InputTranslator.ControllerButtons.A = (OpenTK.Input.ButtonState)(ButtonPressed.A ? 1 : 0);
+			InputTranslator.ControllerButtons.B = (OpenTK.Input.ButtonState)(ButtonPressed.B ? 1 : 0);
+			InputTranslator.ControllerButtons.C = (OpenTK.Input.ButtonState)(ButtonPressed.C ? 1 : 0);
 		}
 
 		/// <summary>
@@ -218,7 +222,25 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public static void Calibrate()
 		{
-			string[] input = { "SELECT", "START", "A", "B", "C", "EMG", "B6", "B5", "B4", "B8", "P5", "N", "P2", "P1", "P5" };
+			string[] input = 
+			{
+				"SELECT",
+				"START",
+				"A",
+				"B",
+				"C",
+				Translations.QuickReferences.HandleEmergency,
+				Translations.QuickReferences.HandleBrake + "6",
+				Translations.QuickReferences.HandleBrake + "5",
+				Translations.QuickReferences.HandleBrake + "4",
+				Translations.QuickReferences.HandleBrake + "8",
+				Translations.QuickReferences.HandlePower + "5",
+				Translations.QuickReferences.HandlePowerNull,
+				Translations.QuickReferences.HandlePower + "2",
+				Translations.QuickReferences.HandlePower + "1",
+				Translations.QuickReferences.HandlePower + "5",
+			};
+
 			List<OpenTK.Input.ButtonState> ButtonState = InputTranslator.GetButtonsState();
 			List<OpenTK.Input.ButtonState> PreviousButtonState;
 			List<HatPosition> HatPositions = InputTranslator.GetHatPositions();
@@ -242,13 +264,13 @@ namespace DenshaDeGoInput
 						ButtonIndex.Start = index;
 						break;
 					case 2:
-						ButtonIndex.Square = index;
+						ButtonIndex.A = index;
 						break;
 					case 3:
-						ButtonIndex.Cross = index;
+						ButtonIndex.B = index;
 						break;
 					case 4:
-						ButtonIndex.Circle = index;
+						ButtonIndex.C = index;
 						break;
 				}
 			}
@@ -267,16 +289,16 @@ namespace DenshaDeGoInput
 				switch (i)
 				{
 					case 6:
-						ButtonIndex.R2 = index;
+						ButtonIndex.Brake4 = index;
 						break;
 					case 7:
-						ButtonIndex.L1 = index;
+						ButtonIndex.Brake1 = index;
 						break;
 					case 8:
-						ButtonIndex.L2 = index;
+						ButtonIndex.Brake2 = index;
 						break;
 					case 9:
-						ButtonIndex.R1 = index;
+						ButtonIndex.Brake3 = index;
 						break;
 				}
 			}
@@ -305,24 +327,24 @@ namespace DenshaDeGoInput
 				if (hat != -1 && i != 13)
 				{
 					// If a hat has changed, it means the converter is mapping the direction buttons 
-					UsesHat = true;
+					usesHat = true;
 					hatIndex = hat;
 				}
 				else
 				{
-					UsesHat = false;
+					usesHat = false;
 				}
 
 				switch (i)
 				{
 					case 12:
-						ButtonIndex.Left = index;
+						ButtonIndex.Power2 = index;
 						break;
 					case 13:
-						ButtonIndex.Triangle = index;
+						ButtonIndex.Power1 = index;
 						break;
 					case 14:
-						ButtonIndex.Right = index;
+						ButtonIndex.Power3 = index;
 						break;
 				}
 			}
