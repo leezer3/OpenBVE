@@ -42,6 +42,11 @@ namespace OpenBve
 			{
 				state = OpenTK.Input.Joystick.GetState(Handle);
 			}
+
+			internal override bool IsConnected()
+			{
+				return OpenTK.Input.Joystick.GetCapabilities(Handle).IsConnected;
+			}
 		}
 	}
 }

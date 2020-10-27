@@ -21,6 +21,32 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed in ms since the last call to this function</param>
 		internal static void ProcessControls(double TimeElapsed)
 		{
+			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
+			{
+				/*
+				 * Prequisite checks:
+				 * Is our joystick connected?
+				 * Have we already detected the disconnection?
+				 */
+				if (!JoystickManager.AttachedJoysticks[i].IsConnected() && JoystickManager.AttachedJoysticks[i].Disconnected == false)
+				{
+					JoystickManager.AttachedJoysticks[i].Disconnected = true;
+					for (int j = 0; j < Interface.CurrentControls.Length; j++)
+					{
+						if (Interface.CurrentControls[j].Method == Interface.ControlMethod.Joystick && Interface.CurrentControls[i].Device == JoystickManager.AttachedJoysticks[i].Handle)
+						{
+							//This control is bound to our disconnected joystick, so let's kick into pause mode
+							Program.Renderer.CurrentInterface = InterfaceType.Pause;
+						}
+					}
+				}
+				else if (JoystickManager.AttachedJoysticks[i].IsConnected() && JoystickManager.AttachedJoysticks[i].Disconnected)
+				{
+					//Reconnected, so kick out of pause mode
+					Program.Renderer.CurrentInterface = InterfaceType.Normal;
+				}
+
+			}
 			if (Interface.CurrentOptions.KioskMode)
 			{
 				kioskModeTimer += TimeElapsed;

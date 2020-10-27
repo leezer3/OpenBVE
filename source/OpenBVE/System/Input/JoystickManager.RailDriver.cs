@@ -207,6 +207,11 @@ namespace OpenBve
 				devices[0].ReadData(ref currentState);
 			}
 
+			internal override bool IsConnected()
+			{
+				return true;
+			}
+
 			private static int ScaleValue(int value, int value_min, int value_max)
 			{
 				long temp = (value - value_min) * 65535;

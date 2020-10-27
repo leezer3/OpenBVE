@@ -32,6 +32,10 @@ namespace OpenBve {
 			internal abstract int HatCount();
 
 			internal abstract void Poll();
+
+			internal abstract bool IsConnected();
+
+			internal bool Disconnected = false;
 		}
 
 		internal JoystickManager()
@@ -58,7 +62,7 @@ namespace OpenBve {
 		/// <returns>Call this function to refresh the list of available joysticks and thier capabilities</returns>
 		internal void RefreshJoysticks()
 		{
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 100; i++)
 			{
 				//Load the list of attached openTK joysticks
 				var state = OpenTK.Input.Joystick.GetState(i);
