@@ -197,16 +197,11 @@ namespace CsvRwRouteParser
 									}
 									break;
 								case "timeout":
-									if (!NumberFormats.TryParseDouble(c.InnerText, new[] {1.0}, out TimeOut))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Marker timeout invalid in " + fileName);
-									}
+									TimeOut = NumberFormats.ParseDouble(c.InnerText, c.Name, n.Name, -1, fileName);
 									break;
 								case "distance":
-									if (!NumberFormats.TryParseDouble(c.InnerText, new[] {1.0}, out EndingPosition))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Marker distance invalid in " + fileName);
-									}
+									//FIXME: We need to pass the unit modification array into this parser
+									EndingPosition = NumberFormats.ParseDouble(c.InnerText, c.Name, n.Name, -1, fileName);
 									break;
 								case "trains":
 									Trains = c.InnerText.Split(new char[] { ';' });

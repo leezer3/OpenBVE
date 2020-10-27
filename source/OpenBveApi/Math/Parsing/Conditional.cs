@@ -43,27 +43,6 @@ namespace OpenBveApi.Math
 			return false;
 		}
 
-		/// <summary>Parses a float formatted as a Visual Basic 6 string</summary>
-		/// <param name="Expression">The expression to parse</param>
-		/// <param name="Value">The value to return (Default 0.0)</param>
-		/// <returns>True if parsing succeds, false otherwise</returns>
-		public static bool TryParseFloatVb6(string Expression, out float Value)
-		{
-			Expression = TrimInside(Expression);
-			for (int n = Expression.Length; n > 0; n--)
-			{
-				float a;
-				if (float.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
-				{
-					Value = a;
-					return true;
-				}
-			}
-
-			Value = 0.0f;
-			return false;
-		}
-
 		/// <summary>Parses an integer formatted as a Visual Basic 6 string</summary>
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="Value">The value to return (Default 0.0)</param>
@@ -131,7 +110,7 @@ namespace OpenBveApi.Math
 			}
 		}
 
-		/// <summary>Parses an integer formatted as a Visual Basic 6 string, using the supplied unit conversion factor(s)</summary>
+		/// <summary>Parses a double formatted as a Visual Basic 6 string, using the supplied unit conversion factor(s)</summary>
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="UnitFactors">An array of unit conversion factors</param>
 		/// <param name="Value">The value to return (Default 0.0)</param>

@@ -946,21 +946,17 @@ namespace Plugin
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int j = 0; float x = 0.0f, y = 0.0f;
+								int j = 0;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out j)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument VertexIndex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									j = 0;
 								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseFloatVb6(Arguments[1], out x)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 0.0f;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseFloatVb6(Arguments[2], out y)) {
-									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 0.0f;
-								}
-								if (j >= 0 & j < Builder.Vertices.Length) {
-									Builder.Vertices[j].TextureCoordinates = new Vector2(x, y);
+
+								Vector2 parsedCoordinates = NumberFormats.ParseVector2(Arguments.Skip(1).ToArray(), Command, "Coordinates", i, FileName);
+
+								if (j >= 0 & j < Builder.Vertices.Length)
+								{
+									Builder.Vertices[j].TextureCoordinates = parsedCoordinates;
 								} else {
 									currentHost.AddMessage(MessageType.Error, false, "VertexIndex references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
