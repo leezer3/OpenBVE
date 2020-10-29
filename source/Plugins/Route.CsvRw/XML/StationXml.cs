@@ -425,12 +425,7 @@ namespace CsvRwRouteParser
 												case "distance":
 													if (!string.IsNullOrEmpty(cc.InnerText))
 													{
-														double d;
-														if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out d))
-														{
-															Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Request stop distance is invalid in XML file " + fileName);
-															break;
-														}
+														double d = NumberFormats.ParseDouble(cc.InnerText, cc.Name, c.Name, -1, fileName);
 														stopRequest.TrackPosition -= Math.Abs(d);
 													}
 													break;

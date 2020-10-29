@@ -48,15 +48,13 @@ namespace CsvRwRouteParser
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "cablighting":
-										double b;
-										if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out b))
-										{
-											cb = true;
-										}
+										cb = true;
+										double b = NumberFormats.ParseDouble(Arguments[0], c.Name, "Brightness", -1, fileName);
 										if (b > 255 || b < 0)
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid brightness value in file " + fileName);
 											currentLight.CabBrightness = 255;
+											cb = false;
 											break;
 										}
 										currentLight.CabBrightness = b;

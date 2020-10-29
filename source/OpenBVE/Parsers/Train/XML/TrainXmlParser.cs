@@ -77,16 +77,10 @@ namespace OpenBve.Parsers.Train
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "minimum":
-										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars))
-										{
-											Interface.AddMessage(MessageType.Error, false, "MinimumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
-										}
+										Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars = NumberFormats.ParseDouble(c.InnerText, c.Name, DocumentNodes[i].Name, -1, fileName);
 										break;
 									case "maximum":
-										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[carIndex - 1].Coupler.MaximumDistanceBetweenCars))
-										{
-											Interface.AddMessage(MessageType.Error, false, "MaximumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
-										}
+										Train.Cars[carIndex - 1].Coupler.MaximumDistanceBetweenCars = NumberFormats.ParseDouble(c.InnerText, c.Name, DocumentNodes[i].Name, -1, fileName);
 										break;
 									case "object":
 										if (string.IsNullOrEmpty(c.InnerText))

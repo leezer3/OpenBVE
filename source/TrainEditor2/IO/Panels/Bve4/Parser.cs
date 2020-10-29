@@ -6,6 +6,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenTK.Input;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Systems;
 using Path = OpenBveApi.Path;
@@ -56,13 +57,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 										switch (key.ToLowerInvariant())
 										{
 											case "resolution":
-												double pr = 0.0;
-
-												if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out pr))
-												{
-													Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-												}
-
+												double pr = NumberFormats.ParseDouble(value, key, section, i, fileName);
 												if (pr > 100)
 												{
 													panel.This.Resolution = pr;
@@ -77,53 +72,25 @@ namespace TrainEditor2.IO.Panels.Bve4
 											case "left":
 												if (value.Any())
 												{
-													double left;
-
-													if (!NumberFormats.TryParseDoubleVb6(value, out left))
-													{
-														Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line{(i + 1).ToString(culture)} in {fileName}");
-													}
-
-													panel.This.Left = left;
+													panel.This.Left = NumberFormats.ParseDouble(value, key, section, i, fileName);
 												}
 												break;
 											case "right":
 												if (value.Any())
 												{
-													double right;
-
-													if (!NumberFormats.TryParseDoubleVb6(value, out right))
-													{
-														Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-													}
-
-													panel.This.Right = right;
+													panel.This.Right = NumberFormats.ParseDouble(value, key, section, i, fileName);
 												}
 												break;
 											case "top":
 												if (value.Any())
 												{
-													double top;
-
-													if (!NumberFormats.TryParseDoubleVb6(value, out top))
-													{
-														Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-													}
-
-													panel.This.Top = top;
+													panel.This.Top = NumberFormats.ParseDouble(value, key, section, i, fileName);
 												}
 												break;
 											case "bottom":
 												if (value.Any())
 												{
-													double bottom;
-
-													if (!NumberFormats.TryParseDoubleVb6(value, out bottom))
-													{
-														Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-													}
-
-													panel.This.Bottom = bottom;
+													panel.This.Bottom = NumberFormats.ParseDouble(value, key, section, i, fileName);
 												}
 												break;
 											case "daytimeimage":
@@ -190,26 +157,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 														if (a.Any())
 														{
-															double x;
-
-															if (!NumberFormats.TryParseDoubleVb6(a, out x))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															panel.This.CenterX = x;
+															panel.This.CenterX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 														}
 
 														if (b.Any())
 														{
-															double y;
-
-															if (!NumberFormats.TryParseDoubleVb6(b, out y))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															panel.This.CenterY = y;
+															panel.This.CenterY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 														}
 													}
 													else
@@ -229,26 +182,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 														if (a.Any())
 														{
-															double x;
-
-															if (!NumberFormats.TryParseDoubleVb6(a, out x))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															panel.This.OriginX = x;
+															panel.This.OriginX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 														}
 
 														if (b.Any())
 														{
-															double y;
-
-															if (!NumberFormats.TryParseDoubleVb6(b, out y))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															panel.This.OriginY = y;
+															panel.This.OriginY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 														}
 													}
 													else
@@ -294,26 +233,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 														if (a.Any())
 														{
-															double x;
-
-															if (!NumberFormats.TryParseDoubleVb6(a, out x))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															pilotLamp.LocationX = x;
+															pilotLamp.LocationX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 														}
 
 														if (b.Any())
 														{
-															double y;
-
-															if (!NumberFormats.TryParseDoubleVb6(b, out y))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															pilotLamp.LocationY = y;
+															pilotLamp.LocationY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 														}
 													}
 													else
@@ -377,14 +302,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "layer":
 													if (value.Any())
 													{
-														int layer;
-
-														if (!NumberFormats.TryParseIntVb6(value, out layer))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														pilotLamp.Layer = layer;
+														pilotLamp.Layer = NumberFormats.ParseInt(value, key, section, i, fileName);
 													}
 													break;
 											}
@@ -427,26 +345,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 															if (a.Any())
 															{
-																double x;
-
-																if (!NumberFormats.TryParseDoubleVb6(a, out x))
-																{
-																	Interface.AddMessage(MessageType.Error, false, $"CenterX is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-																}
-
-																needle.LocationX = x;
+																needle.LocationX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 															}
 
 															if (b.Any())
 															{
-																double y;
-
-																if (!NumberFormats.TryParseDoubleVb6(b, out y))
-																{
-																	Interface.AddMessage(MessageType.Error, false, $"CenterY is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-																}
-
-																needle.LocationY = y;
+																needle.LocationY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 															}
 														}
 														else
@@ -458,14 +362,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "radius":
 													if (value.Any())
 													{
-														double radius;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out radius))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"ValueInPixels is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														needle.Radius = radius;
+														needle.Radius = NumberFormats.ParseDouble(value, key, section, i, fileName);
 
 														if (needle.Radius == 0.0)
 														{
@@ -553,27 +450,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 															if (a.Any())
 															{
-																double x;
-
-																if (!NumberFormats.TryParseDoubleVb6(a, out x))
-																{
-																	Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-																}
-
-																needle.OriginX = x;
+																needle.OriginX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 															}
 
 															if (b.Any())
 															{
-																double y;
-
-																if (!NumberFormats.TryParseDoubleVb6(b, out y))
-																{
-																	Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-																	needle.OriginX = -needle.OriginX;
-																}
-
-																needle.OriginY = y;
+																needle.OriginY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 															}
 
 															needle.DefinedOrigin = true;
@@ -587,66 +469,31 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "initialangle":
 													if (value.Any())
 													{
-														double initialAngle;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out initialAngle))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"ValueInDegrees is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														needle.InitialAngle = initialAngle.ToRadians();
+														needle.InitialAngle = NumberFormats.ParseDouble(value, key, section, i, fileName).ToRadians();
 													}
 													break;
 												case "lastangle":
 													if (value.Any())
 													{
-														double lastAngle;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out lastAngle))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"ValueInDegrees is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														needle.LastAngle = lastAngle.ToRadians();
+														needle.LastAngle = NumberFormats.ParseDouble(value, key, section, i, fileName).ToRadians();
 													}
 													break;
 												case "minimum":
 													if (value.Any())
 													{
-														double minimum;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out minimum))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														needle.Minimum = minimum;
+														needle.Minimum = NumberFormats.ParseDouble(value, key, section, i, fileName);
 													}
 													break;
 												case "maximum":
 													if (value.Any())
 													{
-														double maximum;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out maximum))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														needle.Maximum = maximum;
+														needle.Maximum = NumberFormats.ParseDouble(value, key, section, i, fileName);
 													}
 													break;
 												case "naturalfreq":
 													if (value.Any())
 													{
-														double naturalFreq;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out naturalFreq))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														needle.NaturalFreq = naturalFreq;
+														needle.NaturalFreq = NumberFormats.ParseDouble(value, key, section, i, fileName);
 
 														if (needle.NaturalFreq < 0.0)
 														{
@@ -660,14 +507,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "dampingratio":
 													if (value.Any())
 													{
-														double dampingRatio;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out dampingRatio))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														needle.DampingRatio = dampingRatio;
+														needle.DampingRatio = NumberFormats.ParseDouble(value, key, section, i, fileName);
 
 														if (needle.DampingRatio < 0.0)
 														{
@@ -681,14 +521,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "layer":
 													if (value.Any())
 													{
-														int layer;
-
-														if (!NumberFormats.TryParseIntVb6(value, out layer))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														needle.Layer = layer;
+														needle.Layer = NumberFormats.ParseInt(value, key, section, i, fileName);
 													}
 													break;
 												case "backstop":
@@ -742,26 +575,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 														if (a.Any())
 														{
-															double x;
-
-															if (!NumberFormats.TryParseDoubleVb6(a, out x))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															linearGauge.LocationX = x;
+															linearGauge.LocationX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 														}
 
 														if (b.Any())
 														{
-															double y;
-
-															if (!NumberFormats.TryParseDoubleVb6(b, out y))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															linearGauge.LocationY = y;
+															linearGauge.LocationY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 														}
 													}
 													else
@@ -772,40 +591,19 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "minimum":
 													if (value.Any())
 													{
-														double minimum;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out minimum))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														linearGauge.Minimum = minimum;
+														linearGauge.Minimum = NumberFormats.ParseDouble(value, key, section, i, fileName);
 													}
 													break;
 												case "maximum":
 													if (value.Any())
 													{
-														double maximum;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out maximum))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														linearGauge.Maximum = maximum;
+														linearGauge.Maximum = NumberFormats.ParseDouble(value, key, section, i, fileName);
 													}
 													break;
 												case "width":
 													if (value.Any())
 													{
-														int width;
-
-														if (!NumberFormats.TryParseIntVb6(value, out width))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														linearGauge.Width = width;
+														linearGauge.Width = NumberFormats.ParseInt(value, key, section, i, fileName);
 													}
 													break;
 												case "direction":
@@ -814,14 +612,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 														if (s.Length == 2)
 														{
-															int x, y;
-
-															if (!NumberFormats.TryParseIntVb6(s[0], out x))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"X is invalid in LinearGauge Direction at line {(i + 1).ToString(culture)} in file {fileName}");
-															}
-
-															linearGauge.DirectionX = x;
+															linearGauge.DirectionX = NumberFormats.ParseInt(s[0], key, section, i, fileName);
 
 															if (linearGauge.DirectionX < -1 || linearGauge.DirectionX > 1)
 															{
@@ -829,12 +620,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 																linearGauge.DirectionX = 0;
 															}
 
-															if (!NumberFormats.TryParseIntVb6(s[1], out y))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Y is invalid in  LinearGauge Direction at line {(i + 1).ToString(culture)} in file {fileName}");
-															}
-
-															linearGauge.DirectionY = y;
+															linearGauge.DirectionY = NumberFormats.ParseInt(s[1], key, section, i, fileName);
 
 															if (linearGauge.DirectionY < -1 || linearGauge.DirectionY > 1)
 															{
@@ -904,14 +690,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "layer":
 													if (value.Any())
 													{
-														int layer;
-
-														if (!NumberFormats.TryParseIntVb6(value, out layer))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														linearGauge.Layer = layer;
+														linearGauge.Layer = NumberFormats.ParseInt(value, key, section, i, fileName);
 													}
 													break;
 											}
@@ -953,26 +732,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 														if (a.Any())
 														{
-															double x;
-
-															if (!NumberFormats.TryParseDoubleVb6(a, out x))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															digitalNumber.LocationX = x;
+															digitalNumber.LocationX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 														}
 
 														if (b.Any())
 														{
-															double y;
-
-															if (!NumberFormats.TryParseDoubleVb6(b, out y))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															digitalNumber.LocationY = y;
+															digitalNumber.LocationY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 														}
 													}
 													else
@@ -1036,14 +801,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "interval":
 													if (value.Any())
 													{
-														int interval;
-
-														if (!NumberFormats.TryParseIntVb6(value, out interval))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Height is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalNumber.Interval = interval;
+														digitalNumber.Interval = NumberFormats.ParseInt(value, key, section, i, fileName);
 
 														if (digitalNumber.Interval <= 0)
 														{
@@ -1054,14 +812,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "layer":
 													if (value.Any())
 													{
-														int layer;
-
-														if (!NumberFormats.TryParseIntVb6(value, out layer))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalNumber.Layer = layer;
+														digitalNumber.Layer = NumberFormats.ParseInt(value, key, section, i, fileName);
 													}
 													break;
 											}
@@ -1103,26 +854,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 														if (a.Any())
 														{
-															double x;
-
-															if (!NumberFormats.TryParseDoubleVb6(a, out x))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"CenterX is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															digitalGauge.LocationX = x;
+															digitalGauge.LocationX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 														}
 
 														if (b.Any())
 														{
-															double y;
-
-															if (!NumberFormats.TryParseDoubleVb6(b, out y))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"CenterY is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															digitalGauge.LocationY = y;
+															digitalGauge.LocationY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 														}
 													}
 													else
@@ -1133,14 +870,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "radius":
 													if (value.Any())
 													{
-														double radius;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out radius))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"ValueInPixels is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalGauge.Radius = radius;
+														digitalGauge.Radius = NumberFormats.ParseDouble(value, key, section, i, fileName);
 
 														if (digitalGauge.Radius == 0.0)
 														{
@@ -1165,79 +895,37 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "initialangle":
 													if (value.Any())
 													{
-														double initialAngle;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out initialAngle))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"ValueInDegrees is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalGauge.InitialAngle = initialAngle.ToRadians();
+														digitalGauge.InitialAngle = NumberFormats.ParseDouble(value, key, section, i, fileName).ToRadians();
 													}
 													break;
 												case "lastangle":
 													if (value.Any())
 													{
-														double lastAngle;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out lastAngle))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"ValueInDegrees is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalGauge.LastAngle = lastAngle.ToRadians();
+														digitalGauge.LastAngle = NumberFormats.ParseDouble(value, key, section, i, fileName).ToRadians();
 													}
 													break;
 												case "minimum":
 													if (value.Any())
 													{
-														double minimum;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out minimum))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalGauge.Minimum = minimum;
+														digitalGauge.Minimum = NumberFormats.ParseDouble(value, key, section, i, fileName);
 													}
 													break;
 												case "maximum":
 													if (value.Any())
 													{
-														double maximum;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out maximum))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalGauge.Maximum = maximum;
+														digitalGauge.Maximum = NumberFormats.ParseDouble(value, key, section, i, fileName);
 													}
 													break;
 												case "step":
 													if (value.Any())
 													{
-														double step;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out step))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalGauge.Step = step;
+														digitalGauge.Step = NumberFormats.ParseDouble(value, key, section, i, fileName);
 													}
 													break;
 												case "layer":
 													if (value.Any())
 													{
-														int layer;
-
-														if (!NumberFormats.TryParseIntVb6(value, out layer))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														digitalGauge.Layer = layer;
+														digitalGauge.Layer = NumberFormats.ParseInt(value, key, section, i, fileName);
 													}
 													break;
 											}
@@ -1276,26 +964,12 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 														if (a.Any())
 														{
-															double x;
-
-															if (!NumberFormats.TryParseDoubleVb6(a, out x))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															timetable.LocationX = x;
+															timetable.LocationX = NumberFormats.ParseDouble(a, key, section, i, fileName);
 														}
 
 														if (b.Any())
 														{
-															double y;
-
-															if (!NumberFormats.TryParseDoubleVb6(b, out y))
-															{
-																Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-															}
-
-															timetable.LocationY = y;
+															timetable.LocationY = NumberFormats.ParseDouble(b, key, section, i, fileName);
 														}
 													}
 													else
@@ -1306,14 +980,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "width":
 													if (value.Any())
 													{
-														double width;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out width))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"ValueInPixels is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														timetable.Width = width;
+														timetable.Width = NumberFormats.ParseDouble(value, key, section, i, fileName);
 
 														if (timetable.Width <= 0.0)
 														{
@@ -1324,14 +991,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "height":
 													if (value.Any())
 													{
-														double height;
-
-														if (!NumberFormats.TryParseDoubleVb6(value, out height))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"ValueInPixels is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														timetable.Height = height;
+														timetable.Height = NumberFormats.ParseDouble(value, key, section, i, fileName);
 
 														if (timetable.Height <= 0.0)
 														{
@@ -1355,14 +1015,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 												case "layer":
 													if (value.Any())
 													{
-														int layer;
-
-														if (!NumberFormats.TryParseIntVb6(value, out layer))
-														{
-															Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
-														}
-
-														timetable.Layer = layer;
+														timetable.Layer = NumberFormats.ParseInt(value, key, section, i, fileName);
 													}
 													break;
 											}
