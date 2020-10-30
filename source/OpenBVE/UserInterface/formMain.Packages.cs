@@ -488,7 +488,7 @@ namespace OpenBve
 		{
 
 			string uninstallResults = "";
-			List<Package> brokenDependancies = Database.CheckUninstallDependancies(packageToUninstall.Dependancies);
+			List<Package> brokenDependancies = Database.CheckUninstallDependancies(packageToUninstall.Dependancies.ToList());
 			if (brokenDependancies.Count != 0)
 			{
 				PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false, false, false);
