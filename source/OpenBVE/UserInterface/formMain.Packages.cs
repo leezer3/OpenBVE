@@ -107,7 +107,7 @@ namespace OpenBve
 				return;
 			}
 
-			List<Package> Dependancies = Database.checkDependsReccomends(currentPackage.Dependancies);
+			List<Package> Dependancies = Database.checkDependsReccomends(currentPackage.Dependancies.ToList());
 			if (Dependancies != null)
 			{
 				//We are missing a dependancy
@@ -119,7 +119,7 @@ namespace OpenBve
 				panelDependancyError.Show();
 				return;
 			}
-			List<Package> Reccomendations = Database.checkDependsReccomends(currentPackage.Reccomendations);
+			List<Package> Reccomendations = Database.checkDependsReccomends(currentPackage.Reccomendations.ToList());
 			if (Reccomendations != null)
 			{
 				//We are missing a reccomendation
