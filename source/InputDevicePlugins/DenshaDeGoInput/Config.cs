@@ -47,19 +47,31 @@ namespace DenshaDeGoInput
 			Translations.LoadLanguageFiles(OpenBveApi.Path.CombineDirectory(DenshaDeGoInput.FileSystem.DataFolder, "Languages"));
 
 			// Populate command boxes
+			buttonselectBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonstartBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
 			buttonaBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
 			buttonbBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
 			buttoncBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonstartBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonselectBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttondBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonupBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttondownBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonleftBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonrightBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonpedalBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
 			Translations.CommandInfo[] commands = Translations.CommandInfos.OrderBy(o => o.Command).ToArray();
 			for (int i = 0; i < Translations.CommandInfos.Length; i++)
 			{
+				buttonselectBox.Items.Add(commands[i].Name);
+				buttonstartBox.Items.Add(commands[i].Name);
 				buttonaBox.Items.Add(commands[i].Name);
 				buttonbBox.Items.Add(commands[i].Name);
 				buttoncBox.Items.Add(commands[i].Name);
-				buttonstartBox.Items.Add(commands[i].Name);
-				buttonselectBox.Items.Add(commands[i].Name);
+				buttondBox.Items.Add(commands[i].Name);
+				buttonupBox.Items.Add(commands[i].Name);
+				buttondownBox.Items.Add(commands[i].Name);
+				buttonleftBox.Items.Add(commands[i].Name);
+				buttonrightBox.Items.Add(commands[i].Name);
+				buttonpedalBox.Items.Add(commands[i].Name);
 			}
 		}
 
@@ -71,11 +83,11 @@ namespace DenshaDeGoInput
 
 			for (int i = 0; i < 10; i++)
 			{
-				JoystickState state = Joystick.GetState(i);
-				JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
-				InputTranslator.ControllerModels model = InputTranslator.GetControllerModel(state, capabilities);
-				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
+				InputTranslator.ControllerModels model = InputTranslator.GetControllerModel(i);
 				deviceList.Add(Translations.GetInterfaceString("denshadego_joystick").Replace("[index]", (i + 1).ToString()));
+
+				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
+				JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
 				if (capabilities.ButtonCount > 0 && model != InputTranslator.ControllerModels.Unsupported)
 				{
 					deviceBox.Items.Add(deviceList[i]);
@@ -107,6 +119,11 @@ namespace DenshaDeGoInput
 			label_d.ForeColor = Color.Black;
 			label_start.ForeColor = Color.Black;
 			label_select.ForeColor = Color.Black;
+			label_up.ForeColor = Color.Black;
+			label_down.ForeColor = Color.Black;
+			label_left.ForeColor = Color.Black;
+			label_right.ForeColor = Color.Black;
+			label_pedal.ForeColor = Color.Black;
 
 			if (InputTranslator.IsControllerConnected)
 			{
@@ -188,17 +205,57 @@ namespace DenshaDeGoInput
 				{
 					label_d.ForeColor = Color.White;
 				}
+				if (InputTranslator.ControllerButtons.Up == OpenTK.Input.ButtonState.Pressed)
+				{
+					label_up.ForeColor = Color.White;
+				}
+				if (InputTranslator.ControllerButtons.Down == OpenTK.Input.ButtonState.Pressed)
+				{
+					label_down.ForeColor = Color.White;
+				}
+				if (InputTranslator.ControllerButtons.Left == OpenTK.Input.ButtonState.Pressed)
+				{
+					label_left.ForeColor = Color.White;
+				}
+				if (InputTranslator.ControllerButtons.Right == OpenTK.Input.ButtonState.Pressed)
+				{
+					label_right.ForeColor = Color.White;
+				}
+				if (InputTranslator.ControllerButtons.Pedal == OpenTK.Input.ButtonState.Pressed)
+				{
+					label_pedal.ForeColor = Color.White;
+				}
 			}
 
-			if (InputTranslator.ControllerModel == InputTranslator.ControllerModels.Classic)
+			switch (InputTranslator.ControllerModel)
 			{
-				buttonCalibrate.Visible = true;
-				label_d.Visible = false;
-			}
-			else
-			{
-				buttonCalibrate.Visible = false;
-				label_d.Visible = true;
+				case InputTranslator.ControllerModels.Classic:
+					buttonCalibrate.Visible = true;
+					label_d.Visible = false;
+					label_up.Visible = false;
+					label_down.Visible = false;
+					label_left.Visible = false;
+					label_right.Visible = false;
+					label_pedal.Visible = false;
+					break;
+				case InputTranslator.ControllerModels.Unbalance:
+					buttonCalibrate.Visible = false;
+					label_d.Visible = true;
+					label_up.Visible = true;
+					label_down.Visible = true;
+					label_left.Visible = true;
+					label_right.Visible = true;
+					label_pedal.Visible = false;
+					break;
+				default:
+					buttonCalibrate.Visible = false;
+					label_d.Visible = true;
+					label_up.Visible = true;
+					label_down.Visible = true;
+					label_left.Visible = true;
+					label_right.Visible = true;
+					label_pedal.Visible = true;
+					break;
 			}
 		}
 
@@ -221,6 +278,12 @@ namespace DenshaDeGoInput
 			buttonaBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 			buttonbBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 			buttoncBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttondBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonupBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttondownBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonleftBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonrightBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonpedalBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 
 			label_brakeemg.Text = Translations.QuickReferences.HandleEmergency;
 			label_brake8.Text = Translations.QuickReferences.HandleBrake + "8";
@@ -238,6 +301,17 @@ namespace DenshaDeGoInput
 			label_power2.Text = Translations.QuickReferences.HandlePower + "2";
 			label_power1.Text = Translations.QuickReferences.HandlePower + "1";
 			label_powern.Text = Translations.QuickReferences.HandlePowerNull;
+
+			label_up.Text = Translations.GetInterfaceString("denshadego_label_up");
+			label_down.Text = Translations.GetInterfaceString("denshadego_label_down");
+			label_left.Text = Translations.GetInterfaceString("denshadego_label_left");
+			label_right.Text = Translations.GetInterfaceString("denshadego_label_right");
+			label_pedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
+			label_buttonup.Text = Translations.GetInterfaceString("denshadego_label_up");
+			label_buttondown.Text = Translations.GetInterfaceString("denshadego_label_down");
+			label_buttonleft.Text = Translations.GetInterfaceString("denshadego_label_left");
+			label_buttonright.Text = Translations.GetInterfaceString("denshadego_label_right");
+			label_buttonpedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
 		}
 
 		private void Config_Shown(object sender, EventArgs e)
@@ -257,6 +331,12 @@ namespace DenshaDeGoInput
 			buttonaBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[2].Command;
 			buttonbBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[3].Command;
 			buttoncBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[4].Command;
+			buttondBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[5].Command;
+			buttonupBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[6].Command;
+			buttondownBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[7].Command;
+			buttonleftBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[8].Command;
+			buttonrightBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[9].Command;
+			buttonpedalBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[10].Command;
 
 			// Set checkboxes
 			convertnotchesCheck.Checked = DenshaDeGoInput.convertNotches;
@@ -305,6 +385,36 @@ namespace DenshaDeGoInput
 		private void buttoncBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			DenshaDeGoInput.ButtonProperties[4].Command = buttoncBox.SelectedIndex;
+		}
+
+		private void buttondBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonProperties[5].Command = buttondBox.SelectedIndex;
+		}
+
+		private void buttonupBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonProperties[6].Command = buttonupBox.SelectedIndex;
+		}
+
+		private void buttondownBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonProperties[7].Command = buttondownBox.SelectedIndex;
+		}
+
+		private void buttonleftBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonProperties[8].Command = buttonleftBox.SelectedIndex;
+		}
+
+		private void buttonrightBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonProperties[9].Command = buttonrightBox.SelectedIndex;
+		}
+
+		private void buttonpedalBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonProperties[10].Command = buttonpedalBox.SelectedIndex;
 		}
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)

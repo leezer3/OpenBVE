@@ -2513,6 +2513,21 @@
 					<trans-unit id="calibrate_power">
 						<source>Move the power handle to [notch] and press OK.</source>
 					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+					</trans-unit>
 				</group>
 			</group>
 			<group id="train_editor">

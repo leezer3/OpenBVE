@@ -88,7 +88,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// An array with the properties for each button.
 		/// </summary>
-		internal static ButtonProp[] ButtonProperties = new ButtonProp[6];
+		internal static ButtonProp[] ButtonProperties = new ButtonProp[11];
 
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace DenshaDeGoInput
 		/// Internval for repeating a button press.
 		/// </summary>
 		internal static int repeatInterval = 100;
-
+		
 		/// <summary>
 		/// A function call when the Config button is pressed.
 		/// </summary>
@@ -210,6 +210,16 @@ namespace DenshaDeGoInput
 			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[4].Command]));
 			// D button
 			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[5].Command]));
+			// Up button
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[6].Command]));
+			// Down button
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[7].Command]));
+			// Left button
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[8].Command]));
+			// Right button
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[9].Command]));
+			// Pedal
+			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[10].Command]));
 
 			InputTranslator.Update();
 
@@ -312,6 +322,76 @@ namespace DenshaDeGoInput
 						ButtonProperties[5].Repeats = true;
 					}
 				}
+				// Up button
+				if (InputTranslator.ControllerButtons.Up == OpenTK.Input.ButtonState.Pressed && ButtonProperties[6].Timer <= 0)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[6].Command]));
+					if (ButtonProperties[6].Repeats)
+					{
+						ButtonProperties[6].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[6].Timer = repeatDelay;
+						ButtonProperties[6].Repeats = true;
+					}
+				}
+				// Down button
+				if (InputTranslator.ControllerButtons.Down == OpenTK.Input.ButtonState.Pressed && ButtonProperties[7].Timer <= 0)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[7].Command]));
+					if (ButtonProperties[7].Repeats)
+					{
+						ButtonProperties[7].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[7].Timer = repeatDelay;
+						ButtonProperties[7].Repeats = true;
+					}
+				}
+				// Left button
+				if (InputTranslator.ControllerButtons.Left == OpenTK.Input.ButtonState.Pressed && ButtonProperties[8].Timer <= 0)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[8].Command]));
+					if (ButtonProperties[8].Repeats)
+					{
+						ButtonProperties[8].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[8].Timer = repeatDelay;
+						ButtonProperties[8].Repeats = true;
+					}
+				}
+				// Right button
+				if (InputTranslator.ControllerButtons.Right == OpenTK.Input.ButtonState.Pressed && ButtonProperties[9].Timer <= 0)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[9].Command]));
+					if (ButtonProperties[9].Repeats)
+					{
+						ButtonProperties[9].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[9].Timer = repeatDelay;
+						ButtonProperties[9].Repeats = true;
+					}
+				}
+				// Pedal
+				if (InputTranslator.ControllerButtons.Pedal == OpenTK.Input.ButtonState.Pressed && ButtonProperties[10].Timer <= 0)
+				{
+					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[10].Command]));
+					if (ButtonProperties[10].Repeats)
+					{
+						ButtonProperties[10].Timer = repeatInterval;
+					}
+					else
+					{
+						ButtonProperties[10].Timer = repeatDelay;
+						ButtonProperties[10].Repeats = true;
+					}
+				}
 			}
 
 			loading = false;
@@ -378,6 +458,51 @@ namespace DenshaDeGoInput
 			{
 				ButtonProperties[5].Timer = 0;
 				ButtonProperties[5].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.Up == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[6].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[6].Timer = 0;
+				ButtonProperties[6].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.Down == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[7].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[7].Timer = 0;
+				ButtonProperties[7].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.Left == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[8].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[8].Timer = 0;
+				ButtonProperties[8].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.Right == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[9].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[9].Timer = 0;
+				ButtonProperties[9].Repeats = false;
+			}
+			if (InputTranslator.ControllerButtons.Pedal == OpenTK.Input.ButtonState.Pressed)
+			{
+				ButtonProperties[10].Timer -= data.ElapsedTime.Milliseconds;
+			}
+			else
+			{
+				ButtonProperties[10].Timer = 0;
+				ButtonProperties[10].Repeats = false;
 			}
 		}
 
@@ -622,6 +747,51 @@ namespace DenshaDeGoInput
 												}
 											}
 											break;
+										case "up":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ButtonProperties[6].Command = a;
+												}
+											}
+											break;
+										case "down":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ButtonProperties[7].Command = a;
+												}
+											}
+											break;
+										case "left":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ButtonProperties[8].Command = a;
+												}
+											}
+											break;
+										case "right":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ButtonProperties[9].Command = a;
+												}
+											}
+											break;
+										case "pedal":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ButtonProperties[10].Command = a;
+												}
+											}
+											break;
 									}
 									break;
 								case "classic":
@@ -847,6 +1017,11 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("b = " + ButtonProperties[3].Command.ToString(Culture));
 				Builder.AppendLine("c = " + ButtonProperties[4].Command.ToString(Culture));
 				Builder.AppendLine("d = " + ButtonProperties[5].Command.ToString(Culture));
+				Builder.AppendLine("up = " + ButtonProperties[6].Command.ToString(Culture));
+				Builder.AppendLine("down = " + ButtonProperties[7].Command.ToString(Culture));
+				Builder.AppendLine("left = " + ButtonProperties[8].Command.ToString(Culture));
+				Builder.AppendLine("right = " + ButtonProperties[9].Command.ToString(Culture));
+				Builder.AppendLine("pedal = " + ButtonProperties[10].Command.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[classic]");
 				Builder.AppendLine("hat = " + ControllerClassic.usesHat.ToString(Culture).ToLower());

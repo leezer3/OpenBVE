@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using System.Collections.Generic;
 using OpenTK.Input;
 
@@ -87,6 +88,7 @@ namespace DenshaDeGoInput
 			internal OpenTK.Input.ButtonState Down;
 			internal OpenTK.Input.ButtonState Left;
 			internal OpenTK.Input.ButtonState Right;
+			internal OpenTK.Input.ButtonState Pedal;
 		}
 
 		/// <summary>
@@ -132,17 +134,34 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the controller model.
 		/// </summary>
-		internal static ControllerModels GetControllerModel(JoystickState state, JoystickCapabilities capabilities)
+		internal static ControllerModels GetControllerModel(int index)
 		{
-			if (ControllerUnbalance.IsCompatibleController(capabilities))
+			JoystickCapabilities capabilities = Joystick.GetCapabilities(index);
+			string id = GetControllerID(index);
+
+			if (ControllerUnbalance.IsCompatibleController(id, capabilities))
 			{
+				// The controller is a USB controller by Unbalance
 				return ControllerModels.Unbalance;
 			}
 			if (ControllerClassic.IsCompatibleController(capabilities))
 			{
+				// The controller is a classic console controller
 				return ControllerModels.Classic;
 			}
+			// Unsupported controller
 			return ControllerModels.Unsupported;
+		}
+
+		/// <summary>
+		/// Gets a string representing the vendor and product ID.
+		/// </summary>
+		internal static string GetControllerID(int index)
+		{
+			string guid = Joystick.GetGuid(index).ToString("N");
+			// OpenTK joysticks have a GUID which contains the vendor and product ID.
+			string id = guid.Substring(10,2)+guid.Substring(8,2)+":"+guid.Substring(18,2)+guid.Substring(16,2);
+			return id;
 		}
 
 		/// <summary>
@@ -153,19 +172,16 @@ namespace DenshaDeGoInput
 			if (!IsControllerConnected)
 			{
 				// The controller is apparently not connected; try to connect to it
-				JoystickState state = Joystick.GetState(activeControllerIndex);
-				JoystickCapabilities capabilities = Joystick.GetCapabilities(activeControllerIndex);
-				ControllerModel = GetControllerModel(state, capabilities);
+				ControllerModel = GetControllerModel(activeControllerIndex);
 
 				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
+				JoystickCapabilities capabilities = Joystick.GetCapabilities(activeControllerIndex);
 				if (capabilities.ButtonCount > 0 && ControllerModel != ControllerModels.Unsupported)
 				{
 					// The controller is valid and can be used
 					IsControllerConnected = true;
 					return;
 				}
-				// The controller is not valid; temporarily discard input from the device
-				activeControllerIndex = -1;
 			}
 			else
 			{
@@ -176,6 +192,7 @@ namespace DenshaDeGoInput
 					IsControllerConnected = false;
 					return;
 				}
+				// A valid controller is connected, get input
 				GetInput();
 			}
 		}
