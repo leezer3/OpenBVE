@@ -45,6 +45,9 @@ namespace DenshaDeGoInput
 			internal int D = 3;
 		}
 
+		/// <summary>
+		/// Represents the possible bytes for brake notches.
+		/// </summary>
 		internal enum BrakeByte
 		{
 			Released = 0x79,
@@ -60,6 +63,9 @@ namespace DenshaDeGoInput
 			Transition = 0xFF
 		}
 
+		/// <summary>
+		/// Represents the possible bytes for power notches.
+		/// </summary>
 		internal enum PowerByte
 		{
 			N = 0x81,
@@ -84,7 +90,10 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Checks whether a joystick is an Unbalance controller.
 		/// </summary>
-		public static bool IsCompatibleController(string id, JoystickCapabilities capabilities)
+		/// <param name="id">A string representing the vendor and product ID.</param>
+		/// <param name="capabilities">the capabilities of the joystick.</param>
+		/// <returns>Whether the controller is compatible.</returns>
+		internal static bool IsCompatibleController(string id, JoystickCapabilities capabilities)
 		{
 			// DGC-255/DGOC-44U
 			if (id == "0ae4:0003")
@@ -99,7 +108,8 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Reads the input from the controller.
 		/// </summary>
-		public static void ReadInput(JoystickState joystick)
+		/// <param name="joystick">The state of the joystick to read input from.</param>
+		internal static void ReadInput(JoystickState joystick)
 		{
 			double brakeAxis = joystick.GetAxis(0);
 			double powerAxis = joystick.GetAxis(1);
@@ -188,6 +198,8 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the minimum value for a notch byte.
 		/// </summary>
+		/// <param name="notch">A notch byte.</param>
+		/// <returns>The minimum value for a notch byte.</returns>
 		private static double GetRangeMin(byte notch)
 		{
 			double value = (notch - 1) * (2.0 / 255) - 1;
@@ -197,6 +209,8 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the maximum value for a notch byte.
 		/// </summary>
+		/// <param name="notch">A notch byte.</param>
+		/// <returns>The maximum value for a notch byte.</returns>
 		private static double GetRangeMax(byte notch)
 		{
 			double value = (notch + 1) * (2.0 / 255) - 1;

@@ -134,6 +134,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the controller model.
 		/// </summary>
+		/// <param name="index">The index of the joystick.</param>
 		internal static ControllerModels GetControllerModel(int index)
 		{
 			JoystickCapabilities capabilities = Joystick.GetCapabilities(index);
@@ -154,8 +155,10 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Gets a string representing the vendor and product ID.
+		/// Gets a string representing a controller's vendor and product ID.
 		/// </summary>
+		/// <param name="index">The index of the joystick.</param>
+		/// <returns>String representing the controller's vendor and product ID.</returns>
 		internal static string GetControllerID(int index)
 		{
 			string guid = Joystick.GetGuid(index).ToString("N");
@@ -257,6 +260,9 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Compares two button states to find the index of the button that has been pressed.
 		/// </summary>
+		/// <param name="previousState">The previous state of the buttons.</param>
+		/// <param name="newState">The new state of the buttons.</param>
+		/// <param name="ignored">The list of ignored buttons.</param>
 		/// <returns>Index of the button that has been pressed.</returns>
 		internal static int GetDifferentPressedIndex(List<OpenTK.Input.ButtonState> previousState, List<OpenTK.Input.ButtonState> newState, List<int> ignored)
 		{
@@ -271,6 +277,8 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Compares two hat states to find the index of the hat that has changed.
 		/// </summary>
+		/// <param name="previousPosition">The previous position of the hat.</param>
+		/// <param name="newPosition">The new position of the hat.</param>
 		/// <returns>Index of the hat that has changed.</returns>
 		internal static int GetChangedHat(List<HatPosition> previousPosition, List<HatPosition> newPosition)
 		{

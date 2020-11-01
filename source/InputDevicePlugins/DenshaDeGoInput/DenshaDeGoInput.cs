@@ -508,6 +508,10 @@ namespace DenshaDeGoInput
 
 		public void SetMaxNotch(int powerNotch, int brakeNotch) { }
 
+		/// <summary>
+		/// A function notifying the plugin about the train's specifications.
+		/// </summary>
+		/// <param name="specs">The train's specifications.</param>
 		public void SetVehicleSpecs(VehicleSpecs specs)
 		{
 			vehicleSpecs = specs;
@@ -515,7 +519,7 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Configures the correct mappings for the buttons and notches according to the settings.
+		/// Configures the correct mappings for the buttons and notches according to the user settings.
 		/// </summary>
 		internal void ConfigureMappings()
 		{

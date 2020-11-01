@@ -97,9 +97,12 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Checks whether a joystick is a classic console controller.
 		/// </summary>
-		public static bool IsCompatibleController(JoystickCapabilities joystick)
+		/// <param name="capabilities">the capabilities of the joystick.</param>
+		/// <returns>Whether the controller is compatible.</returns>
+		internal static bool IsCompatibleController(JoystickCapabilities capabilities)
 		{
-			if ((joystick.ButtonCount >= 12 || (joystick.ButtonCount >= 10 && joystick.HatCount > 0)) && joystick.ButtonCount <= 20)
+			// A valid controller needs at least 12 buttons or 10 buttons plus a hat. If there are more than 20 buttons, the joystick is unlikely a valid controller.
+			if ((capabilities.ButtonCount >= 12 || (capabilities.ButtonCount >= 10 && capabilities.HatCount > 0)) && capabilities.ButtonCount <= 20)
 			{
 				return true;
 			}
@@ -109,7 +112,8 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Reads the input from the controller.
 		/// </summary>
-		public static void ReadInput(JoystickState joystick)
+		/// <param name="joystick">The state of the joystick to read input from.</param>
+		internal static void ReadInput(JoystickState joystick)
 		{
 			ButtonPressed.Select = joystick.IsButtonDown(ButtonIndex.Select);
 			ButtonPressed.Start = joystick.IsButtonDown(ButtonIndex.Start);
@@ -220,7 +224,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Launches the calibration wizard to guess the button indices used by the adapter.
 		/// </summary>
-		public static void Calibrate()
+		internal static void Calibrate()
 		{
 			string[] input = 
 			{
@@ -349,6 +353,5 @@ namespace DenshaDeGoInput
 				}
 			}
 		}
-
 	}
 }

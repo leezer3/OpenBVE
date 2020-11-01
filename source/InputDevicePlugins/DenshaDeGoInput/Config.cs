@@ -75,6 +75,9 @@ namespace DenshaDeGoInput
 			}
 		}
 
+		/// <summary>
+		/// Adds the available controllers to the device dropdown list.
+		/// </summary>
 		private void ListControllers()
 		{
 			// Clear the internal and visible lists
@@ -95,6 +98,9 @@ namespace DenshaDeGoInput
 			}
 		}
 
+		/// <summary>
+		/// Updates the interface to reflect the input from the controller.
+		/// </summary>
 		private void UpdateInterface()
 		{
 			label_brakeemg.ForeColor = Color.Black;
@@ -241,11 +247,21 @@ namespace DenshaDeGoInput
 				case InputTranslator.ControllerModels.Unbalance:
 					buttonCalibrate.Visible = false;
 					label_d.Visible = true;
-					label_up.Visible = true;
-					label_down.Visible = true;
-					label_left.Visible = true;
-					label_right.Visible = true;
 					label_pedal.Visible = false;
+					if (ControllerUnbalance.hasDirectionButtons)
+					{
+						label_up.Visible = true;
+						label_down.Visible = true;
+						label_left.Visible = true;
+						label_right.Visible = true;
+					}
+					else
+					{
+						label_up.Visible = false;
+						label_down.Visible = false;
+						label_left.Visible = false;
+						label_right.Visible = false;
+					}
 					break;
 				default:
 					buttonCalibrate.Visible = false;
@@ -259,6 +275,9 @@ namespace DenshaDeGoInput
 			}
 		}
 
+		/// <summary>
+		/// Retranslates the configutarion interface.
+		/// </summary>
 		private void UpdateTranslation()
 		{
 			Text = Translations.GetInterfaceString("denshadego_config_title");
