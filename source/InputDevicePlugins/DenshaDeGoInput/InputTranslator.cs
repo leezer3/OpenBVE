@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Marc Riera, The OpenBVE Project
 //
@@ -46,36 +46,92 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Enumeration representing brake notches.
 		/// </summary>
+		[Flags]
 		internal enum BrakeNotches
 		{
-			Released = 0,
-			B1 = 1,
-			B2 = 2,
-			B3 = 3,
-			B4 = 4,
-			B5 = 5,
-			B6 = 6,
-			B7 = 7,
-			B8 = 8,
-			Emergency = 9,
+			// The controller has 4 physical buttons.
+			// These do *not* map directly to the simulation
+
+			/// <summary>No buttons are pressed on the controller</summary>
+			None = 0,
+			/// <summary>The Brake1 button is pressed</summary>
+			Brake1 = 1,
+			/// <summary>The Brake2 button is pressed</summary>
+			Brake2 = 2,
+			/// <summary>The Brake3 button is pressed</summary>
+			Brake3 = 4,
+			/// <summary>The Brake4 button is pressed</summary>
+			Brake4 = 8,
+
+			// Our returned notches to the simulation are a bitflag button combination
+
+			/// <summary>Brakes are released</summary>
+			Released = Brake2 | Brake3 | Brake4,
+			/// <summary>Brake Notch B1</summary>
+			B1 = Brake1 | Brake3 | Brake4,
+			/// <summary>Brake Notch B2</summary>
+			B2 = Brake3 | Brake4,
+			/// <summary>Brake Notch B3</summary>
+			B3 = Brake1 | Brake2 | Brake4,
+			/// <summary>Brake Notch B4</summary>
+			B4 = Brake2 | Brake4,
+			/// <summary>Brake Notch B5</summary>
+			B5 = Brake1 | Brake4,
+			/// <summary>Brake Notch B6</summary>
+			B6 = Brake4,
+			/// <summary>Brake Notch B7</summary>
+			B7 = Brake1 | Brake2 | Brake3,
+			/// <summary>Brake Notch B8</summary>
+			B8 = Brake2 | Brake3,
+			/// <summary>Emergency</summary>
+			Emergency = Brake1 | Brake2 | Brake3 | Brake4,
 		};
 
 		/// <summary>
 		/// Enumeration representing power notches.
 		/// </summary>
+		[Flags]
 		internal enum PowerNotches
 		{
-			N = 0,
-			P1 = 1,
-			P2 = 2,
-			P3 = 3,
-			P4 = 4,
-			P5 = 5,
+			// The controller has 3 physical buttons.
+			// These do *not* map directly to the simulation
+
+			/// <summary>No buttons are pressed on the controller</summary>
+			None = 0,
+			/// <summary>The Power1 button is pressed</summary>
+			Power1 = 1,
+			/// <summary>The Power2 button is pressed</summary>
+			Power2 = 2,
+			/// <summary>The Power3 button is pressed</summary>
+			Power3 = 4,
+			
+			// Our returned notches to the simulation are a bitflag button combination
+
+			/// <summary>Power is in N</summary>
+			N = Power2 | Power3,
+			/// <summary>Power notch P1</summary>
+			P1 = Power1 | Power3,
+			/// <summary>Power notch P2</summary>
+			P2 = Power3,
+			/// <summary>Power notch P3</summary>
+			P3 = Power1 | Power2,
+			/// <summary>Power notch P4</summary>
+			P4 = Power2,
+			/// <summary>Power notch P5</summary>
+			P5 = Power1,
 		};
 
-		/// <summary>
-		/// Class with the state of the buttons.
-		/// </summary>
+		[Flags]
+		internal enum ControllerFunctionButtons
+		{
+			None = 0,
+			Start = 1,
+			Select = 2,
+			A = 4,
+			B = 8,
+			C = 16
+		}
+
 		internal class ButtonState
 		{
 			internal OpenTK.Input.ButtonState Select;
@@ -213,7 +269,7 @@ namespace DenshaDeGoInput
 			switch (ControllerModel)
 			{
 				case ControllerModels.Classic:
-					ControllerClassic.ReadInput(Joystick.GetState(activeControllerIndex));
+					ControllerClassic.ReadInput(Joystick.GetState(activeControllerIndex), out PowerNotch, out BrakeNotch);
 					return;
 				case ControllerModels.Unbalance:
 					ControllerUnbalance.ReadInput(Joystick.GetState(activeControllerIndex));

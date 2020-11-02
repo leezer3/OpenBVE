@@ -97,9 +97,9 @@ namespace DenshaDeGoInput
 		{
 			// DGC-255/DGOC-44U
 			if (id == "0ae4:0003")
-				{
-					// DGC-255 has direction buttons
-					hasDirectionButtons = capabilities.HatCount > 0;
+			{
+				// DGC-255 has direction buttons
+				hasDirectionButtons = capabilities.HatCount > 0;
 				return true;
 			}
 			return false;
@@ -179,12 +179,12 @@ namespace DenshaDeGoInput
 				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P5;
 			}
 
-			InputTranslator.ControllerButtons.Select = (ButtonState)(joystick.IsButtonDown(ButtonIndex.Select) ? 1 : 0);
-			InputTranslator.ControllerButtons.Start = (ButtonState)(joystick.IsButtonDown(ButtonIndex.Start) ? 1 : 0);
-			InputTranslator.ControllerButtons.A = (ButtonState)(joystick.IsButtonDown(ButtonIndex.A) ? 1 : 0);
-			InputTranslator.ControllerButtons.B = (ButtonState)(joystick.IsButtonDown(ButtonIndex.B) ? 1 : 0);
-			InputTranslator.ControllerButtons.C = (ButtonState)(joystick.IsButtonDown(ButtonIndex.C) ? 1 : 0);
-			InputTranslator.ControllerButtons.D = (ButtonState)(joystick.IsButtonDown(ButtonIndex.D) ? 1 : 0);
+			InputTranslator.ControllerButtons.Select = joystick.GetButton(ButtonIndex.Select);
+			InputTranslator.ControllerButtons.Start = joystick.GetButton(ButtonIndex.Start);
+			InputTranslator.ControllerButtons.A = joystick.GetButton(ButtonIndex.A);
+			InputTranslator.ControllerButtons.B = joystick.GetButton(ButtonIndex.B);
+			InputTranslator.ControllerButtons.C = joystick.GetButton(ButtonIndex.C);
+			InputTranslator.ControllerButtons.D = joystick.GetButton(ButtonIndex.D);
 
 			if (hasDirectionButtons)
 			{

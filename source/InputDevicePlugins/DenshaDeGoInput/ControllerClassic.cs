@@ -64,35 +64,9 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Class for the pressed state of the buttons used by the controller.
-		/// </summary>
-		internal class PressedButtons
-		{
-			internal bool Select;
-			internal bool Start;
-			internal bool A;
-			internal bool B;
-			internal bool C;
-			internal bool Power1;
-			internal bool Power2;
-			internal bool Power3;
-			internal bool Brake1;
-			internal bool Brake3;
-			internal bool Brake2;
-			internal bool Brake4;
-
-
-		}
-
-		/// <summary>
 		/// The button indices of the buttons used by the controller.
 		/// </summary>
 		internal static ButtonIndices ButtonIndex = new ButtonIndices();
-
-		/// <summary>
-		/// The pressed state of the buttons used by the controller.
-		/// </summary>
-		internal static PressedButtons ButtonPressed = new PressedButtons();
 
 		/// <summary>
 		/// Checks whether a joystick is a classic console controller.
@@ -113,93 +87,35 @@ namespace DenshaDeGoInput
 		/// Reads the input from the controller.
 		/// </summary>
 		/// <param name="joystick">The state of the joystick to read input from.</param>
-		internal static void ReadInput(JoystickState joystick)
+		/// <param name="powerNotch">The returned power notch</param>
+		/// <param name="brakeNotch">The returned brake notch</param>
+		internal static void ReadInput(JoystickState joystick, out InputTranslator.PowerNotches powerNotch, out InputTranslator.BrakeNotches brakeNotch)
 		{
-			ButtonPressed.Select = joystick.IsButtonDown(ButtonIndex.Select);
-			ButtonPressed.Start = joystick.IsButtonDown(ButtonIndex.Start);
-			ButtonPressed.A = joystick.IsButtonDown(ButtonIndex.A);
-			ButtonPressed.B = joystick.IsButtonDown(ButtonIndex.B);
-			ButtonPressed.C = joystick.IsButtonDown(ButtonIndex.C);
-			ButtonPressed.Power1 = joystick.IsButtonDown(ButtonIndex.Power1);
-			ButtonPressed.Brake1 = joystick.IsButtonDown(ButtonIndex.Brake1);
-			ButtonPressed.Brake2 = joystick.IsButtonDown(ButtonIndex.Brake2);
-			ButtonPressed.Brake3 = joystick.IsButtonDown(ButtonIndex.Brake3);
-			ButtonPressed.Brake4 = joystick.IsButtonDown(ButtonIndex.Brake4);
-
+			powerNotch = InputTranslator.PowerNotches.None;
+			brakeNotch = InputTranslator.BrakeNotches.None;
+			powerNotch = joystick.IsButtonDown(ButtonIndex.Power1) ? powerNotch | InputTranslator.PowerNotches.Power1 : powerNotch & ~InputTranslator.PowerNotches.Power1;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake1) ? brakeNotch | InputTranslator.BrakeNotches.Brake1 : brakeNotch & ~InputTranslator.BrakeNotches.Brake1;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake2) ? brakeNotch | InputTranslator.BrakeNotches.Brake2 : brakeNotch & ~InputTranslator.BrakeNotches.Brake2;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake3) ? brakeNotch | InputTranslator.BrakeNotches.Brake3 : brakeNotch & ~InputTranslator.BrakeNotches.Brake3;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake4) ? brakeNotch | InputTranslator.BrakeNotches.Brake4 : brakeNotch & ~InputTranslator.BrakeNotches.Brake4;
+			
 			if (usesHat)
 			{
 				// The adapter uses the hat to map the direction buttons.
 				// This is the case of some PlayStation adapters.
-				ButtonPressed.Power2 = joystick.GetHat((JoystickHat)hatIndex).IsLeft;
-				ButtonPressed.Power3 = joystick.GetHat((JoystickHat)hatIndex).IsRight;
+				powerNotch = joystick.GetHat((JoystickHat)hatIndex).IsLeft ? powerNotch | InputTranslator.PowerNotches.Power2 : powerNotch & ~InputTranslator.PowerNotches.Power2;
+				powerNotch = joystick.GetHat((JoystickHat)hatIndex).IsRight ? powerNotch | InputTranslator.PowerNotches.Power3 : powerNotch & ~InputTranslator.PowerNotches.Power3;
 			}
 			else
 			{
 				// The adapter maps the direction buttons to independent buttons.
-				ButtonPressed.Power2 = joystick.IsButtonDown(ButtonIndex.Power2);
-				ButtonPressed.Power3 = joystick.IsButtonDown(ButtonIndex.Power3);
+				powerNotch = joystick.IsButtonDown(ButtonIndex.Power2) ? powerNotch | InputTranslator.PowerNotches.Power2 : powerNotch & ~InputTranslator.PowerNotches.Power2;
+				powerNotch = joystick.IsButtonDown(ButtonIndex.Power3) ? powerNotch | InputTranslator.PowerNotches.Power3 : powerNotch & ~InputTranslator.PowerNotches.Power3;
 			}
 
-			if (!ButtonPressed.Brake1 && !ButtonPressed.Brake2 && !ButtonPressed.Brake3 && !ButtonPressed.Brake4)
+			if (usesHat && powerNotch == InputTranslator.PowerNotches.P4)
 			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.Emergency;
-			}
-			if (!ButtonPressed.Brake1 && ButtonPressed.Brake2 && ButtonPressed.Brake3 && !ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B8;
-			}
-			if (ButtonPressed.Brake1 && ButtonPressed.Brake2 && ButtonPressed.Brake3 && !ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B7;
-			}
-			if (!ButtonPressed.Brake1 && !ButtonPressed.Brake2 && !ButtonPressed.Brake3 && ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B6;
-			}
-			if (ButtonPressed.Brake1 && !ButtonPressed.Brake2 && !ButtonPressed.Brake3 && ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B5;
-			}
-			if (!ButtonPressed.Brake1 && ButtonPressed.Brake2 && !ButtonPressed.Brake3 && ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B4;
-			}
-			if (ButtonPressed.Brake1 && ButtonPressed.Brake2 && !ButtonPressed.Brake3 && ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B3;
-			}
-			if (!ButtonPressed.Brake1 && !ButtonPressed.Brake2 && ButtonPressed.Brake3 && ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B2;
-			}
-			if (ButtonPressed.Brake1 && !ButtonPressed.Brake2 && ButtonPressed.Brake3 && ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B1;
-			}
-			if (!ButtonPressed.Brake1 && ButtonPressed.Brake2 && ButtonPressed.Brake3 && ButtonPressed.Brake4)
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.Released;
-			}
-
-			if (!ButtonPressed.Power1 && ButtonPressed.Power2 && ButtonPressed.Power3)
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
-			}
-			if (ButtonPressed.Power1 && !ButtonPressed.Power2 && ButtonPressed.Power3)
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P1;
-			}
-			if (!ButtonPressed.Power1 && !ButtonPressed.Power2 && ButtonPressed.Power3)
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P2;
-			}
-			if (ButtonPressed.Power1 && ButtonPressed.Power2 && !ButtonPressed.Power3)
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P3;
-			}
-			if (!ButtonPressed.Power1 && ButtonPressed.Power2 && !ButtonPressed.Power3)
-			{
-				if (usesHat && InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
+				if (InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
 				{
 					// Hack for adapters which map the direction buttons to a hat and confuse N with P4
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
@@ -209,17 +125,17 @@ namespace DenshaDeGoInput
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.P4;
 				}
 			}
-			if (ButtonPressed.Power1 && !ButtonPressed.Power2 && !ButtonPressed.Power3)
+			else
 			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P5;
+				InputTranslator.PowerNotch = powerNotch;
 			}
-
-			InputTranslator.ControllerButtons.Select = (OpenTK.Input.ButtonState)(ButtonPressed.Select ? 1 : 0);
-			InputTranslator.ControllerButtons.Start = (OpenTK.Input.ButtonState)(ButtonPressed.Start ? 1 : 0);
-			InputTranslator.ControllerButtons.A = (OpenTK.Input.ButtonState)(ButtonPressed.A ? 1 : 0);
-			InputTranslator.ControllerButtons.B = (OpenTK.Input.ButtonState)(ButtonPressed.B ? 1 : 0);
-			InputTranslator.ControllerButtons.C = (OpenTK.Input.ButtonState)(ButtonPressed.C ? 1 : 0);
+			InputTranslator.ControllerButtons.Select = joystick.GetButton(ButtonIndex.Select);
+			InputTranslator.ControllerButtons.Start = joystick.GetButton(ButtonIndex.Start);
+			InputTranslator.ControllerButtons.A = joystick.GetButton(ButtonIndex.A);
+			InputTranslator.ControllerButtons.B = joystick.GetButton(ButtonIndex.B);
+			InputTranslator.ControllerButtons.C = joystick.GetButton(ButtonIndex.C);
 		}
+
 
 		/// <summary>
 		/// Launches the calibration wizard to guess the button indices used by the adapter.
