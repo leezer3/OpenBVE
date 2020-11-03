@@ -11,8 +11,6 @@ namespace OpenBve
 		internal CarSound WetWipeSound;
 		/// <summary>The car sound played when the wipers are activated or deactivated</summary>
 		internal CarSound WiperSwitchSound;
-		/// <summary>The speed taken for the wiper to pass across the screen</summary>
-		internal double WipeSpeed = 1000;
 		/// <summary>The time for which the wiper pauses at the hold position</summary>
 		internal double WiperHoldTime = 0;
 		/// <summary>The wiper rest position</summary>
@@ -147,17 +145,17 @@ namespace OpenBve
 					{
 						if(Windscreen.currentDrops / (double)Windscreen.RainDrops.Length > 0.8)
 						{
-							if (WetWipeSound.Buffer != null && soundTriggered == false)
+							if (soundTriggered == false)
 							{
-								Program.Sounds.PlaySound(WetWipeSound.Buffer, 1.0, 1.0, WetWipeSound.Position, Windscreen.Car, false);
+								Program.Sounds.PlayCarSound(WetWipeSound, 1.0, 1.0, Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
 						else
 						{
-							if (DryWipeSound.Buffer != null && soundTriggered == false)
+							if (soundTriggered == false)
 							{
-								Program.Sounds.PlaySound(WetWipeSound.Buffer, 1.0, 1.0, DryWipeSound.Position, Windscreen.Car, false);
+								Program.Sounds.PlayCarSound(DryWipeSound, 1.0, 1.0, Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
@@ -168,17 +166,17 @@ namespace OpenBve
 					{
 						if(Windscreen.currentDrops / (double)Windscreen.RainDrops.Length > 0.8)
 						{
-							if (WetWipeSound.Buffer != null && soundTriggered == false)
+							if (soundTriggered == false)
 							{
-								Program.Sounds.PlaySound(WetWipeSound.Buffer, 1.0, 1.0, WetWipeSound.Position, Windscreen.Car, false);
+								Program.Sounds.PlayCarSound(WetWipeSound, 1.0, 1.0, Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
 						else
 						{
-							if (DryWipeSound.Buffer != null && soundTriggered == false)
+							if (soundTriggered == false)
 							{
-								Program.Sounds.PlaySound(WetWipeSound.Buffer, 1.0, 1.0, DryWipeSound.Position, Windscreen.Car, false);
+								Program.Sounds.PlayCarSound(DryWipeSound, 1.0, 1.0, Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}

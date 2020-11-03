@@ -875,6 +875,10 @@ namespace OpenBve
 						Cars[i].UpdateObjects(TimeElapsed, ForceUpdate, true);
 						Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
 						Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
+						if (i == DriverCar && Cars[i].Windscreen != null)
+						{
+							Cars[i].Windscreen.Update(TimeElapsed);
+						}
 						Cars[i].Coupler.UpdateObjects(TimeElapsed, ForceUpdate);
 					}
 				}

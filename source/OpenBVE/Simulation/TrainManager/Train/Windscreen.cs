@@ -27,7 +27,6 @@ namespace OpenBve
 			RainDrops = new bool[numberOfDrops];
 			currentDrops = 0;
 			Car = car;
-
 		}
 
 		internal void Update(double TimeElapsed)

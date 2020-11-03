@@ -19,7 +19,6 @@ namespace OpenBve
 		/// <summary>The base class containing the properties of a train car</summary>
 		internal partial class Car : AbstractCar
 		{
-			
 			/// <summary>The front bogie</summary>
 			internal Bogie FrontBogie;
 			/// <summary>The rear bogie</summary>
@@ -50,7 +49,8 @@ namespace OpenBve
 			internal bool Topples;
 			/// <summary>The coupler between cars</summary>
 			internal Coupler Coupler;
-			
+
+			internal Windscreen Windscreen;
 			internal double BeaconReceiverPosition;
 			internal TrackFollower BeaconReceiver;
 			/// <summary>Whether loading sway is enabled for this car</summary>
