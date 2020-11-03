@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
@@ -39,7 +40,10 @@ namespace DenshaDeGoInput
 		public event EventHandler<InputEventArgs> KeyDown;
 		public event EventHandler<InputEventArgs> KeyUp;
 
-		public InputControl[] Controls { get; private set; }
+		public InputControl[] Controls
+		{
+			get; private set;
+		}
 
 		internal static FileSystem FileSystem;
 
@@ -90,6 +94,24 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static ButtonProp[] ButtonProperties = new ButtonProp[11];
 
+		/// <summary>
+		/// Dictionary storing the mapping of each brake notch.
+		/// </summary>
+		internal static readonly Dictionary<int, OpenTK.Input.ButtonState> ButtonMap = new Dictionary<int, OpenTK.Input.ButtonState>
+		{
+			{ 0, InputTranslator.ControllerButtons.Select},
+			{ 1, InputTranslator.ControllerButtons.Start},
+			{ 2, InputTranslator.ControllerButtons.A},
+			{ 3, InputTranslator.ControllerButtons.B},
+			{ 4, InputTranslator.ControllerButtons.C},
+			{ 5, InputTranslator.ControllerButtons.D},
+			{ 6, InputTranslator.ControllerButtons.Up},
+			{ 7, InputTranslator.ControllerButtons.Down},
+			{ 8, InputTranslator.ControllerButtons.Left},
+			{ 9, InputTranslator.ControllerButtons.Right},
+			{ 10, InputTranslator.ControllerButtons.Pedal}
+		};
+
 
 		/// <summary>
 		/// Whether to convert the handle notches to match the driver's train.
@@ -115,7 +137,7 @@ namespace DenshaDeGoInput
 		/// Internval for repeating a button press.
 		/// </summary>
 		internal static int repeatInterval = 100;
-		
+
 		/// <summary>
 		/// A function call when the Config button is pressed.
 		/// </summary>
@@ -198,28 +220,11 @@ namespace DenshaDeGoInput
 				KeyUp(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 				powerHandleMoved = false;
 			}
-			// Select button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[0].Command]));
-			// Start button
-            KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[1].Command]));
-			// A button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[2].Command]));
-			// B button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[3].Command]));
-			// C button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[4].Command]));
-			// D button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[5].Command]));
-			// Up button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[6].Command]));
-			// Down button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[7].Command]));
-			// Left button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[8].Command]));
-			// Right button
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[9].Command]));
-			// Pedal
-			KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[10].Command]));
+			// Buttons
+			for (int i = 0; i < ButtonProperties.Length; i++)
+			{
+				KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[i].Command]));
+			}
 
 			InputTranslator.Update();
 
@@ -237,159 +242,21 @@ namespace DenshaDeGoInput
 					KeyDown(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 					powerHandleMoved = true;
 				}
-
-				// Select button
-				if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed && ButtonProperties[0].Timer <= 0)
+				// Buttons
+				for (int i = 0; i < ButtonProperties.Length; i++)
 				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[0].Command]));
-					if (ButtonProperties[0].Repeats)
+					if (ButtonMap[i] == OpenTK.Input.ButtonState.Pressed && ButtonProperties[i].Timer <= 0)
 					{
-						ButtonProperties[0].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[0].Timer = repeatDelay;
-						ButtonProperties[0].Repeats = true;
-					}
-				}
-				// Start button
-				if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed && ButtonProperties[1].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[1].Command]));
-					if (ButtonProperties[1].Repeats)
-					{
-						ButtonProperties[1].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[1].Timer = repeatDelay;
-						ButtonProperties[1].Repeats = true;
-					}
-				}
-				// A button
-				if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Pressed && ButtonProperties[2].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[2].Command]));
-					if (ButtonProperties[2].Repeats)
-					{
-						ButtonProperties[2].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[2].Timer = repeatDelay;
-						ButtonProperties[2].Repeats = true;
-					}
-				}
-				// B button
-				if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Pressed && ButtonProperties[3].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[3].Command]));
-					if (ButtonProperties[3].Repeats)
-					{
-						ButtonProperties[3].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[3].Timer = repeatDelay;
-						ButtonProperties[3].Repeats = true;
-					}
-				}
-				// C button
-				if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Pressed && ButtonProperties[4].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[4].Command]));
-					if (ButtonProperties[4].Repeats)
-					{
-						ButtonProperties[4].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[4].Timer = repeatDelay;
-						ButtonProperties[4].Repeats = true;
-					}
-				}
-				// D button
-				if (InputTranslator.ControllerButtons.D == OpenTK.Input.ButtonState.Pressed && ButtonProperties[5].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[5].Command]));
-					if (ButtonProperties[5].Repeats)
-					{
-						ButtonProperties[5].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[5].Timer = repeatDelay;
-						ButtonProperties[5].Repeats = true;
-					}
-				}
-				// Up button
-				if (InputTranslator.ControllerButtons.Up == OpenTK.Input.ButtonState.Pressed && ButtonProperties[6].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[6].Command]));
-					if (ButtonProperties[6].Repeats)
-					{
-						ButtonProperties[6].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[6].Timer = repeatDelay;
-						ButtonProperties[6].Repeats = true;
-					}
-				}
-				// Down button
-				if (InputTranslator.ControllerButtons.Down == OpenTK.Input.ButtonState.Pressed && ButtonProperties[7].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[7].Command]));
-					if (ButtonProperties[7].Repeats)
-					{
-						ButtonProperties[7].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[7].Timer = repeatDelay;
-						ButtonProperties[7].Repeats = true;
-					}
-				}
-				// Left button
-				if (InputTranslator.ControllerButtons.Left == OpenTK.Input.ButtonState.Pressed && ButtonProperties[8].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[8].Command]));
-					if (ButtonProperties[8].Repeats)
-					{
-						ButtonProperties[8].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[8].Timer = repeatDelay;
-						ButtonProperties[8].Repeats = true;
-					}
-				}
-				// Right button
-				if (InputTranslator.ControllerButtons.Right == OpenTK.Input.ButtonState.Pressed && ButtonProperties[9].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[9].Command]));
-					if (ButtonProperties[9].Repeats)
-					{
-						ButtonProperties[9].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[9].Timer = repeatDelay;
-						ButtonProperties[9].Repeats = true;
-					}
-				}
-				// Pedal
-				if (InputTranslator.ControllerButtons.Pedal == OpenTK.Input.ButtonState.Pressed && ButtonProperties[10].Timer <= 0)
-				{
-					KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[10].Command]));
-					if (ButtonProperties[10].Repeats)
-					{
-						ButtonProperties[10].Timer = repeatInterval;
-					}
-					else
-					{
-						ButtonProperties[10].Timer = repeatDelay;
-						ButtonProperties[10].Repeats = true;
+						KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[i].Command]));
+						if (ButtonProperties[i].Repeats)
+						{
+							ButtonProperties[i].Timer = repeatInterval;
+						}
+						else
+						{
+							ButtonProperties[i].Timer = repeatDelay;
+							ButtonProperties[i].Repeats = true;
+						}
 					}
 				}
 			}
@@ -405,108 +272,24 @@ namespace DenshaDeGoInput
 		{
 			Translations.CurrentLanguageCode = data.CurrentLanguageCode;
 
-			if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed)
+			// Button timers
+			for (int i = 0; i < ButtonProperties.Length; i++)
 			{
-				ButtonProperties[0].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[0].Timer = 0;
-				ButtonProperties[0].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[1].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[1].Timer = 0;
-				ButtonProperties[1].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[2].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[2].Timer = 0;
-				ButtonProperties[2].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[3].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[3].Timer = 0;
-				ButtonProperties[3].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[4].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[4].Timer = 0;
-				ButtonProperties[4].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.D == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[5].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[5].Timer = 0;
-				ButtonProperties[5].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.Up == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[6].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[6].Timer = 0;
-				ButtonProperties[6].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.Down == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[7].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[7].Timer = 0;
-				ButtonProperties[7].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.Left == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[8].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[8].Timer = 0;
-				ButtonProperties[8].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.Right == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[9].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[9].Timer = 0;
-				ButtonProperties[9].Repeats = false;
-			}
-			if (InputTranslator.ControllerButtons.Pedal == OpenTK.Input.ButtonState.Pressed)
-			{
-				ButtonProperties[10].Timer -= data.ElapsedTime.Milliseconds;
-			}
-			else
-			{
-				ButtonProperties[10].Timer = 0;
-				ButtonProperties[10].Repeats = false;
+				if (ButtonMap[i] == OpenTK.Input.ButtonState.Pressed)
+				{
+					ButtonProperties[i].Timer -= data.ElapsedTime.Milliseconds;
+				}
+				else
+				{
+					ButtonProperties[i].Timer = 0;
+					ButtonProperties[i].Repeats = false;
+				}
 			}
 		}
 
-		public void SetMaxNotch(int powerNotch, int brakeNotch) { }
+		public void SetMaxNotch(int powerNotch, int brakeNotch)
+		{
+		}
 
 		/// <summary>
 		/// A function notifying the plugin about the train's specifications.
@@ -984,7 +767,7 @@ namespace DenshaDeGoInput
 											}
 											break;
 									}
-								break;
+									break;
 							}
 						}
 					}

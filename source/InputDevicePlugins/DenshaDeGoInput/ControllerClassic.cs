@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
@@ -69,6 +70,119 @@ namespace DenshaDeGoInput
 		internal static ButtonIndices ButtonIndex = new ButtonIndices();
 
 		/// <summary>
+		/// Enumeration representing brake notches.
+		/// </summary>
+		[Flags]
+		internal enum BrakeNotches
+		{
+			// The controller has 4 physical buttons.
+			// These do *not* map directly to the simulation
+
+			/// <summary>No buttons are pressed on the controller</summary>
+			None = 0,
+			/// <summary>The Brake1 button is pressed</summary>
+			Brake1 = 1,
+			/// <summary>The Brake2 button is pressed</summary>
+			Brake2 = 2,
+			/// <summary>The Brake3 button is pressed</summary>
+			Brake3 = 4,
+			/// <summary>The Brake4 button is pressed</summary>
+			Brake4 = 8,
+
+			// Our returned notches to the simulation are a bitflag button combination
+
+			/// <summary>Brakes are released</summary>
+			Released = Brake2 | Brake3 | Brake4,
+			/// <summary>Brake Notch B1</summary>
+			B1 = Brake1 | Brake3 | Brake4,
+			/// <summary>Brake Notch B2</summary>
+			B2 = Brake3 | Brake4,
+			/// <summary>Brake Notch B3</summary>
+			B3 = Brake1 | Brake2 | Brake4,
+			/// <summary>Brake Notch B4</summary>
+			B4 = Brake2 | Brake4,
+			/// <summary>Brake Notch B5</summary>
+			B5 = Brake1 | Brake4,
+			/// <summary>Brake Notch B6</summary>
+			B6 = Brake4,
+			/// <summary>Brake Notch B7</summary>
+			B7 = Brake1 | Brake2 | Brake3,
+			/// <summary>Brake Notch B8</summary>
+			B8 = Brake2 | Brake3,
+			/// <summary>Emergency</summary>
+			Emergency = None,
+			/// <summary>Transition between notches</summary>
+			Transition = Brake1 | Brake2 | Brake3 | Brake4,
+		};
+
+		/// <summary>
+		/// Dictionary storing the mapping of each brake notch.
+		/// </summary>
+		internal static readonly Dictionary<BrakeNotches, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeNotches, InputTranslator.BrakeNotches>
+		{
+			{ BrakeNotches.Released, InputTranslator.BrakeNotches.Released },
+			{ BrakeNotches.B1, InputTranslator.BrakeNotches.B1 },
+			{ BrakeNotches.B2, InputTranslator.BrakeNotches.B2 },
+			{ BrakeNotches.B3, InputTranslator.BrakeNotches.B3 },
+			{ BrakeNotches.B4, InputTranslator.BrakeNotches.B4 },
+			{ BrakeNotches.B5, InputTranslator.BrakeNotches.B5 },
+			{ BrakeNotches.B6, InputTranslator.BrakeNotches.B6 },
+			{ BrakeNotches.B7, InputTranslator.BrakeNotches.B7 },
+			{ BrakeNotches.B8, InputTranslator.BrakeNotches.B8 },
+			{ BrakeNotches.Emergency, InputTranslator.BrakeNotches.Emergency }
+		};
+
+		/// <summary>
+		/// Enumeration representing power notches.
+		/// </summary>
+		[Flags]
+		internal enum PowerNotches
+		{
+			// The controller has 3 physical buttons.
+			// These do *not* map directly to the simulation
+
+			/// <summary>No buttons are pressed on the controller</summary>
+			None = 0,
+			/// <summary>The Power1 button is pressed</summary>
+			Power1 = 1,
+			/// <summary>The Power2 button is pressed</summary>
+			Power2 = 2,
+			/// <summary>The Power3 button is pressed</summary>
+			Power3 = 4,
+
+			// Our returned notches to the simulation are a bitflag button combination
+
+			/// <summary>Power is in N</summary>
+			N = Power2 | Power3,
+			/// <summary>Power notch P1</summary>
+			P1 = Power1 | Power3,
+			/// <summary>Power notch P2</summary>
+			P2 = Power3,
+			/// <summary>Power notch P3</summary>
+			P3 = Power1 | Power2,
+			/// <summary>Power notch P4</summary>
+			P4 = Power2,
+			/// <summary>Power notch P5</summary>
+			P5 = Power1,
+			/// <summary>Transition between notches</summary>
+			Transition = None,
+		};
+
+		/// <summary>
+		/// Dictionary storing the mapping of each power notch.
+		/// </summary>
+		internal static readonly Dictionary<PowerNotches, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerNotches, InputTranslator.PowerNotches>
+		{
+			{ PowerNotches.N, InputTranslator.PowerNotches.N },
+			{ PowerNotches.P1, InputTranslator.PowerNotches.P1 },
+			{ PowerNotches.P2, InputTranslator.PowerNotches.P2 },
+			{ PowerNotches.P3, InputTranslator.PowerNotches.P3 },
+			{ PowerNotches.P4, InputTranslator.PowerNotches.P4 },
+			{ PowerNotches.P5, InputTranslator.PowerNotches.P5 }
+		};
+
+
+		/// <summary>
 		/// Checks whether a joystick is a classic console controller.
 		/// </summary>
 		/// <param name="capabilities">the capabilities of the joystick.</param>
@@ -87,33 +201,31 @@ namespace DenshaDeGoInput
 		/// Reads the input from the controller.
 		/// </summary>
 		/// <param name="joystick">The state of the joystick to read input from.</param>
-		/// <param name="powerNotch">The returned power notch</param>
-		/// <param name="brakeNotch">The returned brake notch</param>
-		internal static void ReadInput(JoystickState joystick, out InputTranslator.PowerNotches powerNotch, out InputTranslator.BrakeNotches brakeNotch)
+		internal static void ReadInput(JoystickState joystick)
 		{
-			powerNotch = InputTranslator.PowerNotches.None;
-			brakeNotch = InputTranslator.BrakeNotches.None;
-			powerNotch = joystick.IsButtonDown(ButtonIndex.Power1) ? powerNotch | InputTranslator.PowerNotches.Power1 : powerNotch & ~InputTranslator.PowerNotches.Power1;
-			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake1) ? brakeNotch | InputTranslator.BrakeNotches.Brake1 : brakeNotch & ~InputTranslator.BrakeNotches.Brake1;
-			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake2) ? brakeNotch | InputTranslator.BrakeNotches.Brake2 : brakeNotch & ~InputTranslator.BrakeNotches.Brake2;
-			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake3) ? brakeNotch | InputTranslator.BrakeNotches.Brake3 : brakeNotch & ~InputTranslator.BrakeNotches.Brake3;
-			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake4) ? brakeNotch | InputTranslator.BrakeNotches.Brake4 : brakeNotch & ~InputTranslator.BrakeNotches.Brake4;
-			
+			PowerNotches powerNotch = PowerNotches.None;
+			BrakeNotches brakeNotch = BrakeNotches.None;
+			powerNotch = joystick.IsButtonDown(ButtonIndex.Power1) ? powerNotch | PowerNotches.Power1 : powerNotch & ~PowerNotches.Power1;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake1) ? brakeNotch | BrakeNotches.Brake1 : brakeNotch & ~BrakeNotches.Brake1;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake2) ? brakeNotch | BrakeNotches.Brake2 : brakeNotch & ~BrakeNotches.Brake2;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake3) ? brakeNotch | BrakeNotches.Brake3 : brakeNotch & ~BrakeNotches.Brake3;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake4) ? brakeNotch | BrakeNotches.Brake4 : brakeNotch & ~BrakeNotches.Brake4;
+
 			if (usesHat)
 			{
 				// The adapter uses the hat to map the direction buttons.
 				// This is the case of some PlayStation adapters.
-				powerNotch = joystick.GetHat((JoystickHat)hatIndex).IsLeft ? powerNotch | InputTranslator.PowerNotches.Power2 : powerNotch & ~InputTranslator.PowerNotches.Power2;
-				powerNotch = joystick.GetHat((JoystickHat)hatIndex).IsRight ? powerNotch | InputTranslator.PowerNotches.Power3 : powerNotch & ~InputTranslator.PowerNotches.Power3;
+				powerNotch = joystick.GetHat((JoystickHat)hatIndex).IsLeft ? powerNotch | PowerNotches.Power2 : powerNotch & ~PowerNotches.Power2;
+				powerNotch = joystick.GetHat((JoystickHat)hatIndex).IsRight ? powerNotch | PowerNotches.Power3 : powerNotch & ~PowerNotches.Power3;
 			}
 			else
 			{
 				// The adapter maps the direction buttons to independent buttons.
-				powerNotch = joystick.IsButtonDown(ButtonIndex.Power2) ? powerNotch | InputTranslator.PowerNotches.Power2 : powerNotch & ~InputTranslator.PowerNotches.Power2;
-				powerNotch = joystick.IsButtonDown(ButtonIndex.Power3) ? powerNotch | InputTranslator.PowerNotches.Power3 : powerNotch & ~InputTranslator.PowerNotches.Power3;
+				powerNotch = joystick.IsButtonDown(ButtonIndex.Power2) ? powerNotch | PowerNotches.Power2 : powerNotch & ~PowerNotches.Power2;
+				powerNotch = joystick.IsButtonDown(ButtonIndex.Power3) ? powerNotch | PowerNotches.Power3 : powerNotch & ~PowerNotches.Power3;
 			}
 
-			if (usesHat && powerNotch == InputTranslator.PowerNotches.P4)
+			if (usesHat && powerNotch == PowerNotches.P4)
 			{
 				if (InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
 				{
@@ -125,9 +237,15 @@ namespace DenshaDeGoInput
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.P4;
 				}
 			}
-			else
+			else if (powerNotch != PowerNotches.Transition)
 			{
-				InputTranslator.PowerNotch = powerNotch;
+				// Set notch only if it is not a transition
+				InputTranslator.PowerNotch = PowerNotchMap[powerNotch];
+			}
+			if (brakeNotch != BrakeNotches.Transition && (brakeNotch == BrakeNotches.Emergency || brakeNotch >= BrakeNotches.B8))
+			{
+				// Set notch only if it is not a transition nor an unmarked notch
+				InputTranslator.BrakeNotch = BrakeNotchMap[brakeNotch];
 			}
 			InputTranslator.ControllerButtons.Select = joystick.GetButton(ButtonIndex.Select);
 			InputTranslator.ControllerButtons.Start = joystick.GetButton(ButtonIndex.Start);
@@ -142,7 +260,7 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static void Calibrate()
 		{
-			string[] input = 
+			string[] input =
 			{
 				"SELECT",
 				"START",
