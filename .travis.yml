@@ -16,21 +16,10 @@ matrix:
       script: make debian
       if: tag IS present
 
-    #Test builds
-    ##Use makefile##
+    #Further test builds on different Ubuntu / Mono versions and using the SLN file directly
     
-    #Note: Only run upload builds on MacOS https://blog.travis-ci.com/2020-11-02-travis-ci-new-billing
-    #Let's test all variations on Linux, but can probably get away with only running an upload build on OS-X
-    #TODO: Consider possible alternatives
-    - os: linux
-      dist: xenial
-      mono: latest
-      script: make all-release
-    - os: linux
-      dist: trusty
-      mono: 5.20.1
-      script: make all-release
-    ##Use .sln file##
+    #Note: Only run the single uploading build on MacOS https://blog.travis-ci.com/2020-11-02-travis-ci-new-billing
+    #Let's test all variations on Linux. This will (probably) ensure that things go OK
     - os: linux
       dist: trusty
       mono: latest
