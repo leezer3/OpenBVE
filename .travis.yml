@@ -18,11 +18,12 @@ matrix:
 
     #Test builds
     ##Use makefile##
+    
+    #Note: Only run upload builds on MacOS https://blog.travis-ci.com/2020-11-02-travis-ci-new-billing
+    #Let's test all variations on Linux, but can probably get away with only running an upload build on OS-X
+    #TODO: Consider possible alternatives
     - os: linux
       dist: xenial
-      mono: latest
-      script: make all-release
-    - os: osx
       mono: latest
       script: make all-release
     - os: linux
@@ -36,9 +37,6 @@ matrix:
       solution: OpenBVE.sln
     - os: linux
       dist: xenial
-      mono: latest
-      solution: OpenBVE.sln
-    - os: osx
       mono: latest
       solution: OpenBVE.sln
     - os: linux
