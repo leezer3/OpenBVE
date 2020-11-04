@@ -38,9 +38,38 @@ namespace OpenBve
 			Windscreen = windscreen;
 		}
 
+		/// <summary>Speeds up the windscreen wipers</summary>
+		internal void SpeedUp()
+		{
+			if (CurrentSpeed < WiperSpeed.Fast)
+			{
+				CurrentSpeed++;
+			}
+		}
+
+		/// <summary>Slows down the windscreen wipers</summary>
+		internal void SlowDown()
+		{
+			if (CurrentSpeed > WiperSpeed.Off)
+			{
+				CurrentSpeed--;
+			}
+		}
+
 		internal void Update(double TimeElapsed)
 		{
 			wiperTimer += TimeElapsed;
+			if (CurrentSpeed == WiperSpeed.Off)
+			{
+				if (RestPosition == WiperPosition.Left && CurrentPosition == 0)
+				{
+					return;
+				}
+				if(RestPosition == WiperPosition.Right && CurrentPosition == 100)
+				{
+					return;
+				}
+			}
 			//Move the wiper
 			if (wiperTimer > MovementSpeed)
 			{

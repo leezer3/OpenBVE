@@ -1239,8 +1239,18 @@ namespace OpenBve {
 										Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
 										Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
 										int numberOfDrops = 16, Layer = 0, dropSize = 16;
-										List<string> daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Day")).ToList();
-										List<string> nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Night")).ToList();
+										WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
+										List<string> daytimeDropFiles, nighttimeDropFiles;
+										try
+										{
+											daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day")).ToList();
+											nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night")).ToList();
+										}
+										catch
+										{
+											break;
+										}
+										
 										Color24 TransparentColor = Color24.Blue;
 										switch (Key.ToLowerInvariant())
 										{
@@ -1302,6 +1312,38 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "NumberOfDrops is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												}
 												break;
+											case "wiperrestposition":
+												switch (Value.ToLowerInvariant())
+												{
+													case "0":
+													case "left":
+														restPosition = WiperPosition.Left;
+														break;
+													case "1":
+													case "right":
+														restPosition = WiperPosition.Right;
+														break;
+													default:
+														Interface.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														break;
+												}
+												break;
+											case "wiperholdposition":
+												switch (Value.ToLowerInvariant())
+												{
+													case "0":
+													case "left":
+														holdPosition = WiperPosition.Left;
+														break;
+													case "1":
+													case "right":
+														holdPosition = WiperPosition.Right;
+														break;
+													default:
+														Interface.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														break;
+												}
+												break;
 										}
 
 										List<Texture> daytimeDrops = new List<Texture>(), nighttimeDrops = new List<Texture>();
@@ -1325,9 +1367,10 @@ namespace OpenBve {
 												nighttimeDropFiles.Add(string.Empty);
 											}
 										}
+
 										for (int l = 0; l < daytimeDropFiles.Count; l++)
 										{
-											string currentDropFile = Path.CombineFile(TrainPath, daytimeDropFiles[l]);
+											string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(TrainPath, daytimeDropFiles[l]) : daytimeDropFiles[l];
 											if (!System.IO.File.Exists(currentDropFile))
 											{
 												currentDropFile = Path.CombineFile( Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Program.RandomNumberGenerator.Next(1,4) + ".png");
@@ -1340,7 +1383,7 @@ namespace OpenBve {
 										}
 										for (int l = 0; l < nighttimeDropFiles.Count; l++)
 										{
-											string currentDropFile = Path.CombineFile(TrainPath, nighttimeDropFiles[l]);
+											string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(TrainPath, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
 											if (!System.IO.File.Exists(currentDropFile))
 											{
 												currentDropFile = Path.CombineFile( Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Program.RandomNumberGenerator.Next(1,4) + ".png");
@@ -1348,10 +1391,12 @@ namespace OpenBve {
 											}
 											Texture drop;
 											Program.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
-											daytimeDrops.Add(drop);
+											nighttimeDrops.Add(drop);
 										}
 										double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
 										double currentDropX = topLeft.X;
+										Train.Cars[Train.DriverCar].Windscreen = new Windscreen(numberOfDrops, Train.Cars[Train.DriverCar]);
+										Train.Cars[Train.DriverCar].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Train.DriverCar].Windscreen, restPosition, holdPosition);
 										// Create drops
 										for (int drop = 0; drop < numberOfDrops; drop++)
 										{
@@ -1362,7 +1407,7 @@ namespace OpenBve {
 												Program.CurrentHost.LoadTexture(daytimeDrops[DropTexture], OpenGlTextureWrapMode.ClampClamp);
 											});
 											int panelDropIndex = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White, false);
-											string f = GetStackLanguageFromSubject(Train, "Raindrop" + drop, Section + " in " + FileName);
+											string f = drop + " raindrop";
 											try
 											{
 												Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
@@ -1373,8 +1418,8 @@ namespace OpenBve {
 											}
 											currentDropX += dropInterval;
 										}
-									}
-								}
+									} i++;
+								} i--;
 								break;
 						}
 					}

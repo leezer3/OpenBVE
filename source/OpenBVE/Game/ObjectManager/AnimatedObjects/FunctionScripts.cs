@@ -1346,6 +1346,17 @@ namespace OpenBve {
 							Function.Stack[s] = 0;
 						}
 						s++; break;
+					case Instructions.RainDrop:
+						if (Train == null || !Train.IsPlayerTrain) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int n = (int)Math.Round(Function.Stack[s - 1]);
+							if (n >= 0 & n < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length) {
+								Function.Stack[s - 1] = Train.Cars[Train.DriverCar].Windscreen.RainDrops[n] ? 1.0 : 0.0;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						} break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

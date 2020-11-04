@@ -32,7 +32,8 @@
 		SafetyPluginAvailable, SafetyPluginState, PassAlarm, StationAdjustAlarm,
 		TimetableVisible, Panel2Timetable, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit,
-		SectionAspectNumber, CurrentObjectState
+		SectionAspectNumber, CurrentObjectState,
+		RainDrop
 #pragma warning restore CS1591
 			
 		}
