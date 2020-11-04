@@ -7,13 +7,33 @@ namespace OpenBve
 	internal class Windscreen
 	{
 		/// <summary>Whether currently raining</summary>
-		internal bool CurrentlyRaining;
+		internal bool CurrentlyRaining
+		{
+			get
+			{
+				return RainIntensity != 0;
+			}
+		}
+
 		/// <summary>The current rain intensity</summary>
-		internal int RainIntensity;
+		internal int RainIntensity
+		{
+			get
+			{
+				if (legacyRainEvents)
+				{
+					return rainIntensity;
+				}
+				return Car.FrontAxle.Follower.RainIntensity;
+			}
+		}
+
+		private int rainIntensity;
+		private bool legacyRainEvents;
 		/// <summary>The raindrop array</summary>
 		internal bool[] RainDrops;
 		/// <summary>The sound played when a raindrop hits the windscreen</summary>
-		internal CarSound DropSound;
+		internal CarSound DropSound = new CarSound();
 		/// <summary>The windscreen wipers</summary>
 		internal WindscreenWiper Wipers;
 
@@ -29,6 +49,21 @@ namespace OpenBve
 			Car = car;
 		}
 
+		internal void SetRainIntensity(int intensity)
+		{
+			//Must assume that the .rain command and legacy rain are not mixed in a routefile
+			legacyRainEvents = true;
+			if (intensity < 0)
+			{
+				intensity = 0;
+			}
+			if (intensity > 100)
+			{
+				intensity = 100;
+			}
+			rainIntensity = intensity;
+		}
+
 		internal void Update(double TimeElapsed)
 		{
 			if (RainDrops == null || RainDrops.Length == 0)
@@ -40,8 +75,8 @@ namespace OpenBve
 			{
 				int nextDrop = PickDrop();
 				dropTimer += TimeElapsed;
-				var dev = (int)(0.4 * 2000 / RainIntensity);
-				int dropInterval = 2000 / RainIntensity + Program.RandomNumberGenerator.Next(dev, dev * 2);
+				var dev = (int)(0.4 * 200 / RainIntensity);
+				int dropInterval = 200 / RainIntensity + Program.RandomNumberGenerator.Next(dev, dev * 2);
 				if (dropTimer > dropInterval)
 				{
 					if (nextDrop != -1)

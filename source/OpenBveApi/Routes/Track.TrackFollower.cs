@@ -31,6 +31,8 @@ namespace OpenBveApi.Routes
 		public double CantDueToInaccuracy;
 		/// <summary>The adhesion multiplier at the current location</summary>
 		public double AdhesionMultiplier;
+		/// <summary>The rain intensity at the current location</summary>
+		public int RainIntensity;
 		/// <summary>The event types to be triggered</summary>
 		public EventTriggerType TriggerType;
 		/// <summary>The train the follower is attached to, or a null reference</summary>
@@ -76,6 +78,7 @@ namespace OpenBveApi.Routes
 			Odometer = 0;
 			CantDueToInaccuracy = 0;
 			AdhesionMultiplier = 0;
+			RainIntensity = 0;
 			TriggerType = EventTriggerType.None;
 			TrackIndex = 0;
 		}
@@ -290,6 +293,7 @@ namespace OpenBveApi.Routes
 			}
 
 			AdhesionMultiplier = currentHost.Tracks[TrackIndex].Elements[i].AdhesionMultiplier;
+			RainIntensity = currentHost.Tracks[TrackIndex].Elements[i].RainIntensity;
 			//Pitch added for Plugin Data usage
 			//Mutliply this by 1000 to get the original value
 			Pitch = currentHost.Tracks[TrackIndex].Elements[i].Pitch * 1000;

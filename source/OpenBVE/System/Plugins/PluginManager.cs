@@ -423,6 +423,13 @@ namespace OpenBve {
 			/// <param name="sectionIndex">The section the beacon is attached to, or -1 for the next red signal.</param>
 			/// <param name="optional">Optional data attached to the beacon.</param>
 			internal void UpdateBeacon(int type, int sectionIndex, int optional) {
+
+				if (type == 21 && Train.IsPlayerTrain)
+				{
+					//Legacy rain beacon, so let's pass to the windscreen as well as the plugin
+					Train.Cars[Train.DriverCar].Windscreen.SetRainIntensity(optional);
+				}
+
 				if (sectionIndex == -1) {
 					sectionIndex = this.Train.CurrentSectionIndex + 1;
 					SignalData signal = null;
