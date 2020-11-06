@@ -243,8 +243,7 @@ namespace OpenBve {
 				}
 				return t;
 			} 
-			
-				return Translations.GetInterfaceString("controls_assignment_invalid");
+			return Translations.GetInterfaceString("controls_assignment_invalid");
 			
 		}
 

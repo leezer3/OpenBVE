@@ -90,7 +90,7 @@ namespace OpenBve {
 					}
 					StandardJoystick newJoystick = new StandardJoystick
 					{
-						Name = "Joystick" + i,
+						Name = OpenTK.Input.Joystick.GetName(i),
 						Handle = i,
 
 					};

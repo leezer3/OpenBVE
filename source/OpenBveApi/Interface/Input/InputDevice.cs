@@ -248,7 +248,7 @@ namespace OpenBveApi.Interface
 		}
 
 		/// <summary>
-		/// The function that calls the plugin's load funcion
+		/// The function that calls the plugin's load function
 		/// </summary>
 		/// <param name="index">The index number which can use the plugins</param>
 		public static void CallPluginLoad(int index)
