@@ -96,6 +96,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanYingInput", "source\Inpu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultDisplayPlugin", "source\InputDevicePlugins\DefaultDisplayPlugin\DefaultDisplayPlugin.csproj", "{3D833D81-4F14-4A68-B0DE-6469B8CF4E62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DenshaDeGoInput", "source\InputDevicePlugins\DenshaDeGoInput\DenshaDeGoInput.csproj", "{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Tga", "source\Plugins\Texture.Tga\Texture.Tga.csproj", "{F714A9FA-1C4B-456B-BACF-D6763223A81C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpParser", "source\AssimpParser\AssimpParser.csproj", "{77CCAE62-D374-468E-98A0-DD8ADB461C10}"
@@ -551,6 +553,18 @@ Global
 		{8DAA1CF4-A29A-42CE-8649-34E0FBC0D97C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8DAA1CF4-A29A-42CE-8649-34E0FBC0D97C}.Release|x86.ActiveCfg = Release|Any CPU
 		{8DAA1CF4-A29A-42CE-8649-34E0FBC0D97C}.Release|x86.Build.0 = Release|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Debug|x86.Build.0 = Debug|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Release|x86.ActiveCfg = Release|Any CPU
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -582,6 +596,7 @@ Global
 		{C841EA02-4918-4162-ADC1-C09F5BC28AF9} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{8D21C5C6-73E9-42E0-92FB-63500E321836} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{F49789F2-97F3-45B3-BC85-F4E09C0D120D} = {16553295-E70F-4596-AA78-848EEA576C4A}
+		{F6FBD153-9D9F-4D6C-B08D-0C798F106B32} = {851ADF1E-4500-4A14-B4AA-C1087A6C537E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}

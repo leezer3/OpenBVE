@@ -2470,6 +2470,71 @@
 						<source>Z</source>
 					</trans-unit>
 				</group>
+				<group id="denshadego">
+					<trans-unit id="config_title">
+						<source>Densha de GO! controller configuration</source>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+					</trans-unit>
+					<trans-unit id="calibration_button">
+						<source>Start calibration</source>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+					</trans-unit>
+					<trans-unit id="joystick">
+						<source>[index]: [name]</source>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+					</trans-unit>
+					<trans-unit id="calibrate_button">
+						<source>Hold the [button] button in the controller and press OK.</source>
+					</trans-unit>
+					<trans-unit id="calibrate_brake">
+						<source>Move the brake handle to [notch] and press OK.</source>
+					</trans-unit>
+					<trans-unit id="calibrate_power">
+						<source>Move the power handle to [notch] and press OK.</source>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+					</trans-unit>
+				</group>
 			</group>
 			<group id="train_editor">
 				<group id="general">
