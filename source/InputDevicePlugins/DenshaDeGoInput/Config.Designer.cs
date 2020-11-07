@@ -675,20 +675,21 @@ namespace DenshaDeGoInput
             this.deviceBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.deviceBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.deviceBox.FormattingEnabled = true;
-            this.deviceBox.Location = new System.Drawing.Point(598, 16);
+            this.deviceBox.Location = new System.Drawing.Point(566, 16);
             this.deviceBox.Name = "deviceBox";
-            this.deviceBox.Size = new System.Drawing.Size(150, 21);
+            this.deviceBox.Size = new System.Drawing.Size(182, 21);
             this.deviceBox.TabIndex = 6;
             this.deviceBox.SelectedIndexChanged += new System.EventHandler(this.deviceBox_SelectedIndexChanged);
             // 
             // label_device
             // 
             this.label_device.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_device.Location = new System.Drawing.Point(510, 19);
+            this.label_device.Location = new System.Drawing.Point(478, 19);
             this.label_device.Name = "label_device";
             this.label_device.Size = new System.Drawing.Size(82, 18);
             this.label_device.TabIndex = 7;
             this.label_device.Text = "Device";
+            this.label_device.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label_up
             // 

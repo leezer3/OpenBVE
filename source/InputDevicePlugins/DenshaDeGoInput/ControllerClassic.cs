@@ -247,11 +247,11 @@ namespace DenshaDeGoInput
 				// Set notch only if it is not a transition nor an unmarked notch
 				InputTranslator.BrakeNotch = BrakeNotchMap[brakeNotch];
 			}
-			InputTranslator.ControllerButtons.Select = joystick.GetButton(ButtonIndex.Select);
-			InputTranslator.ControllerButtons.Start = joystick.GetButton(ButtonIndex.Start);
-			InputTranslator.ControllerButtons.A = joystick.GetButton(ButtonIndex.A);
-			InputTranslator.ControllerButtons.B = joystick.GetButton(ButtonIndex.B);
-			InputTranslator.ControllerButtons.C = joystick.GetButton(ButtonIndex.C);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = joystick.GetButton(ButtonIndex.Select);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = joystick.GetButton(ButtonIndex.Start);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = joystick.GetButton(ButtonIndex.A);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = joystick.GetButton(ButtonIndex.B);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = joystick.GetButton(ButtonIndex.C);
 		}
 
 

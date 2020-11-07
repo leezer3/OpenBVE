@@ -22,7 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
+using System.Collections.Generic;
 using OpenTK.Input;
 
 namespace DenshaDeGoInput
@@ -64,6 +64,23 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
+		/// Dictionary storing the mapping of each brake notch.
+		/// </summary>
+		internal static readonly Dictionary<BrakeByte, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeByte, InputTranslator.BrakeNotches>
+		{
+			{ BrakeByte.Released, InputTranslator.BrakeNotches.Released },
+			{ BrakeByte.B1, InputTranslator.BrakeNotches.B1 },
+			{ BrakeByte.B2, InputTranslator.BrakeNotches.B2 },
+			{ BrakeByte.B3, InputTranslator.BrakeNotches.B3 },
+			{ BrakeByte.B4, InputTranslator.BrakeNotches.B4 },
+			{ BrakeByte.B5, InputTranslator.BrakeNotches.B5 },
+			{ BrakeByte.B6, InputTranslator.BrakeNotches.B6 },
+			{ BrakeByte.B7, InputTranslator.BrakeNotches.B7 },
+			{ BrakeByte.B8, InputTranslator.BrakeNotches.B8 },
+			{ BrakeByte.Emergency, InputTranslator.BrakeNotches.Emergency }
+		};
+
+		/// <summary>
 		/// Represents the possible bytes for power notches.
 		/// </summary>
 		internal enum PowerByte
@@ -76,6 +93,19 @@ namespace DenshaDeGoInput
 			P5 = 0x00,
 			Transition = 0xFF
 		}
+
+		/// <summary>
+		/// Dictionary storing the mapping of each power notch.
+		/// </summary>
+		internal static readonly Dictionary<PowerByte, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerByte, InputTranslator.PowerNotches>
+		{
+			{ PowerByte.N, InputTranslator.PowerNotches.N },
+			{ PowerByte.P1, InputTranslator.PowerNotches.P1 },
+			{ PowerByte.P2, InputTranslator.PowerNotches.P2 },
+			{ PowerByte.P3, InputTranslator.PowerNotches.P3 },
+			{ PowerByte.P4, InputTranslator.PowerNotches.P4 },
+			{ PowerByte.P5, InputTranslator.PowerNotches.P5 }
+		};
 
 		/// <summary>
 		/// The button indices of the buttons used by the controller.
@@ -113,85 +143,34 @@ namespace DenshaDeGoInput
 		{
 			double brakeAxis = joystick.GetAxis(0);
 			double powerAxis = joystick.GetAxis(1);
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.Emergency) && brakeAxis <= GetRangeMax((byte)BrakeByte.Emergency))
+			foreach (var notch in BrakeNotchMap)
 			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.Emergency;
+				if (brakeAxis >= GetRangeMin((byte)notch.Key) && brakeAxis <= GetRangeMax((byte)notch.Key))
+				{
+					InputTranslator.BrakeNotch = notch.Value;
+				}
 			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.B8) && brakeAxis <= GetRangeMax((byte)BrakeByte.B8))
+			foreach (var notch in PowerNotchMap)
 			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B8;
-			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.B7) && brakeAxis <= GetRangeMax((byte)BrakeByte.B7))
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B7;
-			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.B6) && brakeAxis <= GetRangeMax((byte)BrakeByte.B6))
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B6;
-			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.B5) && brakeAxis <= GetRangeMax((byte)BrakeByte.B5))
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B5;
-			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.B4) && brakeAxis <= GetRangeMax((byte)BrakeByte.B4))
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B4;
-			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.B3) && brakeAxis <= GetRangeMax((byte)BrakeByte.B3))
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B3;
-			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.B2) && brakeAxis <= GetRangeMax((byte)BrakeByte.B2))
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B2;
-			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.B1) && brakeAxis <= GetRangeMax((byte)BrakeByte.B1))
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.B1;
-			}
-			if (brakeAxis >= GetRangeMin((byte)BrakeByte.Released) && brakeAxis <= GetRangeMax((byte)BrakeByte.Released))
-			{
-				InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.Released;
+				if (powerAxis >= GetRangeMin((byte)notch.Key) && powerAxis <= GetRangeMax((byte)notch.Key))
+				{
+					InputTranslator.PowerNotch = notch.Value;
+				}
 			}
 
-			if (powerAxis >= GetRangeMin((byte)PowerByte.N) && powerAxis <= GetRangeMax((byte)PowerByte.N))
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
-			}
-			if (powerAxis >= GetRangeMin((byte)PowerByte.P1) && powerAxis <= GetRangeMax((byte)PowerByte.P1))
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P1;
-			}
-			if (powerAxis >= GetRangeMin((byte)PowerByte.P2) && powerAxis <= GetRangeMax((byte)PowerByte.P2))
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P2;
-			}
-			if (powerAxis >= GetRangeMin((byte)PowerByte.P3) && powerAxis <= GetRangeMax((byte)PowerByte.P3))
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P3;
-			}
-			if (powerAxis >= GetRangeMin((byte)PowerByte.P4) && powerAxis <= GetRangeMax((byte)PowerByte.P4))
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P4;
-			}
-			if (powerAxis >= GetRangeMin((byte)PowerByte.P5) && powerAxis <= GetRangeMax((byte)PowerByte.P5))
-			{
-				InputTranslator.PowerNotch = InputTranslator.PowerNotches.P5;
-			}
-
-			InputTranslator.ControllerButtons.Select = joystick.GetButton(ButtonIndex.Select);
-			InputTranslator.ControllerButtons.Start = joystick.GetButton(ButtonIndex.Start);
-			InputTranslator.ControllerButtons.A = joystick.GetButton(ButtonIndex.A);
-			InputTranslator.ControllerButtons.B = joystick.GetButton(ButtonIndex.B);
-			InputTranslator.ControllerButtons.C = joystick.GetButton(ButtonIndex.C);
-			InputTranslator.ControllerButtons.D = joystick.GetButton(ButtonIndex.D);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = joystick.GetButton(ButtonIndex.Select);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = joystick.GetButton(ButtonIndex.Start);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = joystick.GetButton(ButtonIndex.A);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = joystick.GetButton(ButtonIndex.B);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = joystick.GetButton(ButtonIndex.C);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = joystick.GetButton(ButtonIndex.D);
 
 			if (hasDirectionButtons)
 			{
-				InputTranslator.ControllerButtons.Up = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsUp ? 1 : 0);
-				InputTranslator.ControllerButtons.Down = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsDown ? 1 : 0);
-				InputTranslator.ControllerButtons.Left = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsLeft ? 1 : 0);
-				InputTranslator.ControllerButtons.Right = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsRight ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsUp ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsDown ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsLeft ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsRight ? 1 : 0);
 			}
 		}
 

@@ -94,24 +94,6 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static ButtonProp[] ButtonProperties = new ButtonProp[11];
 
-		/// <summary>
-		/// Dictionary storing the mapping of each brake notch.
-		/// </summary>
-		internal static readonly Dictionary<int, OpenTK.Input.ButtonState> ButtonMap = new Dictionary<int, OpenTK.Input.ButtonState>
-		{
-			{ 0, InputTranslator.ControllerButtons.Select},
-			{ 1, InputTranslator.ControllerButtons.Start},
-			{ 2, InputTranslator.ControllerButtons.A},
-			{ 3, InputTranslator.ControllerButtons.B},
-			{ 4, InputTranslator.ControllerButtons.C},
-			{ 5, InputTranslator.ControllerButtons.D},
-			{ 6, InputTranslator.ControllerButtons.Up},
-			{ 7, InputTranslator.ControllerButtons.Down},
-			{ 8, InputTranslator.ControllerButtons.Left},
-			{ 9, InputTranslator.ControllerButtons.Right},
-			{ 10, InputTranslator.ControllerButtons.Pedal}
-		};
-
 
 		/// <summary>
 		/// Whether to convert the handle notches to match the driver's train.
@@ -245,7 +227,7 @@ namespace DenshaDeGoInput
 				// Buttons
 				for (int i = 0; i < ButtonProperties.Length; i++)
 				{
-					if (ButtonMap[i] == OpenTK.Input.ButtonState.Pressed && ButtonProperties[i].Timer <= 0)
+					if (InputTranslator.ControllerButtons[i] == OpenTK.Input.ButtonState.Pressed && ButtonProperties[i].Timer <= 0)
 					{
 						KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[i].Command]));
 						if (ButtonProperties[i].Repeats)
@@ -275,7 +257,7 @@ namespace DenshaDeGoInput
 			// Button timers
 			for (int i = 0; i < ButtonProperties.Length; i++)
 			{
-				if (ButtonMap[i] == OpenTK.Input.ButtonState.Pressed)
+				if (InputTranslator.ControllerButtons[i] == OpenTK.Input.ButtonState.Pressed)
 				{
 					ButtonProperties[i].Timer -= data.ElapsedTime.Milliseconds;
 				}

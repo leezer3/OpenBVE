@@ -89,25 +89,44 @@ namespace DenshaDeGoInput
 			P5 = 5,
 		};
 
-		internal class ButtonState
+		/// <summary>
+		/// Enumeration representing controller buttons.
+		/// </summary>
+		internal enum ControllerButton
 		{
-			internal OpenTK.Input.ButtonState Select;
-			internal OpenTK.Input.ButtonState Start;
-			internal OpenTK.Input.ButtonState A;
-			internal OpenTK.Input.ButtonState B;
-			internal OpenTK.Input.ButtonState C;
-			internal OpenTK.Input.ButtonState D;
-			internal OpenTK.Input.ButtonState Up;
-			internal OpenTK.Input.ButtonState Down;
-			internal OpenTK.Input.ButtonState Left;
-			internal OpenTK.Input.ButtonState Right;
-			internal OpenTK.Input.ButtonState Pedal;
+			/// <summary>Select button</summary>
+			Select = 0,
+			/// <summary>Start button</summary>
+			Start = 1,
+			/// <summary>A button</summary>
+			A = 2,
+			/// <summary>B button</summary>
+			B = 3,
+			/// <summary>C button</summary>
+			C = 4,
+			/// <summary>D button</summary>
+			D = 5,
+			/// <summary>Up button</summary>
+			Up = 6,
+			/// <summary>Down button</summary>
+			Down = 7,
+			/// <summary>Left button</summary>
+			Left = 8,
+			/// <summary>Right button</summary>
+			Right = 9,
+			/// <summary>Pedal button</summary>
+			Pedal = 10,
 		}
+
+		/// <summary>
+		/// An array with the state of the controller's buttons.
+		/// </summary>
+		internal static ButtonState[] ControllerButtons = new ButtonState[11];
 
 		/// <summary>
 		/// The index of the active controller, or -1 if not set.
 		/// </summary>
-		public static int activeControllerIndex = -1;
+		internal static int activeControllerIndex = -1;
 
 		/// <summary>
 		/// Whether a supported controller is connected or not.
@@ -138,11 +157,6 @@ namespace DenshaDeGoInput
 		/// The previous power notch reported by the controller.
 		/// </summary>
 		internal static PowerNotches PreviousPowerNotch;
-
-		/// <summary>
-		/// The state of the controller's buttons.
-		/// </summary>
-		internal static ButtonState ControllerButtons = new ButtonState();
 
 		/// <summary>
 		/// Gets the controller model.
@@ -190,9 +204,7 @@ namespace DenshaDeGoInput
 				// The controller is apparently not connected; try to connect to it
 				ControllerModel = GetControllerModel(activeControllerIndex);
 
-				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
-				JoystickCapabilities capabilities = Joystick.GetCapabilities(activeControllerIndex);
-				if (capabilities.ButtonCount > 0 && ControllerModel != ControllerModels.Unsupported)
+				if (Joystick.GetState(activeControllerIndex).IsConnected && ControllerModel != ControllerModels.Unsupported)
 				{
 					// The controller is valid and can be used
 					IsControllerConnected = true;
@@ -201,8 +213,7 @@ namespace DenshaDeGoInput
 			}
 			else
 			{
-				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
-				if (Joystick.GetCapabilities(activeControllerIndex).ButtonCount == 0)
+				if (!Joystick.GetState(activeControllerIndex).IsConnected)
 				{
 					// The controller is apparently not connected
 					IsControllerConnected = false;

@@ -87,13 +87,22 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < 10; i++)
 			{
 				InputTranslator.ControllerModels model = InputTranslator.GetControllerModel(i);
-				deviceList.Add(Translations.GetInterfaceString("denshadego_joystick").Replace("[index]", (i + 1).ToString()));
+				deviceList.Add(Translations.GetInterfaceString("denshadego_joystick").Replace("[index]", (i + 1).ToString()).Replace("[name]", Joystick.GetName(i)));
 
-				// HACK: IsConnected seems to be broken on Mono, so we use the button count instead
-				JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
-				if (capabilities.ButtonCount > 0 && model != InputTranslator.ControllerModels.Unsupported)
+				if (Joystick.GetState(i).IsConnected && model != InputTranslator.ControllerModels.Unsupported)
 				{
 					deviceBox.Items.Add(deviceList[i]);
+				}
+			}
+
+			// Adjust the width of the device dropdown to prevent truncation
+			deviceBox.DropDownWidth = deviceBox.Width;
+			foreach (var item in deviceBox.Items)
+			{
+				int currentItemWidth = (int)deviceBox.CreateGraphics().MeasureString(item.ToString(), deviceBox.Font).Width;
+				if (currentItemWidth > deviceBox.DropDownWidth)
+				{
+					deviceBox.DropDownWidth = currentItemWidth;
 				}
 			}
 		}
@@ -103,134 +112,37 @@ namespace DenshaDeGoInput
 		/// </summary>
 		private void UpdateInterface()
 		{
-			label_brakeemg.ForeColor = Color.Black;
-			label_brake8.ForeColor = Color.Black;
-			label_brake7.ForeColor = Color.Black;
-			label_brake6.ForeColor = Color.Black;
-			label_brake5.ForeColor = Color.Black;
-			label_brake4.ForeColor = Color.Black;
-			label_brake3.ForeColor = Color.Black;
-			label_brake2.ForeColor = Color.Black;
-			label_brake1.ForeColor = Color.Black;
-			label_braken.ForeColor = Color.Black;
-			label_power5.ForeColor = Color.Black;
-			label_power4.ForeColor = Color.Black;
-			label_power3.ForeColor = Color.Black;
-			label_power2.ForeColor = Color.Black;
-			label_power1.ForeColor = Color.Black;
-			label_powern.ForeColor = Color.Black;
-			label_a.ForeColor = Color.Black;
-			label_b.ForeColor = Color.Black;
-			label_c.ForeColor = Color.Black;
-			label_d.ForeColor = Color.Black;
-			label_start.ForeColor = Color.Black;
-			label_select.ForeColor = Color.Black;
-			label_up.ForeColor = Color.Black;
-			label_down.ForeColor = Color.Black;
-			label_left.ForeColor = Color.Black;
-			label_right.ForeColor = Color.Black;
-			label_pedal.ForeColor = Color.Black;
-
 			if (InputTranslator.IsControllerConnected)
 			{
-				switch (InputTranslator.BrakeNotch)
-				{
-					case InputTranslator.BrakeNotches.Emergency:
-						label_brakeemg.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.B8:
-						label_brake8.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.B7:
-						label_brake7.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.B6:
-						label_brake6.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.B5:
-						label_brake5.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.B4:
-						label_brake4.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.B3:
-						label_brake3.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.B2:
-						label_brake2.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.B1:
-						label_brake1.ForeColor = Color.White;
-						break;
-					case InputTranslator.BrakeNotches.Released:
-						label_braken.ForeColor = Color.White;
-						break;
-				}
-				switch (InputTranslator.PowerNotch)
-				{
-					case InputTranslator.PowerNotches.P5:
-						label_power5.ForeColor = Color.White;
-						break;
-					case InputTranslator.PowerNotches.P4:
-						label_power4.ForeColor = Color.White;
-						break;
-					case InputTranslator.PowerNotches.P3:
-						label_power3.ForeColor = Color.White;
-						break;
-					case InputTranslator.PowerNotches.P2:
-						label_power2.ForeColor = Color.White;
-						break;
-					case InputTranslator.PowerNotches.P1:
-						label_power1.ForeColor = Color.White;
-						break;
-					case InputTranslator.PowerNotches.N:
-						label_powern.ForeColor = Color.White;
-						break;
-				}
-				if (InputTranslator.ControllerButtons.Select == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_select.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.Start == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_start.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.A == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_a.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.B == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_b.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.C == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_c.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.D == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_d.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.Up == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_up.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.Down == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_down.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.Left == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_left.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.Right == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_right.ForeColor = Color.White;
-				}
-				if (InputTranslator.ControllerButtons.Pedal == OpenTK.Input.ButtonState.Pressed)
-				{
-					label_pedal.ForeColor = Color.White;
-				}
+				label_brakeemg.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.Emergency ? Color.White : Color.Black;
+				label_brake8.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B8 ? Color.White : Color.Black;
+				label_brake7.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B7 ? Color.White : Color.Black;
+				label_brake6.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B6 ? Color.White : Color.Black;
+				label_brake5.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B5 ? Color.White : Color.Black;
+				label_brake4.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B4 ? Color.White : Color.Black;
+				label_brake3.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B3 ? Color.White : Color.Black;
+				label_brake2.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B2 ? Color.White : Color.Black;
+				label_brake1.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B1 ? Color.White : Color.Black;
+				label_braken.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.Released ? Color.White : Color.Black;
+
+				label_power5.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P5 ? Color.White : Color.Black;
+				label_power4.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P4 ? Color.White : Color.Black;
+				label_power3.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P3 ? Color.White : Color.Black;
+				label_power2.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P2 ? Color.White : Color.Black;
+				label_power1.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P1 ? Color.White : Color.Black;
+				label_powern.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.N ? Color.White : Color.Black;
+
+				label_select.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_start.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_a.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_b.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_c.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_d.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_up.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_down.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_left.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_right.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_pedal.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
 			}
 
 			switch (InputTranslator.ControllerModel)
@@ -383,57 +295,57 @@ namespace DenshaDeGoInput
 
 		private void buttonselectBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[0].Command = buttonselectBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Select].Command = buttonselectBox.SelectedIndex;
 		}
 
 		private void buttonstartBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[1].Command = buttonstartBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Start].Command = buttonstartBox.SelectedIndex;
 		}
 
 		private void buttonaBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[2].Command = buttonaBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.A].Command = buttonaBox.SelectedIndex;
 		}
 
 		private void buttonbBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[3].Command = buttonbBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.B].Command = buttonbBox.SelectedIndex;
 		}
 
 		private void buttoncBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[4].Command = buttoncBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.C].Command = buttoncBox.SelectedIndex;
 		}
 
 		private void buttondBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[5].Command = buttondBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.D].Command = buttondBox.SelectedIndex;
 		}
 
 		private void buttonupBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[6].Command = buttonupBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Up].Command = buttonupBox.SelectedIndex;
 		}
 
 		private void buttondownBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[7].Command = buttondownBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Down].Command = buttondownBox.SelectedIndex;
 		}
 
 		private void buttonleftBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[8].Command = buttonleftBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Left].Command = buttonleftBox.SelectedIndex;
 		}
 
 		private void buttonrightBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[9].Command = buttonrightBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Right].Command = buttonrightBox.SelectedIndex;
 		}
 
 		private void buttonpedalBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[10].Command = buttonpedalBox.SelectedIndex;
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Pedal].Command = buttonpedalBox.SelectedIndex;
 		}
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)
