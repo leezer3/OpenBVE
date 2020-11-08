@@ -66,6 +66,8 @@ namespace OpenBveApi.Packages
 		public List<Package> Dependancies;
 		/// <summary>The list of packages that this package reccomends you also install</summary>
 		public List<Package> Reccomendations;
+		/// <summary>The list of packages which depend on this package</summary>
+		public List<string> DependantPackages;
 		/*
 		 * These values are used by dependancies
 		 * They need to live in the base Package class to save creating another.....
@@ -193,6 +195,18 @@ namespace OpenBveApi.Packages
 		BZ2
 	}
 
+	/// <summary>The current operation being performed</summary>
+	public enum PackageOperation
+	{
+		/// <summary>No current operation</summary>
+		None,
+		/// <summary>Creating a package</summary>
+		Creating,
+		/// <summary>Installing a package</summary>
+		Installing,
+		/// <summary>Uninstalling a package</summary>
+		Uninstalling
+	}
 	
 
 	/// <summary>Provides functions for manipulating OpenBVE packages</summary>

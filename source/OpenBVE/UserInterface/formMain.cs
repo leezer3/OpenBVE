@@ -1343,9 +1343,14 @@ namespace OpenBve {
 			if (radioButtonPackages.Checked)
 			{
 				ResetInstallerPanels();
-				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
+				string errorMessage;
+				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile, out errorMessage))
 				{
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
+				}
+				if (errorMessage != string.Empty)
+				{
+					MessageBox.Show(Translations.GetInterfaceString(errorMessage));
 				}
 				comboBoxPackageType.SelectedIndex = 0;
 			}

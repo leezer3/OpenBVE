@@ -687,6 +687,12 @@
 					<trans-unit id="file_generic">
 						<source>Failed to create the following file: \r \n</source>
 					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">

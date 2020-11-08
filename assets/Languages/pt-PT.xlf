@@ -208,6 +208,12 @@
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 						<target>Se está a tentar instalar acessórios nos Ficheiros de Programas ou directórios de Dados de Programas, isso pode exigir permissão de administrador. \r\n\r\n Isto não é recomendado por motivos de segurança.</target>
 					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">

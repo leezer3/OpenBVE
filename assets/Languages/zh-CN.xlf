@@ -206,6 +206,12 @@
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 						<target>如果您要将扩展包安装在 Program Files 或 ProgramData 文件夹内，您需要选择以管理员身份运行本程序。\r\n\r\n 此配置并不安全，建议您在设置中修改。</target>
 					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">
