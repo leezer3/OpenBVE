@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using LibRender2;
 using LibRender2.Screens;
 using OpenBveApi.Interface;
@@ -241,48 +242,50 @@ namespace OpenBve
 		{
 			if (Interface.CurrentOptions.UseJoysticks)
 			{
-				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
+				for (int k = 0; k < JoystickManager.AttachedJoysticks.Count; k++)
 				{
-					JoystickManager.AttachedJoysticks[k].Poll();
+					Guid guid = JoystickManager.AttachedJoysticks.ElementAt(k).Key;
+					JoystickManager.AttachedJoysticks[guid].Poll();
 				}
 			}
 			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				if (Interface.CurrentOptions.UseJoysticks)
 				{
-					for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
+					for (int k = 0; k < JoystickManager.AttachedJoysticks.Count; k++)
 					{
-						int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
+						Guid guid = JoystickManager.AttachedJoysticks.ElementAt(k).Key;
+						int axes = JoystickManager.AttachedJoysticks[guid].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{
-							double aa = JoystickManager.AttachedJoysticks[k].GetAxis(i);
+							double aa = JoystickManager.AttachedJoysticks[guid].GetAxis(i);
 							if (aa < -0.75)
 							{
-								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Axis, i, -1);
+								Game.Menu.SetControlJoyCustomData(guid, Interface.JoystickComponent.Axis, i, -1);
 								return;
 							}
 							if (aa > 0.75)
 							{
-								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Axis, i, 1);
+								Game.Menu.SetControlJoyCustomData(guid, Interface.JoystickComponent.Axis, i, 1);
 								return;
 							}
 						}
-						int buttons = JoystickManager.AttachedJoysticks[k].ButtonCount();
+						int buttons = JoystickManager.AttachedJoysticks[guid].ButtonCount();
 						for (int i = 0; i < buttons; i++)
 						{
-							if (JoystickManager.AttachedJoysticks[k].GetButton(i) == ButtonState.Pressed)
+							if (JoystickManager.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
 							{
-								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Button, i, 1);
+								Game.Menu.SetControlJoyCustomData(guid, Interface.JoystickComponent.Button, i, 1);
 								return;
 							}
 						}
-						int hats = JoystickManager.AttachedJoysticks[k].HatCount();
+						int hats = JoystickManager.AttachedJoysticks[guid].HatCount();
 						for (int i = 0; i < hats; i++)
 						{
-							JoystickHatState hat = JoystickManager.AttachedJoysticks[k].GetHat(i);
+							JoystickHatState hat = JoystickManager.AttachedJoysticks[guid].GetHat(i);
 							if (hat.Position != HatPosition.Centered)
 							{
-								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Hat, i, (int)hat.Position);
+								Game.Menu.SetControlJoyCustomData(guid, Interface.JoystickComponent.Hat, i, (int)hat.Position);
 								return;
 							}
 						}
@@ -310,12 +313,12 @@ namespace OpenBve
 			//Traverse the controls array
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				int currentDevice = Interface.CurrentControls[i].Device;
+				Guid currentDevice = Interface.CurrentControls[i].Device;
 				//Check to see if our device is currently available
 				switch (Interface.CurrentControls[i].Method)
 				{
 					case Interface.ControlMethod.Joystick:
-						if (JoystickManager.AttachedJoysticks.Length == 0 || !Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected)
+						if (JoystickManager.AttachedJoysticks.Count == 0 || !JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].IsConnected())
 						{
 							//Not currently connected
 							continue;
@@ -327,7 +330,7 @@ namespace OpenBve
 							//Not currently connected
 							continue;
 						}
-						currentDevice = JoystickManager.RailDriverIndex;
+						currentDevice = JoystickManager.Raildriver.Guid;
 						break;
 					default:
 						//Not a joystick / RD

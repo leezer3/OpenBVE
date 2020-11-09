@@ -1,4 +1,5 @@
-﻿using OpenTK.Input;
+﻿using System;
+using OpenTK.Input;
 
 namespace OpenBve
 {
@@ -8,6 +9,15 @@ namespace OpenBve
 		internal class StandardJoystick : Joystick
 		{
 			private JoystickState state;
+			private readonly Guid Guid;
+
+			internal StandardJoystick(int joystickHandle)
+			{
+				Handle = joystickHandle;
+				Name = OpenTK.Input.Joystick.GetName(Handle);
+				Guid = OpenTK.Input.Joystick.GetGuid(Handle);
+			}
+
 			internal override ButtonState GetButton(int button)
 			{
 				return state.GetButton(button);
@@ -46,6 +56,11 @@ namespace OpenBve
 			internal override bool IsConnected()
 			{
 				return OpenTK.Input.Joystick.GetCapabilities(Handle).IsConnected;
+			}
+
+			internal override Guid GetGuid()
+			{
+				return Guid;
 			}
 		}
 	}

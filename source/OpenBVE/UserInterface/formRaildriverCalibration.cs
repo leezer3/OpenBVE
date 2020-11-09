@@ -22,22 +22,15 @@ namespace OpenBve.UserInterface
 				Load += (s, e) => Close();
 				return;
 			}
-			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
-			{
-				if (JoystickManager.AttachedJoysticks[i] is JoystickManager.Raildriver)
-				{
-					joystickIDX = i;
-				}
-			}
 			buttonCalibrationNext.Text = Translations.GetInterfaceString("packages_button_next");
 			buttonCalibrationPrevious.Text = Translations.GetInterfaceString("packages_button_back");
 		}
 
 		private void formRaildriverCalibration_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (joystickIDX != -1)
+			if (JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.Raildriver.Guid))
 			{
-				var j = JoystickManager.AttachedJoysticks[joystickIDX] as JoystickManager.Raildriver;
+				var j = JoystickManager.AttachedJoysticks[JoystickManager.Raildriver.Guid] as JoystickManager.Raildriver;
 				if (j == null)
 				{
 					return;
@@ -77,7 +70,6 @@ namespace OpenBve.UserInterface
 		}
 
 		private int calibrationStage;
-		private readonly int joystickIDX = -1;
 
 		//Stores the main bitmap
 		private readonly Bitmap main;
@@ -86,7 +78,11 @@ namespace OpenBve.UserInterface
 
 		private void buttonCalibrationNext_Click(object sender, EventArgs e)
 		{
-			var j = JoystickManager.AttachedJoysticks[joystickIDX] as JoystickManager.Raildriver;
+			if (!JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.Raildriver.Guid))
+			{
+				return;
+			}
+			var j = JoystickManager.AttachedJoysticks[JoystickManager.Raildriver.Guid] as JoystickManager.Raildriver;
 			if (j == null)
 			{
 				return;
