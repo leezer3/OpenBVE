@@ -12,7 +12,7 @@
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>Alvin Wong@I-Circle BVE, Kenny Hui@HKTSS</target>
+					<target>Alvin Wong@I-Circle BVE, Kenny@HKTSS</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
@@ -105,11 +105,11 @@
 				<group id="errors">
 					<trans-unit id="critical_file">
 						<source>A critical error occured whilst parsing the [file] file</source>
-						<target>A critical error occured whilst parsing the [file] file</target>
+						<target>處理文件:[file] 時發生錯誤。</target>
 					</trans-unit>
 					<trans-unit id="filesystem_invalid">
 						<source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
-						<target>The file system configuration could not be accessed or is invalid due to the following reason:</target>
+						<target>無法訪問文件系統或系統無效，原因:</target>
 					</trans-unit>
 					<trans-unit id="warning">
 						<source>Warning:</source>
@@ -129,7 +129,7 @@
 					</trans-unit>
 					<trans-unit id="controls_default_oldversion">
 						<source>The default key assingment file is an older version or corrupt.</source>
-						<target>The default key assingment file is an older version or corrupt.</target>
+						<target>默認鍵盤配置文件是舊版本或已損壞。</target>
 					</trans-unit>
 					<trans-unit id="controls_default_missing">
 						<source>The default key assignment file does not exist.</source>
@@ -200,7 +200,7 @@
 					</trans-unit>
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
-						<target>Failed to create the following file: \r \n</target>
+						<target>無法創建以下文件: \r \n</target>
 					</trans-unit>
 					<trans-unit id="security_checkaccess">
 						<source>Please check that this path is accessible.</source>
@@ -458,19 +458,19 @@
 					</trans-unit>
 					<trans-unit id="proceed">
 						<source>Proceed...</source>
-						<target>Proceed...</target>
+						<target>繼續</target>
 					</trans-unit>
 					<trans-unit id="proceed_anyway">
 						<source>Proceed Anyway</source>
-						<target>Proceed Anyway</target>
+						<target>仍然繼續</target>
 					</trans-unit>
 					<trans-unit id="processing">
 						<source>Processing, please wait...</source>
-						<target>Processing, please wait...</target>
+						<target>處理中, 請稍後...</target>
 					</trans-unit>
 					<trans-unit id="unknown_file">
 						<source>Unknown File...</source>
-						<target>Unknown File...</target>
+						<target>不明檔案</target>
 					</trans-unit>
 					<trans-unit id="shownlist">
 						<source>These are shown in the list below:</source>
@@ -478,15 +478,15 @@
 					</trans-unit>
 					<trans-unit id="selection_none">
 						<source>No package selected.</source>
-						<target>No package selected.</target>
+						<target>沒有選擇任何包裝</target>
 					</trans-unit>
 					<trans-unit id="selection_none_website">
 						<source>No website provided.</source>
-						<target>No website provided.</target>
+						<target>沒有提供網站</target>
 					</trans-unit>
 					<trans-unit id="list">
 						<source>Installed Packages</source>
-						<target>Installed Packages</target>
+						<target>已安裝的包裝</target>
 					</trans-unit>
 					<trans-unit id="list_type">
 						<source>Select the type of packages you wish to view:</source>
@@ -582,7 +582,7 @@
 					</trans-unit>
 					<trans-unit id="install_dependancies_unmet_header">
 						<source>Dependancy Error</source>
-						<target>Dependancy Error</target>
+						<target>相依包裝錯誤</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_broken">
 						<source>The following dependancies may be broken by this action:</source>
@@ -594,27 +594,27 @@
 					</trans-unit>
 					<trans-unit id="install_reccomends_unmet_header">
 						<source>Recommended Packages</source>
-						<target>Recommended Packages</target>
+						<target>建議包裝</target>
 					</trans-unit>
 					<trans-unit id="install_name">
 						<source>Package Name:</source>
-						<target>Package Name:</target>
+						<target>包裝名稱:</target>
 					</trans-unit>
 					<trans-unit id="install_author">
 						<source>Package Author:</source>
-						<target>Package Author:</target>
+						<target>包裝作者:</target>
 					</trans-unit>
 					<trans-unit id="install_version">
 						<source>Package Version:</source>
-						<target>Package Version:</target>
+						<target>包裝版本:</target>
 					</trans-unit>
 					<trans-unit id="install_website">
 						<source>Package Website:</source>
-						<target>Package Website:</target>
+						<target>包裝網頁:</target>
 					</trans-unit>
 					<trans-unit id="install_description">
 						<source>Package Description:</source>
-						<target>Package Description:</target>
+						<target>包裝描述:</target>
 					</trans-unit>
 					<trans-unit id="creation_button">
 						<source>Create Package</source>
@@ -626,11 +626,11 @@
 					</trans-unit>
 					<trans-unit id="creation_saveas_button">
 						<source>Save As...</source>
-						<target>Save As...</target>
+						<target>儲存為</target>
 					</trans-unit>
 					<trans-unit id="creation_saveas_label">
 						<source>Save package as:</source>
-						<target>Save package as:</target>
+						<target>儲存包裝為</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies">
 						<source>Select Dependancies</source>
@@ -642,7 +642,7 @@
 					</trans-unit>
 					<trans-unit id="creation_dependancies_remove">
 						<source>Remove</source>
-						<target>Remove</target>
+						<target>移除</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -654,11 +654,11 @@
 					</trans-unit>
 					<trans-unit id="creation_clearselection">
 						<source>Clear Selection</source>
-						<target>Clear Selection</target>
+						<target>清除選擇</target>
 					</trans-unit>
 					<trans-unit id="creation_additems">
 						<source>Add Item(s)</source>
-						<target>Add Item(s)</target>
+						<target>增加項目</target>
 					</trans-unit>
 					<trans-unit id="creation_selecteditems">
 						<source>The following files and folders will be packaged:</source>
@@ -717,7 +717,7 @@
 					</trans-unit>
 					<trans-unit id="creation_proceed">
 						<source>Proceed......</source>
-						<target>Proceed......</target>
+						<target>繼續...</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_nofiles">
 						<source>No files were selected to package- Please retry.</source>
@@ -737,7 +737,7 @@
 					</trans-unit>
 					<trans-unit id="creation_save">
 						<source>Save Package</source>
-						<target>Save Package</target>
+						<target>儲存包裝</target>
 					</trans-unit>
 					<trans-unit id="creation_replace">
 						<source>Is this to replace an existing package?</source>
@@ -745,11 +745,11 @@
 					</trans-unit>
 					<trans-unit id="creation_yes">
 						<source>Yes</source>
-						<target>Yes</target>
+						<target>是</target>
 					</trans-unit>
 					<trans-unit id="creation_no">
 						<source>No</source>
-						<target>No</target>
+						<target>否</target>
 					</trans-unit>
 					<trans-unit id="replace_select">
 						<source>Replace this Package</source>
@@ -833,11 +833,11 @@
 					</trans-unit>
 					<trans-unit id="selected">
 						<source>Selected Packages</source>
-						<target>Selected Packages</target>
+						<target>選擇包裝</target>
 					</trans-unit>
 					<trans-unit id="dependancy">
 						<source>Dependancy</source>
-						<target>Dependancy</target>
+						<target>相依包裝</target>
 					</trans-unit>
 					<trans-unit id="recommendation">
 						<source>Recommendation</source>
@@ -857,31 +857,31 @@
 					</trans-unit>
 					<trans-unit id="button_next">
 						<source>Next &gt;</source>
-						<target>Next &gt;</target>
+						<target>下一頁 &gt;</target>
 					</trans-unit>
 					<trans-unit id="button_back">
 						<source>&lt; Back</source>
-						<target>&lt; Back</target>
+						<target>&lt; 上一頁</target>
 					</trans-unit>
 					<trans-unit id="button_cancel">
 						<source>Cancel</source>
-						<target>Cancel</target>
+						<target>取消</target>
 					</trans-unit>
 					<trans-unit id="button_ok">
 						<source>OK</source>
-						<target>OK</target>
+						<target>確定</target>
 					</trans-unit>
 					<trans-unit id="button_install">
 						<source>Install</source>
-						<target>Install</target>
+						<target>安裝</target>
 					</trans-unit>
 					<trans-unit id="button_create">
 						<source>Create</source>
-						<target>Create</target>
+						<target>創造</target>
 					</trans-unit>
 					<trans-unit id="button_ignore">
 						<source>Ignore</source>
-						<target>Ignore</target>
+						<target>略過</target>
 					</trans-unit>
 					<trans-unit id="button_abort">
 						<source>Abort</source>
@@ -902,6 +902,14 @@
 					<trans-unit id="file_generic">
 						<source>Failed to create the following file: \r \n</source>
 						<target>Failed to create the following file: \r \n</target>
+					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+						<target>包裝資料庫xml無效, 並已重新制造</target>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+						<target>包裝資料庫xml無效, 並已重新制造</target>
 					</trans-unit>
 				</group>
 				<group id="controls">
@@ -1203,7 +1211,7 @@
 					</trans-unit>
 					<trans-unit id="calibration_l">
 						<source>Move the wiper switch to FULL and press 'Next'.</source>
-						<target>將雨刮器開關移至FULL（滿），然後按“ Next”（下一步）。</target>
+						<target>將雨刮器開關移至FULL（滿），然後按下一步。</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
 						<source>Move the lights switch to OFF and press 'Next'.</source>
@@ -1516,11 +1524,11 @@
 					</trans-unit>
 					<trans-unit id="page_previous">
 						<source>Previous Page...</source>
-						<target>&amp;lt; 上一頁</target>
+						<target>&lt; 上一頁</target>
 					</trans-unit>
 					<trans-unit id="page_next">
 						<source>Next Page...</source>
-						<target>下一頁 &amp;gt;</target>
+						<target>下一頁 &gt;</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode">
 						<source>Kiosk Mode</source>
@@ -2443,7 +2451,7 @@
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
 						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
-						<target>進入車內視點(無面板)</target>
+						<target>進入車內視點, 但沒有面板</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
 						<source>Switches to the train's exterior view</source>
@@ -2575,7 +2583,7 @@
 					</trans-unit>
 					<trans-unit id="misc_dist_next_station">
 						<source>Toggles through different next station remain distance display modes</source>
-						<target>Toggles through different next station remain distance display modes</target>
+						<target>切換到不同的下一站距離顯示模式</target>
 					</trans-unit>
 					<trans-unit id="misc_timefactor">
 						<source>Toggles through different time acceleration factors</source>
@@ -2791,7 +2799,7 @@
 					</trans-unit>
 					<trans-unit id="colon">
 						<source>Colon</source>
-						<target>Colon (:)</target>
+						<target>冒號 (:)</target>
 					</trans-unit>
 					<trans-unit id="comma">
 						<source>Comma</source>
@@ -3032,11 +3040,11 @@
 					</trans-unit>
 					<trans-unit id="pagedown">
 						<source>Page down</source>
-						<target>Page down</target>
+						<target>下頁</target>
 					</trans-unit>
 					<trans-unit id="pageup">
 						<source>Page up</source>
-						<target>Page up</target>
+						<target>上頁</target>
 					</trans-unit>
 					<trans-unit id="pause">
 						<source>Pause</source>
@@ -3238,6 +3246,91 @@
 					<trans-unit id="z">
 						<source>Z</source>
 						<target>Z</target>
+					</trans-unit>
+				</group>
+				<group id="denshadego">
+					<trans-unit id="config_title">
+						<source>Densha de GO! controller configuration</source>
+						<target>電車 GO! 控制器設定</target>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+						<target>裝置輸入</target>
+					</trans-unit>
+					<trans-unit id="calibration_button">
+						<source>Start calibration</source>
+						<target>開始校準：</target>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+						<target>裝置:</target>
+					</trans-unit>
+					<trans-unit id="joystick">
+						<source>[index]: [name]</source>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+						<target>按鈕映射</target>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+						<target>沒有</target>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+						<target>手柄映射</target>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+						<target>變換切口</target>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+						<target>保持最少和最大</target>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+						<target>映射制動閘到 B1</target>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+						<target>儲存</target>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+						<target>取消</target>
+					</trans-unit>
+					<trans-unit id="calibrate_button">
+						<source>Hold the [button] button in the controller and press OK.</source>
+						<target>請在控制器上按住[button], 然後按確定。</target>
+					</trans-unit>
+					<trans-unit id="calibrate_brake">
+						<source>Move the brake handle to [notch] and press OK.</source>
+						<target>移動減速手柄到[notch], 然後按確定.</target>
+					</trans-unit>
+					<trans-unit id="calibrate_power">
+						<source>Move the power handle to [notch] and press OK.</source>
+						<target>移動加速手柄到[notch], 然後按確定.</target>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+						<target>上</target>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+						<target>下</target>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+						<target>左</target>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+						<target>右</target>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+						<target>踏板</target>
 					</trans-unit>
 				</group>
 			</group>
@@ -3557,7 +3650,6 @@
 				<group id="device">
 					<trans-unit id="device">
 						<source>Device</source>
-						<target>Device</target>
 					</trans-unit>
 					<trans-unit id="const_speed">
 						<source>ConstSpeed:</source>
