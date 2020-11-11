@@ -13,7 +13,7 @@ namespace OpenBve
 		/// <summary>The car sound played when the wipers are activated or deactivated</summary>
 		internal CarSound SwitchSound;
 		/// <summary>The time for which the wiper pauses at the hold position</summary>
-		internal double WiperHoldTime = 0;
+		internal double HoldTime;
 		/// <summary>The wiper rest position</summary>
 		internal WiperPosition RestPosition;
 		/// <summary>The wiper hold position</summary>
@@ -32,12 +32,15 @@ namespace OpenBve
 		private double holdTimer;
 		private bool soundTriggered;
 
-		internal WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition, double WipeSpeed)
+		internal WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition, double wipeSpeed, double holdTime)
 		{
 			RestPosition = restPosition;
 			HoldPosition = holdPosition;
-			MovementSpeed = WipeSpeed / 100.0;
+			MovementSpeed = wipeSpeed / 100.0;
+			HoldTime = holdTime;
 			Windscreen = windscreen;
+			CurrentPosition = restPosition == WiperPosition.Left ? 100 : 0;
+			CurrentSpeed = WiperSpeed.Off;
 		}
 
 		/// <summary>Changes the wiper speed</summary>
@@ -67,12 +70,14 @@ namespace OpenBve
 			wiperTimer += TimeElapsed;
 			if (CurrentSpeed == WiperSpeed.Off)
 			{
-				if (RestPosition == WiperPosition.Left && CurrentPosition == 0)
+				if (RestPosition == WiperPosition.Left && CurrentPosition == 100)
 				{
+					wiperTimer = 0;
 					return;
 				}
-				if(RestPosition == WiperPosition.Right && CurrentPosition == 100)
+				if(RestPosition == WiperPosition.Right && CurrentPosition == 0)
 				{
+					wiperTimer = 0;
 					return;
 				}
 			}
@@ -103,10 +108,10 @@ namespace OpenBve
 				case 0:
 					if (CurrentSpeed > 0)
 					{
-						if (HoldPosition == WiperPosition.Left && CurrentSpeed != WiperSpeed.Fast)
+						if (HoldPosition == WiperPosition.Right && CurrentSpeed != WiperSpeed.Fast)
 						{
 							holdTimer += TimeElapsed;
-							if (holdTimer > WiperHoldTime)
+							if (holdTimer > HoldTime)
 							{
 								holdTimer = 0;
 								currentDirection = WiperPosition.Right;
@@ -119,12 +124,12 @@ namespace OpenBve
 					}
 					else
 					{
-						if (RestPosition == WiperPosition.Right)
+						if (RestPosition == WiperPosition.Left)
 						{
-							if (HoldPosition == WiperPosition.Left)
+							if (HoldPosition == WiperPosition.Right)
 							{
 								holdTimer += TimeElapsed;
-								if (holdTimer > WiperHoldTime)
+								if (holdTimer > HoldTime)
 								{
 									holdTimer = 0;
 									currentDirection = WiperPosition.Right;
@@ -140,10 +145,10 @@ namespace OpenBve
 				case 100:
 					if (CurrentSpeed > 0)
 					{
-						if (HoldPosition == WiperPosition.Right && CurrentSpeed != WiperSpeed.Fast)
+						if (HoldPosition == WiperPosition.Left && CurrentSpeed != WiperSpeed.Fast)
 						{
 							holdTimer += TimeElapsed;
-							if (holdTimer > WiperHoldTime)
+							if (holdTimer > HoldTime)
 							{
 								holdTimer = 0;
 								currentDirection = WiperPosition.Left;
@@ -156,12 +161,12 @@ namespace OpenBve
 					}
 					else
 					{
-						if (RestPosition == WiperPosition.Left)
+						if (RestPosition == WiperPosition.Right)
 						{
-							if (HoldPosition == WiperPosition.Right)
+							if (HoldPosition == WiperPosition.Left)
 							{
 								holdTimer += TimeElapsed;
-								if (holdTimer > WiperHoldTime)
+								if (holdTimer > HoldTime)
 								{
 									holdTimer = 0;
 									currentDirection = WiperPosition.Left;

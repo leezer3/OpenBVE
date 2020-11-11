@@ -1235,7 +1235,7 @@ namespace OpenBve {
 									WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
 									List<string> daytimeDropFiles, nighttimeDropFiles;
 									Color24 TransparentColor = Color24.Blue;
-									double wipeSpeed = 1.0;
+									double wipeSpeed = 1.0, holdTime = 1.0;
 									try
 									{
 										daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day")).ToList();
@@ -1340,6 +1340,13 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													}
 													break;
+												case "wiperholdtime":
+													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out holdTime))
+													{
+														Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													}
+													break;
+												case "restposition":
 												case "wiperrestposition":
 													switch (Value.ToLowerInvariant())
 													{
@@ -1355,8 +1362,8 @@ namespace OpenBve {
 															Interface.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															break;
 													}
-
 													break;
+												case "holdposition":
 												case "wiperholdposition":
 													switch (Value.ToLowerInvariant())
 													{
@@ -1372,7 +1379,6 @@ namespace OpenBve {
 															Interface.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															break;
 													}
-
 													break;
 											}
 										}
@@ -1436,7 +1442,7 @@ namespace OpenBve {
 									double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
 									double currentDropX = topLeft.X;
 									Train.Cars[Train.DriverCar].Windscreen = new Windscreen(numberOfDrops, Train.Cars[Train.DriverCar]);
-									Train.Cars[Train.DriverCar].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Train.DriverCar].Windscreen, restPosition, holdPosition, wipeSpeed);
+									Train.Cars[Train.DriverCar].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Train.DriverCar].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
 									// Create drops
 									for (int drop = 0; drop < numberOfDrops; drop++)
 									{
