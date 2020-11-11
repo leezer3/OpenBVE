@@ -11,7 +11,7 @@ namespace OpenBve
 		/// <summary>The car sound played when 20% or more drops are visible</summary>
 		internal CarSound WetWipeSound;
 		/// <summary>The car sound played when the wipers are activated or deactivated</summary>
-		internal CarSound WiperSwitchSound;
+		internal CarSound SwitchSound;
 		/// <summary>The time for which the wiper pauses at the hold position</summary>
 		internal double WiperHoldTime = 0;
 		/// <summary>The wiper rest position</summary>
@@ -43,6 +43,7 @@ namespace OpenBve
 		/// <summary>Changes the wiper speed</summary>
 		internal void ChangeSpeed(Translations.Command Command)
 		{
+			Program.Sounds.PlayCarSound(SwitchSound, 1.0, 1.0, Windscreen.Car, false);
 			switch (Command)
 			{
 				case Translations.Command.WiperSpeedUp:
