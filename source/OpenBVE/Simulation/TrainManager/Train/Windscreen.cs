@@ -74,9 +74,9 @@ namespace OpenBve
 			if (CurrentlyRaining)
 			{
 				int nextDrop = PickDrop();
-				dropTimer += TimeElapsed * 10;
-				var dev = (int)(0.4 * 200 / RainIntensity);
-				int dropInterval = 200 / RainIntensity + Program.RandomNumberGenerator.Next(dev, dev * 2);
+				dropTimer += TimeElapsed * 1000;
+				var dev = (int)(0.4 * 2000 / RainIntensity);
+				int dropInterval = 2000 / RainIntensity + Program.RandomNumberGenerator.Next(dev, dev * 2);
 				if (dropTimer > dropInterval)
 				{
 					if (nextDrop != -1)
