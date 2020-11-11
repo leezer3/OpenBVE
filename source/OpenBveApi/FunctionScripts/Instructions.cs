@@ -33,7 +33,7 @@
 		TimetableVisible, Panel2Timetable, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit,
 		SectionAspectNumber, CurrentObjectState,
-		RainDrop
+		RainDrop, WiperPosition
 #pragma warning restore CS1591
 			
 		}

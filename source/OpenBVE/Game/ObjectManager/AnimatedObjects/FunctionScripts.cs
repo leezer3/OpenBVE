@@ -1357,6 +1357,16 @@ namespace OpenBve {
 								Function.Stack[s - 1] = 0.0;
 							}
 						} break;
+					case Instructions.WiperPosition:
+						if (Train == null || !Train.IsPlayerTrain)
+						{
+							Function.Stack[s] = 0.0; //Not part of player train, so irrelevant
+						}
+						else
+						{
+							Function.Stack[s] = Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentPosition;
+						}
+						s++; break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Interface;
 using SoundManager;
 
 namespace OpenBve
@@ -20,8 +21,8 @@ namespace OpenBve
 		/// <summary>The current wiper position</summary>
 		/// <remarks>Range of 0 to 100</remarks>
 		internal int CurrentPosition;
-		/// <summary>The time taken to move 1 position unit in milliseconds</summary>
-		internal double MovementSpeed = 10;
+		/// <summary>The time taken to move 1 position unit in seconds</summary>
+		internal double MovementSpeed;
 		/// <summary>The current speed</summary>
 		internal WiperSpeed CurrentSpeed;
 
@@ -31,29 +32,33 @@ namespace OpenBve
 		private double holdTimer;
 		private bool soundTriggered;
 
-		internal WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition)
+		internal WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition, double WipeSpeed)
 		{
 			RestPosition = restPosition;
 			HoldPosition = holdPosition;
+			MovementSpeed = WipeSpeed / 100.0;
 			Windscreen = windscreen;
 		}
 
-		/// <summary>Speeds up the windscreen wipers</summary>
-		internal void SpeedUp()
+		/// <summary>Changes the wiper speed</summary>
+		internal void ChangeSpeed(Translations.Command Command)
 		{
-			if (CurrentSpeed < WiperSpeed.Fast)
+			switch (Command)
 			{
-				CurrentSpeed++;
+				case Translations.Command.WiperSpeedUp:
+					if (CurrentSpeed < WiperSpeed.Fast)
+					{
+						CurrentSpeed++;
+					}
+					break;
+				case Translations.Command.WiperSpeedDown:
+					if (CurrentSpeed > WiperSpeed.Off)
+					{
+						CurrentSpeed--;
+					}
+					break;
 			}
-		}
-
-		/// <summary>Slows down the windscreen wipers</summary>
-		internal void SlowDown()
-		{
-			if (CurrentSpeed > WiperSpeed.Off)
-			{
-				CurrentSpeed--;
-			}
+			
 		}
 
 		internal void Update(double TimeElapsed)
@@ -212,7 +217,7 @@ namespace OpenBve
 					}
 					break;
 			}
-			int dropToRemove = Math.Min(Windscreen.RainDrops.Length - 1, (int) (CurrentPosition / (100.0 / Windscreen.RainDrops.Length)));
+			int dropToRemove = Windscreen.RainDrops.Length - 1 - Math.Min(Windscreen.RainDrops.Length - 1, (int) (CurrentPosition / (100.0 / Windscreen.RainDrops.Length)));
 			if (Windscreen.RainDrops[dropToRemove])
 			{
 				Windscreen.RainDrops[dropToRemove] = false;

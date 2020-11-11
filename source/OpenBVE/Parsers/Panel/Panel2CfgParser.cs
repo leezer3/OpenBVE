@@ -1235,6 +1235,7 @@ namespace OpenBve {
 									WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
 									List<string> daytimeDropFiles, nighttimeDropFiles;
 									Color24 TransparentColor = Color24.Blue;
+									double wipeSpeed = 1.0;
 									try
 									{
 										daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day")).ToList();
@@ -1332,7 +1333,12 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, false, "NumberOfDrops is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													}
-
+													break;
+												case "wipespeed":
+													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out wipeSpeed))
+													{
+														Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													}
 													break;
 												case "wiperrestposition":
 													switch (Value.ToLowerInvariant())
@@ -1430,7 +1436,7 @@ namespace OpenBve {
 									double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
 									double currentDropX = topLeft.X;
 									Train.Cars[Train.DriverCar].Windscreen = new Windscreen(numberOfDrops, Train.Cars[Train.DriverCar]);
-									Train.Cars[Train.DriverCar].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Train.DriverCar].Windscreen, restPosition, holdPosition);
+									Train.Cars[Train.DriverCar].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Train.DriverCar].Windscreen, restPosition, holdPosition, wipeSpeed);
 									// Create drops
 									for (int drop = 0; drop < numberOfDrops; drop++)
 									{
@@ -1440,7 +1446,7 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(daytimeDrops[DropTexture], OpenGlTextureWrapMode.ClampClamp);
 										});
-										int panelDropIndex = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White, false);
+										int panelDropIndex = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White, false);
 										string f = drop + " raindrop";
 										try
 										{
@@ -1609,6 +1615,9 @@ namespace OpenBve {
 					break;
 				case "routelimit":
 					Code = "routelimit";
+					break;
+				case "wiperposition":
+					Code = "wiperposition";
 					break;
 				default:
 					{
