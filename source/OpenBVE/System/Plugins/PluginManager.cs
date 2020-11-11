@@ -424,7 +424,7 @@ namespace OpenBve {
 			/// <param name="optional">Optional data attached to the beacon.</param>
 			internal void UpdateBeacon(int type, int sectionIndex, int optional) {
 
-				if (type == 21 && Train.IsPlayerTrain)
+				if (type == 21 && Train.IsPlayerTrain && Train.Cars[Train.DriverCar].Windscreen != null)
 				{
 					//Legacy rain beacon, so let's pass to the windscreen as well as the plugin
 					Train.Cars[Train.DriverCar].Windscreen.SetRainIntensity(optional);

@@ -1528,7 +1528,10 @@ namespace OpenBve
 										break;
 									case Translations.Command.WiperSpeedUp:
 									case Translations.Command.WiperSpeedDown:
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.Wipers.ChangeSpeed(Interface.CurrentControls[i].Command);
+										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen != null)
+										{
+											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.Wipers.ChangeSpeed(Interface.CurrentControls[i].Command);
+										}
 										if (TrainManager.PlayerTrain.Plugin != null)
 										{
 											//Also inform the plugin that these keys have been pressed
@@ -1536,8 +1539,6 @@ namespace OpenBve
 												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
 										}
 										break;
-
-
 									case Translations.Command.TimetableToggle:
 										// option: timetable
 										if (Interface.CurrentOptions.TimeTableStyle == TimeTableMode.None)
