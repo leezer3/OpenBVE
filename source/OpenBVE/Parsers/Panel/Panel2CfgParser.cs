@@ -1235,7 +1235,7 @@ namespace OpenBve {
 									WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
 									List<string> daytimeDropFiles, nighttimeDropFiles;
 									Color24 TransparentColor = Color24.Blue;
-									double wipeSpeed = 1.0, holdTime = 1.0;
+									double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
 									try
 									{
 										daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day")).ToList();
@@ -1380,6 +1380,12 @@ namespace OpenBve {
 															break;
 													}
 													break;
+												case "droplife":
+													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out dropLife))
+													{
+														Interface.AddMessage(MessageType.Error, false, "DropLife is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													}
+													break;
 											}
 										}
 
@@ -1441,7 +1447,7 @@ namespace OpenBve {
 
 									double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
 									double currentDropX = topLeft.X;
-									Train.Cars[Train.DriverCar].Windscreen = new Windscreen(numberOfDrops, Train.Cars[Train.DriverCar]);
+									Train.Cars[Train.DriverCar].Windscreen = new Windscreen(numberOfDrops, dropLife, Train.Cars[Train.DriverCar]);
 									Train.Cars[Train.DriverCar].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Train.DriverCar].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
 									// Create drops
 									for (int drop = 0; drop < numberOfDrops; drop++)

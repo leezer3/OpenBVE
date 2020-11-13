@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Interface;
+using OpenTK.Graphics.OpenGL;
 using SoundManager;
 
 namespace OpenBve
@@ -224,9 +225,10 @@ namespace OpenBve
 					break;
 			}
 			int dropToRemove = Windscreen.RainDrops.Length - 1 - Math.Min(Windscreen.RainDrops.Length - 1, (int) (CurrentPosition / (100.0 / Windscreen.RainDrops.Length)));
-			if (Windscreen.RainDrops[dropToRemove])
+			if (Windscreen.RainDrops[dropToRemove].Visible)
 			{
-				Windscreen.RainDrops[dropToRemove] = false;
+				Windscreen.RainDrops[dropToRemove].Visible = false;
+				Windscreen.RainDrops[dropToRemove].RemainingLife = 0.5 * Program.RandomNumberGenerator.NextDouble() * Windscreen.DropLife;
 				Windscreen.currentDrops--;
 			}
 		}

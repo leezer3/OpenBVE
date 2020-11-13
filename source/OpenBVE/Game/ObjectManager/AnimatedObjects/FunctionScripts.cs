@@ -1352,7 +1352,7 @@ namespace OpenBve {
 						} else {
 							int n = (int)Math.Round(Function.Stack[s - 1]);
 							if (n >= 0 & n < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length) {
-								Function.Stack[s - 1] = Train.Cars[Train.DriverCar].Windscreen.RainDrops[n] ? 1.0 : 0.0;
+								Function.Stack[s - 1] = Train.Cars[Train.DriverCar].Windscreen.RainDrops[n].Visible ? 1.0 : 0.0;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
