@@ -16,11 +16,11 @@
 		/// <summary>Controls how objects are disposed after the camera passes their point of origin</summary>
 		ObjectVisibility,
 		/// <summary>Controls the behaviour of signalling sections</summary>
-		SectionBehaviour,
+		SectionBehavior,
 		/// <summary>Controls whether cant is expected to be signed</summary>
-		CantBehaviour,
+		CantBehavior,
 		/// <summary>Controls the blending mode used for fog</summary>
-		FogBehaviour,
+		FogBehavior,
 		/// <summary>Controls whether BVETS Hacks are forced on / off for this route</summary>
 		EnableBveTsHacks,
 

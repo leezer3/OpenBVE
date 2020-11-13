@@ -345,7 +345,7 @@ namespace CsvRwRouteParser {
 									break;
 								case "train":
 									TrainCommand parsedTrainCommand;
-									if (Enum.TryParse(Command, true, out parsedTrainCommand))
+									if (Enum.TryParse(Command.Split(' ')[0], true, out parsedTrainCommand))
 									{
 										ParseTrainCommand(parsedTrainCommand, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
 									}
