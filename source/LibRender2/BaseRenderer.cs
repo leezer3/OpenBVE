@@ -360,7 +360,7 @@ namespace LibRender2
 			Initialize(currentHost, currentOptions);
 		}
 
-		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			//FIXME: This seems to need to be the 'wrong' way around. Need to standardise on Matrices throughout?
@@ -368,7 +368,7 @@ namespace LibRender2
 			return CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		public int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			if (Prototype == null)
 			{
@@ -384,7 +384,7 @@ namespace LibRender2
 			float startingDistance = float.MaxValue;
 			float endingDistance = float.MinValue;
 
-			if (AccurateObjectDisposal)
+			if (AccurateObjectDisposal == ObjectDisposalMode.Accurate)
 			{
 				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
 				{
@@ -413,22 +413,30 @@ namespace LibRender2
 				BlockLength *= Math.Ceiling(minBlockLength / BlockLength);
 			}
 
-			if (AccurateObjectDisposal)
+			switch (AccurateObjectDisposal)
 			{
-				startingDistance += (float)TrackPosition;
-				endingDistance += (float)TrackPosition;
-				double z = BlockLength * Math.Floor(TrackPosition / BlockLength);
-				StartingDistance = Math.Min(z - BlockLength, startingDistance);
-				EndingDistance = Math.Max(z + 2.0 * BlockLength, endingDistance);
-				startingDistance = (float)(BlockLength * Math.Floor(StartingDistance / BlockLength));
-				endingDistance = (float)(BlockLength * Math.Ceiling(EndingDistance / BlockLength));
+				case ObjectDisposalMode.Accurate:
+					startingDistance += (float)TrackPosition;
+					endingDistance += (float)TrackPosition;
+					double z = BlockLength * Math.Floor(TrackPosition / BlockLength);
+					StartingDistance = Math.Min(z - BlockLength, startingDistance);
+					EndingDistance = Math.Max(z + 2.0 * BlockLength, endingDistance);
+					startingDistance = (float)(BlockLength * Math.Floor(StartingDistance / BlockLength));
+					endingDistance = (float)(BlockLength * Math.Ceiling(EndingDistance / BlockLength));
+					break;
+				case ObjectDisposalMode.Legacy:
+					startingDistance = (float)StartingDistance;
+					endingDistance = (float)EndingDistance;
+					break;
+				case ObjectDisposalMode.Mechanik:
+					startingDistance = (float) StartingDistance;
+					endingDistance = (float) EndingDistance + 1500;
+					if (startingDistance < 0)
+					{
+						startingDistance = 0;
+					}
+					break;
 			}
-			else
-			{
-				startingDistance = (float)StartingDistance;
-				endingDistance = (float)EndingDistance;
-			}
-
 			StaticObjectStates.Add(new ObjectState
 			{
 				Prototype = Prototype,
