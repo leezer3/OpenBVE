@@ -51,6 +51,7 @@ namespace MechanikRouteParser
 			double yOffset = 0.0;
 			for (int i = 0; i < routeLines.Length; i++)
 			{
+				double X, Y, Z;
 				int j = routeLines[i].IndexOf(@"//", StringComparison.Ordinal);
 				if (j != -1)
 				{
@@ -77,7 +78,6 @@ namespace MechanikRouteParser
 						 * => Scale factor (200px in image == 1m at factor 1)
 						 *
 						 */
-						double X, Y, Z;
 						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
 						{
 							//Add message
@@ -273,18 +273,18 @@ namespace MechanikRouteParser
 						break;
 					case "'o":
 						//Rotation marker for the player track, roughly equivilant to .turn
-						double x, z, radians;
+						double radians;
 						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out x))
+						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out X))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out z))
+						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out Z))
 						{
 							//Add message
 							continue;
@@ -294,14 +294,42 @@ namespace MechanikRouteParser
 							//Add message
 							continue;
 						}
-						Vector2 turnPoint = new Vector2(x / 200, z / 200);
-						double dist = trackPosition + Math.Sqrt(turnPoint.X*turnPoint.X+turnPoint.Y*turnPoint.Y);
+						Vector2 turnPoint = new Vector2(X / 200, Z / 200);
+						double dist = (trackPosition / 200) + Math.Sqrt(turnPoint.X*turnPoint.X+turnPoint.Y*turnPoint.Y);
 						blockIndex = currentRouteData.FindBlock(dist);
 						currentRouteData.Blocks[blockIndex].Turn = radians / 1000000.0;
 						break;
 					case "'k":
 						//Rotates the world to zero after a curve
 						//Going to give me a headache, but uncommon
+						break;
+					case "'z_p":
+						//Speed limit
+						double kph;
+						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out X))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out Z))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out kph))
+						{
+							//Add message
+							continue;
+						}
+
+						trackPosition /= 200;
+						blockIndex = currentRouteData.FindBlock(trackPosition);
+						currentRouteData.Blocks[blockIndex].SpeedLimit = kph;
 						break;
 				}
 
@@ -358,6 +386,7 @@ namespace MechanikRouteParser
 			}
 			Position = new Vector3(0,0,0);
 			Direction = new Vector2(0, 1);
+			double currentSpeedLimit = Double.PositiveInfinity;
 			for (int i = 0; i < currentRouteData.Blocks.Count; i++)
 			{
 				/*
@@ -402,6 +431,14 @@ namespace MechanikRouteParser
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection.RotatePlane(cosag, sinag);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide.RotatePlane(cosag, sinag);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide);
+				}
+
+				if (currentRouteData.Blocks[i].SpeedLimit != -1)
+				{
+					int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new LimitChangeEvent(0, currentSpeedLimit, currentRouteData.Blocks[i].SpeedLimit);
+					currentSpeedLimit = currentRouteData.Blocks[i].SpeedLimit;
 				}
 				
 			}

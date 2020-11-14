@@ -7,6 +7,7 @@ namespace MechanikRouteParser
 		internal double StartingTrackPosition;
 		internal List<RouteObject> Objects = new List<RouteObject>();
 		internal double Turn = 0.0;
+		internal double SpeedLimit = -1;
 
 		internal Block(double TrackPosition)
 		{
