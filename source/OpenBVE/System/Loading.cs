@@ -210,6 +210,9 @@ namespace OpenBve {
 			
 			Program.CurrentRoute.TrackFollowingObjects = TrainManager.TFOs;
 			bool loaded = false;
+			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Route loading plugins available.");
+			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableObjectPluginCount + " Object loading plugins available.");
+			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Sound loading plugins available.");
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))

@@ -489,6 +489,15 @@ namespace OpenBveApi.Hosts {
 		/// <summary>The list of available content loading plugins</summary>
 		public ContentLoadingPlugin[] Plugins;
 
+		/// <summary>The total number of available route loading plugins</summary>
+		public int AvailableRoutePluginCount => Plugins.Count(x => x.Route != null);
+
+		/// <summary>The total number of available object loading plugins</summary>
+		public int AvailableObjectPluginCount => Plugins.Count(x => x.Object != null);
+
+		/// <summary>The total number of available sound loading plugins</summary>
+		public int AvailableSoundPluginCount => Plugins.Count(x => x.Sound != null);
+
 		/// <summary>
 		/// Array of supported animated object extensions.
 		/// </summary>
