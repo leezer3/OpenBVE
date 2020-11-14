@@ -10,6 +10,7 @@ using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
 using RouteManager2.Events;
+using RouteManager2.Stations;
 
 namespace MechanikRouteParser
 {
@@ -56,7 +57,6 @@ namespace MechanikRouteParser
 			double yOffset = 0.0;
 			for (int i = 0; i < routeLines.Length; i++)
 			{
-				double X, Y, Z;
 				int j = routeLines[i].IndexOf(@"//", StringComparison.Ordinal);
 				if (j != -1)
 				{
@@ -83,23 +83,24 @@ namespace MechanikRouteParser
 						 * => Scale factor (200px in image == 1m at factor 1)
 						 *
 						 */
-						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
+						Vector3 topLeft = new Vector3();
+						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out X))
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out topLeft.X))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out Y))
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out topLeft.Y))
 						{
 							//Add message
 							continue;
 						}
-						Y = -Y;
-						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out Z))
+						topLeft.Y = -topLeft.Y;
+						if (Arguments.Length < 5 || !TryParseDistance(Arguments[4], out topLeft.Z))
 						{
 							//Add message
 							continue;
@@ -113,14 +114,7 @@ namespace MechanikRouteParser
 						{
 							continue;
 						}
-						//Divide the track position, X and Y by 200, as Mechanik uses a 200px per meter scale factor
-						trackPosition /= 200.0;
-						Vector3 topLeft = new Vector3(X / 200, Y / 200, Z / 200);
-						if (textureIndex == 50)
-						{
-							int t = 0;
-							t++;
-						}
+
 						Idx = CreatePerpendicularPlane(topLeft, scaleFactor, textureIndex, true);
 						blockIndex = currentRouteData.FindBlock(trackPosition);
 						
@@ -144,7 +138,7 @@ namespace MechanikRouteParser
 						 * => Furthest point: Determines when this vanishes (When the cab passes?)
 						 */
 						int numPoints, firstPoint;
-						if (!double.TryParse(Arguments[1], out trackPosition))
+						if (!TryParseDistance(Arguments[1], out trackPosition))
 						{
 							//Add message
 							continue;
@@ -168,27 +162,24 @@ namespace MechanikRouteParser
 							switch (v)
 							{
 								case 0:
-									if (!double.TryParse(Arguments[p], out currentPoint.X))
+									if (!TryParseDistance(Arguments[p], out currentPoint.X))
 									{
 										//Add message
 									}
-									currentPoint.X /= 200;
 									break;
 								case 1:
-									if (!double.TryParse(Arguments[p], out currentPoint.Y))
+									if (!TryParseDistance(Arguments[p], out currentPoint.Y))
 									{
 										//Add message
 									}
-									currentPoint.Y /= 200;
 									currentPoint.Y = -currentPoint.Y;
 									currentPoint.Y += yOffset;
 									break;
 								case 2:
-									if (!double.TryParse(Arguments[p], out currentPoint.Z))
+									if (!TryParseDistance(Arguments[p], out currentPoint.Z))
 									{
 										//Add message
 									}
-									currentPoint.Z /= 200;
 									if (points.Count > 0 && points.Count < numPoints)
 									{
 										if (points.Count == 1)
@@ -251,7 +242,6 @@ namespace MechanikRouteParser
 						{
 							sortedPoints.Add(points[k]);
 						}
-						trackPosition /= 200.0;
 
 						switch (Arguments[0].ToLowerInvariant())
 						{
@@ -279,17 +269,18 @@ namespace MechanikRouteParser
 					case "'o":
 						//Rotation marker for the player track, roughly equivilant to .turn
 						double radians;
-						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
+						Vector2 turnPoint = new Vector2();
+						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out X))
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out turnPoint.X))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out Z))
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out turnPoint.Y))
 						{
 							//Add message
 							continue;
@@ -299,8 +290,7 @@ namespace MechanikRouteParser
 							//Add message
 							continue;
 						}
-						Vector2 turnPoint = new Vector2(X / 200, Z / 200);
-						double dist = (trackPosition / 200) + Math.Sqrt(turnPoint.X*turnPoint.X+turnPoint.Y*turnPoint.Y);
+						double dist = trackPosition + Math.Sqrt(turnPoint.X*turnPoint.X+turnPoint.Y*turnPoint.Y);
 						blockIndex = currentRouteData.FindBlock(dist);
 						currentRouteData.Blocks[blockIndex].Turn = radians / 1000000.0;
 						break;
@@ -320,17 +310,18 @@ namespace MechanikRouteParser
 						bool looped;
 						bool speedDependant;
 						int volume;
-						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
+						Vector3 soundPosition = new Vector3();
+						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out X))
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out soundPosition.X))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out Z))
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out soundPosition.Z))
 						{
 							//Add message
 							continue;
@@ -361,35 +352,36 @@ namespace MechanikRouteParser
 							//Add message
 							continue;
 						}
-						trackPosition /= 200;
 						if (looped)
 						{
 							//As looped, use the position as-is
 							blockIndex = currentRouteData.FindBlock(trackPosition);
-							currentRouteData.Blocks[blockIndex].Sounds.Add(new SoundEvent(soundNumber, new Vector3(X / 200, 0, Z / 200), looped, speedDependant, volume));
+							currentRouteData.Blocks[blockIndex].Sounds.Add(new SoundEvent(soundNumber, soundPosition, looped, speedDependant, volume));
 						}
 						else
 						{
 							//Otherwise, add the Z offset to the trackposition to give us the relative tpos for the event
-							blockIndex = currentRouteData.FindBlock((trackPosition / 200) + (Z / 200));
-							currentRouteData.Blocks[blockIndex].Sounds.Add(new SoundEvent(soundNumber, new Vector3(X / 200, 0, 0), looped, speedDependant, volume));
+							blockIndex = currentRouteData.FindBlock(trackPosition + soundPosition.Z);
+							soundPosition.Z = 0;
+							currentRouteData.Blocks[blockIndex].Sounds.Add(new SoundEvent(soundNumber, soundPosition, looped, speedDependant, volume));
 						}
 						
 						break;
 					case "'z_p":
 						//Speed limit
 						double kph;
-						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
+						Vector2 limitPos = new Vector2();
+						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out X))
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out limitPos.X))
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out Z))
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out limitPos.Y))
 						{
 							//Add message
 							continue;
@@ -400,13 +392,57 @@ namespace MechanikRouteParser
 							continue;
 						}
 
-						trackPosition /= 200;
 						blockIndex = currentRouteData.FindBlock(trackPosition);
 						currentRouteData.Blocks[blockIndex].SpeedLimit = kph;
+						break;
+					case "'z_z":
+						//Station stop marker
+						bool terminal;
+						Vector2 stopPos = new Vector2();
+						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out stopPos.X))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out stopPos.Y))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 5 || !TryParseBool(Arguments[4], out terminal))
+						{
+							//Add message
+							continue;
+						}
+						blockIndex = currentRouteData.FindBlock(trackPosition);
+						if (currentRouteData.Blocks[blockIndex].stopMarker == null)
+						{
+							currentRouteData.Blocks[blockIndex].stopMarker = new StationStop();
+						}
+						if (terminal)
+						{
+							currentRouteData.Blocks[blockIndex].stopMarker.endPosition = stopPos.Y;
+						}
+						else
+						{
+							currentRouteData.Blocks[blockIndex].stopMarker.startPosition = stopPos.Y;
+						}
 						break;
 				}
 
 			}
+			//Insert a stop in the first block, as Mechanik always starts at pos 0, wheras BVE starts at the first stop
+			int blockZero = currentRouteData.FindBlock(0);
+			currentRouteData.Blocks[blockZero].stopMarker = new StationStop
+			{
+				startPosition = 0,
+				endPosition = 12.5
+			};
 			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
 			currentRouteData.CreateMissingBlocks();
 			ProcessRoute();
@@ -527,9 +563,55 @@ namespace MechanikRouteParser
 					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position, Plugin.CurrentHost);
 				}
+
+				if (currentRouteData.Blocks[i].stopMarker != null)
+				{
+					//Use the stop markers to generate station events
+					//Mechanik doesn't support station names, so let's just call them Station N
+					int s = Plugin.CurrentRoute.Stations.Length;
+					Array.Resize(ref Plugin.CurrentRoute.Stations, s + 1);
+					Plugin.CurrentRoute.Stations[s] = new RouteStation
+					{
+						Name = "Station " + s,
+						OpenLeftDoors = true,
+						OpenRightDoors = true,
+						Stops = new [] 
+						{ 
+							new RouteManager2.Stations.StationStop
+							{
+								ForwardTolerance = currentRouteData.Blocks[i].stopMarker.startPosition, 
+								BackwardTolerance = currentRouteData.Blocks[i].stopMarker.endPosition,
+								Cars = 0,
+								TrackPosition = currentRouteData.Blocks[i].StartingTrackPosition
+							}
+						}
+					};
+					
+					int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(0, s);
+				}
 				
 			}
-			
+			// insert station end events
+			int lastStationBlock = 0;
+			for (int i = 0; i < Plugin.CurrentRoute.Stations.Length; i++)
+			{
+				int j = Plugin.CurrentRoute.Stations[i].Stops.Length - 1;
+				if (j >= 0)
+				{
+					double p = Plugin.CurrentRoute.Stations[i].Stops[j].TrackPosition + Plugin.CurrentRoute.Stations[i].Stops[j].ForwardTolerance + 25.0;
+					for (int k = lastStationBlock; k < Plugin.CurrentRoute.Tracks[0].Elements.Length; k++)
+					{
+						if (Plugin.CurrentRoute.Tracks[0].Elements[k].StartingTrackPosition > p)
+						{
+							int e = Plugin.CurrentRoute.Tracks[0].Elements[k].Events.Length; 
+							Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[k].Events, e + 1);
+							Plugin.CurrentRoute.Tracks[0].Elements[k].Events[e] = new StationEndEvent(0, i, Plugin.CurrentRoute, Plugin.CurrentHost);
+						}
+					}
+				}
+			}
 			Array.Resize<TrackElement>(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
 			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 25) };
 		}
@@ -822,6 +904,16 @@ namespace MechanikRouteParser
 				x *= t;
 				y *= t;
 			}
+		}
+
+		private static bool TryParseDistance(string val, out double position)
+		{
+			if (double.TryParse(val, out position))
+			{
+				position /= 200; //200px per meter scale
+				return true;
+			}
+			return false;
 		}
 
 		private static bool TryParseBool(string val, out bool boolean)

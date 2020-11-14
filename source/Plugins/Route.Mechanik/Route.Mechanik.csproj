@@ -46,6 +46,7 @@
     <Compile Include="Structures\Block.cs" />
     <Compile Include="Structures\RouteObject.cs" />
     <Compile Include="Structures\SoundEvent.cs" />
+    <Compile Include="Structures\StationStop.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">

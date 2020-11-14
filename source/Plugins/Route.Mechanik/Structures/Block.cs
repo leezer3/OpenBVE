@@ -9,6 +9,7 @@ namespace MechanikRouteParser
 		internal double Turn = 0.0;
 		internal double SpeedLimit = -1;
 		internal List<SoundEvent> Sounds = new List<SoundEvent>();
+		internal StationStop stopMarker;
 
 		internal Block(double TrackPosition)
 		{
