@@ -156,6 +156,7 @@ namespace OpenBve {
 			Image FolderIcon = LoadImage(MenuFolder, "icon_folder.png");
 			Image DiskIcon = LoadImage(MenuFolder, "icon_disk.png");
 			Image RouteIcon = LoadImage(MenuFolder, "icon_route.png");
+			Image MechanikRouteIcon = LoadImage(MenuFolder, "icon_route_latestversion.png");
 			Image TrainIcon = LoadImage(MenuFolder, "icon_train.png");
 			Image KeyboardIcon = LoadImage(MenuFolder, "icon_keyboard.png");
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
@@ -185,6 +186,7 @@ namespace OpenBve {
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
 			if (RouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("route", RouteIcon);
+			if (MechanikRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			if (DiskIcon != null) listviewRouteFiles.SmallImageList.Images.Add("disk", DiskIcon);
 			listviewRouteFiles.Columns.Clear();
 			listviewRouteFiles.Columns.Add("");

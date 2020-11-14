@@ -345,7 +345,7 @@ namespace OpenBve
 						bool introduce = true;
 						if (!forceIntroduction)
 						{
-							if (CurrentSectionIndex >= 0)
+							if (CurrentSectionIndex >= 0 && Program.CurrentRoute.Sections.Length > CurrentSectionIndex)
 							{
 								if (!Program.CurrentRoute.Sections[CurrentSectionIndex].IsFree())
 								{

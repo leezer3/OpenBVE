@@ -7,6 +7,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
+using RouteManager2.Stations;
 
 namespace MechanikRouteParser
 {
@@ -72,11 +73,12 @@ namespace MechanikRouteParser
 		    IsLoading = true;
 		    FileSystem.AppendToLogFile("Loading route file: " + path);
 		    CurrentRoute = (CurrentRoute)route;
+			CurrentRoute.Stations = new RouteStation[] { };
 		    FileSystem.AppendToLogFile("Route file format is: Mechanik");
 		    try
 		    {
 				Parser parser = new Parser();
-				parser.ParseRoute(path);
+				parser.ParseRoute(path, PreviewOnly);
 				IsLoading = false;
 			    return true;
 		    }

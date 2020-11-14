@@ -22,7 +22,7 @@ namespace MechanikRouteParser
 		private static Dictionary<int, SoundHandle> AvailableSounds = new Dictionary<int, SoundHandle>();
 		private static string RouteFolder;
 
-		internal void ParseRoute(string routeFile)
+		internal void ParseRoute(string routeFile, bool PreviewOnly)
 		{
 			if (!System.IO.File.Exists(routeFile))
 			{
@@ -74,6 +74,10 @@ namespace MechanikRouteParser
 				switch (Arguments[0].ToLowerInvariant())
 				{
 					case "'s":
+						if (PreviewOnly)
+						{
+							continue;
+						}
 						/*
 						 * PERPENDICULAR PLANE OBJECTS
 						 * => Track Position
@@ -123,6 +127,10 @@ namespace MechanikRouteParser
 					case "#t":
 					case "#t_p":
 					case "#t_prz":
+						if (PreviewOnly)
+						{
+							continue;
+						}
 						yOffset -= 0.001;
 						/*
 						 * HORIZONTAL PLANE OBJECTS
@@ -305,6 +313,10 @@ namespace MechanikRouteParser
 					 * assume that they must be validated
 					 */
 					case "'z_d":
+						if (PreviewOnly)
+						{
+							continue;
+						}
 						//Sound marker
 						int soundNumber;
 						bool looped;
@@ -445,19 +457,24 @@ namespace MechanikRouteParser
 			};
 			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
 			currentRouteData.CreateMissingBlocks();
-			ProcessRoute();
+			ProcessRoute(PreviewOnly);
 		}
 
-		private static void ProcessRoute()
+		private static void ProcessRoute(bool PreviewOnly)
 		{
-			Texture bt = null;
-			string f = OpenBveApi.Path.CombineFile(RouteFolder, "obloczki.bmp");
-			if (System.IO.File.Exists(f))
+			if (!PreviewOnly)
 			{
-				Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
+				Texture bt = null;
+				string f = OpenBveApi.Path.CombineFile(RouteFolder, "obloczki.bmp");
+				if (System.IO.File.Exists(f))
+				{
+					Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
+				}
+
+				Plugin.CurrentRoute.CurrentBackground = new StaticBackground(bt, 2, false);
+				Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
 			}
-			Plugin.CurrentRoute.CurrentBackground = new StaticBackground(bt, 2, false);
-			Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
+
 			Vector3 Position = new Vector3(0.0, 0.0, 0.0);
 			Vector2 Direction = new Vector2(0.0, 1.0);
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
@@ -572,7 +589,7 @@ namespace MechanikRouteParser
 					Array.Resize(ref Plugin.CurrentRoute.Stations, s + 1);
 					Plugin.CurrentRoute.Stations[s] = new RouteStation
 					{
-						Name = "Station " + s,
+						Name = "Station " + (s + 1),
 						OpenLeftDoors = true,
 						OpenRightDoors = true,
 						Stops = new [] 

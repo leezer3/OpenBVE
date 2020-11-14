@@ -201,16 +201,17 @@ namespace OpenBve
 						Array.Sort<string>(Files);
 						for (int i = 0; i < Files.Length; i++)
 						{
-							if (Files[i] == null) return;
+							string fileName;
+							ListViewItem Item;
 							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
 							switch (Extension)
 							{
 								case ".rw":
 								case ".csv":
-									string fileName = System.IO.Path.GetFileName(Files[i]);
+									fileName = System.IO.Path.GetFileName(Files[i]);
 									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
 									{
-										ListViewItem Item = listviewRouteFiles.Items.Add(fileName);
+										Item = listviewRouteFiles.Items.Add(fileName);
 										if (Extension == ".csv")
 										{
 											try
@@ -237,6 +238,16 @@ namespace OpenBve
 										}
 										Item.Tag = Files[i];
 									}
+									break;
+								case ".dat":
+									fileName = System.IO.Path.GetFileName(Files[i]);
+									if (fileName == null || fileName.ToLowerInvariant() != "trasa.dat")
+									{
+										continue;
+									}
+									Item = listviewRouteFiles.Items.Add(fileName);
+									Item.ImageKey = @"mechanik";
+									Item.Tag = Files[i];
 									break;
 							}
 						}
