@@ -333,11 +333,10 @@ namespace MechanikRouteParser
 				 */
 				// normalize
 				Normalize(ref Direction.X, ref Direction.Y);
-				Transformation NullTransformation = new Transformation(0.0, 0.0, 0.0);
 				
 				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
 				{
-					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(Position, NullTransformation, NullTransformation, StartingDistance, StartingDistance + 25, 100);
+					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(Position, StartingDistance, StartingDistance + 25, 100);
 				}
 
 				double blockLength;
