@@ -50,7 +50,15 @@ namespace LibRender2.Loadings
 			if (TextureLoadingBkg == null)
 			{
 				int bkgNo = new Random().Next(numOfLoadingBkgs);
-				string backgroundFile = OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png");
+				string backgroundFile = string.Empty;
+				try
+				{
+					backgroundFile = OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png");
+				}
+				catch
+				{
+					//ignored
+				}
 
 				if (System.IO.File.Exists(backgroundFile))
 				{
@@ -76,7 +84,15 @@ namespace LibRender2.Loadings
 					fName = LogoFileName[0];
 				}
 
-				string logoFile = OpenBveApi.Path.CombineFile(Path, fName);
+				string logoFile = string.Empty;
+				try
+				{
+					logoFile = OpenBveApi.Path.CombineFile(Path, fName);
+				}
+				catch
+				{
+					//ignored
+				}
 
 				if (System.IO.File.Exists(logoFile))
 				{
