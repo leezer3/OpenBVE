@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using OpenBveApi;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
 using RouteManager2.Events;
@@ -17,6 +18,7 @@ namespace MechanikRouteParser
 		private static RouteData currentRouteData;
 		private static List<MechanikObject> AvailableObjects = new List<MechanikObject>();
 		private static List<MechanikTexture> AvailableTextures = new List<MechanikTexture>();
+		private static Dictionary<int, SoundHandle> AvailableSounds = new Dictionary<int, SoundHandle>();
 		private static string RouteFolder;
 
 		internal void ParseRoute(string routeFile)
@@ -29,6 +31,7 @@ namespace MechanikRouteParser
 			Plugin.CurrentRoute.AccurateObjectDisposal = ObjectDisposalMode.Mechanik;
 			AvailableObjects = new List<MechanikObject>();
 			AvailableTextures = new List<MechanikTexture>();
+			AvailableSounds = new Dictionary<int, SoundHandle>();
 			currentRouteData = new RouteData();
 			//Load texture list
 			RouteFolder = System.IO.Path.GetDirectoryName(routeFile);
@@ -47,6 +50,8 @@ namespace MechanikRouteParser
 				}
 			}
 			LoadTextureList(tDat);
+			string sDat = OpenBveApi.Path.CombineFile(RouteFolder, "dzwieki.dat");
+			LoadSoundList(sDat);
 			string[] routeLines = System.IO.File.ReadAllLines(routeFile);
 			double yOffset = 0.0;
 			for (int i = 0; i < routeLines.Length; i++)
@@ -303,6 +308,74 @@ namespace MechanikRouteParser
 						//Rotates the world to zero after a curve
 						//Going to give me a headache, but uncommon
 						break;
+					/*
+					 * Both sounds and speed limits are invisible markers
+					 * Currently unclear as to whether the X and Z must validate
+					 * or whether they can be ignored; For the minute, let's
+					 * assume that they must be validated
+					 */
+					case "'z_d":
+						//Sound marker
+						int soundNumber;
+						bool looped;
+						bool speedDependant;
+						int volume;
+						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out X))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out Z))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 5 || !int.TryParse(Arguments[4], out soundNumber))
+						{
+							//Add message
+							continue;
+						}
+						int valueCheck; //Documentation states this value must be 5, unclear as to purpose
+						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out valueCheck) || valueCheck != 5)
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 7 || !TryParseBool(Arguments[6], out looped))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 8 || !TryParseBool(Arguments[7], out speedDependant))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 9 || !int.TryParse(Arguments[8], out volume))
+						{
+							//Add message
+							continue;
+						}
+						trackPosition /= 200;
+						if (looped)
+						{
+							//As looped, use the position as-is
+							blockIndex = currentRouteData.FindBlock(trackPosition);
+							currentRouteData.Blocks[blockIndex].Sounds.Add(new SoundEvent(soundNumber, new Vector3(X / 200, 0, Z / 200), looped, speedDependant, volume));
+						}
+						else
+						{
+							//Otherwise, add the Z offset to the trackposition to give us the relative tpos for the event
+							blockIndex = currentRouteData.FindBlock((trackPosition / 200) + (Z / 200));
+							currentRouteData.Blocks[blockIndex].Sounds.Add(new SoundEvent(soundNumber, new Vector3(X / 200, 0, 0), looped, speedDependant, volume));
+						}
+						
+						break;
 					case "'z_p":
 						//Speed limit
 						double kph;
@@ -439,6 +512,20 @@ namespace MechanikRouteParser
 					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new LimitChangeEvent(0, currentSpeedLimit, currentRouteData.Blocks[i].SpeedLimit);
 					currentSpeedLimit = currentRouteData.Blocks[i].SpeedLimit;
+				}
+
+				for (int j = 0; j < currentRouteData.Blocks[i].Sounds.Count; j++)
+				{
+					if (!AvailableSounds.ContainsKey(currentRouteData.Blocks[i].Sounds[j].SoundIndex))
+					{
+						// -1 does somethig a little funny
+						// Stops playing sounds (all??)
+						// For the minute, let's ignore and see how much further we get
+						continue;
+					}
+					int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position, Plugin.CurrentHost);
 				}
 				
 			}
@@ -683,6 +770,49 @@ namespace MechanikRouteParser
 			}
 		}
 
+		private static void LoadSoundList(string sDat)
+		{
+			string[] soundLines = System.IO.File.ReadAllLines(sDat);
+			for (int i = 0; i < soundLines.Length; i++)
+			{
+				int j = soundLines[i].IndexOf(@"//", StringComparison.Ordinal);
+				if (j != -1)
+				{
+					//Split out comments
+					soundLines[i] = soundLines[i].Substring(j, soundLines[i].Length - 1);
+				}
+				if (String.IsNullOrWhiteSpace(soundLines[i]))
+				{
+					continue;
+				}
+				soundLines[i] = Regex.Replace(soundLines[i], @"\s+", " ");
+				int k = 0;
+				string s = null;
+				for (int l = 0; l < soundLines[i].Length; l++)
+				{
+					if (!char.IsDigit(soundLines[i][l]))
+					{
+						string str = soundLines[i].Substring(0, l);
+						k = int.Parse(soundLines[i].Substring(0, l));
+						s = soundLines[i].Substring(l, soundLines[i].Length - l).Trim();
+						break;
+					}
+				}
+				if (!String.IsNullOrWhiteSpace(s))
+				{
+					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(sDat), s);
+					if (System.IO.File.Exists(path))
+					{
+						SoundHandle handle;
+						Plugin.CurrentHost.RegisterSound(path, out handle);
+						AvailableSounds.Add(k, handle);
+					}
+
+				}
+
+			}
+		}
+
 		private static void Normalize(ref double x, ref double y)
 		{
 			double t = x * x + y * y;
@@ -691,6 +821,24 @@ namespace MechanikRouteParser
 				t = 1.0 / Math.Sqrt(t);
 				x *= t;
 				y *= t;
+			}
+		}
+
+		private static bool TryParseBool(string val, out bool boolean)
+		{
+			int value;
+			int.TryParse(val, out value);
+			switch (value)
+			{
+				case 0:
+					boolean = false;
+					return true;
+				case 1:
+					boolean = true;
+					return true;
+				default:
+					boolean = false;
+					return false;
 			}
 		}
 	}
