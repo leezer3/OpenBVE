@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
-using System.Drawing;
 using System.Text.RegularExpressions;
 using OpenBveApi;
 using OpenBveApi.Objects;
@@ -15,66 +14,6 @@ namespace MechanikRouteParser
 {
 	internal class Parser
 	{
-		private class Block
-		{
-			internal double StartingTrackPosition;
-			internal List<RouteObject> Objects = new List<RouteObject>();
-
-			internal Block(double TrackPosition)
-			{
-				this.StartingTrackPosition = TrackPosition;
-			}
-		}
-
-		internal class RouteObject
-		{
-			internal int objectIndex;
-			internal Vector3 Position;
-
-			internal RouteObject(int index, Vector3 position)
-			{
-				this.objectIndex = index;
-				this.Position = position;
-			}
-		}
-
-		private class RouteData
-		{
-			internal List<Block> Blocks = new List<Block>();
-
-			internal int FindBlock(double TrackPosition)
-			{
-				for (int i = 0; i < this.Blocks.Count; i++)
-				{
-					if (this.Blocks[i].StartingTrackPosition == TrackPosition)
-					{
-						return i;
-					}
-				}
-				this.Blocks.Add(new Block(TrackPosition));
-				return this.Blocks.Count - 1;
-			}
-
-			internal void CreateMissingBlocks()
-			{
-				for (int i = 0; i < this.Blocks.Count -1; i++)
-				{
-					while (true)
-					{
-						if (this.Blocks[i + 1].StartingTrackPosition - this.Blocks[i].StartingTrackPosition > 25)
-						{
-							this.Blocks.Insert(i + 1, new Block(this.Blocks[i].StartingTrackPosition + 25));
-							i++;
-						}
-						else
-						{
-							break;
-						}
-					}
-				}
-			}
-		}
-
 		private static RouteData currentRouteData;
 		private static List<MechanikObject> AvailableObjects = new List<MechanikObject>();
 		private static List<MechanikTexture> AvailableTextures = new List<MechanikTexture>();
@@ -108,7 +47,6 @@ namespace MechanikRouteParser
 				}
 			}
 			LoadTextureList(tDat);
-			double previousTrackPosition = 0;
 			string[] routeLines = System.IO.File.ReadAllLines(routeFile);
 			double yOffset = 0.0;
 			for (int i = 0; i < routeLines.Length; i++)
@@ -333,6 +271,38 @@ namespace MechanikRouteParser
 						
 						currentRouteData.Blocks[blockIndex].Objects.Add(new RouteObject(Idx, new Vector3(0, 0, 0)));
 						break;
+					case "'o":
+						//Rotation marker for the player track, roughly equivilant to .turn
+						double x, z, radians;
+						if (Arguments.Length < 2 || !double.TryParse(Arguments[1], out trackPosition))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 3 || !double.TryParse(Arguments[2], out x))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 4 || !double.TryParse(Arguments[3], out z))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out radians))
+						{
+							//Add message
+							continue;
+						}
+						Vector2 turnPoint = new Vector2(x / 200, z / 200);
+						double dist = trackPosition + Math.Sqrt(turnPoint.X*turnPoint.X+turnPoint.Y*turnPoint.Y);
+						blockIndex = currentRouteData.FindBlock(dist);
+						currentRouteData.Blocks[blockIndex].Turn = radians / 1000000.0;
+						break;
+					case "'k":
+						//Rotates the world to zero after a curve
+						//Going to give me a headache, but uncommon
+						break;
 				}
 
 			}
@@ -353,17 +323,47 @@ namespace MechanikRouteParser
 			Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
 			Vector3 Position = new Vector3(0.0, 0.0, 0.0);
 			Vector2 Direction = new Vector2(0.0, 1.0);
-			double CurrentSpeedLimit = double.PositiveInfinity;
-			int CurrentRunIndex = 0;
-			int CurrentFlangeIndex = 0;
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
 			int CurrentTrackLength = 0;
-			int PreviousFogElement = -1;
-			int PreviousFogEvent = -1;
+			double StartingDistance = 0;
 			for (int i = 0; i < currentRouteData.Blocks.Count; i++)
 			{
-				double StartingDistance = (double)i * 25;
-				double EndingDistance = StartingDistance + 25;	
+				/*
+				 * First loop to create the objects
+				 */
+				// normalize
+				Normalize(ref Direction.X, ref Direction.Y);
+				Transformation NullTransformation = new Transformation(0.0, 0.0, 0.0);
+				
+				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
+				{
+					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(Position, NullTransformation, NullTransformation, StartingDistance, StartingDistance + 25, 100);
+				}
+
+				double blockLength;
+				if (i == currentRouteData.Blocks.Count - 1)
+				{
+					blockLength = 25;
+				}
+				else
+				{
+					blockLength = currentRouteData.Blocks[i + 1].StartingTrackPosition - currentRouteData.Blocks[i].StartingTrackPosition;
+				}
+
+				StartingDistance += blockLength;
+
+				// finalize block
+				Position.X += Direction.X * blockLength;
+				Position.Z += Direction.Y * blockLength;
+
+			}
+			Position = new Vector3(0,0,0);
+			Direction = new Vector2(0, 1);
+			for (int i = 0; i < currentRouteData.Blocks.Count; i++)
+			{
+				/*
+				 * Second loop to create the track elements and transforms
+				 */
 				// normalize
 				Normalize(ref Direction.X, ref Direction.Y);
 				// track
@@ -380,38 +380,33 @@ namespace MechanikRouteParser
 				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
 				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				CurrentTrackLength++;
-				
-				double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
-				Transformation GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
-				Transformation TrackTransformation = new Transformation(TrackYaw, 0.0, 0.0);
-				Transformation NullTransformation = new Transformation(0.0, 0.0, 0.0);
-				// curves
-				double a = 0.0;
-				double c = 25.0;
-				double h = 0.0;
-				if (WorldTrackElement.CurveRadius != 0.0)
+
+				double blockLength;
+				if (i == currentRouteData.Blocks.Count - 1)
 				{
-					double d = 25.0;
-					double r = WorldTrackElement.CurveRadius;
-					double b = d / Math.Abs(r);
-					c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
-					a = 0.5 * (double)Math.Sign(r) * b;
-					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
+					blockLength = 25;
 				}
-				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
+				else
 				{
-					Transformation RailTransformation = new Transformation(TrackTransformation, 0.0, 0.0, 0.0);
-					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(Position, NullTransformation, NullTransformation, StartingDistance, EndingDistance, 100);
+					blockLength = currentRouteData.Blocks[i + 1].StartingTrackPosition - currentRouteData.Blocks[i].StartingTrackPosition;
 				}
+
 				// finalize block
-				Position.X += Direction.X * c;
-				Position.Y += h;
-				Position.Z += Direction.Y * c;
-				if (a != 0.0)
+				Position.X += Direction.X * blockLength;
+				Position.Z += Direction.Y * blockLength;
+				if (currentRouteData.Blocks[i].Turn != 0.0)
 				{
-					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
+					double ag = -Math.Atan(currentRouteData.Blocks[i].Turn);
+					double cosag = Math.Cos(ag);
+					double sinag = Math.Sin(ag);
+					Direction.Rotate(cosag, sinag);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection.RotatePlane(cosag, sinag);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide.RotatePlane(cosag, sinag);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				}
+				
 			}
+			
 			Array.Resize<TrackElement>(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
 			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 25) };
 		}
@@ -609,41 +604,6 @@ namespace MechanikRouteParser
 			AvailableObjects.Add(o);
 			return AvailableObjects.Count - 1;
 		}
-
-		private struct MechanikObject
-		{
-			internal MechnikObjectType Type;
-			internal Vector3 TopLeft;
-			internal double ScaleFactor;
-			internal int TextureIndex;
-			internal StaticObject Object;
-		}
-
-		private enum MechnikObjectType
-		{
-			Perpendicular = 0,
-			Horizontal = 1
-		}
-
-		private struct MechanikTexture
-		{
-			internal string Path;
-			internal int Index;
-			internal Texture Texture;
-			internal double Width;
-			internal double Height;
-			internal MechanikTexture(string p, string s, int i)
-			{
-				Path = p;
-				Index = i;
-				Plugin.CurrentHost.RegisterTexture(p, new TextureParameters(null, null), out Texture);
-				Bitmap b = new Bitmap(p);
-				this.Width = b.Width / 200.0;
-				this.Height = b.Height / 200.0;
-			}
-		}
-
-		
 
 		private static void LoadTextureList(string tDat)
 		{
