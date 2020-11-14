@@ -77,6 +77,7 @@ namespace OpenBve.Graphics
 			Touch = new Touch(this);
 			ObjectsSortedByStart = new int[] { };
 			ObjectsSortedByEnd = new int[] { };
+			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
 		
 		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
