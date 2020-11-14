@@ -385,7 +385,7 @@ namespace OpenBve
 					}
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
-					Dialog.Filter = @"CSV/RW files|*.csv;*.rw|All files|*";
+					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;trasa.dat|CSV/RW files|*.csv;*.rw|Mechanik Routes|trasa.dat|All files|*";
 					if (Dialog.ShowDialog() == DialogResult.OK)
 					{
 						Application.DoEvents();
