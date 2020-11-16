@@ -38,8 +38,13 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal enum ControllerModels
 		{
-			Unsupported = 0,
+			/// <summary>Unsupported controller</summary>
+			Unsupported = -1,
+			/// <summary>Unknown controller</summary>
+			Unknown = 0,
+			/// <summary>Classic non-USB console controller</summary>
 			Classic = 1,
+			/// <summary>Unbalance USB controller for PC</summary>
 			Unbalance = 2,
 		};
 
@@ -124,9 +129,14 @@ namespace DenshaDeGoInput
 		internal static ButtonState[] ControllerButtons = new ButtonState[11];
 
 		/// <summary>
-		/// The index of the active controller, or -1 if not set.
+		/// A dictionary containing GUID/index pairs for controllers.
 		/// </summary>
-		internal static int activeControllerIndex = -1;
+		internal static Dictionary<Guid,int> ConnectedControllers = new Dictionary<Guid, int>();
+
+		/// <summary>
+		/// The GUID of the active controller.
+		/// </summary>
+		internal static Guid activeControllerGuid = new Guid();
 
 		/// <summary>
 		/// Whether a supported controller is connected or not.
@@ -161,11 +171,11 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the controller model.
 		/// </summary>
-		/// <param name="index">The index of the joystick.</param>
-		internal static ControllerModels GetControllerModel(int index)
+		/// <param name="guid">The GUID of the joystick.</param>
+		/// <param name="capabilities">The capabilities of the joystick.</param>
+		internal static ControllerModels GetControllerModel(Guid guid, JoystickCapabilities capabilities)
 		{
-			JoystickCapabilities capabilities = Joystick.GetCapabilities(index);
-			string id = GetControllerID(index);
+			string id = GetControllerID(guid);
 
 			if (ControllerUnbalance.IsCompatibleController(id, capabilities))
 			{
@@ -184,14 +194,40 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets a string representing a controller's vendor and product ID.
 		/// </summary>
-		/// <param name="index">The index of the joystick.</param>
+		/// <param name="guid">The GUID of the joystick.</param>
 		/// <returns>String representing the controller's vendor and product ID.</returns>
-		internal static string GetControllerID(int index)
+		internal static string GetControllerID(Guid guid)
 		{
-			string guid = Joystick.GetGuid(index).ToString("N");
+			string id = guid.ToString("N");
 			// OpenTK joysticks have a GUID which contains the vendor and product ID.
-			string id = guid.Substring(10,2)+guid.Substring(8,2)+":"+guid.Substring(18,2)+guid.Substring(16,2);
+			id = id.Substring(10,2)+id.Substring(8,2)+":"+id.Substring(18,2)+id.Substring(16,2);
 			return id;
+		}
+
+		/// <summary>
+		/// Refreshes the connected controllers.
+		/// </summary>
+		public static void RefreshControllers()
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				Guid guid = Joystick.GetGuid(i);
+				if (!ConnectedControllers.ContainsKey(guid))
+				{
+					// New controller
+					JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
+					ControllerModels model = GetControllerModel(guid, capabilities);
+					if (Joystick.GetState(i).IsConnected && model != ControllerModels.Unsupported)
+					{
+						ConnectedControllers.Add(guid, i);
+					}
+				}
+				else
+				{
+					// Update the controller index
+					ConnectedControllers[guid] = i;
+				}
+			}
 		}
 
 		/// <summary>
@@ -199,28 +235,20 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public static void Update()
 		{
-			if (!IsControllerConnected)
-			{
-				// The controller is apparently not connected; try to connect to it
-				ControllerModel = GetControllerModel(activeControllerIndex);
+			RefreshControllers();
 
-				if (Joystick.GetState(activeControllerIndex).IsConnected && ControllerModel != ControllerModels.Unsupported)
-				{
-					// The controller is valid and can be used
-					IsControllerConnected = true;
-					return;
-				}
-			}
-			else
+			if (ConnectedControllers.ContainsKey(activeControllerGuid))
 			{
-				if (!Joystick.GetState(activeControllerIndex).IsConnected)
+				if (ControllerModel == ControllerModels.Unknown)
 				{
-					// The controller is apparently not connected
-					IsControllerConnected = false;
-					return;
+					ControllerModel = GetControllerModel(activeControllerGuid, Joystick.GetCapabilities(ConnectedControllers[activeControllerGuid]));
 				}
-				// A valid controller is connected, get input
-				GetInput();
+				IsControllerConnected = Joystick.GetState(ConnectedControllers[activeControllerGuid]).IsConnected;
+				if (IsControllerConnected)
+				{
+					// A valid controller is connected, get input
+					GetInput();
+				}
 			}
 		}
 
@@ -237,10 +265,10 @@ namespace DenshaDeGoInput
 			switch (ControllerModel)
 			{
 				case ControllerModels.Classic:
-					ControllerClassic.ReadInput(Joystick.GetState(activeControllerIndex));
+					ControllerClassic.ReadInput(Joystick.GetState(ConnectedControllers[activeControllerGuid]));
 					return;
 				case ControllerModels.Unbalance:
-					ControllerUnbalance.ReadInput(Joystick.GetState(activeControllerIndex));
+					ControllerUnbalance.ReadInput(Joystick.GetState(ConnectedControllers[activeControllerGuid]));
 					return;
 			}
 		}
@@ -249,15 +277,15 @@ namespace DenshaDeGoInput
 		/// Gets the state of the buttons of the current controller
 		/// </summary>
 		/// <returns>State of the buttons of the current controller</returns>
-		internal static List<OpenTK.Input.ButtonState> GetButtonsState()
+		internal static List<ButtonState> GetButtonsState()
 		{
-			List<OpenTK.Input.ButtonState> buttonsState = new List<OpenTK.Input.ButtonState>();
+			List<ButtonState> buttonsState = new List<ButtonState>();
 
 			if (IsControllerConnected)
 			{
-				for (int i = 0; i < Joystick.GetCapabilities(activeControllerIndex).ButtonCount; i++)
+				for (int i = 0; i < Joystick.GetCapabilities(ConnectedControllers[activeControllerGuid]).ButtonCount; i++)
 				{
-					buttonsState.Add(Joystick.GetState(activeControllerIndex).GetButton(i));
+					buttonsState.Add(Joystick.GetState(ConnectedControllers[activeControllerGuid]).GetButton(i));
 				}
 			}
 			return buttonsState;
@@ -273,9 +301,9 @@ namespace DenshaDeGoInput
 
 			if (IsControllerConnected)
 			{
-				for (int i = 0; i < Joystick.GetCapabilities(activeControllerIndex).ButtonCount; i++)
+				for (int i = 0; i < Joystick.GetCapabilities(ConnectedControllers[activeControllerGuid]).ButtonCount; i++)
 				{
-					hatPositions.Add(Joystick.GetState(activeControllerIndex).GetHat((JoystickHat)i).Position);
+					hatPositions.Add(Joystick.GetState(ConnectedControllers[activeControllerGuid]).GetHat((JoystickHat)i).Position);
 				}
 			}
 			return hatPositions;
@@ -288,7 +316,7 @@ namespace DenshaDeGoInput
 		/// <param name="newState">The new state of the buttons.</param>
 		/// <param name="ignored">The list of ignored buttons.</param>
 		/// <returns>Index of the button that has been pressed.</returns>
-		internal static int GetDifferentPressedIndex(List<OpenTK.Input.ButtonState> previousState, List<OpenTK.Input.ButtonState> newState, List<int> ignored)
+		internal static int GetDifferentPressedIndex(List<ButtonState> previousState, List<ButtonState> newState, List<int> ignored)
 		{
 			for (int i = 0; i < newState.Count; i++)
 			{

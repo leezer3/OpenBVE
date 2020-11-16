@@ -434,12 +434,12 @@ namespace DenshaDeGoInput
 								case "general":
 									switch (Key)
 									{
-										case "controller":
+										case "guid":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												Guid a;
+												if (Guid.TryParse(Value, out a))
 												{
-													InputTranslator.activeControllerIndex = a;
+													InputTranslator.activeControllerGuid = a;
 												}
 											}
 											break;
@@ -772,7 +772,7 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("; Specific options file for the Densha de GO! controller input plugin");
 				Builder.AppendLine();
 				Builder.AppendLine("[general]");
-				Builder.AppendLine("controller = " + InputTranslator.activeControllerIndex.ToString(Culture));
+				Builder.AppendLine("guid = " + InputTranslator.activeControllerGuid.ToString());
 				Builder.AppendLine();
 				Builder.AppendLine("[handles]");
 				Builder.AppendLine("convert_notches = " + convertNotches.ToString(Culture).ToLower());

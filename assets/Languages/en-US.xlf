@@ -2489,9 +2489,6 @@
 					<trans-unit id="device">
 						<source>Device:</source>
 					</trans-unit>
-					<trans-unit id="joystick">
-						<source>[index]: [name]</source>
-					</trans-unit>
 					<trans-unit id="button_section">
 						<source>Button mapping</source>
 					</trans-unit>
