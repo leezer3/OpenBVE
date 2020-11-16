@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -1414,22 +1415,23 @@ namespace OpenBve {
 		private void timerEvents_Tick(object sender, EventArgs e)
 		{
 			Program.Joysticks.RefreshJoysticks();
-			if (currentJoystickStates == null || currentJoystickStates.Length < JoystickManager.AttachedJoysticks.Length)
+			if (currentJoystickStates == null || currentJoystickStates.Length < JoystickManager.AttachedJoysticks.Values.Count)
 			{
-				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Length];
+				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Values.Count];
 			}	
 			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
 
-				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
+				for (int k = 0; k < JoystickManager.AttachedJoysticks.Count; k++)
 				{
-					JoystickManager.AttachedJoysticks[k].Poll();
-					bool railDriver = JoystickManager.AttachedJoysticks[k] is JoystickManager.Raildriver;
-					int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
+					Guid guid = JoystickManager.AttachedJoysticks.ElementAt(k).Key;
+					JoystickManager.AttachedJoysticks[guid].Poll();
+					bool railDriver = JoystickManager.AttachedJoysticks[guid] is JoystickManager.Raildriver;
+					int axes = JoystickManager.AttachedJoysticks[guid].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{
-							double a = JoystickManager.AttachedJoysticks[k].GetAxis(i);
+							double a = JoystickManager.AttachedJoysticks[guid].GetAxis(i);
 							if (a < -0.75)
 							{
 								if (railDriver)
@@ -1441,7 +1443,7 @@ namespace OpenBve {
 									}
 								Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
 								}
-								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Device = guid;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = -1;
@@ -1456,7 +1458,7 @@ namespace OpenBve {
 								{
 									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
 								}
-								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Device = guid;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = 1;
@@ -1466,16 +1468,16 @@ namespace OpenBve {
 								return;
 							}
 						}
-						int buttons = JoystickManager.AttachedJoysticks[k].ButtonCount();
+						int buttons = JoystickManager.AttachedJoysticks[guid].ButtonCount();
 						for (int i = 0; i < buttons; i++)
 						{
-							if (JoystickManager.AttachedJoysticks[k].GetButton(i) == ButtonState.Pressed)
+							if (JoystickManager.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
 							{
 								if (railDriver)
 								{
 									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
 								}
-								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Device = guid;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = 1;
@@ -1485,13 +1487,13 @@ namespace OpenBve {
 								return;
 							}
 						}
-						int hats = JoystickManager.AttachedJoysticks[k].HatCount();
+						int hats = JoystickManager.AttachedJoysticks[guid].HatCount();
 						for (int i = 0; i < hats; i++)
 						{
-							JoystickHatState hat = JoystickManager.AttachedJoysticks[k].GetHat(i);
+							JoystickHatState hat = JoystickManager.AttachedJoysticks[guid].GetHat(i);
 							if (hat.Position != HatPosition.Centered)
 							{
-								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Device = guid;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Hat;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = (int)hat.Position;

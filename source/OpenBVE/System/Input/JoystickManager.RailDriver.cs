@@ -15,6 +15,9 @@ namespace OpenBve
 	{
 		internal class Raildriver : Joystick
 		{
+
+			internal static readonly Guid Guid = new Guid("4d7641ef-95ce-44a5-b405-b051fb6139b4"); //completely random value, just used as a unique identifier
+
 			internal Raildriver()
 			{
 				for (int i = 0; i < Calibration.Length; i++)
@@ -207,6 +210,16 @@ namespace OpenBve
 				devices[0].ReadData(ref currentState);
 			}
 
+			internal override bool IsConnected()
+			{
+				return true;
+			}
+
+			internal override Guid GetGuid()
+			{
+				return Guid;
+			}
+
 			private static int ScaleValue(int value, int value_min, int value_max)
 			{
 				long temp = (value - value_min) * 65535;
@@ -297,14 +310,11 @@ namespace OpenBve
 				if (devices[i] == sourceDevice)
 				{
 					//Source device found, so map it
-					for (int j = 0; j < AttachedJoysticks.Length; j++)
+					if (AttachedJoysticks.ContainsKey(Raildriver.Guid))
 					{
-						if (AttachedJoysticks[j] is Raildriver && AttachedJoysticks[j].Handle == i)
+						for (int r = 0; r < sourceDevice.ReadLength; r++)
 						{
-							for (int r = 0; r < sourceDevice.ReadLength; r++)
-							{
-								AttachedJoysticks[j].currentState[r] = data[r];
-							}
+							AttachedJoysticks[Raildriver.Guid].currentState[r] = data[r];
 						}
 					}
 				}

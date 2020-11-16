@@ -496,7 +496,7 @@ namespace OpenBve
 			isCustomisingControl = false;
 
 		}
-		internal void SetControlJoyCustomData(int device, Interface.JoystickComponent component, int element, int dir)
+		internal void SetControlJoyCustomData(Guid device, Interface.JoystickComponent component, int element, int dir)
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{

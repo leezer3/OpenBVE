@@ -53,7 +53,7 @@ namespace OpenBve
             internal Translations.CommandType InheritedType;
             internal ControlMethod Method;
             internal KeyboardModifier Modifier;
-            internal int Device;
+            internal Guid Device;
             internal JoystickComponent Component;
             internal int Element;
             internal int Direction;
