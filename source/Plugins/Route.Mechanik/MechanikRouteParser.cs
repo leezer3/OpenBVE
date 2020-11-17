@@ -305,6 +305,36 @@ namespace MechanikRouteParser
 					case "'k":
 						//Rotates the world to zero after a curve
 						//Going to give me a headache, but uncommon
+						Vector2 correctionPoint1 = new Vector2(), correctionPoint2 = new Vector2();
+						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out correctionPoint1.X))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out correctionPoint1.Y))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 5 || !TryParseDistance(Arguments[4], out correctionPoint2.X))
+						{
+							//Add message
+							continue;
+						}
+						if (Arguments.Length < 6 || !TryParseDistance(Arguments[5], out correctionPoint2.Y))
+						{
+							//Add message
+							continue;
+						}
+						double firstCorrectionDist = trackPosition + Math.Sqrt(correctionPoint1.X*correctionPoint1.X+correctionPoint1.Y*correctionPoint1.Y);
+						double correctionDist = firstCorrectionDist + Math.Sqrt(correctionPoint2.X*correctionPoint2.X+correctionPoint2.Y*correctionPoint2.Y);
+						blockIndex = currentRouteData.FindBlock(correctionDist);
+						currentRouteData.Blocks[blockIndex].Correction = true;
 						break;
 					/*
 					 * Both sounds and speed limits are invisible markers
@@ -477,6 +507,8 @@ namespace MechanikRouteParser
 
 			Vector3 Position = new Vector3(0.0, 0.0, 0.0);
 			Vector2 Direction = new Vector2(0.0, 1.0);
+			Vector3 Position2 = new Vector3(0.0, 0.0, 0.0);
+			Vector2 Direction2 = new Vector2(0.0, 1.0);
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
 			int CurrentTrackLength = 0;
 			double StartingDistance = 0;
@@ -487,7 +519,8 @@ namespace MechanikRouteParser
 				 */
 				// normalize
 				Normalize(ref Direction.X, ref Direction.Y);
-				
+				Normalize(ref Direction2.X, ref Direction2.Y);
+
 				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
 				{
 					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(Position, StartingDistance, StartingDistance + 25, 100);
@@ -508,7 +541,20 @@ namespace MechanikRouteParser
 				// finalize block
 				Position.X += Direction.X * blockLength;
 				Position.Z += Direction.Y * blockLength;
-
+				Position2.X += Direction2.X * blockLength;
+				Position2.Z += Direction2.Y * blockLength;
+				if (currentRouteData.Blocks[i].Turn != 0.0)
+				{
+					double ag = -Math.Atan(currentRouteData.Blocks[i].Turn);
+					double cosag = Math.Cos(ag);
+					double sinag = Math.Sin(ag);
+					Direction2.Rotate(cosag, sinag);
+				}
+				if (currentRouteData.Blocks[i].Correction)
+				{
+					Position = Position2;
+					Direction = Direction2;
+				}
 			}
 			Position = new Vector3(0,0,0);
 			Direction = new Vector2(0, 1);
