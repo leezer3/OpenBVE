@@ -131,22 +131,42 @@ namespace RouteManager2
 		/// <summary>Updates all sections within the route</summary>
 		public void UpdateAllSections()
 		{
-			UpdateSection(Sections.LastOrDefault());
+			/*
+			 * When there are an insane amount of sections, updating via a reference chain
+			 * may trigger a StackOverflowException
+			 *
+			 * Instead, pull out the reference to the next section in an out variable
+			 * and use a while loop
+			 * https://github.com/leezer3/OpenBVE/issues/557
+			 */
+			Section nextSectionToUpdate;
+			UpdateSection(Sections.LastOrDefault(), out nextSectionToUpdate);
+			while (nextSectionToUpdate != null)
+			{
+				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
+			}
 		}
 
 		/// <summary>Updates the specified signal section</summary>
 		/// <param name="SectionIndex"></param>
 		public void UpdateSection(int SectionIndex)
 		{
-			UpdateSection(Sections[SectionIndex]);
+			Section nextSectionToUpdate;
+			UpdateSection(Sections[SectionIndex], out nextSectionToUpdate);
+			while (nextSectionToUpdate != null)
+			{
+				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
+			}
 		}
 
 		/// <summary>Updates the specified signal section</summary>
 		/// <param name="Section"></param>
-		public void UpdateSection(Section Section)
+		/// <param name="PreviousSection"></param>
+		public void UpdateSection(Section Section, out Section PreviousSection)
 		{
 			if (Section == null)
 			{
+				PreviousSection = null;
 				return;
 			}
 
@@ -355,7 +375,7 @@ namespace RouteManager2
 			Section.CurrentAspect = newAspect;
 
 			// update previous section
-			UpdateSection(Section.PreviousSection);
+			PreviousSection = Section.PreviousSection;
 		}
 
 		/// <summary>Updates the currently displayed background</summary>
