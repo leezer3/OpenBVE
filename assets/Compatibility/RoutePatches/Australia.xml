@@ -1,0 +1,22 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<Patch>
+		<Hash>7C21D03D487E36CCA2D9D1003732614BEEF682E421CB861E8632418CCD8D9D41</Hash>
+		<FileName>kurra_fine1.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+	<Patch>
+		<Hash>FF2B19C253C09CB541E57AB144CE67792E069F6FC2022D918ED7CBD9B59A1994</Hash>
+		<FileName>kurrajong.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+	<Patch>
+		<Hash>6BFDD2746C56A64FCB5BE116C64530FFA0AD7C2889B8F77DCFFBFAD526070704</Hash>
+		<FileName>camden_17.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+		<Message>Campbelltown- Camden routefile detected- Applying fix to yaw / roll.</Message>
+	</Patch>
+  </RoutePatches>
+</openBVE>

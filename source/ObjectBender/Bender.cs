@@ -120,11 +120,11 @@ namespace ObjectBender {
 								}
 							}
 						}
-						Array.Resize<string>(ref cells[i], 6);
+						Array.Resize(ref cells[i], 6);
 						cells[i][4] = dx.ToString("R", culture);
 						cells[i][5] = dy.ToString("R", culture);
 					} else if (n != cells[i].Length) {
-						Array.Resize<string>(ref cells[i], n);
+						Array.Resize(ref cells[i], n);
 					}
 				} else {
 					cells[i] = new string[] { };
@@ -152,7 +152,7 @@ namespace ObjectBender {
 								double y = cells[i].Length >= 3 ? double.Parse(cells[i][2], culture) : x;
 								double z = cells[i].Length >= 4 ? double.Parse(cells[i][3], culture) : x;
 								string[][] code = CreateCube(x, y, z, ref numVertices);
-								Array.Resize<string[]>(ref cells, cells.Length + code.Length - 1);
+								Array.Resize(ref cells, cells.Length + code.Length - 1);
 								for (int j = cells.Length - 1; j >= i + code.Length; j--) {
 									cells[j] = cells[j - code.Length + 1];
 								}
@@ -169,7 +169,7 @@ namespace ObjectBender {
 								double l = cells[i].Length >= 4 ? double.Parse(cells[i][3], culture) : 0.0;
 								double h = cells[i].Length >= 5 ? double.Parse(cells[i][4], culture) : 0.0;
 								string[][] code = CreateCylinder(n, u, l, h, ref numVertices);
-								Array.Resize<string[]>(ref cells, cells.Length + code.Length - 1);
+								Array.Resize(ref cells, cells.Length + code.Length - 1);
 								for (int j = cells.Length - 1; j >= i + code.Length; j--) {
 									cells[j] = cells[j - code.Length + 1];
 								}

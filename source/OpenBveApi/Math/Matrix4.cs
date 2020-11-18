@@ -176,12 +176,12 @@ namespace OpenBveApi.Math
 		/// <returns>True if the instances are equal; false otherwise.</returns>
 		public override bool Equals(object obj)
 		{
-			if (!(obj is Vector4))
+			if (!(obj is Matrix4D))
 			{
 				return false;
 			}
 
-			return this.Equals((Vector4) obj);
+			return this.Equals((Matrix4D) obj);
 		}
 
 		/// <summary>Checks whether the current vector is equal to the specified vector.</summary>
@@ -557,6 +557,9 @@ namespace OpenBveApi.Math
             return mat;
         }
 
+        /// <summary>
+        /// Inverts a matrix
+        /// </summary>
         public void Invert(ref Matrix4D result)
         {
             double m41 = Row3.X, m42 = Row3.Y, m43 = Row3.Z, m44 = Row3.W;

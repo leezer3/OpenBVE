@@ -5,17 +5,10 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Globalization;
-using System.Windows.Forms;
-using LibRender2;
 using LibRender2.Cameras;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -23,14 +16,20 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using RouteManager2;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.Text;
+using System.Windows.Forms;
 using ButtonState = OpenTK.Input.ButtonState;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve {
+namespace OpenBve
+{
 	internal static class Program {
 
 		// system
-		private static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
 
 		internal static bool CpuReducedMode = false;
@@ -42,9 +41,7 @@ namespace OpenBve {
 		internal static string JumpToPositionValue = "";
 		internal static double MinimumJumpToPositionValue =  0;
 		internal static bool processCommandLineArgs;
-		internal static string[] commandLineArguments;
-		internal static bool[] SkipArgs;
-		
+
 		// keys
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
@@ -70,9 +67,6 @@ namespace OpenBve {
 		internal static void Main(string[] args)
 		{
 			CurrentHost = new Host();
-			commandLineArguments = args;
-			// platform and mono
-			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args);
 			FileSystem.CreateFileSystem();
@@ -80,36 +74,67 @@ namespace OpenBve {
 			CurrentRoute = new CurrentRoute(Renderer);
 			Sounds = new Sounds();
 			
+			Options.LoadOptions();
+			Plugins.LoadPlugins();
 			// command line arguments
-			SkipArgs = new bool[args.Length];
-			if (args.Length != 0) {
-				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
-				if (System.IO.File.Exists(File)) {
-					int Skips = 0;
-					System.Text.StringBuilder NewArgs = new System.Text.StringBuilder();
-					for (int i = 0; i < args.Length; i++) {
-						if (args[i] != null && System.IO.File.Exists(args[i])) {
-							if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase)) {
-								string Text = System.IO.File.ReadAllText(args[i], System.Text.Encoding.UTF8);
-								if (Text.Length == 0 || Text.IndexOf("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) >= 0) {
-									if (NewArgs.Length != 0) NewArgs.Append(" ");
-									NewArgs.Append("\"" + args[i] + "\"");
-									SkipArgs[i] = true;
-									Skips++;
+			StringBuilder objectsToLoad = new StringBuilder();
+			if (args.Length != 0)
+			{
+				for (int i = 0; i < args.Length; i++)
+				{
+					if (args[i] != null)
+					{
+						if (System.IO.File.Exists(args[i]))
+						{
+							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+							{
+								if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
+								{
+									objectsToLoad.Append(args[i] + " ");
+									continue;
+								}
+
+								if (CurrentHost.Plugins[j].Route != null && CurrentHost.Plugins[j].Route.CanLoadRoute(args[i]))
+								{
+									if (string.IsNullOrEmpty(CurrentRouteFile))
+									{
+										CurrentRouteFile = args[i];
+										processCommandLineArgs = true;
+									}
 								}
 							}
-						} else {
-							SkipArgs[i] = true;
-							Skips++;
+						}
+						else if (args[i].ToLowerInvariant() == "/enablehacks")
+						{
+							//Deliberately undocumented option for debugging use
+							Interface.CurrentOptions.EnableBveTsHacks = true;
+							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+							{
+								if (CurrentHost.Plugins[j].Object != null)
+								{
+									CurrentHost.Plugins[j].Object.SetCompatibilityHacks(true, false);
+								}
+							}
 						}
 					}
-					if (NewArgs.Length != 0) {
-						System.Diagnostics.Process.Start(File, NewArgs.ToString());
-					}
-					if (Skips == args.Length) return;
 				}
 			}
-			Options.LoadOptions();
+
+			if (objectsToLoad.Length != 0)
+			{
+				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
+				if (System.IO.File.Exists(File))
+				{
+					System.Diagnostics.Process.Start(File, objectsToLoad.ToString());
+					if (string.IsNullOrEmpty(CurrentRouteFile))
+					{
+						//We only supplied objects, so launch Object Viewer instead
+						Environment.Exit(0);
+					}
+				}
+
+			}
+
 			var options = new ToolkitOptions();
 			Plugins.LoadPlugins();
 			options.Backend = PlatformBackend.PreferX11;
@@ -139,24 +164,33 @@ namespace OpenBve {
 		}
 		
 		// load route
-		internal static bool LoadRoute() {
-			
+		internal static bool LoadRoute(Bitmap bitmap = null) {
+			if (string.IsNullOrEmpty(CurrentRouteFile))
+			{
+				return false;
+			}
 			CurrentStation = -1;
-			Game.Reset();
 			Renderer.UpdateViewport();
 			bool result;
-			try {
-				Loading.Load(CurrentRouteFile, System.Text.Encoding.UTF8);
+			try
+			{
+				Encoding encoding = TextEncoding.GetSystemEncodingFromFile(CurrentRouteFile);
+				Loading.Load(CurrentRouteFile, encoding, bitmap);
 				result = true;
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Game.Reset();
-				CurrentRoute = null;
 				result = false;
+				CurrentRouteFile = null;
+			}
+
+			if (Loading.Cancel)
+			{
+				result = false;
+				CurrentRouteFile = null;
 			}
 			Renderer.Lighting.Initialize();
 			Renderer.InitializeVisibility();
-			Renderer.TextureManager.UnloadAllTextures();
 			return result;
 		}
 
@@ -197,7 +231,6 @@ namespace OpenBve {
 				Renderer.RenderScene(0.0);
 				Program.currentGameWindow.SwapBuffers();
 				CameraAlignment a = Renderer.Camera.Alignment;
-				Renderer.TextureManager.UnloadAllTextures();
 				if (Program.LoadRoute())
 				{
 					Renderer.Camera.Alignment = a;
@@ -310,10 +343,9 @@ namespace OpenBve {
 							GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-							Renderer.Loading.SetLoadingBkg(Renderer.TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null)));
 						}
 						CameraAlignment a = Renderer.Camera.Alignment;
-						if (LoadRoute())
+						if (LoadRoute(bitmap))
 						{
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
@@ -323,7 +355,20 @@ namespace OpenBve {
 							Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
-						
+						else
+						{
+							Renderer.Camera.Alignment.Yaw = 0.0;
+							Renderer.Camera.Alignment.Pitch = 0.0;
+							Renderer.Camera.Alignment.Roll = 0.0;
+							Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
+							Renderer.Camera.Alignment.Zoom = 0.0;
+							Renderer.Camera.AlignmentDirection = new CameraAlignment();
+							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
+							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+							Renderer.UpdateViewport();
+							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+						}
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
 						if (bitmap != null)
@@ -346,14 +391,30 @@ namespace OpenBve {
 						Application.DoEvents();
 						CurrentlyLoading = true;
 						CurrentRouteFile = Dialog.FileName;
-						LoadRoute();
-						ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+						if (LoadRoute())
+						{
+							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+						}
+						else
+						{
+							Renderer.Camera.Alignment.Yaw = 0.0;
+							Renderer.Camera.Alignment.Pitch = 0.0;
+							Renderer.Camera.Alignment.Roll = 0.0;
+							Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
+							Renderer.Camera.Alignment.Zoom = 0.0;
+							Renderer.Camera.AlignmentDirection = new CameraAlignment();
+							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
+							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+							Renderer.UpdateViewport();
+							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+						}
 						CurrentlyLoading = false;
 						UpdateCaption();
 					}
 					else
 					{
-						if (Program.CurrentlyRunOnMono)
+						if (Program.CurrentHost.MonoRuntime)
 						{
 							//HACK: Dialog doesn't close properly when pressing the ESC key under Mono
 							//Avoid calling Application.DoEvents() unless absolutely necessary though!
@@ -373,12 +434,18 @@ namespace OpenBve {
 						UpdateGraphicsSettings();
 					}
 					Application.DoEvents();
+					Renderer.Camera.AlignmentDirection.TrackPosition = 0;
+					Renderer.Camera.AlignmentDirection.Position.X = 0;
+					Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					break;
 				case Key.F9:
-					if (Interface.MessageCount != 0)
+					if (Interface.LogMessages.Count != 0)
 					{
 						formMessages.ShowMessages();
 						Application.DoEvents();
+						Renderer.Camera.AlignmentDirection.TrackPosition = 0;
+						Renderer.Camera.AlignmentDirection.Position.X = 0;
+						Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					}
 					break;
 				case Key.F10:

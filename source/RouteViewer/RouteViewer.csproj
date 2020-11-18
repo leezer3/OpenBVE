@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -59,14 +59,15 @@
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.3.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.3.1\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="formMessages.cs">
@@ -90,8 +91,6 @@
     <Compile Include="NewRendererR.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="ObjectManager.cs" />
-    <Compile Include="Parsers\CsvRwRouteParser.cs" />
-    <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
     <Compile Include="Audio\Sounds.cs" />
     <Compile Include="Audio\Sounds.Update.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
@@ -117,7 +116,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="OpenTK.dll.config" />
+    <None Include="OpenTK.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -133,10 +134,6 @@
     <Compile Include="WorldR.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DevTools\LBAHeader\LBAHeader.csproj">
-      <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
-      <Name>LBAHeader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">
       <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
       <Name>LibRender2</Name>
@@ -154,26 +151,16 @@
       <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <!-- Copy in dependancies and child projects -->
-    <!-- Finally, set LBA flag & cleanup -->
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-		xcopy "$(SolutionDir)assets\*.*" "$(TargetDir)Data" /Y /I /E /C	
-"$(TargetDir)DevTools\LBAHeader.exe" OpenBve.exe 
-	</PostBuildEvent>
-    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-		cp -rf "$(SolutionDir)assets/." "$(TargetDir)Data/"
-mono "$(TargetDir)DevTools\LBAHeader.exe" OpenBve.exe 
-	</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
   <Target Name="AfterBuild">
+    <!-- Set LBA flag -->
+    <Exec Condition="'$(OS)' != 'Unix'" Command="$(TargetDir)DevTools\LBAHeader.exe $(TargetDir)OpenBve.exe" />
+    <Exec Condition="'$(OS)' == 'Unix'" Command="mono $(TargetDir)DevTools/LBAHeader.exe $(TargetDir)OpenBve.exe" />
+    <!-- Copy in dependancies -->
+    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
+    <ItemGroup>
+      <AssetFiles Include="$(SolutionDir)assets\**\*.*" />
+    </ItemGroup>
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
-  -->
 </Project>

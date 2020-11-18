@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 
@@ -25,6 +26,30 @@ namespace OpenBve
 
 				string Text = System.IO.File.ReadAllText(config, encoding);
 				Text = Text.Replace("\r", "").Replace("\n", "");
+				if (Text.Length > 260)
+				{
+					/*
+					 * String length is over max Windows path length, so
+					 * comments or ATS plugin docs have been included in here
+					 * e.g dlg70v40
+					 */
+					string[] fileLines = System.IO.File.ReadAllLines(config);
+					for (int i = 0; i < fileLines.Length; i++)
+					{
+						int commentStart = fileLines[i].IndexOf(';');
+						if (commentStart != -1)
+						{
+							fileLines[i] = fileLines[i].Substring(0, commentStart);
+						}
+
+						fileLines[i] = fileLines[i].Trim();
+						if (fileLines[i].Length != 0)
+						{
+							Text = fileLines[i];
+							break;
+						}
+					}
+				}
 				string file;
 				try
 				{
@@ -83,6 +108,30 @@ namespace OpenBve
 				return success;
 			}
 
+			internal VehicleSpecs vehicleSpecs()
+			{
+				BrakeTypes brakeType = (BrakeTypes) Cars[DriverCar].CarBrake.brakeType;
+				int brakeNotches;
+				int powerNotches;
+				bool hasHoldBrake;
+				if (brakeType == BrakeTypes.AutomaticAirBrake)
+				{
+					brakeNotches = 2;
+					powerNotches = Handles.Power.MaximumNotch;
+					hasHoldBrake = false;
+				}
+				else
+				{
+					brakeNotches = Handles.Brake.MaximumNotch + (Handles.HasHoldBrake ? 1 : 0);
+					powerNotches = Handles.Power.MaximumNotch;
+					hasHoldBrake = Handles.HasHoldBrake;
+				}
+
+				bool hasLocoBrake = Handles.HasLocoBrake;
+				int cars = Cars.Length;
+				return new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, cars);
+			}
+
 			/// <summary>Loads the specified plugin for the specified train.</summary>
 			/// <param name="pluginFile">The file to the plugin.</param>
 			/// <param name="trainFolder">The train folder.</param>
@@ -107,27 +156,8 @@ namespace OpenBve
 				/*
 				 * Prepare initialization data for the plugin.
 				 * */
-				BrakeTypes brakeType = (BrakeTypes) Cars[DriverCar].CarBrake.brakeType;
-				int brakeNotches;
-				int powerNotches;
-				bool hasHoldBrake;
-				if (brakeType == BrakeTypes.AutomaticAirBrake)
-				{
-					brakeNotches = 2;
-					powerNotches = Handles.Power.MaximumNotch;
-					hasHoldBrake = false;
-				}
-				else
-				{
-					brakeNotches = Handles.Brake.MaximumNotch + (Handles.HasHoldBrake ? 1 : 0);
-					powerNotches = Handles.Power.MaximumNotch;
-					hasHoldBrake = Handles.HasHoldBrake;
-				}
-
-				bool hasLocoBrake = Handles.HasLocoBrake;
-				int cars = Cars.Length;
-				VehicleSpecs specs = new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, cars);
-				InitializationModes mode = (InitializationModes) Game.TrainStart;
+				
+				InitializationModes mode = (InitializationModes) Interface.CurrentOptions.TrainStart;
 				/*
 				 * Check if the plugin is a .NET plugin.
 				 * */
@@ -175,7 +205,7 @@ namespace OpenBve
 
 							IRuntime api = assembly.CreateInstance(type.FullName) as IRuntime;
 							Plugin = new NetPlugin(pluginFile, trainFolder, api, this);
-							if (Plugin.Load(specs, mode))
+							if (Plugin.Load(vehicleSpecs(), mode))
 							{
 								return true;
 							}
@@ -209,20 +239,20 @@ namespace OpenBve
 					return false;
 				}
 
-				if (!Program.CurrentlyRunningOnWindows | IntPtr.Size != 4)
+				if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows | IntPtr.Size != 4)
 				{
 					Interface.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
 					return false;
 				}
 
-				if (Program.CurrentlyRunningOnWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
+				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
 				{
 					Interface.AddMessage(MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
 					return false;
 				}
 
 				Plugin = new Win32Plugin(pluginFile, this);
-				if (Plugin.Load(specs, mode))
+				if (Plugin.Load(vehicleSpecs(), mode))
 				{
 					return true;
 				}

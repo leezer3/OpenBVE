@@ -58,7 +58,10 @@ namespace OpenBve.Graphics
 
 			try
 			{
-				pickingShader = new Shader(this, "default", "picking", true);
+				if (pickingShader == null)
+				{
+					pickingShader = new Shader(this, "default", "picking", true);
+				}
 				pickingShader.Activate();
 				pickingShader.Deactivate();
 			}
@@ -74,6 +77,7 @@ namespace OpenBve.Graphics
 			Touch = new Touch(this);
 			ObjectsSortedByStart = new int[] { };
 			ObjectsSortedByEnd = new int[] { };
+			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
 		
 		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
@@ -84,133 +88,7 @@ namespace OpenBve.Graphics
 				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
 				return -1;
 			}
-			if (obj.Mesh.Faces.Length == 0)
-			{
-				//Null object- Waste of time trying to calculate anything for these
-				return -1;
-			}
 			return base.CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-		}
-
-		public override void InitializeVisibility()
-		{
-			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
-			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
-			ObjectsSortedByStartPointer = 0;
-			ObjectsSortedByEndPointer = 0;
-
-			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-
-			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
-			{
-				VisibleObjects.ShowObject(state, ObjectType.Static);
-			}
-		}
-
-		public override void UpdateVisibility(double TrackPosition)
-		{
-			double d = TrackPosition - LastUpdatedTrackPosition;
-			int n = ObjectsSortedByStart.Length;
-			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-
-			if (d < 0.0)
-			{
-				if (ObjectsSortedByStartPointer >= n)
-				{
-					ObjectsSortedByStartPointer = n - 1;
-				}
-
-				if (ObjectsSortedByEndPointer >= n)
-				{
-					ObjectsSortedByEndPointer = n - 1;
-				}
-
-				// dispose
-				while (ObjectsSortedByStartPointer >= 0)
-				{
-					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-
-					if (StaticObjectStates[o].StartingDistance > p + Camera.ForwardViewingDistance)
-					{
-						VisibleObjects.HideObject(StaticObjectStates[o]);
-						ObjectsSortedByStartPointer--;
-					}
-					else
-					{
-						break;
-					}
-				}
-
-				// introduce
-				while (ObjectsSortedByEndPointer >= 0)
-				{
-					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-
-					if (StaticObjectStates[o].EndingDistance >= p - Camera.BackwardViewingDistance)
-					{
-						if (StaticObjectStates[o].StartingDistance <= p + Camera.ForwardViewingDistance)
-						{
-							VisibleObjects.ShowObject(StaticObjectStates[o], ObjectType.Static);
-						}
-
-						ObjectsSortedByEndPointer--;
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-			else if (d > 0.0)
-			{
-				if (ObjectsSortedByStartPointer < 0)
-				{
-					ObjectsSortedByStartPointer = 0;
-				}
-
-				if (ObjectsSortedByEndPointer < 0)
-				{
-					ObjectsSortedByEndPointer = 0;
-				}
-
-				// dispose
-				while (ObjectsSortedByEndPointer < n)
-				{
-					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-
-					if (StaticObjectStates[o].EndingDistance < p - Camera.BackwardViewingDistance)
-					{
-						VisibleObjects.HideObject(StaticObjectStates[o]);
-						ObjectsSortedByEndPointer++;
-					}
-					else
-					{
-						break;
-					}
-				}
-
-				// introduce
-				while (ObjectsSortedByStartPointer < n)
-				{
-					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-
-					if (StaticObjectStates[o].StartingDistance <= p + Camera.ForwardViewingDistance)
-					{
-						if (StaticObjectStates[o].EndingDistance >= p - Camera.BackwardViewingDistance)
-						{
-							VisibleObjects.ShowObject(StaticObjectStates[o], ObjectType.Static);
-						}
-
-						ObjectsSortedByStartPointer++;
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-
-			LastUpdatedTrackPosition = TrackPosition;
 		}
 
 		public override void UpdateViewport(int Width, int Height)
@@ -240,6 +118,7 @@ namespace OpenBve.Graphics
 		// render scene
 		internal void RenderScene(double TimeElapsed)
 		{
+			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
 
@@ -289,6 +168,10 @@ namespace OpenBve.Graphics
 				Program.CurrentRoute.CurrentFog.Color.R = (byte)(Program.CurrentRoute.PreviousFog.Color.R * frc + Program.CurrentRoute.NextFog.Color.R * fr);
 				Program.CurrentRoute.CurrentFog.Color.G = (byte)(Program.CurrentRoute.PreviousFog.Color.G * frc + Program.CurrentRoute.NextFog.Color.G * fr);
 				Program.CurrentRoute.CurrentFog.Color.B = (byte)(Program.CurrentRoute.PreviousFog.Color.B * frc + Program.CurrentRoute.NextFog.Color.B * fr);
+				if (!Program.CurrentRoute.CurrentFog.IsLinear)
+				{
+					Program.CurrentRoute.CurrentFog.Density = (byte)(Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr);
+				}
 			}
 			else
 			{
@@ -311,7 +194,9 @@ namespace OpenBve.Graphics
 				Fog.Start = aa;
 				Fog.End = bb;
 				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
-				SetFogForImmediateMode();
+				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
+				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;
+				Fog.SetForImmediateMode();
 			}
 			else
 			{
@@ -337,9 +222,7 @@ namespace OpenBve.Graphics
 				if (OptionFog)
 				{
 					DefaultShader.SetIsFog(true);
-					DefaultShader.SetFogStart(Fog.Start);
-					DefaultShader.SetFogEnd(Fog.End);
-					DefaultShader.SetFogColor(Fog.Color);
+					DefaultShader.SetFog(Fog);
 				}
 				DefaultShader.SetTexture(0);
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
@@ -542,6 +425,11 @@ namespace OpenBve.Graphics
                  */
 				ResetOpenGlState();
 				OptionLighting = false;
+				if (AvailableNewRenderer)
+				{
+					DefaultShader.SetIsLight(false);
+				}
+				
 				SetBlendFunc();
 				UnsetAlphaFunc();
 				GL.Disable(EnableCap.DepthTest);

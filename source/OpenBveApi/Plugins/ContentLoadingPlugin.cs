@@ -18,6 +18,9 @@
 		/// <summary>The interface to load objects as exposed by the plugin, or a null reference.</summary>
 		public Objects.ObjectInterface Object;
 
+		/// <summary>The interface to load routes as exposed by the plugin, or a null reference.</summary>
+		public Routes.RouteInterface Route;
+		
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="file">The plugin file.</param>
 		public ContentLoadingPlugin(string file)
@@ -29,7 +32,7 @@
 		}
 
 		/// <summary>Loads all interfaces this plugin supports.</summary>
-		public void Load(Hosts.HostInterface Host, FileSystem.FileSystem FileSystem, BaseOptions Options)
+		public void Load(Hosts.HostInterface Host, FileSystem.FileSystem FileSystem, BaseOptions Options, object RendererReference = null)
 		{
 			if (this.Texture != null)
 			{
@@ -46,6 +49,12 @@
 				this.Object.Load(Host, FileSystem);
 				this.Object.SetObjectParser(Options.CurrentXParser);
 				this.Object.SetObjectParser(Options.CurrentObjParser);
+			}
+
+			if (this.Route != null)
+			{
+				//FIXME: Remove renderer reference
+				this.Route.Load(Host, FileSystem, Options, RendererReference);
 			}
 		}
 
@@ -65,6 +74,11 @@
 			if (this.Object != null)
 			{
 				this.Object.Unload();
+			}
+
+			if (this.Route != null)
+			{
+				this.Route.Unload();
 			}
 		}
 	}

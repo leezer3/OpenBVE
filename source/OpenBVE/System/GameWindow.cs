@@ -84,7 +84,7 @@ namespace OpenBve
 				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 				{
 					Close();
-					if (Program.CurrentlyRunningOnMono && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+					if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
 					{
 						Environment.Exit(0);
 					}
@@ -157,12 +157,16 @@ namespace OpenBve
 			if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 			{
 				Program.currentGameWindow.Exit();
-				if (Program.CurrentlyRunningOnMono && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+				if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
 				{
 					Environment.Exit(0);
 				}				
 			}
-			Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight);
+
+			if (Program.CurrentRoute.DynamicLighting)
+			{
+				Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
+			}
 			Program.Renderer.RenderScene(TimeElapsed);
 			Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 			Program.currentGameWindow.SwapBuffers();
@@ -178,23 +182,24 @@ namespace OpenBve
 			MainLoop.ProcessKeyboard();
 			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
-			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
+			if (JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.Raildriver.Guid))
 			{
-				var railDriver = JoystickManager.AttachedJoysticks[i] as JoystickManager.Raildriver;
+				var railDriver = JoystickManager.AttachedJoysticks[JoystickManager.Raildriver.Guid] as JoystickManager.Raildriver;
 				if (railDriver != null)
 				{
 					if (Interface.CurrentOptions.RailDriverMPH)
 					{
 						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
-							                             .CurrentPerceivedSpeed * 2.23694));
+							.CurrentPerceivedSpeed * 2.23694));
 					}
 					else
 					{
 						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
-							                             .CurrentPerceivedSpeed * 3.6));
+							.CurrentPerceivedSpeed * 3.6));
 					}
 				}
 			}
+			
 			RenderRealTimeElapsed = 0.0;
 			RenderTimeElapsed = 0.0;
 				
@@ -330,12 +335,12 @@ namespace OpenBve
 			jobs = new Queue<ThreadStart>(10);
 			locks = new Queue<object>(10);
 			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
-			Program.Renderer.DetermineMaxAFLevel(Program.CurrentlyRunningOnMacOS);
+			Program.Renderer.DetermineMaxAFLevel();
 			HUD.LoadHUD();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
-			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.CompatabilitySignalSet, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
+			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 			LoadingScreenLoop();
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
@@ -407,7 +412,7 @@ namespace OpenBve
 			{
 				InputDevicePlugin.CallPluginUnload(i);
 			}
-			if (MainLoop.Quit == MainLoop.QuitMode.ContinueGame && Program.CurrentlyRunningOnMono)
+			if (MainLoop.Quit == MainLoop.QuitMode.ContinueGame && Program.CurrentHost.MonoRuntime)
 			{
 				//More forcefully close under Mono, stuff *still* hanging around....
 				Environment.Exit(0);
@@ -460,7 +465,7 @@ namespace OpenBve
 				Timetable.CreateTimetable();
 			}
 			//Check if any critical errors have occured during the route or train loading
-			for (int i = 0; i < Interface.MessageCount; i++)
+			for (int i = 0; i < Interface.LogMessages.Count; i++)
 			{
 				if (Interface.LogMessages[i].Type == MessageType.Critical)
 				{
@@ -497,9 +502,9 @@ namespace OpenBve
 			bool f = false;
 			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 			{
-				if (!String.IsNullOrEmpty(Game.InitialStationName))
+				if (!String.IsNullOrEmpty(Program.CurrentRoute.InitialStationName))
 				{
-					if (Game.InitialStationName.ToLowerInvariant() == Program.CurrentRoute.Stations[i].Name.ToLowerInvariant())
+					if (Program.CurrentRoute.InitialStationName.ToLowerInvariant() == Program.CurrentRoute.Stations[i].Name.ToLowerInvariant())
 					{
 						PlayerFirstStationIndex = i;
 					}
@@ -564,10 +569,10 @@ namespace OpenBve
 				{
 					PlayerFirstStationPosition = Program.CurrentRoute.Stations[PlayerFirstStationIndex].DefaultTrackPosition;
 				}
-				if (Game.InitialStationTime != -1)
+				if (Program.CurrentRoute.InitialStationTime != -1)
 				{
-					Program.CurrentRoute.SecondsSinceMidnight = Game.InitialStationTime;
-					Game.StartupTime = Game.InitialStationTime;
+					Program.CurrentRoute.SecondsSinceMidnight = Program.CurrentRoute.InitialStationTime;
+					Game.StartupTime = Program.CurrentRoute.InitialStationTime;
 				}
 				else
 				{
@@ -628,9 +633,9 @@ namespace OpenBve
 					break;
 				}
 			}
-			if (Game.PrecedingTrainTimeDeltas.Length != 0)
+			if (Program.CurrentRoute.PrecedingTrainTimeDeltas.Length != 0)
 			{
-				OtherFirstStationTime -= Game.PrecedingTrainTimeDeltas[Game.PrecedingTrainTimeDeltas.Length - 1];
+				OtherFirstStationTime -= Program.CurrentRoute.PrecedingTrainTimeDeltas[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length - 1];
 				if (OtherFirstStationTime < Program.CurrentRoute.SecondsSinceMidnight)
 				{
 					Program.CurrentRoute.SecondsSinceMidnight = OtherFirstStationTime;
@@ -670,7 +675,8 @@ namespace OpenBve
 				}
 			}
 
-			foreach (var Train in TrainManager.TFOs)
+			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
+			foreach (TrainManager.TrackFollowingObject Train in TrainManager.TFOs)  //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.Initialize();
 
@@ -728,9 +734,9 @@ namespace OpenBve
 				}
 			}
 			// timetable
-			if (Timetable.DefaultTimetableDescription.Length == 0)
+			if (Program.CurrentRoute.Information.DefaultTimetableDescription.Length == 0)
 			{
-				Timetable.DefaultTimetableDescription = Game.LogTrainName;
+				Program.CurrentRoute.Information.DefaultTimetableDescription = Game.LogTrainName;
 			}
 
 			// initialize camera
@@ -793,7 +799,7 @@ namespace OpenBve
 				Timetable.UpdateCustomTimetable(Program.CurrentRoute.Stations[TrainManager.PlayerTrain.Station].TimetableDaytimeTexture, Program.CurrentRoute.Stations[TrainManager.PlayerTrain.Station].TimetableNighttimeTexture);
 				if (Timetable.CustomObjectsUsed != 0 & Timetable.CustomTimetableAvailable && Interface.CurrentOptions.TimeTableStyle != TimeTableMode.AutoGenerated && Interface.CurrentOptions.TimeTableStyle != TimeTableMode.None)
 				{
-					Timetable.CurrentTimetable = Timetable.TimetableState.Custom;
+					Program.Renderer.CurrentTimetable = DisplayedTimetable.Custom;
 				}
 			}
 			//Create AI driver for the player train if specified via the commmand line
@@ -808,12 +814,12 @@ namespace OpenBve
 			}
 			
 			// warnings / errors
-			if (Interface.MessageCount != 0)
+			if (Interface.LogMessages.Count != 0)
 			{
 				int filesNotFound = 0;
 				int errors = 0;
 				int warnings = 0;
-				for (int i = 0; i < Interface.MessageCount; i++)
+				for (int i = 0; i < Interface.LogMessages.Count; i++)
 				{
 					if (Interface.LogMessages[i].FileNotFound)
 					{
@@ -851,8 +857,8 @@ namespace OpenBve
 					Messages = warnings.ToString() + " warning(s)";
 					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
-				Game.RouteInformation.FilesNotFound = NotFound;
-				Game.RouteInformation.ErrorsAndWarnings = Messages;
+				Program.CurrentRoute.Information.FilesNotFound = NotFound;
+				Program.CurrentRoute.Information.ErrorsAndWarnings = Messages;
 				//Print the plugin error encountered (If any) for 10s
 				//This must be done after the simulation has init, as otherwise the timeout doesn't work
 				if (Loading.PluginError != null)
@@ -866,7 +872,7 @@ namespace OpenBve
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
-			switch (Game.InitialViewpoint)
+			switch (Interface.CurrentOptions.InitialViewpoint)
 			{
 				case 0:
 					if (Game.InitialReversedConsist)
@@ -970,7 +976,18 @@ namespace OpenBve
 				this.ProcessEvents();
 				if (this.IsExiting)
 					Loading.Cancel = true;
-				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, Loading.RouteProgress, Loading.TrainProgress);
+				double routeProgress = 1.0;
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
+					{
+						routeProgress = Program.CurrentHost.Plugins[i].Route.CurrentProgress;
+						break;
+					}
+				}
+
+				Program.Renderer.Loading.SetLoadingBkg(Program.CurrentRoute.Information.LoadingScreenBackground);
+				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, routeProgress, Loading.TrainProgress);
 				Program.currentGameWindow.SwapBuffers();
 				
 				if (Loading.JobAvailable)
@@ -1031,8 +1048,6 @@ namespace OpenBve
 		
 		public override void Dispose()
 		{
-			Program.Renderer.Finalization();
-
 			base.Dispose();
 		}
 	}

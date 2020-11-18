@@ -1,4 +1,4 @@
-﻿using LibRender2.Cameras;
+﻿using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
@@ -7,12 +7,11 @@ namespace RouteManager2.Events
 	/// <summary>This event is placed at the end of the track</summary>
 	public class TrackEndEvent : GeneralEvent
 	{
-		private readonly CameraProperties camera;
+		private readonly HostInterface currentHost;
 
-		public TrackEndEvent(CameraProperties Camera, double TrackPositionDelta)
+		public TrackEndEvent(HostInterface Host, double TrackPositionDelta)
 		{
-			camera = Camera;
-
+			currentHost = Host;
 			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 		}
@@ -35,7 +34,7 @@ namespace RouteManager2.Events
 
 			if (TriggerType == EventTriggerType.Camera)
 			{
-				camera.AtWorldEnd = !camera.AtWorldEnd;
+				currentHost.CameraAtWorldEnd();
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 using System;
+using LibRender2.Overlays;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -1124,7 +1125,28 @@ namespace OpenBve {
 						} break;
 						// timetable
 					case Instructions.TimetableVisible:
-						Function.Stack[s] = Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
+						switch (Program.Renderer.CurrentTimetable)
+						{
+							case DisplayedTimetable.Custom:
+							case DisplayedTimetable.Default:
+								Function.Stack[s] = 1.0;
+								break;
+							case DisplayedTimetable.None:
+								Function.Stack[s] = 0.0;
+								break;
+						}
+						s++; break;
+					case Instructions.Panel2Timetable:
+						//Internal instruction used to show / hide custom timetable overlay on Panel2 trains
+						switch (Program.Renderer.CurrentTimetable)
+						{
+							case DisplayedTimetable.Custom:
+								Function.Stack[s] = 0.0;
+								break;
+							default:
+								Function.Stack[s] = -1.0;
+								break;
+						}
 						s++; break;
 					case Instructions.DistanceNextStation:
 						if (Train == null)
@@ -1278,6 +1300,18 @@ namespace OpenBve {
 								}
 								Function.Stack[s] = stationIdx;
 							}
+							s++; break; 
+					case Instructions.TerminalStation:
+							int idx = Program.CurrentRoute.Stations.Length;
+							for (int j = Program.CurrentRoute.Stations.Length - 1; j >= 0; j--)
+							{
+								if (Program.CurrentRoute.Stations[j].Type == StationType.Terminal)
+								{
+									idx = j;
+									break;
+								}
+							}
+							Function.Stack[s] = idx;
 							s++; break;
 					case Instructions.RouteLimit:
 						if (Train == null)

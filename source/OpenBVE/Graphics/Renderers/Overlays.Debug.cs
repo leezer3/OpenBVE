@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using LibRender2;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -133,7 +132,7 @@ namespace OpenBve.Graphics.Renderers
 				remainder = (int)Program.CurrentRoute.SecondsSinceMidnight % 3600,
 				minutes = remainder / 60,
 				seconds = remainder % 60;
-			string[] Lines = new string[] {
+			string[] Lines = {
 				"=system",
 				"fps: " + Program.Renderer.FrameRate.ToString("0.0", Culture) + (MainLoop.LimitFramerate ? " (low cpu)" : ""),
 				"time:" + hours.ToString("00") +  ":" + minutes.ToString("00") + ":" + seconds.ToString("00"),
@@ -178,11 +177,12 @@ namespace OpenBve.Graphics.Renderers
 				"pitch: " + Program.Renderer.CameraTrackFollower.Pitch.ToString("0.00", Culture),
 				"",
 				"=sound",
-				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " / " + soundBuffersRegistered.ToString(Culture),
-				"sound sources: " + soundSourcesPlaying.ToString(Culture) + " / " + soundSourcesRegistered.ToString(Culture),
+				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " loaded / " + soundBuffersRegistered.ToString(Culture) + " total",
+				"sound sources: " + soundSourcesPlaying.ToString(Culture) + " playing / " + Interface.CurrentOptions.SoundNumber + " max playing / " + soundSourcesRegistered.ToString(Culture) + " total",
 				(Interface.CurrentOptions.SoundModel == SoundModels.Inverse ? "log clamp factor: " + Program.Sounds.LogClampFactor.ToString("0.00") : "outer radius factor: " + Program.Sounds.OuterRadiusFactor.ToString("0.00", Culture)),
 				"",
 				"=debug",
+				"bvets hacks: " + (Interface.CurrentOptions.EnableBveTsHacks ? "enabled" : "disabled"),
 				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
 				"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
 				Game.InfoDebugString ?? ""
@@ -220,7 +220,6 @@ namespace OpenBve.Graphics.Renderers
 
 		private void RenderATSDebugOverlay()
 		{
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
 			renderer.Rectangle.Draw(null, new Vector2(0.0f, 0.0f), new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
 			string[] Lines;

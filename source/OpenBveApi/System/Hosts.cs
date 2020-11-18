@@ -6,7 +6,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -46,14 +45,56 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Train Editor</summary>
 		TrainEditor = 3
 	}
+
+	/// <summary>The host platform</summary>
+	public enum HostPlatform
+	{
+		/// <summary>Microsoft Windows and compatabiles</summary>
+		MicrosoftWindows = 0,
+		/// <summary>Linux</summary>
+		GNULinux = 1,
+		/// <summary>Mac OS-X</summary>
+		AppleOSX = 2
+
+	}
 	
 	/// <summary>Represents the host application and functionality it exposes.</summary>
 	public abstract class HostInterface {
+
+		/// <summary>Returns whether the current host application is running under Mono</summary>
+		public bool MonoRuntime
+		{
+			get
+			{
+				return Type.GetType("Mono.Runtime") != null;
+			}
+		}
+
+		/// <summary>Returns the current host platform</summary>
+		public HostPlatform Platform
+		{
+			get
+			{
+				if (Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT)
+				{
+					return HostPlatform.MicrosoftWindows;
+				}
+				if (System.IO.File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
+				{
+					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
+					return HostPlatform.AppleOSX;
+				}
+
+				return HostPlatform.GNULinux;
+			}
+		}
 
 		/// <summary>The base host interface constructor</summary>
 		protected HostInterface(HostApplication host)
 		{
 			Application = host;
+			StaticObjectCache = new Dictionary<ValueTuple<string, bool>, StaticObject>();
+			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
 		}
 
 		/// <summary></summary>
@@ -226,6 +267,20 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether loading the object was successful</returns>
 		public virtual bool LoadObject(string Path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
+			ValueTuple<string, bool> key = ValueTuple.Create(Path, false);
+
+			if (StaticObjectCache.ContainsKey(key))
+			{
+				Object = StaticObjectCache[key].Clone();
+				return true;
+			}
+
+			if (AnimatedObjectCollectionCache.ContainsKey(Path))
+			{
+				Object = AnimatedObjectCollectionCache[Path].Clone();
+				return true;
+			}
+
 			Object = null;
 			return false;
 		}
@@ -240,6 +295,14 @@ namespace OpenBveApi.Hosts {
 		/// Selecting to preserve vertices may be useful if using the object as a deformable.</remarks>
 		public virtual bool LoadStaticObject(string Path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
+			ValueTuple<string, bool> key = ValueTuple.Create(Path, PreserveVertices);
+
+			if (StaticObjectCache.ContainsKey(key))
+			{
+				Object = (StaticObject)StaticObjectCache[key].Clone();
+				return true;
+			}
+
 			Object = null;
 			return false;
 		}
@@ -261,15 +324,13 @@ namespace OpenBveApi.Hosts {
 		/// <param name="Position">The world position</param>
 		/// <param name="BaseTransformation">The base world transformation to apply</param>
 		/// <param name="AuxTransformation">The secondary rail transformation to apply</param>
-		/// <param name="AccurateObjectDisposal">Whether accurate object disposal is in use</param>
 		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
 		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
 		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
-		/// <param name="BlockLength">The block length</param>
 		/// <param name="TrackPosition">The absolute route based track position</param>
 		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
 			return -1;
 		}
@@ -279,15 +340,13 @@ namespace OpenBveApi.Hosts {
 		/// <param name="AuxTransformation">The secondary rail transformation to apply NOTE: Only used for object disposal calcs</param>
 		/// <param name="Rotate">The rotation matrix to apply</param>
 		/// <param name="Translate">The translation matrix to apply</param>
-		/// <param name="AccurateObjectDisposal">Whether accurate object disposal is in use</param>
 		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
 		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
 		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
-		/// <param name="BlockLength">The block length</param>
 		/// <param name="TrackPosition">The absolute route based track position</param>
 		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public virtual int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
 			return -1;
 		}
@@ -328,8 +387,8 @@ namespace OpenBveApi.Hosts {
 		public virtual void AddMessage(MessageType type, bool FileNotFound, string text) { }
 
 		/// <summary>Adds a message to the in-game display</summary>
-		/// <param name="AbstractMesage">The message to add</param>
-		public virtual void AddMessage(object AbstractMesage)
+		/// <param name="AbstractMessage">The message to add</param>
+		public virtual void AddMessage(object AbstractMessage)
 		{
 			/*
 			 * Using object as a parameter type allows us to keep the messages out the API...
@@ -356,6 +415,15 @@ namespace OpenBveApi.Hosts {
 			return null;
 		}
 
+		/// <summary>Register the position to play microphone input.</summary>
+		/// <param name="position">The position.</param>
+		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
+		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
+		public virtual void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		{
+
+		}
+
 		/// <summary>Stops a playing sound source</summary>
 		public virtual void StopSound(object SoundSource)
 		{
@@ -363,13 +431,7 @@ namespace OpenBveApi.Hosts {
 		}
 
 		/// <summary>Returns whether the simulation is currently in progress</summary>
-		public virtual bool SimulationSetup
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public virtual bool SimulationSetup => false;
 
 		/// <summary>Returns the number of animated world objects used</summary>
 		public virtual int AnimatedWorldObjectsUsed
@@ -418,8 +480,23 @@ namespace OpenBveApi.Hosts {
 
 		}
 
+		/// <summary>Loads a track following object via the host program</summary>
+		/// <param name="objectPath">The path to the object directory</param>
+		/// /// <param name="tfoFile">The TFO parameters file</param>
+		/// <returns>The track following object</returns>
+		public abstract AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile);
+
 		/// <summary>The list of available content loading plugins</summary>
 		public ContentLoadingPlugin[] Plugins;
+
+		/// <summary>The total number of available route loading plugins</summary>
+		public int AvailableRoutePluginCount => Plugins.Count(x => x.Route != null);
+
+		/// <summary>The total number of available object loading plugins</summary>
+		public int AvailableObjectPluginCount => Plugins.Count(x => x.Object != null);
+
+		/// <summary>The total number of available sound loading plugins</summary>
+		public int AvailableSoundPluginCount => Plugins.Count(x => x.Sound != null);
 
 		/// <summary>
 		/// Array of supported animated object extensions.
@@ -430,5 +507,36 @@ namespace OpenBveApi.Hosts {
 		/// Array of supported static object extensions.
 		/// </summary>
 		public string[] SupportedStaticObjectExtensions => Plugins.Where(x => x.Object != null).SelectMany(x => x.Object.SupportedStaticObjectExtensions).ToArray();
+
+		/// <summary>
+		/// Dictionary of StaticObject with Path and PreserveVertices as keys.
+		/// </summary>
+		public readonly Dictionary<ValueTuple<string, bool>, StaticObject> StaticObjectCache;
+
+		/// <summary>
+		/// Dictionary of AnimatedObjectCollection with Path as key.
+		/// </summary>
+
+		public readonly Dictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
+
+		/// <summary>Adds a marker texture to the host application's display</summary>
+		/// <param name="MarkerTexture">The texture to add</param>
+		public virtual void AddMarker(Texture MarkerTexture)
+		{
+
+		}
+
+		/// <summary>Removes a marker texture if present in the host application's display</summary>
+		/// <param name="MarkerTexture">The texture to remove</param>
+		public virtual void RemoveMarker(Texture MarkerTexture)
+		{
+
+		}
+
+		/// <summary>Called when a follower reaches the end of the world</summary>
+		public virtual void CameraAtWorldEnd()
+		{
+
+		}
 	}
 }

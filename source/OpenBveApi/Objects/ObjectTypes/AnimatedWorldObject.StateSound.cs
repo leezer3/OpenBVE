@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Math;
+﻿using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -9,8 +8,6 @@ namespace OpenBveApi.Objects
 	/// <summary>Represents an animated object which plays a sound upon state change</summary>
 	public class AnimatedWorldObjectStateSound : WorldObject
 	{
-		/// <summary>Holds a reference to the host application</summary>
-		private readonly Hosts.HostInterface currentHost;
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
 		/// <summary>The sound buffer array</summary>
@@ -31,9 +28,16 @@ namespace OpenBveApi.Objects
 		private int lastState;
 
 		/// <summary>Creates a new AnimatedWorldObjectStateSound</summary>
-		public AnimatedWorldObjectStateSound(Hosts.HostInterface Host)
+		public AnimatedWorldObjectStateSound(Hosts.HostInterface Host) : base(Host)
 		{
-			currentHost = Host;
+		}
+
+		/// <inheritdoc/>
+		public override WorldObject Clone()
+		{
+			AnimatedWorldObjectStateSound awoss = (AnimatedWorldObjectStateSound)base.Clone();
+			awoss.Source = null;
+			return awoss;
 		}
 
 		/// <inheritdoc/>
@@ -74,7 +78,7 @@ namespace OpenBveApi.Objects
 						else
 						{
 							int bufferIndex = this.Object.CurrentState + 1;
-							if (this.Buffers.Length < bufferIndex || this.Buffers[bufferIndex] == null)
+							if (this.Buffers.Length - 1 < bufferIndex || this.Buffers[bufferIndex] == null)
 							{
 								return;
 							}
@@ -127,33 +131,24 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Creates the animated object within the game world</summary>
-		/// <param name="Position">The absolute position</param>
+		/// <param name="WorldPosition">The absolute position</param>
 		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>
 		/// <param name="AuxTransformation">The auxilary transformation (Placed rail)</param>
-		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
-		/// <param name="TrackPosition">The absolute track position</param>
+		/// <param name="FinalSectionIndex">The index of the section if placed using a SigF command</param>
+		/// <param name="FinalTrackPosition">The absolute track position</param>
 		/// <param name="Brightness">The brightness value at the track position</param>
-		public void Create(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
+		public void Create(Vector3 WorldPosition, Transformation BaseTransformation, Transformation AuxTransformation, int FinalSectionIndex, double FinalTrackPosition, double Brightness)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
-			var o = this.Object.Clone();
-			currentHost.CreateDynamicObject(ref o.internalObject);
-			AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound(currentHost)
-			{
-				Position = Position,
-				Direction = FinalTransformation.Z,
-				Up = FinalTransformation.Y,
-				Side = FinalTransformation.X,
-				Object = o,
-				SectionIndex = SectionIndex,
-				TrackPosition = TrackPosition,
-				Buffers = Buffers,
-				SingleBuffer = SingleBuffer,
-				PlayOnShow = PlayOnShow,
-				PlayOnHide = PlayOnHide
-			};
+			AnimatedWorldObjectStateSound currentObject = (AnimatedWorldObjectStateSound)Clone();
+			currentObject.Position = WorldPosition;
+			currentObject.Direction = FinalTransformation.Z;
+			currentObject.Up = FinalTransformation.Y;
+			currentObject.Side = FinalTransformation.X;
+			currentObject.SectionIndex = FinalSectionIndex;
+			currentObject.TrackPosition = FinalTrackPosition;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{
 				if (currentObject.Object.States[i].Prototype == null)

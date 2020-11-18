@@ -14,7 +14,7 @@ namespace OpenBveApi.Objects
 		private Matrix4D _scale;
 		/// <summary>The rotation matrix to be applied</summary>
 		private Matrix4D _rotate;
-
+		/// <summary>The world position vector</summary>
 		public Vector3 WorldPosition;
 
 		/// <summary>The translation matrix to be applied</summary>
@@ -106,9 +106,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Clones this ObjectState</summary>
 		public object Clone()
 		{
-			ObjectState os = (ObjectState) MemberwiseClone();
-			os.Prototype = Prototype?.Clone() as StaticObject;
-			return os;
+			return MemberwiseClone();
 		}
 	}
 }

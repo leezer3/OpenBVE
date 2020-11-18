@@ -138,11 +138,26 @@ namespace LibRender2
 		/// </summary>
 		public void Dispose()
 		{
-			if (!disposed)
+			if (disposed)
 			{
-				GL.DeleteBuffer(handle);
-				GC.SuppressFinalize(this);
-				disposed = true;
+				return;
+			}
+
+			GL.DeleteBuffer(handle);
+			GC.SuppressFinalize(this);
+			disposed = true;
+		}
+
+		~VertexBufferObject()
+		{
+			if (disposed)
+			{
+				return;
+			}
+
+			lock (BaseRenderer.vboToDelete)
+			{
+				BaseRenderer.vboToDelete.Add(handle);
 			}
 		}
 	}

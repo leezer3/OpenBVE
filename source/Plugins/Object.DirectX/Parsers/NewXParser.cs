@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -321,9 +321,9 @@ namespace Plugin
 					double mPower = block.ReadSingle(); //TODO: Unsure what this does...
 					Color24 mSpecular = new Color24((byte)block.ReadSingle(), (byte)block.ReadSingle(), (byte)block.ReadSingle());
 					builder.Materials[m].EmissiveColor = new Color24((byte)(255 *block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()));
-					builder.Materials[m].EmissiveColorUsed = true; //TODO: Check exact behaviour
+					builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
 					builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
-					builder.Materials[m].TransparentColorUsed = true;
+					builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
 					if (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock(TemplateID.TextureFilename);
@@ -385,6 +385,18 @@ namespace Plugin
 					{
 						builder.Vertices[i] = new ColoredVertex((Vertex)builder.Vertices[i], new Color128(block.ReadSingle(), block.ReadSingle(), block.ReadSingle()));
 					}
+					break;
+				case TemplateID.MeshFaceWraps:
+					int nMeshFaceWraps = block.ReadUInt16();
+					if (nMeshFaceWraps != builder.Faces.Length)
+					{
+						throw new Exception("nMeshFaceWraps must match the number of faces in the mesh");
+					}
+					/*
+					 * MeshFaceWraps is a 2 * boolean array, representing the clamping on X / Y axis for each face
+					 * The current engine only supports clamping on a per-texture basis & this was discontinued in
+					 * later versions of DirectX so just validate this is structurally valid and ignore for the minute
+					 */
 					break;
 			}
 		}

@@ -11,7 +11,7 @@ namespace OpenBve {
 	internal static class Timetable {
 
 		// members (built-in timetable)
-		internal static string DefaultTimetableDescription = "";
+		
 		internal static Texture DefaultTimetableTexture;
 		internal static double DefaultTimetablePosition = 0.0;
 		
@@ -23,15 +23,6 @@ namespace OpenBve {
 		internal static Texture CurrentCustomTimetableNighttimeTexture;
 		internal static double CustomTimetablePosition = 0.0;
 		
-		// members (interface)
-		internal enum TimetableState {
-			None = 0,
-			Custom = 1,
-			Default = 2
-		}
-		/// <summary>Holds the currently displayed timetable state</summary>
-		internal static TimetableState CurrentTimetable = TimetableState.None;
-
 		// data
 		internal struct Time {
 			internal string Hour;
@@ -77,7 +68,7 @@ namespace OpenBve {
 							// update station
 							if (n == Stations.Length)
 							{
-								Array.Resize<Station>(ref Stations, Stations.Length << 1);
+								Array.Resize(ref Stations, Stations.Length << 1);
 							}
 
 							Stations[n].Name = Program.CurrentRoute.Stations[sse.StationIndex].Name;
@@ -133,7 +124,7 @@ namespace OpenBve {
 								int m = n - 1;
 								if (m == Tracks.Length)
 								{
-									Array.Resize<Track>(ref Tracks, Tracks.Length << 1);
+									Array.Resize(ref Tracks, Tracks.Length << 1);
 								}
 
 								// speed
@@ -209,10 +200,10 @@ namespace OpenBve {
 					}
 				}
 
-				Array.Resize<Station>(ref Stations, n);
+				Array.Resize(ref Stations, n);
 				if (n >= 2)
 				{
-					Array.Resize<Track>(ref Tracks, n - 1);
+					Array.Resize(ref Tracks, n - 1);
 				}
 				else
 				{
@@ -249,7 +240,7 @@ namespace OpenBve {
 					float y0 = 8;
 					if (k == 1)
 					{
-						t = DefaultTimetableDescription;
+						t = Program.CurrentRoute.Information.DefaultTimetableDescription;
 						g.DrawString(t, f, Brushes.Black, new RectangleF(x0, 6, descriptionwidth, descriptionheight + 8));
 						y0 += descriptionheight + 2;
 					}
@@ -482,7 +473,7 @@ namespace OpenBve {
 					// description
 					if (k == 0)
 					{
-						t = DefaultTimetableDescription;
+						t = Program.CurrentRoute.Information.DefaultTimetableDescription;
 						s = g.MeasureString(t, f, w - 16);
 						descriptionwidth = s.Width;
 						descriptionheight = s.Height + 2;

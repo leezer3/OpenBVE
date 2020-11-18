@@ -66,174 +66,10 @@ namespace OpenBve
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 		}
 
-		internal void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
-		{
-			if (Prototype != null)
-			{
-				CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0);
-			}
-		}
-
-		internal void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
-		{
-			if (Prototype is StaticObject)
-			{
-				StaticObject s = (StaticObject)Prototype;
-				if (s.Mesh.Faces.Length == 0)
-				{
-					return;
-				}
-				CreateStaticObject(s, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-			}
-			else if (Prototype is AnimatedObjectCollection)
-			{
-				AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
-				a.CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, true);
-			}
-		}
-
-		internal int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
-		{
-			return base.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0);
-		}
-
-		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
-		{
-			StaticObject obj = Prototype as StaticObject;
-
-			if (obj == null)
-			{
-				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
-				return -1;
-			}
-
-			return base.CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-		}
-
-		public override void InitializeVisibility()
-		{
-			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
-			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
-			ObjectsSortedByStartPointer = 0;
-			ObjectsSortedByEndPointer = 0;
-
-			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-
-			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
-			{
-				VisibleObjects.ShowObject(state, ObjectType.Static);
-			}
-		}
-
-		public override void UpdateVisibility(double TrackPosition)
-		{
-			double d = TrackPosition - LastUpdatedTrackPosition;
-			int n = ObjectsSortedByStart.Length;
-			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-
-			if (d < 0.0)
-			{
-				if (ObjectsSortedByStartPointer >= n)
-				{
-					ObjectsSortedByStartPointer = n - 1;
-				}
-
-				if (ObjectsSortedByEndPointer >= n)
-				{
-					ObjectsSortedByEndPointer = n - 1;
-				}
-
-				// dispose
-				while (ObjectsSortedByStartPointer >= 0)
-				{
-					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-
-					if (StaticObjectStates[o].StartingDistance > p + Camera.ForwardViewingDistance)
-					{
-						VisibleObjects.HideObject(StaticObjectStates[o]);
-						ObjectsSortedByStartPointer--;
-					}
-					else
-					{
-						break;
-					}
-				}
-
-				// introduce
-				while (ObjectsSortedByEndPointer >= 0)
-				{
-					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-
-					if (StaticObjectStates[o].EndingDistance >= p - Camera.BackwardViewingDistance)
-					{
-						if (StaticObjectStates[o].StartingDistance <= p + Camera.ForwardViewingDistance)
-						{
-							VisibleObjects.ShowObject(StaticObjectStates[o], ObjectType.Static);
-						}
-
-						ObjectsSortedByEndPointer--;
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-			else if (d > 0.0)
-			{
-				if (ObjectsSortedByStartPointer < 0)
-				{
-					ObjectsSortedByStartPointer = 0;
-				}
-
-				if (ObjectsSortedByEndPointer < 0)
-				{
-					ObjectsSortedByEndPointer = 0;
-				}
-
-				// dispose
-				while (ObjectsSortedByEndPointer < n)
-				{
-					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-
-					if (StaticObjectStates[o].EndingDistance < p - Camera.BackwardViewingDistance)
-					{
-						VisibleObjects.HideObject(StaticObjectStates[o]);
-						ObjectsSortedByEndPointer++;
-					}
-					else
-					{
-						break;
-					}
-				}
-
-				// introduce
-				while (ObjectsSortedByStartPointer < n)
-				{
-					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-
-					if (StaticObjectStates[o].StartingDistance <= p + Camera.ForwardViewingDistance)
-					{
-						if (StaticObjectStates[o].EndingDistance >= p - Camera.BackwardViewingDistance)
-						{
-							VisibleObjects.ShowObject(StaticObjectStates[o], ObjectType.Static);
-						}
-
-						ObjectsSortedByStartPointer++;
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-
-			LastUpdatedTrackPosition = TrackPosition;
-		}
-
 		// render scene
 		internal void RenderScene(double TimeElapsed)
 		{
+			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
 
@@ -282,6 +118,11 @@ namespace OpenBve
 				Program.CurrentRoute.CurrentFog.Color.R = (byte)(Program.CurrentRoute.PreviousFog.Color.R * frc + Program.CurrentRoute.NextFog.Color.R * fr);
 				Program.CurrentRoute.CurrentFog.Color.G = (byte)(Program.CurrentRoute.PreviousFog.Color.G * frc + Program.CurrentRoute.NextFog.Color.G * fr);
 				Program.CurrentRoute.CurrentFog.Color.B = (byte)(Program.CurrentRoute.PreviousFog.Color.B * frc + Program.CurrentRoute.NextFog.Color.B * fr);
+				if (!Program.CurrentRoute.CurrentFog.IsLinear)
+				{
+					Program.CurrentRoute.CurrentFog.Density = (byte)(Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr);
+				}
+				
 			}
 			else
 			{
@@ -307,7 +148,9 @@ namespace OpenBve
 				Fog.Start = aa;
 				Fog.End = bb;
 				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
-				SetFogForImmediateMode();
+				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
+				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;
+				Fog.SetForImmediateMode();
 			}
 			else
 			{
@@ -333,9 +176,7 @@ namespace OpenBve
 				if (OptionFog)
 				{
 					DefaultShader.SetIsFog(true);
-					DefaultShader.SetFogStart(Fog.Start);
-					DefaultShader.SetFogEnd(Fog.End);
-					DefaultShader.SetFogColor(Fog.Color);
+					DefaultShader.SetFog(Fog);
 				}
 				DefaultShader.SetTexture(0);
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
@@ -759,7 +600,7 @@ namespace OpenBve
 						OpenGlString.Draw(Fonts.SmallFont, t.ToString(), new Point((int)x, 36), TextAlignment.TopLeft, Color128.White, true);
 					}
 
-					if (Interface.MessageCount == 1)
+					if (Interface.LogMessages.Count == 1)
 					{
 						keys = new[] { new[] { "F9" } };
 						Keys.Render(4, 72, 24, Fonts.SmallFont, keys);
@@ -774,18 +615,18 @@ namespace OpenBve
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
-					else if (Interface.MessageCount > 1)
+					else if (Interface.LogMessages.Count > 1)
 					{
 						Keys.Render(4, 72, 24, Fonts.SmallFont, new[] { new[] { "F9" } });
 						bool error = Interface.LogMessages.Any(m => m.Type != MessageType.Information);
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.MessageCount} error messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.Red, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} error messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.MessageCount} messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
 

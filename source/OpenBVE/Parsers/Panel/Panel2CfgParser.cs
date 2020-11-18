@@ -1211,7 +1211,7 @@ namespace OpenBve {
 										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White, false);
 										try
 										{
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "panel2timetable", false);
 										}
 										catch
 										{
@@ -1463,6 +1463,12 @@ namespace OpenBve {
 			if (DaytimeTexture != null)
 			{
 				Object.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
+
+				if (NighttimeTexture != null)
+				{
+					// In BVE4 and versions of OpenBVE prior to v1.7.1.0, elements with NighttimeImage defined are rendered with lighting disabled.
+					Object.Mesh.Materials[0].Flags |= MaterialFlags.DisableLighting;
+				}
 			}
 			Object.Mesh.Materials[0].Color = Color;
 			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;

@@ -53,9 +53,8 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="NLayer, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NLayer.1.12.0\lib\net35\NLayer.dll</HintPath>
@@ -63,10 +62,8 @@
     </Reference>
     <Reference Include="NLayer.NAudioSupport, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NLayer.NAudioSupport.1.0.0\lib\net35\NLayer.NAudioSupport.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Plugin.Parser.cs">
@@ -83,16 +80,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <PropertyGroup>
-	  <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-		  mkdir $(TargetDir)Data\Plugins\
-		  move /Y $(TargetDir)$(TargetName).* $(TargetDir)Data\Plugins\
-	  </PostBuildEvent>
-	  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-		  mkdir -p $(TargetDir)Data/Plugins/
-		  mv -f $(TargetDir)$(TargetName).* $(TargetDir)Data/Plugins/
-	  </PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutputFiles Include="$(TargetDir)$(TargetName).*" />
+    </ItemGroup>
+    <Move SourceFiles="@(OutputFiles)" DestinationFolder="$(TargetDir)Data\Plugins\" />
+  </Target>
 </Project>

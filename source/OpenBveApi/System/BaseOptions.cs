@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 
 namespace OpenBveApi
 {
@@ -36,6 +37,33 @@ namespace OpenBveApi
 		public XParsers CurrentXParser;
 		/// <summary>The parser to use for Wavefront Obj objects</summary>
 		public ObjParsers CurrentObjParser;
+		/// <summary>Enables / disables various hacks for BVE related content</summary>
+		public bool EnableBveTsHacks;
+		/// <summary>Stores whether to use fuzzy matching for transparency colors (Matches BVE2 / BVE4 behaviour)</summary>
+		public bool OldTransparencyMode;
+		/// <summary>The viewing distance in meters</summary>
+		public int ViewingDistance;
+		/// <summary>Whether toppling is enabled</summary>
+		public bool Toppling;
+		/// <summary>Whether derailments are enabled</summary>
+		public bool Derailments;
+		/// <summary>The number 1km/h must be multiplied by to produce your desired speed units, or 0.0 to disable this</summary>
+		public double SpeedConversionFactor = 0.0;
+		/// <summary>The unit of speed displayed in in-game messages</summary>
+		public string UnitOfSpeed = "km/h";
+		/// <summary>The default mode for the train's safety system to start in</summary>
+		public TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesAts;
+		/// <summary>The initial destination for any train within the game</summary>
+		public int InitialDestination = -1;
+		/// <summary>The initial camera viewpoint</summary>
+		public int InitialViewpoint = 0;
+		/// <summary>The speed limit for any preceeding AI trains</summary>
+		public double PrecedingTrainSpeedLimit = double.PositiveInfinity;
+		/// <summary>The name of the current train</summary>
+		public string TrainName = "";
+		/// <summary>The current compatibility signal set</summary>
+		public string CurrentCompatibilitySignalSet;
+
 		/*
 		 * Note: Object optimisation takes time whilst loading, but may increase the render performance of an
 		 * object by checking for duplicate vertices etc.

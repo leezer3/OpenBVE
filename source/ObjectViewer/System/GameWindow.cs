@@ -5,7 +5,7 @@ using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
-    class ObjectViewer : OpenTK.GameWindow
+    class ObjectViewer : GameWindow
     {
         //Deliberately specify the default constructor with various overrides
         public ObjectViewer(int width, int height, GraphicsMode currentGraphicsMode, string openbve,
@@ -18,10 +18,9 @@ namespace OpenBve
             }
             catch
             {
+	            //Ignored
             }
         }
-        
-        private static double ReducedModeEnteringTime = 0;
         
         private static double RotateXSpeed = 0.0;
         private static double RotateYSpeed = 0.0;
@@ -39,16 +38,7 @@ namespace OpenBve
             {
                 ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
             }
-            if (Program.ReducedMode)
-            {
-                System.Threading.Thread.Sleep(125);
-            }
-            else
-            {
-                System.Threading.Thread.Sleep(1);
-            }
             bool updatelight = false;
-            bool keep = false;
             // rotate x
             if (Program.RotateX == 0)
             {
@@ -83,7 +73,6 @@ namespace OpenBve
                 Program.Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
                 Program.Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
                 Program.Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
-                keep = true;
             }
             // rotate y
             if (Program.RotateY == 0)
@@ -118,7 +107,6 @@ namespace OpenBve
                 double sina = Math.Sin(RotateYSpeed * timeElapsed);
                 Program.Renderer.Camera.AbsoluteDirection.Rotate(Program.Renderer.Camera.AbsoluteSide, cosa, sina);
                 Program.Renderer.Camera.AbsoluteUp.Rotate(Program.Renderer.Camera.AbsoluteSide, cosa, sina);
-                keep = true;
             }
             // move x
             if (Program.MoveX == 0)
@@ -150,7 +138,6 @@ namespace OpenBve
             if (MoveXSpeed != 0.0)
             {
 	            Program.Renderer.Camera.AbsolutePosition += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide;
-	            keep = true;
             }
             // move y
             if (Program.MoveY == 0)
@@ -182,7 +169,6 @@ namespace OpenBve
             if (MoveYSpeed != 0.0)
             {
 	            Program.Renderer.Camera.AbsolutePosition += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp;
-	            keep = true;
             }
             // move z
             if (Program.MoveZ == 0)
@@ -214,8 +200,6 @@ namespace OpenBve
             if (MoveZSpeed != 0.0)
             {
 	            Program.Renderer.Camera.AbsolutePosition += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection;
-
-                keep = true;
             }
             // lighting
             if (Program.LightingRelative == -1)
@@ -230,7 +214,6 @@ namespace OpenBve
                     Program.LightingRelative -= 0.5 * timeElapsed;
                     if (Program.LightingRelative < 0.0) Program.LightingRelative = 0.0;
                     updatelight = true;
-                    keep = true;
                 }
             }
             else
@@ -240,33 +223,9 @@ namespace OpenBve
                     Program.LightingRelative += 0.5 * timeElapsed;
                     if (Program.LightingRelative > 1.0) Program.LightingRelative = 1.0;
                     updatelight = true;
-                    keep = true;
                 }
             }
             // continue
-            if (Program.ReducedMode)
-            {
-                ReducedModeEnteringTime = 3.0;
-            }
-            else
-            {
-                if (keep)
-                {
-                    ReducedModeEnteringTime =3.0;
-                }
-                else if (ReducedModeEnteringTime <= 0)
-                {
-                    Program.ReducedMode = true;
-                    Program.Renderer.Camera.AbsoluteSide.Y = 0.0;
-                    Program.Renderer.Camera.AbsoluteSide.Normalize();
-                    Program.Renderer.Camera.AbsoluteDirection.Normalize();
-                    Program.Renderer.Camera.AbsoluteUp = Vector3.Cross(Program.Renderer.Camera.AbsoluteDirection, Program.Renderer.Camera.AbsoluteSide);
-                }
-                else
-                {
-                    ReducedModeEnteringTime -= timeElapsed;
-                }
-            }
             if (updatelight)
             {
 				Program.Renderer.Lighting.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
@@ -300,43 +259,11 @@ namespace OpenBve
 	        Program.Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
             Program.Renderer.Initialize(Program.CurrentHost,Interface.CurrentOptions);
             Program.Renderer.Lighting.Initialize();
-            //SwapBuffers();
-            //Fonts.Initialize();
             Program.Renderer.UpdateViewport();
-			// command line arguments
-			// if (commandLineArgs != null)
-			// {
-			//     for (int i = 0; i < commandLineArgs.Length; i++)
-			//     {
-			//         if (!Program.SkipArgs[i] && System.IO.File.Exists(commandLineArgs[i]))
-			//         {
-			//             try
-			//             {
-			//                 UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
-			//                     System.Text.Encoding.UTF8, false, false, false,0,0,0);
-			//                 ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
-			//                     new Transformation(), new Transformation(), true,
-			//                     0.0, 0.0, 25.0, 0.0);
-			//             }
-			//             catch (Exception ex)
-			//             {
-			//                 Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
-			//             }
-			//             Array.Resize<string>(ref Program.Files, Program.Files.Length + 1);
-			//             Program.Files[Program.Files.Length - 1] = commandLineArgs[i];
-			//         }
-			//     }
-			// }
 			Program.Renderer.InitializeVisibility();
             Program.Renderer.UpdateVisibility(0.0, true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
-        }
-
-        public override void Dispose()
-        {
-			Program.Renderer.Finalization();
-
-	        base.Dispose();
+			Program.RefreshObjects();
         }
     }
 }

@@ -172,6 +172,9 @@
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
 						<target>La ruta seleccionada està corrompuda: \r\n No hi ha cap objecte definit.</target>
 					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 						<target>No s'ha pogut carregar l'extensió del tren [plugin].</target>
@@ -203,6 +206,12 @@
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 						<target>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</target>
+					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
 					</trans-unit>
 				</group>
 				<group id="start">

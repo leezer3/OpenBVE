@@ -129,8 +129,7 @@ namespace AssimpNET.Obj
 			Debug.Assert(Model != null);
 			if (Model.DefaultMaterial == null)
 			{
-				Model.DefaultMaterial = new Material();
-				Model.DefaultMaterial.MaterialName = "default";
+				Model.DefaultMaterial = new Material("default");
 			}
 			Load(lines);
 			model = Model;
@@ -261,12 +260,6 @@ namespace AssimpNET.Obj
 			// we have to check if color is default 0 with only one token
 			if (!IsLineEnd(DataIt))
 			{
-				/*
-				 * HACK:
-				 * Using a try/ catch block here so that we don't blow up
-				 * if our color is missing a component or ends with whitespace
-				 * unexpectedly
-				 */
 				try
 				{
 					GetFloat(out g);
@@ -274,6 +267,12 @@ namespace AssimpNET.Obj
 				}
 				catch
 				{
+					/*
+					 * HACK:
+					* Using a try/ catch block here so that we don't blow up
+					* if our color is missing a component or ends with whitespace
+					* unexpectedly
+					*/
 				}
 			}
 			color.G = g;
@@ -517,8 +516,7 @@ namespace AssimpNET.Obj
 			if (!Model.MaterialMap.TryGetValue(name, out tmp))
 			{
 				// New Material created
-				Model.CurrentMaterial = new Material();
-				Model.CurrentMaterial.MaterialName = name;
+				Model.CurrentMaterial = new Material(name);
 				if (Model.CurrentMesh != null)
 				{
 					Model.CurrentMesh.MaterialIndex = (uint)Model.MaterialLib.Count - 1;

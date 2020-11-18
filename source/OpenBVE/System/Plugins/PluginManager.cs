@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using LibRender2.Cameras;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.Stations;
 
 namespace OpenBve {
@@ -174,9 +172,7 @@ namespace OpenBve {
 						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 1 : this.Train.Handles.Brake.Driver;
 					}
 				}
-				int locoBrakeNotch = this.Train.Handles.LocoBrake.Driver;
-				bool constSpeed = this.Train.Specs.CurrentConstSpeed;
-				return new Handles(reverser, powerNotch, brakeNotch, locoBrakeNotch, constSpeed);
+				return new Handles(reverser, powerNotch, brakeNotch, this.Train.Handles.LocoBrake.Driver, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);
 			}
 			/// <summary>Sets the driver handles or the virtual handles.</summary>
 			/// <param name="handles">The handles.</param>
@@ -328,6 +324,7 @@ namespace OpenBve {
 				 * Process the const speed system.
 				 * */
 				this.Train.Specs.CurrentConstSpeed = handles.ConstSpeed & this.Train.Specs.HasConstSpeed;
+				this.Train.Handles.HoldBrake.Actual = handles.HoldBrake & this.Train.Handles.HasHoldBrake;
 			}
 			/// <summary>Called every frame to update the plugin.</summary>
 			/// <param name="data">The data passed to the plugin on Elapse.</param>
@@ -458,7 +455,8 @@ namespace OpenBve {
 			protected abstract void SetBeacon(BeaconData beacon);
 			/// <summary>Updates the AI.</summary>
 			/// <returns>The AI response.</returns>
-			internal AIResponse UpdateAI() {
+			internal AIResponse UpdateAI()
+			{
 				if (this.SupportsAI) {
 					AIData data = new AIData(GetHandles());
 					this.PerformAI(data);
@@ -466,9 +464,8 @@ namespace OpenBve {
 						SetHandles(data.Handles, false);
 					}
 					return data.Response;
-				} else {
-					return AIResponse.None;
 				}
+				return AIResponse.None;
 			}
 			/// <summary>Called when the AI should be performed.</summary>
 			/// <param name="data">The AI data.</param>

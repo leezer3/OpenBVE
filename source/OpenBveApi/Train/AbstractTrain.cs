@@ -7,6 +7,8 @@ namespace OpenBveApi.Trains
 	{
 		/// <summary>The current state of the train</summary>
 		public TrainState State;
+		/// <summary>Holds the AI controlling the train if any</summary>
+		public GeneralAI AI;
 		/// <summary>The current station state</summary>
 		public TrainStopState StationState;
 		/// <summary>Defines whether the next stop is skipped</summary>

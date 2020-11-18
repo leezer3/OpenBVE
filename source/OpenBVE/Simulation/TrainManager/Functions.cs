@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender2.Screens;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
 
@@ -58,7 +59,7 @@ namespace OpenBve
 				{
 					if (train.Plugin != null)
 					{
-						train.Plugin.BeginJump((OpenBveApi.Runtime.InitializationModes)Game.TrainStart);
+						train.Plugin.BeginJump((OpenBveApi.Runtime.InitializationModes)Interface.CurrentOptions.TrainStart);
 					}
 				}
 				for (int h = 0; h < train.Cars.Length; h++)
@@ -171,7 +172,8 @@ namespace OpenBve
 
 		internal static void JumpTFO()
 		{
-			foreach (var Train in TFOs)
+			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
+			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.Dispose();
 				Train.State = TrainState.Pending;
@@ -193,7 +195,8 @@ namespace OpenBve
 				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
 			}
 
-			foreach (var Train in TFOs)
+			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
+			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.UpdateObjects(TimeElapsed, ForceUpdate);
 			}

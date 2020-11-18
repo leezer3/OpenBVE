@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -35,12 +35,15 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.3.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.3.1\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backgrounds\Background.cs" />
@@ -49,7 +52,6 @@
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestriction.cs" />
     <Compile Include="Fog\Fog.cs" />
-    <Compile Include="Lighting\LightDefinition.cs" />
     <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Loading\Loading.cs" />
     <Compile Include="MotionBlur\MotionBlur.cs" />
@@ -58,11 +60,10 @@
     <Compile Include="Objects\ObjectLibrary.cs" />
     <Compile Include="openGL\FrameBufferObject.cs" />
     <Compile Include="openGL\IndexBufferObject.cs" />
-    <Compile Include="openGL\IndexBufferObjectI.cs" />
-    <Compile Include="openGL\IndexBufferObjectU.cs" />
     <Compile Include="openGL\ShaderLayout.cs" />
     <Compile Include="openGL\VertexArrayObject.cs" />
     <Compile Include="openGL\VertexBufferObject.cs" />
+    <Compile Include="Overlays\DisplayedTimetable.cs" />
     <Compile Include="Overlays\Keys.cs" />
     <Compile Include="Overlays\Marker.cs" />
     <Compile Include="Overlays\TimeTableMode.cs" />
@@ -89,8 +90,6 @@
   <ItemGroup>
     <EmbeddedResource Include="..\..\assets\Shaders\default.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\default.vert" />
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config" />
     <EmbeddedResource Include="..\..\assets\Shaders\picking.frag" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +100,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Overlays\Messages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="OpenTK.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

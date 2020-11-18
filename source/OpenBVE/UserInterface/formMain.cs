@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -44,8 +45,6 @@ namespace OpenBve {
 			internal System.Text.Encoding RouteEncoding;
 			/// <summary>The absolute on-disk path of the train folder to start the simulation with</summary>
 			internal string TrainFolder;
-			/// <summary>The absolute on-disk path of the current compatibility signal set</summary>
-			internal string CompatabilitySignalSet;
 			/// <summary>The text encoding of the selected train</summary>
 			internal System.Text.Encoding TrainEncoding;
 			/// <summary>Whether the consist of the train is to be reversed on start</summary>
@@ -444,7 +443,7 @@ namespace OpenBve {
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (Decimal)Interface.CurrentOptions.KioskModeTimer;
 			ListInputDevicePlugins();
-			if (Program.CurrentlyRunningOnMono)
+			if (Program.CurrentHost.MonoRuntime)
 			{
 				//HACK: If we're running on Mono, manually select the tabpage at start. This avoids the 'grey tab' bug
 				tabcontrolRouteSelection.SelectedTab = tabpageRouteBrowse;
@@ -978,7 +977,7 @@ namespace OpenBve {
 					{
 						if (Interface.CurrentOptions.RecentlyUsedRoutes.Length < Interface.CurrentOptions.RecentlyUsedLimit)
 						{
-							Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedRoutes, i + 1);
+							Array.Resize(ref Interface.CurrentOptions.RecentlyUsedRoutes, i + 1);
 						}
 						else {
 							i--;
@@ -1004,7 +1003,7 @@ namespace OpenBve {
 					{
 						if (Interface.CurrentOptions.RecentlyUsedTrains.Length < Interface.CurrentOptions.RecentlyUsedLimit)
 						{
-							Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedTrains, i + 1);
+							Array.Resize(ref Interface.CurrentOptions.RecentlyUsedTrains, i + 1);
 						}
 						else {
 							i--;
@@ -1029,7 +1028,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<string>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.RecentlyUsedRoutes = a;
 			}
 			// remove non-existing recently used trains
@@ -1044,7 +1043,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<string>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.RecentlyUsedTrains = a;
 			}
 			// remove non-existing route encoding mappings
@@ -1059,7 +1058,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.RouteEncodings = a;
 			}
 			// remove non-existing train encoding mappings
@@ -1074,7 +1073,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
 			{
@@ -1093,7 +1092,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<string>(ref a, n);
+				Array.Resize(ref a, n);
 				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}
 			Program.Sounds.Deinitialize();
@@ -1345,9 +1344,14 @@ namespace OpenBve {
 			if (radioButtonPackages.Checked)
 			{
 				ResetInstallerPanels();
-				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
+				string errorMessage;
+				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile, out errorMessage))
 				{
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
+				}
+				if (errorMessage != string.Empty)
+				{
+					MessageBox.Show(Translations.GetInterfaceString(errorMessage));
 				}
 				comboBoxPackageType.SelectedIndex = 0;
 			}
@@ -1380,7 +1384,7 @@ namespace OpenBve {
 			//This fixes the main form failing to close on Linux
 			formMain_FormClosing();
 			Application.DoEvents();
-			if (Program.CurrentlyRunningOnMono && sender != StartGame)
+			if (Program.CurrentHost.MonoRuntime && sender != StartGame)
 			{
 				//On some systems, the process *still* seems to hang around
 				//https://github.com/leezer3/OpenBVE/issues/213
@@ -1411,22 +1415,23 @@ namespace OpenBve {
 		private void timerEvents_Tick(object sender, EventArgs e)
 		{
 			Program.Joysticks.RefreshJoysticks();
-			if (currentJoystickStates == null || currentJoystickStates.Length < JoystickManager.AttachedJoysticks.Length)
+			if (currentJoystickStates == null || currentJoystickStates.Length < JoystickManager.AttachedJoysticks.Values.Count)
 			{
-				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Length];
+				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Values.Count];
 			}	
 			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
 
-				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
+				for (int k = 0; k < JoystickManager.AttachedJoysticks.Count; k++)
 				{
-					JoystickManager.AttachedJoysticks[k].Poll();
-					bool railDriver = JoystickManager.AttachedJoysticks[k] is JoystickManager.Raildriver;
-					int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
+					Guid guid = JoystickManager.AttachedJoysticks.ElementAt(k).Key;
+					JoystickManager.AttachedJoysticks[guid].Poll();
+					bool railDriver = JoystickManager.AttachedJoysticks[guid] is JoystickManager.Raildriver;
+					int axes = JoystickManager.AttachedJoysticks[guid].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{
-							double a = JoystickManager.AttachedJoysticks[k].GetAxis(i);
+							double a = JoystickManager.AttachedJoysticks[guid].GetAxis(i);
 							if (a < -0.75)
 							{
 								if (railDriver)
@@ -1438,7 +1443,7 @@ namespace OpenBve {
 									}
 								Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
 								}
-								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Device = guid;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = -1;
@@ -1453,7 +1458,7 @@ namespace OpenBve {
 								{
 									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
 								}
-								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Device = guid;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = 1;
@@ -1463,16 +1468,16 @@ namespace OpenBve {
 								return;
 							}
 						}
-						int buttons = JoystickManager.AttachedJoysticks[k].ButtonCount();
+						int buttons = JoystickManager.AttachedJoysticks[guid].ButtonCount();
 						for (int i = 0; i < buttons; i++)
 						{
-							if (JoystickManager.AttachedJoysticks[k].GetButton(i) == ButtonState.Pressed)
+							if (JoystickManager.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
 							{
 								if (railDriver)
 								{
 									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
 								}
-								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Device = guid;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = 1;
@@ -1482,13 +1487,13 @@ namespace OpenBve {
 								return;
 							}
 						}
-						int hats = JoystickManager.AttachedJoysticks[k].HatCount();
+						int hats = JoystickManager.AttachedJoysticks[guid].HatCount();
 						for (int i = 0; i < hats; i++)
 						{
-							JoystickHatState hat = JoystickManager.AttachedJoysticks[k].GetHat(i);
+							JoystickHatState hat = JoystickManager.AttachedJoysticks[guid].GetHat(i);
 							if (hat.Position != HatPosition.Centered)
 							{
-								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Device = guid;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Hat;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = (int)hat.Position;
@@ -1711,32 +1716,38 @@ namespace OpenBve {
 
 		private void buttonSetRouteDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void buttonTrainInstallationDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void buttonOtherDirectory_Click(object sender, EventArgs e)
 		{
-			var folderSelectDialog = new FolderBrowserDialog();
-			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+			using (var folderSelectDialog = new FolderBrowserDialog())
 			{
-				Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+				}
+				textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 			}
-			textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 		}
 
 		private void comboBoxCompressionFormat_SelectedIndexChanged(object sender, EventArgs e)
@@ -1789,7 +1800,7 @@ namespace OpenBve {
 
 		private void comboBoxCompatibilitySignals_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Result.CompatabilitySignalSet = compatibilitySignals[comboBoxCompatibilitySignals.GetItemText(comboBoxCompatibilitySignals.SelectedItem)]; //Cheat by using the name as the dictionary key!
+			Interface.CurrentOptions.CurrentCompatibilitySignalSet = compatibilitySignals[comboBoxCompatibilitySignals.GetItemText(comboBoxCompatibilitySignals.SelectedItem)]; //Cheat by using the name as the dictionary key!
 		}
 	}
 }

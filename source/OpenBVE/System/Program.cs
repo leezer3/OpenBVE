@@ -8,9 +8,9 @@ using System.Windows.Forms;
 using OpenBve.Graphics;
 using OpenTK;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using RouteManager2;
 
 namespace OpenBve {
@@ -24,18 +24,7 @@ namespace OpenBve {
 #pragma warning disable IDE1006 // Suppress the VS2017 naming style rule, as this is an external syscall
 		private static extern uint getuid();
 #pragma warning restore IDE1006
-
-		// --- members ---
-
-		/// <summary>Whether the program is currently running on Mono. This is of interest for the Windows Forms main menu which behaves differently on Mono than on Microsoft .NET.</summary>
-		internal static bool CurrentlyRunningOnMono = false;
 		
-		/// <summary>Whether the program is currently running on Microsoft Windows or compatible. This is of interest for whether running Win32 plugins is possible.</summary>
-		internal static bool CurrentlyRunningOnWindows = false;
-
-		/// <summary>Whether the program is currently running on MacOS</summary>
-		internal static bool CurrentlyRunningOnMacOS = false;
-
 		/// <summary>Stores the current CPU architecture</summary>
 		internal static ImageFileMachine CurrentCPUArchitecture;
 
@@ -87,13 +76,8 @@ namespace OpenBve {
 			
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			//--- determine the running environment ---
-			//I wonder if disabling this hack will stop the craashing on Linux....
-			CurrentlyRunningOnMono = Type.GetType("Mono.Runtime") != null;
-			//Doesn't appear to, but Mono have fixed the button appearance bug
-			CurrentlyRunningOnWindows = Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT;
-			Joysticks = new JoystickManager();
 			CurrentHost = new Host();
+			Joysticks = new JoystickManager();
 			try {
 				FileSystem = FileSystem.FromCommandLineArgs(args);
 				FileSystem.CreateFileSystem();
@@ -106,59 +90,14 @@ namespace OpenBve {
 			Sounds = new Sounds();
 			CurrentRoute = new CurrentRoute(Renderer);
 
+
 			//Platform specific startup checks
-			if (CurrentlyRunningOnMono && !CurrentlyRunningOnWindows)
+			// --- Check if we're running as root, and prompt not to ---
+			if (CurrentHost.Platform == HostPlatform.GNULinux && getuid() == 0)
 			{
-				// --- Check if we're running as root, and prompt not to ---
-				if (getuid() == 0)
-				{
-					MessageBox.Show(
-						"You are currently running as the root user." + System.Environment.NewLine +
-						"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				}
-
-				if (File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
-				{
-					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
-					CurrentlyRunningOnMacOS = true;
-				}
-			}
-			else
-			{
-				if (!System.IO.File.Exists(System.IO.Path.Combine(Environment.SystemDirectory, "OpenAL32.dll")))
-				{
-					
-					MessageBox.Show(
-						"OpenAL was not found on your system, and will now be installed." + System.Environment.NewLine + System.Environment.NewLine +
-						"Please follow the install prompts.", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-
-					ProcessStartInfo info = new ProcessStartInfo(Path.Combine(FileSystem.DataFolder, "Dependencies\\Win32\\oalinst.exe"));
-					info.UseShellExecute = true;
-					if (Environment.OSVersion.Version.Major >= 6)
-					{
-						info.Verb = "runas";
-					}
-					try
-					{
-						Process p = Process.Start(info);
-						if (p != null)
-						{
-							p.WaitForExit();
-						}
-						else
-						{
-							//For unknown reasons, the process failed to trigger, but did not raise an exception itself
-							//Throw one
-							throw new Win32Exception();
-						}
-					}
-					catch (Win32Exception)
-					{
-						MessageBox.Show(
-						"An error occured during OpenAL installation....", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					}
-					
-				}
+				MessageBox.Show(
+					"You are currently running as the root user." + System.Environment.NewLine +
+					"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 
 
@@ -204,16 +143,39 @@ namespace OpenBve {
 			}
 			// --- if a route was provided but no train, try to use the route default ---
 			if (result.RouteFile != null & result.TrainFolder == null) {
-				bool isRW = string.Equals(System.IO.Path.GetExtension(result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-				CsvRwRouteParser.ParseRoute(result.RouteFile, isRW, result.RouteEncoding, null, null, null, null, true);
-				if (!string.IsNullOrEmpty(Game.TrainName)) {
+				if (!Plugins.LoadPlugins())
+				{
+					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+				}
+				Game.Reset(false);
+				bool loaded = false;
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(result.RouteFile))
+					{
+						object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+						Program.CurrentHost.Plugins[i].Route.LoadRoute(result.RouteFile, result.RouteEncoding, null, null, null, true, ref Route);
+						Program.CurrentRoute = (CurrentRoute) Route;
+						Program.Renderer.Lighting.OptionAmbientColor = CurrentRoute.Atmosphere.AmbientLightColor;
+						Program.Renderer.Lighting.OptionDiffuseColor = CurrentRoute.Atmosphere.DiffuseLightColor;
+						Program.Renderer.Lighting.OptionLightPosition = CurrentRoute.Atmosphere.LightPosition;
+						loaded = true;
+						break;
+					}
+				}
+				Plugins.UnloadPlugins();
+				if (!loaded)
+				{
+					throw new Exception("No plugins capable of loading routefile " + result.RouteFile + " were found.");
+				}
+				if (!string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 					folder = System.IO.Path.GetDirectoryName(result.RouteFile);
 					while (true) {
 						string trainFolder = OpenBveApi.Path.CombineDirectory(folder, "Train");
 						if (System.IO.Directory.Exists(trainFolder)) {
 							try
 							{
-								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Game.TrainName);
+								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
 							}
 							catch (Exception ex)
 							{
@@ -245,7 +207,7 @@ namespace OpenBve {
 						}
 					}
 				}
-				Game.Reset(false, false);
+				Game.Reset(false);
 			}
 			// --- show the main menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {

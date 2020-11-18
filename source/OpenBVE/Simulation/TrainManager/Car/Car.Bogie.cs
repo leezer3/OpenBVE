@@ -146,11 +146,12 @@ namespace OpenBve
 				}
 			}
 
-			internal void LoadCarSections(UnifiedObject currentObject)
+			internal void LoadCarSections(UnifiedObject currentObject, bool visibleFromInterior)
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
 				CarSections[j] = new CarSection(Program.Renderer, false);
+				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;

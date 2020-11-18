@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Hosts;
+﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -8,8 +8,6 @@ namespace OpenBveApi.Objects
 	/// <summary>A container object for an animated object which follows a track</summary>
 	public class TrackFollowingObject : WorldObject
 	{
-		/// <summary>Holds a reference to the host application</summary>
-		private readonly HostInterface currentHost;
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
 		/// <summary>The front axle follower</summary>
@@ -28,11 +26,16 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates a new Track Following Object</summary>
 		/// <param name="Host">The host application</param>
-		public TrackFollowingObject(HostInterface Host)
+		public TrackFollowingObject(Hosts.HostInterface Host) : base(Host)
 		{
-			currentHost = Host;
 			FrontAxleFollower = new TrackFollower(currentHost);
 			RearAxleFollower = new TrackFollower(currentHost);
+		}
+
+		/// <inheritdoc/>
+		public override WorldObject Clone()
+		{
+			throw new NotSupportedException();
 		}
 
 		/// <inheritdoc/>
@@ -49,7 +52,7 @@ namespace OpenBveApi.Objects
 					if (base.Visible)
 					{
 						//Calculate the distance travelled
-						double delta = UpdateTrackFollowerScript(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, TrackPosition, Position, true, timeDelta);
+						double delta = UpdateTrackFollowerScript(false, NearestTrain, NearestTrain?.DriverCar ?? 0, SectionIndex, TrackPosition, Position, true, timeDelta);
 						//Update the front and rear axle track followers
 						FrontAxleFollower.UpdateAbsolute((TrackPosition + FrontAxlePosition) + delta, true, true);
 						RearAxleFollower.UpdateAbsolute((TrackPosition + RearAxlePosition) + delta, true, true);
@@ -60,7 +63,7 @@ namespace OpenBveApi.Objects
 					}
 
 					//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
-					Object.Update(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(false, NearestTrain, NearestTrain?.DriverCar ?? 0, SectionIndex, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
 				}
 				else
 				{

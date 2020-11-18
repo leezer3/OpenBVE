@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Packages;
 using System.Text;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -21,7 +22,7 @@ namespace OpenBve
 		 * 
 		 * Package manipulation is handled by the OpenBveApi.Packages namespace
 		 */
-		private static bool creatingPackage = false;
+		private PackageOperation currentOperation = PackageOperation.None;
 		private PackageType newPackageType;
 		private string ImageFile;
 		private BackgroundWorker workerThread = new BackgroundWorker();
@@ -37,10 +38,16 @@ namespace OpenBve
 			{
 				MessageBox.Show(Translations.GetInterfaceString("packages_database_save_error"));
 			}
-			if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
+
+			string errorMessage;
+			if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile, out errorMessage))
 			{
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				comboBoxPackageType.SelectedIndex = 0;
+			}
+			if (errorMessage != string.Empty)
+			{
+				MessageBox.Show(Translations.GetInterfaceString(errorMessage));
 			}
 			currentPackage = null;
 		}
@@ -51,7 +58,7 @@ namespace OpenBve
 
 		private void buttonInstall_Click(object sender, EventArgs e)
 		{
-			if (creatingPackage)
+			if (currentOperation == PackageOperation.Creating)
 			{
 				if (textBoxPackageName.Text == Translations.GetInterfaceString("packages_selection_none"))
 				{
@@ -78,7 +85,7 @@ namespace OpenBve
 				//Only set properties after making the checks
 
 				
-				if (Program.CurrentlyRunningOnMono)
+				if (Program.CurrentHost.MonoRuntime)
 				{
 					//HACK: Mono's WinForms implementation appears to be setting the encoding for a textbox to be Encoding.Default
 					//as opposed to UTF-8 under Microsoft .Net 
@@ -106,7 +113,7 @@ namespace OpenBve
 				return;
 			}
 
-			List<Package> Dependancies = Database.checkDependsReccomends(currentPackage.Dependancies);
+			List<Package> Dependancies = Database.checkDependsReccomends(currentPackage.Dependancies.ToList());
 			if (Dependancies != null)
 			{
 				//We are missing a dependancy
@@ -118,7 +125,7 @@ namespace OpenBve
 				panelDependancyError.Show();
 				return;
 			}
-			List<Package> Reccomendations = Database.checkDependsReccomends(currentPackage.Reccomendations);
+			List<Package> Reccomendations = Database.checkDependsReccomends(currentPackage.Reccomendations.ToList());
 			if (Reccomendations != null)
 			{
 				//We are missing a reccomendation
@@ -227,7 +234,7 @@ namespace OpenBve
 
 		private void buttonInstallFinished_Click(object sender, EventArgs e)
 		{
-			if (!creatingPackage)
+			if (currentOperation != PackageOperation.Creating)
 			{
 				RefreshPackages();
 			}
@@ -242,8 +249,16 @@ namespace OpenBve
 		private void buttonProceedAnyway_Click(object sender, EventArgs e)
 		{
 			panelDependancyError.Hide();
-			labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet");
-			Extract(oldPackage);
+			if (currentOperation == PackageOperation.Uninstalling)
+			{
+				UninstallPackage(currentPackage, true);
+			}
+			else
+			{
+				labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet");
+				Extract(oldPackage);
+			}
+			
 		}
 
 		private void Extract(Package packageToReplace = null)
@@ -282,7 +297,6 @@ namespace OpenBve
 			{
 				if (!ProblemEncountered)
 				{
-
 					switch (currentPackage.PackageType)
 					{
 						case PackageType.Route:
@@ -325,6 +339,7 @@ namespace OpenBve
 							Database.currentDatabase.InstalledOther.Add(currentPackage);
 							break;
 					}
+					Database.currentDatabase.AddDependancies(currentPackage);
 					labelInstallSuccess1.Text = Translations.GetInterfaceString("packages_install_success");
 					labelInstallSuccess2.Text = Translations.GetInterfaceString("packages_install_success_header");
 					labelListFilesInstalled.Text = Translations.GetInterfaceString("packages_install_success_files");
@@ -365,7 +380,7 @@ namespace OpenBve
 			}
 			//Update the text, but don't change the tab- Do this when the worker terminates
 			ProblemEncountered = true;
-			if (!creatingPackage)
+			if (currentOperation != PackageOperation.Creating)
 			{
 				labelInstallSuccess1.Text = Translations.GetInterfaceString("packages_install_failure");
 				labelInstallSuccess2.Text = Translations.GetInterfaceString("packages_install_failure_header");
@@ -377,11 +392,11 @@ namespace OpenBve
 			}
 			labelListFilesInstalled.Text = Translations.GetInterfaceString("packages_creation_failure_error");
 			buttonInstallFinish.Text = Translations.GetInterfaceString("packages_success");
-			if (e.Exception is UnauthorizedAccessException && !creatingPackage)
+			if (e.Exception is UnauthorizedAccessException && currentOperation != PackageOperation.Creating)
 			{
 				//User attempted to install in a directory which requires UAC access
 				textBoxFilesInstalled.Text = e.Exception.Message + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_checkaccess");
-				if (Program.CurrentlyRunningOnWindows)
+				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 				{
 					textBoxFilesInstalled.Text+= Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_badlocation");
 				}
@@ -483,17 +498,33 @@ namespace OpenBve
 		}
 
 		/// <summary>This method should be called to uninstall a package</summary>
-		internal void UninstallPackage(Package packageToUninstall, ref List<Package> Packages)
+		internal void UninstallPackage(Package packageToUninstall, bool force = false)
 		{
-
-			string uninstallResults = "";
-			List<Package> brokenDependancies = Database.CheckUninstallDependancies(packageToUninstall.Dependancies);
-			if (brokenDependancies.Count != 0)
+			currentOperation = PackageOperation.Uninstalling;
+			List<Package> Packages;
+			switch (packageToUninstall.PackageType)
 			{
-				PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false, false, false);
+				case PackageType.Route:
+					Packages = Database.currentDatabase.InstalledRoutes;
+					break;
+				case PackageType.Train:
+					Packages = Database.currentDatabase.InstalledTrains;
+					break;
+				case PackageType.Other:
+					Packages = Database.currentDatabase.InstalledOther;
+					break;
+				default:
+					throw new Exception("Unknown package type");
+			}
+			string uninstallResults = "";
+			List<Package> brokenDependancies = Database.CheckUninstallDependancies(packageToUninstall.DependantPackages);
+			if (brokenDependancies.Count != 0 && force == false)
+			{
+				PopulatePackageList(brokenDependancies, dataGridViewDependancies, false, false, false);
 				labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_uninstall_broken");
 				HidePanels();
 				panelDependancyError.Show();
+				return;
 			}
 			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder, ref uninstallResults))
 			{
@@ -536,6 +567,7 @@ namespace OpenBve
 			}
 			HidePanels();
 			panelUninstallResult.Show();
+			currentOperation = PackageOperation.None;
 		}
 
 
@@ -607,14 +639,14 @@ namespace OpenBve
 				switch (currentPackage.PackageType)
 				{
 					case PackageType.Route:
-						UninstallPackage(currentPackage, ref Database.currentDatabase.InstalledRoutes);
+						UninstallPackage(currentPackage);
 						break;
 					case PackageType.Train:
-						UninstallPackage(currentPackage, ref Database.currentDatabase.InstalledTrains);
+						UninstallPackage(currentPackage);
 						break;
 					case PackageType.Other:
 					case PackageType.Loksim3D:
-						UninstallPackage(currentPackage, ref Database.currentDatabase.InstalledOther);
+						UninstallPackage(currentPackage);
 						break;
 				}
 			}
@@ -822,7 +854,7 @@ namespace OpenBve
 				{
 					throw new DirectoryNotFoundException(directory);
 				}
-				if (!Program.CurrentlyRunningOnMono)
+				if (!Program.CurrentHost.MonoRuntime)
 				{
 					//Mono doesn't support System.Security.AccessControl, so this doesn't work....
 					Directory.GetAccessControl(directory);
@@ -934,7 +966,7 @@ namespace OpenBve
 				return;
 			}
 			buttonSelectPackage.Text = Translations.GetInterfaceString("packages_creation_proceed");
-			creatingPackage = true;
+			currentOperation = PackageOperation.Creating;
 			switch (newPackageType)
 			{
 				case PackageType.Route:
@@ -974,7 +1006,7 @@ namespace OpenBve
 
 		private void pictureBoxPackageImage_Click(object sender, EventArgs e)
 		{
-			if (creatingPackage)
+			if (currentOperation == PackageOperation.Creating)
 			{
 				if (openPackageFileDialog.ShowDialog() == DialogResult.OK)
 				{
@@ -1157,7 +1189,7 @@ namespace OpenBve
 
 		private void linkLabelPackageWebsite_Click(object sender, EventArgs e)
 		{
-			if (creatingPackage)
+			if (currentOperation == PackageOperation.Creating)
 			{
 				if (ShowInputDialog(ref currentPackage.Website) == DialogResult.OK)
 				{
@@ -1548,7 +1580,7 @@ namespace OpenBve
 		{
 			HidePanels();
 			panelPackageList.Show();
-			creatingPackage = false;
+			currentOperation = PackageOperation.None;
 			//Reset radio buttons in the installer
 			radioButtonQ1Yes.Checked = false;
 			radioButtonQ1No.Checked = false;
@@ -1570,7 +1602,7 @@ namespace OpenBve
 			textBoxPackageVersion.ReadOnly = true;
 			textBoxPackageAuthor.ReadOnly = true;
 			//Set variables to uninitialised states
-			creatingPackage = false;
+			currentOperation = PackageOperation.None;
 			currentPackage = null;
 			dependantPackage = null;
 			newPackageType = PackageType.NotFound;
@@ -1613,7 +1645,7 @@ namespace OpenBve
 
 		private void buttonBack2_Click(object sender, EventArgs e)
 		{
-			if (!creatingPackage)
+			if (currentOperation != PackageOperation.Creating)
 			{
 				ResetInstallerPanels();
 			}

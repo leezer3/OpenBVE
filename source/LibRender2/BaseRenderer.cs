@@ -137,6 +137,9 @@ namespace LibRender2
 		/// <summary>The previous debug output mode</summary>
 		public OutputMode PreviousOutputMode = OutputMode.Default;
 
+		/// <summary>The currently displayed timetable</summary>
+		public DisplayedTimetable CurrentTimetable = DisplayedTimetable.None;
+
 		/// <summary>The total number of OpenGL triangles in the current frame</summary>
 		public int InfoTotalTriangles;
 
@@ -185,6 +188,14 @@ namespace LibRender2
 			set;
 		}
 
+		/*
+		 * List of VBO and IBO to delete on the next frame pass
+		 * This needs to be done here as opposed to in the finalizer
+		 */
+		internal static readonly List<int> vaoToDelete = new List<int>();
+		internal static readonly List<int> vboToDelete = new List<int>();
+		internal static readonly List<int> iboToDelete = new List<int>();
+
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
 
 		protected BaseRenderer()
@@ -208,7 +219,10 @@ namespace LibRender2
 
 			try
 			{
-				DefaultShader = new Shader(this,"default", "default", true);
+				if (DefaultShader == null)
+				{
+					DefaultShader = new Shader(this, "default", "default", true);
+				}
 				DefaultShader.Activate();
 				DefaultShader.SetMaterialAmbient(Color32.White);
 				DefaultShader.SetMaterialDiffuse(Color32.White);
@@ -257,21 +271,35 @@ namespace LibRender2
 			GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 		}
 
-		public void Finalization()
+		/// <summary>Performs cleanup of disposed resources</summary>
+		public void ReleaseResources()
 		{
-			foreach (FrameBufferObject fbo in FrameBufferObject.Disposable)
+			//Must remember to lock on the lists as the destructor is in a different thread
+			lock (vaoToDelete)
 			{
-				fbo.Dispose();
+				foreach (int VAO in vaoToDelete)
+				{
+					GL.DeleteVertexArray(VAO);
+				}
+				vaoToDelete.Clear();
 			}
 
-			foreach (VertexArrayObject vao in VertexArrayObject.Disposable)
+			lock (vboToDelete)
 			{
-				vao.Dispose();
+				foreach (int VBO in vboToDelete)
+				{
+					GL.DeleteBuffer(VBO);
+				}
+				vboToDelete.Clear();
 			}
 
-			foreach (Shader shader in Shader.Disposable)
+			lock (iboToDelete)
 			{
-				shader.Dispose();
+				foreach (int IBO in iboToDelete)
+				{
+					GL.DeleteBuffer(IBO);
+				}
+				iboToDelete.Clear();
 			}
 		}
 
@@ -325,100 +353,20 @@ namespace LibRender2
 
 		public void Reset()
 		{
+			currentHost.AnimatedObjectCollectionCache.Clear();
+			currentHost.StaticObjectCache.Clear();
+			TextureManager.UnloadAllTextures();
+
 			Initialize(currentHost, currentOptions);
 		}
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
-			if (Prototype == null)
-			{
-				return -1;
-			}
-
-			float startingDistance = Single.MaxValue;
-			float endingDistance = Single.MinValue;
-
-			if (AccurateObjectDisposal)
-			{
-				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
-				{
-					Vector3 Coordinates = new Vector3(vertex.Coordinates);
-					Coordinates.Rotate(AuxTransformation);
-
-					if (Coordinates.Z < startingDistance)
-					{
-						startingDistance = (float)Coordinates.Z;
-					}
-
-					if (Coordinates.Z > endingDistance)
-					{
-						endingDistance = (float)Coordinates.Z;
-					}
-				}
-
-				startingDistance += (float)AccurateObjectDisposalZOffset;
-				endingDistance += (float)AccurateObjectDisposalZOffset;
-			}
-
-			const double minBlockLength = 20.0;
-
-			if (BlockLength < minBlockLength)
-			{
-				BlockLength *= Math.Ceiling(minBlockLength / BlockLength);
-			}
-
-			if (AccurateObjectDisposal)
-			{
-				startingDistance += (float)TrackPosition;
-				endingDistance += (float)TrackPosition;
-				double z = BlockLength * Math.Floor(TrackPosition / BlockLength);
-				StartingDistance = Math.Min(z - BlockLength, startingDistance);
-				EndingDistance = Math.Max(z + 2.0 * BlockLength, endingDistance);
-				startingDistance = (float)(BlockLength * Math.Floor(StartingDistance / BlockLength));
-				endingDistance = (float)(BlockLength * Math.Ceiling(EndingDistance / BlockLength));
-			}
-			else
-			{
-				startingDistance = (float)StartingDistance;
-				endingDistance = (float)EndingDistance;
-			}
-
-			StaticObjectStates.Add(new ObjectState
-			{
-				Prototype = Prototype,
-				Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z),
-				//FIXME: This seems to need to be the 'wrong' way around. Need to standardise on Matrices throughout?
-				Rotate = (Matrix4D)new Transformation(AuxTransformation, BaseTransformation),
-				Brightness = Brightness,
-				StartingDistance = startingDistance,
-				EndingDistance = endingDistance
-			});
-
-			foreach (MeshFace face in Prototype.Mesh.Faces)
-			{
-				switch (face.Flags & MeshFace.FaceTypeMask)
-				{
-					case MeshFace.FaceTypeTriangles:
-						InfoTotalTriangles++;
-						break;
-					case MeshFace.FaceTypeTriangleStrip:
-						InfoTotalTriangleStrip++;
-						break;
-					case MeshFace.FaceTypeQuads:
-						InfoTotalQuads++;
-						break;
-					case MeshFace.FaceTypeQuadStrip:
-						InfoTotalQuadStrip++;
-						break;
-					case MeshFace.FaceTypePolygon:
-						InfoTotalPolygon++;
-						break;
-				}
-			}
-
-			return StaticObjectStates.Count - 1;
+			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
+			//FIXME: This seems to need to be the 'wrong' way around. Need to standardise on Matrices throughout?
+			Matrix4D Rotate = (Matrix4D)new Transformation(AuxTransformation, BaseTransformation);
+			return CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
-
 
 		public int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
@@ -427,8 +375,14 @@ namespace LibRender2
 				return -1;
 			}
 
-			float startingDistance = Single.MaxValue;
-			float endingDistance = Single.MinValue;
+			if (Prototype.Mesh.Faces.Length == 0)
+			{
+				//Null object- Waste of time trying to calculate anything for these
+				return -1;
+			}
+
+			float startingDistance = float.MaxValue;
+			float endingDistance = float.MinValue;
 
 			if (AccurateObjectDisposal)
 			{
@@ -525,14 +479,14 @@ namespace LibRender2
 		/// <summary>Initializes the visibility of all objects within the game world</summary>
 		/// <remarks>If the new renderer is enabled, this must be run in a thread processing an openGL context in order to successfully create
 		/// the required VAO objects</remarks>
-		public virtual void InitializeVisibility()
+		public void InitializeVisibility()
 		{
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 
-			double p = Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
 			{
@@ -540,11 +494,11 @@ namespace LibRender2
 			}
 		}
 
-		public virtual void UpdateVisibility(double TrackPosition)
+		public void UpdateVisibility(double TrackPosition)
 		{
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			if (d < 0.0)
 			{
@@ -709,9 +663,9 @@ namespace LibRender2
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
-		public void DetermineMaxAFLevel(bool MacOS)
+		public void DetermineMaxAFLevel()
 		{
-			if (MacOS)
+			if (currentHost.Platform == HostPlatform.AppleOSX)
 			{
 				// Calling GL.GetString in this manner seems to be crashing the OS-X driver (No idea, but probably OpenTK....)
 				// As we only support newer Intel Macs, 16x AF is safe
@@ -801,7 +755,7 @@ namespace LibRender2
 
 			if (lastError != ErrorCode.NoError)
 			{
-				throw new InvalidOperationException($"OpenGL Error: {lastError.ToString()}");
+				throw new InvalidOperationException($"OpenGL Error: {lastError}");
 			}
 #endif
 
@@ -821,22 +775,11 @@ namespace LibRender2
 			lastColor = Color32.White;
 			Shader.SetMaterialShininess(1.0f);
 			Shader.SetIsFog(false);
-			Shader.SetFogStart(0.0f);
-			Shader.SetFogEnd(0.0f);
-			Shader.SetFogColor(Color24.White);
 			Shader.SetIsTexture(false);
 			Shader.SetTexture(0);
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
-		}
-
-		public void SetFogForImmediateMode()
-		{
-			GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
-			GL.Fog(FogParameter.FogStart, Fog.Start);
-			GL.Fog(FogParameter.FogEnd, Fog.End);
-			GL.Fog(FogParameter.FogColor, new[] { inv255 * Fog.Color.R, inv255 * Fog.Color.G, inv255 * Fog.Color.B, 1.0f });
 		}
 
 		public void SetBlendFunc()
@@ -969,6 +912,7 @@ namespace LibRender2
 			}
 
 			// lighting
+			Shader.SetMaterialFlags(material.Flags);
 			if (OptionLighting)
 			{
 				if (material.Color != lastColor)
@@ -978,7 +922,6 @@ namespace LibRender2
 					Shader.SetMaterialSpecular(material.Color);
 					//TODO: Ambient and specular colors are not set by any current parsers
 				}
-				Shader.SetMaterialFlags(material.Flags);
 				if ((material.Flags & MaterialFlags.Emissive) != 0)
 				{
 					Shader.SetMaterialEmission(material.EmissiveColor);
@@ -1016,6 +959,23 @@ namespace LibRender2
 					break;
 			}
 
+			// blend factor
+			float distanceFactor;
+			if (material.GlowAttenuationData != 0)
+			{
+				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
+			}
+			else
+			{
+				distanceFactor = 1.0f;
+			}
+
+			float blendFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+			if (blendFactor > 1.0)
+			{
+				blendFactor = 1.0f;
+			}
+
 			// daytime polygon
 			{
 				// texture
@@ -1046,13 +1006,7 @@ namespace LibRender2
 				else if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
 				{
 					//No nighttime texture or both are identical- Darken the polygon to match the light conditions
-					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (blend > 1.0f)
-					{
-						blend = 1.0f;
-					}
-
-					factor = 1.0f - 0.7f * blend;
+					factor = 1.0f - 0.7f * blendFactor;
 				}
 				else
 				{
@@ -1061,15 +1015,10 @@ namespace LibRender2
 				}
 				Shader.SetBrightness(factor);
 
-				float alphaFactor;
-				if (material.GlowAttenuationData != 0)
+				float alphaFactor = distanceFactor;
+				if (material.NighttimeTexture != null && (material.Flags & MaterialFlags.CrossFadeTexture) != 0)
 				{
-					GlowAttenuationMode mode;
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData, out mode);
-				}
-				else
-				{
-					alphaFactor = 1.0f;
+					alphaFactor *= 1.0f - blendFactor;
 				}
 
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
@@ -1097,26 +1046,7 @@ namespace LibRender2
 				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
 
 				// blend mode
-				float alphaFactor;
-				if (material.GlowAttenuationData != 0)
-				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
-					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (blend > 1.0f)
-					{
-						blend = 1.0f;
-					}
-
-					alphaFactor *= blend;
-				}
-				else
-				{
-					alphaFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (alphaFactor > 1.0f)
-					{
-						alphaFactor = 1.0f;
-					}
-				}
+				float alphaFactor = distanceFactor * blendFactor;
 
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
@@ -1265,6 +1195,23 @@ namespace LibRender2
 					break;
 			}
 
+			// blend factor
+			float distanceFactor;
+			if (material.GlowAttenuationData != 0)
+			{
+				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
+			}
+			else
+			{
+				distanceFactor = 1.0f;
+			}
+
+			float blendFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+			if (blendFactor > 1.0)
+			{
+				blendFactor = 1.0f;
+			}
+
 			// daytime polygon
 			{
 				// texture
@@ -1292,14 +1239,7 @@ namespace LibRender2
 				}
 				else if (material.NighttimeTexture == null)
 				{
-					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-
-					if (blend > 1.0f)
-					{
-						blend = 1.0f;
-					}
-
-					factor = 1.0f - 0.7f * blend;
+					factor = 1.0f - 0.7f * blendFactor;
 				}
 				else
 				{
@@ -1310,14 +1250,11 @@ namespace LibRender2
 				{
 					GL.Disable(EnableCap.Lighting);
 				}
-				float alphaFactor;
-				if (material.GlowAttenuationData != 0)
+
+				float alphaFactor = distanceFactor;
+				if (material.NighttimeTexture != null && (material.Flags & MaterialFlags.CrossFadeTexture) != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
-				}
-				else
-				{
-					alphaFactor = 1.0f;
+					alphaFactor *= 1.0f - blendFactor;
 				}
 
 				GL.Begin(DrawMode);
@@ -1366,26 +1303,7 @@ namespace LibRender2
 				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
 
 				// blend mode
-				float alphaFactor;
-				if (material.GlowAttenuationData != 0)
-				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
-					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (blend > 1.0f)
-					{
-						blend = 1.0f;
-					}
-
-					alphaFactor *= blend;
-				}
-				else
-				{
-					alphaFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-					if (alphaFactor > 1.0f)
-					{
-						alphaFactor = 1.0f;
-					}
-				}
+				float alphaFactor = distanceFactor * blendFactor;
 
 				GL.Begin(DrawMode);
 

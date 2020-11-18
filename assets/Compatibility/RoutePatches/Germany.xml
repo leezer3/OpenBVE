@@ -1,0 +1,9 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<Patch>
+		<Hash>8052F76CB2EFA58514334C2E16714BAEDF1BEE6EEC90A84555C76C09C266E787</Hash>
+		<FileName>S75 daytime.csv</FileName>
+		<SignalSet>SV.xml</SignalSet>
+	</Patch>
+  </RoutePatches>
+</openBVE>

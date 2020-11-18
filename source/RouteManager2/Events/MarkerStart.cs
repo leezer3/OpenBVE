@@ -26,7 +26,7 @@ namespace RouteManager2.Events
 		{
 			if (TriggerType == EventTriggerType.FrontCarFrontAxle && Train.IsPlayerTrain || TriggerType == EventTriggerType.Camera && currentHost.Application == HostApplication.RouteViewer)
 			{
-				if (message != null)
+				if (message != null && Train != null)
 				{
 					if (Direction < 0)
 					{

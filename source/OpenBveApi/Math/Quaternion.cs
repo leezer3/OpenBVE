@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#pragma warning disable 660,661
 using System.Runtime.InteropServices;
 
 namespace OpenBveApi.Math
@@ -249,6 +250,10 @@ namespace OpenBveApi.Math
 			W *= scale;
 		}
 
+		/// <summary>
+		/// Multiplies this quaternion by another
+		/// </summary>
+		/// <param name="Quaternion">The quaternion to multiply by</param>
 		public void Multiply(ref Quaternion Quaternion)
         {
             double w = W * Quaternion.W - X * Quaternion.X - Y * Quaternion.Y - Z * Quaternion.Z;
@@ -260,6 +265,11 @@ namespace OpenBveApi.Math
             Y = y;
         }
 
+        /// <summary>
+        /// Multiplies this quaternion by another and returns the result as a new quaternion
+        /// </summary>
+        /// <param name="Quaternion">The quaternion to multiply by</param>
+        /// <param name="result">The new quaternion</param>
         public void Multiply(ref Quaternion Quaternion, out Quaternion result)
         {
 			result = new Quaternion(W * Quaternion.X + X * Quaternion.W + Y * Quaternion.Z - Z * Quaternion.Y, 
@@ -267,6 +277,13 @@ namespace OpenBveApi.Math
 									W * Quaternion.Z + Z * Quaternion.W + X * Quaternion.Y - Y * Quaternion.X,
 									W * Quaternion.W - X * Quaternion.X - Y * Quaternion.Y - Z * Quaternion.Z);
         }
+
+        /// <summary>
+        /// Multiplies one quaternion by another and returns the result as a new quaternion
+        /// </summary>
+        /// <param name="left">The first quaternion multiply by</param>
+        /// <param name="right">The quaternion to multiply by</param>
+        /// <param name="result">The new quaternion</param>
         public static void Multiply(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
 			result = new Quaternion(left.W * right.X + left.X * right.W + left.Y * right.Z - left.Z * right.Y,
@@ -275,6 +292,10 @@ namespace OpenBveApi.Math
 									left.W * right.W - left.X * right.X - left.Y * right.Y - left.Z * right.Z);
         }
 
+        /// <summary>
+        /// Multiplies all components of this quaternion by a scalar
+        /// </summary>
+        /// <param name="scalar">The scalar</param>
         public void Multiply(double scalar)
         {
             W = W * scalar;
@@ -282,6 +303,12 @@ namespace OpenBveApi.Math
             Y = Y * scalar;
             Z = Z * scalar;
         }
+
+        /// <summary>
+        /// Multiplies this quaternion by a scalar and returns the result as a new quaternion
+        /// </summary>
+        /// <param name="scalar">The scalar</param>
+        /// <param name="result">The new quaternion</param>
         public void Multiply(double scalar, out Quaternion result)
         {
 	        result = new Quaternion();
@@ -290,6 +317,13 @@ namespace OpenBveApi.Math
             result.Y = Y * scalar;
             result.Z = Z * scalar;
         }
+
+		/// <summary>
+		/// Multiplies a quaternion by a scalar and returns the result as a new quaternion
+		/// </summary>
+		/// <param name="Quaternion">The quaternion</param>
+		/// <param name="scalar">The scalar</param>
+		/// <param name="result">The new quaternion</param>
         public static void Multiply(ref Quaternion Quaternion, double scalar, out Quaternion result)
         {
 	        result = new Quaternion(Quaternion.X * scalar,
@@ -385,3 +419,4 @@ namespace OpenBveApi.Math
 		public static readonly Quaternion Identity = new Quaternion(0, 0, 0, 1);
 	}
 }
+#pragma warning restore 660,661

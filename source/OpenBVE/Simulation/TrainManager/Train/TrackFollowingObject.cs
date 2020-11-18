@@ -114,7 +114,7 @@ namespace OpenBve
 							dnb = (byte) Math.Min(Program.Renderer.Lighting.DynamicCabBrightness, ccb);
 						}
 						int cs = Cars[i].CurrentCarSection;
-						if (cs >= 0 && Cars[i].CarSections.Length > 0 && Cars[i].CarSections.Length >= cs)
+						if (cs >= 0 && cs < Cars[i].CarSections.Length)
 						{
 							if (Cars[i].CarSections[cs].Groups.Length > 0)
 							{

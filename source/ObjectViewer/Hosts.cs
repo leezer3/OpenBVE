@@ -38,7 +38,7 @@ namespace OpenBve {
 		/// <param name="height">Receives the height of the texture.</param>
 		/// <returns>Whether querying the dimensions was successful.</returns>
 		public override bool QueryTextureDimensions(string path, out int width, out int height) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Texture != null) {
 						try {
@@ -87,7 +87,7 @@ namespace OpenBve {
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Texture != null) {
 						try {
@@ -135,7 +135,7 @@ namespace OpenBve {
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				Texture data;
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
@@ -173,7 +173,7 @@ namespace OpenBve {
 		/// <param name="sound">Receives the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool LoadSound(string path, out OpenBveApi.Sounds.Sound sound) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Sound != null) {
 						try {
@@ -205,7 +205,7 @@ namespace OpenBve {
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool RegisterSound(string path, out OpenBveApi.Sounds.SoundHandle handle) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				// Sounds.SoundBuffer data;
 				// data = Sounds.RegisterBuffer(path, 0.0); // TODO
 			} else {
@@ -227,7 +227,12 @@ namespace OpenBve {
 
 		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (base.LoadObject(path, Encoding, out Object))
+			{
+				return true;
+			}
+
+			if (File.Exists(path) || Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
@@ -240,6 +245,20 @@ namespace OpenBve {
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 										Object = obj;
+
+										StaticObject staticObject = Object as StaticObject;
+										if (staticObject != null)
+										{
+											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
+											return true;
+										}
+
+										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
+										if (aoc != null)
+										{
+											AnimatedObjectCollectionCache.Add(path, aoc);
+										}
+
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
@@ -254,7 +273,7 @@ namespace OpenBve {
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			Object = null;
 			return false;
@@ -265,14 +284,14 @@ namespace OpenBve {
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, true, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, true, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)
@@ -334,6 +353,11 @@ namespace OpenBve {
 			{
 				Program.CurrentRoute.Tracks = value;
 			}
+		}
+
+		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
+		{
+			throw new NotImplementedException();
 		}
 
 		public Host() : base(HostApplication.ObjectViewer)

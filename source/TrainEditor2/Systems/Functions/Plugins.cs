@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenBveApi;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
+using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using Path = System.IO.Path;
@@ -41,68 +43,78 @@ namespace TrainEditor2.Systems.Functions
 				if (file.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
 				{
 #if !DEBUG
-					try {
-#endif
-					ContentLoadingPlugin plugin = new ContentLoadingPlugin(file);
-					Assembly assembly;
-					Type[] types;
-
 					try
 					{
-						assembly = Assembly.LoadFile(file);
-						types = assembly.GetTypes();
-					}
-					catch
-					{
-						builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");
-						continue;
-					}
+#endif
+						ContentLoadingPlugin plugin = new ContentLoadingPlugin(file);
+						Assembly assembly;
+						Type[] types;
 
-					bool iTexture = false;
-					bool iObject = false;
-					bool iRuntime = false;
-
-					foreach (Type type in types)
-					{
-						if (type.FullName == null)
+						try
 						{
+							assembly = Assembly.LoadFile(file);
+							types = assembly.GetTypes();
+						}
+						catch
+						{
+							builder.AppendLine($"Plugin {Path.GetFileName(file)} is not a .Net assembly.");
 							continue;
 						}
 
-						if (type.IsSubclassOf(typeof(TextureInterface)))
+						bool iTexture = false;
+						bool iObject = false;
+						bool iRoute = false;
+						bool iRuntime = false;
+
+						foreach (Type type in types)
 						{
-							iTexture = true;
+							if (type.FullName == null)
+							{
+								continue;
+							}
+
+							if (type.IsSubclassOf(typeof(TextureInterface)))
+							{
+								iTexture = true;
+							}
+
+							if (type.IsSubclassOf(typeof(SoundInterface)))
+							{
+								plugin.Sound = (SoundInterface)assembly.CreateInstance(type.FullName);
+							}
+
+							if (type.IsSubclassOf(typeof(ObjectInterface)))
+							{
+								iObject = true;
+							}
+
+							if (type.IsSubclassOf(typeof(RouteInterface)))
+							{
+								iRoute = true;
+							}
+
+							if (typeof(IRuntime).IsAssignableFrom(type))
+							{
+								iRuntime = true;
+							}
 						}
 
-						if (type.IsSubclassOf(typeof(SoundInterface)))
+						if (plugin.Sound != null)
 						{
-							plugin.Sound = (SoundInterface)assembly.CreateInstance(type.FullName);
+							// Doesn't actually need a renderer reference at all here.
+							plugin.Load(Program.CurrentHost, Program.FileSystem, new Interface.Options());
+							list.Add(plugin);
 						}
-
-						if (type.IsSubclassOf(typeof(ObjectInterface)))
+						else if (!iTexture && !iObject && !iRoute && !iRuntime)
 						{
-							iObject = true;
+							builder.AppendLine($"Plugin {Path.GetFileName(file)} does not implement compatible interfaces.");
+							builder.AppendLine();
 						}
-
-						if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type))
-						{
-							iRuntime = true;
-						}
-					}
-
-					if (plugin.Sound != null)
-					{
-						plugin.Load(Program.CurrentHost, Program.FileSystem, new Interface.Options());
-						list.Add(plugin);
-					}
-					else if (!iTexture && !iObject && !iRuntime)
-					{
-						builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
-						builder.AppendLine();
-					}
 #if !DEBUG
-					} catch (Exception ex) {
-						builder.Append("Could not load plugin ").Append(Path.GetFileName(file)).AppendLine(":").AppendLine(ex.Message);
+					}
+					catch (Exception ex)
+					{
+						builder.AppendLine($"Could not load plugin {Path.GetFileName(file)}:{ex.Message}");
 						builder.AppendLine();
 					}
 #endif
@@ -137,12 +149,15 @@ namespace TrainEditor2.Systems.Functions
 				foreach (ContentLoadingPlugin plugin in Program.CurrentHost.Plugins)
 				{
 #if !DEBUG
-					try {
+					try
+					{
 #endif
-					plugin.Unload();
+						plugin.Unload();
 #if !DEBUG
-					} catch (Exception ex) {
-						builder.Append("Could not unload plugin ").Append(plugin.Title).AppendLine(":").AppendLine(ex.Message);
+					}
+					catch (Exception ex)
+					{
+						builder.AppendLine($"Could not unload plugin {plugin.Title}:{ex.Message}");
 						builder.AppendLine();
 					}
 #endif

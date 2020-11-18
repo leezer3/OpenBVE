@@ -129,6 +129,16 @@
 		public short FogColor = -1;
 
 		/// <summary>
+		/// The handle of "uFogIsLinear" within the shader
+		/// </summary>
+		public short FogIsLinear = -1;
+
+		/// <summary>
+		/// The handle of "uFogDensity" within the shader
+		/// </summary>
+		public short FogDensity = -1;
+
+		/// <summary>
 		/// The handle of "uIsTexture" within the shader
 		/// </summary>
 		public short IsTexture = -1;

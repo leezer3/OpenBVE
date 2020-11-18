@@ -253,6 +253,11 @@ namespace OpenBve {
 
 		public override bool LoadStaticObject(string path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
+			if (base.LoadStaticObject(path, Encoding, PreserveVertices, out Object))
+			{
+				return true;
+			}
+
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
@@ -263,12 +268,15 @@ namespace OpenBve {
 								try {
 									UnifiedObject unifiedObject;
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out unifiedObject)) {
-										if (unifiedObject is StaticObject)
+										StaticObject staticObject = unifiedObject as StaticObject;
+										if (staticObject != null)
 										{
-											unifiedObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
-											Object = (StaticObject) unifiedObject;
+											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
+											Object = staticObject;
+											StaticObjectCache.Add(ValueTuple.Create(path, PreserveVertices), Object);
 											return true;
 										}
+
 										Object = null;
 										Interface.AddMessage(MessageType.Error, false, "Attempted to load " + path + " which is an animated object where only static objects are allowed.");
 									}
@@ -292,6 +300,11 @@ namespace OpenBve {
 
 		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
+			if (base.LoadObject(path, Encoding, out Object))
+			{
+				return true;
+			}
+
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
@@ -305,6 +318,20 @@ namespace OpenBve {
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 										Object = obj;
+
+										StaticObject staticObject = Object as StaticObject;
+										if (staticObject != null)
+										{
+											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
+											return true;
+										}
+
+										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
+										if (aoc != null)
+										{
+											AnimatedObjectCollectionCache.Add(path, aoc);
+										}
+
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
@@ -330,14 +357,14 @@ namespace OpenBve {
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)
@@ -368,6 +395,11 @@ namespace OpenBve {
 		public override object PlaySound(SoundHandle buffer, double pitch, double volume, Vector3 position, object parent, bool looped)
 		{
 			return Program.Sounds.PlaySound(buffer, pitch, volume, position, parent, looped);
+		}
+
+		public override void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		{
+			Program.Sounds.PlayMicSound(position, backwardTolerance, forwardTolerance);
 		}
 
 		public override void StopSound(object SoundSource)
@@ -432,6 +464,26 @@ namespace OpenBve {
 		public override void UpdateCustomTimetable(Texture Daytime, Texture Nighttime)
 		{
 			Timetable.UpdateCustomTimetable(Daytime, Nighttime);
+		}
+
+		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
+		{
+			return TrackFollowingObjectParser.ParseTrackFollowingObject(objectPath, tfoFile);
+		}
+
+		public override void AddMarker(Texture MarkerTexture)
+		{
+			Program.Renderer.Marker.AddMarker(MarkerTexture);
+		}
+
+		public override void RemoveMarker(Texture MarkerTexture)
+		{
+			Program.Renderer.Marker.RemoveMarker(MarkerTexture);
+		}
+
+		public override void CameraAtWorldEnd()
+		{
+			Program.Renderer.Camera.AtWorldEnd = !Program.Renderer.Camera.AtWorldEnd;
 		}
 
 		public Host() : base(HostApplication.OpenBve)

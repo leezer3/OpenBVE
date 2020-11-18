@@ -40,8 +40,33 @@ namespace Plugin
 		private byte ImageDescriptor;
 		private bool HasColorMap;
 		private int AttributeBits;
-		private int VerticalTransferOrder;
-		private int HorizontalTransferOrder;
+		private VerticalTransferOrder verticalTransferOrder;
+		private HorizontalTransferOrder horizontalTransferOrder;
+
+		internal FirstPixelDestination firstPixelDestination
+		{
+			get
+			{
+				if (verticalTransferOrder == VerticalTransferOrder.Unknown || horizontalTransferOrder == HorizontalTransferOrder.Unknown)
+				{
+					return FirstPixelDestination.Unknown;
+				}
+				if (verticalTransferOrder == VerticalTransferOrder.Bottom && horizontalTransferOrder == HorizontalTransferOrder.Left)
+				{
+					return FirstPixelDestination.BottomLeft;
+				}
+				if (verticalTransferOrder == VerticalTransferOrder.Bottom && horizontalTransferOrder == HorizontalTransferOrder.Right)
+				{
+					return FirstPixelDestination.BottomRight;
+				}
+				if (verticalTransferOrder == VerticalTransferOrder.Top && horizontalTransferOrder == HorizontalTransferOrder.Left)
+				{
+					return FirstPixelDestination.TopLeft;
+				}
+				return FirstPixelDestination.TopRight;
+			}
+		}
+
 		private string ImageID;
 		private short ImageWidth;
 		private short ImageHeight;
@@ -77,12 +102,12 @@ namespace Plugin
 		internal bool Parse(string fileName, out Texture texture)
 		{
 
-			byte[] filebytes = System.IO.File.ReadAllBytes(fileName);
+			byte[] filebytes = File.ReadAllBytes(fileName);
 			if (filebytes.Length > 0)
 			{
 				using (MemoryStream filestream = new MemoryStream(filebytes))
 				{
-					if (filestream.Length > 0 && filestream.CanSeek == true)
+					if (filestream.Length > 0 && filestream.CanSeek)
 					{
 						using (BinaryReader binReader = new BinaryReader(filestream))
 						{
@@ -158,8 +183,9 @@ namespace Plugin
 
 								ImageDescriptor = binReader.ReadByte();
 								AttributeBits = (ImageDescriptor >> 0) & ((1 << 4) - 1);
-								HorizontalTransferOrder = (ImageDescriptor >> 5) & ((1 << 1) - 1);
-								VerticalTransferOrder = (ImageDescriptor >> 4) & ((1 << 1) - 1);
+								verticalTransferOrder = (VerticalTransferOrder)((ImageDescriptor >> 5) & ((1 << 1) - 1));
+								horizontalTransferOrder = (HorizontalTransferOrder)((ImageDescriptor >> 4) & ((1 << 1) - 1));
+								
 
 								// load ImageID value if any
 								if (ImageIDLength > 0)
@@ -200,14 +226,14 @@ namespace Plugin
 													b = Convert.ToInt32(binReader.ReadByte());
 													g = Convert.ToInt32(binReader.ReadByte());
 													r = Convert.ToInt32(binReader.ReadByte());
-													ColorMap.Add(System.Drawing.Color.FromArgb(r, g, b));
+													ColorMap.Add(Color.FromArgb(r, g, b));
 													break;
 												case 32:
 													a = Convert.ToInt32(binReader.ReadByte());
 													b = Convert.ToInt32(binReader.ReadByte());
 													g = Convert.ToInt32(binReader.ReadByte());
 													r = Convert.ToInt32(binReader.ReadByte());
-													ColorMap.Add(System.Drawing.Color.FromArgb(a, r, g, b));
+													ColorMap.Add(Color.FromArgb(a, r, g, b));
 													break;
 												default:
 													//No other entry sizes than 15, 16, 24 & 32 are supported....
@@ -320,8 +346,8 @@ namespace Plugin
 								//Create the padding array, as stride must be a multiple of 4
 								byte[] paddingBytes = new byte[padding];
 								//Create the temporary row lists
-								var rows = new System.Collections.Generic.List<System.Collections.Generic.List<byte>>();
-								var row = new System.Collections.Generic.List<byte>();
+								var rows = new List<List<byte>>();
+								var row = new List<byte>();
 
 								//Calculate the offset & seek to the start of the image data
 								var ImageDataOffset = 18 + ImageIDLength;
@@ -378,7 +404,7 @@ namespace Plugin
 												if (RowBytesRead == ImageRowByteSize)
 												{
 													rows.Add(row);
-													row = new System.Collections.Generic.List<byte>();
+													row = new List<byte>();
 													RowBytesRead = 0;
 												}
 											}
@@ -396,7 +422,7 @@ namespace Plugin
 												if (RowBytesRead == ImageRowByteSize)
 												{
 													rows.Add(row);
-													row = new System.Collections.Generic.List<byte>();
+													row = new List<byte>();
 													RowBytesRead = 0;
 												}
 
@@ -414,38 +440,33 @@ namespace Plugin
 											row.Add(binReader.ReadByte());
 										}
 										rows.Add(row);
-										row = new System.Collections.Generic.List<byte>();
+										row = new List<byte>();
 									}
 								}
 								bool reverseRows = false;
 								bool reverseBytes = false;
 								//We now need to get the location of the first pixel to see if the rows need to be reversed when converted to bitmap
-								if (VerticalTransferOrder == -1 && HorizontalTransferOrder == -1)
+								switch (firstPixelDestination)
 								{
-									//Unknown==>
-									reverseRows = true;
+									case FirstPixelDestination.TopLeft:
+										reverseRows = false;
+										reverseBytes = true;
+										break;
+									case FirstPixelDestination.TopRight:
+										reverseRows = false;
+										reverseBytes = false;
+										break;
+									case FirstPixelDestination.BottomLeft:
+										reverseRows = true;
+										reverseBytes = true;
+										break;
+									case FirstPixelDestination.BottomRight:
+									case FirstPixelDestination.Unknown:
+										reverseRows = true;
+										reverseBytes = true;
+										break;
 								}
-								else if (VerticalTransferOrder == 0 && HorizontalTransferOrder == 1)
-								{
-									//Bottom Left
-									reverseRows = true;
-									reverseBytes = true;
-								}
-								else if (VerticalTransferOrder == 0 && HorizontalTransferOrder == 0)
-								{
-									//Bottom right
-									reverseRows = true;
-								}
-								else if (VerticalTransferOrder == 1 && HorizontalTransferOrder == 1)
-								{
-									//Top left
-									reverseBytes = true;
-								}
-								else
-								{
-									//Top right
-									//No reversions
-								}
+								
 								//Check and reverse rows & bytes if necessary
 								if (reverseRows)
 								{
@@ -485,7 +506,7 @@ namespace Plugin
 										CurrentPixelFormat = PixelFormat.Format8bppIndexed;
 										break;
 									case 16:
-										if (NewTGA == true && ExtensionAreaOffset > 0)
+										if (NewTGA && ExtensionAreaOffset > 0)
 										{
 											switch (AttributesType)
 											{
@@ -516,7 +537,7 @@ namespace Plugin
 										CurrentPixelFormat = PixelFormat.Format24bppRgb;
 										break;
 									case 32:
-										if (NewTGA == true && ExtensionAreaOffset > 0)
+										if (NewTGA && ExtensionAreaOffset > 0)
 										{
 											switch (AttributesType)
 											{
@@ -562,7 +583,7 @@ namespace Plugin
 									for (int i = 0; i < ColorMap.Count; i++)
 									{
 										bool forceopaque = false;
-										if (NewTGA == true && ExtensionAreaOffset > 0)
+										if (NewTGA && ExtensionAreaOffset > 0)
 										{
 											if (AttributesType == 0 || AttributesType == 1)
 											{

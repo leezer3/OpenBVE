@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Overlays;
@@ -21,6 +22,34 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed in ms since the last call to this function</param>
 		internal static void ProcessControls(double TimeElapsed)
 		{
+			for (int i = 0; i < JoystickManager.AttachedJoysticks.Count; i++)
+			{
+				/*
+				 * Prequisite checks:
+				 * Is our joystick connected?
+				 * Have we already detected the disconnection?
+				 */
+				Guid guid = JoystickManager.AttachedJoysticks.ElementAt(i).Key;
+				if (!JoystickManager.AttachedJoysticks[guid].IsConnected() && JoystickManager.AttachedJoysticks[guid].Disconnected == false)
+				{
+					JoystickManager.AttachedJoysticks[guid].Disconnected = true;
+					for (int j = 0; j < Interface.CurrentControls.Length; j++)
+					{
+						if (Interface.CurrentControls[j].Method == Interface.ControlMethod.Joystick && Interface.CurrentControls[i].Device == guid)
+						{
+							//This control is bound to our disconnected joystick, so let's kick into pause mode
+							Program.Renderer.CurrentInterface = InterfaceType.Pause;
+						}
+					}
+				}
+				else if (JoystickManager.AttachedJoysticks[guid].IsConnected() && JoystickManager.AttachedJoysticks[guid].Disconnected)
+				{
+					//Reconnected, so kick out of pause mode
+					Program.Renderer.CurrentInterface = InterfaceType.Normal;
+					JoystickManager.AttachedJoysticks[guid].Disconnected = false;
+				}
+
+			}
 			if (Interface.CurrentOptions.KioskMode)
 			{
 				kioskModeTimer += TimeElapsed;
@@ -64,13 +93,13 @@ namespace OpenBve
 							}
 							else
 							{
-								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 								returnToCab = true;
 							}
 						}
 						else
 						{
-							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 						}
 					}
 
@@ -572,7 +601,7 @@ namespace OpenBve
 										if (TimeElapsed > 0.0)
 										{
 											const double scrollSpeed = 250.0;
-											if (Timetable.CurrentTimetable == Timetable.TimetableState.Default)
+											if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
 											{
 												Timetable.DefaultTimetablePosition += scrollSpeed*
 																					  Interface.CurrentControls[i]
@@ -580,7 +609,7 @@ namespace OpenBve
 												if (Timetable.DefaultTimetablePosition > 0.0)
 													Timetable.DefaultTimetablePosition = 0.0;
 											}
-											else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom)
+											else if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom)
 											{
 												Timetable.CustomTimetablePosition += scrollSpeed*
 																					 Interface.CurrentControls[i]
@@ -595,7 +624,7 @@ namespace OpenBve
 										if (TimeElapsed > 0.0)
 										{
 											const double scrollSpeed = 250.0;
-											if (Timetable.CurrentTimetable == Timetable.TimetableState.Default)
+											if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
 											{
 												Timetable.DefaultTimetablePosition -= scrollSpeed*
 																					  Interface.CurrentControls[i]
@@ -617,7 +646,7 @@ namespace OpenBve
 												if (Timetable.DefaultTimetablePosition < max)
 													Timetable.DefaultTimetablePosition = max;
 											}
-											else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom)
+											else if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom)
 											{
 												Timetable.CustomTimetablePosition -= scrollSpeed*
 																					 Interface.CurrentControls[i]
@@ -693,13 +722,13 @@ namespace OpenBve
 													}
 													else
 													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 														returnToCab = true;
 													}
 												}
 												else
 												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 												}
 											}
 											if (returnToCab)
@@ -766,13 +795,13 @@ namespace OpenBve
 													}
 													else
 													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 														returnToCab = true;
 													}
 												}
 												else
 												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 												}
 											}
 											if (returnToCab)
@@ -785,7 +814,7 @@ namespace OpenBve
 											//Hide interior and bogies
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(-1);
@@ -1387,6 +1416,7 @@ namespace OpenBve
 									case Translations.Command.HoldBrake:
 										if (TrainManager.PlayerTrain.Handles.HasHoldBrake && (TrainManager.PlayerTrain.Handles.Brake.Driver == 0 || TrainManager.PlayerTrain.Handles.Brake.Driver == 1) && !TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 										{
+											TrainManager.PlayerTrain.ApplyNotch(0, !TrainManager.PlayerTrain.Handles.SingleHandle, 0, false);
 											TrainManager.PlayerTrain.ApplyHoldBrake(true);
 										}
 										break;
@@ -1442,7 +1472,7 @@ namespace OpenBve
 										}
 										else
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+											if (TrainManager.PlayerTrain.Specs.DoorCloseMode != TrainManager.DoorMode.Automatic)
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
@@ -1470,7 +1500,7 @@ namespace OpenBve
 										}
 										else
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+											if (TrainManager.PlayerTrain.Specs.DoorCloseMode != TrainManager.DoorMode.Automatic)
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
@@ -1541,13 +1571,13 @@ namespace OpenBve
 										if (Interface.CurrentOptions.TimeTableStyle == TimeTableMode.AutoGenerated || !Timetable.CustomTimetableAvailable)
 										{
 											//Either the auto-generated timetable has been selected as the preference, or no custom timetable has been supplied
-											switch (Timetable.CurrentTimetable)
+											switch (Program.Renderer.CurrentTimetable)
 											{
-												case Timetable.TimetableState.Default:
-													Timetable.CurrentTimetable = Timetable.TimetableState.None;
+												case DisplayedTimetable.Default:
+													Program.Renderer.CurrentTimetable = DisplayedTimetable.None;
 													break;
 												default:
-													Timetable.CurrentTimetable = Timetable.TimetableState.Default;
+													Program.Renderer.CurrentTimetable = DisplayedTimetable.Default;
 													break;
 											}
 											break;
@@ -1555,27 +1585,20 @@ namespace OpenBve
 										if (Interface.CurrentOptions.TimeTableStyle == TimeTableMode.PreferCustom)
 										{
 											//We have already determined that a custom timetable is available in the if above
-											if (Timetable.CurrentTimetable == Timetable.TimetableState.None)
-											{
-												Timetable.CurrentTimetable = Timetable.TimetableState.Custom;
-											}
-											else
-											{
-												Timetable.CurrentTimetable = Timetable.TimetableState.None;
-											}
+											Program.Renderer.CurrentTimetable = Program.Renderer.CurrentTimetable != DisplayedTimetable.Custom ? DisplayedTimetable.Custom : DisplayedTimetable.None;
 											break;
 										}
 										//Fallback legacy behaviour- Cycles between custom, default and none
-										switch (Timetable.CurrentTimetable)
+										switch (Program.Renderer.CurrentTimetable)
 										{
-											case Timetable.TimetableState.Custom:
-												Timetable.CurrentTimetable = Timetable.TimetableState.Default;
+											case DisplayedTimetable.Custom:
+												Program.Renderer.CurrentTimetable = DisplayedTimetable.Default;
 												break;
-											case Timetable.TimetableState.Default:
-												Timetable.CurrentTimetable = Timetable.TimetableState.None;
+											case DisplayedTimetable.Default:
+												Program.Renderer.CurrentTimetable = DisplayedTimetable.None;
 												break;
 											default:
-												Timetable.CurrentTimetable = Timetable.TimetableState.Custom;
+												Program.Renderer.CurrentTimetable = DisplayedTimetable.Custom;
 												break;
 										}
 										break;

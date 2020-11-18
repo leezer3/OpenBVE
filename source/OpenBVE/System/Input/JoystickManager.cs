@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using OpenBveApi.Hosts;
 using OpenTK.Input;
+using OpenTK.Platform;
 using PIEHid32Net;
 
 namespace OpenBve {
@@ -31,11 +34,17 @@ namespace OpenBve {
 			internal abstract int HatCount();
 
 			internal abstract void Poll();
+
+			internal abstract bool IsConnected();
+
+			internal bool Disconnected = false;
+
+			internal abstract Guid GetGuid();
 		}
 
 		internal JoystickManager()
 		{
-			if (!Program.CurrentlyRunningOnWindows)
+			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows)
 			{
 				return;
 			}
@@ -43,7 +52,7 @@ namespace OpenBve {
 		}
 
 		/// <summary>Holds all joysticks currently attached to the computer.</summary>
-		internal static Joystick[] AttachedJoysticks = new Joystick[] { };
+		internal static Dictionary<Guid, Joystick> AttachedJoysticks = new Dictionary<Guid, Joystick>();
 
 		/// <summary>Holds all raildrivers and other PI Engineering controllers attached to the computer</summary>
 		internal static PIEDevice[] devices;
@@ -57,10 +66,11 @@ namespace OpenBve {
 		/// <returns>Call this function to refresh the list of available joysticks and thier capabilities</returns>
 		internal void RefreshJoysticks()
 		{
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 100; i++)
 			{
 				//Load the list of attached openTK joysticks
 				var state = OpenTK.Input.Joystick.GetState(i);
+				Guid foundGuid = OpenTK.Input.Joystick.GetGuid(i);
 				var description = OpenTK.Input.Joystick.GetCapabilities(i);
 				if (description.ToString() == "{Axes: 0; Buttons: 0; Hats: 0; IsConnected: True}")
 				{
@@ -69,7 +79,7 @@ namespace OpenBve {
 				//A joystick with 56 buttons and zero axis is likely the RailDriver, which is bugged in openTK
 				if (description.ToString() != "{Axes: 0; Buttons: 56; Hats: 0; IsConnected: True}")
 				{
-					if (Program.CurrentlyRunningOnMono)
+					if (Program.CurrentHost.MonoRuntime)
 					{
 						if (description.AxisCount == 0 && description.ButtonCount == 0 && description.HatCount == 0)
 						{
@@ -83,30 +93,21 @@ namespace OpenBve {
 							continue;
 						}
 					}
-					StandardJoystick newJoystick = new StandardJoystick
-					{
-						Name = "Joystick" + i,
-						Handle = i,
 
-					};
+					StandardJoystick newJoystick = new StandardJoystick(i);
 
-					bool alreadyFound = false;
-					for (int j = 0; j < AttachedJoysticks.Length; j++)
+					if (AttachedJoysticks.ContainsKey(newJoystick.GetGuid()))
 					{
-						if (AttachedJoysticks[j] is StandardJoystick && AttachedJoysticks[j].Handle == newJoystick.Handle)
-						{
-							alreadyFound = true;
-						}
+						AttachedJoysticks[newJoystick.GetGuid()].Handle = i;
+						AttachedJoysticks[newJoystick.GetGuid()].Disconnected = false;
 					}
-					if (!alreadyFound)
+					else
 					{
-						int l = AttachedJoysticks.Length;
-						Array.Resize(ref AttachedJoysticks, AttachedJoysticks.Length + 1);
-						AttachedJoysticks[l] = newJoystick;
+						AttachedJoysticks.Add(newJoystick.GetGuid(), newJoystick);
 					}
 				}
 			}
-			if (!Program.CurrentlyRunningOnWindows || devices == null || RailDriverInit == true)
+			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows || devices == null || RailDriverInit == true)
 			{
 				return;
 			}
@@ -130,22 +131,12 @@ namespace OpenBve {
 								}
 							};
 							bool alreadyFound = false;
-							for (int j = 0; j < AttachedJoysticks.Length; j++)
+							if (!AttachedJoysticks.ContainsKey(new Guid()))
 							{
-								if (AttachedJoysticks[j] is Raildriver && AttachedJoysticks[j].Handle == newJoystick.Handle)
-								{
-									alreadyFound = true;
-								}
-							}
-							if (!alreadyFound)
-							{
-								int l = AttachedJoysticks.Length;
-								Array.Resize(ref AttachedJoysticks, AttachedJoysticks.Length + 1);
-								AttachedJoysticks[l] = newJoystick;
+								AttachedJoysticks.Add(new Guid(), newJoystick);
 								devices[i].SetupInterface();
 								devices[i].SetDataCallback(this);
 								devices[i].SetErrorCallback(this);
-								RailDriverIndex = l;
 							}
 							break;
 					}
@@ -155,27 +146,27 @@ namespace OpenBve {
 
 		}
 
-		internal static ButtonState GetButton(int Device, int Button)
+		internal static ButtonState GetButton(Guid Device, int Button)
 		{
-			if (Device < AttachedJoysticks.Length)
+			if (AttachedJoysticks.ContainsKey(Device))
 			{
 				return AttachedJoysticks[Device].GetButton(Button);
 			}
 			return ButtonState.Released;
 		}
 
-		internal static double GetAxis(int Device, int Axis)
+		internal static double GetAxis(Guid Device, int Axis)
 		{
-			if (Device < AttachedJoysticks.Length)
+			if (AttachedJoysticks.ContainsKey(Device))
 			{
 				return AttachedJoysticks[Device].GetAxis(Axis);
 			}
 			return 0.0;
 		}
 
-		internal static JoystickHatState GetHat(int Device, int Hat)
+		internal static JoystickHatState GetHat(Guid Device, int Hat)
 		{
-			if (Device < AttachedJoysticks.Length)
+			if (AttachedJoysticks.ContainsKey(Device))
 			{
 				return AttachedJoysticks[Device].GetHat(Hat);
 			}

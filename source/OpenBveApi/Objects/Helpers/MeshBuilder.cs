@@ -31,7 +31,7 @@ namespace OpenBveApi.Objects
 			this.currentHost = Host;
 			this.Vertices = new VertexTemplate[] {};
 			this.Faces = new MeshFace[] { };
-			this.Materials = new Material[] {new Material()};
+			this.Materials = new[] {new Material()};
 			this.isCylinder = false;
 		}
 
@@ -50,9 +50,9 @@ namespace OpenBveApi.Objects
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
-				Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
-				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
+				Array.Resize(ref Object.Mesh.Faces, mf + Faces.Length);
+				Array.Resize(ref Object.Mesh.Materials, mm + Materials.Length);
+				Array.Resize(ref Object.Mesh.Vertices, mv + Vertices.Length);
 				for (int i = 0; i < Vertices.Length; i++)
 				{
 					Object.Mesh.Vertices[mv + i] = Vertices[i];
@@ -77,26 +77,14 @@ namespace OpenBveApi.Objects
 						{
 							/*
 							 * Versions of openBVE prior to 1.7.0 rendered polygons with two defined textures as unlit
-							* The new GL 3.2 renderer corrects this behaviour
+							 * The new GL 3.2 renderer corrects this behaviour
 							 * Horrid workaround....
 							 */
-							Materials[i].DisableLighting = true;
+							Materials[i].Flags |= MaterialFlags.DisableLighting;
 						}
 					}
 
-					Object.Mesh.Materials[mm + i].Flags = new MaterialFlags();
-					if (Materials[i].EmissiveColorUsed)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.Emissive;
-					}
-					if (Materials[i].TransparentColorUsed)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.TransparentColor;
-					}
-					if (Materials[i].DisableLighting)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.DisableLighting;
-					}
+					Object.Mesh.Materials[mm + i].Flags = Materials[i].Flags;
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
@@ -115,7 +103,7 @@ namespace OpenBveApi.Objects
 						}
 						else
 						{
-							if (Materials[i].TransparentColorUsed)
+							if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 							{
 								currentHost.RegisterTexture(Materials[i].DaytimeTexture, new TextureParameters(null,
 										new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G,
@@ -138,7 +126,7 @@ namespace OpenBveApi.Objects
 					if (Materials[i].NighttimeTexture != null)
 					{
 						Textures.Texture tnight;
-						if (Materials[i].TransparentColorUsed)
+						if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 						{
 							currentHost.RegisterTexture(Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
 						}

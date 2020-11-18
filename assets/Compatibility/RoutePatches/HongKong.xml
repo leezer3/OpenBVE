@@ -1,0 +1,10 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<!--- HKHR Campus City Line -->
+	<Patch>
+		<Hash>F24B29EB7D4D93F2ED20B3C99CA4D69B74D8442ED91F5DCB2E90EF7E69EAD2EE</Hash>
+		<FileName>cclc.csv</FileName>
+		<AllowTrackPositionArguments>true</AllowTrackPositionArguments>
+	</Patch>
+  </RoutePatches>
+</openBVE>

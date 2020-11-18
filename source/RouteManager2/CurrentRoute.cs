@@ -1,14 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using LibRender2;
 using OpenBveApi.Colors;
-using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
-using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -16,7 +10,6 @@ using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
-using Path = OpenBveApi.Path;
 
 namespace RouteManager2
 {
@@ -24,6 +17,8 @@ namespace RouteManager2
 	{
 		private readonly BaseRenderer renderer;
 
+		/// <summary>Holds the information properties of the route</summary>
+		public RouteInformation Information;
 		/// <summary>The route's comment (For display in the main menu)</summary>
 		public string Comment = "";
 		/// <summary>The route's image file (For display in the main menu)</summary>
@@ -35,15 +30,25 @@ namespace RouteManager2
 		/// <summary>Holds a reference to the base TrainManager.Trains array</summary>
 		public AbstractTrain[] Trains;
 
+		/// <summary>Holds a reference to the base TrainManager.TFOs array</summary>
+		public AbstractTrain[] TrackFollowingObjects;
+
 		/// <summary>Holds all signal sections within the current route</summary>
 		public Section[] Sections;
 
 		/// <summary>Holds all stations within the current route</summary>
 		public RouteStation[] Stations;
 
+		/// <summary>The name of the initial station on game startup, if set via command-line arguments</summary>
+		public string InitialStationName;
+		/// <summary>The start time at the initial station, if set via command-line arguments</summary>
+		public double InitialStationTime = -1;
+
 		/// <summary>Holds all .PreTrain instructions for the current route</summary>
 		/// <remarks>Must be in distance and time ascending order</remarks>
 		public BogusPreTrainInstruction[] BogusPreTrainInstructions;
+
+		public double[] PrecedingTrainTimeDeltas = new double[] { };
 
 		/// <summary>Holds all points of interest within the game world</summary>
 		public PointOfInterest[] PointsOfInterest;
@@ -53,6 +58,12 @@ namespace RouteManager2
 
 		/// <summary>The new background texture (Currently fading in)</summary>
 		public BackgroundHandle TargetBackground;
+
+		/// <summary>The list of dynamic light definitions</summary>
+		public LightDefinition[] LightDefinitions;
+
+		/// <summary>Whether dynamic lighting is currently enabled</summary>
+		public bool DynamicLighting = false;
 
 		/// <summary>The start of a region without fog</summary>
 		/// <remarks>Must not be below the viewing distance (e.g. 600m)</remarks>
@@ -80,6 +91,15 @@ namespace RouteManager2
 		/// <summary>Holds the length conversion units</summary>
 		public double[] UnitOfLength = new double[] { 1.0 };
 
+		/// <summary>The length of a block in meters</summary>
+		public double BlockLength = 25.0;
+
+		/// <summary>Controls whether accurate object disposal is in use</summary>
+		/// <remarks>If this bool is set to FALSE, then objects will disappear when the block in which their command is placed is exited via by the camera
+		/// Certain BVE2/4 era routes used this as an animation trick
+		/// </remarks>
+		public bool AccurateObjectDisposal;
+
 		public CurrentRoute(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
@@ -104,27 +124,49 @@ namespace RouteManager2
 			NextFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 1.0);
 			Atmosphere = new Atmosphere();
 			SecondsSinceMidnight = 0.0;
+			Information = new RouteInformation();
+			Illustrations.CurrentRoute = this;
 		}
 		
 		/// <summary>Updates all sections within the route</summary>
 		public void UpdateAllSections()
 		{
-			UpdateSection(Sections.LastOrDefault());
+			/*
+			 * When there are an insane amount of sections, updating via a reference chain
+			 * may trigger a StackOverflowException
+			 *
+			 * Instead, pull out the reference to the next section in an out variable
+			 * and use a while loop
+			 * https://github.com/leezer3/OpenBVE/issues/557
+			 */
+			Section nextSectionToUpdate;
+			UpdateSection(Sections.LastOrDefault(), out nextSectionToUpdate);
+			while (nextSectionToUpdate != null)
+			{
+				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
+			}
 		}
 
 		/// <summary>Updates the specified signal section</summary>
 		/// <param name="SectionIndex"></param>
 		public void UpdateSection(int SectionIndex)
 		{
-			UpdateSection(Sections[SectionIndex]);
+			Section nextSectionToUpdate;
+			UpdateSection(Sections[SectionIndex], out nextSectionToUpdate);
+			while (nextSectionToUpdate != null)
+			{
+				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
+			}
 		}
 
 		/// <summary>Updates the specified signal section</summary>
 		/// <param name="Section"></param>
-		public void UpdateSection(Section Section)
+		/// <param name="PreviousSection"></param>
+		public void UpdateSection(Section Section, out Section PreviousSection)
 		{
 			if (Section == null)
 			{
+				PreviousSection = null;
 				return;
 			}
 
@@ -333,7 +375,7 @@ namespace RouteManager2
 			Section.CurrentAspect = newAspect;
 
 			// update previous section
-			UpdateSection(Section.PreviousSection);
+			PreviousSection = Section.PreviousSection;
 		}
 
 		/// <summary>Updates the currently displayed background</summary>
@@ -360,7 +402,9 @@ namespace RouteManager2
 				renderer.Fog.Start = CurrentFog.Start * ratio * scale;
 				renderer.Fog.End = CurrentFog.End * ratio * scale;
 				renderer.Fog.Color = CurrentFog.Color;
-				renderer.SetFogForImmediateMode();
+				renderer.Fog.Density = CurrentFog.Density;
+				renderer.Fog.IsLinear = CurrentFog.IsLinear;
+				renderer.Fog.SetForImmediateMode();
 			}
 			else
 			{

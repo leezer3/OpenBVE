@@ -452,107 +452,12 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>Applies world data to create a transformed model</summary>
-		public void ApplyData(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double startingDistance, double endingDistance, double BlockLength, double TrackPosition, double Brightness, double ViewingDistance)
-		{
-			if (Prototype == null) return;
-			StartingDistance = float.MaxValue;
-			EndingDistance = float.MinValue;
-			Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
-			// vertices
-			for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++)
-			{
-				if (Prototype.Mesh.Vertices[j] is ColoredVertex)
-				{
-					Mesh.Vertices[j] = new ColoredVertex((ColoredVertex) Prototype.Mesh.Vertices[j]);
-				}
-				else
-				{
-					Mesh.Vertices[j] = new Vertex((Vertex) Prototype.Mesh.Vertices[j]);
-				}
-
-				if (AccurateObjectDisposal)
-				{
-					Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
-					if (Mesh.Vertices[j].Coordinates.Z < StartingDistance)
-					{
-						StartingDistance = (float) Mesh.Vertices[j].Coordinates.Z;
-					}
-
-					if (Mesh.Vertices[j].Coordinates.Z > EndingDistance)
-					{
-						EndingDistance = (float) Mesh.Vertices[j].Coordinates.Z;
-					}
-
-					Mesh.Vertices[j].Coordinates = Prototype.Mesh.Vertices[j].Coordinates;
-				}
-
-				Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
-				Mesh.Vertices[j].Coordinates.Rotate(BaseTransformation);
-				Mesh.Vertices[j].Coordinates += Position;
-			}
-
-			if (AccurateObjectDisposal)
-			{
-				StartingDistance += (float) AccurateObjectDisposalZOffset;
-				EndingDistance += (float) AccurateObjectDisposalZOffset;
-			}
-
-			// faces
-			Mesh.Faces = new MeshFace[Prototype.Mesh.Faces.Length];
-			for (int j = 0; j < Prototype.Mesh.Faces.Length; j++)
-			{
-				Mesh.Faces[j].Flags = Prototype.Mesh.Faces[j].Flags;
-				Mesh.Faces[j].Material = Prototype.Mesh.Faces[j].Material;
-				Mesh.Faces[j].Vertices = new MeshFaceVertex[Prototype.Mesh.Faces[j].Vertices.Length];
-				for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
-				{
-					Mesh.Faces[j].Vertices[k] = Prototype.Mesh.Faces[j].Vertices[k];
-					if (Mesh.Faces[j].Vertices[k].Normal.NormSquared() != 0.0)
-					{
-						Mesh.Faces[j].Vertices[k].Normal.Rotate(AuxTransformation);
-						Mesh.Faces[j].Vertices[k].Normal.Rotate(BaseTransformation);
-					}
-				}
-			}
-
-			// materials
-			Mesh.Materials = new MeshMaterial[Prototype.Mesh.Materials.Length];
-			for (int j = 0; j < Prototype.Mesh.Materials.Length; j++)
-			{
-				Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-				Mesh.Materials[j].Color *= Brightness;
-			}
-
-			const double minBlockLength = 20.0;
-			if (BlockLength < minBlockLength)
-			{
-				BlockLength = BlockLength * System.Math.Ceiling(minBlockLength / BlockLength);
-			}
-
-			if (AccurateObjectDisposal)
-			{
-				StartingDistance += (float) TrackPosition;
-				EndingDistance += (float) TrackPosition;
-				double z = BlockLength * System.Math.Floor(TrackPosition / BlockLength);
-				startingDistance = System.Math.Min(z - BlockLength, (double) StartingDistance);
-				endingDistance = System.Math.Max(z + 2.0 * BlockLength, (double) EndingDistance);
-				StartingDistance = (float) (BlockLength * System.Math.Floor(startingDistance / BlockLength));
-				EndingDistance = (float) (BlockLength * System.Math.Ceiling(endingDistance / BlockLength));
-			}
-			else
-			{
-				StartingDistance = (float) startingDistance;
-				EndingDistance = (float) endingDistance;
-			}
-		}
-
 		/// <summary>Callback function to create the object within the world</summary>
 		public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
-			int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
-			double TrackPosition, double Brightness, bool DuplicateMaterials)
+			int SectionIndex, double StartingDistance, double EndingDistance,
+			double TrackPosition, double Brightness, bool DuplicateMaterials = false)
 		{
-			currentHost.CreateStaticObject(this, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			currentHost.CreateStaticObject(this, Position, BaseTransformation, AuxTransformation, 0.0, StartingDistance, EndingDistance, TrackPosition, Brightness);
 		}
 
 		/// <inheritdoc />
@@ -843,7 +748,7 @@ namespace OpenBveApi.Objects
 						int n = (Mesh.Faces[i].Vertices.Length - face_count) / face_count;
 						while (f + n > Mesh.Faces.Length)
 						{
-							Array.Resize<MeshFace>(ref Mesh.Faces, Mesh.Faces.Length << 1);
+							Array.Resize(ref Mesh.Faces, Mesh.Faces.Length << 1);
 						}
 
 						for (int j = 0; j < n; j++)
@@ -863,7 +768,7 @@ namespace OpenBveApi.Objects
 							}
 						}
 
-						Array.Resize<MeshFaceVertex>(ref Mesh.Faces[i].Vertices, face_count);
+						Array.Resize(ref Mesh.Faces[i].Vertices, face_count);
 						f += n;
 					}
 				}
@@ -941,17 +846,17 @@ namespace OpenBveApi.Objects
 			// finalize arrays
 			if (v != Mesh.Vertices.Length)
 			{
-				Array.Resize<VertexTemplate>(ref Mesh.Vertices, v);
+				Array.Resize(ref Mesh.Vertices, v);
 			}
 
 			if (m != Mesh.Materials.Length)
 			{
-				Array.Resize<MeshMaterial>(ref Mesh.Materials, m);
+				Array.Resize(ref Mesh.Materials, m);
 			}
 
 			if (f != Mesh.Faces.Length)
 			{
-				Array.Resize<MeshFace>(ref Mesh.Faces, f);
+				Array.Resize(ref Mesh.Faces, f);
 			}
 		}
 	}

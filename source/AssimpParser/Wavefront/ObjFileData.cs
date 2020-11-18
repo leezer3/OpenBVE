@@ -123,7 +123,7 @@ namespace AssimpNET.Obj
 		};
 
 		//! Object name
-		public string ObjName = string.Empty;
+		public readonly string ObjName;
 		//! Transformation matrix, stored in OpenGL format
 #pragma warning disable 169
 		Matrix4D Transformation;
@@ -132,6 +132,11 @@ namespace AssimpNET.Obj
 		List<WavefrontObject> SubObjects = new List<WavefrontObject>();
 		/// Assigned meshes
 		public List<uint> Meshes = new List<uint>();
+
+		public WavefrontObject(string objName)
+		{
+			ObjName = objName;
+		}
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -143,7 +148,7 @@ namespace AssimpNET.Obj
 		internal const string AI_DEFAULT_MATERIAL_NAME = "DefaultMaterial";
 
 		//! Name of material description
-		public string MaterialName;
+		public readonly string MaterialName;
 
 		//! Texture names
 		public string Texture;
@@ -197,6 +202,11 @@ namespace AssimpNET.Obj
 		public float Ior = 1.0f;
 		//! Transparency color
 		public Color128 Transparent = Color128.White;
+
+		public Material(string materialName)
+		{
+			MaterialName = materialName;
+		}
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -241,7 +251,7 @@ namespace AssimpNET.Obj
 	public class Model
 	{
 		//! Model name
-		public string ModelName = string.Empty;
+		public readonly string ModelName;
 		//! List ob assigned objects
 		public List<WavefrontObject> Objects = new List<WavefrontObject>();
 		//! Pointer to current object
@@ -272,5 +282,10 @@ namespace AssimpNET.Obj
 		public List<Mesh> Meshes = new List<Mesh>();
 		//! Material map
 		public SortedDictionary<string, Material> MaterialMap = new SortedDictionary<string, Material>();
+
+		public Model(string modelName)
+		{
+			ModelName = modelName;
+		}
 	}
 }

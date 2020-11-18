@@ -56,10 +56,11 @@ namespace Plugin
 			internal ushort nNumCoef;
 			internal CoefSet[] aCoeff;
 
-			internal static readonly short[] AdaptionTable = new short[] {
-					230, 230, 230, 230, 307, 409, 512, 614,
-					768, 614, 512, 409, 307, 230, 230, 230
-				};
+			internal static readonly short[] AdaptionTable =
+			{
+				230, 230, 230, 230, 307, 409, 512, 614,
+				768, 614, 512, 409, 307, 230, 230, 230
+			};
 		}
 
 		private class WaveFormatMp3 : WaveFormatEx
@@ -222,7 +223,9 @@ namespace Plugin
 						if (ckSize > 16)
 						{
 							format.cbSize = reader.ReadUInt16(endianness);
-							reader.BaseStream.Position += format.cbSize;
+
+							// This is a countermeasure to the cbSize is not correct file.
+							reader.BaseStream.Position += Math.Min(format.cbSize, ckSize - 18);
 						}
 
 						if (format is WaveFormatPcm)
@@ -235,6 +238,11 @@ namespace Plugin
 							if (format.nBlockAlign != format.nChannels * format.wBitsPerSample / 8)
 							{
 								throw new InvalidDataException("Unexpected wBlockAlign");
+							}
+
+							if (format.nAvgBytesPerSec != format.nChannels * format.nSamplesPerSec * format.wBitsPerSample / 8)
+							{
+								throw new InvalidDataException("Unexpected nAvgBytesPerSec");
 							}
 						}
 					}
@@ -436,13 +444,6 @@ namespace Plugin
 				}
 			}
 
-			byte[][] buffers = new byte[format.nChannels][];
-
-			for (int i = 0; i < format.nChannels; i++)
-			{
-				buffers[i] = new byte[dataBytes.Length / format.nChannels];
-			}
-
 			int bytesPerSample;
 
 			if (!(format is WaveFormatAdPcm))
@@ -454,7 +455,15 @@ namespace Plugin
 				bytesPerSample = 2;
 			}
 
+			// The size of the data chunk may not be correct, so we use sampleCount as the standard thereafter.
 			int sampleCount = dataBytes.Length / (format.nChannels * bytesPerSample);
+
+			byte[][] buffers = new byte[format.nChannels][];
+
+			for (int i = 0; i < format.nChannels; i++)
+			{
+				buffers[i] = new byte[sampleCount * bytesPerSample];
+			}
 
 			for (int i = 0; i < sampleCount; i++)
 			{

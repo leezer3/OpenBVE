@@ -122,7 +122,8 @@ namespace OpenBve
 			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
 			UnifiedObject[] BogieObjects = new UnifiedObject[Train.Cars.Length * 2];
 			UnifiedObject[] CouplerObjects = new UnifiedObject[Train.Cars.Length - 1];
-			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, ref CouplerObjects, Train, true);
+			bool[] VisibleFromInterior = new bool[Train.Cars.Length];
+			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior, Train, true);
 
 			int currentBogieObject = 0;
 			for (int i = 0; i < Train.Cars.Length; i++)
@@ -149,18 +150,18 @@ namespace OpenBve
 				if (CarObjects[i] != null)
 				{
 					// add object
-					Train.Cars[i].LoadCarSections(CarObjects[i]);
+					Train.Cars[i].LoadCarSections(CarObjects[i], false);
 				}
 
 				//Load bogie objects
 				if (BogieObjects[currentBogieObject] != null)
 				{
-					Train.Cars[i].FrontBogie.LoadCarSections(BogieObjects[currentBogieObject]);
+					Train.Cars[i].FrontBogie.LoadCarSections(BogieObjects[currentBogieObject], false);
 				}
 				currentBogieObject++;
 				if (BogieObjects[currentBogieObject] != null)
 				{
-					Train.Cars[i].RearBogie.LoadCarSections(BogieObjects[currentBogieObject]);
+					Train.Cars[i].RearBogie.LoadCarSections(BogieObjects[currentBogieObject], false);
 				}
 				currentBogieObject++;
 			}
@@ -549,7 +550,7 @@ namespace OpenBve
 									d = -1;
 									break;
 								default:
-									if (Value.Any() && (!NumberFormats.TryParseIntVb6(Value, out d) || !Enum.IsDefined(typeof(Game.TravelDirection), d)))
+									if (Value.Any() && (!NumberFormats.TryParseIntVb6(Value, out d) || !Enum.IsDefined(typeof(TravelDirection), d)))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
 										d = 1;
@@ -557,7 +558,7 @@ namespace OpenBve
 									break;
 							}
 
-							Data.Direction = (Game.TravelDirection)d;
+							Data.Direction = (TravelDirection)d;
 						}
 						break;
 					case "decelerate":

@@ -42,7 +42,8 @@ namespace Plugin
 			"loadtexture",
 			"settexturecoordinates",
 			"setemissivecolor",
-			"setdecaltransparentcolor"
+			"setdecaltransparentcolor",
+			"enablecrossfading"
 		};
 
 		private static int SecondIndexOfAny(string testString, string[] values)
@@ -113,12 +114,12 @@ namespace Plugin
 					int k = Lines[i].IndexOf("//", StringComparison.Ordinal);
 					if (k >= 0)
 					{
-						if (IsPotentialPath(Lines[i]))
+						if (!IsPotentialPath(Lines[i]))
 						{
 							//HACK: Handles malformed potential paths
-							continue;
+							Lines[i] = Lines[i].Substring(0, k);
 						}
-						Lines[i] = Lines[i].Substring(0, k);
+						
 					}
 					//Strip star backslash comments
 					if (!CommentStarted)
@@ -169,7 +170,7 @@ namespace Plugin
 					for (j = Arguments.Length - 1; j >= 0; j--) {
 						if (Arguments[j].Length != 0) break;
 					}
-					Array.Resize<string>(ref Arguments, j + 1);
+					Array.Resize(ref Arguments, j + 1);
 				}
 				// style
 				string Command;
@@ -217,7 +218,7 @@ namespace Plugin
 					for (int j = 0; j < Arguments.Length - 1; j++) {
 						Arguments[j] = Arguments[j + 1];
 					}
-					Array.Resize<string>(ref Arguments, Arguments.Length - 1);
+					Array.Resize(ref Arguments, Arguments.Length - 1);
 				} else {
 					// empty
 					Command = null;
@@ -287,9 +288,9 @@ namespace Plugin
 									currentNormal.Z = 0.0;
 								}
 								currentNormal.Normalize();
-								Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+								Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
 								while (Builder.Vertices.Length >= Normals.Length) {
-									Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
+									Array.Resize(ref Normals, Normals.Length << 1);
 								}
 								Builder.Vertices[Builder.Vertices.Length - 1] = currentVertex;
 								Normals[Builder.Vertices.Length - 1] = currentNormal;
@@ -319,13 +320,25 @@ namespace Plugin
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
-											if (BveTsHacks && IsB3D && j == 0 && Arguments[j] == string.Empty)
+											if (BveTsHacks)
 											{
-												/*
-												 * Face ,1,2,3
-												 * is interpreted by BVE as Face 0,1,2,3
-												 */
-												a[j] = 0;
+												if (IsB3D && j == 0 && Arguments[j] == string.Empty)
+												{
+													/*
+													* Face ,1,2,3
+													* is interpreted by BVE as Face 0,1,2,3
+													*/
+													a[j] = 0;
+												}
+												else if (a.Length > 2)
+												{
+													/*
+													 * AddFace,0,3,2,1,,,,,,1
+													 * Viable face command, but junk / comments added at the end													 *
+													 */
+													currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													break;
+												}
 												continue;
 											}
 											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -343,10 +356,10 @@ namespace Plugin
 									}
 									if (q) {
 										int f = Builder.Faces.Length;
-										Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+										Array.Resize(ref Builder.Faces, f + 1);
 										Builder.Faces[f] = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
 										while (Builder.Vertices.Length > Normals.Length) {
-											Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
+											Array.Resize(ref Normals, Normals.Length << 1);
 										}
 										for (int j = 0; j < Arguments.Length; j++) {
 											Builder.Faces[f].Vertices[j].Index = (ushort)a[j];
@@ -655,7 +668,7 @@ namespace Plugin
 									a = a < 0 ? 0 : 255;
 								}
 								int m = Builder.Materials.Length;
-								Array.Resize<Material>(ref Builder.Materials, m << 1);
+								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j] = new Material(Builder.Materials[j - m])
 									{
@@ -665,7 +678,7 @@ namespace Plugin
 										DaytimeTexture = Builder.Materials[0].DaytimeTexture,
 										NighttimeTexture = Builder.Materials[0].NighttimeTexture,
 										TransparentColor = Builder.Materials[0].TransparentColor,
-										TransparentColorUsed = Builder.Materials[0].TransparentColorUsed,
+										Flags =  Builder.Materials[0].Flags,
 										WrapMode = Builder.Materials[0].WrapMode
 									};
 								}
@@ -707,17 +720,16 @@ namespace Plugin
 									b = b < 0 ? 0 : 255;
 								}
 								int m = Builder.Materials.Length;
-								Array.Resize<Material>(ref Builder.Materials, m << 1);
+								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j] = new Material(Builder.Materials[j - m]);
 									Builder.Materials[j].EmissiveColor = new Color24((byte)r, (byte)g, (byte)b);
-									Builder.Materials[j].EmissiveColorUsed = true;
+									Builder.Materials[j].Flags = Builder.Materials[0].Flags | MaterialFlags.Emissive;
 									Builder.Materials[j].BlendMode = Builder.Materials[0].BlendMode;
 									Builder.Materials[j].GlowAttenuationData = Builder.Materials[0].GlowAttenuationData;
 									Builder.Materials[j].DaytimeTexture = Builder.Materials[0].DaytimeTexture;
 									Builder.Materials[j].NighttimeTexture = Builder.Materials[0].NighttimeTexture;
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
-									Builder.Materials[j].TransparentColorUsed = Builder.Materials[0].TransparentColorUsed;
 									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
@@ -759,7 +771,7 @@ namespace Plugin
 								}
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].TransparentColor = new Color24((byte)r, (byte)g, (byte)b);
-									Builder.Materials[j].TransparentColorUsed = true;
+									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 								}
 							} break;
 						case "setblendingmode":
@@ -1152,6 +1164,35 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "VertexIndex references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 							} break;
+						case "enablecrossfading":
+						case "crossfading":
+							{
+								if (Arguments.Length > 1)
+								{
+									currentHost.AddMessage(MessageType.Warning, false, $"At most 1 arguments are expected in {Command} at line {(i + 1).ToString(Culture)} in file {FileName}");
+								}
+
+								bool value = false;
+
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !bool.TryParse(Arguments[0], out value))
+								{
+									currentHost.AddMessage(MessageType.Error, false, $"Invalid argument Value in {Command} at line {(i + 1).ToString(Culture)} in file {FileName}");
+									value = false;
+								}
+
+								foreach (Material material in Builder.Materials)
+								{
+									if (value)
+									{
+										material.Flags |= MaterialFlags.CrossFadeTexture;
+									}
+									else
+									{
+										material.Flags &= ~MaterialFlags.CrossFadeTexture;
+									}
+								}
+							}
+							break;
 						default:
 							if (Command.Length != 0) {
 								if (IsUtf(Encoding))
@@ -1221,7 +1262,7 @@ namespace Plugin
 		// create cube
 		private static void CreateCube(ref MeshBuilder Builder, double sx, double sy, double sz) {
 			int v = Builder.Vertices.Length;
-			Array.Resize<VertexTemplate>(ref Builder.Vertices, v + 8);
+			Array.Resize(ref Builder.Vertices, v + 8);
 			Builder.Vertices[v + 0] = new Vertex(sx, sy, -sz);
 			Builder.Vertices[v + 1] = new Vertex(sx, -sy, -sz);
 			Builder.Vertices[v + 2] = new Vertex(-sx, -sy, -sz);
@@ -1231,7 +1272,7 @@ namespace Plugin
 			Builder.Vertices[v + 6] = new Vertex(-sx, -sy, sz);
 			Builder.Vertices[v + 7] = new Vertex(-sx, sy, sz);
 			int f = Builder.Faces.Length;
-			Array.Resize<MeshFace>(ref Builder.Faces, f + 6);
+			Array.Resize(ref Builder.Faces, f + 6);
 			Builder.Faces[f + 0].Vertices = new[]  { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };
 			Builder.Faces[f + 0].Flags |= MeshFace.FaceTypeTriangles;
 			Builder.Faces[f + 1].Vertices = new[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 1) };
@@ -1258,7 +1299,7 @@ namespace Plugin
 			double ns = h >= 0.0 ? 1.0 : -1.0;
 			// initialization
 			int v = Builder.Vertices.Length;
-			Array.Resize<VertexTemplate>(ref Builder.Vertices, v + 2 * n);
+			Array.Resize(ref Builder.Vertices, v + 2 * n);
 			Vector3[] Normals = new Vector3[2 * n];
 			double d = 2.0 * Math.PI / (double)n;
 			double g = 0.5 * h;
@@ -1285,7 +1326,7 @@ namespace Plugin
 			}
 			// faces
 			int f = Builder.Faces.Length;
-			Array.Resize<MeshFace>(ref Builder.Faces, f + n + m);
+			Array.Resize(ref Builder.Faces, f + n + m);
 			for (int i = 0; i < n; i++) {
 				Builder.Faces[f + i].Flags = 0;
 				int i0 = (2 * i + 2) % (2 * n);

@@ -629,9 +629,9 @@ namespace OpenBveApi.Math {
 		/// <param name="transformMatrix">The matrix by which to transform the Vector</param>
 		public void Transform(Matrix4D transformMatrix)
 		{
-			double x = (X * transformMatrix.Row0.X) + (Y * transformMatrix.Row1.X) + (Z * transformMatrix.Row2.X) + (1 * transformMatrix.Row3.X);
-			double y = (X * transformMatrix.Row0.Y) + (Y * transformMatrix.Row1.Y) + (Z * transformMatrix.Row2.Y) + (1 * transformMatrix.Row3.Y);
-			double z = (X * transformMatrix.Row0.Z) + (Y * transformMatrix.Row1.Z) + (Z * transformMatrix.Row2.Z) + (1 * transformMatrix.Row3.Z);
+			double x = (X * transformMatrix.Row0.X) + (Y * transformMatrix.Row1.X) + (Z * transformMatrix.Row2.X);
+			double y = (X * transformMatrix.Row0.Y) + (Y * transformMatrix.Row1.Y) + (Z * transformMatrix.Row2.Y);
+			double z = (X * transformMatrix.Row0.Z) + (Y * transformMatrix.Row1.Z) + (Z * transformMatrix.Row2.Z);
 			X = x;
 			Y = y;
 			Z = z;

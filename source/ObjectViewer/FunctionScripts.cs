@@ -964,13 +964,23 @@ namespace OpenBve {
 						break;
 						// timetable
 					case Instructions.TimetableVisible:
-						Function.Stack[s] = Timetable.CurrentTimetable == TimeTableMode.PreferCustom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
+						switch (Program.Renderer.CurrentTimetable)
+						{
+							case DisplayedTimetable.Custom:
+							case DisplayedTimetable.Default:
+								Function.Stack[s] = 1.0;
+								break;
+							case DisplayedTimetable.None:
+								Function.Stack[s] = 0.0;
+								break;
+						}
 						s++; break;
 					case Instructions.DistanceNextStation:
 					case Instructions.StopsNextStation:
 					case Instructions.NextStation:
 					case Instructions.NextStationStop:
 					case Instructions.RouteLimit:
+					case Instructions.TerminalStation:
 						Function.Stack[s] = 0.0; //Unsupported in viewers
 						s++; break;
 					case Instructions.DistanceStation:
@@ -1000,9 +1010,10 @@ namespace OpenBve {
 							Function.Stack[s] = 0;
 						}
 						s++; break;
-						// default
+					case Instructions.Panel2Timetable:
+						throw new InvalidOperationException("The instruction " + Function.InstructionSet[i].ToString() + " is for internal use only, and should not be added to objects.");
 					default:
-						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
+						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}
 			}
 			Function.LastResult = Function.Stack[s - 1];

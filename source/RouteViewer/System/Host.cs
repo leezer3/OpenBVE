@@ -18,9 +18,6 @@ namespace OpenBve
 	/// <summary>Represents the host application.</summary>
 	internal class Host : OpenBveApi.Hosts.HostInterface
 	{
-
-		// --- functions ---
-
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
@@ -294,46 +291,10 @@ namespace OpenBve
 			return true;
 		}
 
-		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
-		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
-				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
-
-				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
-					if (Program.CurrentHost.Plugins[i].Object != null) {
-						try {
-							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
-								try
-								{
-									UnifiedObject obj;
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
-										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
-										Object = obj;
-										return true;
-									}
-									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
-								} catch (Exception ex) {
-									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
-								}
-							}
-						} catch (Exception ex) {
-							Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
-						}
-					}
-				}
-				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
-			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
-			}
-			Object = null;
-			return false;
-		}
-
 		public override bool LoadStaticObject(string path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
+			Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
-				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
-
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Object != null) {
 						try {
@@ -343,7 +304,7 @@ namespace OpenBve
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out unifiedObject)) {
 										if (unifiedObject is StaticObject)
 										{
-											unifiedObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
+											unifiedObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 											Object = (StaticObject) unifiedObject;
 											return true;
 										}
@@ -368,19 +329,73 @@ namespace OpenBve
 			return false;
 		}
 
+		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
+		{
+			if (base.LoadObject(path, Encoding, out Object))
+			{
+				return true;
+			}
+
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
+
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
+					if (Program.CurrentHost.Plugins[i].Object != null) {
+						try {
+							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
+								try
+								{
+									UnifiedObject obj;
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+										Object = obj;
+
+										StaticObject staticObject = Object as StaticObject;
+										if (staticObject != null)
+										{
+											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
+											return true;
+										}
+
+										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
+										if (aoc != null)
+										{
+											AnimatedObjectCollectionCache.Add(path, aoc);
+										}
+
+										return true;
+									}
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
+								} catch (Exception ex) {
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
+								}
+							}
+						} catch (Exception ex) {
+							Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
+						}
+					}
+				}
+				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+			} else {
+				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+			}
+			Object = null;
+			return false;
+		}
+
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)
@@ -442,6 +457,12 @@ namespace OpenBve
 			{
 				Program.CurrentRoute.Tracks = value;
 			}
+		}
+
+		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
+		{
+			Interface.AddMessage(MessageType.Warning, false, "Track Following Objects are not shown in Route Viewer. Please test using the main simulation.");
+			return null;
 		}
 
 		public Host() : base(HostApplication.RouteViewer)

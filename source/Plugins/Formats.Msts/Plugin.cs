@@ -106,7 +106,7 @@ namespace OpenBve.Formats.MsTs
 					i++;
 				}
 
-				Label = System.Text.Encoding.Unicode.GetString(buff, 0, length * 2);
+				Label = Encoding.Unicode.GetString(buff, 0, length * 2);
 			}
 			else
 			{

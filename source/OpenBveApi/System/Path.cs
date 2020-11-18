@@ -16,10 +16,10 @@ namespace OpenBveApi {
 		// --- read-only fields ---
 		
 		/// <summary>The list of characters that are invalid in platform-independent relative paths.</summary>
-		private static readonly char[] InvalidPathChars = new char[] { ':', '*', '?', '"', '<', '>', '|' };
+		private static readonly char[] InvalidPathChars = { ':', '*', '?', '"', '<', '>', '|' };
 		
 		/// <summary>The list of characters at which relative paths are separated into parts.</summary>
-		private static readonly char[] PathSeparationChars = new char[] { '/', '\\' };
+		private static readonly char[] PathSeparationChars = { '/', '\\' };
 		
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a directory.</summary>
 		/// <param name="absolute">The platform-specific absolute path.</param>
@@ -32,9 +32,8 @@ namespace OpenBveApi {
 				string directory = CombineDirectory(absolute, relative.Substring(0, index).TrimEnd());
 				if (Directory.Exists(directory)) {
 					return directory;
-				} else {
-					return CombineDirectory(absolute, relative.Substring(index + 2).TrimStart());
 				}
+				return CombineDirectory(absolute, relative.Substring(index + 2).TrimStart());
 			}
 			if (relative.IndexOfAny(InvalidPathChars) >= 0) {
 				throw new ArgumentException("The relative path contains invalid characters.");
@@ -115,9 +114,8 @@ namespace OpenBveApi {
 				string file = CombineFile(absolute, relative.Substring(0, index).TrimEnd());
 				if (File.Exists(file)) {
 					return file;
-				} else {
-					return CombineFile(absolute, relative.Substring(index + 2).TrimStart());
 				}
+				return CombineFile(absolute, relative.Substring(index + 2).TrimStart());
 			}
 			if (relative.IndexOfAny(InvalidPathChars) >= 0) {
 				throw new ArgumentException("The relative path contains invalid characters.");
@@ -128,23 +126,23 @@ namespace OpenBveApi {
 					/*
 					 * Consider only non-empty parts.
 					 * */
-					if (IsAllPeriods(parts[i])) {
+					if (IsAllPeriods(parts[i]))
+					{
 						if (i == parts.Length - 1) {
 							/*
 							 * The last part must not be all periods because
 							 * it would reference a directory then, not a file.
 							 * */
 							throw new ArgumentException("The relative path is malformed.");
-						} else {
-							/*
-							 * A string of periods is a reference to an
-							 * upper directory. A single period is the
-							 * current directory. For each additional
-							 * period, jump one directory up.
-							 * */
-							for (int j = 1; j < parts[i].Length; j++) {
-								absolute = System.IO.Path.GetDirectoryName(absolute);
-							}
+						}
+						/*
+						 * A string of periods is a reference to an
+						 * upper directory. A single period is the
+						 * current directory. For each additional
+						 * period, jump one directory up.
+						 * */
+						for (int j = 1; j < parts[i].Length; j++) {
+							absolute = System.IO.Path.GetDirectoryName(absolute);
 						}
 					} else if (i == parts.Length - 1) {
 						/*
@@ -155,20 +153,22 @@ namespace OpenBveApi {
 					    if (File.Exists(file)) {
 					        return file;
 					    }
-					        /*
-							 * Try to find the file case-insensitively.
-							 * */
-					        if (Directory.Exists(absolute)) {
-					            string[] files = Directory.GetFiles(absolute);
-					            for (int j = 0; j < files.Length; j++) {
-					                string name = System.IO.Path.GetFileName(files[j]);
-					                if (name != null && name.Equals(parts[i], StringComparison.OrdinalIgnoreCase)) {
-					                    return files[j];
-					                }
-					            }
+				        /*
+						 * Try to find the file case-insensitively.
+						 * */
+				        if (Directory.Exists(absolute))
+				        {
+					        string[] files = Directory.GetFiles(absolute);
+					        for (int j = 0; j < files.Length; j++)
+					        {
+						        string name = System.IO.Path.GetFileName(files[j]);
+						        if (name != null && name.Equals(parts[i], StringComparison.OrdinalIgnoreCase))
+						        {
+							        return files[j];
+						        }
 					        }
-					        return file;
-					    
+				        }
+				        return file;
 					} else {
 						/*
 						 * This part references a directory.

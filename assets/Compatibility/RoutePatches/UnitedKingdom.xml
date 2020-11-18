@@ -1,0 +1,302 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<!-- Aldwych -->
+	<Patch>
+		<Hash>AA6528402BE457A20DF77A8B7CAFBC2580F3F8326BB56B9A691A4558174AE152</Hash>
+		<FileName>V.2.1.1 Aldwych BVE4- no fog.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Aldwych v2.1.1 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>2EB087770AEC2C6A0F2AADC0A8D531117502B1AB33E94CBBC11940DA4FFF4A30</Hash>
+		<FileName>V.2.1.1 Aldwych BVE4.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Aldwych v2.1.1 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<!-- Bakerloo V3 BVE2 -->
+	<Patch>
+		<Hash>2654DAF8B0FEEAAB928C8CC9E1D68279E361C7C2150D82860CCBB31DFD48A7C8</Hash>
+		<FileName>Elephant to Harrow 1972Mk2TS.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>D2382ED7D67DF6B9D6F32E8A89B1C21A7689EA18AEADED6BFE8EFE53BD78D2BD</Hash>
+		<FileName>Elephant to Queen's Park 1972Mk2TS.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>9062F55797622F66E2FED2C7E2A6EB6F661F6C8C6EE89A249AEAC0E6CB6B1FF9</Hash>
+		<FileName>Queen's Park to Harrow SILVERLINK Cl313.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<!-- Bakerloo V3 BVE4 -->
+	<Patch>
+		<Hash>C2AC8A277D08AED9505A339759EDD5BBB0E4C541E0226EFFD8615DCBDCE8A446</Hash>
+		<FileName>Elephant to Harrow 1972Mk2TS.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>1175ABDC20934050DBF3DF6E186874D9A7315358235D2CE4CC3096512BF17514</Hash>
+		<FileName>Elephant to Queen's Park 1972Mk2TS.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>84F32BB8CFAB5D63E611C261822A55F22AE444401A04B826E2529449E3431728</Hash>
+		<FileName>Queen's Park to Harrow SILVERLINK Cl313.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<!-- Picadilly Line -->
+	<Patch>
+		<Hash>9D87539BAC426DE5B1ECB638A935EF8AC37B31AD6B16D645B1D3F2A7E2D1B23F</Hash>
+		<FileName>Barons Ct to Arnos 38ts.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>078324311EC9048F313513849B5EBDCF3C3CAF193520F947258324FEDDD6A2BD</Hash>
+		<FileName>Barons Ct to Arnos Peak.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>939E18B5AB5645FF25CF5C4CE72D0F0567C9A0C9ABDF6D21AB5DC3278D180032</Hash>
+		<FileName>Barons Ct to Arnos Weedkill.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>3E673AAD446439A42FA81AA37D6C51FE69DC32C93D2FDC1EE3B8DA73EDC61B81</Hash>
+		<FileName>Barons Ct to Arnos.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>60F9CF7F40E21808072DAEF3F316ECB0BEA2AA224F5AD414BCA084F6AE0BD1E8</Hash>
+		<FileName>Barons Ct to Wood Green.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>179EB3C4F653DBC8FF98CF1F6F44693DE5AE6EB8A196CE89D2B5681BA6D972EB</Hash>
+		<FileName>Hyde Pk Cnr to Wood Green.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<!-- Sandymill- Invernay -->
+	<Patch>
+		<Hash>5B2A2AD999FA955FDA5DCB2A7DFFDE8C6856194EC5D040C8C34748D039EECDD4</Hash>
+		<FileName>Clear Sandymill-Invermay - 158 Aft.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>E6644FA372526EAF5975CA32BA3F6E64EA2631AC9BA311A7E5CE3AF56E2869A0</Hash>
+		<FileName>Clear Sandymill-Invermay - 158 Morn.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>974FE77BCF91D11B2C647AB001A4F888F4134C49BE8DE892ED013846B942AD5D</Hash>
+		<FileName>Clear Sandymill-Invermay - HST LA.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>7A1163DA300A8E5029C72D4E7EFB9356A7EFD35F3151E86AB92D5963886D2ED8</Hash>
+		<FileName>Clear Sandymill-Invermay - Sprinter Aft.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>9D42BF16E01A40A2EDD46BE1B4C746198CDD5DD578C6D68649CECBCB04413445</Hash>
+		<FileName>Clear Sandymill-Invermay - Sprinter Morn.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>A3B2AB67C58557C1CD431FEA1209A8F06A9019BEC8ED7DDC3A0033FDF3663B44</Hash>
+		<FileName>Fog Sandymill-Invermay - 158 Aft.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>8A348FD7ED2AF78EC4C65B4020D88B50E873EA083469E8B32D53885E1C2BBE3F</Hash>
+		<FileName>Fog Sandymill-Invermay - HST LA.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>167C0A2EF1631C829785C14332627CF21DC0C137CEC6D666B4B001029D1BA887</Hash>
+		<FileName>Sandymill to Invermay\\Sandymill-Invermay - HST Late Train .rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- Sandymill Electric -->
+	<!-- Day -->
+	<Patch>
+		<Hash>7E327966DE62D5441CCD03171876D129E5BAB247390FB6D487DB6DD314AE6662</Hash>
+		<FileName>311_SM-Balfearn.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>1C6B71F3D1FDCB59C4CCCE2B79D1A5CA303078F160D9D9AD08353A9F3BEB14E0</Hash>
+		<FileName>47_PW-Invermay.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>BD6AB73AA955A47C8303F2CB9F1A2674F0649669E42A245BE656C7D559856281</Hash>
+		<FileName>87_SM-Pinwhirrie.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>DA556F1FCFAE115829982F53809FA3103290B29524CEFAD8B37DA3003B06CA17</Hash>
+		<FileName>HST_SM-Invermay.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- Night -->
+	<Patch>
+		<Hash>5679353768B5D07109E32C02A0443539E76F60DA5AAD077CD97303245C1D7FC9</Hash>
+		<FileName>311_SM-Balfearn.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>9694EF802953F7262A5D6475C6A443BA06E79506428F3FDD1E404E201DEF464C</Hash>
+		<FileName>47_PW-Invermay.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>1ECBE7D13C920441B5983DFA25C6FD954B03A9E7499614947143B8F5FC889CA6</Hash>
+		<FileName>87_SM-Pinwhirrie.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>38D0D107E21F163FBE1DD5ED21D26730CC14374AD84FCA4B16D460EFFDAC6F3A</Hash>
+		<FileName>HST_SM-Invermay.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!--Sandymill - Balfearn -->
+	<Patch>
+		<Hash>1EF0756168A0CA139450BB2EA1DC9C2C9AC64E14222BE8289339404E2E7132D0</Hash>
+		<FileName>Sandymill_Morning.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>BFCA0158A5D0168365C770F0B6888774D8E9974216E02914E78925EA91039EE6</Hash>
+		<FileName>Sandymill_Night - Clear.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>62EE92C7533F73DD4122F079F922C47D9BECFA29241BBAD8BFDC939B65183058</Hash>
+		<FileName>Sandymill_Night - Dark.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>2E205B001B3E0699840AEDE7924BE568194B9FD1B309453F3BE0B673FE230F5C</Hash>
+		<FileName>Sandymill_Original.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>B3C6E90AB97F65E733C7CA4376C7B8E1A2F779392E7D69AE2F415A8AF5804F88</Hash>
+		<FileName>Sandymill_Snow.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>B77AA9070629AD379A3B342FBBA177FC3392C9994ECF545827B426624766A28A</Hash>
+		<FileName>Sandymill_HST.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>95EA69BB178CA23839FE3E8172E9F28ED062BB20EACC7820A6EEF7122BC867DA</Hash>
+		<FileName>Sandymill_Sprinter.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- Bay Park -->
+	<Patch>
+		<Hash>09285CB0E873848E1E79A070EF8D51B20502B5FE07FA7FCCED55AF9485127A10</Hash>
+		<FileName>Bay_Park CL158.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>CDA148AF28C3F1A54F02F13F38BCB923110836E7FEE6A5B053649C8FDBDAA900</Hash>
+		<FileName>Bay_Park HST.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- Blackbrook - Cheddingham -->
+	<Patch>
+		<Hash>8C6BEC133FF3BD99B45C0CE1EFE273511D5E6C877CE8448C6326DF49091709B0</Hash>
+		<FileName>01-Blackbrook - Cheddingham.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>27009581473948AEF86A732DF901C4338F1A3F55F828AD4C67C78305F7EF42B6</Hash>
+		<FileName>02-Cheddingham - Appleford.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>877A3D79EBADDBA4CAF9E6E74F82CAACA52A65158A73A5AC2758F48731EC8580</Hash>
+		<FileName>03a-Appleford - Blackbrook Express.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>8BA9A7933DC6B95E7E71A6D72878090B578294DADFF3881D86FDA231C964ADC6</Hash>
+		<FileName>03-Appleford - Blackbrook.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>7355841785A1049182F966BAC5F1B78A24BFC6EEFBA947C9C2C17F8A82137D54</Hash>
+		<FileName>04-Blackbrook - Cheddingham.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>4571D4FEC90ADA7771D6DDC0683FD1E38A035C29D1B8015BC88C7A44F2DF8CE5</Hash>
+		<FileName>05-Cheddingham - Appleford.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>7751ECA40F964985F7C381BB2EE46AC6907DBDA1BE0923E3149E71D2A7A495F9</Hash>
+		<FileName>06-Appleford - Blackbrook.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- Tinsford -->
+	<Patch>
+		<Hash>1B0ADA299CC4E1A1500AFE6510D6103DF958C2746DF6FA236476D9DF6115D3A3</Hash>
+		<FileName>Tinsford.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- Milngavie - Springburn -->
+	<Patch>
+		<Hash>798F942EC6C227149D32957B78F3B9E635276A2B462A07B338F313FAF62E500E</Hash>
+		<FileName>Milngavie - Springburn 6 Car Evening Rush Hour.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>2BC570375D5DC0209612309EBF20CA5F12C6B6E811B63428832296148F6A8ED5</Hash>
+		<FileName>Milngavie - Springburn Daytime Local.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>9DDB119D0316B37CA2C98A37B50C134B47CF044809D0D47DB31621A0FAA7F597</Hash>
+		<FileName>Milngavie - Springburn Express.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>52F841DFB59E83D95FC8F1CBCC14F38682E65411F2A099977B66F0ACE801DDE6</Hash>
+		<FileName>Milngavie to Springburn First Train.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>72B9A0BD4548E3983836C51C36BAAE3A19697BE779AFCA520AACF49F1B886DB1</Hash>
+		<FileName>Milngavie to Springburn Last Train.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>B742B9CDEDB61F0B8927541551EEC9CA9782ED7034E57CAE2B2AA9E631FBC97A</Hash>
+		<FileName>Milngavie to Springburn Mid-day Train.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>A72ED12D6F376800AF38072B7203786B36B66742847899B2E1F073BD61E24FAE</Hash>
+		<FileName>Milngavie to Springburn FOGGY.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+  </RoutePatches>
+</openBVE>

@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender2.Texts;
+using OpenBveApi;
 using OpenBveApi.Trains;
 using RouteManager2;
 using RouteManager2.MessageManager;
@@ -46,16 +47,16 @@ namespace OpenBve
 						lim = Math.Round(lim * 3.6);
 						remove = spd <= lim;
 						string s = InternalText, t;
-						if (Game.SpeedConversionFactor != 0.0)
+						if (Interface.CurrentOptions.SpeedConversionFactor != 0.0)
 						{
-							spd = Math.Round(spd * Game.SpeedConversionFactor);
-							lim = Math.Round(lim * Game.SpeedConversionFactor);
+							spd = Math.Round(spd * Interface.CurrentOptions.SpeedConversionFactor);
+							lim = Math.Round(lim * Interface.CurrentOptions.SpeedConversionFactor);
 						}
 						t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
 						s = s.Replace("[speed]", t);
 						t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
 						s = s.Replace("[limit]", t);
-						s = s.Replace("[unit]", Game.UnitOfSpeed);
+						s = s.Replace("[unit]", Interface.CurrentOptions.UnitOfSpeed);
 						MessageToDisplay = s;
 					} break;
 					case MessageDependency.PassedRedSignal:
@@ -67,16 +68,16 @@ namespace OpenBve
 						lim = Math.Round(lim * 3.6);
 						remove = spd <= lim;
 						string s = InternalText, t;
-						if (Game.SpeedConversionFactor != 0.0)
+						if (Interface.CurrentOptions.SpeedConversionFactor != 0.0)
 						{
-							spd = Math.Round(spd * Game.SpeedConversionFactor);
-							lim = Math.Round(lim * Game.SpeedConversionFactor);
+							spd = Math.Round(spd * Interface.CurrentOptions.SpeedConversionFactor);
+							lim = Math.Round(lim * Interface.CurrentOptions.SpeedConversionFactor);
 						}
 						t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
 						s = s.Replace("[speed]", t);
 						t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
 						s = s.Replace("[limit]", t);
-						s = s.Replace("[unit]", Game.UnitOfSpeed);
+						s = s.Replace("[unit]", Interface.CurrentOptions.UnitOfSpeed);
 						MessageToDisplay = s;
 					} break;
 					case MessageDependency.StationArrival:

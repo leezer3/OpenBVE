@@ -195,7 +195,7 @@ namespace OpenBve.Graphics.Renderers
 			        }
 		        }
 
-		        Array.Resize<Lamp>(ref Lamps, Count);
+		        Array.Resize(ref Lamps, Count);
 		        for (int i = 0; i < Count; i++)
 		        {
 			        if (Lamps[i].Width > Width)

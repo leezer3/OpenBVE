@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.World;
@@ -23,8 +24,8 @@ namespace OpenBveApi.Objects
 
 			/// <inheritdoc/>
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
-				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
-				double TrackPosition, double Brightness, bool DuplicateMaterials)
+				int SectionIndex, double StartingDistance, double EndingDistance,
+				double TrackPosition, double Brightness, bool DuplicateMaterials = false)
 			{
 				bool[] free = new bool[Objects.Length];
 				bool anyfree = false;
@@ -66,7 +67,7 @@ namespace OpenBveApi.Objects
 								mat *= (Matrix4D)new Transformation(FinalTransformation.Z, FinalTransformation.Y, FinalTransformation.X);
 								double zOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
 								
-								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
 							}
 							else
 							{
@@ -95,16 +96,8 @@ namespace OpenBveApi.Objects
 					{
 						continue;
 					}
-					var snd = this.Sounds[i] as WorldSound;
-					if (snd != null)
-					{
-						snd.CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
-					}
-					var snd2 = this.Sounds[i] as AnimatedWorldObjectStateSound;
-					if (snd2 != null)
-					{
-						snd2.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
-					}
+					(Sounds[i] as WorldSound)?.CreateSound(Position + Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 				}
 			}
 
@@ -127,7 +120,11 @@ namespace OpenBveApi.Objects
 			/// <inheritdoc/>
 			public override UnifiedObject Clone()
 			{
-				throw new NotSupportedException();
+				return new AnimatedObjectCollection(currentHost)
+				{
+					Objects = Objects.Select(x => x?.Clone()).ToArray(),
+					Sounds = Sounds.Select(x => x?.Clone()).ToArray()
+				};
 			}
 
 			/// <summary>Creates a mirrored clone of this object</summary>
@@ -154,6 +151,35 @@ namespace OpenBveApi.Objects
 				return Result;
 			}
 
+			/// <summary>Reverses the object</summary>
+			public void Reverse()
+			{
+				foreach (AnimatedObject animatedObj in Objects)
+				{
+					foreach (ObjectState state in animatedObj.States)
+					{
+						state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
+						Matrix4D t = state.Translation;
+						t.Row3.X *= -1.0f;
+						t.Row3.Z *= -1.0f;
+						state.Translation = t;
+					}
+					animatedObj.TranslateXDirection.X *= -1.0;
+					animatedObj.TranslateXDirection.Z *= -1.0;
+					animatedObj.TranslateYDirection.X *= -1.0;
+					animatedObj.TranslateYDirection.Z *= -1.0;
+					animatedObj.TranslateZDirection.X *= -1.0;
+					animatedObj.TranslateZDirection.Z *= -1.0;
+					//Must reverse the also reverse the direction of the rotation functions
+					animatedObj.RotateXDirection.X *= -1.0;
+					animatedObj.RotateXDirection.Z *= -1.0;
+					animatedObj.RotateYDirection.X *= -1.0;
+					animatedObj.RotateYDirection.Z *= -1.0;
+					animatedObj.RotateZDirection.X *= -1.0;
+					animatedObj.RotateZDirection.Z *= -1.0;
+				}
+			}
+			
 			/// <inheritdoc/>
 			public override UnifiedObject Transform(double NearDistance, double FarDistance)
 			{

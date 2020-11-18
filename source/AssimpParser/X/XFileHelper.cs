@@ -164,14 +164,15 @@ namespace AssimpNET.X
 	/** Helper structure to represent a XFile frame */
 	public class Node
 	{
-		public string Name;
+		public readonly string Name;
 		public Matrix4D TrafoMatrix;
 		public Node Parent;
 		public List<Node> Children = new List<Node>();
 		public List<Mesh> Meshes = new List<Mesh>();
 
-		public Node(Node parent = null)
+		public Node(string name, Node parent = null)
 		{
+			Name = name;
 			Parent = parent;
 		}
 	}

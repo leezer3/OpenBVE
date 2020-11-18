@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using LibRender2;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -22,23 +21,14 @@ using RouteManager2.Stations;
 namespace OpenBve {
 	internal static class Game {
 
-		// random numbers
-		internal static readonly Random Generator = new Random();
-
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
 		internal static double StartupTime = 0.0;
-
-		// game constants
-		internal static double[] PrecedingTrainTimeDeltas;
-		internal static double PrecedingTrainSpeedLimit;
-
-		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-		internal static string TrainName = "";
-
+		
 		// ================================
 
 		internal static void Reset() {
+			Program.Renderer.Reset();
 			// track manager
 			Program.CurrentRoute.Tracks = new Dictionary<int, Track>();
 			Track t = new Track
@@ -49,23 +39,19 @@ namespace OpenBve {
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
-			Interface.ClearMessages();
+			Interface.LogMessages.Clear();
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
-			Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = 9.80665;
-			Program.CurrentRoute.Atmosphere.InitialAirPressure = 101325.0;
-			Program.CurrentRoute.Atmosphere.InitialAirTemperature = 293.15;
-			Program.CurrentRoute.Atmosphere.InitialElevation = 0.0;
-			Program.CurrentRoute.Atmosphere.SeaLevelAirPressure = 101325.0;
-			Program.CurrentRoute.Atmosphere.SeaLevelAirTemperature = 293.15;
+			Program.CurrentRoute.Atmosphere = new Atmosphere();
+			Program.CurrentRoute.LightDefinitions = new LightDefinition[] { };
 			Program.CurrentRoute.Stations = new RouteStation[] { };
 			Program.CurrentRoute.Sections = new Section[] { };
 			Program.CurrentRoute.BufferTrackPositions = new double[] { };
 			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
-			TrainName = "";
-			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
+			Interface.CurrentOptions.TrainName = "";
+			Interface.CurrentOptions.TrainStart = TrainStartMode.EmergencyBrakesNoAts;
 			Program.CurrentRoute.PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
 			Program.CurrentRoute.CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
 			Program.CurrentRoute.NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
@@ -81,7 +67,6 @@ namespace OpenBve {
 			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
-			Program.Renderer.Reset();
 			Program.Sounds.StopAllSounds();
 			GC.Collect();
 		}

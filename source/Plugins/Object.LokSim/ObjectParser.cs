@@ -233,8 +233,8 @@ namespace Plugin
 												}
 											}
 											//Resize temp arrays
-											Array.Resize<VertexTemplate>(ref tempVertices, tempVertices.Length + 1);
-											Array.Resize<Vector3>(ref tempNormals, tempNormals.Length + 1);
+											Array.Resize(ref tempVertices, tempVertices.Length + 1);
+											Array.Resize(ref tempNormals, tempNormals.Length + 1);
 											//Add vertex and normals to temp array
 											if (vF == false)
 											{
@@ -244,10 +244,10 @@ namespace Plugin
 											tempVertices[tempVertices.Length - 1] = new Vertex((Vector3)v);
 											tempNormals[tempNormals.Length - 1] = new Vector3(n);
 											tempNormals[tempNormals.Length - 1].Normalize();
-											Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+											Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
 											while (Builder.Vertices.Length >= Normals.Length)
 											{
-												Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
+												Array.Resize(ref Normals, Normals.Length << 1);
 											}
 											Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(new Vector3((Vector3)v));
 											Normals[Builder.Vertices.Length - 1] = new Vector3(n);
@@ -268,13 +268,13 @@ namespace Plugin
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
 												int f = Builder.Faces.Length;
 												//Add 1 to the length of the face array
-												Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+												Array.Resize(ref Builder.Faces, f + 1);
 												Builder.Faces[f] = new MeshFace();
 												//Create the vertex array for the face
 												Builder.Faces[f].Vertices = new MeshFaceVertex[Verticies.Length];
 												while (Builder.Vertices.Length > Normals.Length)
 												{
-													Array.Resize<Vector3>(ref Normals,
+													Array.Resize(ref Normals,
 														Normals.Length << 1);
 												}
 												//Run through the vertices list and grab from the temp array
@@ -291,7 +291,7 @@ namespace Plugin
 														continue;
 													}
 													//Add one to the actual vertex array
-													Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+													Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
 													//Set coordinates
 													Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(tempVertices[currentVertex].Coordinates);
 													//Set the vertex index
@@ -405,7 +405,7 @@ namespace Plugin
 					for (int j = 0; j < Builder.Materials.Length; j++)
 					{
 						Builder.Materials[j].TransparentColor = FirstPxTransparent ? FirstPxColor : transparentColor;
-						Builder.Materials[j].TransparentColorUsed = true;
+						Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 					}
 				}
 

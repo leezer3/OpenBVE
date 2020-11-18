@@ -33,7 +33,7 @@ namespace OpenBve
 						Builder.Append("keyboard, " + controlsToSave[i].Key + ", " + ((int)controlsToSave[i].Modifier).ToString(Culture) + ", " + controlsToSave[i].Option.ToString(Culture));
 						break;
 					case ControlMethod.Joystick:
-						Builder.Append("joystick, " + controlsToSave[i].Device.ToString(Culture) + ", ");
+						Builder.Append("joystick, " + controlsToSave[i].Device + ", ");
 						switch (controlsToSave[i].Component) {
 							case JoystickComponent.Axis:
 								Builder.Append("axis, " + controlsToSave[i].Element.ToString(Culture) + ", " + controlsToSave[i].Direction.ToString(Culture));
@@ -159,7 +159,7 @@ namespace OpenBve
 					{
 						if (Length >= Controls.Length)
 						{
-							Array.Resize<Control>(ref Controls, Controls.Length << 1);
+							Array.Resize(ref Controls, Controls.Length << 1);
 						}
 
 						int j;
@@ -173,7 +173,7 @@ namespace OpenBve
 							Controls[Length].Command = Translations.Command.None;
 							Controls[Length].InheritedType = Translations.CommandType.Digital;
 							Controls[Length].Method = ControlMethod.Invalid;
-							Controls[Length].Device = -1;
+							Controls[Length].Device = new Guid();
 							Controls[Length].Component = JoystickComponent.Invalid;
 							Controls[Length].Element = -1;
 							Controls[Length].Direction = 0;
@@ -234,7 +234,7 @@ namespace OpenBve
 									if (int.TryParse(Terms[3], NumberStyles.Integer, Culture, out Modifiers))
 									{
 										Controls[Length].Method = ControlMethod.Keyboard;
-										Controls[Length].Device = -1;
+										Controls[Length].Device = new Guid(); //will create invalid all zero GUID
 										Controls[Length].Component = JoystickComponent.Invalid;
 										Controls[Length].Key = (OpenBveApi.Input.Key)CurrentKey;
 										Controls[Length].Direction = 0;
@@ -253,8 +253,14 @@ namespace OpenBve
 
 							else if (Method == "joystick" & Terms.Length >= 4)
 							{
-								int Device;
-								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device))
+								int oldDevice;
+								Guid Device = new Guid();
+								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out oldDevice))
+								{
+									Device = OpenTK.Input.Joystick.GetGuid(oldDevice);
+								}
+								
+								if (Device != new Guid() || Guid.TryParse(Terms[2], out Device))
 								{
 									string Component = Terms[3].ToLowerInvariant();
 									if (Component == "axis" & Terms.Length >= 6)
@@ -332,8 +338,14 @@ namespace OpenBve
 							}
 							else if (Method == "raildriver" & Terms.Length >= 4)
 							{
-								int Device;
-								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device))
+								int oldDevice;
+								Guid Device = new Guid();
+								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out oldDevice))
+								{
+									Device = OpenTK.Input.Joystick.GetGuid(oldDevice);
+								}
+								
+								if (Device != new Guid() || Guid.TryParse(Terms[2], out Device))
 								{
 									string Component = Terms[3].ToLowerInvariant();
 									if (Component == "axis" & Terms.Length >= 6)
@@ -388,7 +400,7 @@ namespace OpenBve
 							if (!Valid)
 							{
 								Controls[Length].Method = ControlMethod.Invalid;
-								Controls[Length].Device = -1;
+								Controls[Length].Device = new Guid(); //Invalid all zero GUID
 								Controls[Length].Component = JoystickComponent.Invalid;
 								Controls[Length].Element = -1;
 								Controls[Length].Direction = 0;
@@ -401,7 +413,7 @@ namespace OpenBve
 					}
 				}
 			}
-			Array.Resize<Control>(ref Controls, Length);
+			Array.Resize(ref Controls, Length);
 		}
 
 
@@ -415,7 +427,7 @@ namespace OpenBve
 					if (Add[i].Command == Base[j].Command) break;
 				}
 				if (j == Base.Length) {
-					Array.Resize<Control>(ref Base, Base.Length + 1);
+					Array.Resize(ref Base, Base.Length + 1);
 					Base[Base.Length - 1] = Add[i];
 				}
 			}

@@ -25,16 +25,19 @@ namespace RouteManager2.Events
 			private readonly double Speed;
 			/// <summary>Holds a reference to the host application callback function</summary>
 			private readonly HostInterface currentHost;
+			/// <summary>Whether this triggers for all cars</summary>
+			private readonly bool AllCars;
 
 			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
 			/// <param name="SoundBuffer">The sound buffer to play.</param>
 			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
+			/// <param name="AllCars">Whether this triggers for all cars in a train</param>
 			/// <param name="Once">Defines whether this sound repeats looped, or plays once</param>
 			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
 			/// <param name="Position">The position of the sound relative to it's track location</param>
 			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
 			/// <param name="Host">The </param>
-			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed, HostInterface Host)
+			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position, double Speed, HostInterface Host)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
@@ -45,6 +48,50 @@ namespace RouteManager2.Events
 				this.Position = Position;
 				this.Speed = Speed;
 				this.currentHost = Host;
+				this.AllCars = AllCars;
+			}
+
+			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
+			/// <param name="SoundBuffer">The sound buffer to play.</param>
+			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
+			/// <param name="AllCars">Whether this triggers for all cars in a train</param>
+			/// <param name="Once">Defines whether this sound repeats looped, or plays once</param>
+			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
+			/// <param name="Position">The position of the sound relative to it's track location</param>
+			/// <param name="Host">The </param>
+			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position, HostInterface Host)
+			{
+				this.TrackPositionDelta = TrackPositionDelta;
+				this.DontTriggerAnymore = false;
+				this.SoundBuffer = (SoundBuffer)SoundBuffer;
+				this.PlayerTrainOnly = PlayerTrainOnly;
+				this.Once = Once;
+				this.Dynamic = Dynamic;
+				this.Position = Position;
+				this.Speed = 0.0;
+				this.currentHost = Host;
+				this.AllCars = AllCars;
+			}
+
+			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
+			/// <param name="SoundBuffer">The sound buffer to play.</param>
+			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
+			/// <param name="Once">Defines whether this sound repeats looped, or plays once</param>
+			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
+			/// <param name="Position">The position of the sound relative to it's track location</param>
+			/// <param name="Host">The </param>
+			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, HostInterface Host)
+			{
+				this.TrackPositionDelta = TrackPositionDelta;
+				this.DontTriggerAnymore = false;
+				this.SoundBuffer = (SoundBuffer)SoundBuffer;
+				this.PlayerTrainOnly = PlayerTrainOnly;
+				this.Once = Once;
+				this.Dynamic = Dynamic;
+				this.Position = Position;
+				this.Speed = 0.0;
+				this.currentHost = Host;
+				this.AllCars = false;
 			}
 
 			/// <summary>Triggers the playback of a sound</summary>
@@ -59,9 +106,18 @@ namespace RouteManager2.Events
 				{
 					if (!PlayerTrainOnly | Train.IsPlayerTrain)
 					{
+						if (AllCars && TriggerType == EventTriggerType.OtherCarRearAxle)
+						{
+							/*
+							 * For a multi-car announce, we only want the front axles to trigger
+							 * However, we also want the rear car, rear axle to run the final processing of DontTriggerAnymore
+							 */
+							return;
+						}
 						double pitch = 1.0;
 						double gain = 1.0;
-						SoundBuffer buffer = SoundBuffer;
+						//In order to play for all cars, we need to create a clone of the buffer, as 1 buffer can only be playing in a single location
+						SoundBuffer buffer = this.AllCars ? SoundBuffer.Clone() : SoundBuffer;
 						if (buffer != null)
 						{
 							if (this.Dynamic)
@@ -76,10 +132,16 @@ namespace RouteManager2.Events
 							}
 							if (buffer != null)
 							{
-								currentHost.PlaySound(buffer, pitch, gain, Position, Car, false);
+								if (AllCars || TriggerType != EventTriggerType.RearCarRearAxle)
+								{
+									currentHost.PlaySound(buffer, pitch, gain, Position, Car, false);
+								}
 							}
 						}
-						this.DontTriggerAnymore = this.Once;
+						if (!AllCars || TriggerType == EventTriggerType.RearCarRearAxle)
+						{
+							this.DontTriggerAnymore = this.Once;
+						}
 					}
 				}
 			}

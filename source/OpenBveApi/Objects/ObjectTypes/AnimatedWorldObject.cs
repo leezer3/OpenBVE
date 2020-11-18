@@ -1,20 +1,24 @@
-﻿using OpenBveApi.Trains;
+﻿using System;
+using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
 {
 	/// <summary>A container object for animated objects within the world</summary>
 	public class AnimatedWorldObject : WorldObject
 	{
-		/// <summary>Holds a reference to the host application</summary>
-		private readonly Hosts.HostInterface currentHost;
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
 
 		/// <summary>Creates a new Animated World Object</summary>
 		/// <param name="Host">The host application</param>
-		public AnimatedWorldObject(Hosts.HostInterface Host)
+		public AnimatedWorldObject(Hosts.HostInterface Host) : base(Host)
 		{
-			currentHost = Host;
+		}
+
+		/// <inheritdoc/>
+		public override WorldObject Clone()
+		{
+			throw new NotSupportedException();
 		}
 
 		/// <inheritdoc/>
@@ -26,7 +30,7 @@ namespace OpenBveApi.Objects
 				{
 					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
-					Object.Update(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(false, NearestTrain, NearestTrain?.DriverCar ?? 0, SectionIndex, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
 				}
 				else
 				{

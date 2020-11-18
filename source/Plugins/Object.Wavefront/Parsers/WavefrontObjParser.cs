@@ -421,7 +421,7 @@ namespace Plugin
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
+				Array.Resize(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
 				if (mm == 0)
 				{
 					if (Object.Mesh.Materials.Length == 0)
@@ -440,7 +440,7 @@ namespace Plugin
 				}
 				if (Builder.Materials.Length > 0)
 				{
-					Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
+					Array.Resize(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
 				}
 				else
 				{
@@ -449,7 +449,7 @@ namespace Plugin
 					 */
 					mm -= 1;
 				}
-				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
+				Array.Resize(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
 				for (int i = 0; i < Builder.Vertices.Count; i++)
 				{
 					Object.Mesh.Vertices[mv + i] = new Vertex((Vertex)Builder.Vertices[i]);
@@ -465,21 +465,13 @@ namespace Plugin
 				}
 				for (int i = 0; i < Builder.Materials.Length; i++)
 				{
-					Object.Mesh.Materials[mm + i].Flags = new MaterialFlags();
-					if (Builder.Materials[i].EmissiveColorUsed)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.Emissive;
-					}
-					if (Builder.Materials[i].TransparentColorUsed)
-					{
-						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.TransparentColor;
-					}
+					Object.Mesh.Materials[mm + i].Flags = Builder.Materials[i].Flags;
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
 					if (Builder.Materials[i].DaytimeTexture != null)
 					{
 						Texture tday;
-						if (Builder.Materials[i].TransparentColorUsed)
+						if ((Builder.Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 						{
 							Plugin.currentHost.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
 						}
@@ -497,7 +489,7 @@ namespace Plugin
 					if (Builder.Materials[i].NighttimeTexture != null)
 					{
 						Texture tnight;
-						if (Builder.Materials[i].TransparentColorUsed)
+						if ((Builder.Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 						{
 							Plugin.currentHost.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
 						}

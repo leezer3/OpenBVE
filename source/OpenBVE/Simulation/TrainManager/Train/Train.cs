@@ -45,9 +45,6 @@ namespace OpenBve
 			internal bool StationDepartureSoundPlayed;
 			internal double StationDistanceToStopPoint;
 			
-			
-			
-			internal GeneralAI AI;
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			
@@ -73,7 +70,7 @@ namespace OpenBve
 			internal Train(TrainState state)
 			{
 				State = state;
-				Destination = Game.InitialDestination;
+				Destination = Interface.CurrentOptions.InitialDestination;
 				Station = -1;
 				RouteLimits = new double[] { double.PositiveInfinity };
 				CurrentRouteLimit = double.PositiveInfinity;
@@ -393,7 +390,7 @@ namespace OpenBve
 										this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 										if (IsPlayerTrain)
 										{
-											this.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+											this.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 
 										}
 									}
@@ -597,7 +594,7 @@ namespace OpenBve
 						if (IsPlayerTrain)
 						{
 							string s = Translations.GetInterfaceString("message_signal_proceed");
-							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
+							double a = (3.6 * CurrentSectionLimit) * Interface.CurrentOptions.SpeedConversionFactor;
 							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);
 							MessageManager.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
@@ -850,7 +847,7 @@ namespace OpenBve
 						SignalData signal = Program.CurrentRoute.Sections[i].GetPluginSignal(this);
 						if (data.Length == count)
 						{
-							Array.Resize<SignalData>(ref data, data.Length << 1);
+							Array.Resize(ref data, data.Length << 1);
 						}
 						data[count] = signal;
 						count++;
@@ -859,7 +856,7 @@ namespace OpenBve
 							break;
 						}
 					}
-					Array.Resize<SignalData>(ref data, count);
+					Array.Resize(ref data, count);
 					Plugin.UpdateSignals(data);
 					Plugin.LastSection = CurrentSectionIndex;
 					Plugin.UpdatePlugin();

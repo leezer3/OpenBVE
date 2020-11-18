@@ -6,23 +6,50 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
-using System.Threading;
+using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LibRender2;
 using LibRender2.Cameras;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using OpenBveApi.Textures;
+using OpenTK.Graphics.ES20;
+using RouteManager2;
 
 namespace OpenBve {
 	internal static class Loading {
 
-		// members
-		internal static double RouteProgress;
-		internal static bool Cancel;
+		internal static bool Cancel
+		{
+			get
+			{
+				return _cancel;
+			}
+			set
+			{
+				if (value)
+				{
+					//Send cancellation call to plugins
+					for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+					{
+						if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
+						{
+							Program.CurrentHost.Plugins[i].Route.Cancel = true;
+						}
+					}
+					_cancel = true;
+				}
+				else
+				{
+					_cancel = false;
+				}
+			}
+		}
+
+		private static bool _cancel;
 		internal static bool Complete;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
@@ -30,19 +57,21 @@ namespace OpenBve {
 		internal static bool JobAvailable;
 
 		// load
-		internal static void Load(string RouteFile, Encoding RouteEncoding) {
+		internal static void Load(string RouteFile, Encoding RouteEncoding, Bitmap bitmap = null) {
 			// reset
 			Game.Reset();
-			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
-			
+			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
+			if (bitmap != null)
+			{
+				Program.Renderer.Loading.SetLoadingBkg(Program.Renderer.TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null)));
+			}
 			// members
-			RouteProgress = 0.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
 			CurrentRouteEncoding = RouteEncoding;
 			// thread
-			Loading.LoadAsynchronously(CurrentRouteFile, Encoding.UTF8);
+			Loading.LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
 			RouteViewer.LoadingScreenLoop();
 		}
 
@@ -91,14 +120,14 @@ namespace OpenBve {
 			}
 			catch (Exception ex)
 			{
-				Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+				MessageBox.Show("The route loader encountered the following critical error: " + ex.Message, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Cancel = true;
 			}
 		}
 
 		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding)
 		{
 			// members
-			RouteProgress = 0.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
@@ -106,7 +135,6 @@ namespace OpenBve {
 
 			//Set the route and train folders in the info class
 			// ReSharper disable once UnusedVariable
-			
 			Task loadThreaded = LoadThreaded();
 		}
 
@@ -114,15 +142,34 @@ namespace OpenBve {
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
-			// string CompatibilityFolder = OpenBveApi.Path.CombineDirectory(Application.StartupPath, "Compatibility");
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 			// load route
-			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
+			bool loaded = false;
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			{
+				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
+				{
+					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, null, ObjectFolder, SoundFolder, false, ref Route))
+					{
+						Program.CurrentRoute = (CurrentRoute) Route;
+						Program.Renderer.Lighting.OptionAmbientColor = Program.CurrentRoute.Atmosphere.AmbientLightColor;
+						Program.Renderer.Lighting.OptionDiffuseColor = Program.CurrentRoute.Atmosphere.DiffuseLightColor;
+						Program.Renderer.Lighting.OptionLightPosition = Program.CurrentRoute.Atmosphere.LightPosition;
+						loaded = true;
+						break;
+					}
+					throw Program.CurrentHost.Plugins[i].Route.LastException;
+				}
+			}
+
+			if (!loaded)
+			{
+				throw new Exception("No plugins capable of loading routefile " + CurrentRouteFile + " were found.");
+			}
 			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
-			RouteProgress = 1.0;
 			// camera
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute( 0.0, true, false);
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.1, true, false);

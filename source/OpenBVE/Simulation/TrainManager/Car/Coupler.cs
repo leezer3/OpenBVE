@@ -95,7 +95,7 @@ namespace OpenBve
 				}
 				// update current section
 				int cs = CurrentCarSection;
-				if (cs >= 0 && CarSections.Length > 0 && CarSections.Length >= cs)
+				if (cs >= 0 && cs < CarSections.Length)
 				{
 					if (CarSections[cs].Groups.Length > 0)
 					{
@@ -181,11 +181,12 @@ namespace OpenBve
 				}
 			}
 
-			internal void LoadCarSections(UnifiedObject currentObject)
+			internal void LoadCarSections(UnifiedObject currentObject, bool visibleFromInterior)
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
 				CarSections[j] = new CarSection(Program.Renderer, false);
+				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;

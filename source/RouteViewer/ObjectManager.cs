@@ -1,9 +1,4 @@
-using System;
-using System.Text;
-using LibRender2;
-using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBve {
@@ -17,7 +12,12 @@ namespace OpenBve {
 			{
 				TrainManager.Train train = null;
 				const double extraRadius = 10.0;
-				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
+				double z = 0.0;
+				if(AnimatedWorldObjects[i].Object != null)
+				{
+					//Standalone sound may not have an object file attached
+					z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
+				}
 				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
 				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
 				double ta = Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z - Program.CurrentRoute.CurrentBackground.BackgroundImageDistance - Program.Renderer.Camera.ExtraViewingDistance;
@@ -54,67 +54,6 @@ namespace OpenBve {
 				}
 				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
 			}
-		}
-
-		internal static StaticObject LoadStaticObject(string FileName, Encoding Encoding, bool PreserveVertices) {
-			#if !DEBUG
-			try {
-				#endif
-				if (!System.IO.Path.HasExtension(FileName)) {
-					while (true) {
-						string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".csv");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						break;
-					}
-				}
-				StaticObject Result;
-				UnifiedObject obj;
-				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
-					case ".csv":
-					case ".b3d":
-					case ".x":
-					case ".obj":
-					case ".animated":
-					case ".l3dobj":
-					case ".l3dgrp":
-					case ".s":
-						Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
-						if (obj is AnimatedObjectCollection)
-						{
-							Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
-							return null;
-						}
-						Result = (StaticObject)obj;
-						break;
-					default:
-						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
-						return null;
-				}
-
-				if (Result != null)
-				{
-					Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
-				}
-				return Result;
-				#if !DEBUG
-			} catch (Exception ex) {
-				Interface.AddMessage(MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
-				return null;
-			}
-			#endif
 		}
 	}
 }

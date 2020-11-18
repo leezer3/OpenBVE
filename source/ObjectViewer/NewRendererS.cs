@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
+using LibRender2.Primitives;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -12,7 +13,6 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -28,9 +28,9 @@ namespace OpenBve
 		internal Color128 TextColor = Color128.White;
 		internal const int MaxBackgroundColor = 4;
 
-		private VertexArrayObject redAxisVAO;
-		private VertexArrayObject greenAxisVAO;
-		private VertexArrayObject blueAxisVAO;
+		private Cube redAxisVAO;
+		private Cube greenAxisVAO;
+		private Cube blueAxisVAO;
 
 		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
 		{
@@ -38,9 +38,9 @@ namespace OpenBve
 
 			if (!ForceLegacyOpenGL)
 			{
-				redAxisVAO = RegisterBox(Color128.Red);
-				greenAxisVAO = RegisterBox(Color128.Green);
-				blueAxisVAO = RegisterBox(Color128.Blue);
+				redAxisVAO = new Cube(this, Color128.Red);
+				greenAxisVAO = new Cube(this, Color128.Green);
+				blueAxisVAO = new Cube(this, Color128.Blue);
 			}
 		}
 
@@ -84,81 +84,10 @@ namespace OpenBve
 			GL.ClearColor(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f);
 		}
 
-		internal void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
-		{
-			if (Prototype != null)
-			{
-				CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
-			}
-		}
-
-		internal void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
-		{
-			if (Prototype is StaticObject)
-			{
-				StaticObject s = (StaticObject)Prototype;
-				CreateStaticObject(s, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-			}
-			else if (Prototype is AnimatedObjectCollection)
-			{
-				AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
-				a.CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
-			}
-		}
-
-		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
-		{
-			StaticObject obj = Prototype as StaticObject;
-
-			if (obj == null)
-			{
-				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
-				return -1;
-			}
-
-			return base.CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-		}
-
-		private VertexArrayObject RegisterBox(Color128 Color)
-		{
-			LibRenderVertex[] vertexData = new LibRenderVertex[8];
-			vertexData[0].Position = new Vector3f(1.0f, 1.0f, 1.0f);
-			vertexData[1].Position = new Vector3f(1.0f, -1.0f, 1.0f);
-			vertexData[2].Position = new Vector3f(-1.0f, -1.0f, 1.0f);
-			vertexData[3].Position = new Vector3f(-1.0f, 1.0f, 1.0f);
-			vertexData[4].Position = new Vector3f(1.0f, 1.0f, -1.0f);
-			vertexData[5].Position = new Vector3f(1.0f, -1.0f, -1.0f);
-			vertexData[6].Position = new Vector3f(-1.0f, -1.0f, -1.0f);
-			vertexData[7].Position = new Vector3f(-1.0f, 1.0f, -1.0f);
-
-			for (int i = 0; i < vertexData.Length; i++)
-			{
-				vertexData[i].Color = Color;
-			}
-
-			ushort[] indexData =
-			{
-				0, 1, 2, 3,
-				0, 4, 5, 1,
-				0, 3, 7, 4,
-				6, 5, 4, 7,
-				6, 7, 3, 2,
-				6, 2, 1, 5
-			};
-
-			VertexArrayObject vao = new VertexArrayObject();
-			vao.Bind();
-			vao.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-			vao.SetIBO(new IndexBufferObjectU(indexData, BufferUsageHint.StaticDraw));
-			vao.SetAttributes(DefaultShader.VertexLayout);
-			vao.UnBind();
-
-			return vao;
-		}
-
 		// render scene
 		internal void RenderScene()
 		{
+			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
 
@@ -185,18 +114,18 @@ namespace OpenBve
 
 				if (AvailableNewRenderer)
 				{
-					Cube.DrawRetained(redAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
-					Cube.DrawRetained(greenAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
-					Cube.DrawRetained(blueAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
+					redAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
+					greenAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
+					blueAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 				}
 				else
 				{
 					GL.Color4(1.0, 0.0, 0.0, 0.2);
-					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
+					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
 					GL.Color4(0.0, 1.0, 0.0, 0.2);
-					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
+					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
 					GL.Color4(0.0, 0.0, 1.0, 0.2);
-					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
+					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 				}
 			}
 			GL.Disable(EnableCap.DepthTest);
@@ -357,7 +286,7 @@ namespace OpenBve
 					keys = new[] { new[] { null, "8", "9" }, new[] { "4", "5", "6" }, new[] { null, "2", "3" } };
 					Keys.Render(Screen.Width - 60, Screen.Height - 60, 16, Fonts.SmallFont, keys);
 
-					if (Interface.MessageCount == 1)
+					if (Interface.LogMessages.Count == 1)
 					{
 						Keys.Render(4, 112, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 
@@ -371,18 +300,18 @@ namespace OpenBve
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 112), TextAlignment.TopLeft, TextColor);
 						}
 					}
-					else if (Interface.MessageCount > 1)
+					else if (Interface.LogMessages.Count > 1)
 					{
 						Keys.Render(4, 112, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 						bool error = Interface.LogMessages.Any(x => x.Type != MessageType.Information);
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.MessageCount.ToString(culture)} error messages recently generated.", new Point(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Point(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.MessageCount.ToString(culture)} messages recently generated.", new Point(32, 112), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Point(32, 112), TextAlignment.TopLeft, TextColor);
 						}
 					}
 				}

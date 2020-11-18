@@ -88,10 +88,10 @@ namespace OpenBve
 					int trainX = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
 					int trainZ = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
 					// convert to route map coordinates
-					xPos = mapSize.X * (trainX - Game.RouteInformation.RouteMinX) /
-							(Game.RouteInformation.RouteMaxX - Game.RouteInformation.RouteMinX) - trainDotRadius;
-					zPos = mapSize.Y - mapSize.Y * (trainZ - Game.RouteInformation.RouteMinZ) /
-							(Game.RouteInformation.RouteMaxZ - Game.RouteInformation.RouteMinZ) - trainDotRadius;
+					xPos = mapSize.X * (trainX - Program.CurrentRoute.Information.RouteMinX) /
+							(Program.CurrentRoute.Information.RouteMaxX - Program.CurrentRoute.Information.RouteMinX) - trainDotRadius;
+					zPos = mapSize.Y - mapSize.Y * (trainZ - Program.CurrentRoute.Information.RouteMinZ) /
+							(Program.CurrentRoute.Information.RouteMaxZ - Program.CurrentRoute.Information.RouteMinZ) - trainDotRadius;
 						// draw a dot at current train position
 						Program.Renderer.Rectangle.Draw(null, new Vector2(xPos, zPos),
 							new Vector2(trainDotDiameter, trainDotDiameter),
@@ -103,8 +103,8 @@ namespace OpenBve
 				// get current train position in track
 				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition());
 				// convert to gradient profile offset
-				xPos = gradientSize.X * (trackPos - Game.RouteInformation.GradientMinTrack) /
-						(Game.RouteInformation.GradientMaxTrack - Game.RouteInformation.GradientMinTrack);
+				xPos = gradientSize.Y * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
+						(Program.CurrentRoute.Information.GradientMaxTrack - Program.CurrentRoute.Information.GradientMinTrack);
 				// draw a vertical bar at the current train position
 				Program.Renderer.Rectangle.Draw(null, new Vector2(xPos, gradientSize.Y / 2),
 					new Vector2(gradientPosWidth, gradientSize.Y / 2), gradientPosBar);
@@ -133,15 +133,15 @@ namespace OpenBve
 			case state.map:
 				if (mapImage == null)
 				{
-					mapImage	= new Texture(Game.RouteInformation.RouteMap);
-					mapSize		= new Vector2(Game.RouteInformation.RouteMap.Size.Width, Game.RouteInformation.RouteMap.Size.Height);
+					mapImage	= new Texture(Program.CurrentRoute.Information.RouteMap);
+					mapSize		= new Vector2(Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height);
 				}
 				break;
 			case state.gradient:
 				if (gradientImage == null)
 				{
-					gradientImage	= new Texture(Game.RouteInformation.GradientProfile);
-					gradientSize	= new Vector2(Game.RouteInformation.GradientProfile.Size.Width, Game.RouteInformation.GradientProfile.Size.Height);
+					gradientImage	= new Texture(Program.CurrentRoute.Information.GradientProfile);
+					gradientSize	= new Vector2(Program.CurrentRoute.Information.GradientProfile.Width, Program.CurrentRoute.Information.GradientProfile.Height);
 				}
 				break;
 			}

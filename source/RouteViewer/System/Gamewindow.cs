@@ -91,7 +91,7 @@ namespace OpenBve
 				Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
             }
-            Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight);
+            Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
             Program.Renderer.RenderScene(TimeElapsed);
             MessageManager.UpdateMessages();
             SwapBuffers();
@@ -125,17 +125,8 @@ namespace OpenBve
             if (Program.processCommandLineArgs)
             {
                 Program.processCommandLineArgs = false;
-                for (int i = 0; i < Program.commandLineArguments.Length; i++)
-                {
-                    if (!Program.SkipArgs[i] && System.IO.File.Exists(Program.commandLineArguments[i]))
-                    {
-                        currentlyLoading = true;
-                        Program.CurrentRouteFile = Program.commandLineArguments[i];
-                        Program.LoadRoute();
-                        Program.UpdateCaption();
-                        break;
-                    }
-                }
+                Program.LoadRoute();
+                Program.UpdateCaption();
             }
         }
 
@@ -170,7 +161,15 @@ namespace OpenBve
 				Program.currentGameWindow.ProcessEvents();
 				if (Program.currentGameWindow.IsExiting)
 					Loading.Cancel = true;
-				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, Loading.RouteProgress, 1.0);
+				double routeProgress = 1.0;
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
+					{
+						routeProgress = Program.CurrentHost.Plugins[i].Route.CurrentProgress;
+					}
+				}
+				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, routeProgress);
 				Program.currentGameWindow.SwapBuffers();
 
 				if (Loading.JobAvailable)
@@ -202,7 +201,9 @@ namespace OpenBve
 			}
 			else
 			{
-				Program.currentGameWindow.Exit();
+				Game.Reset();
+				currentlyLoading = false;
+				Program.CurrentRouteFile = null;
 			}
 		}
 
@@ -233,8 +234,6 @@ namespace OpenBve
 
 		public override void Dispose()
 		{
-			Program.Renderer.Finalization();
-
 			base.Dispose();
 		}
     }

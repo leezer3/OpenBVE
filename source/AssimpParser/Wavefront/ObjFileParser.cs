@@ -94,9 +94,9 @@ namespace AssimpNET.Obj
 		private const string DefaultObjName = "defaultobject";
 
 		/// Path to the current model, name of the obj file where the buffer comes from
-		private string OriginalObjFileName;
+		private readonly string OriginalObjFileName;
 
-		private string ObjFilePath;
+		private readonly string ObjFilePath;
 
 		/// @brief  The default constructor.
 		public ObjFileParser()
@@ -115,12 +115,10 @@ namespace AssimpNET.Obj
 			ObjFilePath = objFilePath;
 
 			// Create the model instance to store all the data
-			Model = new Model();
-			Model.ModelName = modelName;
+			Model = new Model(modelName);
 
 			// create default material and store it
-			Model.DefaultMaterial = new Material();
-			Model.DefaultMaterial.MaterialName = DEFAULT_MATERIAL;
+			Model.DefaultMaterial = new Material(DEFAULT_MATERIAL);
 			Model.MaterialLib.Add(DEFAULT_MATERIAL);
 			Model.MaterialMap[DEFAULT_MATERIAL] = Model.DefaultMaterial;
 
@@ -535,8 +533,7 @@ namespace AssimpNET.Obj
 		{
 			Debug.Assert(Model != null);
 
-			Model.Current = new WavefrontObject();
-			Model.Current.ObjName = objName;
+			Model.Current = new WavefrontObject(objName);
 			Model.Objects.Add(Model.Current);
 
 			CreateMesh(objName);
@@ -624,8 +621,7 @@ namespace AssimpNET.Obj
 					// materials if that happens, so create a new named material instead of discarding it
 					// completely.
 					Debug.WriteLine("OBJ: failed to locate material " + name + ", creating new material");
-					Model.CurrentMaterial = new Material();
-					Model.CurrentMaterial.MaterialName = name;
+					Model.CurrentMaterial = new Material(name);
 					Model.MaterialLib.Add(name);
 					Model.MaterialMap[name] = Model.CurrentMaterial;
 				}

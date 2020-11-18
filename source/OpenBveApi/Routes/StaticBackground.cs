@@ -15,9 +15,9 @@ namespace OpenBveApi.Routes
 		public double TransitionTime;
 		/// <summary> The time at which this background should be displayed (Expressed as the number of seconds since midnight)</summary>
 		public double Time;
-		/// <summary>The OpenGL/OpenTK VAO for the background</summary>
+		/// <summary>If using GL3.0, the OpenGL/OpenTK VAO for the background</summary>
 		public object VAO;
-
+		/// <summary>If using GL1.2, the index of the display list</summary>
 		public int DisplayList = 0;
 
 		/// <summary>Creates a new static background, using the default 0.8s fade-in time</summary>
@@ -60,6 +60,10 @@ namespace OpenBveApi.Routes
 			this.Time = Time;
 		}
 		
+		/// <summary>Updates the static background</summary>
+		/// <param name="SecondsSinceMidnight">The current in-game time</param>
+		/// <param name="ElapsedTime">The elapsed time since the last call to this function</param>
+		/// <param name="Target">Whether this is the target background or the current background when applying fading</param>
 		public override void UpdateBackground(double SecondsSinceMidnight, double ElapsedTime, bool Target)
 		{
 			if (Target)

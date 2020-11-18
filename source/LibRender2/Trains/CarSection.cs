@@ -11,6 +11,8 @@ namespace LibRender2.Trains
 		public ElementsGroup[] Groups;
 		/// <summary>The current additional group (touch etc.)</summary>
 		public int CurrentAdditionalGroup;
+		/// <summary>Whether this is visible from internal views</summary>
+		public bool VisibleFromInterior;
 
 		public CarSection(BaseRenderer Renderer, bool Overlay)
 		{

@@ -23,7 +23,7 @@ namespace OpenBve
 				}
 			};
 			string Folder = Program.FileSystem.GetDataFolder("Menu");
-
+			// ReSharper disable EmptyGeneralCatchClause
 			try
 			{
 				Dialog.listviewMessages.SmallImageList.Images.Add("information", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_information.png")));
@@ -44,7 +44,8 @@ namespace OpenBve
 				Dialog.listviewMessages.SmallImageList.Images.Add("critical", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_critical.png")));
 			}
 			catch { }
-			for (int i = 0; i < Interface.MessageCount; i++)
+			// ReSharper restore EmptyGeneralCatchClause
+			for (int i = 0; i < Interface.LogMessages.Count; i++)
 			{
 				string t = "Unknown";
 				string g = "information";
@@ -97,22 +98,24 @@ namespace OpenBve
 			// prepare
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 
-			for (int i = 0; i < Interface.MessageCount; i++)
+			for (int i = 0; i < Interface.LogMessages.Count; i++)
 			{
 				Builder.AppendLine(Interface.LogMessages[i].Text);
 			}
 			// save
-			SaveFileDialog Dialog = new SaveFileDialog();
-			Dialog.Filter = @"Text files|*.txt|All files|*";
-			if (Dialog.ShowDialog() == DialogResult.OK)
+			using (SaveFileDialog Dialog = new SaveFileDialog())
 			{
-				try
+				Dialog.Filter = @"Text files|*.txt|All files|*";
+				if (Dialog.ShowDialog() == DialogResult.OK)
 				{
-					System.IO.File.WriteAllText(Dialog.FileName, Builder.ToString(), System.Text.Encoding.UTF8);
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					try
+					{
+						System.IO.File.WriteAllText(Dialog.FileName, Builder.ToString(), System.Text.Encoding.UTF8);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					}
 				}
 			}
 		}

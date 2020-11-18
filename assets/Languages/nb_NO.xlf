@@ -1,0 +1,5283 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="nb-NO">
+		<body>
+			<group id="language">
+				<trans-unit id="name">
+					<source>English (United States)</source>
+					<target>Norsk (Bokmål)</target>
+				</trans-unit>
+				<trans-unit id="flag">
+					<source>US.png</source>
+					<target>NO.png</target>
+				</trans-unit>
+				<trans-unit id="contributors">
+					<source>Unknown</source>
+					<target>Per-Henrik</target>
+				</trans-unit>
+				<trans-unit id="last_updated">
+					<source>2016-02-21</source>
+					<target>2020-07-21</target>
+				</trans-unit>
+			</group>
+			<group id="openbve">
+				<group id="program">
+					<trans-unit id="title">
+						<source>openBVE</source>
+						<target>openBVE</target>
+					</trans-unit>
+				</group>
+				<group id="panel">
+					<trans-unit id="start">
+						<source>Start new game</source>
+						<target>Nytt spill</target>
+					</trans-unit>
+					<trans-unit id="review">
+						<source>Review last game</source>
+						<target>Gå gjennom siste spill</target>
+					</trans-unit>
+					<trans-unit id="getaddons">
+						<source>Get Add-ons</source>
+						<target>Installer Add-ons</target>
+					</trans-unit>
+					<trans-unit id="controls">
+						<source>Customize controls</source>
+						<target>Endre knapper</target>
+					</trans-unit>
+					<trans-unit id="options">
+						<source>Options</source>
+						<target>Innstillinger</target>
+					</trans-unit>
+					<trans-unit id="homepage">
+						<source>Visit official homepage</source>
+						<target>Offisiell nettside</target>
+					</trans-unit>
+					<trans-unit id="updates">
+						<source>Check for updates</source>
+						<target>Sjekk etter oppdateringer</target>
+					</trans-unit>
+
+					<trans-unit id="updates_invalid">
+					  <source>A connection to the server could be established. Unfortunately, the version information could not be retrieved.</source>
+					  <target>Får tilkoblet serveren, men dessverre kan vi ikke hente ned versjonen.</target>
+					</trans-unit>
+					<trans-unit id="updates_old">
+					  <source>You already have the latest version.</source>
+					  <target>Du har den nyeste versjonen.</target>
+					</trans-unit>
+					<trans-unit id="updates_new">
+					  <source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
+					  <target>Versjon [version] ([date]) er tilgjengelig for nedlasting på den offisielle nettsiden.</target>
+					</trans-unit>
+					<trans-unit id="close">
+					  <source>Close</source>
+					  <target>Lukk</target>
+					</trans-unit>
+					<trans-unit id="packages">
+					  <source>Package Management</source>
+					  <target>Pakkehåndtering</target>
+					</trans-unit>
+					<trans-unit id="reportbug">
+					  <source>Report Problem</source>
+					  <target>Rapporter et problem</target>
+					</trans-unit>
+					<trans-unit id="about">
+					  <source>About</source>
+					  <target>Om</target>
+					</trans-unit>
+				</group>
+				<group id="mode">
+					<trans-unit id="arcade">
+					  <source>Arcade</source>
+					  <target>Arkadespill</target>
+					</trans-unit>
+					<trans-unit id="normal">
+					  <source>Normal</source>
+					  <target>Normal</target>
+					</trans-unit>
+					<trans-unit id="expert">
+					  <source>Expert</source>
+					  <target>Ekspert</target>
+					</trans-unit>
+					<trans-unit id="unknown">
+					  <source>Unknown</source>
+					  <target>Ukjent</target>
+					</trans-unit>
+				</group>
+				<group id="errors">
+					<trans-unit id="critical_file">
+					  <source>A critical error occured whilst parsing the [file] file</source>
+					  <target>En kritisk feil oppstod ved lasting av filen [file]</target>
+					</trans-unit>
+					<trans-unit id="filesystem_invalid">
+					  <source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
+					  <target>Filsystemkonfigurasjonen kunne ikke bli nådd på grunn av følgende grunn:</target>
+					</trans-unit>
+					<trans-unit id="warning">
+					  <source>Warning:</source>
+					  <target>Advarsel:</target>
+					</trans-unit>
+					<trans-unit id="controls_missing">
+					  <source>No control configuration files found.</source>
+					  <target>Ingen kontrollkonfigurasjonsfiler funnet.</target>
+					</trans-unit>
+					<trans-unit id="controls_oldversion">
+					  <source>An older key-configuration file was found.</source>
+					  <target>En eldre knapp-konfigurasjonsfil var funnet.</target>
+					</trans-unit>
+					<trans-unit id="controls_reset">
+					  <source>The current key-configuration has been reset to defaults.</source>
+					  <target>Den nåværende knapp-konfigurasjonen har blitt satt tilbake til standard.</target>
+					</trans-unit>
+					<trans-unit id="controls_default_oldversion">
+					  <source>The default key assingment file is an older version or corrupt.</source>
+					  <target>Filen med standard-knappeoppsettet oppsettet er en gammel versjon eller korrupt.</target>
+					</trans-unit>
+					<trans-unit id="controls_default_missing">
+					  <source>The default key assignment file does not exist.</source>
+					  <target>Filen med standard-knappeoppsettet fins ike.</target>
+					</trans-unit>
+					<trans-unit id="controls_ingame">
+					  <source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
+					  <target>Du kjører nå [platform] backend. Bruk spill-menyen for å konfigurere joystick baserte kontroller.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_version">
+					  <source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
+					  <target>OpenAL 1.1 er påkrevd. Du ser ut til å ha versjon 1.0.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_context">
+					  <source>The OpenAL context could not be created.</source>
+					  <target>OpenAL-konteksten kunne ikke bli opprettet.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_device">
+					  <source>The OpenAL sound device could not be opened.</source>
+					  <target>OpenAL driveren kunne ikke bli åpnet.</target>
+					</trans-unit>
+					<trans-unit id="fullscreen_switch1">
+					  <source>An error occured whilst attempting to switch to fullscreen mode.</source>
+					  <target>En feil oppstod mens programmet prøvde å bytte til fullskjermsmodus.</target>
+					</trans-unit>
+					<trans-unit id="fullscreen_switch2">
+					  <source>Please check your fullscreen resolution settings.</source>
+					  <target>Sjekk fullskjermsinnstillingene.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_withtrack">
+					  <source>The selected route is corrupt: \r\n WithTrack section missing.</source>
+					  <target>Den valgte ruten er korrupt: \r\n WithTrack seksjonen mangler.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_nostations">
+					  <source>The selected route is corrupt: \r\n No stations defined.</source>
+					  <target>Den valgte ruten er korrupt: \r\n Ingen stasjoner er definert.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_noobjects">
+					  <source>The selected route is corrupt: \r\n No objects defined.</source>
+					  <target>Den valgte ruten er korrupt: \r\n Ingen objekter er definert.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+					</trans-unit>
+					<trans-unit id="plugin_failure1">
+					  <source>The train plugin [plugin] failed to load.</source>
+					  <target>Tog-plugin [plugin] kunne ikke laste inn.</target>
+					</trans-unit>
+					<trans-unit id="plugin_failure2">
+						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
+					</trans-unit>
+					<trans-unit id="package_filename_empty">
+					  <source>Attempted to create a package with an empty filename.</source>
+					  <target>Forsøkte å opprette en pakke med tomt filnavn.</target>
+					</trans-unit>
+					<trans-unit id="package_directory_missing">
+					  <source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+					  <target>Mappen du prøvde å lagre filen til pakken eksisterer ikke: \r \n</target>
+					</trans-unit>
+					<trans-unit id="package_directory_nowrite">
+					  <source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+					  <target>Mappen du prøvde å lagre filen til pakken til kan ikke skrives til: \r \n</target>
+					</trans-unit>
+					<trans-unit id="package_file_generic">
+					  <source>Failed to create the following file: \r \n</source>
+					  <target>Det gikk ikke å lage følgende fil: \r \n</target>
+					</trans-unit>
+					<trans-unit id="security_checkaccess">
+					  <source>Please check that this path is accessible.</source>
+					  <target>Vennligst sjekk om denne fil-stien er tilgjengelig.</target>
+					</trans-unit>
+					<trans-unit id="security_badlocation">
+					  <source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+					  <target>Hvis du prøver å installere addons i Programfiler eller Programdata mappene, kan det hende at det krever administrator rettigheter. \r\n\r\n Dette er ikke anbefalt av sikkerhetsmessige grunner.</target>
+					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+					</trans-unit>
+				      </group>
+				      
+				      <group id="start">
+					<trans-unit id="title">
+					  <source>Start new game</source>
+					  <target>Start nytt spill</target>
+					</trans-unit>
+					<trans-unit id="route">
+					  <source>Route</source>
+					  <target>Rute</target>
+					</trans-unit>
+					<trans-unit id="route_selection">
+					  <source>Selection</source>
+					  <target>Rutevalg</target>
+					</trans-unit>
+					<trans-unit id="route_addons">
+					  <source>Add-ons</source>
+					  <target>Add-ons</target>
+					</trans-unit>
+					<trans-unit id="route_browse">
+					  <source>Browse manually</source>
+					  <target>Filutforsker</target>
+					</trans-unit>
+					<trans-unit id="route_recently">
+					  <source>Recently used</source>
+					  <target>Sist brukt</target>
+					</trans-unit>
+					<trans-unit id="route_details">
+					  <source>Details</source>
+					  <target>Detaljer</target>
+					</trans-unit>
+					<trans-unit id="route_description">
+					  <source>Description</source>
+					  <target>Beskrivelse</target>
+					</trans-unit>
+					<trans-unit id="route_map">
+					  <source>Map</source>
+					  <target>Kart</target>
+					</trans-unit>
+					<trans-unit id="route_gradient">
+					  <source>Gradient profile</source>
+					  <target>Høydeprofil</target>
+					</trans-unit>
+					<trans-unit id="route_settings">
+					  <source>Settings</source>
+					  <target>Valg</target>
+					</trans-unit>
+					<trans-unit id="route_settings_encoding">
+					  <source>Encoding:</source>
+					  <target>Tegnsett:</target>
+					</trans-unit>
+					<trans-unit id="route_settings_encoding_preview">
+					    <source>Preview:</source>
+					    <target>Forhåndsvisning:</target>
+					  </trans-unit>
+					  <trans-unit id="route_processing">
+					    <source>Processing route, please wait.....</source>
+					    <target>Prosesserer rute, vennligst vent.....</target>
+					  </trans-unit>
+					  <trans-unit id="train">
+					    <source>Train</source>
+					    <target>Tog</target>
+					  </trans-unit>
+					  <trans-unit id="train_selection">
+					    <source>Selection</source>
+					    <target>Togvalg</target>
+					  </trans-unit>
+					  <trans-unit id="train_addons">
+					    <source>Add-ons</source>
+					    <target>Add-ons</target>
+					  </trans-unit>
+					  <trans-unit id="train_browse">
+					    <source>Browse manually</source>
+					    <target>Filutforsker</target>
+					  </trans-unit>
+					  <trans-unit id="train_recently">
+					    <source>Recently used</source>
+					    <target>Nylig brukt</target>
+					  </trans-unit>
+					  <trans-unit id="train_default">
+					    <source>Route default</source>
+					    <target>Standard for rute</target>
+					  </trans-unit>
+					  <trans-unit id="train_usedefault">
+					    <source>Use the train suggested by the route</source>
+					    <target>Bruk toget som er standard for rute</target>
+					  </trans-unit>
+					  <trans-unit id="train_details">
+					    <source>Details</source>
+					    <target>Detaljer</target>
+					  </trans-unit>
+					  <trans-unit id="train_description">
+					    <source>Description</source>
+					    <target>Beskrivelse</target>
+					  </trans-unit>
+					  <trans-unit id="train_settings">
+					    <source>Settings</source>
+					    <target>Valg</target>
+					  </trans-unit>
+					  <trans-unit id="train_settings_encoding">
+					    <source>Encoding:</source>
+					    <target>Tegnsett:</target>
+					  </trans-unit>
+					  <trans-unit id="train_settings_reverseconsist">
+					    <source>Reverse Consist:</source>
+					    <target>Snu toget</target>
+					  </trans-unit>
+					  <trans-unit id="train_settings_encoding_preview">
+					    <source>Preview:</source>
+					    <target>Forhåndsvisning:</target>
+					  </trans-unit>
+					  <trans-unit id="train_notfound">
+					    <source>The default train could not be found:\r\n\r\n</source>
+					    <target>Det forhåndsvalgte toget kunne ikke bli funnet:\r\n\r\n</target>
+					  </trans-unit>
+					  <trans-unit id="train_pluginnotsupported">
+					    <source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
+					    <target>--- Dette toget bruker en plugin for sikkerhets-systemer som ikke kan bli benyttet på ditt operativsystem. Det innebygde sikkerhetssystemet ATS/ATC vil bli brukt i stede for. Dette kan forårsake problemer. ---</target>
+					  </trans-unit>
+					  <trans-unit id="start">
+					    <source>Start</source>
+					    <target>Start</target>
+					  </trans-unit>
+					  <trans-unit id="start_mode">
+					    <source>Mode of driving:</source>
+					    <target>Kjøremodus:</target>
+					  </trans-unit>
+					  <trans-unit id="start_start">
+					    <source>Start</source>
+					    <target>Start</target>
+					  </trans-unit>
+					  
+				</group>
+				<group id="review">
+					<trans-unit id="title">
+					  <source>Review last game</source>
+					  <target>Gå gjennom siste spill</target>
+					</trans-unit>
+					<trans-unit id="conditions">
+					  <source>Conditions</source>
+					  <target>Forhold</target>
+					</trans-unit>
+					<trans-unit id="conditions_route">
+					  <source>Route</source>
+					  <target>Rute</target>
+					</trans-unit>
+					<trans-unit id="conditions_route_file">
+					  <source>Route file:</source>
+					  <target>Rutefil:</target>
+					</trans-unit>
+					<trans-unit id="conditions_train">
+					  <source>Train</source>
+					  <target>Tog</target>
+					</trans-unit>
+					<trans-unit id="conditions_train_folder">
+					  <source>Train folder:</source>
+					  <target>Tog-mappe:</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime">
+					  <source>Date and time</source>
+					  <target>Dato og tid</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime_date">
+					  <source>Date:</source>
+					  <target>Dato:</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime_time">
+					  <source>Time:</source>
+					  <target>Tid:</target>
+					</trans-unit>
+					<trans-unit id="score">
+					  <source>Score</source>
+					  <target>Poeng</target>
+					</trans-unit>
+					<trans-unit id="score_rating">
+					  <source>Rating</source>
+					  <target>Vurdering</target>
+					</trans-unit>
+					<trans-unit id="score_rating_mode">
+					  <source>Mode:</source>
+					  <target>Modus:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_achieved">
+					  <source>Achieved:</source>
+					  <target>Oppnådd:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_maximum">
+					  <source>Maximum:</source>
+					  <target>Maksimum:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_ratio">
+						<source>Ratio:</source>
+					</trans-unit>
+					<trans-unit id="score_log">
+						<source>Log</source>
+					</trans-unit>
+					<trans-unit id="score_log_list_time">
+					  <source>Time</source>
+					  <target>Tid</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_position">
+					  <source>Position (m)</source>
+					  <target>Posisjon (m)</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_value">
+					  <source>Value</source>
+					  <target>Verdi</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_cumulative">
+					  <source>Cumulative</source>
+					  <target>Kumulative</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_reason">
+					  <source>Reason</source>
+					  <target>Årsak</target>
+					</trans-unit>
+					<trans-unit id="score_log_penalties">
+					  <source>Show penalties only</source>
+					  <target>Se bare straffer</target>
+					</trans-unit>
+					<trans-unit id="score_log_export">
+					  <source>Export...</source>
+					  <target>Eksporter...</target>
+					</trans-unit>
+					<trans-unit id="blackbox">
+					  <source>Black box</source>
+					  <target>Blackbox</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format">
+					  <source>Format:</source>
+					  <target>Format:</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format_csv">
+					  <source>Comma-separated value</source>
+					  <target>Komma-separerte verdier</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format_text">
+					  <source>Formatted text</source>
+					  <target>Formatert tekst</target>
+					</trans-unit>
+					<trans-unit id="blackbox_export">
+					  <source>Export...</source>
+					  <target>Eksport...</target>
+					</trans-unit>
+				</group>
+				<group id="packages">
+					<trans-unit id="title">
+					  <source>Package Management</source>
+					  <target>Pakkehåndtering</target>
+					</trans-unit>
+					<trans-unit id="proceed">
+					  <source>Proceed...</source>
+					  <target>Fortsett...</target>
+					</trans-unit>
+					<trans-unit id="proceed_anyway">
+					  <source>Proceed Anyway</source>
+					  <target>Fortsett uansett...</target>
+					</trans-unit>
+					<trans-unit id="processing">
+					  <source>Processing, please wait...</source>
+					  <target>Prosesserer, vennligst vent...</target>
+					</trans-unit>
+					<trans-unit id="unknown_file">
+					  <source>Unknown File...</source>
+					  <target>Ukjent fil...</target>
+					</trans-unit>
+					<trans-unit id="shownlist">
+					  <source>These are shown in the list below:</source>
+					  <target>Disse er vist i listen under:</target>
+					</trans-unit>
+					<trans-unit id="selection_none">
+					  <source>No package selected.</source>
+					  <target>Ingen pakker er valgt.</target>
+					</trans-unit>
+					<trans-unit id="selection_none_website">
+					  <source>No website provided.</source>
+					  <target>Ingen nettside er registrert.</target>
+					</trans-unit>
+					<trans-unit id="list">
+					  <source>Installed Packages</source>
+					  <target>Installerte pakker</target>
+					</trans-unit>
+					<trans-unit id="list_type">
+					  <source>Select the type of packages you wish to view:</source>
+					  <target>Velg type pakker du ønsker å se:</target>
+					</trans-unit>
+					<trans-unit id="list_name">
+					  <source>Name</source>
+					  <target>Navn</target>
+					</trans-unit>
+					<trans-unit id="list_version">
+					  <source>Version</source>
+					  <target>Versjon</target>
+					</trans-unit>
+					<trans-unit id="list_minimum">
+					  <source>Minimum Version</source>
+					  <target>Minimums-versjon</target>
+					</trans-unit>
+					<trans-unit id="list_maximum">
+					  <source>Maximum Version</source>
+					  <target>Maksimums-versjon</target>
+					</trans-unit>
+					<trans-unit id="list_author">
+					  <source>Author</source>
+					  <target>Forfatter</target>
+					</trans-unit>
+					<trans-unit id="list_website">
+					  <source>Website</source>
+					  <target>Nettside</target>
+					</trans-unit>
+					<trans-unit id="list_packagetype">
+					  <source>Type</source>
+					  <target>Type</target>
+					</trans-unit>
+					<trans-unit id="install">
+					  <source>Install</source>
+					  <target>Installer</target>
+					</trans-unit>
+					<trans-unit id="install_button">
+					  <source>Install Package</source>
+					  <target>Installer pakke</target>
+					</trans-unit>
+					<trans-unit id="install_header">
+					  <source>Install a Package</source>
+					  <target>Installer en pakke</target>
+					</trans-unit>
+					<trans-unit id="install_invalid">
+					  <source>This file does not appear to be a valid openBVE package.</source>
+					  <target>Filen ser ikke ut til å være en valid openBVE pakke.</target>
+					</trans-unit>
+					<trans-unit id="install_version_error">
+					  <source>Package Version Error</source>
+					  <target>Pakkeversjonsfeil</target>
+					</trans-unit>
+					<trans-unit id="install_version_new">
+					  <source>The selected package is already installed, and is a newer version.</source>
+					  <target>Den valgte pakken er allerede installert og er en nyere versjon.</target>
+					</trans-unit>
+					<trans-unit id="install_version_old">
+					  <source>The selected package is already installed, and is an older version.</source>
+					  <target>Den valgte pakken er allerede installert og er en eldre versjon.</target>
+					</trans-unit>
+					<trans-unit id="install_version_same">
+					  <source>The selected package is already installed, and is an identical version.</source>
+					  <target>Den valgte pakken er allerede installert og er en lik versjon.</target>
+					</trans-unit>
+					<trans-unit id="install_success">
+					  <source>Package installation was successful.</source>
+					  <target>Pakkeinstallasjonen var velykket.</target>
+					</trans-unit>
+					<trans-unit id="install_success_header">
+					  <source>Installation Successful</source>
+					  <target>Installasjon velykket</target>
+					</trans-unit>
+					<trans-unit id="install_success_files">
+					  <source>A list of files installed is shown below:</source>
+					  <target>En liste over filer installert vises under:</target>
+					</trans-unit>
+					<trans-unit id="install_failure">
+					  <source>Unfortunately, package installation failed.</source>
+					  <target>Dessverre feilet pakkeinstallasjonen.</target>
+					</trans-unit>
+					<trans-unit id="install_failure_header">
+					  <source>Package Installation Failed</source>
+					  <target>Pakkeinstallasjonen feilet</target>
+					</trans-unit>
+					<trans-unit id="install_select">
+					  <source>Select Package......</source>
+					  <target>Velg en pakke......</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_unmet">
+					  <source>The current package has unmet dependancies.</source>
+					  <target>Den valgte pakken har avhengigheter som ikke er oppfylt.</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_unmet_header">
+					  <source>Dependancy Error</source>
+					  <target>Avhengighetsfeil</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_broken">
+					  <source>The following dependancies may be broken by this action:</source>
+					  <target>Følgende avhengigheter blir ødelagt av denne handlingen:</target>
+					</trans-unit>
+					<trans-unit id="install_reccomends_unmet">
+					  <source>The following packages are recommended, but not installed:</source>
+					  <target>Følgende pakker er anbefalt men ikke installert:</target>
+					</trans-unit>
+					<trans-unit id="install_reccomends_unmet_header">
+					  <source>Recommended Packages</source>
+					  <target>Anbefalte pakker</target>
+					</trans-unit>
+					<trans-unit id="install_name">
+					  <source>Package Name:</source>
+					  <target>Pakkens navn:</target>
+					</trans-unit>
+					<trans-unit id="install_author">
+					  <source>Package Author:</source>
+					  <target>Pakkens forfatter:</target>
+					</trans-unit>
+					<trans-unit id="install_version">
+					  <source>Package Version:</source>
+					  <target>Pakkens versjon:</target>
+					</trans-unit>
+					<trans-unit id="install_website">
+					  <source>Package Website:</source>
+					  <target>Pakkens nettside:</target>
+					</trans-unit>
+					<trans-unit id="install_description">
+					  <source>Package Description:</source>
+					  <target>Pakkens beskrivelse:</target>
+					</trans-unit>
+					<trans-unit id="creation_button">
+					  <source>Create Package</source>
+					  <target>Lag pakke</target>
+					</trans-unit>
+					<trans-unit id="creation_header">
+					  <source>Create a Package</source>
+					  <target>Lag en pakke</target>
+					  
+					</trans-unit>
+					<trans-unit id="creation_saveas_button">
+					  <source>Save As...</source>
+					  <target>Lagre som...</target>
+					</trans-unit>
+					<trans-unit id="creation_saveas_label">
+					  <source>Save package as:</source>
+					  <target>Lagre pakke som:</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies">
+					  <source>Select Dependancies</source>
+					  <target>Velg avhengigheter</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_add">
+					  <source>Add Dependancy</source>
+					  <target>Legg til avhengighet</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_remove">
+					  <source>Remove</source>
+					  <target>Fjern</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_nextstep">
+					  <source>Package details and dependancies may be assigned in the following steps.</source>
+					  <target>Pakke detaljer og avhengigheter vil bli lagt til i følgende steg.</target>
+					</trans-unit>
+					<trans-unit id="creation_reccommends_add">
+					  <source>Add Recommendation</source>
+					  <target>Legg til anbefaling</target>
+					</trans-unit>
+					<trans-unit id="creation_clearselection">
+					  <source>Clear Selection</source>
+					  <target>Fjern utvalgte</target>
+					</trans-unit>
+					<trans-unit id="creation_additems">
+					  <source>Add Item(s)</source>
+					  <target>Legg til elementer</target>
+					</trans-unit>
+					<trans-unit id="creation_selecteditems">
+					  <source>The following files and folders will be packaged:</source>
+					  <target>Følgende filer og pakker vil bli pakket:</target>
+					</trans-unit>
+					<trans-unit id="creation_new_guid">
+					  <source>The new package has been assigned the following GUID:</source>
+					  <target>Den nye pakken har fått følgende GUID:</target>
+					</trans-unit>
+					<trans-unit id="creation_header">
+					  <source>Enter Package Details</source>
+					  <target>Legg inn pakkedetaljer</target>
+					</trans-unit>
+					<trans-unit id="creation_name">
+					  <source>Please enter a package name.</source>
+					  <target>Legg til navn på pakken.</target>
+					</trans-unit>
+					<trans-unit id="creation_author">
+					  <source>Please enter a package author.</source>
+					  <target>Legg til pakkens forfatter.</target>
+					</trans-unit>
+					<trans-unit id="creation_description">
+					  <source>Please enter a package description.</source>
+					  <target>Legg til beskrivelse på pakke.</target>
+					</trans-unit>
+					<trans-unit id="creation_version">
+					  <source>Please enter a valid package version number in the following format: \r\n 1.0.0</source>
+					  <target>Legg til en gyldig pakkeversjonsnummer på følgende format: \r\n 1.0.0</target>
+					</trans-unit>
+					<trans-unit id="creation_version_invalid">
+					  <source>You have entered an invalid version number. \r\n Please try again.</source>
+					  <target>Du har skrevet inn et ikke gyldig versjonsnummer. \r\n Prøv igjen.</target>
+					</trans-unit>
+					<trans-unit id="creation_success">
+					  <source>Package creation was successful.</source>
+					  <target>Pakken ble velykket laget.</target>
+					</trans-unit>
+					<trans-unit id="creation_success_header">
+					  <source>Package Creation Successful</source>
+					  <target>Laging av pakken er vellykket.</target>
+					</trans-unit>
+					<trans-unit id="creation_success_files">
+					  <source>The following files were added to your package:</source>
+					  <target>Følgende filer ble lagt til din pakke:</target>
+					</trans-unit>
+					<trans-unit id="creation_failure">
+					  <source>Unfortunately, creation of your package failed.</source>
+					  <target>Dessverre feilet opprettelsen av pakken din. </target>
+					</trans-unit>
+					<trans-unit id="creation_failure_header">
+					  <source>Package Creation Failed</source>
+					  <target>Laging av pakken feilet</target>
+					</trans-unit>
+					<trans-unit id="creation_failure_error">
+					  <source>The following error was encountered:</source>
+					  <target>Følgende feil oppstod:</target>
+					</trans-unit>
+					<trans-unit id="creation_proceed">
+					  <source>Proceed......</source>
+					  <target>Fortsett.....</target>
+					</trans-unit>
+					<trans-unit id="creation_invalid_nofiles">
+					  <source>No files were selected to package- Please retry.</source>
+					  <target>Ingen filer ble lagt til i pakken. Prøv igjen.</target>
+					</trans-unit>
+					<trans-unit id="creation_invalid_filename">
+					  <source>The selected filename is invalid- Please retry.</source>
+					  <target>Valgt filnavn er ikke gyldig. Prøv igjen.</target>
+					</trans-unit>
+					<trans-unit id="creation_new_id">
+					  <source>The new package has been assigned the following GUID:</source>
+					  <target>Pakken har blitt tildelt følgende GUID:</target>
+					</trans-unit>
+					<trans-unit id="creation_replace_id">
+					  <source>Replacing the package with the following GUID:</source>
+					  <target>Bytter ut pakken med følgende GUID:</target>
+					</trans-unit>
+					<trans-unit id="creation_save">
+					  <source>Save Package</source>
+					  <target>Lagre pakke</target>
+					</trans-unit>
+					<trans-unit id="creation_replace">
+					  <source>Is this to replace an existing package?</source>
+					  <target>Er dette en oppdatering av en eksisterende pakke?</target>
+					</trans-unit>
+					<trans-unit id="creation_yes">
+					  <source>Yes</source>
+					  <target>Ja</target>
+					</trans-unit>
+					<trans-unit id="creation_no">
+					  <source>No</source>
+					  <target>Nei</target>
+					</trans-unit>
+					<trans-unit id="replace_select">
+					  <source>Replace this Package</source>
+					  <target>Bytt ut denne pakken</target>
+					</trans-unit>
+					<trans-unit id="replace_choose">
+					  <source>Please select the package you wish to replace:</source>
+					  <target>Velg pakken du ønsker å bytte ut:</target>
+					</trans-unit>
+					<trans-unit id="replace_noneavailable">
+					  <source>No packages are currently installed.</source>
+					  <target>Ingen pakker er foreløpig installert.</target>
+					</trans-unit>
+					<trans-unit id="type_route">
+					  <source>Route</source>
+					  <target>Ruter</target>
+					</trans-unit>
+					<trans-unit id="type_train">
+					  <source>Train</source>
+					  <target>Tog</target>
+					</trans-unit>
+					<trans-unit id="type_other">
+					  <source>Other</source>
+					  <target>Andre</target>
+					</trans-unit>
+					<trans-unit id="type_select">
+					  <source>Please select the package type:</source>
+					  <target>Velg en pakketype:</target>
+					</trans-unit>
+					<trans-unit id="uninstall_failure">
+					  <source>Unfortunately, uninstallation of this package failed.</source>
+					  <target>Avinstallering av denne pakken feilet.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_failure_header">
+					  <source>Uninstallation Failed</source>
+					  <target>Avinstallering feilet</target>
+					</trans-unit>
+					<trans-unit id="uninstall_success">
+					  <source>Uninstallation of this package was successful.</source>
+					  <target>Avinstalleringen av denne pakken var vellykket.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_success_header">
+					  <source>Uninstallation Successful</source>
+					  <target>Avinstallering vellykket</target>
+					</trans-unit>
+					<trans-unit id="uninstall_log">
+					  <source>A log is shown below:</source>
+					  <target>Loggen vises nedenfor:</target>
+					</trans-unit>
+					<trans-unit id="uninstall_button">
+					  <source>Uninstall Package</source>
+					  <target>Avinstaller pakker</target>
+					</trans-unit>
+					<trans-unit id="uninstall_broken">
+					  <source>Some existing packages may be broken by this action.</source>
+					  <target>Eksisterende pakker kan bli skadet av denne handlingen.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_missing_xml">
+					  <source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
+					  <target>Ikke mulig å avinstallere den valgte pakken. \r\n XML listefil mangler.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_database_remove">
+					  <source>Do you wish to remove this package from the database?</source>
+					  <target>Ønsker du å fjerne denne pakken helt fra databasen?</target>
+					</trans-unit>
+					<trans-unit id="database_save_error">
+					  <source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
+					  <target>En feil oppstod mens pakken prøvde å lagres til databasen. \r\n Vennligst sjekk om du har skriverettigheter.</target>
+					</trans-unit>
+					<trans-unit id="version_new">
+					  <source>New version:</source>
+					  <target>Ny versjon:</target>
+					</trans-unit>
+					<trans-unit id="version_current">
+					  <source>Current version:</source>
+					  <target>Nåværende versjon:</target>
+					</trans-unit>
+					<trans-unit id="success">
+					  <source>Finished!</source>
+					  <target>Ferdig!</target>
+					</trans-unit>
+					<trans-unit id="selected">
+					  <source>Selected Packages</source>
+					  <target>Valgte pakker</target>
+					</trans-unit>
+					<trans-unit id="dependancy">
+					  <source>Dependancy</source>
+					  <target>Avhengigheter</target>
+					</trans-unit>
+					<trans-unit id="recommendation">
+					  <source>Recommendation</source>
+					  <target>Anbefaling</target>
+					</trans-unit>
+					<trans-unit id="error_action">
+					  <source>Please select the action you wish to take:</source>
+					  <target>Velg handlingen du ønsker å ta:</target>
+					</trans-unit>
+					<trans-unit id="error_overwrite">
+					  <source>Overwrite</source>
+					  <target>Skriv over</target>
+					</trans-unit>
+					<trans-unit id="error_replace">
+					  <source>Replace</source>
+					  <target>Bytt ut</target>
+					</trans-unit>
+					<trans-unit id="button_next">
+					  <source>Next &gt;</source>
+					  <target>Neste &gt;</target>
+					</trans-unit>
+					<trans-unit id="button_back">
+					  <source>&lt; Back</source>
+					  <target>&lt; Tilbake</target>
+					</trans-unit>
+					<trans-unit id="button_cancel">
+					  <source>Cancel</source>
+					  <target>Avbryt</target>
+					</trans-unit>
+					<trans-unit id="button_ok">
+					  <source>OK</source>
+					  <target>OK</target>
+					</trans-unit>
+					<trans-unit id="button_install">
+					  <source>Install</source>
+					  <target>Installer</target>
+					</trans-unit>
+					<trans-unit id="button_create">
+					  <source>Create</source>
+					  <target>Lag</target>
+					</trans-unit>
+					<trans-unit id="button_ignore">
+					  <source>Ignore</source>
+					  <target>Ignorer</target>
+					</trans-unit>
+					<trans-unit id="button_abort">
+					  <source>Abort</source>
+					  <target>Avbryt</target>
+					</trans-unit>
+					<trans-unit id="filename_empty">
+					  <source>Attempted to create a package with an empty filename.</source>
+					  <target>Prøvde å lage en pakke med tomt filnavn.</target>
+					</trans-unit>
+					<trans-unit id="directory_missing">
+					  <source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+					  <target>Mappen hvor du prøvede å skrive pakken til fins ikke: \r \n</target>
+					</trans-unit>
+					<trans-unit id="directory_nowrite">
+					  <source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+					  <target>Det er ikke skrivetilgang i mappen hvor du prøver å lagre pakkefilen til: \r \n</target>
+					</trans-unit>
+					<trans-unit id="file_generic">
+					  <source>Failed to create the following file: \r \n</source>
+					  <target>Klarte ikke å lage følgende fil: \r \n</target>
+					</trans-unit>
+				</group>
+				<group id="controls">
+					<trans-unit id="title">
+					  <source>Customize controls</source>
+					  <target>Endre knapper / kontroller</target>
+					</trans-unit>
+					<trans-unit id="list_command">
+					  <source>Command</source>
+					  <target>Kommando</target>
+					</trans-unit>
+					<trans-unit id="list_type">
+					  <source>Type</source>
+					  <target>Type</target>
+					</trans-unit>
+					<trans-unit id="list_type_digital">
+					  <source>Digital</source>
+					  <target>Digital</target>
+					</trans-unit>
+					<trans-unit id="list_type_analoghalf">
+					  <source>Analog (half axis)</source>
+					  <target>Analog (halv akse)</target>
+					</trans-unit>
+					<trans-unit id="list_type_analogfull">
+					  <source>Analog (full axis)</source>
+					  <target>Analog (full akse)</target>
+					</trans-unit>
+					<trans-unit id="list_description">
+					  <source>Description</source>
+					  <target>Beskrivelse</target>
+					</trans-unit>
+					<trans-unit id="list_assignment">
+					  <source>Assignment</source>
+					  <target>Tilordning</target>
+					</trans-unit>
+					<trans-unit id="list_option">
+					  <source>Command Option</source>
+					  <target>Kommandovalg</target>
+					</trans-unit>
+					<trans-unit id="add">
+					  <source>Add control</source>
+					  <target>Legg til knapp</target>
+					</trans-unit>
+					<trans-unit id="remove">
+					  <source>Remove control</source>
+					  <target>Fjern knapp</target>
+					</trans-unit>
+					<trans-unit id="import">
+					  <source>Import...</source>
+					  <target>Importer...</target>
+					</trans-unit>
+					<trans-unit id="export">
+					  <source>Export...</source>
+					  <target>Eksporter...</target>
+					</trans-unit>
+					<trans-unit id="reset">
+					  <source>Reset to defaults</source>
+					  <target>Tilbakestill</target>
+					</trans-unit>
+					<trans-unit id="up">
+					  <source>Move up</source>
+					  <target>Flytt opp</target>
+					</trans-unit>
+					<trans-unit id="down">
+					  <source>Move down</source>
+					  <target>Flytt ned</target>
+					</trans-unit>
+					<trans-unit id="selection">
+					  <source>Currently selected command</source>
+					  <target>Valgte kommando</target>
+					</trans-unit>
+					<trans-unit id="selection_command">
+					  <source>Command:</source>
+					  <target>Kommando:</target>
+					</trans-unit>
+					<trans-unit id="selection_command_option">
+					  <source>Command Option:</source>
+					  <target>Kommandovalg:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard">
+					  <source>Keyboard:</source>
+					  <target>Tastatur:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_assignment_grab">
+					  <source>Click here to enable keyboard grab to automatically select the desired key.</source>
+					  <target>Trykk her for å velge ønsket knapp på tastaturet.</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_assignment_grabbing">
+					  <source>Please press any key...</source>
+					  <target>Trykk hvilken som helst knapp...</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_key">
+					  <source>Key:</source>
+					  <target>Knapp:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers">
+					  <source>Modifiers:</source>
+					  <target>Kombinasjonsknapp:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_shift">
+						<source>Shift</source>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_ctrl">
+						<source>Ctrl</source>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_alt">
+						<source>Alt</source>
+					</trans-unit>
+					<trans-unit id="selection_joystick">
+						<source>Joystick:</source>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment">
+					  <source>Assignment:</source>
+					  <target>Tilordning:</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab">
+					  <source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
+					  <target>Trykk her for å velge ønsket knapp på joysticken.</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab_normal">
+					  <source>Press a button or move an axis or hat into the desired direction...</source>
+					  <target>Trykk en knapp eller beveg en akse inn i ønsket retning...</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
+					  <source>Move an axis into the direction of "increase" or "power"...</source>
+					  <target>Flytt en akse inn i ønsket retning "øke akselerasjon"...</target>
+					</trans-unit>
+					<trans-unit id="attached">
+					  <source>Attached joysticks</source>
+					  <target>Tilkoblede joysticker</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard">
+					  <source>Keyboard</source>
+					  <target>Tastatur</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_shift">
+						<source>Shift +\x20</source>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_ctrl">
+						<source>Ctrl +\x20</source>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_alt">
+						<source>Alt +\x20</source>
+					</trans-unit>
+					<trans-unit id="assignment_joystick">
+						<source>Joystick [index]</source>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis">
+						<source>axis [index]</source>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_negative">
+					  <source>negative direction</source>
+					  <target>negativ retning</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_positive">
+					  <source>positive direction</source>
+					  <target>positiv retning</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_invalid">
+					  <source>invalid direction</source>
+					  <target>ugyldig retning</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_button">
+					  <source>button [index]</source>
+					  <target>knapp [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat">
+						<source>hat [index]</source>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_left">
+					  <source>left</source>
+					  <target>venstre</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_upleft">
+					  <source>up-left</source>
+					  <target>opp-venstre</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_up">
+					  <source>up</source>
+					  <target>opp</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_upright">
+					  <source>up-right</source>
+					  <target>opp-høyre</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_right">
+					  <source>right</source>
+					  <target>høyre</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_downright">
+					  <source>down-right</source>
+					  <target>ned-høyre</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_down">
+					  <source>down</source>
+					  <target>ned</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_downleft">
+					  <source>down-left</source>
+					  <target>ned-venstre</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_invalid">
+					  <source>invalid</source>
+					  <target>ugyldig</target>
+					</trans-unit>
+					<trans-unit id="assignment_invalid">
+					  <source>Not assigned</source>
+					  <target>Ikke tilordnet</target>
+					</trans-unit>
+					<trans-unit id="assignment_separator">
+						<source>,\x20</source>
+					</trans-unit>
+				</group>
+				<group id="raildriver">
+					<trans-unit id="speedunits">
+					  <source>LED Display speed units</source>
+					  <target>LED Display hastighetsenhet</target>
+					</trans-unit>
+					<trans-unit id="milesperhour">
+					  <source>Miles per Hour (MPH)</source>
+					  <target>Engelsk mil i timen (MPH)</target>
+					</trans-unit>
+					<trans-unit id="kilometersperhour">
+					  <source>Kilometers per Hour (KPH)</source>
+					  <target>Kilometer i timen (Km/H)</target>
+					</trans-unit>
+					<trans-unit id="setcalibration">
+					  <source>Set Calibration:</source>
+					  <target>Sett kalibrering</target>
+					</trans-unit>
+					<trans-unit id="launch">
+					  <source>Launch</source>
+					  <!-- unshure of this-->
+					  <target>Start</target>
+					</trans-unit>
+					<trans-unit id="notdetected">
+					  <source>No RailDriver conrollers detected.</source>
+					  <target>Ingen RailDriver kontroller oppdaget.</target>
+					</trans-unit>
+					<trans-unit id="config_error">
+					  <source>Error loading RailDriver calibration file.</source>
+					  <target>Feil ved lasting av RailDriver kalibreringsfil.</target>
+					</trans-unit>
+					<trans-unit id="calibration_start">
+					  <source>Please press 'Next' to start calibration.</source>
+					  <target>Trykk 'Neste' for å starte kalibrering.</target>
+					</trans-unit>
+					<trans-unit id="calibration_a">
+					  <source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+					  <target>Dytt vendegir-spaken til fullstendig revers og trykk 'Neste'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_b">
+					  <source>Move the reverser lever to the full forward position and press 'Next'.</source>
+					  <target>Dytt vendegir-spaken til fullstendig forover og trykk 'Neste'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_c">
+					  <source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+					<target>Dytt kombinasjonsbremsen til full akselerasjon og trykk 'Neste'.</target>								</trans-unit>
+					<trans-unit id="calibration_d">
+					  <source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+					<target>Dytt kombinasjonsbremsen til full brems og trykk 'Neste'.</target>										</trans-unit>
+				      
+					<trans-unit id="calibration_e">
+					  <source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+					  <target>Dytt den regenerative bremsen til fullstendig av og trykk 'Neste'</target>
+					</trans-unit>
+					<trans-unit id="calibration_f">
+					  <source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+					  <target>Dytt den regenerative bremsen til nødbrems og trykk 'Neste'</target>
+					</trans-unit>
+					<trans-unit id="calibration_g">
+					  <source>Move the independant brake lever to the release position and press 'Next'.</source>
+					  <target>Dytt lokomotiv bremsen til fullstendig av og trykk 'Neste'</target>
+					  
+					</trans-unit>
+					<trans-unit id="calibration_h">
+					  <source>Move the independant brake lever to the full position and press 'Next'.</source>
+					  <target>Dytt lokomotiv bremsen til fullstendig på og trykk 'Neste'</target>
+					</trans-unit>
+					<!-- unshure of this -->
+					<trans-unit id="calibration_i">
+						<source>Move the bail-off lever to the release position and press 'Next'.</source>
+					</trans-unit>
+					<trans-unit id="calibration_j">
+						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
+					</trans-unit>
+					<trans-unit id="calibration_k">
+					  <source>Move the wiper switch to OFF and press 'Next'.</source>
+					  <target>Flytt vindusvisker til AV og trykk 'Neste'</target>
+					</trans-unit>
+					<trans-unit id="calibration_l">
+					  <source>Move the wiper switch to FULL and press 'Next'.</source>
+					  <target>Flytt vindusvisker til FULL og trykk 'Neste'</target>
+					</trans-unit>
+					<trans-unit id="calibration_m">
+					  <source>Move the lights switch to OFF and press 'Next'.</source>
+					  <target>Flytt lysbryteren til AV og trykk 'Neste'</target>
+					</trans-unit>
+					<trans-unit id="calibration_n">
+					  <source>Move the lights switch to FULL and press 'Next'.</source>
+					  <target>Flytt lysbryteren til FULL og trykk 'Neste'</target>
+					</trans-unit>
+					<trans-unit id="calibration_o">
+					  <source>Calibration complete.</source>
+					  <target>Kalibrering ferdig.</target>
+					</trans-unit>
+				</group>
+				<group id="options">
+				  <trans-unit id="title">
+				    <source>Options</source>
+				    <target>Innstillinger</target>
+					</trans-unit>
+					<trans-unit id="language">
+					  <source>Language</source>
+					  <target>Språk</target>
+					</trans-unit>
+					<trans-unit id="display">
+					  <source>Display</source>
+					  <target>Skjerm</target>
+					</trans-unit>
+					<trans-unit id="display_mode">
+					  <source>Display mode</source>
+					  <target>Skjermmodus</target>
+					</trans-unit>
+					<trans-unit id="display_mode_window">
+					  <source>Window mode</source>
+					  <target>Vindusmodus</target>
+					</trans-unit>
+					<trans-unit id="display_mode_fullscreen">
+					  <source>Fullscreen mode</source>
+					  <target>Fullskjermsmodus</target>
+					</trans-unit>
+					<trans-unit id="display_vsync">
+					  <source>Vertical synchronization:</source>
+					  <target>Vertikal synkronisering::</target>
+					</trans-unit>
+					<trans-unit id="display_vsync_off">
+					  <source>Disabled</source>
+					  <target>Avslått</target>
+					</trans-unit>
+					<trans-unit id="display_vsync_on">
+					  <source>Enabled</source>
+					  <target>Påslått</target>
+					</trans-unit>
+					<trans-unit id="display_window">
+					  <source>Window mode</source>
+					  <target>Vindusmodus</target>
+					</trans-unit>
+					<trans-unit id="display_window_width">
+					  <source>Width:</source>
+					  <target>Bredde:</target>
+					</trans-unit>
+					<trans-unit id="display_window_height">
+					  <source>Height:</source>
+					  <target>Høyde:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen">
+					  <source>Fullscreen</source>
+					  <target>Fullskjerm</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_width">
+					  <source>Width:</source>
+					  <target>Bredde:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_height">
+					  <source>Height:</source>
+					  <target>Høyde:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_bits">
+					  <source>Bits per pixel:</source>
+					  <target>Bits per piksel:</target>
+					</trans-unit>
+					<trans-unit id="quality">
+					  <source>Quality</source>
+					  <target>Kvalitet</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation">
+					  <source>Interpolation</source>
+					  <target>Interpolasjon</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode">
+					  <source>Mode:</source>
+					  <target>Modus:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_nearest">
+					  <source>Nearest neighbor</source>
+					  <target>Nærmeste nabo</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_bilinear">
+					  <source>Bilinear</source>
+					  <target>Bilineær</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_nearestmipmap">
+					  <source>Nearest neighbor (mipmapping)</source>
+					  <target>Nærmeste nabo (mipmapping)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_bilinearmipmap">
+					  <source>Bilinear (mipmapping)</source>
+					  <target>Bilineær (mipmapping)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_trilinearmipmap">
+					  <source>Trilinear (mipmapping)</source>
+					  <target>Trilineær (mipmapping)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_anisotropic">
+					  <source>Anisotropic filtering</source>
+					  <target>Anisotropisk filtrering</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_anisotropic_level">
+					  <source>Level of anisotropic filtering:</source>
+					  <target>Nivå av anisotropisk filtrering:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_antialiasing_level">
+					  <source>Level of anti-aliasing:</source>
+					  <target>Nivå av kantutjevning (anti-aliasing):</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency">
+					  <source>Transparency:</source>
+					  <target>Transparens</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency_sharp">
+					  <source>Sharp</source>
+					  <target>Skarp</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency_smooth">
+					  <source>Smooth</source>
+					  <target>Myk</target>
+					</trans-unit>
+					<trans-unit id="quality_distance">
+					  <source>Distance effects</source>
+					  <target>Avstandseffekter</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_viewingdistance">
+					  <source>Viewing distance:</source>
+					  <target>Utsiktsavstand:</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_viewingdistance_meters">
+						<source>m</source>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur">
+					  <source>Motion blur:</source>
+					  <target>Bevegelsesuskarphet:</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_none">
+					  <source>Disabled</source>
+					  <target>Avslått</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_low">
+					  <source>Low</source>
+					  <target>Lav</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_medium">
+					  <source>Medium</source>
+					  <target>Medium</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_high">
+					  <source>High</source>
+					  <target>Høy</target>
+					</trans-unit>
+					<trans-unit id="misc">
+					  <source>Miscellaneous</source>
+					  <target>Diverse</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation">
+					  <source>Detail of simulation</source>
+					  <target>Simuleringsdetalj</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_toppling">
+					  <source>Toppling</source>
+					  <target>Velting</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_collisions">
+					  <source>Collisions</source>
+					  <target>Kolisjoner</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_derailments">
+					  <source>Derailments</source>
+					  <target>Avsporinger</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_blackbox">
+					  <source>Enable black box</source>
+					  <target>Slå på blackbox</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_loadingsway">
+					  <source>Enable loading sway</source>
+					  <target>Slå på laste svai</target>
+					</trans-unit>
+					<trans-unit id="misc_controls">
+					  <source>Controls</source>
+					  <target>Kontroller</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_joysticks">
+					  <source>Joysticks enabled</source>
+					  <target>Joysticker påslått</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_threshold">
+					  <source>Joystick threshold:</source>
+					  <target>Joystick terskel:</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_ebaxis">
+					  <source>Allow EB on brake axis</source>
+					</trans-unit>
+					<trans-unit id="misc_sound">
+					  <source>Sound</source>
+					  <target>Lyd</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range">
+					  <source>Effective range:</source>
+					  <target>Effektiv avstand:</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_low">
+					  <source>Low</source>
+					  <target>Lav</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_medium">
+					  <source>Medium</source>
+					  <target>Medium</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_high">
+					  <source>High</source>
+					  <target>Høy</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_number">
+					  <source>Number of allowed sounds:</source>
+					  <target>Antall lyder som kan spilles på en gang:</target>
+					</trans-unit>
+					<trans-unit id="verbosity">
+					  <source>Verbosity</source>
+					  <target>Detaljnivå</target>
+					</trans-unit>
+					<trans-unit id="verbosity_warningmessages">
+					  <source>Show warning messages</source>
+					  <target>Vis varselmeldinger</target>
+					</trans-unit>
+					<trans-unit id="verbosity_errormessages">
+					  <source>Show error messages</source>
+					  <target>Vis feilmeldinger</target>
+					</trans-unit>
+					<trans-unit id="advanced">
+					  <source>Advanced Options</source>
+					  <target>Avanserte valg</target>
+					</trans-unit>
+					<trans-unit id="advanced_load_advance">
+					  <source>Load in advance</source>
+					  <target>Last in råd</target>
+					</trans-unit>
+					<trans-unit id="advanced_is_use_new_renderer">
+					  <source>Enable the new renderer</source>
+					  <target>Slå på den nye rendereren</target>
+					</trans-unit>
+					<trans-unit id="advanced_timefactor">
+					  <source>Accelerated Time Factor</source>
+					  <target>Akselerert tidsfaktor</target>
+					</trans-unit>
+					<trans-unit id="advanced_unload_textures">
+					  <source>Unload unused textures</source>
+					  <target>Last av ubrukte teksturer</target>
+					</trans-unit>
+					<trans-unit id="other">
+					  <source>Other</source>
+					  <target>Annet</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode">
+					  <source>Timetable mode:</source>
+					  <target>Tidstabell modus:</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_none">
+					  <source>None</source>
+					  <target>Ingen</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_default">
+					  <source>Default</source>
+					  <target>Forholdsvalgete</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_autogenerated">
+					  <source>Auto-generated timetable</source>
+					  <target>Automatisk generert tidstabell</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_prefercustom">
+					  <source>Prefer custom timetable</source>
+					  <target>Foretrekk egenlaget tidstabell</target>
+					</trans-unit>
+					<trans-unit id="package_choose">
+					  <source>Choose...</source>
+					  <target>Velg...</target>
+					</trans-unit>
+					<trans-unit id="package_route_directory">
+					  <source>Route installation directory:</source>
+					  <target>Mappe for installasjon av ruter:</target>
+					</trans-unit>
+					<trans-unit id="package_train_directory">
+					  <source>Train installation directory:</source>
+					  <target>Mappe for installasjon av tog:</target>
+					</trans-unit>
+					<trans-unit id="package_other_directory">
+					  <source>Other items installation directory:</source>
+					  <target>Mappe for installasjon av andre ting:</target>
+					</trans-unit>
+					<trans-unit id="package_compression">
+					  <source>Package compression format:</source>
+					  <target>Pakke kompresjonsformat:</target>
+					</trans-unit>
+					<trans-unit id="page_previous">
+					  <source>Previous Page...</source>
+					  <target>Forrige side...</target>
+					</trans-unit>
+					<trans-unit id="page_next">
+					  <source>Next Page...</source>
+					  <target>Neste side...</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode">
+					  <source>Kiosk Mode</source>
+					  <target>Kioskmodus</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode_enable">
+					  <source>Enable Kiosk Mode</source>
+					  <target>Slå på kioskmodus</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode_timer">
+					  <source>Control Timeout (s)</source>
+					  <target>Kontrolltimeout (s)</target>
+					</trans-unit>
+					<trans-unit id="hud_size">
+					  <source>HUD Size</source>
+					  <target>HUD størrelse</target>
+					</trans-unit>
+					<trans-unit id="hud_size_small">
+					  <source>Small</source>
+					  <target>Liten</target>
+					</trans-unit>
+					<trans-unit id="hud_size_normal">
+					  <source>Normal</source>
+					  <target>Normal</target>
+					</trans-unit>
+					<trans-unit id="hud_size_large">
+					  <source>Large</source>
+					  <target>Stor</target>
+					</trans-unit>
+					<trans-unit id="transparencyfix">
+					  <source>Attempt to fix transparency issues in older content.</source>
+					  <target>Prøver å fiske feil med gjennomsiktighet for gammelt innhold.</target>
+					</trans-unit>
+					<trans-unit id="hacks_enable">
+					  <source>Enable hacks for buggy older content.</source>
+					  <target>Slå på "hacks" for buggy gammelt innhold.</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin">
+					  <source>Input Device Plugin</source>
+					  <target>Inndataenhetplugin</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_warning">
+					  <source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
+					  <target>ADVARSEL: Hvis du slår på Inndataenhetplugin kan de skape konflikt med andre kontrollenheter.</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_name">
+					  <source>Name</source>
+					  <target>Navn</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status">
+					  <source>Status</source>
+					  <target>Status</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_failure">
+					  <source>Failure</source>
+					  <target>Feil</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_disable">
+					  <source>Disable</source>
+					  <target>Slå av</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_enable">
+					  <source>Enable</source>
+					  <target>Slå på</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_version">
+					  <source>Version</source>
+					  <target>Versjon</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_provider">
+					  <source>Provider</source>
+					  <target>Leverandør</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_file_name">
+					  <source>File Name</source>
+					  <target>Filnavn</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_switch">
+					  <source>Enable this Input Device Plugin</source>
+					  <target>Slå på denne inndata plugin</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_config">
+					  <source>Config</source>
+					  <target>Konfigurer</target>
+					</trans-unit>
+					<trans-unit id="panel2_extended">
+					  <source>Enable Panel2 Extended Mode</source>
+					  <target>Slå på panel2 utvidet modus</target>
+					</trans-unit>
+					<trans-unit id="xobject_parser">
+					  <source>X Object Parser</source>
+					  <target>X Objekt parser</target>
+					</trans-unit>
+					<trans-unit id="objobject_parser">
+					  <source>OBJ Object Parser</source>
+					  <target>OBJ objekt parser</target>
+					</trans-unit>
+					<trans-unit id="compatibility_signals">
+					  <source>Default Signals:</source>
+					  <target>Forhåndsvalgte signaler (stillverk):</target>
+					</trans-unit>
+				</group>
+				<group id="dialog">
+					<trans-unit id="csvfiles">
+					  <source>CSV files</source>
+					  <target>CSV filer</target>
+					</trans-unit>
+					<trans-unit id="textfiles">
+					  <source>Text files</source>
+					  <target>Tekstfiler</target>
+					</trans-unit>
+					<trans-unit id="controlsfiles">
+					  <source>Controls</source>
+					  <target>Knappefiler</target>
+					</trans-unit>
+					<trans-unit id="allfiles">
+					  <source>All files</source>
+					  <target>Alle filer</target>
+					</trans-unit>
+				</group>
+				<group id="log">
+					<trans-unit id="time">
+					  <source>Time</source>
+					  <target>Tid</target>
+					</trans-unit>
+					<trans-unit id="position">
+					  <source>Position (m)</source>
+					  <target>Posisjon (m)</target>
+					</trans-unit>
+					<trans-unit id="value">
+					  <source>Value</source>
+					  <target>Verdi</target>
+					</trans-unit>
+					<trans-unit id="cumulative">
+					  <source>Cumulative</source>
+					  <target>Kumulativ</target>
+					</trans-unit>
+					<trans-unit id="reason">
+					  <source>Reason</source>
+					  <target>Årsak</target>
+					</trans-unit>
+					<trans-unit id="speed">
+					  <source>Speed (m/s)</source>
+					  <target>Fart (m/s)</target>
+					</trans-unit>
+					<trans-unit id="acceleration">
+					  <source>Acceleration (m/s²)</source>
+					  <target>Akselerasjon (m/s²)</target>
+					</trans-unit>
+					<trans-unit id="reverser">
+					  <source>Reverser</source>
+					  <target>Vendegir</target>
+					</trans-unit>
+					<trans-unit id="power">
+					  <source>Power</source>
+					  <target>Kraft</target>
+					</trans-unit>
+					<trans-unit id="brake">
+					  <source>Brake</source>
+					  <target>Brems</target>
+					</trans-unit>
+					<trans-unit id="event">
+					  <source>Event</source>
+					  <target>Hendelse</target>
+					</trans-unit>
+					<trans-unit id="route">
+					  <source>Route:</source>
+					  <target>Rute:</target>
+					</trans-unit>
+					<trans-unit id="train">
+					  <source>Train:</source>
+					  <target>Tog:</target>
+					</trans-unit>
+					<trans-unit id="date">
+					  <source>Date:</source>
+					  <target>Dato:</target>
+					</trans-unit>
+					<trans-unit id="mode">
+					  <source>Mode:</source>
+					  <target>Modus:</target>
+					</trans-unit>
+					<trans-unit id="score">
+					  <source>Score:</source>
+					  <target>Poeng:</target>
+					</trans-unit>
+					<trans-unit id="rating">
+					  <source>Rating:</source>
+					  <target>Vurdering:</target>
+					</trans-unit>
+				</group>
+				<group id="loading">
+					<trans-unit id="loading">
+					  <source>Loading</source>
+					  <target>Laster</target>
+					</trans-unit>
+					<trans-unit id="loading_route">
+					  <source>Loading route...</source>
+					  <target>Laster rute...</target>
+					</trans-unit>
+					<trans-unit id="loading_train">
+					  <source>Loading train...</source>
+					  <target>Laster tog...</target>
+					</trans-unit>
+					<trans-unit id="almost">
+					  <source>Almost ready to start</source>
+					  <target>Nest klart til å starte</target>
+					</trans-unit>
+					<trans-unit id="almost_filesnotfound">
+					  <source>Files not found:</source>
+					  <target>Filer ikke funnet:</target>
+					</trans-unit>
+					<trans-unit id="almost_help_filesnotfound">
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
+					</trans-unit>
+					<trans-unit id="almost_help_general">
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
+					</trans-unit>
+					<trans-unit id="almost_show">
+					  <source>Show issues</source>
+					  <target>Vis problemer</target>
+					</trans-unit>
+					<trans-unit id="problems">
+					  <source>Problems</source>
+					  <target>Problemer</target>
+					</trans-unit>
+					<trans-unit id="problems_type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="problems_description">
+					  <source>Description</source>
+					  <target>Beskrivelse</target>
+					</trans-unit>
+					<trans-unit id="save">
+					  <source>Save report...</source>
+					  <target>Lagre rapport...</target>
+					</trans-unit>
+					<trans-unit id="ignore">
+					  <source>Ignore</source>
+					  <target>Ignorer</target>
+					</trans-unit>
+					<trans-unit id="cancel">
+					  <source>Cancel</source>
+					  <target>Avbryt</target>
+					</trans-unit>
+				</group>
+				<group id="timetable">
+					<trans-unit id="highestspeed">
+					  <source>Max.\r\nspd.</source>
+					  <target>MAx.\r\nfart</target>
+					</trans-unit>
+					<trans-unit id="drivingtime">
+					  <source>Drv.\r\ntime</source>
+					  <target>Kjr.\r\ntid</target>
+					</trans-unit>
+					<trans-unit id="stationname">
+					  <source>Station name</source>
+					  <target>Stasjonsnavn</target>
+					</trans-unit>
+					<trans-unit id="arrivaltime">
+					  <source>Arrival</source>
+					  <target>Ankomst</target>
+					</trans-unit>
+					<trans-unit id="departuretime">
+					  <source>Departure</source>
+					  <target>Avgang</target>
+					</trans-unit>
+				</group>
+				<group id="message">
+					<trans-unit id="delimiter">
+						<source>\x20</source>
+					</trans-unit>
+					<trans-unit id="signal_proceed">
+					  <source>You may proceed at [speed] [unit] with extreme caution.</source>
+					  <target>Du kan kjøre i [speed] [unit] med ekstrem forsiktighet.</target>
+					</trans-unit>
+					<trans-unit id="signal_stop">
+					  <source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
+					  <target>Du har kjørt forbi et stop-signal. Vennligst slå på nødbrems umiddelbart og stopp toget.</target>
+					</trans-unit>
+					<trans-unit id="signal_overspeed">
+					  <source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+					  <target>Signalet indikerer fartsgrense på [limit] [unit]. Du kjører nå i [speed] [unit]. Vennligst senk farten.</target>
+					</trans-unit>
+					<trans-unit id="route_overspeed">
+					  <source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+					  <target>Fartsgrensen er på [limit] [unit]. Du kjører nå i [speed] [unit]. Vennligst senk farten.</target>
+					</trans-unit>
+					<trans-unit id="station_arrival">
+					  <source>You have arrived at [name].</source>
+					  <target>Du har ankommet [name].</target>
+					</trans-unit>
+					<trans-unit id="station_arrival_late">
+					  <source>You have arrived at [name] and are [time] late.</source>
+					  <target>Du har ankommet [name] og er [time] for sen.</target>
+					</trans-unit>
+					<trans-unit id="station_arrival_early">
+					  <source>You have arrived at [name] and are [time] early.</source>
+					  <target>Du har ankommet [name] og er [time] for tidlig.</target>
+					</trans-unit>
+					<trans-unit id="station_overrun">
+					  <source>Overrun: [difference] m.</source>
+					  <target>Du har stoppet [difference] m for sent.</target>
+					</trans-unit>
+					<trans-unit id="station_underrun">
+					  <source>Underrun: [difference] m.</source>
+					  <target>Du har stoppet [difference] m for tidlig.</target>
+					</trans-unit>
+					<trans-unit id="station_terminal">
+					  <source>This is the terminal station.</source>
+					  <target>Dette er siste stasjon.</target>
+					</trans-unit>
+					<trans-unit id="station_deadline">
+					  <source>Departure is expected in [time].</source>
+					  <target>Avgang er forventet om [time].</target>
+					</trans-unit>
+					<trans-unit id="station_security">
+					  <source>Please activate [system].</source>
+					  <target>Vennligst aktivert [system].</target>
+					</trans-unit>
+					<trans-unit id="station_correct">
+					  <source>Please correct your stop position.</source>
+					  <target>Vennligst stopp på rett plass.</target>
+					</trans-unit>
+					<trans-unit id="station_depart_closedoors">
+					  <source>Boarding complete. You may close the doors now.</source>
+					  <target>Ombordstigning er ferdig. Du kan lukke dørene nå.</target>
+					</trans-unit>
+					<trans-unit id="station_depart">
+					  <source>Boarding complete.</source>
+					  <target>Ombordstigning ferdig.</target>
+					</trans-unit>
+					<trans-unit id="station_passed">
+					  <source>You have passed [name] where you should have stopped.</source>
+					  <target>Du har kjørt forbi [name] hvor du skulle ha stoppet.</target>
+					</trans-unit>
+					<trans-unit id="station_passed_boarding">
+					  <source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
+					  <target>Du har passert [name] mens du fremdeles laster på. Stopp umiddelbart.</target>
+					</trans-unit>
+					<trans-unit id="loading">
+					  <source>Loading. Please wait...</source>
+					  <target>Laster. Vennligst vent...</target>
+					</trans-unit>
+				</group>
+				<group id="notification">
+					<trans-unit id="interior">
+					  <source>Interior camera</source>
+					  <target>Innendørs kamera</target>
+					</trans-unit>
+					<trans-unit id="interior_lookahead">
+					  <source>Interior camera (look ahead)</source>
+					  <target>Innendørs camera (se frem)</target>
+					</trans-unit>
+					<trans-unit id="exterior">
+					  <source>Exterior camera</source>
+					  <target>Utendørs kamera</target>
+					</trans-unit>
+					<trans-unit id="track">
+					  <source>Track camera</source>
+					  <target>Sporveikamera</target>
+					</trans-unit>
+					<trans-unit id="flybynormal">
+					  <source>Fly-by camera (normal)</source>
+					  <target>Fly-by kamera (normal)</target>
+					</trans-unit>
+					<trans-unit id="flybyzooming">
+					  <source>Fly-by camera (zooming)</source>
+					  <target>Fly-by kamera (med zoom)</target>
+					</trans-unit>
+					<trans-unit id="cpu_normal">
+					  <source>CPU: normal</source>
+					  <target>CPU: normal</target>
+					</trans-unit>
+					<trans-unit id="cpu_low">
+					  <source>CPU: low</source>
+					  <target>CPU: lav</target>
+					</trans-unit>
+					<trans-unit id="backfaceculling_on">
+						<source>Backface culling: on</source>
+					</trans-unit>
+					<trans-unit id="backfaceculling_off">
+						<source>Backface culling: off</source>
+					</trans-unit>
+					<trans-unit id="notavailableexpert">
+					  <source>This feature is not available in Expert mode.</source>
+					  <target>Denne funksjonen er ikke tilgjengelig i ekspert modus.</target>
+					</trans-unit>
+					<trans-unit id="aiunable">
+					  <source>The AI might be unable to fully operate this train.</source>
+					  <target>Den kunstige intelligensen klarer kanskje ikke å kjøre dette toget.</target>
+					</trans-unit>
+					<trans-unit id="camerarestriction_on">
+					  <source>Camera restriction: on</source>
+					  <target>Kamerabegrensning: på</target>
+					</trans-unit>
+					<trans-unit id="camerarestriction_off">
+					  <source>Camera restriction: off</source>
+					  <target>Kamerabegrensning: av</target>
+					</trans-unit>
+					<trans-unit id="mousegrab_on">
+					  <source>Mouse grab: on</source>
+					  <target>"Mouse grab": på</target>
+					</trans-unit>
+					<trans-unit id="mousegrab_off">
+					  <source>Mouse grab: off</source>
+					  <target>"Mouse grab": av</target>
+					</trans-unit>
+				</group>
+				<group id="score">
+					<trans-unit id="overspeed">
+					  <source>Overspeed</source>
+					  <target>Forfortkjøring</target>
+					</trans-unit>
+					<trans-unit id="redsignal">
+					  <source>Passed red signal</source>
+					  <target>Forbikjørt rødt signal</target>
+					</trans-unit>
+					<trans-unit id="toppling">
+					  <source>Toppling</source>
+					  <target>Velting</target>
+					</trans-unit>
+					<trans-unit id="derailed">
+					  <source>Derailed</source>
+					  <target>Avsporing</target>
+					</trans-unit>
+					<trans-unit id="discomfort">
+					  <source>Passenger discomfort</source>
+					  <target>Ukomfortabelhet blant passasjerene</target>
+					</trans-unit>
+					<trans-unit id="doors">
+					  <source>Doors opened</source>
+					  <target>Dørene åpnet</target>
+					</trans-unit>
+					<trans-unit id="station_arrived">
+					  <source>Arrived at station</source>
+					  <target>Ankom på stasjon</target>
+					</trans-unit>
+					<trans-unit id="station_perfecttime">
+					  <source>Perfect time bonus</source>
+					  <target>Perfekt på tiden bonus</target>
+					</trans-unit>
+					<trans-unit id="station_late">
+					  <source>Late</source>
+					  <target>For sen</target>
+					</trans-unit>
+					<trans-unit id="station_perfectstop">
+					  <source>Perfect stop bonus</source>
+					  <target>Prefekt stopp bonus</target>
+					</trans-unit>
+					<trans-unit id="station_stop">
+					  <source>Stop</source>
+					  <target>Stop</target>
+					</trans-unit>
+					<trans-unit id="station_departure">
+					  <source>Premature departure</source>
+					  <target>For tidlig avgang</target>
+					</trans-unit>
+					<trans-unit id="station_total">
+					  <source>Total</source>
+					  <target>Totalt</target>
+					</trans-unit>
+					<trans-unit id="rating">
+					  <source>Your rating:</source>
+					  <target>Din vurdering:</target>
+					</trans-unit>
+				</group>
+				<group id="rating">
+					<trans-unit id="0">
+					  <source>Abysmal</source>
+					  <target>Grusomt</target>
+					</trans-unit>
+					<trans-unit id="1">
+					  <source>Terrible</source>
+					  <target>Forferdelig</target>
+					</trans-unit>
+					<trans-unit id="2">
+					  <source>Bad</source>
+					  <target>Dårlig</target>
+					</trans-unit>
+					<trans-unit id="3">
+					  <source>Poor</source>
+					  <target>Stakkarslig</target>
+					</trans-unit>
+					<trans-unit id="4">
+					  <source>Fair</source>
+					  <target>Adekvat</target>
+					</trans-unit>
+					<trans-unit id="5">
+					  <source>Mediocre</source>
+					  <target>Gjennomsnittlig</target>
+					</trans-unit>
+					<trans-unit id="6">
+					  <source>Good</source>
+					  <target>Bra</target>
+					</trans-unit>
+					<trans-unit id="7">
+					  <source>Great</source>
+					  <target>Flott</target>
+					</trans-unit>
+					<trans-unit id="8">
+					  <source>Superb</source>
+					  <target>Utmerket</target>
+					</trans-unit>
+					<trans-unit id="9">
+					  <source>Excellent</source>
+					  <target>Perfekt</target>
+					</trans-unit>
+					<trans-unit id="unknown">
+					  <source>Unknown</source>
+					  <target>Uvisst</target>
+					</trans-unit>
+				</group>
+				<group id="menu">
+					<trans-unit id="resume">
+					  <source>Resume simulation</source>
+					  <target>Fortsett simulartor</target>
+					</trans-unit>
+					<trans-unit id="jump">
+					  <source>Jump to station</source>
+					  <target>Hopp til stasjon</target>
+					</trans-unit>
+					<trans-unit id="exit">
+					  <source>Exit to main menu</source>
+					  <target>Avslutt til menyen</target>
+					</trans-unit>
+					<trans-unit id="exit_question">
+					  <source>Do you really want to exit to the main menu?</source>
+					  <target>Er du sikker på at du vil avslutte til menyen?</target>
+					</trans-unit>
+					<trans-unit id="exit_no">
+					  <source>No</source>
+					  <target>Nei</target>
+					</trans-unit>
+					<trans-unit id="exit_yes">
+					  <source>Yes</source>
+					  <target>Ja</target>
+					</trans-unit>
+					<trans-unit id="quit">
+					  <source>Quit</source>
+					  <target>Avslutt</target>
+					</trans-unit>
+					<trans-unit id="quit_question">
+					  <source>Do you really want to quit?</source>
+					  <target>Er du sikker på at du vil avslutte?</target>
+					</trans-unit>
+					<trans-unit id="quit_no">
+					  <source>No</source>
+					  <target>Nei</target>
+					</trans-unit>
+					<trans-unit id="quit_yes">
+					  <source>Yes</source>
+					  <target>Ja</target>
+					</trans-unit>
+					<trans-unit id="back">
+					  <source>← Back</source>
+					  <target>← Tilbake</target>
+					</trans-unit>
+					<trans-unit id="customize_controls">
+					  <source>Customise controls</source>
+					  <target>Tilpass kontroller</target>
+					</trans-unit>
+					<trans-unit id="assign">
+						<source>Please press any key or move a joystick axis to set this control...</source>
+					</trans-unit>
+					<trans-unit id="keyboard">
+					  <source>Keyboard</source>
+					  <target>Tastatur</target>
+					</trans-unit>
+					<trans-unit id="joystick">
+					  <source>Joystick</source>
+					  <target>Joystick</target>
+					</trans-unit>
+					<trans-unit id="joystick_notavailable">
+					  <source>N/A</source>
+					  <target>-- ikke der --</target>
+					</trans-unit>
+					<trans-unit id="joystickdirection_positive">
+					  <source>Positive</source>
+					  <target>Positiv</target>
+					</trans-unit>
+					<trans-unit id="joystickdirection_negative">
+					  <source>Negative</source>
+					  <target>Negativ</target>
+					</trans-unit>
+					<trans-unit id="assignment_current">
+					  <source>Current assignment:</source>
+					  <target>Nåværende oppdrag:</target>
+					</trans-unit>
+				</group>
+				<group id="lamps">
+					<trans-unit id="ats">
+						<source>ATS</source>
+					</trans-unit>
+					<trans-unit id="atsoperation">
+						<source>ATS RUN</source>
+					</trans-unit>
+					<trans-unit id="atsppower">
+						<source>P POWER</source>
+					</trans-unit>
+					<trans-unit id="atsppattern">
+						<source>PTN APPROACH</source>
+					</trans-unit>
+					<trans-unit id="atspbrakeoverride">
+						<source>BRAKE RELEASE</source>
+					</trans-unit>
+					<trans-unit id="atspbrakeoperation">
+						<source>BRAKE APPLY</source>
+					</trans-unit>
+					<trans-unit id="atsp">
+						<source>ATS-P</source>
+					</trans-unit>
+					<trans-unit id="atspfailure">
+						<source>FAILURE</source>
+					</trans-unit>
+					<trans-unit id="atc">
+						<source>ATC</source>
+					</trans-unit>
+					<trans-unit id="atcpower">
+						<source>ATC POWER</source>
+					</trans-unit>
+					<trans-unit id="atcuse">
+						<source>ATC SRV</source>
+					</trans-unit>
+					<trans-unit id="atcemergency">
+						<source>ATC EMG</source>
+					</trans-unit>
+					<trans-unit id="eb">
+						<source>EB</source>
+					</trans-unit>
+					<trans-unit id="constspeed">
+						<source>CONST SPEED</source>
+					</trans-unit>
+				</group>
+				<!-- I do not know if these needs translations -->
+				<group id="handles">
+					<trans-unit id="forward">
+						<source>F</source>
+					</trans-unit>
+					<trans-unit id="neutral">
+						<source>N</source>
+					</trans-unit>
+					<trans-unit id="backward">
+						<source>B</source>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>P</source>
+					</trans-unit>
+					<trans-unit id="powernull">
+						<source>N</source>
+					</trans-unit>
+					<trans-unit id="brake">
+						<source>B</source>
+					</trans-unit>
+					<trans-unit id="locobrake">
+						<source>L</source>
+					</trans-unit>
+					<trans-unit id="brakenull">
+						<source>N</source>
+					</trans-unit>
+					<trans-unit id="release">
+						<source>REL</source>
+					</trans-unit>
+					<trans-unit id="lap">
+						<source>LAP</source>
+					</trans-unit>
+					<trans-unit id="service">
+						<source>SRV</source>
+					</trans-unit>
+					<trans-unit id="emergency">
+						<source>EMG</source>
+					</trans-unit>
+					<trans-unit id="holdbrake">
+						<source>HLD</source>
+					</trans-unit>
+				</group>
+				<group id="doors">
+					<trans-unit id="left">
+						<source>V</source>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>H</source>
+					</trans-unit>
+				</group>
+				<group id="misc">
+					<trans-unit id="score">
+						<source>Score:\x20</source>
+					</trans-unit>
+				</group>
+				<group id="commands">
+				  <trans-unit id="power_increase">
+				    <source>Increases power by one notch for trains with two handles</source>
+				    <target>Øker turtallet med et hakk for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="power_decrease">
+				    <source>Decreases power by one notch for trains with two handles</source>
+				    <target>Minster turtallet med et hakk for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="power_halfaxis">
+				    <source>Controls power for trains with two handles on half of a joystick axis</source>
+				    <target>Kontrollerer turtallet for tog med to håndtak på en halv joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="power_fullaxis">
+				    <source>Controls power for trains with two handles on a full joystick axis</source>
+				    <target>Kontrollerer turtallet på tog med to håndtak på en full joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="brake_decrease">
+				    <source>Decreases brake by one notch for trains with two handles</source>
+				    <target>Slepp opp bremsen med et hakk for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="brake_increase">
+				    <source>Increases brake by one notch for trains with two handles</source>
+				    <target>Øk bremsen med et hakk for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="locobrake_decrease">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="locobrake_increase">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="brake_halfaxis">
+				    <source>Controls brake for trains with two handles on half of a joystick axis</source>
+				    <target>Kontrollerer bremsen for tog med to håndtak på en halv joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="brake_fullaxis">
+				    <source>Controls brake for trains with two handles on a full joystick axis</source>
+				    <target>Kontrollerer bremsen for tog med to håndtak på en hel joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="brake_emergency">
+				    <source>Activates emergency brakes for trains with two handles</source>
+				    <target>Aktiverer nødbrems for tog med to håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_power">
+				    <source>Moves handle toward power by one notch for trains with one handle</source>
+				    <target>Dytter håndtaket et trinn mot høyere turtall for tog med et håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_neutral">
+				    <source>Moves handle toward neutral by one notch for trains with one handle</source>
+				    <target>Dytter håndtaket ett trinn mot nøytral stilling for tog med et håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_brake">
+				    <source>Moves handle toward brake by one notch for trains with one handle</source>
+				    <target>Dytter håndtaket ett trinn mot brems for tog med et håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_emergency">
+				    <source>Activates emergency brake for trains with one handle</source>
+				    <target>Aktiverer nødbrems for tog med et håndtak</target>
+				  </trans-unit>
+				  <trans-unit id="single_fullaxis">
+				    <source>Controls power and brake for trains with one handle on a full joystick axis</source>
+				    <target>Kontrollerer turtall og brems for tog med ett håndtak på en full joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="power_any_notch">
+				    <source>Adjusts the power notch directly from a command option value.</source>
+				    <target>Juster turtallet til en direkte posisjon via en gitt verdi</target>
+				  </trans-unit>
+				  <trans-unit id="brake_any_notch">
+				    <source>Adjusts the brake notch directly from a command option value.</source>
+				    <target>Juster bremsen til en direkte posisjon via en gitt verdi</target>
+				  </trans-unit>
+				  <trans-unit id="reverser_any_position">
+				    <source>Adjusts the reverser directly from a command option value.</source>
+				    <target>Juster vendegiret til en direkte posisjon via en gitt verdi</target>
+				  </trans-unit>
+				  <trans-unit id="hold_brake">
+				    <source>Hold Brake</source>
+				    <target>Parkeringsbrems</target>
+				  </trans-unit>
+				  <trans-unit id="reverser_forward">
+				    <source>Moves reverser forward by one notch</source>
+				    <target>Dytter vendegiret et hakk frem</target>
+				  </trans-unit>
+				  <trans-unit id="reverser_backward">
+				    <source>Moves reverser backward by one notch</source>
+				    <target>Dytter vendegiret et hakk bakover</target>
+				  </trans-unit>
+				  <trans-unit id="reverser_fullaxis">
+				    <source>Controls reverser on a full joystick axis</source>
+				    <target>Kontrollerer vendegiret på en full joystick akse</target>
+				  </trans-unit>
+				  <trans-unit id="doors_left">
+				    <source>Opens or closes the left doors</source>
+				    <target>Åpner og lukker venstre dør</target>
+				  </trans-unit>
+				  <trans-unit id="doors_right">
+				    <source>Opens or closes the right doors</source>
+				    <target>Åpner og lukker høyre dør</target>
+				  </trans-unit>
+				  <trans-unit id="horn_primary">
+				    <source>Plays the primary horn</source>
+				    <target>Tut med primærhornet</target>
+				  </trans-unit>
+				  <trans-unit id="horn_secondary">
+				    <source>Plays the secondary horn</source>
+				    <target>Tut med sekundærhornet</target>
+				  </trans-unit>
+				  <trans-unit id="horn_music">
+				    <source>Plays or stops the music horn</source>
+				    <target>Starter og stopper musikkhornet</target>
+				  </trans-unit>
+				  <trans-unit id="device_constspeed">
+				    <source>Activates or deactivates the constant speed device</source>
+				    <target>Aktiverer eller deaktiverer kruskontroll</target>
+				  </trans-unit>
+				  <trans-unit id="security_power">
+				    <source>Activates or deactivates the security system on some trains</source>
+				    <target>Aktiverer eller deaktiverer sikkerhetssystemet på noen tog</target>
+				  </trans-unit>
+				  <trans-unit id="security_s">
+				    <source>The S function of the security system</source>
+				    <target>S funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_a1">
+				    <source>The A1 function of the security system</source>
+				    <target>A1 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_a2">
+				    <source>The A2 function of the security system</source>
+				    <target>A2 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_b1">
+				    <source>The B1 function of the security system</source>
+				    <target>B1 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_b2">
+				    <source>The B2 function of the security system</source>
+				    <target>B2 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_c1">
+				    <source>The C1 function of the security system</source>
+				    <target>C1 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_c2">
+				    <source>The C2 function of the security system</source>
+				    <target>C2 funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_d">
+				    <source>The D function of the security system</source>
+				    <target>D funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_e">
+				    <source>The E function of the security system</source>
+				    <target>E funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_f">
+				    <source>The F function of the security system</source>
+				    <target>F funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_g">
+				    <source>The G function of the security system</source>
+				    <target>G funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_h">
+				    <source>The H function of the security system</source>
+				    <target>H funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_i">
+				    <source>The I function of the security system</source>
+				    <target>I funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_j">
+				    <source>The J function of the security system</source>
+				    <target>J funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_k">
+				    <source>The K function of the security system</source>
+				    <target>K funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_l">
+				    <source>The L function of the security system</source>
+				    <target>L funksjonen på sikkerhetssystemet</target>
+				  </trans-unit>
+				  <trans-unit id="security_m">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="security_n">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="security_o">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="security_p">
+				    <source>N/A</source>
+				  </trans-unit>
+				  <trans-unit id="camera_interior">
+				    <source>Switches to the train's interior view</source>
+				    <target>Bytt til togets interiørvisning</target>
+				  </trans-unit>
+				  <trans-unit id="camera_interior_nopanel">
+				    <source>Switches to the train's interior view. However, the panel is not displayed.</source>
+				    <target>Bytt til togets interiørvisning. Panelt vises ikke.</target>					  
+				  </trans-unit>
+				  <trans-unit id="camera_exterior">
+				    <source>Switches to the train's exterior view</source>
+				    <target>Bytt til togets eksteriørvisning.</target>
+				  </trans-unit>
+				  <trans-unit id="camera_track">
+				    <source>Switches to the track view</source>
+				    <target>Bytt til skinnegangvisning</target>
+				  </trans-unit>
+				  <trans-unit id="camera_flyby">
+				    <source>Switches between different fly-by views</source>
+				    <target>Bytt mellom forskjellige fly-by visninger</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_forward">
+				    <source>Moves the camera forward</source>
+				    <target>Flytter kamera forover</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_backward">
+				    <source>Moves the camera backward</source>
+				    <target>Flytter kamera bakover</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_left">
+				    <source>Moves the camera left</source>
+				    <target>Flytter kamera venstre</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_right">
+				    <source>Moves the camera right</source>
+				    <target>Flytter kamera høyre</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_up">
+				    <source>Moves the camera up</source>
+				    <target>Flytter kamera opp</target>
+				  </trans-unit>
+				  <trans-unit id="camera_move_down">
+				    <source>Moves the camera down</source>
+				    <target>Flytter kamera ned</target>
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_left">
+				    <source>Rotates the camera left</source>
+				    <target>Roterer kamera venstre</target>
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_right">
+				    <source>Rotates the camera right</source>
+				    <target>Roterer kamera høyre</target>					  
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_up">
+				    <source>Rotates the camera up</source>
+				    <target>Roterer kamera oppover</target>					  			  
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_down">
+				    <source>Rotates the camera down</source>
+				    <target>Roterer kamera nedover</target>		  
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_ccw">
+				    <source>Rotates the camera counter-clockwise</source>
+				    <target>Roterer kamera mot klokken</target>	  
+				  </trans-unit>
+				  <trans-unit id="camera_rotate_cw">
+				    <source>Rotates the camera clockwise</source>
+				    <target>Roterer kamera med klokken</target>	  
+				  </trans-unit>
+				  <trans-unit id="camera_zoom_in">
+				    <source>Zooms the camera in</source>
+				    <target>Zoomer kamera inn</target>
+				  </trans-unit>
+				  <trans-unit id="camera_zoom_out">
+				    <source>Zooms the camera out</source>
+				    <target>Zoomer kamera ut</target>
+				  </trans-unit>
+				  <trans-unit id="camera_poi_previous">
+				    <source>Jumps to the previous point of interest in the route.</source>
+				    <target>Hopper til forrige punkt av interesse på denne ruten.</target>
+				  </trans-unit>
+				  <trans-unit id="camera_poi_next">
+				    <source>Jumps to the next point of interest in the route.</source>
+				    <target>Hopper til neste punkt av interesse på denne ruten.</target>				    
+				  </trans-unit>
+				  <trans-unit id="camera_reset">
+				    <source>Resets the camera view to default values</source>
+				    <target>Resetter kamera til forhåndsdefinerte innstillinger</target>
+				  </trans-unit>
+				  <trans-unit id="camera_restriction">
+				    <source>Activates or deactivates interior view camera restriction</source>
+				    <target>Aktiverer eller deaktiverer interiørvisningskamerarestriksjoner</target>
+				  </trans-unit>
+				  <trans-unit id="timetable_toggle">
+				    <source>Toggles through different timetable modes</source>
+				    <target>Bytter mellom forskjellige tidtabellsmoduser</target>
+				  </trans-unit>
+				  <trans-unit id="timetable_up">
+				    <source>Scrolls the timetable up</source>
+				    <target>Flytt tidtabell opp</target>
+				  </trans-unit>
+				  <trans-unit id="timetable_down">
+				    <source>Scrolls the timetable down</source>
+				    <target>Flytt tidtabell ned</target>
+				  </trans-unit>
+				  <trans-unit id="menu_activate">
+				    <source>Displays the in-game menu</source>
+				    <target>Viser menyen i spillet</target>
+				  </trans-unit>
+				  <trans-unit id="menu_up">
+				    <source>Moves the cursor up within the in-game menu</source>
+				    <target>Flytter markøren opp i spillmenyen</target>
+				  </trans-unit>
+				  <trans-unit id="menu_down">
+				    <source>Moves the cursor down within the in-game menu</source>
+				    <target>Flytter markøren ned i spillmenyen</target>
+				  </trans-unit>
+				  <trans-unit id="menu_enter">
+				    <source>Performs the selected command within the in-game menu</source>
+				    <target>Velger den valgte kommandoen i spillmenyen</target>
+				  </trans-unit>
+				  <trans-unit id="menu_back">
+				    <source>Goes back within the in-game menu</source>
+				    <target>Går tilbake inni spillmenyen</target>
+				  </trans-unit>
+				  <trans-unit id="misc_clock">
+				    <source>Shows or hides the clock</source>
+				    <target>Viser eller skjuler klokken</target>
+				  </trans-unit>
+				  <trans-unit id="misc_speed">
+				    <source>Toggles through different speed display modes</source>
+				    <target>Itererer gjennom forskjellige speedometermoduser</target>
+				  </trans-unit>
+				  <trans-unit id="misc_gradient">
+				    <source>Toggles through different gradient display modes</source>
+				    <target>Itererer gjennom forskjellige gradientvisningsmoduser</target>
+				  </trans-unit>
+				  <trans-unit id="misc_dist_next_station">
+				    <source>Toggles through different next station remain distance display modes</source>
+				    <target>Iterer gjennom forskjellige "av stand til neste stasjon" moduser</target>
+				  </trans-unit>
+				  <trans-unit id="misc_timefactor">
+				    <source>Toggles through different time acceleration factors</source>
+				    <target>Iterer gjennom forskjellige tidsakselerasjonsfaktorer</target>
+				  </trans-unit>
+				  <trans-unit id="misc_fps">
+				    <source>Shows or hides the frame rate display</source>
+				    <target>Viser eller skjuler bilde per sekund visningen</target>
+				  </trans-unit>
+				  <trans-unit id="misc_ai">
+				    <source>Activates or deactivates the virtual driver (AI)</source>
+				    <target>Aktiverer eller deaktiverer virtuell konduktør (AI)</target>
+				  </trans-unit>
+				  <trans-unit id="misc_pause">
+				    <source>Pauses or resumes the simulation</source>
+				    <target>Pause eller forsette simulatoren</target>
+				  </trans-unit>
+				  <trans-unit id="misc_fullscreen">
+				    <source>Toggles to or from fullscreen mode</source>
+				    <target>Setter av og på fullskjemsmodus</target>
+				  </trans-unit>
+				  <trans-unit id="misc_mute">
+				    <source>Mutes sound or resumes playing sounds</source>
+				    <target>Slår av og på lyd</target>
+				  </trans-unit>
+				  <trans-unit id="misc_quit">
+				    <source>Quits the simulation</source>
+				    <target>Avslutter simulatoren</target>
+				  </trans-unit>
+				  <trans-unit id="misc_interface">
+				    <source>Toggles through different interface modes</source>
+				    <target>Iterer gjennom forskjellige brukergrensesnitt</target>
+				  </trans-unit>
+				  <trans-unit id="misc_backface">
+				    <source>Activates or deactivates backface culling</source>
+				    <target>Aktiverer eller deaktiverer baksideavskjæring</target>
+				  </trans-unit>
+				  <trans-unit id="misc_cpumode">
+				    <source>Switches to or from reduced CPU mode</source>
+				    <target>Bytter til og fra redusert CPU modus</target>
+				  </trans-unit>
+				  <trans-unit id="debug_wireframe">
+				    <source>Activates or deactivates wireframe mode</source>
+				    <target>Aktiverer eller deaktiverer "wireframe" modus</target>
+				  </trans-unit>
+				  <trans-unit id="debug_normals">
+				    <source>Shows or hides vertex normals</source>
+				    <target>Vis eller skjul 3D hjelpe linjer</target>
+				  </trans-unit>
+				  <trans-unit id="debug_brake">
+				    <source>Shows or hides brake system debug output</source>
+				    <target>Vis eller skjul utskrift fra bremsesystem</target>
+				  </trans-unit>
+				  <trans-unit id="debug_ats">
+				    <source>Shows or hides plugin debug output</source>
+				    <target>Vis eller skjul utskrift fra plugins</target>
+				  </trans-unit>
+				  <trans-unit id="debug_touch_mode">
+				    <source>Shows or hides the touch range</source>
+				    <target>Vis eller skjul avstand man kan nå / ta til</target>
+				  </trans-unit>
+				  <trans-unit id="route_information">
+				    <source>Shows or hides the route information window</source>
+				    <target>Vis eller skjul informasjon om ruten</target>
+				  </trans-unit>
+				  <trans-unit id="show_events">
+				    <source>Shows or hides event markers (For developers)</source>
+				    <target>Vis eller skjul hendelesmarkører (for utviklere)</target>
+				  </trans-unit>
+				  <trans-unit id="debug_renderer_mode">
+				    <source>Toggles the renderer</source>
+				    <target>Slå på "renderer-mode"</target>
+				  </trans-unit>
+				  <trans-unit id="wiper_speed_up">
+				    <source>Increases the speed of the windscreen wipers</source>
+				    <target>Øk hastigheten på store viskere</target>
+				  </trans-unit>
+				  <trans-unit id="wiper_speed_down">
+				    <source>Decreases the speed of the windscreen wipers</source>
+				    <target>Senk hastigheten på store viskere</target>
+				  </trans-unit>
+				  <trans-unit id="fill_fuel">
+				    <source>Fills fuel</source>
+				    <target>Fyller drivstoff</target>
+				  </trans-unit>
+				  <trans-unit id="headlights">
+				    <source>Toggles the train headlights</source>
+				    <target>Slå på storlysene</target>
+				  </trans-unit>
+				  <trans-unit id="live_steam_injector">
+				    <source>Activates or deactivates the live steam injector</source>
+				  </trans-unit>
+				  <trans-unit id="exhaust_steam_injector">
+				    <source>Activates or deactivates the exhaust steam injector</source>
+				  </trans-unit>
+				  <trans-unit id="increase_cutoff">
+				    <source>Increases the cutoff</source>
+				    <target>Øker momentum</target>
+				  </trans-unit>
+				  <trans-unit id="decrease_cutoff">
+				    <source>Decreases the cutoff</source>
+				    <target>Senker momentum</target>
+				  </trans-unit>
+				  <trans-unit id="blowers">
+				    <source>Activates or deactivates the blowers</source>
+				    <target>Aktiverer eller deaktiverer blåsere</target>
+				  </trans-unit>
+				  <trans-unit id="engine_start">
+				    <source>Starts the engine</source>
+				    <target>Starter motoren</target>
+				  </trans-unit>
+				  <trans-unit id="engine_stop">
+				    <source>Stops the engine</source>
+				    <target>Stopper motoren</target>
+				  </trans-unit>
+				  <trans-unit id="gear_up">
+				    <source>Shifts up a gear in a train fitted with a gearbox</source>
+				    <target>Skifter opp et gir i et tog utstyrt med girkasse</target>
+				  </trans-unit>
+				  <trans-unit id="gear_down">
+				    <source>Shifts down a gear in a train fitted with a gearbox</source>
+				    <target>Skifter ned et gir i et tog utstyrt med girkasse</target>
+				  </trans-unit>
+				  <trans-unit id="raise_pantograph">
+				    <source>Raises the pantograph</source>
+				    <target>Reiser pantografen</target>
+				  </trans-unit>
+				  <trans-unit id="lower_pantograph">
+				    <source>Lowers the pantograph</source>
+				    <target>Senker pantografen</target>
+				  </trans-unit>
+				  <trans-unit id="main_breaker">
+				    <source>Toggles the main breaker</source>
+				    <target>Slår på hovedbremsen</target>
+				  </trans-unit>
+				  <trans-unit id="raildriver_speed_units">
+				    <source>Toggles the RailDriver speed display units.</source>
+				    <target>Slår på RailDriver speedometerenheter</target>
+				  </trans-unit>
+				</group>
+				<group id="keys">
+					<trans-unit id="0">
+						<source>0</source>
+					</trans-unit>
+					<trans-unit id="1">
+						<source>1</source>
+					</trans-unit>
+					<trans-unit id="2">
+						<source>2</source>
+					</trans-unit>
+					<trans-unit id="3">
+						<source>3</source>
+					</trans-unit>
+					<trans-unit id="4">
+						<source>4</source>
+					</trans-unit>
+					<trans-unit id="5">
+						<source>5</source>
+					</trans-unit>
+					<trans-unit id="6">
+						<source>6</source>
+					</trans-unit>
+					<trans-unit id="7">
+						<source>7</source>
+					</trans-unit>
+					<trans-unit id="8">
+						<source>8</source>
+					</trans-unit>
+					<trans-unit id="9">
+						<source>9</source>
+					</trans-unit>
+					<trans-unit id="ampersand">
+						<source>Ampersand</source>
+					</trans-unit>
+					<trans-unit id="asterisk">
+						<source>Asterisk</source>
+					</trans-unit>
+					<trans-unit id="at">
+						<source>At</source>
+					</trans-unit>
+					<trans-unit id="backquote">
+						<source>Backquote</source>
+					</trans-unit>
+					<trans-unit id="backslash">
+						<source>Backslash</source>
+					</trans-unit>
+					<trans-unit id="backspace">
+						<source>Backspace</source>
+					</trans-unit>
+					<trans-unit id="break">
+						<source>Break</source>
+					</trans-unit>
+					<trans-unit id="capslock">
+						<source>Capslock</source>
+					</trans-unit>
+					<trans-unit id="caret">
+						<source>Caret</source>
+					</trans-unit>
+					<trans-unit id="clear">
+						<source>Clear</source>
+					</trans-unit>
+					<trans-unit id="colon">
+						<source>Colon</source>
+					</trans-unit>
+					<trans-unit id="comma">
+						<source>Comma</source>
+					</trans-unit>
+					<trans-unit id="delete">
+						<source>Delete</source>
+					</trans-unit>
+					<trans-unit id="dollar">
+						<source>Dollar</source>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Down</source>
+					</trans-unit>
+					<trans-unit id="end">
+						<source>End</source>
+					</trans-unit>
+					<trans-unit id="enter">
+						<source>Enter</source>
+					</trans-unit>
+					<trans-unit id="equals">
+						<source>Equals</source>
+					</trans-unit>
+					<trans-unit id="escape">
+						<source>Escape</source>
+					</trans-unit>
+					<trans-unit id="euro">
+						<source>Euro</source>
+					</trans-unit>
+					<trans-unit id="exclaim">
+						<source>Exclamation</source>
+					</trans-unit>
+					<trans-unit id="f1">
+						<source>F1</source>
+					</trans-unit>
+					<trans-unit id="f2">
+						<source>F2</source>
+					</trans-unit>
+					<trans-unit id="f3">
+						<source>F3</source>
+					</trans-unit>
+					<trans-unit id="f4">
+						<source>F4</source>
+					</trans-unit>
+					<trans-unit id="f5">
+						<source>F5</source>
+					</trans-unit>
+					<trans-unit id="f6">
+						<source>F6</source>
+					</trans-unit>
+					<trans-unit id="f7">
+						<source>F7</source>
+					</trans-unit>
+					<trans-unit id="f8">
+						<source>F8</source>
+					</trans-unit>
+					<trans-unit id="f9">
+						<source>F9</source>
+					</trans-unit>
+					<trans-unit id="f10">
+						<source>F10</source>
+					</trans-unit>
+					<trans-unit id="f11">
+						<source>F11</source>
+					</trans-unit>
+					<trans-unit id="f12">
+						<source>F12</source>
+					</trans-unit>
+					<trans-unit id="f13">
+						<source>F13</source>
+					</trans-unit>
+					<trans-unit id="f14">
+						<source>F14</source>
+					</trans-unit>
+					<trans-unit id="f15">
+						<source>F15</source>
+					</trans-unit>
+					<trans-unit id="greater">
+						<source>Greater</source>
+					</trans-unit>
+					<trans-unit id="hash">
+						<source>Hash</source>
+					</trans-unit>
+					<trans-unit id="help">
+						<source>Help</source>
+					</trans-unit>
+					<trans-unit id="home">
+						<source>Home</source>
+					</trans-unit>
+					<trans-unit id="insert">
+						<source>Insert</source>
+					</trans-unit>
+					<trans-unit id="kp0">
+						<source>Keypad 0</source>
+					</trans-unit>
+					<trans-unit id="kp1">
+						<source>Keypad 1</source>
+					</trans-unit>
+					<trans-unit id="kp2">
+						<source>Keypad 2</source>
+					</trans-unit>
+					<trans-unit id="kp3">
+						<source>Keypad 3</source>
+					</trans-unit>
+					<trans-unit id="kp4">
+						<source>Keypad 4</source>
+					</trans-unit>
+					<trans-unit id="kp5">
+						<source>Keypad 5</source>
+					</trans-unit>
+					<trans-unit id="kp6">
+						<source>Keypad 6</source>
+					</trans-unit>
+					<trans-unit id="kp7">
+						<source>Keypad 7</source>
+					</trans-unit>
+					<trans-unit id="kp8">
+						<source>Keypad 8</source>
+					</trans-unit>
+					<trans-unit id="kp9">
+						<source>Keypad 9</source>
+					</trans-unit>
+					<trans-unit id="kp_divide">
+						<source>Keypad Divide</source>
+					</trans-unit>
+					<trans-unit id="kp_enter">
+						<source>Keypad Enter</source>
+					</trans-unit>
+					<trans-unit id="kp_equals">
+						<source>Keypad Equals</source>
+					</trans-unit>
+					<trans-unit id="kp_minus">
+						<source>Keypad Minus</source>
+					</trans-unit>
+					<trans-unit id="kp_multiply">
+						<source>Keypad Multiply</source>
+					</trans-unit>
+					<trans-unit id="kp_period">
+						<source>Keypad Period</source>
+					</trans-unit>
+					<trans-unit id="kp_plus">
+						<source>Keypad Plus</source>
+					</trans-unit>
+					<trans-unit id="lalt">
+						<source>Left Alt</source>
+					</trans-unit>
+					<trans-unit id="lctrl">
+						<source>Left Ctrl</source>
+					</trans-unit>
+					<trans-unit id="left">
+						<source>Left</source>
+					</trans-unit>
+					<trans-unit id="leftbracket">
+						<source>Left bracket</source>
+					</trans-unit>
+					<trans-unit id="leftparen">
+						<source>Left parenthesis</source>
+					</trans-unit>
+					<trans-unit id="less">
+						<source>Less</source>
+					</trans-unit>
+					<trans-unit id="lmeta">
+						<source>Left Meta</source>
+					</trans-unit>
+					<trans-unit id="lshift">
+						<source>Left Shift</source>
+					</trans-unit>
+					<trans-unit id="lsuper">
+						<source>Left Application</source>
+					</trans-unit>
+					<trans-unit id="menu">
+						<source>Menu</source>
+					</trans-unit>
+					<trans-unit id="minus">
+						<source>Minus</source>
+					</trans-unit>
+					<trans-unit id="mode">
+						<source>Alt Gr</source>
+					</trans-unit>
+					<trans-unit id="numlock">
+						<source>Numlock</source>
+					</trans-unit>
+					<trans-unit id="pagedown">
+						<source>Page down</source>
+					</trans-unit>
+					<trans-unit id="pageup">
+						<source>Page up</source>
+					</trans-unit>
+					<trans-unit id="pause">
+						<source>Pause</source>
+					</trans-unit>
+					<trans-unit id="period">
+						<source>Period</source>
+					</trans-unit>
+					<trans-unit id="plus">
+						<source>Plus</source>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>Power</source>
+					</trans-unit>
+					<trans-unit id="print">
+						<source>Print</source>
+					</trans-unit>
+					<trans-unit id="question">
+						<source>Question</source>
+					</trans-unit>
+					<trans-unit id="quote">
+						<source>Quote</source>
+					</trans-unit>
+					<trans-unit id="quotedbl">
+						<source>Quote double</source>
+					</trans-unit>
+					<trans-unit id="ralt">
+						<source>Right Alt</source>
+					</trans-unit>
+					<trans-unit id="rctrl">
+						<source>Right Ctrl</source>
+					</trans-unit>
+					<trans-unit id="return">
+						<source>Return</source>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>Right</source>
+					</trans-unit>
+					<trans-unit id="rightbracket">
+						<source>Right bracket</source>
+					</trans-unit>
+					<trans-unit id="rightparen">
+						<source>Right parenthesis</source>
+					</trans-unit>
+					<trans-unit id="rmeta">
+						<source>Right Meta</source>
+					</trans-unit>
+					<trans-unit id="rshift">
+						<source>Right Shift</source>
+					</trans-unit>
+					<trans-unit id="rsuper">
+						<source>Right Application</source>
+					</trans-unit>
+					<trans-unit id="scrolllock">
+						<source>Scrolllock</source>
+					</trans-unit>
+					<trans-unit id="semicolon">
+						<source>Semicolon</source>
+					</trans-unit>
+					<trans-unit id="slash">
+						<source>Slash</source>
+					</trans-unit>
+					<trans-unit id="space">
+						<source>Space</source>
+					</trans-unit>
+					<trans-unit id="sysreq">
+						<source>SysRq</source>
+					</trans-unit>
+					<trans-unit id="tab">
+						<source>Tab</source>
+					</trans-unit>
+					<trans-unit id="underscore">
+						<source>Underscore</source>
+					</trans-unit>
+					<trans-unit id="up">
+						<source>Up</source>
+					</trans-unit>
+					<trans-unit id="a">
+						<source>A</source>
+					</trans-unit>
+					<trans-unit id="b">
+						<source>B</source>
+					</trans-unit>
+					<trans-unit id="c">
+						<source>C</source>
+					</trans-unit>
+					<trans-unit id="d">
+						<source>D</source>
+					</trans-unit>
+					<trans-unit id="e">
+						<source>E</source>
+					</trans-unit>
+					<trans-unit id="f">
+						<source>F</source>
+					</trans-unit>
+					<trans-unit id="g">
+						<source>G</source>
+					</trans-unit>
+					<trans-unit id="h">
+						<source>H</source>
+					</trans-unit>
+					<trans-unit id="i">
+						<source>I</source>
+					</trans-unit>
+					<trans-unit id="j">
+						<source>J</source>
+					</trans-unit>
+					<trans-unit id="k">
+						<source>K</source>
+					</trans-unit>
+					<trans-unit id="l">
+						<source>L</source>
+					</trans-unit>
+					<trans-unit id="m">
+						<source>M</source>
+					</trans-unit>
+					<trans-unit id="n">
+						<source>N</source>
+					</trans-unit>
+					<trans-unit id="o">
+						<source>O</source>
+					</trans-unit>
+					<trans-unit id="p">
+						<source>P</source>
+					</trans-unit>
+					<trans-unit id="q">
+						<source>Q</source>
+					</trans-unit>
+					<trans-unit id="r">
+						<source>R</source>
+					</trans-unit>
+					<trans-unit id="s">
+						<source>S</source>
+					</trans-unit>
+					<trans-unit id="t">
+						<source>T</source>
+					</trans-unit>
+					<trans-unit id="u">
+						<source>U</source>
+					</trans-unit>
+					<trans-unit id="v">
+						<source>V</source>
+					</trans-unit>
+					<trans-unit id="w">
+						<source>W</source>
+					</trans-unit>
+					<trans-unit id="x">
+						<source>X</source>
+					</trans-unit>
+					<trans-unit id="y">
+						<source>Y</source>
+					</trans-unit>
+					<trans-unit id="z">
+						<source>Z</source>
+					</trans-unit>
+				</group>
+			</group>
+			<group id="train_editor">
+				<group id="general">
+					<trans-unit id="new">
+					  <source>New</source>
+					  <target>Ny</target>
+					</trans-unit>
+					<trans-unit id="open">
+					  <source>Open...</source>
+					  <target>Åpne...</target>
+					</trans-unit>
+					<trans-unit id="save">
+					  <source>Save</source>
+					  <target>Lagre</target>
+					</trans-unit>
+					<trans-unit id="save_as">
+					  <source>Save as...</source>
+					  <target>Lagre som...</target>
+					</trans-unit>
+					<trans-unit id="close">
+					  <source>Close</source>
+					  <target>Lukk</target>
+					</trans-unit>
+					<trans-unit id="new_message">
+					  <source>Do you want to save data before creating a new train?</source>
+					  <target>Ønsker du å lagre før du lager et nytt tog?</target>
+					</trans-unit>
+					<trans-unit id="open_message">
+					  <source>Do you want to save data before opening another train?</source>
+					  <target>Ønsker du å lagre data før åpne ett nytt tog?</target>
+					</trans-unit>
+					<trans-unit id="close_message">
+					  <source>Do you want to save data before closing?</source>
+					  <target>Ønsker du å lagre data før du lukker?</target>
+					</trans-unit>
+					<trans-unit id="properties_one">
+					  <source>Properties (1)</source>
+					  <target>Egenskaper (1)</target>
+					</trans-unit>
+					<trans-unit id="properties_two">
+					  <source>Properties (2)</source>
+					  <target>Egenskaper (2)</target>
+					</trans-unit>
+				</group>
+				<group id="performance">
+					<trans-unit id="performance">
+					  <source>Performance</source>
+					  <target>Ytelse</target>
+					</trans-unit>
+					<trans-unit id="deceleration">
+					  <source>Deceleration:</source>
+					  <target>Fartsreduksjon:</target>
+					</trans-unit>
+					<trans-unit id="static_friction">
+					  <source>CoefficientOfStaticFriction:</source>
+					  <target>Koeffisient for statisk friksjon</target>
+					</trans-unit>
+					<trans-unit id="rolling_resistance">
+					  <source>CoefficientOfRollingResistance:</source>
+					  <target>Koeffisient for rullemotstand</target>
+					</trans-unit>
+					<trans-unit id="aerodynamic_drag">
+					  <source>AerodynamicDragCoefficient:</source>
+					  <target>Koeffisient for luftmotstand</target>
+					</trans-unit>
+				</group>
+				<group id="delay">
+					<trans-unit id="delay">
+					  <source>Delay</source>
+					  <target>Forsinkelse</target>
+					</trans-unit>
+					<trans-unit id="power_up">
+					  <source>DelayPowerUp</source>
+					  <target>Forsinkelse turtall opp</target>
+					</trans-unit>
+					<trans-unit id="power_down">
+					  <source>DelayPowerDown</source>
+					  <target>Forsinkelse turtall ned</target>
+					</trans-unit>
+					<trans-unit id="brake_up">
+					  <source>DelayBrakeUp</source>
+					  <target>Forsinkelse bremse på</target>
+					</trans-unit>
+					<trans-unit id="brake_down">
+					  <source>DelayBrakeDown</source>
+					  <target>Forsinkelse bremse av</target>
+					</trans-unit>
+					<trans-unit id="set">
+					  <source>Set</source>
+					  <target>Set</target>
+					</trans-unit>
+					<trans-unit id="notch">
+					  <source>Notch</source>
+					  <target>Hakk</target>
+					</trans-unit>
+					<trans-unit id="save">
+					  <source>Save</source>
+					  <target>Lagre</target>
+					</trans-unit>
+					<trans-unit id="cancel">
+					  <source>Cancel</source>
+					  <target>Avbryt</target>
+					</trans-unit>
+				</group>
+				<group id="move">
+					<trans-unit id="move">
+					  <source>Move</source>
+					  <target>Bevegelse</target>
+					</trans-unit>
+					<trans-unit id="jerk_power_up">
+					  <source>JerkPowerUp:</source>
+					  <target>Dytt aksl. opp</target>
+					</trans-unit>
+					<trans-unit id="jerk_power_down">
+					  <source>JerkPowerDown:</source>
+					  <target>Dytt aksl. ned</target>
+					</trans-unit>
+					<trans-unit id="jerk_brake_up">
+					  <source>JerkBrakeUp:</source>
+					  <target>Dytt brems på</target>
+					</trans-unit>
+					<trans-unit id="jerk_brake_down">
+					  <source>JerkBrakeDown:</source>
+					  <target>Dytt brems av</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_up">
+					  <source>BrakeCylinderUp:</source>
+					  <target>Bremsesylinder opp</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_down">
+					  <source>BrakeCylinderDown:</source>
+					  <target>Bremsesylinder ned</target>
+					</trans-unit>
+				</group>
+				<group id="brake">
+					<trans-unit id="brake">
+					  <source>Brake</source>
+					  <target>Bremse</target>
+					</trans-unit>
+					<trans-unit id="type">
+					  <source>BrakeType:</source>
+					  <target>Bremsesystem:</target>
+					</trans-unit>
+					<trans-unit id="control_system">
+					  <source>BrakeControlSystem:</source>
+					  <target>Bremsekontrollsystem:</target>
+					</trans-unit>
+					<trans-unit id="control_speed">
+					  <source>BrakeControlSpeed:</source>
+					  <target>Bremsekontrollfart</target>
+					</trans-unit>
+					<trans-unit id="smee">
+					  <source>Electromagnetic straight air brake</source>
+					  <target>Elektromagnetisk rett luftbremse</target>
+					</trans-unit>
+					<trans-unit id="ecb">
+					  <source>Electro-pneumatic air brake without brake pipe</source>
+					  <target>Elektronisk pneumatisk luftbremse uten bremserør</target>
+					</trans-unit>
+					<trans-unit id="cl">
+					  <source>Air brake with partial release feature</source>
+					  <target>Luftbrems med delvis utslipp</target>
+					</trans-unit>
+					<trans-unit id="control_system_none">
+					  <source>None</source>
+					  <target>Ingen</target>
+					</trans-unit>
+					<trans-unit id="lock_out_valve">
+					  <source>Closing electromagnetic valve</source>
+					  <target>Lukket elektromagnetisk hvelv</target>
+					</trans-unit>
+					<trans-unit id="delay_including_control">
+					  <source>Delay-including control</source>
+					  <target>Inkludert forsinkelses kontroll</target>
+					</trans-unit>
+				</group>
+				<group id="pressure">
+					<trans-unit id="pressure">
+					  <source>Pressure</source>
+					  <target>Trykk</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_service_max">
+					  <source>BrakeCylinderServiceMaximumPressure:</source>
+					  <target>Bremsesylinder maks operasjonelt trykk:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_emergency_max">
+					  <source>BrakeCylinderEmergencyMaximumPressure:</source>
+					  <target>Bremsesylinder maks nødstopp trykk:</target>
+					  <target></target>
+					</trans-unit>
+					<trans-unit id="main_reservoir_min">
+					  <source>MainReservoirMinimumPressure:</source>
+					  <target>Hoved reservoar minimumstrykk:</target>
+					</trans-unit>
+					<trans-unit id="main_reservoir_max">
+					  <source>MainReservoirMaximumPressure:</source>
+					  <target>Hoved reservoar maksimumstrykk:</target>
+					</trans-unit>
+					<trans-unit id="brake_pipe_normal">
+					  <source>BrakePipeNormalPressure:</source>
+					  <target>Bremserørets normale trykk:</target>
+					</trans-unit>
+				</group>
+				<group id="handle">
+					<trans-unit id="handle">
+					  <source>Handle</source>
+					  <target>Spaker</target>
+					</trans-unit>
+					<trans-unit id="type">
+					  <source>HandleType:</source>
+					  <target>Spak type:</target>
+					</trans-unit>
+					<trans-unit id="power_notches">
+					  <source>PowerNotches:</source>
+					  <target>Turtallhakk</target>
+					</trans-unit>
+					<trans-unit id="brake_notches">
+					  <source>BrakeNotches:</source>
+					  <target>Bremsehakk</target>
+					</trans-unit>
+					<trans-unit id="driver_power_notches">
+					  <source>DriverPowerNotches:</source>
+					  <target>Fører turtall hakk:</target>
+					</trans-unit>
+					<trans-unit id="driver_brake_notches">
+					  <source>DriverBrakeNotches:</source>
+					  <target>Fører bremse hakk:</target>
+					</trans-unit>
+					<trans-unit id="power_notch_reduce_steps">
+					  <source>PowerNotchReduceSteps:</source>
+					  <target>Fører reduserende hakk</target>
+					</trans-unit>
+					<trans-unit id="separated">
+					  <source>Separated</source>
+					  <target>Separat</target>
+					</trans-unit>
+					<trans-unit id="combined">
+					  <source>Combined</source>
+					  <target>Kombinert</target>
+					</trans-unit>
+					<trans-unit id="brake_notches_error_message">
+					  <source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+					  <target>Bremsehakk må være minst 1 hvis parkeringsbremsen er satt.</target>
+					</trans-unit>
+					<trans-unit id="driver_power_notches_error_message">
+					  <source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+					  <target>Førerbremsen må være mindre eller lik turtallshakkene.</target>
+					</trans-unit>
+					<trans-unit id="driver_brake_notches_error_message">
+					  <source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
+					  <target>Førers bremsehakk må være mindre eller lik bremsehakkene</target>
+					</trans-unit>
+				</group>
+				<group id="cab">
+					<trans-unit id="cab">
+					  <source>Cab</source>
+					  <target>Førerhytten</target>
+					</trans-unit>
+					<trans-unit id="driver_car">
+					  <source>DriverCar:</source>
+					  <target>Førervogna:</target>
+					</trans-unit>
+					<trans-unit id="driver_car_error_message">
+					  <source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
+
+					</trans-unit>
+				</group>
+				<group id="car">
+					<trans-unit id="car">
+					  <source>Car</source>
+					  <target>Vogner</target>
+					</trans-unit>
+					<trans-unit id="motor_car_mass">
+					  <source>MotorCarMass:</source>
+					  <target>Motorvognmasse:</target>
+					</trans-unit>
+					<trans-unit id="number_of_motor_cars">
+					  <source>NumberOfMotorCars:</source>
+					  <target>Antall motorvogner:</target>
+					</trans-unit>
+					<trans-unit id="trailer_car_mass">
+					  <source>TrailerCarMass:</source>
+					  <target>Trekkvognmasse:</target>
+					</trans-unit>
+					<trans-unit id="number_of_trailer_cars">
+					  <source>NumberOfTrailerCars:</source>
+					  <target>Antall trekkvogner:</target>
+					</trans-unit>
+					<trans-unit id="length_of_a_car">
+					  <source>LengthOfACar:</source>
+					  <target>Lengde på vogn:</target>
+					</trans-unit>
+					<trans-unit id="front_car_is_motor_car">
+					  <source>FrontCarIsMotorCar:</source>
+					  <target>Fremste vogn har motor:</target>
+					</trans-unit>
+					<trans-unit id="width_of_a_car">
+					  <source>WidthOfACar:</source>
+					  <target>Vognbredde:</target>
+					</trans-unit>
+					<trans-unit id="height_of_a_car">
+					  <source>HeightOfACar:</source>
+					  <target>Vognhøyde</target>
+					</trans-unit>
+					<trans-unit id="center_of_gravity_height">
+					  <source>CenterOfGravityHeight:</source>
+					  <target>Senter for gravitasjon høyde:</target>
+					</trans-unit>
+					<trans-unit id="exposed_frontal_area">
+					  <source>ExposedFrontalArea:</source>
+					  <target>Eksponert frontalområde</target>
+					</trans-unit>
+					<trans-unit id="unexposed_frontal_area">
+					  <source>UnexposedFrontalArea:</source>
+					  <target>Ikke-eksponert frontalområde</target>
+					</trans-unit>
+					<trans-unit id="number_of_trailer_cars_error_message">
+					  <source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
+					  <target>Antall trekkvogner må være minst 1 hvis første vogn ikke er satt til motorvogn.</target>
+					</trans-unit>
+				</group>
+				<group id="device">
+					<trans-unit id="device">
+					  <source>Device</source>
+					  <target>Enheter</target>
+					</trans-unit>
+					<trans-unit id="const_speed">
+					  <source>ConstSpeed:</source>
+					  <target>Kruskontroll:</target>
+					</trans-unit>
+					<trans-unit id="hold_brake">
+					  <source>HoldBrake:</source>
+					  <target>Parkeringsbrems:</target>
+					</trans-unit>
+					<trans-unit id="readhesion_device">
+					  <source>ReAdhesionDevice:</source>
+					  <target>Re-adhesjonenhet:</target>
+					  <target></target>
+					</trans-unit>
+					<trans-unit id="pass_alarm">
+					  <source>PassAlarm:</source>
+					  <target>Passeringsalarm:</target>
+					</trans-unit>
+					<trans-unit id="door_open_mode">
+					  <source>DoorOpenMode:</source>
+					  <target>Døråpningsmetode:</target>
+					</trans-unit>
+					<trans-unit id="door_close_mode">
+					  <source>DoorCloseMode:</source>
+					  <target>Dørlukkingsmetode:</target>
+					</trans-unit>
+					<trans-unit id="door_width">
+					  <source>DoorWidth:</source>
+					  <target>Dørbredde:</target>
+					</trans-unit>
+					<trans-unit id="door_max_tolerance">
+					  <source>DoorMaxTolerance:</source>
+					  <target>Dørens makstoleranse:</target>
+					</trans-unit>
+					<trans-unit id="none">
+					  <source>None</source>
+					  <target>Ingen</target>
+					</trans-unit>
+					<trans-unit id="manual_switching">
+					  <source>Manual switching</source>
+					  <target>Manuell switching</target>
+					</trans-unit>
+					<trans-unit id="automatic_switching">
+					  <source>Automatic switching</source>
+					  <target>Automatisk switching</target>
+					</trans-unit>
+					<trans-unit id="type_a">
+					  <source>Type A (instant)</source>
+					  <target>Type A (umiddelbart)</target>
+					</trans-unit>
+					<trans-unit id="type_b">
+					  <source>Type B (slow)</source>
+					  <target>Type B (sein)</target>
+					</trans-unit>
+					<trans-unit id="type_c">
+					  <source>Type C (medium)</source>
+					  <target>Type C (medium)</target>
+					</trans-unit>
+					<trans-unit id="type_d">
+					  <source>Type D (fast)</source>
+					  <target>Type D (rask)</target>
+					</trans-unit>
+					<trans-unit id="single">
+					  <source>Single</source>
+					  <target>Enkel alarm</target>
+					</trans-unit>
+					<trans-unit id="looping">
+					  <source>Looping</source>
+					  <target>Repeterende</target>
+					</trans-unit>
+					<trans-unit id="semi_automatic">
+					  <source>Semi-automatic</source>
+					  <target>Semi-automatisk</target>
+					</trans-unit>
+					<trans-unit id="automatic">
+					  <source>Automatic</source>
+					  <target>Automatisk</target>
+					</trans-unit>
+					<trans-unit id="manual">
+					  <source>Manual</source>
+					  <target>Manuell</target>
+					</trans-unit>
+				</group>
+				<group id="acceleration">
+					<trans-unit id="acceleration">
+					  <source>Acceleration</source>
+					  <target>Akselerasjon</target>
+					</trans-unit>
+					<trans-unit id="notch">
+					  <source>Notch:</source>
+					  <target>Hakk / Trinn:</target>
+					</trans-unit>
+					<trans-unit id="data">
+					  <source>Data</source>
+					  <target>Data</target>
+					</trans-unit>
+					<trans-unit id="preview">
+					  <source>Preview</source>
+					  <target>Forhåndsvis</target>
+					</trans-unit>
+					<trans-unit id="subtract_deceleration">
+					  <source>Subtract deceleration due to air and rolling resistance</source>
+					  <target>Trekk fra deselerasjon på grunn av luft- og rullemotstand</target>
+					</trans-unit>
+					<trans-unit id="max_x">
+					  <source>Xmax:</source>
+					  <target>XMaks:</target>
+					</trans-unit>
+					<trans-unit id="max_y">
+					  <source>Ymax:</source>
+					  <target>YMax:</target>
+					</trans-unit>
+				</group>
+				<group id="motor">
+					<trans-unit id="sound">
+					  <source>Motor Sound</source>
+					  <target>Motorlyd</target>
+					</trans-unit>
+					<trans-unit id="edit">
+					  <source>Edit mode</source>
+					  <target>Redigeringsmodus</target>
+					</trans-unit>
+					<trans-unit id="sound_index">
+					  <source>SoundIndex:</source>
+					  <target>Lydindeks:</target>
+					</trans-unit>
+					<trans-unit id="pitch">
+					  <source>Pitch</source>
+					  <target>Pitch</target>
+					</trans-unit>
+					<trans-unit id="volume">
+					  <source>Volume</source>
+					  <target>Nivå</target>
+					</trans-unit>
+					<trans-unit id="sound_none">
+					  <source>None</source>
+					  <target>Ingen</target>
+					</trans-unit>
+					<trans-unit id="preview">
+					  <source>Preview</source>
+					  <target>Forhåndsvis</target>
+					</trans-unit>
+					<trans-unit id="y_pitch">
+					  <source>Ypitch</source>
+					  <target>Y-pitch</target>
+					</trans-unit>
+					<trans-unit id="y_volume">
+					  <source>Yvolume</source>
+					  <target>Y-nivå</target>
+					</trans-unit>
+					<trans-unit id="min_x">
+					  <source>Xmin:</source>
+					  <target>Xmin:</target>
+					</trans-unit>
+					<trans-unit id="max_x">
+					  <source>Xmax:</source>
+					  <target>Xmaks:</target>
+					</trans-unit>
+					<trans-unit id="left">
+					  <source>Left</source>
+					  <target>Venstre</target>
+					</trans-unit>
+					<trans-unit id="right">
+					  <source>Right</source>
+					  <target>Høyre</target>
+					</trans-unit>
+					<trans-unit id="in">
+					  <source>In</source>
+					  <target>Inne</target>
+					</trans-unit>
+					<trans-unit id="out">
+					  <source>Out</source>
+					  <target>Ute</target>
+					</trans-unit>
+					<trans-unit id="max_y_pitch">
+					  <source>YmaxPitch:</source>
+					  <target>Maks y pitch:</target>
+					</trans-unit>
+					<trans-unit id="max_y_volume">
+					  <source>YmaxVolume:</source>
+					  <target>Maks y nivå:</target>
+					</trans-unit>
+				</group>
+				<group id="extended">
+					<trans-unit id="features">
+					  <source>Extended Features</source>
+					  <target>Utvidede funksjoner</target>
+					</trans-unit>
+					<trans-unit id="note">
+					  <source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
+					  <target>Obs: Disse funksjonene krever minimum denne versjonen av openBVE:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake">
+					  <source>Locomotive Brake</source>
+					  <target>Lokomotivbremse</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_system_type">
+					  <source>BrakeType:</source>
+					  <target>Bremsetype</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_notches">
+					  <source>Notches:</source>
+					  <target>Hakk:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_delay_up">
+					  <source>DelayUp:</source>
+					  <target>Forsinkelse opp:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_delay_down">
+					  <source>DelayDown:</source>
+					  <target>Forsinkelse ned:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_type">
+					  <source>Type:</source>
+					  <target>Type:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_set">
+						<source>Set</source>
+					</trans-unit>
+					<trans-unit id="loco_brake_none">
+					  <source>Not fitted</source>
+					  <target>Ikke tilpasset</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_notched_air_brake">
+					  <source>Notched air brake</source>
+					  <target>Trinnvis luftbrems</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_cl">
+					  <source>Air brake with partial release</source>
+					  <target>Luftbrems med delvis utslipp</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_combined">
+					  <source>Combined</source>
+					  <target>Kombinert</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_independant">
+					  <source>Independent</source>
+					  <target>Uavhengig</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_blocking">
+					  <source>Blocking</source>
+					  <target>Blokerende</target>
+					</trans-unit>
+					<trans-unit id="delay_loco_brake_up">
+					  <source>DelayLocoBrakeUp</source>
+					  <target>Forsinkelse lokomotivbrems opp</target>
+					</trans-unit>
+					<trans-unit id="delay_loco_brake_down">
+					  <source>DelayLocoBrakeDown</source>
+					  <target>Forsinkelse lokomotivbrems ned</target>
+					</trans-unit>
+					<trans-unit id="misc">
+					  <source>Miscellaneous Features</source>
+					  <target>Diverse egenskaper</target>>
+					</trans-unit>
+					<trans-unit id="misc_eb">
+					  <source>Handle behaviour on EB:</source>
+					  <target>Spakoppførsel ved NB:</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_no">
+					  <source>No Action</source>
+					  <target>Ingen handling</target>					  
+					</trans-unit>
+					<trans-unit id="misc_eb_power">
+					  <source>Return Power to neutral</source>
+					  <target>Sett turtall i nøytral</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_reverser">
+					  <source>Return Reverser to neutral</source>
+					  <target>Sett vendegir til nøytral</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_power_reverser">
+					  <source>Return Power and Reverser to neutral</source>
+					  <target>Sett turtall og vendegir til nøytral</target>
+					</trans-unit>
+					<trans-unit id="language">
+					  <source>Language</source>
+					  <target>Språk</target>
+					</trans-unit>
+				</group>
+			</group>
+			<group id="train_editor2">
+				<group id="menu">
+					<group id="file">
+						<trans-unit id="name">
+						  <source>File</source>
+						  <target>Fil</target>
+						</trans-unit>
+						<trans-unit id="new">
+						  <source>New</source>
+						  <target>Ny</target>
+						</trans-unit>
+						<trans-unit id="open">
+						  <source>Open...</source>
+						  <target>Åpne...</target>
+						</trans-unit>
+						<trans-unit id="save">
+						  <source>Save</source>
+						  <target>Lagre</target>
+						</trans-unit>
+						<trans-unit id="save_as">
+						  <source>Save as...</source>
+						  <target>Lagre som...</target>
+						</trans-unit>
+						<trans-unit id="import">
+						  <source>Import...</source>
+						  <target>Importer...</target>
+						</trans-unit>
+						<trans-unit id="export">
+						  <source>Export...</source>
+						  <target>Eksporter...</target>
+						</trans-unit>
+						<trans-unit id="exit">
+						  <source>Exit</source>
+						  <target>Avslutt</target>
+						</trans-unit>
+						<trans-unit id="wrongtype">
+						  <source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+						  <target>Du har forsøkt å åpnet et tog \n\n Disse kan ikke åpnes direkte. \n\n Bruk importfunksjonen for å importere toget til TrainEditor2</target>
+						</trans-unit>
+					</group>
+					<trans-unit id="language">
+					  <source>Language</source>
+					  <target>Språk</target>
+					</trans-unit>
+					<group id="message">
+						<trans-unit id="new">
+						  <source>Do you want to save the current file before creating a new one?</source>
+						  <target>Ønsker du å lagre den nåværende filen før du lager en ny en?</target>
+						</trans-unit>
+						<trans-unit id="open">
+						  <source>Do you want to save the current file before opening another file?</source>
+						  <target>Ønsker du å lagre den nåværende filen før du åpner en ny en?</target>
+						</trans-unit>
+						<trans-unit id="exit">
+						  <source>Do you want to save the current file before closing?</source>
+						  <target>Ønsker du å lagre den nåværende filen før du lukker?</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="navigation">
+					<trans-unit id="up">
+					  <source>Up</source>
+					  <target>Opp</target>
+					</trans-unit>
+					<trans-unit id="down">
+					  <source>Down</source>
+					  <target>Ned</target>
+					</trans-unit>
+					<trans-unit id="add">
+					  <source>Add</source>
+					  <target>Legg til</target>
+					</trans-unit>
+					<trans-unit id="remove">
+					  <source>Remove</source>
+					  <target>Fjern</target>
+					</trans-unit>
+					<trans-unit id="copy">
+					  <source>Copy</source>
+					  <target>Kopier</target>
+					</trans-unit>
+					<trans-unit id="set">
+					  <source>Set...</source>
+					  <target>Set...</target>
+					</trans-unit>
+					<trans-unit id="open">
+					  <source>Open...</source>
+					  <target>Åpne...</target>
+					</trans-unit>
+				</group>
+				<group id="tree_cars">
+					<trans-unit id="train">
+					  <source>Train</source>
+					  <target>Tog</target>
+					</trans-unit>
+					<trans-unit id="general">
+					  <source>General</source>
+					  <target>Generelt</target>
+					</trans-unit>
+					<trans-unit id="cars">
+					  <source>Cars</source>
+					  <target>Vogner</target>
+					</trans-unit>
+					<trans-unit id="couplers">
+					  <source>Couplers</source>
+					  <target>Koblere</target>
+					</trans-unit>
+				</group>
+				<group id="general_settings">
+					<trans-unit id="name">
+					  <source>General settings</source>
+					  <target>Generelle settinger</target>
+					</trans-unit>
+					<group id="handle">
+						<trans-unit id="name">
+						  <source>Handle</source>
+						  <target>Spaktype</target>
+						</trans-unit>
+						<group id="handle_type">
+							<trans-unit id="name">
+							  <source>HandleType</source>
+							  <target>Spaktype</target>
+							</trans-unit>
+							<trans-unit id="separated">
+							  <source>Separated</source>
+							  <target>Separert</target>
+							</trans-unit>
+							<trans-unit id="combined">
+							  <source>Combined</source>
+							  <target>Kombinert</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="power_notches">
+						  <source>PowerNotches</source>
+						  <target>Turtallhakk</target>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+						  <source>BrakeNotches</source>
+						  <target>Bremsehakk</target>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+						  <source>PowerNotchReduceSteps</source>
+						  <target>Bremsehakk reduserende steg</target>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+						  <source>DriverPowerNotches</source>
+						  <target>Turtallhakk</target>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+						  <source>DriverBrakeNotches</source>
+						  <target>Bremsehakk</target>
+						</trans-unit>
+						<group id="eb_handle_behaviour">
+							<trans-unit id="name">
+							  <source>EbHandleBehaviour</source>
+							  <target>Nødbrems spak oppførsel</target>
+							</trans-unit>
+							<trans-unit id="no">
+							  <source>No action</source>
+							  <target>Ingen handling</target>
+							</trans-unit>
+							<trans-unit id="power">
+							  <source>Return power to neutral</source>
+							  <target>Sett turtall i nøytral</target>
+							</trans-unit>
+							<trans-unit id="reverser">
+							  <source>Return reverser to neutral</source>
+							  <target>Sett vendegir til nøytral</target>
+							</trans-unit>
+							<trans-unit id="power_reverser">
+							  <source>Return power and reverser to neutral</source>
+							  <target>Sett turtall og vendegir til nøytral</target>
+							</trans-unit>
+						</group>
+						<group id="loco_brake_handle_type">
+							<trans-unit id="name">
+							  <source>LocoBrakeHandleType</source>
+							  <target>Lokomotivbrems type</target>
+							</trans-unit>
+							<trans-unit id="combined">
+							  <source>Combined</source>
+							  <target>Kombinert</target>
+							</trans-unit>
+							<trans-unit id="independent">
+							  <source>Independent</source>
+							  <target>Uavhengig</target>
+							</trans-unit>
+							<trans-unit id="blocking">
+							  <source>Blocking</source>
+							  <target>Blokkerende</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="loco_brake_notches">
+						  <source>LocoBrakeNotches</source>
+						  <target>Lokomotivbremshakk</target>
+						</trans-unit>
+					</group>
+					<group id="cab">
+						<trans-unit id="name">
+						  <source>Cab</source>
+						  <target>Førerhytte</target>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>X</source>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>Y</source>
+						</trans-unit>
+						<trans-unit id="z">
+							<source>Z</source>
+						</trans-unit>
+						<trans-unit id="driver_car">
+						  <source>DriverCar</source>
+						  <target>Førervogn</target>
+						</trans-unit>
+					</group>
+					<group id="device">
+						<trans-unit id="name">
+						  <source>Device</source>
+						  <target>Enheter</target>
+						</trans-unit>
+						<group id="ats">
+							<trans-unit id="name">
+								<source>Ats</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="ats_sn">
+								<source>ATS-SN</source>
+							</trans-unit>
+							<trans-unit id="ats_sn_ats_p">
+								<source>ATS-SN / ATS-P</source>
+							</trans-unit>
+						</group>
+						<group id="atc">
+							<trans-unit id="name">
+								<source>Atc</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="manual">
+							  <source>Manual switching</source>
+							  <target>Manuell switching</target>
+							</trans-unit>
+							<trans-unit id="automatic">
+							  <source>Automatic switching</source>
+							  <target>Automatisk switching</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="eb">
+						  <source>Eb</source>
+						  <target>Nb</target>
+						</trans-unit>
+						<trans-unit id="const_speed">
+						  <source>ConstSpeed</source>
+						  <target>Cruise-kontroll</target>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+						  <source>HoldBrake</source>
+						  <target>Parkeringsbrems</target>
+						</trans-unit>
+						<group id="re_adhesion_device">
+							<trans-unit id="name">
+							  <source>ReAdhesionDevice</source>
+							  <target>Re-adhesjonenhet</target>
+							</trans-unit>
+							<trans-unit id="none">
+							  <source>None</source>
+							  <target>Ingen</target>
+							</trans-unit>
+							<trans-unit id="type_a">
+							  <source>Type A (instant)</source>
+							  <target>Type A (umiddelbart)</target>
+							</trans-unit>
+							<trans-unit id="type_b">
+							  <source>Type B (slow)</source>
+							  <target>Type B (sein)</target>
+							</trans-unit>
+							<trans-unit id="type_c">
+							  <source>Type C (medium)</source>
+							  <target>Type C (medium)</target>
+							</trans-unit>
+							<trans-unit id="type_d">
+							  <source>Type D (fast)</source>
+							  <target>Type D (rask)</target>
+							</trans-unit>
+						</group>
+						<group id="pass_alarm">
+							<trans-unit id="name">
+							  <source>PassAlarm</source>
+							  <target>Passeringsalarm</target>
+							</trans-unit>
+							<trans-unit id="none">
+							  <source>None</source>
+							  <target>Ingen</target>
+							</trans-unit>
+							<trans-unit id="single">
+							  <source>Single</source>
+							  <target>Enkel</target>
+							</trans-unit>
+							<trans-unit id="looping">
+							  <source>Looping</source>
+							  <target>Repeterende</target>
+							</trans-unit>
+						</group>
+						<group id="door_mode">
+							<trans-unit id="open">
+							  <source>DoorOpenMode</source>
+							  <target>Døråpningsmetode:</target>
+							</trans-unit>
+							<trans-unit id="close">
+							  <source>DoorCloseMode</source>
+							  <target>Dørlukkingsmetode</target>
+							</trans-unit>
+							<trans-unit id="semi_automatic">
+							  <source>Semi-automatic</source>
+							  <target>Semi-automatisk</target>
+							</trans-unit>
+							<trans-unit id="automatic">
+							  <source>Automatic</source>
+							  <target>Automatisk</target>
+							</trans-unit>
+							<trans-unit id="manual">
+							  <source>Manual</source>
+							  <target>Manuell</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="door_width">
+						  <source>DoorWidth</source>
+						  <target>Dørbredde</target>
+						</trans-unit>
+						<trans-unit id="door_max_tolerance">
+						  <source>DoorMaxTolerance</source>
+						  <target>Dørens makstoleranse</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="car_settings">
+					<trans-unit id="name">
+					  <source>Car settings</source>
+					  <target>Vognegenskaper</target>
+					</trans-unit>
+					<group id="general">
+						<trans-unit id="name">
+						  <source>General</source>
+						  <target>Generelt</target>
+						</trans-unit>
+						<trans-unit id="is_motor_car">
+						  <source>IsMotorCar</source>
+						  <target>Er motorvogn</target>
+						</trans-unit>
+						<trans-unit id="mass">
+						  <source>Mass</source>
+						  <target>Masse</target>
+						</trans-unit>
+						<trans-unit id="length">
+						  <source>Length</source>
+						  <target>Lengde</target>
+						</trans-unit>
+						<trans-unit id="width">
+						  <source>Width</source>
+						  <target>Bredde</target>
+						</trans-unit>
+						<trans-unit id="height">
+						  <source>Height</source>
+						  <target>Høyde</target>
+						</trans-unit>
+						<trans-unit id="center_of_gravity_height">
+						  <source>CenterOfGravityHeight</source>
+						  <target>Senter for høyden på gravitasjon</target>
+						</trans-unit>
+						<trans-unit id="exposed_frontal_area">
+						  <source>ExposedFrontalArea</source>
+						  <target>Eksponert frontalområde</target>
+						</trans-unit>
+						<trans-unit id="unexposed_frontal_area">
+						  <source>UnexposedFrontalArea</source>
+						  <target>Ikke-eksponert frontalområde</target>
+						  
+						</trans-unit>
+						<trans-unit id="defined_axles">
+						  <source>DefinedAxles</source>
+						  <target>Definerte aksler</target>
+						</trans-unit>
+						<group id="axles">
+							<trans-unit id="name">
+							  <source>Axles</source>
+							  <target>Aksler</target>
+							</trans-unit>
+							<trans-unit id="front">
+							  <source>FrontAxle</source>
+							  <target>Fram aksle</target>
+							</trans-unit>
+							<trans-unit id="rear">
+							  <source>RearAxle</source>
+							  <target>Bak aksle</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="front_bogie">
+						  <source>FrontBogie</source>
+						  <target>Fremre bogie</target>
+						</trans-unit>
+						<trans-unit id="rear_bogie">
+						  <source>RearBogie</source>
+						  <target>Bakre bogie</target>
+						</trans-unit>
+						<trans-unit id="loading_sway">
+						  <source>LoadingSway</source>
+						  <target>Laste svai</target>
+						</trans-unit>
+						<trans-unit id="reversed">
+						  <source>Reversed</source>
+						  <target>Reversert</target>
+						</trans-unit>
+						<trans-unit id="object">
+						  <source>Object</source>
+						  <target>Objekt</target>
+						</trans-unit>
+					</group>
+					<group id="performance">
+						<trans-unit id="name">
+							<source>Performance</source>
+						</trans-unit>
+						<trans-unit id="deceleration">
+							<source>Deceleration</source>
+						</trans-unit>
+						<trans-unit id="static_friction">
+							<source>CoefficientOfStaticFriction</source>
+						</trans-unit>
+						<trans-unit id="rolling_resistance">
+							<source>CoefficientOfRollingResistance</source>
+						</trans-unit>
+						<trans-unit id="aerodynamic_drag">
+							<source>AerodynamicDragCoefficient</source>
+						</trans-unit>
+					</group>
+					<group id="move">
+						<trans-unit id="name">
+						  <source>Move</source>
+						  <target>Bevegelse</target>
+						</trans-unit>
+						<trans-unit id="jerk_power_up">
+						  <source>JerkPowerUp</source>
+						  <target>Dytt aksl. opp</target>
+						</trans-unit>
+						<trans-unit id="jerk_power_down">
+						  <source>JerkPowerDown</source>
+						  <target>Dytt aksl. ned</target>
+						</trans-unit>
+						<trans-unit id="jerk_brake_up">
+						  <source>JerkBrakeUp</source>
+						  <target>Dytt brems på</target>
+						</trans-unit>
+						<trans-unit id="jerk_brake_down">
+						  <source>JerkBrakeDown</source>
+						  <target>Dytt brems av</target>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_up">
+						  <source>BrakeCylinderUp</source>
+						  <target>Bremsesylinder opp</target>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_down">
+						  <source>BrakeCylinderDown</source>
+						  <target>Bremsesylinder ned</target>
+						</trans-unit>
+					</group>
+					<group id="brake">
+						<trans-unit id="name">
+						  <source>Brake</source>
+						  <target>Brems</target>
+						</trans-unit>
+						<group id="brake_type">
+							<trans-unit id="name">
+							  <source>BrakeType</source>
+							  <target>Bremsesystem</target>
+							</trans-unit>
+							<trans-unit id="smee">
+							  <source>Electromagnetic straight air brake</source>
+							  <target>Elektromagnetisk rett luftbremse</target>
+							</trans-unit>
+							<trans-unit id="ecb">
+							  <source>Electro-pneumatic air brake without brake pipe</source>
+							  <target>Elektronisk pneumatisk luftbremse uten bremserør</target>
+							</trans-unit>
+							<trans-unit id="cl">
+							  <source>Air brake with partial release feature</source>
+							  <target>Luftbrems med delvis utslipp</target>							  
+							</trans-unit>
+						</group>
+						<group id="loco_brake_type">
+							<trans-unit id="name">
+							  <source>LocoBrakeType</source>
+							  <target>Lokomotivets bremsesystem</target>
+							</trans-unit>
+							<trans-unit id="none">
+							  <source>Not fitted</source>
+							  <target>Ikke tilpasset</target>
+							</trans-unit>
+							<trans-unit id="notched_air_brake">
+							  <source>Notched air brake</source>
+							  <target>Trinnvis luftbrems</target>
+							</trans-unit>
+							<trans-unit id="cl">
+							  <source>Air brake with partial release</source>
+							  <target>Luftbrems med delvis utslipp</target>
+							</trans-unit>
+						</group>
+						<group id="brake_control_system">
+							<trans-unit id="name">
+							  <source>BrakeControlSystem</source>
+							  <target>Bremsekontrollsystem</target>o
+							</trans-unit>
+							<trans-unit id="none">
+							  <source>None</source>
+							  <target>Ingen</target>
+							</trans-unit>
+							<trans-unit id="lock_out_valve">
+							  <source>Closing electromagnetic valve</source>
+							  <target>Lukket elektromagnetisk hvelv</target>							  
+							  <target></target>
+							</trans-unit>
+							<trans-unit id="delay_including_control">
+							  <source>Delay-including control</source>
+							  <target>Inkludert forsinkelses kontroll</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="brake_control_speed">
+						  <source>BrakeControlSpeed</source>
+						  <target>Bremsekontrollhastighet</target>
+						</trans-unit>
+					</group>
+					<group id="pressure">
+						<trans-unit id="name">
+						  <source>Pressure</source>
+						  <target>Trykk</target>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_service_max">
+						  <source>BrakeCylinderServiceMaximumPressure</source>
+						  <target>Bremsesylinder maks operasjonelt trykk:</target>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_emergency_max">
+						  <source>BrakeCylinderEmergencyMaximumPressure</source>
+						  <target>Bremsesylinder maks nødstopp trykk:</target>
+						</trans-unit>
+						<trans-unit id="main_reservoir_min">
+						  <source>MainReservoirMinimumPressure</source>
+						  <target>Hoved reservoar minimumstrykk:</target>
+						</trans-unit>
+						<trans-unit id="main_reservoir_max">
+						  <source>MainReservoirMaximumPressure</source>
+						  <target>Hoved reservoar maksimumstrykk:</target>
+						</trans-unit>
+						<trans-unit id="brake_pipe_normal">
+						  <source>BrakePipeNormalPressure</source>
+						  <target>Bremserørets normale trykk:</target>
+						</trans-unit>
+					</group>
+					<group id="delay">
+						<trans-unit id="name">
+						  <source>Delay</source>
+						  <target>Forsinkelse</target>
+						</trans-unit>
+						<trans-unit id="power">
+						  <source>Power</source>
+						  <target>Turtall</target>
+						</trans-unit>
+						<trans-unit id="brake">
+						  <source>Brake</source>
+						  <target>Brems</target>
+						</trans-unit>
+						<trans-unit id="loco_brake">
+						  <source>LocoBrake</source>
+						  <target>Lokomotiv brems</target>
+						</trans-unit>
+						<trans-unit id="notch">
+						  <source>Notch</source>
+						  <target>Hakk</target>
+						</trans-unit>
+						<trans-unit id="value">
+						  <source>Value</source>
+						  <target>Verdi</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="acceleration_settings">
+					<trans-unit id="name">
+					  <source>Acceleration settings</source>
+					  <target>Akselerasjonsegenskaper</target>
+					</trans-unit>
+					<trans-unit id="notch">
+					  <source>Notch</source>
+					  <target>Hakk / Trinn</target>
+					</trans-unit>
+					<group id="parameter">
+						<trans-unit id="name">
+						  <source>Parameter</source>
+						  <target>Parametere</target>
+						</trans-unit>
+						<trans-unit id="a0">
+							<source>a0</source>
+						</trans-unit>
+						<trans-unit id="a1">
+							<source>a1</source>
+						</trans-unit>
+						<trans-unit id="v1">
+							<source>v1</source>
+						</trans-unit>
+						<trans-unit id="v2">
+							<source>v2</source>
+						</trans-unit>
+						<trans-unit id="e">
+							<source>e (2.0)</source>
+						</trans-unit>
+					</group>
+					<group id="preview">
+						<trans-unit id="name">
+						  <source>Preview</source>
+						  <target>Forhåndsvis</target>
+						</trans-unit>
+						<trans-unit id="subtract_deceleration">
+						  <source>Subtract deceleration due to air and rolling resistance</source>
+						  <target>Trekk fra deselerasjon på grunn av luft- og rullemotstand</target>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>X</source>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>Y</source>
+						</trans-unit>
+						<trans-unit id="x_min">
+							<source>x-min</source>
+						</trans-unit>
+						<trans-unit id="x_max">
+							<source>x-max</source>
+						</trans-unit>
+						<trans-unit id="y_min">
+							<source>y-min</source>
+						</trans-unit>
+						<trans-unit id="y_max">
+							<source>y-max</source>
+						</trans-unit>
+						<trans-unit id="zoom_in">
+							<source>Zoom In</source>
+						</trans-unit>
+						<trans-unit id="zoom_out">
+							<source>Zoom Out</source>
+						</trans-unit>
+						<trans-unit id="reset">
+							<source>Reset</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="motor_sound_settings">
+					<trans-unit id="name">
+					  <source>Motor sound settings</source>
+					  <target>Motorlydegenskaper</target>
+					</trans-unit>
+					<group id="menu">
+						<group id="edit">
+							<trans-unit id="name">
+							  <source>Edit</source>
+							  <target>Endre</target>
+							</trans-unit>
+							<trans-unit id="undo">
+							  <source>Undo</source>
+							  <target>Undo</target>
+							</trans-unit>
+							<trans-unit id="redo">
+							  <source>Redo</source>
+							  <target>Redo</target>
+							</trans-unit>
+							<trans-unit id="cut">
+							  <source>Cut</source>
+							  <target>Kutt</target>
+							</trans-unit>
+							<trans-unit id="copy">
+							  <source>Copy</source>
+							  <target>Kopier</target>
+							</trans-unit>
+							<trans-unit id="paste">
+							  <source>Paste</source>
+							  <target>Lim-inn</target>
+							</trans-unit>
+							<trans-unit id="cleanup">
+							  <source>Cleanup</source>
+							  <target>Rensk</target>
+							</trans-unit>
+							<trans-unit id="delete">
+							  <source>Delete</source>
+							  <target>Slett</target>
+							</trans-unit>
+						</group>
+						<group id="view">
+							<trans-unit id="name">
+							  <source>View</source>
+							  <target>Vis</target>
+							</trans-unit>
+							<trans-unit id="power">
+							  <source>Power</source>
+							  <target>Turtall</target>
+							</trans-unit>
+							<trans-unit id="brake">
+							  <source>Brake</source>
+							  <target>Brems</target>
+							</trans-unit>
+							<trans-unit id="track">
+							  <source>Track</source>
+							  <target>Skinnegang</target>
+							</trans-unit>
+						</group>
+						<group id="input">
+							<trans-unit id="name">
+							  <source>Input</source>
+							  <target>Innputt</target>
+							</trans-unit>
+							<trans-unit id="pitch">
+							  <source>Pitch</source>
+
+							</trans-unit>
+							<trans-unit id="volume">
+							  <source>Volume</source>
+							  <target>Nivå</target>
+							</trans-unit>
+							<trans-unit id="sound_index">
+							  <source>Sound source index</source>
+							  <target>Lydindeks</target>
+							</trans-unit>
+							<trans-unit id="sound_index_none">
+							  <source>None</source>
+							  <target>Ingen</target>
+							</trans-unit>
+						</group>
+						<group id="tool">
+							<trans-unit id="name">
+							  <source>Tool</source>
+							  <target>Verktøy</target>
+							</trans-unit>
+							<trans-unit id="select">
+							  <source>Select</source>
+							  <target>Velg</target>
+							</trans-unit>
+							<trans-unit id="move">
+							  <source>Move</source>
+							  <target>Flytt</target>
+							</trans-unit>
+							<trans-unit id="dot">
+							  <source>Dot</source>
+							  <target>Dott</target>
+							</trans-unit>
+							<trans-unit id="line">
+							  <source>Line</source>
+							  <target>Linje</target>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="view_setting">
+						<trans-unit id="name">
+						  <source>View setting</source>
+						  <target>Visningsvalg</target>
+						</trans-unit>
+						<trans-unit id="min_velocity">
+							<source>x-min(Velocity)</source>
+						</trans-unit>
+						<trans-unit id="max_velocity">
+							<source>x-max(Velocity)</source>
+						</trans-unit>
+						<trans-unit id="min_pitch">
+							<source>y-min(Pitch)</source>
+						</trans-unit>
+						<trans-unit id="max_pitch">
+							<source>y-max(Pitch)</source>
+						</trans-unit>
+						<trans-unit id="min_volume">
+						  <source>y-min(Volume)</source>
+						  <target>y-min(Nivå)</target>
+						</trans-unit>
+						<trans-unit id="max_volume">
+						  <source>y-max(Volume)</source>
+						  <target>y-max(Nivå)</target>
+						</trans-unit>
+						<trans-unit id="zoom_in">
+						  <source>Zoom In</source>
+						  <target>Zoom inn</target>
+						</trans-unit>
+						<trans-unit id="zoom_out">
+						  <source>Zoom Out</source>
+						  <target>Zoom ut</target>
+						</trans-unit>
+						<trans-unit id="reset">
+						  <source>Reset</source>
+						</trans-unit>
+					</group>
+					<group id="direct_input">
+						<trans-unit id="name">
+						  <source>Direct input</source>
+						  <target>Direkte innputt</target>
+						</trans-unit>
+						<trans-unit id="x">
+						  <source>x coordinate</source>
+						  <target>x koordinat</target>
+						</trans-unit>
+						<trans-unit id="y">
+						  <source>y coordinate</source>
+						  <target>y koordinat</target>
+						</trans-unit>
+						<trans-unit id="dot">
+							<source>Dot</source>
+						</trans-unit>
+						<trans-unit id="move">
+						  <source>Move</source>
+						  <target>Flytt</target>
+						</trans-unit>
+					</group>
+					<group id="play_setting">
+						<trans-unit id="name">
+						  <source>Playback setting</source>
+						  <target>Avspillingsvalg</target>
+						</trans-unit>
+						<group id="source">
+							<trans-unit id="name">
+							  <source>Sound source setting</source>
+							  <target>Lydkildevalg</target>
+							</trans-unit>
+							<trans-unit id="run">
+							  <source>Running sound</source>
+							  <target>Trillelyd</target>
+							</trans-unit>
+							<trans-unit id="track">
+							  <source>Track</source>
+							  <target>Skinne</target>
+							</trans-unit>
+						</group>
+						<group id="area">
+							<trans-unit id="name">
+							  <source>Area setting</source>
+							</trans-unit>
+							<trans-unit id="loop">
+							  <source>Loop playback</source>
+							  <target>Løkke avspilling</target>
+							</trans-unit>
+							<trans-unit id="constant">
+							  <source>Constant speed</source>
+							  <target>Konstant fart</target>
+							</trans-unit>
+							<trans-unit id="acceleration">
+							  <source>Acceleration:</source>
+							  <target>Akselerasjon:</target>
+							</trans-unit>
+							<trans-unit id="swap">
+							  <source>Swap</source>
+							  <target>Swap</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="play">
+						  <source>Playback</source>
+						  <target>Avspilling</target>
+						</trans-unit>
+						<trans-unit id="pause">
+							<source>Pause</source>
+						</trans-unit>
+						<trans-unit id="stop">
+							<source>Stop</source>
+						</trans-unit>
+					</group>
+					<group id="vertex_info">
+						<trans-unit id="name">
+						  <source>Vertex information</source>
+						  <target>Vertex informasjon</target>
+						</trans-unit>
+						<trans-unit id="velocity">
+							<source>Velocity</source>
+						</trans-unit>
+						<trans-unit id="pitch">
+							<source>Pitch</source>
+						</trans-unit>
+						<trans-unit id="volume">
+						  <source>Volume</source>
+						  <target>Nivå</target>
+						</trans-unit>
+						<trans-unit id="sound_index">
+						  <source>Sound source index</source>
+						  <target>Lydkildeindeks</target>
+						</trans-unit>
+					</group>
+					<group id="status">
+						<group id="type">
+							<trans-unit id="name">
+								<source>Type</source>
+							</trans-unit>
+							<trans-unit id="power">
+							  <source>Power</source>
+							  <target>Turtall</target>
+							</trans-unit>
+							<trans-unit id="brake">
+							  <source>Brake</source>
+							  <target>Bremse</target>
+							</trans-unit>
+						</group>
+						<group id="track">
+							<trans-unit id="name">
+							  <source>Track</source>
+							  <target>Skinne</target>
+							</trans-unit>
+						</group>
+						<group id="mode">
+							<trans-unit id="name">
+							  <source>Mode</source>
+							  <target>Modus</target>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+							</trans-unit>
+							<trans-unit id="sound_index">
+							  <source>Sound source index</source>
+							  <target>Lydkildekindeks</target>
+							</trans-unit>
+						</group>
+						<group id="tool">
+							<trans-unit id="name">
+							  <source>Tool</source>
+							  <target>Verktøy</target>
+							</trans-unit>
+							<trans-unit id="select">
+							  <source>Select</source>
+							  <target>Velg</target>
+							</trans-unit>
+							<trans-unit id="move">
+							  <source>Move</source>
+							  <target>Flytt</target>
+							</trans-unit>
+							<trans-unit id="dot">
+								<source>Dot</source>
+							</trans-unit>
+							<trans-unit id="line">
+							  <source>Line</source>
+							  <target>Linje</target>
+							</trans-unit>
+						</group>
+						<group id="xy">
+							<trans-unit id="velocity">
+								<source>Velocity</source>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="message">
+						<trans-unit id="vertex_exist">
+						  <source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
+						  <target>Et punkt eksisterer allerede i samme x koordinat, ønsker du å skrive over?</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="coupler_settings">
+					<trans-unit id="name">
+					  <source>Coupler settings</source>
+					  <target>Kobleegenskaper</target>
+					</trans-unit>
+					<group id="general">
+						<trans-unit id="name">
+						  <source>General</source>
+						  <target>Generelt</target>
+						</trans-unit>
+						<trans-unit id="min">
+						  <source>Min</source>
+						  <target>Min</target>
+						</trans-unit>
+						<trans-unit id="max">
+						  <source>Max</source>
+						  <target>Maks</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="panel_settings">
+					<trans-unit id="name">
+					  <source>Panel settings</source>
+					  <target>Panel egenskaper</target>
+					</trans-unit>
+					<group id="this">
+						<trans-unit id="name">
+						  <source>This</source>
+						  <target>Denne</target>
+						</trans-unit>
+						<trans-unit id="resolution">
+						  <source>Resolution</source>
+						  <target>Oppløsning</target>
+						</trans-unit>
+						<trans-unit id="left">
+						  <source>Left</source>
+						  <target>Venstre</target>
+						</trans-unit>
+						<trans-unit id="right">
+						  <source>Right</source>
+						  <target>Høyre</target>
+						</trans-unit>
+						<trans-unit id="top">
+						  <source>Top</source>
+						  <target>Topp</target>
+						</trans-unit>
+						<trans-unit id="bottom">
+						  <source>Bottom</source>
+						  <target>Bunn</target>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
+						</trans-unit>
+						<group id="center">
+							<trans-unit id="name">
+							  <source>Center</source>
+							  <target>Senter</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="origin">
+							<trans-unit id="name">
+							  <source>Origin</source>
+							  <target>Opprinnelsespunkt</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="screen">
+						<trans-unit id="name">
+						  <source>Screen</source>
+						  <target>Skjerm</target>
+						</trans-unit>
+						<trans-unit id="number">
+						  <source>Number</source>
+						  <target>Tall</target>
+						</trans-unit>
+						<trans-unit id="layer">
+						  <source>Layer</source>
+						  <target>Lag</target>
+						</trans-unit>
+					</group>
+					<group id="pilot_lamp">
+						<trans-unit id="name">
+						  <source>PilotLamp</source>
+						  <target>Pilotlampe</target>
+						</trans-unit>
+						<trans-unit id="subject">
+						  <source>Subject</source>
+						  <target>Subjekt</target>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+							  <source>Location</source>
+							  <target>Lokasjon</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
+						</trans-unit>
+						<trans-unit id="layer">
+						  <source>Layer</source>
+						  <target>Lag</target>
+						</trans-unit>
+					</group>
+					<group id="needle">
+						<trans-unit id="name">
+						  <source>Needle</source>
+						  <target>Nål</target>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+							  <source>Location</source>
+							  <target>Lokasjon</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="defined_radius">
+						  <source>DefinedRadius</source>
+						  <target>Definert radius</target>
+						</trans-unit>
+						<trans-unit id="radius">
+						  <source>Radius</source>
+						  <target>Radius</target>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
+						</trans-unit>
+						<trans-unit id="color">
+						  <source>Color</source>
+						  <target>Farge</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
+						</trans-unit>
+						<trans-unit id="defined_origin">
+						  <source>DefinedOrigin</source>
+						  <target>Definert origo</target>
+						</trans-unit>
+						<group id="origin">
+							<trans-unit id="name">
+							  <source>Origin</source>
+							  <target>Origo</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="initial_angle">
+						  <source>InitialAngle</source>
+						  <target>Initiell vinkel</target>
+						</trans-unit>
+						<trans-unit id="last_angle">
+						  <source>LastAngle</source>
+						  <target>Siste vinkel</target>
+						</trans-unit>
+						<trans-unit id="minimum">
+						  <source>Minimum</source>
+						  <target>Minimum</target>
+						</trans-unit>
+						<trans-unit id="maximum">
+						  <source>Maximum</source>
+						  <target>Maksimum</target>
+						</trans-unit>
+						<trans-unit id="defined_natural_freq">
+						  <source>DefinedNaturalFreq</source>
+						  <target>Definert nøytral frekvens</target>
+						</trans-unit>
+						<trans-unit id="natural_freq">
+						  <source>NaturalFreq</source>
+						  <target>Nøytral frekvens</target>
+						</trans-unit>
+						<trans-unit id="defined_damping_ratio">
+						  <source>DefiedDampingRatio</source>
+						  <target>Definert dempingsforhold</target>
+						</trans-unit>
+						<trans-unit id="damping_ratio">
+						  <source>DampingRatio</source>
+						  <target>Dempingsforhold</target>
+						</trans-unit>
+						<trans-unit id="backstop">
+						  <source>Backstop</source>
+						  <target>Bakstopp</target>
+						</trans-unit>
+						<trans-unit id="smoothed">
+						  <source>smoothed</source>
+						  <target>utgjenvet</target>
+						</trans-unit>
+						<trans-unit id="layer">
+						  <source>Layer</source>
+						  <target>Lag</target>
+						</trans-unit>
+					</group>
+					<group id="digital_number">
+						<trans-unit id="name">
+						  <source>DigitalNumber</source>
+						  <target>Digitalt nummer</target>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+							  <source>Location</source>
+							  <target>Lokasjon</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
+						</trans-unit>
+						<trans-unit id="layer">
+						  <source>Layer</source>
+						  <target>Lag</target>
+						</trans-unit>
+						<trans-unit id="interval">
+						  <source>Interval</source>
+						  <target>Intervall</target>
+						</trans-unit>
+					</group>
+					<group id="digital_gauge">
+						<trans-unit id="name">
+						  <source>DigitalGauge</source>
+						  <target>Digital måleenhet</target>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+							  <source>Location</source>
+							  <target>Lokasjon</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="radius">
+						  <source>Radius</source>
+						  <target>Radius</target>
+						</trans-unit>
+						<trans-unit id="color">
+						  <source>Color</source>
+						  <target>Farge</target>
+						</trans-unit>
+						<trans-unit id="initial_angle">
+						  <source>InitialAngle</source>
+						  <target>Initiell vinkel</target>
+						</trans-unit>
+						<trans-unit id="last_angle">
+						  <source>LastAngle</source>
+						  <target>Siste vinkel</target>
+						</trans-unit>
+						<trans-unit id="minimum">
+						  <source>Minimum</source>
+						  <target>Minimum</target>
+						</trans-unit>
+						<trans-unit id="maximum">
+						  <source>Maximum</source>
+						  <target>Maksimum</target>
+						</trans-unit>
+						<trans-unit id="step">
+						  <source>Step</source>
+						  <target>Steg</target>
+						</trans-unit>
+						<trans-unit id="layer">
+						  <source>Layer</source>
+						  <target>Lag</target>
+						</trans-unit>
+					</group>
+					<group id="linear_gauge">
+						<trans-unit id="name">
+						  <source>LinearGauge</source>
+						  <target>Lineær måleenhet</target>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+							  <source>Location</source>
+							  <target>Lokasjon</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+						  <source>DaytimeImage</source>
+						  <target>Dagbilde</target>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+						  <source>NighttimeImage</source>
+						  <target>Nattbilde</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
+						</trans-unit>
+						<trans-unit id="minimum">
+						  <source>Minimum</source>
+						  <target>Minimum</target>
+						</trans-unit>
+						<trans-unit id="maximum">
+						  <source>Maximum</source>
+						  <target>Maksimum</target>
+						</trans-unit>
+						<group id="direction">
+							<trans-unit id="name">
+							  <source>Direction</source>
+							  <target>Retning</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="width">
+						  <source>Width</source>
+						  <target>Bredde</target>
+						</trans-unit>
+						<trans-unit id="layer">
+						  <source>Layer</source>
+						  <target>Lag</target>
+						</trans-unit>
+					</group>
+					<group id="timetable">
+						<trans-unit id="name">
+						  <source>Timetable</source>
+						  <target>Tidstabell</target>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+							  <source>Location</source>
+							  <target>Lokasjon</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="height">
+						  <source>Height</source>
+						  <target>Høyde</target>
+						</trans-unit>
+						<trans-unit id="width">
+						  <source>Width</source>
+						  <target>Bredde</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+						  <source>TransparentColor</source>
+						  <target>Transparent farge</target>
+						</trans-unit>
+						<trans-unit id="layer">
+						  <source>Layer</source>
+						  <target>Lag</target>
+						</trans-unit>
+					</group>
+					<group id="touch">
+						<trans-unit id="name">
+							<source>Touch</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="size">
+							<trans-unit id="name">
+								<source>Size</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="jump_screen">
+							<source>JumpScreen</source>
+						</trans-unit>
+						<trans-unit id="sound_index">
+							<source>SoundIndex</source>
+						</trans-unit>
+						<trans-unit id="command">
+							<source>Command</source>
+						</trans-unit>
+						<trans-unit id="command_option">
+							<source>CommandOption</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="sound_settings">
+					<trans-unit id="name">
+					  <source>Sound settings</source>
+					  <target>Lydegenskaper</target>
+					</trans-unit>
+					<trans-unit id="key">
+					  <source>Key</source>
+					  <target>Knapp</target>
+					</trans-unit>
+					<trans-unit id="filename">
+					  <source>Filename</source>
+					  <target>Filnavn</target>
+					</trans-unit>
+					<trans-unit id="position">
+					  <source>Position</source>
+					  <target>Posisjon</target>
+					</trans-unit>
+					<trans-unit id="radius">
+						<source>Radius</source>
+					</trans-unit>
+					<group id="edit_entry">
+						<trans-unit id="name">
+						  <source>Edit entry</source>
+						  <target>Endre valgt</target>
+						</trans-unit>
+						<group id="section">
+							<trans-unit id="name">
+							  <source>Section select</source>
+							  <target>Velg seksjon</target>
+							</trans-unit>
+						</group>
+						<group id="key">
+							<trans-unit id="name">
+							  <source>Key type select</source>
+							  <target>Knappetypevalg</target>
+							</trans-unit>
+						</group>
+						<group id="value">
+							<trans-unit id="name">
+							  <source>Input value</source>
+							  <target>Innputtverdi</target>
+							</trans-unit>
+							<trans-unit id="filename">
+							  <source>Filename</source>
+							  <target>Filnavn</target>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+							</trans-unit>
+							<trans-unit id="position">
+							  <source>Position setting</source>
+							  <target>Posisjonsvalg</target>
+							</trans-unit>
+							<group id="position">
+								<trans-unit id="name">
+								  <source>Position</source>
+								  <target>Posisjon</target>
+								</trans-unit>
+								<trans-unit id="x">
+								  <source>x coordinate</source>
+								  <target>x koordinat</target>
+								</trans-unit>
+								
+								<trans-unit id="y">
+								  <source>y coordinate</source>
+								  <target>y koordinat</target>
+								</trans-unit>
+								<trans-unit id="z">
+								  <source>z coordinate</source>
+								  <target>z koordinat</target>
+								</trans-unit>
+							</group>
+						</group>
+					</group>
+					<group id="message">
+						<trans-unit id="empty_filename">
+						  <source>File name has not been entered.</source>
+						  <target>Filnavn har ikke blitt skrevet inn.</target>
+						</trans-unit>
+						<trans-unit id="key_exist">
+						  <source>The specified key is already set.</source>
+						  <target>Knappen er allerede satt til noe.</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="status">
+					<trans-unit id="name">
+					  <source>Status</source>
+					  <target>Status</target>
+					</trans-unit>
+					<group id="menu">
+						<trans-unit id="error">
+						  <source>Error</source>
+						  <target>Feil</target>
+						</trans-unit>
+						<trans-unit id="warning">
+						  <source>Warning</source>
+						  <target>Advarsel</target>
+						</trans-unit>
+						<trans-unit id="info">
+						  <source>Information</source>
+						  <target>Informasjon</target>
+						</trans-unit>
+						<trans-unit id="clear">
+						  <source>Clear</source>
+						  <target>Vask bort</target>
+						</trans-unit>
+					</group>
+					<trans-unit id="level">
+					  <source>Level</source>
+					  <target>Nivå</target>
+					</trans-unit>
+					<trans-unit id="description">
+					  <source>Description</source>
+					  <target>Beskrivelse</target>
+					</trans-unit>
+				</group>
+				<group id="message">
+					<trans-unit id="error">
+					  <source>Error</source>
+					  <target>Feil</target>
+					</trans-unit>
+					<trans-unit id="warning">
+					  <source>Warning</source>
+					  <target>Advarsel</target>
+					</trans-unit>
+					<trans-unit id="info">
+					  <source>Information</source>
+					  <target>Informasjon</target>
+					</trans-unit>
+					<trans-unit id="positive">
+					  <source>positive</source>
+					  <target>positiv</target>
+					</trans-unit>
+					<trans-unit id="non_negative">
+					  <source>non-negative</source>
+					  <target>ikke-negativ</target>
+					</trans-unit>
+					<trans-unit id="non_zero">
+					  <source>non-zero</source>
+					  <target>ikke-null</target>
+					</trans-unit>
+					<trans-unit id="invalid_float">
+					  <source>This value must be a {0}floating-point number.</source>
+					  <target>Denne verdien må være en {0}flyttallsnummer.</target>
+					</trans-unit>
+					<trans-unit id="invalid_color">
+					  <source>invalid_color</source>
+					  <target>invalid farge</target>
+					</trans-unit>
+				</group>
+			</group>
+		</body>
+	</file>
+</xliff>

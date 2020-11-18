@@ -20,30 +20,11 @@ namespace OpenBve
 		/// Train and time movements are processed, but no graphical processing is done
 		/// </summary>
 		internal static bool MinimalisticSimulation = false;
-		// other trains
-		internal static double[] PrecedingTrainTimeDeltas = new double[] { };
-		internal static double PrecedingTrainSpeedLimit = double.PositiveInfinity;
-
-		/// <summary>The name of the initial station on game startup, if set via command-line arguments</summary>
-		internal static string InitialStationName;
-		/// <summary>The start time at the initial station, if set via command-line arguments</summary>
-		internal static double InitialStationTime = -1;
 		
-
-		
-        /// <summary>The default mode for the player train's safety system to start in</summary>
-		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesAts;
-        /// <summary>The name of the current train</summary>
-		internal static string TrainName = "";
-		/// <summary>The initial destination for any train within the game</summary>
-		internal static int InitialDestination = -1;
-
-		internal static int InitialViewpoint = 0;
-
 		/// <summary>Call this function to reset the game</summary>
 		/// <param name="ResetLogs">Whether the logs should be reset</param>
 		/// <param name="ResetRenderer">Whether the renderer should be reset</param>
-		internal static void Reset(bool ResetLogs, bool ResetRenderer) {
+		internal static void Reset(bool ResetLogs) {
 			// track manager
 			for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
 			{
@@ -53,25 +34,21 @@ namespace OpenBve
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
-			Interface.ClearMessages();
+			Interface.LogMessages.Clear();
 			Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
-			Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = 9.80665;
-			Program.CurrentRoute.Atmosphere.InitialAirPressure = 101325.0;
-			Program.CurrentRoute.Atmosphere.InitialAirTemperature = 293.15;
-			Program.CurrentRoute.Atmosphere.InitialElevation = 0.0;
-			Program.CurrentRoute.Atmosphere.SeaLevelAirPressure = 101325.0;
-			Program.CurrentRoute.Atmosphere.SeaLevelAirTemperature = 293.15;
+			Program.CurrentRoute.Atmosphere = new Atmosphere();
+			Program.CurrentRoute.LightDefinitions = new LightDefinition[] { };
 			Program.CurrentRoute.BufferTrackPositions = new double[] { };
 			//Messages = new Message[] { };
 			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
-			PrecedingTrainTimeDeltas = new double[] { };
-			PrecedingTrainSpeedLimit = double.PositiveInfinity;
+			Program.CurrentRoute.PrecedingTrainTimeDeltas = new double[] { };
+			Interface.CurrentOptions.PrecedingTrainSpeedLimit = double.PositiveInfinity;
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
-			TrainName = "";
-			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
+			Interface.CurrentOptions.TrainName = "";
+			Interface.CurrentOptions.TrainStart = TrainStartMode.EmergencyBrakesNoAts;
 			Program.CurrentRoute.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
 			Program.CurrentRoute.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
 			Program.CurrentRoute.PreviousFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
@@ -89,17 +66,6 @@ namespace OpenBve
 				BlackBoxEntryCount = 0;
 				BlackBoxNextUpdate = 0.0;
 			}
-			// renderer
-			if (ResetRenderer)
-			{
-				Program.Renderer.InfoTotalTriangles = 0;
-				Program.Renderer.InfoTotalTriangleStrip = 0;
-				Program.Renderer.InfoTotalQuads = 0;
-				Program.Renderer.InfoTotalQuadStrip = 0;
-				Program.Renderer.InfoTotalPolygon = 0;
-				Program.Renderer.Reset();
-			}
-			
 		}
 
 		// ================================
@@ -145,7 +111,7 @@ namespace OpenBve
 		internal static void AddBlackBoxEntry(BlackBoxEventToken EventToken) {
 			if (Interface.CurrentOptions.BlackBox) {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
-					Array.Resize<BlackBoxEntry>(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
+					Array.Resize(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
 				}
 				BlackBoxEntries[BlackBoxEntryCount].Time = Program.CurrentRoute.SecondsSinceMidnight;
 				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;

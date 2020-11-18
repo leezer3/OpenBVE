@@ -78,12 +78,15 @@ namespace OpenBve {
 							if (type.IsSubclassOf(typeof(OpenBveApi.Objects.ObjectInterface))) {
 								plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
 							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Routes.RouteInterface))) {
+								plugin.Route = (OpenBveApi.Routes.RouteInterface)assembly.CreateInstance(type.FullName);
+							}
 							if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
 								iruntime = true;
 							}
 						}
-						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
-							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
+						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Route != null) {
+							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions, Program.Renderer);
 							list.Add(plugin);
 						} else if (!iruntime) {
 							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");

@@ -25,6 +25,98 @@ namespace OpenBveApi.Packages
 
 		/// <summary>The installed other items</summary>
 		public List<Package> InstalledOther;
+		
+		/// <summary>The database version</summary>
+		public int DatabaseVersion;
+
+		/// <summary>The expected database version</summary>
+		[XmlIgnore]
+		internal static readonly int ExpectedDatabaseVersion = 2;
+
+		internal void Upgrade()
+		{
+			switch (DatabaseVersion)
+			{
+				case 0:
+					FixDependancyList(ref InstalledRoutes);
+					FixDependancyList(ref InstalledTrains);
+					FixDependancyList(ref InstalledOther);
+					break;
+			}
+
+			DatabaseVersion = ExpectedDatabaseVersion;
+		}
+
+		private void FixDependancyList(ref List<Package> packages)
+		{
+			/*
+			 * Initial database version didn't correctly store the list of dependant packages, so we're going to have to go through the list to populate it....
+			 */
+			foreach (Package currentPackage in packages)
+			{
+				AddDependancies(currentPackage);
+			}
+		}
+
+		/// <summary>Adds the database dependancies</summary>
+		public void AddDependancies(Package currentPackage)
+		{
+			if (currentPackage.Dependancies != null)
+			{
+				PopulateDependantList(currentPackage.Dependancies, currentPackage.GUID);
+			}
+			if (currentPackage.Reccomendations != null)
+			{
+				PopulateDependantList(currentPackage.Reccomendations, currentPackage.GUID);
+			}
+		}
+
+		private void PopulateDependantList(List<Package> packageList, string GUID)
+		{
+			foreach (Package currentDependancy in packageList)
+			{
+				switch (currentDependancy.PackageType)
+				{
+					case PackageType.Route:
+						foreach (Package p in InstalledRoutes)
+						{
+							if (p.GUID == currentDependancy.GUID)
+							{
+								if (!p.DependantPackages.Contains(GUID))
+								{
+									p.DependantPackages.Add(GUID);
+								}
+							}
+						}
+						break;
+					case PackageType.Train:
+						foreach (Package p in InstalledTrains)
+						{
+							if (p.GUID == currentDependancy.GUID)
+							{
+								if (!p.DependantPackages.Contains(GUID))
+								{
+									p.DependantPackages.Add(GUID);
+								}
+							}
+						}
+						break;
+					case PackageType.Other:
+						foreach (Package p in InstalledOther)
+						{
+							if (p.GUID == currentDependancy.GUID)
+							{
+								if (!p.DependantPackages.Contains(GUID))
+								{
+									p.DependantPackages.Add(GUID);
+								}
+							}
+						}
+						break;
+				}
+			}
+		}
+		
 	}
 
 	/// <summary>Stores the current package database</summary>
@@ -46,7 +138,6 @@ namespace OpenBveApi.Packages
 				}
 				if (File.Exists(currentDatabaseFile))
 				{
-
 					File.Delete(currentDatabaseFile);
 				}
 				using (StreamWriter sw = new StreamWriter(currentDatabaseFile))
@@ -65,9 +156,11 @@ namespace OpenBveApi.Packages
 		/// <summary>Loads a package database XML file as the current database</summary>
 		/// <param name="Folder">The root database folder</param>
 		/// <param name="File">The database file</param>
+		/// <param name="ErrorMessage">The error message to return if failed</param>
 		/// <returns>Whether the loading succeded</returns>
-		public static bool LoadDatabase(string Folder, string File)
+		public static bool LoadDatabase(string Folder, string File, out string ErrorMessage)
 		{
+			ErrorMessage = string.Empty;
 			currentDatabaseFolder = Folder;
 			currentDatabaseFile = File;
 			if (System.IO.File.Exists(currentDatabaseFile))
@@ -75,14 +168,32 @@ namespace OpenBveApi.Packages
 				try
 				{
 					XmlSerializer listReader = new XmlSerializer(typeof(PackageDatabase));
+					bool saveDatabase = false;
 					using (XmlReader reader = XmlReader.Create(currentDatabaseFile))
 					{
 						currentDatabase = (PackageDatabase) listReader.Deserialize(reader);
+						if (currentDatabase.DatabaseVersion > PackageDatabase.ExpectedDatabaseVersion)
+						{
+							ErrorMessage = @"packages_database_newer_expected";
+						}
+
+						if (currentDatabase.DatabaseVersion < PackageDatabase.ExpectedDatabaseVersion)
+						{
+							currentDatabase.Upgrade();
+							saveDatabase = true;
+						}
+					}
+
+					if (saveDatabase)
+					{
+						//Can't do above as the reader locks it
+						SaveDatabase();
 					}
 				}
 				catch
 				{
 					//Loading the DB failed, so just create a new one
+					ErrorMessage = @"packages_database_invalid_xml";
 					currentDatabase = null;
 				}
 			}
@@ -98,10 +209,7 @@ namespace OpenBveApi.Packages
 			}
 			return true;
 		}
-
-
-
-
+		
 		/*
 		 * DATABASE FUNCTIONS
 		 * 
@@ -175,49 +283,28 @@ namespace OpenBveApi.Packages
 		/// <summary>Checks whether uninstalling a package will break any dependancies</summary>
 		/// <param name="packagesToRemove">The list of packages that will be removed</param>
 		/// <returns>A list of potentially broken packages</returns>
-		public static List<Package> CheckUninstallDependancies(List<Package> packagesToRemove)
+		public static List<Package> CheckUninstallDependancies(List<string> packagesToRemove)
 		{
 			List<Package> brokenPackages = new List<Package>();
 			foreach (Package Route in currentDatabase.InstalledRoutes)
 			{
-				foreach (Package dependancy in Route.Dependancies)
+				if (packagesToRemove.Contains(Route.GUID))
 				{
-					foreach (Package packageToRemove in packagesToRemove)
-					{
-						if (packageToRemove.GUID == dependancy.GUID)
-						{
-							brokenPackages.Add(Route);
-							break;
-						}
-					}
+					brokenPackages.Add(Route);
 				}
 			}
 			foreach (Package Train in currentDatabase.InstalledTrains)
 			{
-				foreach (Package dependancy in Train.Dependancies)
+				if (packagesToRemove.Contains(Train.GUID))
 				{
-					foreach (Package packageToRemove in packagesToRemove)
-					{
-						if (packageToRemove.GUID == dependancy.GUID)
-						{
-							brokenPackages.Add(Train);
-							break;
-						}
-					}
+					brokenPackages.Add(Train);
 				}
 			}
 			foreach (Package Other in currentDatabase.InstalledRoutes)
 			{
-				foreach (Package dependancy in Other.Dependancies)
+				if (packagesToRemove.Contains(Other.GUID))
 				{
-					foreach (Package packageToRemove in packagesToRemove)
-					{
-						if (packageToRemove.GUID == dependancy.GUID)
-						{
-							brokenPackages.Add(Other);
-							break;
-						}
-					}
+					brokenPackages.Add(Other);
 				}
 			}
 			return brokenPackages;
@@ -440,12 +527,22 @@ namespace OpenBveApi.Packages
 			}
 			else
 			{
-				if (entries.Count() == 1 && File.Exists(currentDirectory + "thumbs.db"))
+				if (entries.Count() == 1)
 				{
-					//thumbs.db files are auto-generated by Windows in any folder with pictures....
-					File.Delete(currentDirectory + "thumbs.db");
-					Directory.Delete(currentDirectory, false);
-					Result += currentDirectory + " deleted successfully. \r\n";
+					if (File.Exists(currentDirectory + "thumbs.db"))
+					{
+						//thumbs.db files are auto-generated by Windows in any folder with pictures....
+						File.Delete(currentDirectory + "thumbs.db");
+						Directory.Delete(currentDirectory, false);
+						Result += currentDirectory + " deleted successfully. \r\n";
+					}
+					else if (File.Exists(currentDirectory + ".DS_Store"))
+					{
+						//Hidden file auto-generated by the MacOS finder....
+						File.Delete(currentDirectory + ".DS_Store");
+						Directory.Delete(currentDirectory, false);
+						Result += currentDirectory + " deleted successfully. \r\n";
+					}
 				}
 			}
 		}

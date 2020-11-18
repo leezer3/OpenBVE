@@ -3,13 +3,12 @@ using System.Text;
 using OpenBveApi;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class ExtensionsCfgParser {
 
 		// parse extensions config
-		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, TrainManager.Train Train, bool LoadObjects)
+		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, ref bool[] VisibleFromInterior, TrainManager.Train Train, bool LoadObjects)
 		{
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
@@ -161,6 +160,9 @@ namespace OpenBve {
 																break;
 															case "loadingsway":
 																Train.Cars[n].EnableLoadingSway = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+																break;
+															case "visiblefrominterior":
+																VisibleFromInterior[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 																break;
 															default:
 																Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -413,7 +415,7 @@ namespace OpenBve {
 										 *
 										 * Try again with ASCII instead
 										 */
-										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, ref CouplerObjects, Train, LoadObjects);
+										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior, Train, LoadObjects);
 										return;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -440,25 +442,7 @@ namespace OpenBve {
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							} else if (CarObjects[i] is AnimatedObjectCollection) {
 								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i];
-								for (int j = 0; j < obj.Objects.Length; j++) {
-									for (int h = 0; h < obj.Objects[j].States.Length; h++) {
-										if (obj.Objects[j].States[h].Prototype == null)
-										{
-											continue; //object failed to load?
-										}
-										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-										Matrix4D t = obj.Objects[j].States[h].Translation;
-										t.Row3.X *= -1.0f;
-										t.Row3.Z *= -1.0f;
-										obj.Objects[j].States[h].Translation = t;
-									}
-									obj.Objects[j].TranslateXDirection.X *= -1.0;
-									obj.Objects[j].TranslateXDirection.Z *= -1.0;
-									obj.Objects[j].TranslateYDirection.X *= -1.0;
-									obj.Objects[j].TranslateYDirection.Z *= -1.0;
-									obj.Objects[j].TranslateZDirection.X *= -1.0;
-									obj.Objects[j].TranslateZDirection.Z *= -1.0;
-								}
+								obj.Reverse();
 							} else {
 								throw new NotImplementedException();
 							}
@@ -500,27 +484,7 @@ namespace OpenBve {
 							else if (BogieObjects[i] is AnimatedObjectCollection)
 							{
 								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i];
-								for (int j = 0; j < obj.Objects.Length; j++)
-								{
-									for (int h = 0; h < obj.Objects[j].States.Length; h++)
-									{
-										if (obj.Objects[j].States[h].Prototype == null)
-										{
-											continue; //object failed to load?
-										}
-										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-										Matrix4D t = obj.Objects[j].States[h].Translation;
-										t.Row3.X *= -1.0f;
-										t.Row3.Z *= -1.0f;
-										obj.Objects[j].States[h].Translation = t;
-									}
-									obj.Objects[j].TranslateXDirection.X *= -1.0;
-									obj.Objects[j].TranslateXDirection.Z *= -1.0;
-									obj.Objects[j].TranslateYDirection.X *= -1.0;
-									obj.Objects[j].TranslateYDirection.Z *= -1.0;
-									obj.Objects[j].TranslateZDirection.X *= -1.0;
-									obj.Objects[j].TranslateZDirection.Z *= -1.0;
-								}
+								obj.Reverse();
 							}
 							else
 							{

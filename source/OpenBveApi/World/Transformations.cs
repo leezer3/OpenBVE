@@ -133,6 +133,9 @@ namespace OpenBveApi.World
 			Quaternion rot2 = Quaternion.RotationBetweenVectors(newUp, v2);
 			return Matrix4D.CreateFromQuaternion(rot2 * rot1);
 		}
+
+		/// <summary>A transformation which leaves the input unchanged</summary>
+		public static readonly Transformation NullTransformation = new Transformation();
 	}
 
 }

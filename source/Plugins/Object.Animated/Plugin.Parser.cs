@@ -17,7 +17,7 @@ namespace Plugin
 		/// <returns>The collection of animated objects.</returns>
 		private static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			CultureInfo Culture = CultureInfo.InvariantCulture;
 			AnimatedObjectCollection Result = new AnimatedObjectCollection(currentHost)
 			{
 				Objects = new AnimatedObject[4],
@@ -69,15 +69,15 @@ namespace Plugin
 														if (s.Length == 3)
 														{
 															double x, y, z;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -110,7 +110,7 @@ namespace Plugin
 												{
 													if (obj.Length == objCount)
 													{
-														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
+														Array.Resize(ref obj, obj.Length << 1);
 													}
 													currentHost.LoadObject(file, Encoding, out obj[objCount]);
 													objCount++;
@@ -143,13 +143,13 @@ namespace Plugin
 												Prototype = s,
 												Translation = Matrix4D.CreateTranslation(position.X, position.Y, -position.Z)
 											};
-											a.States = new ObjectState[] { aos };
+											a.States = new[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
 										}
 										else if (obj[j] is AnimatedObjectCollection)
 										{
-											AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j];
+											AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j].Clone();
 											for (int k = 0; k < a.Objects.Length; k++)
 											{
 												if (ObjectCount >= Result.Objects.Length)
@@ -203,7 +203,6 @@ namespace Plugin
 								int StateFunctionLine = -1;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
-									string Folder;
 									if (Lines[i].Length != 0)
 									{
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -219,15 +218,15 @@ namespace Plugin
 														if (s.Length == 3)
 														{
 															double x, y, z;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -246,7 +245,7 @@ namespace Plugin
 														string[] s = b.Split(new char[] { ',' });
 														if (s.Length >= 1)
 														{
-															Folder = System.IO.Path.GetDirectoryName(FileName);
+															string Folder = System.IO.Path.GetDirectoryName(FileName);
 															StateFiles = new string[s.Length];
 															bool NullObject = true;
 															for (int k = 0; k < s.Length; k++)
@@ -305,15 +304,15 @@ namespace Plugin
 														if (s.Length == 3)
 														{
 															double x, y, z;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -499,15 +498,15 @@ namespace Plugin
 														if (s.Length == 3)
 														{
 															double x, y, z;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -612,11 +611,11 @@ namespace Plugin
 														if (s.Length == 2)
 														{
 															double nf, dr;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out nf))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out nf))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out dr))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out dr))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -656,11 +655,11 @@ namespace Plugin
 														if (s.Length == 2)
 														{
 															double x, y;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -738,7 +737,7 @@ namespace Plugin
 												case "refreshrate":
 													{
 														double r;
-														if (!double.TryParse(b, System.Globalization.NumberStyles.Float, Culture, out r))
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out r))
 														{
 															currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
@@ -892,16 +891,19 @@ namespace Plugin
 										}
 										if (StaticXRotation)
 										{
+											Result.Objects[ObjectCount].States[j].Prototype = (StaticObject)Result.Objects[ObjectCount].States[j].Prototype.Clone();
 											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateXDirection, RotateX);
 											Result.Objects[ObjectCount].RotateXFunction = null;
 										}
 										if (StaticYRotation)
 										{
+											Result.Objects[ObjectCount].States[j].Prototype = (StaticObject)Result.Objects[ObjectCount].States[j].Prototype.Clone();
 											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateYDirection, RotateY);
 											Result.Objects[ObjectCount].RotateYFunction = null;
 										}
 										if (StaticZRotation)
 										{
+											Result.Objects[ObjectCount].States[j].Prototype = (StaticObject)Result.Objects[ObjectCount].States[j].Prototype.Clone();
 											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateZDirection, RotateZ);
 											Result.Objects[ObjectCount].RotateZFunction = null;
 										}
@@ -924,7 +926,7 @@ namespace Plugin
 								i++;
 								if (Result.Sounds.Length >= SoundCount)
 								{
-									Array.Resize<WorldObject>(ref Result.Sounds, Result.Sounds.Length << 1);
+									Array.Resize(ref Result.Sounds, Result.Sounds.Length << 1);
 								}
 								Vector3 Position = Vector3.Zero;
 								string fileName = null;
@@ -945,15 +947,15 @@ namespace Plugin
 														if (s.Length == 3)
 														{
 															double x, y, z;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -989,7 +991,7 @@ namespace Plugin
 													break;
 												case "radius":
 													{
-														if (!Double.TryParse(b, out radius))
+														if (!double.TryParse(b, out radius))
 														{
 															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															radius = 30.0;
@@ -998,7 +1000,7 @@ namespace Plugin
 													break;
 												case "pitch":
 													{
-														if (!Double.TryParse(b, out pitch))
+														if (!double.TryParse(b, out pitch))
 														{
 															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															pitch = 1.0;
@@ -1007,7 +1009,7 @@ namespace Plugin
 													break;
 												case "volume":
 													{
-														if (!Double.TryParse(b, out volume))
+														if (!double.TryParse(b, out volume))
 														{
 															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															volume = 1.0;
@@ -1022,15 +1024,15 @@ namespace Plugin
 														if (s.Length == 3)
 														{
 															double x, y, z;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -1188,13 +1190,15 @@ namespace Plugin
 								{
 									SoundHandle currentSound;
 									currentHost.RegisterSound(fileName, radius, out currentSound);
-									WorldSound snd = new WorldSound(currentHost, currentSound);
-									snd.currentPitch = pitch;
-									snd.currentVolume = volume;
-									snd.Position = Position;
-									snd.TrackFollowerFunction = TrackFollowerFunction;
-									snd.PitchFunction = PitchFunction;
-									snd.VolumeFunction = VolumeFunction;
+									WorldSound snd = new WorldSound(currentHost, currentSound)
+									{
+										currentPitch = pitch,
+										currentVolume = volume,
+										Position = Position,
+										TrackFollowerFunction = TrackFollowerFunction,
+										PitchFunction = PitchFunction,
+										VolumeFunction = VolumeFunction
+									};
 									Result.Sounds[SoundCount] = snd;
 									SoundCount++;
 								}
@@ -1229,15 +1233,15 @@ namespace Plugin
 														if (s.Length == 3)
 														{
 															double x, y, z;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
@@ -1256,7 +1260,7 @@ namespace Plugin
 													{
 														singleBuffer = true;
 														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														fileNames = new string[] {OpenBveApi.Path.CombineFile(Folder, b)};
+														fileNames = new[] {OpenBveApi.Path.CombineFile(Folder, b)};
 														if (!System.IO.File.Exists(fileNames[0]))
 														{
 															if (currentSoundFolder != null)
@@ -1302,7 +1306,7 @@ namespace Plugin
 													break;
 												case "radius":
 													{
-														if (!Double.TryParse(b, out radius))
+														if (!double.TryParse(b, out radius))
 														{
 															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															radius = 30.0;
@@ -1311,7 +1315,7 @@ namespace Plugin
 													break;
 												case "pitch":
 													{
-														if (!Double.TryParse(b, out pitch))
+														if (!double.TryParse(b, out pitch))
 														{
 															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															pitch = 1.0;
@@ -1320,7 +1324,7 @@ namespace Plugin
 													break;
 												case "volume":
 													{
-														if (!Double.TryParse(b, out volume))
+														if (!double.TryParse(b, out volume))
 														{
 															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															volume = 1.0;
@@ -1367,9 +1371,11 @@ namespace Plugin
 								i--;
 								if (fileNames.Length != 0 && ObjectCount > 0)
 								{
-									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(currentHost);
-									snd.Object = Result.Objects[ObjectCount -1].Clone();
-									snd.Buffers = new SoundHandle[fileNames.Length];
+									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(currentHost)
+									{
+										Object = Result.Objects[ObjectCount - 1].Clone(),
+										Buffers = new SoundHandle[fileNames.Length]
+									};
 									for (int j = 0; j < fileNames.Length; j++)
 									{
 										if (fileNames[j] != null)
