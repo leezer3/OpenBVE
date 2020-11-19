@@ -557,7 +557,7 @@ namespace CsvRwRouteParser
 					int gi = Data.Blocks[i].Cycle[ci];
 					if (Data.Structure.Ground.ContainsKey(gi))
 					{
-						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, StartingDistance, EndingDistance, StartingDistance);
 					}
 				}
 				// ground-aligned free objects
@@ -689,7 +689,7 @@ namespace CsvRwRouteParser
 						{
 							if (Data.Structure.RailObjects[Data.Blocks[i].RailType[j]] != null)
 							{
-								Data.Structure.RailObjects[Data.Blocks[i].RailType[j]].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+								Data.Structure.RailObjects[Data.Blocks[i].RailType[j]].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 							}
 						}
 						// points of interest
