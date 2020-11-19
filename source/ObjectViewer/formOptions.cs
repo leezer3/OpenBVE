@@ -111,7 +111,7 @@ namespace OpenBve
 					{
 						UnifiedObject o;
 						Program.CurrentHost.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, out o);
-						o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+						o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
 
 					}
 					catch (Exception ex)

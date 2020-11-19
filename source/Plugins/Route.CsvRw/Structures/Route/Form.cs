@@ -44,7 +44,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormL[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormL[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 					if (RoofType > 0)
 					{
 						if (!Structure.RoofL.ContainsKey(RoofType))
@@ -53,7 +53,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+							Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 						}
 					}
 				}
@@ -66,7 +66,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormL[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormL[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 
 				if (!Structure.FormCL.ContainsKey(FormType))
@@ -86,7 +86,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 					}
 
 					if (!Structure.RoofCL.ContainsKey(RoofType))
@@ -107,7 +107,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormR[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormR[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 
 				if (!Structure.FormCR.ContainsKey(FormType))
@@ -127,7 +127,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						Structure.RoofR[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Structure.RoofR[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 					}
 
 					if (!Structure.RoofCR.ContainsKey(RoofType))
@@ -162,7 +162,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							Structure.FormL[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+							Structure.FormL[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 						}
 
 						if (!Structure.FormCL.ContainsKey(FormType))
@@ -183,7 +183,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+								Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 							}
 
 							if (!Structure.RoofCL.ContainsKey(RoofType))
@@ -205,7 +205,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							Structure.FormR[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+							Structure.FormR[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 						}
 
 						if (!Structure.FormCR.ContainsKey(FormType))
@@ -226,7 +226,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								Structure.RoofR[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+								Structure.RoofR[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 							}
 
 							if (!Structure.RoofCR.ContainsKey(RoofType))
@@ -257,7 +257,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormL[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormL[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 
 				if (RoofType > 0)
@@ -268,7 +268,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 					}
 				}
 			}
@@ -280,7 +280,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormR[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormR[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 
 				if (RoofType > 0)
