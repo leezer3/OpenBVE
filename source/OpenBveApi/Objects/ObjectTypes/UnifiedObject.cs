@@ -16,6 +16,17 @@ namespace OpenBveApi.Objects
 			CreateObject(Position, Transformation.NullTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, 1.0);
 		}
 
+		/// <summary>Creates the object within the worldspace using a single track based transforms</summary>
+		/// <param name="Position">The world position</param>
+		/// <param name="BaseTransformation">The base transformation to be applied</param>
+		/// <param name="StartingDistance">The track distance at which this is displayed by the renderer</param>
+		/// <param name="EndingDistance">The track distance at which this hidden by the renderer</param>
+		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
+		public void CreateObject(Vector3 Position, Transformation BaseTransformation, double StartingDistance, double EndingDistance, double TrackPosition)
+		{
+			CreateObject(Position, BaseTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, 1.0);
+		}
+
 		/// <summary>Creates the object within the world</summary>
 		/// <param name="Position">The world position</param>
 		/// <param name="BaseTransformation">The base transformation to be applied</param>

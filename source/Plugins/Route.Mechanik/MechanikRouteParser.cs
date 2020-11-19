@@ -520,10 +520,14 @@ namespace MechanikRouteParser
 				// normalize
 				Normalize(ref Direction.X, ref Direction.Y);
 				Normalize(ref Direction2.X, ref Direction2.Y);
-
+				Transformation t = new Transformation();
+				if (!PreviewOnly)
+				{
+					t = new Transformation(Math.Atan2(Direction.X, Direction.Y), 0, 0);
+				}
 				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
 				{
-					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(Position, StartingDistance, StartingDistance + 25, 100);
+					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(Position, t, StartingDistance, StartingDistance + 25, 100);
 				}
 
 				double blockLength;
@@ -550,7 +554,7 @@ namespace MechanikRouteParser
 					double sinag = Math.Sin(ag);
 					Direction2.Rotate(cosag, sinag);
 				}
-				if (currentRouteData.Blocks[i].Correction)
+				if (i < currentRouteData.Blocks.Count - 1 && currentRouteData.Blocks[i + 1].Correction)
 				{
 					Position = Position2;
 					Direction = Direction2;
