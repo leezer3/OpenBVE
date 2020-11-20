@@ -5,6 +5,7 @@ MONO_VERSION:= $(shell mono --version | awk '/version/ { print $$5 }')
 MIN_NUGET_VERSION:= "2.16.0"
 NUGET_VERSION:= $(shell nuget help 2> /dev/null | awk '/Version:/ { print $$3; exit 0}')
 GreaterVersion = $(shell printf '%s\n' $(1) $(2) | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)
+PROGRAM_VERSION = $(shell git describe --tags --exact-match 2> /dev/null)
 
 # Directories
 DEBUG_DIR   := bin_debug
@@ -157,11 +158,31 @@ $(MAC_BUILD_RESULT): all-release
 
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
 	@hdiutil create $(MAC_BUILD_RESULT) -volname "OpenBVE" -fs HFS+ -srcfolder "mac/OpenBVE.app"
+	@echo Renaming final output file
+ifeq (, $(PROGRAM_VERSION))
+	@echo This is a $(COLOR_BLUE)Daily build$(COLOR_END)
+	@echo Final filename: $(COLOR_RED)OpenBVE-$$(date '+%F').dmg$(COLOR_END)
+	@mv macbuild.dmg OpenBVE-$$(date '+%F').dmg
+else
+	@echo This is a $(COLOR_YELLOW)Tagged Release build$(COLOR_END)
+	@echo Final filename: $(COLOR_RED)OpenBVE-$(PROGRAM_VERSION).dmg$(COLOR_END)
+	@mv macbuild.dmg OpenBVE-$(PROGRAM_VERSION).dmg
+endif
 
 $(LINUX_BUILD_RESULT): all-release
 	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(LINUX_BUILD_RESULT)$(COLOR_END)
 	@cd $(RELEASE_DIR); zip -qr9Z deflate ../$(LINUX_BUILD_RESULT) *
+	@echo Renaming final output file
+ifeq (, $(PROGRAM_VERSION))
+	@echo This is a $(COLOR_BLUE)Daily build$(COLOR_END)
+	@echo Final filename: $(COLOR_RED)OpenBVE-$$(date '+%F').zip$(COLOR_END)
+	@mv linuxbuild.zip OpenBVE-$$(date '+%F').zip
+else
+	@echo This is a $(COLOR_YELLOW)Tagged Release build$(COLOR_END)
+	@echo Final filename: $(COLOR_RED)OpenBVE-$(PROGRAM_VERSION).zip$(COLOR_END)
+	@mv linuxbuild.zip OpenBVE-$(PROGRAM_VERSION).zip
+endif
 
 $(DEBIAN_BUILD_RESULT): all-release
 	@rm -rf bin_release/DevTools/
@@ -174,3 +195,13 @@ $(DEBIAN_BUILD_RESULT): all-release
 	@cp -r -f $(CP_UPDATE_FLAG) $(RELEASE_DIR)/* installers/debian/usr/lib/openbve
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(DEBIAN_BUILD_RESULT)$(COLOR_END)
 	@fakeroot dpkg-deb --build installers/debian
+	@echo Renaming final output file
+ifeq (, $(PROGRAM_VERSION))
+	@echo This is a $(COLOR_BLUE)Daily build$(COLOR_END)
+	@echo Final filename: $(COLOR_RED)OpenBVE-$$(date '+%F').deb$(COLOR_END)
+	@mv debianbuild.deb OpenBVE-$$(date '+%F').deb
+else
+	@echo This is a $(COLOR_YELLOW)Tagged Release build$(COLOR_END)
+	@echo Final filename: $(COLOR_RED)OpenBVE-$$(date '+%F').deb$(COLOR_END)
+	@mv debianbuild.deb OpenBVE-$(PROGRAM_VERSION).deb
+endif

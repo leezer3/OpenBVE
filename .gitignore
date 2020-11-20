@@ -19,6 +19,9 @@ linuxbuild.*
 macbuild.*
 /mac/
 installers/debian.deb
+OpenBVE-*.zip
+OpenBVE-*.deb
+OpenBVE-*.dmg
 
 #Debian Build directory
 installers/debian/usr/lib/*
