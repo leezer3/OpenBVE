@@ -61,7 +61,7 @@ namespace MechanikRouteParser
 			currentRouteData = new RouteData();
 			//Load texture list
 			RouteFolder = System.IO.Path.GetDirectoryName(routeFile);
-			string tDat = OpenBveApi.Path.CombineFile(RouteFolder, "tekstury.dat");
+			string tDat = Path.CombineFile(RouteFolder, "tekstury.dat");
 			if (!System.IO.File.Exists(tDat))
 			{
 				/*
@@ -69,14 +69,14 @@ namespace MechanikRouteParser
 				 * Various Mechanik routes use custom hardcoded DAT paths
 				 * Thus, we will need to keep a search list for both the trasa and tekstury files
 				 */
-				tDat = OpenBveApi.Path.CombineFile(RouteFolder, "s80_text.dat"); //S80 U-Bahn
+				tDat = Path.CombineFile(RouteFolder, "s80_text.dat"); //S80 U-Bahn
 				if (!System.IO.File.Exists(tDat))
 				{
 					return;
 				}
 			}
 			LoadTextureList(tDat);
-			string sDat = OpenBveApi.Path.CombineFile(RouteFolder, "dzwieki.dat");
+			string sDat = Path.CombineFile(RouteFolder, "dzwieki.dat");
 			LoadSoundList(sDat);
 			string[] routeLines = System.IO.File.ReadAllLines(routeFile);
 			double yOffset = 0.0;
@@ -277,14 +277,14 @@ namespace MechanikRouteParser
 						{
 							case "#t_prz":
 								//FREE, transparent
-								Idx = CreateHorizontalObject(tDat, sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, true, false);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, true, false);
 								break;
 							case "#t_p":
 								//HORIZONTAL, no transparency
-								Idx = CreateHorizontalObject(tDat, sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false, true);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false, true);
 								break;
 							case "#t":
-								Idx = CreateHorizontalObject(tDat, sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false, false);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false, false);
 								break;
 						}
 						
@@ -417,6 +417,7 @@ namespace MechanikRouteParser
 					case "'z_p":
 						//Speed limit
 						double kph;
+						// ReSharper disable once NotAccessedVariable
 						Vector2 limitPos = new Vector2();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out limitPos.X))
 						{
@@ -549,7 +550,7 @@ namespace MechanikRouteParser
 			if (!PreviewOnly)
 			{
 				Texture bt = null;
-				string f = OpenBveApi.Path.CombineFile(RouteFolder, "obloczki.bmp");
+				string f = Path.CombineFile(RouteFolder, "obloczki.bmp");
 				if (System.IO.File.Exists(f))
 				{
 					Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
@@ -559,83 +560,32 @@ namespace MechanikRouteParser
 				Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
 			}
 
-			Vector3 Position = new Vector3(0.0, 0.0, 0.0);
-			Vector2 Direction = new Vector2(0.0, 1.0);
-			Vector3 Position2 = new Vector3(0.0, 0.0, 0.0);
-			Vector2 Direction2 = new Vector2(0.0, 1.0);
+			Vector3 worldPosition = new Vector3(0.0, 0.0, 0.0);
+			Vector2 worldDirection = new Vector2(0.0, 1.0);
+			Vector3 trackPosition = new Vector3(0.0, 0.0, 0.0);
+			Vector2 trackDirection = new Vector2(0.0, 1.0);
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
 			int CurrentTrackLength = 0;
 			double StartingDistance = 0;
 			for (int i = 0; i < currentRouteData.Blocks.Count; i++)
 			{
-				/*
-				 * First loop to create the objects
-				 */
 				// normalize
-				Normalize(ref Direction.X, ref Direction.Y);
-				Normalize(ref Direction2.X, ref Direction2.Y);
-				Transformation t = new Transformation();
-				if (!PreviewOnly)
-				{
-					t = new Transformation(Math.Atan2(Direction.X, Direction.Y), 0, 0);
-				}
-				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
-				{
-					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(Position, t, StartingDistance, StartingDistance + 25, 100);
-				}
+				Normalize(ref worldDirection.X, ref worldDirection.Y);
+				Normalize(ref trackDirection.X, ref trackDirection.Y);
 
-				double blockLength;
-				if (i == currentRouteData.Blocks.Count - 1)
-				{
-					blockLength = 25;
-				}
-				else
-				{
-					blockLength = currentRouteData.Blocks[i + 1].StartingTrackPosition - currentRouteData.Blocks[i].StartingTrackPosition;
-				}
 
-				StartingDistance += blockLength;
-
-				// finalize block
-				Position.X += Direction.X * blockLength;
-				Position.Z += Direction.Y * blockLength;
-				Position2.X += Direction2.X * blockLength;
-				Position2.Z += Direction2.Y * blockLength;
-				if (currentRouteData.Blocks[i].Turn != 0.0)
-				{
-					double ag = -Math.Atan(currentRouteData.Blocks[i].Turn);
-					double cosag = Math.Cos(ag);
-					double sinag = Math.Sin(ag);
-					Direction2.Rotate(cosag, sinag);
-				}
-				if (i < currentRouteData.Blocks.Count - 1 && currentRouteData.Blocks[i + 1].Correction)
-				{
-					Position = Position2;
-					Direction = Direction2;
-				}
-			}
-			Position = new Vector3(0,0,0);
-			Direction = new Vector2(0, 1);
-			double currentSpeedLimit = Double.PositiveInfinity;
-			for (int i = 0; i < currentRouteData.Blocks.Count; i++)
-			{
-				/*
-				 * Second loop to create the track elements and transforms
-				 */
-				// normalize
-				Normalize(ref Direction.X, ref Direction.Y);
 				// track
 				TrackElement WorldTrackElement = new TrackElement(currentRouteData.Blocks[i].StartingTrackPosition);
 
 				int n = CurrentTrackLength;
 				if (n >= Plugin.CurrentRoute.Tracks[0].Elements.Length)
 				{
-					Array.Resize<TrackElement>(ref Plugin.CurrentRoute.Tracks[0].Elements, Plugin.CurrentRoute.Tracks[0].Elements.Length << 1);
+					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, Plugin.CurrentRoute.Tracks[0].Elements.Length << 1);
 				}
 				Plugin.CurrentRoute.Tracks[0].Elements[n] = WorldTrackElement;
-				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldPosition = Position;
-				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection = Vector3.GetVector3(Direction, 0);
-				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
+				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldPosition = trackPosition;
+				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection = Vector3.GetVector3(trackDirection, 0);
+				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(trackDirection.Y, 0.0, -trackDirection.X);
 				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				CurrentTrackLength++;
 
@@ -648,27 +598,35 @@ namespace MechanikRouteParser
 				{
 					blockLength = currentRouteData.Blocks[i + 1].StartingTrackPosition - currentRouteData.Blocks[i].StartingTrackPosition;
 				}
-
+				StartingDistance += blockLength;
+				Transformation t = new Transformation();
+				if (!PreviewOnly)
+				{
+					t = new Transformation(Math.Atan2(worldDirection.X, worldDirection.Y), 0, 0);
+				}
+				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
+				{
+					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(worldPosition, t, StartingDistance, StartingDistance + 25, 100);
+				}
 				// finalize block
-				Position.X += Direction.X * blockLength;
-				Position.Z += Direction.Y * blockLength;
+				worldPosition.X += worldDirection.X * blockLength;
+				worldPosition.Z += worldDirection.Y * blockLength;
+				trackPosition.X += trackDirection.X * blockLength;
+				trackPosition.Z += trackDirection.Y * blockLength;
 				if (currentRouteData.Blocks[i].Turn != 0.0)
 				{
 					double ag = -Math.Atan(currentRouteData.Blocks[i].Turn);
 					double cosag = Math.Cos(ag);
 					double sinag = Math.Sin(ag);
-					Direction.Rotate(cosag, sinag);
+					trackDirection.Rotate(cosag, sinag);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection.RotatePlane(cosag, sinag);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide.RotatePlane(cosag, sinag);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				}
-
-				if (currentRouteData.Blocks[i].SpeedLimit != -1)
+				if (i < currentRouteData.Blocks.Count - 1 && currentRouteData.Blocks[i + 1].Correction)
 				{
-					int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new LimitChangeEvent(0, currentSpeedLimit, currentRouteData.Blocks[i].SpeedLimit);
-					currentSpeedLimit = currentRouteData.Blocks[i].SpeedLimit;
+					worldPosition = trackPosition;
+					worldDirection = trackDirection;
 				}
 
 				for (int j = 0; j < currentRouteData.Blocks[i].Sounds.Count; j++)
@@ -712,7 +670,6 @@ namespace MechanikRouteParser
 					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(0, s);
 				}
-				
 			}
 			// insert station end events
 			int lastStationBlock = 0;
@@ -733,11 +690,11 @@ namespace MechanikRouteParser
 					}
 				}
 			}
-			Array.Resize<TrackElement>(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
+			Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
 			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 25) };
 		}
 
-		private static int CreateHorizontalObject(string TdatPath, List<Vector3> Points, int firstPoint, double scaleFactor, double sx, double sy, int textureIndex, bool transparent, bool horizontal)
+		private static int CreateHorizontalObject(List<Vector3> Points, int firstPoint, double scaleFactor, double sx, double sy, int textureIndex, bool transparent, bool horizontal)
 		{
 			MechanikTexture t = new MechanikTexture();
 			for (int i = 0; i < AvailableTextures.Count; i++)
@@ -792,7 +749,7 @@ namespace MechanikRouteParser
 			Vector3 faceSize = max - min;
 			int fl = Builder.Faces.Length;
 			Array.Resize(ref Builder.Faces, Builder.Faces.Length + 1);
-			Builder.Faces[fl] = new MeshFace { Vertices = new MeshFaceVertex[Points.Count] , Flags = (byte)MeshFace.Face2Mask };
+			Builder.Faces[fl] = new MeshFace { Vertices = new MeshFaceVertex[Points.Count] , Flags = MeshFace.Face2Mask };
 			for (int i = 0; i < Points.Count; i++)
 			{
 				Builder.Faces[fl].Vertices[i].Index = (ushort) i;
@@ -907,7 +864,7 @@ namespace MechanikRouteParser
 			Builder.Vertices[3] = new Vertex(new Vector3(topLeft.X, (topLeft.Y - (t.Height * 5)), topLeft.Z)); //bottom left
 			//Possibly change to Face, check this though (Remember that Mechanik was restricted to the cab, wheras we are not)
 			Builder.Faces = new MeshFace[1];
-			Builder.Faces[0] = new MeshFace { Vertices = new MeshFaceVertex[4], Flags = (byte)MeshFace.Face2Mask };
+			Builder.Faces[0] = new MeshFace { Vertices = new MeshFaceVertex[4], Flags = MeshFace.Face2Mask };
 			Builder.Faces[0].Vertices = new MeshFaceVertex[4];
 			Builder.Faces[0].Vertices[0] = new MeshFaceVertex(0);
 			Builder.Faces[0].Vertices[1] = new MeshFaceVertex(1);
@@ -953,7 +910,6 @@ namespace MechanikRouteParser
 				{
 					if (!char.IsDigit(textureLines[i][l]))
 					{
-						string str = textureLines[i].Substring(0, l);
 						k = int.Parse(textureLines[i].Substring(0, l));
 						s = textureLines[i].Substring(l, textureLines[i].Length - l).Trim();
 						break;
@@ -995,7 +951,6 @@ namespace MechanikRouteParser
 				{
 					if (!char.IsDigit(soundLines[i][l]))
 					{
-						string str = soundLines[i].Substring(0, l);
 						k = int.Parse(soundLines[i].Substring(0, l));
 						s = soundLines[i].Substring(l, soundLines[i].Length - l).Trim();
 						break;
