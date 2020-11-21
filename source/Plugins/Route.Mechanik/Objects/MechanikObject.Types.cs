@@ -24,9 +24,12 @@
 
 namespace MechanikRouteParser
 {
+	/// <summary>The types of object</summary>
 	internal enum MechnikObjectType
 	{
+		/// <summary>Perpendicular plane</summary>
 		Perpendicular = 0,
+		/// <summary>Horizontal plane</summary>
 		Horizontal = 1
 	}
 }

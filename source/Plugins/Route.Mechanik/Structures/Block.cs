@@ -26,14 +26,22 @@ using System.Collections.Generic;
 
 namespace MechanikRouteParser
 {
+	/// <summary>Represents a variable length route block</summary>
 	internal class Block
 	{
+		/// <summary>The track position at which this block starts</summary>
 		internal double StartingTrackPosition;
+		/// <summary>The world objects placed in this block</summary>
 		internal List<RouteObject> Objects = new List<RouteObject>();
+		/// <summary>The turn radius in radians</summary>
 		internal double Turn = 0.0;
+		/// <summary>The speed limit for this block</summary>
 		internal double SpeedLimit = -1;
+		/// <summary>The sound events placed in this block</summary>
 		internal List<SoundEvent> Sounds = new List<SoundEvent>();
+		/// <summary>The station stop if applicable</summary>
 		internal StationStop stopMarker;
+		/// <summary>Whether a rotation / position correction should be issued after this block</summary>
 		internal bool Correction;
 
 		internal Block(double TrackPosition)

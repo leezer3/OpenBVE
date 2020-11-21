@@ -24,9 +24,12 @@
 
 namespace MechanikRouteParser
 {
+	/// <summary>A station stop marker</summary>
 	internal class StationStop
 	{
+		/// <summary>The offset for the start position from where the marker is placed on the track</summary>
 		internal double startPosition = 0;
+		/// <summary> The offset for the end position from where the marker is placed on the track</summary>
 		internal double endPosition = 10;
 	}
 }

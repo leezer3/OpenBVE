@@ -26,12 +26,18 @@ using OpenBveApi.Math;
 
 namespace MechanikRouteParser
 {
+	/// <summary>A train triggered sound event</summary>
 	internal class SoundEvent
 	{
+		/// <summary>The sound index from dzwieki.dat</summary>
 		internal readonly int SoundIndex;
+		/// <summary>Whether this plays looped until stopped</summary>
 		internal readonly bool Looped;
+		/// <summary>Whether this is speed dependant</summary>
 		internal readonly bool SpeedDependant;
+		/// <summary>The volume of the sound</summary>
 		internal readonly int Volume;
+		/// <summary>The sound's position vector</summary>
 		internal readonly Vector3 Position;
 
 		internal SoundEvent(int soundIndex, Vector3 position, bool looped, bool speedDependant, int volume)

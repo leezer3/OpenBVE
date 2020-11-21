@@ -26,9 +26,12 @@ using OpenBveApi.Math;
 
 namespace MechanikRouteParser
 {
+	/// <summary>An object placed in the world</summary>
 	internal class RouteObject
 	{
+		/// <summary>The index of the object in the shared objects array</summary>
 		internal int objectIndex;
+		/// <summary>The relative world position from the track position</summary>
 		internal Vector3 Position;
 
 		internal RouteObject(int index, Vector3 position)

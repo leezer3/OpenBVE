@@ -26,12 +26,18 @@ using OpenBveApi.Textures;
 
 namespace MechanikRouteParser
 {
+	/// <summary>Holds cached properties of a Mechanik texture</summary>
 	internal struct MechanikTexture
 	{
+		/// <summary>The absolute on-disk path of the texture file</summary>
 		internal string Path;
+		/// <summary>The texture index in tekstury.dat</summary>
 		internal int Index;
+		/// <summary>The texture itself</summary>
 		internal Texture Texture;
+		/// <summary>The calculated, unscaled world width of the texture (1px == 0.5cm)</summary>
 		internal double Width;
+		/// <summary>The calculated, unscaled world height of the texture (1px == 0.5cm)</summary>
 		internal double Height;
 		internal MechanikTexture(string p, string s, int i)
 		{
