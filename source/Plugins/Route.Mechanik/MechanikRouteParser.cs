@@ -43,7 +43,7 @@ namespace MechanikRouteParser
 	{
 		private static RouteData currentRouteData;
 		private static List<MechanikObject> AvailableObjects = new List<MechanikObject>();
-		private static List<MechanikTexture> AvailableTextures = new List<MechanikTexture>();
+		private static Dictionary<int, MechanikTexture> AvailableTextures = new Dictionary<int, MechanikTexture>();
 		private static Dictionary<int, SoundHandle> AvailableSounds = new Dictionary<int, SoundHandle>();
 		private static string RouteFolder;
 
@@ -56,7 +56,7 @@ namespace MechanikRouteParser
 
 			Plugin.CurrentRoute.AccurateObjectDisposal = ObjectDisposalMode.Mechanik;
 			AvailableObjects = new List<MechanikObject>();
-			AvailableTextures = new List<MechanikTexture>();
+			AvailableTextures = new Dictionary<int, MechanikTexture>();
 			AvailableSounds = new Dictionary<int, SoundHandle>();
 			currentRouteData = new RouteData();
 			//Load texture list
@@ -696,14 +696,7 @@ namespace MechanikRouteParser
 
 		private static int CreateHorizontalObject(List<Vector3> Points, int firstPoint, double scaleFactor, double sx, double sy, int textureIndex, bool transparent, bool horizontal)
 		{
-			MechanikTexture t = new MechanikTexture();
-			for (int i = 0; i < AvailableTextures.Count; i++)
-			{
-				if (AvailableTextures[i].Index == textureIndex)
-				{
-					t = AvailableTextures[i];
-				}
-			}
+			MechanikTexture t = AvailableTextures[textureIndex];
 			MechanikObject o = new MechanikObject();
 			o.TopLeft = new Vector3();
 			o.TextureIndex = textureIndex;
@@ -841,15 +834,8 @@ namespace MechanikRouteParser
 					return i;
 				}
 			}
-			MechanikTexture t = new MechanikTexture();
-			for (int i = 0; i < AvailableTextures.Count; i++)
-			{
-				if (AvailableTextures[i].Index == textureIndex)
-				{
-					t = AvailableTextures[i];
-					break;
-				}
-			}
+
+			MechanikTexture t = AvailableTextures[textureIndex];
 			MechanikObject o = new MechanikObject();
 			o.TopLeft = new Vector3(0,0,0);
 			o.TextureIndex = textureIndex;	
@@ -920,8 +906,8 @@ namespace MechanikRouteParser
 					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(tDat), s);
 					if (System.IO.File.Exists(path))
 					{
-						MechanikTexture t = new MechanikTexture(path, s, k);
-						AvailableTextures.Add(t);
+						MechanikTexture t = new MechanikTexture(path, s);
+						AvailableTextures.Add(k, t);
 					}
 
 				}
