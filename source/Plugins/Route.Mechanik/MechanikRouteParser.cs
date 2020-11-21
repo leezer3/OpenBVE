@@ -86,7 +86,7 @@ namespace MechanikRouteParser
 				if (j != -1)
 				{
 					//Split out comments
-					routeLines[i] = routeLines[i].Substring(j, routeLines[i].Length - j);
+					routeLines[i] = routeLines[i].Substring(0, j);
 				}
 				if (String.IsNullOrWhiteSpace(routeLines[i]))
 				{
