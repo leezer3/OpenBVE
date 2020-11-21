@@ -28,6 +28,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using System.Text.RegularExpressions;
 using OpenBveApi;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
@@ -95,6 +96,12 @@ namespace MechanikRouteParser
 				string[] Arguments = routeLines[i].Trim().Split(null);
 				double trackPosition, scaleFactor;
 				int Idx, blockIndex, textureIndex;
+				if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
+				{
+					//Second argument is always track position in KM
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid track position encountered in " + Arguments[0] + " at line " + i);
+					continue;
+				}
 				switch (Arguments[0].ToLowerInvariant())
 				{
 					case "'s":
@@ -112,11 +119,6 @@ namespace MechanikRouteParser
 						 *
 						 */
 						Vector3 topLeft = new Vector3();
-						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
-						{
-							//Add message
-							continue;
-						}
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out topLeft.X))
 						{
 							//Add message
@@ -170,11 +172,6 @@ namespace MechanikRouteParser
 						 * => Furthest point: Determines when this vanishes (When the cab passes?)
 						 */
 						int numPoints, firstPoint;
-						if (!TryParseDistance(Arguments[1], out trackPosition))
-						{
-							//Add message
-							continue;
-						}
 						if (!int.TryParse(Arguments[2], out numPoints))
 						{
 							//Add message
@@ -302,11 +299,6 @@ namespace MechanikRouteParser
 						//Rotation marker for the player track, roughly equivilant to .turn
 						double radians;
 						Vector2 turnPoint = new Vector2();
-						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
-						{
-							//Add message
-							continue;
-						}
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out turnPoint.X))
 						{
 							//Add message
@@ -330,11 +322,6 @@ namespace MechanikRouteParser
 						//Rotates the world to zero after a curve
 						//Going to give me a headache, but uncommon
 						Vector2 correctionPoint1 = new Vector2(), correctionPoint2 = new Vector2();
-						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
-						{
-							//Add message
-							continue;
-						}
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out correctionPoint1.X))
 						{
 							//Add message
@@ -377,11 +364,6 @@ namespace MechanikRouteParser
 						bool speedDependant;
 						int volume;
 						Vector3 soundPosition = new Vector3();
-						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
-						{
-							//Add message
-							continue;
-						}
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out soundPosition.X))
 						{
 							//Add message
@@ -437,11 +419,6 @@ namespace MechanikRouteParser
 						//Speed limit
 						double kph;
 						Vector2 limitPos = new Vector2();
-						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
-						{
-							//Add message
-							continue;
-						}
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out limitPos.X))
 						{
 							//Add message
@@ -465,11 +442,6 @@ namespace MechanikRouteParser
 						//Station stop marker
 						bool terminal;
 						Vector2 stopPos = new Vector2();
-						if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
-						{
-							//Add message
-							continue;
-						}
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out stopPos.X))
 						{
 							//Add message
