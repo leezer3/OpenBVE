@@ -186,7 +186,6 @@ namespace MechanikRouteParser
 						int v = 0;
 						List<Vector3> points = new List<Vector3>();
 						Vector3 currentPoint = new Vector3();
-						double offset = 0;
 						for (int p = 3; p < 24; p++)
 						{
 							switch (v)
@@ -209,17 +208,6 @@ namespace MechanikRouteParser
 									if (!TryParseDistance(Arguments[p], out currentPoint.Z))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Z encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
-									}
-									if (points.Count > 0 && points.Count < numPoints)
-									{
-										if (points.Count == 1)
-										{
-											offset = Math.Min(currentPoint.Z, points[points.Count - 1].Z);
-										}
-										else
-										{
-											offset = Math.Min(currentPoint.Z, offset);
-										}
 									}
 									break;
 							}
