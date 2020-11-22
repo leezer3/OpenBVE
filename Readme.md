@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/leezer3/OpenBVE.svg?branch=master)](https://travis-ci.org/leezer3/OpenBVE)
+[![Build Status](https://dev.azure.com/leezer3/OpenBVE/_apis/build/status/leezer3.OpenBVE?branchName=master)](https://dev.azure.com/leezer3/OpenBVE/_build/latest?definitionId=1&branchName=master)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/p4d983eclo738hjo?svg=true)](https://ci.appveyor.com/project/leezer3/openbve)
 
