@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Events;
@@ -190,7 +190,7 @@ namespace OpenBve
 							// doors not fully open at station - open doors
 							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 							{
-								TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+								AttemptToOpenDoors();
 							}
 						}
 						CurrentInterval = 1.0;
@@ -241,6 +241,7 @@ namespace OpenBve
 							// ready for departure - close doors
 							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 							{
+								doorOpenAttempted = false;
 								TrainManager.CloseTrainDoors(Train, true, true);
 							}
 						}
@@ -252,7 +253,7 @@ namespace OpenBve
 							// doors not fully open at station - open doors
 							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 							{
-								TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+								AttemptToOpenDoors();
 							}
 							CurrentInterval = 1.0;
 						}
@@ -261,6 +262,7 @@ namespace OpenBve
 							// not at station - close doors
 							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 							{
+								doorOpenAttempted = false;
 								TrainManager.CloseTrainDoors(Train, true, true);
 							}
 						}
@@ -271,7 +273,7 @@ namespace OpenBve
 					// arrived at station - open doors
 					if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 					{
-						TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+						AttemptToOpenDoors();
 					}
 					CurrentInterval = 1.0;
 				}
@@ -882,6 +884,25 @@ namespace OpenBve
 					}
 				}
 			}
+
+			private double doorWaitingTimer = 2.0;
+			private bool doorOpenAttempted = false;
+
+
+			/// <summary>Provides a simple random delay timer, so the driver does not appear to open the doors instantly</summary>
+			private void AttemptToOpenDoors()
+			{
+				if (doorOpenAttempted == false)
+				{
+					doorWaitingTimer = Program.RandomNumberGenerator.Next(0, 5);
+					doorOpenAttempted = true;
+				}
+				if (doorWaitingTimer < 0)
+				{
+					TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+				}
+				
+			}
 			public override void Trigger(double TimeElapsed)
 			{
 				if (TimeLastProcessed > Program.CurrentRoute.SecondsSinceMidnight)
@@ -890,6 +911,7 @@ namespace OpenBve
 				}
 				else if (Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{
+					doorWaitingTimer -= Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed;
 					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
 					if (Train.Plugin != null && Train.Plugin.SupportsAI)
 					{
