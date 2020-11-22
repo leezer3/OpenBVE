@@ -736,47 +736,48 @@ namespace MechanikRouteParser
 				Builder.Faces[fl].Vertices[i].Index = (ushort) i;
 				Builder.Faces[fl].Vertices[i].Normal = new Vector3();
 			}
+
 			double tc1 = sx, tc2 = sy;
 			if (horizontal)
 			{
-				tc1 = faceSize.X / (t.Width * sy * scaleFactor);
-				tc2 = faceSize.Z / (t.Height * sx * scaleFactor);
+				tc2 = frontSize.X / (t.Width * sy * scaleFactor);
+				tc1 = frontSize.Z / (t.Height * sx * scaleFactor);
+				firstPoint = 0;
 			}
 			else
 			{
-				if (faceSize.X == 0)
+				if (frontSize.X == 0)
 				{
-					tc1 = faceSize.Z / (t.Width * sx * scaleFactor);
-					tc2 = faceSize.Y / (t.Height * sy * scaleFactor);
+					tc1 = frontSize.Z / (t.Width * sx * scaleFactor);
+					tc2 = frontSize.Y / (t.Height * sy * scaleFactor);
 				}
-				else if (faceSize.Y == 0)
+				else if (frontSize.Y == 0)
 				{
 					//BUG: Not sure why this needs negating at the minute.....
-					tc1 = -(faceSize.X / (t.Width * sx * scaleFactor));
-					tc2 = faceSize.Z / (t.Height * sy * scaleFactor);
+					tc1 = frontSize.X / (t.Width * sx * scaleFactor);
+					tc2 = frontSize.Z / (t.Height * sy * scaleFactor);
+					firstPoint = 0;
 				}
-				else if (faceSize.Z == 0)
+				else if (frontSize.Z == 0)
 				{
-					tc1 = faceSize.X / (t.Width * sx * scaleFactor);
-					tc2 = faceSize.Y / (t.Height * sy * scaleFactor);
+					tc2 = frontSize.X / (t.Width * sx * scaleFactor);
+					tc1 = frontSize.Y / (t.Height * sy * scaleFactor);
+				}
+				else
+				{
+					tc1 = -tc1;
+					tc2 = -tc2;
 				}
 			}
 
+			if (t.Path.EndsWith("prz_wl.bmp", StringComparison.InvariantCultureIgnoreCase))
+			{
+				int test = 0;
+				test++;
+			}
 			/*
 			 * BUG: Not sure this is right, but it makes a bunch more stuff work OK
 			 */
-			double tc3 = 0, tc4 = 0;
-			if (Math.Abs(tc1) != tc1)
-			{
-				tc3 = tc1;
-				tc1 = 0;
-			}
-			if (Math.Abs(tc2) != tc2)
-			{
-				tc4 = tc2;
-				tc2 = 0;
-				firstPoint = 0;
-			}
 			for (int i = 0; i < Points.Count; i++)
 			{
 				if (firstPoint >= Points.Count)
@@ -786,16 +787,37 @@ namespace MechanikRouteParser
 				switch (i)
 				{
 					case 0:
-						Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc3, tc2);
+						if (!horizontal)
+						{
+							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc1, 0);
+						}
+						else
+						{
+							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc2, 0);
+						}
 						break;
 					case 1:
-						Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc3, tc4);
+						if (!horizontal)
+						{
+							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc1, tc2);
+						}
+						else
+						{
+							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc2, tc1);
+						}
 						break;
 					case 2:
-						Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc1, tc4);
+						if (!horizontal)
+						{
+							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(0, tc2);
+						}
+						else
+						{
+							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(0, tc1);
+						}
 						break;
 					case 3:
-						Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc1, tc2);
+						Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(0, 0);
 						break;
 				}
 				firstPoint++;
