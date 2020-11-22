@@ -10,16 +10,24 @@ namespace OpenBve
 		/// <summary>This class forms an AI representation of a simple human driver</summary>
 		internal class SimpleHumanDriverAI : GeneralAI
 		{
-			// members
+			/// <summary>The time last processed, in seconds since midnight</summary>
 			private double TimeLastProcessed;
+			/// <summary>The processing interval in seconds</summary>
 			private double CurrentInterval;
+			/// <summary>Whether the train is currently braking to a stop</summary>
 			private bool BrakeMode;
+			/// <summary>The current percentage of the limit the driver is aiming for</summary>
 			private double CurrentSpeedFactor;
+			/// <summary>A random base speed factor for the driver personality</summary>
+			/// <remarks>Controls the percentage of the speed limit the driver aims for</remarks>
 			private readonly double PersonalitySpeedFactor;
+			/// <summary>The last notch at which wheelslip was observed</summary>
 			private int PowerNotchAtWhichWheelSlipIsObserved;
+			/// <summary>The index of the last station the train called at</summary>
 			private int LastStation;
+			/// <summary>The AI speed limit (if set by routefile)</summary>
 			private readonly double SpeedLimit;
-
+			/// <summary>Holds a reference to the train the AI is driving</summary>
 			private readonly TrainManager.Train Train;
 			// functions
 			internal SimpleHumanDriverAI(TrainManager.Train train, double Limit)
@@ -41,6 +49,9 @@ namespace OpenBve
 				}
 				this.SpeedLimit = Limit;
 			}
+
+			/// <summary>Sets the response time for actions triggered by a runtime plugin</summary>
+			/// <returns>The response time</returns>
 			private AIResponse PerformPlugin()
 			{
 				AIResponse response = Train.Plugin.UpdateAI();
@@ -58,6 +69,8 @@ namespace OpenBve
 				}
 				return response;
 			}
+
+			/// <summary>Performs all default actions</summary>
 			private void PerformDefault()
 			{
 				if (Train.Derailed)
@@ -242,7 +255,7 @@ namespace OpenBve
 							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 							{
 								doorOpenAttempted = false;
-								TrainManager.CloseTrainDoors(Train, true, true);
+								Train.CloseDoors(true, true);
 							}
 						}
 						else if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)
@@ -263,7 +276,7 @@ namespace OpenBve
 							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 							{
 								doorOpenAttempted = false;
-								TrainManager.CloseTrainDoors(Train, true, true);
+								Train.CloseDoors(true, true);
 							}
 						}
 					}
@@ -885,7 +898,9 @@ namespace OpenBve
 				}
 			}
 
+			/// <summary>The timer unti the doors may be opened</summary>
 			private double doorWaitingTimer = 2.0;
+			/// <summary>Whether a door open has yet been attempted</summary>
 			private bool doorOpenAttempted = false;
 
 
@@ -899,7 +914,7 @@ namespace OpenBve
 				}
 				if (doorWaitingTimer < 0)
 				{
-					TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+					Train.OpenDoors(Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
 				}
 				
 			}

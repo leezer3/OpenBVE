@@ -160,7 +160,7 @@ namespace OpenBve
 				}
 
 				// update station and doors
-				UpdateTrainDoors(this, TimeElapsed);
+				UpdateTrainDoors(TimeElapsed);
 
 				// Update Run and Motor sounds
 				foreach (var Car in Cars)

@@ -522,7 +522,7 @@ namespace OpenBve
 				}
 				// update station and doors
 				UpdateTrainStation(this, TimeElapsed);
-				UpdateTrainDoors(this, TimeElapsed);
+				UpdateTrainDoors(TimeElapsed);
 				// delayed handles
 				if (Plugin == null)
 				{

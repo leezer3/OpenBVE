@@ -23,8 +23,8 @@ namespace OpenBve.Graphics.Renderers
 			{
 				return;
 			}
-			TrainManager.TrainDoorState LeftDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false);
-			TrainManager.TrainDoorState RightDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true);
+			TrainManager.TrainDoorState LeftDoors = TrainManager.PlayerTrain.GetDoorsState(true, false);
+			TrainManager.TrainDoorState RightDoors = TrainManager.PlayerTrain.GetDoorsState(false, true);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Command = Element.Subject.ToLowerInvariant();
 			// default

@@ -1462,19 +1462,19 @@ namespace OpenBve
 										{
 											return;
 										}
-										if ((TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false) &
+										if ((TrainManager.PlayerTrain.GetDoorsState(true, false) &
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 											{
-												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, true, false);
+												TrainManager.PlayerTrain.OpenDoors(true, false);
 											}
 										}
 										else
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorCloseMode != TrainManager.DoorMode.Automatic)
 											{
-												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, true, false);
+												TrainManager.PlayerTrain.CloseDoors(true, false);
 											}
 										}
 										if (TrainManager.PlayerTrain.Plugin != null)
@@ -1490,19 +1490,19 @@ namespace OpenBve
 										{
 											return;
 										}
-										if ((TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true) &
+										if ((TrainManager.PlayerTrain.GetDoorsState(false, true) &
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 											{
-												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, false, true);
+												TrainManager.PlayerTrain.OpenDoors(false, true);
 											}
 										}
 										else
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorCloseMode != TrainManager.DoorMode.Automatic)
 											{
-												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, false, true);
+												TrainManager.PlayerTrain.CloseDoors(false, true);
 											}
 										}
 										if (TrainManager.PlayerTrain.Plugin != null)

@@ -148,8 +148,8 @@ namespace OpenBve
 				}
 				Train.Handles.Reverser.Actual = Train.Handles.Reverser.Driver;
 
-				TrainManager.OpenTrainDoors(Train, OpenLeftDoors, OpenRightDoors);
-				TrainManager.CloseTrainDoors(Train, !OpenLeftDoors, !OpenRightDoors);
+				Train.OpenDoors(OpenLeftDoors, OpenRightDoors);
+				Train.CloseDoors(!OpenLeftDoors, !OpenRightDoors);
 
 				if (TimeElapsed != 0.0)
 				{

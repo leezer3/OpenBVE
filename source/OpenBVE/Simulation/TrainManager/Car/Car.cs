@@ -8,6 +8,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
@@ -251,6 +252,96 @@ namespace OpenBve
 				RearBogie.FrontAxle.Follower.UpdateAbsolute(RearAxle.Position + RearBogie.FrontAxle.Position, true, false);
 				RearBogie.RearAxle.Follower.UpdateAbsolute(RearAxle.Position + RearBogie.RearAxle.Position, true, false);
 				
+			}
+
+			public override void OpenDoors(bool Left, bool Right)
+			{
+				bool sl = false, sr = false;
+				if (Left & !Doors[0].AnticipatedOpen & (baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Left | baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				{
+					Doors[0].AnticipatedOpen = true;
+					sl = true;
+				}
+				if (Right & !Doors[1].AnticipatedOpen & (baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Right | baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				{
+					Doors[1].AnticipatedOpen = true;
+					sr = true;
+				}
+				if (sl)
+				{
+					SoundBuffer buffer = Doors[0].OpenSound.Buffer;
+					if (buffer != null)
+					{
+						OpenBveApi.Math.Vector3 pos = Doors[0].OpenSound.Position;
+						Program.Sounds.PlaySound(buffer, Specs.DoorOpenPitch, 1.0, pos, this, false);
+					}
+					for (int i = 0; i < Doors.Length; i++)
+					{
+						if (Doors[i].Direction == -1)
+						{
+							Doors[i].DoorLockDuration = 0.0;
+						}
+					}
+				}
+				if (sr)
+				{
+					SoundBuffer buffer = Doors[1].OpenSound.Buffer;
+					if (buffer != null)
+					{
+						OpenBveApi.Math.Vector3 pos = Doors[1].OpenSound.Position;
+						Program.Sounds.PlaySound(buffer, Specs.DoorOpenPitch, 1.0, pos, this, false);
+					}
+					for (int i = 0; i < Doors.Length; i++)
+					{
+						if (Doors[i].Direction == 1)
+						{
+							Doors[i].DoorLockDuration = 0.0;
+						}
+					}
+				}
+				for (int i = 0; i < Doors.Length; i++)
+				{
+					if (Doors[i].AnticipatedOpen)
+					{
+						Doors[i].NextReopenTime = 0.0;
+						Doors[i].ReopenCounter++;
+					}
+				}
+			}
+
+			/// <summary>Returns the combination of door states what encountered at the specified car in a train.</summary>
+			/// <param name="Left">Whether to include left doors.</param>
+			/// <param name="Right">Whether to include right doors.</param>
+			/// <returns>A bit mask combining encountered door states.</returns>
+			internal TrainDoorState GetDoorsState(bool Left, bool Right)
+			{
+				bool opened = false, closed = false, mixed = false;
+				for (int i = 0; i < Doors.Length; i++)
+				{
+					if (Left & Doors[i].Direction == -1 | Right & Doors[i].Direction == 1)
+					{
+						if (Doors[i].State == 0.0)
+						{
+							closed = true;
+						}
+						else if (Doors[i].State == 1.0)
+						{
+							opened = true;
+						}
+						else
+						{
+							mixed = true;
+						}
+					}
+				}
+				TrainDoorState Result = TrainDoorState.None;
+				if (opened) Result |= TrainDoorState.Opened;
+				if (closed) Result |= TrainDoorState.Closed;
+				if (mixed) Result |= TrainDoorState.Mixed;
+				if (opened & !closed & !mixed) Result |= TrainDoorState.AllOpened;
+				if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
+				if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
+				return Result;
 			}
 
 			internal void UpdateRunSounds(double TimeElapsed)
