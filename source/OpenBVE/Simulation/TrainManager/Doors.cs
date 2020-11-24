@@ -3,7 +3,7 @@ using SoundManager;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>A train door</summary>
 		internal struct Door

@@ -5,7 +5,9 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
+using TrainManager.BrakeSystems;
 using OpenBveApi.Trains;
+using TrainManager.Handles;
 
 namespace OpenBve {
 	internal static class TrainManager {
@@ -19,22 +21,6 @@ namespace OpenBve {
 			internal double State;
 		}
 		
-		internal enum CarBrakeType {
-			ElectromagneticStraightAirBrake = 0, //電磁直通
-			ElectricCommandBrake = 1, //電気指令式
-			AutomaticAirBrake = 2 //自動空気
-		}
-		internal enum EletropneumaticBrakeType {
-			None = 0,
-			ClosingElectromagneticValve = 1, //締切電磁弁
-			DelayFillingControl = 2 //遅れ込め制御
-		}
-		internal enum AirBrakeHandleState {
-			Invalid = -1,
-			Release = 0,
-			Lap = 1,
-			Service = 2,
-		}
 		internal struct AirBrakeHandle {
 			internal AirBrakeHandleState Driver;
 			internal AirBrakeHandleState Safety;
@@ -42,9 +28,8 @@ namespace OpenBve {
 			internal AirBrakeHandleState DelayedValue;
 			internal double DelayedTime;
 		}
-		internal enum AirBrakeType { Main, Auxillary }
 		internal struct CarAirBrake {
-			internal AirBrakeType Type;
+			internal BrakeType Type;
 			internal bool AirCompressorEnabled;
 			internal double AirCompressorMinimumPressure;
 			internal double AirCompressorMaximumPressure;
@@ -106,7 +91,7 @@ namespace OpenBve {
 			internal bool CurrentMotorBrake;
 			internal CarHoldBrake HoldBrake;
 			internal CarConstSpeed ConstSpeed;
-			internal CarBrakeType BrakeType;
+			internal BrakeSystemType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
 			internal CarAirBrake AirBrake;
 			internal Door[] Doors;

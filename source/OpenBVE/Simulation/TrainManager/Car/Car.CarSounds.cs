@@ -1,14 +1,15 @@
 ﻿using SoundManager;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The set of sounds attached to a car</summary>
 		internal struct CarSounds
 		{
-			internal MotorSound Motor;
+			internal BVEMotorSound Motor;
 			
 			internal CarSound Brake;
 			internal CarSound BreakerResume;

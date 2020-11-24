@@ -6,6 +6,7 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
+using TrainManager.Handles;
 
 namespace TrainEditor2.IO.Trains.TrainDat
 {
@@ -585,7 +586,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 4:
 										if (a >= 0 && a < 4)
 										{
-											train.Handle.HandleBehaviour = (Handle.EbHandleBehaviour)b;
+											train.Handle.HandleBehaviour = (EbHandleBehaviour)b;
 										}
 
 										break;
@@ -599,7 +600,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 6:
 										if (a <= 0 && a > 3)
 										{
-											train.Handle.LocoBrake = (Handle.LocoBrakeType)b;
+											train.Handle.LocoBrake = (LocoBrakeType)b;
 										}
 
 										break;

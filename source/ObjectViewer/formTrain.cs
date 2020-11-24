@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TrainManager.BrakeSystems;
 using OpenBveApi.Trains;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -56,7 +58,7 @@ namespace OpenBve
 				numericUpDownReverser.Value = TrainManager.Trains[0].Specs.CurrentReverser.Driver;
 				numericUpDownPowerNotch.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver;
 				numericUpDownPowerNotches.Value = TrainManager.Trains[0].Specs.MaximumPowerNotch;
-				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake;
+				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake;
 				if (checkBoxAirBrake.Checked)
 				{
 					numericUpDownBrakeNotch.Value = (int)TrainManager.Trains[0].Specs.AirBrake.Handle.Driver;
@@ -320,8 +322,8 @@ namespace OpenBve
 					TrainManager.Trains[0].Specs.MaximumPowerNotch = (int)numericUpDownPowerNotches.Value;
 					if (checkBoxAirBrake.Checked)
 					{
-						TrainManager.Trains[0].Cars[0].Specs.BrakeType = TrainManager.CarBrakeType.AutomaticAirBrake;
-						TrainManager.Trains[0].Specs.AirBrake.Handle.Driver = (TrainManager.AirBrakeHandleState)numericUpDownBrakeNotch.Value;
+						TrainManager.Trains[0].Cars[0].Specs.BrakeType = BrakeSystemType.AutomaticAirBrake;
+						TrainManager.Trains[0].Specs.AirBrake.Handle.Driver = (AirBrakeHandleState)numericUpDownBrakeNotch.Value;
 					}
 					else
 					{

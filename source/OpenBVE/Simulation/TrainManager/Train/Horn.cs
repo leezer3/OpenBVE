@@ -3,7 +3,7 @@ using SoundManager;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>Represents a horn or whistle</summary>
 		internal class Horn

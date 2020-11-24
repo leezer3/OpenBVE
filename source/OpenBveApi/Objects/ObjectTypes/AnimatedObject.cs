@@ -245,7 +245,12 @@ namespace OpenBveApi.Objects
 				if (si < 0 | si >= sn) si = -1;
 				if (s != si)
 				{
-					Initialize(si, Camera != null, Show);
+					ObjectType type = ObjectType.Dynamic;
+					if (Camera != null)
+					{
+						type = ObjectType.Overlay;
+					}
+					Initialize(si, type, Show);
 					s = si;
 				}
 			}

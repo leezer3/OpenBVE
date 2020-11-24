@@ -3,7 +3,7 @@ using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
 using LibRender2.Trains;
-using OpenBve.BrakeSystems;
+using TrainManager.BrakeSystems;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -12,10 +12,11 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
 		internal partial class Car : AbstractCar
@@ -57,7 +58,7 @@ namespace OpenBve
 			/// <summary>Whether loading sway is enabled for this car</summary>
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
-			private readonly Train baseTrain;
+			internal readonly Train baseTrain;
 
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
@@ -444,8 +445,8 @@ namespace OpenBve
 				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
 				for (int h = 0; h < 2; h++)
 				{
-					int j = h == 0 ? TrainManager.MotorSound.MotorP1 : TrainManager.MotorSound.MotorP2;
-					int k = h == 0 ? TrainManager.MotorSound.MotorB1 : TrainManager.MotorSound.MotorB2;
+					int j = h == 0 ? BVEMotorSound.MotorP1 : BVEMotorSound.MotorP2;
+					int k = h == 0 ? BVEMotorSound.MotorB1 : BVEMotorSound.MotorB2;
 					if (odir > 0 & ndir <= 0)
 					{
 						if (j < Sounds.Motor.Tables.Length)

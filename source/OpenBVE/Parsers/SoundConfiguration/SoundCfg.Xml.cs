@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Xml;
-using OpenBve.BrakeSystems;
+using TrainManager.BrakeSystems;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
@@ -555,7 +556,7 @@ namespace OpenBve
 		/// <param name="Tables">The motor sound tables to assign this node's contents to</param>
 		/// <param name="Position">The default sound position</param>
 		/// <param name="Radius">The default sound radius</param>
-		private static void ParseMotorSoundTableNode(XmlNode node, ref TrainManager.MotorSoundTable[] Tables, Vector3 Position, double Radius)
+		private static void ParseMotorSoundTableNode(XmlNode node, ref BVEMotorSoundTable[] Tables, Vector3 Position, double Radius)
 		{
 			foreach (XmlNode c in node.ChildNodes)
 			{

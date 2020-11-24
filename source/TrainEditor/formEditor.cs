@@ -5,6 +5,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
+using TrainManager.Handles;
 
 namespace TrainEditor {
 	public partial class formEditor : Form {
@@ -240,7 +241,7 @@ namespace TrainEditor {
 				numericUpDownDriverBrakeNotches.Focus();
 				return false;
 			}
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
 			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;
@@ -1735,12 +1736,12 @@ namespace TrainEditor {
 
 		private void comboBoxEBHandleBehaviour_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
 		}
 
 		private void comboBoxLocoBrakeType_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Train.Handle.LocoBrake = (TrainDat.Handle.LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
+			Train.Handle.LocoBrake = (LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
 		}
 
 		private void comboBoxLocoBrakeSystemType_SelectedIndexChanged(object sender, EventArgs e)

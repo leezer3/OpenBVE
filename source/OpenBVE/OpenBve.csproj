@@ -203,18 +203,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\AutomaticAirBrake.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\CarBrake.BrakeType.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\AirCompressor.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\BrakeCylinder.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\BrakePipe.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\Reservoirs.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\StraightAirPipe.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\ElectricCommandBrake.cs" />
     <Compile Include="Simulation\TrainManager\Brake\AirBrake\ElectromagneticStraightAirBrake.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\BrakeSystemType.cs" />
     <Compile Include="Simulation\TrainManager\Brake\CarBrake.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\ElectropnuematicBrakeType.cs" />
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\Coupler.cs" />
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
@@ -231,24 +221,12 @@
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
-    <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.States.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Eb.Behaviour.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Abstract.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Brake.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.EmergencyBrake.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.HoldBrake.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Power.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.Positions.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
     <Compile Include="Simulation\TrainManager\Train\Plugin.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems\StationAdjustAlarm.cs" />
@@ -386,7 +364,6 @@
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
     <EmbeddedResource Include="..\..\assets\Controls\Default.controls" />
     <None Include="OpenTK.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -441,6 +418,10 @@
       <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
       <Name>SoundManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TrainManager\TrainManager.csproj">
+      <Project>{d0fca2c5-ff75-42d8-ae80-310280a61fb1}</Project>
+      <Name>TrainManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -451,7 +432,9 @@
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Simulation\TrainManager\Brake\AirBrake\Components\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- AUTOMATICALLY TRANSLATE TEXT TEMPLATES -->
   <!-- Optionally make the import portable across VS versions -->

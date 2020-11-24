@@ -11,6 +11,7 @@ using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
+using TrainManager.Handles;
 
 namespace TrainEditor2.IO.IntermediateFile
 {
@@ -48,8 +49,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				PowerNotches = (int)parent.Element("PowerNotches"),
 				BrakeNotches = (int)parent.Element("BrakeNotches"),
 				PowerNotchReduceSteps = (int)parent.Element("PowerNotchReduceSteps"),
-				HandleBehaviour = (Handle.EbHandleBehaviour)Enum.Parse(typeof(Handle.EbHandleBehaviour), (string)parent.Element("EbHandleBehaviour")),
-				LocoBrake = (Handle.LocoBrakeType)Enum.Parse(typeof(Handle.LocoBrakeType), (string)parent.Element("LocoBrakeType")),
+				HandleBehaviour = (EbHandleBehaviour)Enum.Parse(typeof(EbHandleBehaviour), (string)parent.Element("EbHandleBehaviour")),
+				LocoBrake = (LocoBrakeType)Enum.Parse(typeof(LocoBrakeType), (string)parent.Element("LocoBrakeType")),
 				LocoBrakeNotches = (int)parent.Element("LocoBrakeNotches"),
 				DriverPowerNotches = (int)parent.Element("DriverPowerNotches"),
 				DriverBrakeNotches = (int)parent.Element("DriverBrakeNotches")

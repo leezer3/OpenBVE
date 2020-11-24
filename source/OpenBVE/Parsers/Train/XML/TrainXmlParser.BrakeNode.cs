@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using System.Xml;
 using OpenBveApi.Math;
-using OpenBve.BrakeSystems;
+using TrainManager.BrakeSystems;
 using OpenBveApi.Interface;
+using TrainManager.Handles;
 
 namespace OpenBve.Parsers.Train
 {
@@ -227,7 +228,7 @@ namespace OpenBve.Parsers.Train
 						break;
 				}
 			}
-			Train.Cars[Car].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is TrainManager.AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
+			Train.Cars[Car].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
 			Train.Cars[Car].CarBrake.airCompressor = new Compressor(compressorRate, Train.Cars[Car].CarBrake.mainReservoir, Train.Cars[Car]);
 			Train.Cars[Car].CarBrake.equalizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
 			Train.Cars[Car].CarBrake.equalizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;
@@ -239,7 +240,7 @@ namespace OpenBve.Parsers.Train
 				if (r > 1.0) r = 1.0;
 				Train.Cars[Car].CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakePipeNormalPressure, auxiliaryReservoirChargeRate, 0.5, r);
 			}
-			Train.Cars[Car].CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderServiceMaximumPressure, brakeCylinderEmergencyMaximumPressure, Train.Handles.Brake is TrainManager.AirBrakeHandle ? brakeCylinderEmergencyRate : 0.3 * brakeCylinderEmergencyRate, brakeCylinderEmergencyRate, brakeCylinderReleaseRate);
+			Train.Cars[Car].CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderServiceMaximumPressure, brakeCylinderEmergencyMaximumPressure, Train.Handles.Brake is AirBrakeHandle ? brakeCylinderEmergencyRate : 0.3 * brakeCylinderEmergencyRate, brakeCylinderEmergencyRate, brakeCylinderReleaseRate);
 			Train.Cars[Car].CarBrake.straightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
 		}
 	}

@@ -4,6 +4,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using RouteManager2.Stations;
+using TrainManager.Handles;
 
 namespace OpenBve {
 	internal static class PluginManager {
@@ -163,8 +164,8 @@ namespace OpenBve {
 				int reverser = (int)this.Train.Handles.Reverser.Driver;
 				int powerNotch = this.Train.Handles.Power.Driver;
 				int brakeNotch;
-				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
-					brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
+				if (this.Train.Handles.Brake is AirBrakeHandle) {
+					brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.Brake.Driver == (int)AirBrakeHandleState.Service ? 2 : this.Train.Handles.Brake.Driver == (int)AirBrakeHandleState.Lap ? 1 : 0;
 				} else {
 					if (this.Train.Handles.HasHoldBrake) {
 						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 2 : this.Train.Handles.Brake.Driver > 0 ? this.Train.Handles.Brake.Driver + 1 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
@@ -189,7 +190,7 @@ namespace OpenBve {
 				 */
 				if (handles.Reverser >= -1 & handles.Reverser <= 1) {
 					if (virtualHandles) {
-						this.Train.Handles.Reverser.Actual = (TrainManager.ReverserPosition)handles.Reverser;
+						this.Train.Handles.Reverser.Actual = (ReverserPosition)handles.Reverser;
 					} else {
 						this.Train.ApplyReverser(handles.Reverser, false);
 					}
@@ -221,34 +222,34 @@ namespace OpenBve {
 					this.Train.Handles.EmergencyBrake.Safety = false;
 					this.Train.Handles.HoldBrake.Actual = false;
 				}
-				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
+				if (this.Train.Handles.Brake is AirBrakeHandle) {
 					if (handles.BrakeNotch == 0) {
 						if (virtualHandles) {
-							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Release;
+							this.Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Release;
 						} else {
 							this.Train.UnapplyEmergencyBrake();
-							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+							this.Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 						}
 					} else if (handles.BrakeNotch == 1) {
 						if (virtualHandles) {
-							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Lap;
+							this.Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Lap;
 						} else {
 							this.Train.UnapplyEmergencyBrake();
-							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Lap);
+							this.Train.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
 						}
 					} else if (handles.BrakeNotch == 2) {
 						if (virtualHandles) {
-							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
+							this.Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Service;
 						} else {
 							this.Train.UnapplyEmergencyBrake();
-							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+							this.Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 						}
 					} else if (handles.BrakeNotch == 3) {
 						if (virtualHandles) {
-							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
+							this.Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Service;
 							this.Train.Handles.EmergencyBrake.Safety = true;
 						} else {
-							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+							this.Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 							this.Train.ApplyEmergencyBrake();
 						}
 					} else {
@@ -357,11 +358,11 @@ namespace OpenBve {
 			/// <summary>Called to update the brake notch. This invokes a call to SetBrake only if a change actually occured.</summary>
 			internal void UpdateBrake() {
 				int brakeNotch;
-				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
+				if (this.Train.Handles.Brake is AirBrakeHandle) {
 					if (this.Train.Handles.HasHoldBrake) {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 4 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 2 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
+						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 4 : this.Train.Handles.Brake.Driver == (int)AirBrakeHandleState.Service ? 3 : this.Train.Handles.Brake.Driver == (int)AirBrakeHandleState.Lap ? 2 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
 					} else {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
+						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.Brake.Driver == (int)AirBrakeHandleState.Service ? 2 : this.Train.Handles.Brake.Driver == (int)AirBrakeHandleState.Lap ? 1 : 0;
 					}
 				} else {
 					if (this.Train.Handles.HasHoldBrake) {

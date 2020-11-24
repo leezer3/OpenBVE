@@ -9,7 +9,7 @@ using SoundManager;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>Is called once a frame to update the station state for the given train</summary>
 		/// <param name="Train">The train</param>

@@ -1,7 +1,7 @@
 ﻿namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>Defines the differing types of readhesion device which may be fitted to a car</summary>
 		/// <remarks>See <see href="http://openbve-project.net/documentation/HTML/train_train_dat.html"/> for further details</remarks>

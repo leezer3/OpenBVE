@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using TrainManager.Handles;
 
 // ReSharper disable UnusedMember.Global
 
@@ -546,7 +547,7 @@ namespace OpenBve
             public static int brakeNotchLinear(TrainManager.Train Train)
             {
                 if (Train == null) return 0;
-                if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
+                if (Train.Handles.Brake is AirBrakeHandle)
                 {
                     if (Train.Handles.EmergencyBrake.Driver)
                     {
@@ -579,7 +580,7 @@ namespace OpenBve
             public static int brakeNotchesLinear(TrainManager.Train Train)
             {
                 if (Train == null) return 0;
-                if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
+                if (Train.Handles.Brake is AirBrakeHandle)
                 {
                     return 3;
                 }
@@ -605,7 +606,7 @@ namespace OpenBve
             public static bool hasAirBrake(TrainManager.Train Train)
             {
                 if (Train == null) return false;
-                return Train.Handles.Brake is TrainManager.AirBrakeHandle;
+                return Train.Handles.Brake is AirBrakeHandle;
             }
 
             /// <summary>Whether the hold brake is currently active for the selected train</summary>

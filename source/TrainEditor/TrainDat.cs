@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using TrainManager.Handles;
 
 namespace TrainEditor {
 	internal static class TrainDat {
@@ -137,20 +138,6 @@ namespace TrainEditor {
 			internal enum HandleTypes {
 				Separate = 0,
 				Combined = 1
-			}
-			internal enum EbHandleBehaviour
-			{
-				NoAction = 0,
-				PowerNeutral = 1,
-				ReverserNeutral = 2,
-				PowerReverserNeutral = 3
-			}
-
-			internal enum LocoBrakeType
-			{
-				Combined = 0,
-				Independant = 1, 
-				Blocking = 2
 			}
 			internal HandleTypes HandleType;
 			internal int PowerNotches;
@@ -598,13 +585,13 @@ namespace TrainEditor {
 										if (b >= 0) t.Handle.PowerNotchReduceSteps = b;
 										break;
 									case 4:
-										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
+										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (EbHandleBehaviour) b;
 										break;
 									case 5:
 										if (b > 0) t.Handle.LocoBrakeNotches = b;
 										break;
 									case 6:
-										if (a <= 0 && a > 3) t.Handle.LocoBrake = (Handle.LocoBrakeType) b;
+										if (a <= 0 && a > 3) t.Handle.LocoBrake = (LocoBrakeType) b;
 										break;
 									case 7:
 										if (b > 0) t.Handle.DriverPowerNotches = b;

@@ -2,7 +2,7 @@
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The passenger loading of a train at any given point in time</summary>
 		internal struct TrainPassengers

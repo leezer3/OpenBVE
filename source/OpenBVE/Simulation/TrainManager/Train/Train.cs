@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using LibRender2.Trains;
-using OpenBve.BrakeSystems;
+using TrainManager.BrakeSystems;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
@@ -17,11 +17,12 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using RouteManager2.MessageManager;
 using SoundManager;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train : AbstractTrain
@@ -210,7 +211,7 @@ namespace OpenBve
 					{
 						Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
 						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, this, DriverCar);
+						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Cars[DriverCar]);
 						Cars[DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
 						Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 					}
@@ -220,7 +221,7 @@ namespace OpenBve
 						if (System.IO.File.Exists(File))
 						{
 							Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, this);
+							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Cars[DriverCar]);
 							Cars[DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
 							Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 						}

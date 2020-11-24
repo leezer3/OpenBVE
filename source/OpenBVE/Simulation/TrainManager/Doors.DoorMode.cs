@@ -1,6 +1,6 @@
 ﻿namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The available modes for doors within a train</summary>
 		internal enum DoorMode

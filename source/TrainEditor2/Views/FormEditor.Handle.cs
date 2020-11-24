@@ -7,6 +7,7 @@ using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Trains;
+using TrainManager.Handles;
 
 namespace TrainEditor2.Views
 {
@@ -153,7 +154,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Handle.EbHandleBehaviour)z,
+					z => (EbHandleBehaviour)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxEbHandleBehaviour.SelectedIndexChanged += h,
@@ -169,7 +170,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Handle.LocoBrakeType)z,
+					z => (LocoBrakeType)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxLocoBrakeHandleType.SelectedIndexChanged += h,

@@ -6,7 +6,7 @@ using OpenBveApi.Trains;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>Represents a bogie fitted to a train car</summary>
 		internal class Bogie

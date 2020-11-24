@@ -4,7 +4,7 @@ using SoundManager;
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train

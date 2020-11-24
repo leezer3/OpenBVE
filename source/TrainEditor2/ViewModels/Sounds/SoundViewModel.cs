@@ -373,8 +373,8 @@ namespace TrainEditor2.ViewModels.Sounds
 			CompositeDisposable treeItemDisposable = new CompositeDisposable();
 			CompositeDisposable listItemDisposable = new CompositeDisposable();
 
-			TrainManager.RunSounds = sound.SoundElements.OfType<RunElement>().ToList();
-			TrainManager.MotorSounds = sound.SoundElements.OfType<MotorElement>().ToList();
+			Simulation.TrainManager.TrainManager.RunSounds = sound.SoundElements.OfType<RunElement>().ToList();
+			Simulation.TrainManager.TrainManager.MotorSounds = sound.SoundElements.OfType<MotorElement>().ToList();
 
 			sound.SoundElements
 				.ObserveAddChanged()
@@ -385,12 +385,12 @@ namespace TrainEditor2.ViewModels.Sounds
 
 					if (run != null)
 					{
-						TrainManager.RunSounds.Add(run);
+						Simulation.TrainManager.TrainManager.RunSounds.Add(run);
 					}
 
 					if (motor != null)
 					{
-						TrainManager.MotorSounds.Add(motor);
+						Simulation.TrainManager.TrainManager.MotorSounds.Add(motor);
 					}
 				})
 				.AddTo(disposable);
@@ -404,12 +404,12 @@ namespace TrainEditor2.ViewModels.Sounds
 
 					if (run != null)
 					{
-						TrainManager.RunSounds.Remove(run);
+						Simulation.TrainManager.TrainManager.RunSounds.Remove(run);
 					}
 
 					if (motor != null)
 					{
-						TrainManager.MotorSounds.Remove(motor);
+						Simulation.TrainManager.TrainManager.MotorSounds.Remove(motor);
 					}
 				})
 				.AddTo(disposable);

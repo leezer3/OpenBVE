@@ -3,6 +3,7 @@ using System.Linq;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
+using TrainManager.Motor;
 
 namespace TrainEditor2.Simulation.TrainManager
 {
@@ -97,8 +98,8 @@ namespace TrainEditor2.Simulation.TrainManager
 
 				for (int h = 0; h < 2; h++)
 				{
-					int j = h == 0 ? MotorSound.MotorP1 : MotorSound.MotorP2;
-					int k = h == 0 ? MotorSound.MotorB1 : MotorSound.MotorB2;
+					int j = h == 0 ? BVEMotorSound.MotorP1 : BVEMotorSound.MotorP2;
+					int k = h == 0 ? BVEMotorSound.MotorB1 : BVEMotorSound.MotorB2;
 
 					if (odir > 0 & ndir <= 0)
 					{

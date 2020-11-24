@@ -5,10 +5,13 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
+using TrainManager.BrakeSystems;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
+using TrainManager.Handles;
+using TrainManager.Power;
 
 namespace OpenBve {
 	using System;
@@ -23,29 +26,6 @@ namespace OpenBve {
 			internal int Direction;
 			internal double State;
 		}
-		internal struct AccelerationCurve {
-			internal double StageZeroAcceleration;
-			internal double StageOneSpeed;
-			internal double StageOneAcceleration;
-			internal double StageTwoSpeed;
-			internal double StageTwoExponent;
-		}
-		internal enum CarBrakeType {
-			ElectromagneticStraightAirBrake = 0,
-			ElectricCommandBrake = 1,
-			AutomaticAirBrake = 2
-		}
-		internal enum EletropneumaticBrakeType {
-			None = 0,
-			ClosingElectromagneticValve = 1,
-			DelayFillingControl = 2
-		}
-		internal enum AirBrakeHandleState {
-			Invalid = -1,
-			Release = 0,
-			Lap = 1,
-			Service = 2,
-		}
 		internal struct AirBrakeHandle {
 			internal AirBrakeHandleState Driver;
 			internal AirBrakeHandleState Security;
@@ -53,9 +33,8 @@ namespace OpenBve {
 			internal AirBrakeHandleState DelayedValue;
 			internal double DelayedTime;
 		}
-		internal enum AirBrakeType { Main, Auxillary }
 		internal struct CarAirBrake {
-			internal AirBrakeType Type;
+			internal BrakeType Type;
 			internal bool AirCompressorEnabled;
 			internal double AirCompressorMinimumPressure;
 			internal double AirCompressorMaximumPressure;
@@ -118,7 +97,7 @@ namespace OpenBve {
 			internal bool CurrentMotorBrake;
 			internal CarHoldBrake HoldBrake;
 			internal CarConstSpeed ConstSpeed;
-			internal CarBrakeType BrakeType;
+			internal BrakeSystemType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
 			internal CarAirBrake AirBrake;
 			internal Door[] Doors;
