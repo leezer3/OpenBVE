@@ -159,7 +159,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Texture", "Texture", "{8D21
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Train", "Train", "{F49789F2-97F3-45B3-BC85-F4E09C0D120D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainManager", "Source\TrainManager\TrainManager.csproj", "{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainManager", "source\TrainManager\TrainManager.csproj", "{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
