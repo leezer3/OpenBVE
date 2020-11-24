@@ -44,7 +44,7 @@ namespace RouteManager2.SignalManager
 				aoc.Objects[0].States = new ObjectState[AspectNumbers.Length];
 				for (int l = 0; l < AspectNumbers.Length; l++)
 				{
-					aoc.Objects[0].States[l] = new ObjectState { Prototype = (StaticObject)Objects[l].Clone() };
+					aoc.Objects[0].States[l] = new ObjectState((StaticObject)Objects[l].Clone());
 				}
 				CultureInfo Culture = CultureInfo.InvariantCulture;
 				string expr = "";

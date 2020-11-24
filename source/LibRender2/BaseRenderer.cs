@@ -472,7 +472,7 @@ namespace LibRender2
 		{
 			if (internalObject == null)
 			{
-				internalObject = new ObjectState { Prototype = new StaticObject(currentHost) };
+				internalObject = new ObjectState( new StaticObject(currentHost));
 			}
 
 			internalObject.Prototype.Dynamic = true;

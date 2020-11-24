@@ -557,10 +557,11 @@ namespace OpenBve
 				{
 					StaticObject s = (StaticObject)currentObject;
 					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
-					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost);
-					CarSections[j].Groups[0].Elements[0].States = new[] { new ObjectState() };
-					CarSections[j].Groups[0].Elements[0].States[0].Prototype = s;
-					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
+					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost)
+					{
+						States = new[] {new ObjectState(s)},
+						CurrentState = 0
+					};
 					Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
 				else if (currentObject is AnimatedObjectCollection)

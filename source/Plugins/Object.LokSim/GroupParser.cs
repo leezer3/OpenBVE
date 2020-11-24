@@ -318,10 +318,7 @@ namespace Plugin
 					{
 						Array.Resize(ref Result.Objects, Result.Objects.Length + 1);
 						AnimatedObject a = new AnimatedObject(Plugin.currentHost);
-						ObjectState aos = new ObjectState
-						{
-							Prototype = staticObject
-						};
+						ObjectState aos = new ObjectState(staticObject);
 						a.States = new [] { aos };
 						Result.Objects[Result.Objects.Length - 1] = a;
 					}

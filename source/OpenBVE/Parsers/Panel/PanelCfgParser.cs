@@ -1225,7 +1225,7 @@ namespace OpenBve {
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Prototype = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].CurrentState = 0;
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject = new ObjectState { Prototype = Object };
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject = new ObjectState(Object);
 				Program.CurrentHost.CreateDynamicObject(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject);
 				return n;
 			}

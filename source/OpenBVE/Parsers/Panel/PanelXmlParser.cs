@@ -1779,7 +1779,7 @@ namespace OpenBve.Parsers.Panel
 			Group.TouchElements[n].Element.States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
 			Group.TouchElements[n].Element.States[0].Prototype = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
-			Group.TouchElements[n].Element.internalObject = new ObjectState { Prototype = Object };
+			Group.TouchElements[n].Element.internalObject = new ObjectState(Object);
 			Program.CurrentHost.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
 			int m = Interface.CurrentControls.Length;
 			Array.Resize(ref Interface.CurrentControls, m + CommandEntries.Length);
