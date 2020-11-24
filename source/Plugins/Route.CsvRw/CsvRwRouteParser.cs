@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -89,14 +88,16 @@ namespace CsvRwRouteParser {
 				Data.Markers = new Marker[] {};
 				Data.RequestStops = new StopRequest[] { };
 				string PoleFolder = Path.CombineDirectory(CompatibilityFolder, "Poles");
-				Data.Structure.Poles = new PoleDictionary();
-				Data.Structure.Poles.Add(0, new ObjectDictionary());
+				Data.Structure.Poles = new PoleDictionary
+				{
+					{0, new ObjectDictionary()}, 
+					{1, new ObjectDictionary()},
+					{2, new ObjectDictionary()}, 
+					{3, new ObjectDictionary()}
+				};
 				Data.Structure.Poles[0].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_1.csv"), System.Text.Encoding.UTF8, false));
-				Data.Structure.Poles.Add(1, new ObjectDictionary());
 				Data.Structure.Poles[1].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_2.csv"), System.Text.Encoding.UTF8, false));
-				Data.Structure.Poles.Add(2, new ObjectDictionary());
 				Data.Structure.Poles[2].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_3.csv"), System.Text.Encoding.UTF8, false));
-				Data.Structure.Poles.Add(3, new ObjectDictionary());
 				Data.Structure.Poles[3].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_4.csv"), System.Text.Encoding.UTF8, false));
 				
 				Data.Structure.RailObjects = new ObjectDictionary();

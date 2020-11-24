@@ -923,6 +923,7 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override void Reverse()
 			{
 				double trackPosition = Cars[0].TrackPosition;

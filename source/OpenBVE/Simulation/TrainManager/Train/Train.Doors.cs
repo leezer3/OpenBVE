@@ -9,6 +9,7 @@ namespace OpenBve
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train
 		{
+			/// <inheritdoc/>
 			public override void OpenDoors(bool Left, bool Right)
 			{
 				bool sl = false, sr = false;
@@ -70,6 +71,7 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override void CloseDoors(bool Left, bool Right)
 			{
 				bool sl = false, sr = false;
