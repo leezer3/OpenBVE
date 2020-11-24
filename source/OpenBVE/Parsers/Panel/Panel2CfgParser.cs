@@ -295,7 +295,7 @@ namespace OpenBve {
 			{
 				GroupIndex++;
 				Array.Resize(ref Train.Cars[Car].CarSections[0].Groups, GroupIndex + 1);
-				Train.Cars[Car].CarSections[0].Groups[GroupIndex] = new ElementsGroup(true);
+				Train.Cars[Car].CarSections[0].Groups[GroupIndex] = new ElementsGroup(ObjectType.Overlay);
 			}
 
 			// parse lines for rest

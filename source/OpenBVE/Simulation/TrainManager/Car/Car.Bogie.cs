@@ -150,7 +150,7 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection(Program.Renderer, false);
+				CarSections[j] = new CarSection(Program.Renderer, ObjectType.Dynamic);
 				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
@@ -283,8 +283,7 @@ namespace OpenBve
 						Up.Rotate(d, cosa, sina);
 					}
 					// apply pitching
-					if (CurrentCarSection >= 0 &&
-						CarSections[CurrentCarSection].Groups[0].Overlay)
+					if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
 					{
 						double a = baseCar.Specs.CurrentPitchDueToAccelerationAngle;
 						double cosa = Math.Cos(a);

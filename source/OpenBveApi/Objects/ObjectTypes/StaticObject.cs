@@ -79,23 +79,8 @@ namespace OpenBveApi.Objects
 			for (int j = 0; j < Mesh.Materials.Length; j++)
 			{
 				Result.Mesh.Materials[j] = Mesh.Materials[j];
-				if (DaytimeTexture != null)
-				{
-					Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture;
-				}
-				else
-				{
-					Result.Mesh.Materials[j].DaytimeTexture = Mesh.Materials[j].DaytimeTexture;
-				}
-
-				if (NighttimeTexture != null)
-				{
-					Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture;
-				}
-				else
-				{
-					Result.Mesh.Materials[j].NighttimeTexture = Mesh.Materials[j].NighttimeTexture;
-				}
+				Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture != null ? DaytimeTexture : Mesh.Materials[j].DaytimeTexture;
+				Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture != null ? NighttimeTexture : Mesh.Materials[j].NighttimeTexture;
 			}
 
 			return Result;

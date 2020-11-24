@@ -88,7 +88,7 @@ namespace OpenBve
 			internal void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding)
 			{
 				Cars[DriverCar].CarSections = new CarSection[1];
-				Cars[DriverCar].CarSections[0] = new CarSection(Program.Renderer, true);
+				Cars[DriverCar].CarSections[0] = new CarSection(Program.Renderer, ObjectType.Overlay);
 				string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
 				if (!System.IO.File.Exists(File))
 				{

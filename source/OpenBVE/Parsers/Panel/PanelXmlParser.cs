@@ -406,7 +406,7 @@ namespace OpenBve.Parsers.Panel
 							if (n + 1 >= CarSection.Groups.Length)
 							{
 								Array.Resize(ref CarSection.Groups, n + 2);
-								CarSection.Groups[n + 1] = new ElementsGroup(true);
+								CarSection.Groups[n + 1] = new ElementsGroup(ObjectType.Overlay);
 							}
 
 							ParsePanelNode(SectionElement, FileName, TrainPath, Train, Car, ref CarSection, n + 1, Layer, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter.X, PanelCenter.Y, PanelOriginX, PanelOriginY);

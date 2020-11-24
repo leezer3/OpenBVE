@@ -551,7 +551,7 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection(Program.Renderer, false);
+				CarSections[j] = new CarSection(Program.Renderer, ObjectType.Dynamic);
 				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
@@ -768,7 +768,7 @@ namespace OpenBve
 			private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
+				if (CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -803,7 +803,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
+				CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay ? Program.Renderer.Camera : null);
 				if (!Program.Renderer.ForceLegacyOpenGL && CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
 				{
 					VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, Program.Renderer.DefaultShader.VertexLayout, Program.Renderer);
@@ -813,7 +813,7 @@ namespace OpenBve
 			private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
+				if (CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -848,7 +848,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
+				CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay ? Program.Renderer.Camera : null);
 				if (!Program.Renderer.ForceLegacyOpenGL && CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
 				{
 					VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, Program.Renderer.DefaultShader.VertexLayout, Program.Renderer);
@@ -1106,7 +1106,7 @@ namespace OpenBve
 					Up.Rotate(d, cosa, sina);
 				}
 				// apply pitching
-				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Overlay)
+				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
 				{
 					double a = Specs.CurrentPitchDueToAccelerationAngle;
 					double cosa = Math.Cos(a);
