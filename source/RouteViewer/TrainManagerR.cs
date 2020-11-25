@@ -11,6 +11,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 
 namespace OpenBve {
@@ -118,28 +119,8 @@ namespace OpenBve {
 			internal bool Loop;
 		}
 		
-		internal struct MotorSoundTableEntry {
-			internal int SoundBufferIndex;
-			internal float Pitch;
-			internal float Gain;
-		}
-		internal struct MotorSoundTable {
-			internal MotorSoundTableEntry[] Entries;
-			internal int SoundBufferIndex;
-			internal int SoundSourceIndex;
-		}
-		internal struct MotorSound {
-			internal MotorSoundTable[] Tables;
-			internal Vector3 Position;
-			internal double SpeedConversionFactor;
-			internal int SpeedDirection;
-			internal const int MotorP1 = 0;
-			internal const int MotorP2 = 1;
-			internal const int MotorB1 = 2;
-			internal const int MotorB2 = 3;
-		}
 		internal struct CarSounds {
-			internal MotorSound Motor;
+			internal BVEMotorSound Motor;
 			internal CarSound Adjust;
 			internal CarSound Air;
 			internal CarSound AirHigh;
@@ -233,10 +214,6 @@ namespace OpenBve {
 		}
 
 		// train
-		internal struct HandleChange {
-			internal int Value;
-			internal double Time;
-		}
 		internal struct PowerHandle {
 			internal int Driver;
 			internal int Security;
@@ -302,11 +279,6 @@ namespace OpenBve {
 		}
 		
 		// train specs
-		internal enum PassAlarmType {
-			None = 0,
-			Single = 1,
-			Loop = 2
-		}
 		internal struct TrainAirBrake {
 			internal AirBrakeHandle Handle;
 		}

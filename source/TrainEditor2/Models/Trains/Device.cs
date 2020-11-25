@@ -1,5 +1,6 @@
 ﻿using System;
 using Prism.Mvvm;
+using TrainManager.SafetySystems;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -31,13 +32,6 @@ namespace TrainEditor2.Models.Trains
 			TypeD = 3
 		}
 
-		internal enum PassAlarmModes
-		{
-			None = 0,
-			Single = 1,
-			Looping = 2
-		}
-
 		internal enum DoorModes
 		{
 			SemiAutomatic = 0,
@@ -52,7 +46,7 @@ namespace TrainEditor2.Models.Trains
 		private bool holdBrake;
 		private ReAdhesionDevices reAdhesionDevice;
 		private double loadCompensatingDevice;
-		private PassAlarmModes passAlarm;
+		private PassAlarmType passAlarm;
 		private DoorModes doorOpenMode;
 		private DoorModes doorCloseMode;
 		private double doorWidth;
@@ -142,7 +136,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal PassAlarmModes PassAlarm
+		internal PassAlarmType PassAlarm
 		{
 			get
 			{
@@ -211,7 +205,7 @@ namespace TrainEditor2.Models.Trains
 			HoldBrake = false;
 			ReAdhesionDevice = ReAdhesionDevices.TypeA;
 			LoadCompensatingDevice = 0.0;
-			PassAlarm = PassAlarmModes.None;
+			PassAlarm = PassAlarmType.None;
 			DoorOpenMode = DoorModes.SemiAutomatic;
 			DoorCloseMode = DoorModes.SemiAutomatic;
 			DoorWidth = 1000.0;

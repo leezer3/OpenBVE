@@ -8,6 +8,7 @@
 using TrainManager.BrakeSystems;
 using OpenBveApi.Trains;
 using TrainManager.Handles;
+using TrainManager.SafetySystems;
 
 namespace OpenBve {
 	internal static class TrainManager {
@@ -123,10 +124,6 @@ namespace OpenBve {
 		}
 
 		// train
-		internal struct HandleChange {
-			internal int Value;
-			internal double Time;
-		}
 		internal struct PowerHandle {
 			internal int Driver;
 			internal int Safety;
@@ -206,11 +203,6 @@ namespace OpenBve {
 			internal Eb Eb;
 		}
 		// train specs
-		internal enum PassAlarmType {
-			None = 0,
-			Single = 1,
-			Loop = 2
-		}
 		internal struct TrainAirBrake {
 			internal AirBrakeHandle Handle;
 		}

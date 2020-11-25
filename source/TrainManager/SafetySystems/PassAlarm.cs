@@ -1,19 +1,22 @@
 ﻿using OpenBveApi.Trains;
 using SoundManager;
 
-namespace OpenBve.SafetySystems
+namespace TrainManager.SafetySystems
 {
-	internal class PassAlarm
+	public class PassAlarm
 	{
 		/// <summary>Holds the reference to the base train's driver car</summary>
 		private readonly AbstractCar baseCar;
 		/// <summary>The type of pass alarm</summary>
 		private readonly PassAlarmType Type;
 		/// <summary>The sound played when this alarm is triggered</summary>
-		internal CarSound Sound;
+		public CarSound Sound;
 		/// <summary>Whether the pass alarm light is currently lit</summary>
-		internal bool Lit;
+		public bool Lit;
 
+		/// <summary>Creates a new PassAlarm</summary>
+		/// <param name="type">The type of PassAlarm</param>
+		/// <param name="Car">A reference to the base car</param>
 		public PassAlarm(PassAlarmType type, AbstractCar Car)
 		{
 			this.baseCar = Car;
@@ -21,12 +24,13 @@ namespace OpenBve.SafetySystems
 			this.Sound = new CarSound();
 			this.Lit = false;
 		}
+
 		/// <summary>Triggers the pass alarm</summary>
-		internal void Trigger()
+		public void Trigger()
 		{
 			Lit = true;
 			SoundBuffer buffer = Sound.Buffer;
-			if (Program.Sounds.IsPlaying(Sound.Source))
+			if (TrainManagerBase.currentHost.SoundIsPlaying(Sound.Source))
 			{
 				return;
 			}
@@ -35,16 +39,16 @@ namespace OpenBve.SafetySystems
 				switch (Type)
 				{
 					case PassAlarmType.Single:
-						Sound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseCar, false);
+						Sound.Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseCar, false);
 						break;
 					case PassAlarmType.Loop:
-						Sound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseCar, true);
+						Sound.Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseCar, true);
 						break;
 				}
 			}
 		}
 		/// <summary>Halts the pass alarm</summary>
-		internal void Halt()
+		public void Halt()
 		{
 			Lit = false;
 			if (Sound != null)
@@ -54,7 +58,7 @@ namespace OpenBve.SafetySystems
 		}
 	}
 	/// <summary>Defines the differing types of station pass alarm a train may be fitted with</summary>
-	internal enum PassAlarmType
+	public enum PassAlarmType
 	{
 		/// <summary>No pass alarm</summary>
 		None = 0,

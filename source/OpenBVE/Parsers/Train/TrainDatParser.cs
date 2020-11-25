@@ -9,9 +9,11 @@ using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
 using TrainManager.Motor;
+using TrainManager.SafetySystems;
 
 namespace OpenBve {
 	internal static partial class TrainDatParser {
@@ -150,7 +152,7 @@ namespace OpenBve {
 			bool FrontCarIsMotorCar = true;
 			double DoorWidth = 1000.0;
 			double DoorTolerance = 0.0;
-			TrainManager.ReadhesionDeviceType ReAdhesionDevice = TrainManager.ReadhesionDeviceType.TypeA;
+			ReadhesionDeviceType ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 			PassAlarmType passAlarm = PassAlarmType.None;
 			Train.Handles.EmergencyBrake = new EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
@@ -711,11 +713,11 @@ namespace OpenBve {
 										int dt = (int) Math.Round(a);
 										if (dt < 4 && dt > -1)
 										{
-											ReAdhesionDevice = (TrainManager.ReadhesionDeviceType)dt;
+											ReAdhesionDevice = (ReadhesionDeviceType)dt;
 										}
 										else
 										{
-											ReAdhesionDevice = TrainManager.ReadhesionDeviceType.NotFitted;
+											ReAdhesionDevice = ReadhesionDeviceType.NotFitted;
 											Interface.AddMessage(MessageType.Error, false, "ReAdhesionDeviceType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;

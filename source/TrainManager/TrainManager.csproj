@@ -54,6 +54,7 @@
     <Compile Include="Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Brake\CarBrake.cs" />
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
+    <Compile Include="Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Handles\AbstractHandle.cs" />
     <Compile Include="Handles\HandleChange.cs" />
     <Compile Include="Handles\Handles.AirBrake.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="TrainManager.cs" />
   </ItemGroup>
   <ItemGroup>

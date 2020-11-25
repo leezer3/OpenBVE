@@ -210,7 +210,6 @@
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems\PilotLamp.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
-    <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Simulation\TrainManager\Doors.DoorMode.cs" />
     <Compile Include="Simulation\TrainManager\DriverBody.cs" />
     <Compile Include="Simulation\TrainManager\Motor\AccelerationCurve.cs" />
@@ -231,7 +230,6 @@
     <Compile Include="Simulation\TrainManager\Train\SafetySystems.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
-    <Compile Include="Simulation\TrainManager\Train\SafetySystems\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Doors.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />

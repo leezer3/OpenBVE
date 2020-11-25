@@ -6,7 +6,9 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
+using TrainManager.BrakeSystems;
 using TrainManager.Handles;
+using TrainManager.SafetySystems;
 
 namespace TrainEditor2.IO.Trains.TrainDat
 {
@@ -453,14 +455,14 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (b >= 0 & b <= 2)
 										{
-											brake.BrakeType = (Brake.BrakeTypes)b;
+											brake.BrakeType = (BrakeSystemType)b;
 										}
 
 										break;
 									case 1:
 										if (b >= 0 & b <= 2)
 										{
-											brake.BrakeControlSystem = (Brake.BrakeControlSystems)b;
+											brake.BrakeControlSystem = (EletropneumaticBrakeType)b;
 										}
 
 										break;
@@ -800,7 +802,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 7:
 										if (b >= 0 & b <= 2)
 										{
-											train.Device.PassAlarm = (Device.PassAlarmModes)b;
+											train.Device.PassAlarm = (PassAlarmType)b;
 										}
 
 										break;

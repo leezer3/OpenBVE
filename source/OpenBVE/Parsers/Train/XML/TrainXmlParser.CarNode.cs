@@ -11,6 +11,7 @@ using OpenBve.Parsers.Panel;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using TrainManager.Car;
 using TrainManager.Power;
 
 namespace OpenBve.Parsers.Train
@@ -20,7 +21,7 @@ namespace OpenBve.Parsers.Train
 		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
 		{
 			string interiorFile = string.Empty;
-			TrainManager.ReadhesionDeviceType readhesionDevice = Train.Cars[0].Specs.ReAdhesionDevice.DeviceType;
+			ReadhesionDeviceType readhesionDevice = Train.Cars[0].Specs.ReAdhesionDevice.DeviceType;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
@@ -325,22 +326,22 @@ namespace OpenBve.Parsers.Train
 						{
 							case "typea":
 							case "a":
-								readhesionDevice = TrainManager.ReadhesionDeviceType.TypeA;
+								readhesionDevice = ReadhesionDeviceType.TypeA;
 								break;
 							case "typeb":
 							case "b":
-								readhesionDevice = TrainManager.ReadhesionDeviceType.TypeB;
+								readhesionDevice = ReadhesionDeviceType.TypeB;
 								break;
 							case "typec":
 							case "c":
-								readhesionDevice = TrainManager.ReadhesionDeviceType.TypeC;
+								readhesionDevice = ReadhesionDeviceType.TypeC;
 								break;
 							case "typed":
 							case "d":
-								readhesionDevice = TrainManager.ReadhesionDeviceType.TypeD;
+								readhesionDevice = ReadhesionDeviceType.TypeD;
 								break;
 							default:
-								readhesionDevice = TrainManager.ReadhesionDeviceType.NotFitted;
+								readhesionDevice = ReadhesionDeviceType.NotFitted;
 								break;
 						}
 						break;
