@@ -5,8 +5,9 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using TrainManager.BrakeSystems;
 using OpenBveApi.Trains;
+using TrainManager.BrakeSystems;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.SafetySystems;
 
@@ -17,11 +18,6 @@ namespace OpenBve {
 #pragma warning disable 0649
 
 		// cars
-		internal struct Door {
-			internal int Direction;
-			internal double State;
-		}
-		
 		internal struct AirBrakeHandle {
 			internal AirBrakeHandleState Driver;
 			internal AirBrakeHandleState Safety;
@@ -166,41 +162,9 @@ namespace OpenBve {
 			AtsP = 2,
 			Atc = 3
 		}
-		internal struct Ats {
-			internal double Time;
-			internal bool AtsPAvailable;
-			internal double AtsPDistance;
-			internal double AtsPTemporarySpeed;
-			internal double AtsPPermanentSpeed;
-			internal bool AtsPOverride;
-			internal double AtsPOverrideTime;
-		}
-		internal struct Atc {
-			internal bool Available;
-			internal bool Transmitting;
-			internal bool AutomaticSwitch;
-			internal double SpeedRestriction;
-		}
-		internal struct Eb {
-			internal bool Available;
-			internal SafetyState BellState;
-			internal double Time;
-			internal bool Reset;
-		}
-		internal struct TrainPendingTransponder {
-			internal bool SwitchSubsystem;
-			internal int OptionalInteger;
-			internal double OptionalFloat;
-			internal int SectionIndex;
-		}
+
 		internal struct TrainSafety {
 			internal SafetySystem Mode;
-			internal SafetySystem ModeChange;
-			internal SafetyState State;
-			internal TrainPendingTransponder[] PendingTransponders;
-			internal Ats Ats;
-			internal Atc Atc;
-			internal Eb Eb;
 		}
 		// train specs
 		internal struct TrainAirBrake {

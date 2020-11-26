@@ -5,11 +5,12 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using TrainManager.BrakeSystems;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
+using TrainManager.BrakeSystems;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Power;
@@ -23,10 +24,6 @@ namespace OpenBve {
 #pragma warning disable 0649
 		
 		// cars
-		internal struct Door {
-			internal int Direction;
-			internal double State;
-		}
 		internal struct AirBrakeHandle {
 			internal AirBrakeHandleState Driver;
 			internal AirBrakeHandleState Security;
@@ -212,72 +209,6 @@ namespace OpenBve {
 				}
 			}
 		}
-
-		// train
-		internal struct PowerHandle {
-			internal int Driver;
-			internal int Security;
-			internal int Actual;
-			internal HandleChange[] DelayedChanges;
-		}
-		internal struct BrakeHandle {
-			internal int Driver;
-			internal int Security;
-			internal int Actual;
-			internal HandleChange[] DelayedChanges;
-		}
-		internal struct EmergencyHandle {
-			internal bool Driver;
-			internal bool Security;
-			internal bool Actual;
-			internal double ApplicationTime;
-		}
-		internal struct ReverserHandle {
-			internal int Driver;
-			internal int Actual;
-		}
-		internal struct HoldBrakeHandle {
-			internal bool Driver;
-			internal bool Actual;
-		}
-		// train security
-		internal enum SafetyState {
-			Normal = 0,
-			Initialization = 1,
-			Ringing = 2,
-			Emergency = 3,
-			Pattern = 4,
-			Service = 5
-		}
-		internal enum SafetySystem {
-			Plugin = -1,
-			None = 0,
-			AtsSn = 1,
-			AtsP = 2,
-			Atc = 3
-		}
-		internal struct Ats {
-			internal double Time;
-			internal bool AtsPAvailable;
-			internal double AtsPDistance;
-			internal double AtsPTemporarySpeed;
-			internal double AtsPPermanentSpeed;
-			internal bool AtsPOverride;
-			internal double AtsPOverrideTime;
-		}
-		internal struct Atc {
-			internal bool Available;
-			internal bool Transmitting;
-			internal bool AutomaticSwitch;
-			internal double SpeedRestriction;
-		}
-		internal struct Eb {
-			internal bool Available;
-			internal SafetyState BellState;
-			internal double Time;
-			internal bool Reset;
-		}
-		
 		// train specs
 		internal struct TrainAirBrake {
 			internal AirBrakeHandle Handle;

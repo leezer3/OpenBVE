@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Runtime;
 using SoundManager;
+using TrainManager.Car;
 
 namespace OpenBve
 {

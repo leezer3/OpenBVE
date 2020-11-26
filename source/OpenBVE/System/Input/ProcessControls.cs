@@ -14,6 +14,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using RouteManager2.MessageManager;
 using TrainManager.Handles;
+using TrainManager.Car;
 
 namespace OpenBve
 {
@@ -1464,16 +1465,16 @@ namespace OpenBve
 											return;
 										}
 										if ((TrainManager.PlayerTrain.GetDoorsState(true, false) &
-											 TrainManager.TrainDoorState.Opened) == 0)
+											 TrainDoorState.Opened) == 0)
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != DoorMode.Automatic)
 											{
 												TrainManager.PlayerTrain.OpenDoors(true, false);
 											}
 										}
 										else
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorCloseMode != TrainManager.DoorMode.Automatic)
+											if (TrainManager.PlayerTrain.Specs.DoorCloseMode != DoorMode.Automatic)
 											{
 												TrainManager.PlayerTrain.CloseDoors(true, false);
 											}
@@ -1492,16 +1493,16 @@ namespace OpenBve
 											return;
 										}
 										if ((TrainManager.PlayerTrain.GetDoorsState(false, true) &
-											 TrainManager.TrainDoorState.Opened) == 0)
+											 TrainDoorState.Opened) == 0)
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != DoorMode.Automatic)
 											{
 												TrainManager.PlayerTrain.OpenDoors(false, true);
 											}
 										}
 										else
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorCloseMode != TrainManager.DoorMode.Automatic)
+											if (TrainManager.PlayerTrain.Specs.DoorCloseMode != DoorMode.Automatic)
 											{
 												TrainManager.PlayerTrain.CloseDoors(false, true);
 											}

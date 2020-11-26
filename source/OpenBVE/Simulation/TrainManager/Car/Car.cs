@@ -12,6 +12,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
+using TrainManager.Car;
 using TrainManager.Motor;
 
 namespace OpenBve

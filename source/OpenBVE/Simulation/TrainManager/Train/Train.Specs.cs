@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Runtime;
+﻿using TrainManager.Car;
+using TrainManager.SafetySystems;
 
 namespace OpenBve
 {

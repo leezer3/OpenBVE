@@ -689,20 +689,20 @@ namespace OpenBve {
 								switch (n) {
 									case 0:
 										if (a == 0.0) {
-											Train.Specs.DefaultSafetySystems |= TrainManager.DefaultSafetySystems.AtsSn;
+											Train.Specs.DefaultSafetySystems |= DefaultSafetySystems.AtsSn;
 										} else if (a == 1.0) {
-											Train.Specs.DefaultSafetySystems |= TrainManager.DefaultSafetySystems.AtsSn;
-											Train.Specs.DefaultSafetySystems |= TrainManager.DefaultSafetySystems.AtsP;
+											Train.Specs.DefaultSafetySystems |= DefaultSafetySystems.AtsSn;
+											Train.Specs.DefaultSafetySystems |= DefaultSafetySystems.AtsP;
 										}
 										break;
 									case 1:
 										if (a == 1.0 | a == 2.0) {
-											Train.Specs.DefaultSafetySystems |= TrainManager.DefaultSafetySystems.Atc;
+											Train.Specs.DefaultSafetySystems |= DefaultSafetySystems.Atc;
 										}
 										break;
 									case 2:
 										if (a == 1.0) {
-											Train.Specs.DefaultSafetySystems |= TrainManager.DefaultSafetySystems.Eb;
+											Train.Specs.DefaultSafetySystems |= DefaultSafetySystems.Eb;
 										}
 										break;
 									case 3:
@@ -734,7 +734,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.Specs.DoorOpenMode = (TrainManager.DoorMode)b;
+												Train.Specs.DoorOpenMode = (DoorMode)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "DoorOpenMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
@@ -743,7 +743,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.Specs.DoorCloseMode = (TrainManager.DoorMode)b;
+												Train.Specs.DoorCloseMode = (DoorMode)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "DoorCloseMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;

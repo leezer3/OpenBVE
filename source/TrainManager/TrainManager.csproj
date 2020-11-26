@@ -54,6 +54,9 @@
     <Compile Include="Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Brake\CarBrake.cs" />
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
+    <Compile Include="Car\Door.cs" />
+    <Compile Include="Car\Door.DoorModes.cs" />
+    <Compile Include="Car\Door.TrainDoorState.cs" />
     <Compile Include="Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Handles\AbstractHandle.cs" />
     <Compile Include="Handles\HandleChange.cs" />
@@ -73,7 +76,9 @@
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafetySystems\DefaultSafetySystems.cs" />
     <Compile Include="SafetySystems\PassAlarm.cs" />
+    <Compile Include="SafetySystems\PilotLamp.cs" />
     <Compile Include="TrainManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +94,8 @@
       <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Train\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

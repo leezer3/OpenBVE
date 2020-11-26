@@ -1,6 +1,7 @@
 ﻿using System;
 using LibRender2.Texts;
 using OpenBveApi.Interface;
+using TrainManager.SafetySystems;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -102,10 +103,10 @@ namespace OpenBve.Graphics.Renderers
 	        /// <summary>Initialises the ATS lamps for the specified train using one of the default safety systems</summary>
 	        internal LampCollection(TrainManager.Train Train)
 	        {
-		        bool atsSn = (Train.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.AtsSn) != 0;
-		        bool atsP = (Train.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.AtsP) != 0;
-		        bool atc = (Train.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.Atc) != 0;
-		        bool eb = (Train.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.Eb) != 0;
+		        bool atsSn = (Train.Specs.DefaultSafetySystems & DefaultSafetySystems.AtsSn) != 0;
+		        bool atsP = (Train.Specs.DefaultSafetySystems & DefaultSafetySystems.AtsP) != 0;
+		        bool atc = (Train.Specs.DefaultSafetySystems & DefaultSafetySystems.Atc) != 0;
+		        bool eb = (Train.Specs.DefaultSafetySystems & DefaultSafetySystems.Eb) != 0;
 		        Width = 0.0f;
 		        Lamps = new Lamp[17];
 		        int Count;

@@ -6,6 +6,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
 using SoundManager;
+using TrainManager.Car;
 
 namespace OpenBve
 {
