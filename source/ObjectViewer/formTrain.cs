@@ -56,7 +56,7 @@ namespace OpenBve
 				checkBoxLeftTarget.Checked = TrainManager.Trains[0].Cars[0].Specs.AnticipatedLeftDoorsOpened;
 				checkBoxRightTarget.Checked = TrainManager.Trains[0].Cars[0].Specs.AnticipatedRightDoorsOpened;
 
-				numericUpDownReverser.Value = TrainManager.Trains[0].Specs.CurrentReverser.Driver;
+				numericUpDownReverser.Value = (decimal)TrainManager.Trains[0].Specs.CurrentReverser.Driver;
 				numericUpDownPowerNotch.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver;
 				numericUpDownPowerNotches.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.MaximumNotch;
 				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake;
@@ -317,8 +317,8 @@ namespace OpenBve
 						TrainManager.Trains[0].Cars[i].Specs.AnticipatedRightDoorsOpened = checkBoxRightTarget.Checked;
 					}
 
-					TrainManager.Trains[0].Specs.CurrentReverser.Driver = (int)numericUpDownReverser.Value;
-					TrainManager.Trains[0].Specs.CurrentReverser.Actual = (int)numericUpDownReverser.Value;
+					TrainManager.Trains[0].Specs.CurrentReverser.Driver = (ReverserPosition)numericUpDownReverser.Value;
+					TrainManager.Trains[0].Specs.CurrentReverser.Actual = (ReverserPosition)numericUpDownReverser.Value;
 					if ((int)numericUpDownPowerNotches.Value != TrainManager.Trains[0].Specs.CurrentPowerNotch.MaximumNotch)
 					{
 						TrainManager.Trains[0].Specs.CurrentPowerNotch = new PowerHandle((int)numericUpDownPowerNotches.Value, (int)numericUpDownPowerNotches.Value, new double[] {}, new double[] {});
