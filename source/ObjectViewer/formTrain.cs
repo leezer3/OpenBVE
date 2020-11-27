@@ -58,11 +58,11 @@ namespace OpenBve
 
 				numericUpDownReverser.Value = TrainManager.Trains[0].Specs.CurrentReverser.Driver;
 				numericUpDownPowerNotch.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver;
-				numericUpDownPowerNotches.Value = TrainManager.Trains[0].Specs.MaximumPowerNotch;
+				numericUpDownPowerNotches.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.MaximumNotch;
 				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake;
 				if (checkBoxAirBrake.Checked)
 				{
-					numericUpDownBrakeNotch.Value = (int)TrainManager.Trains[0].Specs.AirBrake.Handle.Driver;
+					numericUpDownBrakeNotch.Value = (int)TrainManager.Trains[0].Specs.AirBrake.Driver;
 					numericUpDownBrakeNotch.Maximum = 2;
 					numericUpDownBrakeNotches.Value = 2;
 					numericUpDownBrakeNotches.Enabled = false;
@@ -71,7 +71,7 @@ namespace OpenBve
 				else
 				{
 					numericUpDownBrakeNotch.Value = TrainManager.Trains[0].Specs.CurrentBrakeNotch.Driver;
-					numericUpDownBrakeNotches.Value = TrainManager.Trains[0].Specs.MaximumBrakeNotch;
+					numericUpDownBrakeNotches.Value = TrainManager.Trains[0].Specs.CurrentBrakeNotch.MaximumNotch;
 					checkBoxHoldBrake.Checked = TrainManager.Trains[0].Specs.HasHoldBrake;
 					if (checkBoxHoldBrake.Checked)
 					{
@@ -319,17 +319,23 @@ namespace OpenBve
 
 					TrainManager.Trains[0].Specs.CurrentReverser.Driver = (int)numericUpDownReverser.Value;
 					TrainManager.Trains[0].Specs.CurrentReverser.Actual = (int)numericUpDownReverser.Value;
+					if ((int)numericUpDownPowerNotches.Value != TrainManager.Trains[0].Specs.CurrentPowerNotch.MaximumNotch)
+					{
+						TrainManager.Trains[0].Specs.CurrentPowerNotch = new PowerHandle((int)numericUpDownPowerNotches.Value, (int)numericUpDownPowerNotches.Value, new double[] {}, new double[] {});
+					}
 					TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver = (int)numericUpDownPowerNotch.Value;
-					TrainManager.Trains[0].Specs.MaximumPowerNotch = (int)numericUpDownPowerNotches.Value;
 					if (checkBoxAirBrake.Checked)
 					{
 						TrainManager.Trains[0].Cars[0].Specs.BrakeType = BrakeSystemType.AutomaticAirBrake;
-						TrainManager.Trains[0].Specs.AirBrake.Handle.Driver = (AirBrakeHandleState)numericUpDownBrakeNotch.Value;
+						TrainManager.Trains[0].Specs.AirBrake.Driver = (int)numericUpDownBrakeNotch.Value;
 					}
 					else
 					{
+						if ((int)numericUpDownBrakeNotches.Value != TrainManager.Trains[0].Specs.CurrentBrakeNotch.MaximumNotch)
+						{
+							TrainManager.Trains[0].Specs.CurrentBrakeNotch = new BrakeHandle((int)numericUpDownBrakeNotches.Value, (int)numericUpDownBrakeNotches.Value, null, new double[] {}, new double[] {});
+						}
 						TrainManager.Trains[0].Specs.CurrentBrakeNotch.Driver = (int)numericUpDownBrakeNotch.Value;
-						TrainManager.Trains[0].Specs.MaximumBrakeNotch = (int)numericUpDownBrakeNotches.Value;
 						TrainManager.Trains[0].Specs.HasHoldBrake = checkBoxHoldBrake.Checked;
 						if (checkBoxHoldBrake.Checked)
 						{

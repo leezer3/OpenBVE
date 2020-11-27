@@ -9,6 +9,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
+using TrainManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -18,19 +19,12 @@ using TrainManager.Power;
 namespace OpenBve {
 	using System;
 
-	internal static class TrainManager {
+	internal class TrainManager : TrainManagerBase {
 
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
 		
 		// cars
-		internal struct AirBrakeHandle {
-			internal AirBrakeHandleState Driver;
-			internal AirBrakeHandleState Security;
-			internal AirBrakeHandleState Actual;
-			internal AirBrakeHandleState DelayedValue;
-			internal double DelayedTime;
-		}
 		internal struct CarAirBrake {
 			internal BrakeType Type;
 			internal bool AirCompressorEnabled;
@@ -210,9 +204,6 @@ namespace OpenBve {
 			}
 		}
 		// train specs
-		internal struct TrainAirBrake {
-			internal AirBrakeHandle Handle;
-		}
 		internal struct TrainSpecs {
 			internal ReverserHandle CurrentReverser;
 			internal int MaximumPowerNotch;
@@ -224,13 +215,19 @@ namespace OpenBve {
 			internal HoldBrakeHandle CurrentHoldBrake;
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;
-			internal TrainAirBrake AirBrake;
+			internal AirBrakeHandle AirBrake;
 		}
 		// train
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
-
+			internal Train()
+			{
+				Specs.CurrentReverser = new ReverserHandle();
+				Specs.CurrentPowerNotch = new PowerHandle(8, 8, new double[] {}, new double[] {});
+				Specs.CurrentBrakeNotch = new BrakeHandle(8, 8, null, new double[] {}, new double[] {});
+				Specs.AirBrake = new AirBrakeHandle();
+			}
 			public override int NumberOfCars
 			{
 				get
