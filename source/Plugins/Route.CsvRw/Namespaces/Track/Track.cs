@@ -1391,6 +1391,10 @@ namespace CsvRwRouteParser
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StopDuration is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						halt = 15.0;
 					}
+					else if (halt < 0)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StopDuration is expected to be non-negative in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					}
 					else if (halt < 5.0)
 					{
 						halt = 5.0;
