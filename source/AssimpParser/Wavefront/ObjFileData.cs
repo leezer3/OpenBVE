@@ -283,6 +283,7 @@ namespace AssimpNET.Obj
 		//! Material map
 		public SortedDictionary<string, Material> MaterialMap = new SortedDictionary<string, Material>();
 
+		public double ScaleFactor = 1.0;
 		public Model(string modelName)
 		{
 			ModelName = modelName;

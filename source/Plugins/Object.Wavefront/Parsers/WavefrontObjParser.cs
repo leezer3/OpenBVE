@@ -60,6 +60,8 @@ namespace Plugin
 			//Read the contents of the file
 			string[] Lines = File.ReadAllLines(FileName, Encoding);
 
+			double currentScale = 1.0;
+
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
 			{
@@ -67,6 +69,35 @@ namespace Plugin
 				int c = Lines[i].IndexOf("#", StringComparison.Ordinal);
 				if (c >= 0)
 				{
+					int eq = Lines[i].IndexOf('=');
+					int hash = Lines[i].IndexOf('#');
+					if(eq != -1 && hash != -1)
+					{
+						string afterHash = Lines[i].Substring(hash + 1).Trim();
+						if (afterHash.StartsWith("File units", StringComparison.InvariantCultureIgnoreCase))
+						{
+							string units = Lines[i].Substring(eq + 1).Trim().ToLowerInvariant();
+							switch (units)
+							{
+								/*
+								 * Apply unit correction factor
+								 * This is not a default obj feature, but seems to appear in Sketchup exported files
+								 */
+								case "millimeters":
+									currentScale = 0.001;
+									break;
+								case "centimeters":
+									currentScale = 0.01;
+									break;
+								case "meters":
+									currentScale = 1.0;
+									break;
+								default:
+									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised units value " + units + " at line "+ i);
+									break;
+							}
+						}
+					}
 					Lines[i] = Lines[i].Substring(0, c);
 				}
 				// collect arguments
@@ -100,6 +131,7 @@ namespace Plugin
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex at Line " + i);
 						}
+						vertex *= currentScale;
 						tempVertices.Add(vertex);
 						break;
 					case "vt":

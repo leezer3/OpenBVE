@@ -55,7 +55,7 @@ namespace Plugin
 				List<Vertex> allVertices = new List<Vertex>();
 				foreach (var vertex in model.Vertices)
 				{
-					allVertices.Add(new Vertex(vertex));
+					allVertices.Add(new Vertex(vertex * model.ScaleFactor));
 				}
 
 				List<Vector2> allTexCoords = new List<Vector2>();
