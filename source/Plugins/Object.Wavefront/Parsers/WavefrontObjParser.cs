@@ -27,9 +27,9 @@ using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 
 namespace Plugin
 {
@@ -53,9 +53,9 @@ namespace Plugin
 			 List<Vector3> tempVertices = new List<Vector3>();
 			List<Vector3> tempNormals = new List<Vector3>();
 			List<Vector2> tempCoords = new List<Vector2>();
-			Material[] TempMaterials = new Material[0];
+			Dictionary<string, Material> TempMaterials = new Dictionary<string, Material>();
 			//Stores the current material
-			int currentMaterial = -1;
+			string currentMaterial = string.Empty;
 
 			//Read the contents of the file
 			string[] Lines = File.ReadAllLines(FileName, Encoding);
@@ -254,7 +254,35 @@ namespace Plugin
 							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
-						Builder.Faces.Add(currentMaterial == -1 ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)currentMaterial));
+
+						int materialIndex = -1;
+						if (currentMaterial != string.Empty)
+						{
+							for (int m = 0; m < Builder.Materials.Length; m++)
+							{
+								if (Builder.Materials[m] == TempMaterials[currentMaterial])
+								{
+									materialIndex = m;
+									break;
+								}
+							}
+						}
+
+						if (materialIndex == -1)
+						{
+							materialIndex = Builder.Materials.Length;
+							Array.Resize(ref Builder.Materials, Builder.Materials.Length + 1);
+							if (TempMaterials.ContainsKey(currentMaterial))
+							{
+								Builder.Materials[materialIndex] = TempMaterials[currentMaterial];
+							}
+							else
+							{
+								Builder.Materials[materialIndex] = new Material();
+							}
+							
+						}
+						Builder.Faces.Add(currentMaterial == string.Empty ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)materialIndex));
 						break;
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
@@ -283,33 +311,11 @@ namespace Plugin
 						}
 						break;
 					case "usemtl":
-						for (int m = 0; m < TempMaterials.Length; m++)
+						currentMaterial = Arguments[1].ToLowerInvariant();
+						if (!TempMaterials.ContainsKey(currentMaterial))
 						{
-							if (TempMaterials[m].Key.ToLowerInvariant() == Arguments[1].ToLowerInvariant())
-							{
-								bool mf = false;
-								for (int k = 0; k < Builder.Materials.Length; k++)
-								{
-									if (Builder.Materials[k].Key != null && Builder.Materials[k].Key.ToLowerInvariant() == Arguments[1].ToLowerInvariant())
-									{
-										mf = true;
-										currentMaterial = k;
-										break;
-									}
-								}
-								if (!mf)
-								{
-									Array.Resize(ref Builder.Materials, Builder.Materials.Length + 1);
-									Builder.Materials[Builder.Materials.Length - 1] = TempMaterials[m];
-									currentMaterial = Builder.Materials.Length - 1;
-								}
-								break;
-							}
-							if (m == TempMaterials.Length)
-							{
-								Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + Arguments[1] + " was not found.");
-								currentMaterial = -1;
-							}
+							currentMaterial = string.Empty;
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + Arguments[1] + " was not found.");
 						}
 						break;
 					default:
@@ -322,11 +328,10 @@ namespace Plugin
 			return Object;
 		}
 
-		private static void LoadMaterials(string FileName, ref Material[] Materials)
+		private static void LoadMaterials(string FileName, ref Dictionary<string, Material> Materials)
 		{
 			string[] Lines = File.ReadAllLines(FileName);
-			Material mm = new Material();
-			bool fm = false;
+			string currentKey = string.Empty;
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
 			{
@@ -354,14 +359,15 @@ namespace Plugin
 				switch (Arguments[0].ToLowerInvariant())
 				{
 					case "newmtl":
-						if (fm == true)
+						currentKey = Arguments[1].ToLowerInvariant(); //store as KVP, but case insensitive
+						if (Materials.ContainsKey(currentKey))
 						{
-							Array.Resize(ref Materials, Materials.Length + 1);
-							Materials[Materials.Length - 1] = mm;
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Material " + currentKey + " has been defined twice.");
 						}
-						mm = new Material();
-						mm.Key = Arguments[1];
-						fm = true;
+						else
+						{
+							Materials.Add(currentKey, new Material());
+						}
 						break;
 					case "ka":
 						//Ambient color not supported
@@ -371,20 +377,20 @@ namespace Plugin
 						double r = 1, g = 1, b = 1;
 						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out r))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + currentKey);
 						}
 						if (Arguments.Count >= 3 && !double.TryParse(Arguments[2], out g))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + currentKey);
 						}
 						if (Arguments.Count >= 4 && !double.TryParse(Arguments[3], out b))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + currentKey);
 						}
 						r = 255 * r;
 						g = 255 * g;
 						b = 255 * b;
-						mm.Color = new Color32((byte)r, (byte)g, (byte)b);
+						Materials[currentKey].Color = new Color32((byte)r, (byte)g, (byte)b);
 						break;
 					case "ks":
 						//Specular color not supported
@@ -397,16 +403,16 @@ namespace Plugin
 						double a = 1;
 						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out a))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + currentKey);
 						}
-						mm.Color.A = (byte)((1 - a) * 255);
+						Materials[currentKey].Color.A = (byte)((1 - a) * 255);
 						break;
 					case "map_kd":
 					case "map_ka":
 						string tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[Arguments.Count - 1]);
 						if (File.Exists(tday))
 						{
-							mm.DaytimeTexture = tday;
+							Materials[currentKey].DaytimeTexture = tday;
 						}
 						else
 						{
@@ -423,8 +429,6 @@ namespace Plugin
 					
 				}
 			}
-			Array.Resize(ref Materials, Materials.Length + 1);
-			Materials[Materials.Length - 1] = mm;
 		}
 	}
 }
