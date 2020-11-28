@@ -35,18 +35,7 @@ namespace Plugin
 {
 	internal static class WavefrontObjParser
 	{
-		private class MeshBuilder
-		{
-			internal List<VertexTemplate> Vertices;
-			internal List<MeshFace> Faces;
-			internal Material[] Materials;
-			internal MeshBuilder()
-			{
-				this.Vertices = new List<VertexTemplate>();
-				this.Faces = new List<MeshFace>();
-				this.Materials = new Material[] { new Material() };
-			}
-		}
+		
 
 		/// <summary>Loads a Wavefront object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
@@ -56,7 +45,7 @@ namespace Plugin
 		{
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 
-			MeshBuilder Builder = new MeshBuilder();
+			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
 
 			/*
 			 * Temporary arrays
@@ -269,8 +258,8 @@ namespace Plugin
 						break;
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
-						ApplyMeshBuilder(ref Object, Builder);
-						Builder = new MeshBuilder();
+						Builder.Apply(ref Object);
+						Builder = new MeshBuilder(Plugin.currentHost);
 						break;
 					case "s":
 						/* 
@@ -328,7 +317,7 @@ namespace Plugin
 						break;
 				}
 			}
-			ApplyMeshBuilder(ref Object, Builder);
+			Builder.Apply(ref Object);
 			Object.Mesh.CreateNormals();
 			return Object;
 		}
@@ -436,103 +425,6 @@ namespace Plugin
 			}
 			Array.Resize(ref Materials, Materials.Length + 1);
 			Materials[Materials.Length - 1] = mm;
-		}
-
-		private static void ApplyMeshBuilder(ref StaticObject Object, MeshBuilder Builder)
-		{
-			if (Builder.Faces.Count != 0)
-			{
-				int mf = Object.Mesh.Faces.Length;
-				int mm = Object.Mesh.Materials.Length;
-				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
-				if (mm == 0)
-				{
-					if (Object.Mesh.Materials.Length == 0)
-					{
-						/*
-						 * If the object has no materials defined at all, we need to add one
-						 */
-						Array.Resize(ref Object.Mesh.Materials, 1);
-						Object.Mesh.Materials[0] = new MeshMaterial();
-						Object.Mesh.Materials[0].Color = Color32.White;
-						Object.Mesh.Materials[0].Flags = (byte)(0 | 0);
-						Object.Mesh.Materials[0].DaytimeTexture = null;
-						Object.Mesh.Materials[0].NighttimeTexture = null;
-						mm++;
-					}
-				}
-				if (Builder.Materials.Length > 0)
-				{
-					Array.Resize(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
-				}
-				else
-				{
-					/*
-					 * If no materials have been defined for this face group, use the last material
-					 */
-					mm -= 1;
-				}
-				Array.Resize(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
-				for (int i = 0; i < Builder.Vertices.Count; i++)
-				{
-					Object.Mesh.Vertices[mv + i] = new Vertex((Vertex)Builder.Vertices[i]);
-				}
-				for (int i = 0; i < Builder.Faces.Count; i++)
-				{
-					Object.Mesh.Faces[mf + i] = Builder.Faces[i];
-					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
-					{
-						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-					}
-					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
-				}
-				for (int i = 0; i < Builder.Materials.Length; i++)
-				{
-					Object.Mesh.Materials[mm + i].Flags = Builder.Materials[i].Flags;
-					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
-					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					if (Builder.Materials[i].DaytimeTexture != null)
-					{
-						Texture tday;
-						if ((Builder.Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
-						{
-							Plugin.currentHost.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
-						}
-						else
-						{
-							Plugin.currentHost.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
-						}
-						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
-					}
-					else
-					{
-						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
-					if (Builder.Materials[i].NighttimeTexture != null)
-					{
-						Texture tnight;
-						if ((Builder.Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
-						{
-							Plugin.currentHost.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
-						}
-						else
-						{
-							Plugin.currentHost.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, null), out tnight);
-						}
-						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
-					}
-					else
-					{
-						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
-					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
-					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
-					Object.Mesh.Materials[mm + i].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
-				}
-			}
 		}
 	}
 }

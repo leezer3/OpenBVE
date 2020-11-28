@@ -79,22 +79,22 @@ namespace Plugin
 						{
 							throw new Exception("nVertices must be greater than zero");
 						}
-						int v = builder.Vertices.Length;
-						Array.Resize(ref builder.Vertices, v + nVerts);
 						for (int i = 0; i < nVerts; i++)
 						{
-							builder.Vertices[v + i] = allVertices[(int)face.Vertices[i]];
+							builder.Vertices.Add(allVertices[(int) face.Vertices[i]]);
 						}
 
-						int f = builder.Faces.Length;
-						Array.Resize(ref builder.Faces, f + 1);
-						builder.Faces[f] = new MeshFace();
-						builder.Faces[f].Vertices = new MeshFaceVertex[nVerts];
+						MeshFace f = new MeshFace()
+						{
+							Vertices = new MeshFaceVertex[nVerts]
+						};
 						for (int i = 0; i < nVerts; i++)
 						{
-							builder.Faces[f].Vertices[i].Index = (ushort)i;
+							f.Vertices[i].Index = (ushort)i;
 						}
-						builder.Faces[f].Material = 1;
+						f.Material = 1;
+						builder.Faces.Add(f);
+						
 
 						int m = builder.Materials.Length;
 						Array.Resize(ref builder.Materials, m + 1);

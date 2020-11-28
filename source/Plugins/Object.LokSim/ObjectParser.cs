@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -51,7 +52,7 @@ namespace Plugin
 			//Initialise the object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
-			Vector3[] Normals = new Vector3[4];
+			List<Vector3> Normals = new List<Vector3>();
 			bool PropertiesFound = false;
 
 			VertexTemplate[] tempVertices = new VertexTemplate[0];
@@ -268,13 +269,8 @@ namespace Plugin
 											tempVertices[tempVertices.Length - 1] = new Vertex((Vector3)v);
 											tempNormals[tempNormals.Length - 1] = new Vector3(n);
 											tempNormals[tempNormals.Length - 1].Normalize();
-											Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
-											while (Builder.Vertices.Length >= Normals.Length)
-											{
-												Array.Resize(ref Normals, Normals.Length << 1);
-											}
-											Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(new Vector3((Vector3)v));
-											Normals[Builder.Vertices.Length - 1] = new Vector3(n);
+											Builder.Vertices.Add(new Vertex(new Vector3((Vector3)v)));
+											Normals.Add(new Vector3(n));
 										}
 									}
 								}
@@ -290,17 +286,10 @@ namespace Plugin
 											if (childNode.Attributes["Points"] != null)
 											{
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
-												int f = Builder.Faces.Length;
 												//Add 1 to the length of the face array
-												Array.Resize(ref Builder.Faces, f + 1);
-												Builder.Faces[f] = new MeshFace();
+												MeshFace f = new MeshFace();
 												//Create the vertex array for the face
-												Builder.Faces[f].Vertices = new MeshFaceVertex[Verticies.Length];
-												while (Builder.Vertices.Length > Normals.Length)
-												{
-													Array.Resize(ref Normals,
-														Normals.Length << 1);
-												}
+												f.Vertices = new MeshFaceVertex[Verticies.Length];
 												//Run through the vertices list and grab from the temp array
 
 												int smallestX = TextureWidth;
@@ -315,13 +304,12 @@ namespace Plugin
 														continue;
 													}
 													//Add one to the actual vertex array
-													Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
 													//Set coordinates
-													Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(tempVertices[currentVertex].Coordinates);
+													Builder.Vertices.Add(new Vertex(tempVertices[currentVertex].Coordinates));
 													//Set the vertex index
-													Builder.Faces[f].Vertices[j].Index = (ushort)(Builder.Vertices.Length - 1);
+													f.Vertices[j].Index = (ushort)(Builder.Vertices.Count - 1);
 													//Set the normals
-													Builder.Faces[f].Vertices[j].Normal = tempNormals[currentVertex];
+													f.Vertices[j].Normal = tempNormals[currentVertex];
 													//Now deal with the texture
 													//Texture mapping points are in pixels X,Y and are relative to the face in question rather than the vertex
 													if (childNode.Attributes["Texture"] != null)
@@ -360,7 +348,7 @@ namespace Plugin
 															currentCoords.X = 0;
 															currentCoords.Y = 0;
 														}
-														Builder.Vertices[Builder.Vertices.Length - 1].TextureCoordinates = currentCoords;
+														Builder.Vertices[Builder.Vertices.Count - 1].TextureCoordinates = currentCoords;
 
 
 													}
@@ -368,8 +356,9 @@ namespace Plugin
 												if (Face2)
 												{
 													//Add face2 flag if required
-													Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
+													f.Flags = FaceFlags.Face2Mask;
 												}
+												Builder.Faces.Add(f);
 											}
 
 										}

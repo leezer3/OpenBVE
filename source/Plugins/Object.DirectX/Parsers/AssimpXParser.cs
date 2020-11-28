@@ -123,7 +123,7 @@ namespace Plugin
 
 		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
 		{
-			if (builder.Vertices.Length != 0)
+			if (builder.Vertices.Count != 0)
 			{
 				builder.Apply(ref obj);
 				builder = new MeshBuilder(Plugin.currentHost);
@@ -135,16 +135,12 @@ namespace Plugin
 				//Some null objects contain an empty mesh
 				Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + mesh.Name);
 			}
-			int v = builder.Vertices.Length;
-			Array.Resize(ref builder.Vertices, v + nVerts);
 			for (int i = 0; i < nVerts; i++)
 			{
-				builder.Vertices[v + i] = new Vertex(mesh.Positions[i]);
+				builder.Vertices.Add(new Vertex(mesh.Positions[i]));
 			}
 
 			int nFaces = mesh.PosFaces.Count;
-			int f = builder.Faces.Length;
-			Array.Resize(ref builder.Faces, f + nFaces);
 			for (int i = 0; i < nFaces; i++)
 			{
 				int fVerts = mesh.PosFaces[i].Indices.Count;
@@ -152,12 +148,13 @@ namespace Plugin
 				{
 					throw new Exception("fVerts must be greater than zero");
 				}
-				builder.Faces[f + i] = new MeshFace();
-				builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
+				MeshFace f = new MeshFace();
+				f.Vertices = new MeshFaceVertex[fVerts];
 				for (int j = 0; j < fVerts; j++)
 				{
-					builder.Faces[f + i].Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];
+					f.Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];
 				}
+				builder.Faces.Add(f);
 			}
 
 			int nMaterials = mesh.Materials.Count;
@@ -165,7 +162,9 @@ namespace Plugin
 			for (int i = 0; i < nFaceIndices; i++)
 			{
 				int fMaterial = (int)mesh.FaceMaterials[i];
-				builder.Faces[i].Material = (ushort)(fMaterial + 1);
+				MeshFace f = builder.Faces[i];
+				f.Material = (ushort)(fMaterial + 1);
+				builder.Faces[i] = f;
 			}
 			for (int i = 0; i < nMaterials; i++)
 			{
@@ -208,7 +207,7 @@ namespace Plugin
 				normals[i].Normalize();
 			}
 			int nFaceNormals = mesh.NormFaces.Count;
-			if (nFaceNormals > builder.Faces.Length)
+			if (nFaceNormals > builder.Faces.Count)
 			{
 				throw new Exception("nFaceNormals must match the number of faces in the mesh");
 			}

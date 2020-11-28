@@ -202,7 +202,7 @@ namespace Plugin
 					return;
 				case TemplateID.Frame:
 					currentLevel++;
-					if (builder.Vertices.Length != 0)
+					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj);
 						builder = new MeshBuilder(Plugin.currentHost);
@@ -238,7 +238,7 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.Mesh:
-					if (builder.Vertices.Length != 0)
+					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj);
 						builder = new MeshBuilder(Plugin.currentHost);
@@ -249,11 +249,9 @@ namespace Plugin
 						//Some null objects contain an empty mesh
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + block.Label);
 					}
-					int v = builder.Vertices.Length;
-					Array.Resize(ref builder.Vertices, v + nVerts);
 					for (int i = 0; i < nVerts; i++)
 					{
-						builder.Vertices[v + i] = new Vertex(new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle()));
+						builder.Vertices.Add(new Vertex(new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle())));
 					}
 					int nFaces = block.ReadUInt16();
 					if (nFaces == 0)
@@ -284,8 +282,6 @@ namespace Plugin
 						}
 						
 					}
-					int f = builder.Faces.Length;
-					Array.Resize(ref builder.Faces, f + nFaces);
 					for (int i = 0; i < nFaces; i++)
 					{
 						int fVerts = block.ReadUInt16();
@@ -293,12 +289,13 @@ namespace Plugin
 						{
 							throw new Exception("fVerts must be greater than zero");
 						}
-						builder.Faces[f + i] = new MeshFace();
-						builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
+						MeshFace f = new MeshFace();
+						f.Vertices = new MeshFaceVertex[fVerts];
 						for (int j = 0; j < fVerts; j++)
 						{
-							builder.Faces[f + i].Vertices[j].Index = block.ReadUInt16();
+							f.Vertices[j].Index = block.ReadUInt16();
 						}
+						builder.Faces.Add(f);
 					}
 					NoFaces:
 					while (block.Position() < block.Length() - 5)
@@ -310,21 +307,25 @@ namespace Plugin
 				case TemplateID.MeshMaterialList:
 					int nMaterials = block.ReadUInt16();
 					int nFaceIndices = block.ReadUInt16();
-					if (nFaceIndices == 1 && builder.Faces.Length > 1)
+					if (nFaceIndices == 1 && builder.Faces.Count > 1)
 					{
 						//Single material for all faces
 						int globalMaterial = block.ReadUInt16();
-						for (int i = 0; i < builder.Faces.Length; i++)
+						for (int i = 0; i < builder.Faces.Count; i++)
 						{
-							builder.Faces[i].Material = (ushort)(globalMaterial + 1);
+							MeshFace f = builder.Faces[i];
+							f.Material = (ushort)(globalMaterial + 1);
+							builder.Faces[i] = f;
 						}
 					}
-					else if(nFaceIndices == builder.Faces.Length)
+					else if(nFaceIndices == builder.Faces.Count)
 					{
 						for (int i = 0; i < nFaceIndices; i++)
 						{
 							int fMaterial = block.ReadUInt16();
-							builder.Faces[i].Material = (ushort) (fMaterial + 1);
+							MeshFace f = builder.Faces[i];
+							f.Material = (ushort) (fMaterial + 1);
+							builder.Faces[i] = f;
 						}
 					}
 					else
@@ -386,7 +387,7 @@ namespace Plugin
 						normals[i].Normalize();
 					}
 					int nFaceNormals = block.ReadUInt16();
-					if (nFaceNormals != builder.Faces.Length)
+					if (nFaceNormals != builder.Faces.Count)
 					{
 						throw new Exception("nFaceNormals must match the number of faces in the mesh");
 					}
@@ -412,7 +413,7 @@ namespace Plugin
 					break;
 				case TemplateID.MeshFaceWraps:
 					int nMeshFaceWraps = block.ReadUInt16();
-					if (nMeshFaceWraps != builder.Faces.Length)
+					if (nMeshFaceWraps != builder.Faces.Count)
 					{
 						throw new Exception("nMeshFaceWraps must match the number of faces in the mesh");
 					}
