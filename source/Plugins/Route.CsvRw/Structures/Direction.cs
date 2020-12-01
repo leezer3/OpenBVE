@@ -22,7 +22,7 @@ namespace CsvRwRouteParser
 				case "L":
 				case "LEFT":
 					return CsvRwRouteParser.Direction.Left;
-				case "0": 
+				case "B":
 				case "BOTH":
 					return CsvRwRouteParser.Direction.Both;
 				case "+1":
@@ -30,6 +30,7 @@ namespace CsvRwRouteParser
 				case "R":
 				case "RIGHT":
 					return CsvRwRouteParser.Direction.Right;
+				case "0":
 				case "N":
 				case "NONE":
 				case "NEITHER":
