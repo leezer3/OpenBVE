@@ -261,16 +261,16 @@ namespace CsvRwRouteParser {
 								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.x" + Command.Substring(18, Command.Length - 20).TrimEnd(new char[] { });
+								Command = "texture.backgroundx" + Command.Substring(18, Command.Length - 20).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.aspect" + Command.Substring(18, Command.Length - 25).TrimEnd(new char[] { });
+								Command = "texture.backgroundaspect" + Command.Substring(18, Command.Length - 25).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.x" + Command.Substring(14, Command.Length - 16).TrimEnd(new char[] { });
+								Command = "texture.backgroundx" + Command.Substring(14, Command.Length - 16).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.aspect" + Command.Substring(14, Command.Length - 21).TrimEnd(new char[] { });
+								Command = "texture.backgroundaspect" + Command.Substring(14, Command.Length - 21).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("cycle", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".params", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 7).TrimEnd(new char[] { });
