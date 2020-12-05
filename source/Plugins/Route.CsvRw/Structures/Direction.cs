@@ -13,7 +13,7 @@ namespace CsvRwRouteParser
 
 	internal partial class Parser
 	{
-		internal static Direction FindDirection(string Direction, string Command, int Line, string File)
+		internal static Direction FindDirection(string Direction, string Command, bool IsWallDike, int Line, string File)
 		{
 			Direction = Direction.Trim();
 			switch (Direction.ToUpperInvariant())
@@ -31,6 +31,8 @@ namespace CsvRwRouteParser
 				case "RIGHT":
 					return CsvRwRouteParser.Direction.Right;
 				case "0":
+					// BVE is inconsistant: Walls / Dikes use 0 for *both* sides, stations use 0 for none....
+					return IsWallDike ? CsvRwRouteParser.Direction.Both : CsvRwRouteParser.Direction.None;
 				case "N":
 				case "NONE":
 				case "NEITHER":

@@ -1321,7 +1321,7 @@ namespace CsvRwRouteParser
 					Direction door = Direction.Both;
 					if (Arguments.Length >= 5 && Arguments[4].Length != 0)
 					{
-						door = FindDirection(Arguments[4], "Track.Sta", Expression.Line, Expression.File);
+						door = FindDirection(Arguments[4], "Track.Sta", false, Expression.Line, Expression.File);
 						if (door == Direction.Invalid)
 						{
 							door = Direction.Both;
@@ -2022,7 +2022,7 @@ namespace CsvRwRouteParser
 						Direction dir = Direction.Invalid;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							dir = FindDirection(Arguments[1], "Track.Wall", Expression.Line, Expression.File);
+							dir = FindDirection(Arguments[1], "Track.Wall", true, Expression.Line, Expression.File);
 						}
 						if (dir == Direction.Invalid || dir == Direction.None)
 						{
@@ -2141,7 +2141,7 @@ namespace CsvRwRouteParser
 						
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							dir = FindDirection(Arguments[1], "Track.Dike", Expression.Line, Expression.File);
+							dir = FindDirection(Arguments[1], "Track.Dike", true, Expression.Line, Expression.File);
 						}
 						if (dir == Direction.Invalid || dir == Direction.None)
 						{
