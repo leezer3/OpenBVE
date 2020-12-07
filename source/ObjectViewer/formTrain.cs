@@ -7,6 +7,7 @@ using TrainManager.BrakeSystems;
 using OpenBveApi.Trains;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Power;
 
 namespace OpenBve
 {
@@ -46,10 +47,10 @@ namespace OpenBve
 				numericUpDownSpeed.Value = (decimal)(TrainManager.Trains[0].Cars[0].CurrentSpeed * 3.6);
 				numericUpDownAccel.Value = (decimal)(TrainManager.Trains[0].Cars[0].Specs.CurrentAcceleration * 3.6);
 
-				numericUpDownMain.Value = (decimal)(TrainManager.Trains[0].Cars[0].Specs.AirBrake.MainReservoirCurrentPressure / 1000.0);
-				numericUpDownPipe.Value = (decimal)(TrainManager.Trains[0].Cars[0].Specs.AirBrake.BrakePipeCurrentPressure / 1000.0);
-				numericUpDownCylinder.Value = (decimal)(TrainManager.Trains[0].Cars[0].Specs.AirBrake.BrakeCylinderCurrentPressure / 1000.0);
-				numericUpDownAirPipe.Value = (decimal)(TrainManager.Trains[0].Cars[0].Specs.AirBrake.StraightAirPipeCurrentPressure / 1000.0);
+				numericUpDownMain.Value = (decimal)(TrainManager.Trains[0].Cars[0].CarBrake.mainReservoir.CurrentPressure / 1000.0);
+				numericUpDownPipe.Value = (decimal)(TrainManager.Trains[0].Cars[0].CarBrake.brakePipe.CurrentPressure / 1000.0);
+				numericUpDownCylinder.Value = (decimal)(TrainManager.Trains[0].Cars[0].CarBrake.brakeCylinder.CurrentPressure / 1000.0);
+				numericUpDownAirPipe.Value = (decimal)(TrainManager.Trains[0].Cars[0].CarBrake.straightAirPipe.CurrentPressure / 1000.0);
 
 				numericUpDownLeft.Value = (decimal)TrainManager.Trains[0].Cars[0].Specs.Doors[0].State;
 				numericUpDownRight.Value = (decimal)TrainManager.Trains[0].Cars[0].Specs.Doors[1].State;
@@ -59,7 +60,7 @@ namespace OpenBve
 				numericUpDownReverser.Value = (decimal)TrainManager.Trains[0].Specs.CurrentReverser.Driver;
 				numericUpDownPowerNotch.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver;
 				numericUpDownPowerNotches.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.MaximumNotch;
-				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake;
+				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].CarBrake is AutomaticAirBrake;
 				if (checkBoxAirBrake.Checked)
 				{
 					numericUpDownBrakeNotch.Value = (int)TrainManager.Trains[0].Specs.AirBrake.Driver;
@@ -302,11 +303,19 @@ namespace OpenBve
 						TrainManager.Trains[0].Cars[i].CurrentSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.CurrentPerceivedSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.CurrentAcceleration = (int)numericUpDownAccel.Value / 3.6;
-
-						TrainManager.Trains[0].Cars[i].Specs.AirBrake.MainReservoirCurrentPressure = (int)numericUpDownMain.Value * 1000;
-						TrainManager.Trains[0].Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = (int)numericUpDownPipe.Value * 1000;
-						TrainManager.Trains[0].Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = (int)numericUpDownCylinder.Value * 1000;
-						TrainManager.Trains[0].Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = (int)numericUpDownAirPipe.Value * 1000;
+						if (checkBoxAirBrake.Checked)
+						{
+							TrainManager.Trains[0].Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, TrainManager.Trains[0].Specs.CurrentEmergencyBrake, TrainManager.Trains[0].Specs.CurrentReverser, true, 0.0, 0.0, new AccelerationCurve[] {});
+						}
+						else
+						{
+							TrainManager.Trains[0].Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, TrainManager.Trains[0].Specs.CurrentEmergencyBrake, TrainManager.Trains[0].Specs.CurrentReverser, true, 0.0, 0.0, new AccelerationCurve[] {});
+						}
+						//At the minute, Object Viewer uses dummy brake systems
+						TrainManager.Trains[0].Cars[i].CarBrake.mainReservoir = new MainReservoir((int)numericUpDownMain.Value * 1000);
+						TrainManager.Trains[0].Cars[i].CarBrake.brakePipe = new BrakePipe((int)numericUpDownPipe.Value * 1000);
+						TrainManager.Trains[0].Cars[i].CarBrake.brakeCylinder = new BrakeCylinder((int)numericUpDownCylinder.Value * 1000);
+						TrainManager.Trains[0].Cars[i].CarBrake.straightAirPipe = new StraightAirPipe((int)numericUpDownAirPipe.Value * 1000);
 
 						TrainManager.Trains[0].Cars[i].Specs.Doors = new[] { new Door(), new Door() };
 						TrainManager.Trains[0].Cars[i].Specs.Doors[0].Direction = -1;
@@ -326,7 +335,6 @@ namespace OpenBve
 					TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver = (int)numericUpDownPowerNotch.Value;
 					if (checkBoxAirBrake.Checked)
 					{
-						TrainManager.Trains[0].Cars[0].Specs.BrakeType = BrakeSystemType.AutomaticAirBrake;
 						TrainManager.Trains[0].Specs.AirBrake.Driver = (int)numericUpDownBrakeNotch.Value;
 					}
 					else

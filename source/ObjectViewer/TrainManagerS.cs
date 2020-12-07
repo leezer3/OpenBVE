@@ -10,6 +10,7 @@ using TrainManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Power;
 using TrainManager.SafetySystems;
 
 namespace OpenBve {
@@ -17,44 +18,6 @@ namespace OpenBve {
 
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
-
-		// cars
-		internal struct CarAirBrake {
-			internal BrakeType Type;
-			internal bool AirCompressorEnabled;
-			internal double AirCompressorMinimumPressure;
-			internal double AirCompressorMaximumPressure;
-			internal double AirCompressorRate;
-			internal double MainReservoirCurrentPressure;
-			internal double MainReservoirEqualizingReservoirCoefficient;
-			internal double MainReservoirBrakePipeCoefficient;
-			internal double EqualizingReservoirCurrentPressure;
-			internal double EqualizingReservoirNormalPressure;
-			internal double EqualizingReservoirServiceRate;
-			internal double EqualizingReservoirEmergencyRate;
-			internal double EqualizingReservoirChargeRate;
-			internal double BrakePipeCurrentPressure;
-			internal double BrakePipeNormalPressure;
-			internal double BrakePipeChargeRate;
-			internal double BrakePipeServiceRate;
-			internal double BrakePipeEmergencyRate;
-			internal double AuxillaryReservoirCurrentPressure;
-			internal double AuxillaryReservoirMaximumPressure;
-			internal double AuxillaryReservoirChargeRate;
-			internal double AuxillaryReservoirBrakePipeCoefficient;
-			internal double AuxillaryReservoirBrakeCylinderCoefficient;
-			internal double BrakeCylinderCurrentPressure;
-			internal double BrakeCylinderEmergencyMaximumPressure;
-			internal double BrakeCylinderServiceMaximumPressure;
-			internal double BrakeCylinderEmergencyChargeRate;
-			internal double BrakeCylinderServiceChargeRate;
-			internal double BrakeCylinderReleaseRate;
-			internal double BrakeCylinderSoundPlayedForPressure;
-			internal double StraightAirPipeCurrentPressure;
-			internal double StraightAirPipeReleaseRate;
-			internal double StraightAirPipeServiceRate;
-			internal double StraightAirPipeEmergencyRate;
-		}
 		internal struct CarHoldBrake {
 			internal double CurrentAccelerationOutput;
 			internal double NextUpdateTime;
@@ -82,9 +45,6 @@ namespace OpenBve {
 			internal bool CurrentMotorBrake;
 			internal CarHoldBrake HoldBrake;
 			internal CarConstSpeed ConstSpeed;
-			internal BrakeSystemType BrakeType;
-			internal EletropneumaticBrakeType ElectropneumaticType;
-			internal CarAirBrake AirBrake;
 			internal Door[] Doors;
 			internal double DoorOpenSpeed;
 			internal double DoorCloseSpeed;
@@ -102,24 +62,18 @@ namespace OpenBve {
 		internal class Car : AbstractCar {
 			internal int CurrentSection;
 			internal CarSpecs Specs;
+			internal CarBrake CarBrake;
 
 			internal Car(Train train)
 			{
 				FrontAxle = new Axle(Program.CurrentHost, train, this);
 				RearAxle = new Axle(Program.CurrentHost, train, this);
+				CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Specs.CurrentEmergencyBrake, train.Specs.CurrentReverser, true, 0.0, 0.0, new AccelerationCurve[] {});
+				CarBrake.mainReservoir = new MainReservoir(690000.0);
+				CarBrake.brakePipe = new BrakePipe(690000.0);
+				CarBrake.brakeCylinder = new BrakeCylinder(0.0);
+				CarBrake.straightAirPipe = new StraightAirPipe(690000.0);
 			}
-		}
-
-		// train
-		internal struct EmergencyHandle {
-			internal bool Driver;
-			internal bool Safety;
-			internal bool Actual;
-			internal double ApplicationTime;
-		}
-		internal struct HoldBrakeHandle {
-			internal bool Driver;
-			internal bool Actual;
 		}
 		// train security
 		internal enum SafetySystem {
@@ -171,7 +125,9 @@ namespace OpenBve {
 				Specs.CurrentReverser = new ReverserHandle();
 				Specs.CurrentPowerNotch = new PowerHandle(8, 8, new double[] {}, new double[] {});
 				Specs.CurrentBrakeNotch = new BrakeHandle(8, 8, null, new double[] {}, new double[] {});
+				Specs.CurrentEmergencyBrake = new EmergencyHandle();
 				Specs.AirBrake = new AirBrakeHandle();
+				Specs.CurrentHoldBrake = new HoldBrakeHandle();
 			}
 			public override double FrontCarTrackPosition()
 			{

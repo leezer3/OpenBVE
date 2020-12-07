@@ -25,42 +25,6 @@ namespace OpenBve {
 #pragma warning disable 0649
 		
 		// cars
-		internal struct CarAirBrake {
-			internal BrakeType Type;
-			internal bool AirCompressorEnabled;
-			internal double AirCompressorMinimumPressure;
-			internal double AirCompressorMaximumPressure;
-			internal double AirCompressorRate;
-			internal double MainReservoirCurrentPressure;
-			internal double MainReservoirEqualizingReservoirCoefficient;
-			internal double MainReservoirBrakePipeCoefficient;
-			internal double EqualizingReservoirCurrentPressure;
-			internal double EqualizingReservoirNormalPressure;
-			internal double EqualizingReservoirServiceRate;
-			internal double EqualizingReservoirEmergencyRate;
-			internal double EqualizingReservoirChargeRate;
-			internal double BrakePipeCurrentPressure;
-			internal double BrakePipeNormalPressure;
-			internal double BrakePipeChargeRate;
-			internal double BrakePipeServiceRate;
-			internal double BrakePipeEmergencyRate;
-			internal double AuxillaryReservoirCurrentPressure;
-			internal double AuxillaryReservoirMaximumPressure;
-			internal double AuxillaryReservoirChargeRate;
-			internal double AuxillaryReservoirBrakePipeCoefficient;
-			internal double AuxillaryReservoirBrakeCylinderCoefficient;
-			internal double BrakeCylinderCurrentPressure;
-			internal double BrakeCylinderEmergencyMaximumPressure;
-			internal double BrakeCylinderServiceMaximumPressure;
-			internal double BrakeCylinderEmergencyChargeRate;
-			internal double BrakeCylinderServiceChargeRate;
-			internal double BrakeCylinderReleaseRate;
-			internal double BrakeCylinderSoundPlayedForPressure;
-			internal double StraightAirPipeCurrentPressure;
-			internal double StraightAirPipeReleaseRate;
-			internal double StraightAirPipeServiceRate;
-			internal double StraightAirPipeEmergencyRate;
-		}
 		internal struct CarHoldBrake {
 			internal double CurrentAccelerationOutput;
 			internal double NextUpdateTime;
@@ -89,9 +53,6 @@ namespace OpenBve {
 			internal bool CurrentMotorBrake;
 			internal CarHoldBrake HoldBrake;
 			internal CarConstSpeed ConstSpeed;
-			internal BrakeSystemType BrakeType;
-			internal EletropneumaticBrakeType ElectropneumaticType;
-			internal CarAirBrake AirBrake;
 			internal Door[] Doors;
 			internal double DoorOpenSpeed;
 			internal double DoorCloseSpeed;
@@ -167,11 +128,17 @@ namespace OpenBve {
 			internal CarSounds Sounds;
 			internal bool Derailed;
 			internal bool Topples;
+			internal CarBrake CarBrake;
 
 			internal Car(Train train)
 			{
 				FrontAxle = new Axle(Program.CurrentHost, train, this);
 				RearAxle = new Axle(Program.CurrentHost, train, this);
+				CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Specs.CurrentEmergencyBrake, train.Specs.CurrentReverser, true, 0.0, 0.0, new AccelerationCurve[] {});
+				CarBrake.mainReservoir = new MainReservoir(690000.0);
+				CarBrake.brakePipe = new BrakePipe(690000.0);
+				CarBrake.brakeCylinder = new BrakeCylinder(0.0);
+				CarBrake.straightAirPipe = new StraightAirPipe(690000.0);
 			}
 
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)

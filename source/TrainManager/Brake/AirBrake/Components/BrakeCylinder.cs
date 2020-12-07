@@ -17,6 +17,7 @@
 		internal readonly double ReleaseRate;
 		internal double SoundPlayedForPressure;
 
+		/// <summary>Creates a functional brake cylinder</summary>
 		public  BrakeCylinder(double serviceMaximumPressure, double emergencyMaximumPressure, double serviceChargeRate, double emergencyChargeRate, double releaseRate)
 		{
 			ServiceMaximumPressure = serviceMaximumPressure;
@@ -26,6 +27,17 @@
 			ReleaseRate = releaseRate;
 			SoundPlayedForPressure = emergencyMaximumPressure;
 			CurrentPressure = EmergencyMaximumPressure;
+		}
+
+		/// <summary>Creates a dummy brake cylinder</summary>
+		public BrakeCylinder(double pressure)
+		{
+			ServiceMaximumPressure = pressure;
+			EmergencyMaximumPressure = pressure;
+			ServiceChargeRate = 0.0;
+			EmergencyChargeRate = 0.0;
+			ReleaseRate = 0.0;
+			CurrentPressure = pressure;
 		}
 	}
 }

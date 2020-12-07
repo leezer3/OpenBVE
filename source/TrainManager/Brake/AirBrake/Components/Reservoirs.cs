@@ -63,6 +63,7 @@ namespace TrainManager.BrakeSystems
 		/// <summary>The co-efficient used when transferring pressure to the brake pipe</summary>
 		internal readonly double BrakePipeCoefficient;
 
+		/// <summary>Creates a functional main reservoir</summary>
 		public MainReservoir(double minimumPressure, double maximumPressure, double equalizingReservoirCoefficient, double brakePipeCoefficient)
 		{
 			MinimumPressure = minimumPressure;
@@ -70,6 +71,16 @@ namespace TrainManager.BrakeSystems
 			EqualizingReservoirCoefficient = equalizingReservoirCoefficient;
 			BrakePipeCoefficient = brakePipeCoefficient;
 			CurrentPressure = MinimumPressure + (MaximumPressure - MinimumPressure) * new Random().NextDouble();
+		}
+
+		/// <summary>Creates a dummy main reservoir</summary>
+		public MainReservoir(double pressure)
+		{
+			MinimumPressure = pressure;
+			MaximumPressure = pressure;
+			EqualizingReservoirCoefficient = 0.0;
+			BrakePipeCoefficient = 0.0;
+			CurrentPressure = pressure;
 		}
 	}
 }

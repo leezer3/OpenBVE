@@ -732,7 +732,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotch:
 						if (Train != null) {
-							if (Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake) {
+							if (Train.Cars[Train.DriverCar].CarBrake is AutomaticAirBrake) {
 								Function.Stack[s] = (double)Train.Specs.AirBrake.Driver;
 							} else {
 								Function.Stack[s] = (double)Train.Specs.CurrentBrakeNotch.Driver;
@@ -743,7 +743,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotches:
 						if (Train != null) {
-							if (Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake) {
+							if (Train.Cars[Train.DriverCar].CarBrake is AutomaticAirBrake) {
 								Function.Stack[s] = 2.0;
 							} else {
 								Function.Stack[s] = (double)Train.Specs.MaximumBrakeNotch;
@@ -754,7 +754,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotchLinear:
 						if (Train != null) {
-							if (Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake) {
+							if (Train.Cars[Train.DriverCar].CarBrake is AutomaticAirBrake) {
 								if (Train.Specs.CurrentEmergencyBrake.Driver) {
 									Function.Stack[s] = 3.0;
 								} else {
@@ -781,7 +781,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotchesLinear:
 						if (Train != null) {
-							if (Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake) {
+							if (Train.Cars[Train.DriverCar].CarBrake is AutomaticAirBrake) {
 								Function.Stack[s] = 3.0;
 							} else if (Train.Specs.HasHoldBrake) {
 								Function.Stack[s] = Train.Specs.MaximumBrakeNotch + 2.0;
@@ -805,7 +805,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.HasAirBrake:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake ? 1.0 : 0.0;
+							Function.Stack[s] = Train.Cars[Train.DriverCar].CarBrake is AutomaticAirBrake ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -841,7 +841,7 @@ namespace OpenBve {
 						// brake
 					case Instructions.BrakeMainReservoir:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
+							Function.Stack[s] = Train.Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -853,7 +853,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.AirBrake.MainReservoirCurrentPressure;
+								Function.Stack[s - 1] = Train.Cars[j].CarBrake.mainReservoir.CurrentPressure;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -861,7 +861,7 @@ namespace OpenBve {
 						break;
 					case Instructions.BrakeEqualizingReservoir:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
+							Function.Stack[s] = Train.Cars[CarIndex].CarBrake.equalizingReservoir.CurrentPressure;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -873,7 +873,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.AirBrake.EqualizingReservoirCurrentPressure;
+								Function.Stack[s - 1] = Train.Cars[j].CarBrake.equalizingReservoir.CurrentPressure;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -881,7 +881,7 @@ namespace OpenBve {
 						break;
 					case Instructions.BrakeBrakePipe:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
+							Function.Stack[s] = Train.Cars[CarIndex].CarBrake.brakePipe.CurrentPressure;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -893,7 +893,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.AirBrake.BrakePipeCurrentPressure;
+								Function.Stack[s - 1] = Train.Cars[j].CarBrake.brakePipe.CurrentPressure;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -901,7 +901,7 @@ namespace OpenBve {
 						break;
 					case Instructions.BrakeBrakeCylinder:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
+							Function.Stack[s] = Train.Cars[CarIndex].CarBrake.brakeCylinder.CurrentPressure;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -913,7 +913,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.AirBrake.BrakeCylinderCurrentPressure;
+								Function.Stack[s - 1] = Train.Cars[j].CarBrake.brakeCylinder.CurrentPressure;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -921,7 +921,7 @@ namespace OpenBve {
 						break;
 					case Instructions.BrakeStraightAirPipe:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure;
+							Function.Stack[s] = Train.Cars[CarIndex].CarBrake.straightAirPipe.CurrentPressure;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -933,7 +933,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.AirBrake.StraightAirPipeCurrentPressure;
+								Function.Stack[s - 1] = Train.Cars[j].CarBrake.straightAirPipe.CurrentPressure;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
