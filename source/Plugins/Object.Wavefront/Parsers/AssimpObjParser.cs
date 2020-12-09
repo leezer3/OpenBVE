@@ -110,9 +110,12 @@ namespace Plugin
 #pragma warning restore 0219
 							builder.Materials[m].EmissiveColor = new Color24((byte)(255 * material.Emissive.R), (byte)(255 * material.Emissive.G), (byte)(255 * material.Emissive.B));
 							builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
-							builder.Materials[m].TransparentColor = new Color24((byte)(255 * material.Transparent.R), (byte)(255 * material.Transparent.G), (byte)(255 * material.Transparent.B));
-							builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
-
+							if (material.TransparentUsed)
+							{
+								builder.Materials[m].TransparentColor = new Color24((byte)(255 * material.Transparent.R), (byte)(255 * material.Transparent.G), (byte)(255 * material.Transparent.B));
+								builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+							}
+							
 							if (material.Texture != null)
 							{
 								builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, material.Texture);

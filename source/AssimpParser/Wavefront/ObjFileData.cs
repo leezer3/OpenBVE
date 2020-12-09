@@ -203,6 +203,8 @@ namespace AssimpNET.Obj
 		//! Transparency color
 		public Color128 Transparent = Color128.White;
 
+		public bool TransparentUsed = false;
+
 		public Material(string materialName)
 		{
 			MaterialName = materialName;

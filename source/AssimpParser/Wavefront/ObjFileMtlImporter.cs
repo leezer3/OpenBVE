@@ -185,6 +185,7 @@ namespace AssimpNET.Obj
 							{
 								++DataIt;
 								GetColorRGBA(ref Model.CurrentMaterial.Transparent);
+								Model.CurrentMaterial.TransparentUsed = true;
 							}
 							DataIt = SkipLine(DataIt, DataEnd, ref Line);
 						}
