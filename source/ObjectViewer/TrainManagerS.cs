@@ -22,17 +22,13 @@ namespace OpenBve {
 			internal double CurrentPerceivedSpeed;
 			internal double CurrentAcceleration;
 			internal double CurrentAccelerationOutput;
-
-			internal Door[] Doors;
-			internal bool AnticipatedLeftDoorsOpened;
-			internal bool AnticipatedRightDoorsOpened;
 		}
 
 		internal class Car : AbstractCar {
 			internal int CurrentSection;
 			internal CarSpecs Specs;
 			internal CarBrake CarBrake;
-
+			internal readonly Door[] Doors;
 			internal Car(Train train)
 			{
 				FrontAxle = new Axle(Program.CurrentHost, train, this);
@@ -42,6 +38,7 @@ namespace OpenBve {
 				CarBrake.brakePipe = new BrakePipe(690000.0);
 				CarBrake.brakeCylinder = new BrakeCylinder(0.0);
 				CarBrake.straightAirPipe = new StraightAirPipe(690000.0);
+				Doors = new Door[2];
 			}
 		}
 		// train security

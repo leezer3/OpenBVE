@@ -52,10 +52,10 @@ namespace OpenBve
 				numericUpDownCylinder.Value = (decimal)(TrainManager.Trains[0].Cars[0].CarBrake.brakeCylinder.CurrentPressure / 1000.0);
 				numericUpDownAirPipe.Value = (decimal)(TrainManager.Trains[0].Cars[0].CarBrake.straightAirPipe.CurrentPressure / 1000.0);
 
-				numericUpDownLeft.Value = (decimal)TrainManager.Trains[0].Cars[0].Specs.Doors[0].State;
-				numericUpDownRight.Value = (decimal)TrainManager.Trains[0].Cars[0].Specs.Doors[1].State;
-				checkBoxLeftTarget.Checked = TrainManager.Trains[0].Cars[0].Specs.AnticipatedLeftDoorsOpened;
-				checkBoxRightTarget.Checked = TrainManager.Trains[0].Cars[0].Specs.AnticipatedRightDoorsOpened;
+				numericUpDownLeft.Value = (decimal)TrainManager.Trains[0].Cars[0].Doors[0].State;
+				numericUpDownRight.Value = (decimal)TrainManager.Trains[0].Cars[0].Doors[1].State;
+				checkBoxLeftTarget.Checked = TrainManager.Trains[0].Cars[0].Doors[0].AnticipatedOpen;
+				checkBoxRightTarget.Checked = TrainManager.Trains[0].Cars[0].Doors[1].AnticipatedOpen;
 
 				numericUpDownReverser.Value = (decimal)TrainManager.Trains[0].Specs.CurrentReverser.Driver;
 				numericUpDownPowerNotch.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver;
@@ -317,13 +317,18 @@ namespace OpenBve
 						TrainManager.Trains[0].Cars[i].CarBrake.brakeCylinder = new BrakeCylinder((int)numericUpDownCylinder.Value * 1000);
 						TrainManager.Trains[0].Cars[i].CarBrake.straightAirPipe = new StraightAirPipe((int)numericUpDownAirPipe.Value * 1000);
 
-						TrainManager.Trains[0].Cars[i].Specs.Doors = new[] { new Door(), new Door() };
-						TrainManager.Trains[0].Cars[i].Specs.Doors[0].Direction = -1;
-						TrainManager.Trains[0].Cars[i].Specs.Doors[0].State = (double)numericUpDownLeft.Value;
-						TrainManager.Trains[0].Cars[i].Specs.Doors[1].Direction = 1;
-						TrainManager.Trains[0].Cars[i].Specs.Doors[1].State = (double)numericUpDownRight.Value;
-						TrainManager.Trains[0].Cars[i].Specs.AnticipatedLeftDoorsOpened = checkBoxLeftTarget.Checked;
-						TrainManager.Trains[0].Cars[i].Specs.AnticipatedRightDoorsOpened = checkBoxRightTarget.Checked;
+						TrainManager.Trains[0].Cars[i].Doors[0] = new Door
+						{
+							Direction = -1, 
+							State = (double) numericUpDownLeft.Value,
+							AnticipatedOpen = checkBoxLeftTarget.Checked
+						};
+						TrainManager.Trains[0].Cars[i].Doors[1] = new Door
+						{
+							Direction = 1, 
+							State = (double) numericUpDownRight.Value,
+							AnticipatedOpen = checkBoxRightTarget.Checked
+						};
 					}
 
 					TrainManager.Trains[0].Specs.CurrentReverser.Driver = (ReverserPosition)numericUpDownReverser.Value;

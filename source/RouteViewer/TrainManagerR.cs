@@ -28,10 +28,6 @@ namespace OpenBve {
 			internal double CurrentPerceivedSpeed;
 			internal double CurrentAcceleration;
 			internal double CurrentAccelerationOutput;
-			internal Door[] Doors;
-			internal bool AnticipatedLeftDoorsOpened;
-			internal bool AnticipatedRightDoorsOpened;
-
 		}
 		internal struct Horn {
 			internal CarSound Sound;
@@ -44,7 +40,7 @@ namespace OpenBve {
 			internal bool Derailed;
 			internal bool Topples;
 			internal CarBrake CarBrake;
-
+			internal readonly Door[] Doors;
 			internal Car(Train train)
 			{
 				FrontAxle = new Axle(Program.CurrentHost, train, this);
@@ -54,6 +50,7 @@ namespace OpenBve {
 				CarBrake.brakePipe = new BrakePipe(690000.0);
 				CarBrake.brakeCylinder = new BrakeCylinder(0.0);
 				CarBrake.straightAirPipe = new StraightAirPipe(690000.0);
+				Doors = new Door[2];
 			}
 
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
