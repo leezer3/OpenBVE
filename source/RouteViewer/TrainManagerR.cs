@@ -6,14 +6,12 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
-using TrainManager.Motor;
 using TrainManager.Power;
 
 namespace OpenBve {
@@ -25,107 +23,24 @@ namespace OpenBve {
 #pragma warning disable 0649
 		
 		// cars
-		internal struct CarHoldBrake {
-			internal double CurrentAccelerationOutput;
-			internal double NextUpdateTime;
-			internal double UpdateInterval;
-		}
-		internal struct CarConstSpeed {
-			internal double CurrentAccelerationOutput;
-			internal double NextUpdateTime;
-			internal double UpdateInterval;
-		}
 		internal struct CarSpecs {
 			internal bool IsMotorCar;
-			internal AccelerationCurve[] AccelerationCurves;
-			internal double AccelerationCurvesMultiplier;
-			internal double BrakeDecelerationAtServiceMaximumPressure;
-			internal double BrakeControlSpeed;
-			internal double MotorDeceleration;
-			internal double ExposedFrontalArea;
-			internal double UnexposedFrontalArea;
-			internal double CenterOfGravityHeight;
-			internal double CriticalTopplingAngle;
 			internal double CurrentPerceivedSpeed;
 			internal double CurrentAcceleration;
 			internal double CurrentAccelerationOutput;
-			internal bool CurrentMotorPower;
-			internal bool CurrentMotorBrake;
-			internal CarHoldBrake HoldBrake;
-			internal CarConstSpeed ConstSpeed;
 			internal Door[] Doors;
-			internal double DoorOpenSpeed;
-			internal double DoorCloseSpeed;
 			internal bool AnticipatedLeftDoorsOpened;
 			internal bool AnticipatedRightDoorsOpened;
-			internal double CurrentRollDueToTopplingAngle;
-			internal double CurrentRollDueToCantAngle;
-			internal double CurrentRollDueToCantAngularSpeed;
-			internal double CurrentRollShakeDirection;
-			internal double CurrentPitchDueToAccelerationAngle;
-			internal double CurrentPitchDueToAccelerationTrackPosition;
-			internal double CurrentPitchDueToAccelerationSpeed;
+
 		}
 		internal struct Horn {
 			internal CarSound Sound;
 			internal bool Loop;
 		}
 		
-		internal struct CarSounds {
-			internal BVEMotorSound Motor;
-			internal CarSound Adjust;
-			internal CarSound Air;
-			internal CarSound AirHigh;
-			internal CarSound AirZero;
-			internal CarSound Ats;
-			internal CarSound AtsCnt;
-			internal CarSound Brake;
-			internal CarSound BrakeHandleApply;
-			internal CarSound BrakeHandleRelease;
-			internal CarSound BrakeHandleMin;
-			internal CarSound BrakeHandleMax;
-			internal CarSound CpEnd;
-			internal CarSound CpLoop;
-			internal bool CpLoopStarted;
-			internal CarSound CpStart;
-			internal double CpStartTimeStarted;
-			internal CarSound Ding;
-			internal CarSound DoorCloseL;
-			internal CarSound DoorCloseR;
-			internal CarSound DoorOpenL;
-			internal CarSound DoorOpenR;
-			internal CarSound Eb;
-			internal CarSound EmrBrake;
-			internal CarSound[] Flange;
-			internal double[] FlangeVolume;
-			internal CarSound Halt;
-			internal Horn[] Horns;
-			internal CarSound Loop;
-			internal CarSound MasterControllerUp;
-			internal CarSound MasterControllerDown;
-			internal CarSound MasterControllerMin;
-			internal CarSound MasterControllerMax;
-			internal CarSound PilotLampOn;
-			internal CarSound PilotLampOff;
-			internal CarSound PointFrontAxle;
-			internal CarSound PointRearAxle;
-			internal CarSound Rub;
-			internal CarSound ReverserOn;
-			internal CarSound ReverserOff;
-			internal CarSound[] Run;
-			internal double[] RunVolume;
-			internal CarSound SpringL;
-			internal CarSound SpringR;
-			internal CarSound ToAtc;
-			internal CarSound ToAts;
-			internal CarSound[] Plugin;
-			internal double FlangePitch;
-			internal double SpringPlayedAngle;
-		}
 		internal class Car : AbstractCar {
 			internal int CurrentSection;
 			internal CarSpecs Specs;
-			internal CarSounds Sounds;
 			internal bool Derailed;
 			internal bool Topples;
 			internal CarBrake CarBrake;

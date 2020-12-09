@@ -11,52 +11,21 @@ using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
-using TrainManager.SafetySystems;
 
 namespace OpenBve {
 	internal class TrainManager : TrainManagerBase {
 
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
-		internal struct CarHoldBrake {
-			internal double CurrentAccelerationOutput;
-			internal double NextUpdateTime;
-			internal double UpdateInterval;
-		}
-		internal struct CarConstSpeed {
-			internal double CurrentAccelerationOutput;
-			internal double NextUpdateTime;
-			internal double UpdateInterval;
-		}
 		internal struct CarSpecs {
 			internal bool IsMotorCar;
-			internal double AccelerationCurvesMultiplier;
-			internal double BrakeDecelerationAtServiceMaximumPressure;
-			internal double BrakeControlSpeed;
-			internal double MotorDeceleration;
-			internal double ExposedFrontalArea;
-			internal double UnexposedFrontalArea;
-			internal double CenterOfGravityHeight;
-			internal double CriticalTopplingAngle;
 			internal double CurrentPerceivedSpeed;
 			internal double CurrentAcceleration;
 			internal double CurrentAccelerationOutput;
-			internal bool CurrentMotorPower;
-			internal bool CurrentMotorBrake;
-			internal CarHoldBrake HoldBrake;
-			internal CarConstSpeed ConstSpeed;
+
 			internal Door[] Doors;
-			internal double DoorOpenSpeed;
-			internal double DoorCloseSpeed;
 			internal bool AnticipatedLeftDoorsOpened;
 			internal bool AnticipatedRightDoorsOpened;
-			internal double CurrentRollDueToTopplingAngle;
-			internal double CurrentRollDueToCantAngle;
-			internal double CurrentRollDueToCantAngularSpeed;
-			internal double CurrentRollShakeDirection;
-			internal double CurrentPitchDueToAccelerationAngle;
-			internal double CurrentPitchDueToAccelerationTrackPosition;
-			internal double CurrentPitchDueToAccelerationSpeed;
 		}
 
 		internal class Car : AbstractCar {
@@ -89,15 +58,7 @@ namespace OpenBve {
 		}
 		// train specs
 		internal struct TrainSpecs {
-			internal double TotalMass;
 			internal ReverserHandle CurrentReverser;
-			internal double CurrentAverageAcceleration;
-			internal double CurrentAverageJerk;
-			internal double CurrentAirPressure;
-			internal double CurrentAirDensity;
-			internal double CurrentAirTemperature;
-			internal bool SingleHandle;
-			internal int PowerNotchReduceSteps;
 			internal PowerHandle CurrentPowerNotch;
 			internal BrakeHandle CurrentBrakeNotch;
 			internal EmergencyHandle CurrentEmergencyBrake;
@@ -107,13 +68,6 @@ namespace OpenBve {
 			internal bool CurrentConstSpeed;
 			internal TrainSafety Safety;
 			internal AirBrakeHandle AirBrake;
-			internal double DelayPowerStart;
-			internal double DelayPowerStop;
-			internal double DelayBrakeStart;
-			internal double DelayBrakeEnd;
-			internal double DelayServiceBrake;
-			internal double DelayEmergencyBrake;
-			internal PassAlarmType PassAlarm;
 		}
 		// train
 		internal class Train : AbstractTrain {
