@@ -61,7 +61,7 @@ namespace Plugin
 			string[] Lines = File.ReadAllLines(FileName, Encoding);
 
 			double currentScale = 1.0;
-
+			bool TopLeftTextureCoordinates = false;
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
 			{
@@ -69,9 +69,10 @@ namespace Plugin
 				int c = Lines[i].IndexOf("#", StringComparison.Ordinal);
 				if (c >= 0)
 				{
-					int eq = Lines[i].IndexOf('=');
 					int hash = Lines[i].IndexOf('#');
-					if(eq != -1 && hash != -1)
+					int eq = Lines[i].IndexOf('=');
+					int skp = Lines[i].IndexOf("SketchUp", StringComparison.InvariantCultureIgnoreCase);
+					if(hash != -1 && (eq != -1 || skp != -1))
 					{
 						string afterHash = Lines[i].Substring(hash + 1).Trim();
 						if (afterHash.StartsWith("File units", StringComparison.InvariantCultureIgnoreCase))
@@ -96,6 +97,10 @@ namespace Plugin
 									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised units value " + units + " at line "+ i);
 									break;
 							}
+						}
+						else if (afterHash.StartsWith("Exported from SketchUp", StringComparison.InvariantCultureIgnoreCase))
+						{
+							TopLeftTextureCoordinates = true;
 						}
 					}
 					Lines[i] = Lines[i].Substring(0, c);
@@ -235,6 +240,10 @@ namespace Plugin
 									else
 									{
 										newVertex.TextureCoordinates = tempCoords[currentCoord - 1];
+										if (TopLeftTextureCoordinates)
+										{
+											newVertex.TextureCoordinates.Y *= -1.0;
+										}
 									}
 									
 								}

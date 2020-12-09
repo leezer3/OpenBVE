@@ -145,9 +145,10 @@ namespace AssimpNET.Obj
 				{
 					continue;
 				}
-				int eq = buffer.IndexOf('=');
 				int hash = buffer.IndexOf('#');
-				if(eq != -1 && hash != -1)
+				int eq = buffer.IndexOf('=');
+				int skp = buffer.IndexOf("SketchUp", StringComparison.InvariantCultureIgnoreCase);
+				if(hash != -1 && (eq != -1 || skp != -1))
 				{
 					string afterHash = buffer.Substring(hash + 1).Trim();
 					if (afterHash.StartsWith("File units", StringComparison.InvariantCultureIgnoreCase))
@@ -169,6 +170,10 @@ namespace AssimpNET.Obj
 								Model.ScaleFactor = 1.0;
 								break;
 						}
+					}
+					else if (afterHash.StartsWith("Exported from SketchUp", StringComparison.InvariantCultureIgnoreCase))
+					{
+						Model.TopLeftTextureCoordinates = true;
 					}
 				}
 

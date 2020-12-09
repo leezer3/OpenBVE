@@ -132,7 +132,6 @@ namespace AssimpNET.Obj
 		List<WavefrontObject> SubObjects = new List<WavefrontObject>();
 		/// Assigned meshes
 		public List<uint> Meshes = new List<uint>();
-
 		public WavefrontObject(string objName)
 		{
 			ObjName = objName;
@@ -284,7 +283,9 @@ namespace AssimpNET.Obj
 		public List<Mesh> Meshes = new List<Mesh>();
 		//! Material map
 		public SortedDictionary<string, Material> MaterialMap = new SortedDictionary<string, Material>();
-
+		/// <summary>Whether the file uses the top-left texture co-ordinate system</summary>
+		public bool TopLeftTextureCoordinates;
+		/// <summary>The scaling factor to be applied</summary>
 		public double ScaleFactor = 1.0;
 		public Model(string modelName)
 		{

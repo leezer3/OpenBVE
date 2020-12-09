@@ -61,7 +61,13 @@ namespace Plugin
 				List<Vector2> allTexCoords = new List<Vector2>();
 				foreach (var texCoord in model.TextureCoord)
 				{
-					allTexCoords.Add(new Vector2(texCoord.X, texCoord.Y));
+					Vector2 textureCoordinate = new Vector2(texCoord.X, texCoord.Y);
+					if (model.TopLeftTextureCoordinates)
+					{
+						textureCoordinate.Y *= -1.0;
+					}
+					allTexCoords.Add(textureCoordinate);
+					
 				}
 
 				List<Vector3> allNormals = new List<Vector3>();
