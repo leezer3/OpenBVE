@@ -2873,6 +2873,91 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
+				case TrackCommand.HornBlow:
+				{
+					if (!PreviewOnly)
+					{
+						int type = 0;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HornType is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							type = 0;
+						}
+
+						if (type < 0 || type > 2)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HornType is expected to be in the range of -1 to 1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else
+						{
+							int structure = 0, triggerOnce = 0;
+							if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								structure = 0;
+							}
+
+							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out triggerOnce))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+
+							if (structure < -1)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								structure = -1;
+							}
+							else if (structure >= 0 && !Data.Structure.Beacon.ContainsKey(structure))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								structure = -1;
+							}
+
+							if (triggerOnce < 0 || triggerOnce > 1)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is expected to be in the range of 0 to 1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								triggerOnce = 0;
+							}
+
+							double x = 0.0, y = 0.0;
+							double yaw = 0.0, pitch = 0.0, roll = 0.0;
+							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out x))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								x = 0.0;
+							}
+
+							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out y))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								y = 0.0;
+							}
+
+							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out yaw))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								yaw = 0.0;
+							}
+
+							if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out pitch))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								pitch = 0.0;
+							}
+
+							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out roll))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								roll = 0.0;
+							}
+
+							int n = Data.Blocks[BlockIndex].HornBlows.Length;
+							Array.Resize(ref Data.Blocks[BlockIndex].HornBlows, n + 1);
+							Data.Blocks[BlockIndex].HornBlows[n] = new HornBlowEvent(Data.TrackPosition, (HornTypes)type, triggerOnce != 0, structure, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
+						}
+					}
+				}
+					break;
 			}
 		}
 

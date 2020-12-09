@@ -784,6 +784,10 @@ namespace CsvRwRouteParser
 							{
 								Data.Blocks[i].DestinationChanges[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
 							}
+							for (int k = 0; k < Data.Blocks[i].HornBlows.Length; k++)
+							{
+								Data.Blocks[i].HornBlows[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
+							}
 						}
 						// sections/signals/transponders
 						if (j == 0)
@@ -860,6 +864,14 @@ namespace CsvRwRouteParser
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
 						CurrentRoute.Tracks[0].Elements[n].Events[m] = new RouteManager2.Events.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
+					}
+					for (int j = 0; j < Data.Blocks[i].HornBlows.Length; j++)
+					{
+						int n = i - Data.FirstUsedBlock;
+						int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
+						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+						double d = Data.Blocks[i].HornBlows[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+						CurrentRoute.Tracks[0].Elements[n].Events[m] = new RouteManager2.Events.HornBlowEvent(d, Data.Blocks[i].HornBlows[j].Type, Data.Blocks[i].HornBlows[j].TriggerOnce);
 					}
 				}
 			}

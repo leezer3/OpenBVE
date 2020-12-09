@@ -973,9 +973,9 @@ namespace OpenBve
 					Cars[i].Sounds.FlangeVolume = new double[] { };
 					Cars[i].Horns = new TrainManager.Horn[]
 					{
-						new TrainManager.Horn(),
-						new TrainManager.Horn(),
-						new TrainManager.Horn()
+						new TrainManager.Horn(this),
+						new TrainManager.Horn(this),
+						new TrainManager.Horn(this)
 					};
 					Cars[i].Sounds.RequestStop = new CarSound[]
 					{

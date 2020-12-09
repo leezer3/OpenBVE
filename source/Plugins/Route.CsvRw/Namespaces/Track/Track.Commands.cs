@@ -111,6 +111,7 @@
 		PointOfInterest,
 		/// <summary>Adds a PointOfInterest</summary>
 		POI,
-
+		/// <summary>Adds a horn blow event</summary>
+		HornBlow,
 	}
 }
