@@ -57,13 +57,13 @@ namespace OpenBve
 				checkBoxLeftTarget.Checked = TrainManager.Trains[0].Cars[0].Doors[0].AnticipatedOpen;
 				checkBoxRightTarget.Checked = TrainManager.Trains[0].Cars[0].Doors[1].AnticipatedOpen;
 
-				numericUpDownReverser.Value = (decimal)TrainManager.Trains[0].Specs.CurrentReverser.Driver;
-				numericUpDownPowerNotch.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver;
-				numericUpDownPowerNotches.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.MaximumNotch;
+				numericUpDownReverser.Value = (decimal)TrainManager.Trains[0].Handles.Reverser.Driver;
+				numericUpDownPowerNotch.Value = TrainManager.Trains[0].Handles.Power.Driver;
+				numericUpDownPowerNotches.Value = TrainManager.Trains[0].Handles.Power.MaximumNotch;
 				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].CarBrake is AutomaticAirBrake;
 				if (checkBoxAirBrake.Checked)
 				{
-					numericUpDownBrakeNotch.Value = (int)TrainManager.Trains[0].Specs.AirBrake.Driver;
+					numericUpDownBrakeNotch.Value = (int)TrainManager.Trains[0].Handles.Brake.Driver;
 					numericUpDownBrakeNotch.Maximum = 2;
 					numericUpDownBrakeNotches.Value = 2;
 					numericUpDownBrakeNotches.Enabled = false;
@@ -71,16 +71,16 @@ namespace OpenBve
 				}
 				else
 				{
-					numericUpDownBrakeNotch.Value = TrainManager.Trains[0].Specs.CurrentBrakeNotch.Driver;
-					numericUpDownBrakeNotches.Value = TrainManager.Trains[0].Specs.CurrentBrakeNotch.MaximumNotch;
-					checkBoxHoldBrake.Checked = TrainManager.Trains[0].Specs.HasHoldBrake;
+					numericUpDownBrakeNotch.Value = TrainManager.Trains[0].Handles.Brake.Driver;
+					numericUpDownBrakeNotches.Value = TrainManager.Trains[0].Handles.Brake.MaximumNotch;
+					checkBoxHoldBrake.Checked = TrainManager.Trains[0].Handles.HasHoldBrake;
 					if (checkBoxHoldBrake.Checked)
 					{
 						checkBoxSetHoldBrake.Enabled = true;
-						checkBoxSetHoldBrake.Checked = TrainManager.Trains[0].Specs.CurrentHoldBrake.Driver;
+						checkBoxSetHoldBrake.Checked = TrainManager.Trains[0].Handles.HoldBrake.Driver;
 					}
 				}
-				checkBoxSetEmergency.Checked = TrainManager.Trains[0].Specs.CurrentEmergencyBrake.Driver;
+				checkBoxSetEmergency.Checked = TrainManager.Trains[0].Handles.EmergencyBrake.Driver;
 				checkBoxConstSpeed.Checked = TrainManager.Trains[0].Specs.HasConstSpeed;
 				if (checkBoxConstSpeed.Checked)
 				{
@@ -305,11 +305,11 @@ namespace OpenBve
 						TrainManager.Trains[0].Cars[i].Specs.CurrentAcceleration = (int)numericUpDownAccel.Value / 3.6;
 						if (checkBoxAirBrake.Checked)
 						{
-							TrainManager.Trains[0].Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, TrainManager.Trains[0].Specs.CurrentEmergencyBrake, TrainManager.Trains[0].Specs.CurrentReverser, true, 0.0, 0.0, new AccelerationCurve[] {});
+							TrainManager.Trains[0].Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, TrainManager.Trains[0].Handles.EmergencyBrake, TrainManager.Trains[0].Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] {});
 						}
 						else
 						{
-							TrainManager.Trains[0].Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, TrainManager.Trains[0].Specs.CurrentEmergencyBrake, TrainManager.Trains[0].Specs.CurrentReverser, true, 0.0, 0.0, new AccelerationCurve[] {});
+							TrainManager.Trains[0].Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, TrainManager.Trains[0].Handles.EmergencyBrake, TrainManager.Trains[0].Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] {});
 						}
 						//At the minute, Object Viewer uses dummy brake systems
 						TrainManager.Trains[0].Cars[i].CarBrake.mainReservoir = new MainReservoir((int)numericUpDownMain.Value * 1000);
@@ -331,31 +331,31 @@ namespace OpenBve
 						};
 					}
 
-					TrainManager.Trains[0].Specs.CurrentReverser.Driver = (ReverserPosition)numericUpDownReverser.Value;
-					TrainManager.Trains[0].Specs.CurrentReverser.Actual = (ReverserPosition)numericUpDownReverser.Value;
-					if ((int)numericUpDownPowerNotches.Value != TrainManager.Trains[0].Specs.CurrentPowerNotch.MaximumNotch)
+					TrainManager.Trains[0].Handles.Reverser.Driver = (ReverserPosition)numericUpDownReverser.Value;
+					TrainManager.Trains[0].Handles.Reverser.Actual = (ReverserPosition)numericUpDownReverser.Value;
+					if ((int)numericUpDownPowerNotches.Value != TrainManager.Trains[0].Handles.Power.MaximumNotch)
 					{
-						TrainManager.Trains[0].Specs.CurrentPowerNotch = new PowerHandle((int)numericUpDownPowerNotches.Value, (int)numericUpDownPowerNotches.Value, new double[] {}, new double[] {});
+						TrainManager.Trains[0].Handles.Power = new PowerHandle((int)numericUpDownPowerNotches.Value, (int)numericUpDownPowerNotches.Value, new double[] {}, new double[] {});
 					}
-					TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver = (int)numericUpDownPowerNotch.Value;
+					TrainManager.Trains[0].Handles.Power.Driver = (int)numericUpDownPowerNotch.Value;
 					if (checkBoxAirBrake.Checked)
 					{
-						TrainManager.Trains[0].Specs.AirBrake.Driver = (int)numericUpDownBrakeNotch.Value;
+						TrainManager.Trains[0].Handles.Brake.Driver = (int)numericUpDownBrakeNotch.Value;
 					}
 					else
 					{
-						if ((int)numericUpDownBrakeNotches.Value != TrainManager.Trains[0].Specs.CurrentBrakeNotch.MaximumNotch)
+						if ((int)numericUpDownBrakeNotches.Value != TrainManager.Trains[0].Handles.Brake.MaximumNotch)
 						{
-							TrainManager.Trains[0].Specs.CurrentBrakeNotch = new BrakeHandle((int)numericUpDownBrakeNotches.Value, (int)numericUpDownBrakeNotches.Value, null, new double[] {}, new double[] {});
+							TrainManager.Trains[0].Handles.Brake = new BrakeHandle((int)numericUpDownBrakeNotches.Value, (int)numericUpDownBrakeNotches.Value, null, new double[] {}, new double[] {});
 						}
-						TrainManager.Trains[0].Specs.CurrentBrakeNotch.Driver = (int)numericUpDownBrakeNotch.Value;
-						TrainManager.Trains[0].Specs.HasHoldBrake = checkBoxHoldBrake.Checked;
+						TrainManager.Trains[0].Handles.Brake.Driver = (int)numericUpDownBrakeNotch.Value;
+						TrainManager.Trains[0].Handles.HasHoldBrake = checkBoxHoldBrake.Checked;
 						if (checkBoxHoldBrake.Checked)
 						{
-							TrainManager.Trains[0].Specs.CurrentHoldBrake.Driver = checkBoxSetHoldBrake.Checked;
+							TrainManager.Trains[0].Handles.HoldBrake.Driver = checkBoxSetHoldBrake.Checked;
 						}
 					}
-					TrainManager.Trains[0].Specs.CurrentEmergencyBrake.Driver = checkBoxSetEmergency.Checked;
+					TrainManager.Trains[0].Handles.EmergencyBrake.Driver = checkBoxSetEmergency.Checked;
 					TrainManager.Trains[0].Specs.HasConstSpeed = checkBoxConstSpeed.Checked;
 					if (checkBoxConstSpeed.Checked)
 					{

@@ -59,6 +59,7 @@
     <Compile Include="Car\Door.TrainDoorState.cs" />
     <Compile Include="Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Handles\AbstractHandle.cs" />
+    <Compile Include="Handles\CabHandles.cs" />
     <Compile Include="Handles\HandleChange.cs" />
     <Compile Include="Handles\Handles.AirBrake.cs" />
     <Compile Include="Handles\Handles.AirBrake.States.cs" />
@@ -94,8 +95,6 @@
       <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Train\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

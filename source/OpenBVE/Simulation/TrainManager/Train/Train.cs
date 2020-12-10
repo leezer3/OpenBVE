@@ -37,7 +37,7 @@ namespace OpenBve
 
 			/// <summary>The index of the car which the camera is currently anchored to</summary>
 			internal int CameraCar;
-			internal Handles Handles;
+			internal CabHandles Handles;
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;

@@ -45,7 +45,7 @@ namespace OpenBve {
 			{
 				FrontAxle = new Axle(Program.CurrentHost, train, this);
 				RearAxle = new Axle(Program.CurrentHost, train, this);
-				CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Specs.CurrentEmergencyBrake, train.Specs.CurrentReverser, true, 0.0, 0.0, new AccelerationCurve[] {});
+				CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] {});
 				CarBrake.mainReservoir = new MainReservoir(690000.0);
 				CarBrake.brakePipe = new BrakePipe(690000.0);
 				CarBrake.brakeCylinder = new BrakeCylinder(0.0);
@@ -82,30 +82,22 @@ namespace OpenBve {
 				}
 			}
 		}
-		// train specs
+
 		internal struct TrainSpecs {
-			internal ReverserHandle CurrentReverser;
-			internal int MaximumPowerNotch;
-			internal PowerHandle CurrentPowerNotch;
-			internal int MaximumBrakeNotch;
-			internal BrakeHandle CurrentBrakeNotch;
-			internal EmergencyHandle CurrentEmergencyBrake;
-			internal bool HasHoldBrake;
-			internal HoldBrakeHandle CurrentHoldBrake;
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;
-			internal AirBrakeHandle AirBrake;
 		}
 		// train
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
+			internal CabHandles Handles;
 			internal TrainSpecs Specs;
 			internal Train()
 			{
-				Specs.CurrentReverser = new ReverserHandle();
-				Specs.CurrentPowerNotch = new PowerHandle(8, 8, new double[] {}, new double[] {});
-				Specs.CurrentBrakeNotch = new BrakeHandle(8, 8, null, new double[] {}, new double[] {});
-				Specs.AirBrake = new AirBrakeHandle();
+				Handles.Reverser = new ReverserHandle();
+				Handles.EmergencyBrake = new EmergencyHandle();
+				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {});
+				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {});
 			}
 			public override int NumberOfCars
 			{
