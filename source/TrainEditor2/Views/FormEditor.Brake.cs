@@ -6,6 +6,7 @@ using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Trains;
+using TrainManager.BrakeSystems;
 
 namespace TrainEditor2.Views
 {
@@ -21,7 +22,7 @@ namespace TrainEditor2.Views
 					w => w.SelectedIndex,
 					BindingMode.TwoWay,
 					w => (int)w,
-					w => (Brake.BrakeTypes)w,
+					w => (BrakeSystemType)w,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxBrakeType.SelectedIndexChanged += h,
@@ -53,7 +54,7 @@ namespace TrainEditor2.Views
 					w => w.SelectedIndex,
 					BindingMode.TwoWay,
 					w => (int)w,
-					w => (Brake.BrakeControlSystems)w,
+					w => (EletropneumaticBrakeType)w,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxBrakeControlSystem.SelectedIndexChanged += h,

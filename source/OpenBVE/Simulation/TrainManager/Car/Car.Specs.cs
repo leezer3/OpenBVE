@@ -1,7 +1,9 @@
-﻿namespace OpenBve
+﻿using TrainManager.Power;
+
+namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		internal struct CarSpecs
 		{

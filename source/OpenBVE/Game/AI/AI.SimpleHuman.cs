@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Events;
+using TrainManager.Car;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -10,16 +12,24 @@ namespace OpenBve
 		/// <summary>This class forms an AI representation of a simple human driver</summary>
 		internal class SimpleHumanDriverAI : GeneralAI
 		{
-			// members
+			/// <summary>The time last processed, in seconds since midnight</summary>
 			private double TimeLastProcessed;
+			/// <summary>The processing interval in seconds</summary>
 			private double CurrentInterval;
+			/// <summary>Whether the train is currently braking to a stop</summary>
 			private bool BrakeMode;
+			/// <summary>The current percentage of the limit the driver is aiming for</summary>
 			private double CurrentSpeedFactor;
+			/// <summary>A random base speed factor for the driver personality</summary>
+			/// <remarks>Controls the percentage of the speed limit the driver aims for</remarks>
 			private readonly double PersonalitySpeedFactor;
+			/// <summary>The last notch at which wheelslip was observed</summary>
 			private int PowerNotchAtWhichWheelSlipIsObserved;
+			/// <summary>The index of the last station the train called at</summary>
 			private int LastStation;
+			/// <summary>The AI speed limit (if set by routefile)</summary>
 			private readonly double SpeedLimit;
-
+			/// <summary>Holds a reference to the train the AI is driving</summary>
 			private readonly TrainManager.Train Train;
 			// functions
 			internal SimpleHumanDriverAI(TrainManager.Train train, double Limit)
@@ -41,6 +51,9 @@ namespace OpenBve
 				}
 				this.SpeedLimit = Limit;
 			}
+
+			/// <summary>Sets the response time for actions triggered by a runtime plugin</summary>
+			/// <returns>The response time</returns>
 			private AIResponse PerformPlugin()
 			{
 				AIResponse response = Train.Plugin.UpdateAI();
@@ -58,6 +71,8 @@ namespace OpenBve
 				}
 				return response;
 			}
+
+			/// <summary>Performs all default actions</summary>
 			private void PerformDefault()
 			{
 				if (Train.Derailed)
@@ -188,9 +203,9 @@ namespace OpenBve
 						if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 						{
 							// doors not fully open at station - open doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 							{
-								TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+								AttemptToOpenDoors();
 							}
 						}
 						CurrentInterval = 1.0;
@@ -199,19 +214,19 @@ namespace OpenBve
 					{
 						CurrentInterval = 1.0;
 						Train.ApplyNotch(-1, true, 0, true);
-						if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
+						if (Train.Handles.Brake is AirBrakeHandle)
 						{
 							if (Train.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight > 10 || Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.ServiceMaximumPressure)
 							{
-								Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+								Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 							}
 							else if (Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure > 0.9 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.EmergencyMaximumPressure)
 							{
-								Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+								Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 							}
 							else
 							{
-								Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Lap);
+								Train.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
 							}
 						}
 						else
@@ -239,9 +254,10 @@ namespace OpenBve
 						if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed)
 						{
 							// ready for departure - close doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 							{
-								TrainManager.CloseTrainDoors(Train, true, true);
+								doorOpenAttempted = false;
+								Train.CloseDoors(true, true);
 							}
 						}
 						else if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)
@@ -250,18 +266,19 @@ namespace OpenBve
 						else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 						{
 							// doors not fully open at station - open doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 							{
-								TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+								AttemptToOpenDoors();
 							}
 							CurrentInterval = 1.0;
 						}
 						else
 						{
 							// not at station - close doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 							{
-								TrainManager.CloseTrainDoors(Train, true, true);
+								doorOpenAttempted = false;
+								Train.CloseDoors(true, true);
 							}
 						}
 					}
@@ -269,9 +286,9 @@ namespace OpenBve
 				else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 				{
 					// arrived at station - open doors
-					if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+					if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 					{
-						TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+						AttemptToOpenDoors();
 					}
 					CurrentInterval = 1.0;
 				}
@@ -283,7 +300,7 @@ namespace OpenBve
 						Train.ApplyReverser(0, false);
 					}
 					Train.ApplyNotch(-1, true, 1, true);
-					Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+					Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 					Train.ApplyEmergencyBrake();
 					CurrentInterval = 10.0;
 				}
@@ -298,7 +315,7 @@ namespace OpenBve
 						{
 							this.PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.Driver;
 							Train.ApplyNotch(-1, true, -1, true);
-							Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+							Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 							this.CurrentInterval = 2.5;
 							return;
 						}
@@ -359,7 +376,7 @@ namespace OpenBve
 							break;
 						}
 					}
-					if (Train.Handles.Brake is TrainManager.AirBrakeHandle | Train.Handles.Brake.MaximumNotch <= 0)
+					if (Train.Handles.Brake is AirBrakeHandle | Train.Handles.Brake.MaximumNotch <= 0)
 					{
 						decelerationCruise = 0.3 * BrakeDeceleration;
 						decelerationStart = 0.5 * BrakeDeceleration;
@@ -634,14 +651,14 @@ namespace OpenBve
 								else if (dist >= 5.0)
 								{
 									Train.ApplyNotch(-1, true, 1, true);
-									Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+									Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 									this.CurrentInterval = 0.1;
 									return;
 								}
 								else
 								{
 									Train.ApplyNotch(-1, true, 1, true);
-									Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+									Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 									Train.ApplyEmergencyBrake();
 									this.CurrentInterval = 10.0;
 									return;
@@ -673,14 +690,14 @@ namespace OpenBve
 								else if (dist > 0.5 * minDistance)
 								{
 									Train.ApplyNotch(-1, true, 1, true);
-									Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+									Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 									this.CurrentInterval = 0.1;
 									return;
 								}
 								else
 								{
 									Train.ApplyNotch(-1, true, 1, true);
-									Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+									Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 									Train.ApplyEmergencyBrake();
 									this.CurrentInterval = 1.0;
 									return;
@@ -741,7 +758,7 @@ namespace OpenBve
 							if (Train.Handles.Power.Driver == 0)
 							{
 								Train.ApplyNotch(0, true, 1, true);
-								Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+								Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 							}
 							else
 							{
@@ -754,7 +771,7 @@ namespace OpenBve
 						{
 							// brake stop
 							Train.ApplyNotch(-1, true, -1, true);
-							Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+							Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 							CurrentInterval *= 0.4;
 							if (CurrentInterval < 0.3) CurrentInterval = 0.3;
 						}
@@ -762,7 +779,7 @@ namespace OpenBve
 						{
 							// keep brake
 							Train.ApplyNotch(-1, true, 0, true);
-							Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Lap);
+							Train.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
 							CurrentInterval *= 1.2;
 							if (CurrentInterval > 1.0) CurrentInterval = 1.0;
 						}
@@ -770,7 +787,7 @@ namespace OpenBve
 						{
 							Train.ApplyHoldBrake(Train.Handles.HasHoldBrake);
 						}
-						if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
+						if (Train.Handles.Brake is AirBrakeHandle)
 						{
 							CurrentInterval = 0.1;
 						}
@@ -780,7 +797,7 @@ namespace OpenBve
 						// cut power/brake
 						BrakeMode = false;
 						Train.ApplyNotch(-1, true, -1, true);
-						Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+						Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 						if (Train.Handles.Power.Driver == 0 & Train.Handles.Brake.Driver == 0)
 						{
 							Train.ApplyHoldBrake(Train.Handles.HasHoldBrake);
@@ -823,7 +840,7 @@ namespace OpenBve
 							{
 								Train.ApplyNotch(0, true, -1, true);
 							}
-							Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+							Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 							if (double.IsPositiveInfinity(powerstart))
 							{
 								CurrentInterval = 0.3 + 0.1 * Train.Handles.Power.Driver;
@@ -839,7 +856,7 @@ namespace OpenBve
 						{
 							// power end (over-speed)
 							Train.ApplyNotch(-1, true, -1, true);
-							Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+							Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 							CurrentInterval *= 0.3;
 							if (CurrentInterval < 0.2) CurrentInterval = 0.2;
 						}
@@ -860,14 +877,14 @@ namespace OpenBve
 							{
 								Train.ApplyNotch(0, true, -1, true);
 							}
-							Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+							Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 							CurrentInterval = 1.3;
 						}
 						else
 						{
 							// keep power
 							Train.ApplyNotch(0, true, -1, true);
-							Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+							Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
 							if (Train.Handles.Power.Driver != 0)
 							{
 								Train.Specs.CurrentConstSpeed = Train.Specs.HasConstSpeed;
@@ -882,6 +899,27 @@ namespace OpenBve
 					}
 				}
 			}
+
+			/// <summary>The timer unti the doors may be opened</summary>
+			private double doorWaitingTimer = 2.0;
+			/// <summary>Whether a door open has yet been attempted</summary>
+			private bool doorOpenAttempted = false;
+
+
+			/// <summary>Provides a simple random delay timer, so the driver does not appear to open the doors instantly</summary>
+			private void AttemptToOpenDoors()
+			{
+				if (doorOpenAttempted == false)
+				{
+					doorWaitingTimer = Program.RandomNumberGenerator.Next(0, 5);
+					doorOpenAttempted = true;
+				}
+				if (doorWaitingTimer < 0)
+				{
+					Train.OpenDoors(Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+				}
+				
+			}
 			public override void Trigger(double TimeElapsed)
 			{
 				if (TimeLastProcessed > Program.CurrentRoute.SecondsSinceMidnight)
@@ -890,6 +928,7 @@ namespace OpenBve
 				}
 				else if (Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{
+					doorWaitingTimer -= Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed;
 					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
 					if (Train.Plugin != null && Train.Plugin.SupportsAI)
 					{

@@ -9,6 +9,8 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using RouteManager2;
+using TrainManager.Car;
+using TrainManager.Handles;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -23,8 +25,8 @@ namespace OpenBve.Graphics.Renderers
 			{
 				return;
 			}
-			TrainManager.TrainDoorState LeftDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false);
-			TrainManager.TrainDoorState RightDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true);
+			TrainDoorState LeftDoors = TrainManager.PlayerTrain.GetDoorsState(true, false);
+			TrainDoorState RightDoors = TrainManager.PlayerTrain.GetDoorsState(false, true);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Command = Element.Subject.ToLowerInvariant();
 			// default
@@ -146,7 +148,7 @@ namespace OpenBve.Graphics.Renderers
 					{
 						return;
 					}
-					if (TrainManager.PlayerTrain.Handles.Brake is TrainManager.AirBrakeHandle)
+					if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 					{
 						if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 						{
@@ -160,7 +162,7 @@ namespace OpenBve.Graphics.Renderers
 								t = Translations.QuickReferences.HandleEmergency;
 							}
 						}
-						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Release)
+						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)AirBrakeHandleState.Release)
 						{
 							sc = MessageColor.Gray;
 							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
@@ -172,7 +174,7 @@ namespace OpenBve.Graphics.Renderers
 								t = Translations.QuickReferences.HandleRelease;
 							}
 						}
-						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap)
+						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)AirBrakeHandleState.Lap)
 						{
 							sc = MessageColor.Blue;
 							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
@@ -258,9 +260,9 @@ namespace OpenBve.Graphics.Renderers
 						return;
 					}
 
-					if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
+					if (TrainManager.PlayerTrain.Handles.LocoBrake is LocoAirBrakeHandle)
 					{
-						if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)TrainManager.AirBrakeHandleState.Release)
+						if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)AirBrakeHandleState.Release)
 						{
 							sc = MessageColor.Gray;
 							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
@@ -272,7 +274,7 @@ namespace OpenBve.Graphics.Renderers
 								t = Translations.QuickReferences.HandleRelease;
 							}
 						}
-						else if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)TrainManager.AirBrakeHandleState.Lap)
+						else if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)AirBrakeHandleState.Lap)
 						{
 							sc = MessageColor.Blue;
 							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
@@ -398,7 +400,7 @@ namespace OpenBve.Graphics.Renderers
 				case "doorsleft":
 				case "doorsright":
 				{
-					if ((LeftDoors & TrainManager.TrainDoorState.AllClosed) == 0 | (RightDoors & TrainManager.TrainDoorState.AllClosed) == 0)
+					if ((LeftDoors & TrainDoorState.AllClosed) == 0 | (RightDoors & TrainDoorState.AllClosed) == 0)
 					{
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -408,16 +410,16 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					}
-					TrainManager.TrainDoorState Doors = Command == "doorsleft" ? LeftDoors : RightDoors;
-					if ((Doors & TrainManager.TrainDoorState.Mixed) != 0)
+					TrainDoorState Doors = Command == "doorsleft" ? LeftDoors : RightDoors;
+					if ((Doors & TrainDoorState.Mixed) != 0)
 					{
 						sc = MessageColor.Orange;
 					}
-					else if ((Doors & TrainManager.TrainDoorState.AllClosed) != 0)
+					else if ((Doors & TrainDoorState.AllClosed) != 0)
 					{
 						sc = MessageColor.Gray;
 					}
-					else if (TrainManager.PlayerTrain.Specs.DoorCloseMode == TrainManager.DoorMode.Manual)
+					else if (TrainManager.PlayerTrain.Specs.DoorCloseMode == DoorMode.Manual)
 					{
 						sc = MessageColor.Green;
 					}

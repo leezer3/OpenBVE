@@ -1,5 +1,6 @@
 ﻿using System;
 using Prism.Mvvm;
+using TrainManager.BrakeSystems;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -8,13 +9,6 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal class Brake : BindableBase, ICloneable
 	{
-		internal enum BrakeTypes
-		{
-			ElectromagneticStraightAirBrake = 0,
-			ElectricCommandBrake = 1,
-			AutomaticAirBrake = 2
-		}
-
 		internal enum LocoBrakeTypes
 		{
 			NotFitted = 0,
@@ -22,19 +16,12 @@ namespace TrainEditor2.Models.Trains
 			AutomaticAirBrake = 2
 		}
 
-		internal enum BrakeControlSystems
-		{
-			None = 0,
-			ClosingElectromagneticValve = 1,
-			DelayIncludingSystem = 2
-		}
-
-		private BrakeTypes brakeType;
+		private BrakeSystemType brakeType;
 		private LocoBrakeTypes locoBrakeType;
-		private BrakeControlSystems brakeControlSystem;
+		private EletropneumaticBrakeType brakeControlSystem;
 		private double brakeControlSpeed;
 
-		internal BrakeTypes BrakeType
+		internal BrakeSystemType BrakeType
 		{
 			get
 			{
@@ -58,7 +45,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal BrakeControlSystems BrakeControlSystem
+		internal EletropneumaticBrakeType BrakeControlSystem
 		{
 			get
 			{
@@ -84,9 +71,9 @@ namespace TrainEditor2.Models.Trains
 
 		internal Brake()
 		{
-			BrakeType = BrakeTypes.ElectromagneticStraightAirBrake;
+			BrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
 			LocoBrakeType = LocoBrakeTypes.NotFitted;
-			BrakeControlSystem = BrakeControlSystems.None;
+			BrakeControlSystem = EletropneumaticBrakeType.None;
 			BrakeControlSpeed = 0.0;
 		}
 

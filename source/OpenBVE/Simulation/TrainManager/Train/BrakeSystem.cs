@@ -1,10 +1,11 @@
 ﻿using System;
-using OpenBve.BrakeSystems;
+using TrainManager.BrakeSystems;
 using SoundManager;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		public partial class Train
 		{

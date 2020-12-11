@@ -14,11 +14,11 @@ namespace LibRender2.Trains
 		/// <summary>Whether this is visible from internal views</summary>
 		public bool VisibleFromInterior;
 
-		public CarSection(BaseRenderer Renderer, bool Overlay)
+		public CarSection(BaseRenderer Renderer, ObjectType Type)
 		{
 			renderer = Renderer;
 			Groups = new ElementsGroup[1];
-			Groups[0] = new ElementsGroup(Overlay);
+			Groups[0] = new ElementsGroup(Type);
 		}
 
 		/// <summary>Initalizes the CarSection</summary>
@@ -38,14 +38,7 @@ namespace LibRender2.Trains
 			{
 				for (int i = 0; i < Groups[0].Elements.Length; i++)
 				{
-					if (Groups[0].Overlay)
-					{
-						renderer.VisibleObjects.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Overlay);
-					}
-					else
-					{
-						renderer.VisibleObjects.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Dynamic);
-					}
+					renderer.VisibleObjects.ShowObject(Groups[0].Elements[i].internalObject, Groups[0].Type);
 				}
 			}
 
@@ -54,14 +47,8 @@ namespace LibRender2.Trains
 			{
 				for (int i = 0; i < Groups[add].Elements.Length; i++)
 				{
-					if (Groups[add].Overlay)
-					{
-						renderer.VisibleObjects.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Overlay);
-					}
-					else
-					{
-						renderer.VisibleObjects.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Dynamic);
-					}
+					renderer.VisibleObjects.ShowObject(Groups[add].Elements[i].internalObject, Groups[add].Type);
+					
 				}
 			}
 		}

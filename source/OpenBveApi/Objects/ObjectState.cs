@@ -103,6 +103,12 @@ namespace OpenBveApi.Objects
 			updateModelMatrix = false;
 		}
 
+		/// <summary>Creates a new ObjectState</summary>
+		public ObjectState(StaticObject prototype) : this()
+		{
+			Prototype = prototype;
+		}
+
 		/// <summary>Clones this ObjectState</summary>
 		public object Clone()
 		{

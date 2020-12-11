@@ -11,7 +11,7 @@ namespace OpenBveApi.Objects
 		[CLSCompliant(false)]
 		public ushort Material;
 		/// <summary>A bit mask combining constants of the MeshFace structure.</summary>
-		public byte Flags;
+		public FaceFlags Flags;
 		/// <summary>The starting position for the face in the VAO</summary>
 		public int IboStartIndex;
 		/// <summary>The starting position for the normals in the VAO</summary>
@@ -30,7 +30,8 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates a new MeshFace using the specified vertex indicies and the default material</summary>
 		/// <param name="Vertices">The vertex indicies</param>
-		public MeshFace(int[] Vertices)
+		/// <param name="Type">The type of OpenGL face drawing to use</param>
+		public MeshFace(int[] Vertices, FaceFlags Type = FaceFlags.NotSet)
 		{
 			this.Vertices = new MeshFaceVertex[Vertices.Length];
 			for (int i = 0; i < Vertices.Length; i++)
@@ -42,6 +43,10 @@ namespace OpenBveApi.Objects
 			this.Flags = 0;
 			IboStartIndex = 0;
 			NormalsIboStartIndex = 0;
+			if (Type != FaceFlags.NotSet)
+			{
+				Flags |= Type;
+			}
 		}
 
 		/// <summary>Creates a new MeshFace using the specified vertex indices and material</summary>
@@ -60,7 +65,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Flips the MeshFace</summary>
 		public void Flip()
 		{
-			if ((this.Flags & FaceTypeMask) == FaceTypeQuadStrip)
+			if (((FaceFlags)Flags & FaceFlags.FaceTypeMask) == FaceFlags.QuadStrip)
 			{
 				for (int i = 0; i < this.Vertices.Length; i += 2)
 				{
@@ -81,23 +86,6 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>The mask used for unidirectonal Face commands</summary>
-		public const int FaceTypeMask = 7;
-		/// <summary>The mask used for bidirectional Face2 commands</summary>
-		public const int Face2Mask = 8;
-
-		//openGL types
-
-		/// <summary>Polygon</summary>
-		public const int FaceTypePolygon = 0;
-		/// <summary>Triangles</summary>
-		public const int FaceTypeTriangles = 1;
-		/// <summary>TriangleStrip</summary>
-		public const int FaceTypeTriangleStrip = 2;
-		/// <summary>Quads</summary>
-		public const int FaceTypeQuads = 3;
-		/// <summary>QuadStrip</summary>
-		public const int FaceTypeQuadStrip = 4;
 		
 	}
 }

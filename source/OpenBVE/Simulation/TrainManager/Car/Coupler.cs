@@ -7,7 +7,7 @@ using OpenBveApi.Trains;
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		internal class Coupler : AbstractCoupler
 		{
@@ -185,7 +185,7 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection(Program.Renderer, false);
+				CarSections[j] = new CarSection(Program.Renderer, ObjectType.Dynamic);
 				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
@@ -193,10 +193,9 @@ namespace OpenBve
 					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
 					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost)
 					{
-						States = new[] { new ObjectState() }
+						States = new[] { new ObjectState(s) },
+						CurrentState = 0
 					};
-					CarSections[j].Groups[0].Elements[0].States[0].Prototype = s;
-					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
 					Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
 				else if (currentObject is AnimatedObjectCollection)

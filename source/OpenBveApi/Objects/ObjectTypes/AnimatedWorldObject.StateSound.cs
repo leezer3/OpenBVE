@@ -171,7 +171,7 @@ namespace OpenBveApi.Objects
 
 			currentObject.Radius = System.Math.Sqrt(r);
 			currentObject.Visible = false;
-			currentObject.Object.Initialize(0, false, false);
+			currentObject.Object.Initialize(0, ObjectType.Dynamic, false);
 			currentHost.AnimatedWorldObjects[a] = currentObject;
 			currentHost.AnimatedWorldObjectsUsed++;
 		}

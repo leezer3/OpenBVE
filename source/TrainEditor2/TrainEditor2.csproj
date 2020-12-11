@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -150,7 +150,6 @@
     <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.Specs.cs" />
-    <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
     <Compile Include="Simulation\TrainManager\TrainManager.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Systems\Fonts.cs" />
@@ -386,6 +385,10 @@
     <ProjectReference Include="..\SoundManager\SoundManager.csproj">
       <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
       <Name>SoundManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TrainManager\TrainManager.csproj">
+      <Project>{d0fca2c5-ff75-42d8-ae80-310280a61fb1}</Project>
+      <Name>TrainManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

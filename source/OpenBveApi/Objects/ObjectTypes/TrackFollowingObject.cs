@@ -127,14 +127,7 @@ namespace OpenBveApi.Objects
 			double x = 0.0;
 			if (Object.TrackFollowerFunction != null)
 			{
-				if (UpdateFunctions)
-				{
-					x = Object.TrackFollowerFunction.Perform(Train, CarIndex, WorldPosition, currentTrackPosition, currentSectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
-				}
-				else
-				{
-					x = Object.TrackFollowerFunction.LastResult;
-				}
+				x = UpdateFunctions ? Object.TrackFollowerFunction.Perform(Train, CarIndex, WorldPosition, currentTrackPosition, currentSectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState) : Object.TrackFollowerFunction.LastResult;
 			}
 
 			return x;

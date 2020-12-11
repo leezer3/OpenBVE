@@ -538,5 +538,9 @@ namespace OpenBveApi.Hosts {
 		{
 
 		}
+
+		/// <summary>Gets the current in-game time</summary>
+		/// <returns>The time in seconds since midnight on the first day</returns>
+		public virtual double InGameTime => 0.0;
 	}
 }

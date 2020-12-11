@@ -100,7 +100,7 @@ namespace Plugin
 			// parse lines
 			bool firstMeshBuilder = false;
 			MeshBuilder Builder = new MeshBuilder(currentHost);
-			Vector3[] Normals = new Vector3[4];
+			List<Vector3> Normals = new List<Vector3>();
 			bool CommentStarted = false;
 			for (int i = 0; i < Lines.Count; i++) {
 				{
@@ -242,7 +242,7 @@ namespace Plugin
 								}
 								Builder.Apply(ref Object, Plugin.BveTsHacks);
 								Builder = new MeshBuilder(currentHost);
-								Normals = new Vector3[4];
+								Normals = new List<Vector3>();
 							} break;
 						case "addvertex":
 						case "vertex":
@@ -288,12 +288,8 @@ namespace Plugin
 									currentNormal.Z = 0.0;
 								}
 								currentNormal.Normalize();
-								Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
-								while (Builder.Vertices.Length >= Normals.Length) {
-									Array.Resize(ref Normals, Normals.Length << 1);
-								}
-								Builder.Vertices[Builder.Vertices.Length - 1] = currentVertex;
-								Normals[Builder.Vertices.Length - 1] = currentNormal;
+								Builder.Vertices.Add(currentVertex);
+								Normals.Add(currentNormal);
 							} break;
 						case "addface":
 						case "addface2":
@@ -344,7 +340,7 @@ namespace Plugin
 											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											q = false;
 											break;
-										} else if (a[j] < 0 | a[j] >= Builder.Vertices.Length) {
+										} else if (a[j] < 0 | a[j] >= Builder.Vertices.Count) {
 											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											q = false;
 											break;
@@ -355,26 +351,22 @@ namespace Plugin
 										}
 									}
 									if (q) {
-										int f = Builder.Faces.Length;
-										Array.Resize(ref Builder.Faces, f + 1);
-										Builder.Faces[f] = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
-										while (Builder.Vertices.Length > Normals.Length) {
-											Array.Resize(ref Normals, Normals.Length << 1);
-										}
+										MeshFace f = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
 										for (int j = 0; j < Arguments.Length; j++) {
-											Builder.Faces[f].Vertices[j].Index = (ushort)a[j];
-											Builder.Faces[f].Vertices[j].Normal = Normals[a[j]];
+											f.Vertices[j].Index = (ushort)a[j];
+											f.Vertices[j].Normal = Normals[a[j]];
 										}
 										if (Builder.isCylinder && BveTsHacks && CylinderHack)
 										{
-											int l = Builder.Faces[f].Vertices.Length;
-											MeshFaceVertex v = Builder.Faces[f].Vertices[l - 1];
-											Builder.Faces[f].Vertices[l - 1] = Builder.Faces[f].Vertices[l - 2];
-											Builder.Faces[f].Vertices[l - 2] = v;
+											int l = f.Vertices.Length;
+											MeshFaceVertex v = f.Vertices[l - 1];
+											f.Vertices[l - 1] = f.Vertices[l - 2];
+											f.Vertices[l - 2] = v;
 										}
 										if (cmd == "addface2" | cmd == "face2") {
-											Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
+											f.Flags = FaceFlags.Face2Mask;
 										}
+										Builder.Faces.Add(f);
 									}
 								}
 							} break;
@@ -682,8 +674,11 @@ namespace Plugin
 										WrapMode = Builder.Materials[0].WrapMode
 									};
 								}
-								for (int j = 0; j < Builder.Faces.Length; j++) {
-									Builder.Faces[j].Material += (ushort)m;
+								for (int j = 0; j < Builder.Faces.Count; j++)
+								{
+									MeshFace f = Builder.Faces[j];
+									f.Material += (ushort) m;
+									Builder.Faces[j] = f;
 								}
 							} break;
 						case "setemissivecolor":
@@ -732,8 +727,11 @@ namespace Plugin
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
 									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
 								}
-								for (int j = 0; j < Builder.Faces.Length; j++) {
-									Builder.Faces[j].Material += (ushort)m;
+								for (int j = 0; j < Builder.Faces.Count; j++)
+								{
+									MeshFace f = Builder.Faces[j];
+									f.Material += (ushort)m;
+									Builder.Faces[j] = f;
 								}
 							} break;
 						case "setdecaltransparentcolor":
@@ -1158,7 +1156,7 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									y = 0.0f;
 								}
-								if (j >= 0 & j < Builder.Vertices.Length) {
+								if (j >= 0 & j < Builder.Vertices.Count) {
 									Builder.Vertices[j].TextureCoordinates = new Vector2(x, y);
 								} else {
 									currentHost.AddMessage(MessageType.Error, false, "VertexIndex references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -1260,31 +1258,30 @@ namespace Plugin
 		}
 
 		// create cube
-		private static void CreateCube(ref MeshBuilder Builder, double sx, double sy, double sz) {
-			int v = Builder.Vertices.Length;
-			Array.Resize(ref Builder.Vertices, v + 8);
-			Builder.Vertices[v + 0] = new Vertex(sx, sy, -sz);
-			Builder.Vertices[v + 1] = new Vertex(sx, -sy, -sz);
-			Builder.Vertices[v + 2] = new Vertex(-sx, -sy, -sz);
-			Builder.Vertices[v + 3] = new Vertex(-sx, sy, -sz);
-			Builder.Vertices[v + 4] = new Vertex(sx, sy, sz);
-			Builder.Vertices[v + 5] = new Vertex(sx, -sy, sz);
-			Builder.Vertices[v + 6] = new Vertex(-sx, -sy, sz);
-			Builder.Vertices[v + 7] = new Vertex(-sx, sy, sz);
-			int f = Builder.Faces.Length;
-			Array.Resize(ref Builder.Faces, f + 6);
-			Builder.Faces[f + 0].Vertices = new[]  { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };
-			Builder.Faces[f + 0].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 1].Vertices = new[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 1) };
-			Builder.Faces[f + 1].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 2].Vertices = new[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 4) };
-			Builder.Faces[f + 2].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 3].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 7) };
-			Builder.Faces[f + 3].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 4].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 2) };
-			Builder.Faces[f + 4].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 5].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 1) , new MeshFaceVertex(v + 5) };
-			Builder.Faces[f + 5].Flags |= MeshFace.FaceTypeTriangles;
+		private static void CreateCube(ref MeshBuilder Builder, double sx, double sy, double sz)
+		{
+			int v = Builder.Vertices.Count;
+			Builder.Vertices.Add(new Vertex(sx, sy, -sz));
+			Builder.Vertices.Add(new Vertex(sx, -sy, -sz));
+			Builder.Vertices.Add(new Vertex(-sx, -sy, -sz));
+			Builder.Vertices.Add(new Vertex(-sx, sy, -sz));
+			Builder.Vertices.Add(new Vertex(sx, sy, sz));
+			Builder.Vertices.Add(new Vertex(sx, -sy, sz));
+			Builder.Vertices.Add(new Vertex(-sx, -sy, sz));
+			Builder.Vertices.Add(new Vertex(-sx, sy, sz));
+			MeshFace f0 = new MeshFace(new[] {v + 0, v + 1, v + 2, v + 0, v + 2, v + 3}, FaceFlags.Triangles);
+			Builder.Faces.Add(f0);
+			MeshFace f1 = new MeshFace(new[] {v + 0, v + 4, v + 5, v + 0, v + 5, v + 1}, FaceFlags.Triangles);
+			Builder.Faces.Add(f1);
+			MeshFace f2 = new MeshFace(new[] {v + 0, v + 3, v + 7, v + 0, v + 7, v + 4}, FaceFlags.Triangles);
+			Builder.Faces.Add(f2);
+			MeshFace f3 = new MeshFace(new[] {v + 6, v + 5, v + 4, v + 6, v + 4, v + 7}, FaceFlags.Triangles);
+			Builder.Faces.Add(f3);
+			MeshFace f4 = new MeshFace(new[] {v + 6, v + 7, v + 3, v + 6, v + 3, v + 2}, FaceFlags.Triangles);
+			Builder.Faces.Add(f4);
+			MeshFace f5 = new MeshFace(new[] {v + 6, v + 2, v + 1, v + 6, v + 1, v + 5}, FaceFlags.Triangles);
+			Builder.Faces.Add(f5);
+			
 		}
 
 		// create cylinder
@@ -1298,8 +1295,6 @@ namespace Plugin
 			r2 = Math.Abs(r2);
 			double ns = h >= 0.0 ? 1.0 : -1.0;
 			// initialization
-			int v = Builder.Vertices.Length;
-			Array.Resize(ref Builder.Vertices, v + 2 * n);
 			Vector3[] Normals = new Vector3[2 * n];
 			double d = 2.0 * Math.PI / (double)n;
 			double g = 0.5 * h;
@@ -1308,6 +1303,7 @@ namespace Plugin
 			double cosa = Math.Cos(a);
 			double sina = Math.Sin(a);
 			// vertices and normals
+			int v = Builder.Vertices.Count;
 			for (int i = 0; i < n; i++) {
 				double dx = Math.Cos(t);
 				double dz = Math.Sin(t);
@@ -1315,8 +1311,8 @@ namespace Plugin
 				double lz = dz * r2;
 				double ux = dx * r1;
 				double uz = dz * r1;
-				Builder.Vertices[v + 2 * i + 0] = new Vertex(ux, g, uz);
-				Builder.Vertices[v + 2 * i + 1] = new Vertex(lx, -g, lz);
+				Builder.Vertices.Add(new Vertex(ux, g, uz));
+				Builder.Vertices.Add(new Vertex(lx, -g, lz));
 				Vector3 normal = new Vector3(dx * ns, 0.0, dz * ns);
 				Vector3 s = Vector3.Cross(normal, Vector3.Down);
 				normal.Rotate(s, cosa, sina);
@@ -1325,16 +1321,15 @@ namespace Plugin
 				t += d;
 			}
 			// faces
-			int f = Builder.Faces.Length;
-			Array.Resize(ref Builder.Faces, f + n + m);
+
 			for (int i = 0; i < n; i++) {
-				Builder.Faces[f + i].Flags = 0;
 				int i0 = (2 * i + 2) % (2 * n);
 				int i1 = (2 * i + 3) % (2 * n);
 				int i2 = 2 * i + 1;
 				int i3 = 2 * i;
-				Builder.Faces[f + i].Vertices = new[] { new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3]) };
-				Builder.Faces[f + i].Flags |= MeshFace.FaceTypeTriangles;
+				MeshFace f = new MeshFace(new[] {new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3])}, 0);
+				f.Flags = FaceFlags.Triangles;
+				Builder.Faces.Add(f);
 			}
 
 			for (int i = 0; i < m; i++) {
@@ -1357,9 +1352,9 @@ namespace Plugin
 				verts.Add(verts[0]);
 				verts.Add(verts[verts.Count - 1]);
 				verts.Add(verts[1]);
-				Builder.Faces[f + n + i].Vertices = verts.ToArray();
-				Builder.Faces[f + n + i].Flags |= MeshFace.FaceTypeTriangles;
-				
+				MeshFace f = new MeshFace(verts.ToArray(), 0);
+				f.Flags = FaceFlags.Triangles;
+				Builder.Faces.Add(f);
 			}
 
 		}

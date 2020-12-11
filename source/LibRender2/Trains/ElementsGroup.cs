@@ -8,13 +8,13 @@ namespace LibRender2.Trains
 		/// <summary>The animated objects</summary>
 		public AnimatedObject[] Elements;
 		/// <summary>Whether this is to be shown in overlay mode (e.g. panel)</summary>
-		public readonly bool Overlay;
+		public readonly ObjectType Type;
 		/// <summary>The touch elements if applicable</summary>
 		public TouchElement[] TouchElements;
 
-		public ElementsGroup(bool overlay)
+		public ElementsGroup(ObjectType type)
 		{
-			Overlay = overlay;
+			Type = type;
 			Elements = new AnimatedObject[] {};
 		}
 
@@ -26,7 +26,7 @@ namespace LibRender2.Trains
 			{
 				for (int j = 0; j < Elements[i].States.Length; j++)
 				{
-					Elements[i].Initialize(j, Overlay, CurrentlyVisible);
+					Elements[i].Initialize(j, Type, CurrentlyVisible);
 				}
 			}
 		}

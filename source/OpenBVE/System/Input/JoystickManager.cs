@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using OpenBveApi.Hosts;
 using OpenTK.Input;
-using OpenTK.Platform;
 using PIEHid32Net;
 
-namespace OpenBve {
+namespace OpenBve 
+{
 	/// <summary>Provides functions for dealing with joysticks.</summary>
 	internal partial class JoystickManager : PIEDataHandler, PIEErrorHandler
 	{
@@ -130,7 +130,6 @@ namespace OpenBve {
 									0,134,0,0,0,0,0,0,0
 								}
 							};
-							bool alreadyFound = false;
 							if (!AttachedJoysticks.ContainsKey(new Guid()))
 							{
 								AttachedJoysticks.Add(new Guid(), newJoystick);

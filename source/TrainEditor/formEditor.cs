@@ -5,6 +5,10 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
+using TrainManager.BrakeSystems;
+using TrainManager.Car;
+using TrainManager.Handles;
+using TrainManager.SafetySystems;
 
 namespace TrainEditor {
 	public partial class formEditor : Form {
@@ -207,8 +211,8 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxBrakeCylinderUp, "BrakeCylinderUp", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Move.BrakeCylinderUp)) return false;
 			if (!SaveControlContent(textboxBrakeCylinderDown, "BrakeCylinderDown", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Move.BrakeCylinderDown)) return false;
 			// brake
-			Train.Brake.BrakeType = (TrainDat.Brake.BrakeTypes)comboboxBrakeType.SelectedIndex;
-			Train.Brake.BrakeControlSystem = (TrainDat.Brake.BrakeControlSystems)comboboxBrakeControlSystem.SelectedIndex;
+			Train.Brake.BrakeType = (BrakeSystemType)comboboxBrakeType.SelectedIndex;
+			Train.Brake.BrakeControlSystem = (EletropneumaticBrakeType)comboboxBrakeControlSystem.SelectedIndex;
 			if (!SaveControlContent(textboxBrakeControlSpeed, "BrakeControlSpeed", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Brake.BrakeControlSpeed)) return false;
 			// pressure
 			if (!SaveControlContent(textboxBrakeCylinderServiceMaximumPressure, "BrakeCylinderServiceMaximumPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.BrakeCylinderServiceMaximumPressure)) return false;
@@ -240,7 +244,7 @@ namespace TrainEditor {
 				numericUpDownDriverBrakeNotches.Focus();
 				return false;
 			}
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
 			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;
@@ -279,8 +283,8 @@ namespace TrainEditor {
 			Train.Device.Eb = checkboxEb.Checked;
 			Train.Device.ConstSpeed = checkboxConstSpeed.Checked;
 			Train.Device.HoldBrake = checkboxHoldBrake.Checked;
-			Train.Device.ReAdhesionDevice = (TrainDat.Device.ReAdhesionDevices)(comboboxReAdhesionDevice.SelectedIndex - 1);
-			Train.Device.PassAlarm = (TrainDat.Device.PassAlarmModes)comboboxPassAlarm.SelectedIndex;
+			Train.Device.ReAdhesionDevice = (ReadhesionDeviceType)(comboboxReAdhesionDevice.SelectedIndex - 1);
+			Train.Device.PassAlarm = (PassAlarmType)comboboxPassAlarm.SelectedIndex;
 			Train.Device.DoorOpenMode = (TrainDat.Device.DoorModes)comboboxDoorOpenMode.SelectedIndex;
 			Train.Device.DoorCloseMode = (TrainDat.Device.DoorModes)comboboxDoorCloseMode.SelectedIndex;
 			if (!SaveControlContent(textboxDoorWidth, "DoorWidth", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Device.DoorWidth)) return false;
@@ -1735,12 +1739,12 @@ namespace TrainEditor {
 
 		private void comboBoxEBHandleBehaviour_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
 		}
 
 		private void comboBoxLocoBrakeType_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Train.Handle.LocoBrake = (TrainDat.Handle.LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
+			Train.Handle.LocoBrake = (LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
 		}
 
 		private void comboBoxLocoBrakeSystemType_SelectedIndexChanged(object sender, EventArgs e)

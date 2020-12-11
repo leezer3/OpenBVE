@@ -16,11 +16,17 @@ namespace CsvRwRouteParser
 			RoofType = roofType;
 			Structure = structure;
 		}
-
+		/// <summary>The platform face rail</summary>
 		internal readonly int PrimaryRail;
+		/// <summary>The rail for the rear transformation</summary>
 		internal readonly int SecondaryRail;
+		/// <summary>The index of the FormType to use</summary>
 		internal readonly int FormType;
+		/// <summary>The index of the RoofType to use</summary>
 		internal readonly int RoofType;
+		/*
+		 * Magic number constants used by BVE2 /4
+		 */
 		internal const int SecondaryRailStub = 0;
 		internal const int SecondaryRailL = -1;
 		internal const int SecondaryRailR = -2;
@@ -38,7 +44,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormL[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormL[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 					if (RoofType > 0)
 					{
 						if (!Structure.RoofL.ContainsKey(RoofType))
@@ -47,7 +53,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+							Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 						}
 					}
 				}
@@ -60,7 +66,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormL[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormL[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 
 				if (!Structure.FormCL.ContainsKey(FormType))
@@ -80,7 +86,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 					}
 
 					if (!Structure.RoofCL.ContainsKey(RoofType))
@@ -101,7 +107,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormR[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormR[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 
 				if (!Structure.FormCR.ContainsKey(FormType))
@@ -121,7 +127,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						Structure.RoofR[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Structure.RoofR[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 					}
 
 					if (!Structure.RoofCR.ContainsKey(RoofType))
@@ -146,10 +152,8 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					double sx0 = currentBlock.Rails[s].RailStart.X;
-					double sx1 = currentBlock.Rails[s].RailEnd.X;
-					double d0 = sx0 - px0;
-					double d1 = sx1 - px1;
+					double d0 = currentBlock.Rails[s].RailStart.X - px0;
+					double d1 = currentBlock.Rails[s].RailEnd.X - px1;
 					if (d0 < 0.0)
 					{
 						if (!Structure.FormL.ContainsKey(FormType))
@@ -158,7 +162,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							Structure.FormL[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+							Structure.FormL[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 						}
 
 						if (!Structure.FormCL.ContainsKey(FormType))
@@ -179,7 +183,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+								Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 							}
 
 							if (!Structure.RoofCL.ContainsKey(RoofType))
@@ -201,7 +205,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							Structure.FormR[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+							Structure.FormR[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 						}
 
 						if (!Structure.FormCR.ContainsKey(FormType))
@@ -222,7 +226,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								Structure.RoofR[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+								Structure.RoofR[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 							}
 
 							if (!Structure.RoofCR.ContainsKey(RoofType))
@@ -243,11 +247,8 @@ namespace CsvRwRouteParser
 
 		internal void CreateSecondaryRail(Block currentBlock, Vector3 pos, Transformation RailTransformation, double StartingDistance, double EndingDistance, string FileName)
 		{
-			int p = PrimaryRail;
-			double px = p > 0 ? currentBlock.Rails[p].RailStart.X : 0.0;
-			int s = SecondaryRail;
-			double sx = currentBlock.Rails[s].RailStart.X;
-			double d = px - sx;
+			double px = PrimaryRail > 0 ? currentBlock.Rails[PrimaryRail].RailStart.X : 0.0;
+			double d = px - currentBlock.Rails[SecondaryRail].RailStart.X;
 			if (d < 0.0)
 			{
 				if (!Structure.FormL.ContainsKey(FormType))
@@ -256,7 +257,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormL[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormL[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 
 				if (RoofType > 0)
@@ -267,7 +268,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Structure.RoofL[RoofType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 					}
 				}
 			}
@@ -279,7 +280,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Structure.FormR[FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Structure.FormR[FormType].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 
 				if (RoofType > 0)

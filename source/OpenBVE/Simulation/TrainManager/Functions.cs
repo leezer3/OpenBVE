@@ -3,10 +3,11 @@ using LibRender2.Screens;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>Un-derails all trains within the simulation</summary>
 		internal static void UnderailTrains()
@@ -107,7 +108,7 @@ namespace OpenBve
 				else
 				{
 					train.ApplyNotch(0, false, train.Handles.Brake.MaximumNotch, false);
-					train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+					train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 				}
 				if (Program.CurrentRoute.Sections.Length > 0)
 				{

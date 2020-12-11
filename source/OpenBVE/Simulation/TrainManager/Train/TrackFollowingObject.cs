@@ -6,7 +6,7 @@ using OpenBveApi.Trains;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>A more advanced type of AnimatedObject, which follows a rail and a travel plan</summary>
 		public class TrackFollowingObject : Train
@@ -160,7 +160,7 @@ namespace OpenBve
 				}
 
 				// update station and doors
-				UpdateTrainDoors(this, TimeElapsed);
+				UpdateTrainDoors(TimeElapsed);
 
 				// Update Run and Motor sounds
 				foreach (var Car in Cars)

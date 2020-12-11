@@ -486,6 +486,8 @@ namespace OpenBve {
 			Program.Renderer.Camera.AtWorldEnd = !Program.Renderer.Camera.AtWorldEnd;
 		}
 
+		public override double InGameTime => Program.CurrentRoute.SecondsSinceMidnight;
+
 		public Host() : base(HostApplication.OpenBve)
 		{
 		}

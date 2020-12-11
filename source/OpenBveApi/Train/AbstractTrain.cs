@@ -138,5 +138,21 @@ namespace OpenBveApi.Trains
 		{
 
 		}
+
+		/// <summary>Opens the train doors</summary>
+		/// <param name="Left">Whether the left side is to open</param>
+		/// <param name="Right">Whether the right side is to open</param>
+		public virtual void OpenDoors(bool Left, bool Right)
+		{
+
+		}
+
+		/// <summary>Closes the train doors</summary>
+		/// <param name="Left">Whether the left side is to close</param>
+		/// <param name="Right">Whether the right side is to close</param>
+		public virtual void CloseDoors(bool Left, bool Right)
+		{
+
+		}
 	}
 }

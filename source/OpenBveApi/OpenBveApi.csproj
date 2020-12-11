@@ -106,6 +106,7 @@
     <Compile Include="Math\Vectors\Vector2f.cs" />
     <Compile Include="Math\Vectors\Vector3f.cs" />
     <Compile Include="Math\Vectors\Vector4.cs" />
+    <Compile Include="Objects\FaceType.cs" />
     <Compile Include="Objects\Glow.cs" />
     <Compile Include="Objects\Helpers\Material.cs" />
     <Compile Include="Objects\Helpers\MeshBuilder.cs" />

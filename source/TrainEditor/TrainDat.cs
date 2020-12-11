@@ -1,6 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Forms;
+using TrainManager.BrakeSystems;
+using TrainManager.Car;
+using TrainManager.Handles;
+using TrainManager.SafetySystems;
+
 
 namespace TrainEditor {
 	internal static class TrainDat {
@@ -87,29 +92,21 @@ namespace TrainEditor {
 		// brake
 		/// <summary>The Brake section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Brake {
-			internal enum BrakeTypes {
-				ElectromagneticStraightAirBrake = 0,
-				ElectricCommandBrake = 1,
-				AutomaticAirBrake = 2
-			}
+		
 			internal enum LocoBrakeTypes {
 				NotFitted = 0,
 				NotchedAirBrake = 1,
 				AutomaticAirBrake = 2
 			}
-			internal enum BrakeControlSystems {
-				None = 0,
-				ClosingElectromagneticValve = 1,
-				DelayIncludingSystem = 2
-			}
-			internal BrakeTypes BrakeType;
+			
+			internal BrakeSystemType BrakeType;
 			internal LocoBrakeTypes LocoBrakeType;
-			internal BrakeControlSystems BrakeControlSystem;
+			internal EletropneumaticBrakeType BrakeControlSystem;
 			internal double BrakeControlSpeed;
 			internal Brake() {
-				this.BrakeType = BrakeTypes.ElectromagneticStraightAirBrake;
+				this.BrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
 				this.LocoBrakeType = LocoBrakeTypes.NotFitted;
-				this.BrakeControlSystem = BrakeControlSystems.None;
+				this.BrakeControlSystem = EletropneumaticBrakeType.None;
 				this.BrakeControlSpeed = 0.0;
 			}
 		}
@@ -137,20 +134,6 @@ namespace TrainEditor {
 			internal enum HandleTypes {
 				Separate = 0,
 				Combined = 1
-			}
-			internal enum EbHandleBehaviour
-			{
-				NoAction = 0,
-				PowerNeutral = 1,
-				ReverserNeutral = 2,
-				PowerReverserNeutral = 3
-			}
-
-			internal enum LocoBrakeType
-			{
-				Combined = 0,
-				Independant = 1, 
-				Blocking = 2
 			}
 			internal HandleTypes HandleType;
 			internal int PowerNotches;
@@ -232,18 +215,6 @@ namespace TrainEditor {
 				Manual = 1,
 				Automatic = 2
 			}
-			internal enum ReAdhesionDevices {
-				None = -1,
-				TypeA = 0,
-				TypeB = 1,
-				TypeC = 2,
-				TypeD = 3
-			}
-			internal enum PassAlarmModes {
-				None = 0,
-				Single = 1,
-				Looping = 2
-			}
 			internal enum DoorModes {
 				SemiAutomatic = 0,
 				Automatic = 1,
@@ -254,9 +225,9 @@ namespace TrainEditor {
 			internal bool Eb;
 			internal bool ConstSpeed;
 			internal bool HoldBrake;
-			internal ReAdhesionDevices ReAdhesionDevice;
+			internal ReadhesionDeviceType ReAdhesionDevice;
 			internal double LoadCompensatingDevice;
-			internal PassAlarmModes PassAlarm;
+			internal PassAlarmType PassAlarm;
 			internal DoorModes DoorOpenMode;
 			internal DoorModes DoorCloseMode;
 			internal double DoorWidth;
@@ -267,9 +238,9 @@ namespace TrainEditor {
 				this.Eb = false;
 				this.ConstSpeed = false;
 				this.HoldBrake = false;
-				this.ReAdhesionDevice = ReAdhesionDevices.TypeA;
+				this.ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 				this.LoadCompensatingDevice = 0.0;
-				this.PassAlarm = PassAlarmModes.None;
+				this.PassAlarm = PassAlarmType.None;
 				this.DoorOpenMode = DoorModes.SemiAutomatic;
 				this.DoorCloseMode = DoorModes.SemiAutomatic;
 				this.DoorWidth = 1000.0;
@@ -544,10 +515,10 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b >= 0 & b <= 2) t.Brake.BrakeType = (Brake.BrakeTypes)b;
+										if (b >= 0 & b <= 2) t.Brake.BrakeType = (BrakeSystemType)b;
 										break;
 									case 1:
-										if (b >= 0 & b <= 2) t.Brake.BrakeControlSystem = (Brake.BrakeControlSystems)b;
+										if (b >= 0 & b <= 2) t.Brake.BrakeControlSystem = (EletropneumaticBrakeType)b;
 										break;
 									case 2:
 										if (a >= 0.0) t.Brake.BrakeControlSpeed = a;
@@ -598,13 +569,13 @@ namespace TrainEditor {
 										if (b >= 0) t.Handle.PowerNotchReduceSteps = b;
 										break;
 									case 4:
-										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
+										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (EbHandleBehaviour) b;
 										break;
 									case 5:
 										if (b > 0) t.Handle.LocoBrakeNotches = b;
 										break;
 									case 6:
-										if (a <= 0 && a > 3) t.Handle.LocoBrake = (Handle.LocoBrakeType) b;
+										if (a <= 0 && a > 3) t.Handle.LocoBrake = (LocoBrakeType) b;
 										break;
 									case 7:
 										if (b > 0) t.Handle.DriverPowerNotches = b;
@@ -697,13 +668,13 @@ namespace TrainEditor {
 										t.Device.HoldBrake = a == 1.0;
 										break;
 									case 5:
-										if (b >= -1 & b <= 3) t.Device.ReAdhesionDevice = (Device.ReAdhesionDevices)b;
+										if (b >= -1 & b <= 3) t.Device.ReAdhesionDevice = (ReadhesionDeviceType)b;
 										break;
 									case 6:
 										t.Device.LoadCompensatingDevice = a;
 										break;
 									case 7:
-										if (b >= 0 & b <= 2) t.Device.PassAlarm = (Device.PassAlarmModes)b;
+										if (b >= 0 & b <= 2) t.Device.PassAlarm = (PassAlarmType)b;
 										break;
 									case 8:
 										if (b >= 0 & b <= 2) t.Device.DoorOpenMode = (Device.DoorModes)b;
@@ -797,7 +768,7 @@ namespace TrainEditor {
 				}
 			}
 			if (t.Pressure.BrakePipeNormalPressure <= 0.0) {
-				if (t.Brake.BrakeType == Brake.BrakeTypes.AutomaticAirBrake) {
+				if (t.Brake.BrakeType == BrakeSystemType.AutomaticAirBrake) {
 					t.Pressure.BrakePipeNormalPressure = t.Pressure.BrakeCylinderEmergencyMaximumPressure + 0.75 * (t.Pressure.MainReservoirMinimumPressure - t.Pressure.BrakeCylinderEmergencyMaximumPressure);
 					if (t.Pressure.BrakePipeNormalPressure > t.Pressure.MainReservoirMinimumPressure) {
 						t.Pressure.BrakePipeNormalPressure = t.Pressure.MainReservoirMinimumPressure;
@@ -810,7 +781,7 @@ namespace TrainEditor {
 					}
 				}
 			}
-			if (t.Brake.BrakeType == Brake.BrakeTypes.AutomaticAirBrake) {
+			if (t.Brake.BrakeType == BrakeSystemType.AutomaticAirBrake) {
 				t.Device.HoldBrake = false;
 			}
 			if (t.Device.HoldBrake & t.Handle.BrakeNotches <= 0) {

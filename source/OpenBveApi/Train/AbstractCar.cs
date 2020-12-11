@@ -76,5 +76,11 @@ namespace OpenBveApi.Trains
 		{
 
 		}
+
+		/// <summary>Opens the car doors</summary>
+		public virtual void OpenDoors(bool Left, bool Right)
+		{
+
+		}
 	}
 }

@@ -8,9 +8,7 @@ using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
-using TrainEditor2.Simulation.TrainManager;
-
-//using TrainEditor2.Simulation.TrainManager;
+using TrainManager.Motor;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -422,11 +420,11 @@ namespace TrainEditor2.Models.Trains
 				return entries;
 			}
 
-			internal static TrainManager.MotorSoundTable EntriesToMotorSoundTable(Entry[] entries)
+			internal static BVEMotorSoundTable EntriesToMotorSoundTable(Entry[] entries)
 			{
-				TrainManager.MotorSoundTable table = new TrainManager.MotorSoundTable
+				BVEMotorSoundTable table = new BVEMotorSoundTable
 				{
-					Entries = new TrainManager.MotorSoundTableEntry[entries.Length]
+					Entries = new BVEMotorSoundTableEntry[entries.Length]
 				};
 
 				for (int i = 0; i < entries.Length; i++)

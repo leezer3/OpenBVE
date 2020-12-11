@@ -6,10 +6,11 @@ using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
 using SoundManager;
+using TrainManager.Car;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>Is called once a frame to update the station state for the given train</summary>
 		/// <param name="Train">The train</param>
@@ -48,7 +49,7 @@ namespace OpenBve
 							if (Math.Abs(Train.CurrentSpeed) < 0.1 / 3.6 &
 							    Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
 							{
-								AttemptToOpenDoors(Train, i, tb, tf);
+								Train.AttemptToOpenDoors(i, tb, tf);
 							}
 						}
 						// detect arrival
@@ -197,13 +198,13 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Train.Cars.Length; j++)
 					{
-						if (GetDoorsState(Train, j, Program.CurrentRoute.Stations[i].OpenLeftDoors, Program.CurrentRoute.Stations[i].OpenRightDoors) == (TrainDoorState.Opened | TrainDoorState.AllOpened))
+						if (Train.Cars[j].GetDoorsState(Program.CurrentRoute.Stations[i].OpenLeftDoors, Program.CurrentRoute.Stations[i].OpenRightDoors) == (TrainDoorState.Opened | TrainDoorState.AllOpened))
 						{
 							//Check whether all doors are controlled by the driver, and whether this is a non-standard station type
 							//e.g. Change ends
 							if (Train.Specs.DoorCloseMode != DoorMode.Manual & Program.CurrentRoute.Stations[i].Type == StationType.Normal)
 							{
-								AttemptToCloseDoors(Train);
+								Train.AttemptToCloseDoors();
 
 								if (Train.Specs.DoorClosureAttempted)
 								{
@@ -306,7 +307,7 @@ namespace OpenBve
 							{
 								if (Program.CurrentRoute.SecondsSinceMidnight >= Train.Cars[j].Doors[0].NextReopenTime)
 								{
-									OpenTrainDoors(Train, j, true, false);
+									Train.Cars[j].OpenDoors(true, false);
 								}
 							}
 							else
@@ -324,7 +325,7 @@ namespace OpenBve
 							{
 								if (Program.CurrentRoute.SecondsSinceMidnight >= Train.Cars[j].Doors[1].NextReopenTime)
 								{
-									OpenTrainDoors(Train, j, false, true);
+									Train.Cars[j].OpenDoors(false, true);
 								}
 							}
 							else
@@ -333,7 +334,7 @@ namespace OpenBve
 							}
 						}
 					}
-					TrainDoorState doorState = GetDoorsState(Train, Program.CurrentRoute.Stations[i].OpenLeftDoors, Program.CurrentRoute.Stations[i].OpenRightDoors);
+					TrainDoorState doorState = Train.GetDoorsState(Program.CurrentRoute.Stations[i].OpenLeftDoors, Program.CurrentRoute.Stations[i].OpenRightDoors);
 					if (left | right) 
 					{
 						/*
@@ -417,9 +418,9 @@ namespace OpenBve
 			{
 				if (Train.Station == -1 | Train.StationState == TrainStopState.Completed)
 				{
-					if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
+					if ((Train.GetDoorsState(true, true) & TrainDoorState.AllClosed) == 0)
 					{
-						CloseTrainDoors(Train, true, true);
+						Train.CloseDoors(true, true);
 						Train.Specs.DoorClosureAttempted = true;
 					}
 				}

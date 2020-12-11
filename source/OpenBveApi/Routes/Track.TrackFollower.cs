@@ -247,14 +247,7 @@ namespace OpenBveApi.Routes
 			{
 				if (db != 0.0)
 				{
-					if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
-					{
-						CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
-					}
-					else
-					{
-						CurveRadius = 0.0;
-					}
+					CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0 ? currentHost.Tracks[TrackIndex].Elements[i].CurveRadius : 0.0;
 
 					if (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
 					{

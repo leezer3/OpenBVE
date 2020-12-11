@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.Windows.Forms;
 using LibRender2.MotionBlurs;
 using LibRender2.Overlays;
 using OpenBveApi;
@@ -942,7 +943,15 @@ namespace OpenBve
 			Builder.AppendLine("panel2extended = " + (CurrentOptions.Panel2ExtendedMode ? "true" : "false"));
 			Builder.AppendLine("panel2extendedminsize = " + CurrentOptions.Panel2ExtendedMinSize.ToString(Culture));
 			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
-			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
+			try
+			{
+				System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
+			}
+			catch
+			{
+				MessageBox.Show(@"Failed to write to the Options folder.", @"OpenBVE",  MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			}
+			
 		}
 	}
 }

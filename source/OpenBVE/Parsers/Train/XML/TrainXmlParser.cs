@@ -6,6 +6,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using TrainManager.Power;
 
 namespace OpenBve.Parsers.Train
 {
@@ -14,7 +15,7 @@ namespace OpenBve.Parsers.Train
 		private static string currentPath;
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
-		private static TrainManager.BveAccelerationCurve[] AccelerationCurves;
+		private static BveAccelerationCurve[] AccelerationCurves;
 		internal static void Parse(string fileName, TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, ref bool[] interiorVisible)
 		{
 			//The current XML file to load
@@ -28,10 +29,10 @@ namespace OpenBve.Parsers.Train
 				{
 					if (Train.Cars[i].Specs.IsMotorCar)
 					{
-						AccelerationCurves = new TrainManager.BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
+						AccelerationCurves = new BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
 						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)
 						{
-							TrainManager.BveAccelerationCurve c = (TrainManager.BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
+							BveAccelerationCurve c = (BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
 							AccelerationCurves[j] = c.Clone(c.Multiplier);
 						}
 					}

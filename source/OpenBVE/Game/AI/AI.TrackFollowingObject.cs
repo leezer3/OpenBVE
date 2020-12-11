@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -140,16 +141,16 @@ namespace OpenBve
 				// Set the state quantity of the train.
 				if (DeltaPosition < 0)
 				{
-					Train.Handles.Reverser.Driver = TrainManager.ReverserPosition.Reverse;
+					Train.Handles.Reverser.Driver = ReverserPosition.Reverse;
 				}
 				else if (DeltaPosition > 0)
 				{
-					Train.Handles.Reverser.Driver = TrainManager.ReverserPosition.Forwards;
+					Train.Handles.Reverser.Driver = ReverserPosition.Forwards;
 				}
 				Train.Handles.Reverser.Actual = Train.Handles.Reverser.Driver;
 
-				TrainManager.OpenTrainDoors(Train, OpenLeftDoors, OpenRightDoors);
-				TrainManager.CloseTrainDoors(Train, !OpenLeftDoors, !OpenRightDoors);
+				Train.OpenDoors(OpenLeftDoors, OpenRightDoors);
+				Train.CloseDoors(!OpenLeftDoors, !OpenRightDoors);
 
 				if (TimeElapsed != 0.0)
 				{

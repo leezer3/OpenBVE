@@ -1,5 +1,6 @@
 ﻿using OpenBve.SafetySystems;
 using OpenBveApi.Runtime;
+using TrainManager.SafetySystems;
 
 namespace OpenBve
 {

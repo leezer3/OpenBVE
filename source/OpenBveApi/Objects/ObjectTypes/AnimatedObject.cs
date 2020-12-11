@@ -191,9 +191,9 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Initialises the object</summary>
 		/// <param name="StateIndex">The state to show</param>
-		/// <param name="Overlay">Whether this object is in overlay mode</param>
+		/// <param name="Type">The object type</param>
 		/// <param name="Show">Whether the object should be shown immediately on initialisation</param>
-		public void Initialize(int StateIndex, bool Overlay, bool Show)
+		public void Initialize(int StateIndex, ObjectType Type, bool Show)
 		{
 			currentHost.HideObject(internalObject);
 			int t = StateIndex;
@@ -213,14 +213,7 @@ namespace OpenBveApi.Objects
 			CurrentState = StateIndex;
 			if (Show)
 			{
-				if (Overlay)
-				{
-					currentHost.ShowObject(internalObject, ObjectType.Overlay);
-				}
-				else
-				{
-					currentHost.ShowObject(internalObject, ObjectType.Dynamic);
-				}
+				currentHost.ShowObject(internalObject, Type);
 			}
 		}
 
@@ -252,7 +245,12 @@ namespace OpenBveApi.Objects
 				if (si < 0 | si >= sn) si = -1;
 				if (s != si)
 				{
-					Initialize(si, Camera != null, Show);
+					ObjectType type = ObjectType.Dynamic;
+					if (Camera != null)
+					{
+						type = ObjectType.Overlay;
+					}
+					Initialize(si, type, Show);
 					s = si;
 				}
 			}
@@ -914,7 +912,7 @@ namespace OpenBveApi.Objects
 
 				currentObject.Radius = System.Math.Sqrt(r);
 				currentObject.Visible = false;
-				currentObject.Object.Initialize(0, false, false);
+				currentObject.Object.Initialize(0, ObjectType.Dynamic, false);
 				currentHost.AnimatedWorldObjects[a] = currentObject;
 			}
 			else
@@ -953,7 +951,7 @@ namespace OpenBveApi.Objects
 
 				currentObject.Radius = System.Math.Sqrt(r);
 				currentObject.Visible = false;
-				currentObject.Object.Initialize(0, false, false);
+				currentObject.Object.Initialize(0, ObjectType.Dynamic, false);
 				currentHost.AnimatedWorldObjects[a] = currentObject;
 			}
 

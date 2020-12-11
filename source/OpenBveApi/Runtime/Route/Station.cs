@@ -9,8 +9,6 @@ namespace OpenBveApi.Runtime
 		public double ArrivalTime;
 		/// <summary>The expected departure time.</summary>
 		public double DepartureTime;
-		/// <summary>The expected time stopped.</summary>
-		public double StopTime;
 		/// <summary>Whether the next signal is held red until departure.</summary>
 		public bool ForceStopSignal;
 		/// <summary>Whether the left doors are to open.</summary>
@@ -35,6 +33,30 @@ namespace OpenBveApi.Runtime
 		public int MaxInterferingObjectRate;
 		/// <summary>If departing this station triggers a jump, contains the index of the station to jump to</summary>
 		public int JumpIndex;
+		/// <summary>The expected time stopped.</summary>
+		public double StopTime
+		{
+			get
+			{
+				//If all trains must pass the expcted stop should be zero, regardless of what's set in the route
+				if (StopMode == StationStopMode.AllPass)
+				{
+					return 0;
+				}
+				//A little sanity checking: Must be stopped for more than 0 and less than an hour
+				if (ExpectedTimeStopped <= 0 || ExpectedTimeStopped > 3600)
+				{
+					return 15;
+				}
+				return ExpectedTimeStopped;
+			}
+			set
+			{
+				ExpectedTimeStopped = value;
+			}
+		}
+		/// <summary>Backing property for StopTime</summary>
+		private double ExpectedTimeStopped;
 
 		/// <summary>Creates a new station with default (empty) values</summary>
 		public Station()

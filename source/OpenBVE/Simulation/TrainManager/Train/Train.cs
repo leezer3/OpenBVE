@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using LibRender2.Trains;
-using OpenBve.BrakeSystems;
+using TrainManager.BrakeSystems;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
@@ -17,11 +17,13 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using RouteManager2.MessageManager;
 using SoundManager;
+using TrainManager.Car;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train : AbstractTrain
@@ -35,7 +37,7 @@ namespace OpenBve
 
 			/// <summary>The index of the car which the camera is currently anchored to</summary>
 			internal int CameraCar;
-			internal Handles Handles;
+			internal CabHandles Handles;
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;
@@ -88,7 +90,7 @@ namespace OpenBve
 			internal void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding)
 			{
 				Cars[DriverCar].CarSections = new CarSection[1];
-				Cars[DriverCar].CarSections[0] = new CarSection(Program.Renderer, true);
+				Cars[DriverCar].CarSections[0] = new CarSection(Program.Renderer, ObjectType.Overlay);
 				string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
 				if (!System.IO.File.Exists(File))
 				{
@@ -210,7 +212,7 @@ namespace OpenBve
 					{
 						Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
 						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, this, DriverCar);
+						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Cars[DriverCar]);
 						Cars[DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
 						Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 					}
@@ -220,7 +222,7 @@ namespace OpenBve
 						if (System.IO.File.Exists(File))
 						{
 							Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, this);
+							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Cars[DriverCar]);
 							Cars[DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
 							Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 						}
@@ -522,7 +524,7 @@ namespace OpenBve
 				}
 				// update station and doors
 				UpdateTrainStation(this, TimeElapsed);
-				UpdateTrainDoors(this, TimeElapsed);
+				UpdateTrainDoors(TimeElapsed);
 				// delayed handles
 				if (Plugin == null)
 				{
@@ -923,6 +925,7 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override void Reverse()
 			{
 				double trackPosition = Cars[0].TrackPosition;
@@ -970,9 +973,9 @@ namespace OpenBve
 					Cars[i].Sounds.FlangeVolume = new double[] { };
 					Cars[i].Horns = new TrainManager.Horn[]
 					{
-						new TrainManager.Horn(),
-						new TrainManager.Horn(),
-						new TrainManager.Horn()
+						new TrainManager.Horn(this),
+						new TrainManager.Horn(this),
+						new TrainManager.Horn(this)
 					};
 					Cars[i].Sounds.RequestStop = new CarSound[]
 					{

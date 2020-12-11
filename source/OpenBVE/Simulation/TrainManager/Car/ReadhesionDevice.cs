@@ -1,9 +1,10 @@
 ﻿using System;
+using TrainManager.Car;
 
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		internal class CarReAdhesionDevice
 		{
@@ -35,25 +36,25 @@ namespace OpenBve
 				if (Car.Specs.IsMotorCar)
 				{
 					switch (type) {
-						case TrainManager.ReadhesionDeviceType.TypeA:
+						case ReadhesionDeviceType.TypeA:
 							UpdateInterval = 1.0;
 							ApplicationFactor = 0.0;
 							ReleaseInterval = 1.0;
 							ReleaseFactor = 8.0;
 							break;
-						case TrainManager.ReadhesionDeviceType.TypeB:
+						case ReadhesionDeviceType.TypeB:
 							UpdateInterval = 0.1;
 							ApplicationFactor = 0.9935;
 							ReleaseInterval = 4.0;
 							ReleaseFactor = 1.125;
 							break;
-						case TrainManager.ReadhesionDeviceType.TypeC:
+						case ReadhesionDeviceType.TypeC:
 							UpdateInterval = 0.1;
 							ApplicationFactor = 0.965;
 							ReleaseInterval = 2.0;
 							ReleaseFactor = 1.5;
 							break;
-						case TrainManager.ReadhesionDeviceType.TypeD:
+						case ReadhesionDeviceType.TypeD:
 							UpdateInterval = 0.05;
 							ApplicationFactor = 0.935;
 							ReleaseInterval = 0.3;

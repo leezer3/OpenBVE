@@ -11,6 +11,9 @@ using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
+using TrainManager.BrakeSystems;
+using TrainManager.Handles;
+using TrainManager.SafetySystems;
 
 namespace TrainEditor2.IO.IntermediateFile
 {
@@ -48,8 +51,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				PowerNotches = (int)parent.Element("PowerNotches"),
 				BrakeNotches = (int)parent.Element("BrakeNotches"),
 				PowerNotchReduceSteps = (int)parent.Element("PowerNotchReduceSteps"),
-				HandleBehaviour = (Handle.EbHandleBehaviour)Enum.Parse(typeof(Handle.EbHandleBehaviour), (string)parent.Element("EbHandleBehaviour")),
-				LocoBrake = (Handle.LocoBrakeType)Enum.Parse(typeof(Handle.LocoBrakeType), (string)parent.Element("LocoBrakeType")),
+				HandleBehaviour = (EbHandleBehaviour)Enum.Parse(typeof(EbHandleBehaviour), (string)parent.Element("EbHandleBehaviour")),
+				LocoBrake = (LocoBrakeType)Enum.Parse(typeof(LocoBrakeType), (string)parent.Element("LocoBrakeType")),
 				LocoBrakeNotches = (int)parent.Element("LocoBrakeNotches"),
 				DriverPowerNotches = (int)parent.Element("DriverPowerNotches"),
 				DriverBrakeNotches = (int)parent.Element("DriverBrakeNotches")
@@ -80,7 +83,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				HoldBrake = (bool)parent.Element("HoldBrake"),
 				ReAdhesionDevice = (Device.ReAdhesionDevices)Enum.Parse(typeof(Device.ReAdhesionDevices), (string)parent.Element("ReAdhesionDevice")),
 				LoadCompensatingDevice = (double)parent.Element("LoadCompensatingDevice"),
-				PassAlarm = (Device.PassAlarmModes)Enum.Parse(typeof(Device.PassAlarmModes), (string)parent.Element("PassAlarm")),
+				PassAlarm = (PassAlarmType)Enum.Parse(typeof(PassAlarmType), (string)parent.Element("PassAlarm")),
 				DoorOpenMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorOpenMode")),
 				DoorCloseMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorCloseMode")),
 				DoorWidth = (double)parent.Element("DoorWidth"),
@@ -194,9 +197,9 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Brake
 			{
-				BrakeType = (Brake.BrakeTypes)Enum.Parse(typeof(Brake.BrakeTypes), (string)parent.Element("BrakeType")),
+				BrakeType = (BrakeSystemType)Enum.Parse(typeof(BrakeSystemType), (string)parent.Element("BrakeType")),
 				LocoBrakeType = (Brake.LocoBrakeTypes)Enum.Parse(typeof(Brake.LocoBrakeTypes), (string)parent.Element("LocoBrakeType")),
-				BrakeControlSystem = (Brake.BrakeControlSystems)Enum.Parse(typeof(Brake.BrakeControlSystems), (string)parent.Element("BrakeControlSystem")),
+				BrakeControlSystem = (EletropneumaticBrakeType)Enum.Parse(typeof(EletropneumaticBrakeType), (string)parent.Element("BrakeControlSystem")),
 				BrakeControlSpeed = (double)parent.Element("BrakeControlSpeed")
 			};
 		}

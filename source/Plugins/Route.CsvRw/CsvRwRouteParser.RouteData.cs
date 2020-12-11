@@ -20,7 +20,7 @@ namespace CsvRwRouteParser
 			internal bool AccurateObjectDisposal;
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
-			internal StructureData Structure = new StructureData();
+			internal readonly StructureData Structure = new StructureData();
 			internal SignalDictionary Signals;
 			internal CompatibilitySignalObject[] CompatibilitySignals;
 			internal Texture[] TimetableDaytime;

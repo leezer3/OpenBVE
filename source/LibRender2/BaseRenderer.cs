@@ -106,7 +106,11 @@ namespace LibRender2
 		protected List<Matrix4D> projectionMatrixList;
 		protected List<Matrix4D> viewMatrixList;
 
+#pragma warning disable 0219
+		/// <summary>Holds the last openGL error</summary>
+		/// <remarks>Is only used in debug builds, hence the pragma</remarks>
 		private ErrorCode lastError;
+#pragma warning restore 0219
 
 		/// <summary>The current shader in use</summary>
 		internal Shader CurrentShader;
@@ -441,21 +445,21 @@ namespace LibRender2
 
 			foreach (MeshFace face in Prototype.Mesh.Faces)
 			{
-				switch (face.Flags & MeshFace.FaceTypeMask)
+				switch (face.Flags & FaceFlags.FaceTypeMask)
 				{
-					case MeshFace.FaceTypeTriangles:
+					case FaceFlags.Triangles:
 						InfoTotalTriangles++;
 						break;
-					case MeshFace.FaceTypeTriangleStrip:
+					case FaceFlags.TriangleStrip:
 						InfoTotalTriangleStrip++;
 						break;
-					case MeshFace.FaceTypeQuads:
+					case FaceFlags.Quads:
 						InfoTotalQuads++;
 						break;
-					case MeshFace.FaceTypeQuadStrip:
+					case FaceFlags.QuadStrip:
 						InfoTotalQuadStrip++;
 						break;
-					case MeshFace.FaceTypePolygon:
+					case FaceFlags.Polygon:
 						InfoTotalPolygon++;
 						break;
 				}
@@ -468,7 +472,7 @@ namespace LibRender2
 		{
 			if (internalObject == null)
 			{
-				internalObject = new ObjectState { Prototype = new StaticObject(currentHost) };
+				internalObject = new ObjectState( new StaticObject(currentHost));
 			}
 
 			internalObject.Prototype.Dynamic = true;
@@ -890,13 +894,13 @@ namespace LibRender2
 				lastVAO = VAO.handle;
 			}
 
-			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
+			if (!OptionBackFaceCulling || (Face.Flags & FaceFlags.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
 			}
 			else if (OptionBackFaceCulling)
 			{
-				if ((Face.Flags & MeshFace.Face2Mask) == 0)
+				if ((Face.Flags & FaceFlags.Face2Mask) == 0)
 				{
 					GL.Enable(EnableCap.CullFace);
 				}
@@ -940,18 +944,18 @@ namespace LibRender2
 			lastColor = material.Color;
 			PrimitiveType DrawMode;
 
-			switch (Face.Flags & MeshFace.FaceTypeMask)
+			switch (Face.Flags & FaceFlags.FaceTypeMask)
 			{
-				case MeshFace.FaceTypeTriangles:
+				case FaceFlags.Triangles:
 					DrawMode = PrimitiveType.Triangles;
 					break;
-				case MeshFace.FaceTypeTriangleStrip:
+				case FaceFlags.TriangleStrip:
 					DrawMode = PrimitiveType.TriangleStrip;
 					break;
-				case MeshFace.FaceTypeQuads:
+				case FaceFlags.Quads:
 					DrawMode = PrimitiveType.Quads;
 					break;
-				case MeshFace.FaceTypeQuadStrip:
+				case FaceFlags.QuadStrip:
 					DrawMode = PrimitiveType.QuadStrip;
 					break;
 				default:
@@ -1103,13 +1107,13 @@ namespace LibRender2
 			VertexTemplate[] vertices = State.Prototype.Mesh.Vertices;
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
 
-			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
+			if (!OptionBackFaceCulling || (Face.Flags & FaceFlags.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
 			}
 			else if (OptionBackFaceCulling)
 			{
-				if ((Face.Flags & MeshFace.Face2Mask) == 0)
+				if ((Face.Flags & FaceFlags.Face2Mask) == 0)
 				{
 					GL.Enable(EnableCap.CullFace);
 				}
@@ -1176,18 +1180,18 @@ namespace LibRender2
 
 			PrimitiveType DrawMode;
 
-			switch (Face.Flags & MeshFace.FaceTypeMask)
+			switch (Face.Flags & FaceFlags.FaceTypeMask)
 			{
-				case MeshFace.FaceTypeTriangles:
+				case FaceFlags.Triangles:
 					DrawMode = PrimitiveType.Triangles;
 					break;
-				case MeshFace.FaceTypeTriangleStrip:
+				case FaceFlags.TriangleStrip:
 					DrawMode = PrimitiveType.TriangleStrip;
 					break;
-				case MeshFace.FaceTypeQuads:
+				case FaceFlags.Quads:
 					DrawMode = PrimitiveType.Quads;
 					break;
-				case MeshFace.FaceTypeQuadStrip:
+				case FaceFlags.QuadStrip:
 					DrawMode = PrimitiveType.QuadStrip;
 					break;
 				default:

@@ -6,6 +6,7 @@ using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Trains;
+using TrainManager.SafetySystems;
 
 namespace TrainEditor2.Views
 {
@@ -121,7 +122,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Device.PassAlarmModes)z,
+					z => (PassAlarmType)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxPassAlarm.SelectedIndexChanged += h,

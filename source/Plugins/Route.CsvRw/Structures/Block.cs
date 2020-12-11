@@ -32,6 +32,7 @@ namespace CsvRwRouteParser
 		internal Transponder[] Transponders;
 		internal DestinationEvent[] DestinationChanges;
 		internal PointOfInterest[] PointsOfInterest;
+		internal HornBlowEvent[] HornBlows;
 		internal TrackElement CurrentTrackState;
 		internal double Pitch;
 		internal double Turn;
@@ -57,6 +58,7 @@ namespace CsvRwRouteParser
 				SoundEvents = new Sound[] { };
 				Transponders = new Transponder[] { };
 				DestinationChanges = new DestinationEvent[] { };
+				HornBlows = new HornBlowEvent[] { };
 				RailFreeObj = new Dictionary<int, List<FreeObj>>();
 				GroundFreeObj = new List<FreeObj>();
 				PointsOfInterest = new PointOfInterest[] { };

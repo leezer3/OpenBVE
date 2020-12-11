@@ -294,7 +294,35 @@ namespace OpenBveApi.FileSystem {
 								}
 								break;
 							case "settings":
-								system.SettingsFolder = GetAbsolutePath(value, true);
+								string folder = GetAbsolutePath(value, true);
+								if (value.StartsWith(@"$[AssemblyFolder]", StringComparison.InvariantCulture))
+								{
+									try
+									{
+										/*
+										* Check we have read / write access to the settings file
+										* https://bveworldwide.forumotion.com/t1998-access-denied-after-upgrade#20169
+										*/
+										if (!(Type.GetType("Mono.Runtime") != null))
+										{
+											//Mono doesn't reliably support AccessControl
+											Directory.GetAccessControl(folder);
+										}
+
+										string settingsFile = Path.CombineFile(folder, "1.5.0\\options.cfg");
+										using (FileStream fs = File.OpenWrite(settingsFile))
+										{
+											//Write test
+										}
+									}
+									catch
+									{
+										value = value.Replace("$[AssemblyFolder]", "$[ApplicationData]");
+										folder = GetAbsolutePath(value, true);
+									}
+									
+								}
+								system.SettingsFolder = folder;
 								break;
 							case "initialroute":
 								system.InitialRouteFolder = GetAbsolutePath(value, true);

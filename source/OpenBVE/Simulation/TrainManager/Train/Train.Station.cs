@@ -3,11 +3,12 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train

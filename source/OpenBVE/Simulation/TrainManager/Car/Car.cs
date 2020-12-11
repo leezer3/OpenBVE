@@ -3,18 +3,21 @@ using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
 using LibRender2.Trains;
-using OpenBve.BrakeSystems;
+using TrainManager.BrakeSystems;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
+using TrainManager.Car;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
 		internal partial class Car : AbstractCar
@@ -56,7 +59,7 @@ namespace OpenBve
 			/// <summary>Whether loading sway is enabled for this car</summary>
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
-			private readonly Train baseTrain;
+			internal readonly Train baseTrain;
 
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
@@ -253,6 +256,96 @@ namespace OpenBve
 				
 			}
 
+			public override void OpenDoors(bool Left, bool Right)
+			{
+				bool sl = false, sr = false;
+				if (Left & !Doors[0].AnticipatedOpen & (baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Left | baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				{
+					Doors[0].AnticipatedOpen = true;
+					sl = true;
+				}
+				if (Right & !Doors[1].AnticipatedOpen & (baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Right | baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				{
+					Doors[1].AnticipatedOpen = true;
+					sr = true;
+				}
+				if (sl)
+				{
+					SoundBuffer buffer = Doors[0].OpenSound.Buffer;
+					if (buffer != null)
+					{
+						OpenBveApi.Math.Vector3 pos = Doors[0].OpenSound.Position;
+						Program.Sounds.PlaySound(buffer, Specs.DoorOpenPitch, 1.0, pos, this, false);
+					}
+					for (int i = 0; i < Doors.Length; i++)
+					{
+						if (Doors[i].Direction == -1)
+						{
+							Doors[i].DoorLockDuration = 0.0;
+						}
+					}
+				}
+				if (sr)
+				{
+					SoundBuffer buffer = Doors[1].OpenSound.Buffer;
+					if (buffer != null)
+					{
+						OpenBveApi.Math.Vector3 pos = Doors[1].OpenSound.Position;
+						Program.Sounds.PlaySound(buffer, Specs.DoorOpenPitch, 1.0, pos, this, false);
+					}
+					for (int i = 0; i < Doors.Length; i++)
+					{
+						if (Doors[i].Direction == 1)
+						{
+							Doors[i].DoorLockDuration = 0.0;
+						}
+					}
+				}
+				for (int i = 0; i < Doors.Length; i++)
+				{
+					if (Doors[i].AnticipatedOpen)
+					{
+						Doors[i].NextReopenTime = 0.0;
+						Doors[i].ReopenCounter++;
+					}
+				}
+			}
+
+			/// <summary>Returns the combination of door states what encountered at the specified car in a train.</summary>
+			/// <param name="Left">Whether to include left doors.</param>
+			/// <param name="Right">Whether to include right doors.</param>
+			/// <returns>A bit mask combining encountered door states.</returns>
+			internal TrainDoorState GetDoorsState(bool Left, bool Right)
+			{
+				bool opened = false, closed = false, mixed = false;
+				for (int i = 0; i < Doors.Length; i++)
+				{
+					if (Left & Doors[i].Direction == -1 | Right & Doors[i].Direction == 1)
+					{
+						if (Doors[i].State == 0.0)
+						{
+							closed = true;
+						}
+						else if (Doors[i].State == 1.0)
+						{
+							opened = true;
+						}
+						else
+						{
+							mixed = true;
+						}
+					}
+				}
+				TrainDoorState Result = TrainDoorState.None;
+				if (opened) Result |= TrainDoorState.Opened;
+				if (closed) Result |= TrainDoorState.Closed;
+				if (mixed) Result |= TrainDoorState.Mixed;
+				if (opened & !closed & !mixed) Result |= TrainDoorState.AllOpened;
+				if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
+				if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
+				return Result;
+			}
+
 			internal void UpdateRunSounds(double TimeElapsed)
 			{
 				if (Sounds.Run == null || Sounds.Run.Length == 0)
@@ -353,8 +446,8 @@ namespace OpenBve
 				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
 				for (int h = 0; h < 2; h++)
 				{
-					int j = h == 0 ? TrainManager.MotorSound.MotorP1 : TrainManager.MotorSound.MotorP2;
-					int k = h == 0 ? TrainManager.MotorSound.MotorB1 : TrainManager.MotorSound.MotorB2;
+					int j = h == 0 ? BVEMotorSound.MotorP1 : BVEMotorSound.MotorP2;
+					int k = h == 0 ? BVEMotorSound.MotorB1 : BVEMotorSound.MotorB2;
 					if (odir > 0 & ndir <= 0)
 					{
 						if (j < Sounds.Motor.Tables.Length)
@@ -460,16 +553,17 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection(Program.Renderer, false);
+				CarSections[j] = new CarSection(Program.Renderer, ObjectType.Dynamic);
 				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;
 					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
-					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost);
-					CarSections[j].Groups[0].Elements[0].States = new[] { new ObjectState() };
-					CarSections[j].Groups[0].Elements[0].States[0].Prototype = s;
-					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
+					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost)
+					{
+						States = new[] {new ObjectState(s)},
+						CurrentState = 0
+					};
 					Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
 				else if (currentObject is AnimatedObjectCollection)
@@ -677,7 +771,7 @@ namespace OpenBve
 			private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
+				if (CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -712,7 +806,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
+				CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay ? Program.Renderer.Camera : null);
 				if (!Program.Renderer.ForceLegacyOpenGL && CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
 				{
 					VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, Program.Renderer.DefaultShader.VertexLayout, Program.Renderer);
@@ -722,7 +816,7 @@ namespace OpenBve
 			private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
+				if (CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -757,7 +851,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
+				CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay ? Program.Renderer.Camera : null);
 				if (!Program.Renderer.ForceLegacyOpenGL && CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
 				{
 					VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, Program.Renderer.DefaultShader.VertexLayout, Program.Renderer);
@@ -1015,7 +1109,7 @@ namespace OpenBve
 					Up.Rotate(d, cosa, sina);
 				}
 				// apply pitching
-				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Overlay)
+				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
 				{
 					double a = Specs.CurrentPitchDueToAccelerationAngle;
 					double cosa = Math.Cos(a);

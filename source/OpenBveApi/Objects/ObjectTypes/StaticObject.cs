@@ -79,23 +79,8 @@ namespace OpenBveApi.Objects
 			for (int j = 0; j < Mesh.Materials.Length; j++)
 			{
 				Result.Mesh.Materials[j] = Mesh.Materials[j];
-				if (DaytimeTexture != null)
-				{
-					Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture;
-				}
-				else
-				{
-					Result.Mesh.Materials[j].DaytimeTexture = Mesh.Materials[j].DaytimeTexture;
-				}
-
-				if (NighttimeTexture != null)
-				{
-					Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture;
-				}
-				else
-				{
-					Result.Mesh.Materials[j].NighttimeTexture = Mesh.Materials[j].NighttimeTexture;
-				}
+				Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture != null ? DaytimeTexture : Mesh.Materials[j].DaytimeTexture;
+				Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture != null ? NighttimeTexture : Mesh.Materials[j].NighttimeTexture;
 			}
 
 			return Result;
@@ -474,47 +459,46 @@ namespace OpenBveApi.Objects
 			// eliminate invalid faces and reduce incomplete faces
 			for (int i = 0; i < f; i++)
 			{
-				int type = Mesh.Faces[i].Flags & MeshFace.FaceTypeMask;
+				FaceFlags type = (FaceFlags)Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
 				bool keep;
-				if (type == MeshFace.FaceTypeTriangles)
+				switch (type)
 				{
-					keep = Mesh.Faces[i].Vertices.Length >= 3;
-					if (keep)
-					{
-						int n = (Mesh.Faces[i].Vertices.Length / 3) * 3;
-						if (Mesh.Faces[i].Vertices.Length != n)
+					case FaceFlags.Triangles:
+						keep = Mesh.Faces[i].Vertices.Length >= 3;
+						if (keep)
 						{
-							Array.Resize(ref Mesh.Faces[i].Vertices, n);
+							int n = (Mesh.Faces[i].Vertices.Length / 3) * 3;
+							if (Mesh.Faces[i].Vertices.Length != n)
+							{
+								Array.Resize(ref Mesh.Faces[i].Vertices, n);
+							}
 						}
-					}
-				}
-				else if (type == MeshFace.FaceTypeQuads)
-				{
-					keep = Mesh.Faces[i].Vertices.Length >= 4;
-					if (keep)
-					{
-						int n = Mesh.Faces[i].Vertices.Length & ~3;
-						if (Mesh.Faces[i].Vertices.Length != n)
+						break;
+					case FaceFlags.Quads:
+						keep = Mesh.Faces[i].Vertices.Length >= 4;
+						if (keep)
 						{
-							Array.Resize(ref Mesh.Faces[i].Vertices, n);
+							int n = Mesh.Faces[i].Vertices.Length & ~3;
+							if (Mesh.Faces[i].Vertices.Length != n)
+							{
+								Array.Resize(ref Mesh.Faces[i].Vertices, n);
+							}
 						}
-					}
-				}
-				else if (type == MeshFace.FaceTypeQuadStrip)
-				{
-					keep = Mesh.Faces[i].Vertices.Length >= 4;
-					if (keep)
-					{
-						int n = Mesh.Faces[i].Vertices.Length & ~1;
-						if (Mesh.Faces[i].Vertices.Length != n)
+						break;
+					case FaceFlags.QuadStrip:
+						keep = Mesh.Faces[i].Vertices.Length >= 4;
+						if (keep)
 						{
-							Array.Resize(ref Mesh.Faces[i].Vertices, n);
+							int n = Mesh.Faces[i].Vertices.Length & ~1;
+							if (Mesh.Faces[i].Vertices.Length != n)
+							{
+								Array.Resize(ref Mesh.Faces[i].Vertices, n);
+							}
 						}
-					}
-				}
-				else
-				{
-					keep = Mesh.Faces[i].Vertices.Length >= 3;
+						break;
+					default:
+						keep = Mesh.Faces[i].Vertices.Length >= 3;
+						break;
 				}
 
 				if (!keep)
@@ -533,6 +517,20 @@ namespace OpenBveApi.Objects
 			bool[] materialUsed = new bool[m];
 			for (int i = 0; i < f; i++)
 			{
+				/*
+				if (Mesh.Faces[i].Material < m - 1)
+				{
+					/*
+					 * Our material is out of range
+					 * Rather than crashing, add a new blank material
+					 
+					Array.Resize(ref Mesh.Materials, m + 1);
+					Mesh.Materials[m] = new MeshMaterial();
+					Mesh.Faces[i].Material = (ushort)m;
+					m++;
+					Array.Resize(ref materialUsed, m + 1);
+				}
+			*/
 				materialUsed[Mesh.Faces[i].Material] = true;
 			}
 
@@ -678,9 +676,9 @@ namespace OpenBveApi.Objects
 			// Trangularize all polygons and quads into triangles
 			for (int i = 0; i < f; ++i)
 			{
-				byte type = (byte) (Mesh.Faces[i].Flags & MeshFace.FaceTypeMask);
+				FaceFlags type = (FaceFlags)Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
 				// Only transform quads and polygons
-				if (type == MeshFace.FaceTypeQuads || type == MeshFace.FaceTypePolygon)
+				if (type == FaceFlags.Quads || type == FaceFlags.Polygon)
 				{
 					int staring_vertex_count = Mesh.Faces[i].Vertices.Length;
 
@@ -718,8 +716,8 @@ namespace OpenBveApi.Objects
 					// Mark as triangle
 					unchecked
 					{
-						Mesh.Faces[i].Flags &= (byte) ~MeshFace.FaceTypeMask;
-						Mesh.Faces[i].Flags |= MeshFace.FaceTypeTriangles;
+						Mesh.Faces[i].Flags &=  ~FaceFlags.FaceTypeMask;
+						Mesh.Faces[i].Flags |= FaceFlags.Triangles;
 					}
 				}
 			}
@@ -727,18 +725,18 @@ namespace OpenBveApi.Objects
 			// decomposit TRIANGLES and QUADS
 			for (int i = 0; i < f; i++)
 			{
-				int type = Mesh.Faces[i].Flags & MeshFace.FaceTypeMask;
+				FaceFlags type = (FaceFlags)Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
 				int face_count = 0;
-				byte face_bit = 0;
-				if (type == MeshFace.FaceTypeTriangles)
+				FaceFlags face_bit = 0;
+				if (type == FaceFlags.Triangles)
 				{
 					face_count = 3;
-					face_bit = MeshFace.FaceTypeTriangles;
+					face_bit = FaceFlags.Triangles;
 				}
-				else if (type == MeshFace.FaceTypeQuads)
+				else if (type == FaceFlags.Quads)
 				{
 					face_count = 4;
-					face_bit = MeshFace.FaceTypeQuads;
+					face_bit = FaceFlags.Triangles;
 				}
 
 				if (face_count == 3 || face_count == 4)
@@ -763,7 +761,7 @@ namespace OpenBveApi.Objects
 							Mesh.Faces[f + j].Flags = Mesh.Faces[i].Flags;
 							unchecked
 							{
-								Mesh.Faces[i].Flags &= (byte) ~MeshFace.FaceTypeMask;
+								Mesh.Faces[i].Flags &= ~FaceFlags.FaceTypeMask;
 								Mesh.Faces[i].Flags |= face_bit;
 							}
 						}
@@ -782,17 +780,17 @@ namespace OpenBveApi.Objects
 					int merge_vertices = 0;
 
 					// Type of current face
-					int type = Mesh.Faces[i].Flags & MeshFace.FaceTypeMask;
-					int face = Mesh.Faces[i].Flags & MeshFace.Face2Mask;
+					FaceFlags type = Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
+					FaceFlags face = Mesh.Faces[i].Flags & FaceFlags.Face2Mask;
 
 					// Find faces that can be merged
 					for (int j = i + 1; j < f; ++j)
 					{
-						int type2 = Mesh.Faces[j].Flags & MeshFace.FaceTypeMask;
-						int face2 = Mesh.Faces[j].Flags & MeshFace.Face2Mask;
+						FaceFlags type2 = Mesh.Faces[j].Flags & FaceFlags.FaceTypeMask;
+						FaceFlags face2 = Mesh.Faces[j].Flags & FaceFlags.Face2Mask;
 
 						// Conditions for face merger
-						bool mergeable = (type == MeshFace.FaceTypeTriangles) &&
+						bool mergeable = (type == FaceFlags.Triangles) &&
 						                 (type == type2) &&
 						                 (face == face2) &&
 						                 (Mesh.Faces[i].Material == Mesh.Faces[j].Material);

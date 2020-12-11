@@ -6,7 +6,7 @@ using OpenBveApi.Trains;
 
 namespace OpenBve
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>Represents a bogie fitted to a train car</summary>
 		internal class Bogie
@@ -150,7 +150,7 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection(Program.Renderer, false);
+				CarSections[j] = new CarSection(Program.Renderer, ObjectType.Dynamic);
 				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
@@ -158,10 +158,9 @@ namespace OpenBve
 					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
 					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost)
 					{
-						States = new[] { new ObjectState() }
+						States = new[] { new ObjectState(s) },
+						CurrentState = 0
 					};
-					CarSections[j].Groups[0].Elements[0].States[0].Prototype = s;
-					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
 					Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
 				else if (currentObject is AnimatedObjectCollection)
@@ -283,8 +282,7 @@ namespace OpenBve
 						Up.Rotate(d, cosa, sina);
 					}
 					// apply pitching
-					if (CurrentCarSection >= 0 &&
-						CarSections[CurrentCarSection].Groups[0].Overlay)
+					if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
 					{
 						double a = baseCar.Specs.CurrentPitchDueToAccelerationAngle;
 						double cosa = Math.Cos(a);
