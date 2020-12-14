@@ -366,6 +366,18 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CameraDistance;
 							n++; s++; if (s >= m) m = s; break;
+						case "cameraxdistance":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.CameraXDistance;
+							n++; s++; if (s >= m) m = s; break;
+						case "cameraydistance":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.CameraYDistance;
+							n++; s++; if (s >= m) m = s; break;
+						case "camerazdistance":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.CameraZDistance;
+							n++; s++; if (s >= m) m = s; break;
 						case "cameramode":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CameraView;

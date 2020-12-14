@@ -228,6 +228,21 @@ namespace OpenBve {
 							Function.Stack[s] = Math.Sqrt(dx * dx + dy * dy + dz * dz);
 							s++;
 						} break;
+					case Instructions.CameraXDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.X - Position.X;
+							s++;
+						} break;
+					case Instructions.CameraYDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.Y - Position.Y;
+							s++;
+						} break;
+					case Instructions.CameraZDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.Z - Position.Z;
+							s++;
+						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
 						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)

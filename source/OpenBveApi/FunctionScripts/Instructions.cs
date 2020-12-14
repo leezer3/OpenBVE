@@ -16,7 +16,7 @@
 		SystemHalt,   SystemValue, SystemDelta,
 		StackCopy, StackSwap,
 		MathRandom, MathRandomInt,
-		TimeSecondsSinceMidnight, CameraDistance,CameraView,
+		TimeSecondsSinceMidnight, CameraDistance, CameraXDistance, CameraYDistance, CameraZDistance,CameraView,
 		TrainCars, TrainDestination,
 		TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
