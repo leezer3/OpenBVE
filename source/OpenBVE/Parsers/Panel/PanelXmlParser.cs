@@ -1589,8 +1589,242 @@ namespace OpenBve.Parsers.Panel
 							}
 						}
 						break;
-				}
+					case "windscreen":
+					{
+						Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
+						Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
+						int numberOfDrops = 16, Layer = 0, dropSize = 16;
+						WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
+						List<string> daytimeDropFiles, nighttimeDropFiles;
+						Color24 TransparentColor = Color24.Blue;
+						double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
+						try
+						{
+							daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day")).ToList();
+							nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night")).ToList();
+						}
+						catch
+						{
+							break;
+						}
 
+						int k;
+						foreach (XElement KeyNode in SectionElement.Elements())
+						{
+							string Key = KeyNode.Name.LocalName;
+							string Value = KeyNode.Value;
+							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
+
+							switch (Key.ToLowerInvariant())
+							{
+								case "topleft":
+									k = Value.IndexOf(',');
+									if (k >= 0)
+									{
+										string a = Value.Substring(0, k).TrimEnd(new char[] { });
+										string b = Value.Substring(k + 1).TrimStart(new char[] { });
+										if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out topLeft.X))
+										{
+											Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+										}
+
+										if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out topLeft.Y))
+										{
+											Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+										}
+									}
+									else
+									{
+										Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+									}
+									break;
+								case "bottomright":
+									k = Value.IndexOf(',');
+									if (k >= 0)
+									{
+										string a = Value.Substring(0, k).TrimEnd(new char[] { });
+										string b = Value.Substring(k + 1).TrimStart(new char[] { });
+										if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out bottomRight.X))
+										{
+											Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+										}
+
+										if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out bottomRight.Y))
+										{
+											Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+										}
+									}
+									else
+									{
+										Interface.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+									}
+									break;
+								case "numberofdrops":
+									if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out numberOfDrops))
+									{
+										Interface.AddMessage(MessageType.Error, false, "NumberOfDrops is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+									}
+									break;
+								case "dropsize":
+									if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out numberOfDrops))
+									{
+										Interface.AddMessage(MessageType.Error, false, "DropSize is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+									}
+									break;
+								case "daytimedrops":
+									daytimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
+									break;
+								case "nighttimedrops":
+									nighttimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
+									break;
+								case "transparentcolor":
+									if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
+									{
+										Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+									}
+									break;
+								case "layer":
+									if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
+									{
+										Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+									}
+									break;
+								case "wipespeed":
+									if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out wipeSpeed))
+									{
+										Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+									}
+									break;
+								case "wiperholdtime":
+									if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out holdTime))
+									{
+										Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+									}
+									break;
+								case "restposition":
+								case "wiperrestposition":
+									switch (Value.ToLowerInvariant())
+									{
+										case "0":
+										case "left":
+											restPosition = WiperPosition.Left;
+											break;
+										case "1":
+										case "right":
+											restPosition = WiperPosition.Right;
+											break;
+										default:
+											Interface.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											break;
+									}
+									break;
+								case "holdposition":
+								case "wiperholdposition":
+									switch (Value.ToLowerInvariant())
+									{
+										case "0":
+										case "left":
+											holdPosition = WiperPosition.Left;
+											break;
+										case "1":
+										case "right":
+											holdPosition = WiperPosition.Right;
+											break;
+										default:
+											Interface.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											break;
+									}
+									break;
+								case "droplife":
+									if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out dropLife))
+									{
+										Interface.AddMessage(MessageType.Error, false, "DropLife is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+									}
+									break;
+							}
+						}
+
+						List<Texture> daytimeDrops = new List<Texture>(), nighttimeDrops = new List<Texture>();
+						/*
+						 * Ensure we have the same number of drops for day + night
+						 * NOTE: If a drop is missing, we may get slightly odd effects, but can't be helped
+						 * Raindrops ought to be blurry, and they're small enough anyway...
+						 */
+						int MD = Math.Max(daytimeDropFiles.Count, nighttimeDropFiles.Count);
+						if (daytimeDropFiles.Count < MD)
+						{
+							while (daytimeDropFiles.Count < MD)
+							{
+								daytimeDropFiles.Add(string.Empty);
+							}
+						}
+
+						if (nighttimeDropFiles.Count < MD)
+						{
+							while (nighttimeDropFiles.Count < MD)
+							{
+								nighttimeDropFiles.Add(string.Empty);
+							}
+						}
+
+						for (int l = 0; l < daytimeDropFiles.Count; l++)
+						{
+							string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(TrainPath, daytimeDropFiles[l]) : daytimeDropFiles[l];
+							if (!System.IO.File.Exists(currentDropFile))
+							{
+								currentDropFile = Path.CombineFile(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Program.RandomNumberGenerator.Next(1, 4) + ".png");
+								TransparentColor = Color24.Blue;
+							}
+
+							Texture drop;
+							Program.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
+							daytimeDrops.Add(drop);
+
+						}
+
+						for (int l = 0; l < nighttimeDropFiles.Count; l++)
+						{
+							string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(TrainPath, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
+							if (!System.IO.File.Exists(currentDropFile))
+							{
+								currentDropFile = Path.CombineFile(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Program.RandomNumberGenerator.Next(1, 4) + ".png");
+								TransparentColor = Color24.Blue;
+							}
+
+							Texture drop;
+							Program.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
+							nighttimeDrops.Add(drop);
+						}
+
+						double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
+						double currentDropX = topLeft.X;
+						Train.Cars[Train.DriverCar].Windscreen = new Windscreen(numberOfDrops, dropLife, Train.Cars[Train.DriverCar]);
+						Train.Cars[Train.DriverCar].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Train.DriverCar].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
+						// Create drops
+						for (int drop = 0; drop < numberOfDrops; drop++)
+						{
+							int DropTexture = Program.RandomNumberGenerator.Next(daytimeDrops.Count);
+							double currentDropY = Program.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
+							OpenBVEGame.RunInRenderThread(() =>
+							{
+								Program.CurrentHost.LoadTexture(daytimeDrops[DropTexture], OpenGlTextureWrapMode.ClampClamp);
+							});
+							int panelDropIndex = Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double) Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White, false);
+							string f = drop + " raindrop";
+							try
+							{
+								Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
+							}
+							catch
+							{
+								Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+							}
+
+							currentDropX += dropInterval;
+						}
+					}
+					break;
+				}
 				currentSectionElement++;
 			}
 		}
