@@ -101,7 +101,7 @@ namespace OpenBve {
 				double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;
 				double bpPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakePipe.CurrentPressure;
 				double sapPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.straightAirPipe.CurrentPressure;
-				VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, CurrentRadius, CurrentCant, CurrentPitch);
+				VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, this.Train.Cars[0].FrontAxle.Follower);
 				/*
 				 * Prepare the preceding vehicle state.
 				 * */
@@ -424,6 +424,13 @@ namespace OpenBve {
 			/// <param name="sectionIndex">The section the beacon is attached to, or -1 for the next red signal.</param>
 			/// <param name="optional">Optional data attached to the beacon.</param>
 			internal void UpdateBeacon(int type, int sectionIndex, int optional) {
+
+				if (type == 21 && Train.IsPlayerTrain && Train.Cars[Train.DriverCar].Windscreen != null)
+				{
+					//Legacy rain beacon, so let's pass to the windscreen as well as the plugin
+					Train.Cars[Train.DriverCar].Windscreen.SetRainIntensity(optional);
+				}
+
 				if (sectionIndex == -1) {
 					sectionIndex = this.Train.CurrentSectionIndex + 1;
 					SignalData signal = null;

@@ -40,6 +40,7 @@ namespace CsvRwRouteParser
 		internal bool StationPassAlarm;
 		internal double Accuracy;
 		internal double AdhesionMultiplier;
+		internal int RainIntensity;
 
 		internal Block(bool PreviewOnly)
 		{

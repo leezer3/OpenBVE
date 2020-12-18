@@ -1539,8 +1539,6 @@ namespace OpenBve
 									case Translations.Command.SecurityO:
 									case Translations.Command.SecurityP:
 #pragma warning restore 618
-									case Translations.Command.WiperSpeedUp:
-									case Translations.Command.WiperSpeedDown:
 									case Translations.Command.FillFuel:
 									case Translations.Command.LiveSteamInjector:
 									case Translations.Command.ExhaustSteamInjector:
@@ -1560,9 +1558,19 @@ namespace OpenBve
 												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
 										}
 										break;
-
-
-
+									case Translations.Command.WiperSpeedUp:
+									case Translations.Command.WiperSpeedDown:
+										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen != null)
+										{
+											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.Wipers.ChangeSpeed(Interface.CurrentControls[i].Command);
+										}
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											//Also inform the plugin that these keys have been pressed
+											TrainManager.PlayerTrain.Plugin.KeyDown(
+												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+										break;
 									case Translations.Command.TimetableToggle:
 										// option: timetable
 										if (Interface.CurrentOptions.TimeTableStyle == TimeTableMode.None)
