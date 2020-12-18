@@ -1021,8 +1021,7 @@ namespace OpenBve
 				{
 					double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
 					double sa = (double)Math.Sign(a);
-					double tc = Specs.CriticalTopplingAngle;
-					if (a * sa > tc)
+					if (a * sa > Specs.CriticalTopplingAngle)
 					{
 						baseTrain.Derail(Index, TimeElapsed);
 					}
@@ -1278,18 +1277,11 @@ namespace OpenBve
 				}
 				// power
 				double wheelspin = 0.0;
-				double wheelSlipAccelerationMotorFront;
-				double wheelSlipAccelerationMotorRear;
-				double wheelSlipAccelerationBrakeFront;
-				double wheelSlipAccelerationBrakeRear;
-				if (Derailed)
-				{
-					wheelSlipAccelerationMotorFront = 0.0;
-					wheelSlipAccelerationBrakeFront = 0.0;
-					wheelSlipAccelerationMotorRear = 0.0;
-					wheelSlipAccelerationBrakeRear = 0.0;
-				}
-				else
+				double wheelSlipAccelerationMotorFront = 0.0;
+				double wheelSlipAccelerationMotorRear = 0.0;
+				double wheelSlipAccelerationBrakeFront = 0.0;
+				double wheelSlipAccelerationBrakeRear = 0.0;
+				if (!Derailed)
 				{
 					wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 					wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
