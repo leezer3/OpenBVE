@@ -1680,7 +1680,7 @@ namespace OpenBve.Parsers.Panel
 								case "transparentcolor":
 									if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
 									{
-										Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 									}
 									break;
 								case "layer":
@@ -1692,13 +1692,13 @@ namespace OpenBve.Parsers.Panel
 								case "wipespeed":
 									if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out wipeSpeed))
 									{
-										Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 									}
 									break;
 								case "wiperholdtime":
 									if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out holdTime))
 									{
-										Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 									}
 									break;
 								case "restposition":
@@ -1714,7 +1714,7 @@ namespace OpenBve.Parsers.Panel
 											restPosition = WiperPosition.Right;
 											break;
 										default:
-											Interface.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 											break;
 									}
 									break;
@@ -1731,14 +1731,14 @@ namespace OpenBve.Parsers.Panel
 											holdPosition = WiperPosition.Right;
 											break;
 										default:
-											Interface.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 											break;
 									}
 									break;
 								case "droplife":
 									if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out dropLife))
 									{
-										Interface.AddMessage(MessageType.Error, false, "DropLife is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "DropLife is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 									}
 									break;
 							}

@@ -1446,8 +1446,8 @@ namespace OpenBve {
 
 									double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
 									double currentDropX = topLeft.X;
-									Train.Cars[Train.DriverCar].Windscreen = new Windscreen(numberOfDrops, dropLife, Train.Cars[Train.DriverCar]);
-									Train.Cars[Train.DriverCar].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Train.DriverCar].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
+									Car.Windscreen = new Windscreen(numberOfDrops, dropLife, Car);
+									Car.Windscreen.Wipers = new WindscreenWiper(Car.Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
 									// Create drops
 									for (int drop = 0; drop < numberOfDrops; drop++)
 									{
@@ -1457,11 +1457,11 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(daytimeDrops[DropTexture], OpenGlTextureWrapMode.ClampClamp);
 										});
-										int panelDropIndex = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White, false);
+										int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White, false);
 										string f = drop + " raindrop";
 										try
 										{
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
+											Car.CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
 										}
 										catch
 										{
