@@ -1,0 +1,84 @@
+# This YAML runs the stable release upload builds
+trigger:
+- tag
+
+### Test on latest Windows and .Net version
+
+jobs:
+- job: WindowsBuild
+  displayName: 'Build on Windows (sln)'
+  pool:
+    vmImage: 'windows-latest'
+
+  variables:
+    solution: 'OpenBVE.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - task: NuGetToolInstaller@1
+
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: '$(solution)'
+
+  - task: VSBuild@1
+    inputs:
+      solution: '$(solution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+
+### Build and upload via makefile on OS-X
+### This uses Mono 6.8.0 as the default version isn't high enough on this image
+### As we're 32-bit only at present 10.15+ is no good to us
+
+- job: AppleMakeBuild
+  displayName: 'Build on Apple OS-X (makefile)'
+  pool:
+    vmImage: 'macos-10.14'
+
+  variables:
+    solution: 'OpenBVE.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - task: NuGetToolInstaller@1
+### Default Mono version isn't high enough on this OS-X image so kick to the latest
+  - script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 6_8_0
+  - script: make publish 
+  - task: CopyFilesOverSSH@0
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    inputs:
+     sshEndpoint: 'BuildServer'
+     sourceFolder: $(Pipeline.Workspace)/s/
+     contents: /*.dmg
+     targetFolder: '/var/www/vps.bvecornwall.co.uk/public/OpenBVE/Stable/'
+     overwrite: true
+     readyTimeout: 90000
+
+### Linux makefile build
+### This runs on the latest Mono version installed
+
+- job: LinuxMakeBuild
+  displayName: 'Build on Linux (makefile)'
+  pool:
+    vmImage: 'ubuntu-16.04'
+
+  variables:
+    solution: 'OpenBVE.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - task: NuGetToolInstaller@1
+  - script: make publish 
+  - task: CopyFilesOverSSH@0
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    inputs:
+     sshEndpoint: 'BuildServer'
+     sourceFolder: $(Pipeline.Workspace)/s/
+     contents: /*.zip
+     targetFolder: '/var/www/vps.bvecornwall.co.uk/public/OpenBVE/Stable/'
+     overwrite: true
+     readyTimeout: 90000

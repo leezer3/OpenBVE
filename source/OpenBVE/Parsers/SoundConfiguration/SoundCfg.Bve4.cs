@@ -816,6 +816,43 @@ namespace OpenBve
 							i++;
 						}
 						i--; break;
+					case "[windscreen]":
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						{
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							if (j >= 0)
+							{
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								if (b.Length == 0 || Path.ContainsInvalidChars(b))
+								{
+									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else
+								{
+									switch (a.ToLowerInvariant())
+									{
+										case "raindrop":
+											train.Cars[train.DriverCar].Windscreen.DropSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											break;
+										case "wetwipe":
+											train.Cars[train.DriverCar].Windscreen.Wipers.WetWipeSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											break;
+										case "drywipe":
+											train.Cars[train.DriverCar].Windscreen.Wipers.DryWipeSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											break;
+										case "switch":
+											train.Cars[train.DriverCar].Windscreen.Wipers.SwitchSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											break;
+										default:
+											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											break;
+									}
+								}
+							}
+							i++;
+						}
+						i--; break;
 				}
 			}
 			for (int i = 0; i < train.Cars.Length; i++)

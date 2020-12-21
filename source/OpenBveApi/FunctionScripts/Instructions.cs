@@ -16,7 +16,7 @@
 		SystemHalt,   SystemValue, SystemDelta,
 		StackCopy, StackSwap,
 		MathRandom, MathRandomInt,
-		TimeSecondsSinceMidnight, CameraDistance,CameraView,
+		TimeSecondsSinceMidnight, CameraDistance, CameraXDistance, CameraYDistance, CameraZDistance,CameraView,
 		TrainCars, TrainDestination,
 		TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
@@ -32,7 +32,8 @@
 		SafetyPluginAvailable, SafetyPluginState, PassAlarm, StationAdjustAlarm,
 		TimetableVisible, Panel2Timetable, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit,
-		SectionAspectNumber, CurrentObjectState
+		SectionAspectNumber, CurrentObjectState,
+		RainDrop, WiperPosition
 #pragma warning restore CS1591
 			
 		}

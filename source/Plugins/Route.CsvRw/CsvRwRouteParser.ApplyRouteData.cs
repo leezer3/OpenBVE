@@ -154,6 +154,7 @@ namespace CsvRwRouteParser
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
+			double lastRainIntensity = 0.0;
 			Fog PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, -Data.BlockInterval);
 			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
@@ -230,6 +231,14 @@ namespace CsvRwRouteParser
 				CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(CurrentRoute.Tracks[0].Elements[n].WorldDirection, CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
 				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
+				CurrentRoute.Tracks[0].Elements[n].RainIntensity = Data.Blocks[i].RainIntensity;
+				if (Data.Blocks[i].RainIntensity != lastRainIntensity)
+				{
+					//Insert compatability beacon for OS_ATS et. al
+					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
+					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+					CurrentRoute.Tracks[0].Elements[n].Events[m] = new TransponderEvent(Plugin.CurrentRoute, 0.0, 21, Data.Blocks[i].RainIntensity, -1, false);
+				}
 				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{

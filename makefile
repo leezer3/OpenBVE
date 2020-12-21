@@ -199,9 +199,9 @@ $(DEBIAN_BUILD_RESULT): all-release
 ifeq (, $(PROGRAM_VERSION))
 	@echo This is a $(COLOR_BLUE)Daily build$(COLOR_END)
 	@echo Final filename: $(COLOR_RED)OpenBVE-$$(date '+%F').deb$(COLOR_END)
-	@mv debianbuild.deb OpenBVE-$$(date '+%F').deb
+	@mv installers/debian.deb OpenBVE-$$(date '+%F').deb
 else
 	@echo This is a $(COLOR_YELLOW)Tagged Release build$(COLOR_END)
 	@echo Final filename: $(COLOR_RED)OpenBVE-$$(date '+%F').deb$(COLOR_END)
-	@mv debianbuild.deb OpenBVE-$(PROGRAM_VERSION).deb
+	@mv installers/debian.deb OpenBVE-$(PROGRAM_VERSION).deb
 endif

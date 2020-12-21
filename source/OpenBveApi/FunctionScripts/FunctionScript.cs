@@ -366,6 +366,18 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CameraDistance;
 							n++; s++; if (s >= m) m = s; break;
+						case "cameraxdistance":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.CameraXDistance;
+							n++; s++; if (s >= m) m = s; break;
+						case "cameraydistance":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.CameraYDistance;
+							n++; s++; if (s >= m) m = s; break;
+						case "camerazdistance":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.CameraZDistance;
+							n++; s++; if (s >= m) m = s; break;
 						case "cameramode":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CameraView;
@@ -740,6 +752,16 @@ namespace OpenBveApi.FunctionScripting
 						case "currentstate":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CurrentObjectState;
+							n++; s++; if (s >= m) m = s; break;
+							// windscreen and raindrops
+						case "raindrop":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.RainDrop;
+							n++; break;
+						case "wiperposition":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.WiperPosition;
 							n++; s++; if (s >= m) m = s; break;
 						// default
 						default:

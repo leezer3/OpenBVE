@@ -228,6 +228,21 @@ namespace OpenBve {
 							Function.Stack[s] = Math.Sqrt(dx * dx + dy * dy + dz * dz);
 							s++;
 						} break;
+					case Instructions.CameraXDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.X - Position.X;
+							s++;
+						} break;
+					case Instructions.CameraYDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.Y - Position.Y;
+							s++;
+						} break;
+					case Instructions.CameraZDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.Z - Position.Z;
+							s++;
+						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
 						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
@@ -1345,6 +1360,27 @@ namespace OpenBve {
 							}
 						} else {
 							Function.Stack[s] = 0;
+						}
+						s++; break;
+					case Instructions.RainDrop:
+						if (Train == null || !Train.IsPlayerTrain) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int n = (int)Math.Round(Function.Stack[s - 1]);
+							if (n >= 0 & n < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length) {
+								Function.Stack[s - 1] = Train.Cars[Train.DriverCar].Windscreen.RainDrops[n].Visible ? 1.0 : 0.0;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						} break;
+					case Instructions.WiperPosition:
+						if (Train == null || !Train.IsPlayerTrain)
+						{
+							Function.Stack[s] = 0.0; //Not part of player train, so irrelevant
+						}
+						else
+						{
+							Function.Stack[s] = Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentPosition;
 						}
 						s++; break;
 						// default
