@@ -354,7 +354,11 @@ namespace Plugin
 										MeshFace f = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
 										for (int j = 0; j < Arguments.Length; j++) {
 											f.Vertices[j].Index = (ushort)a[j];
-											f.Vertices[j].Normal = Normals[a[j]];
+											if (j < Normals.Count)
+											{
+												f.Vertices[j].Normal = Normals[a[j]];
+											}
+											
 										}
 										if (Builder.isCylinder && BveTsHacks && CylinderHack)
 										{
