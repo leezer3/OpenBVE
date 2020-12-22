@@ -2,7 +2,11 @@
 trigger:
   tags:
     include:
-    - *
+      - '*'
+      - 1.*
+  branches:
+    exclude:
+      - '*'
 
 ### Test on latest Windows and .Net version
 
