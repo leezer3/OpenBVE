@@ -81,6 +81,8 @@ namespace OpenBve {
 		private int[] EncodingCodepages = new int[0];
 		private Image JoystickImage = null;
 		private Image RailDriverImage = null;
+		private Image GamepadImage = null;
+		private Image XboxImage = null;
 
 		// ====
 		// form
@@ -170,6 +172,8 @@ namespace OpenBve {
 			Image GamepadIcon = LoadImage(MenuFolder, "icon_gamepad.png");
 			JoystickImage = LoadImage(MenuFolder, "joystick.png");
 			RailDriverImage = LoadImage(MenuFolder, "raildriver2.png");
+			GamepadImage = LoadImage(MenuFolder, "gamepad.png");
+			XboxImage = LoadImage(MenuFolder, "xbox.png");
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");

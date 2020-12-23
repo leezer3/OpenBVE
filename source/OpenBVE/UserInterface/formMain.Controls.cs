@@ -622,6 +622,14 @@ namespace OpenBve {
 				{
 					image = RailDriverImage;
 				}
+				else if (JoystickManager.AttachedJoysticks[guid].Name.IndexOf("gamepad", StringComparison.InvariantCultureIgnoreCase) != -1 && GamepadImage != null)
+				{
+					image = GamepadImage;
+				}
+				else if (JoystickManager.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1 && GamepadImage != null)
+				{
+					image = XboxImage;
+				}
 				if (image != null) {
 					e.Graphics.DrawImage(image, x, y);
 					w = image.Width;
