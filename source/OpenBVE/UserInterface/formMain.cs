@@ -99,6 +99,10 @@ namespace OpenBve {
 				this.CenterToScreen();
 			}
 			labelVersion.Text = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
+			if (IntPtr.Size != 4)
+			{
+				labelVersion.Text += @" 64-bit";
+			}
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// form icon
 			try
@@ -1428,7 +1432,7 @@ namespace OpenBve {
 				{
 					Guid guid = JoystickManager.AttachedJoysticks.ElementAt(k).Key;
 					JoystickManager.AttachedJoysticks[guid].Poll();
-					bool railDriver = JoystickManager.AttachedJoysticks[guid] is JoystickManager.Raildriver;
+					bool railDriver = JoystickManager.AttachedJoysticks[guid] is JoystickManager.AbstractRailDriver;
 					int axes = JoystickManager.AttachedJoysticks[guid].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{
