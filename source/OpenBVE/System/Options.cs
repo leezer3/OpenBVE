@@ -187,12 +187,13 @@ namespace OpenBve
 		/// <summary>Loads the options file from disk</summary>
 		internal static void LoadOptions()
 		{
+			CurrentOptions = new Options();
 			string OptionsDir = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
 			if (!System.IO.Directory.Exists(OptionsDir))
 			{
 				System.IO.Directory.CreateDirectory(OptionsDir);
 			}
-			CurrentOptions = new Options();
+			
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string File = OpenBveApi.Path.CombineFile(OptionsDir, "options.cfg");
 			if (!System.IO.File.Exists(File))

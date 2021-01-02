@@ -102,7 +102,15 @@ namespace OpenBve {
 
 
 			// --- load options and controls ---
-			Interface.LoadOptions();
+			try
+			{
+				Interface.LoadOptions();
+			}
+			catch
+			{
+				// ignored
+			}
+			
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
 			if (Interface.CurrentOptions.PreferNativeBackend)
