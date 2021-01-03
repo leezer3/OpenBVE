@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Mono.Cecil;
 
 namespace LBAHeader
 {
@@ -31,6 +32,7 @@ namespace LBAHeader
 				return;
 			}
 			AddLbaFlag(f);
+			Add32BitFlag(f);
 			// ReSharper disable once AssignNullToNotNullAttribute
 			f = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(f), "RouteViewer.exe");
 			if (!System.IO.File.Exists(f))
@@ -40,8 +42,10 @@ namespace LBAHeader
 				return;
 			}
 			AddLbaFlag(f);
+			Add32BitFlag(f);
 		}
 
+		/// <summary>Marks an executable as LBA aware</summary>
 		static void AddLbaFlag(string f)
 		{
 			Console.WriteLine("Adding LBA Flag to executable {0}", f);
@@ -57,7 +61,46 @@ namespace LBAHeader
 			{
 				Console.WriteLine("A problem occured whilst attempting to set the LBA flag for executable " + f);
 			}
-			
+		}
+		
+		/// <summary>Marks an ANYCPU executable as 32-bit preferred</summary>
+		public static void Add32BitFlag(string fileToProcess)
+		{
+			string finalFileName = fileToProcess.Replace(".exe", "-32.exe");
+			Console.WriteLine("Creating 32-bit preferred copy of executable " + fileToProcess);
+			var output = Console.Out;
+			try
+			{
+				ModuleDefinition modDef = ModuleDefinition.ReadModule(fileToProcess);
+				if (modDef == null)
+				{
+					Console.WriteLine("An unexpected error occured whilst attempting to apply Corflags to executable " + fileToProcess);
+					return;
+				}
+				modDef.Attributes |= ModuleAttributes.Required32Bit;
+				try
+				{
+					modDef.Write(finalFileName);
+				}
+				catch
+				{
+					Console.WriteLine("Failed to write 32-bit executable to " + finalFileName);
+					throw;
+				}
+			}
+			catch (FileNotFoundException)
+			{
+				Console.WriteLine("Unable to find file " + fileToProcess);
+			}
+			catch (BadImageFormatException)
+			{
+				Console.WriteLine(fileToProcess + " does not appear to have a valid Win32 Managed header.");
+			}
+			catch
+			{
+				Console.WriteLine("An unexpected error occured whilst attempting to apply Corflags to executable " + fileToProcess);
+			}
+
 		}
 	}
 }
