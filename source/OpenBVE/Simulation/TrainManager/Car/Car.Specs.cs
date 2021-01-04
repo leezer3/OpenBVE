@@ -49,8 +49,6 @@ namespace OpenBve
 			internal double DoorCloseFrequency;
 			internal double DoorOpenPitch;
 			internal double DoorClosePitch;
-
-			
 		}
 	}
 }

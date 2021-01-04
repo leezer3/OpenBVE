@@ -203,14 +203,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\ElectromagneticStraightAirBrake.cs" />
-    <Compile Include="Simulation\TrainManager\Brake\CarBrake.cs" />
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\Coupler.cs" />
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
     <Compile Include="Simulation\TrainManager\DriverBody.cs" />
-    <Compile Include="Simulation\TrainManager\Motor\AccelerationCurve.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.Bogie.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSection.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
@@ -430,9 +427,7 @@
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Simulation\TrainManager\Brake\AirBrake\Components\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- AUTOMATICALLY TRANSLATE TEXT TEMPLATES -->
   <!-- Optionally make the import portable across VS versions -->

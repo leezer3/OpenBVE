@@ -1,6 +1,4 @@
-﻿using LibRender2.Trains;
-using OpenBveApi.Interface;
-using OpenBveApi.Objects;
+﻿using OpenBveApi.Interface;
 
 namespace OpenBve
 {
