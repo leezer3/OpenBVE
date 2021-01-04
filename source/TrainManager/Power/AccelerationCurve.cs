@@ -10,6 +10,12 @@ namespace TrainManager.Power
 		/// <param name="Loading">A double between 0 (Unloaded) and 1.0 (Loaded) representing the load factor</param>
 		/// <returns>The acceleration output</returns>
 		public abstract double GetAccelerationOutput(double Speed, double Loading);
+
+		/// <summary>Gets the maximum possible acceleration output for this curve</summary>
+		public abstract double MaximumAcceleration
+		{
+			get;
+		}
 	}
 
 	/// <summary>Represents a BVE2 / BVE4 format Acceleration Curve</summary>
@@ -43,6 +49,8 @@ namespace TrainManager.Power
 			return Multiplier * this.StageOneSpeed * this.StageOneAcceleration * Math.Pow(this.StageTwoSpeed, this.StageTwoExponent - 1.0) * Math.Pow(Speed, -this.StageTwoExponent);
 		}
 
+		public override double MaximumAcceleration => Math.Max(StageZeroAcceleration, StageOneAcceleration);
+
 		public BveAccelerationCurve Clone(double multiplier)
 		{
 			return new BveAccelerationCurve
@@ -65,6 +73,8 @@ namespace TrainManager.Power
 		{
 			return this.MaxDecelerationOutput;
 		}
+
+		public override double MaximumAcceleration => MaxDecelerationOutput;
 
 		public BveDecelerationCurve(double Deceleration)
 		{

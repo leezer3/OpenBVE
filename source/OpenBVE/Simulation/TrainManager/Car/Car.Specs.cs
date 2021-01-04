@@ -14,8 +14,7 @@ namespace OpenBve
 			internal double AccelerationCurveMaximum;
 			internal double JerkPowerUp;
 			internal double JerkPowerDown;
-			internal double JerkBrakeUp;
-			internal double JerkBrakeDown;
+
 			/// brake
 			internal double MotorDeceleration;
 			internal double ExposedFrontalArea;

@@ -1379,7 +1379,7 @@ namespace OpenBve
 						{
 							if (Specs.CurrentAccelerationOutput < 0.0)
 							{
-								Specs.CurrentAccelerationOutput += Specs.JerkBrakeDown * TimeElapsed;
+								Specs.CurrentAccelerationOutput += CarBrake.JerkDown * TimeElapsed;
 							}
 							else
 							{
@@ -1423,7 +1423,7 @@ namespace OpenBve
 							}
 							else
 							{
-								Specs.CurrentAccelerationOutput -= Specs.JerkBrakeUp * TimeElapsed;
+								Specs.CurrentAccelerationOutput -= CarBrake.JerkUp * TimeElapsed;
 							}
 
 							if (Specs.CurrentAccelerationOutput < a)
@@ -1433,7 +1433,7 @@ namespace OpenBve
 						}
 						else
 						{
-							Specs.CurrentAccelerationOutput += Specs.JerkBrakeDown * TimeElapsed;
+							Specs.CurrentAccelerationOutput += CarBrake.JerkDown * TimeElapsed;
 							if (Specs.CurrentAccelerationOutput > a)
 							{
 								Specs.CurrentAccelerationOutput = a;

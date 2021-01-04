@@ -960,11 +960,8 @@ namespace OpenBve {
 				if (errors) {
 					Interface.AddMessage(MessageType.Error, false, "Entry " + (i + 1).ToString(Culture) + " in the #ACCELERATION section is missing or invalid in " + FileName);
 				}
-				if (AccelerationCurves[i].StageZeroAcceleration > MaximumAcceleration) {
-					MaximumAcceleration = AccelerationCurves[i].StageZeroAcceleration;
-				}
-				if (AccelerationCurves[i].StageOneAcceleration > MaximumAcceleration) {
-					MaximumAcceleration = AccelerationCurves[i].StageOneAcceleration;
+				if (AccelerationCurves[i].MaximumAcceleration > MaximumAcceleration) {
+					MaximumAcceleration = AccelerationCurves[i].MaximumAcceleration;
 				}
 			}
 			// assign motor cars
@@ -1077,6 +1074,8 @@ namespace OpenBve {
 				}
 				Train.Cars[i].CarBrake.brakeCylinder = new BrakeCylinder(BrakeCylinderServiceMaximumPressure, BrakeCylinderEmergencyMaximumPressure, trainBrakeType == BrakeSystemType.AutomaticAirBrake ? BrakeCylinderUp : 0.3 * BrakeCylinderUp, BrakeCylinderUp, BrakeCylinderDown);
 				Train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
+				Train.Cars[i].CarBrake.JerkUp = JerkBrakeUp;
+				Train.Cars[i].CarBrake.JerkDown = JerkBrakeDown;
 			}
 			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
 				Train.Handles.Brake.MaximumNotch--;
@@ -1205,8 +1204,6 @@ namespace OpenBve {
 				Train.Cars[i].RearAxle.Position = -AxleDistance;
 				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
 				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
-				Train.Cars[i].Specs.JerkBrakeUp = JerkBrakeUp;
-				Train.Cars[i].Specs.JerkBrakeDown = JerkBrakeDown;
 				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;
 				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
 				Train.Cars[i].Doors[0].Direction = -1;

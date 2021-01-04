@@ -54,7 +54,11 @@ namespace TrainManager.BrakeSystems
 		public CarSound Rub;
 
 		internal AccelerationCurve[] decelerationCurves;
-
+		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is increased.</summary>
+		public double JerkUp;
+		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is decreased.</summary>
+		public double JerkDown;
+		
 		/// <summary>Updates the brake system</summary>
 		/// <param name="TimeElapsed">The frame time elapsed</param>
 		/// <param name="currentSpeed">The current speed of the train</param>
