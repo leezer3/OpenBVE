@@ -1020,7 +1020,6 @@ namespace OpenBve {
 				{
 					new BveDecelerationCurve(BrakeDeceleration), 
 				};
-				Train.Cars[i].Specs.MotorDeceleration = MotorDeceleration;
 				if (i == Train.DriverCar && Train.Handles.HasLocoBrake)
 				{
 					switch (locomotiveBrakeType)

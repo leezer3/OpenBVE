@@ -194,7 +194,7 @@ namespace OpenBve
 						f = (double) Handles.Brake.Actual / (double) Handles.Brake.MaximumNotch;
 					}
 
-					double a = Cars[CarIndex].Specs.MotorDeceleration;
+					double a = Cars[CarIndex].CarBrake.motorDeceleration;
 					DecelerationDueToMotor = f * a;
 				}
 				else

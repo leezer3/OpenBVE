@@ -36,7 +36,7 @@ namespace OpenBve
 						{
 							this.CurrentDecelerationOutput = 0.0;
 						}
-						double a = Car.Specs.MotorDeceleration;
+						double a = Car.CarBrake.motorDeceleration;
 						if (this.CurrentDecelerationOutput > a)
 						{
 							this.CurrentDecelerationOutput = a;

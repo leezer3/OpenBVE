@@ -40,7 +40,7 @@ namespace TrainManager.BrakeSystems
 		public double brakeControlSpeed;
 
 		/// <summary>The current deceleration provided by the electric motor</summary>
-		internal double motorDeceleration;
+		public double motorDeceleration;
 
 		/// <summary>The air sound currently playing</summary>
 		public CarSound airSound;

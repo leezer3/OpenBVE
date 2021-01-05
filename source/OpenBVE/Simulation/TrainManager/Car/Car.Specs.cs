@@ -15,8 +15,6 @@ namespace OpenBve
 			internal double JerkPowerUp;
 			internal double JerkPowerDown;
 
-			/// brake
-			internal double MotorDeceleration;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
 			internal double CenterOfGravityHeight;
