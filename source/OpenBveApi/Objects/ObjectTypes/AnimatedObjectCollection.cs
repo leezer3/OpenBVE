@@ -158,6 +158,7 @@ namespace OpenBveApi.Objects
 				{
 					foreach (ObjectState state in animatedObj.States)
 					{
+						state.Prototype = (StaticObject)state.Prototype.Clone();
 						state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
 						Matrix4D t = state.Translation;
 						t.Row3.X *= -1.0f;

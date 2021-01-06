@@ -579,13 +579,15 @@ namespace OpenBve
 					{
 						if (carObjects[i] is StaticObject)
 						{
-							StaticObject obj = (StaticObject)carObjects[i];
+							StaticObject obj = (StaticObject)carObjects[i].Clone();
 							obj.ApplyScale(-1.0, 1.0, -1.0);
+							carObjects[i] = obj;
 						}
 						else if (carObjects[i] is AnimatedObjectCollection)
 						{
-							AnimatedObjectCollection obj = (AnimatedObjectCollection) carObjects[i];
+							AnimatedObjectCollection obj = (AnimatedObjectCollection) carObjects[i].Clone();
 							obj.Reverse();
+							carObjects[i] = obj;
 						}
 						else
 						{
