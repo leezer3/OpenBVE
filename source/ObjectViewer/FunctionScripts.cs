@@ -811,7 +811,10 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.PrimaryKlaxon:
 					case Instructions.Klaxon:
+					case Instructions.SecondaryKlaxon:
+					case Instructions.MusicKlaxon:
 						//Object Viewer doesn't actually have a sound player, so we can't test against it, thus return zero....
 						Function.Stack[s] = 0.0;
 						s++; break;
