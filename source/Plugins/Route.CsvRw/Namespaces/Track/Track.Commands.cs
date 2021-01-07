@@ -113,5 +113,7 @@
 		POI,
 		/// <summary>Adds a horn blow event</summary>
 		HornBlow,
+		/// <summary>Sets the rain intensity</summary>
+		Rain
 	}
 }

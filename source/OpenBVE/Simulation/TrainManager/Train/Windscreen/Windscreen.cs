@@ -83,9 +83,12 @@ namespace OpenBve
 				{
 					if (nextDrop != -1)
 					{
+						if (!RainDrops[nextDrop].Visible)
+						{
+							currentDrops++;
+						}
 						RainDrops[nextDrop].Visible = true;
 						RainDrops[nextDrop].RemainingLife = Program.RandomNumberGenerator.NextDouble() * DropLife;
-						currentDrops++;
 					}
 					//We want to play the drop sound even if all drops are currently visible (e.g. the wipers are off and it's still raining)
 					Program.Sounds.PlayCarSound(DropSound, 1.0, 1.0, Car, false);
@@ -99,6 +102,7 @@ namespace OpenBve
 				if (RainDrops[i].RemainingLife <= 0 && RainDrops[i].Visible)
 				{
 					RainDrops[i].Visible = false;
+					currentDrops--;
 					RainDrops[i].RemainingLife = 0.5 * Program.RandomNumberGenerator.NextDouble() * DropLife;
 				}
 			}
