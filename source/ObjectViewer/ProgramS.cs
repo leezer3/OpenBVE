@@ -61,7 +61,7 @@ namespace OpenBve {
 	    {
 		    CurrentHost = new Host();
 			// file system
-	        FileSystem = FileSystem.FromCommandLineArgs(args);
+	        FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 	        FileSystem.CreateFileSystem();
 	        Renderer = new NewRenderer();
 	        CurrentRoute = new CurrentRoute(Renderer);

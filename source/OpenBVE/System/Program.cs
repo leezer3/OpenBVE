@@ -79,7 +79,7 @@ namespace OpenBve {
 			CurrentHost = new Host();
 			Joysticks = new JoystickManager();
 			try {
-				FileSystem = FileSystem.FromCommandLineArgs(args);
+				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 				FileSystem.CreateFileSystem();
 			} catch (Exception ex) {
 				MessageBox.Show(Translations.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
