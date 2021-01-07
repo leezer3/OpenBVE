@@ -29,7 +29,7 @@ namespace OpenBve
 		}
 		
 		private int rainIntensity;
-		private bool legacyRainEvents;
+		internal bool legacyRainEvents;
 		/// <summary>The raindrop array</summary>
 		internal Raindrop[] RainDrops;
 		/// <summary>The sound played when a raindrop hits the windscreen</summary>

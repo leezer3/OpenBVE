@@ -129,6 +129,9 @@ namespace OpenBve.Graphics.Renderers
 			{
 				mass += TrainManager.PlayerTrain.Cars[i].CurrentMass;
 			}
+
+			string rainIntensity = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.legacyRainEvents ? "Legacy beacon based." : TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.RainIntensity + "%";
+
 			int hours = (int)Program.CurrentRoute.SecondsSinceMidnight / 3600,
 				remainder = (int)Program.CurrentRoute.SecondsSinceMidnight % 3600,
 				minutes = remainder / 60,
@@ -144,7 +147,7 @@ namespace OpenBve.Graphics.Renderers
 				"power (car " + car.ToString(Culture) +  "): " + (TrainManager.PlayerTrain.Cars[car].Specs.CurrentAccelerationOutput < 0.0 ? TrainManager.PlayerTrain.Cars[car].Specs.CurrentAccelerationOutput * Math.Sign(TrainManager.PlayerTrain.Cars[car].CurrentSpeed) : TrainManager.PlayerTrain.Cars[car].Specs.CurrentAccelerationOutput * (double)TrainManager.PlayerTrain.Handles.Reverser.Actual).ToString("0.0000", Culture) + " m/s²",
 				"acceleration: " + TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration.ToString("0.0000", Culture) + " m/s²",
 				"position: " + TrainManager.PlayerTrain.FrontCarTrackPosition().ToString("0.00", Culture) + " m",
-				"rain intensity: " + TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.RainIntensity.ToString("0.00", Culture) + "%",
+				"rain intensity: " + rainIntensity,
 				"elevation: " + (Program.CurrentRoute.Atmosphere.InitialElevation + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.WorldPosition.Y).ToString("0.00", Culture) + " m",
 				"temperature: " + (TrainManager.PlayerTrain.Specs.CurrentAirTemperature - 273.15).ToString("0.00", Culture) + " °C",
 				"air pressure: " + (0.001 * TrainManager.PlayerTrain.Specs.CurrentAirPressure).ToString("0.00", Culture) + " kPa",
