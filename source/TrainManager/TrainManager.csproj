@@ -81,6 +81,7 @@
     <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="SafetySystems\PilotLamp.cs" />
     <Compile Include="TrainManager.cs" />
+    <Compile Include="Train\Passengers.cs" />
     <Compile Include="Train\TrainSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
