@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
 using TrainManager.Motor;
@@ -10,7 +11,7 @@ namespace TrainEditor2.Simulation.TrainManager
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal class Car
+		internal class Car : AbstractCar
 		{
 			private readonly Train baseTrain;
 			internal CarSpecs Specs;
@@ -36,7 +37,7 @@ namespace TrainEditor2.Simulation.TrainManager
 				}
 
 				const double factor = 0.04; // 90 km/h -> m/s -> 1/x
-				double speed = Math.Abs(Specs.CurrentSpeed);
+				double speed = Math.Abs(CurrentSpeed);
 				double pitch = speed * factor;
 				double baseGain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
 

@@ -7,6 +7,7 @@ using OpenBveApi.Interface;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 using TrainManager.BrakeSystems;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.SafetySystems;
 
@@ -792,7 +793,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 5:
 										if (b >= -1 & b <= 3)
 										{
-											train.Device.ReAdhesionDevice = (Device.ReAdhesionDevices)b;
+											train.Device.ReAdhesionDevice = (ReadhesionDeviceType)b;
 										}
 
 										break;
@@ -809,14 +810,14 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 8:
 										if (b >= 0 & b <= 2)
 										{
-											train.Device.DoorOpenMode = (Device.DoorModes)b;
+											train.Device.DoorOpenMode = (DoorMode)b;
 										}
 
 										break;
 									case 9:
 										if (b >= 0 & b <= 2)
 										{
-											train.Device.DoorCloseMode = (Device.DoorModes)b;
+											train.Device.DoorCloseMode = (DoorMode)b;
 										}
 
 										break;

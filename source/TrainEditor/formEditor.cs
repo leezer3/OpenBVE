@@ -285,8 +285,8 @@ namespace TrainEditor {
 			Train.Device.HoldBrake = checkboxHoldBrake.Checked;
 			Train.Device.ReAdhesionDevice = (ReadhesionDeviceType)(comboboxReAdhesionDevice.SelectedIndex - 1);
 			Train.Device.PassAlarm = (PassAlarmType)comboboxPassAlarm.SelectedIndex;
-			Train.Device.DoorOpenMode = (TrainDat.Device.DoorModes)comboboxDoorOpenMode.SelectedIndex;
-			Train.Device.DoorCloseMode = (TrainDat.Device.DoorModes)comboboxDoorCloseMode.SelectedIndex;
+			Train.Device.DoorOpenMode = (DoorMode)comboboxDoorOpenMode.SelectedIndex;
+			Train.Device.DoorCloseMode = (DoorMode)comboboxDoorCloseMode.SelectedIndex;
 			if (!SaveControlContent(textboxDoorWidth, "DoorWidth", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Device.DoorWidth)) return false;
 			if (!SaveControlContent(textboxDoorMaxTolerance, "DoorMaxTolerance", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Device.DoorMaxTolerance)) return false;
 			// finish

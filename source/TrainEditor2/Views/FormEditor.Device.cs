@@ -6,6 +6,7 @@ using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Trains;
+using TrainManager.Car;
 using TrainManager.SafetySystems;
 
 namespace TrainEditor2.Views
@@ -106,7 +107,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Device.ReAdhesionDevices)z,
+					z => (ReadhesionDeviceType)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxReAdhesionDevice.SelectedIndexChanged += h,
@@ -138,7 +139,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Device.DoorModes)z,
+					z => (DoorMode)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxDoorOpenMode.SelectedIndexChanged += h,
@@ -154,7 +155,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Device.DoorModes)z,
+					z => (DoorMode)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxDoorCloseMode.SelectedIndexChanged += h,

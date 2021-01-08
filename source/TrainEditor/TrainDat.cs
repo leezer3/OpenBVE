@@ -215,11 +215,6 @@ namespace TrainEditor {
 				Manual = 1,
 				Automatic = 2
 			}
-			internal enum DoorModes {
-				SemiAutomatic = 0,
-				Automatic = 1,
-				Manual = 2
-			}
 			internal AtsModes Ats;
 			internal AtcModes Atc;
 			internal bool Eb;
@@ -228,8 +223,8 @@ namespace TrainEditor {
 			internal ReadhesionDeviceType ReAdhesionDevice;
 			internal double LoadCompensatingDevice;
 			internal PassAlarmType PassAlarm;
-			internal DoorModes DoorOpenMode;
-			internal DoorModes DoorCloseMode;
+			internal DoorMode DoorOpenMode;
+			internal DoorMode DoorCloseMode;
 			internal double DoorWidth;
 			internal double DoorMaxTolerance;
 			internal Device() {
@@ -241,8 +236,8 @@ namespace TrainEditor {
 				this.ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 				this.LoadCompensatingDevice = 0.0;
 				this.PassAlarm = PassAlarmType.None;
-				this.DoorOpenMode = DoorModes.SemiAutomatic;
-				this.DoorCloseMode = DoorModes.SemiAutomatic;
+				this.DoorOpenMode = DoorMode.AutomaticManualOverride;
+				this.DoorCloseMode = DoorMode.AutomaticManualOverride;
 				this.DoorWidth = 1000.0;
 				this.DoorMaxTolerance = 0.0;
 			}
@@ -677,10 +672,10 @@ namespace TrainEditor {
 										if (b >= 0 & b <= 2) t.Device.PassAlarm = (PassAlarmType)b;
 										break;
 									case 8:
-										if (b >= 0 & b <= 2) t.Device.DoorOpenMode = (Device.DoorModes)b;
+										if (b >= 0 & b <= 2) t.Device.DoorOpenMode = (DoorMode)b;
 										break;
 									case 9:
-										if (b >= 0 & b <= 2) t.Device.DoorCloseMode = (Device.DoorModes)b;
+										if (b >= 0 & b <= 2) t.Device.DoorCloseMode = (DoorMode)b;
 										break;
 									case 10:
 										if (a >= 0.0) t.Device.DoorWidth = a;

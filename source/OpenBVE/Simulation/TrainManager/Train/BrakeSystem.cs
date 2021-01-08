@@ -60,6 +60,7 @@ namespace OpenBve
 			private void UpdateBrakeSystem(int CarIndex, double TimeElapsed, out double DecelerationDueToBrake, out double DecelerationDueToMotor)
 			{
 				DecelerationDueToBrake = 0.0;
+				DecelerationDueToMotor = 0.0;
 				// air compressor
 				if (Cars[CarIndex].CarBrake.brakeType == BrakeType.Main)
 				{
@@ -196,10 +197,6 @@ namespace OpenBve
 
 					double a = Cars[CarIndex].CarBrake.motorDeceleration;
 					DecelerationDueToMotor = f * a;
-				}
-				else
-				{
-					DecelerationDueToMotor = 0.0;
 				}
 
 				// hold brake
