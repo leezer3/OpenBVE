@@ -226,7 +226,6 @@
     <Compile Include="Simulation\TrainManager\Train\Train.Doors.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.RequestStop.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Station.cs" />
     <Compile Include="Simulation\TrainManager\Train\Windscreen\Raindrop.cs" />
     <Compile Include="Simulation\TrainManager\Train\Windscreen\Windscreen.cs" />

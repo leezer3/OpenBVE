@@ -19,6 +19,7 @@ using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -248,7 +249,6 @@ namespace OpenBve
 				{
 					Cars[i].Initialize();
 				}
-				UpdateAtmosphericConstants();
 				Update(0.0);
 			}
 
@@ -609,7 +609,6 @@ namespace OpenBve
 				{
 					InternalTimerTimeElapsed -= 10.0;
 					Synchronize();
-					UpdateAtmosphericConstants();
 				}
 			}
 
@@ -821,19 +820,6 @@ namespace OpenBve
 				double invcarlen = 1.0 / (double)Cars.Length;
 				CurrentSpeed *= invcarlen;
 				Specs.CurrentAverageAcceleration *= invcarlen;
-			}
-
-			internal void UpdateAtmosphericConstants()
-			{
-				double h = 0.0;
-				for (int i = 0; i < Cars.Length; i++)
-				{
-					h += Cars[i].FrontAxle.Follower.WorldPosition.Y + Cars[i].RearAxle.Follower.WorldPosition.Y;
-				}
-				double elevation = Program.CurrentRoute.Atmosphere.InitialElevation + h / (2.0 * (double)Cars.Length);
-				Specs.CurrentAirTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
-				Specs.CurrentAirPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, Specs.CurrentAirTemperature);
-				Specs.CurrentAirDensity = Program.CurrentRoute.Atmosphere.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
 			}
 
 			/// <summary>Updates the safety system plugin for this train</summary>

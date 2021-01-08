@@ -88,6 +88,16 @@ namespace RouteManager2.Climate
 			double x = AirPressure * MolarMass / (UniversalGasConstant * AirTemperature);
 			return x >= 0.001 ? x : 0.001;
 		}
+		
+		/// <summary>Calculates the air density for a given elevation</summary>
+		/// <returns>The air density in kg/m³</returns>
+		public double GetAirDensity(double elevation)
+		{
+			double AirTemperature = GetAirTemperature(elevation);
+			double AirPressure = GetAirPressure(elevation, AirTemperature);
+			double x = AirPressure * MolarMass / (UniversalGasConstant * AirTemperature);
+			return x >= 0.001 ? x : 0.001;
+		}
 
 		/// <summary>Calculates the air pressure for a given elevation and temperature</summary>
 		/// <param name="Elevation">The elevation in m</param>

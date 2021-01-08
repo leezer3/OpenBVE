@@ -1271,8 +1271,8 @@ namespace OpenBve
 				{
 					double v = Math.Abs(CurrentSpeed);
 					double t = Index == 0 & CurrentSpeed >= 0.0 || Index == baseTrain.Cars.Length - 1 & CurrentSpeed <= 0.0 ? Specs.ExposedFrontalArea : Specs.UnexposedFrontalArea;
-					double a = FrontAxle.GetResistance(v, t, baseTrain.Specs.CurrentAirDensity, Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-					double b = RearAxle.GetResistance(v, t, baseTrain.Specs.CurrentAirDensity, Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					double a = FrontAxle.GetResistance(v, t, Program.CurrentRoute.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					double b = RearAxle.GetResistance(v, t, Program.CurrentRoute.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 					FrictionBrakeAcceleration = 0.5 * (a + b);
 				}
 				// power
