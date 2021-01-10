@@ -19,6 +19,8 @@ namespace OpenBveApi.Routes
 		public double AdhesionMultiplier;
 		/// <summary>The rain intensity applying to this element</summary>
 		public int RainIntensity;
+		/// <summary>The snow intensity applying to this element</summary>
+		public int SnowIntensity;
 		/// <summary>The accuracy level of this element (Affects cab sway etc) </summary>
 		public double CsvRwAccuracyLevel;
 		/// <summary>The pitch of this element</summary>
@@ -46,6 +48,7 @@ namespace OpenBveApi.Routes
 			this.CurveCantTangent = 0.0;
 			this.AdhesionMultiplier = 1.0;
 			this.RainIntensity = 0;
+			this.SnowIntensity = 0;
 			this.CsvRwAccuracyLevel = 2.0;
 			this.WorldPosition = Vector3.Zero;
 			this.WorldDirection = Vector3.Forward;

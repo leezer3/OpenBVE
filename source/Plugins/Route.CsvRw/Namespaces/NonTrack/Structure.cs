@@ -1004,7 +1004,7 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RainStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 						else
 						{

@@ -2994,6 +2994,44 @@ namespace CsvRwRouteParser
 						}
 					}
 					break;
+				case TrackCommand.Snow:
+					if (!PreviewOnly)
+					{
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0)
+						{
+							int currentIntensity;
+							if (!NumberFormats.TryParseIntVb6(Arguments[0], out currentIntensity))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								Data.Blocks[BlockIndex].SnowIntensity = currentIntensity;
+							}
+						}
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+						{
+							int structure;
+							if (!NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								if (Data.Structure.WeatherObjects.ContainsKey(structure))
+								{
+									Data.Blocks[BlockIndex].WeatherObject = structure;
+								}
+								else
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex " + structure + " was not found in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								}
+								
+							}
+						}
+					}
+					break;
 			}
 		}
 

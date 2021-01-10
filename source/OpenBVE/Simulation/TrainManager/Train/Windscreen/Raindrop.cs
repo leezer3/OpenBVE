@@ -7,5 +7,7 @@
 		internal bool Visible;
 		/// <summary>The remaining life before the drop dries</summary>
 		internal double RemainingLife;
+		/// <summary>Whether this drop should show the alternate snowflake texture</summary>
+		internal bool IsSnowFlake;
 	}
 }

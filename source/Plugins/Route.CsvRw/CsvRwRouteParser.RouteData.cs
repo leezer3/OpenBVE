@@ -52,6 +52,7 @@ namespace CsvRwRouteParser
 							Blocks[i].Cycle = Blocks[i - 1].Cycle;
 							Blocks[i].RailCycles = Blocks[i - 1].RailCycles;
 							Blocks[i].Height = double.NaN;
+							Blocks[i].SnowIntensity = Blocks[i - 1].SnowIntensity;
 							Blocks[i].RainIntensity = Blocks[i - 1].RainIntensity;
 							Blocks[i].WeatherObject = Blocks[i - 1].WeatherObject;
 						}

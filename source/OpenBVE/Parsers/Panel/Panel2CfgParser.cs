@@ -1232,13 +1232,15 @@ namespace OpenBve {
 									Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
 									int numberOfDrops = 16, Layer = 0, dropSize = 16;
 									WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
-									List<string> daytimeDropFiles, nighttimeDropFiles;
+									List<string> daytimeDropFiles, nighttimeDropFiles, daytimeFlakeFiles, nighttimeFlakeFiles;
 									Color24 TransparentColor = Color24.Blue;
 									double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
 									try
 									{
-										daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day")).ToList();
-										nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night")).ToList();
+										daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "drop*.png").ToList();
+										daytimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "flake*.png").ToList();
+										nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "drop*.png").ToList();
+										nighttimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "flake*.png").ToList();
 									}
 									catch
 									{
@@ -1320,6 +1322,12 @@ namespace OpenBve {
 												case "nighttimedrops":
 													nighttimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
 													break;
+												case "daytimeflakes":
+													daytimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
+													break;
+												case "nighttimeflakes":
+													nighttimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
+													break;
 												case "transparentcolor":
 													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
 													{
@@ -1392,18 +1400,27 @@ namespace OpenBve {
 									}
 
 									i--;
-									List<Texture> daytimeDrops = new List<Texture>(), nighttimeDrops = new List<Texture>();
 									/*
 									 * Ensure we have the same number of drops for day + night
 									 * NOTE: If a drop is missing, we may get slightly odd effects, but can't be helped
 									 * Raindrops ought to be blurry, and they're small enough anyway...
 									 */
 									int MD = Math.Max(daytimeDropFiles.Count, nighttimeDropFiles.Count);
+									MD = Math.Max(daytimeFlakeFiles.Count, MD);
+									MD = Math.Max(nighttimeFlakeFiles.Count, MD);
 									if (daytimeDropFiles.Count < MD)
 									{
 										while (daytimeDropFiles.Count < MD)
 										{
 											daytimeDropFiles.Add(string.Empty);
+										}
+									}
+
+									if (daytimeFlakeFiles.Count < MD)
+									{
+										while (daytimeFlakeFiles.Count < MD)
+										{
+											daytimeFlakeFiles.Add(string.Empty);
 										}
 									}
 
@@ -1415,34 +1432,19 @@ namespace OpenBve {
 										}
 									}
 
-									for (int l = 0; l < daytimeDropFiles.Count; l++)
+									
+									if (nighttimeFlakeFiles.Count < MD)
 									{
-										string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(TrainPath, daytimeDropFiles[l]) : daytimeDropFiles[l];
-										if (!System.IO.File.Exists(currentDropFile))
+										while (nighttimeFlakeFiles.Count < MD)
 										{
-											currentDropFile = Path.CombineFile(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Program.RandomNumberGenerator.Next(1, 4) + ".png");
-											TransparentColor = Color24.Blue;
+											nighttimeFlakeFiles.Add(string.Empty);
 										}
-
-										Texture drop;
-										Program.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
-										daytimeDrops.Add(drop);
-
 									}
 
-									for (int l = 0; l < nighttimeDropFiles.Count; l++)
-									{
-										string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(TrainPath, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
-										if (!System.IO.File.Exists(currentDropFile))
-										{
-											currentDropFile = Path.CombineFile(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Program.RandomNumberGenerator.Next(1, 4) + ".png");
-											TransparentColor = Color24.Blue;
-										}
-
-										Texture drop;
-										Program.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
-										nighttimeDrops.Add(drop);
-									}
+									List<Texture> daytimeDrops = LoadDrops(TrainPath, daytimeDropFiles, TransparentColor, "drop");
+									List<Texture> daytimeFlakes = LoadDrops(TrainPath, daytimeFlakeFiles, TransparentColor, "flake");
+									List<Texture> nighttimeDrops = LoadDrops(TrainPath, nighttimeDropFiles, TransparentColor, "drop");
+									List<Texture> nighttimeFlakes = LoadDrops(TrainPath, nighttimeFlakeFiles, TransparentColor, "flake");
 
 									double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
 									double currentDropX = topLeft.X;
@@ -1455,13 +1457,19 @@ namespace OpenBve {
 										double currentDropY = Program.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
 										OpenBVEGame.RunInRenderThread(() =>
 										{
+											//Need to preload both drop and flakes as we don't know whether it's raining or snowing
 											Program.CurrentHost.LoadTexture(daytimeDrops[DropTexture], OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(daytimeFlakes[DropTexture], OpenGlTextureWrapMode.ClampClamp);
 										});
+										//Create both a drop and a snowflake at the same position, the windscreen code will determine which is shown
 										int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White, false);
+										int panelFlakeIndex = CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White, false);
 										string f = drop + " raindrop";
+										string f2 = drop + " snowflake";
 										try
 										{
 											Car.CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
+											Car.CarSections[0].Groups[GroupIndex].Elements[panelFlakeIndex].StateFunction = new FunctionScript(Program.CurrentHost, f2 + " 1 == --", false);
 										}
 										catch
 										{
@@ -1476,6 +1484,26 @@ namespace OpenBve {
 					}
 				}
 			}
+		}
+
+		private static List<Texture> LoadDrops(string TrainPath, List<string> dropFiles, Color24 TransparentColor, string compatabilityString)
+		{
+			List<Texture> drops = new List<Texture>();
+			for (int l = 0; l < dropFiles.Count; l++)
+			{
+				string currentDropFile = !System.IO.Path.IsPathRooted(dropFiles[l]) ? Path.CombineFile(TrainPath, dropFiles[l]) : dropFiles[l];
+				if (!System.IO.File.Exists(currentDropFile))
+				{
+					currentDropFile = Path.CombineFile(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Program.RandomNumberGenerator.Next(1, 4) + ".png");
+					TransparentColor = Color24.Blue;
+				}
+
+				Texture drop;
+				Program.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
+				drops.Add(drop);
+			}
+
+			return drops;
 		}
 
 		internal static string GetInfixFunction(TrainManager.Train Train, string Subject, double Minimum, double Maximum, int Width, int TextureWidth, string ErrorLocation)

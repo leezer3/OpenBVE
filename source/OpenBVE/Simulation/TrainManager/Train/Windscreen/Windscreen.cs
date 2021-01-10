@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SoundManager;
 
 namespace OpenBve
@@ -11,12 +12,12 @@ namespace OpenBve
 		{
 			get
 			{
-				return RainIntensity != 0;
+				return Intensity != 0;
 			}
 		}
 
 		/// <summary>The current rain intensity</summary>
-		internal int RainIntensity
+		internal int Intensity
 		{
 			get
 			{
@@ -24,7 +25,8 @@ namespace OpenBve
 				{
 					return rainIntensity;
 				}
-				return Car.FrontAxle.Follower.RainIntensity;
+				//The weather intensity returns the maximum of the rain and snow intensities
+				return Math.Max(Car.FrontAxle.Follower.RainIntensity, Car.FrontAxle.Follower.SnowIntensity);
 			}
 		}
 		
@@ -77,8 +79,8 @@ namespace OpenBve
 			{
 				int nextDrop = PickDrop();
 				dropTimer += TimeElapsed * 1000;
-				var dev = (int)(0.4 * 2000 / RainIntensity);
-				int dropInterval =  2000 / RainIntensity + Program.RandomNumberGenerator.Next(dev, dev * 2);
+				var dev = (int)(0.4 * 2000 / Intensity);
+				int dropInterval =  2000 / Intensity + Program.RandomNumberGenerator.Next(dev, dev * 2);
 				if (dropTimer > dropInterval)
 				{
 					if (nextDrop != -1)
@@ -88,6 +90,15 @@ namespace OpenBve
 							currentDrops++;
 						}
 						RainDrops[nextDrop].Visible = true;
+						if (!legacyRainEvents)
+						{
+							int snowProbability = Program.RandomNumberGenerator.Next(100);
+							if ((snowProbability < Car.FrontAxle.Follower.SnowIntensity) || Car.FrontAxle.Follower.RainIntensity == 0)
+							{
+								//Either we've met the snow probability roll (mixed snow and rain) or not raining
+								RainDrops[nextDrop].IsSnowFlake = true;
+							}
+						}
 						RainDrops[nextDrop].RemainingLife = Program.RandomNumberGenerator.NextDouble() * DropLife;
 					}
 					//We want to play the drop sound even if all drops are currently visible (e.g. the wipers are off and it's still raining)
@@ -102,6 +113,7 @@ namespace OpenBve
 				if (RainDrops[i].RemainingLife <= 0 && RainDrops[i].Visible)
 				{
 					RainDrops[i].Visible = false;
+					RainDrops[i].IsSnowFlake = false;
 					currentDrops--;
 					RainDrops[i].RemainingLife = 0.5 * Program.RandomNumberGenerator.NextDouble() * DropLife;
 				}

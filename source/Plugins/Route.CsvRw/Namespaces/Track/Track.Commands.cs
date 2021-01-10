@@ -114,6 +114,8 @@
 		/// <summary>Adds a horn blow event</summary>
 		HornBlow,
 		/// <summary>Sets the rain intensity</summary>
-		Rain
+		Rain,
+		/// <summary>Sets the snow intensity</summary>
+		Snow
 	}
 }
