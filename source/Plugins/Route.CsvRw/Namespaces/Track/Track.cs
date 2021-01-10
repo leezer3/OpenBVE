@@ -2971,6 +2971,27 @@ namespace CsvRwRouteParser
 								Data.Blocks[BlockIndex].RainIntensity = currentIntensity;
 							}
 						}
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+						{
+							int structure;
+							if (!NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								if (Data.Structure.WeatherObjects.ContainsKey(structure))
+								{
+									Data.Blocks[BlockIndex].WeatherObject = structure;
+								}
+								else
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex " + structure + " was not found in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								}
+								
+							}
+						}
 					}
 					break;
 			}

@@ -577,6 +577,11 @@ namespace CsvRwRouteParser
 						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance);
 					}
 				}
+				if (Data.Structure.WeatherObjects.ContainsKey(Data.Blocks[i].WeatherObject))
+				{
+					UnifiedObject obj = Data.Structure.WeatherObjects[Data.Blocks[i].WeatherObject];
+					obj.CreateObject(Position, GroundTransformation, Data.Blocks[i].Height, StartingDistance, EndingDistance);
+				}
 				// rail-aligned objects
 				if (!PreviewOnly)
 				{

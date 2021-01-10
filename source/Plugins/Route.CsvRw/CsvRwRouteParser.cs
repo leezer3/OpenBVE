@@ -126,6 +126,7 @@ namespace CsvRwRouteParser {
 				Data.Backgrounds = new BackgroundDictionary();
 				Data.TimetableDaytime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
+				Data.Structure.WeatherObjects = new ObjectDictionary();
 				// signals
 				Data.Signals = new SignalDictionary();
 				if (Plugin.CurrentOptions.CurrentCompatibilitySignalSet == null) //not selected via main form

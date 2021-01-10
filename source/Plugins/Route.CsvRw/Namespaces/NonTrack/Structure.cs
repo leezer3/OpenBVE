@@ -998,6 +998,45 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
+				case StructureCommand.Weather:
+				{
+					if (!PreviewOnly)
+					{
+						if (commandIndices[0] < 0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RainStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else
+						{
+							if (Arguments.Length < 1)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else if (Path.ContainsInvalidChars(Arguments[0]))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								string f = Path.CombineFile(ObjectPath, Arguments[0]);
+								if (!System.IO.File.Exists(f))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								}
+								else
+								{
+									UnifiedObject obj;
+									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
+									if (obj != null)
+									{
+										Data.Structure.WeatherObjects.Add(commandIndices[0], obj, "RainStructure");
+									}
+								}
+							}
+						}
+					}
+				}
+					break;
 			}
 		}
 	}
