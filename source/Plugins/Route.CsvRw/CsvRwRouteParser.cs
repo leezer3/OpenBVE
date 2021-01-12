@@ -5,6 +5,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using RouteManager2;
 using RouteManager2.Climate;
@@ -194,7 +195,13 @@ namespace CsvRwRouteParser {
 				{
 					if (Plugin.CurrentHost.Plugins[i].Object != null)
 					{
-						Plugin.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(Plugin.CurrentOptions.EnableBveTsHacks, CylinderHack);
+						CompatabilityHacks enabledHacks = new CompatabilityHacks
+						{
+							BveTsHacks = true, 
+							CylinderHack = CylinderHack,
+							BlackTransparency =  true
+						};
+						Plugin.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(enabledHacks);
 						//Remember that these will be ignored if not the correct plugin
 						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentXParser);
 						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentObjParser);

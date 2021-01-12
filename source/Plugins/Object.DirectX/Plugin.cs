@@ -10,11 +10,18 @@ namespace Plugin
     {
 	    internal static HostInterface currentHost;
 	    private static XParsers currentXParser = XParsers.Original;
+	    internal static bool BlackTransparency = true;
 
 	    public override string[] SupportedStaticObjectExtensions => new[] { ".x" };
 
-	    public override void Load(HostInterface host, FileSystem fileSystem) {
+	    public override void Load(HostInterface host, FileSystem fileSystem) 
+	    {
 		    currentHost = host;
+	    }
+
+	    public override void SetCompatibilityHacks(CompatabilityHacks EnabledHacks)
+	    {
+		    BlackTransparency = EnabledHacks.BlackTransparency;
 	    }
 		
 	    public override void SetObjectParser(object parserType)

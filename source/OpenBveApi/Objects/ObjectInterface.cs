@@ -26,7 +26,7 @@
 		}
 
 		/// <summary>Sets various hacks to workaround buggy objects</summary>
-		public virtual void SetCompatibilityHacks(bool BveTsHacks, bool CylinderHack)
+		public virtual void SetCompatibilityHacks(CompatabilityHacks EnabledHacks)
 		{
 		}
 
@@ -48,5 +48,18 @@
 		/// <param name="Encoding">The encoding for the object</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public abstract bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject);
+	}
+
+	/// <summary>Controls various hacks used with older content</summary>
+	public struct CompatabilityHacks
+	{
+		/// <summary>Looser parsing model is used in various cases</summary>
+		public bool BveTsHacks;
+		/// <summary>Cylinders are generated with a different face order</summary>
+		/// <remarks>Used as tunnel internals by some BVE2 content</remarks>
+		public bool CylinderHack;
+		/// <summary>Pure black is used as a transparent color</summary>
+		/// <remarks>Used to provide color-key transparency in BVE4 X format files in </remarks>
+		public bool BlackTransparency;
 	}
 }

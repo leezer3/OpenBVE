@@ -81,7 +81,7 @@ namespace Plugin
 
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			if (!IsB3D && BveTsHacks)
+			if (!IsB3D && enabledHacks.BveTsHacks)
 			{
 				/*
 				 * Handles multi-column CSV objects [Hide behind the hacks option in the main program]
@@ -185,7 +185,7 @@ namespace Plugin
 						Command = Arguments[0];
 						bool resetArguments = true;
 						if (Arguments.Length != 1) {
-							if (!BveTsHacks || !IsCommand(Command))
+							if (!enabledHacks.BveTsHacks || !IsCommand(Command))
 							{
 								currentHost.AddMessage(MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							}
@@ -240,7 +240,7 @@ namespace Plugin
 								if (Arguments.Length > 0) {
 									currentHost.AddMessage(MessageType.Warning, false, "0 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Builder.Apply(ref Object, Plugin.BveTsHacks);
+								Builder.Apply(ref Object, enabledHacks.BveTsHacks);
 								Builder = new MeshBuilder(currentHost);
 								Normals = new List<Vector3>();
 							} break;
@@ -316,7 +316,7 @@ namespace Plugin
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
-											if (BveTsHacks)
+											if (enabledHacks.BveTsHacks)
 											{
 												if (IsB3D && j == 0 && Arguments[j] == string.Empty)
 												{
@@ -360,7 +360,7 @@ namespace Plugin
 											}
 											
 										}
-										if (Builder.isCylinder && BveTsHacks && CylinderHack)
+										if (Builder.isCylinder && enabledHacks.BveTsHacks && enabledHacks.CylinderHack)
 										{
 											int l = f.Vertices.Length;
 											MeshFaceVertex v = f.Vertices[l - 1];
@@ -900,7 +900,7 @@ namespace Plugin
 										if (!System.IO.File.Exists(tday))
 										{
 											bool hackFound = false;
-											if (BveTsHacks)
+											if (enabledHacks.BveTsHacks)
 											{
 												//Original BVE2 signal graphics
 												Match m = Regex.Match(tday, @"(signal\d{1,2}\.bmp)", RegexOptions.IgnoreCase);
@@ -1219,7 +1219,7 @@ namespace Plugin
 				}
 			}
 			// finalize object
-			Builder.Apply(ref Object, Plugin.BveTsHacks);
+			Builder.Apply(ref Object, enabledHacks.BveTsHacks);
 			Object.Mesh.CreateNormals();
 			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
 			{

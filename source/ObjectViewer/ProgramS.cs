@@ -110,7 +110,13 @@ namespace OpenBve {
 					        {
 						        if (CurrentHost.Plugins[j].Object != null)
 						        {
-							        CurrentHost.Plugins[j].Object.SetCompatibilityHacks(true, false);
+							        CompatabilityHacks enabledHacks = new CompatabilityHacks
+							        {
+								        BveTsHacks = true, 
+								        CylinderHack = false,
+								        BlackTransparency =  true
+							        };
+							        CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 						        }
 					        }
 				        }

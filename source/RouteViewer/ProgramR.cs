@@ -22,6 +22,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -112,7 +113,13 @@ namespace OpenBve
 							{
 								if (CurrentHost.Plugins[j].Object != null)
 								{
-									CurrentHost.Plugins[j].Object.SetCompatibilityHacks(true, false);
+									CompatabilityHacks enabledHacks = new CompatabilityHacks
+									{
+										BveTsHacks = true, 
+										CylinderHack = false,
+										BlackTransparency =  true
+									};
+									CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 								}
 							}
 						}
