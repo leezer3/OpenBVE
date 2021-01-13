@@ -31,10 +31,7 @@ namespace OpenBve {
 		}
 		
 		internal class Car : AbstractCar {
-			internal int CurrentSection;
 			internal CarSpecs Specs;
-			internal bool Derailed;
-			internal bool Topples;
 			internal CarBrake CarBrake;
 			internal readonly Door[] Doors;
 			internal Car(Train train)

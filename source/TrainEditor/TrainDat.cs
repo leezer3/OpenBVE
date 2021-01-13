@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
+using TrainManager.Power;
 using TrainManager.SafetySystems;
 
 
@@ -15,23 +17,17 @@ namespace TrainEditor {
 		// acceleration
 		/// <summary>The Acceleration section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Acceleration {
-			internal struct Entry {
-				internal double a0;
-				internal double a1;
-				internal double v1;
-				internal double v2;
-				internal double e;
-			}
-			internal Entry[] Entries;
+			
+			internal BveAccelerationCurve[] Entries;
 			internal Acceleration() {
 				const int n = 8;
-				this.Entries = new Entry[n];
+				this.Entries = new BveAccelerationCurve[n];
 				for (int i = 0; i < n; i++) {
-					this.Entries[i].a0 = 1.0;
-					this.Entries[i].a1 = 1.0;
-					this.Entries[i].v1 = 25.0;
-					this.Entries[i].v2 = 25.0;
-					this.Entries[i].e = 1.0;
+					this.Entries[i].StageZeroAcceleration = 1.0;
+					this.Entries[i].StageOneAcceleration = 1.0;
+					this.Entries[i].StageOneSpeed = 25.0;
+					this.Entries[i].StageTwoSpeed = 25.0;
+					this.Entries[i].StageTwoExponent = 1.0;
 				}
 			}
 		}
@@ -246,19 +242,15 @@ namespace TrainEditor {
 		// motor
 		/// <summary>Any of the Motor sections of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Motor {
-			internal struct Entry {
-				internal int SoundIndex;
-				internal double Pitch;
-				internal double Volume;
-			}
-			internal Entry[] Entries;
+			
+			internal BVEMotorSoundTableEntry[] Entries;
 			internal Motor() {
 				const int n = 800;
-				this.Entries = new Entry[n];
+				this.Entries = new BVEMotorSoundTableEntry[n];
 				for (int i = 0; i < n; i++) {
 					this.Entries[i].SoundIndex = -1;
-					this.Entries[i].Pitch = 100.0;
-					this.Entries[i].Volume = 128.0;
+					this.Entries[i].Pitch = 100.0f;
+					this.Entries[i].Gain = 128.0f;
 				}
 			}
 		}
@@ -374,35 +366,35 @@ namespace TrainEditor {
 								double a; if (double.TryParse(s, System.Globalization.NumberStyles.Float, Culture, out a)) {
 									switch (m) {
 										case 0:
-											t.Acceleration.Entries[n].a0 = Math.Max(a, 0.0);
+											t.Acceleration.Entries[n].StageZeroAcceleration = Math.Max(a, 0.0);
 											break;
 										case 1:
-											t.Acceleration.Entries[n].a1 = Math.Max(a, 0.0);
+											t.Acceleration.Entries[n].StageOneAcceleration = Math.Max(a, 0.0);
 											break;
 										case 2:
-											t.Acceleration.Entries[n].v1 = Math.Max(a, 0.0);
+											t.Acceleration.Entries[n].StageOneSpeed = Math.Max(a, 0.0);
 											break;
 										case 3:
-											t.Acceleration.Entries[n].v2 = Math.Max(a, 0.0);
-											if (t.Acceleration.Entries[n].v2 < t.Acceleration.Entries[n].v1) {
-												double x = t.Acceleration.Entries[n].v1;
-												t.Acceleration.Entries[n].v1 = t.Acceleration.Entries[n].v2;
-												t.Acceleration.Entries[n].v2 = x;
+											t.Acceleration.Entries[n].StageTwoSpeed = Math.Max(a, 0.0);
+											if (t.Acceleration.Entries[n].StageTwoSpeed < t.Acceleration.Entries[n].StageOneSpeed) {
+												double x = t.Acceleration.Entries[n].StageOneSpeed;
+												t.Acceleration.Entries[n].StageOneSpeed = t.Acceleration.Entries[n].StageTwoSpeed;
+												t.Acceleration.Entries[n].StageTwoSpeed = x;
 											}
 											break;
 										case 4:
 											if (ver1220000) {
 												if (a <= 0.0) {
-													t.Acceleration.Entries[n].e = 1.0;
+													t.Acceleration.Entries[n].StageTwoExponent = 1.0;
 												} else {
 													const double c = 1.23315173118822;
-													t.Acceleration.Entries[n].e = 1.0 - Math.Log(a) * t.Acceleration.Entries[n].v2 * c;
-													if (t.Acceleration.Entries[n].e > 4.0) {
-														t.Acceleration.Entries[n].e = 4.0;
+													t.Acceleration.Entries[n].StageTwoExponent = 1.0 - Math.Log(a) * t.Acceleration.Entries[n].StageTwoSpeed * c;
+													if (t.Acceleration.Entries[n].StageTwoExponent > 4.0) {
+														t.Acceleration.Entries[n].StageTwoExponent = 4.0;
 													}
 												}
 											} else {
-												t.Acceleration.Entries[n].e = a;
+												t.Acceleration.Entries[n].StageTwoExponent = a;
 											}
 											break;
 									}
@@ -712,10 +704,10 @@ namespace TrainEditor {
 												m.Entries[n].SoundIndex = b >= 0 ? b : -1;
 												break;
 											case 1:
-												m.Entries[n].Pitch = Math.Max(a, 0.0);
+												m.Entries[n].Pitch = (float)Math.Max(a, 0.0);
 												break;
 											case 2:
-												m.Entries[n].Volume = Math.Max(a, 0.0);
+												m.Entries[n].Gain = (float)Math.Max(a, 0.0);
 												break;
 										}
 									} k++;
@@ -801,11 +793,11 @@ namespace TrainEditor {
 				Array.Resize(ref t.Acceleration.Entries, t.Handle.PowerNotches);
 			}
 			for (int i = 0; i < t.Acceleration.Entries.Length; i++) {
-				b.Append(t.Acceleration.Entries[i].a0.ToString(Culture) + ",");
-				b.Append(t.Acceleration.Entries[i].a1.ToString(Culture) + ",");
-				b.Append(t.Acceleration.Entries[i].v1.ToString(Culture) + ",");
-				b.Append(t.Acceleration.Entries[i].v2.ToString(Culture) + ",");
-				b.AppendLine(t.Acceleration.Entries[i].e.ToString(Culture));
+				b.Append(t.Acceleration.Entries[i].StageZeroAcceleration.ToString(Culture) + ",");
+				b.Append(t.Acceleration.Entries[i].StageOneAcceleration.ToString(Culture) + ",");
+				b.Append(t.Acceleration.Entries[i].StageOneSpeed.ToString(Culture) + ",");
+				b.Append(t.Acceleration.Entries[i].StageTwoSpeed.ToString(Culture) + ",");
+				b.AppendLine(t.Acceleration.Entries[i].StageTwoExponent.ToString(Culture));
 			}
 			int n = 15;
 			b.AppendLine("#PERFORMANCE");
@@ -908,7 +900,7 @@ namespace TrainEditor {
 				for (int j = 0; j < m.Entries.Length; j++) {
 					b.Append(m.Entries[j].SoundIndex.ToString(Culture) + ",");
 					b.Append(m.Entries[j].Pitch.ToString(Culture) + ",");
-					b.AppendLine(m.Entries[j].Volume.ToString(Culture));
+					b.AppendLine(m.Entries[j].Gain.ToString(Culture));
 				}
 			}
 			System.IO.File.WriteAllText(FileName, b.ToString(), new System.Text.UTF8Encoding(true));

@@ -9,6 +9,7 @@ using TrainEditor2.Systems;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.SafetySystems;
 
 namespace TrainEditor2.IO.Trains.TrainDat
@@ -851,7 +852,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 						{
 							string section = lines[i].ToLowerInvariant();
 							i++;
-							Motor.Entry[] entries = new Motor.Entry[800];
+							BVEMotorSoundTableEntry[] entries = new BVEMotorSoundTableEntry[800];
 
 							while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 							{
@@ -886,10 +887,10 @@ namespace TrainEditor2.IO.Trains.TrainDat
 												entries[n].SoundIndex = b >= 0 ? b : -1;
 												break;
 											case 1:
-												entries[n].Pitch = Math.Max(a, 0.0);
+												entries[n].Pitch = (float)Math.Max(a, 0.0);
 												break;
 											case 2:
-												entries[n].Volume = Math.Max(a, 0.0);
+												entries[n].Gain = (float)Math.Max(a, 0.0);
 												break;
 										}
 									}
