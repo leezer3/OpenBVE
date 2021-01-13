@@ -10,12 +10,12 @@ namespace TrainEditor2.ViewModels.Trains
 {
 	internal class DeviceViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<Device.AtsModes> Ats
+		internal ReactiveProperty<AtsModes> Ats
 		{
 			get;
 		}
 
-		internal ReactiveProperty<Device.AtcModes> Atc
+		internal ReactiveProperty<AtcModes> Atc
 		{
 			get;
 		}

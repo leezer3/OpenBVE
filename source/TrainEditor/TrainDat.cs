@@ -201,16 +201,6 @@ namespace TrainEditor {
 		// device
 		/// <summary>The Device section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Device {
-			internal enum AtsModes {
-				None = -1,
-				AtsSn = 0,
-				AtsSnP = 1
-			}
-			internal enum AtcModes {
-				None = 0,
-				Manual = 1,
-				Automatic = 2
-			}
 			internal AtsModes Ats;
 			internal AtcModes Atc;
 			internal bool Eb;
@@ -640,10 +630,10 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b >= -1 & b <= 1) t.Device.Ats = (Device.AtsModes)b;
+										if (b >= -1 & b <= 1) t.Device.Ats = (AtsModes)b;
 										break;
 									case 1:
-										if (b >= 0 & b <= 2) t.Device.Atc = (Device.AtcModes)b;
+										if (b >= 0 & b <= 2) t.Device.Atc = (AtcModes)b;
 										break;
 									case 2:
 										t.Device.Eb = a == 1.0;

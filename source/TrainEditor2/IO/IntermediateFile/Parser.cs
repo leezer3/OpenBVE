@@ -77,8 +77,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Device
 			{
-				Ats = (Device.AtsModes)Enum.Parse(typeof(Device.AtsModes), (string)parent.Element("Ats")),
-				Atc = (Device.AtcModes)Enum.Parse(typeof(Device.AtcModes), (string)parent.Element("Atc")),
+				Ats = (AtsModes)Enum.Parse(typeof(AtsModes), (string)parent.Element("Ats")),
+				Atc = (AtcModes)Enum.Parse(typeof(AtcModes), (string)parent.Element("Atc")),
 				Eb = (bool)parent.Element("Eb"),
 				ConstSpeed = (bool)parent.Element("ConstSpeed"),
 				HoldBrake = (bool)parent.Element("HoldBrake"),

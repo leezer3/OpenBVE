@@ -10,20 +10,6 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal class Device : BindableBase, ICloneable
 	{
-		internal enum AtsModes
-		{
-			None = -1,
-			AtsSn = 0,
-			AtsSnP = 1
-		}
-
-		internal enum AtcModes
-		{
-			None = 0,
-			Manual = 1,
-			Automatic = 2
-		}
-
 		private AtsModes ats;
 		private AtcModes atc;
 		private bool eb;

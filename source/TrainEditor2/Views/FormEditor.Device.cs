@@ -23,7 +23,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Device.AtsModes)z,
+					z => (AtsModes)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxAts.SelectedIndexChanged += h,
@@ -39,7 +39,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Device.AtcModes)z,
+					z => (AtcModes)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxAtc.SelectedIndexChanged += h,

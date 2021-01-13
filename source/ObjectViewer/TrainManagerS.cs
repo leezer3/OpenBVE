@@ -41,23 +41,12 @@ namespace OpenBve {
 				Doors = new Door[2];
 			}
 		}
-		// train security
-		internal enum SafetySystem {
-			Plugin = -1,
-			None = 0,
-			AtsSn = 1,
-			AtsP = 2,
-			Atc = 3
-		}
-
-		internal struct TrainSafety {
-			internal SafetySystem Mode;
-		}
+		
 		// train specs
 		internal struct TrainSpecs {
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;
-			internal TrainSafety Safety;
+			internal bool SafetySystemPlugin;
 		}
 		// train
 		internal class Train : AbstractTrain {

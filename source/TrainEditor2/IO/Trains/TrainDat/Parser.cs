@@ -771,14 +771,14 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (b >= -1 & b <= 1)
 										{
-											train.Device.Ats = (Device.AtsModes)b;
+											train.Device.Ats = (AtsModes)b;
 										}
 
 										break;
 									case 1:
 										if (b >= 0 & b <= 2)
 										{
-											train.Device.Atc = (Device.AtcModes)b;
+											train.Device.Atc = (AtcModes)b;
 										}
 
 										break;

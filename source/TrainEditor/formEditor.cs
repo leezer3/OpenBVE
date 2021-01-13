@@ -278,8 +278,8 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxExposedFrontalArea, "ExposedFrontalArea", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.ExposedFrontalArea)) return false;
 			if (!SaveControlContent(textboxUnexposedFrontalArea, "UnexposedFrontalArea", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.UnexposedFrontalArea)) return false;
 			// device
-			Train.Device.Ats = (TrainDat.Device.AtsModes)(comboboxAts.SelectedIndex - 1);
-			Train.Device.Atc = (TrainDat.Device.AtcModes)comboboxAtc.SelectedIndex;
+			Train.Device.Ats = (AtsModes)(comboboxAts.SelectedIndex - 1);
+			Train.Device.Atc = (AtcModes)comboboxAtc.SelectedIndex;
 			Train.Device.Eb = checkboxEb.Checked;
 			Train.Device.ConstSpeed = checkboxConstSpeed.Checked;
 			Train.Device.HoldBrake = checkboxHoldBrake.Checked;
