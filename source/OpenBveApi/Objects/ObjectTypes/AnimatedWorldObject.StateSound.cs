@@ -130,6 +130,21 @@ namespace OpenBveApi.Objects
 			this.lastState = this.Object.CurrentState;
 		}
 
+		/// <inheritdoc/>
+		public override bool IsVisible(Vector3 CameraPosition, double BackgroundImageDistance, double ExtraViewingDistance)
+		{
+			double z = 0;
+			if (Object != null)
+			{
+				z += Object.TranslateZFunction.LastResult;
+			}
+			double pa = TrackPosition + z - Radius - 10.0;
+			double pb = TrackPosition + z + Radius + 10.0;
+			double ta = CameraPosition.Z - BackgroundImageDistance - ExtraViewingDistance;
+			double tb = CameraPosition.Z + BackgroundImageDistance + ExtraViewingDistance;
+			return pb >= ta & pa <= tb;
+		}
+
 		/// <summary>Creates the animated object within the game world</summary>
 		/// <param name="WorldPosition">The absolute position</param>
 		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>

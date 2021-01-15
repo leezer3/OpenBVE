@@ -23,8 +23,7 @@ namespace OpenBve {
 
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
-		internal static double StartupTime = 0.0;
-		
+
 		// ================================
 
 		internal static void Reset() {

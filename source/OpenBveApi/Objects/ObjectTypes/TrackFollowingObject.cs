@@ -87,6 +87,30 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		/// <inheritdoc/>
+		public override bool IsVisible(Vector3 CameraPosition, double ExtraViewingDistance, double BackgroundImageDistance)
+		{
+			double z = 0;
+			if (Object != null)
+			{
+				z += Object.TranslateZFunction.LastResult;
+			}
+			double pa = TrackPosition + z - Radius - 10.0;
+			double pb = TrackPosition + z + Radius + 10.0;
+			double ta = CameraPosition.Z - BackgroundImageDistance - ExtraViewingDistance;
+			double tb = CameraPosition.Z + BackgroundImageDistance + ExtraViewingDistance;
+			bool isVisible = pb >= ta & pa <= tb;
+			if (isVisible == false)
+			{
+				//Not found at the inital track position, so let's check to see if it's moved
+				pa = FrontAxleFollower.TrackPosition + z - Radius - 10.0;
+				pb = FrontAxleFollower.TrackPosition + z + Radius + 10.0;
+				return pb >= ta & pa <= tb;
+			}
+
+			return true;
+		}
+
 		/// <summary>Updates the position and rotation of an animated object which follows a track</summary>
 		private void UpdateObjectPosition()
 		{
