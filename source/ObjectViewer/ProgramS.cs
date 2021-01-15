@@ -270,6 +270,10 @@ namespace OpenBve {
 					    double z = 0.0;
 					    for (int j = 0; j < carObjects.Length; j++)
 					    {
+						    if (carObjects[j] == null)
+						    {
+							    continue;
+						    }
 						    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), 0.0, 0.0, 0.0);
 						    if (j < train.Cars.Length - 1)
 						    {

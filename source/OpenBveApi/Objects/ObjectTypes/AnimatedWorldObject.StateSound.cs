@@ -134,7 +134,7 @@ namespace OpenBveApi.Objects
 		public override bool IsVisible(Vector3 CameraPosition, double BackgroundImageDistance, double ExtraViewingDistance)
 		{
 			double z = 0;
-			if (Object != null)
+			if (Object != null && Object.TranslateZFunction != null)
 			{
 				z += Object.TranslateZFunction.LastResult;
 			}
