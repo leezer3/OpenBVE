@@ -382,7 +382,7 @@ namespace OpenBveApi.Objects
 
 					if (nZ)
 					{
-						Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+						Mesh.Faces[i].Vertices[j].Normal.Z *= -1;
 					}
 				}
 			}
