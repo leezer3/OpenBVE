@@ -18,7 +18,7 @@ namespace CsvRwRouteParser {
 		internal string SoundPath;
 		internal string TrainPath;
 		internal string CompatibilityFolder;
-		internal bool CylinderHack = false;
+		internal CompatabilityHacks EnabledHacks;
 		internal bool SplitLineHack = true;
 		internal bool AllowTrackPositionArguments = false;
 		internal bool IsRW;
@@ -195,13 +195,9 @@ namespace CsvRwRouteParser {
 				{
 					if (Plugin.CurrentHost.Plugins[i].Object != null)
 					{
-						CompatabilityHacks enabledHacks = new CompatabilityHacks
-						{
-							BveTsHacks = true, 
-							CylinderHack = CylinderHack,
-							BlackTransparency =  true
-						};
-						Plugin.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(enabledHacks);
+						EnabledHacks.BveTsHacks = Plugin.CurrentOptions.EnableBveTsHacks;
+						EnabledHacks.BlackTransparency = true;
+						Plugin.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(EnabledHacks);
 						//Remember that these will be ignored if not the correct plugin
 						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentXParser);
 						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentObjParser);

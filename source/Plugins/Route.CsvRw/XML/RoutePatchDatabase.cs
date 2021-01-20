@@ -221,6 +221,17 @@ namespace CsvRwRouteParser
 							currentPatch.AllowTrackPositionArguments = false;
 						}
 						break;
+					case "DisableSemiTransparentFaces":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.DisableSemiTransparentFaces = true;
+						}
+						else
+						{
+							currentPatch.DisableSemiTransparentFaces = false;
+						}
+						break;
 				}
 			}
 
