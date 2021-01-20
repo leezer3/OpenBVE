@@ -16,6 +16,9 @@ namespace CsvRwRouteParser
 		{
 			switch (Command)
 			{
+				case RouteCommand.DeveloperID:
+					//Unused by OpenBVE
+					break;
 				case RouteCommand.Comment:
 					if (Arguments.Length < 1)
 					{
