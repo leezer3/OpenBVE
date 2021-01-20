@@ -160,7 +160,7 @@ namespace Plugin
 					}
 				}
 				// collect arguments
-				string[] Arguments = Lines[i].Split(new char[] { ',' }, StringSplitOptions.None);
+				string[] Arguments = Lines[i].Split(new[] { ',' }, StringSplitOptions.None);
 				for (int j = 0; j < Arguments.Length; j++) {
 					Arguments[j] = Arguments[j].Trim(new char[] { });
 				}
@@ -890,7 +890,7 @@ namespace Plugin
 									} else {
 										try
 										{
-											tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+											tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 										}
 										catch
 										{
@@ -914,7 +914,7 @@ namespace Plugin
 												if (Arguments[0].StartsWith("swiss1/", StringComparison.InvariantCultureIgnoreCase))
 												{
 													Arguments[0] = Arguments[0].Substring(7);
-													tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 													if (System.IO.File.Exists(tday))
 													{
 														hackFound = true;
@@ -941,7 +941,7 @@ namespace Plugin
 											bool ignoreAsInvalid = false;
 											try
 											{
-												tnight = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
+												tnight = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
 											}
 											catch
 											{
@@ -1300,7 +1300,7 @@ namespace Plugin
 			double ns = h >= 0.0 ? 1.0 : -1.0;
 			// initialization
 			Vector3[] Normals = new Vector3[2 * n];
-			double d = 2.0 * Math.PI / (double)n;
+			double d = 2.0 * Math.PI / n;
 			double g = 0.5 * h;
 			double t = 0.0;
 			double a = h != 0.0 ? Math.Atan((r2 - r1) / h) : 0.0;
@@ -1365,7 +1365,7 @@ namespace Plugin
 		
 		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>
 		/// <param name="Encoding">The Encoding</param>
-		private static bool IsUtf(System.Text.Encoding Encoding)
+		private static bool IsUtf(Encoding Encoding)
 		{
 			switch (Encoding.WindowsCodePage)
 			{
