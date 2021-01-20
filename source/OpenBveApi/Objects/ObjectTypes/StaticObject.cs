@@ -412,15 +412,17 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>Applies shear</summary>
-		public void ApplyShear(Vector3 d, Vector3 s, double r)
+		/// <summary>Performs shear mapping for all vertices within the StaticObject</summary>
+		/// <param name="Direction">A vector describing the direction of the plane to be sheared</param>
+		/// <param name="Shear">A vector describing the shear direction</param>
+		/// <param name="Ratio">The amount of shear to apply.</param>
+		/// <remarks>If Ratio is 0, no transformation is performed. If Direction and Shear are perpendicular, a Ratio of 1 corresponds to a slope of 45 degrees</remarks>
+		public void ApplyShear(Vector3 Direction, Vector3 Shear, double Ratio)
 		{
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
 			{
-				double n = r * (d.X * Mesh.Vertices[j].Coordinates.X + d.Y * Mesh.Vertices[j].Coordinates.Y + d.Z * Mesh.Vertices[j].Coordinates.Z);
-				Mesh.Vertices[j].Coordinates.X += s.X * n;
-				Mesh.Vertices[j].Coordinates.Y += s.Y * n;
-				Mesh.Vertices[j].Coordinates.Z += s.Z * n;
+				double n = Ratio * (Direction.X * Mesh.Vertices[j].Coordinates.X + Direction.Y * Mesh.Vertices[j].Coordinates.Y + Direction.Z * Mesh.Vertices[j].Coordinates.Z);
+				Mesh.Vertices[j].Coordinates += Shear * n;
 			}
 
 			for (int j = 0; j < Mesh.Faces.Length; j++)
@@ -429,8 +431,8 @@ namespace OpenBveApi.Objects
 				{
 					if (Mesh.Faces[j].Vertices[k].Normal.X != 0.0f | Mesh.Faces[j].Vertices[k].Normal.Y != 0.0f | Mesh.Faces[j].Vertices[k].Normal.Z != 0.0f)
 					{
-						double n = r * (s.X * Mesh.Faces[j].Vertices[k].Normal.X + s.Y * Mesh.Faces[j].Vertices[k].Normal.Y + s.Z * Mesh.Faces[j].Vertices[k].Normal.Z);
-						Mesh.Faces[j].Vertices[k].Normal -= d * n;
+						double n = Ratio * (Shear.X * Mesh.Faces[j].Vertices[k].Normal.X + Shear.Y * Mesh.Faces[j].Vertices[k].Normal.Y + Shear.Z * Mesh.Faces[j].Vertices[k].Normal.Z);
+						Mesh.Faces[j].Vertices[k].Normal -= Direction * n;
 						Mesh.Faces[j].Vertices[k].Normal.Normalize();
 					}
 				}
