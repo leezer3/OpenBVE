@@ -228,17 +228,17 @@
 		<Message></Message>
 	</Object>
 	<Object>
-		<Name>TunDL.b3d</Name>
+		<Name>TunDL.b3d;TunDL.csv</Name>
 		<Path>UchiboV1\TunDL.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>
-		<Name>TunDR.b3d</Name>
+		<Name>TunDR.b3d;TunDR.csv</Name>
 		<Path>UchiboV1\TunDR.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>
-		<Name>TunEntD.b3d</Name>
+		<Name>TunEntD.b3d;TunEntD.csv</Name>
 		<Path>UchiboV1\TunEntD.csv</Path>
 		<Message></Message>
 	</Object>
@@ -265,6 +265,16 @@
 	<Object>
 		<Name>WallR.b3d</Name>
 		<Path>Uchibo\WallR.csv</Path>
+		<Message></Message>
+	</Object>
+	<Object>
+		<Name>WallGL.b3d;WallGL.csv</Name>
+		<Path>UchiboV1\WallGL.csv</Path>
+		<Message></Message>
+	</Object>
+	<Object>
+		<Name>WallGR.b3d;WallGR.csv</Name>
+		<Path>UchiboV1\WallGR.csv</Path>
 		<Message></Message>
 	</Object>
   </Compatibility>
