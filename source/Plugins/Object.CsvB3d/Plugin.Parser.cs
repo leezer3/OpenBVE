@@ -664,8 +664,12 @@ namespace Plugin
 									a = a < 0 ? 0 : 255;
 								}
 
-								if (enabledHacks.DisableSemiTransparentFaces)
+								if (a == 0 && enabledHacks.BveTsHacks || enabledHacks.DisableSemiTransparentFaces)
 								{
+									/*
+									 * BVE2 didn't support semi-transparent faces at all
+									 * BVE4 treats faces with an opacity value of 0 as having an opacity value of 1
+									 */
 									a = 255;
 								}
 								int m = Builder.Materials.Length;
