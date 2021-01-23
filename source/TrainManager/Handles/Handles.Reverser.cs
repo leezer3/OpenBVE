@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SoundManager;
+﻿using SoundManager;
 
 namespace TrainManager.Handles
 {
@@ -18,6 +13,10 @@ namespace TrainManager.Handles
 		public CarSound EngageSound;
 		/// <summary>Played when the reverser is moved to N</summary>
 		public CarSound ReleaseSound;
+		/// <summary>Contains the notch descriptions to be displayed on the in-game UI</summary>
+		public string[] NotchDescriptions;
+		/// <summary>The max width used in px for the reverser HUD string</summary>
+		public int MaxWidth = 48;
 
 		public ReverserHandle()
 		{

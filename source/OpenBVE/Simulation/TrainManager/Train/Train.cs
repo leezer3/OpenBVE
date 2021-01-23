@@ -51,18 +51,6 @@ namespace OpenBve
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			
-			internal string[] PowerNotchDescriptions;
-			internal string[] LocoBrakeNotchDescriptions;
-			internal string[] BrakeNotchDescriptions;
-			internal string[] ReverserDescriptions;
-			/// <summary>The max width used in px for the power notch HUD string</summary>
-			internal int MaxPowerNotchWidth = 48;
-			/// <summary>The max width used in px for the brake notch HUD string</summary>
-			internal int MaxBrakeNotchWidth = 48;
-			/// <summary>The max width used in px for the loco brake notch HUD string</summary>
-			internal int MaxLocoBrakeNotchWidth = 48;
-			/// <summary>The max width used in px for the reverser HUD string</summary>
-			internal int MaxReverserWidth = 48;
 			/// <summary>Coefficient of friction used for braking</summary>
 			internal const double CoefficientOfGroundFriction = 0.5;
 			/// <summary>The speed difference in m/s above which derailments etc. will occur</summary>

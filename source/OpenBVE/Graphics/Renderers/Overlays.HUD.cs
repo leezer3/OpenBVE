@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using LibRender2;
 using OpenBveApi;
@@ -76,9 +76,9 @@ namespace OpenBve.Graphics.Renderers
 					if (TrainManager.PlayerTrain.Handles.Reverser.Driver < 0)
 					{
 						sc = MessageColor.Orange;
-						if (TrainManager.PlayerTrain.ReverserDescriptions != null && TrainManager.PlayerTrain.ReverserDescriptions.Length > 2)
+						if (TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions.Length > 2)
 						{
-							t = TrainManager.PlayerTrain.ReverserDescriptions[2];
+							t = TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions[2];
 						}
 						else
 						{
@@ -88,9 +88,9 @@ namespace OpenBve.Graphics.Renderers
 					else if (TrainManager.PlayerTrain.Handles.Reverser.Driver > 0)
 					{
 						sc = MessageColor.Blue;
-						if (TrainManager.PlayerTrain.ReverserDescriptions != null && TrainManager.PlayerTrain.ReverserDescriptions.Length > 0)
+						if (TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions.Length > 0)
 						{
-							t = TrainManager.PlayerTrain.ReverserDescriptions[0];
+							t = TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions[0];
 						}
 						else
 						{
@@ -100,9 +100,9 @@ namespace OpenBve.Graphics.Renderers
 					else
 					{
 						sc = MessageColor.Gray;
-						if (TrainManager.PlayerTrain.ReverserDescriptions != null && TrainManager.PlayerTrain.ReverserDescriptions.Length > 1)
+						if (TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions.Length > 1)
 						{
-							t = TrainManager.PlayerTrain.ReverserDescriptions[1];
+							t = TrainManager.PlayerTrain.Handles.Reverser.NotchDescriptions[1];
 						}
 						else
 						{
@@ -119,9 +119,9 @@ namespace OpenBve.Graphics.Renderers
 					if (TrainManager.PlayerTrain.Handles.Power.Driver == 0)
 					{
 						sc = MessageColor.Gray;
-						if (TrainManager.PlayerTrain.PowerNotchDescriptions != null && TrainManager.PlayerTrain.PowerNotchDescriptions.Length > 0)
+						if (TrainManager.PlayerTrain.Handles.Power.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Power.NotchDescriptions.Length > 0)
 						{
-							t = TrainManager.PlayerTrain.PowerNotchDescriptions[0];
+							t = TrainManager.PlayerTrain.Handles.Power.NotchDescriptions[0];
 						}
 						else
 						{
@@ -131,9 +131,9 @@ namespace OpenBve.Graphics.Renderers
 					else
 					{
 						sc = MessageColor.Blue;
-						if (TrainManager.PlayerTrain.PowerNotchDescriptions != null && TrainManager.PlayerTrain.Handles.Power.Driver < TrainManager.PlayerTrain.PowerNotchDescriptions.Length)
+						if (TrainManager.PlayerTrain.Handles.Power.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Power.Driver < TrainManager.PlayerTrain.Handles.Power.NotchDescriptions.Length)
 						{
-							t = TrainManager.PlayerTrain.PowerNotchDescriptions[TrainManager.PlayerTrain.Handles.Power.Driver];
+							t = TrainManager.PlayerTrain.Handles.Power.NotchDescriptions[TrainManager.PlayerTrain.Handles.Power.Driver];
 						}
 						else
 						{
@@ -153,9 +153,9 @@ namespace OpenBve.Graphics.Renderers
 						if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 						{
 							sc = MessageColor.Red;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 0)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 0)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[0];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[0];
 							}
 							else
 							{
@@ -165,9 +165,9 @@ namespace OpenBve.Graphics.Renderers
 						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)AirBrakeHandleState.Release)
 						{
 							sc = MessageColor.Gray;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 1)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[1];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[1];
 							}
 							else
 							{
@@ -177,9 +177,9 @@ namespace OpenBve.Graphics.Renderers
 						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)AirBrakeHandleState.Lap)
 						{
 							sc = MessageColor.Blue;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 2)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[2];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[2];
 							}
 							else
 							{
@@ -189,9 +189,9 @@ namespace OpenBve.Graphics.Renderers
 						else
 						{
 							sc = MessageColor.Orange;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 3)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 3)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[3];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[3];
 							}
 							else
 							{
@@ -205,9 +205,9 @@ namespace OpenBve.Graphics.Renderers
 						if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 						{
 							sc = MessageColor.Red;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 0)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 0)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[0];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[0];
 							}
 							else
 							{
@@ -217,9 +217,9 @@ namespace OpenBve.Graphics.Renderers
 						else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 						{
 							sc = MessageColor.Green;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 2)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[2];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[2];
 							}
 							else
 							{
@@ -229,9 +229,9 @@ namespace OpenBve.Graphics.Renderers
 						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == 0)
 						{
 							sc = MessageColor.Gray;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 1)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[1];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[1];
 							}
 							else
 							{
@@ -241,9 +241,9 @@ namespace OpenBve.Graphics.Renderers
 						else
 						{
 							sc = MessageColor.Orange;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && ((TrainManager.PlayerTrain.Handles.HasHoldBrake && TrainManager.PlayerTrain.Handles.Brake.Driver + 2 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length) || (!TrainManager.PlayerTrain.Handles.HasHoldBrake && TrainManager.PlayerTrain.Handles.Brake.Driver + 1 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length)))
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && ((TrainManager.PlayerTrain.Handles.HasHoldBrake && TrainManager.PlayerTrain.Handles.Brake.Driver + 2 < TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length) || (!TrainManager.PlayerTrain.Handles.HasHoldBrake && TrainManager.PlayerTrain.Handles.Brake.Driver + 1 < TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length)))
 							{
-								t = TrainManager.PlayerTrain.Handles.HasHoldBrake ? TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 2] : TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 1];
+								t = TrainManager.PlayerTrain.Handles.HasHoldBrake ? TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 2] : TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 1];
 							}
 							else
 							{
@@ -265,9 +265,9 @@ namespace OpenBve.Graphics.Renderers
 						if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)AirBrakeHandleState.Release)
 						{
 							sc = MessageColor.Gray;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 1)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[1];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[1];
 							}
 							else
 							{
@@ -277,9 +277,9 @@ namespace OpenBve.Graphics.Renderers
 						else if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)AirBrakeHandleState.Lap)
 						{
 							sc = MessageColor.Blue;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 2)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[2];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[2];
 							}
 							else
 							{
@@ -289,9 +289,9 @@ namespace OpenBve.Graphics.Renderers
 						else
 						{
 							sc = MessageColor.Orange;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 3)
+							if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 3)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[3];
+								t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[3];
 							}
 							else
 							{
@@ -305,9 +305,9 @@ namespace OpenBve.Graphics.Renderers
 						if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == 0)
 						{
 							sc = MessageColor.Gray;
-							if (TrainManager.PlayerTrain.LocoBrakeNotchDescriptions != null && TrainManager.PlayerTrain.LocoBrakeNotchDescriptions.Length > 1)
+							if (TrainManager.PlayerTrain.Handles.LocoBrake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.LocoBrake.NotchDescriptions.Length > 1)
 							{
-								t = TrainManager.PlayerTrain.LocoBrakeNotchDescriptions[1];
+								t = TrainManager.PlayerTrain.Handles.LocoBrake.NotchDescriptions[1];
 							}
 							else
 							{
@@ -317,9 +317,9 @@ namespace OpenBve.Graphics.Renderers
 						else
 						{
 							sc = MessageColor.Orange;
-							if (TrainManager.PlayerTrain.LocoBrakeNotchDescriptions != null && TrainManager.PlayerTrain.Handles.LocoBrake.Driver < TrainManager.PlayerTrain.LocoBrakeNotchDescriptions.Length)
+							if (TrainManager.PlayerTrain.Handles.LocoBrake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.LocoBrake.Driver < TrainManager.PlayerTrain.Handles.LocoBrake.NotchDescriptions.Length)
 							{
-								t = TrainManager.PlayerTrain.LocoBrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.LocoBrake.Driver];
+								t = TrainManager.PlayerTrain.Handles.LocoBrake.NotchDescriptions[TrainManager.PlayerTrain.Handles.LocoBrake.Driver];
 							}
 							else
 							{
@@ -338,9 +338,9 @@ namespace OpenBve.Graphics.Renderers
 					if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 					{
 						sc = MessageColor.Red;
-						if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 0)
+						if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 0)
 						{
-							t = TrainManager.PlayerTrain.BrakeNotchDescriptions[0];
+							t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[0];
 						}
 						else
 						{
@@ -350,9 +350,9 @@ namespace OpenBve.Graphics.Renderers
 					else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 					{
 						sc = MessageColor.Green;
-						if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
+						if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length > 1)
 						{
-							t = TrainManager.PlayerTrain.BrakeNotchDescriptions[1];
+							t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[1];
 						}
 						else
 						{
@@ -362,9 +362,9 @@ namespace OpenBve.Graphics.Renderers
 					else if (TrainManager.PlayerTrain.Handles.Brake.Driver > 0)
 					{
 						sc = MessageColor.Orange;
-						if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.Driver + 3 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length)
+						if (TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Brake.Driver + 3 < TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions.Length)
 						{
-							t = TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 3];
+							t = TrainManager.PlayerTrain.Handles.Brake.NotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 3];
 						}
 						else
 						{
@@ -374,9 +374,9 @@ namespace OpenBve.Graphics.Renderers
 					else if (TrainManager.PlayerTrain.Handles.Power.Driver > 0)
 					{
 						sc = MessageColor.Blue;
-						if (TrainManager.PlayerTrain.PowerNotchDescriptions != null && TrainManager.PlayerTrain.Handles.Power.Driver < TrainManager.PlayerTrain.PowerNotchDescriptions.Length)
+						if (TrainManager.PlayerTrain.Handles.Power.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Power.Driver < TrainManager.PlayerTrain.Handles.Power.NotchDescriptions.Length)
 						{
-							t = TrainManager.PlayerTrain.PowerNotchDescriptions[TrainManager.PlayerTrain.Handles.Power.Driver];
+							t = TrainManager.PlayerTrain.Handles.Power.NotchDescriptions[TrainManager.PlayerTrain.Handles.Power.Driver];
 						}
 						else
 						{
@@ -386,9 +386,9 @@ namespace OpenBve.Graphics.Renderers
 					else
 					{
 						sc = MessageColor.Gray;
-						if (TrainManager.PlayerTrain.PowerNotchDescriptions != null && TrainManager.PlayerTrain.PowerNotchDescriptions.Length > 0)
+						if (TrainManager.PlayerTrain.Handles.Power.NotchDescriptions != null && TrainManager.PlayerTrain.Handles.Power.NotchDescriptions.Length > 0)
 						{
-							t = TrainManager.PlayerTrain.PowerNotchDescriptions[0];
+							t = TrainManager.PlayerTrain.Handles.Power.NotchDescriptions[0];
 						}
 						else
 						{
@@ -811,35 +811,35 @@ namespace OpenBve.Graphics.Renderers
 				// background
 				if (Element.Subject == "reverser")
 				{
-					w = Math.Max(w, TrainManager.PlayerTrain.MaxReverserWidth);
+					w = Math.Max(w, TrainManager.PlayerTrain.Handles.Reverser.MaxWidth);
 					//X-Pos doesn't need to be changed
 				}
 				if (Element.Subject == "power")
 				{
-					w = Math.Max(w, TrainManager.PlayerTrain.MaxPowerNotchWidth);
-					if (TrainManager.PlayerTrain.MaxReverserWidth > 48)
+					w = Math.Max(w, TrainManager.PlayerTrain.Handles.Power.MaxWidth);
+					if (TrainManager.PlayerTrain.Handles.Reverser.MaxWidth > 48)
 					{
-						x += (TrainManager.PlayerTrain.MaxReverserWidth - 48);
+						x += (TrainManager.PlayerTrain.Handles.Reverser.MaxWidth - 48);
 					}
 				}
 				if (Element.Subject == "brake")
 				{
-					w = Math.Max(w, TrainManager.PlayerTrain.MaxBrakeNotchWidth);
-					if (TrainManager.PlayerTrain.MaxReverserWidth > 48)
+					w = Math.Max(w, TrainManager.PlayerTrain.Handles.Brake.MaxWidth);
+					if (TrainManager.PlayerTrain.Handles.Reverser.MaxWidth > 48)
 					{
-						x += (TrainManager.PlayerTrain.MaxReverserWidth - 48);
+						x += (TrainManager.PlayerTrain.Handles.Reverser.MaxWidth - 48);
 					}
-					if (TrainManager.PlayerTrain.MaxPowerNotchWidth > 48)
+					if (TrainManager.PlayerTrain.Handles.Power.MaxWidth > 48)
 					{
-						x += (TrainManager.PlayerTrain.MaxPowerNotchWidth - 48);
+						x += (TrainManager.PlayerTrain.Handles.Power.MaxWidth - 48);
 					}
 				}
 				if (Element.Subject == "single")
 				{
-					w = Math.Max(Math.Max(w, TrainManager.PlayerTrain.MaxPowerNotchWidth), TrainManager.PlayerTrain.MaxBrakeNotchWidth);
-					if (TrainManager.PlayerTrain.MaxReverserWidth > 48)
+					w = Math.Max(Math.Max(w, TrainManager.PlayerTrain.Handles.Power.MaxWidth), TrainManager.PlayerTrain.Handles.Brake.MaxWidth);
+					if (TrainManager.PlayerTrain.Handles.Reverser.MaxWidth > 48)
 					{
-						x += (TrainManager.PlayerTrain.MaxReverserWidth - 48);
+						x += (TrainManager.PlayerTrain.Handles.Reverser.MaxWidth - 48);
 					}
 				}
 				if (Element.CenterMiddle.BackgroundTexture != null)
