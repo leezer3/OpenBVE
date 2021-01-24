@@ -84,7 +84,7 @@ namespace OpenBve
 					float Brightness = (float)(baseCar.Brightness.NextTrackPosition - baseCar.Brightness.PreviousTrackPosition);
 					if (Brightness != 0.0f)
 					{
-						Brightness = (float)(FrontAxle.Follower.TrackPosition - baseCar.Brightness.PreviousTrackPosition) / Brightness;
+						Brightness = (float)(baseCar.FrontAxle.Follower.TrackPosition - baseCar.Brightness.PreviousTrackPosition) / Brightness;
 						if (Brightness < 0.0f) Brightness = 0.0f;
 						if (Brightness > 1.0f) Brightness = 1.0f;
 						Brightness = baseCar.Brightness.PreviousBrightness * (1.0f - Brightness) + baseCar.Brightness.NextBrightness * Brightness;
