@@ -393,6 +393,10 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.CameraView;
 							n++; s++; if (s >= m) m = s; break;
 							// train
+						case "playertrain":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.PlayerTrain;
+							n++; s++; if (s >= m) m = s; break;
 						case "cars":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TrainCars;

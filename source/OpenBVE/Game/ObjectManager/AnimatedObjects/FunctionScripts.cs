@@ -255,6 +255,14 @@ namespace OpenBve {
 						}
 						s++; break;
 						// train
+					case Instructions.PlayerTrain:
+						if (Train != null)
+						{
+							Function.Stack[s] = Train.IsPlayerTrain ? 1.0 : 0.0;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					case Instructions.TrainCars:
 						if (Train != null) {
 							Function.Stack[s] = (double)Train.Cars.Length;
