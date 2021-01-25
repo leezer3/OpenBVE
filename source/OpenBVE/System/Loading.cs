@@ -428,10 +428,7 @@ namespace OpenBve {
 								CarObjects[i] = null;
 							} else {
 								StaticObject c = (StaticObject)so.Clone(); //Clone as otherwise the cached object doesn't scale right
-								double sx = TrainManager.Trains[k].Cars[i].Width;
-								double sy = TrainManager.Trains[k].Cars[i].Height;
-								double sz = TrainManager.Trains[k].Cars[i].Length;
-								c.ApplyScale(sx, sy, sz);
+								c.ApplyScale(TrainManager.Trains[k].Cars[i].Width, TrainManager.Trains[k].Cars[i].Height, TrainManager.Trains[k].Cars[i].Length);
 								CarObjects[i] = c;
 							}
 						}

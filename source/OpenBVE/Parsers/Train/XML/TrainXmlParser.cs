@@ -154,46 +154,50 @@ namespace OpenBve.Parsers.Train
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "power":
-										Train.PowerNotchDescriptions = c.InnerText.Split(new char[] { ';' });
-										for (int j = 0; j < Train.PowerNotchDescriptions.Length; j++)
+										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(new char[] { ';' });
+										for (int j = 0; j < Train.Handles.Power.NotchDescriptions.Length; j++)
 										{
-											Size s = Fonts.NormalFont.MeasureString(Train.PowerNotchDescriptions[j]);
-											if (s.Width > Train.MaxPowerNotchWidth)
+											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Power.NotchDescriptions[j]);
+											if (s.Width > Train.Handles.Power.MaxWidth)
 											{
-												Train.MaxPowerNotchWidth = s.Width;
+												Train.Handles.Power.MaxWidth = s.Width;
 											}
 										}
 										break;
 									case "brake":
-										Train.BrakeNotchDescriptions = c.InnerText.Split(new char[] { ';' });
-										for (int j = 0; j < Train.BrakeNotchDescriptions.Length; j++)
+										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(new char[] { ';' });
+										for (int j = 0; j < Train.Handles.Brake.NotchDescriptions.Length; j++)
 										{
-											Size s = Fonts.NormalFont.MeasureString(Train.BrakeNotchDescriptions[j]);
-											if (s.Width > Train.MaxBrakeNotchWidth)
+											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Brake.NotchDescriptions[j]);
+											if (s.Width > Train.Handles.Brake.MaxWidth)
 											{
-												Train.MaxBrakeNotchWidth = s.Width;
+												Train.Handles.Brake.MaxWidth = s.Width;
 											}
 										}
 										break;
 									case "locobrake":
-										Train.LocoBrakeNotchDescriptions = c.InnerText.Split(new char[] { ';' });
-										for (int j = 0; j < Train.LocoBrakeNotchDescriptions.Length; j++)
+										if (Train.Handles.LocoBrake == null)
 										{
-											Size s = Fonts.NormalFont.MeasureString(Train.LocoBrakeNotchDescriptions[j]);
-											if (s.Width > Train.MaxLocoBrakeNotchWidth)
+											continue;
+										}
+										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(new char[] { ';' });
+										for (int j = 0; j < Train.Handles.LocoBrake.NotchDescriptions.Length; j++)
+										{
+											Size s = Fonts.NormalFont.MeasureString(Train.Handles.LocoBrake.NotchDescriptions[j]);
+											if (s.Width > Train.Handles.LocoBrake.MaxWidth)
 											{
-												Train.MaxLocoBrakeNotchWidth = s.Width;
+												Train.Handles.LocoBrake.MaxWidth = s.Width;
 											}
 										}
 										break;
 									case "reverser":
-										Train.ReverserDescriptions = c.InnerText.Split(new char[] { ';' });
-										for (int j = 0; j < Train.ReverserDescriptions.Length; j++)
+										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(new char[] { ';' });
+										for (int j = 0; j < Train.Handles.Reverser.NotchDescriptions.Length; j++)
 										{
-											Size s = Fonts.NormalFont.MeasureString(Train.ReverserDescriptions[j]);
-											if (s.Width > Train.MaxReverserWidth)
+											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Reverser.NotchDescriptions[j]);
+											if (s.Width > Train.Handles.Reverser.MaxWidth)
 											{
-												Train.MaxReverserWidth = s.Width;
+												Train.Handles.Reverser.MaxWidth = s.Width;
 											}
 										}
 										break;

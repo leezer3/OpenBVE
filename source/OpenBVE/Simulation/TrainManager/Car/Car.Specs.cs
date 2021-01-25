@@ -14,10 +14,7 @@ namespace OpenBve
 			internal double AccelerationCurveMaximum;
 			internal double JerkPowerUp;
 			internal double JerkPowerDown;
-			internal double JerkBrakeUp;
-			internal double JerkBrakeDown;
-			/// brake
-			internal double MotorDeceleration;
+
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
 			internal double CenterOfGravityHeight;
@@ -49,8 +46,6 @@ namespace OpenBve
 			internal double DoorCloseFrequency;
 			internal double DoorOpenPitch;
 			internal double DoorClosePitch;
-
-			
 		}
 	}
 }

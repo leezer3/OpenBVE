@@ -488,22 +488,21 @@ namespace AssimpNET.X
 			// read its components
 			matrix = new Matrix4D();
 			matrix.Row0.X = ReadFloat();
-			matrix.Row1.X = ReadFloat();
-			matrix.Row2.X = ReadFloat();
-			matrix.Row3.X = ReadFloat();
 			matrix.Row0.Y = ReadFloat();
-			matrix.Row1.Y = ReadFloat();
-			matrix.Row2.Y = ReadFloat();
-			matrix.Row3.Y = ReadFloat();
 			matrix.Row0.Z = ReadFloat();
-			matrix.Row1.Z = ReadFloat();
-			matrix.Row2.Z = ReadFloat();
-			matrix.Row3.Z = ReadFloat();
 			matrix.Row0.W = ReadFloat();
+			matrix.Row1.X = ReadFloat();
+			matrix.Row1.Y = ReadFloat();
+			matrix.Row1.Z = ReadFloat();
 			matrix.Row1.W = ReadFloat();
+			matrix.Row2.X = ReadFloat();
+			matrix.Row2.Y = ReadFloat();
+			matrix.Row2.Z = ReadFloat();
 			matrix.Row2.W = ReadFloat();
+			matrix.Row3.X = ReadFloat();
+			matrix.Row3.Y = ReadFloat();
+			matrix.Row3.Z = ReadFloat();
 			matrix.Row3.W = ReadFloat();
-
 			// trailing symbols
 			CheckForSemicolon();
 			CheckForClosingBrace();

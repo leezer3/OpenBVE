@@ -5,6 +5,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using RouteManager2;
 using RouteManager2.Climate;
@@ -17,7 +18,7 @@ namespace CsvRwRouteParser {
 		internal string SoundPath;
 		internal string TrainPath;
 		internal string CompatibilityFolder;
-		internal bool CylinderHack = false;
+		internal CompatabilityHacks EnabledHacks;
 		internal bool SplitLineHack = true;
 		internal bool AllowTrackPositionArguments = false;
 		internal bool IsRW;
@@ -126,6 +127,7 @@ namespace CsvRwRouteParser {
 				Data.Backgrounds = new BackgroundDictionary();
 				Data.TimetableDaytime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
+				Data.Structure.WeatherObjects = new ObjectDictionary();
 				// signals
 				Data.Signals = new SignalDictionary();
 				if (Plugin.CurrentOptions.CurrentCompatibilitySignalSet == null) //not selected via main form
@@ -193,7 +195,9 @@ namespace CsvRwRouteParser {
 				{
 					if (Plugin.CurrentHost.Plugins[i].Object != null)
 					{
-						Plugin.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(Plugin.CurrentOptions.EnableBveTsHacks, CylinderHack);
+						EnabledHacks.BveTsHacks = Plugin.CurrentOptions.EnableBveTsHacks;
+						EnabledHacks.BlackTransparency = true;
+						Plugin.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(EnabledHacks);
 						//Remember that these will be ignored if not the correct plugin
 						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentXParser);
 						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentObjParser);

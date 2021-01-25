@@ -3,18 +3,19 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
+using TrainManager.Car;
 using TrainManager.SafetySystems;
 
 namespace TrainEditor2.ViewModels.Trains
 {
 	internal class DeviceViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<Device.AtsModes> Ats
+		internal ReactiveProperty<AtsModes> Ats
 		{
 			get;
 		}
 
-		internal ReactiveProperty<Device.AtcModes> Atc
+		internal ReactiveProperty<AtcModes> Atc
 		{
 			get;
 		}
@@ -34,7 +35,7 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<Device.ReAdhesionDevices> ReAdhesionDevice
+		internal ReactiveProperty<ReadhesionDeviceType> ReAdhesionDevice
 		{
 			get;
 		}
@@ -44,12 +45,12 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<Device.DoorModes> DoorOpenMode
+		internal ReactiveProperty<DoorMode> DoorOpenMode
 		{
 			get;
 		}
 
-		internal ReactiveProperty<Device.DoorModes> DoorCloseMode
+		internal ReactiveProperty<DoorMode> DoorCloseMode
 		{
 			get;
 		}

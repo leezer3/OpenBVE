@@ -27,7 +27,6 @@ using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
-using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -106,7 +105,7 @@ namespace Plugin
 					Lines[i] = Lines[i].Substring(0, c);
 				}
 				// collect arguments
-				List<string> Arguments = new List<string>(Lines[i].Split(new char[] { ' ', '\t' }, StringSplitOptions.None));
+				List<string> Arguments = new List<string>(Lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
 				for (int j = Arguments.Count -1; j >= 0; j--)
 				{
 					Arguments[j] = Arguments[j].Trim(new char[] { });
@@ -181,7 +180,7 @@ namespace Plugin
 						for (int f = 1; f < Arguments.Count; f++)
 						{
 							Vertex newVertex = new Vertex();
-							string[] faceArguments = Arguments[f].Split(new char[] {'/'} , StringSplitOptions.None);
+							string[] faceArguments = Arguments[f].Split(new[] {'/'} , StringSplitOptions.None);
 							int idx;
 							if (!int.TryParse(faceArguments[0], out idx))
 							{
@@ -383,7 +382,7 @@ namespace Plugin
 					Lines[i] = Lines[i].Substring(0, c);
 				}
 				// collect arguments
-				List<string> Arguments = new List<string>(Lines[i].Split(new char[] { ' ', '\t' }, StringSplitOptions.None));
+				List<string> Arguments = new List<string>(Lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
 				for (int j = Arguments.Count - 1; j >= 0; j--)
 				{
 					Arguments[j] = Arguments[j].Trim(new char[] { });

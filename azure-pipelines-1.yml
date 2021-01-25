@@ -1,7 +1,14 @@
 # The final YAML runs PR trigger builds
-
+trigger:
+  branches:
+    exclude:
+     - master
 pr:
-- master
+  branches:
+    include:
+      - master
+    exclude:
+      - release
 
 ### Test on latest Windows and .Net version
 

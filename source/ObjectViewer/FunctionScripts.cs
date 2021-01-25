@@ -256,6 +256,14 @@ namespace OpenBve {
 						}
 						s++; break;
 						// train
+					case Instructions.PlayerTrain:
+						if (Train != null)
+						{
+							Function.Stack[s] = Train.IsPlayerTrain ? 1.0 : 0.0;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					case Instructions.TrainCars:
 						if (Train != null) {
 							Function.Stack[s] = (double)Train.Cars.Length;
@@ -811,7 +819,10 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.PrimaryKlaxon:
 					case Instructions.Klaxon:
+					case Instructions.SecondaryKlaxon:
+					case Instructions.MusicKlaxon:
 						//Object Viewer doesn't actually have a sound player, so we can't test against it, thus return zero....
 						Function.Stack[s] = 0.0;
 						s++; break;
@@ -954,7 +965,7 @@ namespace OpenBve {
 						// safety
 					case Instructions.SafetyPluginAvailable:
 						if (Train != null && Train.IsPlayerTrain) {
-							Function.Stack[s] = TrainManager.PlayerTrain.Specs.Safety.Mode == TrainManager.SafetySystem.Plugin ? 1.0 : 0.0;
+							Function.Stack[s] = TrainManager.PlayerTrain.Specs.SafetySystemPlugin ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -964,7 +975,7 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						} else {
 							int n = (int)Math.Round(Function.Stack[s - 1]);
-							if (Train.Specs.Safety.Mode == TrainManager.SafetySystem.Plugin) {
+							if (Train.Specs.SafetySystemPlugin) {
 								if (n >= 0 & n < PluginManager.CurrentPlugin.Panel.Length) {
 									Function.Stack[s - 1] = (double)PluginManager.CurrentPlugin.Panel[n];
 								} else {

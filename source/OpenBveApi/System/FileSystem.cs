@@ -3,6 +3,8 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
+
 // ReSharper disable PossibleNullReferenceException
 // ReSharper disable AssignNullToNotNullAttribute
 /*
@@ -55,16 +57,42 @@ namespace OpenBveApi.FileSystem {
 
 		/// <summary>The version of the filesystem</summary>
 		internal int Version;
+
+		/// <summary>The host application</summary>
+		private readonly HostInterface currentHost;
 		
 		
 		// --- constructors ---
 		
 		/// <summary>Creates a new instance of this class with default locations.</summary>
-		internal FileSystem() {
+		internal FileSystem(HostInterface Host)
+		{
+			currentHost = Host;
 			string assemblyFile = Assembly.GetEntryAssembly().Location;
 			string assemblyFolder = System.IO.Path.GetDirectoryName(assemblyFile);
 			//This copy of openBVE is a special string, and should not be localised
-			string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE");
+			string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve");
+			if (currentHost != null && currentHost.Platform != HostPlatform.MicrosoftWindows)
+			{
+				/*
+				 * Case sensitive platforms, where a file and folder cannot have the same name
+				 * https://github.com/leezer3/OpenBVE/issues/571
+				 */
+				if (File.Exists(userDataFolder))
+				{
+					int i = 0;
+					while (File.Exists(userDataFolder))
+					{
+						userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve-" + i);
+						i++;
+						if (i == 10)
+						{
+							//Critical, otherwise we'll be in an infinite loop
+							throw new Exception("Failed to find a valid path for UserData folder.");
+						}
+					}
+				}
+			}
 			this.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
 			this.ManagedContentFolders = new string[] { OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent") };
 			this.SettingsFolder = OpenBveApi.Path.CombineDirectory(userDataFolder, "Settings");
@@ -80,27 +108,28 @@ namespace OpenBveApi.FileSystem {
 		
 		
 		// --- internal functions ---
-		
+
 		/// <summary>Creates the file system information from the command line arguments. If no configuration file is specified in the command line arguments, the default lookup location is used. If no configuration file is found, default values are used.</summary>
 		/// <param name="args">The command line arguments.</param>
+		/// <param name="Host">The host program</param>
 		/// <returns>The file system information.</returns>
-		public static FileSystem FromCommandLineArgs(string[] args) {
+		public static FileSystem FromCommandLineArgs(string[] args, HostInterface Host) {
 			foreach (string arg in args) {
 				if (arg.StartsWith("/filesystem=", StringComparison.OrdinalIgnoreCase)) {
-					return FromConfigurationFile(arg.Substring(12));
+					return FromConfigurationFile(arg.Substring(12), Host);
 				}
 			}
 			string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 			string configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "filesystem.cfg");
 			if (File.Exists(configFile)) {
-				return FromConfigurationFile(configFile);
+				return FromConfigurationFile(configFile, Host);
 			}
-			configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE"), "Settings"), "filesystem.cfg");
+			configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve"), "Settings"), "filesystem.cfg");
 			if (File.Exists(configFile))
 			{
-				return FromConfigurationFile(configFile);
+				return FromConfigurationFile(configFile, Host);
 			}	
-			return new FileSystem();
+			return new FileSystem(Host);
 			
 		}
 
@@ -237,11 +266,12 @@ namespace OpenBveApi.FileSystem {
 
 		/// <summary>Creates the file system information from the specified configuration file.</summary>
 		/// <param name="file">The configuration file describing the file system.</param>
+		/// <param name="Host">The host program</param>
 		/// <returns>The file system.</returns>
-		private static FileSystem FromConfigurationFile(string file) {
+		private static FileSystem FromConfigurationFile(string file, HostInterface Host) {
 			string assemblyFile = Assembly.GetEntryAssembly().Location;
 			string assemblyFolder = System.IO.Path.GetDirectoryName(assemblyFile);
-			FileSystem system = new FileSystem();
+			FileSystem system = new FileSystem(Host);
 			try
 			{
 				string[] lines = File.ReadAllLines(file, Encoding.UTF8);

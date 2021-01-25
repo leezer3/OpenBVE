@@ -77,10 +77,14 @@
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafetySystems\ATC\AtcModes.cs" />
+    <Compile Include="SafetySystems\ATS\AtsModes.cs" />
     <Compile Include="SafetySystems\DefaultSafetySystems.cs" />
     <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="SafetySystems\PilotLamp.cs" />
     <Compile Include="TrainManager.cs" />
+    <Compile Include="Train\Passengers.cs" />
+    <Compile Include="Train\TrainSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Brake\AirBrake\Components\BrakeCylinder.cs" />

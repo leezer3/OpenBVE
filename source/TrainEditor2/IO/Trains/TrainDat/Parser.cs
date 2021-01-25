@@ -7,7 +7,9 @@ using OpenBveApi.Interface;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 using TrainManager.BrakeSystems;
+using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.SafetySystems;
 
 namespace TrainEditor2.IO.Trains.TrainDat
@@ -769,14 +771,14 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (b >= -1 & b <= 1)
 										{
-											train.Device.Ats = (Device.AtsModes)b;
+											train.Device.Ats = (AtsModes)b;
 										}
 
 										break;
 									case 1:
 										if (b >= 0 & b <= 2)
 										{
-											train.Device.Atc = (Device.AtcModes)b;
+											train.Device.Atc = (AtcModes)b;
 										}
 
 										break;
@@ -792,7 +794,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 5:
 										if (b >= -1 & b <= 3)
 										{
-											train.Device.ReAdhesionDevice = (Device.ReAdhesionDevices)b;
+											train.Device.ReAdhesionDevice = (ReadhesionDeviceType)b;
 										}
 
 										break;
@@ -809,14 +811,14 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 8:
 										if (b >= 0 & b <= 2)
 										{
-											train.Device.DoorOpenMode = (Device.DoorModes)b;
+											train.Device.DoorOpenMode = (DoorMode)b;
 										}
 
 										break;
 									case 9:
 										if (b >= 0 & b <= 2)
 										{
-											train.Device.DoorCloseMode = (Device.DoorModes)b;
+											train.Device.DoorCloseMode = (DoorMode)b;
 										}
 
 										break;
@@ -850,7 +852,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 						{
 							string section = lines[i].ToLowerInvariant();
 							i++;
-							Motor.Entry[] entries = new Motor.Entry[800];
+							BVEMotorSoundTableEntry[] entries = new BVEMotorSoundTableEntry[800];
 
 							while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 							{
@@ -885,10 +887,10 @@ namespace TrainEditor2.IO.Trains.TrainDat
 												entries[n].SoundIndex = b >= 0 ? b : -1;
 												break;
 											case 1:
-												entries[n].Pitch = Math.Max(a, 0.0);
+												entries[n].Pitch = (float)Math.Max(a, 0.0);
 												break;
 											case 2:
-												entries[n].Volume = Math.Max(a, 0.0);
+												entries[n].Gain = (float)Math.Max(a, 0.0);
 												break;
 										}
 									}

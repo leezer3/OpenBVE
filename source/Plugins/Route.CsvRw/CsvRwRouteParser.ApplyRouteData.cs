@@ -232,6 +232,7 @@ namespace CsvRwRouteParser
 				CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
 				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 				CurrentRoute.Tracks[0].Elements[n].RainIntensity = Data.Blocks[i].RainIntensity;
+				CurrentRoute.Tracks[0].Elements[n].SnowIntensity = Data.Blocks[i].SnowIntensity;
 				if (Data.Blocks[i].RainIntensity != lastRainIntensity)
 				{
 					//Insert compatability beacon for OS_ATS et. al
@@ -576,6 +577,11 @@ namespace CsvRwRouteParser
 					{
 						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance);
 					}
+				}
+				if (!PreviewOnly && Data.Structure.WeatherObjects.ContainsKey(Data.Blocks[i].WeatherObject))
+				{
+					UnifiedObject obj = Data.Structure.WeatherObjects[Data.Blocks[i].WeatherObject];
+					obj.CreateObject(Position, GroundTransformation, Data.Blocks[i].Height, StartingDistance, EndingDistance);
 				}
 				// rail-aligned objects
 				if (!PreviewOnly)

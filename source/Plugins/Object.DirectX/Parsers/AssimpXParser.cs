@@ -176,9 +176,12 @@ namespace Plugin
 				Color24 mSpecular = new Color24((byte)mesh.Materials[i].Specular.R, (byte)mesh.Materials[i].Specular.G, (byte)mesh.Materials[i].Specular.B);
 				builder.Materials[m].EmissiveColor = new Color24((byte)(255 * mesh.Materials[i].Emissive.R), (byte)(255 * mesh.Materials[i].Emissive.G), (byte)(255 * mesh.Materials[i].Emissive.B));
 				builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
-				builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
-				builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
-
+				if (Plugin.BlackTransparency)
+				{
+					builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
+					builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+				}
+				
 				if (mesh.Materials[i].Textures.Count > 0)
 				{
 					builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, mesh.Materials[i].Textures[0].Name);

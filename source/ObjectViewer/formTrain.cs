@@ -88,7 +88,7 @@ namespace OpenBve
 					checkBoxSetConstSpeed.Checked = TrainManager.Trains[0].Specs.CurrentConstSpeed;
 				}
 
-				checkBoxEnablePlugin.Checked = TrainManager.Trains[0].Specs.Safety.Mode == TrainManager.SafetySystem.Plugin;
+				checkBoxEnablePlugin.Checked = TrainManager.Trains[0].Specs.SafetySystemPlugin;
 			}
 			panelPlugin.Enabled = checkBoxEnablePlugin.Checked;
 			buttonRemove.Enabled = false;
@@ -362,7 +362,7 @@ namespace OpenBve
 						TrainManager.Trains[0].Specs.CurrentConstSpeed = checkBoxSetConstSpeed.Checked;
 					}
 
-					TrainManager.Trains[0].Specs.Safety.Mode = checkBoxEnablePlugin.Checked ? TrainManager.SafetySystem.Plugin : TrainManager.SafetySystem.None;
+					TrainManager.Trains[0].Specs.SafetySystemPlugin = checkBoxEnablePlugin.Checked;
 					if (checkBoxEnablePlugin.Checked && PluginStates.Count != 0)
 					{
 						PluginManager.CurrentPlugin.Panel = new int[PluginStates.Max(value => value.Number) + 1];

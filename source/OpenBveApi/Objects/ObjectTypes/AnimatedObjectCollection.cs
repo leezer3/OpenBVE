@@ -144,9 +144,7 @@ namespace OpenBveApi.Objects
 					Result.Objects[i].TranslateXDirection.X *= -1.0;
 					Result.Objects[i].TranslateYDirection.X *= -1.0;
 					Result.Objects[i].TranslateZDirection.X *= -1.0;
-					Result.Objects[i].RotateXDirection.X *= -1.0;
-					Result.Objects[i].RotateYDirection.X *= -1.0;
-					Result.Objects[i].RotateZDirection.X *= -1.0;
+					//As we are using a rotation matrix, we only need to reverse the translation and not the rotation
 				}
 				return Result;
 			}
@@ -158,6 +156,7 @@ namespace OpenBveApi.Objects
 				{
 					foreach (ObjectState state in animatedObj.States)
 					{
+						state.Prototype = (StaticObject)state.Prototype.Clone();
 						state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
 						Matrix4D t = state.Translation;
 						t.Row3.X *= -1.0f;
@@ -170,13 +169,7 @@ namespace OpenBveApi.Objects
 					animatedObj.TranslateYDirection.Z *= -1.0;
 					animatedObj.TranslateZDirection.X *= -1.0;
 					animatedObj.TranslateZDirection.Z *= -1.0;
-					//Must reverse the also reverse the direction of the rotation functions
-					animatedObj.RotateXDirection.X *= -1.0;
-					animatedObj.RotateXDirection.Z *= -1.0;
-					animatedObj.RotateYDirection.X *= -1.0;
-					animatedObj.RotateYDirection.Z *= -1.0;
-					animatedObj.RotateZDirection.X *= -1.0;
-					animatedObj.RotateZDirection.Z *= -1.0;
+					//As we are using a rotation matrix, we only need to reverse the translation and not the rotation
 				}
 			}
 			

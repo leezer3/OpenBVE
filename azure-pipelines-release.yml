@@ -1,6 +1,12 @@
 # This YAML runs the stable release upload builds
 trigger:
-- tag
+  tags:
+    include:
+      - '*'
+      - 1.*
+  branches:
+    exclude:
+      - '*'
 
 ### Test on latest Windows and .Net version
 
@@ -27,6 +33,16 @@ jobs:
       solution: '$(solution)'
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
+   - script: WindowsInstaller.ps1
+   - task: CopyFilesOverSSH@0
+    condition: and(succeeded())
+    inputs:
+     sshEndpoint: 'BuildServer'
+     sourceFolder: $(Pipeline.Workspace)/s/installers/Windows/Output
+     contents: /*.exe
+     targetFolder: '/var/www/vps.bvecornwall.co.uk/public/OpenBVE/Stable/'
+     overwrite: true
+     readyTimeout: 90000
 
 ### Build and upload via makefile on OS-X
 ### This uses Mono 6.8.0 as the default version isn't high enough on this image
@@ -48,7 +64,7 @@ jobs:
   - script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 6_8_0
   - script: make publish 
   - task: CopyFilesOverSSH@0
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded())
     inputs:
      sshEndpoint: 'BuildServer'
      sourceFolder: $(Pipeline.Workspace)/s/
@@ -74,7 +90,7 @@ jobs:
   - task: NuGetToolInstaller@1
   - script: make publish 
   - task: CopyFilesOverSSH@0
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded())
     inputs:
      sshEndpoint: 'BuildServer'
      sourceFolder: $(Pipeline.Workspace)/s/

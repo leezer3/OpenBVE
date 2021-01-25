@@ -266,10 +266,10 @@ namespace Plugin
 												Plugin.currentHost.AddMessage(MessageType.Warning, true, "Vertex with no co-ordinates supplied encountered in Ls3d object file.");
 												continue;
 											}
-											tempVertices[tempVertices.Length - 1] = new Vertex((Vector3)v);
+											tempVertices[tempVertices.Length - 1] = new Vertex(v);
 											tempNormals[tempNormals.Length - 1] = new Vector3(n);
 											tempNormals[tempNormals.Length - 1].Normalize();
-											Builder.Vertices.Add(new Vertex(new Vector3((Vector3)v)));
+											Builder.Vertices.Add(new Vertex(new Vector3(v)));
 											Normals.Add(new Vector3(n));
 										}
 									}
@@ -413,7 +413,7 @@ namespace Plugin
 						Builder.Materials[j].TransparencyTexture = transtex;
 					}
 				}
-				if (TransparencyUsed == true)
+				if (TransparencyUsed)
 				{
 					for (int j = 0; j < Builder.Materials.Length; j++)
 					{

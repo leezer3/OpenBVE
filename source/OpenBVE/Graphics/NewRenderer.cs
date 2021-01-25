@@ -116,7 +116,7 @@ namespace OpenBve.Graphics
 		}
 		
 		// render scene
-		internal void RenderScene(double TimeElapsed)
+		internal void RenderScene(double TimeElapsed, double RealTimeElapsed)
 		{
 			ReleaseResources();
 			// initialize
@@ -457,7 +457,7 @@ namespace OpenBve.Graphics
 			UnsetAlphaFunc();
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Disable(EnableCap.DepthTest);
-			overlays.Render(TimeElapsed);
+			overlays.Render(RealTimeElapsed);
 			OptionLighting = true;
 		}
 	}

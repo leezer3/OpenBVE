@@ -140,6 +140,7 @@ namespace OpenBve {
 						case "/review": Tab = 1; break;
 						case "/controls": Tab = 2; break;
 						case "/options": Tab = 3; break;
+						case "/packages": Tab = 4; break;
 					}
 				}
 				switch (Tab)

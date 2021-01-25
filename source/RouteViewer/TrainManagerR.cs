@@ -29,16 +29,9 @@ namespace OpenBve {
 			internal double CurrentAcceleration;
 			internal double CurrentAccelerationOutput;
 		}
-		internal struct Horn {
-			internal CarSound Sound;
-			internal bool Loop;
-		}
 		
 		internal class Car : AbstractCar {
-			internal int CurrentSection;
 			internal CarSpecs Specs;
-			internal bool Derailed;
-			internal bool Topples;
 			internal CarBrake CarBrake;
 			internal readonly Door[] Doors;
 			internal Car(Train train)

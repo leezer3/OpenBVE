@@ -553,7 +553,7 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection(Program.Renderer, ObjectType.Dynamic);
+				CarSections[j] = new CarSection(Program.CurrentHost, ObjectType.Dynamic);
 				CarSections[j].VisibleFromInterior = visibleFromInterior;
 				if (currentObject is StaticObject)
 				{
@@ -1271,8 +1271,8 @@ namespace OpenBve
 				{
 					double v = Math.Abs(CurrentSpeed);
 					double t = Index == 0 & CurrentSpeed >= 0.0 || Index == baseTrain.Cars.Length - 1 & CurrentSpeed <= 0.0 ? Specs.ExposedFrontalArea : Specs.UnexposedFrontalArea;
-					double a = FrontAxle.GetResistance(v, t, baseTrain.Specs.CurrentAirDensity, Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-					double b = RearAxle.GetResistance(v, t, baseTrain.Specs.CurrentAirDensity, Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					double a = FrontAxle.GetResistance(v, t, Program.CurrentRoute.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					double b = RearAxle.GetResistance(v, t, Program.CurrentRoute.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 					FrictionBrakeAcceleration = 0.5 * (a + b);
 				}
 				// power
@@ -1379,7 +1379,7 @@ namespace OpenBve
 						{
 							if (Specs.CurrentAccelerationOutput < 0.0)
 							{
-								Specs.CurrentAccelerationOutput += Specs.JerkBrakeDown * TimeElapsed;
+								Specs.CurrentAccelerationOutput += CarBrake.JerkDown * TimeElapsed;
 							}
 							else
 							{
@@ -1423,7 +1423,7 @@ namespace OpenBve
 							}
 							else
 							{
-								Specs.CurrentAccelerationOutput -= Specs.JerkBrakeUp * TimeElapsed;
+								Specs.CurrentAccelerationOutput -= CarBrake.JerkUp * TimeElapsed;
 							}
 
 							if (Specs.CurrentAccelerationOutput < a)
@@ -1433,7 +1433,7 @@ namespace OpenBve
 						}
 						else
 						{
-							Specs.CurrentAccelerationOutput += Specs.JerkBrakeDown * TimeElapsed;
+							Specs.CurrentAccelerationOutput += CarBrake.JerkDown * TimeElapsed;
 							if (Specs.CurrentAccelerationOutput > a)
 							{
 								Specs.CurrentAccelerationOutput = a;

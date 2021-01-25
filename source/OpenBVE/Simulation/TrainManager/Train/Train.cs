@@ -19,6 +19,7 @@ using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -50,18 +51,6 @@ namespace OpenBve
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			
-			internal string[] PowerNotchDescriptions;
-			internal string[] LocoBrakeNotchDescriptions;
-			internal string[] BrakeNotchDescriptions;
-			internal string[] ReverserDescriptions;
-			/// <summary>The max width used in px for the power notch HUD string</summary>
-			internal int MaxPowerNotchWidth = 48;
-			/// <summary>The max width used in px for the brake notch HUD string</summary>
-			internal int MaxBrakeNotchWidth = 48;
-			/// <summary>The max width used in px for the loco brake notch HUD string</summary>
-			internal int MaxLocoBrakeNotchWidth = 48;
-			/// <summary>The max width used in px for the reverser HUD string</summary>
-			internal int MaxReverserWidth = 48;
 			/// <summary>Coefficient of friction used for braking</summary>
 			internal const double CoefficientOfGroundFriction = 0.5;
 			/// <summary>The speed difference in m/s above which derailments etc. will occur</summary>
@@ -90,7 +79,7 @@ namespace OpenBve
 			internal void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding)
 			{
 				Cars[DriverCar].CarSections = new CarSection[1];
-				Cars[DriverCar].CarSections[0] = new CarSection(Program.Renderer, ObjectType.Overlay);
+				Cars[DriverCar].CarSections[0] = new CarSection(Program.CurrentHost, ObjectType.Overlay);
 				string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
 				if (!System.IO.File.Exists(File))
 				{
@@ -248,7 +237,6 @@ namespace OpenBve
 				{
 					Cars[i].Initialize();
 				}
-				UpdateAtmosphericConstants();
 				Update(0.0);
 			}
 
@@ -609,7 +597,6 @@ namespace OpenBve
 				{
 					InternalTimerTimeElapsed -= 10.0;
 					Synchronize();
-					UpdateAtmosphericConstants();
 				}
 			}
 
@@ -821,19 +808,6 @@ namespace OpenBve
 				double invcarlen = 1.0 / (double)Cars.Length;
 				CurrentSpeed *= invcarlen;
 				Specs.CurrentAverageAcceleration *= invcarlen;
-			}
-
-			internal void UpdateAtmosphericConstants()
-			{
-				double h = 0.0;
-				for (int i = 0; i < Cars.Length; i++)
-				{
-					h += Cars[i].FrontAxle.Follower.WorldPosition.Y + Cars[i].RearAxle.Follower.WorldPosition.Y;
-				}
-				double elevation = Program.CurrentRoute.Atmosphere.InitialElevation + h / (2.0 * (double)Cars.Length);
-				Specs.CurrentAirTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
-				Specs.CurrentAirPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, Specs.CurrentAirTemperature);
-				Specs.CurrentAirDensity = Program.CurrentRoute.Atmosphere.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
 			}
 
 			/// <summary>Updates the safety system plugin for this train</summary>

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using TrainEditor2.Models.Trains;
+using TrainManager.Motor;
 
 namespace TrainEditor2.IO.Trains.TrainDat
 {
@@ -118,7 +119,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 			for (int i = 0; i < 4; i++)
 			{
-				Motor.Entry[] entries = new Motor.Entry[0];
+				BVEMotorSoundTableEntry[] entries = new BVEMotorSoundTableEntry[0];
 
 				switch (i)
 				{
@@ -157,7 +158,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 				{
 					builder.Append(entries[j].SoundIndex.ToString(culture) + ",");
 					builder.Append(entries[j].Pitch.ToString(culture) + ",");
-					builder.AppendLine(entries[j].Volume.ToString(culture));
+					builder.AppendLine(entries[j].Gain.ToString(culture));
 				}
 			}
 

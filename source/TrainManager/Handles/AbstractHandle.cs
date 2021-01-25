@@ -44,6 +44,12 @@ namespace TrainManager.Handles
 		/// <summary>The sound played when the handles is moved to the maximum position</summary>
 		public CarSound Max;
 
+		/// <summary>Contains the notch descriptions to be displayed on the in-game UI</summary>
+		public string[] NotchDescriptions;
+
+		/// <summary>The max width used in px for the description string</summary>
+		public int MaxWidth = 48;
+
 		public abstract void Update();
 
 		public AbstractHandle()

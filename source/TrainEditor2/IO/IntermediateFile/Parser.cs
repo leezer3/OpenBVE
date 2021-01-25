@@ -12,6 +12,7 @@ using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
 using TrainManager.BrakeSystems;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.SafetySystems;
 
@@ -76,16 +77,16 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Device
 			{
-				Ats = (Device.AtsModes)Enum.Parse(typeof(Device.AtsModes), (string)parent.Element("Ats")),
-				Atc = (Device.AtcModes)Enum.Parse(typeof(Device.AtcModes), (string)parent.Element("Atc")),
+				Ats = (AtsModes)Enum.Parse(typeof(AtsModes), (string)parent.Element("Ats")),
+				Atc = (AtcModes)Enum.Parse(typeof(AtcModes), (string)parent.Element("Atc")),
 				Eb = (bool)parent.Element("Eb"),
 				ConstSpeed = (bool)parent.Element("ConstSpeed"),
 				HoldBrake = (bool)parent.Element("HoldBrake"),
-				ReAdhesionDevice = (Device.ReAdhesionDevices)Enum.Parse(typeof(Device.ReAdhesionDevices), (string)parent.Element("ReAdhesionDevice")),
+				ReAdhesionDevice = (ReadhesionDeviceType)Enum.Parse(typeof(ReadhesionDeviceType), (string)parent.Element("ReAdhesionDevice")),
 				LoadCompensatingDevice = (double)parent.Element("LoadCompensatingDevice"),
 				PassAlarm = (PassAlarmType)Enum.Parse(typeof(PassAlarmType), (string)parent.Element("PassAlarm")),
-				DoorOpenMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorOpenMode")),
-				DoorCloseMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorCloseMode")),
+				DoorOpenMode = (DoorMode)Enum.Parse(typeof(DoorMode), (string)parent.Element("DoorOpenMode")),
+				DoorCloseMode = (DoorMode)Enum.Parse(typeof(DoorMode), (string)parent.Element("DoorCloseMode")),
 				DoorWidth = (double)parent.Element("DoorWidth"),
 				DoorMaxTolerance = (double)parent.Element("DoorMaxTolerance")
 			};

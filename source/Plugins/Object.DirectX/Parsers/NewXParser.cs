@@ -347,8 +347,12 @@ namespace Plugin
 					Color24 mSpecular = new Color24((byte)block.ReadSingle(), (byte)block.ReadSingle(), (byte)block.ReadSingle());
 					builder.Materials[m].EmissiveColor = new Color24((byte)(255 *block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()));
 					builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
-					builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
-					builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+					if (Plugin.BlackTransparency)
+					{
+						builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
+						builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+					}
+					
 					if (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock(TemplateID.TextureFilename);

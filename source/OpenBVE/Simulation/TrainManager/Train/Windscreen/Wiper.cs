@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenBveApi.Interface;
-using OpenTK.Graphics.OpenGL;
 using SoundManager;
 
 namespace OpenBve
@@ -228,6 +227,7 @@ namespace OpenBve
 			if (Windscreen.RainDrops[dropToRemove].Visible)
 			{
 				Windscreen.RainDrops[dropToRemove].Visible = false;
+				Windscreen.RainDrops[dropToRemove].IsSnowFlake = false;
 				Windscreen.RainDrops[dropToRemove].RemainingLife = 0.5 * Program.RandomNumberGenerator.NextDouble() * Windscreen.DropLife;
 				Windscreen.currentDrops--;
 			}

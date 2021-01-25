@@ -1,4 +1,5 @@
 using System;
+using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Events;
@@ -369,9 +370,9 @@ namespace OpenBve
 					{
 						if (Train.Cars[i].Specs.IsMotorCar)
 						{
-							if (Train.Cars[Train.DriverCar].Specs.MotorDeceleration != 0 && Train.Cars[Train.DriverCar].Specs.MotorDeceleration < BrakeDeceleration)
+							if (Train.Cars[Train.DriverCar].CarBrake.motorDeceleration != 0 && Train.Cars[Train.DriverCar].CarBrake.motorDeceleration < BrakeDeceleration)
 							{
-								BrakeDeceleration = Train.Cars[Train.DriverCar].Specs.MotorDeceleration;
+								BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.motorDeceleration;
 							}
 							break;
 						}
@@ -898,10 +899,48 @@ namespace OpenBve
 						}
 					}
 				}
+
+				if (Train.Cars[Train.DriverCar].Windscreen != null)
+				{
+					if (wiperTimer < 0)
+					{
+						if (Train.Cars[Train.DriverCar].Windscreen.currentDrops < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 4)
+						{
+							if(Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentSpeed != WiperSpeed.Off)
+							{
+								Train.Cars[Train.DriverCar].Windscreen.Wipers.ChangeSpeed(Translations.Command.WiperSpeedDown);
+							}
+						}
+						else if (Train.Cars[Train.DriverCar].Windscreen.currentDrops > Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 4 && Train.Cars[Train.DriverCar].Windscreen.currentDrops < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 2)
+						{
+							switch (Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentSpeed)
+							{
+								case WiperSpeed.Off:
+									Train.Cars[Train.DriverCar].Windscreen.Wipers.ChangeSpeed(Translations.Command.WiperSpeedUp);
+									break;
+								case WiperSpeed.Fast:
+									Train.Cars[Train.DriverCar].Windscreen.Wipers.ChangeSpeed(Translations.Command.WiperSpeedDown);
+									break;
+							}
+							
+						}
+						else
+						{
+							if (Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentSpeed != WiperSpeed.Fast)
+							{
+								Train.Cars[Train.DriverCar].Windscreen.Wipers.ChangeSpeed(Translations.Command.WiperSpeedUp);
+							}
+						}
+						wiperTimer = 5.0;
+					}
+
+				}
 			}
 
 			/// <summary>The timer unti the doors may be opened</summary>
 			private double doorWaitingTimer = 2.0;
+			/// <summary>Controls the AI operating the wipers</summary>
+			private double wiperTimer;
 			/// <summary>Whether a door open has yet been attempted</summary>
 			private bool doorOpenAttempted = false;
 
@@ -929,6 +968,7 @@ namespace OpenBve
 				else if (Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{
 					doorWaitingTimer -= Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed;
+					wiperTimer -= Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed;
 					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
 					if (Train.Plugin != null && Train.Plugin.SupportsAI)
 					{

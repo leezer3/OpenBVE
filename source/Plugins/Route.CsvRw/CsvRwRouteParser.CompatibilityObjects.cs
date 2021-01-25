@@ -122,7 +122,32 @@ namespace CsvRwRouteParser
 				//The object exists, and does not require a compatibility object
 				return true;
 			}
-			//We haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
+
+			if (!System.IO.Path.HasExtension(fileName))
+			{
+				/*
+				 * Marginally hacky: No extension, so let's try as WAV
+				 * (In some cases will produce results)
+				 */
+				fileName += ".wav";
+			}
+			try
+			{
+				//Catch completely malformed path references
+				n = OpenBveApi.Path.CombineFile(objectPath, fileName);
+			}
+			catch
+			{
+				return false;
+			}
+			if (System.IO.File.Exists(n))
+			{
+				fileName = n;
+				//The object exists, and does not require a compatibility object
+				return true;
+			}
+
+			//We still haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
 			for (int i = 0; i < CompatibilityObjects.AvailableSounds.Length; i++)
 			{
 				if (CompatibilityObjects.AvailableSounds[i].ObjectNames.Length == 0)

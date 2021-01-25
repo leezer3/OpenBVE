@@ -177,7 +177,6 @@ namespace OpenBve {
 			Program.Renderer.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// default starting time
 			Game.SecondsSinceMidnight = 0.0;
-			Game.StartupTime = 0.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			// signals
@@ -202,7 +201,6 @@ namespace OpenBve {
 					} else {
 						Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].ArrivalTime;
 					}
-					Game.StartupTime = Game.SecondsSinceMidnight;
 					break;
 				}
 			}

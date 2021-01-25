@@ -17,7 +17,7 @@
 		StackCopy, StackSwap,
 		MathRandom, MathRandomInt,
 		TimeSecondsSinceMidnight, CameraDistance, CameraXDistance, CameraYDistance, CameraZDistance,CameraView,
-		TrainCars, TrainDestination,
+		TrainCars, TrainDestination, PlayerTrain,
 		TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
 		TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, CurveRadiusOfCar, FrontAxleCurveRadius, FrontAxleCurveRadiusOfCar, RearAxleCurveRadius, RearAxleCurveRadiusOfCar, CurveCant, CurveCantOfCar, Pitch, PitchOfCar, Odometer, OdometerOfCar,
@@ -33,7 +33,7 @@
 		TimetableVisible, Panel2Timetable, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit,
 		SectionAspectNumber, CurrentObjectState,
-		RainDrop, WiperPosition
+		RainDrop, SnowFlake, WiperPosition
 #pragma warning restore CS1591
 			
 		}

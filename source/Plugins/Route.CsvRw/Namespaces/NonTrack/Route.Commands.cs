@@ -2,6 +2,8 @@
 {
 	internal enum RouteCommand
 	{
+		/// <summary>Used by BVE to allow for debugging, unused by OpenBVE</summary>
+		DeveloperID,
 		/// <summary>A textual description of the route to be displayed in the main menu</summary>
 		Comment,
 		/// <summary>An image of the route to be displayed in the main menu</summary>

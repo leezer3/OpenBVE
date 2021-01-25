@@ -81,7 +81,7 @@ namespace Plugin
 
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			if (!IsB3D && BveTsHacks)
+			if (!IsB3D && enabledHacks.BveTsHacks)
 			{
 				/*
 				 * Handles multi-column CSV objects [Hide behind the hacks option in the main program]
@@ -160,7 +160,7 @@ namespace Plugin
 					}
 				}
 				// collect arguments
-				string[] Arguments = Lines[i].Split(new char[] { ',' }, StringSplitOptions.None);
+				string[] Arguments = Lines[i].Split(new[] { ',' }, StringSplitOptions.None);
 				for (int j = 0; j < Arguments.Length; j++) {
 					Arguments[j] = Arguments[j].Trim(new char[] { });
 				}
@@ -185,7 +185,7 @@ namespace Plugin
 						Command = Arguments[0];
 						bool resetArguments = true;
 						if (Arguments.Length != 1) {
-							if (!BveTsHacks || !IsCommand(Command))
+							if (!enabledHacks.BveTsHacks || !IsCommand(Command))
 							{
 								currentHost.AddMessage(MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							}
@@ -240,7 +240,7 @@ namespace Plugin
 								if (Arguments.Length > 0) {
 									currentHost.AddMessage(MessageType.Warning, false, "0 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Builder.Apply(ref Object, Plugin.BveTsHacks);
+								Builder.Apply(ref Object, enabledHacks.BveTsHacks);
 								Builder = new MeshBuilder(currentHost);
 								Normals = new List<Vector3>();
 							} break;
@@ -316,7 +316,7 @@ namespace Plugin
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
-											if (BveTsHacks)
+											if (enabledHacks.BveTsHacks)
 											{
 												if (IsB3D && j == 0 && Arguments[j] == string.Empty)
 												{
@@ -360,7 +360,7 @@ namespace Plugin
 											}
 											
 										}
-										if (Builder.isCylinder && BveTsHacks && CylinderHack)
+										if (Builder.isCylinder && enabledHacks.BveTsHacks && enabledHacks.CylinderHack)
 										{
 											int l = f.Vertices.Length;
 											MeshFaceVertex v = f.Vertices[l - 1];
@@ -663,6 +663,15 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Alpha is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									a = a < 0 ? 0 : 255;
 								}
+
+								if (a == 0 && enabledHacks.BveTsHacks || enabledHacks.DisableSemiTransparentFaces)
+								{
+									/*
+									 * BVE2 didn't support semi-transparent faces at all
+									 * BVE4 treats faces with an opacity value of 0 as having an opacity value of 1
+									 */
+									a = 255;
+								}
 								int m = Builder.Materials.Length;
 								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
@@ -890,7 +899,7 @@ namespace Plugin
 									} else {
 										try
 										{
-											tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+											tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 										}
 										catch
 										{
@@ -900,7 +909,7 @@ namespace Plugin
 										if (!System.IO.File.Exists(tday))
 										{
 											bool hackFound = false;
-											if (BveTsHacks)
+											if (enabledHacks.BveTsHacks)
 											{
 												//Original BVE2 signal graphics
 												Match m = Regex.Match(tday, @"(signal\d{1,2}\.bmp)", RegexOptions.IgnoreCase);
@@ -914,7 +923,7 @@ namespace Plugin
 												if (Arguments[0].StartsWith("swiss1/", StringComparison.InvariantCultureIgnoreCase))
 												{
 													Arguments[0] = Arguments[0].Substring(7);
-													tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 													if (System.IO.File.Exists(tday))
 													{
 														hackFound = true;
@@ -941,7 +950,7 @@ namespace Plugin
 											bool ignoreAsInvalid = false;
 											try
 											{
-												tnight = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
+												tnight = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
 											}
 											catch
 											{
@@ -1219,7 +1228,7 @@ namespace Plugin
 				}
 			}
 			// finalize object
-			Builder.Apply(ref Object, Plugin.BveTsHacks);
+			Builder.Apply(ref Object, enabledHacks.BveTsHacks);
 			Object.Mesh.CreateNormals();
 			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
 			{
@@ -1300,7 +1309,7 @@ namespace Plugin
 			double ns = h >= 0.0 ? 1.0 : -1.0;
 			// initialization
 			Vector3[] Normals = new Vector3[2 * n];
-			double d = 2.0 * Math.PI / (double)n;
+			double d = 2.0 * Math.PI / n;
 			double g = 0.5 * h;
 			double t = 0.0;
 			double a = h != 0.0 ? Math.Atan((r2 - r1) / h) : 0.0;
@@ -1365,7 +1374,7 @@ namespace Plugin
 		
 		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>
 		/// <param name="Encoding">The Encoding</param>
-		private static bool IsUtf(System.Text.Encoding Encoding)
+		private static bool IsUtf(Encoding Encoding)
 		{
 			switch (Encoding.WindowsCodePage)
 			{

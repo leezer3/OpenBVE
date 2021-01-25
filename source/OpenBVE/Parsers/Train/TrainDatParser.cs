@@ -33,6 +33,7 @@ namespace OpenBve {
 			}
 			catch
 			{
+				//ignore and load default
 			}
 			if (Lines.Length == 1 && Encoding.Equals(Encoding.Unicode))
 			{
@@ -168,9 +169,9 @@ namespace OpenBve {
 				}
 			}
 			// parse configuration
-			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / (double)Lines.Length;
+			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / Lines.Length;
 			for (int i = 0; i < Lines.Length; i++) {
-				Loading.TrainProgress = Loading.TrainProgressCurrentSum + invfac * (double)i;
+				Loading.TrainProgress = Loading.TrainProgressCurrentSum + invfac * i;
 				if ((i & 7) == 0) {
 					System.Threading.Thread.Sleep(1);
 					if (Loading.Cancel) return;
@@ -530,7 +531,7 @@ namespace OpenBve {
 											powerNotches = 8;
 											Interface.AddMessage(MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
-									break;
+										break;
 									case 2:
 										if (a > 0)
 										{
@@ -590,7 +591,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											}
 										}
-									break;
+										break;
 									case 8:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
 										{
@@ -636,7 +637,7 @@ namespace OpenBve {
 										} else {
 											MotorCars = (int)Math.Round(a);
 										} break;
-										case 2: TrailerCarMass = a * 1000.0; break;
+									case 2: TrailerCarMass = a * 1000.0; break;
 									case 3:
 										if (a < 0.0) {
 											Interface.AddMessage(MessageType.Error, false, "NumberOfTrailerCars is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -649,7 +650,7 @@ namespace OpenBve {
 										} else {
 											CarLength = a;
 										} break;
-										case 5: FrontCarIsMotorCar = a == 1.0; break;
+									case 5: FrontCarIsMotorCar = a == 1.0; break;
 									case 6:
 										if (a <= 0.0) {
 											Interface.AddMessage(MessageType.Error, false, "WidthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -666,7 +667,7 @@ namespace OpenBve {
 											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
 											CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 										} break;
-										case 8: CenterOfGravityHeight = a; break;
+									case 8: CenterOfGravityHeight = a; break;
 									case 9:
 										if (a <= 0.0) {
 											Interface.AddMessage(MessageType.Error, false, "ExposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -959,11 +960,8 @@ namespace OpenBve {
 				if (errors) {
 					Interface.AddMessage(MessageType.Error, false, "Entry " + (i + 1).ToString(Culture) + " in the #ACCELERATION section is missing or invalid in " + FileName);
 				}
-				if (AccelerationCurves[i].StageZeroAcceleration > MaximumAcceleration) {
-					MaximumAcceleration = AccelerationCurves[i].StageZeroAcceleration;
-				}
-				if (AccelerationCurves[i].StageOneAcceleration > MaximumAcceleration) {
-					MaximumAcceleration = AccelerationCurves[i].StageOneAcceleration;
+				if (AccelerationCurves[i].MaximumAcceleration > MaximumAcceleration) {
+					MaximumAcceleration = AccelerationCurves[i].MaximumAcceleration;
 				}
 			}
 			// assign motor cars
@@ -1018,11 +1016,10 @@ namespace OpenBve {
 			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
 			// apply brake-specific attributes for all cars
 			for (int i = 0; i < Cars; i++) {
-				AccelerationCurve[] DecelerationCurves = new AccelerationCurve[]
+				AccelerationCurve[] DecelerationCurves = 
 				{
 					new BveDecelerationCurve(BrakeDeceleration), 
 				};
-				Train.Cars[i].Specs.MotorDeceleration = MotorDeceleration;
 				if (i == Train.DriverCar && Train.Handles.HasLocoBrake)
 				{
 					switch (locomotiveBrakeType)
@@ -1076,6 +1073,8 @@ namespace OpenBve {
 				}
 				Train.Cars[i].CarBrake.brakeCylinder = new BrakeCylinder(BrakeCylinderServiceMaximumPressure, BrakeCylinderEmergencyMaximumPressure, trainBrakeType == BrakeSystemType.AutomaticAirBrake ? BrakeCylinderUp : 0.3 * BrakeCylinderUp, BrakeCylinderUp, BrakeCylinderDown);
 				Train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
+				Train.Cars[i].CarBrake.JerkUp = JerkBrakeUp;
+				Train.Cars[i].CarBrake.JerkDown = JerkBrakeDown;
 			}
 			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
 				Train.Handles.Brake.MaximumNotch--;
@@ -1204,8 +1203,6 @@ namespace OpenBve {
 				Train.Cars[i].RearAxle.Position = -AxleDistance;
 				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
 				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
-				Train.Cars[i].Specs.JerkBrakeUp = JerkBrakeUp;
-				Train.Cars[i].Specs.JerkBrakeDown = JerkBrakeDown;
 				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;
 				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
 				Train.Cars[i].Doors[0].Direction = -1;

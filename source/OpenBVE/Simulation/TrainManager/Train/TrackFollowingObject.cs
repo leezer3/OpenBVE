@@ -27,7 +27,6 @@ namespace OpenBve
 				{
 					Car.Initialize();
 				}
-				UpdateAtmosphericConstants();
 				Update(0.0);
 			}
 
@@ -175,7 +174,6 @@ namespace OpenBve
 				{
 					InternalTimerTimeElapsed -= 10.0;
 					Synchronize();
-					UpdateAtmosphericConstants();
 				}
 			}
 		}

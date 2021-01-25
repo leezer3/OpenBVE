@@ -311,7 +311,7 @@ namespace OpenBve.Parsers.Train
 						}
 						Train.Cars[Car].HasInteriorView = true;
 						Train.Cars[Car].CarSections = new CarSection[1];
-						Train.Cars[Car].CarSections[0] = new CarSection(Program.Renderer, ObjectType.Overlay);
+						Train.Cars[Car].CarSections[0] = new CarSection(Program.CurrentHost, ObjectType.Overlay);
 
 						string cv = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))

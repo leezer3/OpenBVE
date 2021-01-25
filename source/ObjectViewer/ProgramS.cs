@@ -61,7 +61,7 @@ namespace OpenBve {
 	    {
 		    CurrentHost = new Host();
 			// file system
-	        FileSystem = FileSystem.FromCommandLineArgs(args);
+	        FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 	        FileSystem.CreateFileSystem();
 	        Renderer = new NewRenderer();
 	        CurrentRoute = new CurrentRoute(Renderer);
@@ -110,7 +110,13 @@ namespace OpenBve {
 					        {
 						        if (CurrentHost.Plugins[j].Object != null)
 						        {
-							        CurrentHost.Plugins[j].Object.SetCompatibilityHacks(true, false);
+							        CompatabilityHacks enabledHacks = new CompatabilityHacks
+							        {
+								        BveTsHacks = true, 
+								        CylinderHack = false,
+								        BlackTransparency =  true
+							        };
+							        CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 						        }
 					        }
 				        }
@@ -264,6 +270,10 @@ namespace OpenBve {
 					    double z = 0.0;
 					    for (int j = 0; j < carObjects.Length; j++)
 					    {
+						    if (carObjects[j] == null)
+						    {
+							    continue;
+						    }
 						    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), 0.0, 0.0, 0.0);
 						    if (j < train.Cars.Length - 1)
 						    {

@@ -56,5 +56,11 @@ namespace OpenBveApi.Objects
 		/// <param name="ForceUpdate">Whether this is a forced update (e.g. Change of viewpoint) or periodic</param>
 		/// <param name="CurrentlyVisible">Whether the object is currently visble to the player</param>
 		public abstract void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool CurrentlyVisible);
+
+		/// <summary>Whether the object is currently visible</summary>
+		/// <param name="CameraPosition">The camera's world position</param>
+		/// <param name="BackgroundImageDistance">The distance to the background skybox from the camera position</param>
+		/// <param name="ExtraViewingDistance">The user-selected viewing distance</param>
+		public abstract bool IsVisible(Vector3 CameraPosition, double BackgroundImageDistance, double ExtraViewingDistance);
 	}
 }

@@ -140,10 +140,7 @@ namespace OpenBve
 					}
 					else
 					{
-						double sx = Train.Cars[i].Width;
-						double sy = Train.Cars[i].Height;
-						double sz = Train.Cars[i].Length;
-						so.ApplyScale(sx, sy, sz);
+						so.ApplyScale(Train.Cars[i].Width, Train.Cars[i].Height, Train.Cars[i].Length);
 						CarObjects[i] = so;
 					}
 				}

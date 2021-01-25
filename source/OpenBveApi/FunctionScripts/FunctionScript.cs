@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -303,6 +303,16 @@ namespace OpenBveApi.FunctionScripting
 							// conditionals
 						case "<":
 							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (Arguments[i - 2].ToLowerInvariant() == "cars")
+							{
+								int nCars;
+								NumberFormats.TryParseIntVb6(Arguments[i - 1], out nCars);
+								if (System.Math.Abs(nCars) != nCars)
+								{
+									//It makes absolutely no sense to test whether there are less than 0 cars in a train, so let's at least throw a broken script error
+									throw new System.InvalidOperationException("Cannot test against less than zero cars in function script " + Expression);
+								}
+							}
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CompareLess;
 							n++; s--; break;
@@ -383,6 +393,10 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.CameraView;
 							n++; s++; if (s >= m) m = s; break;
 							// train
+						case "playertrain":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.PlayerTrain;
+							n++; s++; if (s >= m) m = s; break;
 						case "cars":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TrainCars;
@@ -758,6 +772,11 @@ namespace OpenBveApi.FunctionScripting
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.RainDrop;
+							n++; break;
+						case "snowflake":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.SnowFlake;
 							n++; break;
 						case "wiperposition":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
