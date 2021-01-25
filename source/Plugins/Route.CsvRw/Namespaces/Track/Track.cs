@@ -2610,11 +2610,20 @@ namespace CsvRwRouteParser
 								{
 									//The initial background for block 0 is always set to zero
 									//This handles the case where background idx #0 is not used
-									b = Data.Backgrounds[0] as StaticBackground;
-									if (b.Texture == null)
+									BackgroundHandle backgroundZero;
+									if (Data.Backgrounds.TryGetValue(0, out backgroundZero))
+									{
+										b = backgroundZero as StaticBackground;
+										if (b.Texture == null)
+										{
+											Data.Blocks[0].Background = typ;
+										}
+									}
+									else
 									{
 										Data.Blocks[0].Background = typ;
 									}
+									
 								}
 							}
 						}
