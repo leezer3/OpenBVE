@@ -189,13 +189,11 @@ namespace OpenBve
 				{
 					if (Interface.CurrentOptions.RailDriverMPH)
 					{
-						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
-							.CurrentPerceivedSpeed * 2.23694));
+						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 2.23694));
 					}
 					else
 					{
-						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
-							.CurrentPerceivedSpeed * 3.6));
+						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 3.6));
 					}
 				}
 			}

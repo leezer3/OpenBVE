@@ -85,6 +85,7 @@ namespace OpenBve
 				Doors[0].MaxTolerance = 0.0;
 				Doors[1].Width = 1000.0;
 				Doors[1].MaxTolerance = 0.0;
+				Specs = new CarSpecs();
 			}
 
 			internal Car(Train train, int index)
@@ -440,10 +441,10 @@ namespace OpenBve
 				{
 					return;
 				}
-				double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
+				double speed = Math.Abs(Specs.PerceivedSpeed);
 				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
 				int odir = Sounds.Motor.CurrentAccelerationDirection;
-				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
+				int ndir = Math.Sign(Specs.MotorAcceleration);
 				for (int h = 0; h < 2; h++)
 				{
 					int j = h == 0 ? BVEMotorSound.MotorP1 : BVEMotorSound.MotorP2;
@@ -488,7 +489,7 @@ namespace OpenBve
 									double max = Specs.AccelerationCurveMaximum;
 									if (max != 0.0)
 									{
-										double cur = Specs.CurrentAccelerationOutput;
+										double cur = Specs.MotorAcceleration;
 										if (cur < 0.0) cur = 0.0;
 										gain *= Math.Pow(cur / max, 0.25);
 									}
@@ -499,7 +500,7 @@ namespace OpenBve
 									double max = CarBrake.DecelerationAtServiceMaximumPressure(baseTrain.Handles.Brake.Actual, CurrentSpeed);
 									if (max != 0.0)
 									{
-										double cur = -Specs.CurrentAccelerationOutput;
+										double cur = -Specs.MotorAcceleration;
 										if (cur < 0.0) cur = 0.0;
 										gain *= Math.Pow(cur / max, 0.25);
 									}
@@ -956,7 +957,7 @@ namespace OpenBve
 						switch (i)
 						{
 							case 0:
-								a = Specs.CurrentAcceleration;
+								a = Specs.Acceleration;
 								v = Specs.CurrentPitchDueToAccelerationFastValue;
 								j = 1.8;
 								break;
@@ -1369,34 +1370,34 @@ namespace OpenBve
 
 					if (!Derailed)
 					{
-						if (Specs.CurrentAccelerationOutput < a)
+						if (Specs.MotorAcceleration < a)
 						{
-							if (Specs.CurrentAccelerationOutput < 0.0)
+							if (Specs.MotorAcceleration < 0.0)
 							{
-								Specs.CurrentAccelerationOutput += CarBrake.JerkDown * TimeElapsed;
+								Specs.MotorAcceleration += CarBrake.JerkDown * TimeElapsed;
 							}
 							else
 							{
-								Specs.CurrentAccelerationOutput += Specs.JerkPowerUp * TimeElapsed;
+								Specs.MotorAcceleration += Specs.JerkPowerUp * TimeElapsed;
 							}
 
-							if (Specs.CurrentAccelerationOutput > a)
+							if (Specs.MotorAcceleration > a)
 							{
-								Specs.CurrentAccelerationOutput = a;
+								Specs.MotorAcceleration = a;
 							}
 						}
 						else
 						{
-							Specs.CurrentAccelerationOutput -= Specs.JerkPowerDown * TimeElapsed;
-							if (Specs.CurrentAccelerationOutput < a)
+							Specs.MotorAcceleration -= Specs.JerkPowerDown * TimeElapsed;
+							if (Specs.MotorAcceleration < a)
 							{
-								Specs.CurrentAccelerationOutput = a;
+								Specs.MotorAcceleration = a;
 							}
 						}
 					}
 					else
 					{
-						Specs.CurrentAccelerationOutput = 0.0;
+						Specs.MotorAcceleration = 0.0;
 					}
 				}
 
@@ -1409,28 +1410,28 @@ namespace OpenBve
 					if (Specs.IsMotorCar & DecelerationDueToMotor != 0.0)
 					{
 						a = -DecelerationDueToMotor;
-						if (Specs.CurrentAccelerationOutput > a)
+						if (Specs.MotorAcceleration > a)
 						{
-							if (Specs.CurrentAccelerationOutput > 0.0)
+							if (Specs.MotorAcceleration > 0.0)
 							{
-								Specs.CurrentAccelerationOutput -= Specs.JerkPowerDown * TimeElapsed;
+								Specs.MotorAcceleration -= Specs.JerkPowerDown * TimeElapsed;
 							}
 							else
 							{
-								Specs.CurrentAccelerationOutput -= CarBrake.JerkUp * TimeElapsed;
+								Specs.MotorAcceleration -= CarBrake.JerkUp * TimeElapsed;
 							}
 
-							if (Specs.CurrentAccelerationOutput < a)
+							if (Specs.MotorAcceleration < a)
 							{
-								Specs.CurrentAccelerationOutput = a;
+								Specs.MotorAcceleration = a;
 							}
 						}
 						else
 						{
-							Specs.CurrentAccelerationOutput += CarBrake.JerkDown * TimeElapsed;
-							if (Specs.CurrentAccelerationOutput > a)
+							Specs.MotorAcceleration += CarBrake.JerkDown * TimeElapsed;
+							if (Specs.MotorAcceleration > a)
 							{
-								Specs.CurrentAccelerationOutput = a;
+								Specs.MotorAcceleration = a;
 							}
 						}
 					}
@@ -1475,14 +1476,14 @@ namespace OpenBve
 				if (baseTrain.Handles.Reverser.Actual != 0)
 				{
 					double factor = EmptyMass / CurrentMass;
-					if (Specs.CurrentAccelerationOutput > 0.0)
+					if (Specs.MotorAcceleration > 0.0)
 					{
 						PowerRollingCouplerAcceleration +=
-							(double) baseTrain.Handles.Reverser.Actual * Specs.CurrentAccelerationOutput * factor;
+							(double) baseTrain.Handles.Reverser.Actual * Specs.MotorAcceleration * factor;
 					}
 					else
 					{
-						double a = -Specs.CurrentAccelerationOutput;
+						double a = -Specs.MotorAcceleration;
 						if (a >= wheelSlipAccelerationMotorFront)
 						{
 							FrontAxle.CurrentWheelSlip = true;
@@ -1504,7 +1505,7 @@ namespace OpenBve
 				}
 				else
 				{
-					Specs.CurrentAccelerationOutput = 0.0;
+					Specs.MotorAcceleration = 0.0;
 				}
 
 				// perceived speed
@@ -1523,7 +1524,7 @@ namespace OpenBve
 						target = CurrentSpeed + wheelspin / 2500.0;
 					}
 
-					double diff = target - Specs.CurrentPerceivedSpeed;
+					double diff = target - Specs.PerceivedSpeed;
 					double rate = (diff < 0.0 ? 5.0 : 1.0) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity *
 					              TimeElapsed;
 					rate *= 1.0 - 0.7 / (diff * diff + 1.0);
@@ -1532,11 +1533,11 @@ namespace OpenBve
 					rate *= factor;
 					if (diff >= -rate & diff <= rate)
 					{
-						Specs.CurrentPerceivedSpeed = target;
+						Specs.PerceivedSpeed = target;
 					}
 					else
 					{
-						Specs.CurrentPerceivedSpeed += rate * (double) Math.Sign(diff);
+						Specs.PerceivedSpeed += rate * (double) Math.Sign(diff);
 					}
 				}
 				// calculate new speed

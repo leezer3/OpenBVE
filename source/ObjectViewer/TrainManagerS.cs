@@ -17,16 +17,9 @@ namespace OpenBve {
 
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
-		internal struct CarSpecs {
-			internal bool IsMotorCar;
-			internal double CurrentPerceivedSpeed;
-			internal double CurrentAcceleration;
-			internal double CurrentAccelerationOutput;
-		}
-
 		internal class Car : AbstractCar {
 			internal int CurrentSection;
-			internal CarSpecs Specs;
+			internal CarPhysics Specs = new CarPhysics();
 			internal CarBrake CarBrake;
 			internal readonly Door[] Doors;
 			internal Car(Train train)

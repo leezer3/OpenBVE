@@ -175,9 +175,9 @@ namespace OpenBve
 					Car.Move(DeltaPosition);
 
 					Car.CurrentSpeed = Train.CurrentSpeed;
-					Car.Specs.CurrentPerceivedSpeed = Train.CurrentSpeed;
-					Car.Specs.CurrentAcceleration = Train.Specs.CurrentAverageAcceleration;
-					Car.Specs.CurrentAccelerationOutput = Train.Specs.CurrentAverageAcceleration;
+					Car.Specs.PerceivedSpeed = Train.CurrentSpeed;
+					Car.Specs.Acceleration = Train.Specs.CurrentAverageAcceleration;
+					Car.Specs.MotorAcceleration = Train.Specs.CurrentAverageAcceleration;
 				}
 
 				CurrentPosition = NewPosition;

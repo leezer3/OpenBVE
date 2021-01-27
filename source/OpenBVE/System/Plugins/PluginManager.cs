@@ -95,7 +95,7 @@ namespace OpenBve {
 					
 				}
 				//End of additions
-				double speed = this.Train.Cars[this.Train.DriverCar].Specs.CurrentPerceivedSpeed;
+				double speed = this.Train.Cars[this.Train.DriverCar].Specs.PerceivedSpeed;
 				double bcPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure;
 				double mrPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.mainReservoir.CurrentPressure;
 				double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;

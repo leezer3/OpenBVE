@@ -7,7 +7,6 @@
 
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
-using SoundManager;
 using TrainManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
@@ -22,16 +21,8 @@ namespace OpenBve {
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
 		
-		// cars
-		internal struct CarSpecs {
-			internal bool IsMotorCar;
-			internal double CurrentPerceivedSpeed;
-			internal double CurrentAcceleration;
-			internal double CurrentAccelerationOutput;
-		}
-		
 		internal class Car : AbstractCar {
-			internal CarSpecs Specs;
+			internal CarPhysics Specs = new CarPhysics();
 			internal CarBrake CarBrake;
 			internal readonly Door[] Doors;
 			internal Car(Train train)

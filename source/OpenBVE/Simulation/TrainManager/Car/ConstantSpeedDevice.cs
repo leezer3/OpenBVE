@@ -35,7 +35,7 @@ namespace OpenBve
 				if (Program.CurrentRoute.SecondsSinceMidnight >= this.NextUpdateTime)
 				{
 					this.NextUpdateTime = Program.CurrentRoute.SecondsSinceMidnight + UpdateInterval;
-					this.CurrentAccelerationOutput -= 0.8 * this.Car.Specs.CurrentAcceleration * (double)ReverserPosition;
+					this.CurrentAccelerationOutput -= 0.8 * this.Car.Specs.Acceleration * (double)ReverserPosition;
 					if (this.CurrentAccelerationOutput < 0.0)
 					{
 						this.CurrentAccelerationOutput = 0.0;

@@ -57,6 +57,7 @@
     <Compile Include="Car\Door.cs" />
     <Compile Include="Car\Door.DoorModes.cs" />
     <Compile Include="Car\Door.TrainDoorState.cs" />
+    <Compile Include="Car\Physics.cs" />
     <Compile Include="Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Handles\AbstractHandle.cs" />
     <Compile Include="Handles\CabHandles.cs" />

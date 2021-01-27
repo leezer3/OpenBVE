@@ -608,7 +608,7 @@ namespace OpenBve
 					for (int i = 0; i < Cars.Length; i++)
 					{
 						Cars[i].CurrentSpeed = 0.0;
-						Cars[i].Specs.CurrentAccelerationOutput = 0.0;
+						Cars[i].Specs.MotorAcceleration = 0.0;
 					}
 					return;
 				}
@@ -800,10 +800,10 @@ namespace OpenBve
 				double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].Specs.CurrentAcceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
+					Cars[i].Specs.Acceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
 					Cars[i].CurrentSpeed = NewSpeeds[i];
 					CurrentSpeed += NewSpeeds[i];
-					Specs.CurrentAverageAcceleration += Cars[i].Specs.CurrentAcceleration;
+					Specs.CurrentAverageAcceleration += Cars[i].Specs.Acceleration;
 				}
 				double invcarlen = 1.0 / (double)Cars.Length;
 				CurrentSpeed *= invcarlen;
