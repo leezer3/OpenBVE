@@ -109,7 +109,7 @@ namespace OpenBveApi.Objects
 		public bool isTimeTableObject;
 		/// <summary>Sets whether the openGL VAO should be updated by the renderer this frame</summary>
 		public bool UpdateVAO;
-
+		
 		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host)
 		{

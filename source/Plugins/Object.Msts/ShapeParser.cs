@@ -309,7 +309,6 @@ namespace Plugin
 
 						Object.Mesh.Materials[mm + i].EmissiveColor = materials[i].EmissiveColor;
 						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
-						Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
 						Object.Mesh.Materials[mm + i].GlowAttenuationData = materials[i].GlowAttenuationData;
 						Object.Mesh.Materials[mm + i].WrapMode = materials[i].WrapMode;
 					}

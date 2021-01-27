@@ -974,7 +974,7 @@ namespace LibRender2
 				distanceFactor = 1.0f;
 			}
 
-			float blendFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+			float blendFactor = inv255 * State.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
 			if (blendFactor > 1.0)
 			{
 				blendFactor = 1.0f;
@@ -1210,7 +1210,7 @@ namespace LibRender2
 				distanceFactor = 1.0f;
 			}
 
-			float blendFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+			float blendFactor = inv255 * State.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
 			if (blendFactor > 1.0)
 			{
 				blendFactor = 1.0f;

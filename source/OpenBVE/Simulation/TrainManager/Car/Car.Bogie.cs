@@ -106,10 +106,7 @@ namespace OpenBve
 						// brightness change
 						if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
 						{
-							for (int j = 0; j < CarSections[cs].Groups[0].Elements[i].internalObject.Prototype.Mesh.Materials.Length; j++)
-							{
-								CarSections[cs].Groups[0].Elements[i].internalObject.Prototype.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
-							}
+							CarSections[cs].Groups[0].Elements[i].internalObject.DaytimeNighttimeBlend = dnb;
 						}
 					}
 				}

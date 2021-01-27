@@ -6,7 +6,7 @@ namespace OpenBveApi.Objects
 	/// <summary>A single internal state of an Object</summary>
 	public class ObjectState : ICloneable
 	{
-		/// <summary>The prototype static object</summary>
+		/// <summary>A reference to the prototype static object</summary>
 		public StaticObject Prototype;
 		/// <summary>The translation matrix to be applied</summary>
 		private Matrix4D _translation;
@@ -16,7 +16,9 @@ namespace OpenBveApi.Objects
 		private Matrix4D _rotate;
 		/// <summary>The world position vector</summary>
 		public Vector3 WorldPosition;
-
+		/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
+		public byte DaytimeNighttimeBlend = 0;
+		
 		/// <summary>The translation matrix to be applied</summary>
 		public Matrix4D Translation
 		{

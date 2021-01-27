@@ -143,7 +143,6 @@ namespace OpenBveApi.Objects
 						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
 					}
 
-					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
 					Object.Mesh.Materials[mm + i].BlendMode = Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Materials[i].GlowAttenuationData;
 					Object.Mesh.Materials[mm + i].WrapMode = Materials[i].WrapMode;
