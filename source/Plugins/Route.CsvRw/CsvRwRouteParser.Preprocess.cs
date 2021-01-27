@@ -345,7 +345,7 @@ namespace CsvRwRouteParser
 										continueWithNextExpression = true;
 										break;
 									}
-									string[] args = s.Split(new char[] { ';' });
+									string[] args = s.Split(new[] { ';' });
 									for (int ia = 0; ia < args.Length; ia++) {
 										args[ia] = args[ia].Trim(new char[] { });
 									}

@@ -226,7 +226,7 @@ namespace CsvRwRouteParser
 
 					if (Arguments.Length == 1 && Arguments[0].IndexOf(',') != -1)
 					{
-						Arguments = Arguments[0].Split(new char[] { ',' });
+						Arguments = Arguments[0].Split(new[] { ',' });
 					}
 					if (Arguments.Length != 2)
 					{

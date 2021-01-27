@@ -299,7 +299,7 @@ namespace OpenBveApi.FileSystem {
 								}
 								break;
 							case "managedcontent":
-								system.ManagedContentFolders = value.Split(new char[] { ',' });
+								system.ManagedContentFolders = value.Split(new[] { ',' });
 								for (int i = 0; i < system.ManagedContentFolders.Length; i++)
 								{
 									system.ManagedContentFolders[i] = GetAbsolutePath(system.ManagedContentFolders[i].Trim(new char[] { }), true);

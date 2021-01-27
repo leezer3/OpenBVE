@@ -154,7 +154,7 @@ namespace OpenBve.Parsers.Train
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "power":
-										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(new char[] { ';' });
+										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(new[] { ';' });
 										for (int j = 0; j < Train.Handles.Power.NotchDescriptions.Length; j++)
 										{
 											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Power.NotchDescriptions[j]);
@@ -165,7 +165,7 @@ namespace OpenBve.Parsers.Train
 										}
 										break;
 									case "brake":
-										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(new char[] { ';' });
+										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(new[] { ';' });
 										for (int j = 0; j < Train.Handles.Brake.NotchDescriptions.Length; j++)
 										{
 											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Brake.NotchDescriptions[j]);
@@ -180,7 +180,7 @@ namespace OpenBve.Parsers.Train
 										{
 											continue;
 										}
-										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(new char[] { ';' });
+										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(new[] { ';' });
 										for (int j = 0; j < Train.Handles.LocoBrake.NotchDescriptions.Length; j++)
 										{
 											Size s = Fonts.NormalFont.MeasureString(Train.Handles.LocoBrake.NotchDescriptions[j]);
@@ -191,7 +191,7 @@ namespace OpenBve.Parsers.Train
 										}
 										break;
 									case "reverser":
-										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(new char[] { ';' });
+										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(new[] { ';' });
 										for (int j = 0; j < Train.Handles.Reverser.NotchDescriptions.Length; j++)
 										{
 											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Reverser.NotchDescriptions[j]);

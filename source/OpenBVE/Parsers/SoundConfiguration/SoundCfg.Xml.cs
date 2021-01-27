@@ -636,7 +636,7 @@ namespace OpenBve
 						}
 						break;
 					case "position":
-						string[] Arguments = c.InnerText.Split(new char[] { ',' });
+						string[] Arguments = c.InnerText.Split(new[] { ',' });
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{
@@ -707,7 +707,7 @@ namespace OpenBve
 						}
 						break;
 					case "position":
-						string[] Arguments = c.InnerText.Split(new char[] { ',' });
+						string[] Arguments = c.InnerText.Split(new[] { ',' });
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{

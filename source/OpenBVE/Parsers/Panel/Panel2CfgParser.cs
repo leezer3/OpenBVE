@@ -686,7 +686,7 @@ namespace OpenBve {
 													break;
 												case "direction":
 													{
-														string[] s = Value.Split( new char[] { ',' });
+														string[] s = Value.Split( new[] { ',' });
 														if (s.Length == 2)
 														{
 															double x, y;

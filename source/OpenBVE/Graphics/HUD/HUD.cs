@@ -56,7 +56,7 @@ namespace OpenBve
 								if (j >= 0)
 								{
 									string Command = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-									string[] Arguments = Lines[i].Substring(j + 1).TrimStart().Split(new char[] {','}, StringSplitOptions.None);
+									string[] Arguments = Lines[i].Substring(j + 1).TrimStart().Split(new[] { ','}, StringSplitOptions.None);
 									for (j = 0; j < Arguments.Length; j++)
 									{
 										Arguments[j] = Arguments[j].Trim(new char[] { });

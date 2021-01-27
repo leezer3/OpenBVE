@@ -384,7 +384,7 @@ namespace Plugin
 					if (splitStrings[i].StartsWith("rauch"))
 					{
 						//Smoke (e.g. steam loco)
-						string[] finalStrings = splitStrings[i].Split(new char[] {'_'});
+						string[] finalStrings = splitStrings[i].Split(new[] { '_'});
 						switch (finalStrings[1])
 						{
 							case "stand":

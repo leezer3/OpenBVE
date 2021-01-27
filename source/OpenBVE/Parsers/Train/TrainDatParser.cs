@@ -62,7 +62,7 @@ namespace OpenBve {
 				if(Lines[i].EndsWith(","))
 				{
 					//File edited with MSExcel may have additional commas at the end of a line
-					Lines[i] = Lines[i].TrimEnd(new char[] { ','});
+					Lines[i] = Lines[i].TrimEnd(new[] { ','});
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
@@ -139,7 +139,7 @@ namespace OpenBve {
 			double CoefficientOfStaticFriction = 0.35;
 			double CoefficientOfRollingResistance = 0.0025;
 			double AerodynamicDragCoefficient = 1.1;
-			BveAccelerationCurve[] AccelerationCurves = new BveAccelerationCurve[] { };
+			BveAccelerationCurve[] AccelerationCurves = { };
 			Vector3 Driver = new Vector3();
 			int DriverCar = 0;
 			double MotorCarMass = 1.0, TrailerCarMass = 1.0;
@@ -285,7 +285,7 @@ namespace OpenBve {
 									case 0:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+											powerDelayUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -296,7 +296,7 @@ namespace OpenBve {
 									case 1:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+											powerDelayDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -307,7 +307,7 @@ namespace OpenBve {
 									case 2:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+											brakeDelayUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -318,7 +318,7 @@ namespace OpenBve {
 									case 3:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+											brakeDelayDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -328,7 +328,7 @@ namespace OpenBve {
 									case 4:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											locoBrakeDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+											locoBrakeDelayUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -338,7 +338,7 @@ namespace OpenBve {
 									case 5:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											locoBrakeDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+											locoBrakeDelayDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{

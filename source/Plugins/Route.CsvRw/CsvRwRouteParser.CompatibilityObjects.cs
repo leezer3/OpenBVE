@@ -285,7 +285,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											names = c.InnerText.Split(new char[] { ';' });
+											names = c.InnerText.Split(new[] { ';' });
 										}
 										break;
 									case "path":
@@ -339,7 +339,7 @@ namespace CsvRwRouteParser
 											}
 											else
 											{
-												names = c.InnerText.Split(new char[] { ';' });
+												names = c.InnerText.Split(new[] { ';' });
 											}
 											break;
 										case "path":

@@ -440,22 +440,22 @@ namespace TrainEditor {
 								switch (n)
 								{
 									case 0:
-										t.Delay.DelayPowerUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 1:
-										t.Delay.DelayPowerDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 2:
-										t.Delay.DelayBrakeUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 3:
-										t.Delay.DelayBrakeDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 4:
-										t.Delay.DelayLocoBrakeUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayLocoBrakeUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 5:
-										t.Delay.DelayLocoBrakeDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayLocoBrakeDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 								}
 							}
