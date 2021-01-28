@@ -24,7 +24,7 @@ namespace OpenBve
 			Train.Derailed = false;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i].Specs.CurrentRollDueToTopplingAngle = 0.0;
+				Train.Cars[i].Specs.RollDueToTopplingAngle = 0.0;
 				Train.Cars[i].Derailed = false;
 			}
 		}

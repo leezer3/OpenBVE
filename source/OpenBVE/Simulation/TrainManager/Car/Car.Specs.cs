@@ -19,13 +19,7 @@ namespace OpenBve
 			internal double UnexposedFrontalArea;
 			internal double CenterOfGravityHeight;
 			internal double CriticalTopplingAngle;
-			/// current data
 			
-			internal double CurrentRollDueToTopplingAngle;
-			internal double CurrentRollDueToCantAngle;
-			internal double CurrentRollDueToShakingAngle;
-			internal double CurrentRollDueToShakingAngularSpeed;
-			internal double CurrentRollShakeDirection;
 			internal double CurrentPitchDueToAccelerationAngle;
 			internal double CurrentPitchDueToAccelerationAngularSpeed;
 			internal double CurrentPitchDueToAccelerationTargetAngle;

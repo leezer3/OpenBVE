@@ -867,14 +867,8 @@ namespace OpenBve
 					s = new Vector3(ez, 0.0, -ex);
 					Up = Vector3.Cross(d, s);
 				}
-				// cant and radius
-				double c;
-				{
-					double ca = FrontAxle.Follower.CurveCant;
-					double cb = RearAxle.Follower.CurveCant;
-					c = Math.Tan(0.5 * (Math.Atan(ca) + Math.Atan(cb)));
-				}
-				double r, rs;
+				
+				double r = 0.0, rs = 0.0;
 				if (FrontAxle.Follower.CurveRadius != 0.0 & RearAxle.Follower.CurveRadius != 0.0)
 				{
 					r = Math.Sqrt(Math.Abs(FrontAxle.Follower.CurveRadius * RearAxle.Follower.CurveRadius));
@@ -890,37 +884,29 @@ namespace OpenBve
 					r = Math.Abs(RearAxle.Follower.CurveRadius);
 					rs = (double)Math.Sign(RearAxle.Follower.CurveRadius);
 				}
-				else
-				{
-					r = 0.0;
-					rs = 0.0;
-				}
 				// roll due to shaking
 				{
 
-					double a0 = Specs.CurrentRollDueToShakingAngle;
-					double a1;
-					if (Specs.CurrentRollShakeDirection != 0.0)
+					double a0 = Specs.RollDueToShakingAngle;
+					double a1 = 0.0;
+					if (Specs.RollShakeDirection != 0.0)
 					{
 						const double c0 = 0.03;
 						const double c1 = 0.15;
-						a1 = c1 * Math.Atan(c0 * Specs.CurrentRollShakeDirection);
-						double dr = 0.5 + Specs.CurrentRollShakeDirection * Specs.CurrentRollShakeDirection;
-						if (Specs.CurrentRollShakeDirection < 0.0)
+						a1 = c1 * Math.Atan(c0 * Specs.RollShakeDirection);
+						double dr = 0.5 + Specs.RollShakeDirection * Specs.RollShakeDirection;
+						if (Specs.RollShakeDirection < 0.0)
 						{
-							Specs.CurrentRollShakeDirection += dr * TimeElapsed;
-							if (Specs.CurrentRollShakeDirection > 0.0) Specs.CurrentRollShakeDirection = 0.0;
+							Specs.RollShakeDirection += dr * TimeElapsed;
+							if (Specs.RollShakeDirection > 0.0) Specs.RollShakeDirection = 0.0;
 						}
 						else
 						{
-							Specs.CurrentRollShakeDirection -= dr * TimeElapsed;
-							if (Specs.CurrentRollShakeDirection < 0.0) Specs.CurrentRollShakeDirection = 0.0;
+							Specs.RollShakeDirection -= dr * TimeElapsed;
+							if (Specs.RollShakeDirection < 0.0) Specs.RollShakeDirection = 0.0;
 						}
 					}
-					else
-					{
-						a1 = 0.0;
-					}
+					
 					double SpringAcceleration;
 					if (!Derailed)
 					{
@@ -931,23 +917,23 @@ namespace OpenBve
 						SpringAcceleration = 1.5 * Math.Abs(a1 - a0);
 					}
 					double SpringDeceleration = 0.25 * SpringAcceleration;
-					Specs.CurrentRollDueToShakingAngularSpeed += (double)Math.Sign(a1 - a0) * SpringAcceleration * TimeElapsed;
-					double x = (double)Math.Sign(Specs.CurrentRollDueToShakingAngularSpeed) * SpringDeceleration * TimeElapsed;
-					if (Math.Abs(x) < Math.Abs(Specs.CurrentRollDueToShakingAngularSpeed))
+					Specs.RollDueToShakingAngularSpeed += (double)Math.Sign(a1 - a0) * SpringAcceleration * TimeElapsed;
+					double x = (double)Math.Sign(Specs.RollDueToShakingAngularSpeed) * SpringDeceleration * TimeElapsed;
+					if (Math.Abs(x) < Math.Abs(Specs.RollDueToShakingAngularSpeed))
 					{
-						Specs.CurrentRollDueToShakingAngularSpeed -= x;
+						Specs.RollDueToShakingAngularSpeed -= x;
 					}
 					else
 					{
-						Specs.CurrentRollDueToShakingAngularSpeed = 0.0;
+						Specs.RollDueToShakingAngularSpeed = 0.0;
 					}
-					a0 += Specs.CurrentRollDueToShakingAngularSpeed * TimeElapsed;
-					Specs.CurrentRollDueToShakingAngle = a0;
+					a0 += Specs.RollDueToShakingAngularSpeed * TimeElapsed;
+					Specs.RollDueToShakingAngle = a0;
 				}
 				// roll due to cant (incorporates shaking)
 				{
-					double cantAngle = Math.Atan(c / Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
-					Specs.CurrentRollDueToCantAngle = cantAngle + Specs.CurrentRollDueToShakingAngle;
+					double cantAngle = Math.Atan(Math.Tan(0.5 * (Math.Atan(FrontAxle.Follower.CurveCant) + Math.Atan(RearAxle.Follower.CurveCant))) / Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
+					Specs.RollDueToCantAngle = cantAngle + Specs.RollDueToShakingAngle;
 				}
 				// pitch due to acceleration
 				{
@@ -1014,7 +1000,7 @@ namespace OpenBve
 				// derailment
 				if (Interface.CurrentOptions.Derailments & !Derailed)
 				{
-					double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
+					double a = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
 					double sa = (double)Math.Sign(a);
 					if (a * sa > Specs.CriticalTopplingAngle)
 					{
@@ -1024,8 +1010,8 @@ namespace OpenBve
 				// toppling roll
 				if (Interface.CurrentOptions.Toppling | Derailed)
 				{
-					double a = Specs.CurrentRollDueToTopplingAngle;
-					double ab = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
+					double a = Specs.RollDueToTopplingAngle;
+					double ab = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
 					double h = Specs.CenterOfGravityHeight;
 					double sr = Math.Abs(CurrentSpeed);
 					double rmax = 2.0 * h * sr * sr / (Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
@@ -1057,15 +1043,11 @@ namespace OpenBve
 							ta = 0.0;
 						}
 					}
-					double td;
+					double td = 1.0;
 					if (Derailed)
 					{
 						td = Math.Abs(ab);
 						if (td < 0.1) td = 0.1;
-					}
-					else
-					{
-						td = 1.0;
 					}
 					if (a > ta)
 					{
@@ -1079,15 +1061,15 @@ namespace OpenBve
 						if (td > da) td = da;
 						a += td * TimeElapsed;
 					}
-					Specs.CurrentRollDueToTopplingAngle = a;
+					Specs.RollDueToTopplingAngle = a;
 				}
 				else
 				{
-					Specs.CurrentRollDueToTopplingAngle = 0.0;
+					Specs.RollDueToTopplingAngle = 0.0;
 				}
 				// apply position due to cant/toppling
 				{
-					double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
+					double a = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
 					double x = Math.Sign(a) * 0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
 					double y = Math.Abs(0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 					Vector3 cc = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
@@ -1096,7 +1078,7 @@ namespace OpenBve
 				}
 				// apply rolling
 				{
-					double a = -Specs.CurrentRollDueToTopplingAngle - Specs.CurrentRollDueToCantAngle;
+					double a = -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle;
 					double cosa = Math.Cos(a);
 					double sina = Math.Sin(a);
 					s.Rotate(d, cosa, sina);
@@ -1120,7 +1102,7 @@ namespace OpenBve
 				}
 				// spring sound
 				{
-					double a = Specs.CurrentRollDueToShakingAngle;
+					double a = Specs.RollDueToShakingAngle;
 					double diff = a - Sounds.SpringPlayedAngle;
 					const double angleTolerance = 0.001;
 					if (diff < -angleTolerance)

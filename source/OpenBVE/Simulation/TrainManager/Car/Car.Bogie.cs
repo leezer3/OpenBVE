@@ -261,8 +261,8 @@ namespace OpenBve
 					//TODO: This currently uses the figures from the base car
 					// apply position due to cant/toppling
 					{
-						double a = baseCar.Specs.CurrentRollDueToTopplingAngle +
-						           baseCar.Specs.CurrentRollDueToCantAngle;
+						double a = baseCar.Specs.RollDueToTopplingAngle +
+						           baseCar.Specs.RollDueToCantAngle;
 						double x = Math.Sign(a) * 0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
 						double y = Math.Abs(0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 						Vector3 c = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
@@ -271,8 +271,8 @@ namespace OpenBve
 					}
 					// apply rolling
 					{
-						double a = -baseCar.Specs.CurrentRollDueToTopplingAngle -
-						           baseCar.Specs.CurrentRollDueToCantAngle;
+						double a = -baseCar.Specs.RollDueToTopplingAngle -
+						           baseCar.Specs.RollDueToCantAngle;
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
 						s.Rotate(d, cosa, sina);

@@ -352,10 +352,10 @@ namespace OpenBve
 								if (r >= Program.RandomNumberGenerator.NextDouble())
 								{
 									int d =
-										(int) Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double) Train.Cars[j].Doors.Length);
+										(int) Math.Floor(Program.RandomNumberGenerator.NextDouble() * Train.Cars[j].Doors.Length);
 									if (Train.Cars[j].Doors[d].State == 1.0)
 									{
-										Train.Cars[j].Specs.CurrentRollShakeDirection += (double) Train.Cars[j].Doors[d].Direction;
+										Train.Cars[j].Specs.RollShakeDirection += Train.Cars[j].Doors[d].Direction;
 									}
 								}
 							}
