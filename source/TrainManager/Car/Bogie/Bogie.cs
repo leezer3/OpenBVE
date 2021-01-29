@@ -83,7 +83,7 @@ namespace TrainManager.Car
 			// determine visibility
 			Vector3 cd = new Vector3(p - TrainManagerBase.Renderer.Camera.AbsolutePosition);
 			double dist = cd.NormSquared();
-			double bid = TrainManagerBase.Renderer.Camera.ForwardViewingDistance + Length;
+			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + Length;
 			CurrentlyVisible = dist < bid * bid;
 			// brightness
 			byte dnb;
