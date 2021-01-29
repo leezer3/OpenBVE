@@ -11,6 +11,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using TrainManager.Car;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve.Parsers.Panel

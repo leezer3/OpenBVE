@@ -2,16 +2,16 @@
 using OpenBveApi.Interface;
 using SoundManager;
 
-namespace OpenBve
+namespace TrainManager.Car
 {
-	internal class WindscreenWiper
+	public class WindscreenWiper
 	{
 		/// <summary>The car sound played when 20% or less drops are visible</summary>
-		internal CarSound DryWipeSound;
+		public CarSound DryWipeSound;
 		/// <summary>The car sound played when 20% or more drops are visible</summary>
-		internal CarSound WetWipeSound;
+		public CarSound WetWipeSound;
 		/// <summary>The car sound played when the wipers are activated or deactivated</summary>
-		internal CarSound SwitchSound;
+		public CarSound SwitchSound;
 		/// <summary>The time for which the wiper pauses at the hold position</summary>
 		internal double HoldTime;
 		/// <summary>The wiper rest position</summary>
@@ -20,11 +20,11 @@ namespace OpenBve
 		internal WiperPosition HoldPosition;
 		/// <summary>The current wiper position</summary>
 		/// <remarks>Range of 0 to 100</remarks>
-		internal int CurrentPosition;
+		public int CurrentPosition;
 		/// <summary>The time taken to move 1 position unit in seconds</summary>
 		internal double MovementSpeed;
 		/// <summary>The current speed</summary>
-		internal WiperSpeed CurrentSpeed;
+		public WiperSpeed CurrentSpeed;
 
 		private readonly Windscreen Windscreen;
 		private WiperPosition currentDirection;
@@ -32,7 +32,7 @@ namespace OpenBve
 		private double holdTimer;
 		private bool soundTriggered;
 
-		internal WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition, double wipeSpeed, double holdTime)
+		public WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition, double wipeSpeed, double holdTime)
 		{
 			RestPosition = restPosition;
 			HoldPosition = holdPosition;
@@ -44,9 +44,13 @@ namespace OpenBve
 		}
 
 		/// <summary>Changes the wiper speed</summary>
-		internal void ChangeSpeed(Translations.Command Command)
+		public void ChangeSpeed(Translations.Command Command)
 		{
-			Program.Sounds.PlayCarSound(SwitchSound, 1.0, 1.0, Windscreen.Car, false);
+			if (SwitchSound.Buffer != null)
+			{
+				TrainManagerBase.currentHost.PlaySound(SwitchSound.Buffer, 1.0, 1.0, SwitchSound.Position, Windscreen.Car, false);
+			}
+			
 			switch (Command)
 			{
 				case Translations.Command.WiperSpeedUp:
@@ -65,6 +69,8 @@ namespace OpenBve
 			
 		}
 
+		/// <summary>Updates the windscreen wipers</summary>
+		/// <param name="TimeElapsed">The time elapsed since the last call to this method</param>
 		internal void Update(double TimeElapsed)
 		{
 			wiperTimer += TimeElapsed;
@@ -187,7 +193,10 @@ namespace OpenBve
 						{
 							if (soundTriggered == false)
 							{
-								Program.Sounds.PlayCarSound(WetWipeSound, 1.0, 1.0, Windscreen.Car, false);
+								if (WetWipeSound.Buffer != null)
+								{
+									TrainManagerBase.currentHost.PlaySound(WetWipeSound.Buffer, 1.0, 1.0, WetWipeSound.Position, Windscreen.Car, false);
+								}
 								soundTriggered = true;
 							}
 						}
@@ -195,7 +204,10 @@ namespace OpenBve
 						{
 							if (soundTriggered == false)
 							{
-								Program.Sounds.PlayCarSound(DryWipeSound, 1.0, 1.0, Windscreen.Car, false);
+								if (DryWipeSound.Buffer != null)
+								{
+									TrainManagerBase.currentHost.PlaySound(DryWipeSound.Buffer, 1.0, 1.0, DryWipeSound.Position, Windscreen.Car, false);
+								}
 								soundTriggered = true;
 							}
 						}
@@ -208,7 +220,10 @@ namespace OpenBve
 						{
 							if (soundTriggered == false)
 							{
-								Program.Sounds.PlayCarSound(WetWipeSound, 1.0, 1.0, Windscreen.Car, false);
+								if (WetWipeSound.Buffer != null)
+								{
+									TrainManagerBase.currentHost.PlaySound(WetWipeSound.Buffer, 1.0, 1.0, WetWipeSound.Position, Windscreen.Car, false);
+								}
 								soundTriggered = true;
 							}
 						}
@@ -216,7 +231,10 @@ namespace OpenBve
 						{
 							if (soundTriggered == false)
 							{
-								Program.Sounds.PlayCarSound(DryWipeSound, 1.0, 1.0, Windscreen.Car, false);
+								if (DryWipeSound.Buffer != null)
+								{
+									TrainManagerBase.currentHost.PlaySound(DryWipeSound.Buffer, 1.0, 1.0, DryWipeSound.Position, Windscreen.Car, false);
+								}
 								soundTriggered = true;
 							}
 						}
@@ -228,7 +246,7 @@ namespace OpenBve
 			{
 				Windscreen.RainDrops[dropToRemove].Visible = false;
 				Windscreen.RainDrops[dropToRemove].IsSnowFlake = false;
-				Windscreen.RainDrops[dropToRemove].RemainingLife = 0.5 * Program.RandomNumberGenerator.NextDouble() * Windscreen.DropLife;
+				Windscreen.RainDrops[dropToRemove].RemainingLife = 0.5 * TrainManagerBase.RandomNumberGenerator.NextDouble() * Windscreen.DropLife;
 				Windscreen.currentDrops--;
 			}
 		}

@@ -28,7 +28,6 @@ namespace TrainEditor2.Simulation.TrainManager
 			internal void InitializeCarSounds()
 			{
 				Sounds.Run = new CarSound[] { };
-				Sounds.RunVolume = new double[] { };
 			}
 
 			internal void UpdateRunSounds(double TimeElapsed, int RunIndex)
@@ -47,24 +46,24 @@ namespace TrainEditor2.Simulation.TrainManager
 				{
 					if (j == RunIndex)
 					{
-						Sounds.RunVolume[j] += 3.0 * TimeElapsed;
+						Sounds.Run[j].TargetVolume += 3.0 * TimeElapsed;
 
-						if (Sounds.RunVolume[j] > 1.0)
+						if (Sounds.Run[j].TargetVolume > 1.0)
 						{
-							Sounds.RunVolume[j] = 1.0;
+							Sounds.Run[j].TargetVolume = 1.0;
 						}
 					}
 					else
 					{
-						Sounds.RunVolume[j] -= 3.0 * TimeElapsed;
+						Sounds.Run[j].TargetVolume -= 3.0 * TimeElapsed;
 
-						if (Sounds.RunVolume[j] < 0.0)
+						if (Sounds.Run[j].TargetVolume < 0.0)
 						{
-							Sounds.RunVolume[j] = 0.0;
+							Sounds.Run[j].TargetVolume = 0.0;
 						}
 					}
 
-					double gain = baseGain * Sounds.RunVolume[j];
+					double gain = baseGain * Sounds.Run[j].TargetVolume;
 
 					if (Program.SoundApi.IsPlaying(Sounds.Run[j].Source))
 					{
@@ -221,10 +220,7 @@ namespace TrainEditor2.Simulation.TrainManager
 
 					Sounds.Run[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center);
 				}
-
-				Sounds.RunVolume = new double[Sounds.Run.Length];
-
-
+				
 				// motor sound
 				Sounds.Motor.Position = center;
 

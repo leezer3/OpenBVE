@@ -62,6 +62,11 @@
     <Compile Include="Car\Door.TrainDoorState.cs" />
     <Compile Include="Car\Physics.cs" />
     <Compile Include="Car\ReadhesionDevice.Types.cs" />
+    <Compile Include="Car\Windscreen\Raindrop.cs" />
+    <Compile Include="Car\Windscreen\Windscreen.cs" />
+    <Compile Include="Car\Windscreen\Wiper.cs" />
+    <Compile Include="Car\Windscreen\WiperPosition.cs" />
+    <Compile Include="Car\Windscreen\WiperSpeed.cs" />
     <Compile Include="Handles\AbstractHandle.cs" />
     <Compile Include="Handles\CabHandles.cs" />
     <Compile Include="Handles\HandleChange.cs" />

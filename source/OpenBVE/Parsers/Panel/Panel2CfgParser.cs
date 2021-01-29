@@ -14,6 +14,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.FunctionScripting;
 using OpenTK.Graphics.ES20;
 using Path = OpenBveApi.Path;
+using TrainManager.Car;
 
 namespace OpenBve {
 	internal static class Panel2CfgParser {

@@ -1,4 +1,4 @@
-﻿namespace OpenBve
+﻿namespace TrainManager.Car
 {
 	/// <summary>Wiper positions</summary>
 	public enum WiperPosition

@@ -1,4 +1,5 @@
-﻿using LibRender2;
+﻿using System;
+using LibRender2;
 using OpenBveApi.Hosts;
 
 namespace TrainManager
@@ -8,5 +9,6 @@ namespace TrainManager
 	{
 		public static HostInterface currentHost;
 		public static BaseRenderer Renderer;
+		internal static Random RandomNumberGenerator = new Random();
 	}
 }

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using SoundManager;
 
-namespace OpenBve
+namespace TrainManager.Car
 {
 	/// <summary>Represents a train windscreen</summary>
-	internal class Windscreen
+	public class Windscreen
 	{
 		/// <summary>Whether currently raining</summary>
 		internal bool CurrentlyRaining
@@ -29,23 +29,25 @@ namespace OpenBve
 				return Math.Max(Car.FrontAxle.Follower.RainIntensity, Car.FrontAxle.Follower.SnowIntensity);
 			}
 		}
-		
+		/// <summary>Backing property storing the current legacy rain intensity</summary>
 		private int rainIntensity;
-		internal bool legacyRainEvents;
+		/// <summary>Whether legacy rain events are in use</summary>
+		public bool legacyRainEvents;
 		/// <summary>The raindrop array</summary>
-		internal Raindrop[] RainDrops;
+		public Raindrop[] RainDrops;
 		/// <summary>The sound played when a raindrop hits the windscreen</summary>
-		internal CarSound DropSound = new CarSound();
+		public CarSound DropSound = new CarSound();
 		/// <summary>The windscreen wipers</summary>
-		internal WindscreenWiper Wipers;
+		public WindscreenWiper Wipers;
 		/// <summary>Holds a reference to the base car</summary>
-		internal readonly TrainManager.Car Car;
+		internal readonly CarBase Car;
 		/// <summary>The median shortest life of a drop on the windscreen before it dries</summary>
 		internal readonly double DropLife;
 		private double dropTimer;
-		internal int currentDrops;
+		/// <summary>The number of drops currently visible on the windscreen</summary>
+		public int currentDrops;
 
-		internal Windscreen(int numberOfDrops, double dropLife, TrainManager.Car car)
+		public Windscreen(int numberOfDrops, double dropLife, CarBase car)
 		{
 			RainDrops = new Raindrop[numberOfDrops];
 			DropLife = dropLife;
@@ -53,7 +55,8 @@ namespace OpenBve
 			Car = car;
 		}
 
-		internal void SetRainIntensity(int intensity)
+		/// <summary>Sets the legacy rain intensity</summary>
+		public void SetRainIntensity(int intensity)
 		{
 			//Must assume that the .rain command and legacy rain are not mixed in a routefile
 			legacyRainEvents = true;
@@ -68,7 +71,9 @@ namespace OpenBve
 			rainIntensity = intensity;
 		}
 
-		internal void Update(double TimeElapsed)
+		/// <summary>Updates the windscreen</summary>
+		/// <param name="TimeElapsed">The time elapsed since the previous call to this method</param>
+		public void Update(double TimeElapsed)
 		{
 			if (RainDrops == null || RainDrops.Length == 0)
 			{
@@ -80,7 +85,7 @@ namespace OpenBve
 				int nextDrop = PickDrop();
 				dropTimer += TimeElapsed * 1000;
 				var dev = (int)(0.4 * 2000 / Intensity);
-				int dropInterval =  2000 / Intensity + Program.RandomNumberGenerator.Next(dev, dev * 2);
+				int dropInterval =  2000 / Intensity + TrainManagerBase.RandomNumberGenerator.Next(dev, dev * 2);
 				if (dropTimer > dropInterval)
 				{
 					if (nextDrop != -1)
@@ -92,17 +97,20 @@ namespace OpenBve
 						RainDrops[nextDrop].Visible = true;
 						if (!legacyRainEvents)
 						{
-							int snowProbability = Program.RandomNumberGenerator.Next(100);
+							int snowProbability = TrainManagerBase.RandomNumberGenerator.Next(100);
 							if ((snowProbability < Car.FrontAxle.Follower.SnowIntensity) || Car.FrontAxle.Follower.RainIntensity == 0)
 							{
 								//Either we've met the snow probability roll (mixed snow and rain) or not raining
 								RainDrops[nextDrop].IsSnowFlake = true;
 							}
 						}
-						RainDrops[nextDrop].RemainingLife = Program.RandomNumberGenerator.NextDouble() * DropLife;
+						RainDrops[nextDrop].RemainingLife = TrainManagerBase.RandomNumberGenerator.NextDouble() * DropLife;
 					}
 					//We want to play the drop sound even if all drops are currently visible (e.g. the wipers are off and it's still raining)
-					Program.Sounds.PlayCarSound(DropSound, 1.0, 1.0, Car, false);
+					if (DropSound.Buffer != null)
+					{
+						TrainManagerBase.currentHost.PlaySound(DropSound.Buffer, 1.0, 1.0, DropSound.Position, Car, false);
+					}
 					dropTimer = 0.0;
 				}
 			}
@@ -115,7 +123,7 @@ namespace OpenBve
 					RainDrops[i].Visible = false;
 					RainDrops[i].IsSnowFlake = false;
 					currentDrops--;
-					RainDrops[i].RemainingLife = 0.5 * Program.RandomNumberGenerator.NextDouble() * DropLife;
+					RainDrops[i].RemainingLife = 0.5 * TrainManagerBase.RandomNumberGenerator.NextDouble() * DropLife;
 				}
 			}
 			Wipers.Update(TimeElapsed);
@@ -131,7 +139,7 @@ namespace OpenBve
 					availableDrops.Add(i);
 				}
 			}
-			return availableDrops.Count != 0 ? availableDrops[Program.RandomNumberGenerator.Next(availableDrops.Count)] : -1;
+			return availableDrops.Count != 0 ? availableDrops[TrainManagerBase.RandomNumberGenerator.Next(availableDrops.Count)] : -1;
 		}
 	}
 }

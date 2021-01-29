@@ -34,21 +34,12 @@ namespace OpenBve
 			internal CarSounds Sounds;
 			
 			
-
-			internal Windscreen Windscreen;
-			internal double BeaconReceiverPosition;
-			internal TrackFollower BeaconReceiver;
 			/// <summary>Whether loading sway is enabled for this car</summary>
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
 			internal readonly Train baseTrain;
 
-			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
-			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
-
-			internal CameraRestriction CameraRestriction;
-			/// <summary>Stores the camera interior camera alignment for this car</summary>
-			internal CameraAlignment InteriorCamera;
+			
 
 			internal bool HasInteriorView = false;
 			

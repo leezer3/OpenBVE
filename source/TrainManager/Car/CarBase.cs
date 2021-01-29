@@ -1,5 +1,9 @@
-﻿using LibRender2.Trains;
+﻿using LibRender2.Camera;
+using LibRender2.Cameras;
+using LibRender2.Trains;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using TrainManager.BrakeSystems;
 using TrainManager.Power;
@@ -41,5 +45,17 @@ namespace TrainManager.Car
 		public Coupler Coupler;
 		/// <summary>The breaker</summary>
 		public Breaker Breaker;
+		/// <summary>The windscreen</summary>
+		public Windscreen Windscreen;
+		/// <summary>The position of the beacon reciever within the car</summary>
+		public double BeaconReceiverPosition;
+		/// <summary>The beacon reciever</summary>
+		public TrackFollower BeaconReceiver;
+		/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
+		public CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
+		/// <summary>The current camera restriction mode for this car</summary>
+		public CameraRestriction CameraRestriction;
+		/// <summary>Stores the camera interior camera alignment for this car</summary>
+		public CameraAlignment InteriorCamera;
 	}
 }

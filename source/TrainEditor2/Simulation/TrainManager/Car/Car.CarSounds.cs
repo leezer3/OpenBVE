@@ -11,7 +11,6 @@ namespace TrainEditor2.Simulation.TrainManager
 		{
 			internal BVEMotorSound Motor;
 			internal CarSound[] Run;
-			internal double[] RunVolume;
 		}
 	}
 }

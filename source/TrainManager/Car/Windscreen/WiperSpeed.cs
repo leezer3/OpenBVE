@@ -1,7 +1,7 @@
-﻿namespace OpenBve
+﻿namespace TrainManager.Car
 {
 	/// <summary>The speed of the windscreen wiper</summary>
-	internal enum WiperSpeed
+	public enum WiperSpeed
 	{
 		Off = 0,
 		Intermittant = 1,
