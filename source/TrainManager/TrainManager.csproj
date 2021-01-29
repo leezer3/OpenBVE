@@ -54,6 +54,8 @@
     <Compile Include="Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Brake\CarBrake.cs" />
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
+    <Compile Include="Car\Bogie\Bogie.cs" />
+    <Compile Include="Car\CarBase.cs" />
     <Compile Include="Car\Door.cs" />
     <Compile Include="Car\Door.DoorModes.cs" />
     <Compile Include="Car\Door.TrainDoorState.cs" />
@@ -91,6 +93,10 @@
     <Compile Include="Brake\AirBrake\Components\BrakeCylinder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibRender2\LibRender2.csproj">
+      <Project>{68215476-302C-49F2-9F7E-AAE20A2B6B12}</Project>
+      <Name>LibRender2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>

@@ -50,6 +50,7 @@ namespace OpenBve
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			TrainManager.currentHost = Program.CurrentHost;
+			TrainManager.Renderer = Program.Renderer;
 			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
 			//Process extra command line arguments supplied
 			if (result.InitialStation != null)

@@ -200,7 +200,7 @@ namespace OpenBve
 				}
 
 				// hold brake
-				Cars[CarIndex].Specs.HoldBrake.Update(ref DecelerationDueToMotor, Handles.HoldBrake.Actual);
+				Cars[CarIndex].HoldBrake.Update(ref DecelerationDueToMotor, Handles.HoldBrake.Actual);
 				{
 					// rub sound
 					SoundBuffer buffer = Cars[CarIndex].CarBrake.Rub.Buffer;

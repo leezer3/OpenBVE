@@ -20,7 +20,7 @@ namespace OpenBve
 	public partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal partial class Car : AbstractCar
+		internal partial class Car : CarBase
 		{
 			/// <summary>The front bogie</summary>
 			internal Bogie FrontBogie;
@@ -32,6 +32,12 @@ namespace OpenBve
 			internal readonly Door[] Doors;
 			/// <summary>The car brake for this car</summary>
 			internal CarBrake CarBrake;
+			/// <summary>The hold brake for this car</summary>
+			internal CarHoldBrake HoldBrake;
+			/// <summary>The constant speed device for this car</summary>
+			internal CarConstSpeed ConstSpeed;
+			/// <summary>The readhesion device for this car</summary>
+			internal CarReAdhesionDevice ReAdhesionDevice;
 			/// <summary>The car sections (objects) attached to the car</summary>
 			internal CarSection[] CarSections;
 			/// <summary>The index of the current car section</summary>
@@ -42,7 +48,6 @@ namespace OpenBve
 			internal double DriverYaw;
 			/// <summary>The current pitch of the driver's eyes</summary>
 			internal double DriverPitch;
-			internal CarSpecs Specs;
 			internal CarSounds Sounds;
 			/// <summary>Whether currently visible from the in-game camera location</summary>
 			internal bool CurrentlyVisible;
@@ -72,6 +77,7 @@ namespace OpenBve
 			
 			internal Car(Train train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 			{
+				Specs = new CarPhysics();
 				baseTrain = train;
 				Index = index;
 				CarSections = new CarSection[] { };
@@ -85,7 +91,6 @@ namespace OpenBve
 				Doors[0].MaxTolerance = 0.0;
 				Doors[1].Width = 1000.0;
 				Doors[1].MaxTolerance = 0.0;
-				Specs = new CarSpecs();
 			}
 
 			internal Car(Train train, int index)
@@ -944,17 +949,17 @@ namespace OpenBve
 						{
 							case 0:
 								a = Specs.Acceleration;
-								v = Specs.CurrentPitchDueToAccelerationFastValue;
+								v = Specs.PitchDueToAccelerationFastValue;
 								j = 1.8;
 								break;
 							case 1:
-								a = Specs.CurrentPitchDueToAccelerationFastValue;
-								v = Specs.CurrentPitchDueToAccelerationMediumValue;
+								a = Specs.PitchDueToAccelerationFastValue;
+								v = Specs.PitchDueToAccelerationMediumValue;
 								j = 1.2;
 								break;
 							default:
-								a = Specs.CurrentPitchDueToAccelerationFastValue;
-								v = Specs.CurrentPitchDueToAccelerationSlowValue;
+								a = Specs.PitchDueToAccelerationFastValue;
+								v = Specs.PitchDueToAccelerationSlowValue;
 								j = 1.0;
 								break;
 						}
@@ -972,29 +977,29 @@ namespace OpenBve
 						switch (i)
 						{
 							case 0:
-								Specs.CurrentPitchDueToAccelerationFastValue = v;
+								Specs.PitchDueToAccelerationFastValue = v;
 								break;
 							case 1:
-								Specs.CurrentPitchDueToAccelerationMediumValue = v;
+								Specs.PitchDueToAccelerationMediumValue = v;
 								break;
 							default:
-								Specs.CurrentPitchDueToAccelerationSlowValue = v;
+								Specs.PitchDueToAccelerationSlowValue = v;
 								break;
 						}
 					}
 					{
-						double da = Specs.CurrentPitchDueToAccelerationSlowValue - Specs.CurrentPitchDueToAccelerationFastValue;
-						Specs.CurrentPitchDueToAccelerationTargetAngle = 0.03 * Math.Atan(da);
+						double da = Specs.PitchDueToAccelerationSlowValue - Specs.PitchDueToAccelerationFastValue;
+						Specs.PitchDueToAccelerationTargetAngle = 0.03 * Math.Atan(da);
 					}
 					{
-						double a = 3.0 * (double)Math.Sign(Specs.CurrentPitchDueToAccelerationTargetAngle - Specs.CurrentPitchDueToAccelerationAngle);
-						Specs.CurrentPitchDueToAccelerationAngularSpeed += a * TimeElapsed;
-						double ds = Math.Abs(Specs.CurrentPitchDueToAccelerationTargetAngle - Specs.CurrentPitchDueToAccelerationAngle);
-						if (Math.Abs(Specs.CurrentPitchDueToAccelerationAngularSpeed) > ds)
+						double a = 3.0 * (double)Math.Sign(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
+						Specs.PitchDueToAccelerationAngularSpeed += a * TimeElapsed;
+						double ds = Math.Abs(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
+						if (Math.Abs(Specs.PitchDueToAccelerationAngularSpeed) > ds)
 						{
-							Specs.CurrentPitchDueToAccelerationAngularSpeed = ds * (double)Math.Sign(Specs.CurrentPitchDueToAccelerationAngularSpeed);
+							Specs.PitchDueToAccelerationAngularSpeed = ds * (double)Math.Sign(Specs.PitchDueToAccelerationAngularSpeed);
 						}
-						Specs.CurrentPitchDueToAccelerationAngle += Specs.CurrentPitchDueToAccelerationAngularSpeed * TimeElapsed;
+						Specs.PitchDueToAccelerationAngle += Specs.PitchDueToAccelerationAngularSpeed * TimeElapsed;
 					}
 				}
 				// derailment
@@ -1087,7 +1092,7 @@ namespace OpenBve
 				// apply pitching
 				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
 				{
-					double a = Specs.CurrentPitchDueToAccelerationAngle;
+					double a = Specs.PitchDueToAccelerationAngle;
 					double cosa = Math.Cos(a);
 					double sina = Math.Sin(a);
 					d.Rotate(s, cosa, sina);
@@ -1293,9 +1298,9 @@ namespace OpenBve
 								}
 
 								// readhesion device
-								if (a > Specs.ReAdhesionDevice.MaximumAccelerationOutput)
+								if (a > ReAdhesionDevice.MaximumAccelerationOutput)
 								{
-									a = Specs.ReAdhesionDevice.MaximumAccelerationOutput;
+									a = ReAdhesionDevice.MaximumAccelerationOutput;
 								}
 
 								// wheel slip
@@ -1320,10 +1325,10 @@ namespace OpenBve
 								}
 
 								// Update readhesion device
-								this.Specs.ReAdhesionDevice.Update(a);
+								this.ReAdhesionDevice.Update(a);
 								// Update constant speed device
 
-								this.Specs.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed,
+								this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed,
 									baseTrain.Handles.Reverser.Actual);
 
 								// finalize

@@ -1224,9 +1224,9 @@ namespace OpenBve {
 
 			// assign motor/trailer-specific settings
 			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].Specs.ConstSpeed = new TrainManager.CarConstSpeed(Train.Cars[i]);
-				Train.Cars[i].Specs.HoldBrake = new TrainManager.CarHoldBrake(Train.Cars[i]);
-				Train.Cars[i].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
+				Train.Cars[i].ConstSpeed = new TrainManager.CarConstSpeed(Train.Cars[i]);
+				Train.Cars[i].HoldBrake = new TrainManager.CarHoldBrake(Train.Cars[i]);
+				Train.Cars[i].ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
 				if (Train.Cars[i].Specs.IsMotorCar) {
 					// motor car
 					Train.Cars[i].EmptyMass = MotorCarMass;

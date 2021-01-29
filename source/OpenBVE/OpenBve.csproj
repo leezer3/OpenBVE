@@ -208,10 +208,8 @@
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
     <Compile Include="Simulation\TrainManager\DriverBody.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Car.Bogie.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSection.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Car.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />

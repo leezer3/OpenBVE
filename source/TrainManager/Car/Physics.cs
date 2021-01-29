@@ -1,10 +1,16 @@
-﻿namespace TrainManager.Car
+﻿using TrainManager.Power;
+
+namespace TrainManager.Car
 {
 	/// <summary>Contains the physics related properties for the car</summary>
 	public class CarPhysics
 	{
 		/// <summary>Stores whether the car is a motor car</summary>
 		public bool IsMotorCar;
+		/// <summary>The acceleration curves for the car</summary>
+		public AccelerationCurve[] AccelerationCurves;
+		/// <summary>The maximum possible acceleration provided by any curve</summary>
+		public double AccelerationCurveMaximum;
 		/// <summary>The current percieved speed of the car</summary>
 		/// <remarks>Appears as if on a speedometer, accounting for wheel lock etc.</remarks>
 		public double PerceivedSpeed;
@@ -28,6 +34,18 @@
 		public double RollDueToShakingAngle;
 		/// <summary>The angular speed of the roll applied due to shaking of the train</summary>
 		public double RollDueToShakingAngularSpeed;
+		/// <summary>The pitch applied due to acceleration in radians</summary>
+		public double PitchDueToAccelerationAngle;
+		/// <summary>The angular speed of the pitch applied due to acceleration</summary>
+		public double PitchDueToAccelerationAngularSpeed;
+		/// <summary>The target angle of the pitch</summary>
+		public double PitchDueToAccelerationTargetAngle;
+		/// <summary>The fast update value for pitch</summary>
+		public double PitchDueToAccelerationFastValue;
+		/// <summary>The medium update value for pitch</summary>
+		public double PitchDueToAccelerationMediumValue;
+		/// <summary>The slow update value for pitch</summary>
+		public double PitchDueToAccelerationSlowValue;
 		/// <summary>The exposed frontal area of the car</summary>
 		public double ExposedFrontalArea;
 		/// <summary>The unexposed frontal area of the car</summary>
@@ -36,5 +54,13 @@
 		public double CenterOfGravityHeight;
 		/// <summary>The critical toppling angle</summary>
 		public double CriticalTopplingAngle;
+		/*
+		 * Used to determine the opening and closing times of the doors
+		 * TODO: Move into the doors struct
+		 */
+		public double DoorOpenFrequency;
+		public double DoorCloseFrequency;
+		public double DoorOpenPitch;
+		public double DoorClosePitch;
 	}
 }

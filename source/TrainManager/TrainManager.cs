@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Hosts;
+﻿using LibRender2;
+using OpenBveApi.Hosts;
 
 namespace TrainManager
 {
@@ -6,5 +7,6 @@ namespace TrainManager
 	public abstract class TrainManagerBase
 	{
 		public static HostInterface currentHost;
+		public static BaseRenderer Renderer;
 	}
 }

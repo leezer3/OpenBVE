@@ -21,7 +21,7 @@ namespace OpenBve.Parsers.Train
 		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
 		{
 			string interiorFile = string.Empty;
-			ReadhesionDeviceType readhesionDevice = Train.Cars[0].Specs.ReAdhesionDevice.DeviceType;
+			ReadhesionDeviceType readhesionDevice = Train.Cars[0].ReAdhesionDevice.DeviceType;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
@@ -427,7 +427,7 @@ namespace OpenBve.Parsers.Train
 					Interface.AddMessage(MessageType.Warning, false, "Interior view file is not supported for Car " + Car + " in XML file " + fileName);
 				}
 			}
-			Train.Cars[Car].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+			Train.Cars[Car].ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[Car], readhesionDevice);
 		}
 	}
 }
