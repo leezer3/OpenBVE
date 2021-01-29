@@ -115,10 +115,10 @@ namespace OpenBve
 				if (b < Handles.Brake.Driver)
 				{
 					// brake release
-					SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+					SoundBuffer buffer = Cars[DriverCar].CarBrake.Release.Buffer;
 					if (buffer != null)
 					{
-						Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
+						Vector3 pos = Cars[DriverCar].CarBrake.Release.Position;
 						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 
@@ -206,10 +206,10 @@ namespace OpenBve
 				if (b < Handles.LocoBrake.Driver)
 				{
 					// brake release 
-					SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+					SoundBuffer buffer = Cars[DriverCar].CarBrake.Release.Buffer;
 					if (buffer != null)
 					{
-						Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
+						Vector3 pos = Cars[DriverCar].CarBrake.Release.Position;
 						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 
@@ -454,10 +454,10 @@ namespace OpenBve
 						// sound when moved to service
 						if (newState == AirBrakeHandleState.Service)
 						{
-							SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+							SoundBuffer buffer = Cars[DriverCar].CarBrake.Release.Buffer;
 							if (buffer != null)
 							{
-								Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
+								Vector3 pos = Cars[DriverCar].CarBrake.Release.Position;
 								Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 							}
 						}
@@ -538,10 +538,10 @@ namespace OpenBve
 						// sound when moved to service
 						if (newState == AirBrakeHandleState.Service)
 						{
-							SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+							SoundBuffer buffer = Cars[DriverCar].CarBrake.Release.Buffer;
 							if (buffer != null)
 							{
-								Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
+								Vector3 pos = Cars[DriverCar].CarBrake.Release.Position;
 								Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 							}
 						}

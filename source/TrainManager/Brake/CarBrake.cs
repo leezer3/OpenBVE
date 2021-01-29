@@ -52,6 +52,8 @@ namespace TrainManager.BrakeSystems
 		public CarSound AirZero;
 		/// <summary>Played when the brake shoe rubs against the wheels</summary>
 		public CarSound Rub;
+		/// <summary>The sound played when the brakes are released</summary>
+		public CarSound Release;
 
 		internal AccelerationCurve[] decelerationCurves;
 		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is increased.</summary>

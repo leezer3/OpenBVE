@@ -80,6 +80,7 @@
     <Compile Include="Motor\BVE4\MotorSoundTable.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
+    <Compile Include="Power\Breaker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SafetySystems\ATC\AtcModes.cs" />
     <Compile Include="SafetySystems\ATS\AtsModes.cs" />

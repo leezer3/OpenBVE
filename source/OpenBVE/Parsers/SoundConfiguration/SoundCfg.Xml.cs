@@ -6,6 +6,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.Motor;
+using TrainManager.Power;
 
 namespace OpenBve
 {
@@ -110,7 +111,7 @@ namespace OpenBve
 												break;
 											case "application":
 												//Standard application
-												ParseNode(cc, out car.Sounds.Brake, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.Release, center, SoundCfgParser.smallRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -168,15 +169,16 @@ namespace OpenBve
 									{
 										break;
 									}
+									car.Breaker = new Breaker(car);
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
-												ParseNode(cc, out car.Sounds.BreakerResume, panel, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Breaker.Resume, panel, SoundCfgParser.smallRadius);
 												break;
 											case "off":
-												ParseNode(cc, out car.Sounds.BreakerResumeOrInterrupt, panel, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Breaker.ResumeOrInterrupt, panel, SoundCfgParser.smallRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");

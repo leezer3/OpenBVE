@@ -1187,7 +1187,10 @@ namespace OpenBve {
 				{
 					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
 				}
-				
+				if (i == DriverCar)
+				{
+					Train.Cars[i].Breaker = new Breaker(Train.Cars[i]);
+				}
 				Train.Cars[i].CurrentCarSection = -1;
 				Train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 				Train.Cars[i].FrontBogie.ChangeSection(-1);

@@ -19,6 +19,7 @@ using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Power;
 using TrainManager.Trains;
 
 namespace OpenBve
@@ -550,28 +551,7 @@ namespace OpenBve
 					{
 						breaker = Handles.Reverser.Actual != 0 & Handles.Power.Safety >= 1 & Handles.Brake.Safety == 0 & !Handles.EmergencyBrake.Safety & !Handles.HoldBrake.Actual;
 					}
-					if (breaker & !Cars[DriverCar].Sounds.BreakerResumed)
-					{
-						// resume
-						if (Cars[DriverCar].Sounds.BreakerResume.Buffer != null)
-						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResume.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResume.Position, Cars[DriverCar], false);
-						}
-						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
-						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, Cars[DriverCar], false);
-						}
-						Cars[DriverCar].Sounds.BreakerResumed = true;
-					}
-					else if (!breaker & Cars[DriverCar].Sounds.BreakerResumed)
-					{
-						// interrupt
-						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
-						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, Cars[DriverCar], false);
-						}
-						Cars[DriverCar].Sounds.BreakerResumed = false;
-					}
+					Cars[DriverCar].Breaker.Update(breaker);
 				}
 				// passengers
 				Passengers.Update(Specs.CurrentAverageAcceleration, TimeElapsed);
@@ -940,9 +920,6 @@ namespace OpenBve
 					Cars[i].CarBrake.Air = new CarSound();
 					Cars[i].CarBrake.AirHigh = new CarSound();
 					Cars[i].CarBrake.AirZero = new CarSound();
-					Cars[i].Sounds.Brake = new CarSound();
-					Cars[i].Sounds.BreakerResume = new CarSound();
-					Cars[i].Sounds.BreakerResumeOrInterrupt = new CarSound();
 					Cars[i].Doors[0].CloseSound = new CarSound();
 					Cars[i].Doors[1].CloseSound = new CarSound();
 					Cars[i].Doors[0].OpenSound = new CarSound();

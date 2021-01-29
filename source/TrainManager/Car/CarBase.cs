@@ -2,6 +2,7 @@
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using TrainManager.BrakeSystems;
+using TrainManager.Power;
 
 namespace TrainManager.Car
 {
@@ -38,5 +39,7 @@ namespace TrainManager.Car
 		public bool Topples;
 		/// <summary>The coupler between cars</summary>
 		public Coupler Coupler;
+		/// <summary>The breaker</summary>
+		public Breaker Breaker;
 	}
 }
