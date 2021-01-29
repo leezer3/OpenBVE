@@ -1181,11 +1181,11 @@ namespace OpenBve {
 			for (int i = 0; i < Cars; i++) {
 				if (Train.Cars.Length > 1)
 				{
-					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
+					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
 				}
 				else
 				{
-					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
+					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
 				}
 				
 				Train.Cars[i].CurrentCarSection = -1;

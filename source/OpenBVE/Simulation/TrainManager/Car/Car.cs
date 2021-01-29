@@ -22,41 +22,18 @@ namespace OpenBve
 		/// <summary>The base class containing the properties of a train car</summary>
 		internal partial class Car : CarBase
 		{
-			/// <summary>The front bogie</summary>
-			internal Bogie FrontBogie;
-			/// <summary>The rear bogie</summary>
-			internal Bogie RearBogie;
 			/// <summary>The horns attached to this car</summary>
 			internal Horn[] Horns;
-			/// <summary>The doors for this car</summary>
-			internal readonly Door[] Doors;
-			/// <summary>The car brake for this car</summary>
-			internal CarBrake CarBrake;
 			/// <summary>The hold brake for this car</summary>
 			internal CarHoldBrake HoldBrake;
 			/// <summary>The constant speed device for this car</summary>
 			internal CarConstSpeed ConstSpeed;
 			/// <summary>The readhesion device for this car</summary>
 			internal CarReAdhesionDevice ReAdhesionDevice;
-			/// <summary>The car sections (objects) attached to the car</summary>
-			internal CarSection[] CarSections;
-			/// <summary>The index of the current car section</summary>
-			internal int CurrentCarSection;
-			/// <summary>The driver's eye position within the car</summary>
-			internal Vector3 Driver;
-			/// <summary>The current yaw of the driver's eyes</summary>
-			internal double DriverYaw;
-			/// <summary>The current pitch of the driver's eyes</summary>
-			internal double DriverPitch;
+			
 			internal CarSounds Sounds;
-			/// <summary>Whether currently visible from the in-game camera location</summary>
-			internal bool CurrentlyVisible;
-			/// <summary>Whether currently derailed</summary>
-			internal bool Derailed;
-			/// <summary>Whether currently toppled over</summary>
-			internal bool Topples;
-			/// <summary>The coupler between cars</summary>
-			internal Coupler Coupler;
+			
+			
 
 			internal Windscreen Windscreen;
 			internal double BeaconReceiverPosition;
