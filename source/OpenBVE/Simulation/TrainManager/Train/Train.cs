@@ -925,7 +925,6 @@ namespace OpenBve
 					Cars[i].Doors[0].OpenSound = new CarSound();
 					Cars[i].Doors[1].OpenSound = new CarSound();
 					Cars[i].Sounds.Flange = new CarSound[] { };
-					Cars[i].Sounds.FlangeVolume = new double[] { };
 					Cars[i].Horns = new TrainManager.Horn[]
 					{
 						new TrainManager.Horn(this),
@@ -946,7 +945,6 @@ namespace OpenBve
 					Cars[i].RearAxle.PointSounds = new CarSound[] { };
 					Cars[i].CarBrake.Rub = new CarSound();
 					Cars[i].Sounds.Run = new CarSound[] { };
-					Cars[i].Sounds.RunVolume = new double[] { };
 					Cars[i].Sounds.SpringL = new CarSound();
 					Cars[i].Sounds.SpringR = new CarSound();
 					Cars[i].Sounds.Plugin = new CarSound[] { };

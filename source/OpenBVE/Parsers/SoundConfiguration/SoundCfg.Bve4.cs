@@ -855,11 +855,6 @@ namespace OpenBve
 						i--; break;
 				}
 			}
-			for (int i = 0; i < train.Cars.Length; i++)
-			{
-				train.Cars[i].Sounds.RunVolume = new double[train.Cars[i].Sounds.Run.Length];
-				train.Cars[i].Sounds.FlangeVolume = new double[train.Cars[i].Sounds.Flange.Length];
-			}
 			// motor sound
 			for (int c = 0; c < train.Cars.Length; c++)
 			{

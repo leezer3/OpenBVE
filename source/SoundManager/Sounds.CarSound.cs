@@ -11,6 +11,9 @@ namespace SoundManager
 		public SoundSource Source;
 		/// <summary>A Vector3 describing the position of the sound source</summary>
 		public Vector3 Position;
+		/// <summary>The target volume of the sound</summary>
+		/// <remarks>Used when crossfading between multiple sounds of the same type</remarks>
+		public double TargetVolume;
 		
 		/// <summary>Creates a new car sound</summary>
 		/// <param name="buffer">The sound buffer</param>

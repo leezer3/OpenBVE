@@ -385,15 +385,15 @@ namespace OpenBve
 				{
 					if (j == FrontAxle.RunIndex | j == RearAxle.RunIndex)
 					{
-						Sounds.RunVolume[j] += 3.0 * TimeElapsed;
-						if (Sounds.RunVolume[j] > 1.0) Sounds.RunVolume[j] = 1.0;
+						Sounds.Run[j].TargetVolume += 3.0 * TimeElapsed;
+						if (Sounds.Run[j].TargetVolume > 1.0) Sounds.Run[j].TargetVolume = 1.0;
 					}
 					else
 					{
-						Sounds.RunVolume[j] -= 3.0 * TimeElapsed;
-						if (Sounds.RunVolume[j] < 0.0) Sounds.RunVolume[j] = 0.0;
+						Sounds.Run[j].TargetVolume -= 3.0 * TimeElapsed;
+						if (Sounds.Run[j].TargetVolume < 0.0) Sounds.Run[j].TargetVolume = 0.0;
 					}
-					double gain = basegain * Sounds.RunVolume[j];
+					double gain = basegain * Sounds.Run[j].TargetVolume;
 					if (Program.Sounds.IsPlaying(Sounds.Run[j].Source))
 					{
 						if (pitch > 0.01 & gain > 0.001)
@@ -1155,15 +1155,15 @@ namespace OpenBve
 					{
 						if (i == this.FrontAxle.FlangeIndex | i == this.RearAxle.FlangeIndex)
 						{
-							Sounds.FlangeVolume[i] += TimeElapsed;
-							if (Sounds.FlangeVolume[i] > 1.0) Sounds.FlangeVolume[i] = 1.0;
+							Sounds.Flange[i].TargetVolume += TimeElapsed;
+							if (Sounds.Flange[i].TargetVolume > 1.0) Sounds.Flange[i].TargetVolume = 1.0;
 						}
 						else
 						{
-							Sounds.FlangeVolume[i] -= TimeElapsed;
-							if (Sounds.FlangeVolume[i] < 0.0) Sounds.FlangeVolume[i] = 0.0;
+							Sounds.Flange[i].TargetVolume -= TimeElapsed;
+							if (Sounds.Flange[i].TargetVolume < 0.0) Sounds.Flange[i].TargetVolume = 0.0;
 						}
-						double gain = basegain * Sounds.FlangeVolume[i];
+						double gain = basegain * Sounds.Flange[i].TargetVolume;
 						if (Program.Sounds.IsPlaying(Sounds.Flange[i].Source))
 						{
 							if (pitch > 0.01 & gain > 0.0001)

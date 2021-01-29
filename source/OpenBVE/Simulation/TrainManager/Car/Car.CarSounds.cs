@@ -11,11 +11,8 @@ namespace OpenBve
 		{
 			internal BVEMotorSound Motor;
 			internal CarSound[] Flange;
-			internal double[] FlangeVolume;
-
 			internal CarSound Loop;
 			internal CarSound[] Run;
-			internal double[] RunVolume;
 			internal double RunNextReasynchronizationPosition;
 			internal CarSound SpringL;
 			internal CarSound SpringR;

@@ -515,8 +515,6 @@ namespace OpenBve
 						}
 					}
 				}
-				car.Sounds.RunVolume = new double[car.Sounds.Run.Length];
-				car.Sounds.FlangeVolume = new double[car.Sounds.Flange.Length];
 			}
 		}
 
