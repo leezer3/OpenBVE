@@ -1034,7 +1034,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 			for (int i = 0; i < numberOfCars - 1; i++)
 			{
-				train.Couplers.Add(new Coupler());
+				train.Couplers.Add(new Models.Trains.Coupler());
 			}
 		}
 	}

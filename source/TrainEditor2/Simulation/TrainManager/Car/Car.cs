@@ -4,6 +4,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
+using TrainManager.Car;
 using TrainManager.Motor;
 
 namespace TrainEditor2.Simulation.TrainManager
@@ -14,12 +15,13 @@ namespace TrainEditor2.Simulation.TrainManager
 		internal class Car : AbstractCar
 		{
 			private readonly Train baseTrain;
-			internal CarSpecs Specs;
+			internal CarPhysics Specs;
 			internal CarSounds Sounds;
 
 			internal Car(Train baseTrain)
 			{
 				this.baseTrain = baseTrain;
+				this.Specs = new CarPhysics();
 			}
 
 			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
@@ -92,10 +94,10 @@ namespace TrainEditor2.Simulation.TrainManager
 			internal void UpdateMotorSounds(bool isPlayTrack1, bool isPlayTrack2)
 			{
 				Vector3 pos = Sounds.Motor.Position;
-				double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
+				double speed = Math.Abs(Specs.PerceivedSpeed);
 				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
 				int odir = Sounds.Motor.CurrentAccelerationDirection;
-				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
+				int ndir = Math.Sign(Specs.Acceleration);
 
 				for (int h = 0; h < 2; h++)
 				{
