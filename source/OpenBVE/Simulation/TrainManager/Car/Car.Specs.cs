@@ -10,15 +10,7 @@ namespace OpenBve
 		{
 			/// motor
 			internal AccelerationCurve[] AccelerationCurves;
-
 			internal double AccelerationCurveMaximum;
-			internal double JerkPowerUp;
-			internal double JerkPowerDown;
-
-			internal double ExposedFrontalArea;
-			internal double UnexposedFrontalArea;
-			internal double CenterOfGravityHeight;
-			internal double CriticalTopplingAngle;
 			
 			internal double CurrentPitchDueToAccelerationAngle;
 			internal double CurrentPitchDueToAccelerationAngularSpeed;
