@@ -5,6 +5,7 @@ using System.Text;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using TrainManager.Car;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
@@ -24,7 +25,7 @@ namespace OpenBve
 			couplerObjects = new UnifiedObject[0];
 			axleLocations = new double[0];
 			couplerDistances = new double[0];
-			train = new TrainManager.Train { Cars = new TrainManager.Car[0] };
+			train = new TrainManager.Train { Cars = new CarBase[0] };
 
 			if (!File.Exists(filePath))
 			{
@@ -87,7 +88,7 @@ namespace OpenBve
 												if (n >= train.Cars.Length)
 												{
 													Array.Resize(ref train.Cars, n + 1);
-													train.Cars[n] = new TrainManager.Car(train);
+													train.Cars[n] = new CarBase(train, n);
 													Array.Resize(ref carObjects, n + 1);
 													Array.Resize(ref bogieObjects, (n + 1) * 2);
 													Array.Resize(ref couplerObjects, n);
@@ -151,7 +152,7 @@ namespace OpenBve
 										if (n >= train.Cars.Length)
 										{
 											Array.Resize(ref train.Cars, n + 1);
-											train.Cars[n] = new TrainManager.Car(train);
+											train.Cars[n] = new CarBase(train, n);
 											Array.Resize(ref carObjects, n + 1);
 											Array.Resize(ref bogieObjects, (n + 1) * 2);
 											Array.Resize(ref carObjectsReversed, n + 1);
@@ -311,12 +312,12 @@ namespace OpenBve
 										Array.Resize(ref train.Cars, n / 2 + 1);
 										if (n == 0)
 										{
-											train.Cars[0] = new TrainManager.Car(train);
+											train.Cars[0] = new CarBase(train, 0);
 											Array.Resize(ref axleLocations, 2);
 										}
 										else
 										{
-											train.Cars[n / 2] = new TrainManager.Car(train);
+											train.Cars[n / 2] = new CarBase(train, n / 2);
 											Array.Resize(ref axleLocations, (n / 2 + 1) * 2);
 										}
 
@@ -431,7 +432,7 @@ namespace OpenBve
 										if (n >= train.Cars.Length - 1)
 										{
 											Array.Resize(ref train.Cars, n + 2);
-											train.Cars[n + 1] = new TrainManager.Car(train);
+											train.Cars[n + 1] = new CarBase(train, n + 1);
 											Array.Resize(ref carObjects, n + 2);
 											Array.Resize(ref bogieObjects, (n + 2) * 2);
 											Array.Resize(ref carObjectsReversed, n + 2);

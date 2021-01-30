@@ -88,7 +88,7 @@ namespace OpenBve
 					checkBoxSetConstSpeed.Checked = TrainManager.Trains[0].Specs.CurrentConstSpeed;
 				}
 
-				checkBoxEnablePlugin.Checked = TrainManager.Trains[0].Specs.SafetySystemPlugin;
+				checkBoxEnablePlugin.Checked = TrainManager.Trains[0].SafetySystemPlugin;
 			}
 			panelPlugin.Enabled = checkBoxEnablePlugin.Checked;
 			buttonRemove.Enabled = false;
@@ -299,7 +299,7 @@ namespace OpenBve
 					Array.Resize(ref TrainManager.Trains[0].Cars, (int)numericUpDownCars.Value);
 					for (int i = 0; i < TrainManager.Trains[0].Cars.Length; i++)
 					{
-						TrainManager.Trains[0].Cars[i] = new TrainManager.Car(TrainManager.Trains[0]);
+						TrainManager.Trains[0].Cars[i] = new CarBase(TrainManager.Trains[0], i);
 						TrainManager.Trains[0].Cars[i].CurrentSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.PerceivedSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.Acceleration = (int)numericUpDownAccel.Value / 3.6;
@@ -362,7 +362,7 @@ namespace OpenBve
 						TrainManager.Trains[0].Specs.CurrentConstSpeed = checkBoxSetConstSpeed.Checked;
 					}
 
-					TrainManager.Trains[0].Specs.SafetySystemPlugin = checkBoxEnablePlugin.Checked;
+					TrainManager.Trains[0].SafetySystemPlugin = checkBoxEnablePlugin.Checked;
 					if (checkBoxEnablePlugin.Checked && PluginStates.Count != 0)
 					{
 						PluginManager.CurrentPlugin.Panel = new int[PluginStates.Max(value => value.Number) + 1];

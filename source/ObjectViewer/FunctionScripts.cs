@@ -965,7 +965,7 @@ namespace OpenBve {
 						// safety
 					case Instructions.SafetyPluginAvailable:
 						if (Train != null && Train.IsPlayerTrain) {
-							Function.Stack[s] = TrainManager.PlayerTrain.Specs.SafetySystemPlugin ? 1.0 : 0.0;
+							Function.Stack[s] = TrainManager.PlayerTrain.SafetySystemPlugin ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -975,7 +975,7 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						} else {
 							int n = (int)Math.Round(Function.Stack[s - 1]);
-							if (Train.Specs.SafetySystemPlugin) {
+							if (Train.SafetySystemPlugin) {
 								if (n >= 0 & n < PluginManager.CurrentPlugin.Panel.Length) {
 									Function.Stack[s - 1] = (double)PluginManager.CurrentPlugin.Panel[n];
 								} else {

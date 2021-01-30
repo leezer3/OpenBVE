@@ -5,27 +5,17 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using OpenBveApi.Trains;
 using TrainManager;
-using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	internal class TrainManager : TrainManagerBase {
+		
+		internal class Train : TrainBase
+		{
 
-// Silence the absurd amount of unused variable warnings
-#pragma warning disable 0649
-		// train specs
-		internal struct TrainSpecs {
-			internal bool HasConstSpeed;
-			internal bool CurrentConstSpeed;
 			internal bool SafetySystemPlugin;
-		}
-		// train
-		internal class Train : AbstractTrain {
-			internal CarBase[] Cars;
-			internal TrainSpecs Specs;
-			internal CabHandles Handles;
 
 			internal Train()
 			{
@@ -45,8 +35,6 @@ namespace OpenBve {
 				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
 			}
 		}
-
-#pragma warning restore 0649
 
 		// trains
 		internal static Train[] Trains = new Train[] { };
