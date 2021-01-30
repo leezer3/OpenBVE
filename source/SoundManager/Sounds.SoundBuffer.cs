@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
+using OpenTK.Audio.OpenAL;
 
 namespace SoundManager
 {
@@ -16,8 +17,22 @@ namespace SoundManager
 		public bool Loaded;
 		/// <summary>The OpenAL sound name. Only valid if the sound is loaded.</summary>
 		public int OpenAlBufferName;
+		/// <summary>Backing property for duration</summary>
+		private double _duration;
 		/// <summary>The duration of the sound in seconds. Only valid if the sound is loaded.</summary>
-		public double Duration;
+		public double Duration
+		{
+			get
+			{
+				if (Loaded)
+				{
+					return _duration;
+				}
+				Load();
+				return _duration;
+			}
+			
+		}
 		/// <summary>Whether to ignore further attemps to load the sound after previous attempts have failed.</summary>
 		internal bool Ignore;
 		/// <summary>The function script controlling this sound's volume.</summary>
@@ -36,7 +51,7 @@ namespace SoundManager
 			Radius = radius;
 			Loaded = false;
 			OpenAlBufferName = 0;
-			Duration = 0.0;
+			_duration = 0.0;
 			InternalVolumeFactor = 0.5;
 			Ignore = false;
 			PitchFunction = null;
@@ -53,7 +68,7 @@ namespace SoundManager
 			Radius = radius;
 			Loaded = false;
 			OpenAlBufferName = 0;
-			Duration = 0.0;
+			_duration = 0.0;
 			InternalVolumeFactor = 0.5;
 			Ignore = false;
 			PitchFunction = null;
@@ -67,7 +82,7 @@ namespace SoundManager
 			Radius = 0.0;
 			Loaded = false;
 			OpenAlBufferName = 0;
-			Duration = 0.0;
+			_duration = 0.0;
 			InternalVolumeFactor = 0.5;
 			Ignore = false;
 			PitchFunction = null;
@@ -82,7 +97,7 @@ namespace SoundManager
 			Radius = 0.0;
 			Loaded = false;
 			OpenAlBufferName = 0;
-			Duration = 0.0;
+			_duration = 0.0;
 			InternalVolumeFactor = 0.5;
 			Ignore = false;
 			PitchFunction = null;
@@ -99,12 +114,40 @@ namespace SoundManager
 				Radius = this.Radius,
 				Loaded = false,
 				OpenAlBufferName = 0,
-				Duration = this.Duration,
+				_duration = 0.0,
 				InternalVolumeFactor = this.InternalVolumeFactor,
 				Ignore = false,
 				PitchFunction = this.PitchFunction,
 				VolumeFunction = this.VolumeFunction
 			};
+		}
+
+		/// <summary>Loads the buffer into OpenAL</summary>
+		public void Load()
+		{
+			if (Loaded)
+			{
+				return;
+			}
+			if (Ignore)
+			{
+				return;
+			}
+			Sound sound;
+			if (Origin.GetSound(out sound))
+			{
+				if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16)
+				{
+					byte[] bytes = sound.GetMonoMix();
+					AL.GenBuffers(1, out OpenAlBufferName);
+					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
+					AL.BufferData(OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
+					_duration = sound.Duration;
+					Loaded = true;
+					return;
+				}
+			}
+			Ignore = true;
 		}
 	}
 }

@@ -280,29 +280,7 @@ namespace SoundManager
 		/// <returns>Whether loading the buffer was successful.</returns>
 		public void LoadBuffer(SoundBuffer buffer)
 		{
-			if (buffer.Loaded)
-			{
-				return;
-			}
-			if (buffer.Ignore)
-			{
-				return;
-			}
-			Sound sound;
-			if (buffer.Origin.GetSound(out sound))
-			{
-				if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16)
-				{
-					byte[] bytes = sound.GetMonoMix();
-					AL.GenBuffers(1, out buffer.OpenAlBufferName);
-					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
-					AL.BufferData(buffer.OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
-					buffer.Duration = sound.Duration;
-					buffer.Loaded = true;
-					return;
-				}
-			}
-			buffer.Ignore = true;
+			buffer.Load();
 		}
 
 		/// <summary>Loads all sound buffers immediately.</summary>
@@ -546,16 +524,6 @@ namespace SoundManager
 			}
 			return false;
 		}
-
-		/// <summary>Gets the duration of the specified sound buffer in seconds.</summary>
-		/// <param name="buffer">The sound buffer.</param>
-		/// <returns>The duration of the sound buffer in seconds, or zero if the buffer could not be loaded.</returns>
-		public double GetDuration(SoundBuffer buffer)
-		{
-			LoadBuffer(buffer);
-			return buffer.Duration;
-		}
-
 
 		// --- statistics ---
 

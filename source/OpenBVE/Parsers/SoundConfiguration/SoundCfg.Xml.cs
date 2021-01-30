@@ -5,8 +5,10 @@ using TrainManager.BrakeSystems;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
+using TrainManager.Car;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -29,7 +31,7 @@ namespace OpenBve
 		}
 
 		private static string currentPath;
-		internal static void Parse(string fileName, ref TrainManager.Train Train, ref TrainManager.Car car, bool isDriverCar)
+		internal static void Parse(string fileName, ref TrainManager.Train Train, ref CarBase car, bool isDriverCar)
 		{
 			//3D center of the car
 			Vector3 center = Vector3.Zero;
@@ -524,9 +526,9 @@ namespace OpenBve
 		/// <param name="Horn">The horn to apply this node's contents to</param>
 		/// <param name="Position">The default sound position</param>
 		/// <param name="Radius">The default sound radius</param>
-		private static void ParseHornNode(XmlNode node, TrainManager.Train train, out TrainManager.Horn Horn, Vector3 Position, double Radius)
+		private static void ParseHornNode(XmlNode node, TrainManager.Train train, out Horn Horn, Vector3 Position, double Radius)
 		{
-			Horn = new TrainManager.Horn(train);
+			Horn = new Horn(train);
 			foreach (XmlNode c in node.ChildNodes)
 			{
 				switch (c.Name.ToLowerInvariant())

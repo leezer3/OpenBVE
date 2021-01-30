@@ -29,7 +29,7 @@ namespace OpenBve {
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Car">The car to add the panel to</param>
-		internal static void ParsePanel2Config(string PanelFile, string TrainPath, TrainManager.Car Car)
+		internal static void ParsePanel2Config(string PanelFile, string TrainPath, CarBase Car)
 		{
 			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(PanelFile);
 			//Train name, used for hacks detection

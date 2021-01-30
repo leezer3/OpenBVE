@@ -407,11 +407,20 @@ namespace OpenBve {
 			Program.Sounds.StopSound(SoundSource);
 		}
 
-		public override bool SimulationSetup
+		public override SimulationState SimulationState
 		{
 			get
 			{
-				return Loading.SimulationSetup;
+				if (!Loading.SimulationSetup)
+				{
+					return SimulationState.Loading;
+				}
+
+				if (Game.MinimalisticSimulation)
+				{
+					return SimulationState.MinimalisticSimulation;
+				}
+				return SimulationState.Running;
 			}
 		}
 

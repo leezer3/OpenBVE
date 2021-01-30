@@ -284,8 +284,7 @@ namespace OpenBve
 						SoundBuffer buffer = (SoundBuffer)Program.CurrentRoute.Stations[i].DepartureSoundBuffer;
 						if (buffer != null)
 						{
-							double dur = Program.Sounds.GetDuration(buffer);
-							if (Program.CurrentRoute.SecondsSinceMidnight >= Train.StationDepartureTime - dur)
+							if (Program.CurrentRoute.SecondsSinceMidnight >= Train.StationDepartureTime - buffer.Duration)
 							{
 								if (!Game.MinimalisticSimulation)
 								{

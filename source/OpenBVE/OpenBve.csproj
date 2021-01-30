@@ -207,15 +207,11 @@
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
     <Compile Include="Simulation\TrainManager\DriverBody.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Car.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Plugin.cs" />
-    <Compile Include="Simulation\TrainManager\Train\SafetySystems.cs" />
-    <Compile Include="Simulation\TrainManager\Train\SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Doors.cs" />

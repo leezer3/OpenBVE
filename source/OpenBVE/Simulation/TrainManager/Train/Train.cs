@@ -19,6 +19,7 @@ using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace OpenBve
@@ -29,21 +30,10 @@ namespace OpenBve
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train : TrainBase
 		{
-			/// <summary>Holds the safety systems for the train</summary>
-			internal TrainSafetySystems SafetySystems;
 			/// <summary>The plugin used by this train.</summary>
 			internal PluginManager.Plugin Plugin;
 			/// <summary>The driver body</summary>
 			internal DriverBody DriverBody;
-
-			
-			internal Car[] Cars;
-			
-			
-			internal double StationArrivalTime;
-			internal double StationDepartureTime;
-			internal bool StationDepartureSoundPlayed;
-			internal double StationDistanceToStopPoint;
 			
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
@@ -60,7 +50,7 @@ namespace OpenBve
 				RouteLimits = new double[] { double.PositiveInfinity };
 				CurrentRouteLimit = double.PositiveInfinity;
 				CurrentSectionLimit = double.PositiveInfinity;
-				Cars = new TrainManager.Car[] { };
+				Cars = new CarBase[] { };
 				
 				Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
@@ -866,7 +856,7 @@ namespace OpenBve
 			{
 				if (this.Cars.Contains(Car))
 				{
-					var c = Car as TrainManager.Car;
+					var c = Car as CarBase;
 					c.Derailed = true;
 					this.Derailed = true;
 					if (Program.GenerateDebugLogging)
@@ -890,18 +880,6 @@ namespace OpenBve
 				UpdateCabObjects();
 			}
 
-			/// <summary>Call this method to topple a car</summary>
-			/// <param name="CarIndex">The car index to derail</param>
-			/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
-			internal void Topple(int CarIndex, double ElapsedTime)
-			{
-				this.Cars[CarIndex].Topples = true;
-				if (Program.GenerateDebugLogging)
-				{
-					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " toppled. Current simulation time: " + Program.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
-				}
-			}
-
 			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
 			internal void InitializeCarSounds()
 			{
@@ -918,11 +896,11 @@ namespace OpenBve
 					Cars[i].Doors[0].OpenSound = new CarSound();
 					Cars[i].Doors[1].OpenSound = new CarSound();
 					Cars[i].Sounds.Flange = new CarSound[] { };
-					Cars[i].Horns = new TrainManager.Horn[]
+					Cars[i].Horns = new Horn[]
 					{
-						new TrainManager.Horn(this),
-						new TrainManager.Horn(this),
-						new TrainManager.Horn(this)
+						new Horn(this),
+						new Horn(this),
+						new Horn(this)
 					};
 					Cars[i].Sounds.RequestStop = new CarSound[]
 					{
@@ -937,6 +915,7 @@ namespace OpenBve
 					Cars[i].FrontAxle.PointSounds = new CarSound[] { };
 					Cars[i].RearAxle.PointSounds = new CarSound[] { };
 					Cars[i].CarBrake.Rub = new CarSound();
+					Cars[i].CarBrake.Release = new CarSound();
 					Cars[i].Sounds.Run = new CarSound[] { };
 					Cars[i].Sounds.SpringL = new CarSound();
 					Cars[i].Sounds.SpringR = new CarSound();

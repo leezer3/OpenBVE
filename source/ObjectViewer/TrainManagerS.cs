@@ -7,34 +7,14 @@
 
 using OpenBveApi.Trains;
 using TrainManager;
-using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
-using TrainManager.Power;
 
 namespace OpenBve {
 	internal class TrainManager : TrainManagerBase {
 
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
-		internal class Car : AbstractCar {
-			internal int CurrentSection;
-			internal CarPhysics Specs = new CarPhysics();
-			internal CarBrake CarBrake;
-			internal readonly Door[] Doors;
-			internal Car(Train train)
-			{
-				FrontAxle = new Axle(Program.CurrentHost, train, this);
-				RearAxle = new Axle(Program.CurrentHost, train, this);
-				CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] {});
-				CarBrake.mainReservoir = new MainReservoir(690000.0);
-				CarBrake.brakePipe = new BrakePipe(690000.0);
-				CarBrake.brakeCylinder = new BrakeCylinder(0.0);
-				CarBrake.straightAirPipe = new StraightAirPipe(690000.0);
-				Doors = new Door[2];
-			}
-		}
-		
 		// train specs
 		internal struct TrainSpecs {
 			internal bool HasConstSpeed;
@@ -43,7 +23,7 @@ namespace OpenBve {
 		}
 		// train
 		internal class Train : AbstractTrain {
-			internal Car[] Cars;
+			internal CarBase[] Cars;
 			internal TrainSpecs Specs;
 			internal CabHandles Handles;
 

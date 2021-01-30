@@ -9,6 +9,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
 using SoundManager;
+using TrainManager.Car;
 using Vector2 = OpenTK.Vector2;
 
 namespace OpenBve.Graphics.Renderers
@@ -78,7 +79,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
 
 			if (add >= Car.CarSections[0].Groups.Length)
@@ -309,7 +310,7 @@ namespace OpenBve.Graphics.Renderers
 
 			Status = Cursor.Status.Default;
 
-			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
 
 			if (add >= Car.CarSections[0].Groups.Length)
@@ -361,7 +362,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
 
 			if (add >= Car.CarSections[0].Groups.Length)
@@ -403,7 +404,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
 			if (add >= Car.CarSections[0].Groups.Length)
 			{

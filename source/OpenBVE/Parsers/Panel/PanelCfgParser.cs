@@ -7,6 +7,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.FunctionScripting;
 using TrainManager.Handles;
+using TrainManager.Car;
 
 namespace OpenBve {
 	internal static class PanelCfgParser {
@@ -20,7 +21,7 @@ namespace OpenBve {
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Encoding">The train's text encoding</param>
 		/// <param name="Car">The car to add the panel to</param>
-		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Car Car) {
+		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, CarBase Car) {
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
@@ -1175,7 +1176,7 @@ namespace OpenBve {
 		}
 
 		// create element
-		private static int CreateElement(TrainManager.Car Car, double Left, double Top, double Width, double Height, double FullWidth, double FullHeight, double WorldLeft, double WorldTop, double WorldWidth, double WorldHeight, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement) {
+		private static int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double FullWidth, double FullHeight, double WorldLeft, double WorldTop, double WorldWidth, double WorldHeight, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement) {
 			// create object
 			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Vector3[] v = new Vector3[4];

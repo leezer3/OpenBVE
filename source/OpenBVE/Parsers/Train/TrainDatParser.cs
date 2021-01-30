@@ -4,7 +4,6 @@ using System.Text;
 using System.Windows.Forms;
 using LibRender2.Trains;
 using TrainManager.BrakeSystems;
-using OpenBve.SafetySystems;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
@@ -890,10 +889,10 @@ namespace OpenBve {
 			if (MotorCars < 1) MotorCars = 1;
 			if (TrailerCars < 0) TrailerCars = 0;
 			int Cars = MotorCars + TrailerCars;
-			Train.Cars = new TrainManager.Car[Cars];
+			Train.Cars = new CarBase[Cars];
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i] = new TrainManager.Car(Train, i, CoefficientOfStaticFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+				Train.Cars[i] = new CarBase(Train, i, CoefficientOfStaticFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			}
 			double DistanceBetweenTheCars = 0.3;
 			
@@ -1227,9 +1226,9 @@ namespace OpenBve {
 
 			// assign motor/trailer-specific settings
 			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].ConstSpeed = new TrainManager.CarConstSpeed(Train.Cars[i]);
-				Train.Cars[i].HoldBrake = new TrainManager.CarHoldBrake(Train.Cars[i]);
-				Train.Cars[i].ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
+				Train.Cars[i].ConstSpeed = new CarConstSpeed(Train.Cars[i]);
+				Train.Cars[i].HoldBrake = new CarHoldBrake(Train.Cars[i]);
+				Train.Cars[i].ReAdhesionDevice = new CarReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
 				if (Train.Cars[i].Specs.IsMotorCar) {
 					// motor car
 					Train.Cars[i].EmptyMass = MotorCarMass;

@@ -430,8 +430,8 @@ namespace OpenBveApi.Hosts {
 
 		}
 
-		/// <summary>Returns whether the simulation is currently in progress</summary>
-		public virtual bool SimulationSetup => false;
+		/// <summary>Returns the current simulation state</summary>
+		public virtual SimulationState SimulationState => SimulationState.Running;
 
 		/// <summary>Returns the number of animated world objects used</summary>
 		public virtual int AnimatedWorldObjectsUsed

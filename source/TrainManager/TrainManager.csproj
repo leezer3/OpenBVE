@@ -62,6 +62,9 @@
     <Compile Include="Car\Door.DoorModes.cs" />
     <Compile Include="Car\Door.TrainDoorState.cs" />
     <Compile Include="Car\Physics.cs" />
+    <Compile Include="Car\Systems\ConstantSpeedDevice.cs" />
+    <Compile Include="Car\Systems\HoldBrake.cs" />
+    <Compile Include="Car\Systems\ReadhesionDevice.cs" />
     <Compile Include="Car\Systems\ReadhesionDevice.Types.cs" />
     <Compile Include="Car\Windscreen\Raindrop.cs" />
     <Compile Include="Car\Windscreen\Windscreen.cs" />
@@ -93,8 +96,11 @@
     <Compile Include="SafetySystems\DefaultSafetySystems.cs" />
     <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="SafetySystems\PilotLamp.cs" />
+    <Compile Include="SafetySystems\StationAdjustAlarm.cs" />
+    <Compile Include="SafetySystems\TrainSafetySystems.cs" />
     <Compile Include="TrainManager.cs" />
     <Compile Include="Train\CommandEntry.cs" />
+    <Compile Include="Train\Horn.cs" />
     <Compile Include="Train\Passengers.cs" />
     <Compile Include="Train\TrainBase.cs" />
     <Compile Include="Train\TrainSpecs.cs" />
@@ -110,6 +116,10 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
+      <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
+      <Name>RouteManager2</Name>
     </ProjectReference>
     <ProjectReference Include="..\SoundManager\SoundManager.csproj">
       <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>

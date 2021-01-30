@@ -427,7 +427,7 @@ namespace OpenBve.Parsers.Train
 					Interface.AddMessage(MessageType.Warning, false, "Interior view file is not supported for Car " + Car + " in XML file " + fileName);
 				}
 			}
-			Train.Cars[Car].ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+			Train.Cars[Car].ReAdhesionDevice = new CarReAdhesionDevice(Train.Cars[Car], readhesionDevice);
 		}
 	}
 }
