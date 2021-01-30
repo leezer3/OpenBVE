@@ -22,12 +22,16 @@ namespace TrainEditor {
 			internal Acceleration() {
 				const int n = 8;
 				this.Entries = new BveAccelerationCurve[n];
-				for (int i = 0; i < n; i++) {
-					this.Entries[i].StageZeroAcceleration = 1.0;
-					this.Entries[i].StageOneAcceleration = 1.0;
-					this.Entries[i].StageOneSpeed = 25.0;
-					this.Entries[i].StageTwoSpeed = 25.0;
-					this.Entries[i].StageTwoExponent = 1.0;
+				for (int i = 0; i < n; i++)
+				{
+					this.Entries[i] = new BveAccelerationCurve
+					{
+						StageZeroAcceleration = 1.0,
+						StageOneAcceleration = 1.0,
+						StageOneSpeed = 25.0,
+						StageTwoSpeed = 25.0,
+						StageTwoExponent = 1.0
+					};
 				}
 			}
 		}

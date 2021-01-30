@@ -56,6 +56,7 @@
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
     <Compile Include="Car\Bogie\Bogie.cs" />
     <Compile Include="Car\CarBase.cs" />
+    <Compile Include="Car\CarSounds.cs" />
     <Compile Include="Car\Coupler\Coupler.cs" />
     <Compile Include="Car\Door.cs" />
     <Compile Include="Car\Door.DoorModes.cs" />

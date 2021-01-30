@@ -147,7 +147,6 @@
     <Compile Include="Models\Trains\Performance.cs" />
     <Compile Include="Models\Trains\Pressure.cs" />
     <Compile Include="Models\Trains\Train.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
     <Compile Include="Simulation\TrainManager\TrainManager.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
