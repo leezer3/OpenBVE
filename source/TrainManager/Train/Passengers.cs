@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Trains;
 
 namespace TrainManager.Trains
 {

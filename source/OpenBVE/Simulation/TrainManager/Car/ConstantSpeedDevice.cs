@@ -1,4 +1,5 @@
-﻿using TrainManager.Handles;
+﻿using TrainManager.Car;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -14,9 +15,9 @@ namespace OpenBve
 			/// <summary>The update interval (Constant 0.5 for BVE2 / BVE4 trains)</summary>
 			private const double UpdateInterval = 0.5;
 			/// <summary>Holds a reference to the base car</summary>
-			private readonly Car Car;
+			private readonly CarBase Car;
 
-			internal CarConstSpeed(Car car)
+			internal CarConstSpeed(CarBase car)
 			{
 				this.Car = car;
 			}

@@ -23,11 +23,11 @@ namespace OpenBve
 			/// <summary>The amount of time with NO wheelslip occuring</summary>
 			private double TimeStable;
 			/// <summary>Holds a reference to the base car</summary>
-			private readonly Car Car;
+			private readonly CarBase Car;
 			/// <summary>The type of device</summary>
 			internal readonly ReadhesionDeviceType DeviceType;
 
-			internal CarReAdhesionDevice(Car car, ReadhesionDeviceType type)
+			internal CarReAdhesionDevice(CarBase car, ReadhesionDeviceType type)
 			{
 				this.Car = car;
 				this.DeviceType = type;

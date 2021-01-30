@@ -19,7 +19,6 @@ using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
-using TrainManager.Power;
 using TrainManager.Trains;
 
 namespace OpenBve
@@ -28,7 +27,7 @@ namespace OpenBve
 	public partial class TrainManager
 	{
 		/// <summary>The root class for a train within the simulation</summary>
-		public partial class Train : AbstractTrain
+		public partial class Train : TrainBase
 		{
 			/// <summary>Holds the safety systems for the train</summary>
 			internal TrainSafetySystems SafetySystems;
@@ -37,12 +36,9 @@ namespace OpenBve
 			/// <summary>The driver body</summary>
 			internal DriverBody DriverBody;
 
-			/// <summary>The index of the car which the camera is currently anchored to</summary>
-			internal int CameraCar;
-			internal CabHandles Handles;
+			
 			internal Car[] Cars;
-			internal TrainSpecs Specs;
-			internal TrainPassengers Passengers;
+			
 			
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;
@@ -52,10 +48,7 @@ namespace OpenBve
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			
-			/// <summary>Coefficient of friction used for braking</summary>
-			internal const double CoefficientOfGroundFriction = 0.5;
-			/// <summary>The speed difference in m/s above which derailments etc. will occur</summary>
-			internal double CriticalCollisionSpeedDifference = 8.0;
+			
 
 			private double previousRouteLimit = 0.0;
 

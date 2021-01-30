@@ -10,7 +10,7 @@ namespace OpenBve
 	public partial class TrainManager
 	{
 		/// <summary>The root class for a train within the simulation</summary>
-		public partial class Train : AbstractTrain
+		public partial class Train
 		{
 			/// <inheritdoc/>
 			public override void RequestStop(RequestStop stopRequest)

@@ -62,7 +62,7 @@
     <Compile Include="Car\Door.DoorModes.cs" />
     <Compile Include="Car\Door.TrainDoorState.cs" />
     <Compile Include="Car\Physics.cs" />
-    <Compile Include="Car\ReadhesionDevice.Types.cs" />
+    <Compile Include="Car\Systems\ReadhesionDevice.Types.cs" />
     <Compile Include="Car\Windscreen\Raindrop.cs" />
     <Compile Include="Car\Windscreen\Windscreen.cs" />
     <Compile Include="Car\Windscreen\Wiper.cs" />
@@ -94,7 +94,9 @@
     <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="SafetySystems\PilotLamp.cs" />
     <Compile Include="TrainManager.cs" />
+    <Compile Include="Train\CommandEntry.cs" />
     <Compile Include="Train\Passengers.cs" />
+    <Compile Include="Train\TrainBase.cs" />
     <Compile Include="Train\TrainSpecs.cs" />
   </ItemGroup>
   <ItemGroup>

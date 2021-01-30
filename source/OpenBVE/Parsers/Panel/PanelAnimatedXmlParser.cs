@@ -11,6 +11,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve.Parsers.Panel
@@ -114,8 +115,8 @@ namespace OpenBve.Parsers.Panel
 							Vector3 Size = Vector3.Zero;
 							int JumpScreen = GroupIndex - 1;
 							List<int> SoundIndices = new List<int>();
-							List<TrainManager.CommandEntry> CommandEntries = new List<TrainManager.CommandEntry>();
-							TrainManager.CommandEntry CommandEntry = new TrainManager.CommandEntry();
+							List<CommandEntry> CommandEntries = new List<CommandEntry>();
+							CommandEntry CommandEntry = new CommandEntry();
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
@@ -303,7 +304,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void ParseTouchCommandEntryNode(string fileName, XElement parent, ICollection<TrainManager.CommandEntry> entries)
+		private static void ParseTouchCommandEntryNode(string fileName, XElement parent, ICollection<CommandEntry> entries)
 		{
 			foreach (XElement childNode in parent.Elements())
 			{
@@ -313,7 +314,7 @@ namespace OpenBve.Parsers.Panel
 				}
 				else
 				{
-					TrainManager.CommandEntry entry = new TrainManager.CommandEntry();
+					CommandEntry entry = new CommandEntry();
 					System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
 					string section = childNode.Name.LocalName;
@@ -374,7 +375,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void CreateTouchElement(ElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int[] SoundIndices, TrainManager.CommandEntry[] CommandEntries)
+		private static void CreateTouchElement(ElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries)
 		{
 			Vertex t0 = new Vertex(Size.X, Size.Y, -Size.Z);
             Vertex t1 = new Vertex(Size.X, -Size.Y, -Size.Z);

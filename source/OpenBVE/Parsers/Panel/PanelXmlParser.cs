@@ -12,6 +12,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using TrainManager.Car;
+using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve.Parsers.Panel
@@ -420,8 +421,8 @@ namespace OpenBve.Parsers.Panel
 							Vector2 Size = new Vector2();
 							int JumpScreen = GroupIndex - 1;
 							List<int> SoundIndices = new List<int>();
-							List<TrainManager.CommandEntry> CommandEntries = new List<TrainManager.CommandEntry>();
-							TrainManager.CommandEntry CommandEntry = new TrainManager.CommandEntry();
+							List<CommandEntry> CommandEntries = new List<CommandEntry>();
+							CommandEntry CommandEntry = new CommandEntry();
 							int Layer = 0;
 
 							foreach (XElement KeyNode in SectionElement.Elements())
@@ -1872,7 +1873,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void ParseTouchCommandEntryNode(string fileName, XElement parent, ICollection<TrainManager.CommandEntry> entries)
+		private static void ParseTouchCommandEntryNode(string fileName, XElement parent, ICollection<CommandEntry> entries)
 		{
 			foreach (XElement childNode in parent.Elements())
 			{
@@ -1882,7 +1883,7 @@ namespace OpenBve.Parsers.Panel
 				}
 				else
 				{
-					TrainManager.CommandEntry entry = new TrainManager.CommandEntry();
+					CommandEntry entry = new CommandEntry();
 					System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
 					string section = childNode.Name.LocalName;
@@ -1943,7 +1944,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		internal static void CreateTouchElement(ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, TrainManager.CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
+		internal static void CreateTouchElement(ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
 			double WorldWidth, WorldHeight;
 			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height)
