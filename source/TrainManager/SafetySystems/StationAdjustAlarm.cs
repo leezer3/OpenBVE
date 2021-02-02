@@ -30,12 +30,7 @@ namespace TrainManager.SafetySystems
 				// correct stop position
 				if (!Lit & (baseTrain.StationDistanceToStopPoint > tb | baseTrain.StationDistanceToStopPoint < -tf))
 				{
-					SoundBuffer buffer = AdjustAlarm.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = AdjustAlarm.Position;
-						TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, pos, baseTrain.Cars[baseTrain.DriverCar], false);
-					}
+					AdjustAlarm.Play(1.0, 1.0, baseTrain.Cars[baseTrain.DriverCar], false);
 					if (baseTrain.IsPlayerTrain)
 					{
 						GeneralMessage message = new GeneralMessage

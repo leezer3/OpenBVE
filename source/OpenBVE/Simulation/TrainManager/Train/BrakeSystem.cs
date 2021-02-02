@@ -175,11 +175,8 @@ namespace OpenBve
 
 				if(Cars[CarIndex].CarBrake.airSound != null)
 				{
-					SoundBuffer buffer = Cars[CarIndex].CarBrake.airSound.Buffer;
-					if (buffer != null)
-					{
-						Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].CarBrake.airSound.Position, Cars[CarIndex], false);
-					}
+					Cars[CarIndex].CarBrake.airSound.Play(1.0, 1.0, Cars[CarIndex], false);
+					
 				}
 
 				// deceleration provided by motor
@@ -203,40 +200,36 @@ namespace OpenBve
 				Cars[CarIndex].HoldBrake.Update(ref DecelerationDueToMotor, Handles.HoldBrake.Actual);
 				{
 					// rub sound
-					SoundBuffer buffer = Cars[CarIndex].CarBrake.Rub.Buffer;
-					if (buffer != null)
+					double spd = Math.Abs(Cars[CarIndex].CurrentSpeed);
+					double pitch = 1.0 / (spd + 1.0) + 1.0;
+					double gain = Cars[CarIndex].Derailed ? 0.0 : Cars[CarIndex].CarBrake.brakeCylinder.CurrentPressure / Cars[CarIndex].CarBrake.brakeCylinder.ServiceMaximumPressure;
+					if (spd < 1.38888888888889)
 					{
-						double spd = Math.Abs(Cars[CarIndex].CurrentSpeed);
-						double pitch = 1.0 / (spd + 1.0) + 1.0;
-						double gain = Cars[CarIndex].Derailed ? 0.0 : Cars[CarIndex].CarBrake.brakeCylinder.CurrentPressure / Cars[CarIndex].CarBrake.brakeCylinder.ServiceMaximumPressure;
-						if (spd < 1.38888888888889)
-						{
-							double t = spd * spd;
-							gain *= 1.5552 * t - 0.746496 * spd * t;
-						}
-						else if (spd > 12.5)
-						{
-							double t = spd - 12.5;
-							const double fadefactor = 0.1;
-							gain *= 1.0 / (fadefactor * t * t + 1.0);
-						}
+						double t = spd * spd;
+						gain *= 1.5552 * t - 0.746496 * spd * t;
+					}
+					else if (spd > 12.5)
+					{
+						double t = spd - 12.5;
+						const double fadefactor = 0.1;
+						gain *= 1.0 / (fadefactor * t * t + 1.0);
+					}
 
-						if (Program.Sounds.IsPlaying(Cars[CarIndex].CarBrake.Rub.Source))
+					if (Program.Sounds.IsPlaying(Cars[CarIndex].CarBrake.Rub.Source))
+					{
+						if (pitch > 0.01 & gain > 0.001)
 						{
-							if (pitch > 0.01 & gain > 0.001)
-							{
-								Cars[CarIndex].CarBrake.Rub.Source.Pitch = pitch;
-								Cars[CarIndex].CarBrake.Rub.Source.Volume = gain;
-							}
-							else
-							{
-								Program.Sounds.StopSound(Cars[CarIndex].CarBrake.Rub);
-							}
+							Cars[CarIndex].CarBrake.Rub.Source.Pitch = pitch;
+							Cars[CarIndex].CarBrake.Rub.Source.Volume = gain;
 						}
-						else if (pitch > 0.02 & gain > 0.01)
+						else
 						{
-							Cars[CarIndex].CarBrake.Rub.Source = Program.Sounds.PlaySound(buffer, pitch, gain, Cars[CarIndex].CarBrake.Rub.Position, Cars[CarIndex], true);
+							Program.Sounds.StopSound(Cars[CarIndex].CarBrake.Rub);
 						}
+					}
+					else if (pitch > 0.02 & gain > 0.01)
+					{
+						Cars[CarIndex].CarBrake.Rub.Play(pitch, gain, Cars[CarIndex], true);
 					}
 				}
 			}

@@ -107,10 +107,7 @@ namespace TrainManager.Car
 						RainDrops[nextDrop].RemainingLife = TrainManagerBase.RandomNumberGenerator.NextDouble() * DropLife;
 					}
 					//We want to play the drop sound even if all drops are currently visible (e.g. the wipers are off and it's still raining)
-					if (DropSound.Buffer != null)
-					{
-						TrainManagerBase.currentHost.PlaySound(DropSound.Buffer, 1.0, 1.0, DropSound.Position, Car, false);
-					}
+					DropSound.Play(1.0, 1.0, Car, false);
 					dropTimer = 0.0;
 				}
 			}

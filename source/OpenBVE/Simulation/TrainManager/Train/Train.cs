@@ -376,10 +376,7 @@ namespace OpenBve
 								
 								if (Cars[j].Specs.IsMotorCar)
 								{
-									if (Cars[j].Sounds.Loop.Buffer != null)
-									{
-										Cars[j].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, Cars[j].Sounds.Loop.Position, Cars[j], true);
-									}
+									Cars[j].Sounds.Loop.Play(1.0, 1.0, Cars[j], true);
 								}
 							}
 						}

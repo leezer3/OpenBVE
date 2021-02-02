@@ -46,10 +46,7 @@ namespace TrainManager.Car
 		/// <summary>Changes the wiper speed</summary>
 		public void ChangeSpeed(Translations.Command Command)
 		{
-			if (SwitchSound.Buffer != null)
-			{
-				TrainManagerBase.currentHost.PlaySound(SwitchSound.Buffer, 1.0, 1.0, SwitchSound.Position, Windscreen.Car, false);
-			}
+			SwitchSound.Play(1.0, 1.0, Windscreen.Car, false);
 			
 			switch (Command)
 			{
@@ -193,10 +190,7 @@ namespace TrainManager.Car
 						{
 							if (soundTriggered == false)
 							{
-								if (WetWipeSound.Buffer != null)
-								{
-									TrainManagerBase.currentHost.PlaySound(WetWipeSound.Buffer, 1.0, 1.0, WetWipeSound.Position, Windscreen.Car, false);
-								}
+								WetWipeSound.Play(1.0, 1.0, Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
@@ -204,10 +198,7 @@ namespace TrainManager.Car
 						{
 							if (soundTriggered == false)
 							{
-								if (DryWipeSound.Buffer != null)
-								{
-									TrainManagerBase.currentHost.PlaySound(DryWipeSound.Buffer, 1.0, 1.0, DryWipeSound.Position, Windscreen.Car, false);
-								}
+								DryWipeSound.Play(1.0, 1.0, Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
@@ -220,10 +211,7 @@ namespace TrainManager.Car
 						{
 							if (soundTriggered == false)
 							{
-								if (WetWipeSound.Buffer != null)
-								{
-									TrainManagerBase.currentHost.PlaySound(WetWipeSound.Buffer, 1.0, 1.0, WetWipeSound.Position, Windscreen.Car, false);
-								}
+								WetWipeSound.Play(1.0, 1.0, Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
@@ -231,10 +219,7 @@ namespace TrainManager.Car
 						{
 							if (soundTriggered == false)
 							{
-								if (DryWipeSound.Buffer != null)
-								{
-									TrainManagerBase.currentHost.PlaySound(DryWipeSound.Buffer, 1.0, 1.0, DryWipeSound.Position, Windscreen.Car, false);
-								}
+								DryWipeSound.Play(1.0, 1.0, Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}

@@ -33,13 +33,7 @@ namespace OpenBve
 				{
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						SoundBuffer buffer = Cars[i].Doors[0].OpenSound.Buffer;
-						if (buffer != null)
-						{
-							OpenBveApi.Math.Vector3 pos = Cars[i].Doors[0].OpenSound.Position;
-							Program.Sounds.PlaySound(buffer, Cars[i].Specs.DoorOpenPitch, 1.0, pos, Cars[i], false);
-						}
-
+						Cars[i].Doors[0].OpenSound.Play(Cars[i].Specs.DoorOpenPitch, 1.0, Cars[i], false);
 						for (int j = 0; j < Cars[i].Doors.Length; j++)
 						{
 							if (Cars[i].Doors[j].Direction == -1)
@@ -54,13 +48,7 @@ namespace OpenBve
 				{
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						SoundBuffer buffer = Cars[i].Doors[1].OpenSound.Buffer;
-						if (buffer != null)
-						{
-							OpenBveApi.Math.Vector3 pos = Cars[i].Doors[1].OpenSound.Position;
-							Program.Sounds.PlaySound(buffer, Cars[i].Specs.DoorOpenPitch, 1.0, pos, Cars[i], false);
-						}
-
+						Cars[i].Doors[1].OpenSound.Play(Cars[i].Specs.DoorOpenPitch, 1.0, Cars[i], false);
 						for (int j = 0; j < Cars[i].Doors.Length; j++)
 						{
 							if (Cars[i].Doors[j].Direction == 1)
@@ -95,12 +83,7 @@ namespace OpenBve
 				{
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						SoundBuffer buffer = Cars[i].Doors[0].CloseSound.Buffer;
-						if (buffer != null)
-						{
-							OpenBveApi.Math.Vector3 pos = Cars[i].Doors[0].CloseSound.Position;
-							Program.Sounds.PlaySound(buffer, Cars[i].Specs.DoorClosePitch, 1.0, pos, Cars[i], false);
-						}
+						Cars[i].Doors[0].CloseSound.Play(Cars[i].Specs.DoorClosePitch, 1.0, Cars[i], false);
 					}
 				}
 
@@ -108,12 +91,7 @@ namespace OpenBve
 				{
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						SoundBuffer buffer = Cars[i].Doors[1].CloseSound.Buffer;
-						if (buffer != null)
-						{
-							OpenBveApi.Math.Vector3 pos = Cars[i].Doors[1].CloseSound.Position;
-							Program.Sounds.PlaySound(buffer, Cars[i].Specs.DoorClosePitch, 1.0, pos, Cars[i], false);
-						}
+						Cars[i].Doors[1].CloseSound.Play(Cars[i].Specs.DoorClosePitch, 1.0, Cars[i], false);
 					}
 				}
 			}

@@ -29,22 +29,18 @@ namespace TrainManager.SafetySystems
 		public void Trigger()
 		{
 			Lit = true;
-			SoundBuffer buffer = Sound.Buffer;
 			if (TrainManagerBase.currentHost.SoundIsPlaying(Sound.Source))
 			{
 				return;
 			}
-			if (buffer != null)
+			switch (Type)
 			{
-				switch (Type)
-				{
-					case PassAlarmType.Single:
-						Sound.Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseCar, false);
-						break;
-					case PassAlarmType.Loop:
-						Sound.Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseCar, true);
-						break;
-				}
+				case PassAlarmType.Single:
+					Sound.Play(1.0, 1.0, baseCar, false);
+					break;
+				case PassAlarmType.Loop:
+					Sound.Play(1.0, 1.0, baseCar, true);
+					break;
 			}
 		}
 		/// <summary>Halts the pass alarm</summary>

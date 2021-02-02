@@ -12,7 +12,7 @@ namespace OpenBve
 {
 	using OpenBveApi.Math;
 
-	internal partial class Sounds
+	internal partial class Sounds : SoundsBase
 	{
 
 		/// <summary>Updates the sound component. Should be called every frame.</summary>

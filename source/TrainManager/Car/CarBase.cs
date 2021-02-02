@@ -288,13 +288,7 @@ namespace TrainManager.Car
 
 			if (sl)
 			{
-				SoundBuffer buffer = Doors[0].OpenSound.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Doors[0].OpenSound.Position;
-					TrainManagerBase.currentHost.PlaySound(buffer, Specs.DoorOpenPitch, 1.0, pos, this, false);
-				}
-
+				Doors[0].OpenSound.Play(Specs.DoorOpenPitch, 1.0, this, false);
 				for (int i = 0; i < Doors.Length; i++)
 				{
 					if (Doors[i].Direction == -1)
@@ -306,13 +300,7 @@ namespace TrainManager.Car
 
 			if (sr)
 			{
-				SoundBuffer buffer = Doors[1].OpenSound.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Doors[1].OpenSound.Position;
-					TrainManagerBase.currentHost.PlaySound(buffer, Specs.DoorOpenPitch, 1.0, pos, this, false);
-				}
-
+				Doors[1].OpenSound.Play(Specs.DoorOpenPitch, 1.0, this, false);
 				for (int i = 0; i < Doors.Length; i++)
 				{
 					if (Doors[i].Direction == 1)
@@ -451,11 +439,7 @@ namespace TrainManager.Car
 				}
 				else if (pitch > 0.02 & gain > 0.01)
 				{
-					SoundBuffer buffer = Sounds.Run[j].Buffer;
-					if (buffer != null)
-					{
-						Sounds.Run[j].Source = (SoundSource) TrainManagerBase.currentHost.PlaySound(buffer, pitch, gain, Sounds.Run[j].Position, this, true);
-					}
+					Sounds.Run[j].Play(pitch, gain, this, true);
 				}
 			}
 		}
@@ -1162,26 +1146,18 @@ namespace TrainManager.Car
 				const double angleTolerance = 0.001;
 				if (diff < -angleTolerance)
 				{
-					SoundBuffer buffer = Sounds.SpringL.Buffer;
-					if (buffer != null)
+					if (!TrainManagerBase.currentHost.SoundIsPlaying(Sounds.SpringL.Source))
 					{
-						if (!TrainManagerBase.currentHost.SoundIsPlaying(Sounds.SpringL.Source))
-						{
-							Sounds.SpringL.Source = (SoundSource) TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, Sounds.SpringL.Position, this, false);
-						}
+						Sounds.SpringL.Play(1.0, 1.0, this, false);
 					}
 
 					Sounds.SpringPlayedAngle = a;
 				}
 				else if (diff > angleTolerance)
 				{
-					SoundBuffer buffer = Sounds.SpringR.Buffer;
-					if (buffer != null)
+					if (!TrainManagerBase.currentHost.SoundIsPlaying(Sounds.SpringR.Source))
 					{
-						if (!TrainManagerBase.currentHost.SoundIsPlaying(Sounds.SpringR.Source))
-						{
-							Sounds.SpringR.Source = (SoundSource) TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, Sounds.SpringR.Position, this, false);
-						}
+						Sounds.SpringR.Play(1.0, 1.0, this, false);
 					}
 
 					Sounds.SpringPlayedAngle = a;
@@ -1255,11 +1231,7 @@ namespace TrainManager.Car
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						SoundBuffer buffer = Sounds.Flange[i].Buffer;
-						if (buffer != null)
-						{
-							Sounds.Flange[i].Source = (SoundSource) TrainManagerBase.currentHost.PlaySound(buffer, pitch, gain, Sounds.Flange[i].Position, this, true);
-						}
+						Sounds.Flange[i].Play(pitch, gain, this, true);
 					}
 				}
 			}

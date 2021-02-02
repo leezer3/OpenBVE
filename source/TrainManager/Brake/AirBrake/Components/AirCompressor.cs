@@ -45,17 +45,8 @@ namespace TrainManager.BrakeSystems
 				{
 					Enabled = false;
 					LoopStarted = false;
-					SoundBuffer buffer = EndSound.Buffer;
-					if (buffer != null)
-					{
-						TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, EndSound.Position, baseCar, false);
-					}
-
-					buffer = LoopSound.Buffer;
-					if (buffer != null)
-					{
-						LoopSound.Stop();
-					}
+					EndSound.Play(1.0, 1.0, baseCar, false);
+					LoopSound.Stop();
 				}
 				else
 				{
@@ -63,11 +54,7 @@ namespace TrainManager.BrakeSystems
 					if (!LoopStarted && TrainManagerBase.currentHost.InGameTime > TimeStarted + 5.0)
 					{
 						LoopStarted = true;
-						SoundBuffer buffer = LoopSound.Buffer;
-						if (buffer != null)
-						{
-							LoopSound.Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, LoopSound.Position, baseCar, true);
-						}
+						LoopSound.Play(1.0, 1.0, baseCar, true);
 					}
 				}
 			}
@@ -77,11 +64,7 @@ namespace TrainManager.BrakeSystems
 				{
 					Enabled = true;
 					TimeStarted = TrainManagerBase.currentHost.InGameTime;
-					SoundBuffer buffer = StartSound.Buffer;
-					if (buffer != null)
-					{
-						TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, StartSound.Position, baseCar, false);
-					}
+					StartSound.Play(1.0, 1.0, baseCar, false);
 				}
 			}
 		}

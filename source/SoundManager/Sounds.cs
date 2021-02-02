@@ -28,10 +28,10 @@ namespace SoundManager
 		private int BufferCount = 0;
 
 		/// <summary>A list of all sound sources.</summary>
-		protected SoundSource[] Sources = new SoundSource[16];
+		protected internal static SoundSource[] Sources = new SoundSource[16];
 
 		/// <summary>The number of sound sources.</summary>
-		protected int SourceCount = 0;
+		protected internal static int SourceCount = 0;
 
 		/// <summary>The gain threshold. Sounds with gains below this value are not played.</summary>
 		protected const double GainThreshold = 0.0001;
