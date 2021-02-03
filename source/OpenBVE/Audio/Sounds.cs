@@ -18,7 +18,7 @@ namespace OpenBve
 				var t = (TrainManager.Train) train;
 				for (int i = 0; i < SourceCount; i++)
 				{
-					if (t.Cars.Contains(Sources[i].Parent))
+					if (t.Cars.Contains(Sources[i].Parent) || Sources[i].Parent == train)
 					{
 						if (Sources[i].State == SoundSourceState.Playing)
 						{

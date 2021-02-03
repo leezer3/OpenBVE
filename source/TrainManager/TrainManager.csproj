@@ -99,7 +99,9 @@
     <Compile Include="SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="SafetySystems\TrainSafetySystems.cs" />
     <Compile Include="TrainManager.cs" />
+    <Compile Include="Train\BrakeSystem.cs" />
     <Compile Include="Train\CommandEntry.cs" />
+    <Compile Include="Train\Doors.cs" />
     <Compile Include="Train\Horn.cs" />
     <Compile Include="Train\Passengers.cs" />
     <Compile Include="Train\TrainBase.cs" />

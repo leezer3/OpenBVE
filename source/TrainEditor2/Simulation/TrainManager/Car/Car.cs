@@ -79,13 +79,7 @@ namespace TrainEditor2.Simulation.TrainManager
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						SoundBuffer buffer = Sounds.Run[j].Buffer;
-
-						if (buffer != null)
-						{
-							Vector3 pos = Sounds.Run[j].Position;
-							Sounds.Run[j].Source = Program.SoundApi.PlaySound(buffer, pitch, gain, pos, baseTrain, true);
-						}
+						Sounds.Run[j].Play(pitch, gain, this, true);
 					}
 				}
 			}

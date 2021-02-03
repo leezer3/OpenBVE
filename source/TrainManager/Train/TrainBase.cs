@@ -8,7 +8,7 @@ namespace TrainManager.Trains
 	/*
 	 * TEMPORARY NAME AND CLASS TO ALLOW FOR MOVE IN PARTS
 	 */
-	public abstract class TrainBase : AbstractTrain
+	public abstract partial class TrainBase : AbstractTrain
 	{
 		/// <summary>Contains information on the specifications of the train</summary>
 		public TrainSpecs Specs;

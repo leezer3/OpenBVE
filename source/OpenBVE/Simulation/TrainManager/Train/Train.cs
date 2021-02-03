@@ -426,8 +426,7 @@ namespace OpenBve
 				//Trigger point sounds if appropriate
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Vector3 p = Vector3.Zero;
-					SoundBuffer buffer = null;
+					CarSound c = (CarSound)Cars[i].FrontAxle.PointSounds[0];
 					if (Cars[i].FrontAxle.PointSoundTriggered)
 					{
 						
@@ -444,26 +443,20 @@ namespace OpenBve
 							//No point sounds defined at all
 							continue;
 						}
-						CarSound c = (CarSound) Cars[i].FrontAxle.PointSounds[bufferIndex];
+						c = (CarSound) Cars[i].FrontAxle.PointSounds[bufferIndex];
 						if (c.Buffer == null)
 						{
 							c = (CarSound)Cars[i].FrontAxle.PointSounds[0];
 						}
-						buffer = c.Buffer;
-						p = c.Position;
 					}
-					if (buffer != null)
+					if (c != null)
 					{
 						double spd = Math.Abs(CurrentSpeed);
 						double pitch = spd / 12.5;
 						double gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
-						if (pitch < 0.2 | gain < 0.2)
+						if (pitch > 0.2 && gain > 0.2)
 						{
-							buffer = null;
-						}
-						if (buffer != null)
-						{
-							Program.Sounds.PlaySound(buffer, pitch, gain, p, Cars[i], false);
+							c.Play(pitch, gain, Cars[i], false);
 						}
 					}
 				}

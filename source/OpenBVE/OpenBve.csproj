@@ -208,7 +208,6 @@
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
     <Compile Include="Simulation\TrainManager\DriverBody.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
-    <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
     <Compile Include="Simulation\TrainManager\Train\Plugin.cs" />
