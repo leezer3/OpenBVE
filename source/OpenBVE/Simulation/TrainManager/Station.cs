@@ -384,11 +384,11 @@ namespace OpenBve
 										break;
 									case StationType.ChangeEnds:
 										// Change ends always jumps to the NEXT station
-										JumpTrain(Train, i + 1);
+										Train.Jump(i + 1);
 										break;
 									case StationType.Jump:
 										// Jumps to an arbritrary station as defined in the routefile
-										JumpTrain(Train, Program.CurrentRoute.Stations[i].JumpIndex);
+										Train.Jump(Program.CurrentRoute.Stations[i].JumpIndex);
 										break;
 								}
 							}

@@ -168,6 +168,17 @@ namespace OpenBve
 					Synchronize();
 				}
 			}
+
+			public override void Jump(int StationIndex)
+			{
+				Dispose();
+				State = TrainState.Pending;
+				Game.TrackFollowingObjectAI AI = this.AI as Game.TrackFollowingObjectAI;
+				if (AI != null)
+				{
+					AI.SetupTravelData(AppearanceTime);
+				}
+			}
 		}
 	}
 }

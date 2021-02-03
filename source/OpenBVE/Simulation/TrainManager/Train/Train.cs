@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using LibRender2.Screens;
 using LibRender2.Trains;
 using TrainManager.BrakeSystems;
 using OpenBve.Parsers.Panel;
@@ -950,6 +951,161 @@ namespace OpenBve
 			public override double RearCarTrackPosition()
 			{
 				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
+			}
+
+			public override void Jump(int stationIndex)
+			{
+				SafetySystems.PassAlarm.Halt();
+				int currentTrackElement = Cars[0].FrontAxle.Follower.LastTrackElement;
+				if (IsPlayerTrain)
+				{
+					for (int i = 0; i < ObjectManager.AnimatedWorldObjects.Length; i++)
+					{
+						var obj = ObjectManager.AnimatedWorldObjects[i] as OpenBveApi.Objects.TrackFollowingObject;
+						if (obj != null)
+						{
+							//Track followers should be reset if we jump between stations
+							obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.FrontAxlePosition;
+							obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.RearAxlePosition;
+							obj.FrontAxleFollower.UpdateWorldCoordinates(false);
+							obj.RearAxleFollower.UpdateWorldCoordinates(false);
+						}
+
+					}
+				}
+
+				StationState = TrainStopState.Jumping;
+				int stopIndex = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(NumberOfCars);
+				if (stopIndex >= 0)
+				{
+					if (IsPlayerTrain)
+					{
+						if (Plugin != null)
+						{
+							Plugin.BeginJump((OpenBveApi.Runtime.InitializationModes) Interface.CurrentOptions.TrainStart);
+						}
+					}
+
+					for (int h = 0; h < Cars.Length; h++)
+					{
+						Cars[h].CurrentSpeed = 0.0;
+					}
+
+					double d = Program.CurrentRoute.Stations[stationIndex].Stops[stopIndex].TrackPosition - Cars[0].FrontAxle.Follower.TrackPosition + Cars[0].FrontAxle.Position - 0.5 * Cars[0].Length;
+					if (IsPlayerTrain)
+					{
+						SoundsBase.SuppressSoundEvents = true;
+					}
+
+					while (d != 0.0)
+					{
+						double x;
+						if (Math.Abs(d) > 1.0)
+						{
+							x = (double) Math.Sign(d);
+						}
+						else
+						{
+							x = d;
+						}
+
+						for (int h = 0; h < Cars.Length; h++)
+						{
+							Cars[h].Move(x);
+						}
+
+						if (Math.Abs(d) >= 1.0)
+						{
+							d -= x;
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					if (IsPlayerTrain)
+					{
+						TrainManager.UnderailTrains();
+						SoundsBase.SuppressSoundEvents = false;
+					}
+
+					if (Handles.EmergencyBrake.Driver)
+					{
+						ApplyNotch(0, false, 0, true);
+					}
+					else
+					{
+						ApplyNotch(0, false, Handles.Brake.MaximumNotch, false);
+						ApplyAirBrakeHandle(AirBrakeHandleState.Service);
+					}
+
+					if (Program.CurrentRoute.Sections.Length > 0)
+					{
+						Program.CurrentRoute.UpdateAllSections();
+					}
+
+					if (IsPlayerTrain)
+					{
+						if (Game.CurrentScore.ArrivalStation <= stationIndex)
+						{
+							Game.CurrentScore.ArrivalStation = stationIndex + 1;
+						}
+					}
+
+					if (IsPlayerTrain)
+					{
+						if (Program.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
+						{
+							Program.CurrentRoute.SecondsSinceMidnight = Program.CurrentRoute.Stations[stationIndex].ArrivalTime;
+						}
+						else if (Program.CurrentRoute.Stations[stationIndex].DepartureTime >= 0.0)
+						{
+							Program.CurrentRoute.SecondsSinceMidnight = Program.CurrentRoute.Stations[stationIndex].DepartureTime - Program.CurrentRoute.Stations[stationIndex].StopTime;
+						}
+					}
+
+					for (int i = 0; i < Cars.Length; i++)
+					{
+						Cars[i].Doors[0].AnticipatedOpen = Program.CurrentRoute.Stations[stationIndex].OpenLeftDoors;
+						Cars[i].Doors[1].AnticipatedOpen = Program.CurrentRoute.Stations[stationIndex].OpenRightDoors;
+					}
+
+					if (IsPlayerTrain)
+					{
+						Game.CurrentScore.DepartureStation = stationIndex;
+						Program.Renderer.CurrentInterface = InterfaceType.Normal;
+					}
+
+					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+					TrainManager.UpdateTrainObjects(0.0, true);
+					if (IsPlayerTrain)
+					{
+						if (Plugin != null)
+						{
+							Plugin.EndJump();
+						}
+					}
+
+					StationState = TrainStopState.Pending;
+					if (IsPlayerTrain)
+					{
+						LastStation = stationIndex;
+					}
+
+					int newTrackElement = Cars[0].FrontAxle.Follower.LastTrackElement;
+					if (newTrackElement < currentTrackElement)
+					{
+						for (int i = newTrackElement; i < currentTrackElement; i++)
+						{
+							for (int j = 0; j < Program.CurrentHost.Tracks[0].Elements[i].Events.Length; j++)
+							{
+								Program.CurrentHost.Tracks[0].Elements[i].Events[j].Reset();
+							}
+
+						}
+					}
+				}
 			}
 		}
 	}
