@@ -3,27 +3,36 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
-namespace OpenBve
+namespace TrainManager.Trains
 {
-	internal class DriverBody
+	/// <summary>Represents the driver's body, as affected by pitch, roll etc.</summary>
+	public class DriverBody
 	{
-		internal Vector2 Slow;
-		internal Vector2 Fast;
-		internal double Roll;
-		internal Damping RollDamping;
-		internal double Pitch;
-		internal Damping PitchDamping;
+		/// <summary>The slow update vector</summary>
+		private Vector2 Slow;
+		/// <summary>The fast update vector</summary>
+		private Vector2 Fast;
+		/// <summary>The current roll value</summary>
+		public double Roll;
+		/// <summary>The damping for the roll</summary>
+		private readonly Damping RollDamping;
+		/// <summary>The current pitch value</summary>
+		public double Pitch;
+		/// <summary>The damping for the pitch value</summary>
+		private readonly Damping PitchDamping;
+		/// <summary>Contains a reference to the base train</summary>
+		private readonly TrainBase Train;
 
-		private readonly TrainManager.Train Train;
-
-		internal DriverBody(TrainManager.Train train)
+		public DriverBody(TrainBase train)
 		{
 			this.Train = train;
+			PitchDamping = new Damping(6.0, 0.3);
+			RollDamping = new Damping(6.0, 0.3);
 		}
 
-		internal void Update(double TimeElapsed)
+		public void Update(double TimeElapsed)
 		{
-			if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
+			if (TrainManagerBase.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 			{
 				{
 					// pitch
@@ -71,12 +80,6 @@ namespace OpenBve
 					{
 						Pitch = 0.1;
 					}
-
-					if (PitchDamping == null)
-					{
-						PitchDamping = new Damping(6.0, 0.3);
-					}
-
 					PitchDamping.Update(TimeElapsed, ref Pitch, true);
 				}
 				{
@@ -159,11 +162,6 @@ namespace OpenBve
 					double diffX = Slow.X - Fast.X;
 					diffX = (double) Math.Sign(diffX) * diffX * diffX;
 					Roll = 0.5 * Math.Atan(0.3 * diffX);
-					if (RollDamping == null)
-					{
-						RollDamping = new Damping(6.0, 0.3);
-					}
-
 					RollDamping.Update(TimeElapsed, ref Roll, true);
 				}
 			}

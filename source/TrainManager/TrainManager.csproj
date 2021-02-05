@@ -102,6 +102,7 @@
     <Compile Include="Train\BrakeSystem.cs" />
     <Compile Include="Train\CommandEntry.cs" />
     <Compile Include="Train\Doors.cs" />
+    <Compile Include="Train\DriverBody.cs" />
     <Compile Include="Train\Horn.cs" />
     <Compile Include="Train\Passengers.cs" />
     <Compile Include="Train\TrainBase.cs" />

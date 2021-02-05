@@ -26,6 +26,7 @@ using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2;
 using RouteManager2.MessageManager;
+using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
 

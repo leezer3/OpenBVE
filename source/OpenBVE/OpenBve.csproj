@@ -203,10 +203,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
-    <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
-    <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
-    <Compile Include="Simulation\TrainManager\DriverBody.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
