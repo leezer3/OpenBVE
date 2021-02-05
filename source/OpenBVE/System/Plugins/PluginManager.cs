@@ -70,10 +70,6 @@ namespace OpenBve {
 				 * Prepare the vehicle state.
 				 * */
 				double location = this.Train.Cars[0].FrontAxle.Follower.TrackPosition - this.Train.Cars[0].FrontAxle.Position + 0.5 * this.Train.Cars[0].Length;
-				//Curve Radius, Cant and Pitch Added
-				double CurrentRadius = this.Train.Cars[0].FrontAxle.Follower.CurveRadius;
-				double CurrentCant = this.Train.Cars[0].FrontAxle.Follower.CurveCant;
-				double CurrentPitch = this.Train.Cars[0].FrontAxle.Follower.Pitch;
 				//If the list of stations has not been loaded, do so
 				if (!StationsLoaded)
 				{

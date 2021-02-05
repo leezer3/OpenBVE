@@ -98,6 +98,12 @@ namespace TrainManager.Car
 			Doors[0].MaxTolerance = 0.0;
 			Doors[1].Width = 1000.0;
 			Doors[1].MaxTolerance = 0.0;
+			Horns = new[]
+			{
+				new Horn(this),
+				new Horn(this),
+				new Horn(this)
+			};
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -115,6 +121,12 @@ namespace TrainManager.Car
 			Doors[0].MaxTolerance = 0.0;
 			Doors[1].Width = 1000.0;
 			Doors[1].MaxTolerance = 0.0;
+			Horns = new[]
+			{
+				new Horn(this),
+				new Horn(this),
+				new Horn(this)
+			};
 		}
 
 		/// <summary>Moves the car</summary>

@@ -286,15 +286,15 @@ namespace OpenBve
 										{
 											case "primary":
 												//Primary horn
-												ParseHornNode(cc, Train, out car.Horns[0], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, car, out car.Horns[0], front, SoundCfgParser.largeRadius);
 												break;
 											case "secondary":
 												//Secondary horn
-												ParseHornNode(cc, Train, out car.Horns[1], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, car, out car.Horns[1], front, SoundCfgParser.largeRadius);
 												break;
 											case "music":
 												//Music horn
-												ParseHornNode(cc, Train, out car.Horns[2], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, car, out car.Horns[2], front, SoundCfgParser.largeRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -522,13 +522,13 @@ namespace OpenBve
 
 		/// <summary>Parses an XML horn node</summary>
 		/// <param name="node">The node to parse</param>
-		/// <param name="train">The train</param>
+		/// <param name="car">The car</param>
 		/// <param name="Horn">The horn to apply this node's contents to</param>
 		/// <param name="Position">The default sound position</param>
 		/// <param name="Radius">The default sound radius</param>
-		private static void ParseHornNode(XmlNode node, TrainManager.Train train, out Horn Horn, Vector3 Position, double Radius)
+		private static void ParseHornNode(XmlNode node, CarBase car, out Horn Horn, Vector3 Position, double Radius)
 		{
-			Horn = new Horn(train);
+			Horn = new Horn(car);
 			foreach (XmlNode c in node.ChildNodes)
 			{
 				switch (c.Name.ToLowerInvariant())

@@ -215,16 +215,7 @@ namespace OpenBve
 					Loading.Cancel = true;
 				}
 			}
-
-			internal void Initialize()
-			{
-				for (int i = 0; i < Cars.Length; i++)
-				{
-					Cars[i].Initialize();
-				}
-				Update(0.0);
-			}
-
+			
 			/// <summary>Disposes of the train</summary>
 			public override void Dispose()
 			{
@@ -793,41 +784,9 @@ namespace OpenBve
 				}
 			}
 			
-			/// <summary>Updates the objects for all cars in this train</summary>
-			/// <param name="TimeElapsed">The time elapsed</param>
-			/// <param name="ForceUpdate">Whether this is a forced update</param>
-			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)
-			{
-				if (!Game.MinimalisticSimulation)
-				{
-					for (int i = 0; i < Cars.Length; i++)
-					{
-						Cars[i].UpdateObjects(TimeElapsed, ForceUpdate, true);
-						Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
-						Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
-						if (i == DriverCar && Cars[i].Windscreen != null)
-						{
-							Cars[i].Windscreen.Update(TimeElapsed);
-						}
-						Cars[i].Coupler.UpdateObjects(TimeElapsed, ForceUpdate);
-					}
-				}
-			}
+			
 
-			/// <summary>Performs a forced update on all objects attached to the driver car</summary>
-			internal void UpdateCabObjects()
-			{
-				Cars[this.DriverCar].UpdateObjects(0.0, true, false);
-			}
-
-			/// <summary>Synchronizes the entire train after a period of infrequent updates</summary>
-			internal void Synchronize()
-			{
-				for (int i = 0; i < Cars.Length; i++)
-				{
-					Cars[i].Syncronize();
-				}
-			}
+			
 
 			/// <summary>Call this method to derail a car</summary>
 			/// <param name="CarIndex">The car index to derail</param>
@@ -869,50 +828,6 @@ namespace OpenBve
 				PlaceCars(trackPosition);
 				DriverCar = Cars.Length - 1 - DriverCar;
 				UpdateCabObjects();
-			}
-
-			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
-			internal void InitializeCarSounds()
-			{
-				// initialize
-				for (int i = 0; i < Cars.Length; i++)
-				{
-					Cars[i].Sounds.Run = new CarSound[] { };
-					Cars[i].Sounds.Flange = new CarSound[] { };
-					Cars[i].CarBrake.Air = new CarSound();
-					Cars[i].CarBrake.AirHigh = new CarSound();
-					Cars[i].CarBrake.AirZero = new CarSound();
-					Cars[i].Doors[0].CloseSound = new CarSound();
-					Cars[i].Doors[1].CloseSound = new CarSound();
-					Cars[i].Doors[0].OpenSound = new CarSound();
-					Cars[i].Doors[1].OpenSound = new CarSound();
-					Cars[i].Sounds.Flange = new CarSound[] { };
-					Cars[i].Horns = new Horn[]
-					{
-						new Horn(this),
-						new Horn(this),
-						new Horn(this)
-					};
-					Cars[i].Sounds.RequestStop = new CarSound[]
-					{
-						//Stop
-						new CarSound(),
-						//Pass
-						new CarSound(),
-						//Ignored
-						new CarSound()
-					};
-					Cars[i].Sounds.Loop = new CarSound();
-					Cars[i].FrontAxle.PointSounds = new CarSound[] { };
-					Cars[i].RearAxle.PointSounds = new CarSound[] { };
-					Cars[i].CarBrake.Rub = new CarSound();
-					Cars[i].CarBrake.Release = new CarSound();
-					Cars[i].Sounds.Run = new CarSound[] { };
-					Cars[i].Sounds.SpringL = new CarSound();
-					Cars[i].Sounds.SpringR = new CarSound();
-					Cars[i].Sounds.Plugin = new CarSound[] { };
-					Cars[i].Sounds.Touch = new CarSound[] { };
-				}
 			}
 
 			/// <summary>Places the cars</summary>

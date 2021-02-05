@@ -1,6 +1,7 @@
 ﻿using OpenBveApi;
 using OpenBveApi.Math;
 using SoundManager;
+using TrainManager.Car;
 
 namespace TrainManager.Trains
 {
@@ -23,20 +24,20 @@ namespace TrainManager.Trains
 		public bool Loop;
 		/// <summary>Stores the loop state</summary>
 		private bool LoopStarted;
-		/// <summary>Holds a reference to the base train</summary>
-		public readonly TrainBase baseTrain;
+		/// <summary>Holds a reference to the base car</summary>
+		public readonly CarBase baseCar;
 
 		/// <summary>The default constructor</summary>
-		public Horn(TrainBase train)
+		public Horn(CarBase car)
 		{
 			this.StartSound = null;
 			this.LoopSound = null;
 			this.EndSound = null;
 			this.Loop = false;
-			this.baseTrain = train;
+			this.baseCar = car;
 		}
 
-		public Horn(SoundBuffer startSound, SoundBuffer loopSound, SoundBuffer endSound, bool loop, TrainBase train)
+		public Horn(SoundBuffer startSound, SoundBuffer loopSound, SoundBuffer endSound, bool loop, CarBase car)
 		{
 			this.Source = null;
 			this.StartSound = startSound;
@@ -46,7 +47,7 @@ namespace TrainManager.Trains
 			this.StartEndSounds = false;
 			this.LoopStarted = false;
 			this.SoundPosition = new Vector3();
-			this.baseTrain = train;
+			this.baseCar = car;
 		}
 
 		/// <summary>Called by the controls loop to start playback of this horn</summary>
@@ -67,14 +68,14 @@ namespace TrainManager.Trains
 						if (StartSound != null)
 						{
 							//The start sound is not currently playing, so start it
-							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(StartSound, 1.0, 1.0, SoundPosition, baseTrain.Cars[baseTrain.DriverCar], false);
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(StartSound, 1.0, 1.0, SoundPosition, baseCar, false);
 
 							//Set the loop control variable to started
 							LoopStarted = true;
 						}
 						else
 						{
-							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseTrain.Cars[baseTrain.DriverCar], true);
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseCar, true);
 						}
 					}
 				}
@@ -83,7 +84,7 @@ namespace TrainManager.Trains
 					if (!TrainManagerBase.currentHost.SoundIsPlaying(Source))
 					{
 						//Start our loop sound playing if the start sound is finished
-						Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseTrain.Cars[baseTrain.DriverCar], true);
+						Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseCar, true);
 					}
 				}
 			}
@@ -99,7 +100,7 @@ namespace TrainManager.Trains
 						{
 							//On the first keydown event, start the sound source playing and trigger the loop control variable
 							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
-								baseTrain.Cars[baseTrain.DriverCar], true);
+								baseCar, true);
 							LoopStarted = true;
 						}
 						else
@@ -117,7 +118,7 @@ namespace TrainManager.Trains
 					{
 						if (!LoopStarted)
 						{
-							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseTrain.Cars[baseTrain.DriverCar], false);
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseCar, false);
 						}
 
 						LoopStarted = true;
@@ -153,7 +154,7 @@ namespace TrainManager.Trains
 			if (StartEndSounds && !TrainManagerBase.currentHost.SoundIsPlaying(Source) && EndSound != null)
 			{
 				//If our end sound is defined and in use, play once
-				Source =(SoundSource)TrainManagerBase.currentHost.PlaySound(EndSound, 1.0, 1.0, SoundPosition, baseTrain.Cars[baseTrain.DriverCar], false);
+				Source =(SoundSource)TrainManagerBase.currentHost.PlaySound(EndSound, 1.0, 1.0, SoundPosition, baseCar, false);
 			}
 		}
 	}
