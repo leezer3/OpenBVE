@@ -118,7 +118,7 @@ namespace SoundManager
 				 * Creative OpenAL implementation on Windows seems to be limited to max 16 simulataneous sounds
 				 * Now shipping OpenAL Soft, but detect this and don't glitch
 				 * Further note that the current version of OpenAL Soft (1.20.0 at the time of writing) does not like OpenTK
-				 * The version in use is 1.15.1 found here: https://github.com/opentk/opentk-dependencies
+				 * The version in use is 1.17.0 found here: https://openal-soft.org/openal-binaries/
 				 */
 				systemMaxSounds = 16;
 			}
