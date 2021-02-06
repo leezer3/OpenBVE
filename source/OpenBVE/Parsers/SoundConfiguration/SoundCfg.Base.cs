@@ -78,7 +78,6 @@ namespace OpenBve
 									for (int j = m; j < n; j++)
 									{
 										Sounds[j] = new CarSound();
-										Sounds[j].Source = null;
 									}
 								}
 								Sounds[n] = new CarSound(Program.Sounds.RegisterBuffer(Files[i], Radius), Position);

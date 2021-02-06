@@ -65,7 +65,7 @@ namespace TrainEditor2.Simulation.TrainManager
 
 					double gain = baseGain * Sounds.Run[j].TargetVolume;
 
-					if (Program.SoundApi.IsPlaying(Sounds.Run[j].Source))
+					if (Sounds.Run[j].IsPlaying)
 					{
 						if (pitch > 0.01 & gain > 0.001)
 						{
@@ -74,7 +74,7 @@ namespace TrainEditor2.Simulation.TrainManager
 						}
 						else
 						{
-							Program.SoundApi.StopSound(Sounds.Run[j]);
+							Sounds.Run[j].Stop();
 						}
 					}
 					else if (pitch > 0.02 & gain > 0.01)

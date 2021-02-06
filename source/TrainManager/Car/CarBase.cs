@@ -437,7 +437,7 @@ namespace TrainManager.Car
 				}
 
 				double gain = basegain * Sounds.Run[j].TargetVolume;
-				if (TrainManagerBase.currentHost.SoundIsPlaying(Sounds.Run[j].Source))
+				if (Sounds.Run[j].IsPlaying)
 				{
 					if (pitch > 0.01 & gain > 0.001)
 					{
@@ -1158,7 +1158,7 @@ namespace TrainManager.Car
 				const double angleTolerance = 0.001;
 				if (diff < -angleTolerance)
 				{
-					if (!TrainManagerBase.currentHost.SoundIsPlaying(Sounds.SpringL.Source))
+					if (!Sounds.SpringL.IsPlaying)
 					{
 						Sounds.SpringL.Play(1.0, 1.0, this, false);
 					}
@@ -1167,7 +1167,7 @@ namespace TrainManager.Car
 				}
 				else if (diff > angleTolerance)
 				{
-					if (!TrainManagerBase.currentHost.SoundIsPlaying(Sounds.SpringR.Source))
+					if (!Sounds.SpringR.IsPlaying)
 					{
 						Sounds.SpringR.Play(1.0, 1.0, this, false);
 					}
@@ -1229,7 +1229,7 @@ namespace TrainManager.Car
 					}
 
 					double gain = basegain * Sounds.Flange[i].TargetVolume;
-					if (TrainManagerBase.currentHost.SoundIsPlaying(Sounds.Flange[i].Source))
+					if (Sounds.Flange[i].IsPlaying)
 					{
 						if (pitch > 0.01 & gain > 0.0001)
 						{

@@ -290,13 +290,13 @@ namespace OpenBve {
 					if (this.Sound[i] != this.LastSound[i]) {
 						if (this.Sound[i] == SoundInstructions.Stop) {
 							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length) {
-								Program.Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Plugin[i]);
+								Train.Cars[Train.DriverCar].Sounds.Plugin[i].Stop();
 							}
 						} else if (this.Sound[i] > SoundInstructions.Stop & this.Sound[i] <= SoundInstructions.PlayLooping) {
 							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length) {
 								if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer != null) {
 									double volume = (double)(this.Sound[i] - SoundInstructions.Stop) / (double)(SoundInstructions.PlayLooping - SoundInstructions.Stop);
-									if (Program.Sounds.IsPlaying(Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source))
+									if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].IsPlaying)
 									{
 										Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source.Volume = volume;
 									}

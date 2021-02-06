@@ -65,5 +65,18 @@ namespace SoundManager
 			}
 			Source.Stop();
 		}
+
+		/// <summary>Whether the sound is currently playing</summary>
+		public bool IsPlaying
+		{
+			get
+			{
+				if (Source != null)
+				{
+					return Source.IsPlaying();
+				}
+				return false;
+			}
+		}
 	}
 }

@@ -13,6 +13,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2.MessageManager;
+using SoundManager;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -404,7 +405,7 @@ namespace OpenBve {
 
 		public override void StopSound(object SoundSource)
 		{
-			Program.Sounds.StopSound(SoundSource);
+			Program.Sounds.StopSound(SoundSource as SoundSource);
 		}
 
 		public override SimulationState SimulationState

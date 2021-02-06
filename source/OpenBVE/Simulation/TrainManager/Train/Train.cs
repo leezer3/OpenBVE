@@ -418,10 +418,9 @@ namespace OpenBve
 				//Trigger point sounds if appropriate
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					CarSound c = (CarSound)Cars[i].FrontAxle.PointSounds[0];
+					CarSound c = null;
 					if (Cars[i].FrontAxle.PointSoundTriggered)
 					{
-						
 						Cars[i].FrontAxle.PointSoundTriggered = false;
 						int bufferIndex = Cars[i].FrontAxle.RunIndex;
 						if (bufferIndex > Cars[i].FrontAxle.PointSounds.Length - 1)
