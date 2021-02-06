@@ -300,8 +300,9 @@ namespace OpenBve.UserInterface
 				{
 					components.Dispose();
 				}
-				main.Dispose();
-				Modified.Dispose();
+				main?.Dispose();
+				Modified?.Dispose();
+
 			}
 			base.Dispose(disposing);
 		}
