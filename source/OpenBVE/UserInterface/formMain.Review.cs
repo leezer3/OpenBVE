@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
 
@@ -37,9 +37,9 @@ namespace OpenBve {
 		private void buttonBlackBoxExport_Click(object sender, EventArgs e) {
 		    SaveFileDialog Dialog = new SaveFileDialog {OverwritePrompt = true};
 		    if (comboboxBlackBoxFormat.SelectedIndex == 0) {
-				Dialog.Filter = Translations.GetInterfaceString("dialog_csvfiles") + @"|*.txt|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
+				Dialog.Filter = Translations.GetInterfaceString("dialog_csvfiles") + @"|*.csv|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
 			} else {
-				Dialog.Filter = Translations.GetInterfaceString("dialog_textfiles") + @"|*.txt|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
+				Dialog.Filter = Translations.GetInterfaceString("dialog_textfiles") + @"|*.csv|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
 			}
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
