@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using TrainManager.BrakeSystems;
@@ -268,7 +269,7 @@ namespace OpenBve
 										Interface.AddMessage(MessageType.Error, false, "An empty list of flange sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.Flange, center, SoundCfgParser.mediumRadius);
+									ParseDictionaryNode(c, out car.Sounds.Flange, center, SoundCfgParser.mediumRadius);
 									break;
 								case "horn":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -445,7 +446,7 @@ namespace OpenBve
 										Interface.AddMessage(MessageType.Error, false, "An empty list of run sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.Run, center, SoundCfgParser.mediumRadius);
+									ParseDictionaryNode(c, out car.Sounds.Run, center, SoundCfgParser.mediumRadius);
 									break;
 								case "shoe":
 								case "rub":
@@ -793,7 +794,56 @@ namespace OpenBve
 					}
 				}
 			}
-			
+		}
+
+		/// <summary>Parses an XML node containing a list of sounds into a car sound array</summary>
+		/// <param name="node">The node to parse</param>
+		/// <param name="Sounds">The car sound array</param>
+		/// <param name="Position">The default position of the sound (May be overriden by any node)</param>
+		/// <param name="Radius">The default radius of the sound (May be overriden by any node)</param>
+		private static void ParseDictionaryNode(XmlNode node, out Dictionary<int, CarSound> Sounds, Vector3 Position, double Radius)
+		{
+			Sounds = new Dictionary<int, CarSound>();
+			foreach (XmlNode c in node.ChildNodes)
+			{
+				int idx = -1;
+				if (c.Name.ToLowerInvariant() != "sound")
+				{
+					Interface.AddMessage(MessageType.Error, false, "Invalid array node " + c.Name + " in XML node " + node.Name);
+				}
+				else
+				{
+					for (int i = 0; i < c.ChildNodes.Count; i++)
+					{
+						if (c.ChildNodes[i].Name.ToLowerInvariant() == "index")
+						{
+							if (!NumberFormats.TryParseIntVb6(c.ChildNodes[i].InnerText.ToLowerInvariant(), out idx))
+							{
+								Interface.AddMessage(MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+								return;
+							}
+							break;
+						}
+					}
+					if (idx >= 0)
+					{
+						CarSound sound;
+						ParseNode(c, out sound, Position, Radius);
+						if (Sounds.ContainsKey(idx))
+						{
+							Sounds[idx] = sound;
+						}
+						else
+						{
+							Sounds.Add(idx, sound);
+						}
+					}
+					else
+					{
+						Interface.AddMessage(MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+					}
+				}
+			}
 		}
 	}
 }

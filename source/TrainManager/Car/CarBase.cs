@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -94,16 +96,13 @@ namespace TrainManager.Car
 			FrontBogie = new Bogie(train, this);
 			RearBogie = new Bogie(train, this);
 			Doors = new Door[2];
-			Doors[0].Width = 1000.0;
-			Doors[0].MaxTolerance = 0.0;
-			Doors[1].Width = 1000.0;
-			Doors[1].MaxTolerance = 0.0;
 			Horns = new[]
 			{
 				new Horn(this),
 				new Horn(this),
 				new Horn(this)
 			};
+			Sounds = new CarSounds();
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -117,10 +116,6 @@ namespace TrainManager.Car
 			FrontBogie = new Bogie(train, this);
 			RearBogie = new Bogie(train, this);
 			Doors = new Door[2];
-			Doors[0].Width = 1000.0;
-			Doors[0].MaxTolerance = 0.0;
-			Doors[1].Width = 1000.0;
-			Doors[1].MaxTolerance = 0.0;
 			Horns = new[]
 			{
 				new Horn(this),
@@ -370,7 +365,7 @@ namespace TrainManager.Car
 
 		public void UpdateRunSounds(double TimeElapsed)
 		{
-			if (Sounds.Run == null || Sounds.Run.Length == 0)
+			if (Sounds.Run == null || Sounds.Run.Count == 0)
 			{
 				return;
 			}
@@ -398,7 +393,7 @@ namespace TrainManager.Car
 				const double maxDistance = 750.0;
 				if (distance > minDistance)
 				{
-					if (FrontAxle.RunIndex < Sounds.Run.Length)
+					if (Sounds.Run.ContainsKey(FrontAxle.RunIndex))
 					{
 						SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
 						if (buffer != null)
@@ -423,35 +418,36 @@ namespace TrainManager.Car
 				basegain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
 			}
 
-			for (int j = 0; j < Sounds.Run.Length; j++)
+			for (int j = 0; j < Sounds.Run.Count; j++)
 			{
-				if (j == FrontAxle.RunIndex | j == RearAxle.RunIndex)
+				int key = Sounds.Run.ElementAt(j).Key;
+				if (key == FrontAxle.RunIndex | key == RearAxle.RunIndex)
 				{
-					Sounds.Run[j].TargetVolume += 3.0 * TimeElapsed;
-					if (Sounds.Run[j].TargetVolume > 1.0) Sounds.Run[j].TargetVolume = 1.0;
+					Sounds.Run[key].TargetVolume += 3.0 * TimeElapsed;
+					if (Sounds.Run[key].TargetVolume > 1.0) Sounds.Run[key].TargetVolume = 1.0;
 				}
 				else
 				{
-					Sounds.Run[j].TargetVolume -= 3.0 * TimeElapsed;
-					if (Sounds.Run[j].TargetVolume < 0.0) Sounds.Run[j].TargetVolume = 0.0;
+					Sounds.Run[key].TargetVolume -= 3.0 * TimeElapsed;
+					if (Sounds.Run[key].TargetVolume < 0.0) Sounds.Run[key].TargetVolume = 0.0;
 				}
 
-				double gain = basegain * Sounds.Run[j].TargetVolume;
-				if (Sounds.Run[j].IsPlaying)
+				double gain = basegain * Sounds.Run[key].TargetVolume;
+				if (Sounds.Run[key].IsPlaying)
 				{
 					if (pitch > 0.01 & gain > 0.001)
 					{
-						Sounds.Run[j].Source.Pitch = pitch;
-						Sounds.Run[j].Source.Volume = gain;
+						Sounds.Run[key].Source.Pitch = pitch;
+						Sounds.Run[key].Source.Volume = gain;
 					}
 					else
 					{
-						TrainManagerBase.currentHost.StopSound(Sounds.Run[j]);
+						TrainManagerBase.currentHost.StopSound(Sounds.Run[key]);
 					}
 				}
 				else if (pitch > 0.02 & gain > 0.01)
 				{
-					Sounds.Run[j].Play(pitch, gain, this, true);
+					Sounds.Run[key].Play(pitch, gain, this, true);
 				}
 			}
 		}
@@ -1176,7 +1172,7 @@ namespace TrainManager.Car
 				}
 			}
 			// flange sound
-			if (Sounds.Flange != null && Sounds.Flange.Length != 0)
+			if (Sounds.Flange != null && Sounds.Flange.Count != 0)
 			{
 				/*
 				 * This determines the amount of flange noise as a result of the angle at which the
@@ -1215,35 +1211,36 @@ namespace TrainManager.Car
 				}
 
 				pitch = Sounds.FlangePitch;
-				for (int i = 0; i < Sounds.Flange.Length; i++)
+				for (int i = 0; i < Sounds.Flange.Count; i++)
 				{
-					if (i == this.FrontAxle.FlangeIndex | i == this.RearAxle.FlangeIndex)
+					int key = Sounds.Flange.ElementAt(i).Key;
+					if (key == this.FrontAxle.FlangeIndex | key == this.RearAxle.FlangeIndex)
 					{
-						Sounds.Flange[i].TargetVolume += TimeElapsed;
-						if (Sounds.Flange[i].TargetVolume > 1.0) Sounds.Flange[i].TargetVolume = 1.0;
+						Sounds.Flange[key].TargetVolume += TimeElapsed;
+						if (Sounds.Flange[key].TargetVolume > 1.0) Sounds.Flange[key].TargetVolume = 1.0;
 					}
 					else
 					{
-						Sounds.Flange[i].TargetVolume -= TimeElapsed;
-						if (Sounds.Flange[i].TargetVolume < 0.0) Sounds.Flange[i].TargetVolume = 0.0;
+						Sounds.Flange[key].TargetVolume -= TimeElapsed;
+						if (Sounds.Flange[key].TargetVolume < 0.0) Sounds.Flange[key].TargetVolume = 0.0;
 					}
 
-					double gain = basegain * Sounds.Flange[i].TargetVolume;
-					if (Sounds.Flange[i].IsPlaying)
+					double gain = basegain * Sounds.Flange[key].TargetVolume;
+					if (Sounds.Flange[key].IsPlaying)
 					{
 						if (pitch > 0.01 & gain > 0.0001)
 						{
-							Sounds.Flange[i].Source.Pitch = pitch;
-							Sounds.Flange[i].Source.Volume = gain;
+							Sounds.Flange[key].Source.Pitch = pitch;
+							Sounds.Flange[key].Source.Volume = gain;
 						}
 						else
 						{
-							Sounds.Flange[i].Stop();
+							Sounds.Flange[key].Stop();
 						}
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						Sounds.Flange[i].Play(pitch, gain, this, true);
+						Sounds.Flange[key].Play(pitch, gain, this, true);
 					}
 				}
 			}

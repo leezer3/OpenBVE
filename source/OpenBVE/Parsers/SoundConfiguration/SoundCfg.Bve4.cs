@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -105,16 +105,19 @@ namespace OpenBve
 									{
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											int n = train.Cars[c].Sounds.Run.Length;
-											if (k >= n)
+											if(train.Cars[c].Sounds.Run == null)
 											{
-												Array.Resize(ref train.Cars[c].Sounds.Run, k + 1);
-												for (int h = n; h < k; h++)
-												{
-													train.Cars[c].Sounds.Run[h] = new CarSound();
-												}
+												train.Cars[c].Sounds.Run = new Dictionary<int, CarSound>();
 											}
-											train.Cars[c].Sounds.Run[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+
+											if (train.Cars[c].Sounds.Run.ContainsKey(k))
+											{
+												train.Cars[c].Sounds.Run[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+											}
+											else
+											{
+												train.Cars[c].Sounds.Run.Add(k, new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center));
+											}
 										}
 									}
 									else
@@ -149,16 +152,14 @@ namespace OpenBve
 									{
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											int n = train.Cars[c].Sounds.Flange.Length;
-											if (k >= n)
+											if (train.Cars[c].Sounds.Flange.ContainsKey(k))
 											{
-												Array.Resize(ref train.Cars[c].Sounds.Flange, k + 1);
-												for (int h = n; h < k; h++)
-												{
-													train.Cars[c].Sounds.Flange[h] = new CarSound();
-												}
+												train.Cars[c].Sounds.Flange[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
 											}
-											train.Cars[c].Sounds.Flange[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+											else
+											{
+												train.Cars[c].Sounds.Flange.Add(k, new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center));
+											}
 										}
 									}
 									else

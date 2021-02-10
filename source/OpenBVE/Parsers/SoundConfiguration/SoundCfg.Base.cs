@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Math;
 using SoundManager;
@@ -41,17 +42,17 @@ namespace OpenBve
 		internal const double smallRadius = 5.0;
 		internal const double tinyRadius = 2.0;
 
-		/// <summary>Attempts to load an array of sound files into a car-sound array</summary>
+		/// <summary>Attempts to load an array of sound files into a car-sound dictionary</summary>
 		/// <param name="Folder">The folder the sound files are located in</param>
 		/// <param name="FileStart">The first sound file</param>
 		/// <param name="FileEnd">The last sound file</param>
 		/// <param name="Position">The position the sound is to be emitted from within the car</param>
 		/// <param name="Radius">The sound radius</param>
-		/// <returns>The new car sound array</returns>
-		internal static CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
+		/// <returns>The new car sound dictionary</returns>
+		internal static Dictionary<int, CarSound> TryLoadSoundDictionary(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			CarSound[] Sounds = { };
+			Dictionary<int, CarSound> Sounds = new Dictionary<int, CarSound>();
 			if (!System.IO.Directory.Exists(Folder))
 			{
 				//Detect whether the given folder exists before attempting to load from it
@@ -67,20 +68,16 @@ namespace OpenBve
 					if (a.StartsWith(FileStart, StringComparison.OrdinalIgnoreCase) & a.EndsWith(FileEnd, StringComparison.OrdinalIgnoreCase))
 					{
 						string b = a.Substring(FileStart.Length, a.Length - FileEnd.Length - FileStart.Length);
-						int n; if (int.TryParse(b, System.Globalization.NumberStyles.Integer, Culture, out n))
+						int n; 
+						if (int.TryParse(b, System.Globalization.NumberStyles.Integer, Culture, out n))
 						{
-							if (n >= 0)
+							if (Sounds.ContainsKey(n))
 							{
-								int m = Sounds.Length;
-								if (n >= m)
-								{
-									Array.Resize(ref Sounds, n + 1);
-									for (int j = m; j < n; j++)
-									{
-										Sounds[j] = new CarSound();
-									}
-								}
 								Sounds[n] = new CarSound(Program.Sounds.RegisterBuffer(Files[i], Radius), Position);
+							}
+							else
+							{
+								Sounds.Add(n, new CarSound(Program.Sounds.RegisterBuffer(Files[i], Radius), Position));
 							}
 						}
 					}

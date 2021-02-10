@@ -43,17 +43,17 @@ namespace TrainManager.BrakeSystems
 		public double motorDeceleration;
 
 		/// <summary>The air sound currently playing</summary>
-		public CarSound airSound;
+		public CarSound airSound = new CarSound();
 		/// <summary>Played when the pressure in the brake cylinder is decreased from a non-high to a non-zero value</summary>
-		public CarSound Air;
+		public CarSound Air = new CarSound();
 		/// <summary>Played when the pressure in the brake cylinder is decreased from a high value</summary>
-		public CarSound AirHigh;
+		public CarSound AirHigh = new CarSound();
 		/// <summary>Played when the pressure in the brake cylinder is decreased to zero</summary>
-		public CarSound AirZero;
+		public CarSound AirZero = new CarSound();
 		/// <summary>Played when the brake shoe rubs against the wheels</summary>
-		public CarSound Rub;
+		public CarSound Rub = new CarSound();
 		/// <summary>The sound played when the brakes are released</summary>
-		public CarSound Release;
+		public CarSound Release = new CarSound();
 
 		internal AccelerationCurve[] decelerationCurves;
 		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is increased.</summary>

@@ -39,7 +39,7 @@ namespace OpenBve {
 		    if (comboboxBlackBoxFormat.SelectedIndex == 0) {
 				Dialog.Filter = Translations.GetInterfaceString("dialog_csvfiles") + @"|*.csv|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
 			} else {
-				Dialog.Filter = Translations.GetInterfaceString("dialog_textfiles") + @"|*.csv|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
+				Dialog.Filter = Translations.GetInterfaceString("dialog_textfiles") + @"|*.txt|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
 			}
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {

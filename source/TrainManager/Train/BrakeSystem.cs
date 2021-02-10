@@ -217,7 +217,7 @@ namespace TrainManager.Trains
 					gain *= 1.0 / (fadefactor * t * t + 1.0);
 				}
 
-				if (TrainManagerBase.currentHost.SoundIsPlaying(Cars[CarIndex].CarBrake.Rub.Source))
+				if (Cars[CarIndex].CarBrake.Rub.IsPlaying)
 				{
 					if (pitch > 0.01 & gain > 0.001)
 					{

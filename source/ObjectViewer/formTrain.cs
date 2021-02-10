@@ -317,15 +317,13 @@ namespace OpenBve
 						TrainManager.Trains[0].Cars[i].CarBrake.brakeCylinder = new BrakeCylinder((int)numericUpDownCylinder.Value * 1000);
 						TrainManager.Trains[0].Cars[i].CarBrake.straightAirPipe = new StraightAirPipe((int)numericUpDownAirPipe.Value * 1000);
 
-						TrainManager.Trains[0].Cars[i].Doors[0] = new Door
+						TrainManager.Trains[0].Cars[i].Doors[0] = new Door(-1, 1000, 0)
 						{
-							Direction = -1, 
 							State = (double) numericUpDownLeft.Value,
 							AnticipatedOpen = checkBoxLeftTarget.Checked
 						};
-						TrainManager.Trains[0].Cars[i].Doors[1] = new Door
+						TrainManager.Trains[0].Cars[i].Doors[1] = new Door(1, 1000, 0)
 						{
-							Direction = 1, 
 							State = (double) numericUpDownRight.Value,
 							AnticipatedOpen = checkBoxRightTarget.Checked
 						};

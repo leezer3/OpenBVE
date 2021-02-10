@@ -1207,14 +1207,8 @@ namespace OpenBve {
 				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
 				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;
 				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
-				Train.Cars[i].Doors[0].Direction = -1;
-				Train.Cars[i].Doors[0].State = 0.0;
-				Train.Cars[i].Doors[0].Width = DoorWidth;
-				Train.Cars[i].Doors[0].MaxTolerance = DoorTolerance;
-				Train.Cars[i].Doors[1].Direction = 1;
-				Train.Cars[i].Doors[1].State = 0.0;
-				Train.Cars[i].Doors[1].Width = DoorWidth;
-				Train.Cars[i].Doors[1].MaxTolerance = DoorTolerance;
+				Train.Cars[i].Doors[0] = new Door(-1, DoorWidth, DoorTolerance);
+				Train.Cars[i].Doors[1] = new Door(1, DoorWidth, DoorTolerance);
 				Train.Cars[i].Specs.DoorOpenFrequency = 0.0;
 				Train.Cars[i].Specs.DoorCloseFrequency = 0.0;
 				Train.Cars[i].Specs.CenterOfGravityHeight = CenterOfGravityHeight;
