@@ -72,7 +72,7 @@ namespace OpenBve
 
 							if (Cars[i].Specs.IsMotorCar)
 							{
-								Cars[i].Sounds.Loop.Play(1.0, 1.0, Cars[i], true);
+								Cars[i].Sounds.Loop.Play(Cars[i], true);
 							}
 						}
 					}

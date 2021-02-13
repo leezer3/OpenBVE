@@ -18,7 +18,7 @@ namespace OpenBve
 				if (stopRequest.MaxCars != 0 && NumberOfCars > stopRequest.MaxCars)
 				{
 					//Check whether our train length is valid for this before doing anything else
-					Cars[DriverCar].Sounds.RequestStop[2].Play( 1.0, 1.0, Cars[DriverCar], false);
+					Cars[DriverCar].Sounds.RequestStop[2].Play(Cars[DriverCar], false);
 					return;
 				}
 				if (Program.RandomNumberGenerator.Next(0, 100) <= stopRequest.Probability)
@@ -31,7 +31,7 @@ namespace OpenBve
 						Station = stopRequest.StationIndex;
 						NextStopSkipped = StopSkipMode.None;
 						//Play sound
-						Cars[DriverCar].Sounds.RequestStop[0].Play(1.0, 1.0, Cars[DriverCar], false);
+						Cars[DriverCar].Sounds.RequestStop[0].Play(Cars[DriverCar], false);
 					}
 					else
 					{
@@ -47,7 +47,7 @@ namespace OpenBve
 						}
 
 						//Play sound
-						Cars[DriverCar].Sounds.RequestStop[1].Play(1.0, 1.0, Cars[DriverCar], false);
+						Cars[DriverCar].Sounds.RequestStop[1].Play(Cars[DriverCar], false);
 						//If message is not empty, add it
 						if (!string.IsNullOrEmpty(stopRequest.PassMessage) && IsPlayerTrain)
 						{
@@ -58,7 +58,7 @@ namespace OpenBve
 					}
 
 					//Play sound
-					Cars[DriverCar].Sounds.RequestStop[0].Play( 1.0, 1.0, Cars[DriverCar], false);
+					Cars[DriverCar].Sounds.RequestStop[0].Play(Cars[DriverCar], false);
 					//If message is not empty, add it
 					if (!string.IsNullOrEmpty(stopRequest.StopMessage) && IsPlayerTrain)
 					{
@@ -67,7 +67,7 @@ namespace OpenBve
 				}
 				else
 				{
-					Cars[DriverCar].Sounds.RequestStop[1].Play(1.0, 1.0, Cars[DriverCar], false);
+					Cars[DriverCar].Sounds.RequestStop[1].Play(Cars[DriverCar], false);
 					if (stopRequest.FullSpeed)
 					{
 						//Pass at linespeed, rather than braking as if for stop
@@ -79,7 +79,7 @@ namespace OpenBve
 					}
 
 					//Play sound
-					Cars[DriverCar].Sounds.RequestStop[1].Play(1.0, 1.0, Cars[DriverCar], false);
+					Cars[DriverCar].Sounds.RequestStop[1].Play(Cars[DriverCar], false);
 					//If message is not empty, add it
 					if (!string.IsNullOrEmpty(stopRequest.PassMessage) && IsPlayerTrain)
 					{

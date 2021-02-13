@@ -46,7 +46,7 @@ namespace TrainManager.Car
 		/// <summary>Changes the wiper speed</summary>
 		public void ChangeSpeed(Translations.Command Command)
 		{
-			SwitchSound.Play(1.0, 1.0, Windscreen.Car, false);
+			SwitchSound.Play(Windscreen.Car, false);
 			
 			switch (Command)
 			{
@@ -190,7 +190,7 @@ namespace TrainManager.Car
 						{
 							if (soundTriggered == false)
 							{
-								WetWipeSound.Play(1.0, 1.0, Windscreen.Car, false);
+								WetWipeSound.Play(Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
@@ -198,7 +198,7 @@ namespace TrainManager.Car
 						{
 							if (soundTriggered == false)
 							{
-								DryWipeSound.Play(1.0, 1.0, Windscreen.Car, false);
+								DryWipeSound.Play(Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
@@ -211,7 +211,7 @@ namespace TrainManager.Car
 						{
 							if (soundTriggered == false)
 							{
-								WetWipeSound.Play(1.0, 1.0, Windscreen.Car, false);
+								WetWipeSound.Play(Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}
@@ -219,7 +219,7 @@ namespace TrainManager.Car
 						{
 							if (soundTriggered == false)
 							{
-								DryWipeSound.Play(1.0, 1.0, Windscreen.Car, false);
+								DryWipeSound.Play(Windscreen.Car, false);
 								soundTriggered = true;
 							}
 						}

@@ -366,9 +366,9 @@ namespace OpenBve
 								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								
-								if (Cars[j].Specs.IsMotorCar)
+								if (Cars[j].Specs.IsMotorCar && Cars[j].Sounds.Loop != null)
 								{
-									Cars[j].Sounds.Loop.Play(1.0, 1.0, Cars[j], true);
+									Cars[j].Sounds.Loop.Play(Cars[j], true);
 								}
 							}
 						}

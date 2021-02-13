@@ -34,14 +34,14 @@ namespace TrainManager.Power
 			if (BreakerActive & !Resumed)
 			{
 				// resume
-				Resume.Play(1.0, 1.0, Car, false);
-				ResumeOrInterrupt.Play(1.0, 1.0, Car, false);
+				Resume.Play(Car, false);
+				ResumeOrInterrupt.Play(Car, false);
 				Resumed = true;
 			}
 			else if (!BreakerActive & Resumed)
 			{
 				// interrupt
-				ResumeOrInterrupt.Play(1.0, 1.0, Car, false);
+				ResumeOrInterrupt.Play(Car, false);
 				Resumed = false;
 			}
 		}

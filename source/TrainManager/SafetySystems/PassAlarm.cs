@@ -36,10 +36,10 @@ namespace TrainManager.SafetySystems
 			switch (Type)
 			{
 				case PassAlarmType.Single:
-					Sound.Play(1.0, 1.0, baseCar, false);
+					Sound.Play(baseCar, false);
 					break;
 				case PassAlarmType.Loop:
-					Sound.Play(1.0, 1.0, baseCar, true);
+					Sound.Play(baseCar, true);
 					break;
 			}
 		}

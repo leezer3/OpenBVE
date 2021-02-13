@@ -310,7 +310,7 @@ namespace OpenBve {
 							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length) {
 								if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer != null)
 								{
-									Train.Cars[Train.DriverCar].Sounds.Plugin[i].Play(1.0, 1.0, Train.Cars[Train.DriverCar], false);
+									Train.Cars[Train.DriverCar].Sounds.Plugin[i].Play(Train.Cars[Train.DriverCar], false);
 								}
 							}
 							this.Sound[i] = SoundInstructions.Continue;

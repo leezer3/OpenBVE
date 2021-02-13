@@ -36,7 +36,15 @@ namespace SoundManager
 			this.Buffer = null;
 		}
 
-		/// <summary>Plays the sound</summary>
+		/// <summary>Plays the sound at the original pitch and volume</summary>
+		/// <param name="Car">The parent car</param>
+		/// <param name="looped">Whether the sound is to be played looped</param>
+		public void Play(AbstractCar Car, bool looped)
+		{
+			Play(1.0, 1.0, Car, looped);
+		}
+
+		/// <summary>Plays the sound at the specified pitch and volume</summary>
 		/// <param name="pitch">The pitch</param>
 		/// <param name="volume">The volume</param>
 		/// <param name="Car">The parent car</param>

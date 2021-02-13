@@ -1156,7 +1156,7 @@ namespace TrainManager.Car
 				{
 					if (!Sounds.SpringL.IsPlaying)
 					{
-						Sounds.SpringL.Play(1.0, 1.0, this, false);
+						Sounds.SpringL.Play(this, false);
 					}
 
 					Sounds.SpringPlayedAngle = a;
@@ -1165,7 +1165,7 @@ namespace TrainManager.Car
 				{
 					if (!Sounds.SpringR.IsPlaying)
 					{
-						Sounds.SpringR.Play(1.0, 1.0, this, false);
+						Sounds.SpringR.Play(this, false);
 					}
 
 					Sounds.SpringPlayedAngle = a;

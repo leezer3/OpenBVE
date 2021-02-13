@@ -45,7 +45,7 @@ namespace TrainManager.BrakeSystems
 				{
 					Enabled = false;
 					LoopStarted = false;
-					EndSound.Play(1.0, 1.0, baseCar, false);
+					EndSound.Play(baseCar, false);
 					LoopSound.Stop();
 				}
 				else
@@ -54,7 +54,7 @@ namespace TrainManager.BrakeSystems
 					if (!LoopStarted && TrainManagerBase.currentHost.InGameTime > TimeStarted + 5.0)
 					{
 						LoopStarted = true;
-						LoopSound.Play(1.0, 1.0, baseCar, true);
+						LoopSound.Play(baseCar, true);
 					}
 				}
 			}
@@ -64,7 +64,7 @@ namespace TrainManager.BrakeSystems
 				{
 					Enabled = true;
 					TimeStarted = TrainManagerBase.currentHost.InGameTime;
-					StartSound.Play(1.0, 1.0, baseCar, false);
+					StartSound.Play(baseCar, false);
 				}
 			}
 		}

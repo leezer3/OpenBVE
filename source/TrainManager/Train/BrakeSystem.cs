@@ -177,7 +177,7 @@ namespace TrainManager.Trains
 
 			if (Cars[CarIndex].CarBrake.airSound != null)
 			{
-				Cars[CarIndex].CarBrake.airSound.Play(1.0, 1.0, Cars[CarIndex], false);
+				Cars[CarIndex].CarBrake.airSound.Play(Cars[CarIndex], false);
 
 			}
 

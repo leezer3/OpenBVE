@@ -30,12 +30,12 @@ namespace TrainManager.SafetySystems
 			if (oldState != DoorStates.None & newState == DoorStates.None)
 			{
 				Lit = true;
-				OnSound.Play(1.0, 1.0, baseCar, false);
+				OnSound.Play(baseCar, false);
 			}
 			else if (oldState == DoorStates.None & newState != DoorStates.None)
 			{
 				Lit = false;
-				OffSound.Play(1.0, 1.0, baseCar, false);
+				OffSound.Play(baseCar, false);
 			}
 			oldState = newState;
 		}

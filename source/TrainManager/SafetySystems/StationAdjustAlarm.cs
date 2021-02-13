@@ -30,7 +30,7 @@ namespace TrainManager.SafetySystems
 				// correct stop position
 				if (!Lit & (baseTrain.StationDistanceToStopPoint > tb | baseTrain.StationDistanceToStopPoint < -tf))
 				{
-					AdjustAlarm.Play(1.0, 1.0, baseTrain.Cars[baseTrain.DriverCar], false);
+					AdjustAlarm.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 					if (baseTrain.IsPlayerTrain)
 					{
 						GeneralMessage message = new GeneralMessage
