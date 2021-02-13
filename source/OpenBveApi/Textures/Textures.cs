@@ -149,6 +149,16 @@ namespace OpenBveApi.Textures {
 				this.MyHeight = value;
 			}
 		}
+
+		/// <summary>Gets the aspect ratio of the texture</summary>
+		public double AspectRatio
+		{
+			get
+			{
+				return (double)this.MyWidth / this.MyHeight;
+			}
+		}
+
 		/// <summary>Gets the number of bits per pixel.</summary>
 		public int BitsPerPixel
 		{

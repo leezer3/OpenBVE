@@ -155,7 +155,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											PanelDaytimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(PanelDaytimeImage))
+											if (!File.Exists(PanelDaytimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												PanelDaytimeImage = null;
@@ -171,7 +171,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											PanelNighttimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(PanelNighttimeImage))
+											if (!File.Exists(PanelNighttimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												PanelNighttimeImage = null;
@@ -329,7 +329,7 @@ namespace OpenBve.Parsers.Panel
 				// create panel
 				if (PanelDaytimeImage != null)
 				{
-					if (!System.IO.File.Exists(PanelDaytimeImage))
+					if (!File.Exists(PanelDaytimeImage))
 					{
 						Interface.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 					}
@@ -340,7 +340,7 @@ namespace OpenBve.Parsers.Panel
 						Texture tnight = null;
 						if (PanelNighttimeImage != null)
 						{
-							if (!System.IO.File.Exists(PanelNighttimeImage))
+							if (!File.Exists(PanelNighttimeImage))
 							{
 								Interface.AddMessage(MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
 							}
@@ -354,7 +354,7 @@ namespace OpenBve.Parsers.Panel
 							Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 							//Program.CurrentHost.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
 						});
-						Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+						Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], 0.0, 0.0, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight);
 					}
 				}
 			}
@@ -616,7 +616,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											DaytimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(DaytimeImage))
+											if (!File.Exists(DaytimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												DaytimeImage = null;
@@ -632,7 +632,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											NighttimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(NighttimeImage))
+											if (!File.Exists(NighttimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												NighttimeImage = null;
@@ -673,7 +673,7 @@ namespace OpenBve.Parsers.Panel
 								});
 								int w = tday.Width;
 								int h = tday.Height;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								string f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
 							}
@@ -747,7 +747,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											DaytimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(DaytimeImage))
+											if (!File.Exists(DaytimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												DaytimeImage = null;
@@ -763,7 +763,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											NighttimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(NighttimeImage))
+											if (!File.Exists(NighttimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												NighttimeImage = null;
@@ -907,7 +907,7 @@ namespace OpenBve.Parsers.Panel
 								double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 								double nx = n * w;
 								double ny = n * h;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color);
 								CarSection.Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
 								CarSection.Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
 								CarSection.Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(CarSection.Groups[GroupIndex].Elements[j].RotateZDirection, CarSection.Groups[GroupIndex].Elements[j].RotateXDirection);
@@ -1039,7 +1039,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											DaytimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(DaytimeImage))
+											if (!File.Exists(DaytimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												DaytimeImage = null;
@@ -1055,7 +1055,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											NighttimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(NighttimeImage))
+											if (!File.Exists(NighttimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												NighttimeImage = null;
@@ -1097,7 +1097,7 @@ namespace OpenBve.Parsers.Panel
 								});
 								int w = tday.Width;
 								int h = tday.Height;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								if (Maximum < Minimum)
 								{
 									Interface.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -1161,7 +1161,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											DaytimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(DaytimeImage))
+											if (!File.Exists(DaytimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												DaytimeImage = null;
@@ -1177,7 +1177,7 @@ namespace OpenBve.Parsers.Panel
 										else
 										{
 											NighttimeImage = Path.CombineFile(TrainPath, Value);
-											if (!System.IO.File.Exists(NighttimeImage))
+											if (!File.Exists(NighttimeImage))
 											{
 												Interface.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												NighttimeImage = null;
@@ -1305,7 +1305,7 @@ namespace OpenBve.Parsers.Panel
 									int j = -1;
 									for (int k = 0; k < tday.Length; k++)
 									{
-										int l = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
+										int l = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
 										if (k == 0) j = l;
 									}
 									string f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -1437,7 +1437,7 @@ namespace OpenBve.Parsers.Panel
 							if (Radius != 0.0)
 							{
 								// create element
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color);
 								InitialAngle = InitialAngle + Math.PI;
 								LastAngle = LastAngle + Math.PI;
 								double x0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
@@ -1585,7 +1585,7 @@ namespace OpenBve.Parsers.Panel
 							}
 							if (Width > 0.0 & Height > 0.0)
 							{
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White, false);
+								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White);
 								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
 								Timetable.AddObjectForCustomTimetable(CarSection.Groups[GroupIndex].Elements[j]);
 							}
@@ -1772,7 +1772,7 @@ namespace OpenBve.Parsers.Panel
 						for (int l = 0; l < daytimeDropFiles.Count; l++)
 						{
 							string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(TrainPath, daytimeDropFiles[l]) : daytimeDropFiles[l];
-							if (!System.IO.File.Exists(currentDropFile))
+							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = Path.CombineFile(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Program.RandomNumberGenerator.Next(1, 4) + ".png");
 								TransparentColor = Color24.Blue;
@@ -1787,7 +1787,7 @@ namespace OpenBve.Parsers.Panel
 						for (int l = 0; l < nighttimeDropFiles.Count; l++)
 						{
 							string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(TrainPath, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
-							if (!System.IO.File.Exists(currentDropFile))
+							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = Path.CombineFile(Program.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Program.RandomNumberGenerator.Next(1, 4) + ".png");
 								TransparentColor = Color24.Blue;
@@ -1811,7 +1811,7 @@ namespace OpenBve.Parsers.Panel
 							{
 								Program.CurrentHost.LoadTexture(daytimeDrops[DropTexture], OpenGlTextureWrapMode.ClampClamp);
 							});
-							int panelDropIndex = Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double) Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White, false);
+							int panelDropIndex = Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double) Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
 							string f = drop + " raindrop";
 							try
 							{
@@ -1985,7 +1985,7 @@ namespace OpenBve.Parsers.Panel
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
 			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
-			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }) };
+			Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 3 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
 			Object.Mesh.Materials[0].Flags = 0;
 			Object.Mesh.Materials[0].Color = Color32.White;

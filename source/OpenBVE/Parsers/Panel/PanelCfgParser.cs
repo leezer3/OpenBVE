@@ -16,7 +16,8 @@ namespace OpenBve {
 		private static double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed</remarks>
 		private const double EyeDistance = 1.0;
-
+		private static double WorldWidth, WorldHeight, WorldLeft, WorldTop;
+		private static double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Encoding">The train's text encoding</param>
@@ -24,7 +25,7 @@ namespace OpenBve {
 		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, CarBase Car) {
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
+			string FileName = Path.CombineFile(TrainPath, "panel.cfg");
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			for (int i = 0; i < Lines.Length; i++) {
 				Lines[i] = Lines[i].Trim(new char[] { });
@@ -35,9 +36,9 @@ namespace OpenBve {
 				}
 			}
 			// initialize
-			double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
+			
 			double AspectRatio = FullWidth / FullHeight;
-			double WorldWidth, WorldHeight;
+			
 			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height) {
 				WorldWidth = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / AspectRatio;
@@ -47,13 +48,13 @@ namespace OpenBve {
 			}
 			Car.CameraRestriction.BottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
 			Car.CameraRestriction.TopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
-			double WorldLeft = Car.Driver.X - 0.5 * WorldWidth;
-			double WorldTop = Car.Driver.Y + 0.5 * WorldHeight;
+			WorldLeft = Car.Driver.X - 0.5 * WorldWidth;
+			WorldTop = Car.Driver.Y + 0.5 * WorldHeight;
 			double WorldZ = Car.Driver.Z;
 			const double UpDownAngleConstant = -0.191986217719376;
 			double PanelYaw = 0.0;
 			double PanelPitch = UpDownAngleConstant;
-			string PanelBackground = OpenBveApi.Path.CombineFile(TrainPath, "panel.bmp");
+			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
 			// parse lines for panel and view
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
@@ -74,7 +75,7 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} else {
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													PanelBackground = OpenBveApi.Path.CombineFile(TrainPath, Value);
+													PanelBackground = Path.CombineFile(TrainPath, Value);
 													if (!System.IO.File.Exists(PanelBackground)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + PanelBackground + "could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													}
@@ -130,16 +131,14 @@ namespace OpenBve {
 					{
 						Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp); 
 					});
-					double w = (double)t.Width;
-					double h = (double)t.Height;
-					SemiHeight = FullHeight - h;
-					CreateElement(Car, 0, SemiHeight, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance, t, Color32.White, false);
+					SemiHeight = FullHeight - t.Height;
+					CreateElement(Car, 0, SemiHeight, t.Width, t.Height, WorldZ + EyeDistance, t, Color32.White);
 				}
 			}
 			// parse lines for rest
-			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / (double)Lines.Length;
+			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / Lines.Length;
 			for (int i = 0; i < Lines.Length; i++) {
-				Loading.TrainProgress = Loading.TrainProgressCurrentSum + invfac * (double)i;
+				Loading.TrainProgress = Loading.TrainProgressCurrentSum + invfac * i;
 				if ((i & 7) == 0) {
 					System.Threading.Thread.Sleep(1);
 					if (Loading.Cancel) return;
@@ -261,7 +260,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														Background = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														Background = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(Background)) {
 															Interface.AddMessage(MessageType.Error, true, "FileName " + Background + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															Background = null;
@@ -274,7 +273,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														Cover = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														Cover = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(Cover)) {
 															Interface.AddMessage(MessageType.Error, true, "FileName " + Cover + "could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															Cover = null;
@@ -337,9 +336,7 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										CreateElement(Car, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, t, Color32.White, false);
+										CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 									}
 									// cover
 									if (Cover != null) {
@@ -349,25 +346,21 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										CreateElement(Car, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, t, Color32.White, false);
+										CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
 									}
 									if (Type == 0) {
 										// needles
 										for (int k = 0; k < 2; k++) {
 											if (NeedleType[k] != 0) {
 												string Folder = Program.FileSystem.GetDataFolder("Compatibility");
-												string File = OpenBveApi.Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
+												string File = Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
 												Texture t;
 												Program.Renderer.TextureManager.RegisterTexture(File, out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
 													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
-												double w = (double)t.Width;
-												double h = (double)t.Height;
-												int j = CreateElement(Car, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - (double)(4 + k) * StackDistance, t, NeedleColor[k], false);
+												int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, t, NeedleColor[k]);
 												Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 												Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 												Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -387,7 +380,7 @@ namespace OpenBve {
 									} else if (Type == 1) {
 										// leds
 										if (NeedleType[1] != 0) {
-											int j = CreateElement(Car, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, null, NeedleColor[1], false);
+											int j = CreateElement(Car, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, NeedleColor[1]);
 											double x0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
 											double y0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
 											double z0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
@@ -409,18 +402,18 @@ namespace OpenBve {
 												//The verticies are transformed by the LED function, so must be created here at zero
 												vertices[v] = new Vertex();
 											}
-											int[][] faces = new int[][] {
-												new int[] { 0, 1, 2 },
-												new int[] { 0, 3, 4 },
-												new int[] { 0, 5, 6 },
-												new int[] { 0, 7, 8 },
-												new int[] { 0, 9, 10 }
+											int[][] faces = {
+												new[] { 0, 1, 2 },
+												new[] { 0, 3, 4 },
+												new[] { 0, 5, 6 },
+												new[] { 0, 7, 8 },
+												new[] { 0, 9, 10 }
 											};
 											Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, NeedleColor[1]);
 											Car.CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = true;
 											Car.CarSections[0].Groups[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
 											Car.CarSections[0].Groups[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
-											Car.CarSections[0].Groups[0].Elements[j].LEDVectors = new Vector3[] {
+											Car.CarSections[0].Groups[0].Elements[j].LEDVectors = new[] {
 												new Vector3(x0, y0, z0),
 												new Vector3(x1, y1, z1),
 												new Vector3(x2, y2, z2),
@@ -475,7 +468,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														Background = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														Background = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(Background)) {
 															Interface.AddMessage(MessageType.Error, true, "FileName " + Background + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															Background = null;
@@ -514,14 +507,14 @@ namespace OpenBve {
 												case "cover":
 												case "ふた":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													Cover = OpenBveApi.Path.CombineFile(TrainPath, Value);
+													Cover = Path.CombineFile(TrainPath, Value);
 													if (!System.IO.File.Exists(Cover)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName" + Cover + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Cover = null;
 													} break;
 												case "atc":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													Atc = OpenBveApi.Path.CombineFile(TrainPath, Value);
+													Atc = Path.CombineFile(TrainPath, Value);
 													if (!System.IO.File.Exists(Atc)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName" + Atc + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Atc = null;
@@ -574,9 +567,7 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										CreateElement(Car, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, t, Color32.White, false);
+										CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 									}
 									if (Cover != null) {
 										// cover
@@ -586,9 +577,7 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										CreateElement(Car, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, t, Color32.White, false);
+										CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
 									}
 									if (Atc != null) {
 										// atc
@@ -626,9 +615,9 @@ namespace OpenBve {
 													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
 												if (j == 0) {
-													k = CreateElement(Car, x, y, (double)h, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White, false);
+													k = CreateElement(Car, x, y, h, h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White);
 												} else {
-													CreateElement(Car, x, y, (double)h, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White, true);
+													CreateElement(Car, x, y, h, h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White, true);
 												}
 											}
 											Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Program.CurrentHost, "271 pluginstate", false);
@@ -637,16 +626,14 @@ namespace OpenBve {
 									if (Type == 0) {
 										// needle
 										string Folder = Program.FileSystem.GetDataFolder("Compatibility");
-										string File = OpenBveApi.Path.CombineFile(Folder, "needle_speedometer.png");
+										string File = Path.CombineFile(Folder, "needle_speedometer.png");
 										Texture t;
 										Program.Renderer.TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										int j = CreateElement(Car, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle, false);
+										int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
 										Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 										Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 										Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -656,7 +643,7 @@ namespace OpenBve {
 									} else if (Type == 1) {
 										// led
 										if (!NeedleOverridden) Needle = Color32.Black;
-										int j = CreateElement(Car, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, null, Needle, false);
+										int j = CreateElement(Car, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, Needle);
 										double x0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
 										double y0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
 										double z0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
@@ -678,18 +665,18 @@ namespace OpenBve {
 											//The verticies are transformed by the LED function, so must be created here at zero
 											vertices[v] = new Vertex();
 										}
-										int[][] faces = new int[][] {
-											new int[] { 0, 1, 2 },
-											new int[] { 0, 3, 4 },
-											new int[] { 0, 5, 6 },
-											new int[] { 0, 7, 8 },
-											new int[] { 0, 9, 10 }
+										int[][] faces = {
+											new[] { 0, 1, 2 },
+											new[] { 0, 3, 4 },
+											new[] { 0, 5, 6 },
+											new[] { 0, 7, 8 },
+											new[] { 0, 9, 10 }
 										};
 										Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Needle);
 										Car.CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = true;
 										Car.CarSections[0].Groups[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
 										Car.CarSections[0].Groups[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
-										Car.CarSections[0].Groups[0].Elements[j].LEDVectors = new Vector3[] {
+										Car.CarSections[0].Groups[0].Elements[j].LEDVectors = new[] {
 											new Vector3(x0, y0, z0),
 											new Vector3(x1, y1, z1),
 											new Vector3(x2, y2, z2),
@@ -722,7 +709,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														Number = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														Number = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(Number)) {
 															Interface.AddMessage(MessageType.Error, true, "FileName " + Number + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															Number = null;
@@ -818,9 +805,9 @@ namespace OpenBve {
 												int k = -1;
 												for (int j = 0; j < n; j++) {
 													if (j == 0) {
-														k = CreateElement(Car, CornerX, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, false);
+														k = CreateElement(Car, CornerX, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
 													} else {
-														CreateElement(Car, CornerX, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+														CreateElement(Car, CornerX, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 													}
 												}
 												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Program.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
@@ -829,9 +816,9 @@ namespace OpenBve {
 												int k = -1;
 												for (int j = 0; j < n; j++) {
 													if (j == 0) {
-														k = CreateElement(Car, CornerX + (double)Width, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, false);
+														k = CreateElement(Car, CornerX + Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
 													} else {
-														CreateElement(Car, CornerX + (double)Width, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+														CreateElement(Car, CornerX + Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 													}
 												}
 												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Program.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
@@ -840,9 +827,9 @@ namespace OpenBve {
 												int k = -1;
 												for (int j = 0; j < n; j++) {
 													if (j == 0) {
-														k = CreateElement(Car, CornerX + 2.0 * (double)Width, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, false);
+														k = CreateElement(Car, CornerX + 2.0 * Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
 													} else {
-														CreateElement(Car, CornerX + 2.0 * (double)Width, CornerY + SemiHeight, (double)Width, (double)Height, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+														CreateElement(Car, CornerX + 2.0 * Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 													}
 												}
 												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Program.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * floor 10 mod", false);
@@ -869,7 +856,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														TurnOn = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														TurnOn = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(TurnOn)) {
 															Interface.AddMessage(MessageType.Error, true, "FileName" + TurnOn + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															TurnOn = null;
@@ -882,7 +869,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														TurnOff = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														TurnOff = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(TurnOff)) {
 															Interface.AddMessage(MessageType.Error, true, "FileName" + TurnOff + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															TurnOff = null;
@@ -910,12 +897,8 @@ namespace OpenBve {
 											Program.CurrentHost.LoadTexture(t0, OpenGlTextureWrapMode.ClampClamp);
 											Program.CurrentHost.LoadTexture(t1, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t0.Width;
-										double h = (double)t0.Height;
-										int j = CreateElement(Car, CornerX, CornerY + SemiHeight, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t0, Color32.White, false);
-										w = (double)t1.Width;
-										h = (double)t1.Height;
-										CreateElement(Car, CornerX, CornerY + SemiHeight, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t1, Color32.White, true);
+										int j = CreateElement(Car, CornerX, CornerY + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t0);
+										CreateElement(Car, CornerX, CornerY + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t1, true);
 										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "doors 0 !=", false);
 									}
 								} break;
@@ -939,7 +922,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														Background = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														Background = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(Background)) {
 															Interface.AddMessage(MessageType.Error, true, "FileName" + Background + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															Background = null;
@@ -999,22 +982,18 @@ namespace OpenBve {
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										CreateElement(Car, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, t, Color32.White, false);
+										CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 									}
 									string Folder = Program.FileSystem.GetDataFolder("Compatibility");
 									{ // hour
-										string File = OpenBveApi.Path.CombineFile(Folder, "needle_hour.png");
+										string File = Path.CombineFile(Folder, "needle_hour.png");
 										Texture t;
 										Program.Renderer.TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										int j = CreateElement(Car, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, t, Needle, false);
+										int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 4.0 * StackDistance, t, Needle);
 										Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 										Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 										Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -1022,16 +1001,14 @@ namespace OpenBve {
 										Car.CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
 									}
 									{ // minute
-										string File = OpenBveApi.Path.CombineFile(Folder, "needle_minute.png");
+										string File = Path.CombineFile(Folder, "needle_minute.png");
 										Texture t;
 										Program.Renderer.TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										int j = CreateElement(Car, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle, false);
+										int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
 										Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 										Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 										Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -1039,16 +1016,14 @@ namespace OpenBve {
 										Car.CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
 									}
 									{ // second
-										string File = OpenBveApi.Path.CombineFile(Folder, "needle_second.png");
+										string File = Path.CombineFile(Folder, "needle_second.png");
 										Texture t;
 										Program.Renderer.TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
-										double w = (double)t.Width;
-										double h = (double)t.Height;
-										int j = CreateElement(Car, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, t, Needle, false);
+										int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 6.0 * StackDistance, t, Needle);
 										Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 										Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 										Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -1076,7 +1051,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														Image = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														Image = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(Image)) {
 															Interface.AddMessage(MessageType.Error, true, "FileName " + Image + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															Image = null;
@@ -1121,9 +1096,9 @@ namespace OpenBve {
 												TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
 												Program.Renderer.TextureManager.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
 												if (j == 0) {
-													k = CreateElement(Car, CornerX, CornerY + SemiHeight, (double)Width, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - StackDistance, t, Color32.White, false);
+													k = CreateElement(Car, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White);
 												} else {
-													CreateElement(Car, CornerX, CornerY + SemiHeight, (double)Width, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - StackDistance, t, Color32.White, true);
+													CreateElement(Car, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White, true);
 												}
 											}
 											if (Car.baseTrain.Handles.Brake is AirBrakeHandle) {
@@ -1175,8 +1150,13 @@ namespace OpenBve {
 			return Arguments;
 		}
 
+		private static int CreateElement(CarBase Car, double Left, double Top, double WorldZ, Texture Texture, bool AddStateToLastElement = false)
+		{
+			return CreateElement(Car, Left, Top, WorldZ, Texture.Width, Texture.Height, Texture, Color32.White, AddStateToLastElement);
+		}
+
 		// create element
-		private static int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double FullWidth, double FullHeight, double WorldLeft, double WorldTop, double WorldWidth, double WorldHeight, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement) {
+		private static int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement = false) {
 			// create object
 			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Vector3[] v = new Vector3[4];
