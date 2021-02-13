@@ -272,7 +272,7 @@ namespace OpenBve
 											Trains[i].Cars[h].UpdateTrackFollowers(d, false, false);
 											if (Interface.CurrentOptions.Derailments &&
 												Math.Abs(Trains[i].Cars[h].CurrentSpeed) >
-												Trains[j].CriticalCollisionSpeedDifference)
+												Trains[i].CriticalCollisionSpeedDifference)
 											{
 												Trains[i].Derail(h, TimeElapsed);
 											}
