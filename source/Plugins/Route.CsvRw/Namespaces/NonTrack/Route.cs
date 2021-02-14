@@ -497,7 +497,7 @@ namespace CsvRwRouteParser
 							}
 						}
 
-						if (cv >= 0 && cv < 4)
+						if (cv >= 0 && cv <= 4)
 						{
 							Plugin.CurrentOptions.InitialViewpoint = cv;
 						}
