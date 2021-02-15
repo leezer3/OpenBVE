@@ -340,7 +340,7 @@ namespace OpenBve
 							{
 								if (Cars[j].CarSections.Length != 0)
 								{
-									if (j == this.DriverCar && IsPlayerTrain)
+									if (j == this.DriverCar && IsPlayerTrain && Interface.CurrentOptions.InitialViewpoint == 0)
 									{
 										this.Cars[j].ChangeCarSection(CarSectionType.Interior);
 									}
@@ -354,7 +354,7 @@ namespace OpenBve
 										 * but we have no control over external factors....
 										 */
 										this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-										if (IsPlayerTrain)
+										if (IsPlayerTrain && Interface.CurrentOptions.InitialViewpoint == 0)
 										{
 											this.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 
