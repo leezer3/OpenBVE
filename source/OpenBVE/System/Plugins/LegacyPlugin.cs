@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
-using SoundManager;
+using TrainManager.SafetySystems;
 
 namespace OpenBve {
 	/// <summary>Represents a legacy Win32 plugin.</summary>
-	internal class Win32Plugin : PluginManager.Plugin {
+	internal class Win32Plugin : Plugin {
 		
 		// --- win32 proxy calls ---
 		
@@ -147,7 +147,7 @@ namespace OpenBve {
 		}
 		
 		// --- functions ---
-		internal override bool Load(VehicleSpecs specs, InitializationModes mode) {
+		public override bool Load(VehicleSpecs specs, InitializationModes mode) {
 			int result;
 			bool retry = true;
 			retryLoad:
@@ -230,7 +230,7 @@ namespace OpenBve {
 			SoundHandle = GCHandle.Alloc(Sound, GCHandleType.Pinned);
 			return true;
 		}
-		internal override void Unload() {
+		public override void Unload() {
 			if (PanelHandle.IsAllocated) {
 				PanelHandle.Free();
 			}
@@ -244,7 +244,7 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void BeginJump(InitializationModes mode) {
+		public override void BeginJump(InitializationModes mode) {
 			try {
 				Win32Initialize((int)mode);
 			} catch (Exception ex) {
@@ -252,7 +252,7 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void EndJump() { }
+		public override void EndJump() { }
 
 		protected override void Elapse(ElapseData data) {
 			try {
@@ -356,7 +356,7 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void KeyDown(VirtualKeys key) {
+		public override void KeyDown(VirtualKeys key) {
 			try {
 				Win32KeyDown((int)key);
 			} catch (Exception ex) {
@@ -364,7 +364,7 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void KeyUp(VirtualKeys key) {
+		public override void KeyUp(VirtualKeys key) {
 			try {
 				Win32KeyUp((int)key);
 			} catch (Exception ex) {
@@ -372,7 +372,7 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void HornBlow(HornTypes type) {
+		public override void HornBlow(HornTypes type) {
 			try {
 				Win32HornBlow((int)type);
 			} catch (Exception ex) {
@@ -380,7 +380,7 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void DoorChange(DoorStates oldState, DoorStates newState) {
+		public override void DoorChange(DoorStates oldState, DoorStates newState) {
 			if (oldState == DoorStates.None & newState != DoorStates.None) {
 				try {
 					Win32DoorOpen();

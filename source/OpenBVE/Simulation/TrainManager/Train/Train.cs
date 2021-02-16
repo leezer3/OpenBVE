@@ -31,16 +31,7 @@ namespace OpenBve
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train : TrainBase
 		{
-			/// <summary>The plugin used by this train.</summary>
-			internal PluginManager.Plugin Plugin;
-			/// <summary>The driver body</summary>
-			internal DriverBody DriverBody;
-			
 			private double InternalTimerTimeElapsed;
-			internal bool Derailed;
-			
-			
-
 			private double previousRouteLimit = 0.0;
 
 			internal Train(TrainState state)

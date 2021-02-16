@@ -1,5 +1,4 @@
 ﻿using OpenBveApi;
-using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -36,6 +35,15 @@ namespace TrainManager.Trains
 		public bool StationDepartureSoundPlayed;
 		/// <summary>The adjust distance to the station stop point</summary>
 		public double StationDistanceToStopPoint;
+		/// <summary>The plugin used by this train.</summary>
+		public Plugin Plugin;
+		/// <summary>The driver body</summary>
+		public DriverBody DriverBody;
+		/// <summary>Whether the train has currently derailed</summary>
+		public bool Derailed;
+			
+			
+		
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>
 		public void Initialize()

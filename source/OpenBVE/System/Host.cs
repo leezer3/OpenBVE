@@ -498,6 +498,11 @@ namespace OpenBve {
 
 		public override double InGameTime => Program.CurrentRoute.SecondsSinceMidnight;
 
+		public override void AddBlackBoxEntry()
+		{
+			Game.AddBlackBoxEntry();
+		}
+
 		public Host() : base(HostApplication.OpenBve)
 		{
 		}

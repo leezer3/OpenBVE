@@ -1054,7 +1054,7 @@ namespace TrainManager.Car
 				double ab = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
 				double h = Specs.CenterOfGravityHeight;
 				double sr = Math.Abs(CurrentSpeed);
-				double rmax = 2.0 * h * sr * sr / (TrainManagerBase.Atmosphere.AccelerationDueToGravity * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
+				double rmax = 2.0 * h * sr * sr / (TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 				double ta;
 				Topples = false;
 				if (Derailed)
@@ -1068,7 +1068,7 @@ namespace TrainManager.Car
 					{
 						if (r < rmax)
 						{
-							double s0 = Math.Sqrt(r * TrainManagerBase.Atmosphere.AccelerationDueToGravity * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
+							double s0 = Math.Sqrt(r * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
 							const double fac = 0.25; // arbitrary coefficient
 							ta = -fac * (sr - s0) * rs;
 							Topples = true;
@@ -1281,15 +1281,15 @@ namespace TrainManager.Car
 				double a = FrontAxle.Follower.WorldDirection.Y;
 				double b = RearAxle.Follower.WorldDirection.Y;
 				PowerRollingCouplerAcceleration =
-					-0.5 * (a + b) * TrainManagerBase.Atmosphere.AccelerationDueToGravity;
+					-0.5 * (a + b) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			}
 			// friction
 			double FrictionBrakeAcceleration;
 			{
 				double v = Math.Abs(CurrentSpeed);
 				double t = Index == 0 & CurrentSpeed >= 0.0 || Index == baseTrain.NumberOfCars - 1 & CurrentSpeed <= 0.0 ? Specs.ExposedFrontalArea : Specs.UnexposedFrontalArea;
-				double a = FrontAxle.GetResistance(v, t, TrainManagerBase.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.Atmosphere.AccelerationDueToGravity);
-				double b = RearAxle.GetResistance(v, t, TrainManagerBase.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.Atmosphere.AccelerationDueToGravity);
+				double a = FrontAxle.GetResistance(v, t, TrainManagerBase.CurrentRoute.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+				double b = RearAxle.GetResistance(v, t, TrainManagerBase.CurrentRoute.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 				FrictionBrakeAcceleration = 0.5 * (a + b);
 			}
 			// power
@@ -1300,10 +1300,10 @@ namespace TrainManager.Car
 			double wheelSlipAccelerationBrakeRear = 0.0;
 			if (!Derailed)
 			{
-				wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor(TrainManagerBase.Atmosphere.AccelerationDueToGravity);
-				wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor(TrainManagerBase.Atmosphere.AccelerationDueToGravity);
-				wheelSlipAccelerationBrakeFront = FrontAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.Atmosphere.AccelerationDueToGravity);
-				wheelSlipAccelerationBrakeRear = RearAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.Atmosphere.AccelerationDueToGravity);
+				wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+				wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+				wheelSlipAccelerationBrakeFront = FrontAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+				wheelSlipAccelerationBrakeRear = RearAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 			}
 
 			if (DecelerationDueToMotor == 0.0)
@@ -1465,7 +1465,7 @@ namespace TrainManager.Car
 					double rf = FrontAxle.Follower.WorldDirection.Y;
 					double rr = RearAxle.Follower.WorldDirection.Y;
 					double ra = Math.Abs(0.5 * (rf + rr) *
-					                     TrainManagerBase.Atmosphere.AccelerationDueToGravity);
+					                     TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 					if (a > ra) a = ra;
 				}
 
@@ -1491,7 +1491,7 @@ namespace TrainManager.Car
 			else if (Derailed)
 			{
 				FrictionBrakeAcceleration += TrainBase.CoefficientOfGroundFriction *
-				                             TrainManagerBase.Atmosphere.AccelerationDueToGravity;
+				                             TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			}
 
 			// motor
@@ -1547,7 +1547,7 @@ namespace TrainManager.Car
 				}
 
 				double diff = target - Specs.PerceivedSpeed;
-				double rate = (diff < 0.0 ? 5.0 : 1.0) * TrainManagerBase.Atmosphere.AccelerationDueToGravity *
+				double rate = (diff < 0.0 ? 5.0 : 1.0) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity *
 				              TimeElapsed;
 				rate *= 1.0 - 0.7 / (diff * diff + 1.0);
 				double factor = rate * rate;

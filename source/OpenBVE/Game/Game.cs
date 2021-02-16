@@ -104,11 +104,11 @@ namespace OpenBve
 
 		internal static void UpdateBlackBox() {
 			if (Program.CurrentRoute.SecondsSinceMidnight >= BlackBoxNextUpdate) {
-				AddBlackBoxEntry(BlackBoxEventToken.None);
+				AddBlackBoxEntry();
 				BlackBoxNextUpdate = Program.CurrentRoute.SecondsSinceMidnight + 1.0;
 			}
 		}
-		internal static void AddBlackBoxEntry(BlackBoxEventToken EventToken) {
+		internal static void AddBlackBoxEntry() {
 			if (Interface.CurrentOptions.BlackBox) {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
 					Array.Resize(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
@@ -149,7 +149,7 @@ namespace OpenBve
 				} else {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = (BlackBoxBrake)TrainManager.PlayerTrain.Handles.Brake.Safety;
 				}
-				BlackBoxEntries[BlackBoxEntryCount].EventToken = EventToken;
+				BlackBoxEntries[BlackBoxEntryCount].EventToken = BlackBoxEventToken.None;
 				BlackBoxEntryCount++;
 			}
 		}

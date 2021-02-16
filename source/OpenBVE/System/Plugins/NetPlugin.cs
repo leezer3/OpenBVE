@@ -8,11 +8,13 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using RouteManager2.MessageManager;
 using SoundManager;
+using TrainManager.SafetySystems;
+using TrainManager.Trains;
 using SoundHandle = OpenBveApi.Runtime.SoundHandle;
 
 namespace OpenBve {
 	/// <summary>Represents a .NET assembly plugin.</summary>
-	internal class NetPlugin : PluginManager.Plugin {
+	internal class NetPlugin : Plugin {
 		
 		// sound handle
 		internal class SoundHandleEx : SoundHandle {
@@ -49,7 +51,7 @@ namespace OpenBve {
 		/// <param name="trainFolder">The absolute on-disk path of the train's folder</param>
 		/// <param name="api">The base OpenBVE runtime interface</param>
 		/// <param name="train">The base train</param>
-		internal NetPlugin(string pluginFile, string trainFolder, IRuntime api, TrainManager.Train train) {
+		internal NetPlugin(string pluginFile, string trainFolder, IRuntime api, TrainBase train) {
 			base.PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			base.PluginValid = true;
 			base.PluginMessage = null;
@@ -71,7 +73,7 @@ namespace OpenBve {
 		}
 		
 		// --- functions ---
-		internal override bool Load(VehicleSpecs specs, InitializationModes mode) {
+		public override bool Load(VehicleSpecs specs, InitializationModes mode) {
 			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.PlaySound, this.AddInterfaceMessage, this.AddScore);
 			bool success;
 			try {
@@ -115,7 +117,7 @@ namespace OpenBve {
 				return false;
 			}
 		}
-		internal override void Unload() {
+		public override void Unload() {
 			#if !DEBUG
 			try {
 				#endif
@@ -127,7 +129,7 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void BeginJump(InitializationModes mode) {
+		public override void BeginJump(InitializationModes mode) {
 			#if !DEBUG
 			try {
 				#endif
@@ -139,7 +141,7 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void EndJump() { }
+		public override void EndJump() { }
 
 		protected override void Elapse(ElapseData data) {
 			#if !DEBUG
@@ -203,7 +205,7 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void KeyDown(VirtualKeys key) {
+		public override void KeyDown(VirtualKeys key) {
 			#if !DEBUG
 			try {
 				#endif
@@ -215,7 +217,7 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void KeyUp(VirtualKeys key) {
+		public override void KeyUp(VirtualKeys key) {
 			#if !DEBUG
 			try {
 				#endif
@@ -227,7 +229,7 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void HornBlow(HornTypes type) {
+		public override void HornBlow(HornTypes type) {
 			#if !DEBUG
 			try {
 				#endif
@@ -239,7 +241,7 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void DoorChange(DoorStates oldState, DoorStates newState) {
+		public override void DoorChange(DoorStates oldState, DoorStates newState) {
 			#if !DEBUG
 			try {
 				#endif

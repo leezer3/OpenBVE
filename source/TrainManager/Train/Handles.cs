@@ -1,12 +1,10 @@
 ﻿using TrainManager.Handles;
+using TrainManager.SafetySystems;
 
-namespace OpenBve
+namespace TrainManager.Trains
 {
-	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public partial class TrainManager
-	{
-		/// <summary>The root class for a train within the simulation</summary>
-		public partial class Train
+	/// <summary>The root class for a train within the simulation</summary>
+		public partial class TrainBase
 		{
 			/// <summary>Applies a power and / or brake notch to this train</summary>
 			/// <param name="PowerValue">The power notch value</param>
@@ -14,7 +12,7 @@ namespace OpenBve
 			/// <param name="BrakeValue">The brake notch value</param>
 			/// <param name="BrakeRelative">Whether this is relative to the current notch</param>
 			/// <param name="IsOverMaxDriverNotch"></param>
-			internal void ApplyNotch(int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
+			public void ApplyNotch(int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
 			{
 				// determine notch
 				int p = PowerRelative ? PowerValue + Handles.Power.Driver : PowerValue;
@@ -132,7 +130,7 @@ namespace OpenBve
 
 				Handles.Power.Driver = p;
 				Handles.Brake.Driver = b;
-				Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
+				TrainManagerBase.currentHost.AddBlackBoxEntry();
 				// plugin
 				if (Plugin != null)
 				{
@@ -144,7 +142,7 @@ namespace OpenBve
 			/// <summary>Applies a loco brake notch to this train</summary>
 			/// <param name="NotchValue">The loco brake notch value</param>
 			/// <param name="Relative">Whether this is relative to the current notch</param>
-			internal void ApplyLocoBrakeNotch(int NotchValue, bool Relative)
+			public void ApplyLocoBrakeNotch(int NotchValue, bool Relative)
 			{
 				int b = Relative ? NotchValue + Handles.LocoBrake.Driver : NotchValue;
 				if (b < 0)
@@ -200,7 +198,7 @@ namespace OpenBve
 			/// <summary>Applies a reverser notch</summary>
 			/// <param name="Value">The notch to apply</param>
 			/// <param name="Relative">Whether this is an absolute value or relative to the previous</param>
-			internal void ApplyReverser(int Value, bool Relative)
+			public void ApplyReverser(int Value, bool Relative)
 			{
 				int a = (int)Handles.Reverser.Driver;
 				int r = Relative ? a + Value : Value;
@@ -213,7 +211,7 @@ namespace OpenBve
 					{
 						Plugin.UpdateReverser();
 					}
-					Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
+					TrainManagerBase.currentHost.AddBlackBoxEntry();
 					// sound
 					if (a == 0 & r != 0)
 					{
@@ -227,7 +225,7 @@ namespace OpenBve
 			}
 
 			/// <summary>Applies the emergency brake</summary>
-			internal void ApplyEmergencyBrake()
+			public void ApplyEmergencyBrake()
 			{
 				// sound
 				if (!Handles.EmergencyBrake.Driver)
@@ -274,7 +272,7 @@ namespace OpenBve
 			}
 
 			/// <summary>Releases the emergency brake</summary>
-			internal void UnapplyEmergencyBrake()
+			public void UnapplyEmergencyBrake()
 			{
 				if (Handles.EmergencyBrake.Driver)
 				{
@@ -307,7 +305,7 @@ namespace OpenBve
 
 			/// <summary>Applies or releases the hold brake</summary>
 			/// <param name="Value">Whether to apply (TRUE) or release (FALSE)</param>
-			internal void ApplyHoldBrake(bool Value)
+			public void ApplyHoldBrake(bool Value)
 			{
 				Handles.HoldBrake.Driver = Value;
 				if (Plugin == null) return;
@@ -317,7 +315,7 @@ namespace OpenBve
 
 			/// <summary>Moves the air brake handle</summary>
 			/// <param name="RelativeDirection">The direction: -1 for decrease, 1 for increase</param>
-			internal void ApplyAirBrakeHandle(int RelativeDirection)
+			public void ApplyAirBrakeHandle(int RelativeDirection)
 			{
 				if (Handles.Brake is AirBrakeHandle)
 				{
@@ -344,13 +342,13 @@ namespace OpenBve
 						}
 					}
 
-					Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
+					TrainManagerBase.currentHost.AddBlackBoxEntry();
 				}
 			}
 
 			/// <summary>Moves the air brake handle to the specified state</summary>
 			/// <param name="newState">The new state</param>
-			internal void ApplyAirBrakeHandle(AirBrakeHandleState newState)
+			public void ApplyAirBrakeHandle(AirBrakeHandleState newState)
 			{
 				if (Handles.Brake is AirBrakeHandle)
 				{
@@ -399,7 +397,7 @@ namespace OpenBve
 
 						// apply
 						Handles.Brake.Driver = (int) newState;
-						Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
+						TrainManagerBase.currentHost.AddBlackBoxEntry();
 						// plugin
 						if (Plugin != null)
 						{
@@ -412,7 +410,7 @@ namespace OpenBve
 
 			/// <summary>Moves the air brake handle to the specified state</summary>
 			/// <param name="newState">The state</param>
-			internal void ApplyLocoAirBrakeHandle(AirBrakeHandleState newState)
+			public void ApplyLocoAirBrakeHandle(AirBrakeHandleState newState)
 			{
 				if (Handles.LocoBrake is LocoAirBrakeHandle)
 				{
@@ -462,7 +460,7 @@ namespace OpenBve
 						// apply
 						Handles.LocoBrake.Driver = (int) newState;
 						Handles.LocoBrake.Actual = (int) newState; //TODO: FIXME
-						Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
+						TrainManagerBase.currentHost.AddBlackBoxEntry();
 						// plugin
 						if (Plugin != null)
 						{
@@ -473,5 +471,4 @@ namespace OpenBve
 				}
 			}
 		}
-	}
 }

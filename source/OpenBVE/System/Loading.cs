@@ -240,7 +240,6 @@ namespace OpenBve {
 
 			TrainManager.Derailments = Interface.CurrentOptions.Derailments;
 			TrainManager.Toppling = Interface.CurrentOptions.Toppling;
-			TrainManager.Atmosphere = Program.CurrentRoute.Atmosphere;
 			TrainManager.TFOs = Program.CurrentRoute.TrackFollowingObjects;
 			if (!loaded)
 			{
