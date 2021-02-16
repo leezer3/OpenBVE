@@ -1130,7 +1130,10 @@ namespace CsvRwRouteParser
 				int subdivisions = (int)Math.Floor(Data.BlockInterval / 5.0);
 				if (subdivisions >= 2)
 				{
-					Plugin.CurrentRoute.Tracks[0].SmoothTurns(subdivisions, Plugin.CurrentHost);
+					if (Data.TurnUsed)
+					{
+						Plugin.CurrentRoute.Tracks[0].SmoothTurns(subdivisions, Plugin.CurrentHost);
+					}
 					ComputeCantTangents();
 				}
 			}

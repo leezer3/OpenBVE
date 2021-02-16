@@ -34,6 +34,8 @@ namespace CsvRwRouteParser
 			internal bool IgnorePitchRoll;
 			internal bool LineEndingFix;
 			internal bool ValueBasedSections = false;
+			internal bool TurnUsed = false;
+
 			/// <summary>Creates any missing blocks</summary>
 			/// <param name="ToIndex">The block index to process until</param>
 			/// <param name="PreviewOnly">Whether this is a preview only</param>

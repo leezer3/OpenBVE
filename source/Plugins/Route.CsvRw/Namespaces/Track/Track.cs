@@ -351,6 +351,7 @@ namespace CsvRwRouteParser
 					break;
 				case TrackCommand.Turn:
 				{
+					Data.TurnUsed = true;
 					double s = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out s))
 					{
