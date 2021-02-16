@@ -247,7 +247,11 @@ namespace CsvRwRouteParser
 
 		internal void CreateSecondaryRail(Block currentBlock, Vector3 pos, Transformation RailTransformation, double StartingDistance, double EndingDistance, string FileName)
 		{
-			double px = PrimaryRail > 0 ? currentBlock.Rails[PrimaryRail].RailStart.X : 0.0;
+			double px = 0.0;
+			if (currentBlock.Rails.ContainsKey(PrimaryRail))
+			{
+				px = PrimaryRail > 0 ? currentBlock.Rails[PrimaryRail].RailStart.X : 0.0;
+			}
 			double d = px - currentBlock.Rails[SecondaryRail].RailStart.X;
 			if (d < 0.0)
 			{
