@@ -1,6 +1,4 @@
 ﻿using OpenBveApi.Runtime;
-using SoundManager;
-using TrainManager.Car;
 
 namespace OpenBve
 {
@@ -12,7 +10,7 @@ namespace OpenBve
 		{
 			/// <summary>Is called once a frame, to update the door states of the train</summary>
 			/// <param name="TimeElapsed">The frame time elapsed</param>
-			internal void UpdateTrainDoors(double TimeElapsed)
+			internal void UpdateDoors(double TimeElapsed)
 			{
 				DoorStates oldState = DoorStates.None;
 				DoorStates newState = DoorStates.None;
@@ -111,35 +109,6 @@ namespace OpenBve
 					if (Plugin != null)
 					{
 						Plugin.DoorChange(oldState, newState);
-					}
-				}
-			}
-
-			/// <summary>Called once a frame for each train when arriving at a station, in order to update the automatic doors</summary>
-			/// <param name="StationIndex">The index of the train's next station</param>
-			/// <param name="BackwardsTolerance">The backwards tolerance for this stop point</param>
-			/// <param name="ForwardsTolerance">The forwards tolerance for this stop point</param>
-			internal void AttemptToOpenDoors(int StationIndex, double BackwardsTolerance, double ForwardsTolerance)
-			{
-				if ((GetDoorsState(Program.CurrentRoute.Stations[StationIndex].OpenLeftDoors, Program.CurrentRoute.Stations[StationIndex].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
-				{
-					if (StationDistanceToStopPoint < BackwardsTolerance & -StationDistanceToStopPoint < ForwardsTolerance)
-					{
-						OpenDoors(Program.CurrentRoute.Stations[StationIndex].OpenLeftDoors, Program.CurrentRoute.Stations[StationIndex].OpenRightDoors);
-					}
-
-				}
-			}
-
-			/// <summary>Called once a frame for each train whilst stopped at a station with the doors open, in order to update the automatic doors</summary>
-			internal void AttemptToCloseDoors()
-			{
-				if (Program.CurrentRoute.SecondsSinceMidnight >= StationDepartureTime - 1.0 / Cars[DriverCar].Specs.DoorCloseFrequency)
-				{
-					if ((GetDoorsState(true, true) & TrainDoorState.AllClosed) == 0)
-					{
-						CloseDoors(true, true);
-						Specs.DoorClosureAttempted = true;
 					}
 				}
 			}

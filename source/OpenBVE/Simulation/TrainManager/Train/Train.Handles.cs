@@ -285,7 +285,7 @@ namespace OpenBve
 					}
 					else
 					{
-						Handles.Brake.Decrease.Play(Cars[DriverCar], false);;
+						Handles.Brake.Decrease.Play(Cars[DriverCar], false);
 					}
 					// apply
 					
@@ -363,7 +363,7 @@ namespace OpenBve
 						}
 
 						// sound
-						if ((int) newState < (int) Handles.Brake.Driver)
+						if ((int) newState < Handles.Brake.Driver)
 						{
 							// brake release
 							if ((int) newState > 0)
@@ -384,10 +384,10 @@ namespace OpenBve
 								Handles.Brake.Min.Play(Cars[DriverCar], false);
 							}
 						}
-						else if ((int) newState > (int) Handles.Brake.Driver)
+						else if ((int) newState > Handles.Brake.Driver)
 						{
 							// brake
-							if ((int)newState - (int)Handles.Brake.Driver > 2 | Handles.Brake.ContinuousMovement && Handles.Brake.IncreaseFast.Buffer != null)
+							if ((int)newState - Handles.Brake.Driver > 2 | Handles.Brake.ContinuousMovement && Handles.Brake.IncreaseFast.Buffer != null)
 							{
 								Handles.Brake.IncreaseFast.Play(Cars[DriverCar], false);
 							}
@@ -425,7 +425,7 @@ namespace OpenBve
 						}
 
 						// sound
-						if ((int) newState < (int) Handles.Brake.Driver)
+						if ((int) newState < Handles.Brake.Driver)
 						{
 							// brake release
 							if ((int) newState > 0)
@@ -446,10 +446,10 @@ namespace OpenBve
 								Handles.Brake.Min.Play(Cars[DriverCar], false);
 							}
 						}
-						else if ((int) newState > (int) Handles.LocoBrake.Driver)
+						else if ((int) newState > Handles.LocoBrake.Driver)
 						{
 							// brake
-							if ((int)newState - (int)Handles.LocoBrake.Driver > 2 | Handles.Brake.ContinuousMovement && Handles.Brake.IncreaseFast.Buffer != null)
+							if ((int)newState - Handles.LocoBrake.Driver > 2 | Handles.Brake.ContinuousMovement && Handles.Brake.IncreaseFast.Buffer != null)
 							{
 								Handles.Brake.IncreaseFast.Play(Cars[DriverCar], false);
 							}

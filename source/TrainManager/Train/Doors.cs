@@ -129,5 +129,34 @@ namespace TrainManager.Trains
 			if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
 			return Result;
 		}
+
+		/// <summary>Called once a frame for each train when arriving at a station, in order to update the automatic doors</summary>
+		/// <param name="NextStation">The train's next station</param>
+		/// <param name="BackwardsTolerance">The backwards tolerance for this stop point</param>
+		/// <param name="ForwardsTolerance">The forwards tolerance for this stop point</param>
+		public void AttemptToOpenDoors(Station NextStation, double BackwardsTolerance, double ForwardsTolerance)
+		{
+			if ((GetDoorsState(NextStation.OpenLeftDoors, NextStation.OpenRightDoors) & TrainDoorState.AllOpened) == 0)
+			{
+				if (StationDistanceToStopPoint < BackwardsTolerance & -StationDistanceToStopPoint < ForwardsTolerance)
+				{
+					OpenDoors(NextStation.OpenLeftDoors, NextStation.OpenRightDoors);
+				}
+
+			}
+		}
+
+		/// <summary>Called once a frame for each train whilst stopped at a station with the doors open, in order to update the automatic doors</summary>
+		public void AttemptToCloseDoors()
+		{
+			if (TrainManagerBase.currentHost.InGameTime >= StationDepartureTime - 1.0 / Cars[DriverCar].Specs.DoorCloseFrequency)
+			{
+				if ((GetDoorsState(true, true) & TrainDoorState.AllClosed) == 0)
+				{
+					CloseDoors(true, true);
+					Specs.DoorClosureAttempted = true;
+				}
+			}
+		}
 	}
 }
