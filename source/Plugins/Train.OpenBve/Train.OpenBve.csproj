@@ -45,6 +45,7 @@
     <Compile Include="Panel\Panel2CfgParser.cs" />
     <Compile Include="Panel\PanelAnimatedXmlParser.cs" />
     <Compile Include="Panel\PanelCfgParser.cs" />
+    <Compile Include="Panel\PanelXmlParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
