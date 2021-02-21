@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
@@ -11,6 +12,10 @@ namespace OpenBveTrainParser
 	    internal static HostInterface currentHost;
 
 	    internal static FileSystem FileSystem;
+
+	    internal static BaseOptions CurrentOptions;
+
+	    internal static Random RandomNumberGenerator = new Random();
 
 	    public override bool CanLoadTrain(string path)
 	    {
