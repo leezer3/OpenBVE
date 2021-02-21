@@ -53,6 +53,8 @@ namespace OpenBve {
 
 		internal static CurrentRoute CurrentRoute;
 
+		internal static TrainManager TrainManager;
+
 		internal static readonly Object LockObj = new Object();
 
 		// main
@@ -67,6 +69,7 @@ namespace OpenBve {
 	        CurrentRoute = new CurrentRoute(Renderer);
 	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        Options.LoadOptions();
+	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {
 		        Renderer.Screen.Width = 960;

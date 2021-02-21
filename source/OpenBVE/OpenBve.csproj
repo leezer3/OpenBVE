@@ -128,10 +128,6 @@
     <Compile Include="Game\AI\AI.SimpleHuman.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\AI\AI.TrackFollowingObject.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>AI.cs</DependentUpon>
-    </Compile>
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="Game\MessageManager.TextualMessages.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
@@ -203,15 +199,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Simulation\TrainManager\Functions.cs" />
-    <Compile Include="Simulation\TrainManager\Passengers.cs" />
-    <Compile Include="Simulation\TrainManager\Station.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Plugin.cs" />
-    <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Train.Doors.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Train.RequestStop.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Train.Station.cs" />
     <Compile Include="System\Cursor.cs" />
     <Compile Include="System\Functions\Bve5Shared.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
@@ -299,14 +287,8 @@
     <Compile Include="Game\ObjectManager\AnimatedObjects\FunctionScripts.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="OldCode\Interface.cs" />
-    <Compile Include="System\Plugins\LegacyPlugin.cs">
-      <DependentUpon>PluginManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="System\Loading.cs" />
     <Compile Include="System\MainLoop.cs" />
-    <Compile Include="System\Plugins\NetPlugin.cs">
-      <DependentUpon>PluginManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="System\Plugins\PluginManager.cs" />
     <Compile Include="System\Functions\Timers.cs" />

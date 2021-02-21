@@ -29,7 +29,7 @@ namespace OpenBve.Parsers.Panel
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanelXml(string PanelFile, string TrainPath, TrainManager.Train Train, int Car)
+		internal static void ParsePanelXml(string PanelFile, string TrainPath, TrainBase Train, int Car)
 		{
 			// The current XML file to load
 			string FileName = PanelFile;
@@ -61,7 +61,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void ParsePanelNode(XElement Element, string FileName, string TrainPath, TrainManager.Train Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
+		private static void ParsePanelNode(XElement Element, string FileName, string TrainPath, TrainBase Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
 		{
 			//Train name, used for hacks detection
 			string trainName = new System.IO.DirectoryInfo(TrainPath).Name.ToUpperInvariant();

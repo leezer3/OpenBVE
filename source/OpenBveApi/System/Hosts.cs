@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -385,14 +386,26 @@ namespace OpenBveApi.Hosts {
 		/// <param name="FileNotFound">Whether this message relates to a file not found</param>
 		/// <param name="text">The textual message.</param>
 		public virtual void AddMessage(MessageType type, bool FileNotFound, string text) { }
-
-		/// <summary>Adds a message to the in-game display</summary>
+		
+		/// <summary>Adds a fully constructed message to the in-game display</summary>
 		/// <param name="AbstractMessage">The message to add</param>
 		public virtual void AddMessage(object AbstractMessage)
 		{
 			/*
 			 * Using object as a parameter type allows us to keep the messages out the API...
 			 */
+
+		}
+
+		///  <summary>Adds a message to the in-game display</summary>
+		/// <param name="Message">The text of the message</param>
+		///  <param name="MessageDependancy">The dependancy of the message</param>
+		///  <param name="Mode">The required game mode for the message to display</param>
+		///  <param name="MessageColor">The color of the message font</param>
+		///  <param name="MessageTimeOut">The timeout of the message</param>
+		///  <param name="Key">The mesage key</param>
+		public virtual void AddMessage(string Message, object MessageDependancy, GameMode Mode, MessageColor MessageColor, double MessageTimeOut, string Key)
+		{
 
 		}
 
@@ -426,6 +439,13 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Stops a playing sound source</summary>
 		public virtual void StopSound(object SoundSource)
+		{
+
+		}
+
+		/// <summary>Stops all sounds with the specified parent object</summary>
+		/// <param name="parent">The parent object</param>
+		public virtual void StopAllSounds(object parent)
 		{
 
 		}
@@ -547,6 +567,40 @@ namespace OpenBveApi.Hosts {
 		public virtual void AddBlackBoxEntry()
 		{
 
+		}
+
+		/// <summary>Processes a jump</summary>
+		/// <param name="Train">The train to be jumped</param>
+		/// <param name="StationIndex">The station to jump to</param>
+		public virtual void ProcessJump(AbstractTrain Train, int StationIndex)
+		{
+
+		}
+
+		/// <summary>May be called from a .Net plugin, in order to add a score to the post-game log</summary>
+		/// <param name="Score">The score to add</param>
+		/// <param name="Message">The message to display in the post-game log</param>
+		/// <param name="Color">The color of the in-game message</param>
+		/// <param name="Timeout">The time in seconds for which to display the in-game message</param>
+		public virtual void AddScore(int Score, string Message, MessageColor Color, double Timeout)
+		{
+
+		}
+
+		/// <summary>Gets the closest train to the specified train</summary>
+		/// <param name="Train">The specified train</param>
+		/// <returns>The closest train, or null if no other trains</returns>
+		public virtual AbstractTrain ClosestTrain(AbstractTrain Train)
+		{
+			return null;
+		}
+
+		/// <summary>Gets the closest train to the specified track location</summary>
+		/// <param name="TrackPosition">The specified track position</param>
+		/// <returns>The closest train, or null if no other trains</returns>
+		public virtual AbstractTrain ClosestTrain(double TrackPosition)
+		{
+			return null;
 		}
 	}
 }

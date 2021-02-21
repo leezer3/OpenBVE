@@ -4,12 +4,13 @@ using OpenBveApi.Math;
 using TrainManager.BrakeSystems;
 using OpenBveApi.Interface;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve.Parsers.Train
 {
 	partial class TrainXmlParser
 	{
-		private static void ParseBrakeNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train)
+		private static void ParseBrakeNode(XmlNode Node, string fileName, int Car, ref TrainBase Train)
 		{
 			double compressorRate = 5000.0, compressorMinimumPressure = 690000.0, compressorMaximumPressure = 780000.0;
 			double auxiliaryReservoirChargeRate = 200000.0;

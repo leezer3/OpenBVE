@@ -5,6 +5,7 @@ using OpenBveApi.Trains;
 using RouteManager2.Events;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -31,9 +32,9 @@ namespace OpenBve
 			/// <summary>The AI speed limit (if set by routefile)</summary>
 			private readonly double SpeedLimit;
 			/// <summary>Holds a reference to the train the AI is driving</summary>
-			private readonly TrainManager.Train Train;
+			private readonly TrainBase Train;
 			// functions
-			internal SimpleHumanDriverAI(TrainManager.Train train, double Limit)
+			internal SimpleHumanDriverAI(TrainBase train, double Limit)
 			{
 				this.Train = train;
 				this.TimeLastProcessed = 0.0;
@@ -669,14 +670,14 @@ namespace OpenBve
 						}
 					}
 					// trains ahead
-					for (int i = 0; i < TrainManager.Trains.Length; i++)
+					for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 					{
-						if (TrainManager.Trains[i] != Train && TrainManager.Trains[i].State == TrainState.Available)
+						if (Program.TrainManager.Trains[i] != Train && Program.TrainManager.Trains[i].State == TrainState.Available)
 						{
 							double pos =
-								TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
-								TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].RearAxle.Position -
-								0.5 * TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].Length;
+								Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
+								Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].RearAxle.Position -
+								0.5 * Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].Length;
 							double dist = pos - tp;
 							if (dist > -10.0 & dist < lookahead)
 							{

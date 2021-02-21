@@ -126,26 +126,13 @@ namespace TrainManager.SafetySystems
 			/*
 			 * Prepare the preceding vehicle state.
 			 * */
-			double bestLocation = double.MaxValue;
-			double bestSpeed = 0.0;
+			
+
 			PrecedingVehicleState precedingVehicle;
 			try
 			{
-				for (int i = 0; i < TrainManagerBase.Trains.Length; i++)
-				{
-					if (TrainManagerBase.Trains[i] != this.Train & TrainManagerBase.Trains[i].State == TrainState.Available & Train.Cars.Length > 0)
-					{
-						int c = TrainManagerBase.Trains[i].Cars.Length - 1;
-						double z = TrainManagerBase.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - TrainManagerBase.Trains[i].Cars[c].RearAxle.Position - 0.5 * TrainManagerBase.Trains[i].Cars[c].Length;
-						if (z >= location & z < bestLocation)
-						{
-							bestLocation = z;
-							bestSpeed = TrainManagerBase.Trains[i].CurrentSpeed;
-						}
-					}
-				}
-
-				precedingVehicle = bestLocation != double.MaxValue ? new PrecedingVehicleState(bestLocation, bestLocation - location, new Speed(bestSpeed)) : null;
+				AbstractTrain closestTrain = TrainManagerBase.currentHost.ClosestTrain(this.Train);
+				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition(), closestTrain.RearCarTrackPosition() - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
 			}
 			catch
 			{

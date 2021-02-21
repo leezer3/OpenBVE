@@ -12,6 +12,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2.MessageManager;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -463,6 +464,62 @@ namespace OpenBve
 		{
 			Interface.AddMessage(MessageType.Warning, false, "Track Following Objects are not shown in Route Viewer. Please test using the main simulation.");
 			return null;
+		}
+
+		public override AbstractTrain ClosestTrain(AbstractTrain Train)
+		{
+			TrainBase baseTrain = Train as TrainBase;
+			AbstractTrain closestTrain = null;
+			double bestLocation = double.MaxValue;
+			if(baseTrain != null)
+			{
+				for (int i = 0; i < Program.CurrentRoute.Trains.Length; i++)
+				{
+					if (Program.CurrentRoute.Trains[i] != baseTrain & Program.CurrentRoute.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
+					{
+						TrainBase train = Program.CurrentRoute.Trains[i] as TrainBase;
+						int c = train.Cars.Length - 1;
+						double z = train.Cars[c].RearAxle.Follower.TrackPosition - train.Cars[c].RearAxle.Position - 0.5 * train.Cars[c].Length;
+						if (z >= baseTrain.FrontCarTrackPosition() & z < bestLocation)
+						{
+							bestLocation = z;
+							closestTrain = Program.CurrentRoute.Trains[i];
+						}
+					}
+				}
+			}
+			return closestTrain;
+		}
+
+		public override AbstractTrain ClosestTrain(double TrackPosition)
+		{
+			AbstractTrain closestTrain = null;
+			double trainDistance = double.MaxValue;
+			for (int j = 0; j < Program.TrainManager.Trains.Length; j++)
+			{
+				if (Program.TrainManager.Trains[j].State == TrainState.Available)
+				{
+					double distance;
+					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
+					{
+						distance = TrackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
+					}
+					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
+					{
+						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
+					}
+					else
+					{
+						distance = 0;
+					}
+					if (distance < trainDistance)
+					{
+						closestTrain = Program.TrainManager.Trains[j];
+						trainDistance = distance;
+					}
+				}
+			}
+			return closestTrain;
 		}
 
 		public Host() : base(HostApplication.RouteViewer)

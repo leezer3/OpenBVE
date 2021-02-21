@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
-using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -23,7 +22,7 @@ namespace OpenBve.Parsers.Panel
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanelAnimatedXml(string PanelFile, string TrainPath, TrainManager.Train Train, int Car)
+		internal static void ParsePanelAnimatedXml(string PanelFile, string TrainPath, TrainBase Train, int Car)
 		{
 			// The current XML file to load
 			string FileName = PanelFile;
@@ -56,7 +55,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, TrainManager.Train Train, int Car, CarSection CarSection, int GroupIndex)
+		private static void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, TrainBase Train, int Car, CarSection CarSection, int GroupIndex)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 

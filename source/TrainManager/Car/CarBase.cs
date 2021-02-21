@@ -1607,5 +1607,69 @@ namespace TrainManager.Car
 				}
 			}
 		}
+
+		public void DetermineDoorClosingSpeed()
+		{
+			if (Specs.DoorOpenFrequency <= 0.0)
+			{
+				if (Doors[0].OpenSound.Buffer != null & Doors[1].OpenSound.Buffer != null)
+				{
+					double a = Doors[0].OpenSound.Buffer.Duration;
+					double b = Doors[1].OpenSound.Buffer.Duration;
+					Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
+				}
+				else if (Doors[0].OpenSound.Buffer != null)
+				{
+					double a = Doors[0].OpenSound.Buffer.Duration;
+					Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
+				}
+				else if (Doors[1].OpenSound.Buffer != null)
+				{
+					double b = Doors[1].OpenSound.Buffer.Duration;
+					Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
+				}
+				else
+				{
+					Specs.DoorOpenFrequency = 0.8;
+				}
+			}
+
+			if (Specs.DoorCloseFrequency <= 0.0)
+			{
+				if (Doors[0].CloseSound.Buffer != null & Doors[1].CloseSound.Buffer != null)
+				{
+					double a = Doors[0].CloseSound.Buffer.Duration;
+					double b = Doors[1].CloseSound.Buffer.Duration;
+					Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
+				}
+				else if (Doors[0].CloseSound.Buffer != null)
+				{
+					double a = Doors[0].CloseSound.Buffer.Duration;
+					Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
+				}
+				else if (Doors[1].CloseSound.Buffer != null)
+				{
+					double b = Doors[1].CloseSound.Buffer.Duration;
+					Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
+				}
+				else
+				{
+					Specs.DoorCloseFrequency = 0.8;
+				}
+			}
+
+			const double f = 0.015;
+			const double g = 2.75;
+			Specs.DoorOpenPitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.RandomNumberGenerator.NextDouble() - 0.5)));
+			Specs.DoorClosePitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.RandomNumberGenerator.NextDouble() - 0.5)));
+			Specs.DoorOpenFrequency /= Specs.DoorOpenPitch;
+			Specs.DoorCloseFrequency /= Specs.DoorClosePitch;
+			/* 
+			 * Remove the following two lines, then the pitch at which doors play
+			 * takes their randomized opening and closing times into account.
+			 * */
+			Specs.DoorOpenPitch = 1.0;
+			Specs.DoorClosePitch = 1.0;
+		}
 	}
 }

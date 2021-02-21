@@ -1,7 +1,7 @@
 ﻿using TrainManager.BrakeSystems;
 using OpenBveApi.Math;
 using SoundManager;
-using TrainManager.Power;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -10,7 +10,7 @@ namespace OpenBve
 		/// <summary>Loads the sound set for a BVE2 based train</summary>
 		/// <param name="train">The train</param>
 		/// <param name="trainFolder">The absolute on-disk path to the train's folder</param>
-		internal static void Parse(string trainFolder, TrainManager.Train train)
+		internal static void Parse(string trainFolder, TrainBase train)
 		{
 			// set sound positions and radii
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);

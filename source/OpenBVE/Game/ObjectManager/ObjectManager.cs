@@ -1,5 +1,7 @@
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using TrainManager.Trains;
+using TrackFollowingObject = OpenBveApi.Objects.TrackFollowingObject;
 
 namespace OpenBve
 {
@@ -18,7 +20,7 @@ namespace OpenBve
 		{
 			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
-				TrainManager.Train train = null;
+				AbstractTrain train = null;
 				const double extraRadius = 10.0;
 				double z = 0.0;
 				if(AnimatedWorldObjects[i].Object != null)
@@ -34,34 +36,31 @@ namespace OpenBve
 				if (visible | ForceUpdate)
 				{
 					//Find the closest train
-					double trainDistance = double.MaxValue;
-					for (int j = 0; j < TrainManager.Trains.Length; j++)
-					{
-						if (TrainManager.Trains[j].State == TrainState.Available)
-						{
-							double distance;
-							if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < AnimatedWorldObjects[i].RelativeTrackPosition)
-							{
-								distance = AnimatedWorldObjects[i].RelativeTrackPosition - TrainManager.Trains[j].Cars[0].TrackPosition;
-							}
-							else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > AnimatedWorldObjects[i].RelativeTrackPosition)
-							{
-								distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - AnimatedWorldObjects[i].RelativeTrackPosition;
-							}
-							else
-							{
-								distance = 0;
-							}
-							if (distance < trainDistance)
-							{
-								train = TrainManager.Trains[j];
-								trainDistance = distance;
-							}
-						}
-					}
+					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);
 				}
 				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
 			}
+		}
+
+		public static void ProcessJump(AbstractTrain Train)
+		{
+			if (Train.IsPlayerTrain)
+			{
+				for (int i = 0; i < AnimatedWorldObjects.Length; i++)
+				{
+					var obj = AnimatedWorldObjects[i] as TrackFollowingObject;
+					if (obj != null)
+					{
+						//Track followers should be reset if we jump between stations
+						obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.FrontAxlePosition;
+						obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.RearAxlePosition;
+						obj.FrontAxleFollower.UpdateWorldCoordinates(false);
+						obj.RearAxleFollower.UpdateWorldCoordinates(false);
+					}
+
+				}
+			}
+			UpdateAnimatedWorldObjects(0.0,true);
 		}
 	}
 }

@@ -9,6 +9,7 @@ using RouteManager2;
 using RouteManager2.Climate;
 using RouteManager2.SignalManager.PreTrain;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve 
 {
@@ -32,7 +33,7 @@ namespace OpenBve
 				Program.CurrentRoute.Tracks[key] = new Track();
 			}
 			// train manager
-			TrainManager.Trains = new TrainManager.Train[] { };
+			Program.TrainManager.Trains = new TrainBase[] { };
 			// game
 			Interface.LogMessages.Clear();
 			Program.Renderer.CurrentInterface = InterfaceType.Normal;

@@ -11,6 +11,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using TrainManager;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -358,6 +359,20 @@ namespace OpenBve {
 		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
 		{
 			throw new NotImplementedException();
+		}
+
+		public override AbstractTrain ClosestTrain(AbstractTrain Train)
+		{
+			/*
+			 * At present, there should only ever be the single player train ref present in ObjectViewer
+			 * This may change at some point, but for the minute it's fixed....
+			 */
+			return TrainManagerBase.PlayerTrain;
+		}
+
+		public override AbstractTrain ClosestTrain(double TrackPosition)
+		{
+			return TrainManagerBase.PlayerTrain;
 		}
 
 		public Host() : base(HostApplication.ObjectViewer)

@@ -9,6 +9,7 @@ using OpenBveApi.Runtime;
 using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
+using TrainManager;
 using ButtonState = OpenTK.Input.ButtonState;
 
 namespace OpenBve
@@ -49,8 +50,6 @@ namespace OpenBve
 
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
-			TrainManager.currentHost = Program.CurrentHost;
-			TrainManager.Renderer = Program.Renderer;
 			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
 			//Process extra command line arguments supplied
 			if (result.InitialStation != null)
@@ -477,7 +476,7 @@ namespace OpenBve
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].InteriorCamera = Program.Renderer.Camera.Alignment;
+					TrainManagerBase.PlayerTrain.Cars[TrainManagerBase.PlayerTrain.CameraCar].InteriorCamera = Program.Renderer.Camera.Alignment;
 					break;
 				case CameraViewMode.Exterior:
 					Program.Renderer.Camera.SavedExterior = Program.Renderer.Camera.Alignment;
@@ -497,7 +496,7 @@ namespace OpenBve
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					Program.Renderer.Camera.Alignment = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].InteriorCamera;
+					Program.Renderer.Camera.Alignment = TrainManagerBase.PlayerTrain.Cars[TrainManagerBase.PlayerTrain.CameraCar].InteriorCamera;
 					break;
 				case CameraViewMode.Exterior:
 					Program.Renderer.Camera.Alignment = Program.Renderer.Camera.SavedExterior;

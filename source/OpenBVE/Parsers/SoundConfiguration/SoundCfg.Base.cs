@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Math;
 using SoundManager;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -11,7 +12,7 @@ namespace OpenBve
 		/// <summary>Parses the sound configuration file for a train</summary>
 		/// <param name="TrainPath">The absolute on-disk path to the train's folder</param>
 		/// <param name="Train">The train to which to apply the new sound configuration</param>
-		internal static void ParseSoundConfig(string TrainPath, TrainManager.Train Train)
+		internal static void ParseSoundConfig(string TrainPath, TrainBase Train)
 		{
 			SoundCfgParser.LoadDefaultATSSounds(Train, TrainPath);
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.xml");

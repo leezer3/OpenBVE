@@ -11,6 +11,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	internal static class World {
@@ -92,11 +93,11 @@ namespace OpenBve {
 				double zoomMultiplier;
 				{
 					const double heightFactor = 0.75;
-					TrainManager.Train bestTrain = null;
+					TrainBase bestTrain = null;
 					double bestDistanceSquared = double.MaxValue;
-					TrainManager.Train secondBestTrain = null;
+					TrainBase secondBestTrain = null;
 					double secondBestDistanceSquared = double.MaxValue;
-					foreach (TrainManager.Train train in TrainManager.Trains) {
+					foreach (TrainBase train in Program.TrainManager.Trains) {
 						if (train.State == TrainState.Available) {
 							double x = 0.5 * (train.Cars[0].FrontAxle.Follower.WorldPosition.X + train.Cars[0].RearAxle.Follower.WorldPosition.X);
 							double y = 0.5 * (train.Cars[0].FrontAxle.Follower.WorldPosition.Y + train.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * train.Cars[0].Height;

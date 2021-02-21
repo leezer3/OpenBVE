@@ -7,6 +7,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.Power;
+using TrainManager.Trains;
 
 namespace OpenBve.Parsers.Train
 {
@@ -16,7 +17,7 @@ namespace OpenBve.Parsers.Train
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
 		private static BveAccelerationCurve[] AccelerationCurves;
-		internal static void Parse(string fileName, TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, ref bool[] interiorVisible)
+		internal static void Parse(string fileName, TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, ref bool[] interiorVisible)
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();

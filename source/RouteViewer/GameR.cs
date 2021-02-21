@@ -17,6 +17,7 @@ using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	internal static class Game {
@@ -36,7 +37,7 @@ namespace OpenBve {
 			};
 			Program.CurrentRoute.Tracks.Add(0, t);
 			// train manager
-			TrainManager.Trains = new TrainManager.Train[] { };
+			Program.TrainManager.Trains = new TrainBase[] { };
 			// game
 			Interface.LogMessages.Clear();
 			Program.CurrentRoute.Comment = "";

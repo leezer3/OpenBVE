@@ -13,6 +13,7 @@ using TrainManager.Handles;
 using TrainManager.Power;
 using TrainManager.Motor;
 using TrainManager.SafetySystems;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	internal static partial class TrainDatParser {
@@ -21,7 +22,7 @@ namespace OpenBve {
 		/// <param name="FileName">The train.dat file to parse</param>
 		/// <param name="Encoding">The text encoding to use</param>
 		/// <param name="Train">The train</param>
-		internal static void ParseTrainData(string FileName, System.Text.Encoding Encoding, TrainManager.Train Train) {
+		internal static void ParseTrainData(string FileName, System.Text.Encoding Encoding, TrainBase Train) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			//Create the array using the default compatibility train.dat
 			string[] Lines = {"BVE2000000","#CAR","1","1","1","0","1","1"};

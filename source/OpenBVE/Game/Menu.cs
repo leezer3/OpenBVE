@@ -689,7 +689,7 @@ namespace OpenBve
 							case MenuTag.JumpToStation:         // JUMP TO STATION
 								Reset();
 								TrainManager.PlayerTrain.Jump(menuItem.Data);
-								TrainManager.JumpTFO();
+								Program.TrainManager.JumpTFO();
 								break;
 							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU
 								Reset();

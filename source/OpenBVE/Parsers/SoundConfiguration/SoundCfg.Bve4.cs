@@ -7,6 +7,7 @@ using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using SoundManager;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -16,7 +17,7 @@ namespace OpenBve
 		/// <param name="train">The train</param>
 		/// <param name="FileName">The absolute on-disk path to the sound.cfg file</param>
 		/// <param name="trainFolder">The absolute on-disk path to the train's folder</param>
-		internal static void Parse(string FileName, string trainFolder, TrainManager.Train train)
+		internal static void Parse(string FileName, string trainFolder, TrainBase train)
 		{
 			//Default sound positions and radii
 

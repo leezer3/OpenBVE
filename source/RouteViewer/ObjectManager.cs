@@ -10,36 +10,11 @@ namespace OpenBve {
 		internal static void UpdateAnimatedWorldObjects(double TimeElapsed, bool ForceUpdate) {
 			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
-				TrainManager.Train train = null;
+				AbstractTrain train = null;
 				bool visible = AnimatedWorldObjects[i].IsVisible(Program.Renderer.Camera.AbsolutePosition, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, Program.Renderer.Camera.ExtraViewingDistance);
 				if (visible | ForceUpdate)
 				{
-					//Find the closest train
-					double trainDistance = double.MaxValue;
-					for (int j = 0; j < TrainManager.Trains.Length; j++)
-					{
-						if (TrainManager.Trains[j].State == TrainState.Available)
-						{
-							double distance;
-							if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < AnimatedWorldObjects[i].TrackPosition)
-							{
-								distance = AnimatedWorldObjects[i].TrackPosition - TrainManager.Trains[j].Cars[0].TrackPosition;
-							}
-							else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > AnimatedWorldObjects[i].TrackPosition)
-							{
-								distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - AnimatedWorldObjects[i].TrackPosition;
-							}
-							else
-							{
-								distance = 0;
-							}
-							if (distance < trainDistance)
-							{
-								train = TrainManager.Trains[j];
-								trainDistance = distance;
-							}
-						}
-					}
+					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);
 				}
 				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
 			}

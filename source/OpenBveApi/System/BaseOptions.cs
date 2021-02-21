@@ -76,5 +76,11 @@ namespace OpenBveApi
 		public int SoundNumber;
 		/// <summary>Whether to use the new rendering method.</summary>
 		public bool IsUseNewRenderer;
+		/// <summary>Whether debug logs should be generated</summary>
+		public bool GenerateDebugLogging;
+		/// <summary>Whether loading sway is added</summary>
+		public bool LoadingSway;
+		/// <summary>The game mode- Affects how the score is calculated</summary>
+		public GameMode GameMode;
 	}
 }

@@ -15,7 +15,7 @@ namespace OpenBve
 {
 	internal class SoundXmlParser
 	{
-		internal static bool ParseTrain(string fileName, TrainManager.Train train)
+		internal static bool ParseTrain(string fileName, TrainBase train)
 		{
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
@@ -32,7 +32,7 @@ namespace OpenBve
 		}
 
 		private static string currentPath;
-		internal static void Parse(string fileName, ref TrainManager.Train Train, ref CarBase car, bool isDriverCar)
+		internal static void Parse(string fileName, ref TrainBase Train, ref CarBase car, bool isDriverCar)
 		{
 			//3D center of the car
 			Vector3 center = Vector3.Zero;

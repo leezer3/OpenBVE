@@ -1,22 +1,23 @@
 ﻿using System;
 using LibRender2.Trains;
-using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
-namespace OpenBve
+namespace TrainManager.Trains
 {
-	public partial class TrainManager
-	{
-		/// <summary>A more advanced type of AnimatedObject, which follows a rail and a travel plan</summary>
-		public class TrackFollowingObject : Train
+	/// <summary>A more advanced type of AnimatedObject, which follows a rail and a travel plan</summary>
+		public class TrackFollowingObject : TrainBase
 		{
-			internal double AppearanceTime;
-			internal double AppearanceStartPosition;
-			internal double AppearanceEndPosition;
-			internal double LeaveTime;
+			/// <summary>The time the train appears in-game</summary>
+			public double AppearanceTime;
+			/// <summary>The track position at which the train appears</summary>
+			public double AppearanceStartPosition;
+			/// <summary>The track position at which the train disappears</summary>
+			public double AppearanceEndPosition;
+			/// <summary>The time at which the train is removed from the game</summary>
+			public double LeaveTime;
 			private double InternalTimerTimeElapsed;
 
-			internal TrackFollowingObject(TrainState state) : base(state)
+			public TrackFollowingObject(TrainState state) : base(state)
 			{
 			}
 
@@ -40,7 +41,7 @@ namespace OpenBve
 					Cars[i].RearBogie.ChangeSection(-1);
 					Cars[i].Coupler.ChangeSection(-1);
 				}
-				Program.Sounds.StopAllSounds(this);
+				TrainManagerBase.currentHost.StopAllSounds(this);
 			}
 
 			/// <summary>Call this method to update the train</summary>
@@ -50,9 +51,9 @@ namespace OpenBve
 				if (State == TrainState.Pending)
 				{
 					// pending train
-					if (Program.CurrentRoute.SecondsSinceMidnight >= AppearanceTime)
+					if (TrainManagerBase.currentHost.InGameTime >= AppearanceTime)
 					{
-						double PlayerTrainTrackPosition = PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition + 0.5 * PlayerTrain.Cars[0].Length - PlayerTrain.Cars[0].FrontAxle.Position;
+						double PlayerTrainTrackPosition = TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition + 0.5 * TrainManagerBase.PlayerTrain.Cars[0].Length - TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Position;
 						if (PlayerTrainTrackPosition < AppearanceStartPosition || (PlayerTrainTrackPosition > AppearanceEndPosition && AppearanceEndPosition > AppearanceStartPosition))
 						{
 							return;
@@ -105,7 +106,7 @@ namespace OpenBve
 							//Calculate the cab brightness
 							double ccb = Math.Round(255.0 * (double) (1.0 - b));
 							//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-							dnb = (byte) Math.Min(Program.Renderer.Lighting.DynamicCabBrightness, ccb);
+							dnb = (byte) Math.Min(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, ccb);
 						}
 						int cs = Cars[i].CurrentCarSection;
 						if (cs >= 0 && cs < Cars[i].CarSections.Length)
@@ -169,16 +170,16 @@ namespace OpenBve
 				}
 			}
 
-			public override void Jump(int StationIndex)
+			public override void Jump(int stationIndex)
 			{
 				Dispose();
 				State = TrainState.Pending;
-				Game.TrackFollowingObjectAI AI = this.AI as Game.TrackFollowingObjectAI;
+				TrackFollowingObjectAI AI = this.AI as TrackFollowingObjectAI;
 				if (AI != null)
 				{
 					AI.SetupTravelData(AppearanceTime);
 				}
+				TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
 			}
 		}
-	}
 }
