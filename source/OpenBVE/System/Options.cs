@@ -84,11 +84,7 @@ namespace OpenBve
 			/// <remarks>Set to zero to never hide the cursor</remarks>
 			internal double CursorHideDelay;
 			internal string CursorFileName;
-			internal bool Panel2ExtendedMode;
-			internal int Panel2ExtendedMinSize;
-
 			
-
 			internal TimeTableMode TimeTableStyle;
 
 			internal CompressionType packageCompressionType;

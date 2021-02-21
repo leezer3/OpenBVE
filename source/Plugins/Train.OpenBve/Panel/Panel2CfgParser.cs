@@ -258,17 +258,17 @@ namespace OpenBveTrainParser
 			}
 			{ // camera restriction
 				double WorldWidth, WorldHeight;
-				if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height) {
-					WorldWidth = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-					WorldHeight = WorldWidth / Program.Renderer.Screen.AspectRatio;
+				if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
+					WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+					WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
 				} else {
-					WorldHeight = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Program.Renderer.Screen.AspectRatio;
-					WorldWidth = WorldHeight * Program.Renderer.Screen.AspectRatio;
+					WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
+					WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
 				}
 				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
 				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Program.Renderer.Screen.AspectRatio;
-				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Program.Renderer.Screen.AspectRatio;
+				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
 				Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
 				Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 				Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
@@ -303,9 +303,9 @@ namespace OpenBveTrainParser
 			}
 
 			// parse lines for rest
-			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / Lines.Length;
+			double invfac = Lines.Length == 0 ? 1.0 : 1.0 / Lines.Length;
 			for (int i = 0; i < Lines.Length; i++) {
-				Plugin.CurrentProgress = Loading.TrainProgressCurrentSum + invfac * i;
+				Plugin.CurrentProgress = Plugin.CurrentProgress + invfac * i;
 				if ((i & 7) == 0) {
 					System.Threading.Thread.Sleep(1);
 					if (Plugin.Cancel) return;
@@ -1687,20 +1687,20 @@ namespace OpenBveTrainParser
 		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
 		{
 			double WorldWidth, WorldHeight;
-			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height) {
-				WorldWidth = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / Program.Renderer.Screen.AspectRatio;
+			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
+				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+				WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
 			} else {
-				WorldHeight = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Program.Renderer.Screen.AspectRatio;
-				WorldWidth = WorldHeight * Program.Renderer.Screen.AspectRatio;
+				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
+				WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
 			}
 			double x0 = Left / PanelResolution;
 			double x1 = (Left + Width) / PanelResolution;
-			double y0 = (PanelBottom - Top) / PanelResolution * Program.Renderer.Screen.AspectRatio;
-			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * Program.Renderer.Screen.AspectRatio;
+			double y0 = (PanelBottom - Top) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
 			double xd = 0.5 - PanelCenter.X / PanelResolution;
 			x0 += xd; x1 += xd;
-			double yt = PanelBottom - PanelResolution / Program.Renderer.Screen.AspectRatio;
+			double yt = PanelBottom - PanelResolution / Plugin.Renderer.Screen.AspectRatio;
 			double yd = (PanelCenter.Y - yt) / (PanelBottom - yt) - 0.5;
 			y0 += yd; y1 += yd;
 			x0 = (x0 - 0.5) * WorldWidth;

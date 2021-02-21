@@ -46,14 +46,14 @@ namespace OpenBveTrainParser
 
 			double AspectRatio = FullWidth / FullHeight;
 
-			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height)
+			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
 			{
-				WorldWidth = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / AspectRatio;
 			}
 			else
 			{
-				WorldHeight = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.VerticalViewingAngle) * EyeDistance;
+				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance;
 				WorldWidth = WorldHeight * AspectRatio;
 			}
 
@@ -178,7 +178,7 @@ namespace OpenBveTrainParser
 				}
 			}
 			// parse lines for rest
-			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / Lines.Length;
+			double invfac = Lines.Length == 0 ? 1.0 : 1.0 / Lines.Length;
 			for (int i = 0; i < Lines.Length; i++)
 			{
 				Plugin.CurrentProgress = Plugin.CurrentProgress + invfac * i;
