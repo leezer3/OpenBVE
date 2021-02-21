@@ -84,7 +84,7 @@ namespace OpenBve {
 
 			Renderer = new NewRenderer();
 			Sounds = new Sounds();
-			CurrentRoute = new CurrentRoute(Renderer);
+			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			
 			//Platform specific startup checks
 			// --- Check if we're running as root, and prompt not to ---

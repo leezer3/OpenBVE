@@ -86,7 +86,7 @@ namespace OpenBve {
 							}
 						}
 						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Route != null) {
-							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions, Program.Renderer);
+							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions, Program.TrainManager);
 							list.Add(plugin);
 						} else if (!iruntime) {
 							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");

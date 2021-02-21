@@ -7,6 +7,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
+using TrainManager;
 
 namespace CsvRwRouteParser
 {
@@ -22,16 +23,22 @@ namespace CsvRwRouteParser
 
 	    internal static BaseOptions CurrentOptions;
 
+	    internal static TrainManagerBase TrainManager;
+
 	    /// <summary>Called when the plugin is loaded.</summary>
 	    /// <param name="host">The host that loaded the plugin.</param>
 	    /// <param name="fileSystem"></param>
 	    /// <param name="Options"></param>
-	    /// <param name="rendererReference"></param>
-	    public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions Options, object rendererReference)
+	    /// <param name="trainManagerReference"></param>
+	    public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions Options, object trainManagerReference)
 	    {
 		    CurrentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
+		    if (trainManagerReference is TrainManagerBase)
+		    {
+			    TrainManager = trainManagerReference as TrainManagerBase;
+		    }
 	    }
 
 	    public override void Unload()

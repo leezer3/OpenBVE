@@ -587,6 +587,15 @@ namespace OpenBveApi.Hosts {
 
 		}
 
+		/// <summary>Returns the trains within the simulation</summary>
+		public virtual AbstractTrain[] Trains
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 		/// <summary>Gets the closest train to the specified train</summary>
 		/// <param name="Train">The specified train</param>
 		/// <returns>The closest train, or null if no other trains</returns>

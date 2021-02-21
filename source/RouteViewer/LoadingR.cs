@@ -180,8 +180,6 @@ namespace OpenBve {
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			// signals
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			// ReSharper disable once CoVariantArrayConversion
-			Program.CurrentRoute.Trains = Program.TrainManager.Trains;
 			Program.CurrentRoute.UpdateAllSections();
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;

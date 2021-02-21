@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -466,6 +466,15 @@ namespace OpenBve
 			return null;
 		}
 
+		public override AbstractTrain[] Trains
+		{
+			get
+			{
+				// ReSharper disable once CoVariantArrayConversion
+				return Program.TrainManager.Trains;
+			}
+		}
+
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)
 		{
 			TrainBase baseTrain = Train as TrainBase;
@@ -473,17 +482,16 @@ namespace OpenBve
 			double bestLocation = double.MaxValue;
 			if(baseTrain != null)
 			{
-				for (int i = 0; i < Program.CurrentRoute.Trains.Length; i++)
+				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 				{
-					if (Program.CurrentRoute.Trains[i] != baseTrain & Program.CurrentRoute.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
+					if (Program.TrainManager.Trains[i] != baseTrain & Program.TrainManager.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
 					{
-						TrainBase train = Program.CurrentRoute.Trains[i] as TrainBase;
-						int c = train.Cars.Length - 1;
-						double z = train.Cars[c].RearAxle.Follower.TrackPosition - train.Cars[c].RearAxle.Position - 0.5 * train.Cars[c].Length;
+						int c = Program.TrainManager.Trains[i].Cars.Length - 1;
+						double z = Program.TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - Program.TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * Program.TrainManager.Trains[i].Cars[c].Length;
 						if (z >= baseTrain.FrontCarTrackPosition() & z < bestLocation)
 						{
 							bestLocation = z;
-							closestTrain = Program.CurrentRoute.Trains[i];
+							closestTrain = Program.TrainManager.Trains[i];
 						}
 					}
 				}

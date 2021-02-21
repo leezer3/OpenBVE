@@ -204,8 +204,7 @@ namespace OpenBve {
 			Game.MinimalisticSimulation = true;
 			// screen
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-			
-			Program.CurrentRoute.TrackFollowingObjects = Program.TrainManager.TFOs;
+
 			bool loaded = false;
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Route loading plugins available.");
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableObjectPluginCount + " Object loading plugins available.");
@@ -238,7 +237,6 @@ namespace OpenBve {
 
 			TrainManager.Derailments = Interface.CurrentOptions.Derailments;
 			TrainManager.Toppling = Interface.CurrentOptions.Toppling;
-			Program.TrainManager.TFOs = Program.CurrentRoute.TrackFollowingObjects;
 			TrainManager.CurrentRoute = Program.CurrentRoute;
 			if (!loaded)
 			{
@@ -423,13 +421,6 @@ namespace OpenBve {
 					currentTrain.Specs.DoorCloseMode = DoorMode.Manual;
 				}
 			}
-			/*
-			 * HACK: Store the TrainManager.Trains reference in the RouteManager also
-			 *		 Note that this may change when the TrainManager is separated from the lump
-			 *       Remember not to modify via this ref
-			 */
-			// ReSharper disable once CoVariantArrayConversion
-			Program.CurrentRoute.Trains = Program.TrainManager.Trains;
 			TrainProgress = 1.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;

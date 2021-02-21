@@ -361,6 +361,15 @@ namespace OpenBve {
 			throw new NotImplementedException();
 		}
 
+		public override AbstractTrain[] Trains
+		{
+			get
+			{
+				// ReSharper disable once CoVariantArrayConversion
+				return Program.TrainManager.Trains;
+			}
+		}
+
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)
 		{
 			/*

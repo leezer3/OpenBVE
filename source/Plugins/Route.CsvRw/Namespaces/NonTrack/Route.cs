@@ -517,13 +517,13 @@ namespace CsvRwRouteParser
 							break;
 						}
 
-						if (CurrentRoute.TrackFollowingObjects == null)
+						if (Plugin.TrainManager.TFOs == null)
 						{
-							CurrentRoute.TrackFollowingObjects = new AbstractTrain[] { };
+							Plugin.TrainManager.TFOs = new AbstractTrain[] { };
 						}
-						int n = CurrentRoute.TrackFollowingObjects.Length;
-						Array.Resize(ref CurrentRoute.TrackFollowingObjects, n + 1);
-						CurrentRoute.TrackFollowingObjects[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, tfoFile);
+						int n = Plugin.TrainManager.TFOs.Length;
+						Array.Resize(ref Plugin.TrainManager.TFOs, n + 1);
+						Plugin.TrainManager.TFOs[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, tfoFile);
 					}
 					break;
 			}

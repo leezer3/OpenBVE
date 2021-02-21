@@ -66,7 +66,7 @@ namespace OpenBve {
 	        FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 	        FileSystem.CreateFileSystem();
 	        Renderer = new NewRenderer();
-	        CurrentRoute = new CurrentRoute(Renderer);
+	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        Options.LoadOptions();
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
