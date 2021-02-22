@@ -52,6 +52,9 @@
     <Compile Include="Sound\SoundCfg.Base.cs" />
     <Compile Include="Sound\SoundCfg.Bve2.cs" />
     <Compile Include="Sound\SoundCfg.Bve4.cs" />
+    <Compile Include="Train\ExtensionsCfgParser.cs" />
+    <Compile Include="Train\TrainDatParser.cs" />
+    <Compile Include="Train\TrainDatparser.Formats.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">
@@ -71,8 +74,6 @@
       <Name>TrainManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Train\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
