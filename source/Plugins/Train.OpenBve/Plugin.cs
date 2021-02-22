@@ -6,7 +6,7 @@ using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 
-namespace OpenBveTrainParser
+namespace Train.OpenBve
 {
     public class Plugin : TrainInterface
     {

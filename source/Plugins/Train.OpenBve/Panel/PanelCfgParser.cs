@@ -9,7 +9,7 @@ using OpenBveApi.Textures;
 using TrainManager.Car;
 using TrainManager.Handles;
 
-namespace OpenBveTrainParser
+namespace Train.OpenBve
 {
 	internal static class PanelCfgParser
 	{

@@ -17,7 +17,7 @@ using TrainManager.Car;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
-namespace OpenBveTrainParser
+namespace Train.OpenBve
 {
 	internal static class PanelXmlParser
 	{

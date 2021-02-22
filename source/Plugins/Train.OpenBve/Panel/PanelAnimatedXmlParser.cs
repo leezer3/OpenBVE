@@ -15,7 +15,7 @@ using OpenBveApi.Objects;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
-namespace OpenBveTrainParser
+namespace Train.OpenBve
 {
 	class PanelAnimatedXmlParser
 	{

@@ -43,6 +43,7 @@ namespace SoundManager
 		internal double InternalVolumeFactor;
 
 		/// <summary>Creates a new sound buffer</summary>
+		/// <param name="host">The host application</param>
 		/// <param name="path">The on-disk path to the sound to load</param>
 		/// <param name="radius">The radius for this sound</param>
 		internal SoundBuffer(HostInterface host, string path, double radius)
