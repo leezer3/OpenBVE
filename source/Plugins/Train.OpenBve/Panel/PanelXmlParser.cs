@@ -30,16 +30,16 @@ namespace Train.OpenBve
 
 		/// <summary>Parses a openBVE panel.xml file</summary>
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
-		/// <param name="TrainPath">The on-disk path to the train</param>
+		/// <param name="Train.TrainFolder">The on-disk path to the train</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanelXml(string PanelFile, string TrainPath, TrainBase Train, int Car)
+		internal static void ParsePanelXml(string PanelFile, TrainBase Train, int Car)
 		{
 			// The current XML file to load
 			string FileName = PanelFile;
 			if (!File.Exists(FileName))
 			{
-				FileName = OpenBveApi.Path.CombineFile(TrainPath, PanelFile);
+				FileName = OpenBveApi.Path.CombineFile(Train.TrainFolder, PanelFile);
 			}
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
 
@@ -61,14 +61,14 @@ namespace Train.OpenBve
 
 			foreach (XElement element in DocumentElements)
 			{
-				ParsePanelNode(element, FileName, TrainPath, Train, Car, ref Train.Cars[Car].CarSections[0], 0, 0);
+				ParsePanelNode(element, FileName, Train, Car, ref Train.Cars[Car].CarSections[0], 0, 0);
 			}
 		}
 
-		private static void ParsePanelNode(XElement Element, string FileName, string TrainPath, TrainBase Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
+		private static void ParsePanelNode(XElement Element, string FileName, TrainBase Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
 		{
 			//Train name, used for hacks detection
-			string trainName = new System.IO.DirectoryInfo(TrainPath).Name.ToUpperInvariant();
+			string trainName = new System.IO.DirectoryInfo(Train.TrainFolder).Name.ToUpperInvariant();
 
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
@@ -158,7 +158,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											PanelDaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											PanelDaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(PanelDaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -174,7 +174,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											PanelNighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											PanelNighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(PanelNighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -410,7 +410,7 @@ namespace Train.OpenBve
 								CarSection.Groups[n + 1] = new ElementsGroup(ObjectType.Overlay);
 							}
 
-							ParsePanelNode(SectionElement, FileName, TrainPath, Train, Car, ref CarSection, n + 1, Layer, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter.X, PanelCenter.Y, PanelOriginX, PanelOriginY);
+							ParsePanelNode(SectionElement, FileName, Train, Car, ref CarSection, n + 1, Layer, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter.X, PanelCenter.Y, PanelOriginX, PanelOriginY);
 						}
 						break;
 					case "touch":
@@ -614,7 +614,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											DaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(DaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -630,7 +630,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											NighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(NighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -741,7 +741,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											DaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(DaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -757,7 +757,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											NighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(NighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1025,7 +1025,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											DaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(DaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1041,7 +1041,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											NighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(NighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1090,7 +1090,7 @@ namespace Train.OpenBve
 								if (tf != String.Empty)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, false);
+									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
 								}
 							}
 						}
@@ -1143,7 +1143,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											DaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(DaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1159,7 +1159,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											NighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(NighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1204,11 +1204,11 @@ namespace Train.OpenBve
 							if (DaytimeImage != null & Interval > 0)
 							{
 								int wday, hday;
-								Program.CurrentHost.QueryTextureDimensions(DaytimeImage, out wday, out hday);
+								Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out wday, out hday);
 								if (wday > 0 & hday > 0)
 								{
 									int numFrames = hday / Interval;
-									if (Interface.CurrentOptions.EnableBveTsHacks)
+									if (Plugin.CurrentOptions.EnableBveTsHacks)
 									{
 										/*
 										 * With hacks enabled, the final frame does not necessarily need to be
@@ -1754,7 +1754,7 @@ namespace Train.OpenBve
 
 						for (int l = 0; l < daytimeDropFiles.Count; l++)
 						{
-							string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? OpenBveApi.Path.CombineFile(TrainPath, daytimeDropFiles[l]) : daytimeDropFiles[l];
+							string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? OpenBveApi.Path.CombineFile(Train.TrainFolder, daytimeDropFiles[l]) : daytimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = OpenBveApi.Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
@@ -1769,7 +1769,7 @@ namespace Train.OpenBve
 
 						for (int l = 0; l < nighttimeDropFiles.Count; l++)
 						{
-							string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? OpenBveApi.Path.CombineFile(TrainPath, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
+							string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? OpenBveApi.Path.CombineFile(Train.TrainFolder, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");

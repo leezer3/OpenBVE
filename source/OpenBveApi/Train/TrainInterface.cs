@@ -25,7 +25,7 @@ namespace OpenBveApi.Trains
 		/// <param name="trainPath">The path to the selected train</param>
 		/// <param name="train">Receives the train.</param>
 		/// <returns>Whether loading the route was successful.</returns>
-		public abstract bool LoadTrain(string path, System.Text.Encoding Encoding, string trainPath, ref object train);
+		public abstract bool LoadTrain(string path, System.Text.Encoding Encoding, string trainPath, ref AbstractTrain train);
 
 		/// <summary>Holds whether loading is currently in progress</summary>
 		public bool IsLoading;

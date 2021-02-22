@@ -27,13 +27,13 @@ namespace Train.OpenBve
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanelAnimatedXml(string PanelFile, string TrainPath, TrainBase Train, int Car)
+		internal static void ParsePanelAnimatedXml(string PanelFile, TrainBase Train, int Car)
 		{
 			// The current XML file to load
 			string FileName = PanelFile;
 			if (!File.Exists(FileName))
 			{
-				FileName = Path.CombineFile(TrainPath, PanelFile);
+				FileName = Path.CombineFile(Train.TrainFolder, PanelFile);
 			}
 			
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
@@ -56,7 +56,7 @@ namespace Train.OpenBve
 
 			foreach (XElement element in DocumentElements)
 			{
-				ParsePanelAnimatedNode(element, FileName, TrainPath, Train, Car, Train.Cars[Car].CarSections[0], 0);
+				ParsePanelAnimatedNode(element, FileName, Train.TrainFolder, Train, Car, Train.Cars[Car].CarSections[0], 0);
 			}
 		}
 

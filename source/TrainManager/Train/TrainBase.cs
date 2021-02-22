@@ -929,6 +929,5 @@ namespace TrainManager.Trains
 				TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
 			}
 		}
-
 	}
 }

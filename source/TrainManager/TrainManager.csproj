@@ -108,7 +108,6 @@
     <Compile Include="TrackFollowingObject\AI\TravelStopData.cs" />
     <Compile Include="TrackFollowingObject\TrackFollowingObject.cs" />
     <Compile Include="TrainManager.cs" />
-    <Compile Include="TrainManager.Functions.cs" />
     <Compile Include="Train\BrakeSystem.cs" />
     <Compile Include="Train\CommandEntry.cs" />
     <Compile Include="Train\Doors.cs" />

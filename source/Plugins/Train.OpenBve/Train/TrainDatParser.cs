@@ -18,14 +18,18 @@ namespace Train.OpenBve
 {
 	internal class TrainDatParser
 	{
+		internal readonly Plugin Plugin;
 
-		internal Plugin Plugin;
+		internal TrainDatParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
 
 		/// <summary>Parses a BVE2 / BVE4 / openBVE train.dat file</summary>
 		/// <param name="FileName">The train.dat file to parse</param>
 		/// <param name="Encoding">The text encoding to use</param>
 		/// <param name="Train">The train</param>
-		internal void ParseTrainData(string FileName, System.Text.Encoding Encoding, TrainBase Train) {
+		internal void Parse(string FileName, System.Text.Encoding Encoding, TrainBase Train) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			//Create the array using the default compatibility train.dat
 			string[] Lines = {"BVE2000000","#CAR","1","1","1","0","1","1"};
