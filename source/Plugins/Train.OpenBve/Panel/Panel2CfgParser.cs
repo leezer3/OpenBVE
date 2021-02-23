@@ -18,12 +18,17 @@ using Path = OpenBveApi.Path;
 
 namespace Train.OpenBve
 {
-	internal static class Panel2CfgParser
+	internal class Panel2CfgParser
 	{
-		internal static Plugin Plugin;
+		internal readonly Plugin Plugin;
+
+		internal Panel2CfgParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
 
 		// constants
-		private static double StackDistance = 0.000001;
+		private  double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
 		private const double EyeDistance = 1.0;
 
@@ -31,7 +36,7 @@ namespace Train.OpenBve
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Car">The car to add the panel to</param>
-		internal static void ParsePanel2Config(string PanelFile, string TrainPath, CarBase Car)
+		internal void ParsePanel2Config(string PanelFile, string TrainPath, CarBase Car)
 		{
 			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(PanelFile);
 			//Train name, used for hacks detection
@@ -280,13 +285,13 @@ namespace Train.OpenBve
 					Plugin.currentHost.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 				} else {
 					Texture tday;
-					Plugin.currentHost.LoadTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out tday);
+					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out tday, true);
 					Texture tnight = null;
 					if (PanelNighttimeImage != null) {
 						if (!File.Exists(PanelNighttimeImage)) {
 							Plugin.currentHost.AddMessage(MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
 						} else {
-							Plugin.currentHost.LoadTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight);
+							Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight, true);
 						}
 					}
 					CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight);
@@ -388,10 +393,10 @@ namespace Train.OpenBve
 									// create element
 									if (DaytimeImage != null) {
 										Texture tday;
-										Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday, true);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
-											Plugin.currentHost.LoadTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight, true);
 										}
 										int w = tday.Width;
 										int h = tday.Height;
@@ -563,13 +568,11 @@ namespace Train.OpenBve
 									if (DaytimeImage != null)
 									{
 										Texture tday;
-										Plugin.currentHost.LoadTexture(DaytimeImage,
-											new TextureParameters(null, TransparentColor), out tday);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday, true);
 										Texture tnight = null;
 										if (NighttimeImage != null)
 										{
-											Plugin.currentHost.LoadTexture(NighttimeImage,
-												new TextureParameters(null, TransparentColor), out tnight);
+											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight, true);
 										}
 										if (!OriginDefined) {
 											OriginX = 0.5 * tday.Width;
@@ -740,10 +743,10 @@ namespace Train.OpenBve
 									// create element
 									if (DaytimeImage != null) {
 										Texture tday;
-										Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday, true);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
-											Plugin.currentHost.LoadTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight, true);
 										}
 										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
 										if (Maximum < Minimum)
@@ -887,7 +890,7 @@ namespace Train.OpenBve
 											{
 												if ((k + 1) * Interval <= hday)
 												{
-													Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k]);
+													Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k], true);
 												}
 												else if (k * Interval >= hday)
 												{
@@ -896,7 +899,7 @@ namespace Train.OpenBve
 												}
 												else
 												{
-													Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
+													Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k], true);
 												}
 											}
 											if (NighttimeImage != null) {
@@ -906,7 +909,7 @@ namespace Train.OpenBve
 												for (int k = 0; k < numFrames; k++) {
 													if ((k + 1) * Interval <= hnight)
 													{
-														Plugin.currentHost.LoadTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k]);
+														Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k], true);
 													}
 													else if (k * Interval > hnight)
 													{
@@ -914,7 +917,7 @@ namespace Train.OpenBve
 													}
 													else
 													{
-														Plugin.currentHost.LoadTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k]);
+														Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k], true);
 													}
 												}
 												
@@ -945,20 +948,20 @@ namespace Train.OpenBve
 												{
 													if (Subject == "power")
 													{
-														PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
 													}
 
 													if (Subject == "brake")
 													{
-														PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
 													}
 
 													if (Subject == "reverser")
 													{
-														PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserForward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserBackward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserForward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserBackward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
 													}
 												}
 											}
@@ -1464,7 +1467,7 @@ namespace Train.OpenBve
 			}
 		}
 
-		private static List<Texture> LoadDrops(string TrainPath, List<string> dropFiles, Color24 TransparentColor, string compatabilityString)
+		private List<Texture> LoadDrops(string TrainPath, List<string> dropFiles, Color24 TransparentColor, string compatabilityString)
 		{
 			List<Texture> drops = new List<Texture>();
 			for (int l = 0; l < dropFiles.Count; l++)
@@ -1477,14 +1480,14 @@ namespace Train.OpenBve
 				}
 
 				Texture drop;
-				Plugin.currentHost.LoadTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
+				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop, true);
 				drops.Add(drop);
 			}
 
 			return drops;
 		}
 
-		internal static string GetInfixFunction(AbstractTrain Train, string Subject, double Minimum, double Maximum, int Width, int TextureWidth, string ErrorLocation)
+		internal string GetInfixFunction(AbstractTrain Train, string Subject, double Minimum, double Maximum, int Width, int TextureWidth, string ErrorLocation)
 		{
 			double mp = 0.0;
 			if (Minimum < 0)
@@ -1514,7 +1517,7 @@ namespace Train.OpenBve
 		/// <param name="Subject">The subject to convert</param>
 		/// <param name="ErrorLocation">The location in the Panel2.cfg file</param>
 		/// <returns>The parsed animation function stack</returns>
-		internal static string GetStackLanguageFromSubject(AbstractTrain Train, string Subject, string ErrorLocation) {
+		internal string GetStackLanguageFromSubject(AbstractTrain Train, string Subject, string ErrorLocation) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Suffix = "";
 			{
@@ -1679,12 +1682,12 @@ namespace Train.OpenBve
 			return Code + Suffix;
 		}
 
-		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, bool AddStateToLastElement = false)
+		internal int CreateElement(ref ElementsGroup Group, double Left, double Top, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, bool AddStateToLastElement = false)
 		{
 			return CreateElement(ref Group, Left, Top, DaytimeTexture.Width, DaytimeTexture.Height, RelativeRotationCenter, Distance, PanelResolution, PanelBottom, PanelCenter, Driver, DaytimeTexture, NighttimeTexture, Color32.White, AddStateToLastElement);
 		}
 
-		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
+		internal int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
 		{
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {

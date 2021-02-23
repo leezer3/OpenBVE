@@ -6,8 +6,14 @@ using TrainManager.Trains;
 
 namespace Train.OpenBve
 {
-	class BVE2SoundParser
+	internal class BVE2SoundParser
 	{
+		internal readonly Plugin Plugin;
+		internal BVE2SoundParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
+
 		/// <summary>Loads the sound set for a BVE2 based train</summary>
 		/// <param name="train">The train</param>
 		internal void Parse(TrainBase train)

@@ -126,7 +126,7 @@ namespace OpenBveApi.Hosts {
 			texture = null;
 			return false;
 		}
-		
+
 		/// <summary>Loads a texture and returns the texture data.</summary>
 		/// <param name="texture">Receives the texture.</param>
 		/// <param name="wrapMode">The openGL wrap mode</param>
@@ -139,8 +139,9 @@ namespace OpenBveApi.Hosts {
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
+		/// <param name="loadTexture">Whether the texture should also be pre-loaded</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Textures.Texture handle) {
+		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Textures.Texture handle, bool loadTexture = false) {
 			handle = null;
 			return false;
 		}

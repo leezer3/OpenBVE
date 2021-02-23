@@ -163,16 +163,15 @@ namespace OpenBve
 			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 		
-		/// <summary>Registers a texture and returns a handle to the texture.</summary>
-		/// <param name="path">The path to the file or folder that contains the texture.</param>
-		/// <param name="parameters">The parameters that specify how to process the texture.</param>
-		/// <param name="handle">Receives the handle to the texture.</param>
-		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Texture data;
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
+					if (loadTexture)
+					{
+						LoadTexture(data, OpenGlTextureWrapMode.ClampClamp);
+					}
 					return true;
 				}
 			} else {

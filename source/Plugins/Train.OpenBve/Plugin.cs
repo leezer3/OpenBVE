@@ -44,9 +44,15 @@ namespace Train.OpenBve
 
 	    internal SoundXmlParser SoundXmlParser;
 
+	    internal PanelCfgParser PanelCfgParser;
+
+	    internal Panel2CfgParser Panel2CfgParser;
+
+	    internal PanelXmlParser PanelXmlParser;
+
 	    internal Control[] CurrentControls;
 
-	    internal Plugin()
+	    public Plugin()
 	    {
 		    if (TrainDatParser == null)
 		    {
@@ -61,9 +67,27 @@ namespace Train.OpenBve
 		    if (SoundCfgParser == null)
 		    {
 			    SoundCfgParser = new SoundCfgParser(this);
-			    BVE2SoundParser = new BVE2SoundParser();
-			    BVE4SoundParser = new BVE4SoundParser();
+			    BVE2SoundParser = new BVE2SoundParser(this);
+			    BVE4SoundParser = new BVE4SoundParser(this);
 			    SoundXmlParser = new SoundXmlParser(this);
+		    }
+
+		    if (PanelCfgParser == null)
+		    {
+			    PanelCfgParser = new PanelCfgParser(this);
+			    Panel2CfgParser = new Panel2CfgParser(this);
+			    PanelXmlParser = new PanelXmlParser(this);
+		    }
+	    }
+
+	    public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions Options, object rendererReference)
+	    {
+		    currentHost = host;
+		    FileSystem = fileSystem;
+		    CurrentOptions = Options;
+		    if (rendererReference is BaseRenderer)
+		    {
+			    Renderer = rendererReference as BaseRenderer;
 		    }
 	    }
 

@@ -37,7 +37,7 @@ namespace OpenBveApi
 		}
 
 		/// <summary>Loads all interfaces this plugin supports.</summary>
-		public void Load(Hosts.HostInterface Host, FileSystem.FileSystem FileSystem, BaseOptions Options, object TrainManagerReference = null)
+		public void Load(Hosts.HostInterface Host, FileSystem.FileSystem FileSystem, BaseOptions Options, object TrainManagerReference = null, object RendererReference = null)
 		{
 			if (this.Texture != null)
 			{
@@ -63,7 +63,7 @@ namespace OpenBveApi
 
 			if (this.Train != null)
 			{
-				this.Train.Load(Host, FileSystem, Options, TrainManagerReference);
+				this.Train.Load(Host, FileSystem, Options, RendererReference);
 			}
 		}
 

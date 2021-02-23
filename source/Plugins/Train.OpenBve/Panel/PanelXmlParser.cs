@@ -19,12 +19,17 @@ using Path = OpenBveApi.Path;
 
 namespace Train.OpenBve
 {
-	internal static class PanelXmlParser
+	internal class PanelXmlParser
 	{
-		internal static Plugin Plugin;
+		internal Plugin Plugin;
+
+		internal PanelXmlParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
 
 		// constants
-		private static double StackDistance = 0.000001;
+		private double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
 		private const double EyeDistance = 1.0;
 
@@ -33,7 +38,7 @@ namespace Train.OpenBve
 		/// <param name="Train.TrainFolder">The on-disk path to the train</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanelXml(string PanelFile, TrainBase Train, int Car)
+		internal void ParsePanelXml(string PanelFile, TrainBase Train, int Car)
 		{
 			// The current XML file to load
 			string FileName = PanelFile;
@@ -65,7 +70,7 @@ namespace Train.OpenBve
 			}
 		}
 
-		private static void ParsePanelNode(XElement Element, string FileName, TrainBase Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
+		private void ParsePanelNode(XElement Element, string FileName, TrainBase Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
 		{
 			//Train name, used for hacks detection
 			string trainName = new System.IO.DirectoryInfo(Train.TrainFolder).Name.ToUpperInvariant();
@@ -353,7 +358,7 @@ namespace Train.OpenBve
 								Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
 							}
 						}
-						Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], 0.0, 0.0, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight);
+						Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], 0.0, 0.0, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight);
 					}
 				}
 			}
@@ -668,8 +673,8 @@ namespace Train.OpenBve
 								}
 								int w = tday.Width;
 								int h = tday.Height;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
-								string f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
+								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
+								string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
 							}
 						}
@@ -894,7 +899,7 @@ namespace Train.OpenBve
 								double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 								double nx = n * w;
 								double ny = n * h;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color);
+								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color);
 								CarSection.Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
 								CarSection.Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
 								CarSection.Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(CarSection.Groups[GroupIndex].Elements[j].RotateZDirection, CarSection.Groups[GroupIndex].Elements[j].RotateXDirection);
@@ -911,7 +916,7 @@ namespace Train.OpenBve
 										f = Smoothed ? "time 60 mod" : "time floor";
 										break;
 									default:
-										f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
+										f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										break;
 								}
 								InitialAngle = InitialAngle.ToRadians();
@@ -1080,13 +1085,13 @@ namespace Train.OpenBve
 								}
 								int w = tday.Width;
 								int h = tday.Height;
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
+								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								if (Maximum < Minimum)
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
 									break;
 								}
-								string tf = Panel2CfgParser.GetInfixFunction(Train, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
+								string tf = Plugin.Panel2CfgParser.GetInfixFunction(Train, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
 								if (tf != String.Empty)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
@@ -1288,10 +1293,10 @@ namespace Train.OpenBve
 									int j = -1;
 									for (int k = 0; k < tday.Length; k++)
 									{
-										int l = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
+										int l = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
 										if (k == 0) j = l;
 									}
-									string f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
+									string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 									CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
 								}
 							}
@@ -1420,7 +1425,7 @@ namespace Train.OpenBve
 							if (Radius != 0.0)
 							{
 								// create element
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color);
+								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color);
 								InitialAngle = InitialAngle + Math.PI;
 								LastAngle = LastAngle + Math.PI;
 								double x0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
@@ -1463,7 +1468,7 @@ namespace Train.OpenBve
 									new Vector3(x3, y3, z3),
 									new Vector3(cx, cy, cz)
 								};
-								string f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
+								string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 								double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 								double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 								if (Step == 1.0)
@@ -1568,7 +1573,7 @@ namespace Train.OpenBve
 							}
 							if (Width > 0.0 & Height > 0.0)
 							{
-								int j = Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White);
+								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White);
 								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "timetable", false);
 								Plugin.currentHost.AddObjectForCustomTimeTable(CarSection.Groups[GroupIndex].Elements[j]);
 							}
@@ -1790,7 +1795,7 @@ namespace Train.OpenBve
 						{
 							int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
 							double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
-							int panelDropIndex = Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double) Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
+							int panelDropIndex = Plugin.Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double) Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
 							string f = drop + " raindrop";
 							try
 							{
@@ -1811,7 +1816,7 @@ namespace Train.OpenBve
 		}
 
 
-		private static void ParseTouchSoundEntryNode(string fileName, XElement parent, ICollection<int> indices)
+		private void ParseTouchSoundEntryNode(string fileName, XElement parent, ICollection<int> indices)
 		{
 			foreach (XElement childNode in parent.Elements())
 			{
@@ -1852,7 +1857,7 @@ namespace Train.OpenBve
 			}
 		}
 
-		private static void ParseTouchCommandEntryNode(string fileName, XElement parent, ICollection<CommandEntry> entries)
+		private void ParseTouchCommandEntryNode(string fileName, XElement parent, ICollection<CommandEntry> entries)
 		{
 			foreach (XElement childNode in parent.Elements())
 			{
@@ -1923,7 +1928,7 @@ namespace Train.OpenBve
 			}
 		}
 
-		internal static void CreateTouchElement(ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
+		internal void CreateTouchElement(ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)

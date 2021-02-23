@@ -13,7 +13,12 @@ namespace Train.OpenBve
 {
 	internal class BVE4SoundParser
 	{
-		internal Plugin Plugin;
+		internal readonly Plugin Plugin;
+
+		internal BVE4SoundParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
 
 		/// <summary>Loads the sound set for a BVE4 or openBVE sound.cfg based train</summary>
 		/// <param name="train">The train</param>

@@ -11,23 +11,29 @@ using TrainManager.Handles;
 
 namespace Train.OpenBve
 {
-	internal static class PanelCfgParser
+	internal class PanelCfgParser
 	{
-		internal static Plugin Plugin;
+		internal readonly Plugin Plugin;
+
+		internal PanelCfgParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
+
 		// constants
-		private static double StackDistance = 0.000001;
+		private double StackDistance = 0.000001;
 
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed</remarks>
 		private const double EyeDistance = 1.0;
 
-		private static double WorldWidth, WorldHeight, WorldLeft, WorldTop;
-		private static double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
+		private double WorldWidth, WorldHeight, WorldLeft, WorldTop;
+		private double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
 
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Encoding">The train's text encoding</param>
 		/// <param name="Car">The car to add the panel to</param>
-		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, CarBase Car)
+		internal void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, CarBase Car)
 		{
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -172,7 +178,7 @@ namespace Train.OpenBve
 				else
 				{
 					Texture t;
-					Plugin.currentHost.LoadTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out t);
+					Plugin.currentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out t, true);
 					SemiHeight = FullHeight - t.Height;
 					CreateElement(Car, 0, SemiHeight, t.Width, t.Height, WorldZ + EyeDistance, t, Color32.White);
 				}
@@ -449,7 +455,7 @@ namespace Train.OpenBve
 								if (Background != null)
 								{
 									Texture t;
-									Plugin.currentHost.LoadTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+									Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t, true);
 									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 								}
 
@@ -457,7 +463,7 @@ namespace Train.OpenBve
 								if (Cover != null)
 								{
 									Texture t;
-									Plugin.currentHost.LoadTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
+									Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t, true);
 									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
 								}
 
@@ -471,7 +477,7 @@ namespace Train.OpenBve
 											string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
 											string File = Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
 											Texture t;
-											Plugin.currentHost.LoadTexture(File, new TextureParameters(null, null), out t);
+											Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out t, true);
 											int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, t, NeedleColor[k]);
 											Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 											Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
@@ -766,7 +772,7 @@ namespace Train.OpenBve
 								{
 									// background/led
 									Texture t;
-									Plugin.currentHost.LoadTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+									Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t, true);
 									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 								}
 
@@ -774,7 +780,7 @@ namespace Train.OpenBve
 								{
 									// cover
 									Texture t;
-									Plugin.currentHost.LoadTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
+									Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t, true);
 									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
 								}
 
@@ -844,7 +850,7 @@ namespace Train.OpenBve
 											double x = CenterX - 0.5 * h + Math.Sin(a) * AtcRadius;
 											double y = CenterY - 0.5 * h - Math.Cos(a) * AtcRadius + SemiHeight;
 											Texture t;
-											Plugin.currentHost.LoadTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
+											Plugin.currentHost.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t, true);
 											if (j == 0)
 											{
 												k = CreateElement(Car, x, y, h, h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White);
@@ -865,7 +871,7 @@ namespace Train.OpenBve
 									string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
 									string File = Path.CombineFile(Folder, "needle_speedometer.png");
 									Texture t;
-									Plugin.currentHost.LoadTexture(File, new TextureParameters(null, null), out t);
+									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out t, true);
 									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
 									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
@@ -1084,7 +1090,7 @@ namespace Train.OpenBve
 										Texture[] t = new Texture[n];
 										for (int j = 0; j < n; j++)
 										{
-											Plugin.currentHost.LoadTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
+											Plugin.currentHost.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j], true);
 										}
 
 										{
@@ -1219,8 +1225,8 @@ namespace Train.OpenBve
 								if (TurnOn != null & TurnOff != null)
 								{
 									Texture t0, t1;
-									Plugin.currentHost.LoadTexture(TurnOn, new TextureParameters(null, Color24.Blue), out t0);
-									Plugin.currentHost.LoadTexture(TurnOff, new TextureParameters(null, Color24.Blue), out t1);
+									Plugin.currentHost.RegisterTexture(TurnOn, new TextureParameters(null, Color24.Blue), out t0, true);
+									Plugin.currentHost.RegisterTexture(TurnOff, new TextureParameters(null, Color24.Blue), out t1, true);
 									int j = CreateElement(Car, CornerX, CornerY + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t0);
 									CreateElement(Car, CornerX, CornerY + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t1, true);
 									Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "doors 0 !=", false);
@@ -1337,7 +1343,7 @@ namespace Train.OpenBve
 								if (Background != null)
 								{
 									Texture t;
-									Plugin.currentHost.LoadTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+									Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t, true);
 									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 								}
 
@@ -1346,7 +1352,7 @@ namespace Train.OpenBve
 									// hour
 									string File = Path.CombineFile(Folder, "needle_hour.png");
 									Texture t;
-									Plugin.currentHost.LoadTexture(File, new TextureParameters(null, null), out t);
+									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out t, true);
 									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 4.0 * StackDistance, t, Needle);
 									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
@@ -1358,7 +1364,7 @@ namespace Train.OpenBve
 									// minute
 									string File = Path.CombineFile(Folder, "needle_minute.png");
 									Texture t;
-									Plugin.currentHost.LoadTexture(File, new TextureParameters(null, null), out t);
+									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out t, true);
 									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
 									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
@@ -1370,7 +1376,7 @@ namespace Train.OpenBve
 									// second
 									string File = Path.CombineFile(Folder, "needle_second.png");
 									Texture t;
-									Plugin.currentHost.LoadTexture(File, new TextureParameters(null, null), out t);
+									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out t, true);
 									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 6.0 * StackDistance, t, Needle);
 									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
@@ -1473,7 +1479,7 @@ namespace Train.OpenBve
 										{
 											Texture t;
 											TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
-											Plugin.currentHost.LoadTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
+											Plugin.currentHost.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t, true);
 											if (j == 0)
 											{
 												k = CreateElement(Car, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White);
@@ -1552,13 +1558,13 @@ namespace Train.OpenBve
 			return Arguments;
 		}
 
-		private static int CreateElement(CarBase Car, double Left, double Top, double WorldZ, Texture Texture, bool AddStateToLastElement = false)
+		private int CreateElement(CarBase Car, double Left, double Top, double WorldZ, Texture Texture, bool AddStateToLastElement = false)
 		{
 			return CreateElement(Car, Left, Top, WorldZ, Texture.Width, Texture.Height, Texture, Color32.White, AddStateToLastElement);
 		}
 
 		// create element
-		private static int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement = false)
+		private int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement = false)
 		{
 			// create object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
