@@ -13,6 +13,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
@@ -35,6 +36,14 @@ namespace Train.OpenBve
 
 	    internal ExtensionsCfgParser ExtensionsCfgParser;
 
+	    internal SoundCfgParser SoundCfgParser;
+
+	    internal BVE2SoundParser BVE2SoundParser;
+
+	    internal BVE4SoundParser BVE4SoundParser;
+
+	    internal SoundXmlParser SoundXmlParser;
+
 	    internal Plugin()
 	    {
 		    if (TrainDatParser == null)
@@ -45,6 +54,14 @@ namespace Train.OpenBve
 		    if (ExtensionsCfgParser == null)
 		    {
 			    ExtensionsCfgParser = new ExtensionsCfgParser(this);
+		    }
+
+		    if (SoundCfgParser == null)
+		    {
+			    SoundCfgParser = new SoundCfgParser(this);
+			    BVE2SoundParser = new BVE2SoundParser();
+			    BVE4SoundParser = new BVE4SoundParser();
+			    SoundXmlParser = new SoundXmlParser(this);
 		    }
 	    }
 
@@ -119,7 +136,7 @@ namespace Train.OpenBve
 			    TrainDatParser.Parse(TrainData, Encoding, currentTrain);
 			    Thread.Sleep(1);
 			    if (Cancel) return false;
-			    SoundCfgParser.ParseSoundConfig(currentTrain.TrainFolder, currentTrain);
+			    SoundCfgParser.ParseSoundConfig(currentTrain);
 			    Thread.Sleep(1);
 			    if (Cancel) return false;
 			    // door open/close speed

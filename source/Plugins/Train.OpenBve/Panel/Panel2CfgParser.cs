@@ -1206,7 +1206,7 @@ namespace Train.OpenBve
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										
-										Timetable.AddObjectForCustomTimetable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
+										Plugin.currentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
 									}
 								} break;
 								case "windscreen":

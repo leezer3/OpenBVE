@@ -52,6 +52,7 @@
     <Compile Include="Sound\SoundCfg.Base.cs" />
     <Compile Include="Sound\SoundCfg.Bve2.cs" />
     <Compile Include="Sound\SoundCfg.Bve4.cs" />
+    <Compile Include="Sound\SoundCfg.Xml.cs" />
     <Compile Include="Train\ExtensionsCfgParser.cs" />
     <Compile Include="Train\TrainDatParser.cs" />
     <Compile Include="Train\TrainDatparser.Formats.cs" />

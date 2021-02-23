@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +11,7 @@ using TrainManager.Trains;
 
 namespace Train.OpenBve
 {
-	class BVE4SoundParser
+	internal class BVE4SoundParser
 	{
 		internal Plugin Plugin;
 
@@ -892,5 +892,4 @@ namespace Train.OpenBve
 			}
 		}
 	}
-}
 }

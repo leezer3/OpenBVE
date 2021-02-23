@@ -7,35 +7,39 @@ using TrainManager.Trains;
 
 namespace Train.OpenBve
 {
-	internal static partial class SoundCfgParser
+	internal partial class SoundCfgParser
 	{
-		internal static Plugin Plugin;
+		internal readonly Plugin Plugin;
+
+		internal SoundCfgParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
 
 		/// <summary>Parses the sound configuration file for a train</summary>
-		/// <param name="TrainPath">The absolute on-disk path to the train's folder</param>
 		/// <param name="Train">The train to which to apply the new sound configuration</param>
-		internal static void ParseSoundConfig(string TrainPath, TrainBase Train)
+		internal void ParseSoundConfig(TrainBase Train)
 		{
-			SoundCfgParser.LoadDefaultATSSounds(Train, TrainPath);
-			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.xml");
+			LoadDefaultATSSounds(Train, Train.TrainFolder);
+			string FileName = OpenBveApi.Path.CombineFile(Train.TrainFolder, "sound.xml");
 			if (System.IO.File.Exists(FileName))
 			{
-				if (SoundXmlParser.ParseTrain(FileName, Train))
+				if (Plugin.SoundXmlParser.ParseTrain(FileName, Train))
 				{
 					Plugin.FileSystem.AppendToLogFile("Loading sound.xml file: " + FileName);
 					return;
 				}
 			}
-			FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.cfg");
+			FileName = OpenBveApi.Path.CombineFile(Train.TrainFolder, "sound.cfg");
 			if (System.IO.File.Exists(FileName))
 			{
 				Plugin.FileSystem.AppendToLogFile("Loading sound.cfg file: " + FileName);
-				BVE4SoundParser.Parse(FileName, TrainPath, Train);
+				Plugin.BVE4SoundParser.Parse(FileName, Train.TrainFolder, Train);
 			}
 			else
 			{
 				Plugin.FileSystem.AppendToLogFile("Loading default BVE2 sounds.");
-				BVE2SoundParser.Parse(TrainPath, Train);
+				Plugin.BVE2SoundParser.Parse(Train);
 			}
 		}
 
