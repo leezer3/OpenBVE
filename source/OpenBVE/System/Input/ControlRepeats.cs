@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -69,7 +70,7 @@ namespace OpenBve
                 {
                     int j = RepeatControls[i].ControlIndex;
                     Interface.CurrentControls[j].AnalogState = 1.0;
-                    Interface.CurrentControls[j].DigitalState = Interface.DigitalControlState.Pressed;
+                    Interface.CurrentControls[j].DigitalState = DigitalControlState.Pressed;
                     RepeatControls[i].Countdown += Interface.CurrentOptions.KeyRepeatInterval;
                 }
             }

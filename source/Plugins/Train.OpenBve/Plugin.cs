@@ -104,7 +104,7 @@ namespace Train.OpenBve
 		    return false;
 	    }
 
-	    public override bool LoadTrain(string path, Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
+	    public override bool LoadTrain(Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
 	    {
 		    CurrentControls = currentControls;
 		    TrainBase currentTrain = train as TrainBase;

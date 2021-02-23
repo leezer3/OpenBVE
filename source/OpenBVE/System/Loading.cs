@@ -288,13 +288,22 @@ namespace OpenBve {
 			}
 			TrainManager.PlayerTrain = Program.TrainManager.Trains[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length];
 
-			UnifiedObject[] CarObjects = null;
-			UnifiedObject[] BogieObjects = null;
-			UnifiedObject[] CouplerObjects = null;
+
 
 			// load trains
-			double TrainProgressMaximum = 0.7 + 0.3 * (double)Program.TrainManager.Trains.Length;
+
 			for (int k = 0; k < Program.TrainManager.Trains.Length; k++) {
+
+				AbstractTrain currentTrain = Program.TrainManager.Trains[k];
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(CurrentTrainFolder))
+					{
+						
+						Program.CurrentHost.Plugins[i].Train.LoadTrain(CurrentTrainEncoding, CurrentTrainFolder, ref currentTrain, ref Interface.CurrentControls);
+					}
+				}
+				/*
 				TrainManager.Train currentTrain = Program.TrainManager.Trains[k] as TrainManager.Train;
 				//Sleep for 20ms to allow route loading locks to release
 				Thread.Sleep(20);
@@ -404,7 +413,7 @@ namespace OpenBve {
 				}
 				// place cars
 				currentTrain.PlaceCars(0.0);
-
+				*/
 				// configure other properties
 				if (currentTrain.IsPlayerTrain) {
 					currentTrain.TimetableDelta = 0.0;
@@ -415,10 +424,11 @@ namespace OpenBve {
 						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 					}
 				} else if (currentTrain.State != TrainState.Bogus) {
-					currentTrain.AI = new Game.SimpleHumanDriverAI(currentTrain, Interface.CurrentOptions.PrecedingTrainSpeedLimit);
+					TrainBase train = currentTrain as TrainBase;
+					currentTrain.AI = new Game.SimpleHumanDriverAI(train, Interface.CurrentOptions.PrecedingTrainSpeedLimit);
 					currentTrain.TimetableDelta = Program.CurrentRoute.PrecedingTrainTimeDeltas[k];
-					currentTrain.Specs.DoorOpenMode = DoorMode.Manual;
-					currentTrain.Specs.DoorCloseMode = DoorMode.Manual;
+					train.Specs.DoorOpenMode = DoorMode.Manual;
+					train.Specs.DoorCloseMode = DoorMode.Manual;
 				}
 			}
 			TrainProgress = 1.0;

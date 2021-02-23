@@ -237,7 +237,7 @@ namespace OpenBve
 		//
 		// KEYBOARD EVENTS
 		//
-		private static Interface.KeyboardModifier CurrentKeyboardModifier = Interface.KeyboardModifier.None;
+		private static KeyboardModifier CurrentKeyboardModifier = KeyboardModifier.None;
 
 		internal static void ProcessKeyboard()
 		{
@@ -262,12 +262,12 @@ namespace OpenBve
 							double aa = JoystickManager.AttachedJoysticks[guid].GetAxis(i);
 							if (aa < -0.75)
 							{
-								Game.Menu.SetControlJoyCustomData(guid, Interface.JoystickComponent.Axis, i, -1);
+								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Axis, i, -1);
 								return;
 							}
 							if (aa > 0.75)
 							{
-								Game.Menu.SetControlJoyCustomData(guid, Interface.JoystickComponent.Axis, i, 1);
+								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Axis, i, 1);
 								return;
 							}
 						}
@@ -276,7 +276,7 @@ namespace OpenBve
 						{
 							if (JoystickManager.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
 							{
-								Game.Menu.SetControlJoyCustomData(guid, Interface.JoystickComponent.Button, i, 1);
+								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Button, i, 1);
 								return;
 							}
 						}
@@ -286,7 +286,7 @@ namespace OpenBve
 							JoystickHatState hat = JoystickManager.AttachedJoysticks[guid].GetHat(i);
 							if (hat.Position != HatPosition.Centered)
 							{
-								Game.Menu.SetControlJoyCustomData(guid, Interface.JoystickComponent.Hat, i, (int)hat.Position);
+								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Hat, i, (int)hat.Position);
 								return;
 							}
 						}
@@ -318,14 +318,14 @@ namespace OpenBve
 				//Check to see if our device is currently available
 				switch (Interface.CurrentControls[i].Method)
 				{
-					case Interface.ControlMethod.Joystick:
+					case ControlMethod.Joystick:
 						if (JoystickManager.AttachedJoysticks.Count == 0 || !JoystickManager.AttachedJoysticks.ContainsKey(Interface.CurrentControls[i].Device) || !JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].IsConnected())
 						{
 							//Not currently connected
 							continue;
 						}
 						break;
-					case Interface.ControlMethod.RailDriver:
+					case ControlMethod.RailDriver:
 						if (JoystickManager.RailDriverIndex == -1)
 						{
 							//Not currently connected
@@ -341,7 +341,7 @@ namespace OpenBve
 				
 				switch (Interface.CurrentControls[i].Component)
 				{
-					case Interface.JoystickComponent.Axis:
+					case JoystickComponent.Axis:
 						var axisState = JoystickManager.GetAxis(currentDevice, Interface.CurrentControls[i].Element);
 						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 						{
@@ -409,19 +409,19 @@ namespace OpenBve
 									{
 										axisState = 1.0f;
 									}
-									if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Released | Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.ReleasedAcknowledged)
+									if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Released | Interface.CurrentControls[i].DigitalState == DigitalControlState.ReleasedAcknowledged)
 									{
-										if (axisState > 0.67) Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+										if (axisState > 0.67) Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
 									}
 									else
 									{
-										if (axisState < 0.33) Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+										if (axisState < 0.33) Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
 									}
 								}
 							}
 						}
 						break;
-					case Interface.JoystickComponent.Button:
+					case JoystickComponent.Button:
 						//Load the current state
 						var buttonState = JoystickManager.GetButton(currentDevice, Interface.CurrentControls[i].Element);
 						//Test whether the state is the same as the last frame
@@ -430,20 +430,20 @@ namespace OpenBve
 							if (buttonState == ButtonState.Pressed)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
-								Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+								Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
 								AddControlRepeat(i);
 							}
 							else
 							{
 								Interface.CurrentControls[i].AnalogState = 0.0;
-								Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+								Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
 								RemoveControlRepeat(i);
 							}
 							//Store the state
 							Interface.CurrentControls[i].LastState = buttonState.ToString();
 						}
 						break;
-					case Interface.JoystickComponent.Hat:
+					case JoystickComponent.Hat:
 						//Load the current state
 						var hatState = JoystickManager.GetHat(currentDevice, Interface.CurrentControls[i].Element).Position;
 						//Test if the state is the same as last frame
@@ -452,13 +452,13 @@ namespace OpenBve
 							if ((int)hatState == Interface.CurrentControls[i].Direction)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
-								Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+								Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
 								AddControlRepeat(i);
 							}
 							else
 							{
 								Interface.CurrentControls[i].AnalogState = 0.0;
-								Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+								Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
 								RemoveControlRepeat(i);
 							}
 							//Store the state

@@ -418,7 +418,7 @@ namespace OpenBve.Parsers.Panel
 			for (int i = 0; i < CommandEntries.Length; i++)
 			{
 				Interface.CurrentControls[m + i].Command = CommandEntries[i].Command;
-				Interface.CurrentControls[m + i].Method = Interface.ControlMethod.Touch;
+				Interface.CurrentControls[m + i].Method = ControlMethod.Touch;
 				Interface.CurrentControls[m + i].Option = CommandEntries[i].Option;
 				Group.TouchElements[n].ControlIndices[i] = m + i;
 			}

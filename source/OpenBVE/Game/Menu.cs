@@ -237,7 +237,7 @@ namespace OpenBve
 						Selection = SelectionNone;
 						Items = new MenuEntry[4];
 						// get code name and description
-						Interface.Control loadedControl = Interface.CurrentControls[data];
+						Control loadedControl = Interface.CurrentControls[data];
 						for (int h = 0; h < Translations.CommandInfos.Length; h++)
 						{
 							if (Translations.CommandInfos[h].Command == loadedControl.Command)
@@ -251,7 +251,7 @@ namespace OpenBve
 						String str = "";
 						switch (loadedControl.Method)
 						{
-							case Interface.ControlMethod.Keyboard:
+							case ControlMethod.Keyboard:
 								string keyName = loadedControl.Key.ToString();
 								for (int k = 0; k < Translations.TranslatedKeys.Length; k++)
 								{
@@ -261,7 +261,7 @@ namespace OpenBve
 										break;
 									}
 								}
-								if (loadedControl.Modifier != Interface.KeyboardModifier.None)
+								if (loadedControl.Modifier != KeyboardModifier.None)
 								{
 									str = Translations.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + keyName + "]";
 								}
@@ -270,39 +270,39 @@ namespace OpenBve
 									str = Translations.GetInterfaceString("menu_keyboard") + " [" + keyName + "]";
 								}
 								break;
-							case Interface.ControlMethod.Joystick:
+							case ControlMethod.Joystick:
 								str = Translations.GetInterfaceString("menu_joystick") + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
 								switch (loadedControl.Component)
 								{
-									case Interface.JoystickComponent.FullAxis:
-									case Interface.JoystickComponent.Axis:
+									case JoystickComponent.FullAxis:
+									case JoystickComponent.Axis:
 										str += " " + (loadedControl.Direction == 1 ? Translations.GetInterfaceString("menu_joystickdirection_positive") : Translations.GetInterfaceString("menu_joystickdirection_negative"));
 										break;
 									//						case Interface.JoystickComponent.Button:	// NOTHING TO DO FOR THIS CASE!
 									//							str = str;
 									//							break;
-									case Interface.JoystickComponent.Hat:
+									case JoystickComponent.Hat:
 										str += " " + (OpenTK.Input.HatPosition)loadedControl.Direction;
 										break;
-									case Interface.JoystickComponent.Invalid:
+									case JoystickComponent.Invalid:
 										str = Translations.GetInterfaceString("menu_joystick_notavailable");
 										break;
 								}
 								break;
-							case Interface.ControlMethod.RailDriver:
+							case ControlMethod.RailDriver:
 								str = "RailDriver [" + loadedControl.Component + " " + loadedControl.Element + "]";
 								switch (loadedControl.Component)
 								{
-									case Interface.JoystickComponent.FullAxis:
-									case Interface.JoystickComponent.Axis:
+									case JoystickComponent.FullAxis:
+									case JoystickComponent.Axis:
 										str += " " + (loadedControl.Direction == 1 ? Translations.GetInterfaceString("menu_joystickdirection_positive") : Translations.GetInterfaceString("menu_joystickdirection_negative"));
 										break;
-									case Interface.JoystickComponent.Invalid:
+									case JoystickComponent.Invalid:
 										str = Translations.GetInterfaceString("menu_joystick_notavailable");
 										break;
 								}
 								break;
-							case Interface.ControlMethod.Invalid:
+							case ControlMethod.Invalid:
 								str = Translations.GetInterfaceString("menu_joystick_notavailable");
 								break;
 						}
@@ -482,12 +482,12 @@ namespace OpenBve
 		//
 		// SET CONTROL CUSTOM DATA
 		//
-		internal void SetControlKbdCustomData(Key key, Interface.KeyboardModifier keybMod)
+		internal void SetControlKbdCustomData(Key key, KeyboardModifier keybMod)
 		{
 			//Check that we are customising a key, and that our key is NOT the menu back key
 			if (isCustomisingControl && key != MenuBackKey && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.Keyboard;
+				Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.Keyboard;
 				Interface.CurrentControls[CustomControlIdx].Key = key;
 				Interface.CurrentControls[CustomControlIdx].Modifier = keybMod;
 				Interface.SaveControls(null, Interface.CurrentControls);
@@ -496,17 +496,17 @@ namespace OpenBve
 			isCustomisingControl = false;
 
 		}
-		internal void SetControlJoyCustomData(Guid device, Interface.JoystickComponent component, int element, int dir)
+		internal void SetControlJoyCustomData(Guid device, JoystickComponent component, int element, int dir)
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
 				if (JoystickManager.AttachedJoysticks[device] is JoystickManager.Raildriver)
 				{
-					Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.RailDriver;
+					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.RailDriver;
 				}
 				else
 				{
-					Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.Joystick;
+					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.Joystick;
 				}
 				Interface.CurrentControls[CustomControlIdx].Device = device;
 				Interface.CurrentControls[CustomControlIdx].Component = component;

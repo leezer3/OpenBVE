@@ -27,7 +27,7 @@ namespace OpenBveApi.Trains
 		/// <param name="train">Receives the train.</param>
 		/// <param name="currentControls">The current control array (modified if touch elements are present)</param>
 		/// <returns>Whether loading the route was successful.</returns>
-		public abstract bool LoadTrain(string path, System.Text.Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls);
+		public abstract bool LoadTrain(System.Text.Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls);
 
 		/// <summary>Holds whether loading is currently in progress</summary>
 		public bool IsLoading;

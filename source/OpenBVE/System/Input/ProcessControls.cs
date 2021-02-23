@@ -37,7 +37,7 @@ namespace OpenBve
 					JoystickManager.AttachedJoysticks[guid].Disconnected = true;
 					for (int j = 0; j < Interface.CurrentControls.Length; j++)
 					{
-						if (Interface.CurrentControls[j].Method == Interface.ControlMethod.Joystick && Interface.CurrentControls[i].Device == guid)
+						if (Interface.CurrentControls[j].Method == ControlMethod.Joystick && Interface.CurrentControls[i].Device == guid)
 						{
 							//This control is bound to our disconnected joystick, so let's kick into pause mode
 							Program.Renderer.CurrentInterface = InterfaceType.Pause;
@@ -157,10 +157,10 @@ namespace OpenBve
 					{
 						if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.Digital)
 						{
-							if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Pressed)
+							if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Pressed)
 							{
 								Interface.CurrentControls[i].DigitalState =
-									Interface.DigitalControlState.PressedAcknowledged;
+									DigitalControlState.PressedAcknowledged;
 								switch (Interface.CurrentControls[i].Command)
 								{
 									case Translations.Command.MiscPause:
@@ -193,10 +193,10 @@ namespace OpenBve
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
 						if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.Digital
-								&& Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Pressed)
+								&& Interface.CurrentControls[i].DigitalState == DigitalControlState.Pressed)
 						{
 							Interface.CurrentControls[i].DigitalState =
-									Interface.DigitalControlState.PressedAcknowledged;
+									DigitalControlState.PressedAcknowledged;
 							Game.Menu.ProcessCommand(Interface.CurrentControls[i].Command, TimeElapsed);
 						}
 					}
@@ -681,11 +681,11 @@ namespace OpenBve
 						else if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.Digital)
 						{
 							// digital control
-							if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Pressed)
+							if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Pressed)
 							{
 								// pressed
 								Interface.CurrentControls[i].DigitalState =
-									Interface.DigitalControlState.PressedAcknowledged;
+									DigitalControlState.PressedAcknowledged;
 								switch (Interface.CurrentControls[i].Command)
 								{
 									case Translations.Command.MiscQuit:
@@ -1864,11 +1864,11 @@ namespace OpenBve
 									break;
 								}
 							}
-							else if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Released)
+							else if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Released)
 							{
 								// released
 								Interface.CurrentControls[i].DigitalState =
-									Interface.DigitalControlState.ReleasedAcknowledged;
+									DigitalControlState.ReleasedAcknowledged;
 								switch (Interface.CurrentControls[i].Command)
 								{
 									case Translations.Command.SingleBrake:

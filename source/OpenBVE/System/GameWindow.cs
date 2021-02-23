@@ -29,6 +29,7 @@ using RouteManager2.MessageManager;
 using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
+using Control = OpenBveApi.Interface.Control;
 
 namespace OpenBve
 {
@@ -355,11 +356,11 @@ namespace OpenBve
 				if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
 				{
 					int AddControlsLength = InputDevicePlugin.AvailablePlugins[i].Controls.Length;
-					Interface.Control[] AddControls = new Interface.Control[AddControlsLength];
+					Control[] AddControls = new Control[AddControlsLength];
 					for (int j = 0; j < AddControlsLength; j++)
 					{
 						AddControls[j].Command = InputDevicePlugin.AvailablePlugins[i].Controls[j].Command;
-						AddControls[j].Method = Interface.ControlMethod.InputDevicePlugin;
+						AddControls[j].Method = ControlMethod.InputDevicePlugin;
 						AddControls[j].Option = InputDevicePlugin.AvailablePlugins[i].Controls[j].Option;
 					}
 					Interface.CurrentControls = Interface.CurrentControls.Concat(AddControls).ToArray();

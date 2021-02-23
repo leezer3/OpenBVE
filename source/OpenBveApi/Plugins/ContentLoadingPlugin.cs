@@ -1,4 +1,6 @@
-﻿namespace OpenBveApi
+﻿using System;
+
+namespace OpenBveApi
 {
 	/// <summary>Represents a plugin for loading content.</summary>
 	public class ContentLoadingPlugin
@@ -20,6 +22,9 @@
 
 		/// <summary>The interface to load routes as exposed by the plugin, or a null reference.</summary>
 		public Routes.RouteInterface Route;
+
+		/// <summary>The interface to load trains as exposed by the plugin, or a null reference</summary>
+		public Trains.TrainInterface Train;
 		
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="file">The plugin file.</param>
@@ -54,6 +59,11 @@
 			if (this.Route != null)
 			{
 				this.Route.Load(Host, FileSystem, Options, TrainManagerReference);
+			}
+
+			if (this.Train != null)
+			{
+				this.Train.Load(Host, FileSystem, Options, TrainManagerReference);
 			}
 		}
 

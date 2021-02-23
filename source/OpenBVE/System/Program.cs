@@ -9,6 +9,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using RouteManager2;
+using Control = OpenBveApi.Interface.Control;
 
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
@@ -124,7 +125,7 @@ namespace OpenBve {
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			folder = Program.FileSystem.GetDataFolder("Controls");
 			string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
-			Interface.Control[] controls;
+			Control[] controls;
 			Interface.LoadControls(file, out controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
 			
