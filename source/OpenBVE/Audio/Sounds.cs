@@ -4,6 +4,7 @@ using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenTK.Audio.OpenAL;
 using SoundManager;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -13,9 +14,9 @@ namespace OpenBve
 		/// <param name="train">The train.</param>
 		public override void StopAllSounds(object train)
 		{
-			if (train is TrainManager.Train)
+			if (train is TrainBase)
 			{
-				var t = (TrainManager.Train) train;
+				var t = (TrainBase) train;
 				for (int i = 0; i < SourceCount; i++)
 				{
 					if (t.Cars.Contains(Sources[i].Parent) || Sources[i].Parent == train)

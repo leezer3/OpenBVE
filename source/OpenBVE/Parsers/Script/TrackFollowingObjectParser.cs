@@ -117,123 +117,14 @@ namespace OpenBve
 				Interface.AddMessage(MessageType.Error, true, $"The supplied train folder in TrackFollowingObject {FileName} did not contain a complete set of data.");
 				return;
 			}
-			TrainDatParser.ParseTrainData(TrainData, TextEncoding.GetSystemEncodingFromFile(TrainData), Train);
-			SoundCfgParser.ParseSoundConfig(TrainDirectory, Train);
-			Train.AI = new TrackFollowingObjectAI(Train, Data.ToArray());
-
-			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
-			UnifiedObject[] BogieObjects = new UnifiedObject[Train.Cars.Length * 2];
-			UnifiedObject[] CouplerObjects = new UnifiedObject[Train.Cars.Length - 1];
-			bool[] VisibleFromInterior = new bool[Train.Cars.Length];
-			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior, Train, true);
-
-			int currentBogieObject = 0;
-			for (int i = 0; i < Train.Cars.Length; i++)
+			AbstractTrain currentTrain = Train;
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
-				if (CarObjects[i] == null)
+				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(TrainDirectory))
 				{
-					// load default exterior object
-					string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-					StaticObject so;
-					Program.CurrentHost.LoadStaticObject(file, Encoding.UTF8, false, out so);
-					if (so == null)
-					{
-						CarObjects[i] = null;
-					}
-					else
-					{
-						so.ApplyScale(Train.Cars[i].Width, Train.Cars[i].Height, Train.Cars[i].Length);
-						CarObjects[i] = so;
-					}
+						
+					Program.CurrentHost.Plugins[i].Train.LoadTrain(Encoding.UTF8, TrainDirectory, ref currentTrain, ref Interface.CurrentControls);
 				}
-				if (CarObjects[i] != null)
-				{
-					// add object
-					Train.Cars[i].LoadCarSections(CarObjects[i], false);
-				}
-
-				//Load bogie objects
-				if (BogieObjects[currentBogieObject] != null)
-				{
-					Train.Cars[i].FrontBogie.LoadCarSections(BogieObjects[currentBogieObject], false);
-				}
-				currentBogieObject++;
-				if (BogieObjects[currentBogieObject] != null)
-				{
-					Train.Cars[i].RearBogie.LoadCarSections(BogieObjects[currentBogieObject], false);
-				}
-				currentBogieObject++;
-			}
-
-			// door open/close speed
-			foreach (var Car in Train.Cars)
-			{
-				if (Car.Specs.DoorOpenFrequency <= 0.0)
-				{
-					if (Car.Doors[0].OpenSound.Buffer != null & Car.Doors[1].OpenSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						Program.Sounds.LoadBuffer(Car.Doors[1].OpenSound.Buffer);
-						double a = Car.Doors[0].OpenSound.Buffer.Duration;
-						double b = Car.Doors[1].OpenSound.Buffer.Duration;
-						Car.Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
-					}
-					else if (Car.Doors[0].OpenSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						double a = Car.Doors[0].OpenSound.Buffer.Duration;
-						Car.Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
-					}
-					else if (Car.Doors[1].OpenSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						double b = Car.Doors[1].OpenSound.Buffer.Duration;
-						Car.Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
-					}
-					else
-					{
-						Car.Specs.DoorOpenFrequency = 0.8;
-					}
-				}
-				if (Car.Specs.DoorCloseFrequency <= 0.0)
-				{
-					if (Car.Doors[0].CloseSound.Buffer != null & Car.Doors[1].CloseSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						Program.Sounds.LoadBuffer(Car.Doors[1].CloseSound.Buffer);
-						double a = Car.Doors[0].CloseSound.Buffer.Duration;
-						double b = Car.Doors[1].CloseSound.Buffer.Duration;
-						Car.Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
-					}
-					else if (Car.Doors[0].CloseSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						double a = Car.Doors[0].CloseSound.Buffer.Duration;
-						Car.Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
-					}
-					else if (Car.Doors[1].CloseSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						double b = Car.Doors[1].CloseSound.Buffer.Duration;
-						Car.Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
-					}
-					else
-					{
-						Car.Specs.DoorCloseFrequency = 0.8;
-					}
-				}
-				const double f = 0.015;
-				const double g = 2.75;
-				Car.Specs.DoorOpenPitch = Math.Exp(f * Math.Tan(g * (Program.RandomNumberGenerator.NextDouble() - 0.5)));
-				Car.Specs.DoorClosePitch = Math.Exp(f * Math.Tan(g * (Program.RandomNumberGenerator.NextDouble() - 0.5)));
-				Car.Specs.DoorOpenFrequency /= Car.Specs.DoorOpenPitch;
-				Car.Specs.DoorCloseFrequency /= Car.Specs.DoorClosePitch;
-				/*
-				 * Remove the following two lines, then the pitch at which doors play
-				 * takes their randomized opening and closing times into account.
-				 * */
-				Car.Specs.DoorOpenPitch = 1.0;
-				Car.Specs.DoorClosePitch = 1.0;
 			}
 
 			foreach (var Car in Train.Cars)

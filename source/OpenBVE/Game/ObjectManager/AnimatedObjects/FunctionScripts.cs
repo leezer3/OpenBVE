@@ -5,11 +5,12 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
 		// execute function script
-		internal static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.InstructionSet.Length; i++) {
 				switch (Function.InstructionSet[i]) {

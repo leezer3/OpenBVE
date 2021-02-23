@@ -20,14 +20,18 @@ namespace Train.OpenBve
 	class PanelAnimatedXmlParser
 	{
 
-		internal static Plugin Plugin;
+		internal Plugin Plugin;
+
+		internal PanelAnimatedXmlParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
 
 		/// <summary>Parses a openBVE panel.animated.xml file</summary>
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
-		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanelAnimatedXml(string PanelFile, TrainBase Train, int Car)
+		internal void ParsePanelAnimatedXml(string PanelFile, TrainBase Train, int Car)
 		{
 			// The current XML file to load
 			string FileName = PanelFile;
@@ -60,7 +64,7 @@ namespace Train.OpenBve
 			}
 		}
 
-		private static void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, TrainBase Train, int Car, CarSection CarSection, int GroupIndex)
+		private void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, TrainBase Train, int Car, CarSection CarSection, int GroupIndex)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
@@ -379,7 +383,7 @@ namespace Train.OpenBve
 			}
 		}
 
-		private static void CreateTouchElement(ElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries)
+		private void CreateTouchElement(ElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries)
 		{
 			Vertex t0 = new Vertex(Size.X, Size.Y, -Size.Z);
             Vertex t1 = new Vertex(Size.X, -Size.Y, -Size.Z);

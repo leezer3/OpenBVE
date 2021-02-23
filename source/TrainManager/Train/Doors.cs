@@ -3,7 +3,7 @@ using TrainManager.Car;
 
 namespace TrainManager.Trains
 {
-	public abstract partial class TrainBase
+	public partial class TrainBase
 	{
 		/// <inheritdoc/>
 		public override void OpenDoors(bool Left, bool Right)

@@ -12,6 +12,7 @@ using LibRender2.Overlays;
 using LibRender2.Primitives;
 using LibRender2.Screens;
 using LibRender2.Shaders;
+using LibRender2.Text;
 using LibRender2.Texts;
 using LibRender2.Textures;
 using LibRender2.Viewports;
@@ -97,6 +98,7 @@ namespace LibRender2
 		public Loading Loading;
 		public Keys Keys;
 		public MotionBlur MotionBlur;
+		public Fonts Fonts;
 
 		public Matrix4D CurrentProjectionMatrix;
 		public Matrix4D CurrentViewMatrix;
@@ -211,6 +213,7 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
+			Fonts = new Fonts();
 		}
 
 		/// <summary>

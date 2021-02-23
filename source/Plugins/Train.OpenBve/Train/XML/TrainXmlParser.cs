@@ -1,7 +1,10 @@
 ﻿using System;
-using System.Xml;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -9,15 +12,22 @@ using OpenBveApi.Objects;
 using TrainManager.Power;
 using TrainManager.Trains;
 
-namespace OpenBve.Parsers.Train
+namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
+		private readonly Plugin Plugin;
+
+		internal TrainXmlParser(Plugin plugin)
+		{
+			Plugin = plugin;
+		}
+
 		private static string currentPath;
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
 		private static BveAccelerationCurve[] AccelerationCurves;
-		internal static void Parse(string fileName, TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, ref bool[] interiorVisible)
+		internal void Parse(string fileName, TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, ref bool[] interiorVisible)
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
@@ -47,7 +57,7 @@ namespace OpenBve.Parsers.Train
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Car or self::Coupler]");
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
-					Interface.AddMessage(MessageType.Error, false, "No car nodes defined in XML file " + fileName);
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "No car nodes defined in XML file " + fileName);
 					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
 					throw new Exception("Empty train.xml file");
 				}
@@ -58,7 +68,7 @@ namespace OpenBve.Parsers.Train
 				{
 					if (carIndex > Train.Cars.Length)
 					{
-						Interface.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
 						break;
 					}
 					if (DocumentNodes[i].ChildNodes.OfType<XmlElement>().Any())
@@ -71,7 +81,7 @@ namespace OpenBve.Parsers.Train
 						{
 							if (carIndex - 1 > Train.Cars.Length - 2)
 							{
-								Interface.AddMessage(MessageType.Error, false, "Unexpected extra coupler encountered in XML file " + fileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected extra coupler encountered in XML file " + fileName);
 								continue;
 							}
 							foreach (XmlNode c in DocumentNodes[i].ChildNodes)
@@ -81,25 +91,25 @@ namespace OpenBve.Parsers.Train
 									case "minimum":
 										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars))
 										{
-											Interface.AddMessage(MessageType.Error, false, "MinimumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "MinimumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
 										}
 										break;
 									case "maximum":
 										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[carIndex - 1].Coupler.MaximumDistanceBetweenCars))
 										{
-											Interface.AddMessage(MessageType.Error, false, "MaximumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "MaximumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
 										}
 										break;
 									case "object":
 										if (string.IsNullOrEmpty(c.InnerText))
 										{
-											Interface.AddMessage(MessageType.Warning, false, "Invalid object path for Coupler " + (carIndex - 1) + " in XML file " + fileName);
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Coupler " + (carIndex - 1) + " in XML file " + fileName);
 											break;
 										}
 										string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 										if (System.IO.File.Exists(f))
 										{
-											Program.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out CouplerObjects[carIndex - 1]);
+											Plugin.currentHost.LoadObject(f, System.Text.Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
 								}
@@ -123,14 +133,14 @@ namespace OpenBve.Parsers.Train
 						}
 						catch
 						{
-							Interface.AddMessage(MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
 						}
 					}
 					if (i == DocumentNodes.Count && carIndex < Train.Cars.Length)
 					{
 						//If this is the case, the number of motor cars is the primary thing which may get confused....
 						//Not a lot to be done about this until a full replacement is built for the train.dat file & we can dump it entirely
-						Interface.AddMessage(MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
 					}
 					if (DocumentNodes[i].Name == "Car")
 					{
@@ -139,8 +149,7 @@ namespace OpenBve.Parsers.Train
 				}
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
-					Program.Renderer.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
-					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+					Plugin.Renderer.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
 				}
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/NotchDescriptions");
 				if (DocumentNodes != null && DocumentNodes.Count > 0)
@@ -158,7 +167,7 @@ namespace OpenBve.Parsers.Train
 										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(new[] { ';' });
 										for (int j = 0; j < Train.Handles.Power.NotchDescriptions.Length; j++)
 										{
-											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Power.NotchDescriptions[j]);
+											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Power.NotchDescriptions[j]);
 											if (s.Width > Train.Handles.Power.MaxWidth)
 											{
 												Train.Handles.Power.MaxWidth = s.Width;
@@ -169,7 +178,7 @@ namespace OpenBve.Parsers.Train
 										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(new[] { ';' });
 										for (int j = 0; j < Train.Handles.Brake.NotchDescriptions.Length; j++)
 										{
-											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Brake.NotchDescriptions[j]);
+											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Brake.NotchDescriptions[j]);
 											if (s.Width > Train.Handles.Brake.MaxWidth)
 											{
 												Train.Handles.Brake.MaxWidth = s.Width;
@@ -184,7 +193,7 @@ namespace OpenBve.Parsers.Train
 										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(new[] { ';' });
 										for (int j = 0; j < Train.Handles.LocoBrake.NotchDescriptions.Length; j++)
 										{
-											Size s = Fonts.NormalFont.MeasureString(Train.Handles.LocoBrake.NotchDescriptions[j]);
+											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.LocoBrake.NotchDescriptions[j]);
 											if (s.Width > Train.Handles.LocoBrake.MaxWidth)
 											{
 												Train.Handles.LocoBrake.MaxWidth = s.Width;
@@ -195,7 +204,7 @@ namespace OpenBve.Parsers.Train
 										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(new[] { ';' });
 										for (int j = 0; j < Train.Handles.Reverser.NotchDescriptions.Length; j++)
 										{
-											Size s = Fonts.NormalFont.MeasureString(Train.Handles.Reverser.NotchDescriptions[j]);
+											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Reverser.NotchDescriptions[j]);
 											if (s.Width > Train.Handles.Reverser.MaxWidth)
 											{
 												Train.Handles.Reverser.MaxWidth = s.Width;

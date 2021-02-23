@@ -398,11 +398,11 @@ namespace OpenBve
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
 			// of font sizes defined in Graphics/Fonts.cs
-			if (Program.Renderer.Screen.Height <= 512) menuFont = Fonts.SmallFont;
-			else if (Program.Renderer.Screen.Height <= 680) menuFont = Fonts.NormalFont;
-			else if (Program.Renderer.Screen.Height <= 890) menuFont = Fonts.LargeFont;
-			else if (Program.Renderer.Screen.Height <= 1150) menuFont = Fonts.VeryLargeFont;
-			else menuFont = Fonts.EvenLargerFont;
+			if (Program.Renderer.Screen.Height <= 512) menuFont = Program.Renderer.Fonts.SmallFont;
+			else if (Program.Renderer.Screen.Height <= 680) menuFont = Program.Renderer.Fonts.NormalFont;
+			else if (Program.Renderer.Screen.Height <= 890) menuFont = Program.Renderer.Fonts.LargeFont;
+			else if (Program.Renderer.Screen.Height <= 1150) menuFont = Program.Renderer.Fonts.VeryLargeFont;
+			else menuFont = Program.Renderer.Fonts.EvenLargerFont;
 			em = (int)menuFont.FontSize;
 			lineHeight = (int)(em * LineSpacing);
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)

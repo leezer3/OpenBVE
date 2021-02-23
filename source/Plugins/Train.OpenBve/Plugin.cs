@@ -50,6 +50,10 @@ namespace Train.OpenBve
 
 	    internal PanelXmlParser PanelXmlParser;
 
+	    internal PanelAnimatedXmlParser PanelAnimatedXmlParser;
+
+	    internal TrainXmlParser TrainXmlParser;
+
 	    internal Control[] CurrentControls;
 
 	    public Plugin()
@@ -77,6 +81,12 @@ namespace Train.OpenBve
 			    PanelCfgParser = new PanelCfgParser(this);
 			    Panel2CfgParser = new Panel2CfgParser(this);
 			    PanelXmlParser = new PanelXmlParser(this);
+			    PanelAnimatedXmlParser = new PanelAnimatedXmlParser(this);
+		    }
+
+		    if (TrainXmlParser == null)
+		    {
+			    TrainXmlParser = new TrainXmlParser(this);
 		    }
 	    }
 
@@ -189,7 +199,7 @@ namespace Train.OpenBve
 				string tXml = Path.CombineFile(currentTrain.TrainFolder, "train.xml");
 				if (File.Exists(tXml))
 				{
-					//TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior);
+					TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior);
 				}
 				else
 				{

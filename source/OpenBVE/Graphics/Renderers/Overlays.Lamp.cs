@@ -81,7 +81,7 @@ namespace OpenBve.Graphics.Renderers
                         this.Text = "TEXT";
                         break;
                 }
-                OpenGlFont font = Fonts.NormalFont;
+                OpenGlFont font = Program.Renderer.Fonts.NormalFont;
                 for (int i = 0; i < HUD.CurrentHudElements.Length; i++)
                 {
                     if (HUD.CurrentHudElements[i].Subject.Equals("ats", StringComparison.OrdinalIgnoreCase))

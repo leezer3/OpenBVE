@@ -987,7 +987,7 @@ namespace OpenBve
 				}
 
 				Program.Renderer.Loading.SetLoadingBkg(Program.CurrentRoute.Information.LoadingScreenBackground);
-				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, routeProgress, Loading.TrainProgress);
+				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress, Loading.TrainProgress);
 				Program.currentGameWindow.SwapBuffers();
 				
 				if (Loading.JobAvailable)

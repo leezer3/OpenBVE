@@ -60,6 +60,9 @@
     <Compile Include="Train\ExtensionsCfgParser.cs" />
     <Compile Include="Train\TrainDatParser.cs" />
     <Compile Include="Train\TrainDatparser.Formats.cs" />
+    <Compile Include="Train\XML\TrainXmlParser.BrakeNode.cs" />
+    <Compile Include="Train\XML\TrainXmlParser.CarNode.cs" />
+    <Compile Include="Train\XML\TrainXmlParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">

@@ -3,9 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
-using OpenBve.Parsers.Train;
 using OpenBveApi.Interface;
-using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
@@ -278,11 +276,11 @@ namespace OpenBve {
 			{
 				if (k == Program.TrainManager.Trains.Length - 1 & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0)
 				{
-					Program.TrainManager.Trains[k] = new TrainManager.Train(TrainState.Bogus);
+					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Bogus);
 				}
 				else
 				{
-					Program.TrainManager.Trains[k] = new TrainManager.Train(TrainState.Pending);
+					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Pending);
 				}
 				
 			}

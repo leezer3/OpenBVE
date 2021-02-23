@@ -439,22 +439,22 @@ namespace OpenBve
 													switch (s)
 													{
 														case 0:
-															CurrentHudElements[Length - 1].Font = Fonts.VerySmallFont;
+															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.VerySmallFont;
 															break;
 														case 1:
-															CurrentHudElements[Length - 1].Font = Fonts.SmallFont;
+															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.SmallFont;
 															break;
 														case 2:
-															CurrentHudElements[Length - 1].Font = Fonts.NormalFont;
+															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.NormalFont;
 															break;
 														case 3:
-															CurrentHudElements[Length - 1].Font = Fonts.LargeFont;
+															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.LargeFont;
 															break;
 														case 4:
-															CurrentHudElements[Length - 1].Font = Fonts.VeryLargeFont;
+															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.VeryLargeFont;
 															break;
 														default:
-															CurrentHudElements[Length - 1].Font = Fonts.NormalFont;
+															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.NormalFont;
 															break;
 													}
 												}

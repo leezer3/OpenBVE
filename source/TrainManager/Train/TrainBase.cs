@@ -20,7 +20,7 @@ namespace TrainManager.Trains
 	/*
 	 * TEMPORARY NAME AND CLASS TO ALLOW FOR MOVE IN PARTS
 	 */
-	public abstract partial class TrainBase : AbstractTrain
+	public partial class TrainBase : AbstractTrain
 	{
 		/// <summary>Contains information on the specifications of the train</summary>
 		public TrainSpecs Specs;
@@ -74,7 +74,7 @@ namespace TrainManager.Trains
 			}
 		}
 
-		protected TrainBase(TrainState state)
+		public TrainBase(TrainState state)
 		{
 			State = state;
 			Destination = TrainManagerBase.CurrentOptions.InitialDestination;
