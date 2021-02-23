@@ -1996,13 +1996,13 @@ namespace Train.OpenBve
 			Group.TouchElements[n].Element.CurrentState = 0;
 			Group.TouchElements[n].Element.internalObject = new ObjectState(Object);
 			Plugin.currentHost.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
-			int m = Interface.CurrentControls.Length;
-			Array.Resize(ref Interface.CurrentControls, m + CommandEntries.Length);
+			int m = Plugin.CurrentControls.Length;
+			Array.Resize(ref Plugin.CurrentControls, m + CommandEntries.Length);
 			for (int i = 0; i < CommandEntries.Length; i++)
 			{
-				Interface.CurrentControls[m + i].Command = CommandEntries[i].Command;
-				Interface.CurrentControls[m + i].Method = Interface.ControlMethod.Touch;
-				Interface.CurrentControls[m + i].Option = CommandEntries[i].Option;
+				Plugin.CurrentControls[m + i].Command = CommandEntries[i].Command;
+				Plugin.CurrentControls[m + i].Method = ControlMethod.Touch;
+				Plugin.CurrentControls[m + i].Option = CommandEntries[i].Option;
 				Group.TouchElements[n].ControlIndices[i] = m + i;
 			}
 		}

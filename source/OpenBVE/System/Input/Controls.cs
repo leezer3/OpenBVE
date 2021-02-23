@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using OpenTK.Input;
 using OpenBveApi.Interface;
+using Control = OpenBveApi.Interface.Control;
 
 namespace OpenBve
 {

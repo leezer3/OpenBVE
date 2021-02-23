@@ -44,6 +44,8 @@ namespace Train.OpenBve
 
 	    internal SoundXmlParser SoundXmlParser;
 
+	    internal Control[] CurrentControls;
+
 	    internal Plugin()
 	    {
 		    if (TrainDatParser == null)
@@ -102,8 +104,9 @@ namespace Train.OpenBve
 		    return false;
 	    }
 
-	    public override bool LoadTrain(string path, Encoding Encoding, string trainPath, ref AbstractTrain train)
+	    public override bool LoadTrain(string path, Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
 	    {
+		    CurrentControls = currentControls;
 		    TrainBase currentTrain = train as TrainBase;
 		    if (currentTrain == null)
 		    {
@@ -223,6 +226,7 @@ namespace Train.OpenBve
 			}
 			// place cars
 			currentTrain.PlaceCars(0.0);
+			currentControls = CurrentControls;
 			return true;
 	    }
 
@@ -231,141 +235,143 @@ namespace Train.OpenBve
 	    /// <param name="Train">The train</param>
 	    /// <param name="Encoding">The selected train encoding</param>
 	    internal void ParsePanelConfig(TrainBase Train, Encoding Encoding)
-			{
-				Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
-				Train.Cars[Train.DriverCar].CarSections[0] = new CarSection(currentHost, ObjectType.Overlay);
-				string File = Path.CombineFile(Train.TrainFolder, "panel.xml");
-				if (!System.IO.File.Exists(File))
-				{
-					//Try animated variant too
-					File = Path.CombineFile(Train.TrainFolder, "panel.animated.xml");
-				}
+	    {
+		    Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
+		    Train.Cars[Train.DriverCar].CarSections[0] = new CarSection(currentHost, ObjectType.Overlay);
+		    string File = Path.CombineFile(Train.TrainFolder, "panel.xml");
+		    if (!System.IO.File.Exists(File))
+		    {
+			    //Try animated variant too
+			    File = Path.CombineFile(Train.TrainFolder, "panel.animated.xml");
+		    }
 
-				if (System.IO.File.Exists(File))
-				{
-					FileSystem.AppendToLogFile("Loading train panel: " + File);
-					try
-					{
-						/*
-						 * First load the XML. We use this to determine
-						 * whether this is a 2D or a 3D animated panel
-						 */
-						XDocument CurrentXML = XDocument.Load(File, LoadOptions.SetLineInfo);
+		    if (System.IO.File.Exists(File))
+		    {
+			    FileSystem.AppendToLogFile("Loading train panel: " + File);
+			    try
+			    {
+				    /*
+				     * First load the XML. We use this to determine
+				     * whether this is a 2D or a 3D animated panel
+				     */
+				    XDocument CurrentXML = XDocument.Load(File, LoadOptions.SetLineInfo);
 
-						// Check for null
-						if (CurrentXML.Root != null)
-						{
+				    // Check for null
+				    if (CurrentXML.Root != null)
+				    {
 
-							IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
-							if (DocumentElements.Any())
-							{
-								PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
-								if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
-								{
-									Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
-								}
-							}
+					    IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
+					    if (DocumentElements.Any())
+					    {
+						    PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
+						    if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
+						    {
+							    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+						    }
+					    }
 
-							DocumentElements = CurrentXML.Root.Elements("Panel");
-							if (DocumentElements.Any())
-							{
-								PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
-								Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-								Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
-							}
-						}
-					}
-					catch
-					{
-						var currentError = Translations.GetInterfaceString("errors_critical_file");
-						currentError = currentError.Replace("[file]", "panel.xml");
-						currentHost.ReportProblem(ProblemType.InvalidData, currentError);
-						Cancel = true;
-						return;
-					}
-					currentHost.AddMessage(MessageType.Error, false, "The panel.xml file " + File + " failed to load. Falling back to legacy panel.");
-				}
-				else
-				{
-					File = Path.CombineFile(Train.TrainFolder, "panel.animated");
-					if (System.IO.File.Exists(File))
-					{
-						FileSystem.AppendToLogFile("Loading train panel: " + File);
-						if (System.IO.File.Exists(Path.CombineFile(Train.TrainFolder, "panel2.cfg")) || System.IO.File.Exists(Path.CombineFile(Train.TrainFolder, "panel.cfg")))
-						{
-							FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
-						}
+					    DocumentElements = CurrentXML.Root.Elements("Panel");
+					    if (DocumentElements.Any())
+					    {
+						    PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
+						    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
+						    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
+					    }
+				    }
+			    }
+			    catch
+			    {
+				    var currentError = Translations.GetInterfaceString("errors_critical_file");
+				    currentError = currentError.Replace("[file]", "panel.xml");
+				    currentHost.ReportProblem(ProblemType.InvalidData, currentError);
+				    Cancel = true;
+				    return;
+			    }
 
-						UnifiedObject currentObject;
-						currentHost.LoadObject(File, Encoding, out currentObject);
-						var a = currentObject as AnimatedObjectCollection;
-						if (a != null)
-						{
-							//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
-							try
-							{
-								for (int i = 0; i < a.Objects.Length; i++)
-								{
-									currentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
-								}
+			    currentHost.AddMessage(MessageType.Error, false, "The panel.xml file " + File + " failed to load. Falling back to legacy panel.");
+		    }
+		    else
+		    {
+			    File = Path.CombineFile(Train.TrainFolder, "panel.animated");
+			    if (System.IO.File.Exists(File))
+			    {
+				    FileSystem.AppendToLogFile("Loading train panel: " + File);
+				    if (System.IO.File.Exists(Path.CombineFile(Train.TrainFolder, "panel2.cfg")) || System.IO.File.Exists(Path.CombineFile(Train.TrainFolder, "panel.cfg")))
+				    {
+					    FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
+				    }
 
-								Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
-								if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
-								{
-									Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
-									Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
-								}
-								return;
-							}
-							catch
-							{
-								var currentError = Translations.GetInterfaceString("errors_critical_file");
-								currentError = currentError.Replace("[file]", "panel.animated");
-								currentHost.ReportProblem(ProblemType.InvalidData, currentError);
-								Cancel = true;
-								return;
-							}
-						}
+				    UnifiedObject currentObject;
+				    currentHost.LoadObject(File, Encoding, out currentObject);
+				    var a = currentObject as AnimatedObjectCollection;
+				    if (a != null)
+				    {
+					    //HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
+					    try
+					    {
+						    for (int i = 0; i < a.Objects.Length; i++)
+						    {
+							    currentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
+						    }
 
-						currentHost.AddMessage(MessageType.Error, false, "The panel.animated file " + File + " failed to load. Falling back to 2D panel.");
-					}
-				}
+						    Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
+						    if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
+						    {
+							    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+							    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+						    }
 
-				var Panel2 = false;
-				try
-				{
-					File = Path.CombineFile(Train.TrainFolder, "panel2.cfg");
-					if (System.IO.File.Exists(File))
-					{
-						FileSystem.AppendToLogFile("Loading train panel: " + File);
-						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config("panel2.cfg", Train.TrainFolder, Train.Cars[Train.DriverCar]);
-						Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-						Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
-					}
-					else
-					{
-						File = Path.CombineFile(Train.TrainFolder, "panel.cfg");
-						if (System.IO.File.Exists(File))
-						{
-							FileSystem.AppendToLogFile("Loading train panel: " + File);
-							PanelCfgParser.ParsePanelConfig(Train.TrainFolder, Encoding, Train.Cars[Train.DriverCar]);
-							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-							Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
-						}
-						else
-						{
-							Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
-						}
-					}
-				}
-				catch
-				{
-					var currentError = Translations.GetInterfaceString("errors_critical_file");
-					currentError = currentError.Replace("[file]", Panel2 ? "panel2.cfg" : "panel.cfg");
-					currentHost.ReportProblem(ProblemType.InvalidData, currentError);
-					Cancel = true;
-				}
-			}
+						    return;
+					    }
+					    catch
+					    {
+						    var currentError = Translations.GetInterfaceString("errors_critical_file");
+						    currentError = currentError.Replace("[file]", "panel.animated");
+						    currentHost.ReportProblem(ProblemType.InvalidData, currentError);
+						    Cancel = true;
+						    return;
+					    }
+				    }
+
+				    currentHost.AddMessage(MessageType.Error, false, "The panel.animated file " + File + " failed to load. Falling back to 2D panel.");
+			    }
+		    }
+
+		    var Panel2 = false;
+		    try
+		    {
+			    File = Path.CombineFile(Train.TrainFolder, "panel2.cfg");
+			    if (System.IO.File.Exists(File))
+			    {
+				    FileSystem.AppendToLogFile("Loading train panel: " + File);
+				    Panel2 = true;
+				    Panel2CfgParser.ParsePanel2Config("panel2.cfg", Train.TrainFolder, Train.Cars[Train.DriverCar]);
+				    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
+				    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
+			    }
+			    else
+			    {
+				    File = Path.CombineFile(Train.TrainFolder, "panel.cfg");
+				    if (System.IO.File.Exists(File))
+				    {
+					    FileSystem.AppendToLogFile("Loading train panel: " + File);
+					    PanelCfgParser.ParsePanelConfig(Train.TrainFolder, Encoding, Train.Cars[Train.DriverCar]);
+					    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
+					    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
+				    }
+				    else
+				    {
+					    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+				    }
+			    }
+		    }
+		    catch
+		    {
+			    var currentError = Translations.GetInterfaceString("errors_critical_file");
+			    currentError = currentError.Replace("[file]", Panel2 ? "panel2.cfg" : "panel.cfg");
+			    currentHost.ReportProblem(ProblemType.InvalidData, currentError);
+			    Cancel = true;
+		    }
+	    }
     }
 }
