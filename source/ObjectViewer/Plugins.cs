@@ -66,12 +66,15 @@ namespace OpenBve {
 							{
 								iroute = true;
 							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Trains.TrainInterface))) {
+								plugin.Train = (OpenBveApi.Trains.TrainInterface)assembly.CreateInstance(type.FullName);
+							}
 							if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
 								iruntime = true;
 							}
 						}
-						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
-							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
+						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Train != null) {
+							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions, Program.TrainManager, Program.Renderer);
 							list.Add(plugin);
 						} else if (!iroute && !iruntime) {
 							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
