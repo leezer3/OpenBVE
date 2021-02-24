@@ -281,11 +281,11 @@ namespace OpenBve {
 							    TrainManager.Trains[0] = new TrainManager.Train();
 								AbstractTrain playerTrain = TrainManager.Trains[0] as AbstractTrain;
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
-
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
 								break;
 						    }
 					    }
+						TrainManager.PlayerTrain.Initialize();
 					    foreach (var Car in TrainManager.PlayerTrain.Cars)
 					    {
 						    double length = TrainManager.PlayerTrain.Cars[0].Length;
@@ -293,8 +293,6 @@ namespace OpenBve {
 						    Car.Move(length);
 					    }
 					    TrainManager.PlayerTrain.PlaceCars(0);
-					    ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-					    Program.TrainManager.UpdateTrainObjects(0.0, true);
 					    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					    {
 							TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
@@ -302,9 +300,6 @@ namespace OpenBve {
 							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 					    }
-						Renderer.InitializeVisibility();
-						Renderer.UpdateViewingDistances(600);
-						Renderer.UpdateVisibility(0);
 				    }
 				    else
 				    {
@@ -322,8 +317,10 @@ namespace OpenBve {
 		    }
 
 		    Renderer.InitializeVisibility();
+		    Renderer.UpdateViewingDistances(600);
 		    Renderer.UpdateVisibility(0.0, true);
 		    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
+		    Program.TrainManager.UpdateTrainObjects(0.0, true);
 		    Renderer.ApplyBackgroundColor();
 	    }
 
