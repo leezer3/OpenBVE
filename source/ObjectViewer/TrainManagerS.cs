@@ -26,7 +26,7 @@ namespace OpenBve {
 
 			internal bool SafetySystemPlugin;
 
-			internal Train() : base(TrainState.Pending)
+			internal Train() : base(TrainState.Available)
 			{
 				Handles.Reverser = new ReverserHandle();
 				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {});

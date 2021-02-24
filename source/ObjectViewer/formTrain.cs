@@ -302,8 +302,11 @@ namespace OpenBve
 					{
 						Train.Cars[i] = new CarBase(Train, i);
 						Train.Cars[i].CurrentSpeed = (int)numericUpDownSpeed.Value / 3.6;
-						Train.Cars[i].Specs.PerceivedSpeed = (int)numericUpDownSpeed.Value / 3.6;
-						Train.Cars[i].Specs.Acceleration = (int)numericUpDownAccel.Value / 3.6;
+						Train.Cars[i].Specs = new CarPhysics
+						{
+							PerceivedSpeed = (int) numericUpDownSpeed.Value / 3.6, 
+							Acceleration = (int) numericUpDownAccel.Value / 3.6
+						};
 						if (checkBoxAirBrake.Checked)
 						{
 							Train.Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, Train.Handles.EmergencyBrake, Train.Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] {});
