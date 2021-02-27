@@ -1,5 +1,6 @@
 ﻿using System;
 using SoundManager;
+using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
@@ -50,10 +51,23 @@ namespace TrainManager.Handles
 		/// <summary>The max width used in px for the description string</summary>
 		public int MaxWidth = 48;
 
+		internal readonly TrainBase baseTrain;
+
 		public abstract void Update();
 
-		public AbstractHandle()
+		public virtual void ApplyState(int newState, bool relativeChange, bool isOverMaxDriverNotch = false)
 		{
+
+		}
+
+		public virtual void ApplyState(AirBrakeHandleState newState)
+		{
+
+		}
+
+		public AbstractHandle(TrainBase Train)
+		{
+			baseTrain = Train;
 			Increase = new CarSound();
 			IncreaseFast = new CarSound();
 			Decrease = new CarSound();
@@ -75,6 +89,11 @@ namespace TrainManager.Handles
 
 		/// <summary>The list of delay values for each notch decrease</summary>
 		internal double[] DelayDown;
+
+		internal NotchedHandle(TrainBase train) : base(train)
+		{
+
+		}
 
 		/// <summary>Adds a delayed handle state change</summary>
 		/// <param name="Value">The value to add or subtract</param>

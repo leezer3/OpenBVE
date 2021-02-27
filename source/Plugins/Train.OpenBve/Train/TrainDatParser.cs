@@ -29,7 +29,7 @@ namespace Train.OpenBve
 		/// <param name="FileName">The train.dat file to parse</param>
 		/// <param name="Encoding">The text encoding to use</param>
 		/// <param name="Train">The train</param>
-		internal void Parse(string FileName, System.Text.Encoding Encoding, TrainBase Train) {
+		internal void Parse(string FileName, Encoding Encoding, TrainBase Train) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			//Create the array using the default compatibility train.dat
 			string[] Lines = {"BVE2000000","#CAR","1","1","1","0","1","1"};
@@ -161,7 +161,7 @@ namespace Train.OpenBve
 			double DoorTolerance = 0.0;
 			ReadhesionDeviceType ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 			PassAlarmType passAlarm = PassAlarmType.None;
-			Train.Handles.EmergencyBrake = new EmergencyHandle();
+			Train.Handles.EmergencyBrake = new EmergencyHandle(Train);
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
@@ -865,8 +865,8 @@ namespace Train.OpenBve
 				}
 				driverBrakeNotches = brakeNotches;
 			}
-			Train.Handles.Reverser = new ReverserHandle();
-			Train.Handles.Power = new PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown);
+			Train.Handles.Reverser = new ReverserHandle(Train);
+			Train.Handles.Power = new PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown, Train);
 			if (powerReduceSteps != -1)
 			{
 				Train.Handles.Power.ReduceSteps = powerReduceSteps;
@@ -874,24 +874,24 @@ namespace Train.OpenBve
 
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 			{
-				Train.Handles.Brake = new AirBrakeHandle();
+				Train.Handles.Brake = new AirBrakeHandle(Train);
 			}
 			else
 			{
-				Train.Handles.Brake = new BrakeHandle(brakeNotches, driverBrakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown);
+				Train.Handles.Brake = new BrakeHandle(brakeNotches, driverBrakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown, Train);
 				
 			}
 
 			if (locomotiveBrakeType == BrakeSystemType.AutomaticAirBrake)
 			{
-				Train.Handles.LocoBrake = new LocoAirBrakeHandle();
+				Train.Handles.LocoBrake = new LocoAirBrakeHandle(Train);
 			}
 			else
 			{
-				Train.Handles.LocoBrake = new LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown);
+				Train.Handles.LocoBrake = new LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown, Train);
 			}
 			Train.Handles.LocoBrakeType = (LocoBrakeType)locoBrakeType;
-			
+			Train.Handles.HoldBrake = new HoldBrakeHandle(Train);
 			// apply data
 			if (MotorCars < 1) MotorCars = 1;
 			if (TrailerCars < 0) TrailerCars = 0;
@@ -985,15 +985,15 @@ namespace Train.OpenBve
 					Train.Cars[1].Specs.IsMotorCar = true;
 					Train.Cars[2].Specs.IsMotorCar = true;
 				} else {
-					int i = (int)Math.Ceiling(0.25 * (double)(Cars - 1));
-					int j = (int)Math.Floor(0.75 * (double)(Cars - 1));
+					int i = (int)Math.Ceiling(0.25 * (Cars - 1));
+					int j = (int)Math.Floor(0.75 * (Cars - 1));
 					Train.Cars[i].Specs.IsMotorCar = true;
 					Train.Cars[j].Specs.IsMotorCar = true;
 				}
 			} else if (MotorCars > 0) {
 				if (FrontCarIsMotorCar) {
 					Train.Cars[0].Specs.IsMotorCar = true;
-					double t = 1.0 + (double)TrailerCars / (double)(MotorCars - 1);
+					double t = 1.0 + TrailerCars / (double)(MotorCars - 1);
 					double r = 0.0;
 					double x = 0.0;
 					while (true) {
@@ -1006,7 +1006,7 @@ namespace Train.OpenBve
 					}
 				} else {
 					Train.Cars[1].Specs.IsMotorCar = true;
-					double t = 1.0 + (double)(TrailerCars - 1) / (double)(MotorCars - 1);
+					double t = 1.0 + (TrailerCars - 1) / (double)(MotorCars - 1);
 					double r = 0.0;
 					double x = 1.0;
 					while (true) {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using LibRender2.Screens;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -870,12 +869,17 @@ namespace TrainManager.Trains
 
 				if (Handles.EmergencyBrake.Driver)
 				{
-					ApplyNotch(0, false, 0, true);
+					Handles.Power.ApplyState(0, false);
 				}
 				else
 				{
-					ApplyNotch(0, false, Handles.Brake.MaximumNotch, false);
-					ApplyAirBrakeHandle(AirBrakeHandleState.Service);
+					Handles.Brake.ApplyState(Handles.Brake.MaximumNotch, false);
+					Handles.Power.ApplyState(0, false);
+					if (Handles.Brake is AirBrakeHandle)
+					{
+						Handles.Brake.ApplyState(AirBrakeHandleState.Service);
+					}
+					
 				}
 
 				if (TrainManagerBase.CurrentRoute.Sections.Length > 0)

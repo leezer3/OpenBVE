@@ -1,9 +1,11 @@
-﻿namespace TrainManager.Handles
+﻿using TrainManager.Trains;
+
+namespace TrainManager.Handles
 {
 	/// <summary>A locomotive brake handle</summary>
 	public class LocoBrakeHandle : NotchedHandle
 	{
-		public LocoBrakeHandle(int max, EmergencyHandle eb, double[] delayUp, double[] delayDown)
+		public LocoBrakeHandle(int max, EmergencyHandle eb, double[] delayUp, double[] delayDown, TrainBase Train) : base (Train)
 		{
 			this.MaximumNotch = max;
 			this.EmergencyBrake = eb;
@@ -58,7 +60,7 @@
 		private AirBrakeHandleState DelayedValue;
 		private double DelayedTime;
 
-		public LocoAirBrakeHandle()
+		public LocoAirBrakeHandle(TrainBase train) : base(train)
 		{
 			this.MaximumNotch = 3;
 		}

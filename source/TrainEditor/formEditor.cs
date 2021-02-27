@@ -162,9 +162,9 @@ namespace TrainEditor {
 			numericUpDownDriverBrakeNotches.Value = Train.Handle.DriverBrakeNotches;
 			textboxPowerNotchReduceSteps.Text = Train.Handle.PowerNotchReduceSteps.ToString(Culture);
 			// cab
-			textboxX.Text = Train.Cab.X.ToString(Culture);
-			textboxY.Text = Train.Cab.Y.ToString(Culture);
-			textboxZ.Text = Train.Cab.Z.ToString(Culture);
+			textboxX.Text = Train.Cab.Driver.X.ToString(Culture);
+			textboxY.Text = Train.Cab.Driver.Y.ToString(Culture);
+			textboxZ.Text = Train.Cab.Driver.Z.ToString(Culture);
 			textboxDriverCar.Text = Train.Cab.DriverCar.ToString(Culture);
 			// car
 			textboxMotorCarMass.Text = Train.Car.MotorCarMass.ToString(Culture);
@@ -247,9 +247,9 @@ namespace TrainEditor {
 			Train.Handle.HandleBehaviour = (EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
-			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;
-			if (!SaveControlContent(textboxY, "Y", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Y)) return false;
-			if (!SaveControlContent(textboxZ, "Z", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Z)) return false;
+			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.X)) return false;
+			if (!SaveControlContent(textboxY, "Y", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.Y)) return false;
+			if (!SaveControlContent(textboxZ, "Z", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.Z)) return false;
 			if (!SaveControlContent(textboxDriverCar, "DriverCar", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Cab.DriverCar)) return false;
 			// car
 			if (!SaveControlContent(textboxMotorCarMass, "MotorCarMass", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.MotorCarMass)) return false;

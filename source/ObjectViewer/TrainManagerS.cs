@@ -28,11 +28,11 @@ namespace OpenBve {
 
 			internal Train() : base(TrainState.Available)
 			{
-				Handles.Reverser = new ReverserHandle();
-				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {});
-				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {});
-				Handles.EmergencyBrake = new EmergencyHandle();
-				Handles.HoldBrake = new HoldBrakeHandle();
+				Handles.Reverser = new ReverserHandle(this);
+				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {}, this);
+				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {}, this);
+				Handles.EmergencyBrake = new EmergencyHandle(this);
+				Handles.HoldBrake = new HoldBrakeHandle(this);
 			}
 			public override double FrontCarTrackPosition()
 			{

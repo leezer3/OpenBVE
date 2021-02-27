@@ -222,7 +222,7 @@ namespace TrainManager.SafetySystems
 				}
 				else
 				{
-					this.Train.ApplyReverser(handles.Reverser, false);
+					this.Train.Handles.Reverser.ApplyState((ReverserPosition)handles.Reverser);
 				}
 			}
 			else
@@ -246,7 +246,7 @@ namespace TrainManager.SafetySystems
 				}
 				else
 				{
-					Train.ApplyNotch(handles.PowerNotch, false, 0, true, true);
+					Train.Handles.Power.ApplyState(handles.PowerNotch, false, true);
 				}
 			}
 			else
@@ -278,8 +278,8 @@ namespace TrainManager.SafetySystems
 					}
 					else
 					{
-						this.Train.UnapplyEmergencyBrake();
-						this.Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
+						this.Train.Handles.EmergencyBrake.Release();
+						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
 					}
 				}
 				else if (handles.BrakeNotch == 1)
@@ -290,8 +290,8 @@ namespace TrainManager.SafetySystems
 					}
 					else
 					{
-						this.Train.UnapplyEmergencyBrake();
-						this.Train.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
+						this.Train.Handles.EmergencyBrake.Release();
+						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Lap);
 					}
 				}
 				else if (handles.BrakeNotch == 2)
@@ -302,8 +302,8 @@ namespace TrainManager.SafetySystems
 					}
 					else
 					{
-						this.Train.UnapplyEmergencyBrake();
-						this.Train.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
+						this.Train.Handles.EmergencyBrake.Release();
+						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
 					}
 				}
 				else if (handles.BrakeNotch == 3)
@@ -315,8 +315,8 @@ namespace TrainManager.SafetySystems
 					}
 					else
 					{
-						this.Train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
-						this.Train.ApplyEmergencyBrake();
+						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
+						this.Train.Handles.EmergencyBrake.Apply();
 					}
 				}
 				else
@@ -337,9 +337,9 @@ namespace TrainManager.SafetySystems
 						}
 						else
 						{
-							this.Train.ApplyHoldBrake(false);
-							Train.ApplyNotch(0, true, this.Train.Handles.Brake.MaximumNotch, false, true);
-							this.Train.ApplyEmergencyBrake();
+							this.Train.Handles.HoldBrake.ApplyState(false);
+							this.Train.Handles.Brake.ApplyState(this.Train.Handles.Brake.MaximumNotch, false, true);
+							this.Train.Handles.EmergencyBrake.Apply();
 						}
 					}
 					else if (handles.BrakeNotch >= 2 & handles.BrakeNotch <= this.Train.Handles.Brake.MaximumNotch + 1)
@@ -350,9 +350,9 @@ namespace TrainManager.SafetySystems
 						}
 						else
 						{
-							this.Train.UnapplyEmergencyBrake();
-							this.Train.ApplyHoldBrake(false);
-							Train.ApplyNotch(0, true, handles.BrakeNotch - 1, false, true);
+							this.Train.Handles.EmergencyBrake.Release();
+							this.Train.Handles.HoldBrake.ApplyState(false);
+							this.Train.Handles.Brake.ApplyState(handles.BrakeNotch - 1, false, true);
 						}
 					}
 					else if (handles.BrakeNotch == 1)
@@ -364,9 +364,9 @@ namespace TrainManager.SafetySystems
 						}
 						else
 						{
-							this.Train.UnapplyEmergencyBrake();
-							Train.ApplyNotch(0, true, 0, false, true);
-							this.Train.ApplyHoldBrake(true);
+							this.Train.Handles.EmergencyBrake.Release();
+							this.Train.Handles.Brake.ApplyState(0, false, true);
+							this.Train.Handles.HoldBrake.ApplyState(true);
 						}
 					}
 					else if (handles.BrakeNotch == 0)
@@ -377,9 +377,9 @@ namespace TrainManager.SafetySystems
 						}
 						else
 						{
-							this.Train.UnapplyEmergencyBrake();
-							Train.ApplyNotch(0, true, 0, false, true);
-							this.Train.ApplyHoldBrake(false);
+							this.Train.Handles.EmergencyBrake.Release();
+							this.Train.Handles.Brake.ApplyState(0, false, true);
+							this.Train.Handles.HoldBrake.ApplyState(false);
 						}
 					}
 					else
@@ -403,8 +403,8 @@ namespace TrainManager.SafetySystems
 						}
 						else
 						{
-							this.Train.ApplyHoldBrake(false);
-							this.Train.ApplyEmergencyBrake();
+							this.Train.Handles.HoldBrake.ApplyState(false);
+							this.Train.Handles.EmergencyBrake.Apply();
 						}
 					}
 					else if (handles.BrakeNotch >= 0 & handles.BrakeNotch <= this.Train.Handles.Brake.MaximumNotch | this.Train.Handles.Brake.DelayedChanges.Length == 0)
@@ -415,8 +415,8 @@ namespace TrainManager.SafetySystems
 						}
 						else
 						{
-							this.Train.UnapplyEmergencyBrake();
-							Train.ApplyNotch(0, true, handles.BrakeNotch, false, true);
+							this.Train.Handles.EmergencyBrake.Release();
+							this.Train.Handles.Brake.ApplyState(handles.BrakeNotch, false, true);
 						}
 					}
 					else

@@ -337,7 +337,7 @@ namespace OpenBve
 					Train.Handles.Reverser.Actual = (ReverserPosition)numericUpDownReverser.Value;
 					if ((int)numericUpDownPowerNotches.Value != Train.Handles.Power.MaximumNotch)
 					{
-						Train.Handles.Power = new PowerHandle((int)numericUpDownPowerNotches.Value, (int)numericUpDownPowerNotches.Value, new double[] {}, new double[] {});
+						Train.Handles.Power = new PowerHandle((int)numericUpDownPowerNotches.Value, (int)numericUpDownPowerNotches.Value, new double[] {}, new double[] {}, Train);
 					}
 					Train.Handles.Power.Driver = (int)numericUpDownPowerNotch.Value;
 					if (checkBoxAirBrake.Checked)
@@ -348,7 +348,7 @@ namespace OpenBve
 					{
 						if ((int)numericUpDownBrakeNotches.Value != Train.Handles.Brake.MaximumNotch)
 						{
-							Train.Handles.Brake = new BrakeHandle((int)numericUpDownBrakeNotches.Value, (int)numericUpDownBrakeNotches.Value, null, new double[] {}, new double[] {});
+							Train.Handles.Brake = new BrakeHandle((int)numericUpDownBrakeNotches.Value, (int)numericUpDownBrakeNotches.Value, null, new double[] {}, new double[] {}, Train);
 						}
 						Train.Handles.Brake.Driver = (int)numericUpDownBrakeNotch.Value;
 						Train.Handles.HasHoldBrake = checkBoxHoldBrake.Checked;

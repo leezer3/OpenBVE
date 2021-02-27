@@ -231,7 +231,7 @@ namespace OpenBve
 											}
 											a *= (double) TrainManager.PlayerTrain.Handles.Power.MaximumNotch;
 											int p = (int) Math.Round(a);
-											TrainManager.PlayerTrain.ApplyNotch(p, false, 0, true);
+											TrainManager.PlayerTrain.Handles.Power.ApplyState(p, false);
 										}
 										break;
 									case Translations.Command.BrakeHalfAxis:
@@ -258,22 +258,22 @@ namespace OpenBve
 													case 0:
 														TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver =
 															false;
-														TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
+														TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
 														break;
 													case 1:
 														TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver =
 															false;
-														TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
+														TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Lap);
 														break;
 													case 2:
 														TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver =
 															false;
-														TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
+														TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 														break;
 													case 3:
 														if (Interface.CurrentOptions.AllowAxisEB)
 														{
-															TrainManager.PlayerTrain.ApplyEmergencyBrake();
+															TrainManager.PlayerTrain.Handles.EmergencyBrake.Apply();
 														}
 														break;
 												}
@@ -294,15 +294,14 @@ namespace OpenBve
 													if (b > 0) b--;
 													if (b <= TrainManager.PlayerTrain.Handles.Brake.MaximumNotch)
 													{
-														TrainManager.PlayerTrain.UnapplyEmergencyBrake();
-														TrainManager.PlayerTrain.ApplyNotch(0, true, b,
-															false);
+														TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
+														TrainManager.PlayerTrain.Handles.Brake.ApplyState(b,false);
 													}
 													else
 													{
-														TrainManager.PlayerTrain.ApplyEmergencyBrake();
+														TrainManager.PlayerTrain.Handles.EmergencyBrake.Apply();
 													}
-													TrainManager.PlayerTrain.ApplyHoldBrake(q);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(q);
 												}
 												else
 												{
@@ -316,15 +315,14 @@ namespace OpenBve
 													int b = (int) Math.Round(a);
 													if (b <= TrainManager.PlayerTrain.Handles.Brake.MaximumNotch)
 													{
-														TrainManager.PlayerTrain.UnapplyEmergencyBrake();
-														TrainManager.PlayerTrain.ApplyNotch(0, true, b,
-															false);
+														TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
+														TrainManager.PlayerTrain.Handles.Brake.ApplyState(b,false);
 													}
 													else
 													{
 														if (Interface.CurrentOptions.AllowAxisEB)
 														{
-															TrainManager.PlayerTrain.ApplyEmergencyBrake();
+															TrainManager.PlayerTrain.Handles.EmergencyBrake.Apply();
 														}
 													}
 												}
@@ -360,17 +358,18 @@ namespace OpenBve
 												if (b > 0) b--;
 												if (b <= TrainManager.PlayerTrain.Handles.Brake.MaximumNotch)
 												{
-													TrainManager.PlayerTrain.UnapplyEmergencyBrake();
-													TrainManager.PlayerTrain.ApplyNotch(p, false, b, false);
+													TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(b,false);
+													TrainManager.PlayerTrain.Handles.Power.ApplyState(p,false);
 												}
 												else
 												{
 													if (Interface.CurrentOptions.AllowAxisEB)
 													{
-														TrainManager.PlayerTrain.ApplyEmergencyBrake();
+														TrainManager.PlayerTrain.Handles.EmergencyBrake.Apply();
 													}
 												}
-												TrainManager.PlayerTrain.ApplyHoldBrake(q);
+												TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(q);
 											}
 											else
 											{
@@ -390,14 +389,15 @@ namespace OpenBve
 												if (b < 0) b = 0;
 												if (b <= TrainManager.PlayerTrain.Handles.Brake.MaximumNotch)
 												{
-													TrainManager.PlayerTrain.UnapplyEmergencyBrake();
-													TrainManager.PlayerTrain.ApplyNotch(p, false, b, false);
+													TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(b,false);
+													TrainManager.PlayerTrain.Handles.Power.ApplyState(p,false);
 												}
 												else
 												{
 													if (Interface.CurrentOptions.AllowAxisEB)
 													{
-														TrainManager.PlayerTrain.ApplyEmergencyBrake();
+														TrainManager.PlayerTrain.Handles.EmergencyBrake.Apply();
 													}
 												}
 											}
@@ -411,8 +411,7 @@ namespace OpenBve
 										}
 										// reverser full axis
 										double als = Interface.CurrentControls[i].AnalogState;
-										int r = (int) Math.Round(als);
-										TrainManager.PlayerTrain.ApplyReverser(r, false);
+										TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition) (int) Math.Round(als));
 										break;
 									case Translations.Command.CameraMoveForward:
 										// camera move forward
@@ -1106,27 +1105,27 @@ namespace OpenBve
 											int b = TrainManager.PlayerTrain.Handles.Brake.Driver;
 											if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 											{
-												TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+												TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
 											}
 											else if (b == 1 & TrainManager.PlayerTrain.Handles.HasHoldBrake)
 											{
-												TrainManager.PlayerTrain.ApplyNotch(0, true, 0, false);
-												TrainManager.PlayerTrain.ApplyHoldBrake(true);
+												TrainManager.PlayerTrain.Handles.Brake.ApplyState(0,false);
+												TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 											}
 											else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 											{
-												TrainManager.PlayerTrain.ApplyHoldBrake(false);
+												TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 											}
 											else if (b > 0)
 											{
-												TrainManager.PlayerTrain.ApplyNotch(0, true, -1, true);
+												TrainManager.PlayerTrain.Handles.Brake.ApplyState(-1,true);
 											}
 											else
 											{
 												int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 												if (p < TrainManager.PlayerTrain.Handles.Power.MaximumNotch)
 												{
-													TrainManager.PlayerTrain.ApplyNotch(1, true, 0, true);
+													TrainManager.PlayerTrain.Handles.Power.ApplyState(1, true);
 												}
 											}
 										}
@@ -1139,7 +1138,7 @@ namespace OpenBve
 											int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 											if (p > 0)
 											{
-												TrainManager.PlayerTrain.ApplyNotch(-1, true, 0, true);
+												TrainManager.PlayerTrain.Handles.Power.ApplyState(-1, true);
 												TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = true;
 											}
 											else
@@ -1147,20 +1146,20 @@ namespace OpenBve
 												int b = TrainManager.PlayerTrain.Handles.Brake.Driver;
 												if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 												{
-													TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+													TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
 												}
 												else if (b == 1 & TrainManager.PlayerTrain.Handles.HasHoldBrake)
 												{
-													TrainManager.PlayerTrain.ApplyNotch(0, true, 0, false);
-													TrainManager.PlayerTrain.ApplyHoldBrake(true);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(0,false);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 												}
 												else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 												{
-													TrainManager.PlayerTrain.ApplyHoldBrake(false);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 												}
 												else if (b > 0)
 												{
-													TrainManager.PlayerTrain.ApplyNotch(0, true, -1, true);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(-1,true);
 												}
 												TrainManager.PlayerTrain.Handles.Brake.ContinuousMovement = true;
 											}
@@ -1173,7 +1172,7 @@ namespace OpenBve
 											int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 											if (p > 0)
 											{
-												TrainManager.PlayerTrain.ApplyNotch(-1, true, 0, true);
+												TrainManager.PlayerTrain.Handles.Power.ApplyState(-1,true);
 											}
 											else
 											{
@@ -1181,12 +1180,12 @@ namespace OpenBve
 												if (TrainManager.PlayerTrain.Handles.HasHoldBrake & b == 0 &
 													!TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 												{
-													TrainManager.PlayerTrain.ApplyHoldBrake(true);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 												}
 												else if (b < TrainManager.PlayerTrain.Handles.Brake.MaximumNotch)
 												{
-													TrainManager.PlayerTrain.ApplyNotch(0, true, 1, true);
-													TrainManager.PlayerTrain.ApplyHoldBrake(false);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(1,true);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 												}
 											}
 										}
@@ -1197,7 +1196,7 @@ namespace OpenBve
 										// single emergency
 										if (TrainManager.PlayerTrain.Handles.SingleHandle)
 										{
-											TrainManager.PlayerTrain.ApplyEmergencyBrake();
+											TrainManager.PlayerTrain.Handles.EmergencyBrake.Apply();
 										}
 										break;
 									case Translations.Command.PowerIncrease:
@@ -1207,7 +1206,7 @@ namespace OpenBve
 											int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 											if (p < TrainManager.PlayerTrain.Handles.Power.MaximumNotch)
 											{
-												TrainManager.PlayerTrain.ApplyNotch(1, true, 0, true);
+												TrainManager.PlayerTrain.Handles.Power.ApplyState(1,true);
 											}
 										}
 										TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = true;
@@ -1219,7 +1218,7 @@ namespace OpenBve
 											int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 											if (p > 0)
 											{
-												TrainManager.PlayerTrain.ApplyNotch(-1, true, 0, true);
+												TrainManager.PlayerTrain.Handles.Power.ApplyState(-1,true);
 											}
 										}
 										TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = true;
@@ -1235,22 +1234,22 @@ namespace OpenBve
 													(int)AirBrakeHandleState.Release &
 													!TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 												{
-													TrainManager.PlayerTrain.ApplyHoldBrake(true);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 												}
 												else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 												{
-													TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
-													TrainManager.PlayerTrain.ApplyHoldBrake(false);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Lap);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 												}
 												else if (TrainManager.PlayerTrain.Handles.Brake.Driver ==
 												         (int)AirBrakeHandleState.Lap)
 												{
-													TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 												}
 												else if (TrainManager.PlayerTrain.Handles.Brake.Driver ==
 												         (int)AirBrakeHandleState.Release)
 												{
-													TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Lap);
 												}
 											}
 											else
@@ -1259,12 +1258,12 @@ namespace OpenBve
 												if (TrainManager.PlayerTrain.Handles.HasHoldBrake & b == 0 &
 													!TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 												{
-													TrainManager.PlayerTrain.ApplyHoldBrake(true);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 												}
 												else if (b < TrainManager.PlayerTrain.Handles.Brake.MaximumNotch)
 												{
-													TrainManager.PlayerTrain.ApplyNotch(0, true, 1, true);
-													TrainManager.PlayerTrain.ApplyHoldBrake(false);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(1,true);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 												}
 											}
 										}
@@ -1278,29 +1277,29 @@ namespace OpenBve
 											{
 												if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 												{
-													TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+													TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
 												}
 												else if (TrainManager.PlayerTrain.Handles.HasHoldBrake &
 														 TrainManager.PlayerTrain.Handles.Brake.Driver ==
 														 (int)AirBrakeHandleState.Lap &
 														 !TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 												{
-													TrainManager.PlayerTrain.ApplyHoldBrake(true);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 												}
 												else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 												{
-													TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
-													TrainManager.PlayerTrain.ApplyHoldBrake(false);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 												}
 												else if (TrainManager.PlayerTrain.Handles.Brake.Driver ==
 												         (int)AirBrakeHandleState.Lap)
 												{
-													TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
 												}
 												else if (TrainManager.PlayerTrain.Handles.Brake.Driver ==
 												         (int)AirBrakeHandleState.Service)
 												{
-													TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Lap);
 												}
 											}
 											else
@@ -1308,20 +1307,20 @@ namespace OpenBve
 												int b = TrainManager.PlayerTrain.Handles.Brake.Driver;
 												if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 												{
-													TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+													TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
 												}
 												else if (b == 1 & TrainManager.PlayerTrain.Handles.HasHoldBrake)
 												{
-													TrainManager.PlayerTrain.ApplyNotch(0, true, 0, false);
-													TrainManager.PlayerTrain.ApplyHoldBrake(true);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(0,false);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 												}
 												else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 												{
-													TrainManager.PlayerTrain.ApplyHoldBrake(false);
+													TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 												}
 												else if (b > 0)
 												{
-													TrainManager.PlayerTrain.ApplyNotch(0, true, -1, true);
+													TrainManager.PlayerTrain.Handles.Brake.ApplyState(-1,true);
 												}
 											}
 										}
@@ -1364,7 +1363,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.BrakeEmergency:
 										// brake emergency
-										TrainManager.PlayerTrain.ApplyEmergencyBrake();
+										TrainManager.PlayerTrain.Handles.EmergencyBrake.Apply();
 										break;
 									case Translations.Command.DeviceConstSpeed:
 										// const speed
@@ -1377,63 +1376,66 @@ namespace OpenBve
 									case Translations.Command.PowerAnyNotch:
 										if (TrainManager.PlayerTrain.Handles.SingleHandle && TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 										{
-											TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+											TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
 										}
-										TrainManager.PlayerTrain.ApplyNotch(Interface.CurrentControls[i].Option, false, 0, !TrainManager.PlayerTrain.Handles.SingleHandle);
+										TrainManager.PlayerTrain.Handles.Brake.ApplyState(0,!TrainManager.PlayerTrain.Handles.SingleHandle);
+										TrainManager.PlayerTrain.Handles.Power.ApplyState(Interface.CurrentControls[i].Option,false);
 										break;
 									case Translations.Command.BrakeAnyNotch:
 										if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 										{
 											if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 											{
-												TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+												TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
 											}
-											TrainManager.PlayerTrain.ApplyHoldBrake(false);
+											TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 											if (Interface.CurrentControls[i].Option <= (int)AirBrakeHandleState.Release)
 											{
-												TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Release);
+												TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
 											}
 											else if (Interface.CurrentControls[i].Option == (int)AirBrakeHandleState.Lap)
 											{
-												TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
+												TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Lap);
 											}
 											else
 											{
-												TrainManager.PlayerTrain.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
+												TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 											}
 										}
 										else
 										{
 											if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 											{
-												TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+												TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
 											}
-											TrainManager.PlayerTrain.ApplyHoldBrake(false);
-											TrainManager.PlayerTrain.ApplyNotch(0, !TrainManager.PlayerTrain.Handles.SingleHandle, Interface.CurrentControls[i].Option, false);
+											TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
+											TrainManager.PlayerTrain.Handles.Brake.ApplyState(Interface.CurrentControls[i].Option, false);
+											TrainManager.PlayerTrain.Handles.Power.ApplyState(0, !TrainManager.PlayerTrain.Handles.SingleHandle);
 										}
 										break;
 									case Translations.Command.ReverserAnyPostion:
-										TrainManager.PlayerTrain.ApplyReverser(Interface.CurrentControls[i].Option, false);
+										TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)Interface.CurrentControls[i].Option);
 										break;
 									case Translations.Command.HoldBrake:
 										if (TrainManager.PlayerTrain.Handles.HasHoldBrake && (TrainManager.PlayerTrain.Handles.Brake.Driver == 0 || TrainManager.PlayerTrain.Handles.Brake.Driver == 1) && !TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 										{
-											TrainManager.PlayerTrain.ApplyNotch(0, !TrainManager.PlayerTrain.Handles.SingleHandle, 0, false);
-											TrainManager.PlayerTrain.ApplyHoldBrake(true);
+											TrainManager.PlayerTrain.Handles.Brake.ApplyState(0, false);
+											TrainManager.PlayerTrain.Handles.Power.ApplyState(0, !TrainManager.PlayerTrain.Handles.SingleHandle);
+											TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 										}
 										break;
 									case Translations.Command.ReverserForward:
 										// reverser forward
 										if (TrainManager.PlayerTrain.Handles.Reverser.Driver < ReverserPosition.Forwards)
 										{
-											TrainManager.PlayerTrain.ApplyReverser(1, true);
+											TrainManager.PlayerTrain.Handles.Reverser.ApplyState(1, true);
 										}
 										break;
 									case Translations.Command.ReverserBackward:
 										// reverser backward
 										if (TrainManager.PlayerTrain.Handles.Reverser.Driver > ReverserPosition.Reverse)
 										{
-											TrainManager.PlayerTrain.ApplyReverser(-1, true);
+											TrainManager.PlayerTrain.Handles.Reverser.ApplyState(-1, true);
 										}
 										break;
 									case Translations.Command.HornPrimary:
