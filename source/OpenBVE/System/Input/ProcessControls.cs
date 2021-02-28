@@ -1331,16 +1331,16 @@ namespace OpenBve
 										{
 											if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)AirBrakeHandleState.Lap)
 											{
-												TrainManager.PlayerTrain.ApplyLocoAirBrakeHandle(AirBrakeHandleState.Service);
+												TrainManager.PlayerTrain.Handles.LocoBrake.ApplyState(AirBrakeHandleState.Service);
 											}
 											else if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)AirBrakeHandleState.Release)
 											{
-												TrainManager.PlayerTrain.ApplyLocoAirBrakeHandle(AirBrakeHandleState.Lap);
+												TrainManager.PlayerTrain.Handles.LocoBrake.ApplyState(AirBrakeHandleState.Lap);
 											}
 										}
 										else
 										{
-											TrainManager.PlayerTrain.ApplyLocoBrakeNotch(1, true);
+											TrainManager.PlayerTrain.Handles.LocoBrake.ApplyState(1, true);
 										}
 										
 										break;
@@ -1349,16 +1349,16 @@ namespace OpenBve
 										{
 											if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)AirBrakeHandleState.Lap)
 											{
-												TrainManager.PlayerTrain.ApplyLocoAirBrakeHandle(AirBrakeHandleState.Release);
+												TrainManager.PlayerTrain.Handles.LocoBrake.ApplyState(AirBrakeHandleState.Release);
 											}
 											else if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)AirBrakeHandleState.Service)
 											{
-												TrainManager.PlayerTrain.ApplyLocoAirBrakeHandle(AirBrakeHandleState.Lap);
+												TrainManager.PlayerTrain.Handles.LocoBrake.ApplyState(AirBrakeHandleState.Lap);
 											}
 										}
 										else
 										{
-											TrainManager.PlayerTrain.ApplyLocoBrakeNotch(-1, true);
+											TrainManager.PlayerTrain.Handles.LocoBrake.ApplyState(-1, true);
 										}
 										break;
 									case Translations.Command.BrakeEmergency:
