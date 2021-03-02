@@ -690,44 +690,8 @@ namespace MechanikRouteParser
 			o.TextureIndex = textureIndex;
 
 			MeshBuilder Builder = new MeshBuilder(Plugin.CurrentHost);
-
-			Vector3 min = new Vector3(Points[0].X, Points[0].Y, Points[0].Z);
-			Vector3 max = new Vector3(Points[0].X, Points[0].Y, Points[0].Z);
 			int v = Builder.Vertices.Length;
 			Array.Resize(ref Builder.Vertices, v + Points.Count);
-			
-			for (int i = 0; i < Points.Count; i++)
-			{
-				Builder.Vertices[v + i] = new Vertex(Points[i]);
-				if (Points[i].X > min.X)
-				{
-					min.X = Points[i].X;
-					
-				}
-				if (Points[i].X < max.X)
-				{
-					max.X = Points[i].X;
-				}
-				if (Points[i].Y > min.Y)
-				{
-					min.Y = Points[i].Y;
-				}
-				if (Points[i].Y < max.Y)
-				{
-					max.Y = Points[i].Y;
-				}
-				if (Points[i].Z > min.Z)
-				{
-					min.Z = Points[i].Z;
-				}
-				if (Points[i].Z < max.Z)
-				{
-					max.Z = Points[i].Z;
-				}
-			}
-			//size of face
-			//BUG: Doesn't take into account diagonal faces or anything of that nature
-			Vector3 faceSize = max - min;
 			int fl = Builder.Faces.Length;
 			Array.Resize(ref Builder.Faces, Builder.Faces.Length + 1);
 			Builder.Faces[fl] = new MeshFace { Vertices = new MeshFaceVertex[Points.Count] , Flags = MeshFace.Face2Mask };
@@ -735,93 +699,11 @@ namespace MechanikRouteParser
 			{
 				Builder.Faces[fl].Vertices[i].Index = (ushort) i;
 				Builder.Faces[fl].Vertices[i].Normal = new Vector3();
+				Builder.Vertices[v + i] = new Vertex(Points[i]);
+				Builder.Vertices[v + i].TextureCoordinates = FindTextureCoordinate(i, firstPoint, Points, scaleFactor, sx, sy, t.Width, t.Height);
 			}
 
-			double tc1 = sx, tc2 = sy;
-			if (horizontal)
-			{
-				tc2 = frontSize.X / (t.Width * sy * scaleFactor);
-				tc1 = frontSize.Z / (t.Height * sx * scaleFactor);
-				firstPoint = 0;
-			}
-			else
-			{
-				if (frontSize.X == 0)
-				{
-					tc1 = frontSize.Z / (t.Width * sx * scaleFactor);
-					tc2 = frontSize.Y / (t.Height * sy * scaleFactor);
-				}
-				else if (frontSize.Y == 0)
-				{
-					//BUG: Not sure why this needs negating at the minute.....
-					tc1 = frontSize.X / (t.Width * sx * scaleFactor);
-					tc2 = frontSize.Z / (t.Height * sy * scaleFactor);
-					firstPoint = 0;
-				}
-				else if (frontSize.Z == 0)
-				{
-					tc2 = frontSize.X / (t.Width * sx * scaleFactor);
-					tc1 = frontSize.Y / (t.Height * sy * scaleFactor);
-				}
-				else
-				{
-					tc1 = -tc1;
-					tc2 = -tc2;
-				}
-			}
-
-			if (t.Path.EndsWith("prz_wl.bmp", StringComparison.InvariantCultureIgnoreCase))
-			{
-				int test = 0;
-				test++;
-			}
-			/*
-			 * BUG: Not sure this is right, but it makes a bunch more stuff work OK
-			 */
-			for (int i = 0; i < Points.Count; i++)
-			{
-				if (firstPoint >= Points.Count)
-				{
-					firstPoint = 0;
-				}
-				switch (i)
-				{
-					case 0:
-						if (!horizontal)
-						{
-							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc1, 0);
-						}
-						else
-						{
-							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc2, 0);
-						}
-						break;
-					case 1:
-						if (!horizontal)
-						{
-							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc1, tc2);
-						}
-						else
-						{
-							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(tc2, tc1);
-						}
-						break;
-					case 2:
-						if (!horizontal)
-						{
-							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(0, tc2);
-						}
-						else
-						{
-							Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(0, tc1);
-						}
-						break;
-					case 3:
-						Builder.Vertices[firstPoint].TextureCoordinates = new Vector2(0, 0);
-						break;
-				}
-				firstPoint++;
-			}
+			
 			Builder.Materials = new [] { new Material(t.Path) };
 			if (transparent)
 			{
@@ -1005,5 +887,42 @@ namespace MechanikRouteParser
 					return false;
 			}
 		}
+
+		private static Vector2 FindTextureCoordinate(int pointIndex, int firstPoint, List<Vector3> pointList, double scale, double u, double v, double textureWidth, double textureHeight)
+		{
+			if (firstPoint > pointList.Count)
+			{
+				firstPoint = 0;
+			}
+			Vector3 V = new Vector3(pointList[1] - pointList[0]);
+			Vector3 U_o = new Vector3(pointList[2] - pointList[1]);
+			Vector3 U = U_o - Vector3.Project(U_o, V);
+			Vector3 t1 = Vector3.Project(pointList[pointIndex] - pointList[firstPoint], U);
+
+			double coordinatesX = 0.0;
+			if (t1.Norm() != 0.0)
+			{
+				Vector3 t1a = new Vector3(t1 / t1.Norm());
+				Vector3 ua = new Vector3(U / U.Norm());
+				Vector3 newVect = t1a * ua;
+				double number = t1.Norm() * newVect.X + t1.Norm() * newVect.Y + t1.Norm() * newVect.Z;
+				coordinatesX = number / scale / v / textureWidth;
+			}
+
+			Vector3 t2 = Vector3.Project(pointList[pointIndex] - pointList[firstPoint], V);
+			
+			double coordinatesY = 0.0;
+			if (t2.Norm() != 0.0)
+			{
+				Vector3 t2a = new Vector3(t2 / t2.Norm());
+				Vector3 va = new Vector3(V / V.Norm());
+				Vector3 newVect = t2a * va;
+				double number = -t2.Norm() * newVect.X + t2.Norm() * newVect.Y + t2.Norm() * newVect.Z;
+				coordinatesY = number / scale / u / textureHeight;
+			}
+			
+			return new Vector2(coordinatesX, -coordinatesY);
+		}
+
 	}
 }
