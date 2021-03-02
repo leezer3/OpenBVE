@@ -384,7 +384,7 @@ namespace OpenBve.Graphics.Renderers
 				foreach (int index in TouchElement.ControlIndices)
 				{
 					Interface.CurrentControls[index].AnalogState = 1.0;
-					Interface.CurrentControls[index].DigitalState = Interface.DigitalControlState.Pressed;
+					Interface.CurrentControls[index].DigitalState = DigitalControlState.Pressed;
 					MainLoop.AddControlRepeat(index);
 				}
 			}
@@ -439,7 +439,7 @@ namespace OpenBve.Graphics.Renderers
 					foreach (int index in TouchElement.ControlIndices)
 					{
 						Interface.CurrentControls[index].AnalogState = 0.0;
-						Interface.CurrentControls[index].DigitalState = Interface.DigitalControlState.Released;
+						Interface.CurrentControls[index].DigitalState = DigitalControlState.Released;
 						MainLoop.RemoveControlRepeat(index);
 					}
 				}

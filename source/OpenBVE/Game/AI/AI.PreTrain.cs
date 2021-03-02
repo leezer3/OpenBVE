@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Trains;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -9,9 +10,9 @@ namespace OpenBve
 		{
 			private double TimeLastProcessed;
 			private double CurrentInterval;
-			private readonly TrainManager.Train Train;
+			private readonly TrainBase Train;
 
-			internal BogusPretrainAI(TrainManager.Train train)
+			internal BogusPretrainAI(TrainBase train)
 			{
 				this.TimeLastProcessed = 0.0;
 				this.CurrentInterval = 1.0;

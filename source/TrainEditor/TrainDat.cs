@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using OpenBveApi.Math;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -159,15 +160,11 @@ namespace TrainEditor {
 		
 		// cab
 		/// <summary>The Cab section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
-		internal class Cab {
-			internal double X;
-			internal double Y;
-			internal double Z;
+		internal class Cab
+		{
+			internal Vector3 Driver;
 			internal double DriverCar;
 			internal Cab() {
-				this.X = 0.0;
-				this.Y = 0.0;
-				this.Z = 0.0;
 				this.DriverCar = 0;
 			}
 		}
@@ -573,13 +570,13 @@ namespace TrainEditor {
 							double a; if (double.TryParse(Lines[i], System.Globalization.NumberStyles.Float, Culture, out a)) {
 								switch (n) {
 									case 0:
-										t.Cab.X = a;
+										t.Cab.Driver.X = a;
 										break;
 									case 1:
-										t.Cab.Y = a;
+										t.Cab.Driver.Y = a;
 										break;
 									case 2:
-										t.Cab.Z = a;
+										t.Cab.Driver.Z = a;
 										break;
 									case 3:
 										t.Cab.DriverCar = (int)Math.Round(a);
@@ -836,9 +833,9 @@ namespace TrainEditor {
 			b.AppendLine(t.Handle.DriverPowerNotches.ToString(Culture).PadRight(n, ' ') + "; DriverPowerNotches");
 			b.AppendLine(t.Handle.DriverBrakeNotches.ToString(Culture).PadRight(n, ' ') + "; DriverBrakeNotches");
 			b.AppendLine("#CAB");
-			b.AppendLine(t.Cab.X.ToString(Culture).PadRight(n, ' ') + "; X");
-			b.AppendLine(t.Cab.Y.ToString(Culture).PadRight(n, ' ') + "; Y");
-			b.AppendLine(t.Cab.Z.ToString(Culture).PadRight(n, ' ') + "; Z");
+			b.AppendLine(t.Cab.Driver.X.ToString(Culture).PadRight(n, ' ') + "; X");
+			b.AppendLine(t.Cab.Driver.Y.ToString(Culture).PadRight(n, ' ') + "; Y");
+			b.AppendLine(t.Cab.Driver.Z.ToString(Culture).PadRight(n, ' ') + "; Z");
 			b.AppendLine(t.Cab.DriverCar.ToString(Culture).PadRight(n, ' ') + "; DriverCar");
 			b.AppendLine("#CAR");
 			b.AppendLine(t.Car.MotorCarMass.ToString(Culture).PadRight(n, ' ') + "; MotorCarMass");

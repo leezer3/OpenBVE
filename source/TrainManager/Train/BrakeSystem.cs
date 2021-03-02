@@ -4,7 +4,7 @@ using TrainManager.Handles;
 
 namespace TrainManager.Trains
 {
-	public abstract partial class TrainBase
+	public partial class TrainBase
 	{
 		/// <summary>Updates the brake system for the entire train</summary>
 		/// <param name="TimeElapsed">The frame time elapsed</param>

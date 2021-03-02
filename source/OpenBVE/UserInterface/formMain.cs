@@ -1442,10 +1442,10 @@ namespace OpenBve {
 										//Bail-off lever, starts at negative
 										continue;
 									}
-								Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								Interface.CurrentControls[j].Method = ControlMethod.RailDriver;
 								}
 								Interface.CurrentControls[j].Device = guid;
-								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
+								Interface.CurrentControls[j].Component = JoystickComponent.Axis;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = -1;
 								radiobuttonJoystick.Focus();
@@ -1457,10 +1457,10 @@ namespace OpenBve {
 							{
 								if (railDriver)
 								{
-									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+									Interface.CurrentControls[j].Method = ControlMethod.RailDriver;
 								}
 								Interface.CurrentControls[j].Device = guid;
-								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
+								Interface.CurrentControls[j].Component = JoystickComponent.Axis;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = 1;
 								radiobuttonJoystick.Focus();
@@ -1476,10 +1476,10 @@ namespace OpenBve {
 							{
 								if (railDriver)
 								{
-									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+									Interface.CurrentControls[j].Method = ControlMethod.RailDriver;
 								}
 								Interface.CurrentControls[j].Device = guid;
-								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
+								Interface.CurrentControls[j].Component = JoystickComponent.Button;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = 1;
 								radiobuttonJoystick.Focus();
@@ -1495,7 +1495,7 @@ namespace OpenBve {
 							if (hat.Position != HatPosition.Centered)
 							{
 								Interface.CurrentControls[j].Device = guid;
-								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Hat;
+								Interface.CurrentControls[j].Component = JoystickComponent.Hat;
 								Interface.CurrentControls[j].Element = i;
 								Interface.CurrentControls[j].Direction = (int)hat.Position;
 								radiobuttonJoystick.Focus();

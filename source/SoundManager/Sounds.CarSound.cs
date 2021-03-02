@@ -1,5 +1,7 @@
 ﻿using System;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
+using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 
 namespace SoundManager
@@ -16,7 +18,26 @@ namespace SoundManager
 		/// <summary>The target volume of the sound</summary>
 		/// <remarks>Used when crossfading between multiple sounds of the same type</remarks>
 		public double TargetVolume;
-		
+
+		public CarSound(HostInterface currentHost, string soundFile, double radius, Vector3 position)
+		{
+			SoundHandle handle;
+			currentHost.RegisterSound(soundFile, radius, out handle);
+			Buffer = handle as SoundBuffer;
+			this.Position = position;
+		}
+
+		/// <summary>Creates a new car sound</summary>
+		/// <param name="handle">The API handle to the sound buffer</param>
+		/// <param name="Position">The position that the sound is emitted from within the car</param>
+		/// <returns>The new car sound</returns>
+		public CarSound(SoundHandle handle, Vector3 Position)
+		{
+			this.Buffer = handle as SoundBuffer;
+			this.Position = Position;
+			this.Source = null;
+		}
+
 		/// <summary>Creates a new car sound</summary>
 		/// <param name="buffer">The sound buffer</param>
 		/// <param name="Position">The position that the sound is emitted from within the car</param>

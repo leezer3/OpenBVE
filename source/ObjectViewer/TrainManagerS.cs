@@ -5,6 +5,11 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
+using LibRender2;
+using OpenBveApi;
+using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
+using OpenBveApi.Trains;
 using TrainManager;
 using TrainManager.Handles;
 using TrainManager.Trains;
@@ -12,18 +17,22 @@ using TrainManager.Trains;
 namespace OpenBve {
 	internal class TrainManager : TrainManagerBase {
 		
+		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options, FileSystem fileSystem) : base(host, renderer, options, fileSystem)
+		{
+		}
+
 		internal class Train : TrainBase
 		{
 
 			internal bool SafetySystemPlugin;
 
-			internal Train()
+			internal Train() : base(TrainState.Available)
 			{
-				Handles.Reverser = new ReverserHandle();
-				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {});
-				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {});
-				Handles.EmergencyBrake = new EmergencyHandle();
-				Handles.HoldBrake = new HoldBrakeHandle();
+				Handles.Reverser = new ReverserHandle(this);
+				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {}, this);
+				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {}, this);
+				Handles.EmergencyBrake = new EmergencyHandle(this);
+				Handles.HoldBrake = new HoldBrakeHandle(this);
 			}
 			public override double FrontCarTrackPosition()
 			{
@@ -35,10 +44,5 @@ namespace OpenBve {
 				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
 			}
 		}
-
-		// trains
-		internal static Train[] Trains = new Train[] { };
-		internal static Train PlayerTrain = new Train();
-
 	}
 }

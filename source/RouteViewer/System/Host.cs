@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -12,6 +12,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2.MessageManager;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
@@ -162,16 +163,15 @@ namespace OpenBve
 			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 		
-		/// <summary>Registers a texture and returns a handle to the texture.</summary>
-		/// <param name="path">The path to the file or folder that contains the texture.</param>
-		/// <param name="parameters">The parameters that specify how to process the texture.</param>
-		/// <param name="handle">Receives the handle to the texture.</param>
-		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Texture data;
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
+					if (loadTexture)
+					{
+						LoadTexture(data, OpenGlTextureWrapMode.ClampClamp);
+					}
 					return true;
 				}
 			} else {
@@ -463,6 +463,70 @@ namespace OpenBve
 		{
 			Interface.AddMessage(MessageType.Warning, false, "Track Following Objects are not shown in Route Viewer. Please test using the main simulation.");
 			return null;
+		}
+
+		public override AbstractTrain[] Trains
+		{
+			get
+			{
+				// ReSharper disable once CoVariantArrayConversion
+				return Program.TrainManager.Trains;
+			}
+		}
+
+		public override AbstractTrain ClosestTrain(AbstractTrain Train)
+		{
+			TrainBase baseTrain = Train as TrainBase;
+			AbstractTrain closestTrain = null;
+			double bestLocation = double.MaxValue;
+			if(baseTrain != null)
+			{
+				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+				{
+					if (Program.TrainManager.Trains[i] != baseTrain & Program.TrainManager.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
+					{
+						int c = Program.TrainManager.Trains[i].Cars.Length - 1;
+						double z = Program.TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - Program.TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * Program.TrainManager.Trains[i].Cars[c].Length;
+						if (z >= baseTrain.FrontCarTrackPosition() & z < bestLocation)
+						{
+							bestLocation = z;
+							closestTrain = Program.TrainManager.Trains[i];
+						}
+					}
+				}
+			}
+			return closestTrain;
+		}
+
+		public override AbstractTrain ClosestTrain(double TrackPosition)
+		{
+			AbstractTrain closestTrain = null;
+			double trainDistance = double.MaxValue;
+			for (int j = 0; j < Program.TrainManager.Trains.Length; j++)
+			{
+				if (Program.TrainManager.Trains[j].State == TrainState.Available)
+				{
+					double distance;
+					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
+					{
+						distance = TrackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
+					}
+					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
+					{
+						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
+					}
+					else
+					{
+						distance = 0;
+					}
+					if (distance < trainDistance)
+					{
+						closestTrain = Program.TrainManager.Trains[j];
+						trainDistance = distance;
+					}
+				}
+			}
+			return closestTrain;
 		}
 
 		public Host() : base(HostApplication.RouteViewer)
