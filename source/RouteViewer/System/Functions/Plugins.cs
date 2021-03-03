@@ -64,7 +64,7 @@ namespace OpenBve
 #endif
 							continue;
 						}
-						bool iruntime = false;
+						bool iruntime = false, itrain = false;
 						foreach (Type type in types) {
 							if (type.FullName == null)
 							{
@@ -85,11 +85,14 @@ namespace OpenBve
 							if (type.IsSubclassOf(typeof(OpenBveApi.Routes.RouteInterface))) {
 								plugin.Route = (OpenBveApi.Routes.RouteInterface)assembly.CreateInstance(type.FullName);
 							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Trains.TrainInterface))) {
+								itrain = true;
+							}
 						}
 						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Route != null) {
 							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
 							list.Add(plugin);
-						} else if (!iruntime) {
+						} else if (!iruntime && !itrain) {
 							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
 							builder.AppendLine();
 						}
