@@ -385,18 +385,29 @@ namespace OpenBve
 					}
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
-					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;trasa.dat|CSV/RW files|*.csv;*.rw|Mechanik Routes|trasa.dat|All files|*";
+					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|All files|*";
 					if (Dialog.ShowDialog() == DialogResult.OK)
 					{
+						
 						Application.DoEvents();
 						CurrentlyLoading = true;
 						CurrentRouteFile = Dialog.FileName;
-						if (LoadRoute())
+						bool canLoad = false;
+						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+						{
+							if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
+							{
+								canLoad = true;
+								break;
+							}
+						}
+						if (canLoad && LoadRoute())
 						{
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
 						else
 						{
+							MessageBox.Show("No plugins found capable of loading routefile: " +Environment.NewLine + CurrentRouteFile);
 							Renderer.Camera.Alignment.Yaw = 0.0;
 							Renderer.Camera.Alignment.Pitch = 0.0;
 							Renderer.Camera.Alignment.Roll = 0.0;

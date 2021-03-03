@@ -24,6 +24,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
@@ -73,8 +74,21 @@ namespace MechanikRouteParser
 	    /// <returns>Whether the plugin can load the specified route.</returns>
 	    public override bool CanLoadRoute(string path)
 	    {
-		    if (path.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase))
+			if (path.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase))
 		    {
+			    if (File.ReadLines(path).Count() < 800)
+			    {
+					/*
+					 * Slightly hacky check:
+					 * The original Mechanik download contained a route generator.
+					 * All this did was to append various module files to generate a
+					 * final route.
+					 *
+					 * If we have less than ~800 lines, it's not a complete route, but
+					 * a module instead.
+					 */
+				    return false;
+			    }
 			    return true;
 		    }
 			return false;
@@ -103,13 +117,20 @@ namespace MechanikRouteParser
 		    {
 				Parser parser = new Parser();
 				parser.ParseRoute(path, PreviewOnly);
+				if (PreviewOnly && CurrentRoute.Stations.Length == 0)
+				{
+					route = null;
+					CurrentHost.AddMessage(MessageType.Error, false, "No stations were found in the following Mechanik routefile: " + path + Environment.NewLine + Environment.NewLine + "This is most likely a module file.");
+					IsLoading = false;
+					return false;
+				}
 				IsLoading = false;
 			    return true;
 		    }
 		    catch(Exception ex)
 		    {
 			    route = null;
-			    CurrentHost.AddMessage(MessageType.Error, false, "An unexpected error occured whilst attempting to load the following routefile: " + path);
+			    CurrentHost.AddMessage(MessageType.Error, false, "An unexpected error occured whilst attempting to load the following Mechanik routefile: " + path);
 			    IsLoading = false;
 			    LastException = ex;
 			    return false;

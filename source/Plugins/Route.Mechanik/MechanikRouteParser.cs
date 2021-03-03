@@ -24,10 +24,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using System.Text.RegularExpressions;
-using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -36,6 +36,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.World;
 using RouteManager2.Events;
 using RouteManager2.Stations;
+using Path = OpenBveApi.Path;
 
 namespace MechanikRouteParser
 {
@@ -49,7 +50,7 @@ namespace MechanikRouteParser
 
 		internal void ParseRoute(string routeFile, bool PreviewOnly)
 		{
-			if (!System.IO.File.Exists(routeFile))
+			if (!File.Exists(routeFile))
 			{
 				return;
 			}
@@ -59,10 +60,19 @@ namespace MechanikRouteParser
 			AvailableTextures = new Dictionary<int, MechanikTexture>();
 			AvailableSounds = new Dictionary<int, SoundHandle>();
 			currentRouteData = new RouteData();
+			if(PreviewOnly)
+			{
+				string routeImage = Path.CombineFile(RouteFolder, "laduj_01.jpg");
+				if (File.Exists(routeImage))
+				{
+					Plugin.CurrentRoute.Image = routeImage;
+				}
+
+			}
 			//Load texture list
 			RouteFolder = System.IO.Path.GetDirectoryName(routeFile);
 			string tDat = Path.CombineFile(RouteFolder, "tekstury.dat");
-			if (!System.IO.File.Exists(tDat))
+			if (!File.Exists(tDat))
 			{
 				/*
 				 * TODO: Separate into a function
@@ -70,15 +80,23 @@ namespace MechanikRouteParser
 				 * Thus, we will need to keep a search list for both the trasa and tekstury files
 				 */
 				tDat = Path.CombineFile(RouteFolder, "s80_text.dat"); //S80 U-Bahn
-				if (!System.IO.File.Exists(tDat))
+				if (!File.Exists(tDat))
 				{
 					return;
 				}
 			}
 			LoadTextureList(tDat);
 			string sDat = Path.CombineFile(RouteFolder, "dzwieki.dat");
+			if (!File.Exists(sDat))
+			{
+				sDat = Path.CombineFile(RouteFolder, "s80_snd.dat"); //S80 U-Bahn
+				if (!File.Exists(tDat))
+				{
+					return;
+				}
+			}
 			LoadSoundList(sDat);
-			string[] routeLines = System.IO.File.ReadAllLines(routeFile);
+			string[] routeLines = File.ReadAllLines(routeFile);
 			double yOffset = 0.0;
 			for (int i = 0; i < routeLines.Length; i++)
 			{

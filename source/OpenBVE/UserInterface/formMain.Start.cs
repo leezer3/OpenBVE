@@ -241,13 +241,20 @@ namespace OpenBve
 									break;
 								case ".dat":
 									fileName = System.IO.Path.GetFileName(Files[i]);
-									if (fileName == null || fileName.ToLowerInvariant() != "trasa.dat")
+									if (fileName == null || fileName.ToLowerInvariant() == "train.dat")
 									{
 										continue;
 									}
-									Item = listviewRouteFiles.Items.Add(fileName);
-									Item.ImageKey = @"mechanik";
-									Item.Tag = Files[i];
+
+									for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+									{
+										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(fileName))
+										{
+											Item = listviewRouteFiles.Items.Add(fileName);
+											Item.ImageKey = @"mechanik";
+											Item.Tag = Files[i];
+										}
+									}
 									break;
 							}
 						}
