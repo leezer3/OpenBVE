@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -10,9 +11,9 @@ namespace OpenBveApi.Objects
 	public class MeshBuilder
 	{
 		/// <summary>The vertices</summary>
-		public VertexTemplate[] Vertices;
+		public List<VertexTemplate> Vertices;
 		/// <summary>The faces</summary>
-		public MeshFace[] Faces;
+		public List<MeshFace> Faces;
 		/// <summary>The materials present</summary>
 		public Material[] Materials;
 		/// <summary>The transform matrix to be applied</summary>
@@ -29,8 +30,8 @@ namespace OpenBveApi.Objects
 		public MeshBuilder(Hosts.HostInterface Host)
 		{
 			this.currentHost = Host;
-			this.Vertices = new VertexTemplate[] {};
-			this.Faces = new MeshFace[] { };
+			this.Vertices = new List<VertexTemplate>();
+			this.Faces = new List<MeshFace>();
 			this.Materials = new[] {new Material()};
 			this.isCylinder = false;
 		}
@@ -40,25 +41,25 @@ namespace OpenBveApi.Objects
 		{
 			if (TransformMatrix != Matrix4D.NoTransformation)
 			{
-				for (int i = 0; i < Vertices.Length; i++)
+				for (int i = 0; i < Vertices.Count; i++)
 				{
 					Vertices[i].Coordinates.Transform(TransformMatrix);
 				}
 			}
-			if (Faces.Length != 0)
+			if (Faces.Count != 0)
 			{
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize(ref Object.Mesh.Faces, mf + Faces.Length);
+				Array.Resize(ref Object.Mesh.Faces, mf + Faces.Count);
 				Array.Resize(ref Object.Mesh.Materials, mm + Materials.Length);
-				Array.Resize(ref Object.Mesh.Vertices, mv + Vertices.Length);
-				for (int i = 0; i < Vertices.Length; i++)
+				Array.Resize(ref Object.Mesh.Vertices, mv + Vertices.Count);
+				for (int i = 0; i < Vertices.Count; i++)
 				{
 					Object.Mesh.Vertices[mv + i] = Vertices[i];
 				}
 
-				for (int i = 0; i < Faces.Length; i++)
+				for (int i = 0; i < Faces.Count; i++)
 				{
 					Object.Mesh.Faces[mf + i] = Faces[i];
 					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
@@ -142,7 +143,6 @@ namespace OpenBveApi.Objects
 						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
 					}
 
-					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
 					Object.Mesh.Materials[mm + i].BlendMode = Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Materials[i].GlowAttenuationData;
 					Object.Mesh.Materials[mm + i].WrapMode = Materials[i].WrapMode;
@@ -153,7 +153,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Translates the MeshBuilder by the given values</summary>
 		public void ApplyTranslation(double x, double y, double z)
 		{
-			for (int i = 0; i < Vertices.Length; i++)
+			for (int i = 0; i < Vertices.Count; i++)
 			{
 				Vertices[i].Coordinates.X += x;
 				Vertices[i].Coordinates.Y += y;
@@ -170,14 +170,14 @@ namespace OpenBveApi.Objects
 			float rx2 = rx * rx;
 			float ry2 = ry * ry;
 			float rz2 = rz * rz;
-			for (int i = 0; i < Vertices.Length; i++)
+			for (int i = 0; i < Vertices.Count; i++)
 			{
 				Vertices[i].Coordinates.X *= x;
 				Vertices[i].Coordinates.Y *= y;
 				Vertices[i].Coordinates.Z *= z;
 			}
 
-			for (int i = 0; i < Faces.Length; i++)
+			for (int i = 0; i < Faces.Count; i++)
 			{
 				for (int j = 0; j < Faces[i].Vertices.Length; j++)
 				{
@@ -197,7 +197,7 @@ namespace OpenBveApi.Objects
 
 			if (x * y * z < 0.0)
 			{
-				for (int i = 0; i < Faces.Length; i++)
+				for (int i = 0; i < Faces.Count; i++)
 				{
 					Faces[i].Flip();
 				}
@@ -209,12 +209,12 @@ namespace OpenBveApi.Objects
 		{
 			double cosa = System.Math.Cos(Angle);
 			double sina = System.Math.Sin(Angle);
-			for (int i = 0; i < Vertices.Length; i++)
+			for (int i = 0; i < Vertices.Count; i++)
 			{
 				Vertices[i].Coordinates.Rotate(Rotation, cosa, sina);
 			}
 
-			for (int i = 0; i < Faces.Length; i++)
+			for (int i = 0; i < Faces.Count; i++)
 			{
 				for (int j = 0; j < Faces[i].Vertices.Length; j++)
 				{
@@ -226,7 +226,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Mirrors the MeshBuilder using the given parameters</summary>
 		public void ApplyMirror(bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
 		{
-			for (int i = 0; i < Vertices.Length; i++)
+			for (int i = 0; i < Vertices.Count; i++)
 			{
 				if (vX)
 				{
@@ -241,7 +241,7 @@ namespace OpenBveApi.Objects
 					Vertices[i].Coordinates.Z *= -1;
 				}
 			}
-			for (int i = 0; i < Faces.Length; i++)
+			for (int i = 0; i < Faces.Count; i++)
 			{
 				for (int j = 0; j < Faces[i].Vertices.Length; j++)
 				{
@@ -275,7 +275,7 @@ namespace OpenBveApi.Objects
 
 			if (numFlips % 2 != 0)
 			{
-				for (int i = 0; i < Faces.Length; i++)
+				for (int i = 0; i < Faces.Count; i++)
 				{
 					Array.Reverse(Faces[i].Vertices);
 				}
@@ -285,7 +285,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Shears the MeshBuilder along the given vectors</summary>
 		public void ApplyShear(Vector3 d, Vector3 s, double r)
 		{
-			for (int j = 0; j < Vertices.Length; j++)
+			for (int j = 0; j < Vertices.Count; j++)
 			{
 				double n = r * (d.X * Vertices[j].Coordinates.X + d.Y * Vertices[j].Coordinates.Y + d.Z * Vertices[j].Coordinates.Z);
 				Vertices[j].Coordinates.X += s.X * n;
@@ -293,7 +293,7 @@ namespace OpenBveApi.Objects
 				Vertices[j].Coordinates.Z += s.Z * n;
 			}
 
-			for (int j = 0; j < Faces.Length; j++)
+			for (int j = 0; j < Faces.Count; j++)
 			{
 				for (int k = 0; k < Faces[j].Vertices.Length; k++)
 				{

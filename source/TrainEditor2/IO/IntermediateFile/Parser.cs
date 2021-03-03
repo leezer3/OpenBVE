@@ -11,6 +11,10 @@ using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
+using TrainManager.BrakeSystems;
+using TrainManager.Car;
+using TrainManager.Handles;
+using TrainManager.SafetySystems;
 
 namespace TrainEditor2.IO.IntermediateFile
 {
@@ -36,7 +40,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				Cab = ParseCabNode(parent.Element("Cab")),
 				Device = ParseDeviceNode(parent.Element("Device")),
 				Cars = new ObservableCollection<Car>(parent.XPathSelectElements("Cars/Car").Select(ParseCarNode)),
-				Couplers = new ObservableCollection<Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode))
+				Couplers = new ObservableCollection<Models.Trains.Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode))
 			};
 		}
 
@@ -48,8 +52,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				PowerNotches = (int)parent.Element("PowerNotches"),
 				BrakeNotches = (int)parent.Element("BrakeNotches"),
 				PowerNotchReduceSteps = (int)parent.Element("PowerNotchReduceSteps"),
-				HandleBehaviour = (Handle.EbHandleBehaviour)Enum.Parse(typeof(Handle.EbHandleBehaviour), (string)parent.Element("EbHandleBehaviour")),
-				LocoBrake = (Handle.LocoBrakeType)Enum.Parse(typeof(Handle.LocoBrakeType), (string)parent.Element("LocoBrakeType")),
+				HandleBehaviour = (EbHandleBehaviour)Enum.Parse(typeof(EbHandleBehaviour), (string)parent.Element("EbHandleBehaviour")),
+				LocoBrake = (LocoBrakeType)Enum.Parse(typeof(LocoBrakeType), (string)parent.Element("LocoBrakeType")),
 				LocoBrakeNotches = (int)parent.Element("LocoBrakeNotches"),
 				DriverPowerNotches = (int)parent.Element("DriverPowerNotches"),
 				DriverBrakeNotches = (int)parent.Element("DriverBrakeNotches")
@@ -73,16 +77,16 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Device
 			{
-				Ats = (Device.AtsModes)Enum.Parse(typeof(Device.AtsModes), (string)parent.Element("Ats")),
-				Atc = (Device.AtcModes)Enum.Parse(typeof(Device.AtcModes), (string)parent.Element("Atc")),
+				Ats = (AtsModes)Enum.Parse(typeof(AtsModes), (string)parent.Element("Ats")),
+				Atc = (AtcModes)Enum.Parse(typeof(AtcModes), (string)parent.Element("Atc")),
 				Eb = (bool)parent.Element("Eb"),
 				ConstSpeed = (bool)parent.Element("ConstSpeed"),
 				HoldBrake = (bool)parent.Element("HoldBrake"),
-				ReAdhesionDevice = (Device.ReAdhesionDevices)Enum.Parse(typeof(Device.ReAdhesionDevices), (string)parent.Element("ReAdhesionDevice")),
+				ReAdhesionDevice = (ReadhesionDeviceType)Enum.Parse(typeof(ReadhesionDeviceType), (string)parent.Element("ReAdhesionDevice")),
 				LoadCompensatingDevice = (double)parent.Element("LoadCompensatingDevice"),
-				PassAlarm = (Device.PassAlarmModes)Enum.Parse(typeof(Device.PassAlarmModes), (string)parent.Element("PassAlarm")),
-				DoorOpenMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorOpenMode")),
-				DoorCloseMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorCloseMode")),
+				PassAlarm = (PassAlarmType)Enum.Parse(typeof(PassAlarmType), (string)parent.Element("PassAlarm")),
+				DoorOpenMode = (DoorMode)Enum.Parse(typeof(DoorMode), (string)parent.Element("DoorOpenMode")),
+				DoorCloseMode = (DoorMode)Enum.Parse(typeof(DoorMode), (string)parent.Element("DoorCloseMode")),
 				DoorWidth = (double)parent.Element("DoorWidth"),
 				DoorMaxTolerance = (double)parent.Element("DoorMaxTolerance")
 			};
@@ -194,9 +198,9 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Brake
 			{
-				BrakeType = (Brake.BrakeTypes)Enum.Parse(typeof(Brake.BrakeTypes), (string)parent.Element("BrakeType")),
+				BrakeType = (BrakeSystemType)Enum.Parse(typeof(BrakeSystemType), (string)parent.Element("BrakeType")),
 				LocoBrakeType = (Brake.LocoBrakeTypes)Enum.Parse(typeof(Brake.LocoBrakeTypes), (string)parent.Element("LocoBrakeType")),
-				BrakeControlSystem = (Brake.BrakeControlSystems)Enum.Parse(typeof(Brake.BrakeControlSystems), (string)parent.Element("BrakeControlSystem")),
+				BrakeControlSystem = (EletropneumaticBrakeType)Enum.Parse(typeof(EletropneumaticBrakeType), (string)parent.Element("BrakeControlSystem")),
 				BrakeControlSpeed = (double)parent.Element("BrakeControlSpeed")
 			};
 		}
@@ -266,9 +270,9 @@ namespace TrainEditor2.IO.IntermediateFile
 			areas = new ObservableCollection<Motor.Area>(parent.XPathSelectElements("Areas/Area").Select(n => new Motor.Area((double)n.Element("LeftX"), (double)n.Element("RightX"), (int)n.Element("Index"))));
 		}
 
-		private static Coupler ParseCouplerNode(XElement parent)
+		private static Models.Trains.Coupler ParseCouplerNode(XElement parent)
 		{
-			return new Coupler
+			return new Models.Trains.Coupler
 			{
 				Min = (double)parent.Element("Min"),
 				Max = (double)parent.Element("Max"),

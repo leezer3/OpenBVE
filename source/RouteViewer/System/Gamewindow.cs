@@ -139,7 +139,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			if (!Loading.Complete)
+			if (!Loading.Complete && Program.CurrentRouteFile != null)
 			{
 				e.Cancel = true;
 				Loading.Cancel = true;

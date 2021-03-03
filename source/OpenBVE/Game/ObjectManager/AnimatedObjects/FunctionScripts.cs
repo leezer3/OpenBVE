@@ -4,11 +4,13 @@ using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
 		// execute function script
-		internal static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.InstructionSet.Length; i++) {
 				switch (Function.InstructionSet[i]) {
@@ -227,6 +229,21 @@ namespace OpenBve {
 							Function.Stack[s] = Math.Sqrt(dx * dx + dy * dy + dz * dz);
 							s++;
 						} break;
+					case Instructions.CameraXDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.X - Position.X;
+							s++;
+						} break;
+					case Instructions.CameraYDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.Y - Position.Y;
+							s++;
+						} break;
+					case Instructions.CameraZDistance:
+						{
+							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.Z - Position.Z;
+							s++;
+						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
 						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
@@ -239,6 +256,14 @@ namespace OpenBve {
 						}
 						s++; break;
 						// train
+					case Instructions.PlayerTrain:
+						if (Train != null)
+						{
+							Function.Stack[s] = Train.IsPlayerTrain ? 1.0 : 0.0;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					case Instructions.TrainCars:
 						if (Train != null) {
 							Function.Stack[s] = (double)Train.Cars.Length;
@@ -275,7 +300,7 @@ namespace OpenBve {
 						break;
 					case Instructions.TrainSpeedometer:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed;
+							Function.Stack[s] = Train.Cars[CarIndex].Specs.PerceivedSpeed;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -285,7 +310,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentPerceivedSpeed;
+								Function.Stack[s - 1] = Train.Cars[j].Specs.PerceivedSpeed;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -295,7 +320,7 @@ namespace OpenBve {
 						break;
 					case Instructions.TrainAcceleration:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.CurrentAcceleration;
+							Function.Stack[s] = Train.Cars[CarIndex].Specs.Acceleration;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -305,7 +330,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAcceleration;
+								Function.Stack[s - 1] = Train.Cars[j].Specs.Acceleration;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -318,11 +343,11 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
 								if (Train.Cars[j].Specs.IsMotorCar) {
-									// hack: CurrentAccelerationOutput does not distinguish between forward/backward
-									if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
-									} else if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Train.Handles.Reverser.Actual;
+									// hack: MotorAcceleration does not distinguish between forward/backward
+									if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
+										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+									} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
+										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
 									} else {
 										Function.Stack[s] = 0.0;
 									}
@@ -338,11 +363,11 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								// hack: CurrentAccelerationOutput does not distinguish between forward/backward
-								if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
-								} else if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Train.Handles.Reverser.Actual;
+								// hack: MotorAcceleration does not distinguish between forward/backward
+								if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+								} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
 								} else {
 									Function.Stack[s - 1] = 0.0;
 								}
@@ -855,7 +880,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotches:
 						if (Train != null) {
-							if (Train.Handles.Brake is TrainManager.AirBrakeHandle) {
+							if (Train.Handles.Brake is AirBrakeHandle) {
 								Function.Stack[s] = 2.0;
 							} else {
 								Function.Stack[s] = (double)Train.Handles.Brake.MaximumNotch;
@@ -866,7 +891,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotchLinear:
 						if (Train != null) {
-							if (Train.Handles.Brake is TrainManager.AirBrakeHandle) {
+							if (Train.Handles.Brake is AirBrakeHandle) {
 								if (Train.Handles.EmergencyBrake.Driver) {
 									Function.Stack[s] = 3.0;
 								} else {
@@ -893,7 +918,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotchesLinear:
 						if (Train != null) {
-							if (Train.Handles.Brake is TrainManager.AirBrakeHandle) {
+							if (Train.Handles.Brake is AirBrakeHandle) {
 								Function.Stack[s] = 3.0;
 							} else if (Train.Handles.HasHoldBrake) {
 								Function.Stack[s] = Train.Handles.Brake.MaximumNotch + 2.0;
@@ -970,7 +995,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.HasAirBrake:
 						if (Train != null) {
-							Function.Stack[s] = Train.Handles.Brake is TrainManager.AirBrakeHandle ? 1.0 : 0.0;
+							Function.Stack[s] = Train.Handles.Brake is AirBrakeHandle ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -1344,6 +1369,38 @@ namespace OpenBve {
 							}
 						} else {
 							Function.Stack[s] = 0;
+						}
+						s++; break;
+					case Instructions.RainDrop:
+						if (Train == null || !Train.IsPlayerTrain) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int n = (int)Math.Round(Function.Stack[s - 1]);
+							if (n >= 0 & n < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length) {
+								Function.Stack[s - 1] = Train.Cars[Train.DriverCar].Windscreen.RainDrops[n].Visible && !Train.Cars[Train.DriverCar].Windscreen.RainDrops[n].IsSnowFlake ? 1.0 : 0.0;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						} break;
+					case Instructions.SnowFlake:
+							if (Train == null || !Train.IsPlayerTrain) {
+								Function.Stack[s - 1] = 0.0;
+							} else {
+								int n = (int)Math.Round(Function.Stack[s - 1]);
+								if (n >= 0 & n < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length) {
+									Function.Stack[s - 1] = Train.Cars[Train.DriverCar].Windscreen.RainDrops[n].Visible && Train.Cars[Train.DriverCar].Windscreen.RainDrops[n].IsSnowFlake ? 1.0 : 0.0;
+								} else {
+									Function.Stack[s - 1] = 0.0;
+								}
+							} break;
+					case Instructions.WiperPosition:
+						if (Train == null || !Train.IsPlayerTrain)
+						{
+							Function.Stack[s] = 0.0; //Not part of player train, so irrelevant
+						}
+						else
+						{
+							Function.Stack[s] = Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentPosition;
 						}
 						s++; break;
 						// default

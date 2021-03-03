@@ -1,4 +1,8 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Hosts;
+using OpenBveApi.Math;
+using OpenBveApi.Sounds;
+using OpenBveApi.Trains;
 
 namespace SoundManager
 {
@@ -9,9 +13,31 @@ namespace SoundManager
 		public readonly SoundBuffer Buffer;
 		/// <summary>The source of the sound within the car</summary>
 		public SoundSource Source;
-		/// <summary>A Vector3 describing the position of the sound source</summary>
-		public Vector3 Position;
-		
+		/// <summary>A Vector3 describing the position of the sound source within the base car</summary>
+		private readonly Vector3 Position;
+		/// <summary>The target volume of the sound</summary>
+		/// <remarks>Used when crossfading between multiple sounds of the same type</remarks>
+		public double TargetVolume;
+
+		public CarSound(HostInterface currentHost, string soundFile, double radius, Vector3 position)
+		{
+			SoundHandle handle;
+			currentHost.RegisterSound(soundFile, radius, out handle);
+			Buffer = handle as SoundBuffer;
+			this.Position = position;
+		}
+
+		/// <summary>Creates a new car sound</summary>
+		/// <param name="handle">The API handle to the sound buffer</param>
+		/// <param name="Position">The position that the sound is emitted from within the car</param>
+		/// <returns>The new car sound</returns>
+		public CarSound(SoundHandle handle, Vector3 Position)
+		{
+			this.Buffer = handle as SoundBuffer;
+			this.Position = Position;
+			this.Source = null;
+		}
+
 		/// <summary>Creates a new car sound</summary>
 		/// <param name="buffer">The sound buffer</param>
 		/// <param name="Position">The position that the sound is emitted from within the car</param>
@@ -31,6 +57,34 @@ namespace SoundManager
 			this.Buffer = null;
 		}
 
+		/// <summary>Plays the sound at the original pitch and volume</summary>
+		/// <param name="Car">The parent car</param>
+		/// <param name="looped">Whether the sound is to be played looped</param>
+		public void Play(AbstractCar Car, bool looped)
+		{
+			Play(1.0, 1.0, Car, looped);
+		}
+
+		/// <summary>Plays the sound at the specified pitch and volume</summary>
+		/// <param name="pitch">The pitch</param>
+		/// <param name="volume">The volume</param>
+		/// <param name="Car">The parent car</param>
+		/// <param name="looped">Whether the sound is to be played looped</param>
+		public void Play(double pitch, double volume, AbstractCar Car, bool looped)
+		{
+			if (Buffer != null)
+			{
+				if (SoundsBase.Sources.Length == SoundsBase.SourceCount)
+				{
+					Array.Resize(ref SoundsBase.Sources, SoundsBase.Sources.Length << 1);
+				}
+				SoundsBase.Sources[SoundsBase.SourceCount] = new SoundSource(Buffer, Buffer.Radius, pitch, volume, Position, Car, looped);
+				this.Source = SoundsBase.Sources[SoundsBase.SourceCount];
+				SoundsBase.SourceCount++;
+			}
+			
+		}
+
 		/// <summary>Unconditionally stops the playing sound</summary>
 		public void Stop()
 		{
@@ -39,6 +93,19 @@ namespace SoundManager
 				return;
 			}
 			Source.Stop();
+		}
+
+		/// <summary>Whether the sound is currently playing</summary>
+		public bool IsPlaying
+		{
+			get
+			{
+				if (Source != null)
+				{
+					return Source.IsPlaying();
+				}
+				return false;
+			}
 		}
 	}
 }

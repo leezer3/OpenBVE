@@ -1,5 +1,7 @@
 ﻿using System;
 using Prism.Mvvm;
+using TrainManager.Car;
+using TrainManager.SafetySystems;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -8,53 +10,16 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal class Device : BindableBase, ICloneable
 	{
-		internal enum AtsModes
-		{
-			None = -1,
-			AtsSn = 0,
-			AtsSnP = 1
-		}
-
-		internal enum AtcModes
-		{
-			None = 0,
-			Manual = 1,
-			Automatic = 2
-		}
-
-		internal enum ReAdhesionDevices
-		{
-			None = -1,
-			TypeA = 0,
-			TypeB = 1,
-			TypeC = 2,
-			TypeD = 3
-		}
-
-		internal enum PassAlarmModes
-		{
-			None = 0,
-			Single = 1,
-			Looping = 2
-		}
-
-		internal enum DoorModes
-		{
-			SemiAutomatic = 0,
-			Automatic = 1,
-			Manual = 2
-		}
-
 		private AtsModes ats;
 		private AtcModes atc;
 		private bool eb;
 		private bool constSpeed;
 		private bool holdBrake;
-		private ReAdhesionDevices reAdhesionDevice;
+		private ReadhesionDeviceType reAdhesionDevice;
 		private double loadCompensatingDevice;
-		private PassAlarmModes passAlarm;
-		private DoorModes doorOpenMode;
-		private DoorModes doorCloseMode;
+		private PassAlarmType passAlarm;
+		private DoorMode doorOpenMode;
+		private DoorMode doorCloseMode;
 		private double doorWidth;
 		private double doorMaxTolerance;
 
@@ -118,7 +83,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal ReAdhesionDevices ReAdhesionDevice
+		internal ReadhesionDeviceType ReAdhesionDevice
 		{
 			get
 			{
@@ -142,7 +107,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal PassAlarmModes PassAlarm
+		internal PassAlarmType PassAlarm
 		{
 			get
 			{
@@ -154,7 +119,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal DoorModes DoorOpenMode
+		internal DoorMode DoorOpenMode
 		{
 			get
 			{
@@ -166,7 +131,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal DoorModes DoorCloseMode
+		internal DoorMode DoorCloseMode
 		{
 			get
 			{
@@ -209,11 +174,11 @@ namespace TrainEditor2.Models.Trains
 			Eb = false;
 			ConstSpeed = false;
 			HoldBrake = false;
-			ReAdhesionDevice = ReAdhesionDevices.TypeA;
+			ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 			LoadCompensatingDevice = 0.0;
-			PassAlarm = PassAlarmModes.None;
-			DoorOpenMode = DoorModes.SemiAutomatic;
-			DoorCloseMode = DoorModes.SemiAutomatic;
+			PassAlarm = PassAlarmType.None;
+			DoorOpenMode = DoorMode.AutomaticManualOverride;
+			DoorCloseMode = DoorMode.AutomaticManualOverride;
 			DoorWidth = 1000.0;
 			DoorMaxTolerance = 0.0;
 		}

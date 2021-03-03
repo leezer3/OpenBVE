@@ -351,6 +351,7 @@ namespace CsvRwRouteParser
 					break;
 				case TrackCommand.Turn:
 				{
+					Data.TurnUsed = true;
 					double s = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out s))
 					{
@@ -1272,7 +1273,7 @@ namespace CsvRwRouteParser
 						}
 						else if (Arguments[2].StartsWith("J:", StringComparison.InvariantCultureIgnoreCase))
 						{
-							string[] splitString = Arguments[2].Split(new char[] {':'});
+							string[] splitString = Arguments[2].Split(new[] { ':'});
 							for (int i = 0; i < splitString.Length; i++)
 							{
 								switch (i)
@@ -1321,7 +1322,7 @@ namespace CsvRwRouteParser
 					Direction door = Direction.Both;
 					if (Arguments.Length >= 5 && Arguments[4].Length != 0)
 					{
-						door = FindDirection(Arguments[4], "Track.Sta", Expression.Line, Expression.File);
+						door = FindDirection(Arguments[4], "Track.Sta", false, Expression.Line, Expression.File);
 						if (door == Direction.Invalid)
 						{
 							door = Direction.Both;
@@ -1390,6 +1391,10 @@ namespace CsvRwRouteParser
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StopDuration is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						halt = 15.0;
+					}
+					else if (halt < 0)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StopDuration is expected to be non-negative in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 					}
 					else if (halt < 5.0)
 					{
@@ -2018,7 +2023,7 @@ namespace CsvRwRouteParser
 						Direction dir = Direction.Invalid;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							dir = FindDirection(Arguments[1], "Track.Wall", Expression.Line, Expression.File);
+							dir = FindDirection(Arguments[1], "Track.Wall", true, Expression.Line, Expression.File);
 						}
 						if (dir == Direction.Invalid || dir == Direction.None)
 						{
@@ -2137,7 +2142,7 @@ namespace CsvRwRouteParser
 						
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							dir = FindDirection(Arguments[1], "Track.Dike", Expression.Line, Expression.File);
+							dir = FindDirection(Arguments[1], "Track.Dike", true, Expression.Line, Expression.File);
 						}
 						if (dir == Direction.Invalid || dir == Direction.None)
 						{
@@ -2606,11 +2611,20 @@ namespace CsvRwRouteParser
 								{
 									//The initial background for block 0 is always set to zero
 									//This handles the case where background idx #0 is not used
-									b = Data.Backgrounds[0] as StaticBackground;
-									if (b.Texture == null)
+									BackgroundHandle backgroundZero;
+									if (Data.Backgrounds.TryGetValue(0, out backgroundZero))
+									{
+										b = backgroundZero as StaticBackground;
+										if (b.Texture == null)
+										{
+											Data.Blocks[0].Background = typ;
+										}
+									}
+									else
 									{
 										Data.Blocks[0].Background = typ;
 									}
+									
 								}
 							}
 						}
@@ -2868,6 +2882,165 @@ namespace CsvRwRouteParser
 						Data.Blocks[BlockIndex].PointsOfInterest[n] = new PointOfInterest(Data.TrackPosition, idx, text, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
 					}
 				}
+					break;
+				case TrackCommand.HornBlow:
+					if (!PreviewOnly)
+					{
+						int type = 0;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HornType is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							type = 0;
+						}
+
+						if (type < 0 || type > 2)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HornType is expected to be in the range of -1 to 1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else
+						{
+							int structure = 0, triggerOnce = 0;
+							if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								structure = 0;
+							}
+
+							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out triggerOnce))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+
+							if (structure < -1)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								structure = -1;
+							}
+							else if (structure >= 0 && !Data.Structure.Beacon.ContainsKey(structure))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								structure = -1;
+							}
+
+							if (triggerOnce < 0 || triggerOnce > 1)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is expected to be in the range of 0 to 1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								triggerOnce = 0;
+							}
+
+							double x = 0.0, y = 0.0;
+							double yaw = 0.0, pitch = 0.0, roll = 0.0;
+							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out x))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								x = 0.0;
+							}
+
+							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out y))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								y = 0.0;
+							}
+
+							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out yaw))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								yaw = 0.0;
+							}
+
+							if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out pitch))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								pitch = 0.0;
+							}
+
+							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out roll))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								roll = 0.0;
+							}
+
+							int n = Data.Blocks[BlockIndex].HornBlows.Length;
+							Array.Resize(ref Data.Blocks[BlockIndex].HornBlows, n + 1);
+							Data.Blocks[BlockIndex].HornBlows[n] = new HornBlowEvent(Data.TrackPosition, (HornTypes)type, triggerOnce != 0, structure, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
+						}
+					}
+					break;
+				case TrackCommand.Rain:
+					if (!PreviewOnly)
+					{
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0)
+						{
+							int currentIntensity;
+							if (!NumberFormats.TryParseIntVb6(Arguments[0], out currentIntensity))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								Data.Blocks[BlockIndex].RainIntensity = currentIntensity;
+							}
+						}
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+						{
+							int structure;
+							if (!NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								if (Data.Structure.WeatherObjects.ContainsKey(structure))
+								{
+									Data.Blocks[BlockIndex].WeatherObject = structure;
+								}
+								else
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex " + structure + " was not found in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								}
+								
+							}
+						}
+					}
+					break;
+				case TrackCommand.Snow:
+					if (!PreviewOnly)
+					{
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0)
+						{
+							int currentIntensity;
+							if (!NumberFormats.TryParseIntVb6(Arguments[0], out currentIntensity))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								Data.Blocks[BlockIndex].SnowIntensity = currentIntensity;
+							}
+						}
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+						{
+							int structure;
+							if (!NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								if (Data.Structure.WeatherObjects.ContainsKey(structure))
+								{
+									Data.Blocks[BlockIndex].WeatherObject = structure;
+								}
+								else
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex " + structure + " was not found in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								}
+								
+							}
+						}
+					}
 					break;
 			}
 		}

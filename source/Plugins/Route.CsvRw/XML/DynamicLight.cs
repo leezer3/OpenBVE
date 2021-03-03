@@ -44,7 +44,7 @@ namespace CsvRwRouteParser
 							string ts = null;
 							foreach (XmlNode c in n.ChildNodes)
 							{
-								string[] Arguments = c.InnerText.Split(new char[] { ',' });
+								string[] Arguments = c.InnerText.Split(new[] { ',' });
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "cablighting":

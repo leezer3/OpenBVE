@@ -82,6 +82,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 
 namespace AssimpNET.Obj
@@ -143,6 +144,37 @@ namespace AssimpNET.Obj
 				if (Buffer.Length == 0)
 				{
 					continue;
+				}
+				int hash = buffer.IndexOf('#');
+				int eq = buffer.IndexOf('=');
+				int skp = buffer.IndexOf("SketchUp", StringComparison.InvariantCultureIgnoreCase);
+				if(hash != -1 && (eq != -1 || skp != -1))
+				{
+					string afterHash = buffer.Substring(hash + 1).Trim();
+					if (afterHash.StartsWith("File units", StringComparison.InvariantCultureIgnoreCase))
+					{
+						string units = buffer.Substring(eq + 1).Trim().ToLowerInvariant();
+						switch (units)
+						{
+							/*
+							 * Apply unit correction factor
+							 * This is not a default obj feature, but seems to appear in Sketchup exported files
+							 */
+							case "millimeters":
+								Model.ScaleFactor = 0.001;
+								break;
+							case "centimeters":
+								Model.ScaleFactor = 0.01;
+								break;
+							case "meters":
+								Model.ScaleFactor = 1.0;
+								break;
+						}
+					}
+					else if (afterHash.StartsWith("Exported from SketchUp", StringComparison.InvariantCultureIgnoreCase))
+					{
+						Model.TopLeftTextureCoordinates = true;
+					}
 				}
 
 				// parse line

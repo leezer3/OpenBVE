@@ -1,5 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
+using TrainManager.Handles;
+using TrainManager.Trains;
 
 // ReSharper disable UnusedMember.Global
 
@@ -21,7 +23,7 @@ namespace OpenBve
             /// <param name="SectionIndex">The section to get the aspect for</param>
             /// <param name="IsPartOfTrain">Defines whether we wish to get the section index for the selected train, or for when placed via a .SigF command</param>
             /// <returns>The aspect of the selected signal</returns>
-            public static int CurrentAspect(TrainManager.Train Train, int SectionIndex, bool IsPartOfTrain)
+            public static int CurrentAspect(TrainBase Train, int SectionIndex, bool IsPartOfTrain)
             {
                 if (IsPartOfTrain)
                 {
@@ -56,7 +58,7 @@ namespace OpenBve
             /// <summary>Returns the number of cars in this train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The number of cars</returns>
-            public static int numberOfCars(TrainManager.Train Train)
+            public static int numberOfCars(TrainBase Train)
             {
                 if (Train != null)
                 {
@@ -69,7 +71,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The car for which to get the speed</param>
             /// <returns>The speed in m/s</returns>
-            public static double speed(TrainManager.Train Train, int CarIndex)
+            public static double speed(TrainBase Train, int CarIndex)
             {
                 if (Train == null)
                 {
@@ -86,51 +88,51 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The car for which to get the speed</param>
             /// <returns>The speed in m/s</returns>
-            public static double speedometer(TrainManager.Train Train, int CarIndex)
+            public static double speedometer(TrainBase Train, int CarIndex)
             {
                 if (Train == null)
                 {
                     return 0;
                 }
                 return CarIndex > Train.Cars.Length
-                    ? Train.Cars[0].Specs.CurrentPerceivedSpeed
-                    : Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed;
+                    ? Train.Cars[0].Specs.PerceivedSpeed
+                    : Train.Cars[CarIndex].Specs.PerceivedSpeed;
             }
 
             /// <summary>Returns the acceleration of the selected car</summary>
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The car for which to get the acceleration</param>
             /// <returns>The acceleration in m/s</returns>
-            public static double acceleration(TrainManager.Train Train, int CarIndex)
+            public static double acceleration(TrainBase Train, int CarIndex)
             {
                 if (Train == null)
                 {
                     return 0;
                 }
                 return CarIndex > Train.Cars.Length
-                    ? Train.Cars[0].Specs.CurrentAcceleration
-                    : Train.Cars[CarIndex].Specs.CurrentAcceleration;
+                    ? Train.Cars[0].Specs.Acceleration
+                    : Train.Cars[CarIndex].Specs.Acceleration;
             }
 
             /// <summary>Returns the acceleration that the first motor car is currently generating in m/s</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The acceleration in m/s</returns>
-            public static double accelerationMotor(TrainManager.Train Train)
+            public static double accelerationMotor(TrainBase Train)
             {
                 if (Train == null) return 0.0;
                 for (int j = 0; j < Train.Cars.Length; j++)
                 {
                     if (Train.Cars[j].Specs.IsMotorCar)
                     {
-                        // hack: CurrentAccelerationOutput does not distinguish between forward/backward
-                        if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0)
+                        // hack: MotorAcceleration does not distinguish between forward/backward
+                        if (Train.Cars[j].Specs.MotorAcceleration < 0.0)
                         {
-                            return Train.Cars[j].Specs.CurrentAccelerationOutput*
+                            return Train.Cars[j].Specs.MotorAcceleration*
                                    (double) Math.Sign(Train.Cars[j].CurrentSpeed);
                         }
-                        if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0)
+                        if (Train.Cars[j].Specs.MotorAcceleration > 0.0)
                         {
-                            return Train.Cars[j].Specs.CurrentAccelerationOutput*
+                            return Train.Cars[j].Specs.MotorAcceleration*
                                    (double) Train.Handles.Reverser.Actual;
                         }
                     }
@@ -142,20 +144,20 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>The acceleration in m/s</returns>
-            public static double accelerationMotor(TrainManager.Train Train, int CarIndex)
+            public static double accelerationMotor(TrainBase Train, int CarIndex)
             {
                 if (Train == null || Train.Cars.Length <= CarIndex) return 0.0;
                 if (Train.Cars[CarIndex].Specs.IsMotorCar)
                 {
-                    // hack: CurrentAccelerationOutput does not distinguish between forward/backward
-                    if (Train.Cars[CarIndex].Specs.CurrentAccelerationOutput < 0.0)
+                    // hack: MotorAcceleration does not distinguish between forward/backward
+                    if (Train.Cars[CarIndex].Specs.MotorAcceleration < 0.0)
                     {
-                        return Train.Cars[CarIndex].Specs.CurrentAccelerationOutput*
+                        return Train.Cars[CarIndex].Specs.MotorAcceleration*
                                (double) Math.Sign(Train.Cars[CarIndex].CurrentSpeed);
                     }
-                    if (Train.Cars[CarIndex].Specs.CurrentAccelerationOutput > 0.0)
+                    if (Train.Cars[CarIndex].Specs.MotorAcceleration > 0.0)
                     {
-                        return Train.Cars[CarIndex].Specs.CurrentAccelerationOutput*
+                        return Train.Cars[CarIndex].Specs.MotorAcceleration*
                                (double) Train.Handles.Reverser.Actual;
                     }
                 }
@@ -166,7 +168,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="Position">The object's absolute in-game position</param>
             /// <returns>The distance to the object</returns>
-            public static double distance(TrainManager.Train Train, Vector3 Position)
+            public static double distance(TrainBase Train, Vector3 Position)
             {
                 if (Train == null) return 0.0;
                 double dist = double.MaxValue;
@@ -191,7 +193,7 @@ namespace OpenBve
             /// <param name="CarIndex">The selected car</param>
             /// <param name="Position">The object's absolute in-game position</param>
             /// <returns>The distance to the object</returns>
-            public static double distance(TrainManager.Train Train, int CarIndex, Vector3 Position)
+            public static double distance(TrainBase Train, int CarIndex, Vector3 Position)
             {
                 if (Train == null || Train.Cars.Length <= CarIndex) return 0.0;
                 double x = 0.5*
@@ -210,7 +212,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="TrackPosition">The object's track position</param>
             /// <returns>The distance to the object</returns>
-            public static double trackDistance(TrainManager.Train Train, double TrackPosition)
+            public static double trackDistance(TrainBase Train, double TrackPosition)
             {
                 if (Train == null) return 0.0;
                 double t0 = Train.FrontCarTrackPosition();
@@ -223,7 +225,7 @@ namespace OpenBve
             /// <param name="CarIndex">The selected car</param>
             /// <param name="TrackPosition">The object's track position</param>
             /// <returns>The distance to the object</returns>
-            public static double trackDistance(TrainManager.Train Train, int CarIndex, double TrackPosition)
+            public static double trackDistance(TrainBase Train, int CarIndex, double TrackPosition)
             {
                 if (Train == null) return 0.0;
                 if (Train.Cars.Length > CarIndex)
@@ -239,7 +241,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>The main brake reservoir pressure in Pa</returns>
-            public static double mainReservoir(TrainManager.Train Train, int CarIndex)
+            public static double mainReservoir(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return 0.0;
                 if (Train.Cars.Length > CarIndex)
@@ -253,7 +255,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>The brake pipe pressure in Pa</returns>
-            public static double brakePipe(TrainManager.Train Train, int CarIndex)
+            public static double brakePipe(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return 0.0;
                 if (Train.Cars.Length > CarIndex)
@@ -267,7 +269,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>The brake cylinder pressure in Pa</returns>
-            public static double brakeCylinder(TrainManager.Train Train, int CarIndex)
+            public static double brakeCylinder(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return 0.0;
                 if (Train.Cars.Length > CarIndex)
@@ -281,7 +283,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>The brake pipe pressure in Pa</returns>
-            public static double straightAirPipe(TrainManager.Train Train, int CarIndex)
+            public static double straightAirPipe(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return 0.0;
                 if (Train.Cars.Length > CarIndex)
@@ -294,7 +296,7 @@ namespace OpenBve
             /// <summary>Returns the doors state of the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
-            public static double doors(TrainManager.Train Train)
+            public static double doors(TrainBase Train)
             {
                 if (Train == null) return 0.0;
                 double doorsState = 0.0;
@@ -315,7 +317,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
-            public static double doors(TrainManager.Train Train, int CarIndex)
+            public static double doors(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return 0.0;
                 if (Train.Cars.Length <= CarIndex)
@@ -336,7 +338,7 @@ namespace OpenBve
             /// <summary>Returns the left-hand doors state of the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
-            public static double leftDoors(TrainManager.Train Train)
+            public static double leftDoors(TrainBase Train)
             {
                 if (Train == null) return 0.0;
                 double doorsState = 0.0;
@@ -358,7 +360,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
-            public static double leftDoors(TrainManager.Train Train, int CarIndex)
+            public static double leftDoors(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return 0.0;
                 if (Train.Cars.Length <= CarIndex)
@@ -380,7 +382,7 @@ namespace OpenBve
             /// <summary>Returns the left-hand doors state of the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
-            public static double rightDoors(TrainManager.Train Train)
+            public static double rightDoors(TrainBase Train)
             {
                 if (Train == null) return 0.0;
                 double doorsState = 0.0;
@@ -402,7 +404,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
-            public static double rightDoors(TrainManager.Train Train, int CarIndex)
+            public static double rightDoors(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return 0.0;
                 if (Train.Cars.Length <= CarIndex)
@@ -424,7 +426,7 @@ namespace OpenBve
             /// <summary>Returns whether the left doors are opening for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>True if the doors are opening, false otherwise</returns>
-            public static bool leftDoorsTarget(TrainManager.Train Train)
+            public static bool leftDoorsTarget(TrainBase Train)
             {
                 if (Train == null) return false;
                 for (int j = 0; j < Train.Cars.Length; j++)
@@ -444,7 +446,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>True if the doors are opening, false otherwise</returns>
-            public static bool leftDoorsTarget(TrainManager.Train Train, int CarIndex)
+            public static bool leftDoorsTarget(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return false;
                 if (Train.Cars.Length <= CarIndex)
@@ -461,7 +463,7 @@ namespace OpenBve
             /// <summary>Returns whether the left doors are opening for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>True if the doors are opening, false otherwise</returns>
-            public static bool rightDoorsTarget(TrainManager.Train Train)
+            public static bool rightDoorsTarget(TrainBase Train)
             {
                 if (Train == null) return false;
                 for (int j = 0; j < Train.Cars.Length; j++)
@@ -481,7 +483,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The selected car</param>
             /// <returns>True if the doors are opening, false otherwise</returns>
-            public static bool rightDoorsTarget(TrainManager.Train Train, int CarIndex)
+            public static bool rightDoorsTarget(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return false;
                 if (Train.Cars.Length <= CarIndex)
@@ -498,7 +500,7 @@ namespace OpenBve
             /// <summary>Returns the driver's selected reverser position for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>-1 for backwards, 0 for neutral, 1 for forwards</returns>
-            public static int reverserNotch(TrainManager.Train Train)
+            public static int reverserNotch(TrainBase Train)
             {
                 if (Train == null) return 0;
                 return (int)Train.Handles.Reverser.Driver;
@@ -507,7 +509,7 @@ namespace OpenBve
             /// <summary>Returns the driver's selected power notch for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The driver's selected power notch</returns>
-            public static int powerNotch(TrainManager.Train Train)
+            public static int powerNotch(TrainBase Train)
             {
                 if (Train == null) return 0;
                 return Train.Handles.Power.Driver;
@@ -516,7 +518,7 @@ namespace OpenBve
             /// <summary>Returns the maximum power notch for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The maximum power notch</returns>
-            public static int powerNotches(TrainManager.Train Train)
+            public static int powerNotches(TrainBase Train)
             {
                 if (Train == null) return 0;
                 return Train.Handles.Power.MaximumNotch;
@@ -525,7 +527,7 @@ namespace OpenBve
             /// <summary>Returns the driver's selected brake notch for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The driver's selected power notch</returns>
-            public static int brakeNotch(TrainManager.Train Train)
+            public static int brakeNotch(TrainBase Train)
             {
                 if (Train == null) return 0;
                 return Train.Handles.Brake.Driver;
@@ -534,7 +536,7 @@ namespace OpenBve
             /// <summary>Returns the maximum brake notch for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The maximum power notch</returns>
-            public static int brakeNotches(TrainManager.Train Train)
+            public static int brakeNotches(TrainBase Train)
             {
                 if (Train == null) return 0;
                 return Train.Handles.Brake.MaximumNotch;
@@ -543,10 +545,10 @@ namespace OpenBve
             /// <summary>Returns the driver's selected brake notch (Including EB) for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The driver's selected brake notch</returns>
-            public static int brakeNotchLinear(TrainManager.Train Train)
+            public static int brakeNotchLinear(TrainBase Train)
             {
                 if (Train == null) return 0;
-                if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
+                if (Train.Handles.Brake is AirBrakeHandle)
                 {
                     if (Train.Handles.EmergencyBrake.Driver)
                     {
@@ -576,10 +578,10 @@ namespace OpenBve
             /// <summary>Returns the maximum possible brake notch (Including EB) for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The maximum possible brake notch</returns>
-            public static int brakeNotchesLinear(TrainManager.Train Train)
+            public static int brakeNotchesLinear(TrainBase Train)
             {
                 if (Train == null) return 0;
-                if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
+                if (Train.Handles.Brake is AirBrakeHandle)
                 {
                     return 3;
                 }
@@ -593,7 +595,7 @@ namespace OpenBve
             /// <summary>Returns whether EB is active for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>Whether EB is active</returns>
-            public static bool emergencyBrake(TrainManager.Train Train)
+            public static bool emergencyBrake(TrainBase Train)
             {
                 if (Train == null) return false;
                 return Train.Handles.EmergencyBrake.Driver;
@@ -602,16 +604,16 @@ namespace OpenBve
             /// <summary>Whether the selected train has an automatic air brake</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>Whether the selected train has an automatic air brake</returns>
-            public static bool hasAirBrake(TrainManager.Train Train)
+            public static bool hasAirBrake(TrainBase Train)
             {
                 if (Train == null) return false;
-                return Train.Handles.Brake is TrainManager.AirBrakeHandle;
+                return Train.Handles.Brake is AirBrakeHandle;
             }
 
             /// <summary>Whether the hold brake is currently active for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>Whether the hold brake is currently active</returns>
-            public static bool holdBrake(TrainManager.Train Train)
+            public static bool holdBrake(TrainBase Train)
             {
                 if (Train == null) return false;
                 return Train.Handles.HoldBrake.Driver;
@@ -620,7 +622,7 @@ namespace OpenBve
             /// <summary>Whether the selected train has a hold brake</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>Whether the selected train has a hold brake</returns>
-            public static bool hasHoldBrake(TrainManager.Train Train)
+            public static bool hasHoldBrake(TrainBase Train)
             {
                 if (Train == null) return false;
                 return Train.Handles.HasHoldBrake;
@@ -629,7 +631,7 @@ namespace OpenBve
             /// <summary>Whether the constant speed devicee is currently active for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>Whether the constant speed device is currently active</returns>
-            public static bool constantSpeed(TrainManager.Train Train)
+            public static bool constantSpeed(TrainBase Train)
             {
                 if (Train == null) return false;
                 return Train.Specs.CurrentConstSpeed;
@@ -638,7 +640,7 @@ namespace OpenBve
             /// <summary>Whether the selected train has a constant speed device</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>Whether the selected train has a constant speed device</returns>
-            public static bool hasConstantSpeed(TrainManager.Train Train)
+            public static bool hasConstantSpeed(TrainBase Train)
             {
                 if (Train == null) return false;
                 return Train.Specs.HasConstSpeed;
@@ -647,7 +649,7 @@ namespace OpenBve
             /// <summary>Whether the selected train uses a custom plugin</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>True if the train uses a custom plugin, false otherwise</returns>
-            public static bool hasPlugin(TrainManager.Train Train)
+            public static bool hasPlugin(TrainBase Train)
             {
                 if (Train == null) return false;
                 if (Train.IsPlayerTrain && Train.Plugin != null)
@@ -661,7 +663,7 @@ namespace OpenBve
             /// <param name="Train">The selected train</param>
             /// <param name="pluginState">The plugin state to query</param>
             /// <returns>The plugin state value</returns>
-            public static int pluginState(TrainManager.Train Train, int pluginState)
+            public static int pluginState(TrainBase Train, int pluginState)
             {
                 if (Train == null || Train.Plugin == null)
                 {

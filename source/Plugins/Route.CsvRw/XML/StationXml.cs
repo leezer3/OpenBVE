@@ -44,7 +44,7 @@ namespace CsvRwRouteParser
 							foreach (XmlNode c in n.ChildNodes)
 							{
 
-								//string[] Arguments = c.InnerText.Split(new char[] { ',' });
+								//string[] Arguments = c.InnerText.Split(new[] { ',' });
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "name":
@@ -127,7 +127,7 @@ namespace CsvRwRouteParser
 										Direction door = Direction.Both;
 										if (!string.IsNullOrEmpty(c.InnerText))
 										{
-											door = Parser.FindDirection(c.InnerText, "StationXML:Doors", -1, System.IO.Path.GetFileName(fileName));
+											door = Parser.FindDirection(c.InnerText, "StationXML:Doors", false, -1, System.IO.Path.GetFileName(fileName));
 										}
 										station.OpenLeftDoors = door == Direction.Left | door == Direction.Both;
 										station.OpenRightDoors = door == Direction.Right | door == Direction.Both;

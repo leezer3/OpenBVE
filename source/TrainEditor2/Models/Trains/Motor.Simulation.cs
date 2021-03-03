@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using OpenBveApi.Interface;
 using SoundManager;
-using TrainEditor2.Simulation.TrainManager;
 using TrainEditor2.Systems;
 
 namespace TrainEditor2.Models.Trains
@@ -23,7 +22,7 @@ namespace TrainEditor2.Models.Trains
 				return;
 			}
 
-			if (TrainManager.PlayerTrain == null)
+			if (Simulation.TrainManager.TrainManager.PlayerTrain == null)
 			{
 				Interface.AddMessage(MessageType.Error, false, "Failed to create train.");
 				CurrentSimState = SimulationState.Disable;
@@ -59,15 +58,15 @@ namespace TrainEditor2.Models.Trains
 		{
 			DisposeCar();
 
-			TrainManager.PlayerTrain = new TrainManager.Train();
-			TrainManager.PlayerTrain.Car.Sounds.Motor.SpeedConversionFactor = 18.0;
-			TrainManager.PlayerTrain.Car.Sounds.Motor.Tables = Tracks.Select(t => Track.EntriesToMotorSoundTable(Track.TrackToEntries(t))).ToArray();
-			TrainManager.PlayerTrain.Car.ApplySounds();
+			Simulation.TrainManager.TrainManager.PlayerTrain = new Simulation.TrainManager.TrainManager.Train();
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor.SpeedConversionFactor = 18.0;
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor.Tables = Tracks.Select(t => Track.EntriesToMotorSoundTable(Track.TrackToEntries(t))).ToArray();
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.ApplySounds();
 		}
 
 		internal void RunSimulation()
 		{
-			if (TrainManager.PlayerTrain == null)
+			if (Simulation.TrainManager.TrainManager.PlayerTrain == null)
 			{
 				return;
 			}
@@ -116,12 +115,12 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			TrainManager.PlayerTrain.Car.Specs.CurrentSpeed = TrainManager.PlayerTrain.Car.Specs.CurrentPerceivedSpeed = nowSpeed / 3.6;
-			TrainManager.PlayerTrain.Car.Specs.CurrentAccelerationOutput = outputAcceleration / 3.6;
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.CurrentSpeed = Simulation.TrainManager.TrainManager.PlayerTrain.Car.Specs.PerceivedSpeed = nowSpeed / 3.6;
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Specs.Acceleration = outputAcceleration / 3.6;
 
-			TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
 
-			TrainManager.PlayerTrain.Car.UpdateMotorSounds(IsPlayTrack1, IsPlayTrack2);
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.UpdateMotorSounds(IsPlayTrack1, IsPlayTrack2);
 
 			Program.SoundApi.Update(deltaTime, SoundModels.Inverse);
 
@@ -178,10 +177,10 @@ namespace TrainEditor2.Models.Trains
 
 		private void DisposeCar()
 		{
-			if (TrainManager.PlayerTrain != null)
+			if (Simulation.TrainManager.TrainManager.PlayerTrain != null)
 			{
-				TrainManager.PlayerTrain.Dispose();
-				TrainManager.PlayerTrain = null;
+				Simulation.TrainManager.TrainManager.PlayerTrain.Dispose();
+				Simulation.TrainManager.TrainManager.PlayerTrain = null;
 			}
 		}
 	}

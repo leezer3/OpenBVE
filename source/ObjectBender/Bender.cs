@@ -54,7 +54,7 @@ namespace ObjectBender {
 						comments = string.Empty;
 						lines[i] = lines[i].Trim(new char[] { });
 					}
-					cells[i] = lines[i].Split(new char[] { ',' });
+					cells[i] = lines[i].Split(new[] { ',' });
 					if (isB3d & cells[i].Length != 0) {
 						/*
 						 * In B3D files, the space is the separator between the command and the

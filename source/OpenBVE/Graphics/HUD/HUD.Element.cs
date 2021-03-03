@@ -43,7 +43,7 @@ namespace OpenBve
 				this.TextColor = Color32.White;
 				this.TextPosition = new Vector2();
 				this.TextAlignment = new Vector2(-1, 0);
-				this.Font = Fonts.VerySmallFont;
+				this.Font = Program.Renderer.Fonts.VerySmallFont;
 				this.TextShadow = true;
 				this.Text = null;
 				this.Value1 = 0.0f;

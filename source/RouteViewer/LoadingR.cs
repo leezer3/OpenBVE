@@ -11,12 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LibRender2.Cameras;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
-using OpenTK.Graphics.ES20;
 using RouteManager2;
 
 namespace OpenBve {
@@ -57,7 +55,8 @@ namespace OpenBve {
 		internal static bool JobAvailable;
 
 		// load
-		internal static void Load(string RouteFile, Encoding RouteEncoding, Bitmap bitmap = null) {
+		internal static void Load(string RouteFile, Encoding RouteEncoding, Bitmap bitmap = null)
+		{
 			// reset
 			Game.Reset();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
@@ -177,13 +176,10 @@ namespace OpenBve {
 			Program.Renderer.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// default starting time
 			Game.SecondsSinceMidnight = 0.0;
-			Game.StartupTime = 0.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			// signals
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			// ReSharper disable once CoVariantArrayConversion
-			Program.CurrentRoute.Trains = TrainManager.Trains;
 			Program.CurrentRoute.UpdateAllSections();
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
@@ -202,7 +198,6 @@ namespace OpenBve {
 					} else {
 						Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].ArrivalTime;
 					}
-					Game.StartupTime = Game.SecondsSinceMidnight;
 					break;
 				}
 			}

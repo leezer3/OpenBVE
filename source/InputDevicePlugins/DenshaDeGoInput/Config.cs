@@ -35,9 +35,9 @@ namespace DenshaDeGoInput
 	public partial class Config : Form
 	{
 		/// <summary>
-		/// Internal list of devices.
+		/// Internal list of connected controllers.
 		/// </summary>
-		private List<string> deviceList = new List<string>();
+		private List<Guid> ControllerList = new List<Guid>();
 
 		public Config()
 		{
@@ -81,18 +81,15 @@ namespace DenshaDeGoInput
 		private void ListControllers()
 		{
 			// Clear the internal and visible lists
-			deviceList.Clear();
+			ControllerList.Clear();
 			deviceBox.Items.Clear();
 
-			for (int i = 0; i < 10; i++)
-			{
-				InputTranslator.ControllerModels model = InputTranslator.GetControllerModel(i);
-				deviceList.Add(Translations.GetInterfaceString("denshadego_joystick").Replace("[index]", (i + 1).ToString()).Replace("[name]", Joystick.GetName(i)));
+			ControllerList.AddRange(InputTranslator.ConnectedControllers.Keys);
 
-				if (Joystick.GetState(i).IsConnected && model != InputTranslator.ControllerModels.Unsupported)
-				{
-					deviceBox.Items.Add(deviceList[i]);
-				}
+			foreach (Guid guid in ControllerList)
+			{
+				int index = InputTranslator.ConnectedControllers[guid];
+				deviceBox.Items.Add(Joystick.GetName(index));
 			}
 
 			// Adjust the width of the device dropdown to prevent truncation
@@ -248,12 +245,13 @@ namespace DenshaDeGoInput
 		private void Config_Shown(object sender, EventArgs e)
 		{
 			// Add connected devices to device list
+			InputTranslator.Update();
 			ListControllers();
 
 			// Try to select the current device
-			if (InputTranslator.activeControllerIndex < deviceBox.Items.Count)
+			if (ControllerList.Contains(InputTranslator.activeControllerGuid))
 			{
-				deviceBox.SelectedIndex = InputTranslator.activeControllerIndex;
+				deviceBox.SelectedIndex = ControllerList.IndexOf(InputTranslator.activeControllerGuid);
 			}
 
 			// Set command boxes
@@ -290,7 +288,7 @@ namespace DenshaDeGoInput
 
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			InputTranslator.activeControllerIndex = deviceList.IndexOf(deviceBox.Items[deviceBox.SelectedIndex].ToString());
+			InputTranslator.activeControllerGuid = ControllerList[deviceBox.SelectedIndex];
 		}
 
 		private void buttonselectBox_SelectedIndexChanged(object sender, EventArgs e)

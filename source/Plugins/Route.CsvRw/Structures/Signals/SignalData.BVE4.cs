@@ -67,7 +67,7 @@ namespace CsvRwRouteParser
 						}
 
 						so.JoinObjects(go);
-						aoc.Objects[0].States[zi] = new ObjectState {Prototype = so};
+						aoc.Objects[0].States[zi] = new ObjectState(so);
 					}
 					else if (qs)
 					{
@@ -76,7 +76,7 @@ namespace CsvRwRouteParser
 							so = BaseObject.Clone(SignalTextures[l], null);
 						}
 
-						aoc.Objects[0].States[zi] = new ObjectState {Prototype = so};
+						aoc.Objects[0].States[zi] = new ObjectState(so);
 					}
 					else if (qg)
 					{
@@ -86,7 +86,7 @@ namespace CsvRwRouteParser
 						}
 
 						//BUG: Should we join the glow object here? Test what BVE4 does with missing state, but provided glow
-						aoc.Objects[0].States[zi] = new ObjectState {Prototype = so};
+						aoc.Objects[0].States[zi] = new ObjectState(so);
 					}
 
 					if (qs | qg)

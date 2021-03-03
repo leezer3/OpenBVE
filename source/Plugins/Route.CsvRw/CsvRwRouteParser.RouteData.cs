@@ -20,7 +20,7 @@ namespace CsvRwRouteParser
 			internal bool AccurateObjectDisposal;
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
-			internal StructureData Structure = new StructureData();
+			internal readonly StructureData Structure = new StructureData();
 			internal SignalDictionary Signals;
 			internal CompatibilitySignalObject[] CompatibilitySignals;
 			internal Texture[] TimetableDaytime;
@@ -34,6 +34,8 @@ namespace CsvRwRouteParser
 			internal bool IgnorePitchRoll;
 			internal bool LineEndingFix;
 			internal bool ValueBasedSections = false;
+			internal bool TurnUsed = false;
+
 			/// <summary>Creates any missing blocks</summary>
 			/// <param name="ToIndex">The block index to process until</param>
 			/// <param name="PreviewOnly">Whether this is a preview only</param>
@@ -52,6 +54,9 @@ namespace CsvRwRouteParser
 							Blocks[i].Cycle = Blocks[i - 1].Cycle;
 							Blocks[i].RailCycles = Blocks[i - 1].RailCycles;
 							Blocks[i].Height = double.NaN;
+							Blocks[i].SnowIntensity = Blocks[i - 1].SnowIntensity;
+							Blocks[i].RainIntensity = Blocks[i - 1].RainIntensity;
+							Blocks[i].WeatherObject = Blocks[i - 1].WeatherObject;
 						}
 						Blocks[i].RailType = new int[Blocks[i - 1].RailType.Length];
 						if (!PreviewOnly)

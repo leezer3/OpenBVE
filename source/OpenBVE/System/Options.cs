@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.Windows.Forms;
 using LibRender2.MotionBlurs;
 using LibRender2.Overlays;
 using OpenBveApi;
@@ -26,8 +27,7 @@ namespace OpenBve
 			
 			/// <summary>Whether collisions between trains are enabled</summary>
 			internal bool Collisions;
-			/// <summary>Whether loading sway is added</summary>
-			internal bool LoadingSway;
+			
 			/// <summary>Whether the black-box data logger is enabled</summary>
 			internal bool BlackBox;
 			/// <summary>Whether joystick support is enabled</summary>
@@ -60,8 +60,6 @@ namespace OpenBve
 			internal TextEncoding.EncodingValue[] RouteEncodings;
 			/// <summary>The list of recently used train character encodings</summary>
 			internal TextEncoding.EncodingValue[] TrainEncodings;
-			/// <summary>The game mode- Affects how the score is calculated</summary>
-			internal GameMode GameMode;
 			/// <summary>The previous game mode, used for calculating the score in the main menu</summary>
 			/// <remarks>This is loaded from the black-box log if enabled, not the main options file</remarks>
 			internal GameMode PreviousGameMode;
@@ -86,11 +84,7 @@ namespace OpenBve
 			/// <remarks>Set to zero to never hide the cursor</remarks>
 			internal double CursorHideDelay;
 			internal string CursorFileName;
-			internal bool Panel2ExtendedMode;
-			internal int Panel2ExtendedMinSize;
-
 			
-
 			internal TimeTableMode TimeTableStyle;
 
 			internal CompressionType packageCompressionType;
@@ -186,12 +180,13 @@ namespace OpenBve
 		/// <summary>Loads the options file from disk</summary>
 		internal static void LoadOptions()
 		{
+			CurrentOptions = new Options();
 			string OptionsDir = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
 			if (!System.IO.Directory.Exists(OptionsDir))
 			{
 				System.IO.Directory.CreateDirectory(OptionsDir);
 			}
-			CurrentOptions = new Options();
+			
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string File = OpenBveApi.Path.CombineFile(OptionsDir, "options.cfg");
 			if (!System.IO.File.Exists(File))
@@ -564,7 +559,7 @@ namespace OpenBve
 											Interface.CurrentOptions.ShowErrorMessages = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "debuglog":
-											Program.GenerateDebugLogging = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.GenerateDebugLogging = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 									} break;
 								case "folders":
@@ -857,7 +852,7 @@ namespace OpenBve
 			Builder.AppendLine("[verbosity]");
 			Builder.AppendLine("showWarningMessages = " + (CurrentOptions.ShowWarningMessages ? "true" : "false"));
 			Builder.AppendLine("showErrorMessages = " + (CurrentOptions.ShowErrorMessages ? "true" : "false"));
-			Builder.AppendLine("debugLog = " + (Program.GenerateDebugLogging ? "true" : "false"));
+			Builder.AppendLine("debugLog = " + (CurrentOptions.GenerateDebugLogging ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[controls]");
 			Builder.AppendLine("useJoysticks = " + (CurrentOptions.UseJoysticks ? "true" : "false"));
@@ -942,7 +937,15 @@ namespace OpenBve
 			Builder.AppendLine("panel2extended = " + (CurrentOptions.Panel2ExtendedMode ? "true" : "false"));
 			Builder.AppendLine("panel2extendedminsize = " + CurrentOptions.Panel2ExtendedMinSize.ToString(Culture));
 			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
-			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
+			try
+			{
+				System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
+			}
+			catch
+			{
+				MessageBox.Show(@"Failed to write to the Options folder.", @"OpenBVE",  MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			}
+			
 		}
 	}
 }

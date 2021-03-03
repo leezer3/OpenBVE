@@ -14,6 +14,15 @@ namespace LibRender2.Cameras
 		public double ForwardViewingDistance;
 		/// <summary>The current viewing distance in the backward direction.</summary>
 		public double BackwardViewingDistance;
+		/// <summary>The current viewing distance</summary>
+		public double ViewingDistance
+		{
+			get
+			{
+				return Math.Max(ForwardViewingDistance, BackwardViewingDistance);
+			}
+		}
+
 		/// <summary>The extra viewing distance used for determining visibility of animated objects.</summary>
 		public double ExtraViewingDistance;
 		/// <summary>Whether the camera has reached the end of the world</summary>

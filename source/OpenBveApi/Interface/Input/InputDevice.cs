@@ -248,7 +248,7 @@ namespace OpenBveApi.Interface
 		}
 
 		/// <summary>
-		/// The function that calls the plugin's load funcion
+		/// The function that calls the plugin's load function
 		/// </summary>
 		/// <param name="index">The index number which can use the plugins</param>
 		public static void CallPluginLoad(int index)
@@ -261,14 +261,7 @@ namespace OpenBveApi.Interface
 			{
 				return;
 			}
-			if (AvailablePlugins[index].Load(FileSystem))
-			{
-				AvailablePluginInfos[index].Status = PluginInfo.PluginStatus.Enable;
-			}
-			else
-			{
-				AvailablePluginInfos[index].Status = PluginInfo.PluginStatus.Failure;
-			}
+			AvailablePluginInfos[index].Status = AvailablePlugins[index].Load(FileSystem) ? PluginInfo.PluginStatus.Enable : PluginInfo.PluginStatus.Failure;
 		}
 
 		/// <summary>

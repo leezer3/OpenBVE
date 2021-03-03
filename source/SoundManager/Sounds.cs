@@ -28,10 +28,10 @@ namespace SoundManager
 		private int BufferCount = 0;
 
 		/// <summary>A list of all sound sources.</summary>
-		protected SoundSource[] Sources = new SoundSource[16];
+		protected internal static SoundSource[] Sources = new SoundSource[16];
 
 		/// <summary>The number of sound sources.</summary>
-		protected int SourceCount = 0;
+		protected internal static int SourceCount = 0;
 
 		/// <summary>The gain threshold. Sounds with gains below this value are not played.</summary>
 		protected const double GainThreshold = 0.0001;
@@ -118,7 +118,7 @@ namespace SoundManager
 				 * Creative OpenAL implementation on Windows seems to be limited to max 16 simulataneous sounds
 				 * Now shipping OpenAL Soft, but detect this and don't glitch
 				 * Further note that the current version of OpenAL Soft (1.20.0 at the time of writing) does not like OpenTK
-				 * The version in use is 1.15.1 found here: https://github.com/opentk/opentk-dependencies
+				 * The version in use is 1.17.0 found here: https://openal-soft.org/openal-binaries/
 				 */
 				systemMaxSounds = 16;
 			}
@@ -280,29 +280,7 @@ namespace SoundManager
 		/// <returns>Whether loading the buffer was successful.</returns>
 		public void LoadBuffer(SoundBuffer buffer)
 		{
-			if (buffer.Loaded)
-			{
-				return;
-			}
-			if (buffer.Ignore)
-			{
-				return;
-			}
-			Sound sound;
-			if (buffer.Origin.GetSound(out sound))
-			{
-				if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16)
-				{
-					byte[] bytes = sound.GetMonoMix();
-					AL.GenBuffers(1, out buffer.OpenAlBufferName);
-					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
-					AL.BufferData(buffer.OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
-					buffer.Duration = sound.Duration;
-					buffer.Loaded = true;
-					return;
-				}
-			}
-			buffer.Ignore = true;
+			buffer.Load();
 		}
 
 		/// <summary>Loads all sound buffers immediately.</summary>
@@ -440,28 +418,9 @@ namespace SoundManager
 		}
 
 		/// <summary>Stops the specified sound source.</summary>
-		/// <param name="sound">The sound source, or a null reference.</param>
-		public void StopSound(CarSound sound)
+		/// <param name="source">The sound source, or a null reference.</param>
+		public void StopSound(SoundSource source)
 		{
-			if (sound != null)
-			{
-				if (sound.Source != null)
-				{
-					if (sound.Source.State == SoundSourceState.Playing)
-					{
-						AL.DeleteSources(1, ref sound.Source.OpenAlSourceName);
-						sound.Source.OpenAlSourceName = 0;
-					}
-					sound.Source.State = SoundSourceState.Stopped;
-				}
-			}
-		}
-
-		/// <summary>Stops the specified sound source.</summary>
-		/// <param name="Source">The sound source, or a null reference.</param>
-		public void StopSound(object Source)
-		{
-			SoundSource source = Source as SoundSource;
 			if (source != null)
 			{
 				if (source.State == SoundSourceState.Playing)
@@ -546,16 +505,6 @@ namespace SoundManager
 			}
 			return false;
 		}
-
-		/// <summary>Gets the duration of the specified sound buffer in seconds.</summary>
-		/// <param name="buffer">The sound buffer.</param>
-		/// <returns>The duration of the sound buffer in seconds, or zero if the buffer could not be loaded.</returns>
-		public double GetDuration(SoundBuffer buffer)
-		{
-			LoadBuffer(buffer);
-			return buffer.Duration;
-		}
-
 
 		// --- statistics ---
 

@@ -1,3 +1,27 @@
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 using System;
 using System.IO;
 using System.Linq;
@@ -178,7 +202,7 @@ namespace Plugin
 					return;
 				case TemplateID.Frame:
 					currentLevel++;
-					if (builder.Vertices.Length != 0)
+					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj);
 						builder = new MeshBuilder(Plugin.currentHost);
@@ -214,7 +238,7 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.Mesh:
-					if (builder.Vertices.Length != 0)
+					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj);
 						builder = new MeshBuilder(Plugin.currentHost);
@@ -225,11 +249,9 @@ namespace Plugin
 						//Some null objects contain an empty mesh
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + block.Label);
 					}
-					int v = builder.Vertices.Length;
-					Array.Resize(ref builder.Vertices, v + nVerts);
 					for (int i = 0; i < nVerts; i++)
 					{
-						builder.Vertices[v + i] = new Vertex(new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle()));
+						builder.Vertices.Add(new Vertex(new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle())));
 					}
 					int nFaces = block.ReadUInt16();
 					if (nFaces == 0)
@@ -260,8 +282,6 @@ namespace Plugin
 						}
 						
 					}
-					int f = builder.Faces.Length;
-					Array.Resize(ref builder.Faces, f + nFaces);
 					for (int i = 0; i < nFaces; i++)
 					{
 						int fVerts = block.ReadUInt16();
@@ -269,12 +289,13 @@ namespace Plugin
 						{
 							throw new Exception("fVerts must be greater than zero");
 						}
-						builder.Faces[f + i] = new MeshFace();
-						builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
+						MeshFace f = new MeshFace();
+						f.Vertices = new MeshFaceVertex[fVerts];
 						for (int j = 0; j < fVerts; j++)
 						{
-							builder.Faces[f + i].Vertices[j].Index = block.ReadUInt16();
+							f.Vertices[j].Index = block.ReadUInt16();
 						}
+						builder.Faces.Add(f);
 					}
 					NoFaces:
 					while (block.Position() < block.Length() - 5)
@@ -286,21 +307,25 @@ namespace Plugin
 				case TemplateID.MeshMaterialList:
 					int nMaterials = block.ReadUInt16();
 					int nFaceIndices = block.ReadUInt16();
-					if (nFaceIndices == 1 && builder.Faces.Length > 1)
+					if (nFaceIndices == 1 && builder.Faces.Count > 1)
 					{
 						//Single material for all faces
 						int globalMaterial = block.ReadUInt16();
-						for (int i = 0; i < builder.Faces.Length; i++)
+						for (int i = 0; i < builder.Faces.Count; i++)
 						{
-							builder.Faces[i].Material = (ushort)(globalMaterial + 1);
+							MeshFace f = builder.Faces[i];
+							f.Material = (ushort)(globalMaterial + 1);
+							builder.Faces[i] = f;
 						}
 					}
-					else if(nFaceIndices == builder.Faces.Length)
+					else if(nFaceIndices == builder.Faces.Count)
 					{
 						for (int i = 0; i < nFaceIndices; i++)
 						{
 							int fMaterial = block.ReadUInt16();
-							builder.Faces[i].Material = (ushort) (fMaterial + 1);
+							MeshFace f = builder.Faces[i];
+							f.Material = (ushort) (fMaterial + 1);
+							builder.Faces[i] = f;
 						}
 					}
 					else
@@ -322,8 +347,12 @@ namespace Plugin
 					Color24 mSpecular = new Color24((byte)block.ReadSingle(), (byte)block.ReadSingle(), (byte)block.ReadSingle());
 					builder.Materials[m].EmissiveColor = new Color24((byte)(255 *block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()));
 					builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
-					builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
-					builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+					if (Plugin.BlackTransparency)
+					{
+						builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
+						builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+					}
+					
 					if (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock(TemplateID.TextureFilename);
@@ -362,7 +391,7 @@ namespace Plugin
 						normals[i].Normalize();
 					}
 					int nFaceNormals = block.ReadUInt16();
-					if (nFaceNormals != builder.Faces.Length)
+					if (nFaceNormals != builder.Faces.Count)
 					{
 						throw new Exception("nFaceNormals must match the number of faces in the mesh");
 					}
@@ -388,7 +417,7 @@ namespace Plugin
 					break;
 				case TemplateID.MeshFaceWraps:
 					int nMeshFaceWraps = block.ReadUInt16();
-					if (nMeshFaceWraps != builder.Faces.Length)
+					if (nMeshFaceWraps != builder.Faces.Count)
 					{
 						throw new Exception("nMeshFaceWraps must match the number of faces in the mesh");
 					}

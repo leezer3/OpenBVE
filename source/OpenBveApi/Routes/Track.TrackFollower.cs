@@ -31,6 +31,10 @@ namespace OpenBveApi.Routes
 		public double CantDueToInaccuracy;
 		/// <summary>The adhesion multiplier at the current location</summary>
 		public double AdhesionMultiplier;
+		/// <summary>The rain intensity at the current location</summary>
+		public int RainIntensity;
+		/// <summary>The rain intensity at the current location</summary>
+		public int SnowIntensity;
 		/// <summary>The event types to be triggered</summary>
 		public EventTriggerType TriggerType;
 		/// <summary>The train the follower is attached to, or a null reference</summary>
@@ -76,6 +80,8 @@ namespace OpenBveApi.Routes
 			Odometer = 0;
 			CantDueToInaccuracy = 0;
 			AdhesionMultiplier = 0;
+			RainIntensity = 0;
+			SnowIntensity = 0;
 			TriggerType = EventTriggerType.None;
 			TrackIndex = 0;
 		}
@@ -111,6 +117,15 @@ namespace OpenBveApi.Routes
 		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
 		public void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
+			if (TrackIndex == 0 && currentHost.Tracks[TrackIndex].Elements.Length == 0)
+			{
+				/*
+				 * Used for displaying trains in Object Viewer
+				 * As we have no track, just update the Z value with the new pos
+				 */
+				WorldPosition.Z = NewTrackPosition;
+				return;
+			}
 			if (!currentHost.Tracks.ContainsKey(TrackIndex) || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
 			int i = LastTrackElement;
 			while (i >= 0 && NewTrackPosition < currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
@@ -247,14 +262,7 @@ namespace OpenBveApi.Routes
 			{
 				if (db != 0.0)
 				{
-					if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
-					{
-						CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
-					}
-					else
-					{
-						CurveRadius = 0.0;
-					}
+					CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0 ? currentHost.Tracks[TrackIndex].Elements[i].CurveRadius : 0.0;
 
 					if (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
 					{
@@ -290,6 +298,8 @@ namespace OpenBveApi.Routes
 			}
 
 			AdhesionMultiplier = currentHost.Tracks[TrackIndex].Elements[i].AdhesionMultiplier;
+			RainIntensity = currentHost.Tracks[TrackIndex].Elements[i].RainIntensity;
+			SnowIntensity = currentHost.Tracks[TrackIndex].Elements[i].SnowIntensity;
 			//Pitch added for Plugin Data usage
 			//Mutliply this by 1000 to get the original value
 			Pitch = currentHost.Tracks[TrackIndex].Elements[i].Pitch * 1000;

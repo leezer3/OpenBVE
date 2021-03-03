@@ -65,7 +65,7 @@ namespace Plugin
 											{
 												case "position":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -214,7 +214,7 @@ namespace Plugin
 											{
 												case "position":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -242,7 +242,7 @@ namespace Plugin
 													} break;
 												case "states":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length >= 1)
 														{
 															string Folder = System.IO.Path.GetDirectoryName(FileName);
@@ -300,7 +300,7 @@ namespace Plugin
 												case "translateydirection":
 												case "translatezdirection":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -429,7 +429,7 @@ namespace Plugin
 													{
 														double FrontAxlePosition;
 														double RearAxlePosition;
-														var splitValue = b.Split(new char[] { ',' });
+														var splitValue = b.Split(new[] { ',' });
 														if (!double.TryParse(splitValue[0], out FrontAxlePosition))
 														{
 															currentHost.AddMessage(MessageType.Error, false,"Invalid FrontAxlePosition in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
@@ -494,7 +494,7 @@ namespace Plugin
 												case "rotateydirection":
 												case "rotatezdirection":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -607,7 +607,7 @@ namespace Plugin
 												case "rotateydamping":
 												case "rotatezdamping":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 2)
 														{
 															double nf, dr;
@@ -651,7 +651,7 @@ namespace Plugin
 												case "textureshiftxdirection":
 												case "textureshiftydirection":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 2)
 														{
 															double x, y;
@@ -943,7 +943,7 @@ namespace Plugin
 											{
 												case "position":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1020,7 +1020,7 @@ namespace Plugin
 												case "translateydirection":
 												case "translatezdirection":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1229,7 +1229,7 @@ namespace Plugin
 											{
 												case "position":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1279,7 +1279,7 @@ namespace Plugin
 												case "filenames":
 													{
 														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														string[] splitFiles = b.Split(new char[] { ',' });
+														string[] splitFiles = b.Split(new[] { ',' });
 														fileNames = new string[splitFiles.Length];
 														for (int k = 0; k < splitFiles.Length; k++)
 														{

@@ -1,28 +1,40 @@
-﻿using System;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using System;
 using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 
 namespace Plugin
 {
 	internal static class WavefrontObjParser
 	{
-		private class MeshBuilder
-		{
-			internal List<VertexTemplate> Vertices;
-			internal List<MeshFace> Faces;
-			internal Material[] Materials;
-			internal MeshBuilder()
-			{
-				this.Vertices = new List<VertexTemplate>();
-				this.Faces = new List<MeshFace>();
-				this.Materials = new Material[] { new Material() };
-			}
-		}
+		
 
 		/// <summary>Loads a Wavefront object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
@@ -32,7 +44,7 @@ namespace Plugin
 		{
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 
-			MeshBuilder Builder = new MeshBuilder();
+			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
 
 			/*
 			 * Temporary arrays
@@ -40,13 +52,15 @@ namespace Plugin
 			 List<Vector3> tempVertices = new List<Vector3>();
 			List<Vector3> tempNormals = new List<Vector3>();
 			List<Vector2> tempCoords = new List<Vector2>();
-			Material[] TempMaterials = new Material[0];
+			Dictionary<string, Material> TempMaterials = new Dictionary<string, Material>();
 			//Stores the current material
-			int currentMaterial = -1;
+			string currentMaterial = string.Empty;
 
 			//Read the contents of the file
 			string[] Lines = File.ReadAllLines(FileName, Encoding);
 
+			double currentScale = 1.0;
+			bool TopLeftTextureCoordinates = false;
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
 			{
@@ -54,10 +68,44 @@ namespace Plugin
 				int c = Lines[i].IndexOf("#", StringComparison.Ordinal);
 				if (c >= 0)
 				{
+					int hash = Lines[i].IndexOf('#');
+					int eq = Lines[i].IndexOf('=');
+					int skp = Lines[i].IndexOf("SketchUp", StringComparison.InvariantCultureIgnoreCase);
+					if(hash != -1 && (eq != -1 || skp != -1))
+					{
+						string afterHash = Lines[i].Substring(hash + 1).Trim();
+						if (afterHash.StartsWith("File units", StringComparison.InvariantCultureIgnoreCase))
+						{
+							string units = Lines[i].Substring(eq + 1).Trim().ToLowerInvariant();
+							switch (units)
+							{
+								/*
+								 * Apply unit correction factor
+								 * This is not a default obj feature, but seems to appear in Sketchup exported files
+								 */
+								case "millimeters":
+									currentScale = 0.001;
+									break;
+								case "centimeters":
+									currentScale = 0.01;
+									break;
+								case "meters":
+									currentScale = 1.0;
+									break;
+								default:
+									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised units value " + units + " at line "+ i);
+									break;
+							}
+						}
+						else if (afterHash.StartsWith("Exported from SketchUp", StringComparison.InvariantCultureIgnoreCase))
+						{
+							TopLeftTextureCoordinates = true;
+						}
+					}
 					Lines[i] = Lines[i].Substring(0, c);
 				}
 				// collect arguments
-				List<string> Arguments = new List<string>(Lines[i].Split(new char[] { ' ', '\t' }, StringSplitOptions.None));
+				List<string> Arguments = new List<string>(Lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
 				for (int j = Arguments.Count -1; j >= 0; j--)
 				{
 					Arguments[j] = Arguments[j].Trim(new char[] { });
@@ -87,6 +135,7 @@ namespace Plugin
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex at Line " + i);
 						}
+						vertex *= currentScale;
 						tempVertices.Add(vertex);
 						break;
 					case "vt":
@@ -131,7 +180,7 @@ namespace Plugin
 						for (int f = 1; f < Arguments.Count; f++)
 						{
 							Vertex newVertex = new Vertex();
-							string[] faceArguments = Arguments[f].Split(new char[] {'/'} , StringSplitOptions.None);
+							string[] faceArguments = Arguments[f].Split(new[] {'/'} , StringSplitOptions.None);
 							int idx;
 							if (!int.TryParse(faceArguments[0], out idx))
 							{
@@ -190,6 +239,10 @@ namespace Plugin
 									else
 									{
 										newVertex.TextureCoordinates = tempCoords[currentCoord - 1];
+										if (TopLeftTextureCoordinates)
+										{
+											newVertex.TextureCoordinates.Y *= -1.0;
+										}
 									}
 									
 								}
@@ -241,12 +294,40 @@ namespace Plugin
 							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
-						Builder.Faces.Add(currentMaterial == -1 ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)currentMaterial));
+
+						int materialIndex = -1;
+						if (currentMaterial != string.Empty)
+						{
+							for (int m = 0; m < Builder.Materials.Length; m++)
+							{
+								if (Builder.Materials[m] == TempMaterials[currentMaterial])
+								{
+									materialIndex = m;
+									break;
+								}
+							}
+						}
+
+						if (materialIndex == -1)
+						{
+							materialIndex = Builder.Materials.Length;
+							Array.Resize(ref Builder.Materials, Builder.Materials.Length + 1);
+							if (TempMaterials.ContainsKey(currentMaterial))
+							{
+								Builder.Materials[materialIndex] = TempMaterials[currentMaterial];
+							}
+							else
+							{
+								Builder.Materials[materialIndex] = new Material();
+							}
+							
+						}
+						Builder.Faces.Add(currentMaterial == string.Empty ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)materialIndex));
 						break;
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
-						ApplyMeshBuilder(ref Object, Builder);
-						Builder = new MeshBuilder();
+						Builder.Apply(ref Object);
+						Builder = new MeshBuilder(Plugin.currentHost);
 						break;
 					case "s":
 						/* 
@@ -270,33 +351,11 @@ namespace Plugin
 						}
 						break;
 					case "usemtl":
-						for (int m = 0; m < TempMaterials.Length; m++)
+						currentMaterial = Arguments[1].ToLowerInvariant();
+						if (!TempMaterials.ContainsKey(currentMaterial))
 						{
-							if (TempMaterials[m].Key.ToLowerInvariant() == Arguments[1].ToLowerInvariant())
-							{
-								bool mf = false;
-								for (int k = 0; k < Builder.Materials.Length; k++)
-								{
-									if (Builder.Materials[k].Key != null && Builder.Materials[k].Key.ToLowerInvariant() == Arguments[1].ToLowerInvariant())
-									{
-										mf = true;
-										currentMaterial = k;
-										break;
-									}
-								}
-								if (!mf)
-								{
-									Array.Resize(ref Builder.Materials, Builder.Materials.Length + 1);
-									Builder.Materials[Builder.Materials.Length - 1] = TempMaterials[m];
-									currentMaterial = Builder.Materials.Length - 1;
-								}
-								break;
-							}
-							if (m == TempMaterials.Length)
-							{
-								Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + Arguments[1] + " was not found.");
-								currentMaterial = -1;
-							}
+							currentMaterial = string.Empty;
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + Arguments[1] + " was not found.");
 						}
 						break;
 					default:
@@ -304,16 +363,15 @@ namespace Plugin
 						break;
 				}
 			}
-			ApplyMeshBuilder(ref Object, Builder);
+			Builder.Apply(ref Object);
 			Object.Mesh.CreateNormals();
 			return Object;
 		}
 
-		private static void LoadMaterials(string FileName, ref Material[] Materials)
+		private static void LoadMaterials(string FileName, ref Dictionary<string, Material> Materials)
 		{
 			string[] Lines = File.ReadAllLines(FileName);
-			Material mm = new Material();
-			bool fm = false;
+			string currentKey = string.Empty;
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
 			{
@@ -324,7 +382,7 @@ namespace Plugin
 					Lines[i] = Lines[i].Substring(0, c);
 				}
 				// collect arguments
-				List<string> Arguments = new List<string>(Lines[i].Split(new char[] { ' ', '\t' }, StringSplitOptions.None));
+				List<string> Arguments = new List<string>(Lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
 				for (int j = Arguments.Count - 1; j >= 0; j--)
 				{
 					Arguments[j] = Arguments[j].Trim(new char[] { });
@@ -341,14 +399,15 @@ namespace Plugin
 				switch (Arguments[0].ToLowerInvariant())
 				{
 					case "newmtl":
-						if (fm == true)
+						currentKey = Arguments[1].ToLowerInvariant(); //store as KVP, but case insensitive
+						if (Materials.ContainsKey(currentKey))
 						{
-							Array.Resize(ref Materials, Materials.Length + 1);
-							Materials[Materials.Length - 1] = mm;
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Material " + currentKey + " has been defined twice.");
 						}
-						mm = new Material();
-						mm.Key = Arguments[1];
-						fm = true;
+						else
+						{
+							Materials.Add(currentKey, new Material());
+						}
 						break;
 					case "ka":
 						//Ambient color not supported
@@ -358,20 +417,20 @@ namespace Plugin
 						double r = 1, g = 1, b = 1;
 						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out r))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + currentKey);
 						}
 						if (Arguments.Count >= 3 && !double.TryParse(Arguments[2], out g))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + currentKey);
 						}
 						if (Arguments.Count >= 4 && !double.TryParse(Arguments[3], out b))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + currentKey);
 						}
 						r = 255 * r;
 						g = 255 * g;
 						b = 255 * b;
-						mm.Color = new Color32((byte)r, (byte)g, (byte)b);
+						Materials[currentKey].Color = new Color32((byte)r, (byte)g, (byte)b);
 						break;
 					case "ks":
 						//Specular color not supported
@@ -384,16 +443,16 @@ namespace Plugin
 						double a = 1;
 						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out a))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + currentKey);
 						}
-						mm.Color.A = (byte)((1 - a) * 255);
+						Materials[currentKey].Color.A = (byte)((1 - a) * 255);
 						break;
 					case "map_kd":
 					case "map_ka":
 						string tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[Arguments.Count - 1]);
 						if (File.Exists(tday))
 						{
-							mm.DaytimeTexture = tday;
+							Materials[currentKey].DaytimeTexture = tday;
 						}
 						else
 						{
@@ -408,105 +467,6 @@ namespace Plugin
 						//Illumination mode not supported
 						break;
 					
-				}
-			}
-			Array.Resize(ref Materials, Materials.Length + 1);
-			Materials[Materials.Length - 1] = mm;
-		}
-
-		private static void ApplyMeshBuilder(ref StaticObject Object, MeshBuilder Builder)
-		{
-			if (Builder.Faces.Count != 0)
-			{
-				int mf = Object.Mesh.Faces.Length;
-				int mm = Object.Mesh.Materials.Length;
-				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
-				if (mm == 0)
-				{
-					if (Object.Mesh.Materials.Length == 0)
-					{
-						/*
-						 * If the object has no materials defined at all, we need to add one
-						 */
-						Array.Resize(ref Object.Mesh.Materials, 1);
-						Object.Mesh.Materials[0] = new MeshMaterial();
-						Object.Mesh.Materials[0].Color = Color32.White;
-						Object.Mesh.Materials[0].Flags = (byte)(0 | 0);
-						Object.Mesh.Materials[0].DaytimeTexture = null;
-						Object.Mesh.Materials[0].NighttimeTexture = null;
-						mm++;
-					}
-				}
-				if (Builder.Materials.Length > 0)
-				{
-					Array.Resize(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
-				}
-				else
-				{
-					/*
-					 * If no materials have been defined for this face group, use the last material
-					 */
-					mm -= 1;
-				}
-				Array.Resize(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
-				for (int i = 0; i < Builder.Vertices.Count; i++)
-				{
-					Object.Mesh.Vertices[mv + i] = new Vertex((Vertex)Builder.Vertices[i]);
-				}
-				for (int i = 0; i < Builder.Faces.Count; i++)
-				{
-					Object.Mesh.Faces[mf + i] = Builder.Faces[i];
-					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
-					{
-						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-					}
-					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
-				}
-				for (int i = 0; i < Builder.Materials.Length; i++)
-				{
-					Object.Mesh.Materials[mm + i].Flags = Builder.Materials[i].Flags;
-					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
-					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					if (Builder.Materials[i].DaytimeTexture != null)
-					{
-						Texture tday;
-						if ((Builder.Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
-						{
-							Plugin.currentHost.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
-						}
-						else
-						{
-							Plugin.currentHost.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
-						}
-						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
-					}
-					else
-					{
-						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
-					if (Builder.Materials[i].NighttimeTexture != null)
-					{
-						Texture tnight;
-						if ((Builder.Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
-						{
-							Plugin.currentHost.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
-						}
-						else
-						{
-							Plugin.currentHost.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, null), out tnight);
-						}
-						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
-					}
-					else
-					{
-						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
-					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
-					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
-					Object.Mesh.Materials[mm + i].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 				}
 			}
 		}

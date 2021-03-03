@@ -106,13 +106,14 @@ namespace OpenBveApi.Routes
 			Vector3[] midpointsWorldUps = new Vector3[newLength];
 			Vector3[] midpointsWorldSides = new Vector3[newLength];
 			double[] midpointsCant = new double[newLength];
+			TrackFollower follower = new TrackFollower(currentHost);
 			for (int i = 0; i < newLength; i++)
 			{
 				int m = i % subdivisions;
 				if (m != 0)
 				{
 					int q = i / subdivisions;
-					TrackFollower follower = new TrackFollower(currentHost);
+					
 					double r = (double) m / (double) subdivisions;
 					double p = (1.0 - r) * Elements[q].StartingTrackPosition + r * Elements[q + 1].StartingTrackPosition;
 					follower.UpdateAbsolute(-1.0, true, false);
@@ -154,7 +155,6 @@ namespace OpenBveApi.Routes
 			// find turns
 			bool[] isTurn = new bool[Elements.Length];
 			{
-				TrackFollower follower = new TrackFollower(currentHost);
 				for (int i = 1; i < Elements.Length - 1; i++)
 				{
 					int m = i % subdivisions;
@@ -237,7 +237,6 @@ namespace OpenBveApi.Routes
 						if (r * r > 1.0)
 						{
 							// apply radius
-							TrackFollower follower = new TrackFollower(currentHost);
 							Elements[i - 1].CurveRadius = r;
 							double p = 0.00000001 * Elements[i - 1].StartingTrackPosition + 0.99999999 * Elements[i].StartingTrackPosition;
 							follower.UpdateAbsolute(p - 1.0, true, false);

@@ -58,7 +58,7 @@ namespace OpenBveApi.Objects
 			SplitAttenuationData(GlowAttenuationData, out mode, out halfdistance);
 			int i = Face.Vertices[0].Index;
 			Vector3 d = new Vector3(Vertices[i].Coordinates.X, Vertices[i].Coordinates.Y, -Vertices[i].Coordinates.Z);
-			d.Transform(ModelMatrix);
+			d.Transform(ModelMatrix, false);
 			switch (mode)
 			{
 				case GlowAttenuationMode.DivisionExponent2:

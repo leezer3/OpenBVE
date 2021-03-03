@@ -69,7 +69,7 @@ namespace CsvRwRouteParser
 				case OptionsCommand.UnitOfSpeed:
 				case OptionsCommand.ObjectVisibility:
 					break;
-				case OptionsCommand.SectionBehaviour:
+				case OptionsCommand.SectionBehavior:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -92,7 +92,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case OptionsCommand.CantBehaviour:
+				case OptionsCommand.CantBehavior:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -115,7 +115,7 @@ namespace CsvRwRouteParser
 					}
 
 					break;
-				case OptionsCommand.FogBehaviour:
+				case OptionsCommand.FogBehavior:
 					if (Arguments.Length < 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);

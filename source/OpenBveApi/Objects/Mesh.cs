@@ -75,9 +75,9 @@ namespace OpenBveApi.Objects
 		{
 			if (Faces[FaceIndex].Vertices.Length >= 3)
 			{
-				int i0 = (int) Faces[FaceIndex].Vertices[0].Index;
-				int i1 = (int) Faces[FaceIndex].Vertices[1].Index;
-				int i2 = (int) Faces[FaceIndex].Vertices[2].Index;
+				int i0 = Faces[FaceIndex].Vertices[0].Index;
+				int i1 = Faces[FaceIndex].Vertices[1].Index;
+				int i2 = Faces[FaceIndex].Vertices[2].Index;
 				double ax = Vertices[i1].Coordinates.X - Vertices[i0].Coordinates.X;
 				double ay = Vertices[i1].Coordinates.Y - Vertices[i0].Coordinates.Y;
 				double az = Vertices[i1].Coordinates.Z - Vertices[i0].Coordinates.Z;

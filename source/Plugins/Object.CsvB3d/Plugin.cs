@@ -9,8 +9,7 @@ namespace Plugin
     public partial class Plugin : ObjectInterface
     {
 		private static HostInterface currentHost;
-	    private static bool CylinderHack = false;
-	    private static bool BveTsHacks = false;
+		private static CompatabilityHacks enabledHacks;
 	    private static string CompatibilityFolder;
 
 	    public override string[] SupportedStaticObjectExtensions => new[] { ".b3d", ".csv" };
@@ -20,10 +19,9 @@ namespace Plugin
 		    CompatibilityFolder = fileSystem.GetDataFolder("Compatibility");
 	    }
 
-	    public override void SetCompatibilityHacks(bool EnableBveTsHacks, bool EnableCylinderHack)
+	    public override void SetCompatibilityHacks(CompatabilityHacks EnabledHacks)
 	    {
-		    BveTsHacks = EnableBveTsHacks;
-		    CylinderHack = EnableCylinderHack;
+		    enabledHacks = EnabledHacks;
 	    }
 
 
