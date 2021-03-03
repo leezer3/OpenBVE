@@ -708,17 +708,13 @@ namespace MechanikRouteParser
 			o.TextureIndex = textureIndex;
 
 			MeshBuilder Builder = new MeshBuilder(Plugin.CurrentHost);
-			int v = Builder.Vertices.Length;
-			Array.Resize(ref Builder.Vertices, v + Points.Count);
-			int fl = Builder.Faces.Length;
-			Array.Resize(ref Builder.Faces, Builder.Faces.Length + 1);
-			Builder.Faces[fl] = new MeshFace { Vertices = new MeshFaceVertex[Points.Count] , Flags = MeshFace.Face2Mask };
+			Builder.Faces.Add(new MeshFace {Vertices = new MeshFaceVertex[Points.Count], Flags = FaceFlags.Face2Mask});
 			for (int i = 0; i < Points.Count; i++)
 			{
-				Builder.Faces[fl].Vertices[i].Index = (ushort) i;
-				Builder.Faces[fl].Vertices[i].Normal = new Vector3();
-				Builder.Vertices[v + i] = new Vertex(Points[i]);
-				Builder.Vertices[v + i].TextureCoordinates = FindTextureCoordinate(i, firstPoint, Points, scaleFactor, sx, sy, t);
+				Builder.Faces[Builder.Faces.Count -1].Vertices[i].Index = (ushort) i;
+				Builder.Faces[Builder.Faces.Count -1].Vertices[i].Normal = new Vector3();
+				Builder.Vertices.Add(new Vertex(Points[i]));
+				Builder.Vertices[Builder.Vertices.Count -1].TextureCoordinates = FindTextureCoordinate(i, firstPoint, Points, scaleFactor, sx, sy, t);
 			}
 
 			
@@ -751,19 +747,18 @@ namespace MechanikRouteParser
 			o.TextureIndex = textureIndex;	
 			//BUG: Not entirely sure why multiplying W & H by 5 makes this work....
 			MeshBuilder Builder = new MeshBuilder(Plugin.CurrentHost);
-			Builder.Vertices = new VertexTemplate[4];
-			Builder.Vertices[0] = new Vertex(new Vector3(topLeft));
-			Builder.Vertices[1] = new Vertex(new Vector3(topLeft.X + (t.Width * 5), topLeft.Y, topLeft.Z)); //upper right
-			Builder.Vertices[2] = new Vertex(new Vector3((topLeft.X + (t.Width * 5)), (topLeft.Y - (t.Height * 5)), topLeft.Z)); //bottom right
-			Builder.Vertices[3] = new Vertex(new Vector3(topLeft.X, (topLeft.Y - (t.Height * 5)), topLeft.Z)); //bottom left
+			Builder.Vertices = new List<VertexTemplate>();
+			Builder.Vertices.Add(new Vertex(new Vector3(topLeft)));
+			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + (t.Width * 5), topLeft.Y, topLeft.Z))); //upper right
+			Builder.Vertices.Add(new Vertex(new Vector3((topLeft.X + (t.Width * 5)), (topLeft.Y - (t.Height * 5)), topLeft.Z))); //bottom right
+			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X, (topLeft.Y - (t.Height * 5)), topLeft.Z))); //bottom left
 			//Possibly change to Face, check this though (Remember that Mechanik was restricted to the cab, wheras we are not)
-			Builder.Faces = new MeshFace[1];
-			Builder.Faces[0] = new MeshFace { Vertices = new MeshFaceVertex[4], Flags = MeshFace.Face2Mask };
-			Builder.Faces[0].Vertices = new MeshFaceVertex[4];
-			Builder.Faces[0].Vertices[0] = new MeshFaceVertex(0);
-			Builder.Faces[0].Vertices[1] = new MeshFaceVertex(1);
-			Builder.Faces[0].Vertices[2] = new MeshFaceVertex(2);
-			Builder.Faces[0].Vertices[3] = new MeshFaceVertex(3);
+			Builder.Faces = new List<MeshFace>();
+			Builder.Faces.Add(new MeshFace { Vertices = new MeshFaceVertex[4], Flags = FaceFlags.Face2Mask });
+			Builder.Faces[0].Vertices[0].Index = 0;
+			Builder.Faces[0].Vertices[1].Index = 1;
+			Builder.Faces[0].Vertices[2].Index = 2;
+			Builder.Faces[0].Vertices[3].Index = 3;
 			Builder.Vertices[1].TextureCoordinates = new Vector2(1,0);
 			Builder.Vertices[2].TextureCoordinates = new Vector2(1,1);
 			Builder.Vertices[3].TextureCoordinates = new Vector2(0,1);
