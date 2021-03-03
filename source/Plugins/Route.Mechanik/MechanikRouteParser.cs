@@ -285,14 +285,14 @@ namespace MechanikRouteParser
 						{
 							case "#t_prz":
 								//FREE, transparent
-								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, true, false);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, true);
 								break;
 							case "#t_p":
 								//HORIZONTAL, no transparency
-								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false, true);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false);
 								break;
 							case "#t":
-								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false, false);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false);
 								break;
 						}
 						
@@ -468,17 +468,13 @@ namespace MechanikRouteParser
 							continue;
 						}
 						blockIndex = currentRouteData.FindBlock(trackPosition);
-						if (currentRouteData.Blocks[blockIndex].stopMarker == null)
-						{
-							currentRouteData.Blocks[blockIndex].stopMarker = new StationStop();
-						}
 						if (terminal)
 						{
-							currentRouteData.Blocks[blockIndex].stopMarker.endPosition = stopPos.Y;
+							currentRouteData.Blocks[blockIndex].stopMarker.Add(new StationStop(stopPos, terminal));
 						}
 						else
 						{
-							currentRouteData.Blocks[blockIndex].stopMarker.startPosition = stopPos.Y;
+							currentRouteData.Blocks[blockIndex].stopMarker.Insert(0, new StationStop(stopPos, terminal));
 						}
 						break;
 					case "'sem":
@@ -545,11 +541,7 @@ namespace MechanikRouteParser
 			}
 			//Insert a stop in the first block, as Mechanik always starts at pos 0, wheras BVE starts at the first stop
 			int blockZero = currentRouteData.FindBlock(0);
-			currentRouteData.Blocks[blockZero].stopMarker = new StationStop
-			{
-				startPosition = 0,
-				endPosition = 12.5
-			};
+			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, -10), true));
 			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
 			currentRouteData.CreateMissingBlocks();
 			ProcessRoute(PreviewOnly);
@@ -563,20 +555,39 @@ namespace MechanikRouteParser
 			{
 				Texture bt = null;
 				string f = Path.CombineFile(RouteFolder, "obloczki.bmp");
-				if (System.IO.File.Exists(f))
+				if (File.Exists(f))
 				{
 					Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
+				}
+				else
+				{
+					f = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Mechanik\\greysky.png");
+					if (File.Exists(f))
+					{
+
+						Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
+					}
 				}
 
 				Plugin.CurrentRoute.CurrentBackground = new StaticBackground(bt, 2, false);
 				Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
 			}
 
-			Vector3 worldPosition = eyePosition; //Use eye pos as world starting pos (as mechanik zero is eye-pos)
+			Vector3 worldPosition = new Vector3();
 			Vector2 worldDirection = new Vector2(0.0, 1.0);
 			Vector3 trackPosition = new Vector3(0.0, 0.0, 0.0);
 			Vector2 trackDirection = new Vector2(0.0, 1.0);
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
+			Plugin.CurrentRoute.Stations = new[]
+			{
+				new RouteStation
+				{
+					Name = "Station 1",
+					OpenLeftDoors = true,
+					OpenRightDoors = true,
+				}
+				
+			};
 			int CurrentTrackLength = 0;
 			double StartingDistance = 0;
 			for (int i = 0; i < currentRouteData.Blocks.Count; i++)
@@ -584,7 +595,7 @@ namespace MechanikRouteParser
 				// normalize
 				Normalize(ref worldDirection.X, ref worldDirection.Y);
 				Normalize(ref trackDirection.X, ref trackDirection.Y);
-
+				
 
 				// track
 				TrackElement WorldTrackElement = new TrackElement(currentRouteData.Blocks[i].StartingTrackPosition);
@@ -618,7 +629,7 @@ namespace MechanikRouteParser
 				}
 				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
 				{
-					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(worldPosition, t, StartingDistance, StartingDistance + 25, 100);
+					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(worldPosition + eyePosition, t, StartingDistance, StartingDistance + 25, 100);
 				}
 				// finalize block
 				worldPosition.X += worldDirection.X * blockLength;
@@ -638,7 +649,6 @@ namespace MechanikRouteParser
 				if (i < currentRouteData.Blocks.Count - 1 && currentRouteData.Blocks[i + 1].Correction)
 				{
 					worldPosition = trackPosition;
-					worldPosition += eyePosition; //correct for eye pos relative
 					worldDirection = trackDirection;
 				}
 
@@ -656,74 +666,64 @@ namespace MechanikRouteParser
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position, Plugin.CurrentHost);
 				}
 
-				if (currentRouteData.Blocks[i].stopMarker != null)
+				foreach (StationStop stop in currentRouteData.Blocks[i].stopMarker)
 				{
-					//Use the stop markers to generate station events
-					//Mechanik doesn't support station names, so let's just call them Station N
-					int s = Plugin.CurrentRoute.Stations.Length;
-					Array.Resize(ref Plugin.CurrentRoute.Stations, s + 1);
-					Plugin.CurrentRoute.Stations[s] = new RouteStation
+					if (!stop.Terminal)
 					{
-						Name = "Station " + (s + 1),
-						OpenLeftDoors = true,
-						OpenRightDoors = true,
-						Stops = new [] 
-						{ 
+						int s = Plugin.CurrentRoute.Stations.Length;
+						Array.Resize(ref Plugin.CurrentRoute.Stations, s + 1);
+						Plugin.CurrentRoute.Stations[s] = new RouteStation
+						{
+							Name = "Station " + (s + 1),
+							OpenLeftDoors = true,
+							OpenRightDoors = true,
+						};
+						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(0, s);
+					}
+					else
+					{
+						int s = Plugin.CurrentRoute.Stations.Length - 1;
+						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationEndEvent(0, s, Plugin.CurrentRoute, Plugin.CurrentHost);
+						double tPos = currentRouteData.Blocks[i].StartingTrackPosition;
+						Plugin.CurrentRoute.Stations[s].Stops = new[]
+						{
 							new RouteManager2.Stations.StationStop
 							{
-								ForwardTolerance = currentRouteData.Blocks[i].stopMarker.startPosition, 
-								BackwardTolerance = currentRouteData.Blocks[i].stopMarker.endPosition,
+								BackwardTolerance = 25,
+								ForwardTolerance = 25,
 								Cars = 0,
 								TrackPosition = currentRouteData.Blocks[i].StartingTrackPosition
 							}
-						}
-					};
-					
-					int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(0, s);
-				}
-			}
-			// insert station end events
-			int lastStationBlock = 0;
-			for (int i = 0; i < Plugin.CurrentRoute.Stations.Length; i++)
-			{
-				int j = Plugin.CurrentRoute.Stations[i].Stops.Length - 1;
-				if (j >= 0)
-				{
-					double p = Plugin.CurrentRoute.Stations[i].Stops[j].TrackPosition + Plugin.CurrentRoute.Stations[i].Stops[j].ForwardTolerance + 25.0;
-					for (int k = lastStationBlock; k < Plugin.CurrentRoute.Tracks[0].Elements.Length; k++)
-					{
-						if (Plugin.CurrentRoute.Tracks[0].Elements[k].StartingTrackPosition > p)
-						{
-							int e = Plugin.CurrentRoute.Tracks[0].Elements[k].Events.Length; 
-							Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[k].Events, e + 1);
-							Plugin.CurrentRoute.Tracks[0].Elements[k].Events[e] = new StationEndEvent(0, i, Plugin.CurrentRoute, Plugin.CurrentHost);
-						}
+
+						};
 					}
+					//TODO: Add the appropriate 3D face
 				}
+				
 			}
 			Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
-			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 25) };
+			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
 		}
 
-		private static int CreateHorizontalObject(List<Vector3> Points, int firstPoint, double scaleFactor, double sx, double sy, int textureIndex, bool transparent, bool horizontal)
+		private static int CreateHorizontalObject(List<Vector3> Points, int firstPoint, double scaleFactor, double sx, double sy, int textureIndex, bool transparent)
 		{
 			if (!AvailableTextures.ContainsKey(textureIndex))
 			{
 				return -1;
 			}
 			MechanikTexture t = AvailableTextures[textureIndex];
-			MechanikObject o = new MechanikObject();
-			o.TopLeft = new Vector3();
-			o.TextureIndex = textureIndex;
+			MechanikObject o = new MechanikObject(MechnikObjectType.Horizontal, Vector3.Zero, scaleFactor, textureIndex);
 
 			MeshBuilder Builder = new MeshBuilder(Plugin.CurrentHost);
 			Builder.Faces.Add(new MeshFace {Vertices = new MeshFaceVertex[Points.Count], Flags = FaceFlags.Face2Mask});
 			for (int i = 0; i < Points.Count; i++)
 			{
 				Builder.Faces[Builder.Faces.Count -1].Vertices[i].Index = (ushort) i;
-				Builder.Faces[Builder.Faces.Count -1].Vertices[i].Normal = new Vector3();
+				Builder.Faces[Builder.Faces.Count -1].Vertices[i].Normal = Vector3.Zero;
 				Builder.Vertices.Add(new Vertex(Points[i]));
 				Builder.Vertices[Builder.Vertices.Count -1].TextureCoordinates = FindTextureCoordinate(i, firstPoint, Points, scaleFactor, sx, sy, t);
 			}
@@ -757,9 +757,7 @@ namespace MechanikRouteParser
 				return -1;
 			}
 			MechanikTexture t = AvailableTextures[textureIndex];
-			MechanikObject o = new MechanikObject();
-			o.TopLeft = new Vector3(0,0,0);
-			o.TextureIndex = textureIndex;	
+			MechanikObject o = new MechanikObject(MechnikObjectType.Perpendicular, topLeft, scaleFactor, textureIndex);
 			//BUG: Not entirely sure why multiplying W & H by 5 makes this work....
 			MeshBuilder Builder = new MeshBuilder(Plugin.CurrentHost);
 			Builder.Vertices = new List<VertexTemplate>();
@@ -794,7 +792,7 @@ namespace MechanikRouteParser
 
 		private static void LoadTextureList(string tDat)
 		{
-			string[] textureLines = System.IO.File.ReadAllLines(tDat);
+			string[] textureLines = File.ReadAllLines(tDat);
 			for (int i = 0; i < textureLines.Length; i++)
 			{
 				int j = textureLines[i].IndexOf(@"//", StringComparison.Ordinal);
@@ -822,7 +820,7 @@ namespace MechanikRouteParser
 				if (!String.IsNullOrWhiteSpace(s))
 				{
 					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(tDat), s);
-					if (System.IO.File.Exists(path))
+					if (File.Exists(path))
 					{
 						MechanikTexture t = new MechanikTexture(path, s);
 						AvailableTextures.Add(k, t);
@@ -835,7 +833,7 @@ namespace MechanikRouteParser
 
 		private static void LoadSoundList(string sDat)
 		{
-			string[] soundLines = System.IO.File.ReadAllLines(sDat);
+			string[] soundLines = File.ReadAllLines(sDat);
 			for (int i = 0; i < soundLines.Length; i++)
 			{
 				int j = soundLines[i].IndexOf(@"//", StringComparison.Ordinal);
@@ -863,7 +861,7 @@ namespace MechanikRouteParser
 				if (!String.IsNullOrWhiteSpace(s))
 				{
 					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(sDat), s);
-					if (System.IO.File.Exists(path))
+					if (File.Exists(path))
 					{
 						SoundHandle handle;
 						Plugin.CurrentHost.RegisterSound(path, out handle);

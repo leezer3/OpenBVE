@@ -40,7 +40,7 @@ namespace MechanikRouteParser
 		/// <summary>The sound events placed in this block</summary>
 		internal List<SoundEvent> Sounds = new List<SoundEvent>();
 		/// <summary>The station stop if applicable</summary>
-		internal StationStop stopMarker;
+		internal List<StationStop> stopMarker;
 		/// <summary>Whether a rotation / position correction should be issued after this block</summary>
 		internal bool Correction;
 
@@ -48,6 +48,7 @@ namespace MechanikRouteParser
 		{
 			this.StartingTrackPosition = TrackPosition;
 			Correction = false;
+			this.stopMarker = new List<StationStop>();
 		}
 	}
 }

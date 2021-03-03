@@ -28,17 +28,25 @@ using OpenBveApi.Objects;
 namespace MechanikRouteParser
 {
 	/// <summary>Describes a world object (single face) within a block</summary>
-	internal struct MechanikObject
+	internal class MechanikObject
 	{
 		/// <summary>The type of object</summary>
-		internal MechnikObjectType Type;
+		internal readonly MechnikObjectType Type;
 		/// <summary>The top left point</summary>
-		internal Vector3 TopLeft;
+		internal readonly Vector3 TopLeft;
 		/// <summary>The scale factor to be applied</summary>
-		internal double ScaleFactor;
+		internal readonly double ScaleFactor;
 		/// <summary>The texture index to be applied</summary>
 		internal int TextureIndex;
 		/// <summary>The generated StaticObject</summary>
 		internal StaticObject Object;
+
+		internal MechanikObject(MechnikObjectType type, Vector3 topLeft, double scaleFactor, int textureIndex)
+		{
+			Type = type;
+			TopLeft = topLeft;
+			ScaleFactor = scaleFactor;
+			TextureIndex = textureIndex;
+		}
 	}
 }

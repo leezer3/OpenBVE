@@ -223,7 +223,7 @@ namespace OpenBve
 													text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
 													text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
 													{
-														Item.ImageKey = @"route";
+														Item.ImageKey = @"csvroute";
 													}
 												}
 												
@@ -234,7 +234,7 @@ namespace OpenBve
 										}
 										else
 										{
-											Item.ImageKey = @"route";
+											Item.ImageKey = @"rwroute";
 										}
 										Item.Tag = Files[i];
 									}

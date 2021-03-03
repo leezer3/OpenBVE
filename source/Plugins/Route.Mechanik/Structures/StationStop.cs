@@ -22,14 +22,23 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Math;
+using OpenBveApi.Runtime;
+
 namespace MechanikRouteParser
 {
 	/// <summary>A station stop marker</summary>
 	internal class StationStop
 	{
-		/// <summary>The offset for the start position from where the marker is placed on the track</summary>
-		internal double startPosition = 0;
-		/// <summary> The offset for the end position from where the marker is placed on the track</summary>
-		internal double endPosition = 10;
+		/// <summary>The position the marker will be placed</summary>
+		internal readonly Vector2 MarkerPosition;
+		/// <summary>Whether this is the terminal marker for the station</summary>
+		internal readonly bool Terminal;
+
+		internal StationStop(Vector2 Position, bool IsTerminal)
+		{
+			MarkerPosition = Position;
+			Terminal = IsTerminal;
+		}
 	}
 }

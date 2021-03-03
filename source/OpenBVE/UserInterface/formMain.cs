@@ -16,6 +16,7 @@ using OpenBveApi.Objects;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
+using Path = System.IO.Path;
 
 namespace OpenBve {
 	internal partial class formMain : Form
@@ -157,8 +158,9 @@ namespace OpenBve {
 			Image ParentIcon = LoadImage(MenuFolder, "icon_parent.png");
 			Image FolderIcon = LoadImage(MenuFolder, "icon_folder.png");
 			Image DiskIcon = LoadImage(MenuFolder, "icon_disk.png");
-			Image RouteIcon = LoadImage(MenuFolder, "icon_route.png");
-			Image MechanikRouteIcon = LoadImage(MenuFolder, "icon_route_latestversion.png");
+			Image CsvRouteIcon = LoadImage(MenuFolder, "icon_route.png");
+			Image RwRouteIcon = LoadImage(MenuFolder, "icon_route_outdatedversion.png");
+			Image MechanikRouteIcon = LoadImage(MenuFolder, "icon_mechanik.png");
 			Image TrainIcon = LoadImage(MenuFolder, "icon_train.png");
 			Image KeyboardIcon = LoadImage(MenuFolder, "icon_keyboard.png");
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
@@ -187,7 +189,8 @@ namespace OpenBve {
 			listviewRouteFiles.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
-			if (RouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("route", RouteIcon);
+			if (CsvRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
+			if (RwRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("rwroute", RwRouteIcon);
 			if (MechanikRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			if (DiskIcon != null) listviewRouteFiles.SmallImageList.Images.Add("disk", DiskIcon);
 			listviewRouteFiles.Columns.Clear();
@@ -195,13 +198,27 @@ namespace OpenBve {
 			listviewRouteRecently.Items.Clear();
 			listviewRouteRecently.Columns.Add("");
 			listviewRouteRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
-			if (RouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("route", RouteIcon);
+			if (CsvRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
+			if (RwRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("rwroute", RwRouteIcon);
 			if (MechanikRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
-				Item.ImageKey = Interface.CurrentOptions.RecentlyUsedRoutes[i].EndsWith(".dat") ? @"mechanik" : @"route";
-				
+				string extension = Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
+				switch (extension)
+				{
+					case ".dat":
+						Item.ImageKey = @"mechanik";
+						break;
+					case ".rw":
+						Item.ImageKey = @"rwroute";
+						break;
+					case ".csv":
+						Item.ImageKey = @"csvroute";
+						break;
+
+				}
+
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];
 				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (textboxRouteFolder.Items.Count == 0 || !textboxRouteFolder.Items.Contains(RoutePath))
