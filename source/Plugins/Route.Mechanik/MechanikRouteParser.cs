@@ -232,12 +232,12 @@ namespace MechanikRouteParser
 						}
 						double sx;
 						double sy;
-						if (!double.TryParse(Arguments[26], out sx))
+						if (!double.TryParse(Arguments[25], out sx))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Scale X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (!double.TryParse(Arguments[25], out sy))
+						if (!double.TryParse(Arguments[26], out sy))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Scale Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -700,7 +700,7 @@ namespace MechanikRouteParser
 				Builder.Faces[fl].Vertices[i].Index = (ushort) i;
 				Builder.Faces[fl].Vertices[i].Normal = new Vector3();
 				Builder.Vertices[v + i] = new Vertex(Points[i]);
-				Builder.Vertices[v + i].TextureCoordinates = FindTextureCoordinate(i, firstPoint, Points, scaleFactor, sx, sy, t.Width, t.Height);
+				Builder.Vertices[v + i].TextureCoordinates = FindTextureCoordinate(i, firstPoint, Points, scaleFactor, sx, sy, t);
 			}
 
 			
@@ -735,8 +735,6 @@ namespace MechanikRouteParser
 			MeshBuilder Builder = new MeshBuilder(Plugin.CurrentHost);
 			Builder.Vertices = new VertexTemplate[4];
 			Builder.Vertices[0] = new Vertex(new Vector3(topLeft));
-			//FIXME: WTF??
-			//s.Add("Vertex " + topLeft + ", -1,1,0");
 			Builder.Vertices[1] = new Vertex(new Vector3(topLeft.X + (t.Width * 5), topLeft.Y, topLeft.Z)); //upper right
 			Builder.Vertices[2] = new Vertex(new Vector3((topLeft.X + (t.Width * 5)), (topLeft.Y - (t.Height * 5)), topLeft.Z)); //bottom right
 			Builder.Vertices[3] = new Vertex(new Vector3(topLeft.X, (topLeft.Y - (t.Height * 5)), topLeft.Z)); //bottom left
@@ -888,7 +886,16 @@ namespace MechanikRouteParser
 			}
 		}
 
-		private static Vector2 FindTextureCoordinate(int pointIndex, int firstPoint, List<Vector3> pointList, double scale, double u, double v, double textureWidth, double textureHeight)
+		/// <summary>Finds the openGL texture co-ordinates for the specified point</summary>
+		/// <param name="pointIndex">The point</param>
+		/// <param name="firstPoint">The first point in the face winding</param>
+		/// <param name="pointList">The list of points</param>
+		/// <param name="scale">The texture scale factor</param>
+		/// <param name="u"></param>
+		/// <param name="v"></param>
+		/// <param name="texture">The texture to use</param>
+		/// <returns>The texture co-ordinate vector</returns>
+		private static Vector2 FindTextureCoordinate(int pointIndex, int firstPoint, List<Vector3> pointList, double scale, double u, double v, MechanikTexture texture)
 		{
 			if (firstPoint > pointList.Count)
 			{
@@ -902,11 +909,9 @@ namespace MechanikRouteParser
 			double coordinatesX = 0.0;
 			if (t1.Norm() != 0.0)
 			{
-				Vector3 t1a = new Vector3(t1 / t1.Norm());
-				Vector3 ua = new Vector3(U / U.Norm());
-				Vector3 newVect = t1a * ua;
+				Vector3 newVect = Vector3.Normalize(t1) * Vector3.Normalize(U);
 				double number = t1.Norm() * newVect.X + t1.Norm() * newVect.Y + t1.Norm() * newVect.Z;
-				coordinatesX = number / scale / v / textureWidth;
+				coordinatesX = number / scale / v / texture.Width;
 			}
 
 			Vector3 t2 = Vector3.Project(pointList[pointIndex] - pointList[firstPoint], V);
@@ -914,13 +919,11 @@ namespace MechanikRouteParser
 			double coordinatesY = 0.0;
 			if (t2.Norm() != 0.0)
 			{
-				Vector3 t2a = new Vector3(t2 / t2.Norm());
-				Vector3 va = new Vector3(V / V.Norm());
-				Vector3 newVect = t2a * va;
-				double number = -t2.Norm() * newVect.X + t2.Norm() * newVect.Y + t2.Norm() * newVect.Z;
-				coordinatesY = number / scale / u / textureHeight;
+				Vector3 newVect = Vector3.Normalize(t2) * Vector3.Normalize(V);
+				double number = t2.Norm() * newVect.X + t2.Norm() * newVect.Y + t2.Norm() * newVect.Z;
+				coordinatesY = number / scale / u / texture.Height;
 			}
-			
+			//FIXME: Why does Y need negating??
 			return new Vector2(coordinatesX, -coordinatesY);
 		}
 
