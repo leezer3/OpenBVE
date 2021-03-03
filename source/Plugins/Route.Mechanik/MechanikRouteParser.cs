@@ -551,6 +551,8 @@ namespace MechanikRouteParser
 			ProcessRoute(PreviewOnly);
 		}
 
+		private static readonly Vector3 eyePosition = new Vector3(0.7, 2.0, 0.0);
+
 		private static void ProcessRoute(bool PreviewOnly)
 		{
 			if (!PreviewOnly)
@@ -566,7 +568,7 @@ namespace MechanikRouteParser
 				Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
 			}
 
-			Vector3 worldPosition = new Vector3(0.0, 0.0, 0.0);
+			Vector3 worldPosition = eyePosition; //Use eye pos as world starting pos (as mechanik zero is eye-pos)
 			Vector2 worldDirection = new Vector2(0.0, 1.0);
 			Vector3 trackPosition = new Vector3(0.0, 0.0, 0.0);
 			Vector2 trackDirection = new Vector2(0.0, 1.0);
@@ -632,6 +634,7 @@ namespace MechanikRouteParser
 				if (i < currentRouteData.Blocks.Count - 1 && currentRouteData.Blocks[i + 1].Correction)
 				{
 					worldPosition = trackPosition;
+					worldPosition += eyePosition; //correct for eye pos relative
 					worldDirection = trackDirection;
 				}
 
