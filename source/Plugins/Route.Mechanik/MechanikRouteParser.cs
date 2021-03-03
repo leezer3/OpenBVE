@@ -166,8 +166,10 @@ namespace MechanikRouteParser
 
 						Idx = CreatePerpendicularPlane(topLeft, scaleFactor, textureIndex, true);
 						blockIndex = currentRouteData.FindBlock(trackPosition);
-						
-						currentRouteData.Blocks[blockIndex].Objects.Add(new RouteObject(Idx, new Vector3(0,0,0)));
+						if (Idx != -1)
+						{
+							currentRouteData.Blocks[blockIndex].Objects.Add(new RouteObject(Idx, new Vector3(0,0,0)));
+						}
 						break;
 					case "#t":
 					case "#t_p":
@@ -295,8 +297,10 @@ namespace MechanikRouteParser
 						}
 						
 						blockIndex = currentRouteData.FindBlock(trackPosition);
-						
-						currentRouteData.Blocks[blockIndex].Objects.Add(new RouteObject(Idx, new Vector3(0, 0, 0)));
+						if (Idx != -1)
+						{
+							currentRouteData.Blocks[blockIndex].Objects.Add(new RouteObject(Idx, new Vector3(0, 0, 0)));
+						}
 						break;
 					case "'o":
 						//Rotation marker for the player track, roughly equivilant to .turn
@@ -705,6 +709,10 @@ namespace MechanikRouteParser
 
 		private static int CreateHorizontalObject(List<Vector3> Points, int firstPoint, double scaleFactor, double sx, double sy, int textureIndex, bool transparent, bool horizontal)
 		{
+			if (!AvailableTextures.ContainsKey(textureIndex))
+			{
+				return -1;
+			}
 			MechanikTexture t = AvailableTextures[textureIndex];
 			MechanikObject o = new MechanikObject();
 			o.TopLeft = new Vector3();
@@ -744,6 +752,10 @@ namespace MechanikRouteParser
 				}
 			}
 
+			if (!AvailableTextures.ContainsKey(textureIndex))
+			{
+				return -1;
+			}
 			MechanikTexture t = AvailableTextures[textureIndex];
 			MechanikObject o = new MechanikObject();
 			o.TopLeft = new Vector3(0,0,0);
