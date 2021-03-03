@@ -60,6 +60,7 @@ namespace MechanikRouteParser
 			AvailableTextures = new Dictionary<int, MechanikTexture>();
 			AvailableSounds = new Dictionary<int, SoundHandle>();
 			currentRouteData = new RouteData();
+			RouteFolder = System.IO.Path.GetDirectoryName(routeFile);
 			if(PreviewOnly)
 			{
 				string routeImage = Path.CombineFile(RouteFolder, "laduj_01.jpg");
@@ -70,7 +71,6 @@ namespace MechanikRouteParser
 
 			}
 			//Load texture list
-			RouteFolder = System.IO.Path.GetDirectoryName(routeFile);
 			string tDat = Path.CombineFile(RouteFolder, "tekstury.dat");
 			if (!File.Exists(tDat))
 			{

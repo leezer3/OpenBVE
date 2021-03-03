@@ -74,22 +74,36 @@ namespace MechanikRouteParser
 	    /// <returns>Whether the plugin can load the specified route.</returns>
 	    public override bool CanLoadRoute(string path)
 	    {
+		    if (!File.Exists(path))
+		    {
+			    return false;
+		    }
 			if (path.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase))
 		    {
-			    if (File.ReadLines(path).Count() < 800)
+			    try
 			    {
-					/*
-					 * Slightly hacky check:
-					 * The original Mechanik download contained a route generator.
-					 * All this did was to append various module files to generate a
-					 * final route.
-					 *
-					 * If we have less than ~800 lines, it's not a complete route, but
-					 * a module instead.
-					 */
+
+
+				    if (File.ReadLines(path).Count() < 800)
+				    {
+					    /*
+					     * Slightly hacky check:
+					     * The original Mechanik download contained a route generator.
+					     * All this did was to append various module files to generate a
+					     * final route.
+					     *
+					     * If we have less than ~800 lines, it's not a complete route, but
+					     * a module instead.
+					     */
+					    return false;
+				    }
+			    }
+			    catch
+			    {
+					//Innacessable file?!
 				    return false;
 			    }
-			    return true;
+				return true;
 		    }
 			return false;
 	    }

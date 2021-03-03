@@ -245,10 +245,13 @@ namespace OpenBve
 									{
 										continue;
 									}
-
+									if (!Plugins.LoadPlugins())
+									{
+										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+									}
 									for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 									{
-										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(fileName))
+										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
 										{
 											Item = listviewRouteFiles.Items.Add(fileName);
 											Item.ImageKey = @"mechanik";

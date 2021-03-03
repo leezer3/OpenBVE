@@ -231,7 +231,7 @@ namespace TrainManager.Trains
 					bool introduce = true;
 					if (!forceIntroduction)
 					{
-						if (CurrentSectionIndex >= 0)
+						if (CurrentSectionIndex >= 0  && TrainManagerBase.CurrentRoute.Sections.Length > CurrentSectionIndex)
 						{
 							if (!TrainManagerBase.CurrentRoute.Sections[CurrentSectionIndex].IsFree())
 							{
