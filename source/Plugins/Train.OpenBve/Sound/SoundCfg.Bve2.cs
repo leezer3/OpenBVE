@@ -42,7 +42,7 @@ namespace Train.OpenBve
 			train.Cars[train.DriverCar].Horns[1].LoopSound = loopSound2 as SoundBuffer;
 			train.Cars[train.DriverCar].Horns[1].Loop = false;
 			train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
-			Plugin.currentHost.RegisterSound(Path.CombineFile(train.TrainFolder, "Klaxon0.wav"), SoundCfgParser.smallRadius, out var loopSound3);
+			Plugin.currentHost.RegisterSound(Path.CombineFile(train.TrainFolder, "Klaxon2.wav"), SoundCfgParser.smallRadius, out var loopSound3);
 			train.Cars[train.DriverCar].Horns[2].LoopSound = loopSound3 as SoundBuffer;
 			train.Cars[train.DriverCar].Horns[2].Loop = true;
 			train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
