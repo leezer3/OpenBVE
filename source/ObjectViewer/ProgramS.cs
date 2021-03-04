@@ -202,7 +202,6 @@ namespace OpenBve {
 			// reset
 			LightingRelative = -1.0;
 			Game.Reset();
-			Interface.LogMessages.Clear();
 			RefreshObjects();
 			Renderer.InitializeVisibility();
 			Renderer.UpdateVisibility(0.0, true);
@@ -263,7 +262,6 @@ namespace OpenBve {
 	    {
 		    LightingRelative = -1.0;
 		    Game.Reset();
-		    Interface.LogMessages.Clear();
 		    for (int i = 0; i < Files.Length; i++)
 		    {
 			    try
@@ -381,8 +379,7 @@ namespace OpenBve {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-	                Interface.LogMessages.Clear();
-	                Files = new string[] {};
+		            Files = new string[] {};
 					Renderer.ApplyBackgroundColor();
 	                break;
 	            case Key.Left:

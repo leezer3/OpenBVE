@@ -96,6 +96,7 @@ namespace OpenBveApi.Hosts {
 			Application = host;
 			StaticObjectCache = new Dictionary<ValueTuple<string, bool>, StaticObject>();
 			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
+			MissingFiles = new List<string>();
 		}
 
 		/// <summary></summary>
@@ -105,6 +106,9 @@ namespace OpenBveApi.Hosts {
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
 		public virtual void ReportProblem(ProblemType type, string text) { }
+
+		/// <summary>Contains a list of missing files encountered</summary>
+		public readonly List<string> MissingFiles;
 		
 		/// <summary>Queries the dimensions of a texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>

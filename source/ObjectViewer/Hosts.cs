@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -23,7 +23,20 @@ namespace OpenBve {
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
 		public override void ReportProblem(ProblemType type, string text) {
-			Interface.AddMessage(MessageType.Error, false, text);
+			switch (type)
+			{
+				case ProblemType.DirectoryNotFound:
+				case ProblemType.FileNotFound:
+				case ProblemType.PathNotFound:
+					if (!MissingFiles.Contains(text))
+					{
+						Interface.AddMessage(MessageType.Error, true, type + " : " + text);
+					}
+					break;
+				default:
+					Interface.AddMessage(MessageType.Error, false, type + " : " + text);
+					break;
+			}
 		}
 
 		public override void AddMessage(MessageType type, bool FileNotFound, string text)
