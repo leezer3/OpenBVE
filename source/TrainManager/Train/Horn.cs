@@ -75,13 +75,16 @@ namespace TrainManager.Trains
 						}
 						else
 						{
-							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseCar, true);
+							if (LoopSound != null)
+							{
+								Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseCar, true);
+							}
 						}
 					}
 				}
 				else
 				{
-					if (!TrainManagerBase.currentHost.SoundIsPlaying(Source))
+					if (!TrainManagerBase.currentHost.SoundIsPlaying(Source) && LoopSound != null)
 					{
 						//Start our loop sound playing if the start sound is finished
 						Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, baseCar, true);
