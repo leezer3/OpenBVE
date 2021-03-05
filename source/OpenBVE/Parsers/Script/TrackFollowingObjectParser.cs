@@ -126,7 +126,7 @@ namespace OpenBve
 					Program.CurrentHost.Plugins[i].Train.LoadTrain(Encoding.UTF8, TrainDirectory, ref currentTrain, ref Interface.CurrentControls);
 				}
 			}
-
+			Train.AI = new TrackFollowingObjectAI(Train, Data.ToArray());
 			foreach (var Car in Train.Cars)
 			{
 				Car.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;

@@ -88,7 +88,7 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>
-		public void Initialize()
+		public virtual void Initialize()
 		{
 			for (int i = 0; i < Cars.Length; i++)
 			{
