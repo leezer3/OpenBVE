@@ -3,7 +3,6 @@ using System.Threading;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using RouteManager2.MessageManager;
@@ -124,16 +123,14 @@ namespace TrainManager.SafetySystems
 				UpdateReverser();
 				return true;
 			}
-			else if (properties.FailureReason != null)
+
+			if (properties.FailureReason != null)
 			{
 				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for the following reason: " + properties.FailureReason);
 				return false;
 			}
-			else
-			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for an unspecified reason.");
-				return false;
-			}
+			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for an unspecified reason.");
+			return false;
 		}
 
 		public override void Unload()

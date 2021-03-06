@@ -40,7 +40,7 @@ namespace Train.OpenBve
 			Vector3 panel = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 
 			//Radius at which the sound is audible at full volume, presumably in m
-			//TODO: All radii are much too SoundCfgParser.smallRadius in external mode, but we can't change them by default.....
+			//TODO: All radii are much too small in external mode, but we can't change them by default.....
 
 			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(FileName);
 

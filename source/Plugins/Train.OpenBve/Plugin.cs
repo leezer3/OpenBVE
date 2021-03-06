@@ -13,7 +13,6 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
