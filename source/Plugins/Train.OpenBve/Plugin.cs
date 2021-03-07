@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -301,6 +301,7 @@ namespace Train.OpenBve
 						    {
 							    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 						    }
+							return;
 					    }
 
 					    DocumentElements = CurrentXML.Root.Elements("Panel");
@@ -309,6 +310,7 @@ namespace Train.OpenBve
 						    PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
 						    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
 						    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
+						    return;
 					    }
 				    }
 			    }
