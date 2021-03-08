@@ -1560,7 +1560,7 @@ namespace Train.OpenBve
 
 		private int CreateElement(CarBase Car, double Left, double Top, double WorldZ, Texture Texture, bool AddStateToLastElement = false)
 		{
-			return CreateElement(Car, Left, Top, WorldZ, Texture.Width, Texture.Height, Texture, Color32.White, AddStateToLastElement);
+			return CreateElement(Car, Left, Top, Texture.Width, Texture.Height, WorldZ, Texture, Color32.White, AddStateToLastElement);
 		}
 
 		// create element
