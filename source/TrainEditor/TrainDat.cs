@@ -277,7 +277,7 @@ namespace TrainEditor {
 			}
 		}
 
-		const int currentVersion = 15311;
+		const int currentVersion = 17250;
 
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>

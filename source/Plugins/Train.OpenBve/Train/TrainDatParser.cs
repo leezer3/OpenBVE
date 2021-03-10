@@ -72,7 +72,7 @@ namespace Train.OpenBve
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
-			const int currentVersion = 15311;
+			const int currentVersion = 17250;
 			int myVersion = -1;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {

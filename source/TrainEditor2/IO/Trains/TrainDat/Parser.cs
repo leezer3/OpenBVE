@@ -16,7 +16,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 {
 	internal static partial class TrainDat
 	{
-		private const int currentVersion = 15311;
+		private const int currentVersion = 17250;
 
 		internal static void Parse(string fileName, out Train train)
 		{
