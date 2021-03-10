@@ -526,7 +526,23 @@ namespace Train.OpenBve
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a)) {
 								switch (n) {
-									case 0: Train.Handles.SingleHandle = a == 1; break;
+									case 0:
+										switch (a)
+										{
+											case 0:
+												Train.Handles.HandleType = HandleType.TwinHandle;
+												break;
+											case 1:
+												Train.Handles.HandleType = HandleType.SingleHandle;
+												break;
+											case 2:
+												Train.Handles.HandleType = HandleType.InterlockedTwinHandle;
+												break;
+											default:
+												Train.Handles.HandleType = HandleType.TwinHandle;
+												break;
+										}
+										break;
 									case 1:
 										if (a > 0)
 										{
@@ -1096,7 +1112,7 @@ namespace Train.OpenBve
 			Train.Handles.Brake.Safety = 0;
 			Train.Handles.Brake.Actual = 0;
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake) {
-				Train.Handles.SingleHandle = false;
+				Train.Handles.HandleType = HandleType.TwinHandle;
 				Train.Handles.HasHoldBrake = false;
 			}
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);

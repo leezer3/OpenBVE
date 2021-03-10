@@ -222,7 +222,7 @@ namespace OpenBve
 											return;
 										}
 										// power half/full-axis
-										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 										{
 											double a = Interface.CurrentControls[i].AnalogState;
 											if (Interface.CurrentControls[i].Command == Translations.Command.PowerFullAxis)
@@ -242,7 +242,7 @@ namespace OpenBve
 											return;
 										}
 										// brake half/full-axis
-										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 										{
 											if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 											{
@@ -336,7 +336,7 @@ namespace OpenBve
 											return;
 										}
 										// single full axis
-										if (TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 										{
 											if (TrainManager.PlayerTrain.Handles.HasHoldBrake)
 											{
@@ -1100,7 +1100,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.SinglePower:
 										// single power
-										if (TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 										{
 											int b = TrainManager.PlayerTrain.Handles.Brake.Driver;
 											if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
@@ -1133,7 +1133,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.SingleNeutral:
 										// single neutral
-										if (TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 										{
 											int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 											if (p > 0)
@@ -1167,7 +1167,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.SingleBrake:
 										// single brake
-										if (TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 										{
 											int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 											if (p > 0)
@@ -1194,14 +1194,14 @@ namespace OpenBve
 										break;
 									case Translations.Command.SingleEmergency:
 										// single emergency
-										if (TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 										{
 											TrainManager.PlayerTrain.Handles.EmergencyBrake.Apply();
 										}
 										break;
 									case Translations.Command.PowerIncrease:
 										// power increase
-										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 										{
 											int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 											if (p < TrainManager.PlayerTrain.Handles.Power.MaximumNotch)
@@ -1213,7 +1213,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.PowerDecrease:
 										// power decrease
-										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 										{
 											int p = TrainManager.PlayerTrain.Handles.Power.Driver;
 											if (p > 0)
@@ -1225,7 +1225,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.BrakeIncrease:
 										// brake increase
-										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 										{
 											if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 											{
@@ -1271,7 +1271,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.BrakeDecrease:
 										// brake decrease
-										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
+										if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 										{
 											if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 											{
@@ -1374,11 +1374,11 @@ namespace OpenBve
 										}
 										break;
 									case Translations.Command.PowerAnyNotch:
-										if (TrainManager.PlayerTrain.Handles.SingleHandle && TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
+										if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle && TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 										{
 											TrainManager.PlayerTrain.Handles.EmergencyBrake.Release();
 										}
-										TrainManager.PlayerTrain.Handles.Brake.ApplyState(0,!TrainManager.PlayerTrain.Handles.SingleHandle);
+										TrainManager.PlayerTrain.Handles.Brake.ApplyState(0,TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle);
 										TrainManager.PlayerTrain.Handles.Power.ApplyState(Interface.CurrentControls[i].Option,false);
 										break;
 									case Translations.Command.BrakeAnyNotch:
@@ -1410,7 +1410,7 @@ namespace OpenBve
 											}
 											TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
 											TrainManager.PlayerTrain.Handles.Brake.ApplyState(Interface.CurrentControls[i].Option, false);
-											TrainManager.PlayerTrain.Handles.Power.ApplyState(0, !TrainManager.PlayerTrain.Handles.SingleHandle);
+											TrainManager.PlayerTrain.Handles.Power.ApplyState(0, TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle);
 										}
 										break;
 									case Translations.Command.ReverserAnyPostion:
@@ -1420,7 +1420,7 @@ namespace OpenBve
 										if (TrainManager.PlayerTrain.Handles.HasHoldBrake && (TrainManager.PlayerTrain.Handles.Brake.Driver == 0 || TrainManager.PlayerTrain.Handles.Brake.Driver == 1) && !TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 										{
 											TrainManager.PlayerTrain.Handles.Brake.ApplyState(0, false);
-											TrainManager.PlayerTrain.Handles.Power.ApplyState(0, !TrainManager.PlayerTrain.Handles.SingleHandle);
+											TrainManager.PlayerTrain.Handles.Power.ApplyState(0, TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle);
 											TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(true);
 										}
 										break;

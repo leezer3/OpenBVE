@@ -16,7 +16,7 @@
 		/// <summary>The Hold Brake</summary>
 		public HoldBrakeHandle HoldBrake;
 		/// <summary>Whether the train has a combined power and brake handle</summary>
-		public bool SingleHandle;
+		public HandleType HandleType;
 		/// <summary>Whether the train has the Hold Brake fitted</summary>
 		public bool HasHoldBrake;
 		/// <summary>Whether the train has a locomotive brake</summary>

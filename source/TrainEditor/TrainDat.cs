@@ -132,11 +132,7 @@ namespace TrainEditor {
 		// handle
 		/// <summary>The Handle section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Handle {
-			internal enum HandleTypes {
-				Separate = 0,
-				Combined = 1
-			}
-			internal HandleTypes HandleType;
+			internal HandleType HandleType;
 			internal int PowerNotches;
 			internal int BrakeNotches;
 			internal int PowerNotchReduceSteps;
@@ -146,7 +142,7 @@ namespace TrainEditor {
 			internal int DriverPowerNotches;
 			internal int DriverBrakeNotches;
 			internal Handle() {
-				this.HandleType = HandleTypes.Separate;
+				this.HandleType = HandleType.TwinHandle;
 				this.PowerNotches = 8;
 				this.BrakeNotches = 8;
 				this.PowerNotchReduceSteps = 0;
@@ -535,7 +531,7 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b == 0 | b == 1) t.Handle.HandleType = (Handle.HandleTypes)b;
+										if (b >= 0  && b <= 2) t.Handle.HandleType = (HandleType)b;
 										break;
 									case 1:
 										if (b > 0) t.Handle.PowerNotches = b;

@@ -214,6 +214,7 @@ namespace TrainEditor2.Views
 			labelHandleType.Text = $@"{Utilities.GetInterfaceString("general_settings", "handle", "handle_type", "name")}:";
 			comboBoxHandleType.Items[0] = Utilities.GetInterfaceString("general_settings", "handle", "handle_type", "separated");
 			comboBoxHandleType.Items[1] = Utilities.GetInterfaceString("general_settings", "handle", "handle_type", "combined");
+			comboBoxHandleType.Items[2] = Utilities.GetInterfaceString("general_settings", "handle", "handle_type", "separated_interlocked");
 			labelPowerNotches.Text = $@"{Utilities.GetInterfaceString("general_settings", "handle", "power_notches")}:";
 			labelBrakeNotches.Text = $@"{Utilities.GetInterfaceString("general_settings", "handle", "brake_notches")}:";
 			labelPowerNotchReduceSteps.Text = $@"{Utilities.GetInterfaceString("general_settings", "handle", "power_notch_reduce_steps")}:";

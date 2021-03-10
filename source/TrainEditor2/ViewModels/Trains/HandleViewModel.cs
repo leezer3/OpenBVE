@@ -9,7 +9,7 @@ namespace TrainEditor2.ViewModels.Trains
 {
 	internal class HandleViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<Handle.HandleTypes> HandleType
+		internal ReactiveProperty<HandleType> HandleType
 		{
 			get;
 		}
