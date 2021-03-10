@@ -114,7 +114,7 @@ namespace TrainManager.Handles
 				}
 			}
 
-			if (baseTrain.Handles.Brake.Driver != 0)
+			if (baseTrain.Handles.SingleHandle && baseTrain.Handles.Brake.Driver != 0)
 			{
 				p = 0;
 			}
