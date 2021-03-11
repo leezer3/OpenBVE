@@ -531,7 +531,7 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b >= 0  && b <= 2) t.Handle.HandleType = (HandleType)b;
+										if (b >= 0  && b <= 3) t.Handle.HandleType = (HandleType)b;
 										break;
 									case 1:
 										if (b > 0) t.Handle.PowerNotches = b;

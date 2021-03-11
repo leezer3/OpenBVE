@@ -6484,7 +6484,8 @@ namespace TrainEditor2.Views
 			this.comboBoxHandleType.Items.AddRange(new object[] {
             "Separated",
             "Combined",
-			"Separated (Interlocked)"
+			"Separated (Interlocked)",
+			"Separated (Reverser Interlocked)",
 			});
 			this.comboBoxHandleType.Location = new System.Drawing.Point(192, 16);
 			this.comboBoxHandleType.Name = "comboBoxHandleType";

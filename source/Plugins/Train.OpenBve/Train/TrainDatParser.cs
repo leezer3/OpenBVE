@@ -538,6 +538,9 @@ namespace Train.OpenBve
 											case 2:
 												Train.Handles.HandleType = HandleType.InterlockedTwinHandle;
 												break;
+											case 3:
+												Train.Handles.HandleType = HandleType.InterlockedReverserHandle;
+												break;
 											default:
 												Train.Handles.HandleType = HandleType.TwinHandle;
 												break;

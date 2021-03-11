@@ -560,7 +560,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								switch (n)
 								{
 									case 0:
-										if (b >= 0 | b <= 2)
+										if (b >= 0 | b <= 3)
 										{
 											train.Handle.HandleType = (HandleType)b;
 										}

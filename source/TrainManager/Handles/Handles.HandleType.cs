@@ -8,6 +8,8 @@
 		/// <summary>Single combined power and brake handle</summary>
 		SingleHandle = 1,
 		/// <summary>Separate power and brake handles, interlocked so that power may not be applied whilst brake is active</summary>
-		InterlockedTwinHandle = 2
+		InterlockedTwinHandle = 2,
+		/// <summary>Twin handles with an interlocked power / reverser</summary>
+		InterlockedReverserHandle = 3
 	}
 }

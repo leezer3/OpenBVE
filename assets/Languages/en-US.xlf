@@ -2724,6 +2724,9 @@
 					<trans-unit id="separated_interlocked">
 						<source>Separated (Interlocked)</source>
 					</trans-unit>
+					<trans-unit id="separated_interlocked_reverser">
+						<source>Separated (Reverser Interlocked)</source>
+					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
 						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
 					</trans-unit>
@@ -3105,6 +3108,9 @@
 							</trans-unit>
 							<trans-unit id="separated_interlocked">
 								<source>Separated (Interlocked)</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked_reverser">
+								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
 						<trans-unit id="power_notches">
