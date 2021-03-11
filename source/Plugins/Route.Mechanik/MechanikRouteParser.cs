@@ -206,40 +206,23 @@ namespace MechanikRouteParser
 						int v = 0;
 						List<Vector3> points = new List<Vector3>();
 						Vector3 currentPoint = new Vector3();
-						for (int p = 3; p < 24; p++)
+						for (int p = 3; p < 24; p += 3)
 						{
-							switch (v)
+							if (!TryParseDistance(Arguments[p], out currentPoint.X))
 							{
-								case 0:
-									if (!TryParseDistance(Arguments[p], out currentPoint.X))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid X encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
-									}
-									break;
-								case 1:
-									if (!TryParseDistance(Arguments[p], out currentPoint.Y))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Y encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
-									}
-									currentPoint.Y = -currentPoint.Y;
-									currentPoint.Y += yOffset;
-									break;
-								case 2:
-									if (!TryParseDistance(Arguments[p], out currentPoint.Z))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Z encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
-									}
-									break;
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid X encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
 							}
-							if (v < 2)
+							if (!TryParseDistance(Arguments[p + 1], out currentPoint.Y))
 							{
-								v++;
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Y encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
 							}
-							else
+							currentPoint.Y = -currentPoint.Y;
+							currentPoint.Y += yOffset;
+							if (!TryParseDistance(Arguments[p + 2], out currentPoint.Z))
 							{
-								points.Add(currentPoint);
-								v = 0;
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Z encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
 							}
+							points.Add(currentPoint);
 						}
 						if (!int.TryParse(Arguments[24], out firstPoint))
 						{
@@ -250,14 +233,13 @@ namespace MechanikRouteParser
 						{
 							firstPoint -= 1;
 						}
-						double sx;
-						double sy;
-						if (!double.TryParse(Arguments[25], out sx))
+						Vector2 textureScale = Vector2.One;
+						if (!double.TryParse(Arguments[25], out textureScale.X))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Scale X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (!double.TryParse(Arguments[26], out sy))
+						if (!double.TryParse(Arguments[26], out textureScale.Y))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Scale Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -285,14 +267,14 @@ namespace MechanikRouteParser
 						{
 							case "#t_prz":
 								//FREE, transparent
-								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, true);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, textureScale, textureIndex, true);
 								break;
 							case "#t_p":
 								//HORIZONTAL, no transparency
-								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, textureScale, textureIndex, false);
 								break;
 							case "#t":
-								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, sx, sy, textureIndex, false);
+								Idx = CreateHorizontalObject(sortedPoints, firstPoint, scaleFactor, textureScale, textureIndex, false);
 								break;
 						}
 						
@@ -709,7 +691,7 @@ namespace MechanikRouteParser
 			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
 		}
 
-		private static int CreateHorizontalObject(List<Vector3> Points, int firstPoint, double scaleFactor, double sx, double sy, int textureIndex, bool transparent)
+		private static int CreateHorizontalObject(List<Vector3> Points, int firstPoint, double scaleFactor, Vector2 textureScale, int textureIndex, bool transparent)
 		{
 			if (!AvailableTextures.ContainsKey(textureIndex))
 			{
@@ -725,7 +707,7 @@ namespace MechanikRouteParser
 				Builder.Faces[Builder.Faces.Count -1].Vertices[i].Index = (ushort) i;
 				Builder.Faces[Builder.Faces.Count -1].Vertices[i].Normal = Vector3.Zero;
 				Builder.Vertices.Add(new Vertex(Points[i]));
-				Builder.Vertices[Builder.Vertices.Count -1].TextureCoordinates = FindTextureCoordinate(i, firstPoint, Points, scaleFactor, sx, sy, t);
+				Builder.Vertices[Builder.Vertices.Count -1].TextureCoordinates = FindTextureCoordinate(i, firstPoint, Points, scaleFactor, textureScale, t);
 			}
 
 			
@@ -758,13 +740,15 @@ namespace MechanikRouteParser
 			}
 			MechanikTexture t = AvailableTextures[textureIndex];
 			MechanikObject o = new MechanikObject(MechnikObjectType.Perpendicular, topLeft, scaleFactor, textureIndex);
-			//BUG: Not entirely sure why multiplying W & H by 5 makes this work....
 			MeshBuilder Builder = new MeshBuilder(Plugin.CurrentHost);
+			//Convert texture size to px/m and then multiply by scaleFactor to get the final vertex offset
+			double scaledWidth = t.Width * 5 * scaleFactor;
+			double scaledHeight = t.Height * 5 * scaleFactor;
 			Builder.Vertices = new List<VertexTemplate>();
 			Builder.Vertices.Add(new Vertex(new Vector3(topLeft)));
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + (t.Width * 5), topLeft.Y, topLeft.Z))); //upper right
-			Builder.Vertices.Add(new Vertex(new Vector3((topLeft.X + (t.Width * 5)), (topLeft.Y - (t.Height * 5)), topLeft.Z))); //bottom right
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X, (topLeft.Y - (t.Height * 5)), topLeft.Z))); //bottom left
+			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y, topLeft.Z))); //upper right
+			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y - scaledHeight, topLeft.Z))); //bottom right
+			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X, topLeft.Y - scaledHeight, topLeft.Z))); //bottom left
 			//Possibly change to Face, check this though (Remember that Mechanik was restricted to the cab, wheras we are not)
 			Builder.Faces = new List<MeshFace>();
 			Builder.Faces.Add(new MeshFace { Vertices = new MeshFaceVertex[4], Flags = FaceFlags.Face2Mask });
@@ -873,6 +857,9 @@ namespace MechanikRouteParser
 			}
 		}
 
+		/// <summary>Normalises 2 components of a 3D vector</summary>
+		/// <param name="x">The first component</param>
+		/// <param name="y">The second component</param>
 		private static void Normalize(ref double x, ref double y)
 		{
 			double t = x * x + y * y;
@@ -884,6 +871,10 @@ namespace MechanikRouteParser
 			}
 		}
 
+		/// <summary>Parses a distance string formatted in Pixels per meter</summary>
+		/// <param name="val">The distance string</param>
+		/// <param name="position">The parsed distance</param>
+		/// <returns>Whether parsing succeded</returns>
 		private static bool TryParseDistance(string val, out double position)
 		{
 			if (double.TryParse(val, out position))
@@ -894,6 +885,10 @@ namespace MechanikRouteParser
 			return false;
 		}
 
+		/// <summary>Parses an integer into a boolean</summary>
+		/// <param name="val">The integer to parse</param>
+		/// <param name="boolean">The parsed boolean</param>
+		/// <returns>Whether parsing succeded</returns>
 		private static bool TryParseBool(string val, out bool boolean)
 		{
 			int value;
@@ -917,11 +912,10 @@ namespace MechanikRouteParser
 		/// <param name="firstPoint">The first point in the face winding</param>
 		/// <param name="pointList">The list of points</param>
 		/// <param name="scale">The texture scale factor</param>
-		/// <param name="u"></param>
-		/// <param name="v"></param>
+		/// <param name="textureScale">A 2D vector representing the texture scaling to be applied</param>
 		/// <param name="texture">The texture to use</param>
 		/// <returns>The texture co-ordinate vector</returns>
-		private static Vector2 FindTextureCoordinate(int pointIndex, int firstPoint, List<Vector3> pointList, double scale, double u, double v, MechanikTexture texture)
+		private static Vector2 FindTextureCoordinate(int pointIndex, int firstPoint, List<Vector3> pointList, double scale, Vector2 textureScale, MechanikTexture texture)
 		{
 			if (firstPoint > pointList.Count)
 			{
@@ -937,7 +931,7 @@ namespace MechanikRouteParser
 			{
 				Vector3 newVect = Vector3.Normalize(t1) * Vector3.Normalize(U);
 				double number = t1.Norm() * newVect.X + t1.Norm() * newVect.Y + t1.Norm() * newVect.Z;
-				coordinatesX = number / scale / v / texture.Width;
+				coordinatesX = number / scale / textureScale.Y / texture.Width;
 			}
 
 			Vector3 t2 = Vector3.Project(pointList[pointIndex] - pointList[firstPoint], V);
@@ -947,7 +941,7 @@ namespace MechanikRouteParser
 			{
 				Vector3 newVect = Vector3.Normalize(t2) * Vector3.Normalize(V);
 				double number = t2.Norm() * newVect.X + t2.Norm() * newVect.Y + t2.Norm() * newVect.Z;
-				coordinatesY = number / scale / u / texture.Height;
+				coordinatesY = number / scale / textureScale.X / texture.Height;
 			}
 			//FIXME: Why does Y need negating??
 			return new Vector2(coordinatesX, -coordinatesY);
