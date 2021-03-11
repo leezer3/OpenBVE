@@ -431,19 +431,26 @@ namespace MechanikRouteParser
 						currentRouteData.Blocks[blockIndex].SpeedLimit = kph;
 						break;
 					case "'z_z":
-						//Station stop marker
+						/*
+						 * STATION STOP MARKER
+						 * => Track position
+						 * => X position of marker
+						 * => Z position of marker
+						 * => Start or end of stop zone
+						 */
 						bool terminal;
-						Vector2 stopPos = new Vector2();
-						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out stopPos.X))
+						double stopPosX, stopPosZ;
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out stopPosX))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out stopPos.Y))
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out stopPosZ))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
+						trackPosition += stopPosZ;
 						if (Arguments.Length < 5 || !TryParseBool(Arguments[4], out terminal))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid IsTerminal encountered in " + Arguments[0] + " at line " + i);
@@ -452,11 +459,11 @@ namespace MechanikRouteParser
 						blockIndex = currentRouteData.FindBlock(trackPosition);
 						if (terminal)
 						{
-							currentRouteData.Blocks[blockIndex].stopMarker.Add(new StationStop(stopPos, terminal));
+							currentRouteData.Blocks[blockIndex].stopMarker.Add(new StationStop(new Vector2(stopPosX, 0), terminal));
 						}
 						else
 						{
-							currentRouteData.Blocks[blockIndex].stopMarker.Insert(0, new StationStop(stopPos, terminal));
+							currentRouteData.Blocks[blockIndex].stopMarker.Insert(0, new StationStop(new Vector2(stopPosX, 0), terminal));
 						}
 						break;
 					case "'sem":
@@ -523,7 +530,9 @@ namespace MechanikRouteParser
 			}
 			//Insert a stop in the first block, as Mechanik always starts at pos 0, wheras BVE starts at the first stop
 			int blockZero = currentRouteData.FindBlock(0);
-			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, -10), true));
+			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, 0), false));
+			blockZero = currentRouteData.FindBlock(25);
+			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, 0), true));
 			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
 			currentRouteData.CreateMissingBlocks();
 			ProcessRoute(PreviewOnly);
@@ -567,6 +576,16 @@ namespace MechanikRouteParser
 					Name = "Station 1",
 					OpenLeftDoors = true,
 					OpenRightDoors = true,
+					Stops = new[]
+					{
+						new RouteManager2.Stations.StationStop()
+						{
+							BackwardTolerance = 25,
+							ForwardTolerance = 25,
+							Cars = 0,
+							TrackPosition = 0
+						}
+					}
 				}
 				
 			};
@@ -670,7 +689,6 @@ namespace MechanikRouteParser
 						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
 						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
 						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationEndEvent(0, s, Plugin.CurrentRoute, Plugin.CurrentHost);
-						double tPos = currentRouteData.Blocks[i].StartingTrackPosition;
 						Plugin.CurrentRoute.Stations[s].Stops = new[]
 						{
 							new RouteManager2.Stations.StationStop
@@ -680,7 +698,6 @@ namespace MechanikRouteParser
 								Cars = 0,
 								TrackPosition = currentRouteData.Blocks[i].StartingTrackPosition
 							}
-
 						};
 					}
 					//TODO: Add the appropriate 3D face
@@ -688,6 +705,14 @@ namespace MechanikRouteParser
 				
 			}
 			Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
+			for (int i = 0; i < Plugin.CurrentRoute.Stations.Length; i++)
+			{
+				//Add any missing station stop events
+				if (Plugin.CurrentRoute.Stations[i].Stops == null || Plugin.CurrentRoute.Stations[i].Stops.Length == 0)
+				{
+					Plugin.CurrentRoute.Stations[i].Stops = new RouteManager2.Stations.StationStop[] { };
+				}
+			}
 			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
 		}
 
