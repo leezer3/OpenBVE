@@ -34,7 +34,9 @@ using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
+using Route.Mechanik;
 using RouteManager2.Events;
+using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 using Path = OpenBveApi.Path;
 
@@ -446,7 +448,7 @@ namespace MechanikRouteParser
 						}
 						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out stopPosZ))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Y encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						trackPosition += stopPosZ;
@@ -484,6 +486,44 @@ namespace MechanikRouteParser
 						 * => Second aspect
 						 * => Signal Type
 						 */
+						Vector3 signalPosition = new Vector3();
+						int firstAspect, secondAspect;
+						bool heldAtRed;
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out signalPosition.X))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
+							continue;
+						}
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out signalPosition.Y))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Y encountered in " + Arguments[0] + " at line " + i);
+							continue;
+						}
+						if (Arguments.Length < 5 || !TryParseDistance(Arguments[4], out signalPosition.Z))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
+							continue;
+						}
+						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out firstAspect))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid CurrentAspect encountered in " + Arguments[0] + " at line " + i);
+							continue;
+						}
+						if (Arguments.Length < 7 || !int.TryParse(Arguments[6], out secondAspect))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid NextAspect encountered in " + Arguments[0] + " at line " + i);
+							continue;
+						}
+						if (Arguments.Length < 8 || !TryParseBool(Arguments[7], out heldAtRed))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
+							continue;
+						}
+						blockIndex = currentRouteData.FindBlock(trackPosition + signalPosition.Z);
+						signalPosition.Y = -signalPosition.Y;
+						signalPosition.Z = 0; //Add signal position Z to tpos and zero so we get the correct section positioning
+						Semaphore sem = new Semaphore((SignalAspect) firstAspect, (SignalAspect) secondAspect, heldAtRed, signalPosition);
+						currentRouteData.Blocks[blockIndex].Signals.Add(sem);
 						break;
 					case "'z_s":
 						/*
@@ -622,15 +662,42 @@ namespace MechanikRouteParser
 					blockLength = currentRouteData.Blocks[i + 1].StartingTrackPosition - currentRouteData.Blocks[i].StartingTrackPosition;
 				}
 				StartingDistance += blockLength;
-				Transformation t = new Transformation();
+				
 				if (!PreviewOnly)
 				{
-					t = new Transformation(Math.Atan2(worldDirection.X, worldDirection.Y), 0, 0);
+					Transformation t = new Transformation(Math.Atan2(worldDirection.X, worldDirection.Y), 0, 0);
+					for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
+					{
+						AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(worldPosition + eyePosition, t, StartingDistance, StartingDistance + 25, 100);
+					}
+					foreach (Semaphore signal in currentRouteData.Blocks[i].Signals)
+					{
+
+						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+						int s = Plugin.CurrentRoute.Sections.Length;
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new SectionChangeEvent(Plugin.CurrentRoute, 0, s, s + 1);
+						Array.Resize(ref Plugin.CurrentRoute.Sections, s + 1);
+						SectionAspect[] newAspects = {
+							new SectionAspect(0, 0),
+							new SectionAspect(1, signal.SpeedLimit)
+						};
+						if (s == 0)
+						{
+							Plugin.CurrentRoute.Sections[s] = new Section(currentRouteData.Blocks[i].StartingTrackPosition, newAspects, SectionType.IndexBased);
+						}
+						else
+						{
+							Plugin.CurrentRoute.Sections[s] = new Section(currentRouteData.Blocks[i].StartingTrackPosition, newAspects, SectionType.IndexBased, Plugin.CurrentRoute.Sections[s - 1]);
+							Plugin.CurrentRoute.Sections[s - 1].NextSection = Plugin.CurrentRoute.Sections[s];
+						}
+						
+
+						Plugin.CurrentRoute.Sections[s].StationIndex = -1;
+						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance, 1.0);
+					}
 				}
-				for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
-				{
-					AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(worldPosition + eyePosition, t, StartingDistance, StartingDistance + 25, 100);
-				}
+				
 				// finalize block
 				worldPosition.X += worldDirection.X * blockLength;
 				worldPosition.Z += worldDirection.Y * blockLength;
@@ -762,8 +829,20 @@ namespace MechanikRouteParser
 			{
 				return -1;
 			}
-			MechanikTexture t = AvailableTextures[textureIndex];
 			MechanikObject o = new MechanikObject(MechnikObjectType.Perpendicular, topLeft, scaleFactor, textureIndex);
+			o.Object = CreateStaticObject(topLeft, scaleFactor, textureIndex, transparent);
+			AvailableObjects.Add(o);
+			return AvailableObjects.Count - 1;
+		}
+
+
+		internal static StaticObject CreateStaticObject(Vector3 topLeft, double scaleFactor, int textureIndex, bool transparent, bool invertY = false)
+		{
+			if (!AvailableTextures.ContainsKey(textureIndex))
+			{
+				return null;
+			}
+			MechanikTexture t = AvailableTextures[textureIndex];
 			MeshBuilder Builder = new MeshBuilder(Plugin.CurrentHost);
 			//Convert texture size to px/m and then multiply by scaleFactor to get the final vertex offset
 			double scaledWidth = t.Width * 5 * scaleFactor;
@@ -780,10 +859,11 @@ namespace MechanikRouteParser
 			Builder.Faces[0].Vertices[1].Index = 1;
 			Builder.Faces[0].Vertices[2].Index = 2;
 			Builder.Faces[0].Vertices[3].Index = 3;
+			Builder.Vertices[0].TextureCoordinates = new Vector2(0,0);
 			Builder.Vertices[1].TextureCoordinates = new Vector2(1,0);
 			Builder.Vertices[2].TextureCoordinates = new Vector2(1,1);
 			Builder.Vertices[3].TextureCoordinates = new Vector2(0,1);
-			Builder.Vertices[0].TextureCoordinates = new Vector2(0,0);
+			
 
 			Builder.Materials = new [] { new Material(t.Path) };
 			if (transparent)
@@ -793,9 +873,7 @@ namespace MechanikRouteParser
 			}
 			StaticObject obj = new StaticObject(Plugin.CurrentHost);
 			Builder.Apply(ref obj);
-			o.Object = obj;
-			AvailableObjects.Add(o);
-			return AvailableObjects.Count - 1;
+			return obj;
 		}
 
 		private static void LoadTextureList(string tDat)

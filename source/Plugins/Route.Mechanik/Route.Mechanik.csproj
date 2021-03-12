@@ -43,6 +43,8 @@
     <Compile Include="Objects\MechanikTexture.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Signalling\Semaphore.cs" />
+    <Compile Include="Signalling\SignalAspects.cs" />
     <Compile Include="Structures\Block.cs" />
     <Compile Include="Structures\RouteObject.cs" />
     <Compile Include="Structures\SoundEvent.cs" />

@@ -22,37 +22,21 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System.Collections.Generic;
-using Route.Mechanik;
-
-namespace MechanikRouteParser
+namespace Route.Mechanik
 {
-	/// <summary>Represents a variable length route block</summary>
-	internal class Block
+	internal enum SignalAspect
 	{
-		/// <summary>The track position at which this block starts</summary>
-		internal double StartingTrackPosition;
-		/// <summary>The world objects placed in this block</summary>
-		internal List<RouteObject> Objects = new List<RouteObject>();
-		/// <summary>The turn radius in radians</summary>
-		internal double Turn = 0.0;
-		/// <summary>The speed limit for this block</summary>
-		internal double SpeedLimit = -1;
-		/// <summary>The sound events placed in this block</summary>
-		internal List<SoundEvent> Sounds = new List<SoundEvent>();
-		/// <summary>The station stop if applicable</summary>
-		internal List<StationStop> stopMarker;
-		/// <summary>Whether a rotation / position correction should be issued after this block</summary>
-		internal bool Correction;
-		/// <summary>The signals placed in this block</summary>
-		internal List<Semaphore> Signals;
-
-		internal Block(double TrackPosition)
-		{
-			this.StartingTrackPosition = TrackPosition;
-			Correction = false;
-			this.stopMarker = new List<StationStop>();
-			this.Signals = new List<Semaphore>();
-		}
+		/// <summary>No speed displayed</summary>
+		NotDisplayed = 0,
+		/// <summary>Signal displays a stop aspect</summary>
+		Stop = 1,
+		/// <summary>Max speed of 40km/h</summary>
+		Slow = 2,
+		/// <summary>Max speed of 60km/h</summary>
+		Medium,
+		/// <summary>Max speed of 100km/h</summary>
+		Fast,
+		/// <summary>Unlimited speed</summary>
+		Unlimited
 	}
 }
