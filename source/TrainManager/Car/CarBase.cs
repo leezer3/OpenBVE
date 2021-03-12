@@ -442,7 +442,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TrainManagerBase.currentHost.StopSound(Sounds.Run[key]);
+						TrainManagerBase.currentHost.StopSound(Sounds.Run[key].Source);
 					}
 				}
 				else if (pitch > 0.02 & gain > 0.01)
