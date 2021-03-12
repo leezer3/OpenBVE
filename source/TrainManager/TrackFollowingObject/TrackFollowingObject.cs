@@ -20,18 +20,9 @@ namespace TrainManager.Trains
 			public TrackFollowingObject(TrainState state) : base(state)
 			{
 			}
-
-			internal new void Initialize()
-			{
-				foreach (var Car in Cars)
-				{
-					Car.Initialize();
-				}
-				Update(0.0);
-			}
-
+			
 			/// <summary>Disposes of the train</summary>
-			internal new void Dispose()
+			public override void Dispose()
 			{
 				State = TrainState.Disposed;
 				for (int i = 0; i < Cars.Length; i++)
@@ -46,7 +37,7 @@ namespace TrainManager.Trains
 
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
-			internal new void Update(double TimeElapsed)
+			public override void Update(double TimeElapsed)
 			{
 				if (State == TrainState.Pending)
 				{
@@ -71,7 +62,7 @@ namespace TrainManager.Trains
 							Cars[i].RearBogie.ChangeSection(0);
 							Cars[i].Coupler.ChangeSection(0);
 
-							if (Cars[i].Specs.IsMotorCar)
+							if (Cars[i].Specs.IsMotorCar && Cars[i].Sounds.Loop != null)
 							{
 								Cars[i].Sounds.Loop.Play(Cars[i], true);
 							}

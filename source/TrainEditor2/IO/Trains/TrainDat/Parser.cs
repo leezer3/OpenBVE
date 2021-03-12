@@ -16,7 +16,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 {
 	internal static partial class TrainDat
 	{
-		private const int currentVersion = 15311;
+		private const int currentVersion = 17250;
 
 		internal static void Parse(string fileName, out Train train)
 		{
@@ -560,9 +560,9 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								switch (n)
 								{
 									case 0:
-										if (b == 0 | b == 1)
+										if (b >= 0 | b <= 3)
 										{
-											train.Handle.HandleType = (Handle.HandleTypes)b;
+											train.Handle.HandleType = (HandleType)b;
 										}
 
 										break;

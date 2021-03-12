@@ -38,6 +38,8 @@ namespace TrainEditor {
 			comboboxBrakeControlSystem.Items.Add("Delay-including control");
 			comboboxHandleType.Items.Add("Separated");
 			comboboxHandleType.Items.Add("Combined");
+			comboboxHandleType.Items.Add("Separated (Interlocked)");
+			comboboxHandleType.Items.Add("Separated (Reverser Interlocked)");
 			comboboxAts.Items.Add("None");
 			comboboxAts.Items.Add("ATS-SN");
 			comboboxAts.Items.Add("ATS-SN / ATS-P");
@@ -221,7 +223,7 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxMainReservoirMaximumPressure, "MainReservoirMaximumPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.MainReservoirMaximumPressure)) return false;
 			if (!SaveControlContent(textboxBrakePipeNormalPressure, "BrakePipeNormalPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.BrakePipeNormalPressure)) return false;
 			// handle
-			Train.Handle.HandleType = (TrainDat.Handle.HandleTypes)comboboxHandleType.SelectedIndex;
+			Train.Handle.HandleType = (HandleType)comboboxHandleType.SelectedIndex;
 			Train.Handle.PowerNotches = (int)numericUpDownPowerNotches.Value;
 			Train.Handle.BrakeNotches = (int)numericUpDownBrakeNotches.Value;
 			if (Train.Handle.BrakeNotches == 0  & checkboxHoldBrake.Checked) {
@@ -1507,6 +1509,8 @@ namespace TrainEditor {
 			labelPowerNotchReduceSteps.Text = Translations.GetInterfaceString("train_editor_handle_power_notch_reduce_steps");
 			comboboxHandleType.Items[0] = Translations.GetInterfaceString("train_editor_handle_separated");
 			comboboxHandleType.Items[1] = Translations.GetInterfaceString("train_editor_handle_combined");
+			comboboxHandleType.Items[2] = Translations.GetInterfaceString("train_editor_handle_separated_interlocked");
+			comboboxHandleType.Items[3] = Translations.GetInterfaceString("train_editor_handle_separated_interlocked_reverser");
 
 			groupboxCab.Text = Translations.GetInterfaceString("train_editor_cab_cab");
 			labelDriverCar.Text = Translations.GetInterfaceString("train_editor_cab_driver_car");

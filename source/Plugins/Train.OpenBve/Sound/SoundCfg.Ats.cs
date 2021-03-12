@@ -15,12 +15,12 @@ namespace Train.OpenBve
 			Vector3 position = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 			const double radius = 2.0;
 			train.Cars[train.DriverCar].Sounds.Plugin = new CarSound[] {
-				new CarSound(Plugin.currentHost, Path.CombineFile(trainFolder, "ats.wav"), radius, position),
-				new CarSound(Plugin.currentHost, Path.CombineFile(trainFolder, "atscnt.wav"), radius, position),
-				new CarSound(Plugin.currentHost, Path.CombineFile(trainFolder, "ding.wav"), radius, position),
-				new CarSound(Plugin.currentHost, Path.CombineFile(trainFolder, "toats.wav"), radius, position),
-				new CarSound(Plugin.currentHost, Path.CombineFile(trainFolder, "toatc.wav"), radius, position),
-				new CarSound(Plugin.currentHost, Path.CombineFile(trainFolder, "eb.wav"), radius, position)
+				new CarSound(Plugin.currentHost, train.TrainFolder,"ats.wav", radius, position),
+				new CarSound(Plugin.currentHost, train.TrainFolder, "atscnt.wav", radius, position),
+				new CarSound(Plugin.currentHost, train.TrainFolder, "ding.wav", radius, position),
+				new CarSound(Plugin.currentHost, train.TrainFolder, "toats.wav", radius, position),
+				new CarSound(Plugin.currentHost, train.TrainFolder, "toatc.wav", radius, position),
+				new CarSound(Plugin.currentHost, train.TrainFolder, "eb.wav", radius, position)
 			};
 		}
 	}

@@ -165,7 +165,7 @@ namespace OpenBve {
 						}
 					}
 				}
-				if (ex is System.DllNotFoundException)
+				if (ex is DllNotFoundException)
 				{
 					Interface.AddMessage(MessageType.Critical, false, "The required system library " + ex.Message + " was not found on the system.");
 					switch (ex.Message)
@@ -332,8 +332,8 @@ namespace OpenBve {
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++) {
 				if ( Program.TrainManager.Trains[i].State != TrainState.Bogus) {
 					if ( Program.TrainManager.Trains[i].IsPlayerTrain) {
-						if (! Program.TrainManager.Trains[i].LoadCustomPlugin( Program.TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
-							Program.TrainManager.Trains[i].LoadDefaultPlugin(  Program.TrainManager.Trains[i].TrainFolder);
+						if (! Program.TrainManager.Trains[i].LoadCustomPlugin(Program.TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
+							Program.TrainManager.Trains[i].LoadDefaultPlugin(Program.TrainManager.Trains[i].TrainFolder);
 						}
 					} else {
 						Program.TrainManager.Trains[i].LoadDefaultPlugin( Program.TrainManager.Trains[i].TrainFolder);

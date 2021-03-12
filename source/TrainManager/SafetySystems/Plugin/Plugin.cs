@@ -206,7 +206,7 @@ namespace TrainManager.SafetySystems
 			/*
 			 * Process the handles.
 			 */
-			if (this.Train.Handles.SingleHandle & handles.BrakeNotch != 0)
+			if (this.Train.Handles.HandleType == HandleType.SingleHandle & handles.BrakeNotch != 0)
 			{
 				handles.PowerNotch = 0;
 			}

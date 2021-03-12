@@ -40,6 +40,7 @@ namespace OpenBve {
 			Program.TrainManager.Trains = new TrainBase[] { };
 			// game
 			Interface.LogMessages.Clear();
+			Program.CurrentHost.MissingFiles.Clear();
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere = new Atmosphere();

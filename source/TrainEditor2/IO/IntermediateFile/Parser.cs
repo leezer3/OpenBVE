@@ -48,7 +48,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Handle
 			{
-				HandleType = (Handle.HandleTypes)Enum.Parse(typeof(Handle.HandleTypes), (string)parent.Element("HandleType")),
+				HandleType = (HandleType)Enum.Parse(typeof(HandleType), (string)parent.Element("HandleType")),
 				PowerNotches = (int)parent.Element("PowerNotches"),
 				BrakeNotches = (int)parent.Element("BrakeNotches"),
 				PowerNotchReduceSteps = (int)parent.Element("PowerNotchReduceSteps"),

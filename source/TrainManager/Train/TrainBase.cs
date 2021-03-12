@@ -78,7 +78,7 @@ namespace TrainManager.Trains
 			State = state;
 			Destination = TrainManagerBase.CurrentOptions.InitialDestination;
 			Station = -1;
-			RouteLimits = new double[] { double.PositiveInfinity };
+			RouteLimits = new[] { double.PositiveInfinity };
 			CurrentRouteLimit = double.PositiveInfinity;
 			CurrentSectionLimit = double.PositiveInfinity;
 			Cars = new CarBase[] { };
@@ -88,7 +88,7 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>
-		public void Initialize()
+		public virtual void Initialize()
 		{
 			for (int i = 0; i < Cars.Length; i++)
 			{
@@ -261,9 +261,9 @@ namespace TrainManager.Trains
 						{
 							if (Cars[j].CarSections.Length != 0)
 							{
-								if (j == this.DriverCar && IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
+								if (j == DriverCar && IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
 								{
-									this.Cars[j].ChangeCarSection(CarSectionType.Interior);
+									Cars[j].ChangeCarSection(CarSectionType.Interior);
 								}
 								else
 								{
@@ -274,10 +274,10 @@ namespace TrainManager.Trains
 									 * Stuff like the R142A really needs to downsize the textures supplied,
 									 * but we have no control over external factors....
 									 */
-									this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
+									Cars[j].ChangeCarSection(CarSectionType.Exterior);
 									if (IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
 									{
-										this.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
+										Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 									}
 								}
 
@@ -701,7 +701,7 @@ namespace TrainManager.Trains
 				Specs.CurrentAverageAcceleration += Cars[i].Specs.Acceleration;
 			}
 
-			double invcarlen = 1.0 / (double) Cars.Length;
+			double invcarlen = 1.0 / Cars.Length;
 			CurrentSpeed *= invcarlen;
 			Specs.CurrentAverageAcceleration *= invcarlen;
 		}
@@ -820,7 +820,7 @@ namespace TrainManager.Trains
 				{
 					if (Plugin != null)
 					{
-						Plugin.BeginJump((OpenBveApi.Runtime.InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
+						Plugin.BeginJump((InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
 					}
 				}
 
@@ -840,7 +840,7 @@ namespace TrainManager.Trains
 					double x;
 					if (Math.Abs(d) > 1.0)
 					{
-						x = (double) Math.Sign(d);
+						x = Math.Sign(d);
 					}
 					else
 					{

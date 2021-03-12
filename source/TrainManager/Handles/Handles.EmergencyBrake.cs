@@ -60,7 +60,7 @@ namespace TrainManager.Handles
 
 			// apply
 			baseTrain.Handles.Brake.ApplyState(baseTrain.Handles.Brake.MaximumNotch, true);
-			baseTrain.Handles.Power.ApplyState(0, !baseTrain.Handles.SingleHandle);
+			baseTrain.Handles.Power.ApplyState(0, baseTrain.Handles.HandleType != HandleType.SingleHandle);
 			baseTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 			Driver = true;
 			baseTrain.Handles.HoldBrake.Driver = false;
@@ -70,7 +70,7 @@ namespace TrainManager.Handles
 				switch (OtherHandlesBehaviour)
 				{
 					case EbHandleBehaviour.PowerNeutral:
-						if (!baseTrain.Handles.SingleHandle)
+						if (baseTrain.Handles.HandleType != HandleType.SingleHandle)
 						{
 							baseTrain.Handles.Power.ApplyState(0, false);
 						}
@@ -79,7 +79,7 @@ namespace TrainManager.Handles
 						baseTrain.Handles.Reverser.ApplyState(ReverserPosition.Neutral);
 						break;
 					case EbHandleBehaviour.PowerReverserNeutral:
-						if (!baseTrain.Handles.SingleHandle)
+						if (baseTrain.Handles.HandleType != HandleType.SingleHandle)
 						{
 							baseTrain.Handles.Power.ApplyState(0, false);
 						}
@@ -116,7 +116,7 @@ namespace TrainManager.Handles
 				else
 				{
 					baseTrain.Handles.Brake.ApplyState(baseTrain.Handles.Brake.MaximumNotch, true);
-					baseTrain.Handles.Power.ApplyState(0, !baseTrain.Handles.SingleHandle);
+					baseTrain.Handles.Power.ApplyState(0, baseTrain.Handles.HandleType != HandleType.SingleHandle);
 				}
 				Driver = false;
 				// plugin

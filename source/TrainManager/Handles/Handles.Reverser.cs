@@ -37,6 +37,10 @@ namespace TrainManager.Handles
 
 		public void ApplyState(int Value, bool Relative)
 		{
+			if (baseTrain.Handles.HandleType == HandleType.InterlockedReverserHandle && baseTrain.Handles.Power.Driver != 0)
+			{
+				return;
+			}
 			int a = (int)Driver;
 			int r = Relative ? a + Value : Value;
 			if (r < -1) r = -1;

@@ -79,6 +79,7 @@
     <Compile Include="Handles\Handles.Brake.cs" />
     <Compile Include="Handles\Handles.Eb.Behaviour.cs" />
     <Compile Include="Handles\Handles.EmergencyBrake.cs" />
+    <Compile Include="Handles\Handles.HandleType.cs" />
     <Compile Include="Handles\Handles.HoldBrake.cs" />
     <Compile Include="Handles\Handles.LocoBrake.cs" />
     <Compile Include="Handles\Handles.LocoBrake.Types.cs" />

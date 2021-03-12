@@ -98,7 +98,7 @@ namespace TrainManager
 		/// <summary>Performs the jump for all TFOs</summary>
 		public void JumpTFO()
 		{
-			foreach (var Train in TFOs)
+			foreach (TrackFollowingObject Train in TFOs)
 			{
 				Train.Jump(-1);
 			}

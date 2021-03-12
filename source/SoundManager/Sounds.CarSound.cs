@@ -1,5 +1,7 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
@@ -18,6 +20,35 @@ namespace SoundManager
 		/// <summary>The target volume of the sound</summary>
 		/// <remarks>Used when crossfading between multiple sounds of the same type</remarks>
 		public double TargetVolume;
+
+		public CarSound(HostInterface currentHost, string trainFolder, string soundFile, double radius, Vector3 position) : this(currentHost, trainFolder, string.Empty, -1, soundFile, radius, position)
+		{
+		}
+
+		
+		public CarSound(HostInterface currentHost, string trainFolder, string configurationFile, int currentLine, string soundFile, double radius, Vector3 position)
+		{
+			if (soundFile.Length == 0 || Path.ContainsInvalidChars(soundFile))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + currentLine + " in file " + configurationFile);
+				return;
+			}
+			soundFile = Path.CombineFile(trainFolder, soundFile);
+
+			if (!System.IO.File.Exists(soundFile))
+			{
+				if (configurationFile != string.Empty)
+				{
+					//Only add missing file message for BVE4 / XML sound configs, not default
+					currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + currentLine + " in file " + configurationFile);
+				}
+				return;
+			}
+			SoundHandle handle;
+			currentHost.RegisterSound(soundFile, radius, out handle);
+			Buffer = handle as SoundBuffer;
+			this.Position = position;
+		}
 
 		public CarSound(HostInterface currentHost, string soundFile, double radius, Vector3 position)
 		{

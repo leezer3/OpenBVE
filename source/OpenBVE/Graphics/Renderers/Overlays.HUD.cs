@@ -112,7 +112,7 @@ namespace OpenBve.Graphics.Renderers
 					Element.TransitionState = 0.0;
 					break;
 				case "power":
-					if (TrainManager.PlayerTrain.Handles.SingleHandle)
+					if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 					{
 						return;
 					}
@@ -144,7 +144,7 @@ namespace OpenBve.Graphics.Renderers
 					Element.TransitionState = 0.0;
 					break;
 				case "brake":
-					if (TrainManager.PlayerTrain.Handles.SingleHandle)
+					if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 					{
 						return;
 					}
@@ -331,7 +331,7 @@ namespace OpenBve.Graphics.Renderers
 					Element.TransitionState = 0.0;
 					break;
 				case "single":
-					if (!TrainManager.PlayerTrain.Handles.SingleHandle)
+					if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 					{
 						return;
 					}
