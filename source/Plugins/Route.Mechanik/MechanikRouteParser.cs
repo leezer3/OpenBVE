@@ -203,7 +203,6 @@ namespace MechanikRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NumberOfPoints must be between 3 and 5 in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						int v = 0;
 						List<Vector3> points = new List<Vector3>();
 						Vector3 currentPoint = new Vector3();
 						for (int p = 3; p < 24; p += 3)
@@ -217,7 +216,7 @@ namespace MechanikRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Y encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
 							}
 							currentPoint.Y = -currentPoint.Y;
-							currentPoint.Y += yOffset;
+							currentPoint.Y += yOffset; //Mechanik stacks textures in order. Use this as a hack to stop Z-fighting
 							if (!TryParseDistance(Arguments[p + 2], out currentPoint.Z))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Z encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
