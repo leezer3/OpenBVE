@@ -335,7 +335,7 @@ namespace MechanikRouteParser
 						double firstCorrectionDist = trackPosition + Math.Sqrt(correctionPoint1.X*correctionPoint1.X+correctionPoint1.Y*correctionPoint1.Y);
 						double correctionDist = firstCorrectionDist + Math.Sqrt(correctionPoint2.X*correctionPoint2.X+correctionPoint2.Y*correctionPoint2.Y);
 						blockIndex = currentRouteData.FindBlock(correctionDist);
-						currentRouteData.Blocks[blockIndex].Correction = true;
+						currentRouteData.Blocks[blockIndex].Correction = new Correction(correctionPoint1, correctionPoint2);
 						break;
 					/*
 					 * Both sounds and speed limits are invisible markers
@@ -736,7 +736,7 @@ namespace MechanikRouteParser
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide.RotatePlane(cosag, sinag);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				}
-				if (i < currentRouteData.Blocks.Count - 1 && currentRouteData.Blocks[i + 1].Correction)
+				if (i < currentRouteData.Blocks.Count - 1 && currentRouteData.Blocks[i + 1].Correction != null)
 				{
 					worldPosition = trackPosition;
 					worldDirection = trackDirection;

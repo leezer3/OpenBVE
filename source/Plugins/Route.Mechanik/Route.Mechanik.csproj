@@ -46,6 +46,7 @@
     <Compile Include="Signalling\Semaphore.cs" />
     <Compile Include="Signalling\SignalAspects.cs" />
     <Compile Include="Structures\Block.cs" />
+    <Compile Include="Structures\Correction.cs" />
     <Compile Include="Structures\RouteObject.cs" />
     <Compile Include="Structures\SoundEvent.cs" />
     <Compile Include="Structures\StationStop.cs" />

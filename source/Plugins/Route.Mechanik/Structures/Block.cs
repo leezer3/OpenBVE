@@ -42,15 +42,15 @@ namespace MechanikRouteParser
 		internal List<SoundEvent> Sounds = new List<SoundEvent>();
 		/// <summary>The station stop if applicable</summary>
 		internal List<StationStop> stopMarker;
-		/// <summary>Whether a rotation / position correction should be issued after this block</summary>
-		internal bool Correction;
+		/// <summary>The rotation / position correction to be issued after this block</summary>
+		internal Correction Correction;
 		/// <summary>The signals placed in this block</summary>
 		internal List<Semaphore> Signals;
 
 		internal Block(double TrackPosition)
 		{
 			this.StartingTrackPosition = TrackPosition;
-			Correction = false;
+			Correction = null;
 			this.stopMarker = new List<StationStop>();
 			this.Signals = new List<Semaphore>();
 		}
