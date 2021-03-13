@@ -488,7 +488,6 @@ namespace MechanikRouteParser
 						 */
 						Vector3 signalPosition = new Vector3();
 						int firstAspect, secondAspect;
-						bool heldAtRed;
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out signalPosition.X))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
@@ -514,10 +513,29 @@ namespace MechanikRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid NextAspect encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 8 || !TryParseBool(Arguments[7], out heldAtRed))
+
+						int signalType;
+						bool heldAtRed;
+						if (Arguments.Length < 8 || !int.TryParse(Arguments[7], out signalType))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
 							continue;
+						}
+						else
+						{
+							switch (signalType)
+							{
+								case 1:
+									heldAtRed = true;
+									break;
+								case 3:
+									heldAtRed = false;
+									break;
+								default:
+									heldAtRed = false;
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
+									break;
+							}
 						}
 						blockIndex = currentRouteData.FindBlock(trackPosition + signalPosition.Z);
 						signalPosition.Y = -signalPosition.Y;
@@ -690,8 +708,15 @@ namespace MechanikRouteParser
 							Plugin.CurrentRoute.Sections[s - 1].NextSection = Plugin.CurrentRoute.Sections[s];
 						}
 						
+						if (signal.HeldAtRed)
+						{
+							Plugin.CurrentRoute.Sections[s].StationIndex = Plugin.CurrentRoute.Stations.Length -1;
+						}
+						else
+						{
+							Plugin.CurrentRoute.Sections[s].StationIndex = -1;	
+						}
 
-						Plugin.CurrentRoute.Sections[s].StationIndex = -1;
 						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance, 1.0);
 					}
 				}
