@@ -437,9 +437,9 @@ namespace MechanikRouteParser
 						 * => Track position
 						 * => X position of marker
 						 * => Z position of marker
-						 * => Start or end of stop zone
+						 * => TRUE if start of stop zone, FALSE for end of stop zone
 						 */
-						bool terminal;
+						bool isStart;
 						double stopPosX, stopPosZ;
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out stopPosX))
 						{
@@ -452,19 +452,19 @@ namespace MechanikRouteParser
 							continue;
 						}
 						trackPosition += stopPosZ;
-						if (Arguments.Length < 5 || !TryParseBool(Arguments[4], out terminal))
+						if (Arguments.Length < 5 || !TryParseBool(Arguments[4], out isStart))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid IsTerminal encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid IsStart encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						blockIndex = currentRouteData.FindBlock(trackPosition);
-						if (terminal)
+						if (isStart)
 						{
-							currentRouteData.Blocks[blockIndex].stopMarker.Add(new StationStop(new Vector2(stopPosX, 0), terminal));
+							currentRouteData.Blocks[blockIndex].stopMarker.Add(new StationStop(new Vector2(stopPosX, 0), isStart));
 						}
 						else
 						{
-							currentRouteData.Blocks[blockIndex].stopMarker.Insert(0, new StationStop(new Vector2(stopPosX, 0), terminal));
+							currentRouteData.Blocks[blockIndex].stopMarker.Insert(0, new StationStop(new Vector2(stopPosX, 0), isStart));
 						}
 						break;
 					case "'sem":
@@ -570,8 +570,6 @@ namespace MechanikRouteParser
 			//Insert a stop in the first block, as Mechanik always starts at pos 0, wheras BVE starts at the first stop
 			int blockZero = currentRouteData.FindBlock(0);
 			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, 0), false));
-			blockZero = currentRouteData.FindBlock(25);
-			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, 0), true));
 			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
 			currentRouteData.CreateMissingBlocks();
 			ProcessRoute(PreviewOnly);
@@ -735,7 +733,7 @@ namespace MechanikRouteParser
 
 				foreach (StationStop stop in currentRouteData.Blocks[i].stopMarker)
 				{
-					if (!stop.Terminal)
+					if (stop.Start)
 					{
 						int s = Plugin.CurrentRoute.Stations.Length;
 						Array.Resize(ref Plugin.CurrentRoute.Stations, s + 1);

@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Math;
-using OpenBveApi.Runtime;
 
 namespace MechanikRouteParser
 {
@@ -32,13 +31,13 @@ namespace MechanikRouteParser
 	{
 		/// <summary>The position the marker will be placed</summary>
 		internal readonly Vector2 MarkerPosition;
-		/// <summary>Whether this is the terminal marker for the station</summary>
-		internal readonly bool Terminal;
+		/// <summary>Whether this is the start marker for the station</summary>
+		internal readonly bool Start;
 
-		internal StationStop(Vector2 Position, bool IsTerminal)
+		internal StationStop(Vector2 Position, bool isStart)
 		{
 			MarkerPosition = Position;
-			Terminal = IsTerminal;
+			Start = isStart;
 		}
 	}
 }
