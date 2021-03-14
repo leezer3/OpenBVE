@@ -590,6 +590,25 @@ namespace MechanikRouteParser
 			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, 0), false));
 			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
 			currentRouteData.CreateMissingBlocks();
+
+			int numTiles = (int)(currentRouteData.Blocks[currentRouteData.Blocks.Count - 1].StartingTrackPosition / 2000);
+			for (int i = 1; i < numTiles; i++)
+			{
+				/*
+				 * UNDOCUMENTED:
+				 * Mechanik divides it's world into 2km 'tiles' which can be fed into the route generator supplied
+				 * It appears to internally issue a correction on each 2km tile boundary in the trasa.dat
+				 *
+				 * Only example of this I can find appears in the IRT-NY route, probably because curves were very
+				 * rare in Mechanik routes
+				 */
+				int blockIndex = currentRouteData.FindBlock(i * 2000);
+				if (currentRouteData.Blocks[blockIndex].Correction == null)
+				{
+					currentRouteData.Blocks[blockIndex].Correction = new Correction(Vector2.Null, Vector2.Null);
+				}
+			}
+
 			ProcessRoute(PreviewOnly);
 		}
 
