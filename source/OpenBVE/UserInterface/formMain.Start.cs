@@ -241,7 +241,7 @@ namespace OpenBve
 									break;
 								case ".dat":
 									fileName = System.IO.Path.GetFileName(Files[i]);
-									if (fileName == null || fileName.ToLowerInvariant() == "train.dat")
+									if (fileName == null || isInvalidDatName(fileName))
 									{
 										continue;
 									}
@@ -269,6 +269,30 @@ namespace OpenBve
 			}
 			catch
 			{
+			}
+		}
+
+		private bool isInvalidDatName(string fileName)
+		{
+			/*
+			 * Blacklist a bunch of invalid .dat files so they don't show up in the route browser
+			 */
+			switch (fileName.ToLowerInvariant())
+			{
+				case "train.dat":		//BVE Train data
+				case "tekstury.dat":	//Mechanik texture list
+				case "dzweiki.dat":		//Mechanik sound list
+				case "moduly.dat":		//Mechnik route generator dat list
+				case "dzw_osob.dat":	//Mechanik route generator sound list
+				case "dzw_posp.dat":	//Mechanik route generator sound list
+				case "log.dat":			//Mechanik route generator logfile
+				case "s80_text.dat":	//S80 Mechanik routefile sounds
+				case "s80_snd.dat":		//S80 Mechanik routefile textures
+				case "gensc.dat":		//Mechanik route generator (?)
+				case "scenerio.dat":	//Mechanik route generator (?)
+					return true;
+				default:
+					return false;
 			}
 		}
 
