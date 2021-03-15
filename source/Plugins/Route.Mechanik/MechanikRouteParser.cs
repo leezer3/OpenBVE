@@ -116,7 +116,11 @@ namespace MechanikRouteParser
 				string[] Arguments = routeLines[i].Trim().Split(null);
 				double trackPosition, scaleFactor;
 				int Idx = -1, blockIndex, textureIndex;
-				if (Arguments.Length < 2 || !TryParseDistance(Arguments[1], out trackPosition))
+				if(Arguments.Length < 2)
+				{
+					continue;
+				}
+				if (!TryParseDistance(Arguments[1], out trackPosition))
 				{
 					//Second argument is always track position in KM
 					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid track position encountered in " + Arguments[0] + " at line " + i);
@@ -588,26 +592,32 @@ namespace MechanikRouteParser
 			//Insert a stop in the first block, as Mechanik always starts at pos 0, wheras BVE starts at the first stop
 			int blockZero = currentRouteData.FindBlock(0);
 			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, 0), false));
-			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
-			currentRouteData.CreateMissingBlocks();
-
-			int numTiles = (int)(currentRouteData.Blocks[currentRouteData.Blocks.Count - 1].StartingTrackPosition / 2000);
+			int numTiles = (int)(currentRouteData.Blocks[currentRouteData.Blocks.Count - 1].StartingTrackPosition / 1000);
 			for (int i = 1; i < numTiles; i++)
 			{
 				/*
 				 * UNDOCUMENTED:
-				 * Mechanik divides it's world into 2km 'tiles' which can be fed into the route generator supplied
-				 * It appears to internally issue a correction on each 2km tile boundary in the trasa.dat
+				 * Mechanik divides it's world into 'tiles' which can be fed into the route generator supplied
+				 * Documentation for these tiles states that they must be a multiple of 500m in length
 				 *
-				 * Only example of this I can find appears in the IRT-NY route, probably because curves were very
-				 * rare in Mechanik routes
+				 * Under certain circumstances, the sim appears to issue an undocumented internal correction.
+				 * Presumably, this must have something to do with the 
+				 *
+				 * Known examples:
+				 * IRT-NY 2km or divisors of work
+				 * UK DMU Route 1km required. 2km and 500m **does not** work
+				 * 
 				 */
-				int blockIndex = currentRouteData.FindBlock(i * 2000);
+				int blockIndex = currentRouteData.FindBlock(i * 1000);
 				if (currentRouteData.Blocks[blockIndex].Correction == null)
 				{
 					currentRouteData.Blocks[blockIndex].Correction = new Correction(Vector2.Null, Vector2.Null);
 				}
 			}
+			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
+			currentRouteData.CreateMissingBlocks();
+
+			
 
 			ProcessRoute(PreviewOnly);
 		}
