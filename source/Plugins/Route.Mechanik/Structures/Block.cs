@@ -46,13 +46,16 @@ namespace MechanikRouteParser
 		internal Correction Correction;
 		/// <summary>The signals placed in this block</summary>
 		internal List<Semaphore> Signals;
+		/// <summary>The block Y offset</summary>
+		internal double YOffset;
 
-		internal Block(double TrackPosition)
+		internal Block(double TrackPosition, double Offset)
 		{
 			this.StartingTrackPosition = TrackPosition;
 			Correction = null;
 			this.stopMarker = new List<StationStop>();
 			this.Signals = new List<Semaphore>();
+			this.YOffset = Offset;
 		}
 	}
 }

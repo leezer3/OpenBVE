@@ -154,6 +154,7 @@ namespace MechanikRouteParser
 							continue;
 						}
 						topLeft.Y = -topLeft.Y;
+						topLeft.Y += yOffset;
 						if (Arguments.Length < 5 || !TryParseDistance(Arguments[4], out topLeft.Z))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid TopLeft Z encountered in " + Arguments[0] + " at line " + i);
@@ -287,6 +288,7 @@ namespace MechanikRouteParser
 						if (Idx != -1)
 						{
 							currentRouteData.Blocks[blockIndex].Objects.Add(new RouteObject(Idx, new Vector3(0, 0, 0)));
+							currentRouteData.Blocks[blockIndex].YOffset = yOffset;
 						}
 						break;
 					case "'o":
@@ -543,6 +545,7 @@ namespace MechanikRouteParser
 						}
 						blockIndex = currentRouteData.FindBlock(trackPosition + signalPosition.Z);
 						signalPosition.Y = -signalPosition.Y;
+						signalPosition.Y += yOffset;
 						signalPosition.Z = 0; //Add signal position Z to tpos and zero so we get the correct section positioning
 						Semaphore sem = new Semaphore((SignalAspect) firstAspect, (SignalAspect) secondAspect, heldAtRed, signalPosition);
 						currentRouteData.Blocks[blockIndex].Signals.Add(sem);
@@ -692,6 +695,7 @@ namespace MechanikRouteParser
 				}
 				Plugin.CurrentRoute.Tracks[0].Elements[n] = WorldTrackElement;
 				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldPosition = trackPosition;
+				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldPosition.Y = currentRouteData.Blocks[i].YOffset;
 				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection = Vector3.GetVector3(trackDirection, 0);
 				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(trackDirection.Y, 0.0, -trackDirection.X);
 				Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide);

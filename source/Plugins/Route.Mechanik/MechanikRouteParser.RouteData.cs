@@ -39,7 +39,7 @@ namespace MechanikRouteParser
 					return i;
 				}
 			}
-			this.Blocks.Add(new Block(TrackPosition));
+			this.Blocks.Add(new Block(TrackPosition, this.Blocks.Count == 0 ? 0 : Blocks[Blocks.Count - 1].YOffset));
 			return this.Blocks.Count - 1;
 		}
 
@@ -51,7 +51,7 @@ namespace MechanikRouteParser
 				{
 					if (this.Blocks[i + 1].StartingTrackPosition - this.Blocks[i].StartingTrackPosition > 25)
 					{
-						this.Blocks.Insert(i + 1, new Block(this.Blocks[i].StartingTrackPosition + 25));
+						this.Blocks.Insert(i + 1, new Block(this.Blocks[i].StartingTrackPosition + 25, this.Blocks[i].YOffset));
 						i++;
 					}
 					else
