@@ -800,6 +800,8 @@ namespace MechanikRouteParser
 							Name = "Station " + (s + 1),
 							OpenLeftDoors = true,
 							OpenRightDoors = true,
+							ArrivalTime = -1,
+							DepartureTime = -1
 						};
 						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
 						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
