@@ -572,7 +572,7 @@ namespace OpenBve
 				menu.Selection = menu.TopItem - 1;
 				return true;
 			}
-			if (x < topItemY || x > menuXmax || y < menuYmin || y > menuYmax)
+			if (x < menuXmin || x > menuXmax || y < menuYmin || y > menuYmax)
 			{
 				return false;
 			}
