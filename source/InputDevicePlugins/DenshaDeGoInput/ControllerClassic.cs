@@ -227,14 +227,23 @@ namespace DenshaDeGoInput
 
 			if (usesHat && powerNotch == PowerNotches.P4)
 			{
+				// Hack for adapters using a hat where pressing left and right simultaneously reports only left being pressed
 				if (InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
 				{
-					// Hack for adapters which map the direction buttons to a hat and confuse N with P4
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
 				}
 				else
 				{
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.P4;
+				}
+			}
+			else if (usesHat && powerNotch == PowerNotches.Transition)
+			{
+				// Hack for adapters using a hat where pressing left and right simultaneously reports nothing being pressed, the same as the transition state
+				// Has the side effect of the power notch jumping P1>N>P2, but it is barely noticeable unless moving the handle very slowly
+				if (InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P2)
+				{
+					InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
 				}
 			}
 			else if (powerNotch != PowerNotches.Transition)
