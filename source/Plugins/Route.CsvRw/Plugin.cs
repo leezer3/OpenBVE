@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
@@ -97,8 +98,12 @@ namespace CsvRwRouteParser
 	    /// <param name="PreviewOnly">Whether this is a preview</param>
 	    /// <param name="route">Receives the route.</param>
 	    /// <returns>Whether loading the sound was successful.</returns>
-	    public override bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
+	    public override bool LoadRoute(string path, Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
 	    {
+		    if (Encoding == null)
+		    {
+				Encoding = Encoding.UTF8;
+		    }
 		    LastException = null;
 		    Cancel = false;
 		    CurrentProgress = 0.0;
