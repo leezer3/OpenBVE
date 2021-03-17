@@ -229,6 +229,7 @@ namespace OpenBve {
 				}
 				Game.Reset(false);
 			}
+			/*
 			// --- show the main menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {
 				Joysticks.RefreshJoysticks();
@@ -240,6 +241,8 @@ namespace OpenBve {
 				//Apply translations
 				Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			}
+			*/
+			result.Start = true;
 			// --- start the actual program ---
 			if (result.Start) {
 				if (Initialize()) {

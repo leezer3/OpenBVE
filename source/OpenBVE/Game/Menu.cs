@@ -1,9 +1,10 @@
-﻿using OpenBveApi.Colors;
+using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using System;
 using System.Drawing;
 using DavyKager;
+using System.IO;
 using LibRender2.Screens;
 using LibRender2.Texts;
 using OpenBve.Input;
@@ -27,6 +28,8 @@ namespace OpenBve
 		/// <summary>The list of possible tags for a menu entry- These define the functionality of a given menu entry</summary>
 		public enum MenuTag
 		{
+			/// <summary>Is unselectable</summary>
+			Unselectable,
 			/// <summary>Has no functionality/ is blank</summary>
 			None,
 			/// <summary>Is a caption for another menu item</summary>
@@ -50,7 +53,15 @@ namespace OpenBve
 			/// <summary>Quits the program</summary>
 			Quit,
 			/// <summary>Customises the selected control</summary>
-			Control
+			Control,
+			/// <summary>Displays a list of routefiles</summary>
+			RouteList,
+			/// <summary>Selects a routefile to load</summary>
+			RouteFile,
+			/// <summary>A directory</summary>
+			Directory,
+			/// <summary>Enters the parent directory</summary>
+			ParentDirectory,
 		};
 
 		/// <summary>The list of possible sub-menu types</summary>
@@ -69,13 +80,19 @@ namespace OpenBve
 			/// <summary>Customises the specified control</summary>
 			Control,
 			/// <summary>Quits the game</summary>
-			Quit
+			Quit,
+			/// <summary>The game start menu</summary>
+			GameStart,
+			/// <summary>Displays a list of routefiles</summary>
+			RouteList,
 		};
 
 		// components of the semi-transparent screen overlay
 		private readonly Color128 overlayColor = new Color128(0.0f, 0.0f, 0.0f, 0.2f);
 		private readonly Color128 backgroundColor = new Color128(0.0f, 0.0f, 0.0f, 1.0f);
 		private readonly Color128 highlightColor = new Color128(1.0f, 0.69f, 0.0f, 1.0f);
+		private readonly Color128 folderHighlightColor = new Color128(0.0f, 0.69f, 1.0f, 1.0f);
+		private readonly Color128 routeHighlightColor = new Color128(0.0f, 1.0f, 0.69f, 1.0f);
 		// text colours
 		private static readonly Color128 ColourCaption = new Color128(0.750f, 0.750f, 0.875f, 1.0f);
 		private static readonly Color128 ColourDimmed = new Color128(1.000f, 1.000f, 1.000f, 0.5f);
@@ -90,6 +107,8 @@ namespace OpenBve
 		private const int MenuItemBorderY = 2;
 		private const float LineSpacing = 1.75f;    // the ratio between the font size and line distance
 		private const int SelectionNone = -1;
+
+		private static string RouteSearchDirectory;
 
 		/********************
 			BASE MENU ENTRY CLASS
@@ -178,6 +197,63 @@ namespace OpenBve
 				Selection = 0;                      // defaults to first menu item
 				switch (menuType)
 				{
+					case MenuType.GameStart:          // top level menu
+						Items = new MenuEntry[3];
+						Items[0] = new MenuCommand("Open Route File", MenuTag.RouteList, 0);
+						
+						if (!Interface.CurrentOptions.KioskMode)
+						{
+							//Don't allow quitting or customisation of the controls in kiosk mode
+							Items[1] = new MenuCommand(Translations.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
+							Items[2] = new MenuCommand(Translations.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
+						}
+						else
+						{
+							Array.Resize(ref Items, Items.Length - 2);
+						}
+						RouteSearchDirectory = Program.FileSystem.InitialRouteFolder;
+						break;
+					case MenuType.RouteList:
+						string[] potentialFiles = { };
+						string[] directoryList;
+						if (RouteSearchDirectory != string.Empty)
+						{
+							potentialFiles = Directory.GetFiles(RouteSearchDirectory);
+							directoryList = Directory.GetDirectories(RouteSearchDirectory);
+						}
+						else
+						{
+							DriveInfo[] systemDrives = DriveInfo.GetDrives();
+							directoryList = new string[systemDrives.Length];
+							for (int k = 0; k < systemDrives.Length; k++)
+							{
+								directoryList[k] = systemDrives[k].Name;
+							}
+						}
+						
+						Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
+						Items[0] = new MenuCaption(RouteSearchDirectory);
+						Items[1] = new MenuCommand("...", MenuTag.ParentDirectory, 0);
+						int j;
+						int totalEntries = 2;
+						for (j = 0; j < directoryList.Length; j++)
+						{
+							Items[totalEntries] = new MenuCommand(new DirectoryInfo(directoryList[j]).Name, MenuTag.Directory, 0);
+							totalEntries++;
+						}
+
+						for (j = 0; j < potentialFiles.Length; j++)
+						{
+							string fileName = System.IO.Path.GetFileName(potentialFiles[j]);
+							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".rw"))
+							{
+								Items[totalEntries] = new MenuCommand(fileName, MenuTag.RouteFile, 0);
+								totalEntries++;
+							}
+						}
+						Array.Resize(ref Items, totalEntries);
+						break;
+
 					case MenuType.Top:          // top level menu
 						if (Interface.CurrentOptions.ScreenReaderAvailable)
 						{
@@ -466,7 +542,8 @@ namespace OpenBve
 		/// <summary>Pushes a menu into the menu stack</summary>
 		/// <param name= "type">The type of menu to push</param>
 		/// <param name= "data">The index of the menu in the menu stack (If pushing an existing higher level menu)</param>
-		public void PushMenu(MenuType type, int data = 0)
+		/// <param name="replace">Whether we are replacing the selected menu item</param>
+		public void PushMenu(MenuType type, int data = 0,  bool replace = false)
 		{
 			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
 			{
@@ -475,10 +552,18 @@ namespace OpenBve
 			}
 			if (!isInitialized)
 				Init();
-			CurrMenu++;
+			if (!replace)
+			{
+				CurrMenu++;
+			}
+			
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
-			Menus[CurrMenu] = new Menu.SingleMenu(type, data);
+			Menus[CurrMenu] = new SingleMenu(type, data);
+			if (replace)
+			{
+				Menus[CurrMenu].Selection = 1;
+			}
 			PositionMenu();
 			Program.Renderer.CurrentInterface = InterfaceType.Menu;
 		}
@@ -716,6 +801,23 @@ namespace OpenBve
 								Reset();
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
+							// route menu commands
+							case MenuTag.RouteList:				// TO ROUTE LIST MENU
+								Menu.instance.PushMenu(MenuType.RouteList);
+								break;
+							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
+								RouteSearchDirectory = RouteSearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : OpenBveApi.Path.CombineDirectory(RouteSearchDirectory, menu.Items[menu.Selection].Text);
+								Menu.instance.PushMenu(MenuType.RouteList, 0, true);
+								break;
+							case MenuTag.ParentDirectory:		// SHOWS THE LIST OF FILES IN THE PARENT DIR
+								if (string.IsNullOrEmpty(RouteSearchDirectory))
+								{
+									return;
+								}
+								DirectoryInfo newDirectory = Directory.GetParent(RouteSearchDirectory);
+								RouteSearchDirectory = newDirectory == null ? string.Empty : Directory.GetParent(RouteSearchDirectory).ToString();
+								Menu.instance.PushMenu(MenuType.RouteList, 0, true);
+								break;
 
 							// simulation commands
 							case MenuTag.JumpToStation:         // JUMP TO STATION
@@ -800,7 +902,25 @@ namespace OpenBve
 					// draw a solid highlight rectangle under the text
 					// HACK! the highlight rectangle has to be shifted a little down to match
 					// the text body. OpenGL 'feature'?
-					Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, itemY /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + 2.0f * MenuItemBorderX, em + MenuItemBorderY * 2), highlightColor);
+					MenuCommand command = menu.Items[i] as MenuCommand;
+					Color128 color = highlightColor;
+					if(command != null)
+					{
+						switch (command.Tag)
+						{
+							case MenuTag.Directory:
+							case MenuTag.ParentDirectory:
+								color = folderHighlightColor;
+								break;
+							case MenuTag.RouteFile:
+								color = routeHighlightColor;
+								break;
+							default:
+								color = highlightColor;
+								break;
+						}
+					}
+					Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, itemY /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + 2.0f * MenuItemBorderX, em + MenuItemBorderY * 2), color);
 					// draw the text
 					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourHighlight, false);

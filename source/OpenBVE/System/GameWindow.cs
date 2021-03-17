@@ -334,11 +334,22 @@ namespace OpenBve
 			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
 			Program.Renderer.DetermineMaxAFLevel();
 			HUD.LoadHUD();
-			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
-			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
-			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
-			LoadingScreenLoop();
+			if (string.IsNullOrEmpty(MainLoop.currentResult.RouteFile))
+			{
+				Game.Menu.PushMenu(Menu.MenuType.GameStart);
+				Loading.Complete = true;
+				Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
+				loadComplete = true;
+			}
+			else
+			{
+				Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
+				Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+				Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
+				Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
+				LoadingScreenLoop();
+			}
+
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
 			KeyDown	+= MainLoop.keyDownEvent;
