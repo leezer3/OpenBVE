@@ -336,7 +336,7 @@ namespace OpenBve
 			HUD.LoadHUD();
 			if (string.IsNullOrEmpty(MainLoop.currentResult.RouteFile))
 			{
-				Game.Menu.PushMenu(Menu.MenuType.GameStart);
+				Game.Menu.PushMenu(MenuType.GameStart);
 				Loading.Complete = true;
 				Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 				loadComplete = true;

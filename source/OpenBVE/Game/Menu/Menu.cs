@@ -23,70 +23,8 @@ namespace OpenBve
 	Keeps a stack of menus, allowing navigating forward and back */
 
 	/// <summary>Implements the in-game menu system; manages addition and removal of individual menus.</summary>
-	public sealed class Menu
+	public sealed partial class Menu
 	{
-		/// <summary>The list of possible tags for a menu entry- These define the functionality of a given menu entry</summary>
-		public enum MenuTag
-		{
-			/// <summary>Is unselectable</summary>
-			Unselectable,
-			/// <summary>Has no functionality/ is blank</summary>
-			None,
-			/// <summary>Is a caption for another menu item</summary>
-			Caption,
-			/// <summary>Moves up a menu level</summary>
-			MenuBack,
-			/// <summary>Enters the submenu containing the list of stations to which the player train may be jumped</summary>
-			MenuJumpToStation,
-			/// <summary>Enters the submenu for exiting to the main menu</summary>
-			MenuExitToMainMenu,
-			/// <summary>Enters the submenu for customising controls</summary>
-			MenuControls,
-			/// <summary>Enters the submenu for quitting the program</summary>
-			MenuQuit,
-			/// <summary>Returns to the simulation</summary>
-			BackToSim,
-			/// <summary>Jumps to the selected station</summary>
-			JumpToStation,
-			/// <summary>Exits to the main menu</summary>
-			ExitToMainMenu,
-			/// <summary>Quits the program</summary>
-			Quit,
-			/// <summary>Customises the selected control</summary>
-			Control,
-			/// <summary>Displays a list of routefiles</summary>
-			RouteList,
-			/// <summary>Selects a routefile to load</summary>
-			RouteFile,
-			/// <summary>A directory</summary>
-			Directory,
-			/// <summary>Enters the parent directory</summary>
-			ParentDirectory,
-		};
-
-		/// <summary>The list of possible sub-menu types</summary>
-		public enum MenuType
-		{
-			/// <summary>Not a sub menu</summary>
-			None,
-			/// <summary>Returns to the menu level above</summary>
-			Top,
-			/// <summary>The station jump menu</summary>
-			JumpToStation,
-			/// <summary>Returns to the main menu</summary>
-			ExitToMainMenu,
-			/// <summary>Provides a list of controls and allows customisation whilst in-game</summary>
-			Controls,
-			/// <summary>Customises the specified control</summary>
-			Control,
-			/// <summary>Quits the game</summary>
-			Quit,
-			/// <summary>The game start menu</summary>
-			GameStart,
-			/// <summary>Displays a list of routefiles</summary>
-			RouteList,
-		};
-
 		// components of the semi-transparent screen overlay
 		private readonly Color128 overlayColor = new Color128(0.0f, 0.0f, 0.0f, 0.2f);
 		private readonly Color128 backgroundColor = new Color128(0.0f, 0.0f, 0.0f, 1.0f);
@@ -108,7 +46,7 @@ namespace OpenBve
 		private const float LineSpacing = 1.75f;    // the ratio between the font size and line distance
 		private const int SelectionNone = -1;
 
-		private static string RouteSearchDirectory;
+		
 
 		/********************
 			BASE MENU ENTRY CLASS
@@ -181,6 +119,7 @@ namespace OpenBve
 				}
 			}
 			public int TopItem;         // the top displayed menu item
+			internal readonly MenuType Type;
 			
 
 			/********************
@@ -188,6 +127,7 @@ namespace OpenBve
 			*********************/
 			public SingleMenu(MenuType menuType, int data = 0)
 			{
+				Type = menuType;
 				int i, menuItem;
 				int jump = 0;
 				Size size;
@@ -212,6 +152,7 @@ namespace OpenBve
 							Array.Resize(ref Items, Items.Length - 2);
 						}
 						RouteSearchDirectory = Program.FileSystem.InitialRouteFolder;
+						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.RouteList:
 						string[] potentialFiles = { };
@@ -252,6 +193,7 @@ namespace OpenBve
 							}
 						}
 						Array.Resize(ref Items, totalEntries);
+						Align = TextAlignment.TopLeft;
 						break;
 
 					case MenuType.Top:          // top level menu
@@ -430,7 +372,7 @@ namespace OpenBve
 					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
 					if (size.Width > Width)
 						Width = size.Width;
-					if (!(Items[i] is MenuCaption) && size.Width > ItemWidth)
+					if (!(Items[i] is MenuCaption && (menuType!= MenuType.RouteList && menuType != MenuType.GameStart)) && size.Width > ItemWidth)
 						ItemWidth = size.Width;
 				}
 				Height = Items.Length * Game.Menu.LineHeight;
@@ -818,8 +760,10 @@ namespace OpenBve
 								RouteSearchDirectory = newDirectory == null ? string.Empty : Directory.GetParent(RouteSearchDirectory).ToString();
 								Menu.instance.PushMenu(MenuType.RouteList, 0, true);
 								break;
-
-							// simulation commands
+							case MenuTag.RouteFile:
+								
+								break;
+								// simulation commands
 							case MenuTag.JumpToStation:         // JUMP TO STATION
 								Reset();
 								TrainManager.PlayerTrain.Jump(menuItem.Data);
@@ -871,15 +815,17 @@ namespace OpenBve
 			// overlay background
 			Program.Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height), overlayColor);
 
-			// HORIZONTAL PLACEMENT: centre the menu in the main window
-			int itemLeft = (Program.Renderer.Screen.Width - menu.ItemWidth) / 2; // item left edge
-																// if menu alignment is left, left-align items, otherwise centre them in the screen
-			int itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Program.Renderer.Screen.Width / 2;
-
-			int menuBottomItem = menu.TopItem + visibleItems - 1;
-
+			
+			int itemLeft, itemX;
+			itemLeft = (Program.Renderer.Screen.Width - menu.ItemWidth) / 2; // item left edge
+			// if menu alignment is left, left-align items, otherwise centre them in the screen
+			itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Program.Renderer.Screen.Width / 2;
 			// draw the menu background
 			Program.Renderer.Rectangle.Draw(null, new Vector2(menuXmin - MenuBorderX, menuYmin - MenuBorderY), new Vector2(menuXmax - menuXmin + 2.0f * MenuBorderX, menuYmax - menuYmin + 2.0f * MenuBorderY), backgroundColor);
+			
+			int menuBottomItem = menu.TopItem + visibleItems - 1;
+
+			
 
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
 			if (menu.Selection == menu.TopItem - 1 && !isCustomisingControl)
@@ -920,7 +866,16 @@ namespace OpenBve
 								break;
 						}
 					}
-					Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, itemY /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + 2.0f * MenuItemBorderX, em + MenuItemBorderY * 2), color);
+
+					if (itemLeft == 0)
+					{
+						Program.Renderer.Rectangle.Draw(null, new Vector2(MenuItemBorderX, itemY /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + 2.0f * MenuItemBorderX, em + MenuItemBorderY * 2), color);
+					}
+					else
+					{
+						Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, itemY /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + 2.0f * MenuItemBorderX, em + MenuItemBorderY * 2), color);
+					}
+					
 					// draw the text
 					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourHighlight, false);
