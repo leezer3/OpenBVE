@@ -65,7 +65,7 @@ namespace TrainManager.Handles
 
 		}
 
-		public AbstractHandle(TrainBase Train)
+		protected AbstractHandle(TrainBase Train)
 		{
 			baseTrain = Train;
 			Increase = new CarSound();

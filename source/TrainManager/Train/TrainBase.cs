@@ -56,22 +56,10 @@ namespace TrainManager.Trains
 		/// <summary>Internal timer used for updates</summary>
 		private double InternalTimerTimeElapsed;
 		/// <inheritdoc/>
-		public override bool IsPlayerTrain
-		{
-			get
-			{
-				return this == TrainManagerBase.PlayerTrain;
-			}
-		}
+		public override bool IsPlayerTrain => this == TrainManagerBase.PlayerTrain;
 
 		/// <inheritdoc/>
-		public override int NumberOfCars
-		{
-			get
-			{
-				return this.Cars.Length;
-			}
-		}
+		public override int NumberOfCars => this.Cars.Length;
 
 		public TrainBase(TrainState state)
 		{

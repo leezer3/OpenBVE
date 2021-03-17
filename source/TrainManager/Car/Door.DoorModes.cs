@@ -1,4 +1,5 @@
-﻿namespace TrainManager.Car
+﻿// ReSharper disable UnusedMember.Global
+namespace TrainManager.Car
 {
 	/// <summary>The available modes for doors within a train</summary>
 	public enum DoorMode

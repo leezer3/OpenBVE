@@ -21,7 +21,7 @@ namespace TrainManager.BrakeSystems
 		{
 			airSound = null;
 			double targetPressure;
-			if (emergencyHandle.Actual == true)
+			if (emergencyHandle.Actual)
 			{
 				if (brakeType == BrakeType.Main)
 				{

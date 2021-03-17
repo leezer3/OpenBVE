@@ -12,6 +12,7 @@ namespace TrainManager.Power
 		public abstract double GetAccelerationOutput(double Speed, double Loading);
 
 		/// <summary>Gets the maximum possible acceleration output for this curve</summary>
+		// ReSharper disable once UnusedMemberInSuper.Global
 		public abstract double MaximumAcceleration
 		{
 			get;

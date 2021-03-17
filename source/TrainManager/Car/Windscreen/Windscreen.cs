@@ -8,13 +8,7 @@ namespace TrainManager.Car
 	public class Windscreen
 	{
 		/// <summary>Whether currently raining</summary>
-		internal bool CurrentlyRaining
-		{
-			get
-			{
-				return Intensity != 0;
-			}
-		}
+		internal bool CurrentlyRaining => Intensity != 0;
 
 		/// <summary>The current rain intensity</summary>
 		internal int Intensity

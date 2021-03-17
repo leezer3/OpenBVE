@@ -45,7 +45,7 @@ namespace TrainManager.Trains
 				TotalPressure += Cars[i].CarBrake.brakePipe.CurrentPressure;
 			}
 
-			double AveragePressure = TotalPressure / (double) Cars.Length;
+			double AveragePressure = TotalPressure / Cars.Length;
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].CarBrake.brakePipe.CurrentPressure = AveragePressure;

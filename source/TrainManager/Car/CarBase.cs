@@ -221,13 +221,7 @@ namespace TrainManager.Car
 			}
 		}
 
-		public override double TrackPosition
-		{
-			get
-			{
-				return FrontAxle.Follower.TrackPosition;
-			}
-		}
+		public override double TrackPosition => FrontAxle.Follower.TrackPosition;
 
 		/// <summary>Backing property for the index of the car within the train</summary>
 		public override int Index
@@ -574,29 +568,7 @@ namespace TrainManager.Car
 		{
 			int j = CarSections.Length;
 			Array.Resize(ref CarSections, j + 1);
-			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic);
-			CarSections[j].VisibleFromInterior = visibleFromInterior;
-			if (currentObject is StaticObject)
-			{
-				StaticObject s = (StaticObject) currentObject;
-				CarSections[j].Groups[0].Elements = new AnimatedObject[1];
-				CarSections[j].Groups[0].Elements[0] = new AnimatedObject(TrainManagerBase.currentHost)
-				{
-					States = new[] {new ObjectState(s)},
-					CurrentState = 0
-				};
-				TrainManagerBase.currentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
-			}
-			else if (currentObject is AnimatedObjectCollection)
-			{
-				AnimatedObjectCollection a = (AnimatedObjectCollection) currentObject;
-				CarSections[j].Groups[0].Elements = new AnimatedObject[a.Objects.Length];
-				for (int h = 0; h < a.Objects.Length; h++)
-				{
-					CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();
-					TrainManagerBase.currentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
-				}
-			}
+			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, currentObject);
 		}
 
 		/// <summary>Changes the currently visible car section</summary>
@@ -1573,7 +1545,7 @@ namespace TrainManager.Car
 							double c = (b - Math.Abs(a)) * TimeElapsed;
 							if (Math.Abs(CurrentSpeed) > c)
 							{
-								Speed = CurrentSpeed - (double) d * c;
+								Speed = CurrentSpeed - d * c;
 							}
 							else
 							{
@@ -1586,7 +1558,7 @@ namespace TrainManager.Car
 						double c = (Math.Abs(a) + b) * TimeElapsed;
 						if (Math.Abs(CurrentSpeed) > c)
 						{
-							Speed = CurrentSpeed - (double) d * c;
+							Speed = CurrentSpeed - d * c;
 						}
 						else
 						{
@@ -1596,7 +1568,7 @@ namespace TrainManager.Car
 				}
 				else
 				{
-					Speed = CurrentSpeed + (a - b * (double) d) * TimeElapsed;
+					Speed = CurrentSpeed + (a - b * d) * TimeElapsed;
 				}
 			}
 		}

@@ -101,7 +101,7 @@ namespace TrainManager.Car
 					Brightness = baseCar.Brightness.PreviousBrightness;
 				}
 
-				dnb = (byte) Math.Round(255.0 * (double) (1.0 - Brightness));
+				dnb = (byte) Math.Round(255.0 * (1.0 - Brightness));
 			}
 			// update current section
 			int cs = CurrentCarSection;
@@ -157,29 +157,7 @@ namespace TrainManager.Car
 		{
 			int j = CarSections.Length;
 			Array.Resize(ref CarSections, j + 1);
-			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic);
-			CarSections[j].VisibleFromInterior = visibleFromInterior;
-			if (currentObject is StaticObject)
-			{
-				StaticObject s = (StaticObject) currentObject;
-				CarSections[j].Groups[0].Elements = new AnimatedObject[1];
-				CarSections[j].Groups[0].Elements[0] = new AnimatedObject(TrainManagerBase.currentHost)
-				{
-					States = new[] {new ObjectState(s)},
-					CurrentState = 0
-				};
-				TrainManagerBase.currentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
-			}
-			else if (currentObject is AnimatedObjectCollection)
-			{
-				AnimatedObjectCollection a = (AnimatedObjectCollection) currentObject;
-				CarSections[j].Groups[0].Elements = new AnimatedObject[a.Objects.Length];
-				for (int h = 0; h < a.Objects.Length; h++)
-				{
-					CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();
-					TrainManagerBase.currentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
-				}
-			}
+			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, currentObject);
 		}
 
 		public void ChangeSection(int SectionIndex)

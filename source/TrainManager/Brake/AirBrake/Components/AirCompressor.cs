@@ -1,6 +1,5 @@
 ﻿using OpenBveApi.Trains;
 using SoundManager;
-using TrainManager;
 
 namespace TrainManager.BrakeSystems
 {

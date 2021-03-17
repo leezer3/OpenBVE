@@ -270,7 +270,7 @@ namespace Train.OpenBve
 	    internal void ParsePanelConfig(TrainBase Train, Encoding Encoding)
 	    {
 		    Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
-		    Train.Cars[Train.DriverCar].CarSections[0] = new CarSection(currentHost, ObjectType.Overlay);
+		    Train.Cars[Train.DriverCar].CarSections[0] = new CarSection(currentHost, ObjectType.Overlay, true);
 		    string File = Path.CombineFile(Train.TrainFolder, "panel.xml");
 		    if (!System.IO.File.Exists(File))
 		    {
