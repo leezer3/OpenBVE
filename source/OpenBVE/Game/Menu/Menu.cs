@@ -2,6 +2,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using DavyKager;
 using System.IO;
@@ -10,7 +11,9 @@ using LibRender2.Texts;
 using OpenBve.Input;
 using OpenBveApi;
 using OpenBveApi.Input;
+using OpenBveApi.Textures;
 using OpenTK;
+using Path = OpenBveApi.Path;
 using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace OpenBve
@@ -36,6 +39,8 @@ namespace OpenBve
 		private static readonly Color128 ColourDimmed = new Color128(1.000f, 1.000f, 1.000f, 0.5f);
 		private static readonly Color128 ColourHighlight = Color128.Black;
 		private static readonly Color128 ColourNormal = Color128.White;
+
+		
 
 		// some sizes and constants
 		// TODO: make borders Menu fields dependent on font size
@@ -138,6 +143,15 @@ namespace OpenBve
 				switch (menuType)
 				{
 					case MenuType.GameStart:          // top level menu
+						if (routeWorkerThread == null)
+						{
+							//Create the worker thread for route details processing on first launch of main menu
+							routeWorkerThread = new BackgroundWorker();
+							routeWorkerThread.DoWork += routeWorkerThread_doWork;
+							routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
+							//Load texture
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routeTexture);
+						}
 						Items = new MenuEntry[3];
 						Items[0] = new MenuCommand("Open Route File", MenuTag.RouteList, 0);
 						
@@ -372,7 +386,7 @@ namespace OpenBve
 					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
 					if (size.Width > Width)
 						Width = size.Width;
-					if (!(Items[i] is MenuCaption && (menuType!= MenuType.RouteList && menuType != MenuType.GameStart)) && size.Width > ItemWidth)
+					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart) && size.Width > ItemWidth)
 						ItemWidth = size.Width;
 				}
 				Height = Items.Length * Game.Menu.LineHeight;
@@ -761,6 +775,12 @@ namespace OpenBve
 								Menu.instance.PushMenu(MenuType.RouteList, 0, true);
 								break;
 							case MenuTag.RouteFile:
+								RoutefileState = RouteState.Loading;
+								RouteFile = Path.CombineFile(RouteSearchDirectory, menu.Items[menu.Selection].Text);
+								if (!routeWorkerThread.IsBusy)
+								{
+									routeWorkerThread.RunWorkerAsync();
+								}
 								
 								break;
 								// simulation commands
@@ -817,11 +837,22 @@ namespace OpenBve
 
 			
 			int itemLeft, itemX;
-			itemLeft = (Program.Renderer.Screen.Width - menu.ItemWidth) / 2; // item left edge
-			// if menu alignment is left, left-align items, otherwise centre them in the screen
-			itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Program.Renderer.Screen.Width / 2;
+			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList)
+			{
+				itemLeft = 0;
+				itemX = 16;
+				Program.Renderer.Rectangle.Draw(null, new Vector2(0, menuYmin - MenuBorderY), new Vector2(menuXmax - menuXmin + 2.0f * MenuBorderX, menuYmax - menuYmin + 2.0f * MenuBorderY), backgroundColor);
+			}
+			else
+			{
+				itemLeft = (Program.Renderer.Screen.Width - menu.ItemWidth) / 2; // item left edge
+				// if menu alignment is left, left-align items, otherwise centre them in the screen
+				itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Program.Renderer.Screen.Width / 2;
+				Program.Renderer.Rectangle.Draw(null, new Vector2(menuXmin - MenuBorderX, menuYmin - MenuBorderY), new Vector2(menuXmax - menuXmin + 2.0f * MenuBorderX, menuYmax - menuYmin + 2.0f * MenuBorderY), backgroundColor);	
+			}
+			
 			// draw the menu background
-			Program.Renderer.Rectangle.Draw(null, new Vector2(menuXmin - MenuBorderX, menuYmin - MenuBorderY), new Vector2(menuXmax - menuXmin + 2.0f * MenuBorderX, menuYmax - menuYmin + 2.0f * MenuBorderY), backgroundColor);
+			
 			
 			int menuBottomItem = menu.TopItem + visibleItems - 1;
 
@@ -898,6 +929,24 @@ namespace OpenBve
 			if (i < menu.Items.Length - 1)
 				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Point(itemX, itemY),
 					menu.Align, ColourDimmed, false);
+
+			switch (RoutefileState)
+			{
+				case RouteState.Loading:
+					if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
+					{
+						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(Program.Renderer.Screen.Width - (int)(Program.Renderer.Screen.Width / 4.0), 0), new Vector2((int)(Program.Renderer.Screen.Width / 4.0), (int)(Program.Renderer.Screen.Width / 4.0)), Color128.White);
+						// ADD LOADING TEXT BELOW
+					}
+					break;
+				case RouteState.Processed:
+					if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
+					{
+						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(Program.Renderer.Screen.Width - (int)(Program.Renderer.Screen.Width / 4.0), 0), new Vector2((int)(Program.Renderer.Screen.Width / 4.0), (int)(Program.Renderer.Screen.Width / 4.0)), Color128.White);
+						// ADD DESCRIPTION TEXT BELOW
+					}
+					break;
+			}
 		}
 
 		//
@@ -913,8 +962,18 @@ namespace OpenBve
 				return;
 
 			SingleMenu menu = Menus[CurrMenu];
-			// HORIZONTAL PLACEMENT: centre the menu in the main window
-			menuXmin = (Program.Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)
+			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList)
+			{
+				// Left aligned, used for route browser
+				menuXmin = 0;
+			}
+
+			else
+			{
+				// HORIZONTAL PLACEMENT: centre the menu in the main window
+				menuXmin = (Program.Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
+			}
+			
 			menuXmax = menuXmin + menu.Width;               // menu right edge (border excluded)
 															// VERTICAL PLACEMENT: centre the menu in the main window
 			menuYmin = (Program.Renderer.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)

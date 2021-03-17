@@ -4,28 +4,26 @@ using System.IO;
 using System.Text;
 using LibRender2;
 using OpenBveApi;
+using OpenBveApi.Textures;
 using RouteManager2;
 
 namespace OpenBve
 {
 	public partial class Menu
 	{
-		private BackgroundWorker routeWorkerThread;
+		private static BackgroundWorker routeWorkerThread;
 		private static string RouteSearchDirectory;
 		private static string RouteFile;
 		private static Encoding RouteEncoding;
 		private static string RouteDescription;
+		private static RouteState RoutefileState;
+		private static Texture routeTexture;
 
-		private void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
+		private static void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{
 			if (string.IsNullOrEmpty(RouteFile))
 			{
 				return;
-			}
-
-			if (!Plugins.LoadPlugins())
-			{
-				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
 			Game.Reset(false);
 			bool loaded = false;
@@ -60,8 +58,9 @@ namespace OpenBve
 			}
 		}
 
-		private void routeWorkerThread_completed(object sender, RunWorkerCompletedEventArgs e)
+		private static void routeWorkerThread_completed(object sender, RunWorkerCompletedEventArgs e)
 		{
+			RoutefileState = RouteState.Processed;
 			if (e.Error != null || Program.CurrentRoute == null)
 			{
 				//TryLoadImage(pictureboxRouteImage, "route_error.png");
@@ -88,7 +87,15 @@ namespace OpenBve
 				// image
 				if (!string.IsNullOrEmpty(Program.CurrentRoute.Image))
 				{
-					//TryLoadImage(pictureboxRouteImage, Program.CurrentRoute.Image);
+
+					try
+					{
+						Program.CurrentHost.RegisterTexture(Program.CurrentRoute.Image, new TextureParameters(null, null), out routeTexture);
+					}
+					catch
+					{
+						routeTexture = null;
+					}
 				}
 				else
 				{

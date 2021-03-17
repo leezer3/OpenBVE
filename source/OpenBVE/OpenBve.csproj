@@ -137,6 +137,7 @@
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\Menu\Menu.Route.cs" />
+    <Compile Include="Game\Menu\Menu.RouteState.cs" />
     <Compile Include="Game\Menu\MenuTag.cs" />
     <Compile Include="Game\Menu\MenuType.cs" />
     <Compile Include="Game\MessageManager.cs" />
