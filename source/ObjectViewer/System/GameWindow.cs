@@ -68,11 +68,9 @@ namespace OpenBve
             }
             if (RotateXSpeed != 0.0)
             {
-                double cosa = Math.Cos(RotateXSpeed * timeElapsed);
-                double sina = Math.Sin(RotateXSpeed * timeElapsed);
-                Program.Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
-                Program.Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
-                Program.Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
+	            Program.Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, RotateXSpeed * timeElapsed);
+                Program.Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, RotateXSpeed * timeElapsed);
+                Program.Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, RotateXSpeed * timeElapsed);
             }
             // rotate y
             if (Program.RotateY == 0)
@@ -103,10 +101,8 @@ namespace OpenBve
             }
             if (RotateYSpeed != 0.0)
             {
-                double cosa = Math.Cos(RotateYSpeed * timeElapsed);
-                double sina = Math.Sin(RotateYSpeed * timeElapsed);
-                Program.Renderer.Camera.AbsoluteDirection.Rotate(Program.Renderer.Camera.AbsoluteSide, cosa, sina);
-                Program.Renderer.Camera.AbsoluteUp.Rotate(Program.Renderer.Camera.AbsoluteSide, cosa, sina);
+	            Program.Renderer.Camera.AbsoluteDirection.Rotate(Program.Renderer.Camera.AbsoluteSide, RotateYSpeed * timeElapsed);
+                Program.Renderer.Camera.AbsoluteUp.Rotate(Program.Renderer.Camera.AbsoluteSide, RotateYSpeed * timeElapsed);
             }
             // move x
             if (Program.MoveX == 0)

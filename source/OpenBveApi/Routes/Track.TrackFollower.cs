@@ -190,21 +190,17 @@ namespace OpenBveApi.Routes
 						double a = 0.5 * (double) System.Math.Sign(r) * b;
 						Vector3 D = new Vector3(currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.X, 0.0, currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Z);
 						D.Normalize();
-						double cosa = System.Math.Cos(a);
-						double sina = System.Math.Sin(a);
-						D.Rotate(Vector3.Down, cosa, sina);
+						D.Rotate(Vector3.Down, a);
 						WorldPosition.X = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.X + c * D.X;
 						WorldPosition.Y = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.Y + h;
 						WorldPosition.Z = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.Z + c * D.Z;
-						D.Rotate(Vector3.Down, cosa, sina);
+						D.Rotate(Vector3.Down, a);
 						WorldDirection.X = D.X;
 						WorldDirection.Y = p;
 						WorldDirection.Z = D.Z;
 						WorldDirection.Normalize();
-						double cos2a = System.Math.Cos(2.0 * a);
-						double sin2a = System.Math.Sin(2.0 * a);
 						WorldSide = currentHost.Tracks[TrackIndex].Elements[i].WorldSide;
-						WorldSide.Rotate(Vector3.Down, cos2a, sin2a);
+						WorldSide.Rotate(Vector3.Down, 2.0 * a);
 						WorldUp = Vector3.Cross(WorldDirection, WorldSide);
 
 					}

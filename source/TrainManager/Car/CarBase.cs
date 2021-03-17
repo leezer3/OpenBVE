@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
@@ -719,7 +718,7 @@ namespace TrainManager.Car
 				}
 
 				//Calculate the cab brightness
-				double ccb = Math.Round(255.0 * (double) (1.0 - b));
+				double ccb = Math.Round(255.0 * (1.0 - b));
 				//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
 				dnb = (byte) Math.Min(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, ccb);
 			}
@@ -904,17 +903,17 @@ namespace TrainManager.Car
 			if (FrontAxle.Follower.CurveRadius != 0.0 & RearAxle.Follower.CurveRadius != 0.0)
 			{
 				r = Math.Sqrt(Math.Abs(FrontAxle.Follower.CurveRadius * RearAxle.Follower.CurveRadius));
-				rs = (double) Math.Sign(FrontAxle.Follower.CurveRadius + RearAxle.Follower.CurveRadius);
+				rs = Math.Sign(FrontAxle.Follower.CurveRadius + RearAxle.Follower.CurveRadius);
 			}
 			else if (FrontAxle.Follower.CurveRadius != 0.0)
 			{
 				r = Math.Abs(FrontAxle.Follower.CurveRadius);
-				rs = (double) Math.Sign(FrontAxle.Follower.CurveRadius);
+				rs = Math.Sign(FrontAxle.Follower.CurveRadius);
 			}
 			else if (RearAxle.Follower.CurveRadius != 0.0)
 			{
 				r = Math.Abs(RearAxle.Follower.CurveRadius);
-				rs = (double) Math.Sign(RearAxle.Follower.CurveRadius);
+				rs = Math.Sign(RearAxle.Follower.CurveRadius);
 			}
 
 			// roll due to shaking
@@ -951,8 +950,8 @@ namespace TrainManager.Car
 				}
 
 				double SpringDeceleration = 0.25 * SpringAcceleration;
-				Specs.RollDueToShakingAngularSpeed += (double) Math.Sign(a1 - a0) * SpringAcceleration * TimeElapsed;
-				double x = (double) Math.Sign(Specs.RollDueToShakingAngularSpeed) * SpringDeceleration * TimeElapsed;
+				Specs.RollDueToShakingAngularSpeed += Math.Sign(a1 - a0) * SpringAcceleration * TimeElapsed;
+				double x = Math.Sign(Specs.RollDueToShakingAngularSpeed) * SpringDeceleration * TimeElapsed;
 				if (Math.Abs(x) < Math.Abs(Specs.RollDueToShakingAngularSpeed))
 				{
 					Specs.RollDueToShakingAngularSpeed -= x;
@@ -1025,12 +1024,12 @@ namespace TrainManager.Car
 					Specs.PitchDueToAccelerationTargetAngle = 0.03 * Math.Atan(da);
 				}
 				{
-					double a = 3.0 * (double) Math.Sign(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
+					double a = 3.0 * Math.Sign(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
 					Specs.PitchDueToAccelerationAngularSpeed += a * TimeElapsed;
 					double ds = Math.Abs(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
 					if (Math.Abs(Specs.PitchDueToAccelerationAngularSpeed) > ds)
 					{
-						Specs.PitchDueToAccelerationAngularSpeed = ds * (double) Math.Sign(Specs.PitchDueToAccelerationAngularSpeed);
+						Specs.PitchDueToAccelerationAngularSpeed = ds * Math.Sign(Specs.PitchDueToAccelerationAngularSpeed);
 					}
 
 					Specs.PitchDueToAccelerationAngle += Specs.PitchDueToAccelerationAngularSpeed * TimeElapsed;
@@ -1040,7 +1039,7 @@ namespace TrainManager.Car
 			if (TrainManagerBase.Derailments & !Derailed)
 			{
 				double a = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
-				double sa = (double) Math.Sign(a);
+				double sa = Math.Sign(a);
 				if (a * sa > Specs.CriticalTopplingAngle)
 				{
 					baseTrain.Derail(Index, TimeElapsed);
@@ -1059,7 +1058,7 @@ namespace TrainManager.Car
 				Topples = false;
 				if (Derailed)
 				{
-					double sab = (double) Math.Sign(ab);
+					double sab = Math.Sign(ab);
 					ta = 0.5 * Math.PI * (sab == 0.0 ? TrainManagerBase.RandomNumberGenerator.NextDouble() < 0.5 ? -1.0 : 1.0 : sab);
 				}
 				else
@@ -1124,25 +1123,19 @@ namespace TrainManager.Car
 			}
 			// apply rolling
 			{
-				double a = -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle;
-				double cosa = Math.Cos(a);
-				double sina = Math.Sin(a);
-				s.Rotate(d, cosa, sina);
-				Up.Rotate(d, cosa, sina);
+				s.Rotate(d, -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle);
+				Up.Rotate(d, -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle);
 			}
 			// apply pitching
 			if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
 			{
-				double a = Specs.PitchDueToAccelerationAngle;
-				double cosa = Math.Cos(a);
-				double sina = Math.Sin(a);
-				d.Rotate(s, cosa, sina);
-				Up.Rotate(s, cosa, sina);
+				d.Rotate(s, Specs.PitchDueToAccelerationAngle);
+				Up.Rotate(s, Specs.PitchDueToAccelerationAngle);
 				Vector3 cc = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
 				FrontAxle.Follower.WorldPosition -= cc;
 				RearAxle.Follower.WorldPosition -= cc;
-				FrontAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
-				RearAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
+				FrontAxle.Follower.WorldPosition.Rotate(s, Specs.PitchDueToAccelerationAngle);
+				RearAxle.Follower.WorldPosition.Rotate(s, Specs.PitchDueToAccelerationAngle);
 				FrontAxle.Follower.WorldPosition += cc;
 				RearAxle.Follower.WorldPosition += cc;
 			}
@@ -1559,7 +1552,7 @@ namespace TrainManager.Car
 				}
 				else
 				{
-					Specs.PerceivedSpeed += rate * (double) Math.Sign(diff);
+					Specs.PerceivedSpeed += rate * Math.Sign(diff);
 				}
 			}
 			// calculate new speed

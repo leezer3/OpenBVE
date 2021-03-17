@@ -207,18 +207,16 @@ namespace OpenBveApi.Objects
 		/// <summary>Rotates the MeshBuilder along the Rotation vector using the given angle</summary>
 		public void ApplyRotation(Vector3 Rotation, double Angle)
 		{
-			double cosa = System.Math.Cos(Angle);
-			double sina = System.Math.Sin(Angle);
 			for (int i = 0; i < Vertices.Count; i++)
 			{
-				Vertices[i].Coordinates.Rotate(Rotation, cosa, sina);
+				Vertices[i].Coordinates.Rotate(Rotation, Angle);
 			}
 
 			for (int i = 0; i < Faces.Count; i++)
 			{
 				for (int j = 0; j < Faces[i].Vertices.Length; j++)
 				{
-					Faces[i].Vertices[j].Normal.Rotate(Rotation, cosa, sina);
+					Faces[i].Vertices[j].Normal.Rotate(Rotation, Angle);
 				}
 			}
 		}

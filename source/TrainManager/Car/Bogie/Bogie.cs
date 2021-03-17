@@ -286,26 +286,19 @@ namespace TrainManager.Car
 				}
 				// apply rolling
 				{
-					double a = -baseCar.Specs.RollDueToTopplingAngle -
-					           baseCar.Specs.RollDueToCantAngle;
-					double cosa = Math.Cos(a);
-					double sina = Math.Sin(a);
-					s.Rotate(d, cosa, sina);
-					Up.Rotate(d, cosa, sina);
+					s.Rotate(d, -baseCar.Specs.RollDueToTopplingAngle - baseCar.Specs.RollDueToCantAngle);
+					Up.Rotate(d, -baseCar.Specs.RollDueToTopplingAngle - baseCar.Specs.RollDueToCantAngle);
 				}
 				// apply pitching
 				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
 				{
-					double a = baseCar.Specs.PitchDueToAccelerationAngle;
-					double cosa = Math.Cos(a);
-					double sina = Math.Sin(a);
-					d.Rotate(s, cosa, sina);
-					Up.Rotate(s, cosa, sina);
+					d.Rotate(s, baseCar.Specs.PitchDueToAccelerationAngle);
+					Up.Rotate(s, baseCar.Specs.PitchDueToAccelerationAngle);
 					Vector3 cc = 0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition);
 					FrontAxle.Follower.WorldPosition -= cc;
 					RearAxle.Follower.WorldPosition -= cc;
-					FrontAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
-					RearAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
+					FrontAxle.Follower.WorldPosition.Rotate(s, baseCar.Specs.PitchDueToAccelerationAngle);
+					RearAxle.Follower.WorldPosition.Rotate(s, baseCar.Specs.PitchDueToAccelerationAngle);
 					FrontAxle.Follower.WorldPosition += cc;
 					RearAxle.Follower.WorldPosition += cc;
 				}

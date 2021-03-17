@@ -225,18 +225,14 @@ namespace OpenBve {
 		            Renderer.Camera.AbsoluteSide = MouseCameraSide;
                     {
                         double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
-                        double cosa = Math.Cos(dx);
-                        double sina = Math.Sin(dx);
-                        Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
-                        Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
-                        Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
+                        Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, dx);
+                        Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, dx);
+                        Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, dx);
                     }
                     {
                         double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
-                        double cosa = Math.Cos(dy);
-                        double sina = Math.Sin(dy);
-                        Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, cosa, sina);
-                        Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, cosa, sina);
+                        Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, dy);
+                        Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, dy);
                     }
 	            }
 	            else if(MouseButton == 2)

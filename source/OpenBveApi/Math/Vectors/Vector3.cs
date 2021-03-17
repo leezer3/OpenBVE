@@ -380,7 +380,15 @@ namespace OpenBveApi.Math {
 			this.Y *= factor.Y;
 			this.Z *= factor.Z;
 		}
-		
+
+		/// <summary>Rotates the vector on the plane perpendicular to a specified direction by a specified angle.</summary>
+		/// <param name="direction">The direction perpendicular to the plane on which to rotate.</param>
+		/// <param name="angle">The angle to rotate by.</param>
+		public void Rotate(Vector3 direction, double angle)
+		{
+			Rotate(direction, System.Math.Cos(angle), System.Math.Sin(angle));
+		}
+
 		/// <summary>Rotates the vector on the plane perpendicular to a specified direction by a specified angle.</summary>
 		/// <param name="direction">The direction perpendicular to the plane on which to rotate.</param>
 		/// <param name="cosineOfAngle">The cosine of the angle.</param>

@@ -1421,7 +1421,7 @@ namespace Plugin
 			//Update co-ords
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
-				Mesh.Vertices[i].Coordinates.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+				Mesh.Vertices[i].Coordinates.Rotate(RotationDirection, Angle);
 			}
 			//Update normals
 			for (int i = 0; i < Mesh.Faces.Length; i++)
@@ -1429,7 +1429,7 @@ namespace Plugin
 				for(int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
 					if (!Vector3.IsZero(Mesh.Faces[i].Vertices[j].Normal))
 					{
-						Mesh.Faces[i].Vertices[j].Normal.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+						Mesh.Faces[i].Vertices[j].Normal.Rotate(RotationDirection, Angle);
 					}
 			}
 		}
