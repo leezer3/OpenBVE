@@ -36,6 +36,16 @@ namespace DenshaDeGoInput
 	internal static class ControllerClassic
 	{
 		/// <summary>
+		/// The number of brake notches, excluding the emergency brake.
+		/// </summary>
+		internal static int ControllerBrakeNotches = 8;
+
+		/// <summary>
+		/// The number of power notches.
+		/// </summary>
+		internal static int ControllerPowerNotches = 5;
+
+		/// <summary>
 		/// Whether the adapter uses a hat to map the direction buttons.
 		/// </summary>
 		internal static bool usesHat;
@@ -187,14 +197,14 @@ namespace DenshaDeGoInput
 		/// </summary>
 		/// <param name="capabilities">the capabilities of the joystick.</param>
 		/// <returns>Whether the controller is compatible.</returns>
-		internal static bool IsCompatibleController(JoystickCapabilities capabilities)
+		internal static InputTranslator.ControllerModels GetControllerModel(JoystickCapabilities capabilities)
 		{
 			// A valid controller needs at least 12 buttons or 10 buttons plus a hat. If there are more than 20 buttons, the joystick is unlikely a valid controller.
 			if ((capabilities.ButtonCount >= 12 || (capabilities.ButtonCount >= 10 && capabilities.HatCount > 0)) && capabilities.ButtonCount <= 20)
 			{
-				return true;
+				return InputTranslator.ControllerModels.Classic;
 			}
-			return false;
+			return InputTranslator.ControllerModels.Unsupported;
 		}
 
 		/// <summary>

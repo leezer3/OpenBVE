@@ -153,7 +153,7 @@ namespace DenshaDeGoInput
 					label_right.Visible = false;
 					label_pedal.Visible = false;
 					break;
-				case InputTranslator.ControllerModels.Unbalance:
+				case InputTranslator.ControllerModels.UnbalanceStandard:
 					buttonCalibrate.Visible = false;
 					label_d.Visible = true;
 					label_pedal.Visible = false;

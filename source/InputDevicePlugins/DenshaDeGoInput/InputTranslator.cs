@@ -44,8 +44,16 @@ namespace DenshaDeGoInput
 			Unknown = 0,
 			/// <summary>Classic non-USB console controller</summary>
 			Classic = 1,
-			/// <summary>Unbalance USB controller for PC</summary>
-			Unbalance = 2,
+			/// <summary>Unbalance standard USB controller for PC</summary>
+			UnbalanceStandard = 2,
+			/// <summary>Unbalance Ryojōhen USB controller for PC</summary>
+			UnbalanceRyojouhen = 3,
+			/// <summary>Type II USB controller for PlayStation 2</summary>
+			Ps2Type2 = 4,
+			/// <summary>Shinkansen USB controller for PlayStation 2</summary>
+			Ps2Shinkansen = 5,
+			/// <summary>Ryojōhen USB controller for PlayStation 2</summary>
+			Ps2Ryojouhen = 6,
 		};
 
 		/// <summary>
@@ -92,6 +100,22 @@ namespace DenshaDeGoInput
 			P4 = 4,
 			/// <summary>Power notch P5</summary>
 			P5 = 5,
+			/// <summary>Power notch P6</summary>
+			P6 = 6,
+			/// <summary>Power notch P7</summary>
+			P7 = 7,
+			/// <summary>Power notch P8</summary>
+			P8 = 8,
+			/// <summary>Power notch P9</summary>
+			P9 = 9,
+			/// <summary>Power notch P10</summary>
+			P10 = 10,
+			/// <summary>Power notch P11</summary>
+			P11 = 11,
+			/// <summary>Power notch P12</summary>
+			P12 = 12,
+			/// <summary>Power notch P13</summary>
+			P13 = 13,
 		};
 
 		/// <summary>
@@ -173,19 +197,23 @@ namespace DenshaDeGoInput
 		/// </summary>
 		/// <param name="guid">The GUID of the joystick.</param>
 		/// <param name="capabilities">The capabilities of the joystick.</param>
+		/// <returns>The controller model.</returns>
 		internal static ControllerModels GetControllerModel(Guid guid, JoystickCapabilities capabilities)
 		{
 			string id = GetControllerID(guid);
+			ControllerModels model;
 
-			if (ControllerUnbalance.IsCompatibleController(id, capabilities))
+			model = ControllerUnbalance.GetControllerModel(id, capabilities);
+			if (model != ControllerModels.Unsupported)
 			{
 				// The controller is a USB controller by Unbalance
-				return ControllerModels.Unbalance;
+				return model;
 			}
-			if (ControllerClassic.IsCompatibleController(capabilities))
+			model = ControllerClassic.GetControllerModel(capabilities);
+			if (model != ControllerModels.Unsupported)
 			{
 				// The controller is a classic console controller
-				return ControllerModels.Classic;
+				return model;
 			}
 			// Unsupported controller
 			return ControllerModels.Unsupported;
@@ -202,6 +230,40 @@ namespace DenshaDeGoInput
 			// OpenTK joysticks have a GUID which contains the vendor and product ID.
 			id = id.Substring(10,2)+id.Substring(8,2)+":"+id.Substring(18,2)+id.Substring(16,2);
 			return id;
+		}
+
+		/// <summary>
+		/// Gets the number of brake notches, excluding the emergency brake.
+		/// </summary>
+		/// <returns>The number of brake notches, excluding the emergency brake.</returns>
+		internal static int GetControllerBrakeNotches()
+		{
+			switch (ControllerModel)
+			{
+				case ControllerModels.Classic:
+					return ControllerClassic.ControllerBrakeNotches;
+				case ControllerModels.UnbalanceStandard:
+				case ControllerModels.UnbalanceRyojouhen:
+					return ControllerUnbalance.ControllerBrakeNotches;
+			}
+			return 0;
+		}
+
+		/// <summary>
+		/// Gets the number of power notches.
+		/// </summary>
+		/// <returns>The number of power notches.</returns>
+		internal static int GetControllerPowerNotches()
+		{
+			switch (ControllerModel)
+			{
+				case ControllerModels.Classic:
+					return ControllerClassic.ControllerPowerNotches;
+				case ControllerModels.UnbalanceStandard:
+				case ControllerModels.UnbalanceRyojouhen:
+					return ControllerUnbalance.ControllerPowerNotches;
+			}
+			return 0;
 		}
 
 		/// <summary>
@@ -267,7 +329,8 @@ namespace DenshaDeGoInput
 				case ControllerModels.Classic:
 					ControllerClassic.ReadInput(Joystick.GetState(ConnectedControllers[activeControllerGuid]));
 					return;
-				case ControllerModels.Unbalance:
+				case ControllerModels.UnbalanceStandard:
+				case ControllerModels.UnbalanceRyojouhen:
 					ControllerUnbalance.ReadInput(Joystick.GetState(ConnectedControllers[activeControllerGuid]));
 					return;
 			}

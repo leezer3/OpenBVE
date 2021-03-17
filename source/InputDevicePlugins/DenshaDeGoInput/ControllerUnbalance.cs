@@ -33,6 +33,16 @@ namespace DenshaDeGoInput
 	internal static class ControllerUnbalance
 	{
 		/// <summary>
+		/// The number of brake notches, excluding the emergency brake.
+		/// </summary>
+		internal static int ControllerBrakeNotches = 8;
+
+		/// <summary>
+		/// The number of power notches.
+		/// </summary>
+		internal static int ControllerPowerNotches = 5;
+
+		/// <summary>
 		/// Class for the indices of the buttons used by the controller.
 		/// </summary>
 		internal class ButtonIndices
@@ -123,16 +133,18 @@ namespace DenshaDeGoInput
 		/// <param name="id">A string representing the vendor and product ID.</param>
 		/// <param name="capabilities">the capabilities of the joystick.</param>
 		/// <returns>Whether the controller is compatible.</returns>
-		internal static bool IsCompatibleController(string id, JoystickCapabilities capabilities)
+		internal static InputTranslator.ControllerModels GetControllerModel(string id, JoystickCapabilities capabilities)
 		{
 			// DGC-255/DGOC-44U
 			if (id == "0ae4:0003")
 			{
 				// DGC-255 has direction buttons
 				hasDirectionButtons = capabilities.HatCount > 0;
-				return true;
+				ControllerBrakeNotches = 8;
+				ControllerPowerNotches = 5;
+				return InputTranslator.ControllerModels.UnbalanceStandard;
 			}
-			return false;
+			return InputTranslator.ControllerModels.Unsupported;
 		}
 
 		/// <summary>

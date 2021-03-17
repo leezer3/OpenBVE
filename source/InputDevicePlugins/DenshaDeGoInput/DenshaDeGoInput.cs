@@ -77,7 +77,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// An array with the command indices configured for each power notch.
 		/// </summary>
-		internal static int[] powerCommands = new int[6];
+		internal static int[] powerCommands = new int[14];
 
 		/// <summary>
 		/// Class for the properties of the buttons.
@@ -288,6 +288,9 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal void ConfigureMappings()
 		{
+			int ControllerBrakeNotches = InputTranslator.GetControllerBrakeNotches();
+			int ControllerPowerNotches = InputTranslator.GetControllerPowerNotches();
+
 			if (!convertNotches)
 			{
 				// The notches are not supposed to be converted
@@ -296,25 +299,25 @@ namespace DenshaDeGoInput
 				{
 					brakeCommands[0] = 0;
 					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
-					for (int i = 2; i < 10; i++)
+					for (int i = 2; i < ControllerBrakeNotches + 2; i++)
 					{
 						brakeCommands[i] = i - 1;
 					}
 				}
 				else
 				{
-					for (int i = 0; i < 10; i++)
+					for (int i = 0; i < ControllerBrakeNotches + 2; i++)
 					{
 						brakeCommands[i] = i;
 					}
 				}
-				// Emergency brake, only if the train has 8 notches or less
-				if (vehicleSpecs.BrakeNotches <= 8)
+				// Emergency brake, only if the train has the same or less notches than the controller
+				if (vehicleSpecs.BrakeNotches <= ControllerBrakeNotches)
 				{
-					brakeCommands[9] = 100 + (int)Translations.Command.BrakeEmergency;
+					brakeCommands[ControllerBrakeNotches + 1] = 100 + (int)Translations.Command.BrakeEmergency;
 				}
 				// Power notches
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < ControllerPowerNotches; i++)
 				{
 					powerCommands[i] = i;
 				}
@@ -325,10 +328,10 @@ namespace DenshaDeGoInput
 				// Brake notches
 				if (mapHoldBrake && vehicleSpecs.HasHoldBrake)
 				{
-					double brakeStep = (vehicleSpecs.BrakeNotches - 1) / 7.0;
+					double brakeStep = (vehicleSpecs.BrakeNotches - 1) / (double)(ControllerBrakeNotches - 1);
 					brakeCommands[0] = 0;
 					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
-					for (int i = 2; i < 9; i++)
+					for (int i = 2; i < ControllerBrakeNotches + 1; i++)
 					{
 						brakeCommands[i] = (int)Math.Round(brakeStep * (i - 1), MidpointRounding.AwayFromZero);
 						if (i > 0 && brakeCommands[i] == 0)
@@ -339,7 +342,7 @@ namespace DenshaDeGoInput
 						{
 							brakeCommands[i] = 1;
 						}
-						if (keepMaxMin && i == 8)
+						if (keepMaxMin && i == ControllerBrakeNotches)
 						{
 							brakeCommands[i] = vehicleSpecs.BrakeNotches;
 						}
@@ -347,8 +350,8 @@ namespace DenshaDeGoInput
 				}
 				else
 				{
-					double brakeStep = vehicleSpecs.BrakeNotches / 8.0;
-					for (int i = 0; i < 9; i++)
+					double brakeStep = vehicleSpecs.BrakeNotches / (double)ControllerBrakeNotches;
+					for (int i = 0; i < ControllerBrakeNotches + 1; i++)
 					{
 						brakeCommands[i] = (int)Math.Round(brakeStep * i, MidpointRounding.AwayFromZero);
 						if (i > 0 && brakeCommands[i] == 0)
@@ -359,17 +362,17 @@ namespace DenshaDeGoInput
 						{
 							brakeCommands[i] = 1;
 						}
-						if (keepMaxMin && i == 8)
+						if (keepMaxMin && i == ControllerBrakeNotches)
 						{
 							brakeCommands[i] = vehicleSpecs.BrakeNotches;
 						}
 					}
 				}
 				// Emergency brake
-				brakeCommands[9] = 100 + (int)Translations.Command.BrakeEmergency;
+				brakeCommands[ControllerBrakeNotches + 1] = 100 + (int)Translations.Command.BrakeEmergency;
 				// Power notches
-				double powerStep = vehicleSpecs.PowerNotches / 5.0;
-				for (int i = 0; i < 6; i++)
+				double powerStep = vehicleSpecs.PowerNotches / (double)ControllerPowerNotches;
+				for (int i = 0; i < ControllerPowerNotches + 1; i++)
 				{
 					powerCommands[i] = (int)Math.Round(powerStep * i, MidpointRounding.AwayFromZero);
 					if (i > 0 && powerCommands[i] == 0)
@@ -380,7 +383,7 @@ namespace DenshaDeGoInput
 					{
 						powerCommands[i] = 1;
 					}
-					if (keepMaxMin && i == 5)
+					if (keepMaxMin && i == ControllerPowerNotches)
 					{
 						powerCommands[i] = vehicleSpecs.PowerNotches;
 					}
