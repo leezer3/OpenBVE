@@ -6,7 +6,9 @@ using System.ComponentModel;
 using System.Drawing;
 using DavyKager;
 using System.IO;
+using System.Text;
 using LibRender2.Screens;
+using LibRender2.Text;
 using LibRender2.Texts;
 using OpenBve.Input;
 using OpenBveApi;
@@ -645,6 +647,15 @@ namespace OpenBve
 				menu.Selection = menu.TopItem - 1;
 				return true;
 			}
+			if (menu.Type == MenuType.RouteList)
+			{
+				//HACK: Use this to trigger our menu start button!
+				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
+				{
+					menu.Selection = int.MaxValue;
+					return true;
+				}
+			}
 			if (x < menuXmin || x > menuXmax || y < menuYmin || y > menuYmax)
 			{
 				return false;
@@ -661,7 +672,7 @@ namespace OpenBve
 					return true;
 				}
 			}
-
+			
 			return false;
 		}
 
@@ -712,6 +723,16 @@ namespace OpenBve
 			SingleMenu menu = Menus[CurrMenu];
 			if (menu.Selection == SelectionNone)    // if menu has no selection, do nothing
 				return;
+			if (menu.Selection == int.MaxValue)
+			{
+				//Launch the game!
+				Loading.Complete = false;
+				Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, "D:\\Program Files\\BVE\\Train\\D1015", Encoding.UTF8);
+				OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+				g.LoadingScreenLoop();
+				Program.Renderer.CurrentInterface = InterfaceType.Normal;
+				return;
+			}
 			switch (cmd)
 			{
 				case Translations.Command.MenuUp:      // UP
@@ -957,6 +978,18 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
 							routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+						}
+						//Game start button
+						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Point(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);	
+						}
+						else
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Point(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White);	
 						}
 						break;
 				}

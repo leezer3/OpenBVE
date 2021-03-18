@@ -334,6 +334,9 @@ namespace OpenBve
 			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
 			Program.Renderer.DetermineMaxAFLevel();
 			HUD.LoadHUD();
+			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
+			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 			if (string.IsNullOrEmpty(MainLoop.currentResult.RouteFile))
 			{
 				Game.Menu.PushMenu(MenuType.GameStart);
@@ -343,9 +346,6 @@ namespace OpenBve
 			}
 			else
 			{
-				Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
-				Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-				Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 				Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 				LoadingScreenLoop();
 			}
@@ -977,7 +977,7 @@ namespace OpenBve
 			}
 		}
 
-		private void LoadingScreenLoop()
+		public void LoadingScreenLoop()
 		{
 			Program.Renderer.PushMatrix(MatrixMode.Projection);
 			Matrix4D.CreateOrthographicOffCenter(0.0f, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Program.Renderer.CurrentProjectionMatrix);
