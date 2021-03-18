@@ -929,24 +929,39 @@ namespace OpenBve
 			if (i < menu.Items.Length - 1)
 				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Point(itemX, itemY),
 					menu.Align, ColourDimmed, false);
-
-			switch (RoutefileState)
+			if (menu.Type == MenuType.RouteList)
 			{
-				case RouteState.Loading:
-					if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
-					{
-						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(Program.Renderer.Screen.Width - (int)(Program.Renderer.Screen.Width / 4.0), 0), new Vector2((int)(Program.Renderer.Screen.Width / 4.0), (int)(Program.Renderer.Screen.Width / 4.0)), Color128.White);
-						// ADD LOADING TEXT BELOW
-					}
-					break;
-				case RouteState.Processed:
-					if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
-					{
-						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(Program.Renderer.Screen.Width - (int)(Program.Renderer.Screen.Width / 4.0), 0), new Vector2((int)(Program.Renderer.Screen.Width / 4.0), (int)(Program.Renderer.Screen.Width / 4.0)), Color128.White);
-						// ADD DESCRIPTION TEXT BELOW
-					}
-					break;
+				//Background to route image box
+				int quarterWidth = (int) (Program.Renderer.Screen.Width / 4.0);
+				int imageLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 4;
+				int descriptionLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
+				int descriptionWidth = quarterWidth + quarterWidth / 2;
+				int descriptionHeight = descriptionWidth;
+				if (descriptionHeight + quarterWidth > Program.Renderer.Screen.Height - 50)
+				{
+					descriptionHeight = Program.Renderer.Screen.Height - quarterWidth - 50;
+				}
+
+				Program.Renderer.Rectangle.Draw(null, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White);
+				switch (RoutefileState)
+				{
+					case RouteState.Loading:
+						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
+						{
+							Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
+							routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+						}
+						break;
+					case RouteState.Processed:
+						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
+						{
+							Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
+							routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+						}
+						break;
+				}
 			}
+			
 		}
 
 		//
