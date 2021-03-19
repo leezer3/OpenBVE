@@ -21,5 +21,9 @@
 		GameStart,
 		/// <summary>Displays a list of routefiles</summary>
 		RouteList,
+		/// <summary>Asks whether the user wishes to use the default train</summary>
+		TrainDefault,
+		/// <summary>Displays a list of train folders</summary>
+		TrainList,
 	}
 }

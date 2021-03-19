@@ -37,5 +37,9 @@
 		Directory,
 		/// <summary>Enters the parent directory</summary>
 		ParentDirectory,
+		/// <summary>Selects Yes for a menu choice</summary>
+		Yes,
+		/// <summary>Selects No for a menu choice</summary>
+		No
 	}
 }

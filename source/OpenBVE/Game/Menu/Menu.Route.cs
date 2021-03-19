@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Primitives;
 using OpenBveApi;
@@ -17,10 +16,11 @@ namespace OpenBve
 		private static BackgroundWorker routeWorkerThread;
 		private static string RouteSearchDirectory;
 		private static string RouteFile;
+		private static string TrainFolder;
 		private static Encoding RouteEncoding;
 		private static RouteState RoutefileState;
 		private static Texture routeTexture;
-		private static Textbox routeDescriptionBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont);
+		private static readonly Textbox routeDescriptionBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont);
 
 		private static void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{
@@ -28,6 +28,7 @@ namespace OpenBve
 			{
 				return;
 			}
+			RouteEncoding = TextEncoding.GetSystemEncodingFromFile(RouteFile);
 			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routeTexture);
 			Game.Reset(false);
 			bool loaded = false;

@@ -376,6 +376,13 @@ namespace OpenBve
 						Items[2] = new MenuCommand(" ", MenuTag.None, 0);
 						Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_assign"), MenuTag.None, 0);
 						break;
+					case MenuType.TrainDefault:
+						Items = new MenuEntry[3];
+						Items[0] = new MenuCaption("Do you wish to use the default train?");
+						Items[1] = new MenuCommand("Yes", MenuTag.Yes, 0);
+						Items[2] = new MenuCommand("No", MenuTag.No, 0);
+						Selection = 1;
+						break;
 				}
 
 				// compute menu extent
@@ -713,25 +720,38 @@ namespace OpenBve
 			{
 				return;
 			}
+			SingleMenu menu = Menus[CurrMenu];
 			// MenuBack is managed independently from single menu data
 			if (cmd == Translations.Command.MenuBack)
 			{
-				PopMenu();
+				if (menu.Type == MenuType.GameStart)
+				{
+					Menu.instance.PushMenu(MenuType.Quit);
+				}
+				else
+				{
+					PopMenu();	
+				}
 				return;
 			}
-
-			SingleMenu menu = Menus[CurrMenu];
+			
 			if (menu.Selection == SelectionNone)    // if menu has no selection, do nothing
 				return;
 			if (menu.Selection == int.MaxValue)
 			{
-				//Launch the game!
-				Loading.Complete = false;
-				Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, "D:\\Program Files\\BVE\\Train\\D1015", Encoding.UTF8);
-				OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
-				g.LoadingScreenLoop();
-				Program.Renderer.CurrentInterface = InterfaceType.Normal;
+				if (menu.Type == MenuType.TrainDefault)
+				{
+					//Launch the game!
+					Loading.Complete = false;
+					Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, "D:\\Program Files\\BVE\\Train\\D1015", Encoding.UTF8);
+					OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+					g.LoadingScreenLoop();
+					Program.Renderer.CurrentInterface = InterfaceType.Normal;
+					return;
+				}
+				Menu.instance.PushMenu(MenuType.TrainDefault);
 				return;
+
 			}
 			switch (cmd)
 			{
@@ -824,6 +844,23 @@ namespace OpenBve
 							case MenuTag.Quit:                  // QUIT PROGRAMME
 								Reset();
 								MainLoop.Quit = MainLoop.QuitMode.QuitProgram;
+								break;
+							case MenuTag.Yes:
+								if (menu.Type == MenuType.TrainDefault)
+								{
+									//Launch the game!
+									Loading.Complete = false;
+									Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, null, Encoding.UTF8);
+									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+									g.LoadingScreenLoop();
+									Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								}
+								break;
+							case MenuTag.No:
+								if (menu.Type == MenuType.TrainDefault)
+								{
+									Menu.instance.PushMenu(MenuType.TrainList);
+								}
 								break;
 						}
 					}
