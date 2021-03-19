@@ -9,6 +9,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 using Vector4 = OpenBveApi.Math.Vector4;
 
@@ -179,7 +180,10 @@ namespace LibRender2.Shaders
 				Texture = (short)GL.GetUniformLocation(handle, "uTexture"),
 				Brightness = (short)GL.GetUniformLocation(handle, "uBrightness"),
 				Opacity = (short)GL.GetUniformLocation(handle, "uOpacity"),
-				ObjectIndex = (short)GL.GetUniformLocation(handle, "uObjectIndex")
+				ObjectIndex = (short)GL.GetUniformLocation(handle, "uObjectIndex"),
+				Point = (short)GL.GetUniformLocation(handle, "uPoint"),
+				Size = (short)GL.GetUniformLocation(handle, "uSize"),
+				Color = (short)GL.GetUniformLocation(handle, "uColor"),
 			};
 		}
 
@@ -341,6 +345,21 @@ namespace LibRender2.Shaders
 		public void SetObjectIndex(int ObjectIndex)
 		{
 			GL.Uniform1(UniformLayout.ObjectIndex, ObjectIndex);
+		}
+
+		public void SetPoint(Vector2 point)
+		{
+			GL.Uniform2(UniformLayout.Point, (float)point.X, (float)point.Y);
+		}
+
+		public void SetSize(Vector2 size)
+		{
+			GL.Uniform2(UniformLayout.Size, (float) size.X, (float) size.Y);
+		}
+
+		public void SetColor(Color128 color)
+		{
+			GL.Uniform4(UniformLayout.Color, color.R, color.G, color.B, color.A);
 		}
 
 		#endregion

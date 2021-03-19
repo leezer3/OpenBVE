@@ -249,7 +249,7 @@ namespace LibRender2
 			OpenGlString = new OpenGlString(this);
 			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
-			Rectangle = new Rectangle(this);
+			Rectangle = new Rectangle(this, new Shader(this, "rectangle", "rectangle", true));
 			Loading = new Loading(this);
 			Keys = new Keys(this);
 			MotionBlur = new MotionBlur(this);

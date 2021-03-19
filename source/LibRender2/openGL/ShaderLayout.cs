@@ -162,5 +162,20 @@
 		/// The handle of "uObjectIndex" within the shader
 		/// </summary>
 		public short ObjectIndex = -1;
+
+		/// <summary>
+		/// The handle "uPoint" within the shader
+		/// </summary>
+		public short Point = -1;
+
+		/// <summary>
+		/// The handle of "uSize" within the shader
+		/// </summary>
+		public short Size;
+
+		/// <summary>
+		/// The handle of "uColor" within the shader
+		/// </summary>
+		public short Color;
 	}
 }

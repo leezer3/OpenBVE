@@ -1,4 +1,7 @@
-﻿using OpenBveApi.Colors;
+﻿using System;
+using System.Drawing;
+using LibRender2.Shaders;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
@@ -7,11 +10,18 @@ namespace LibRender2.Primitives
 {
 	public class Rectangle
 	{
+		/// <summary>Holds a reference to the base renderer</summary>
 		private readonly BaseRenderer renderer;
+		/// <summary>If using GL3, the shader to draw the rectangle with</summary>
+		private readonly Shader Shader;
 
-		internal Rectangle(BaseRenderer renderer)
+		private readonly VertexArrayObject dummyVao;
+
+		internal Rectangle(BaseRenderer renderer, Shader shader)
 		{
 			this.renderer = renderer;
+			this.Shader = shader;
+			this.dummyVao = new VertexArrayObject();
 		}
 
 		/// <summary>Renders an overlay texture</summary>
@@ -41,6 +51,19 @@ namespace LibRender2.Primitives
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
 		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null)
+		{
+			if (renderer.AvailableNewRenderer && Shader != null)
+			{
+				DrawWithShader(texture, point, size, color);	
+			}
+			else
+			{
+				DrawImmediate(texture, point, size, color);	
+			}
+			
+		}
+
+		private void DrawImmediate(Texture texture, Vector2 point, Vector2 size, Color128? color)
 		{
 			renderer.LastBoundTexture = null;
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
@@ -103,6 +126,48 @@ namespace LibRender2.Primitives
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PopMatrix();
+		}
+
+		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color)
+		{
+			ErrorCode error = GL.GetError();
+			if (error != ErrorCode.NoError)
+			{
+				throw new Exception();
+			}
+			Shader.Activate();
+			renderer.CurrentShader = Shader;
+			if (texture != null && renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
+			{
+				Shader.SetIsTexture(true);
+				GL.Enable(EnableCap.Texture2D);
+				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+			}
+			else
+			{
+				error = GL.GetError();
+				if (error != ErrorCode.NoError)
+				{
+					throw new Exception();
+				}
+				Shader.SetIsTexture(false);
+				
+			}
+			
+			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
+			Shader.SetColor(color == null ? Color128.White : color.Value);
+			Shader.SetPoint(point);
+			Shader.SetSize(size);
+			/*
+			 * In order to call GL.DrawArrays with procedural data within the shader,
+			 * we first need to bind a dummy VAO
+			 * If this is not done, it will generate an InvalidOperation error code
+			 */
+			dummyVao.Bind();
+			GL.DrawArrays(PrimitiveType.Quads, 0, 4);
+			dummyVao.UnBind();
+			Shader.Deactivate();
 		}
 	}
 }
