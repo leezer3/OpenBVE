@@ -189,7 +189,7 @@ namespace LibRender2.Loadings
 				// VERSION NUMBER
 				// place the version above the first division
 				int versionTop = logoBottom + blankHeight - fontHeight;
-				renderer.OpenGlString.Draw(Font, "Version " + ProgramVersion, new Point(halfWidth, versionTop), TextAlignment.TopMiddle, Color128.White);
+				renderer.OpenGlString.Draw(Font, "Version " + ProgramVersion, new Vector2(halfWidth, versionTop), TextAlignment.TopMiddle, Color128.White);
 				// for the moment, do not show any URL; would go right below the first division
 				//			DrawString(Fonts.SmallFont, "https://openbve-project.net",
 				//				new Point(halfWidth, versionTop + fontHeight+2),
@@ -203,7 +203,7 @@ namespace LibRender2.Loadings
 
 				// draw progress message right above the second division
 				string text = Translations.GetInterfaceString(routeProgress < 1.0 ? "loading_loading_route" : trainProgress < 1.0 ? "loading_loading_train" : "message_loading");
-				renderer.OpenGlString.Draw(Font, text, new Point(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
+				renderer.OpenGlString.Draw(Font, text, new Vector2(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
 
 				// sum of route progress and train progress arrives up to 2.0:
 				// => times 50.0 to convert to %
@@ -225,7 +225,7 @@ namespace LibRender2.Loadings
 				renderer.Rectangle.Draw(null, new Vector2(progrMargin, progressTop), new Vector2(progressWidth * (int)percent / 100.0, fontHeight + 4), ColourProgressBar);
 
 				// progress percent
-				renderer.OpenGlString.Draw(Font, percStr, new Point(halfWidth, progressTop), TextAlignment.TopMiddle, Color128.Black);
+				renderer.OpenGlString.Draw(Font, percStr, new Vector2(halfWidth, progressTop), TextAlignment.TopMiddle, Color128.Black);
 			}
 		}
 	}

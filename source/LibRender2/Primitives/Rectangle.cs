@@ -15,13 +15,10 @@ namespace LibRender2.Primitives
 		/// <summary>If using GL3, the shader to draw the rectangle with</summary>
 		private readonly Shader Shader;
 
-		private readonly VertexArrayObject dummyVao;
-
 		internal Rectangle(BaseRenderer renderer, Shader shader)
 		{
 			this.renderer = renderer;
 			this.Shader = shader;
-			this.dummyVao = new VertexArrayObject();
 		}
 
 		/// <summary>Renders an overlay texture</summary>
@@ -130,11 +127,6 @@ namespace LibRender2.Primitives
 
 		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color)
 		{
-			ErrorCode error = GL.GetError();
-			if (error != ErrorCode.NoError)
-			{
-				throw new Exception();
-			}
 			Shader.Activate();
 			renderer.CurrentShader = Shader;
 			if (texture != null && renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
@@ -145,13 +137,7 @@ namespace LibRender2.Primitives
 			}
 			else
 			{
-				error = GL.GetError();
-				if (error != ErrorCode.NoError)
-				{
-					throw new Exception();
-				}
 				Shader.SetIsTexture(false);
-				
 			}
 			
 			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
@@ -164,9 +150,9 @@ namespace LibRender2.Primitives
 			 * we first need to bind a dummy VAO
 			 * If this is not done, it will generate an InvalidOperation error code
 			 */
-			dummyVao.Bind();
+			renderer.dummyVao.Bind();
 			GL.DrawArrays(PrimitiveType.Quads, 0, 4);
-			dummyVao.UnBind();
+			renderer.dummyVao.UnBind();
 			Shader.Deactivate();
 		}
 	}

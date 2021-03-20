@@ -13,6 +13,7 @@ using LibRender2.Texts;
 using OpenBve.Input;
 using OpenBveApi;
 using OpenBveApi.Input;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK;
 using Path = OpenBveApi.Path;
@@ -137,7 +138,7 @@ namespace OpenBve
 				Type = menuType;
 				int i, menuItem;
 				int jump = 0;
-				Size size;
+				Vector2 size;
 
 				Align = TextAlignment.TopMiddle;
 				Height = Width = 0;
@@ -393,10 +394,10 @@ namespace OpenBve
 						continue;
 					}
 					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
-					if (size.Width > Width)
-						Width = size.Width;
-					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart) && size.Width > ItemWidth)
-						ItemWidth = size.Width;
+					if (size.X > Width)
+						Width = size.X;
+					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart) && size.X > ItemWidth)
+						ItemWidth = size.X;
 				}
 				Height = Items.Length * Game.Menu.LineHeight;
 				TopItem = 0;
@@ -417,8 +418,8 @@ namespace OpenBve
 		private SingleMenu[] Menus = { };
 		private OpenGlFont menuFont = null;
 		// area occupied by the items of the current menu in screen coordinates
-		private int menuXmin, menuXmax, menuYmin, menuYmax;
-		private int topItemY;           // the top edge of top item
+		private double menuXmin, menuXmax, menuYmin, menuYmax;
+		private double topItemY;           // the top edge of top item
 		private int visibleItems;       // the number of visible items
 										// properties (to allow read-only access to some fields)
 		internal int LineHeight
@@ -668,7 +669,7 @@ namespace OpenBve
 				return false;
 			}
 
-			int item = (y - topItemY) / lineHeight + menu.TopItem;
+			int item = (int) ((y - topItemY) / lineHeight + menu.TopItem);
 			// if the mouse is above a command item, select it
 			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand)
 			{
@@ -894,7 +895,7 @@ namespace OpenBve
 			Program.Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height), overlayColor);
 
 			
-			int itemLeft, itemX;
+			double itemLeft, itemX;
 			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList)
 			{
 				itemLeft = 0;
@@ -922,10 +923,10 @@ namespace OpenBve
 				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, menuYmin /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + MenuItemBorderX, em + MenuItemBorderY * 2), highlightColor);
 			}
 			if (menu.TopItem > 0)
-				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Point(itemX, menuYmin),
+				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Vector2(itemX, menuYmin),
 					menu.Align, ColourDimmed, false);
 			// draw the items
-			int itemY = topItemY;
+			double itemY = topItemY;
 			for (i = menu.TopItem; i <= menuBottomItem && i < menu.Items.Length; i++)
 			{
 				if (menu.Items[i] == null)
@@ -966,14 +967,14 @@ namespace OpenBve
 					}
 					
 					// draw the text
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Vector2(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Vector2(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				itemY += lineHeight;
 			}
@@ -985,7 +986,7 @@ namespace OpenBve
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)
-				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Point(itemX, itemY),
+				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Vector2(itemX, itemY),
 					menu.Align, ColourDimmed, false);
 			if (menu.Type == MenuType.RouteList)
 			{
@@ -1021,12 +1022,12 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Point(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);	
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);	
 						}
 						else
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Point(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White);	
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White);	
 						}
 						break;
 				}

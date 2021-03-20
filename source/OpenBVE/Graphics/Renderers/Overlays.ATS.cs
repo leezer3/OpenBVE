@@ -195,7 +195,7 @@ namespace OpenBve.Graphics.Renderers
 						double q = Math.Round(Element.TextAlignment.Y < 0 ? y : Element.TextAlignment.Y > 0 ? y + lcrh - v : y + 0.5 * (lcrh - v));
 						p += Element.TextPosition.X;
 						q += Element.TextPosition.Y;
-						renderer.OpenGlString.Draw(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, tc, Element.TextShadow);
+						renderer.OpenGlString.Draw(Element.Font, t, new Vector2(p, q), TextAlignment.TopLeft, tc, Element.TextShadow);
 					}
 					// left overlay
 					if (Left.OverlayTexture != null)

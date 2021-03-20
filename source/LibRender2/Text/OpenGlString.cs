@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
+using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
@@ -10,9 +12,12 @@ namespace LibRender2.Texts
 	{
 		private readonly BaseRenderer renderer;
 
-		internal OpenGlString(BaseRenderer renderer)
+		private readonly Shader Shader;
+
+		internal OpenGlString(BaseRenderer renderer, Shader shader)
 		{
 			this.renderer = renderer;
+			this.Shader = shader;
 		}
 
 		/// <summary>Renders a string to the screen.</summary>
@@ -22,7 +27,7 @@ namespace LibRender2.Texts
 		/// <param name="alignment">The alignment.</param>
 		/// <param name="color">The color.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		public void Draw(OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color)
+		public void Draw(OpenGlFont font, string text, Vector2 location, TextAlignment alignment, Color128 color)
 		{
 			if (text == null || font == null)
 			{
@@ -33,18 +38,18 @@ namespace LibRender2.Texts
 			 * Prepare the top-left coordinates for rendering, incorporating the
 			 * orientation of the string in relation to the specified location.
 			 * */
-			int left;
+			double left;
 
 			if ((alignment & TextAlignment.Left) == 0)
 			{
-				int width = 0;
+				double width = 0;
 
 				for (int i = 0; i < text.Length; i++)
 				{
 					Texture texture;
 					OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
-					width += data.TypographicSize.Width;
+					width += data.TypographicSize.X;
 				}
 
 				if ((alignment & TextAlignment.Right) != 0)
@@ -61,11 +66,11 @@ namespace LibRender2.Texts
 				left = location.X;
 			}
 
-			int top;
+			double top;
 
 			if ((alignment & TextAlignment.Top) == 0)
 			{
-				int height = 0;
+				double height = 0;
 
 				for (int i = 0; i < text.Length; i++)
 				{
@@ -73,9 +78,9 @@ namespace LibRender2.Texts
 					OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
 
-					if (data.TypographicSize.Height > height)
+					if (data.TypographicSize.Y > height)
 					{
-						height = data.TypographicSize.Height;
+						height = data.TypographicSize.Y;
 					}
 				}
 
@@ -93,6 +98,19 @@ namespace LibRender2.Texts
 				top = location.Y;
 			}
 
+			if (renderer.AvailableNewRenderer && Shader != null)
+			{
+				DrawWithShader(text, font, left, top, color);
+			}
+			else
+			{
+				DrawImmediate(text, font, left, top, color);
+			}
+
+		}
+
+		private void DrawImmediate(string text, OpenGlFont font, double left, double top, Color128 color)
+		{
 			/*
 			 * Render the string.
 			 * */
@@ -125,8 +143,8 @@ namespace LibRender2.Texts
 				{
 					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 
-					int x = left - (data.PhysicalSize.Width - data.TypographicSize.Width) / 2;
-					int y = top - (data.PhysicalSize.Height - data.TypographicSize.Height) / 2;
+					double x = left - (data.PhysicalSize.X - data.TypographicSize.X) / 2;
+					double y = top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2;
 
 					/*
 					 * In the first pass, mask off the background with pure black.
@@ -134,14 +152,14 @@ namespace LibRender2.Texts
 					GL.BlendFunc(BlendingFactor.Zero, BlendingFactor.OneMinusSrcColor);
 					GL.Begin(PrimitiveType.Quads);
 					GL.Color4(color.A, color.A, color.A, 1.0f);
-					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
+					GL.TexCoord2(data.TextureCoordinates.X, data.TextureCoordinates.Y);
 					GL.Vertex2(x, y);
-					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
-					GL.Vertex2(x + data.PhysicalSize.Width, y);
-					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
-					GL.Vertex2(x + data.PhysicalSize.Width, y + data.PhysicalSize.Height);
-					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Bottom);
-					GL.Vertex2(x, y + data.PhysicalSize.Height);
+					GL.TexCoord2(data.TextureCoordinates.X + data.TextureCoordinates.Z, data.TextureCoordinates.Y);
+					GL.Vertex2(x + data.PhysicalSize.X, y);
+					GL.TexCoord2(data.TextureCoordinates.X + data.TextureCoordinates.Z, data.TextureCoordinates.Y + data.TextureCoordinates.W);
+					GL.Vertex2(x + data.PhysicalSize.X, y + data.PhysicalSize.Y);
+					GL.TexCoord2(data.TextureCoordinates.X, data.TextureCoordinates.Y + data.TextureCoordinates.W);
+					GL.Vertex2(x, y + data.PhysicalSize.Y);
 					GL.End();
 
 					/*
@@ -150,18 +168,18 @@ namespace LibRender2.Texts
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					GL.Begin(PrimitiveType.Quads);
 					GL.Color4(color.R, color.G, color.B, color.A);
-					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
+					GL.TexCoord2(data.TextureCoordinates.X, data.TextureCoordinates.Y);
 					GL.Vertex2(x, y);
-					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
-					GL.Vertex2(x + data.PhysicalSize.Width, y);
-					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
-					GL.Vertex2(x + data.PhysicalSize.Width, y + data.PhysicalSize.Height);
-					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Bottom);
-					GL.Vertex2(x, y + data.PhysicalSize.Height);
+					GL.TexCoord2(data.TextureCoordinates.X + data.TextureCoordinates.Z, data.TextureCoordinates.Y);
+					GL.Vertex2(x + data.PhysicalSize.X, y);
+					GL.TexCoord2(data.TextureCoordinates.X + data.TextureCoordinates.Z, data.TextureCoordinates.Y + data.TextureCoordinates.W);
+					GL.Vertex2(x + data.PhysicalSize.X, y + data.PhysicalSize.Y);
+					GL.TexCoord2(data.TextureCoordinates.X, data.TextureCoordinates.Y + data.TextureCoordinates.W);
+					GL.Vertex2(x, y + data.PhysicalSize.Y);
 					GL.End();
 				}
 
-				left += data.TypographicSize.Width;
+				left += data.TypographicSize.X;
 			}
 
 			renderer.RestoreBlendFunc();
@@ -173,6 +191,52 @@ namespace LibRender2.Texts
 			GL.PopMatrix();
 		}
 
+		private void DrawWithShader(string text, OpenGlFont font, double left, double top, Color128 color)
+		{
+			Shader.Activate();
+			renderer.CurrentShader = Shader;
+			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
+			GL.Enable(EnableCap.Texture2D);
+			Shader.SetIsTexture(true);
+			
+			for (int i = 0; i < text.Length; i++)
+			{
+				Texture texture;
+				OpenGlFontChar data;
+				i += font.GetCharacterData(text, i, out texture, out data) - 1;
+				if (renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
+				{
+					Shader.SetAtlasLocation(data.TextureCoordinates);
+					double x = left - (data.PhysicalSize.X - data.TypographicSize.X) / 2;
+					double y = top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2;
+
+					/*
+					 * In the first pass, mask off the background with pure black.
+					 * */
+					GL.BlendFunc(BlendingFactor.Zero, BlendingFactor.OneMinusSrcColor);
+					Shader.SetColor(new Color128(color.A, color.A, color.A, 1.0f));
+					Shader.SetPoint(new Vector2(x, y));
+					Shader.SetSize(data.PhysicalSize);
+					/*
+					 * In order to call GL.DrawArrays with procedural data within the shader,
+					 * we first need to bind a dummy VAO
+					* If this is not done, it will generate an InvalidOperation error code
+					*/
+					renderer.dummyVao.Bind();
+					GL.DrawArrays(PrimitiveType.Quads, 0, 4);
+					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
+					Shader.SetColor(color);
+					GL.DrawArrays(PrimitiveType.Quads, 0, 4);
+					renderer.dummyVao.UnBind();
+				}
+				left += data.TypographicSize.X;
+			}
+			renderer.RestoreBlendFunc();
+			GL.Disable(EnableCap.Texture2D);
+			Shader.Deactivate();
+		}
+
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
@@ -181,11 +245,11 @@ namespace LibRender2.Texts
 		/// <param name="color">The color.</param>
 		/// <param name="shadow">Whether to draw a shadow.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		public void Draw(OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow)
+		public void Draw(OpenGlFont font, string text, Vector2 location, TextAlignment alignment, Color128 color, bool shadow)
 		{
 			if (shadow)
 			{
-				Draw(font, text, new Point(location.X - 1, location.Y + 1), alignment, new Color128(0.0f, 0.0f, 0.0f, 0.5f * color.A));
+				Draw(font, text, new Vector2(location.X - 1, location.Y + 1), alignment, new Color128(0.0f, 0.0f, 0.0f, 0.5f * color.A));
 				Draw(font, text, location, alignment, color);
 			}
 			else

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
 namespace LibRender2.Texts
@@ -29,8 +30,8 @@ namespace LibRender2.Texts
 			/*
 			 * Measure characters.
 			 * */
-			Size[] physicalSizes = new Size[256];
-			Size[] typographicSizes = new Size[256];
+			Vector2[] physicalSizes = new Vector2[256];
+			Vector2[] typographicSizes = new Vector2[256];
 			bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
 			Graphics graphics = Graphics.FromImage(bitmap);
 			graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -40,8 +41,8 @@ namespace LibRender2.Texts
 				string character = char.ConvertFromUtf32(offset + i);
 				SizeF physicalSize = graphics.MeasureString(character, font, int.MaxValue, StringFormat.GenericDefault);
 				SizeF typographicSize = graphics.MeasureString(character, font, int.MaxValue, StringFormat.GenericTypographic);
-				physicalSizes[i] = new Size((int)Math.Ceiling(physicalSize.Width), (int)Math.Ceiling(physicalSize.Height));
-				typographicSizes[i] = new Size((int)Math.Ceiling(typographicSize.Width == 0.0f ? physicalSize.Width : typographicSize.Width), (int)Math.Ceiling(typographicSize.Height == 0.0f ? physicalSize.Height : typographicSize.Height));
+				physicalSizes[i] = new Vector2((int)Math.Ceiling(physicalSize.Width), (int)Math.Ceiling(physicalSize.Height));
+				typographicSizes[i] = new Vector2((int)Math.Ceiling(typographicSize.Width == 0.0f ? physicalSize.Width : typographicSize.Width), (int)Math.Ceiling(typographicSize.Height == 0.0f ? physicalSize.Height : typographicSize.Height));
 			}
 
 			graphics.Dispose();
@@ -51,11 +52,11 @@ namespace LibRender2.Texts
 			 * Find suitable bitmap dimensions.
 			 * */
 			const int border = 1;
-			int width = border;
-			int height = border;
-			int lineWidth = 0;
-			int lineHeight = 0;
-			PointF[] coordinates = new PointF[256];
+			double width = border;
+			double height = border;
+			double lineWidth = 0;
+			double lineHeight = 0;
+			Vector2[] coordinates = new Vector2[256];
 
 			for (int i = 0; i < 256; i++)
 			{
@@ -72,13 +73,13 @@ namespace LibRender2.Texts
 					lineHeight = 0;
 				}
 
-				coordinates[i] = new PointF(lineWidth, height);
+				coordinates[i] = new Vector2(lineWidth, height);
 
-				lineWidth += physicalSizes[i].Width + border;
+				lineWidth += physicalSizes[i].X + border;
 
-				if (physicalSizes[i].Height + border > lineHeight)
+				if (physicalSizes[i].Y + border > lineHeight)
 				{
-					lineHeight = physicalSizes[i].Height + border;
+					lineHeight = physicalSizes[i].Y + border;
 				}
 			}
 
@@ -93,7 +94,7 @@ namespace LibRender2.Texts
 			/*
 			 * Draw character to bitmap.
 			 * */
-			bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+			bitmap = new Bitmap((int)width, (int)height, PixelFormat.Format32bppArgb);
 			graphics = Graphics.FromImage(bitmap);
 			graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 			graphics.Clear(Color.Black);
@@ -101,12 +102,12 @@ namespace LibRender2.Texts
 
 			for (int i = 0; i < 256; i++)
 			{
-				graphics.DrawString(char.ConvertFromUtf32(offset + i), font, Brushes.White, coordinates[i]);
-				float x0 = (coordinates[i].X - border) / width;
-				float x1 = (coordinates[i].X + physicalSizes[i].Width + border) / width;
-				float y0 = (coordinates[i].Y - border) / height;
-				float y1 = (coordinates[i].Y + physicalSizes[i].Height + border) / height;
-				Characters[i] = new OpenGlFontChar(new RectangleF(x0, y0, x1 - x0, y1 - y0), new Size(physicalSizes[i].Width + 2 * border, physicalSizes[i].Height + 2 * border), typographicSizes[i]);
+				graphics.DrawString(char.ConvertFromUtf32(offset + i), font, Brushes.White, new PointF((float)coordinates[i].X, (float)coordinates[i].Y));
+				double x0 = (coordinates[i].X - border) / width;
+				double x1 = (coordinates[i].X + physicalSizes[i].X + border) / width;
+				double y0 = (coordinates[i].Y - border) / height;
+				double y1 = (coordinates[i].Y + physicalSizes[i].Y + border) / height;
+				Characters[i] = new OpenGlFontChar(new Vector4(x0, y0, x1 - x0, y1 - y0), new Vector2(physicalSizes[i].X + 2 * border, physicalSizes[i].Y + 2 * border), typographicSizes[i]);
 			}
 
 			graphics.Dispose();

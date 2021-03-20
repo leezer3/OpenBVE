@@ -184,6 +184,7 @@ namespace LibRender2.Shaders
 				Point = (short)GL.GetUniformLocation(handle, "uPoint"),
 				Size = (short)GL.GetUniformLocation(handle, "uSize"),
 				Color = (short)GL.GetUniformLocation(handle, "uColor"),
+				AtlasLocation = (short)GL.GetUniformLocation(handle, "uAtlasLocation")
 			};
 		}
 
@@ -360,6 +361,11 @@ namespace LibRender2.Shaders
 		public void SetColor(Color128 color)
 		{
 			GL.Uniform4(UniformLayout.Color, color.R, color.G, color.B, color.A);
+		}
+
+		public void SetAtlasLocation(Vector4 atlasLocation)
+		{
+			GL.Uniform4(UniformLayout.AtlasLocation, (float)atlasLocation.X, (float)atlasLocation.Y, (float)atlasLocation.Z, (float)atlasLocation.W);
 		}
 
 		#endregion

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
 namespace LibRender2.Texts
@@ -57,10 +58,10 @@ namespace LibRender2.Texts
 		/// <summary>Measures the size of a string as it would be rendered using this font.</summary>
 		/// <param name="text">The string to render.</param>
 		/// <returns>The size of the string.</returns>
-		public Size MeasureString(string text)
+		public Vector2 MeasureString(string text)
 		{
-			int width = 0;
-			int height = 0;
+			double width = 0;
+			double height = 0;
 
 			if (text != null)
 			{
@@ -70,16 +71,16 @@ namespace LibRender2.Texts
 					Texture texture;
 					OpenGlFontChar data;
 					i += GetCharacterData(text, i, out texture, out data) - 1;
-					width += data.TypographicSize.Width;
+					width += data.TypographicSize.X;
 
-					if (data.TypographicSize.Height > height)
+					if (data.TypographicSize.Y > height)
 					{
-						height = data.TypographicSize.Height;
+						height = data.TypographicSize.Y;
 					}
 				}
 			}
 
-			return new Size(width, height);
+			return new Vector2(width, height);
 		}
 
 		private void Dispose(bool disposing)

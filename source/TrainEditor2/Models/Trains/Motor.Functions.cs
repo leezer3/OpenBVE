@@ -1105,7 +1105,7 @@ namespace TrainEditor2.Models.Trains
 
 				for (double v = 0.0; v < MaxVelocity; v += 10.0)
 				{
-					Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", culture), new Point((int)VelocityToX(v) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+					Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", culture), new Vector2(VelocityToX(v) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
 				}
 
 				GL.Disable(EnableCap.Texture2D);
@@ -1141,7 +1141,7 @@ namespace TrainEditor2.Models.Trains
 
 					for (double p = 0.0; p < MaxPitch; p += 100.0)
 					{
-						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, p.ToString("0", culture), new Point(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, p.ToString("0", culture), new Vector2(1, PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
 					}
 
 					GL.Disable(EnableCap.Texture2D);
@@ -1173,7 +1173,7 @@ namespace TrainEditor2.Models.Trains
 
 					for (double v = 0.0; v < MaxVolume; v += 128.0)
 					{
-						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", culture), new Point(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", culture), new Vector2(1, VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
 					}
 
 					GL.Disable(EnableCap.Texture2D);

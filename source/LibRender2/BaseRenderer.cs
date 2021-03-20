@@ -54,6 +54,8 @@ namespace LibRender2
 		protected int ObjectsSortedByStartPointer;
 		protected int ObjectsSortedByEndPointer;
 		protected double LastUpdatedTrackPosition;
+		/// <summary>A dummy VAO used when working with procedural data within the shader</summary>
+		public VertexArrayObject dummyVao;
 
 		public Screen Screen;
 
@@ -236,6 +238,7 @@ namespace LibRender2
 				DefaultShader.SetMaterialSpecular(Color32.White);
 				lastColor = Color32.White;
 				DefaultShader.Deactivate();
+				dummyVao = new VertexArrayObject();
 			}
 			catch
 			{
@@ -246,7 +249,7 @@ namespace LibRender2
 
 			Background = new Background(this);
 			Fog = new Fog();
-			OpenGlString = new OpenGlString(this);
+			OpenGlString = new OpenGlString(this, new Shader(this, "text", "rectangle", true)); //text shader shares the rectangle fragment shader
 			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
 			Rectangle = new Rectangle(this, new Shader(this, "rectangle", "rectangle", true));

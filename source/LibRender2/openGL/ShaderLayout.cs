@@ -177,5 +177,10 @@
 		/// The handle of "uColor" within the shader
 		/// </summary>
 		public short Color;
+
+		/// <summary>
+		/// The handle of "uAtlasLocation" within the shader
+		/// </summary>
+		public short AtlasLocation;
 	}
 }

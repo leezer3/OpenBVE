@@ -31,7 +31,7 @@ namespace LibRender2.Primitives
 				{
 					char currentChar = firstSplit[j][i];
 					currentLine += currentChar;
-					if (myFont.MeasureString(currentLine).Width > width)
+					if (myFont.MeasureString(currentLine).X > width)
 					{
 						// Exceeded length, back up to last space
 						int moveback = 0;
@@ -77,14 +77,14 @@ namespace LibRender2.Primitives
 			if (splitString.Count == 1)
 			{
 				//DRAW SINGLE LINE
-				renderer.OpenGlString.Draw(myFont, Text, new Point((int)point.X + Border, (int)point.Y + Border), TextAlignment.TopLeft, Color128.White);
+				renderer.OpenGlString.Draw(myFont, Text, new Vector2(point.X + Border, point.Y + Border), TextAlignment.TopLeft, Color128.White);
 			}
 			else
 			{
 				//DRAW SPLIT LINES
 				for (int i = 0; i < splitString.Count; i++)
 				{
-					renderer.OpenGlString.Draw(myFont, splitString[i], new Point((int)point.X + Border, (int)(point.Y + Border + myFont.FontSize * i)), TextAlignment.TopLeft, Color128.White);
+					renderer.OpenGlString.Draw(myFont, splitString[i], new Vector2(point.X + Border, point.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, Color128.White);
 				}
 				
 			}
