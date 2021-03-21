@@ -8,12 +8,10 @@ using DavyKager;
 using System.IO;
 using System.Text;
 using LibRender2.Screens;
-using LibRender2.Text;
 using LibRender2.Texts;
 using OpenBve.Input;
 using OpenBveApi;
 using OpenBveApi.Input;
-using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK;
 using Path = OpenBveApi.Path;
@@ -54,6 +52,7 @@ namespace OpenBve
 		private const float LineSpacing = 1.75f;    // the ratio between the font size and line distance
 		private const int SelectionNone = -1;
 
+		private double lastTimeElapsed;
 		
 
 		/********************
@@ -61,7 +60,61 @@ namespace OpenBve
 		*********************/
 		private abstract class MenuEntry
 		{
+			/// <summary>The base text of the menu entry</summary>
 			internal string Text;
+			/// <summary>The display text of the menu entry</summary>
+			internal string DisplayText(double TimeElapsed)
+			{
+				if (DisplayLength == 0)
+				{
+					return Text;
+				}
+				timer += TimeElapsed;
+				if (timer > 0.5)
+				{
+					if (pause)
+					{
+						pause = false;
+						return _displayText;
+					}
+					timer = 0;
+					scroll++;
+					if (scroll == Text.Length)
+					{
+						scroll = 0;
+						pause = true;
+					}
+					_displayText = Text.Substring(scroll);
+					if (_displayText.Length > _displayLength)
+					{
+						_displayText = _displayText.Substring(0, _displayLength);
+					}
+				}
+				return _displayText;
+			}
+			/// <summary>Backing property for display text</summary>
+			private string _displayText;
+			/// <summary>Backing property for display length</summary>
+			private int _displayLength;
+			/// <summary>The length to display</summary>
+			internal int DisplayLength
+			{
+				get
+				{
+					return _displayLength;
+				}
+				set
+				{
+					_displayLength = value;
+					_displayText = Text.Substring(0, value);
+					timer = 0;
+				}
+			}
+
+			private double timer;
+			private int scroll;
+			private bool pause;
+
 		}
 
 		/********************
@@ -133,8 +186,9 @@ namespace OpenBve
 			/********************
 				MENU C'TOR
 			*********************/
-			public SingleMenu(MenuType menuType, int data = 0)
+			public SingleMenu(MenuType menuType, int data = 0, double maxWidth = 0)
 			{
+				MaxWidth = maxWidth;
 				Type = menuType;
 				int i, menuItem;
 				int jump = 0;
@@ -385,7 +439,6 @@ namespace OpenBve
 						Selection = 1;
 						break;
 				}
-
 				// compute menu extent
 				for (i = 0; i < Items.Length; i++)
 				{
@@ -395,7 +448,24 @@ namespace OpenBve
 					}
 					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
 					if (size.X > Width)
+					{
 						Width = size.X;
+					}
+					
+					if (MaxWidth != 0 && size.X > MaxWidth)
+					{
+						for (int j = Items[i].Text.Length - 1; j > 0; j--)
+						{
+							string trimmedText = Items[i].Text.Substring(0, j);
+							size = Game.Menu.MenuFont.MeasureString(trimmedText);
+							if (size.X < MaxWidth)
+							{
+								Items[i].DisplayLength = trimmedText.Length;
+								break;
+							}
+						}
+						Width = MaxWidth;
+					}
 					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart) && size.X > ItemWidth)
 						ItemWidth = size.X;
 				}
@@ -525,7 +595,12 @@ namespace OpenBve
 			
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
-			Menus[CurrMenu] = new SingleMenu(type, data);
+			int MaxWidth = 0;
+			if (type == MenuType.RouteList || type == MenuType.TrainList)
+			{
+				MaxWidth = Program.Renderer.Screen.Width / 2;
+			}
+			Menus[CurrMenu] = new SingleMenu(type, data, MaxWidth);
 			if (replace)
 			{
 				Menus[CurrMenu].Selection = 1;
@@ -542,7 +617,7 @@ namespace OpenBve
 		{
 			if (CurrMenu > 0)           // if more than one menu remaining...
 			{
-				CurrMenu--;             // ...back to previous smenu
+				CurrMenu--;             // ...back to previous menu
 				PositionMenu();
 			}
 			else
@@ -882,9 +957,10 @@ namespace OpenBve
 		// DRAW MENU
 		//
 		/// <summary>Draws the current menu as a screen overlay</summary>
-		internal void Draw()
+		internal void Draw(double RealTimeElapsed)
 		{
-
+			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;
+			lastTimeElapsed = RealTimeElapsed;
 			int i;
 
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
@@ -967,14 +1043,14 @@ namespace OpenBve
 					}
 					
 					// draw the text
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Vector2(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Vector2(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].Text, new Vector2(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				itemY += lineHeight;
 			}
@@ -1048,6 +1124,14 @@ namespace OpenBve
 				return;
 
 			SingleMenu menu = Menus[CurrMenu];
+			for (int i = 0; i < menu.Items.Length; i++)
+			{
+				/*
+				 * HACK: This is a property method, and is also used to
+				 * reset the timer and display string back to the starting values
+				 */
+				menu.Items[i].DisplayLength = menu.Items[i].DisplayLength;
+			}
 			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList)
 			{
 				// Left aligned, used for route browser
