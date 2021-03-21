@@ -105,7 +105,7 @@ namespace Train.OpenBve
 													PanelBackground = Path.CombineFile(TrainPath, Value);
 													if (!System.IO.File.Exists(PanelBackground))
 													{
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelBackground + "could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelBackground + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													}
 												}
 
