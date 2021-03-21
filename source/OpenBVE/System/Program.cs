@@ -307,7 +307,8 @@ namespace OpenBve {
 			Renderer.Camera.BackwardViewingDistance = 0.0;
 			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
-			FileSystem.ClearLogFile();
+			string programVersion = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
+			FileSystem.ClearLogFile(programVersion);
 			return true;
 		}
 		
