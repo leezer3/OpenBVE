@@ -128,11 +128,11 @@ namespace DenshaDeGoInput
 		internal static bool hasDirectionButtons;
 
 		/// <summary>
-		/// Checks whether a joystick is an Unbalance controller.
+		/// Checks the controller model.
 		/// </summary>
 		/// <param name="id">A string representing the vendor and product ID.</param>
 		/// <param name="capabilities">the capabilities of the joystick.</param>
-		/// <returns>Whether the controller is compatible.</returns>
+		/// <returns>The controller model.</returns>
 		internal static InputTranslator.ControllerModels GetControllerModel(string id, JoystickCapabilities capabilities)
 		{
 			// DGC-255/DGOC-44U

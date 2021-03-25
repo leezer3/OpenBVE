@@ -209,6 +209,11 @@ namespace DenshaDeGoInput
 			}
 
 			InputTranslator.Update();
+			if (loading)
+			{
+				// Configure the mappings on the first frame to fit the controller's features
+				ConfigureMappings();
+			}
 
 			if (InputTranslator.IsControllerConnected)
 			{

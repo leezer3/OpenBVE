@@ -193,10 +193,10 @@ namespace DenshaDeGoInput
 
 
 		/// <summary>
-		/// Checks whether a joystick is a classic console controller.
+		/// Checks the controller model.
 		/// </summary>
 		/// <param name="capabilities">the capabilities of the joystick.</param>
-		/// <returns>Whether the controller is compatible.</returns>
+		/// <returns>The controller model.</returns>
 		internal static InputTranslator.ControllerModels GetControllerModel(JoystickCapabilities capabilities)
 		{
 			// A valid controller needs at least 12 buttons or 10 buttons plus a hat. If there are more than 20 buttons, the joystick is unlikely a valid controller.
