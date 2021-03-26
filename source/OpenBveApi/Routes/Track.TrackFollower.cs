@@ -117,7 +117,7 @@ namespace OpenBveApi.Routes
 		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
 		public void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
-			if (TrackIndex == 0 && currentHost.Tracks[TrackIndex].Elements.Length == 0)
+			if (TrackIndex == 0 && (currentHost.Tracks[0].Elements == null || currentHost.Tracks[TrackIndex].Elements.Length == 0))
 			{
 				/*
 				 * Used for displaying trains in Object Viewer
