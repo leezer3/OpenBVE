@@ -257,7 +257,7 @@ namespace OpenBve {
 						}
 					}
 
-					cF += sF * Program.Renderer.Camera.Alignment.Position.X + u2 * Program.Renderer.Camera.Alignment.Position + d2 * Program.Renderer.Camera.Alignment.Position.Z;
+					cF += sF * Program.Renderer.Camera.Alignment.Position.X + u2 * Program.Renderer.Camera.Alignment.Position.Y + d2 * Program.Renderer.Camera.Alignment.Position.Z;
 
 				}
 				// yaw, pitch, roll
