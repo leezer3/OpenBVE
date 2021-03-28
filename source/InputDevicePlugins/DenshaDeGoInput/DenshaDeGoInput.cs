@@ -92,7 +92,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// An array with the properties for each button.
 		/// </summary>
-		internal static ButtonProp[] ButtonProperties = new ButtonProp[11];
+		internal static ButtonProp[] ButtonProperties = new ButtonProp[13];
 
 
 		/// <summary>

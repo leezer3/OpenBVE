@@ -2483,6 +2483,12 @@
 					<trans-unit id="input_section">
 						<source>Device input</source>
 					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+					</trans-unit>
 					<trans-unit id="calibration_button">
 						<source>Start calibration</source>
 					</trans-unit>
@@ -2536,6 +2542,12 @@
 					</trans-unit>
 					<trans-unit id="label_pedal">
 						<source>PEDAL</source>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
 					</trans-unit>
 				</group>
 			</group>

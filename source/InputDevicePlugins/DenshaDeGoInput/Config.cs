@@ -58,6 +58,8 @@ namespace DenshaDeGoInput
 			buttonleftBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
 			buttonrightBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
 			buttonpedalBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonldoorBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
+			buttonrdoorBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
 			Translations.CommandInfo[] commands = Translations.CommandInfos.OrderBy(o => o.Command).ToArray();
 			for (int i = 0; i < Translations.CommandInfos.Length; i++)
 			{
@@ -72,6 +74,8 @@ namespace DenshaDeGoInput
 				buttonleftBox.Items.Add(commands[i].Name);
 				buttonrightBox.Items.Add(commands[i].Name);
 				buttonpedalBox.Items.Add(commands[i].Name);
+				buttonldoorBox.Items.Add(commands[i].Name);
+				buttonrdoorBox.Items.Add(commands[i].Name);
 			}
 		}
 
@@ -111,23 +115,28 @@ namespace DenshaDeGoInput
 		{
 			if (InputTranslator.IsControllerConnected)
 			{
-				label_brakeemg.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.Emergency ? Color.White : Color.Black;
-				label_brake8.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B8 ? Color.White : Color.Black;
-				label_brake7.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B7 ? Color.White : Color.Black;
-				label_brake6.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B6 ? Color.White : Color.Black;
-				label_brake5.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B5 ? Color.White : Color.Black;
-				label_brake4.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B4 ? Color.White : Color.Black;
-				label_brake3.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B3 ? Color.White : Color.Black;
-				label_brake2.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B2 ? Color.White : Color.Black;
-				label_brake1.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.B1 ? Color.White : Color.Black;
-				label_braken.ForeColor = InputTranslator.BrakeNotch == InputTranslator.BrakeNotches.Released ? Color.White : Color.Black;
+				switch (InputTranslator.BrakeNotch)
+				{
+					case InputTranslator.BrakeNotches.Released:
+						label_brake.Text = Translations.GetInterfaceString("denshadego_label_brake").Replace("[notch]", Translations.QuickReferences.HandleBrakeNull);
+						break;
+					case InputTranslator.BrakeNotches.Emergency:
+						label_brake.Text = Translations.GetInterfaceString("denshadego_label_brake").Replace("[notch]", Translations.QuickReferences.HandleEmergency);
+						break;
+					default:
+						label_brake.Text = Translations.GetInterfaceString("denshadego_label_brake").Replace("[notch]", Translations.QuickReferences.HandleBrake + (int)InputTranslator.BrakeNotch);
+						break;
+				}
 
-				label_power5.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P5 ? Color.White : Color.Black;
-				label_power4.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P4 ? Color.White : Color.Black;
-				label_power3.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P3 ? Color.White : Color.Black;
-				label_power2.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P2 ? Color.White : Color.Black;
-				label_power1.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.P1 ? Color.White : Color.Black;
-				label_powern.ForeColor = InputTranslator.PowerNotch == InputTranslator.PowerNotches.N ? Color.White : Color.Black;
+				switch (InputTranslator.PowerNotch)
+				{
+					case InputTranslator.PowerNotches.N:
+						label_power.Text = Translations.GetInterfaceString("denshadego_label_power").Replace("[notch]", Translations.QuickReferences.HandlePowerNull);
+						break;
+					default:
+						label_power.Text = Translations.GetInterfaceString("denshadego_label_power").Replace("[notch]", Translations.QuickReferences.HandlePower + (int)InputTranslator.PowerNotch);
+						break;
+				}
 
 				label_select.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
 				label_start.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
@@ -140,6 +149,8 @@ namespace DenshaDeGoInput
 				label_left.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
 				label_right.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
 				label_pedal.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_ldoor.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.LDoor] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+				label_rdoor.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.RDoor] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
 			}
 
 			switch (InputTranslator.ControllerModel)
@@ -152,11 +163,15 @@ namespace DenshaDeGoInput
 					label_left.Visible = false;
 					label_right.Visible = false;
 					label_pedal.Visible = false;
+					label_ldoor.Visible = false;
+					label_rdoor.Visible = false;
 					break;
 				case InputTranslator.ControllerModels.UnbalanceStandard:
 					buttonCalibrate.Visible = false;
 					label_d.Visible = true;
 					label_pedal.Visible = false;
+					label_ldoor.Visible = false;
+					label_rdoor.Visible = false;
 					if (ControllerUnbalance.hasDirectionButtons)
 					{
 						label_up.Visible = true;
@@ -172,6 +187,40 @@ namespace DenshaDeGoInput
 						label_right.Visible = false;
 					}
 					break;
+				case InputTranslator.ControllerModels.UnbalanceRyojouhen:
+					buttonCalibrate.Visible = false;
+					label_d.Visible = true;
+					label_pedal.Visible = false;
+					label_ldoor.Visible = true;
+					label_rdoor.Visible = true;
+					label_up.Visible = true;
+					label_down.Visible = true;
+					label_left.Visible = true;
+					label_right.Visible = true;
+					break;
+				case InputTranslator.ControllerModels.Ps2Type2:
+				case InputTranslator.ControllerModels.Ps2Shinkansen:
+					buttonCalibrate.Visible = false;
+					label_d.Visible = true;
+					label_pedal.Visible = true;
+					label_ldoor.Visible = false;
+					label_rdoor.Visible = false;
+					label_up.Visible = true;
+					label_down.Visible = true;
+					label_left.Visible = true;
+					label_right.Visible = true;
+					break;
+				case InputTranslator.ControllerModels.Ps2Ryojouhen:
+					buttonCalibrate.Visible = false;
+					label_d.Visible = true;
+					label_pedal.Visible = true;
+					label_ldoor.Visible = true;
+					label_rdoor.Visible = true;
+					label_up.Visible = true;
+					label_down.Visible = true;
+					label_left.Visible = true;
+					label_right.Visible = true;
+					break;
 				default:
 					buttonCalibrate.Visible = false;
 					label_d.Visible = true;
@@ -180,6 +229,8 @@ namespace DenshaDeGoInput
 					label_left.Visible = true;
 					label_right.Visible = true;
 					label_pedal.Visible = true;
+					label_ldoor.Visible = true;
+					label_rdoor.Visible = true;
 					break;
 			}
 		}
@@ -212,34 +263,23 @@ namespace DenshaDeGoInput
 			buttonleftBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 			buttonrightBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 			buttonpedalBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-
-			label_brakeemg.Text = Translations.QuickReferences.HandleEmergency;
-			label_brake8.Text = Translations.QuickReferences.HandleBrake + "8";
-			label_brake7.Text = Translations.QuickReferences.HandleBrake + "7";
-			label_brake6.Text = Translations.QuickReferences.HandleBrake + "6";
-			label_brake5.Text = Translations.QuickReferences.HandleBrake + "5";
-			label_brake4.Text = Translations.QuickReferences.HandleBrake + "4";
-			label_brake3.Text = Translations.QuickReferences.HandleBrake + "3";
-			label_brake2.Text = Translations.QuickReferences.HandleBrake + "2";
-			label_brake1.Text = Translations.QuickReferences.HandleBrake + "1";
-			label_braken.Text = Translations.QuickReferences.HandleBrakeNull;
-			label_power5.Text = Translations.QuickReferences.HandlePower + "5";
-			label_power4.Text = Translations.QuickReferences.HandlePower + "4";
-			label_power3.Text = Translations.QuickReferences.HandlePower + "3";
-			label_power2.Text = Translations.QuickReferences.HandlePower + "2";
-			label_power1.Text = Translations.QuickReferences.HandlePower + "1";
-			label_powern.Text = Translations.QuickReferences.HandlePowerNull;
+			buttonldoorBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonrdoorBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 
 			label_up.Text = Translations.GetInterfaceString("denshadego_label_up");
 			label_down.Text = Translations.GetInterfaceString("denshadego_label_down");
 			label_left.Text = Translations.GetInterfaceString("denshadego_label_left");
 			label_right.Text = Translations.GetInterfaceString("denshadego_label_right");
 			label_pedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
+			label_ldoor.Text = Translations.GetInterfaceString("denshadego_label_ldoor");
+			label_rdoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
 			label_buttonup.Text = Translations.GetInterfaceString("denshadego_label_up");
 			label_buttondown.Text = Translations.GetInterfaceString("denshadego_label_down");
 			label_buttonleft.Text = Translations.GetInterfaceString("denshadego_label_left");
 			label_buttonright.Text = Translations.GetInterfaceString("denshadego_label_right");
 			label_buttonpedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
+			label_buttonldoor.Text = Translations.GetInterfaceString("denshadego_label_ldoor");
+			label_buttonrdoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
 		}
 
 		private void Config_Shown(object sender, EventArgs e)
@@ -266,6 +306,9 @@ namespace DenshaDeGoInput
 			buttonleftBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[8].Command;
 			buttonrightBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[9].Command;
 			buttonpedalBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[10].Command;
+			buttonldoorBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[11].Command;
+			buttonrdoorBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[12].Command;
+
 
 			// Set checkboxes
 			convertnotchesCheck.Checked = DenshaDeGoInput.convertNotches;
@@ -344,6 +387,14 @@ namespace DenshaDeGoInput
 		private void buttonpedalBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Pedal].Command = buttonpedalBox.SelectedIndex;
+		}
+		private void buttonldoorBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.LDoor].Command = buttonldoorBox.SelectedIndex;
+		}
+		private void buttonrdoorBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.RDoor].Command = buttonrdoorBox.SelectedIndex;
 		}
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)

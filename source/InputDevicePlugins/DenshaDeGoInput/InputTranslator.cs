@@ -145,12 +145,16 @@ namespace DenshaDeGoInput
 			Right = 9,
 			/// <summary>Pedal button</summary>
 			Pedal = 10,
+			/// <summary>Left door button</summary>
+			LDoor = 11,
+			/// <summary>Right door button</summary>
+			RDoor = 12,
 		}
 
 		/// <summary>
 		/// An array with the state of the controller's buttons.
 		/// </summary>
-		internal static ButtonState[] ControllerButtons = new ButtonState[11];
+		internal static ButtonState[] ControllerButtons = new ButtonState[13];
 
 		/// <summary>
 		/// A dictionary containing GUID/index pairs for controllers.
