@@ -6,7 +6,6 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
-using TrainEditor2.Systems.Functions;
 
 namespace TrainEditor2.Systems
 {

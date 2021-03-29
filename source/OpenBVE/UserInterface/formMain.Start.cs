@@ -10,6 +10,7 @@ using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenTK.Graphics.ES20;
 using RouteManager2;
 using Path = OpenBveApi.Path;
 
@@ -788,7 +789,8 @@ namespace OpenBve
 				return;
 			}
 
-			if (!Plugins.LoadPlugins())
+			string error; //ignored in this case, background thread
+			if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -824,7 +826,7 @@ namespace OpenBve
 
 			if (Loading.Complete)
 			{
-				Plugins.UnloadPlugins();
+				Program.CurrentHost.UnloadPlugins(out error);
 			}
 			
 			if (!loaded)

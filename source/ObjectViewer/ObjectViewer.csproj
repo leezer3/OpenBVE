@@ -88,7 +88,6 @@
     <Compile Include="Hosts.cs" />
     <Compile Include="NewRendererS.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="Plugins.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Fonts.cs" />

@@ -290,7 +290,6 @@
     <Compile Include="System\Input\JoystickManager.StandardJoystick.cs">
       <DependentUpon>JoystickManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Program.cs" />
     <EmbeddedResource Include="UserInterface\formBugReport.resx">
       <DependentUpon>formBugReport.cs</DependentUpon>

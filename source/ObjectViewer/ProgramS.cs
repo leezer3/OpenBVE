@@ -79,7 +79,12 @@ namespace OpenBve {
 		        Renderer.Screen.Width = 960;
 		        Renderer.Screen.Height = 600;
 	        }
-		    Plugins.LoadPlugins();
+	        string error;
+	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+	        {
+		        MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		        return;
+	        }
 	        // command line arguments
 	        List<string> filesToLoad = new List<string>();
 	        
