@@ -1178,6 +1178,10 @@ namespace TrainManager.Car
 				pitch = Sounds.FlangePitch;
 				for (int i = 0; i < Sounds.Flange.Count; i++)
 				{
+					if(Sounds.Flange[i] == null)
+					{
+						continue;
+					}
 					int key = Sounds.Flange.ElementAt(i).Key;
 					if (key == this.FrontAxle.FlangeIndex | key == this.RearAxle.FlangeIndex)
 					{

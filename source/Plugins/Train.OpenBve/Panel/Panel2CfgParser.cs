@@ -1689,6 +1689,10 @@ namespace Train.OpenBve
 
 		internal int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
 		{
+			if (Width == 0 || Height == 0)
+			{
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
+			}
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
 				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
