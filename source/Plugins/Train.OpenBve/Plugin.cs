@@ -55,7 +55,9 @@ namespace Train.OpenBve
 
 	    internal Control[] CurrentControls;
 
-	    public Plugin()
+	    internal double LastProgress;
+
+		public Plugin()
 	    {
 		    if (TrainDatParser == null)
 		    {
@@ -139,11 +141,15 @@ namespace Train.OpenBve
 
 	    public override bool LoadTrain(Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
 	    {
+		    CurrentProgress = 0.0;
+		    LastProgress = 0.0;
+		    IsLoading = true;
 		    CurrentControls = currentControls;
 		    TrainBase currentTrain = train as TrainBase;
 		    if (currentTrain == null)
 		    {
 				currentHost.ReportProblem(ProblemType.InvalidData, "Train was not valid");
+				IsLoading = false;
 				return false;
 		    }
 
@@ -153,7 +159,12 @@ namespace Train.OpenBve
 			    string TrainData = Path.CombineFile(FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
 			    TrainDatParser.Parse(TrainData, Encoding.UTF8, currentTrain);
 			    Thread.Sleep(1);
-			    if (Cancel) return false;
+
+			    if (Cancel)
+			    {
+				    IsLoading = false;
+				    return false;
+			    }
 		    }
 		    else
 		    {
@@ -170,11 +181,17 @@ namespace Train.OpenBve
 
 			    string TrainData = Path.CombineFile(currentTrain.TrainFolder, "train.dat");
 			    TrainDatParser.Parse(TrainData, Encoding, currentTrain);
+			    LastProgress = 0.1;
 			    Thread.Sleep(1);
 			    if (Cancel) return false;
 			    SoundCfgParser.ParseSoundConfig(currentTrain);
+			    LastProgress = 0.2;
 			    Thread.Sleep(1);
-			    if (Cancel) return false;
+			    if (Cancel)
+			    {
+				    IsLoading = false;
+				    return false;
+			    }
 			    // door open/close speed
 			    for (int i = 0; i < currentTrain.Cars.Length; i++)
 			    {
@@ -184,7 +201,13 @@ namespace Train.OpenBve
 		    // add panel section
 		    if (currentTrain.IsPlayerTrain) {	
 			    ParsePanelConfig(currentTrain, Encoding);
-			    Thread.Sleep(1); if (Cancel) return false;
+			    LastProgress = 0.6;
+			    Thread.Sleep(1);
+			    if (Cancel)
+			    {
+				    IsLoading = false;
+				    return false;
+			    }
 			    FileSystem.AppendToLogFile("Train panel loaded sucessfully.");
 		    }
 			// add exterior section
@@ -207,7 +230,11 @@ namespace Train.OpenBve
 
 				currentTrain.CameraCar = currentTrain.DriverCar;
 				Thread.Sleep(1);
-				if (Cancel) return false;
+				if (Cancel)
+				{
+					IsLoading = false;
+					return false;
+				}
 				//Stores the current array index of the bogie object to add
 				//Required as there are two bogies per car, and we're using a simple linear array....
 				int currentBogieObject = 0;
@@ -260,6 +287,7 @@ namespace Train.OpenBve
 			// place cars
 			currentTrain.PlaceCars(0.0);
 			currentControls = CurrentControls;
+			IsLoading = false;
 			return true;
 	    }
 

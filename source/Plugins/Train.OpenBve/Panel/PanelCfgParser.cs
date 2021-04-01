@@ -184,10 +184,10 @@ namespace Train.OpenBve
 				}
 			}
 			// parse lines for rest
-			double invfac = Lines.Length == 0 ? 1.0 : 1.0 / Lines.Length;
+			double invfac = Lines.Length == 0 ? 0.4 : 0.4 / Lines.Length;
 			for (int i = 0; i < Lines.Length; i++)
 			{
-				Plugin.CurrentProgress = Plugin.CurrentProgress + invfac * i;
+				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
 				if ((i & 7) == 0)
 				{
 					System.Threading.Thread.Sleep(1);

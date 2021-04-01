@@ -79,10 +79,10 @@ namespace Train.OpenBve
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid file format encountered in " + FileName + ". The first line is expected to be \"Version 1.0\".");
 			}
 			string[] MotorFiles = new string[] { };
-			double invfac = Lines.Count == 0 ? 1.0 : 1.0 / Lines.Count;
+			double invfac = Lines.Count == 0 ? 0.1 : 0.1 / Lines.Count;
 			for (int i = 0; i < Lines.Count; i++)
 			{
-				Plugin.CurrentProgress = Plugin.CurrentProgress + invfac * i;
+				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
 				if ((i & 7) == 0)
 				{
 					System.Threading.Thread.Sleep(1);

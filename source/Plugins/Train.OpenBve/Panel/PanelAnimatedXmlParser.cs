@@ -70,11 +70,11 @@ namespace Train.OpenBve
 
 			int currentSectionElement = 0;
 			int numberOfSectionElements = Element.Elements().Count();
-			double invfac = numberOfSectionElements == 0 ? 1.0 : 1.0 / (double)numberOfSectionElements;
+			double invfac = numberOfSectionElements == 0 ? 0.4 : 0.4 / (double)numberOfSectionElements;
 
 			foreach (XElement SectionElement in Element.Elements())
 			{
-				Plugin.CurrentProgress = Plugin.CurrentProgress + invfac * (double) currentSectionElement;
+				Plugin.CurrentProgress = Plugin.LastProgress + invfac * (double) currentSectionElement;
 				if ((currentSectionElement & 4) == 0)
 				{
 					System.Threading.Thread.Sleep(1);

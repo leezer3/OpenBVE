@@ -90,7 +90,9 @@ namespace TrainManager.Car
 			Index = index;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+			FrontAxle.Follower.TriggerType = index == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+			RearAxle.Follower.TriggerType = index == baseTrain.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
 			FrontBogie = new Bogie(train, this);
 			RearBogie = new Bogie(train, this);
@@ -102,6 +104,10 @@ namespace TrainManager.Car
 				new Horn(this)
 			};
 			Sounds = new CarSounds();
+			CurrentCarSection = -1;
+			ChangeCarSection(CarSectionType.NotVisible);
+			FrontBogie.ChangeSection(-1);
+			RearBogie.ChangeSection(-1);
 		}
 
 		public CarBase(TrainBase train, int index)

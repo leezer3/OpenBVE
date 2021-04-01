@@ -40,6 +40,7 @@ namespace TrainManager.Car
 
 			CarSections = new CarSection[] { };
 			baseTrain = train;
+			ChangeSection(-1);
 		}
 
 		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)

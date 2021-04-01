@@ -972,18 +972,35 @@ namespace OpenBve
 				this.ProcessEvents();
 				if (this.IsExiting)
 					Loading.Cancel = true;
-				double routeProgress = 1.0;
+				double routeProgress = 1.0, trainProgress = 0.0;
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
 					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
 					{
 						routeProgress = Program.CurrentHost.Plugins[i].Route.CurrentProgress;
+						trainProgress = 0.0;
 						break;
 					}
+
+					if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.IsLoading)
+					{
+						trainProgress = Program.CurrentHost.Plugins[i].Train.CurrentProgress;
+					}
+				}
+				double trainProgressWeight = 1.0 / Program.TrainManager.Trains.Length;
+				double finalTrainProgress;
+				if (Program.TrainManager.Trains.Length != 0)
+				{
+					//Trains are not loaded until after the route
+					finalTrainProgress = (Loading.CurrentTrain * trainProgressWeight) + trainProgressWeight * trainProgress;
+				}
+				else
+				{
+					finalTrainProgress = 0.0;
 				}
 
 				Program.Renderer.Loading.SetLoadingBkg(Program.CurrentRoute.Information.LoadingScreenBackground);
-				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress, Loading.TrainProgress);
+				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress, finalTrainProgress);
 				Program.currentGameWindow.SwapBuffers();
 				
 				if (Loading.JobAvailable)
