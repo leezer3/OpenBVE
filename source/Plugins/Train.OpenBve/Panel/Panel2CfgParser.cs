@@ -46,11 +46,11 @@ namespace Train.OpenBve
 			string FileName = Path.CombineFile(TrainPath, PanelFile);
 			string[] Lines = File.ReadAllLines(FileName, Encoding);
 			for (int i = 0; i < Lines.Length; i++) {
-				Lines[i] = Lines[i].Trim(new char[] { });
+				Lines[i] = Lines[i].Trim();
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
 				}
 			}
 			// initialize
@@ -66,15 +66,15 @@ namespace Train.OpenBve
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
 						switch (Section.ToLowerInvariant()) {
 								// panel
 							case "this":
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('='); if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key.ToLowerInvariant()) {
 											case "resolution":
 												double pr = 0.0;
@@ -155,8 +155,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -229,8 +229,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -317,7 +317,7 @@ namespace Train.OpenBve
 				}
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
 						switch (Section.ToLowerInvariant()) {
 								// pilotlamp
 							case "pilotlamp":
@@ -331,8 +331,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -341,8 +341,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -431,8 +431,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -442,8 +442,8 @@ namespace Train.OpenBve
 														int k = Value.IndexOf(',');
 														if (k >= 0)
 														{
-															string a = Value.Substring(0, k).TrimEnd(new char[] { });
-															string b = Value.Substring(k + 1).TrimStart(new char[] { });
+															string a = Value.Substring(0, k).TrimEnd();
+															string b = Value.Substring(k + 1).TrimStart();
 															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
@@ -498,8 +498,8 @@ namespace Train.OpenBve
 														int k = Value.IndexOf(',');
 														if (k >= 0)
 														{
-															string a = Value.Substring(0, k).TrimEnd(new char[] { });
-															string b = Value.Substring(k + 1).TrimStart(new char[] { });
+															string a = Value.Substring(0, k).TrimEnd();
+															string b = Value.Substring(k + 1).TrimStart();
 															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX)) {
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
@@ -640,8 +640,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -650,8 +650,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -679,7 +679,7 @@ namespace Train.OpenBve
 													break;
 												case "direction":
 													{
-														string[] s = Value.Split( new[] { ',' });
+														string[] s = Value.Split( ',');
 														if (s.Length == 2)
 														{
 															double x, y;
@@ -781,8 +781,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -791,8 +791,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -983,8 +983,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -993,8 +993,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -1150,15 +1150,15 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "location":
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -1240,8 +1240,8 @@ namespace Train.OpenBve
 										if (j >= 0)
 										{
 											int k;
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 
 											switch (Key.ToLowerInvariant())
 											{
@@ -1249,8 +1249,8 @@ namespace Train.OpenBve
 													k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out topLeft.X))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -1271,8 +1271,8 @@ namespace Train.OpenBve
 													k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out bottomRight.X))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);

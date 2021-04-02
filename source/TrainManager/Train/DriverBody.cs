@@ -74,7 +74,7 @@ namespace TrainManager.Trains
 					}
 
 					double diffY = Fast.Y - Slow.Y;
-					diffY = (double) Math.Sign(diffY) * diffY * diffY;
+					diffY = Math.Sign(diffY) * diffY * diffY;
 					Pitch = 0.5 * Math.Atan(0.1 * diffY);
 					if (Pitch > 0.1)
 					{
@@ -160,7 +160,7 @@ namespace TrainManager.Trains
 					}
 
 					double diffX = Slow.X - Fast.X;
-					diffX = (double) Math.Sign(diffX) * diffX * diffX;
+					diffX = Math.Sign(diffX) * diffX * diffX;
 					Roll = 0.5 * Math.Atan(0.3 * diffX);
 					RollDamping.Update(TimeElapsed, ref Roll, true);
 				}

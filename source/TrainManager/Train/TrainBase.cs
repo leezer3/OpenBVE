@@ -52,7 +52,7 @@ namespace TrainManager.Trains
 		/// <summary>Whether the train has currently derailed</summary>
 		public bool Derailed;
 		/// <summary>Stores the previous route speed limit</summary>
-		private double previousRouteLimit = 0.0;
+		private double previousRouteLimit;
 		/// <summary>Internal timer used for updates</summary>
 		private double InternalTimerTimeElapsed;
 		/// <inheritdoc/>

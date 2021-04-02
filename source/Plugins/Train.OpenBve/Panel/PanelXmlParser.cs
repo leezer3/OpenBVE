@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using LibRender2.Trains;
@@ -44,7 +42,7 @@ namespace Train.OpenBve
 			string FileName = PanelFile;
 			if (!File.Exists(FileName))
 			{
-				FileName = OpenBveApi.Path.CombineFile(Train.TrainFolder, PanelFile);
+				FileName = Path.CombineFile(Train.TrainFolder, PanelFile);
 			}
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
 
@@ -52,7 +50,7 @@ namespace Train.OpenBve
 			if (CurrentXML.Root == null)
 			{
 				// We couldn't find any valid XML, so return false
-				throw new System.IO.InvalidDataException();
+				throw new InvalidDataException(FileName + " does not appear to be a valid XML file.");
 			}
 
 			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("Panel");
@@ -61,7 +59,7 @@ namespace Train.OpenBve
 			if (DocumentElements == null || !DocumentElements.Any())
 			{
 				// We couldn't find any valid XML, so return false
-				throw new System.IO.InvalidDataException();
+				throw new InvalidDataException(FileName + " is not a valid PanelXML file.");
 			}
 
 			foreach (XElement element in DocumentElements)
@@ -73,7 +71,7 @@ namespace Train.OpenBve
 		private void ParsePanelNode(XElement Element, string FileName, TrainBase Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
 		{
 			//Train name, used for hacks detection
-			string trainName = new System.IO.DirectoryInfo(Train.TrainFolder).Name.ToUpperInvariant();
+			string trainName = new DirectoryInfo(Train.TrainFolder).Name.ToUpperInvariant();
 
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
@@ -157,13 +155,13 @@ namespace Train.OpenBve
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											PanelDaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											PanelDaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(PanelDaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -173,13 +171,13 @@ namespace Train.OpenBve
 										break;
 									case "nighttimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											PanelNighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											PanelNighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(PanelNighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -199,8 +197,8 @@ namespace Train.OpenBve
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
+												string a = Value.Substring(0, k).TrimEnd();
+												string b = Value.Substring(k + 1).TrimStart();
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -278,8 +276,8 @@ namespace Train.OpenBve
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
+												string a = Value.Substring(0, k).TrimEnd();
+												string b = Value.Substring(k + 1).TrimStart();
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -365,11 +363,11 @@ namespace Train.OpenBve
 
 			int currentSectionElement = 0;
 			int numberOfSectionElements = Element.Elements().Count();
-			double invfac = numberOfSectionElements == 0 ? 0.4 : 0.4 / (double)numberOfSectionElements;
+			double invfac = numberOfSectionElements == 0 ? 0.4 : 0.4 / numberOfSectionElements;
 
 			foreach (XElement SectionElement in Element.Elements())
 			{
-				Plugin.CurrentProgress = Plugin.LastProgress + invfac * (double)currentSectionElement;
+				Plugin.CurrentProgress = Plugin.LastProgress + invfac * currentSectionElement;
 				if ((currentSectionElement & 4) == 0)
 				{
 					System.Threading.Thread.Sleep(1);
@@ -442,8 +440,8 @@ namespace Train.OpenBve
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
+												string a = Value.Substring(0, k).TrimEnd();
+												string b = Value.Substring(k + 1).TrimStart();
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Location.X))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -464,8 +462,8 @@ namespace Train.OpenBve
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
+												string a = Value.Substring(0, k).TrimEnd();
+												string b = Value.Substring(k + 1).TrimStart();
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Size.X))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -595,8 +593,8 @@ namespace Train.OpenBve
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
+											string a = Value.Substring(0, k).TrimEnd();
+											string b = Value.Substring(k + 1).TrimStart();
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -613,13 +611,13 @@ namespace Train.OpenBve
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											DaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											DaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(DaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -629,13 +627,13 @@ namespace Train.OpenBve
 										break;
 									case "nighttimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											NighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											NighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(NighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -710,8 +708,8 @@ namespace Train.OpenBve
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
+												string a = Value.Substring(0, k).TrimEnd();
+												string b = Value.Substring(k + 1).TrimStart();
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -740,13 +738,13 @@ namespace Train.OpenBve
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											DaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											DaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(DaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -756,13 +754,13 @@ namespace Train.OpenBve
 										break;
 									case "nighttimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											NighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											NighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(NighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -787,8 +785,8 @@ namespace Train.OpenBve
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd(new char[] { });
-												string b = Value.Substring(k + 1).TrimStart(new char[] { });
+												string a = Value.Substring(0, k).TrimEnd();
+												string b = Value.Substring(k + 1).TrimStart();
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -887,18 +885,16 @@ namespace Train.OpenBve
 								{
 									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
 								}
-								double w = (double)tday.Width;
-								double h = (double)tday.Height;
 								if (!OriginDefined)
 								{
-									OriginX = 0.5 * w;
-									OriginY = 0.5 * h;
+									OriginX = 0.5 * tday.Width;
+									OriginY = 0.5 * tday.Height;
 								}
-								double ox = OriginX / w;
-								double oy = OriginY / h;
+								double ox = OriginX / tday.Width;
+								double oy = OriginY / tday.Height;
 								double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
-								double nx = n * w;
-								double ny = n * h;
+								double nx = n * tday.Width;
+								double ny = n * tday.Height;
 								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color);
 								CarSection.Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
 								CarSection.Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
@@ -963,8 +959,8 @@ namespace Train.OpenBve
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
+											string a = Value.Substring(0, k).TrimEnd();
+											string b = Value.Substring(k + 1).TrimStart();
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -999,7 +995,7 @@ namespace Train.OpenBve
 										break;
 									case "direction":
 										{
-											string[] s = Value.Split(new[] { ',' });
+											string[] s = Value.Split(',');
 											if (s.Length == 2)
 											{
 												double x, y;
@@ -1024,13 +1020,13 @@ namespace Train.OpenBve
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											DaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											DaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(DaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1040,13 +1036,13 @@ namespace Train.OpenBve
 										break;
 									case "nighttimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											NighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											NighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(NighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1124,8 +1120,8 @@ namespace Train.OpenBve
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
+											string a = Value.Substring(0, k).TrimEnd();
+											string b = Value.Substring(k + 1).TrimStart();
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1142,13 +1138,13 @@ namespace Train.OpenBve
 										break;
 									case "daytimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											DaytimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											DaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(DaytimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1158,13 +1154,13 @@ namespace Train.OpenBve
 										break;
 									case "nighttimeimage":
 										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (OpenBveApi.Path.ContainsInvalidChars(Value))
+										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										else
 										{
-											NighttimeImage = OpenBveApi.Path.CombineFile(Train.TrainFolder, Value);
+											NighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
 											if (!File.Exists(NighttimeImage))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1293,7 +1289,7 @@ namespace Train.OpenBve
 									int j = -1;
 									for (int k = 0; k < tday.Length; k++)
 									{
-										int l = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
+										int l = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, wday, Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
 										if (k == 0) j = l;
 									}
 									string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -1329,8 +1325,8 @@ namespace Train.OpenBve
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
+											string a = Value.Substring(0, k).TrimEnd();
+											string b = Value.Substring(k + 1).TrimStart();
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1450,17 +1446,17 @@ namespace Train.OpenBve
 								}
 								int[][] faces = new int[][]
 								{
-									new int[] { 0, 1, 2 },
-									new int[] { 0, 3, 4 },
-									new int[] { 0, 5, 6 },
-									new int[] { 0, 7, 8 },
-									new int[] { 0, 9, 10 }
+									new[] { 0, 1, 2 },
+									new[] { 0, 3, 4 },
+									new[] { 0, 5, 6 },
+									new[] { 0, 7, 8 },
+									new[] { 0, 9, 10 }
 								};
 								CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Color);
 								CarSection.Groups[GroupIndex].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
 								CarSection.Groups[GroupIndex].Elements[j].LEDInitialAngle = InitialAngle;
 								CarSection.Groups[GroupIndex].Elements[j].LEDLastAngle = LastAngle;
-								CarSection.Groups[GroupIndex].Elements[j].LEDVectors = new Vector3[]
+								CarSection.Groups[GroupIndex].Elements[j].LEDVectors = new[]
 								{
 									new Vector3(x0, y0, z0),
 									new Vector3(x1, y1, z1),
@@ -1511,8 +1507,8 @@ namespace Train.OpenBve
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd(new char[] { });
-											string b = Value.Substring(k + 1).TrimStart(new char[] { });
+											string a = Value.Substring(0, k).TrimEnd();
+											string b = Value.Substring(k + 1).TrimStart();
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1590,8 +1586,8 @@ namespace Train.OpenBve
 						double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
 						try
 						{
-							daytimeDropFiles = Directory.GetFiles(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day")).ToList();
-							nighttimeDropFiles = Directory.GetFiles(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night")).ToList();
+							daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day")).ToList();
+							nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night")).ToList();
 						}
 						catch
 						{
@@ -1611,8 +1607,8 @@ namespace Train.OpenBve
 									k = Value.IndexOf(',');
 									if (k >= 0)
 									{
-										string a = Value.Substring(0, k).TrimEnd(new char[] { });
-										string b = Value.Substring(k + 1).TrimStart(new char[] { });
+										string a = Value.Substring(0, k).TrimEnd();
+										string b = Value.Substring(k + 1).TrimStart();
 										if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out topLeft.X))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1632,8 +1628,8 @@ namespace Train.OpenBve
 									k = Value.IndexOf(',');
 									if (k >= 0)
 									{
-										string a = Value.Substring(0, k).TrimEnd(new char[] { });
-										string b = Value.Substring(k + 1).TrimStart(new char[] { });
+										string a = Value.Substring(0, k).TrimEnd();
+										string b = Value.Substring(k + 1).TrimStart();
 										if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out bottomRight.X))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1759,10 +1755,10 @@ namespace Train.OpenBve
 
 						for (int l = 0; l < daytimeDropFiles.Count; l++)
 						{
-							string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? OpenBveApi.Path.CombineFile(Train.TrainFolder, daytimeDropFiles[l]) : daytimeDropFiles[l];
+							string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, daytimeDropFiles[l]) : daytimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
-								currentDropFile = OpenBveApi.Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
+								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
 								TransparentColor = Color24.Blue;
 							}
 
@@ -1774,7 +1770,7 @@ namespace Train.OpenBve
 
 						for (int l = 0; l < nighttimeDropFiles.Count; l++)
 						{
-							string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? OpenBveApi.Path.CombineFile(Train.TrainFolder, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
+							string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
@@ -1795,7 +1791,7 @@ namespace Train.OpenBve
 						{
 							int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
 							double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
-							int panelDropIndex = Plugin.Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), (double) Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
+							int panelDropIndex = Plugin.Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
 							string f = drop + " raindrop";
 							try
 							{

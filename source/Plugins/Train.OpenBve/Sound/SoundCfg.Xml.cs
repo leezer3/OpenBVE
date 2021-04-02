@@ -362,7 +362,7 @@ namespace Train.OpenBve
 								case "motor":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, string.Format("An empty list of motor sounds was defined in in XML file {0}", fileName));
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of motor sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!car.Specs.IsMotorCar)
@@ -407,6 +407,7 @@ namespace Train.OpenBve
 
 									CarSound[] frontAxlePointSounds;
 									ParseArrayNode(c, out frontAxlePointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									// ReSharper disable once CoVariantArrayConversion
 									car.FrontAxle.PointSounds = frontAxlePointSounds;
 									break;
 								case "pointrearaxle":
@@ -418,6 +419,7 @@ namespace Train.OpenBve
 									}
 									CarSound[] rearAxlePointSounds;
 									ParseArrayNode(c, out rearAxlePointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									// ReSharper disable once CoVariantArrayConversion
 									car.RearAxle.PointSounds = rearAxlePointSounds;
 									break;
 								case "reverser":
@@ -646,7 +648,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "position":
-						string[] Arguments = c.InnerText.Split(new[] { ',' });
+						string[] Arguments = c.InnerText.Split(',');
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{
@@ -719,7 +721,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "position":
-						string[] Arguments = c.InnerText.Split(new[] { ',' });
+						string[] Arguments = c.InnerText.Split(',');
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{

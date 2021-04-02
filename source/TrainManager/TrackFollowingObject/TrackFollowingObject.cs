@@ -95,7 +95,7 @@ namespace TrainManager.Trains
 							}
 
 							//Calculate the cab brightness
-							double ccb = Math.Round(255.0 * (double) (1.0 - b));
+							double ccb = Math.Round(255.0 * (1.0 - b));
 							//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
 							dnb = (byte) Math.Min(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, ccb);
 						}
@@ -165,11 +165,8 @@ namespace TrainManager.Trains
 			{
 				Dispose();
 				State = TrainState.Pending;
-				TrackFollowingObjectAI AI = this.AI as TrackFollowingObjectAI;
-				if (AI != null)
-				{
-					AI.SetupTravelData(AppearanceTime);
-				}
+				TrackFollowingObjectAI myAI = this.AI as TrackFollowingObjectAI;
+				myAI?.SetupTravelData(AppearanceTime);
 				TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
 			}
 		}

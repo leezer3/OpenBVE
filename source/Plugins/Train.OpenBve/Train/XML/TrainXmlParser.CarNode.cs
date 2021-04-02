@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using LibRender2.Trains;
@@ -173,7 +172,7 @@ namespace Train.OpenBve
 						string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (System.IO.File.Exists(f))
 						{
-							Plugin.currentHost.LoadObject(f, System.Text.Encoding.Default, out CarObjects[Car]);
+							Plugin.currentHost.LoadObject(f, Encoding.Default, out CarObjects[Car]);
 						}
 						break;
 					case "reversed":
@@ -224,7 +223,7 @@ namespace Train.OpenBve
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											Plugin.currentHost.LoadObject(fb, System.Text.Encoding.Default, out BogieObjects[Car * 2]);
+											Plugin.currentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2]);
 										}
 										break;
 									case "reversed":
@@ -267,7 +266,7 @@ namespace Train.OpenBve
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											Plugin.currentHost.LoadObject(fb, System.Text.Encoding.Default, out BogieObjects[Car * 2 + 1]);
+											Plugin.currentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2 + 1]);
 										}
 										break;
 									case "reversed":
@@ -283,7 +282,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "driverposition":
-						string[] splitText = c.InnerText.Split(new[] { ',' });
+						string[] splitText = c.InnerText.Split(',');
 						if (splitText.Length != 3)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Driver position must have three arguments for Car " + Car + " in XML file " + fileName);
@@ -406,7 +405,7 @@ namespace Train.OpenBve
 					
 					UnifiedObject currentObject;
 					Plugin.currentHost.LoadObject(interiorFile, Encoding.UTF8, out currentObject);
-					var a = currentObject as AnimatedObjectCollection;
+					var a = (AnimatedObjectCollection)currentObject;
 					if (a != null)
 					{
 						try

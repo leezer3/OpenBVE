@@ -309,7 +309,6 @@ namespace Plugin
 								else
 								{
 									Result.Objects[o] = new AnimatedObject(Plugin.currentHost);
-									Result.Objects[o].States = new ObjectState[0];
 								}
 							}
 						}

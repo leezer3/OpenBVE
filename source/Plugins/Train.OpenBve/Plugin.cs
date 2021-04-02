@@ -96,9 +96,10 @@ namespace Train.OpenBve
 		    currentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
+		    // ReSharper disable once MergeCastWithTypeCheck
 		    if (rendererReference is BaseRenderer)
 		    {
-			    Renderer = rendererReference as BaseRenderer;
+			    Renderer = (BaseRenderer)rendererReference;
 		    }
 	    }
 
@@ -213,7 +214,7 @@ namespace Train.OpenBve
 			// add exterior section
 			if (currentTrain.State != TrainState.Bogus)
 			{
-				bool[] VisibleFromInterior = new bool[currentTrain.Cars.Length];
+				bool[] VisibleFromInterior;
 				UnifiedObject[] CarObjects = new UnifiedObject[currentTrain.Cars.Length];
 				UnifiedObject[] BogieObjects = new UnifiedObject[currentTrain.Cars.Length * 2];
 				UnifiedObject[] CouplerObjects = new UnifiedObject[currentTrain.Cars.Length];
@@ -221,11 +222,11 @@ namespace Train.OpenBve
 				string tXml = Path.CombineFile(currentTrain.TrainFolder, "train.xml");
 				if (File.Exists(tXml))
 				{
-					TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior);
+					TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
 				}
 				else
 				{
-					ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior, currentTrain);
+					ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, currentTrain);
 				}
 
 				currentTrain.CameraCar = currentTrain.DriverCar;
@@ -366,7 +367,7 @@ namespace Train.OpenBve
 
 				    UnifiedObject currentObject;
 				    currentHost.LoadObject(File, Encoding, out currentObject);
-				    var a = currentObject as AnimatedObjectCollection;
+				    var a = (AnimatedObjectCollection)currentObject;
 				    if (a != null)
 				    {
 					    //HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg

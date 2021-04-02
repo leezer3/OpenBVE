@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
@@ -177,7 +177,6 @@ namespace Plugin
 								}
 								Result.Objects[ObjectCount] = new AnimatedObject(currentHost)
 								{
-									States = new ObjectState[] {},
 									CurrentState = -1,
 									TranslateXDirection = Vector3.Right,
 									TranslateYDirection = Vector3.Down,

@@ -135,7 +135,7 @@ namespace TrainManager.BrakeSystems
 			else
 			{
 				//Otherwise [BVE2 / BVE4 train.dat format] work out target pressure as a proportion of the max notch:
-				targetPressure = (double) brakeHandle.Actual / (double) brakeHandle.MaximumNotch;
+				targetPressure = brakeHandle.Actual / (double) brakeHandle.MaximumNotch;
 				targetPressure *= brakeCylinder.ServiceMaximumPressure;
 			}
 
@@ -248,7 +248,7 @@ namespace TrainManager.BrakeSystems
 			}
 			else
 			{
-				p = (double) brakeHandle.Actual / (double) brakeHandle.MaximumNotch;
+				p = brakeHandle.Actual / (double)brakeHandle.MaximumNotch;
 				p *= brakeCylinder.ServiceMaximumPressure;
 			}
 

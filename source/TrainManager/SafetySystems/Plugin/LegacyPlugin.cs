@@ -186,8 +186,7 @@ namespace TrainManager.SafetySystems
 
 				int errorCode = Marshal.GetLastWin32Error();
 				string errorMessage = new Win32Exception(errorCode).Message;
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, true,
-					String.Format("Error loading Win32 plugin: {0} (0x{1})", errorMessage, errorCode.ToString("x")));
+				TrainManagerBase.currentHost.AddMessage(MessageType.Error, true,$"Error loading Win32 plugin: {errorMessage} (0x{errorCode:x})");
 				return false;
 			}
 

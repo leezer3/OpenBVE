@@ -20,7 +20,7 @@ namespace Train.OpenBve
 		/// <param name="Train">The train to which to apply the new sound configuration</param>
 		internal void ParseSoundConfig(TrainBase Train)
 		{
-			LoadDefaultATSSounds(Train, Train.TrainFolder);
+			LoadDefaultATSSounds(Train);
 			string FileName = OpenBveApi.Path.CombineFile(Train.TrainFolder, "sound.xml");
 			if (System.IO.File.Exists(FileName))
 			{

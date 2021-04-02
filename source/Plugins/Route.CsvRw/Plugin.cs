@@ -38,7 +38,7 @@ namespace CsvRwRouteParser
 		    CurrentOptions = Options;
 		    if (trainManagerReference is TrainManagerBase)
 		    {
-			    TrainManager = trainManagerReference as TrainManagerBase;
+			    TrainManager = (TrainManagerBase)trainManagerReference;
 		    }
 	    }
 

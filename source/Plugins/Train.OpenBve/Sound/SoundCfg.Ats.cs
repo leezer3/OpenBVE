@@ -1,5 +1,4 @@
-﻿using OpenBveApi;
-using OpenBveApi.Math;
+﻿using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.Trains;
 
@@ -9,12 +8,11 @@ namespace Train.OpenBve
 	{
 		/// <summary>Loads the default ATS plugin sound set</summary>
 		/// <param name="train">The train</param>
-		/// <param name="trainFolder">The absolute on-disk path to the train's folder</param>
-		private void LoadDefaultATSSounds(TrainBase train, string trainFolder)
+		private void LoadDefaultATSSounds(TrainBase train)
 		{
 			Vector3 position = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 			const double radius = 2.0;
-			train.Cars[train.DriverCar].Sounds.Plugin = new CarSound[] {
+			train.Cars[train.DriverCar].Sounds.Plugin = new[] {
 				new CarSound(Plugin.currentHost, train.TrainFolder,"ats.wav", radius, position),
 				new CarSound(Plugin.currentHost, train.TrainFolder, "atscnt.wav", radius, position),
 				new CarSound(Plugin.currentHost, train.TrainFolder, "ding.wav", radius, position),

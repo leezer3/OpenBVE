@@ -91,7 +91,7 @@ namespace TrainManager.Car
 				}
 
 				//Calculate the cab brightness
-				double ccb = Math.Round(255.0 * (double) (1.0 - b));
+				double ccb = Math.Round(255.0 * (1.0 - b));
 				//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
 				dnb = (byte) Math.Min(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, ccb);
 			}

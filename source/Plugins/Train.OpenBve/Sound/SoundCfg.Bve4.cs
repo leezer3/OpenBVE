@@ -58,11 +58,11 @@ namespace Train.OpenBve
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
+					Lines[i] = Lines[i].Substring(0, j).Trim();
 				}
 				else
 				{
-					Lines[i] = Lines[i].Trim(new char[] { });
+					Lines[i] = Lines[i].Trim();
 				}
 				if (string.IsNullOrEmpty(Lines[i]))
 				{
@@ -96,8 +96,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
 								{
@@ -139,8 +139,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
 								{
@@ -177,8 +177,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
 								{
@@ -214,8 +214,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								int switchIndex;
 								if (NumberFormats.TryParseIntVb6(a, out switchIndex))
 								{
@@ -257,8 +257,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "bc release high":
@@ -310,8 +310,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								for (int c = 0; c < train.Cars.Length; c++)
 								{
 									if (train.Cars[c].CarBrake.brakeType == BrakeType.Main)
@@ -344,8 +344,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "left":
@@ -377,8 +377,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									//PRIMARY HORN (Enter)
@@ -458,8 +458,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "open left":
@@ -503,8 +503,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
 								{
@@ -543,8 +543,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "correct":
@@ -565,8 +565,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "on":
@@ -589,8 +589,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "apply":
@@ -625,8 +625,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "up":
@@ -661,8 +661,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "on":
@@ -685,8 +685,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "on":
@@ -710,8 +710,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "noise":
@@ -752,8 +752,8 @@ namespace Train.OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								switch (a.ToLowerInvariant())
 								{
 									case "raindrop":

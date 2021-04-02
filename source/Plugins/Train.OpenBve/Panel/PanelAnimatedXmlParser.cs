@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using LibRender2.Trains;
@@ -46,7 +44,7 @@ namespace Train.OpenBve
 			if (CurrentXML.Root == null)
 			{
 				// We couldn't find any valid XML, so return false
-				throw new System.IO.InvalidDataException();
+				throw new InvalidDataException(FileName + " does not appear to be a valid XML file.");
 			}
 
 			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
@@ -55,26 +53,26 @@ namespace Train.OpenBve
 			if (DocumentElements == null || !DocumentElements.Any())
 			{
 				// We couldn't find any valid XML, so return false
-				throw new System.IO.InvalidDataException();
+				throw new InvalidDataException(FileName + " is not a valid PanelAnimatedXML file.");
 			}
 
 			foreach (XElement element in DocumentElements)
 			{
-				ParsePanelAnimatedNode(element, FileName, Train.TrainFolder, Train, Car, Train.Cars[Car].CarSections[0], 0);
+				ParsePanelAnimatedNode(element, FileName, Train.TrainFolder, Train.Cars[Car].CarSections[0], 0);
 			}
 		}
 
-		private void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, TrainBase Train, int Car, CarSection CarSection, int GroupIndex)
+		private void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, CarSection CarSection, int GroupIndex)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 			int currentSectionElement = 0;
 			int numberOfSectionElements = Element.Elements().Count();
-			double invfac = numberOfSectionElements == 0 ? 0.4 : 0.4 / (double)numberOfSectionElements;
+			double invfac = numberOfSectionElements == 0 ? 0.4 : 0.4 / numberOfSectionElements;
 
 			foreach (XElement SectionElement in Element.Elements())
 			{
-				Plugin.CurrentProgress = Plugin.LastProgress + invfac * (double) currentSectionElement;
+				Plugin.CurrentProgress = Plugin.LastProgress + invfac * currentSectionElement;
 				if ((currentSectionElement & 4) == 0)
 				{
 					System.Threading.Thread.Sleep(1);
@@ -113,7 +111,7 @@ namespace Train.OpenBve
 								CarSection.Groups[n + 1] = new ElementsGroup(ObjectType.Overlay);
 							}
 
-							ParsePanelAnimatedNode(SectionElement, FileName, TrainPath, Train, Car, CarSection, n + 1);
+							ParsePanelAnimatedNode(SectionElement, FileName, TrainPath, CarSection, n + 1);
 						}
 						break;
 					case "touch":
@@ -241,13 +239,13 @@ namespace Train.OpenBve
 								{
 									case "filename":
 										{
-											string File = OpenBveApi.Path.CombineFile(TrainPath, Value);
+											string File = Path.CombineFile(TrainPath, Value);
 											if (System.IO.File.Exists(File))
 											{
 												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(File);
 												UnifiedObject currentObject;
 												Plugin.currentHost.LoadObject(File, e, out currentObject);
-												var a = currentObject as AnimatedObjectCollection;
+												var a = (AnimatedObjectCollection)currentObject;
 												if (a != null)
 												{
 													for (int i = 0; i < a.Objects.Length; i++)
@@ -395,7 +393,7 @@ namespace Train.OpenBve
             Vertex t7 = new Vertex(-Size.X, Size.Y, Size.Z);
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3, t4, t5, t6, t7 };
-            Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }), new MeshFace(new int[] { 0, 4, 5, 1 }), new MeshFace(new int[] { 0, 3, 7, 4 }), new MeshFace(new int[] { 6, 5, 4, 7 }), new MeshFace(new int[] { 6, 7, 3, 2 }), new MeshFace(new int[] { 6, 2, 1, 5 }) };
+            Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 3 }), new MeshFace(new[] { 0, 4, 5, 1 }), new MeshFace(new[] { 0, 3, 7, 4 }), new MeshFace(new[] { 6, 5, 4, 7 }), new MeshFace(new[] { 6, 7, 3, 2 }), new MeshFace(new[] { 6, 2, 1, 5 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
 			Object.Mesh.Materials[0].Flags = 0;
 			Object.Mesh.Materials[0].Color = Color32.White;

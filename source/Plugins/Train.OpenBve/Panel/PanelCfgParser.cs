@@ -41,11 +41,11 @@ namespace Train.OpenBve
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			for (int i = 0; i < Lines.Length; i++)
 			{
-				Lines[i] = Lines[i].Trim(new char[] { });
+				Lines[i] = Lines[i].Trim();
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
 				}
 			}
 			// initialize
@@ -79,7 +79,7 @@ namespace Train.OpenBve
 				{
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 					{
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
 						switch (Section.ToLowerInvariant())
 						{
 							// panel
@@ -90,8 +90,8 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key.ToLowerInvariant())
 										{
 											case "background":
@@ -126,8 +126,8 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key.ToLowerInvariant())
 										{
 											case "yaw":
@@ -198,7 +198,7 @@ namespace Train.OpenBve
 				{
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 					{
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
 						switch (Section.ToLowerInvariant())
 						{
 							// pressuregauge
@@ -220,8 +220,8 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
 										switch (Key.ToLowerInvariant())
 										{
@@ -603,8 +603,8 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
 										switch (Key.ToLowerInvariant())
 										{
@@ -947,8 +947,8 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
 										switch (Key.ToLowerInvariant())
 										{
@@ -1160,8 +1160,8 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
 										switch (Key.ToLowerInvariant())
 										{
@@ -1246,8 +1246,8 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
 										switch (Key.ToLowerInvariant())
 										{
@@ -1399,8 +1399,8 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
 										switch (Key.ToLowerInvariant())
 										{
@@ -1533,14 +1533,14 @@ namespace Train.OpenBve
 				if (Expression[i] == ',' | Expression[i] == ':')
 				{
 					if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
-					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart(new char[] { });
+					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart();
 					UsedArguments++;
 					Start = i + 1;
 				}
 				else if (Expression[i] == ';')
 				{
 					if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
-					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart(new char[] { });
+					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart();
 					UsedArguments++;
 					Start = Expression.Length;
 					break;
@@ -1550,7 +1550,7 @@ namespace Train.OpenBve
 			if (Start < Expression.Length)
 			{
 				if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
-				Arguments[UsedArguments] = Expression.Substring(Start).Trim(new char[] { });
+				Arguments[UsedArguments] = Expression.Substring(Start).Trim();
 				UsedArguments++;
 			}
 
