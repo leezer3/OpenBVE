@@ -402,9 +402,7 @@ namespace Train.OpenBve
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
-					
-					UnifiedObject currentObject;
-					Plugin.currentHost.LoadObject(interiorFile, Encoding.UTF8, out currentObject);
+					Plugin.currentHost.LoadObject(interiorFile, Encoding.UTF8, out var currentObject);
 					var a = (AnimatedObjectCollection)currentObject;
 					if (a != null)
 					{

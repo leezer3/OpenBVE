@@ -838,8 +838,7 @@ namespace Train.OpenBve
 					}
 					if (idx >= 0)
 					{
-						CarSound sound;
-						ParseNode(c, out sound, Position, Radius);
+						ParseNode(c, out var sound, Position, Radius);
 						if (Sounds.ContainsKey(idx))
 						{
 							Sounds[idx] = sound;

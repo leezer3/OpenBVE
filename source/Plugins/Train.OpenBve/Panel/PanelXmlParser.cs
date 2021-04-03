@@ -342,8 +342,7 @@ namespace Train.OpenBve
 					}
 					else
 					{
-						Texture tday;
-						Plugin.currentHost.LoadTexture(PanelDaytimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tday);
+						Plugin.currentHost.LoadTexture(PanelDaytimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out var tday);
 						Texture tnight = null;
 						if (PanelNighttimeImage != null)
 						{
@@ -488,16 +487,12 @@ namespace Train.OpenBve
 									case "soundindex":
 										if (Value.Length != 0)
 										{
-											int SoundIndex;
-
-											if (!NumberFormats.TryParseIntVb6(Value, out SoundIndex))
+											if (!NumberFormats.TryParseIntVb6(Value, out var SoundIndex))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												break;
 											}
-											else
-											{
-												SoundIndices.Add(SoundIndex);
-											}
+											SoundIndices.Add(SoundIndex);
 										}
 										break;
 									case "command":
@@ -523,11 +518,9 @@ namespace Train.OpenBve
 											if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												break;
 											}
-											else
-											{
-												CommandEntry.Command = Translations.CommandInfos[i].Command;
-											}
+											CommandEntry.Command = Translations.CommandInfos[i].Command;
 										}
 										break;
 									case "commandoption":
@@ -662,8 +655,7 @@ namespace Train.OpenBve
 							// create element
 							if (DaytimeImage != null)
 							{
-								Texture tday;
-								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
@@ -878,8 +870,7 @@ namespace Train.OpenBve
 							// create element
 							if (DaytimeImage != null)
 							{
-								Texture tday;
-								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
@@ -998,18 +989,15 @@ namespace Train.OpenBve
 											string[] s = Value.Split(',');
 											if (s.Length == 2)
 											{
-												double x, y;
-												if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+												if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out Direction.X))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
+													break;
 												}
-												else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+												if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out Direction.Y))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in  LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
-												}
-												else
-												{
-													Direction = new Vector2(x, y);
+													break;
 												}
 											}
 											else
@@ -1072,8 +1060,7 @@ namespace Train.OpenBve
 							// create element
 							if (DaytimeImage != null)
 							{
-								Texture tday;
-								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
@@ -1204,8 +1191,7 @@ namespace Train.OpenBve
 							// create element
 							if (DaytimeImage != null & Interval > 0)
 							{
-								int wday, hday;
-								Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out wday, out hday);
+								Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out var wday, out var hday);
 								if (wday > 0 & hday > 0)
 								{
 									int numFrames = hday / Interval;
@@ -1258,8 +1244,7 @@ namespace Train.OpenBve
 									}
 									if (NighttimeImage != null)
 									{
-										int wnight, hnight;
-										Plugin.currentHost.QueryTextureDimensions(NighttimeImage, out wnight, out hnight);
+										Plugin.currentHost.QueryTextureDimensions(NighttimeImage, out var wnight, out var hnight);
 										tnight = new Texture[numFrames];
 										for (int k = 0; k < numFrames; k++)
 										{
@@ -1422,8 +1407,8 @@ namespace Train.OpenBve
 							{
 								// create element
 								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color);
-								InitialAngle = InitialAngle + Math.PI;
-								LastAngle = LastAngle + Math.PI;
+								InitialAngle += Math.PI;
+								LastAngle += Math.PI;
 								double x0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
 								double y0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
 								double z0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
@@ -1762,8 +1747,7 @@ namespace Train.OpenBve
 								TransparentColor = Color24.Blue;
 							}
 
-							Texture drop;
-							Plugin.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
+							Plugin.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop);
 							daytimeDrops.Add(drop);
 
 						}
@@ -1777,8 +1761,7 @@ namespace Train.OpenBve
 								TransparentColor = Color24.Blue;
 							}
 
-							Texture drop;
-							Plugin.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop);
+							Plugin.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop);
 							nighttimeDrops.Add(drop);
 						}
 
@@ -1837,9 +1820,7 @@ namespace Train.OpenBve
 							case "index":
 								if (value.Any())
 								{
-									int index;
-
-									if (!NumberFormats.TryParseIntVb6(value, out index))
+									if (!NumberFormats.TryParseIntVb6(value, out var index))
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -1904,9 +1885,7 @@ namespace Train.OpenBve
 							case "option":
 								if (value.Any())
 								{
-									int option;
-
-									if (!NumberFormats.TryParseIntVb6(value, out option))
+									if (!NumberFormats.TryParseIntVb6(value, out var option))
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}

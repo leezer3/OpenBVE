@@ -245,8 +245,7 @@ namespace Train.OpenBve
 					{
 						// load default exterior object
 						string file = Path.CombineFile(FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-						StaticObject so;
-						currentHost.LoadStaticObject(file, Encoding.UTF8, false, out so);
+						currentHost.LoadStaticObject(file, Encoding.UTF8, false, out var so);
 						if (so == null)
 						{
 							CarObjects[i] = null;
@@ -365,8 +364,7 @@ namespace Train.OpenBve
 					    FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
 				    }
 
-				    UnifiedObject currentObject;
-				    currentHost.LoadObject(File, Encoding, out currentObject);
+				    currentHost.LoadObject(File, Encoding, out var currentObject);
 				    var a = (AnimatedObjectCollection)currentObject;
 				    if (a != null)
 				    {

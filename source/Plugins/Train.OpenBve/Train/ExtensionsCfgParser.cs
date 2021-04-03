@@ -51,8 +51,7 @@ namespace Train.OpenBve
 										{
 											string a = Lines[i].Substring(0, j).TrimEnd();
 											string b = Lines[i].Substring(j + 1).TrimStart();
-											int n;
-											if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out n)) {
+											if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var n)) {
 												if (n >= 0 & n < Train.Cars.Length) {
 													if (Path.ContainsInvalidChars(b)) {
 														Plugin.currentHost.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -82,7 +81,7 @@ namespace Train.OpenBve
 								if (Lines[i].StartsWith("[car", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 									// car
 									string t = Lines[i].Substring(4, Lines[i].Length - 5);
-									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n)) {
+									if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out var n)) {
 										if (n >= 0 & n < Train.Cars.Length)
 										{
 											if (CarsDefined[n])
@@ -120,8 +119,7 @@ namespace Train.OpenBve
 																break;
 															case "length":
 																{
-																	double m;
-																	if (double.TryParse(b, System.Globalization.NumberStyles.Float, Culture, out m)) {
+																	if (double.TryParse(b, System.Globalization.NumberStyles.Float, Culture, out var m)) {
 																		if (m > 0.0) {
 																			Train.Cars[n].Length = m;
 																			Train.Cars[n].BeaconReceiverPosition = 0.5 * m;
@@ -141,10 +139,9 @@ namespace Train.OpenBve
 																	{
 																		string c = b.Substring(0, k).TrimEnd();
 																		string d = b.Substring(k + 1).TrimStart();
-																		double rear, front;
-																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear)) {
+																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out var rear)) {
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front)) {
+																		} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out var front)) {
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else if (rear >= front) {
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -192,7 +189,7 @@ namespace Train.OpenBve
 								} else if (Lines[i].StartsWith("[coupler", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 									// coupler
 									string t = Lines[i].Substring(8, Lines[i].Length - 9);
-									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n)) {
+									if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out var n)) {
 										if (n >= 0 & n < Train.Cars.Length -1) {
 											i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 												if (Lines[i].Length != 0) {
@@ -209,10 +206,9 @@ namespace Train.OpenBve
 																	{
 																		string c = b.Substring(0, k).TrimEnd();
 																		string d = b.Substring(k + 1).TrimStart();
-																		double min, max;
-																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min)) {
+																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out var min)) {
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out max)) {
+																		} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out var max)) {
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else if (min > max) {
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -261,7 +257,7 @@ namespace Train.OpenBve
 								{
 									// car
 									string t = Lines[i].Substring(6, Lines[i].Length - 7);
-									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
+									if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out var n))
 									{
 										if (n > BogiesDefined.Length -1)
 										{
@@ -325,12 +321,11 @@ namespace Train.OpenBve
 																	{
 																		string c = b.Substring(0, k).TrimEnd();
 																		string d = b.Substring(k + 1).TrimStart();
-																		double rear, front;
-																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear))
+																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out var rear))
 																		{
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		}
-																		else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front))
+																		else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out var front))
 																		{
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		}

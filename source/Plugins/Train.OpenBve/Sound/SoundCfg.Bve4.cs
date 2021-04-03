@@ -98,8 +98,7 @@ namespace Train.OpenBve
 							{
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								int k;
-								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
+								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var k))
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
@@ -141,8 +140,7 @@ namespace Train.OpenBve
 							{
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								int k;
-								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
+								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var k))
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
@@ -179,8 +177,7 @@ namespace Train.OpenBve
 							{
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								int k;
-								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
+								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var k))
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
@@ -216,8 +213,7 @@ namespace Train.OpenBve
 							{
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								int switchIndex;
-								if (NumberFormats.TryParseIntVb6(a, out switchIndex))
+								if (NumberFormats.TryParseIntVb6(a, out var switchIndex))
 								{
 									if (switchIndex < 0)
 									{
@@ -505,8 +501,7 @@ namespace Train.OpenBve
 							{
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								int k;
-								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
+								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var k))
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}

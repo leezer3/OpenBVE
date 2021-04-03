@@ -153,13 +153,11 @@ namespace Train.OpenBve
 									case "soundindex":
 										if (Value.Length != 0)
 										{
-											int SoundIndex;
-
-											if (!NumberFormats.TryParseIntVb6(Value, out SoundIndex))
+											if (!NumberFormats.TryParseIntVb6(Value, out var SoundIndex))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												break;
 											}
-
 											SoundIndices.Add(SoundIndex);
 										}
 										break;
@@ -243,8 +241,7 @@ namespace Train.OpenBve
 											if (System.IO.File.Exists(File))
 											{
 												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(File);
-												UnifiedObject currentObject;
-												Plugin.currentHost.LoadObject(File, e, out currentObject);
+												Plugin.currentHost.LoadObject(File, e, out var currentObject);
 												var a = (AnimatedObjectCollection)currentObject;
 												if (a != null)
 												{
@@ -294,11 +291,10 @@ namespace Train.OpenBve
 							case "index":
 								if (value.Any())
 								{
-									int index;
-
-									if (!NumberFormats.TryParseIntVb6(value, out index))
+									if (!NumberFormats.TryParseIntVb6(value, out var index))
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+										break;
 									}
 
 									indices.Add(index);
@@ -361,16 +357,12 @@ namespace Train.OpenBve
 							case "option":
 								if (value.Any())
 								{
-									int option;
-
-									if (!NumberFormats.TryParseIntVb6(value, out option))
+									if (!NumberFormats.TryParseIntVb6(value, out var option))
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+										break;
 									}
-									else
-									{
-										entry.Option = option;
-									}
+									entry.Option = option;
 								}
 								break;
 						}
