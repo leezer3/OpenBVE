@@ -378,15 +378,15 @@ namespace Plugin
             op.B = (byte)(b << 3 | b >> 2);
         }
 
-        private unsafe void DxtcReadColors(byte* data, ref Colour565 color_0, ref Colour565 color_1)
+        private unsafe void DxtcReadColors(byte* data, ref Color32 color_0, ref Color32 color_1)
         {
-            color_0.blue = (byte)(data[0] & 0x1F);
-            color_0.green = (byte)(((data[0] & 0xE0) >> 5) | ((data[1] & 0x7) << 3));
-            color_0.red = (byte)((data[1] & 0xF8) >> 3);
+            color_0.B = (byte)(data[0] & 0x1F);
+            color_0.G = (byte)(((data[0] & 0xE0) >> 5) | ((data[1] & 0x7) << 3));
+            color_0.R = (byte)((data[1] & 0xF8) >> 3);
 
-            color_1.blue = (byte)(data[2] & 0x1F);
-            color_1.green = (byte)(((data[2] & 0xE0) >> 5) | ((data[3] & 0x7) << 3));
-            color_1.red = (byte)((data[3] & 0xF8) >> 3);
+            color_1.B = (byte)(data[2] & 0x1F);
+            color_1.G = (byte)(((data[2] & 0xE0) >> 5) | ((data[3] & 0x7) << 3));
+            color_1.R = (byte)((data[3] & 0xF8) >> 3);
         }
 
         private void GetBitsFromMask(uint mask, out uint shiftLeft, out uint shiftRight)
@@ -1178,9 +1178,9 @@ namespace Plugin
 
             byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
 
-            Colour565 color_0 = new Colour565();
-            Colour565 color_1 = new Colour565();
-	        Color32[]	colours = new Color32[4];
+            Color32 color_0 = new Color32();
+            Color32 color_1 = new Color32();
+	        Color32[] colours = new Color32[4];
 	        byte[] alphas = new byte[8];
 
             fixed (byte* bytePtr = data)
@@ -1205,14 +1205,14 @@ namespace Plugin
                             uint bitmask = ((uint*)temp)[1];
                             temp += 4;
 
-                            colours[0].R = (byte)(color_0.red << 3);
-                            colours[0].G = (byte)(color_0.green << 2);
-                            colours[0].B = (byte)(color_0.blue << 3);
+                            colours[0].R = (byte)(color_0.R << 3);
+                            colours[0].G = (byte)(color_0.G << 2);
+                            colours[0].B = (byte)(color_0.B << 3);
                             colours[0].A = 0xFF;
 
-                            colours[1].R = (byte)(color_1.red << 3);
-                            colours[1].G = (byte)(color_1.green << 2);
-                            colours[1].B = (byte)(color_1.blue << 3);
+                            colours[1].R = (byte)(color_1.R << 3);
+                            colours[1].G = (byte)(color_1.G << 2);
+                            colours[1].B = (byte)(color_1.B << 3);
                             colours[1].A = 0xFF;
 
                             // Four-color block: derive the other two colors.    
@@ -1569,16 +1569,7 @@ namespace Plugin
             }
             return rawData;
         }
-
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        private struct Colour565
-        {
-            public ushort blue; //: 5;
-            public ushort green; //: 6;
-            public ushort red; //: 5;
-        }
-
+		
         private struct DdsHeader
         {
             public uint flags;
