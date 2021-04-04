@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 1999, 2000 NVIDIA Corporation
  * This file is provided without support, instruction, or implied warranty of any
  * kind.  NVIDIA makes no guarantee of its fitness for a particular purpose and is
@@ -384,9 +384,9 @@ namespace Plugin
             color_0.green = (byte)(((data[0] & 0xE0) >> 5) | ((data[1] & 0x7) << 3));
             color_0.red = (byte)((data[1] & 0xF8) >> 3);
 
-            color_0.blue = (byte)(data[2] & 0x1F);
-            color_0.green = (byte)(((data[2] & 0xE0) >> 5) | ((data[3] & 0x7) << 3));
-            color_0.red = (byte)((data[3] & 0xF8) >> 3);
+            color_1.blue = (byte)(data[2] & 0x1F);
+            color_1.green = (byte)(((data[2] & 0xE0) >> 5) | ((data[3] & 0x7) << 3));
+            color_1.red = (byte)((data[3] & 0xF8) >> 3);
         }
 
         private void GetBitsFromMask(uint mask, out uint shiftLeft, out uint shiftRight)
@@ -590,13 +590,10 @@ namespace Plugin
 
         private unsafe byte[] DecompressDXT1(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
-            int bpp = PixelFormatToBpp(pixelFormat, (int)header.pixelFormat.rgbbitcount);
-            int bps = (int)(header.width * bpp * PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
 
             Color32[] colours = new Color32[4];
             colours[0].A = 0xFF;
