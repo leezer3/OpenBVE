@@ -478,8 +478,7 @@ namespace TrainManager.Trains
 			}
 
 			// update brake system
-			double[] DecelerationDueToBrake, DecelerationDueToMotor;
-			UpdateBrakeSystem(TimeElapsed, out DecelerationDueToBrake, out DecelerationDueToMotor);
+			UpdateBrakeSystem(TimeElapsed, out var DecelerationDueToBrake, out var DecelerationDueToMotor);
 			// calculate new car speeds
 			double[] NewSpeeds = new double[Cars.Length];
 			for (int i = 0; i < Cars.Length; i++)

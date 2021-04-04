@@ -209,7 +209,7 @@ namespace CsvRwRouteParser
 									}
 									break;
 								case "trains":
-									Trains = c.InnerText.Split(new[] { ';' });
+									Trains = c.InnerText.Split(';');
 									break;
 							}
 

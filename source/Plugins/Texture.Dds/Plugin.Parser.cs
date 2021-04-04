@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 1999, 2000 NVIDIA Corporation
  * This file is provided without support, instruction, or implied warranty of any
  * kind.  NVIDIA makes no guarantee of its fitness for a particular purpose and is
@@ -79,7 +79,7 @@ namespace Plugin
                 {
                     for (int y = 0; y < header.height; y++)
                     {
-                        mem.Write(reader.ReadBytes((int)bps), 0, bps);
+                        mem.Write(reader.ReadBytes(bps), 0, bps);
                     }
                 }
                 mem.Seek(0, SeekOrigin.Begin);
@@ -375,7 +375,7 @@ namespace Plugin
 
             op.R = (byte)(r << 3 | r >> 2);
             op.G = (byte)(g << 2 | g >> 3);
-            op.B = (byte)(b << 3 | r >> 2);
+            op.B = (byte)(b << 3 | b >> 2);
         }
 
         private unsafe void DxtcReadColors(byte* data, ref Colour565 color_0, ref Colour565 color_1)
@@ -603,11 +603,11 @@ namespace Plugin
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
-                for (int z = 0; z < depth; z++)
+                for (int z = 0; z < header.depth; z++)
                 {
-                    for (int y = 0; y < height; y += 4)
+                    for (int y = 0; y < header.height; y += 4)
                     {
-                        for (int x = 0; x < width; x += 4)
+                        for (int x = 0; x < header.width; x += 4)
                         {
                             ushort colour0 = *((ushort*)temp);
                             ushort colour1 = *((ushort*)(temp + 2));
@@ -648,13 +648,13 @@ namespace Plugin
                                 {
                                     int select = (int)((bitmask & (0x03 << k * 2)) >> k * 2);
                                     Color32 col = colours[select];
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp);
-                                        rawData[offset + 0] = (byte)col.R;
-                                        rawData[offset + 1] = (byte)col.G;
-                                        rawData[offset + 2] = (byte)col.B;
-                                        rawData[offset + 3] = (byte)col.A;
+                                        rawData[offset + 0] = col.R;
+                                        rawData[offset + 1] = col.G;
+                                        rawData[offset + 2] = col.B;
+                                        rawData[offset + 3] = col.A;
                                     }
                                 }
                             }
@@ -668,32 +668,26 @@ namespace Plugin
 
         private byte[] DecompressDXT2(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
-            byte[] rawData = DecompressDXT3(header, data, pixelFormat);
-            CorrectPremult((uint)(width * height * depth), ref rawData);
+	        byte[] rawData = DecompressDXT3(header, data, pixelFormat);
+            CorrectPremult((uint)(header.width * header.height * header.depth), ref rawData);
 			return rawData;
         }
 
         private unsafe byte[] DecompressDXT3(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
-            int bpp = (int)(PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
             Color32[] colours = new Color32[4];
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
-                for (int z = 0; z < depth; z++)
+                for (int z = 0; z < header.depth; z++)
                 {
-                    for (int y = 0; y < height; y += 4)
+                    for (int y = 0; y < header.height; y += 4)
                     {
-                        for (int x = 0; x < width; x += 4)
+                        for (int x = 0; x < header.width; x += 4)
                         {
                             byte* alpha = temp;
                             temp += 8;
@@ -719,12 +713,12 @@ namespace Plugin
                                 {
                                     int select = (int)((bitmask & (0x03 << k * 2)) >> k * 2);
 
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp);
-                                        rawData[offset + 0] = (byte)colours[select].R;
-                                        rawData[offset + 1] = (byte)colours[select].G;
-                                        rawData[offset + 2] = (byte)colours[select].B;
+                                        rawData[offset + 0] = colours[select].R;
+                                        rawData[offset + 1] = colours[select].G;
+                                        rawData[offset + 2] = colours[select].B;
                                     }
                                 }
                             }
@@ -734,7 +728,7 @@ namespace Plugin
                                 ushort word = (ushort)(alpha[2 * j] | (alpha[2 * j + 1] << 8)); 
                                 for (int i = 0; i < 4; i++)
                                 {
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = (byte)(word & 0x0F);
@@ -752,11 +746,8 @@ namespace Plugin
 
         private byte[] DecompressDXT4(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
-            byte[] rawData = DecompressDXT5(header, data, pixelFormat);
-            CorrectPremult((uint)(width * height * depth), ref rawData);
+	        byte[] rawData = DecompressDXT5(header, data, pixelFormat);
+            CorrectPremult((uint)(header.width * header.height * header.depth), ref rawData);
 
             return rawData;
         }
@@ -764,27 +755,24 @@ namespace Plugin
         private unsafe byte[] DecompressDXT5(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
 
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
             Color32[] colours = new Color32[4];
             ushort[] alphas = new ushort[8];
 
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
-                for (int z = 0; z < depth; z++)
+                for (int z = 0; z < header.depth; z++)
                 {
-                    for (int y = 0; y < height; y += 4)
+                    for (int y = 0; y < header.height; y += 4)
                     {
-                        for (int x = 0; x < width; x += 4)
+                        for (int x = 0; x < header.width; x += 4)
                         {
-                            if (y >= height || x >= width)
+                            if (y >= header.height || x >= header.width)
                                 break;
 
                             alphas[0] = temp[0];
@@ -809,12 +797,12 @@ namespace Plugin
                                     int select = (int)((bitmask & (0x03 << k * 2)) >> k * 2);
                                     Color32 col = colours[select];
                                     // only put pixels out < width or height
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp);
-                                        rawData[offset] = (byte)col.R;
-                                        rawData[offset + 1] = (byte)col.G;
-                                        rawData[offset + 2] = (byte)col.B;
+                                        rawData[offset] = col.R;
+                                        rawData[offset + 1] = col.G;
+                                        rawData[offset + 2] = col.B;
                                     }
                                 }
                             }
@@ -854,7 +842,7 @@ namespace Plugin
                                 for (int i = 0; i < 4; i++)
                                 {
                                     // only put pixels out < width or height
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = (byte)alphas[bits & 0x07];
@@ -871,7 +859,7 @@ namespace Plugin
                                 for (int i = 0; i < 4; i++)
                                 {
                                     // only put pixels out < width or height
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = (byte)alphas[bits & 0x07];
@@ -890,20 +878,17 @@ namespace Plugin
         private unsafe byte[] DecompressRGB(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(this.PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * this.PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
 
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
 	        uint valMask;
 	        unchecked
 	        {
-		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
+		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << header.pixelFormat.rgbbitcount) - 1);
 	        }
-            uint pixSize = (uint)(((int)header.pixelFormat.rgbbitcount + 7) / 8);
+            uint pixSize = (uint)((header.pixelFormat.rgbbitcount + 7) / 8);
             int rShift1; int rMul; int rShift2;
             ComputeMaskParams(header.pixelFormat.rbitmask, out rShift1, out rMul, out rShift2);
             int gShift1; int gMul; int gShift2;
@@ -912,7 +897,7 @@ namespace Plugin
             ComputeMaskParams(header.pixelFormat.bbitmask, out bShift1, out bMul, out bShift2);
 
             int offset = 0;
-            int pixnum = width * height * depth;
+            int pixnum = header.width * header.height * header.depth;
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
@@ -936,18 +921,15 @@ namespace Plugin
         private unsafe byte[] DecompressRGBA(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(this.PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * this.PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
-
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
+            
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
 	        uint valMask;
 	        unchecked
 	        {
-		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
+		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << header.pixelFormat.rgbbitcount) - 1);
 	        }
             int pixSize = (header.pixelFormat.rgbbitcount + 7) / 8;
             int rShift1; int rMul; int rShift2;
@@ -960,7 +942,7 @@ namespace Plugin
             ComputeMaskParams(header.pixelFormat.alphabitmask, out aShift1, out aMul, out aShift2);
 
             int offset = 0;
-            int pixnum = width * height * depth;
+            int pixnum = header.width * header.height * header.depth;
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
@@ -986,14 +968,11 @@ namespace Plugin
         private unsafe byte[] Decompress3Dc(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(this.PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * this.PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
-
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
+            
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
             byte[] yColours = new byte[8];
             byte[] xColours = new byte[8];
 
@@ -1001,11 +980,11 @@ namespace Plugin
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
-                for (int z = 0; z < depth; z++)
+                for (int z = 0; z < header.depth; z++)
                 {
-                    for (int y = 0; y < height; y += 4)
+                    for (int y = 0; y < header.height; y += 4)
                     {
-                        for (int x = 0; x < width; x += 4)
+                        for (int x = 0; x < header.width; x += 4)
                         {
                             byte* temp2 = temp + 8;
 
@@ -1049,12 +1028,12 @@ namespace Plugin
                                 for (int j = 0; j < 2; j++)
                                 {
                                     // only put pixels out < height
-                                    if ((y + k + j) < height)
+                                    if ((y + k + j) < header.height)
                                     {
                                         for (int i = 0; i < 4; i++)
                                         {
                                             // only put pixels out < width
-                                            if (((x + i) < width))
+                                            if (((x + i) < header.width))
                                             {
                                                 int t;
                                                 byte tx, ty;
@@ -1094,25 +1073,22 @@ namespace Plugin
         private unsafe byte[] DecompressAti1n(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(this.PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * this.PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
 
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
             byte[] colours = new byte[8];
 
             uint offset = 0;
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
-                for (int z = 0; z < depth; z++)
+                for (int z = 0; z < header.depth; z++)
                 {
-                    for (int y = 0; y < height; y += 4)
+                    for (int y = 0; y < header.height; y += 4)
                     {
-                        for (int x = 0; x < width; x += 4)
+                        for (int x = 0; x < header.width; x += 4)
                         {
                             //Read palette
                             int t1 = colours[0] = temp[0];
@@ -1138,12 +1114,12 @@ namespace Plugin
                                 for (int j = 0; j < 2; j++)
                                 {
                                     // only put pixels out < height
-                                    if ((y + k + j) < height)
+                                    if ((y + k + j) < header.height)
                                     {
                                         for (int i = 0; i < 4; i++)
                                         {
                                             // only put pixels out < width
-                                            if (((x + i) < width))
+                                            if (((x + i) < header.width))
                                             {
                                                 t1 = (int)(currOffset + (x + i));
                                                 rawData[t1] = colours[bitmask & 0x07];
@@ -1166,20 +1142,17 @@ namespace Plugin
         private unsafe byte[] DecompressLum(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(this.PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * this.PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
 
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
 
             int lShift1; int lMul; int lShift2;
             ComputeMaskParams(header.pixelFormat.rbitmask, out lShift1, out lMul, out lShift2);
 
             int offset = 0;
-            int pixnum = width * height * depth;
+            int pixnum = header.width * header.height * header.depth;
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
@@ -1199,14 +1172,11 @@ namespace Plugin
         private unsafe byte[] DecompressRXGB(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(this.PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * this.PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
 
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
 
             Colour565 color_0 = new Colour565();
             Colour565 color_1 = new Colour565();
@@ -1216,13 +1186,13 @@ namespace Plugin
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
-                for (int z = 0; z < depth; z++)
+                for (int z = 0; z < header.depth; z++)
                 {
-                    for (int y = 0; y < height; y += 4)
+                    for (int y = 0; y < header.height; y += 4)
                     {
-                        for (int x = 0; x < width; x += 4)
+                        for (int x = 0; x < header.width; x += 4)
                         {
-                            if (y >= height || x >= width)
+                            if (y >= header.height || x >= header.width)
                                 break;
                             alphas[0] = temp[0];
                             alphas[1] = temp[1];
@@ -1268,7 +1238,7 @@ namespace Plugin
                                     Color32 col = colours[select];
 
                                     // only put pixels out < width or height
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp);
                                         rawData[offset + 0] = col.R;
@@ -1311,7 +1281,7 @@ namespace Plugin
                                 for (int i = 0; i < 4; i++)
                                 {
                                     // only put pixels out < width or height
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = alphas[bits & 0x07];
@@ -1327,7 +1297,7 @@ namespace Plugin
                                 for (int i = 0; i < 4; i++)
                                 {
                                     // only put pixels out < width or height
-                                    if (((x + i) < width) && ((y + j) < height))
+                                    if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
                                         uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = alphas[bits & 0x07];
@@ -1345,14 +1315,11 @@ namespace Plugin
         private unsafe byte[] DecompressFloat(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(this.PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * this.PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
 
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
             
             fixed (byte* bytePtr = data)
             {
@@ -1364,7 +1331,7 @@ namespace Plugin
                     switch (pixelFormat)
                     {
                         case PixelFormat.R32F:  // Red float, green = blue = max
-                            size = width * height * depth * 3;
+                            size = header.width * header.height * header.depth * 3;
                             for (int i = 0, j = 0; i < size; i += 3, j++)
                             {
                                 ((float*)destData)[i] = ((float*)temp)[j];
@@ -1378,7 +1345,7 @@ namespace Plugin
                             break;
 
                         case PixelFormat.G32R32F:  // Red float, green float, blue = max
-                            size = width * height * depth * 3;
+                            size = header.width * header.height * header.depth * 3;
                             for (int i = 0, j = 0; i < size; i += 3, j += 2)
                             {
                                 ((float*)destData)[i] = ((float*)temp)[j];
@@ -1388,22 +1355,21 @@ namespace Plugin
                             break;
 
                         case PixelFormat.R16F:  // Red float, green = blue = max
-                            size = width * height * depth * bpp;
+                            size = header.width * header.height * header.depth * bpp;
                             ConvR16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
                             break;
 
                         case PixelFormat.A16B16G16R16F:  // Just convert from half to float.
-                            size = width * height * depth * bpp;
+                            size = header.width * header.height * header.depth * bpp;
                             ConvFloat16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
                             break;
 
                         case PixelFormat.G16R16F:  // Convert from half to float, set blue = max.
-                            size = width * height * depth * bpp;
+                            size = header.width * header.height * header.depth * bpp;
                             ConvG16R16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
                             break;
-
-                        default:
-                            break;
+	                    default:
+		                    throw new NotImplementedException("Decompression of PixelFormat " + pixelFormat + " has not been implemented in this plugin.");
                     }
                 }
             }
@@ -1414,18 +1380,15 @@ namespace Plugin
         private unsafe byte[] DecompressARGB(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
 
             if (header.Check16BitComponents())
                 return DecompressARGB16(header, data, pixelFormat);
 
-            int sizeOfData = (int)((header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth);
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            int sizeOfData = (header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth;
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
 
             if ((pixelFormat == PixelFormat.LUMINANCE) && (header.pixelFormat.rgbbitcount == 16) && (header.pixelFormat.rbitmask == 0xFFFF))
             {
@@ -1463,7 +1426,7 @@ namespace Plugin
                             readI = (uint)(*temp | ((*(temp + 1)) << 8) | ((*(temp + 2)) << 16));
                         }
                         else if (tempBpp == 1)
-                            readI = *((byte*)temp);
+                            readI = *temp;
                         else if (tempBpp == 2)
                             readI = (uint)(temp[0] | (temp[1] << 8));
                     }
@@ -1511,15 +1474,12 @@ namespace Plugin
         private unsafe byte[] DecompressARGB16(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = (int)(PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount));
-            int bps = (int)(header.width * bpp * PixelFormatToBpc(pixelFormat));
-            int sizeofplane = (int)(bps * header.height);
-            int width = (int)header.width;
-            int height = (int)header.height;
-            int depth = (int)header.depth;
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            int sizeofplane = bps * header.height;
 
-            int sizeOfData = (int)((header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth);
-            byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
+            int sizeOfData = (header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth;
+            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
 
             uint readI = 0;
             uint redL, redR;
@@ -1564,7 +1524,7 @@ namespace Plugin
                                 readI = (uint)(*temp | ((*(temp + 1)) << 8) | ((*(temp + 2)) << 16));
                             }
                             else if (tempBpp == 1)
-                                readI = *((byte*)temp);
+                                readI = *temp;
                             else if (tempBpp == 2)
                                 readI = (uint)(temp[0] | (temp[1] << 8));
                         }
