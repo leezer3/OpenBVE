@@ -61,20 +61,18 @@ namespace TrainManager.Car
 
 			// calculate positions and directions for section element update
 			Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-			Vector3 u, s;
+			Vector3 s;
 			double t = d.NormSquared();
 			if (t != 0.0)
 			{
 				t = 1.0 / Math.Sqrt(t);
 				d *= t;
-				u = new Vector3(Up);
-				s.X = d.Z * u.Y - d.Y * u.Z;
-				s.Y = d.X * u.Z - d.Z * u.X;
-				s.Z = d.Y * u.X - d.X * u.Y;
+				s.X = d.Z * Up.Y - d.Y * Up.Z;
+				s.Y = d.X * Up.Z - d.Z * Up.X;
+				s.Z = d.Y * Up.X - d.X * Up.Y;
 			}
 			else
 			{
-				u = Vector3.Down;
 				s = Vector3.Right;
 			}
 
@@ -109,7 +107,7 @@ namespace TrainManager.Car
 			{
 				for (int i = 0; i < CarSections[cs].Groups[0].Elements.Length; i++)
 				{
-					UpdateSectionElement(cs, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
+					UpdateSectionElement(cs, i, p, d, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
 
 					// brightness change
 					if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
@@ -190,7 +188,7 @@ namespace TrainManager.Car
 			UpdateObjects(0.0, true);
 		}
 
-		private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
+		private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
 		{
 			//TODO: Check whether the UP and SIDE vectors should actually be recalculated, as this just uses that of the root car
 			{

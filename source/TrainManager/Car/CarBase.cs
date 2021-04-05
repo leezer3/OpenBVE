@@ -651,20 +651,18 @@ namespace TrainManager.Car
 			// calculate positions and directions for section element update
 
 			Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-			Vector3 u, s;
+			Vector3 s;
 			double t = d.NormSquared();
 			if (t != 0.0)
 			{
 				t = 1.0 / Math.Sqrt(t);
 				d *= t;
-				u = new Vector3(Up);
-				s.X = d.Z * u.Y - d.Y * u.Z;
-				s.Y = d.X * u.Z - d.Z * u.X;
-				s.Z = d.Y * u.X - d.X * u.Y;
+				s.X = d.Z * Up.Y - d.Y * Up.Z;
+				s.Y = d.X * Up.Z - d.Z * Up.X;
+				s.Z = d.Y * Up.X - d.X * Up.Y;
 			}
 			else
 			{
-				u = Vector3.Down;
 				s = Vector3.Right;
 			}
 
@@ -708,7 +706,7 @@ namespace TrainManager.Car
 				{
 					for (int i = 0; i < CarSections[cs].Groups[0].Elements.Length; i++)
 					{
-						UpdateCarSectionElement(cs, 0, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate, EnableDamping);
+						UpdateCarSectionElement(cs, 0, i, p, d, s, CurrentlyVisible, TimeElapsed, ForceUpdate, EnableDamping);
 
 						// brightness change
 						if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
@@ -723,7 +721,7 @@ namespace TrainManager.Car
 				{
 					for (int i = 0; i < CarSections[cs].Groups[add].Elements.Length; i++)
 					{
-						UpdateCarSectionElement(cs, add, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate, EnableDamping);
+						UpdateCarSectionElement(cs, add, i, p, d, s, CurrentlyVisible, TimeElapsed, ForceUpdate, EnableDamping);
 
 						// brightness change
 						if (CarSections[cs].Groups[add].Elements[i].internalObject != null)
@@ -736,7 +734,7 @@ namespace TrainManager.Car
 					{
 						for (int i = 0; i < CarSections[cs].Groups[add].TouchElements.Length; i++)
 						{
-							UpdateCarSectionTouchElement(cs, add, i, p, d, u, s, false, TimeElapsed, ForceUpdate, EnableDamping);
+							UpdateCarSectionTouchElement(cs, add, i, p, d, s, false, TimeElapsed, ForceUpdate, EnableDamping);
 						}
 					}
 				}
@@ -745,12 +743,12 @@ namespace TrainManager.Car
 
 			CameraRestriction.AbsoluteBottomLeft = new Vector3(CameraRestriction.BottomLeft);
 			CameraRestriction.AbsoluteBottomLeft += Driver;
-			CameraRestriction.AbsoluteBottomLeft.Rotate(new Transformation(d, u, s));
+			CameraRestriction.AbsoluteBottomLeft.Rotate(new Transformation(d, Up, s));
 			CameraRestriction.AbsoluteBottomLeft.Translate(p);
 
 			CameraRestriction.AbsoluteTopRight = new Vector3(CameraRestriction.TopRight);
 			CameraRestriction.AbsoluteTopRight += Driver;
-			CameraRestriction.AbsoluteTopRight.Rotate(new Transformation(d, u, s));
+			CameraRestriction.AbsoluteTopRight.Rotate(new Transformation(d, Up, s));
 			CameraRestriction.AbsoluteTopRight.Translate(p);
 		}
 
@@ -760,13 +758,12 @@ namespace TrainManager.Car
 		/// <param name="ElementIndex">The element within the group</param>
 		/// <param name="Position"></param>
 		/// <param name="Direction"></param>
-		/// <param name="Up"></param>
 		/// <param name="Side"></param>
 		/// <param name="Show"></param>
 		/// <param name="TimeElapsed"></param>
 		/// <param name="ForceUpdate"></param>
 		/// <param name="EnableDamping"></param>
-		private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
+		private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 		{
 			Vector3 p;
 			if (CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay & (TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
@@ -814,7 +811,7 @@ namespace TrainManager.Car
 			}
 		}
 
-		private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
+		private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 		{
 			Vector3 p;
 			if (CarSections[SectionIndex].Groups[GroupIndex].Type == ObjectType.Overlay & (TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
