@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenBveApi.Math;
-using OpenBveApi.Sounds;
 using SoundManager;
 using TrainManager.Trains;
 

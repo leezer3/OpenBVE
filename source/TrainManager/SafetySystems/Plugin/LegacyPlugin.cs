@@ -369,7 +369,7 @@ namespace TrainManager.SafetySystems
 							{
 								if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer != null)
 								{
-									double volume = (double) (this.Sound[i] - SoundInstructions.Stop) / (double) (SoundInstructions.PlayLooping - SoundInstructions.Stop);
+									double volume = (this.Sound[i] - SoundInstructions.Stop) / (double)(SoundInstructions.PlayLooping - SoundInstructions.Stop);
 									if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].IsPlaying)
 									{
 										Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source.Volume = volume;

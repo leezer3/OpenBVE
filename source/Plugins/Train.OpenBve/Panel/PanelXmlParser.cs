@@ -1000,10 +1000,7 @@ namespace Train.OpenBve
 													break;
 												}
 											}
-											else
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
-											}
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
 										}
 										break;
 									case "daytimeimage":
@@ -1579,13 +1576,12 @@ namespace Train.OpenBve
 							break;
 						}
 
-						int k;
 						foreach (XElement KeyNode in SectionElement.Elements())
 						{
 							string Key = KeyNode.Name.LocalName;
 							string Value = KeyNode.Value;
 							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
-
+							int k;
 							switch (Key.ToLowerInvariant())
 							{
 								case "topleft":

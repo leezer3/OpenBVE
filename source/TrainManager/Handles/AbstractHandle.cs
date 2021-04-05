@@ -121,11 +121,11 @@ namespace TrainManager.Handles
 
 
 		/// <summary>Gets the delay value for this handle</summary>
-		/// <param name="Increase">Whether this is an increase or a decrease</param>
+		/// <param name="ShouldIncrease">Whether this is an increase or a decrease</param>
 		/// <returns>The delay value to apply</returns>
-		internal double GetDelay(bool Increase)
+		internal double GetDelay(bool ShouldIncrease)
 		{
-			if (Increase)
+			if (ShouldIncrease)
 			{
 				if (DelayUp == null || DelayUp.Length == 0)
 				{

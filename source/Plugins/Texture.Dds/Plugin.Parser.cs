@@ -469,20 +469,18 @@ namespace Plugin
             }
             else if (e == 31)
             {
-                if (m == 0)
+	            if (m == 0)
                 {
                     //
                     // Positive or negative infinity
                     //
                     return (uint)((s << 31) | 0x7f800000);
                 }
-                else
-                {
-                    //
-                    // Nan -- preserve sign and significand bits
-                    //
-                    return (uint)((s << 31) | 0x7f800000 | (m << 13));
-                }
+
+	            //
+	            // Nan -- preserve sign and significand bits
+	            //
+	            return (uint)((s << 31) | 0x7f800000 | (m << 13));
             }
 
             //
@@ -622,7 +620,6 @@ namespace Plugin
                                 colours[2].B = (byte)((2 * colours[0].B + colours[1].B + 1) / 3);
                                 colours[2].G = (byte)((2 * colours[0].G + colours[1].G + 1) / 3);
                                 colours[2].R = (byte)((2 * colours[0].R + colours[1].R + 1) / 3);
-                                //colours[2].A = 0xFF;
 
                                 colours[3].B = (byte)((colours[0].B + 2 * colours[1].B + 1) / 3);
                                 colours[3].G = (byte)((colours[0].G + 2 * colours[1].G + 1) / 3);
@@ -634,7 +631,6 @@ namespace Plugin
                                 colours[2].B = (byte)((colours[0].B + colours[1].B) / 2);
                                 colours[2].G = (byte)((colours[0].G + colours[1].G) / 2);
                                 colours[2].R = (byte)((colours[0].R + colours[1].R) / 2);
-                                //colours[2].A = 0xFF;
 
                                 colours[3].B = (byte)((colours[0].B + 2 * colours[1].B + 1) / 3);
                                 colours[3].G = (byte)((colours[0].G + 2 * colours[1].G + 1) / 3);
@@ -700,12 +696,10 @@ namespace Plugin
                             colours[2].B = (byte)((2 * colours[0].B + colours[1].B + 1) / 3);
                             colours[2].G = (byte)((2 * colours[0].G + colours[1].G + 1) / 3);
                             colours[2].R = (byte)((2 * colours[0].R + colours[1].R + 1) / 3);
-                            //colours[2].A = 0xFF;
 
                             colours[3].B = (byte)((colours[0].B + 2 * colours[1].B + 1) / 3);
                             colours[3].G = (byte)((colours[0].G + 2 * colours[1].G + 1) / 3);
                             colours[3].R = (byte)((colours[0].R + 2 * colours[1].R + 1) / 3);
-                            //colours[3].A = 0xFF;
 
                             for (int j = 0, k = 0; j < 4; j++)
                             {
@@ -1323,11 +1317,11 @@ namespace Plugin
             
             fixed (byte* bytePtr = data)
             {
-	            int size;
-                byte* temp = bytePtr;
+	            byte* temp = bytePtr;
                 fixed (byte* destPtr = rawData)
                 {
                     byte* destData = destPtr;
+                    int size;
                     switch (pixelFormat)
                     {
                         case PixelFormat.R32F:  // Red float, green = blue = max
