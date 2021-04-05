@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
@@ -55,9 +54,19 @@ namespace DenshaDeGoInput
 		internal bool loading = true;
 
 		/// <summary>
+		/// Whether the input plugin is running in-game.
+		/// </summary>
+		internal static bool ingame;
+
+		/// <summary>
 		/// The specs of the driver's train.
 		/// </summary>
 		internal VehicleSpecs vehicleSpecs = new VehicleSpecs(5, BrakeTypes.AutomaticAirBrake, 8, false, 1);
+
+		/// <summary>
+		/// The current train speed in kilometers per hour.
+		/// </summary>
+		internal static double trainSpeed;
 
 		/// <summary>
 		/// Whether the brake handle has been moved.
@@ -183,6 +192,8 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public void Unload()
 		{
+			InputTranslator.Unload();
+			configForm.Dispose();
 		}
 
 		/// <summary>
@@ -258,6 +269,14 @@ namespace DenshaDeGoInput
 		public void SetElapseData(ElapseData data)
 		{
 			Translations.CurrentLanguageCode = data.CurrentLanguageCode;
+
+			// HACK: The number of stations cannot be zero in-game
+			if (data.Stations.Count > 0)
+			{
+				ingame = true;
+			}
+
+			trainSpeed = data.Vehicle.Speed.KilometersPerHour;
 
 			// Button timers
 			for (int i = 0; i < ButtonProperties.Length; i++)

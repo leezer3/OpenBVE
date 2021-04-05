@@ -162,12 +162,17 @@ namespace DenshaDeGoInput
 		internal static Dictionary<Guid,int> ConnectedControllers = new Dictionary<Guid, int>();
 
 		/// <summary>
+		/// A dictionary containing GUID/model pairs for controllers.
+		/// </summary>
+		internal static Dictionary<Guid, ControllerModels> ConnectedModels = new Dictionary<Guid, ControllerModels>();
+
+		/// <summary>
 		/// The GUID of the active controller.
 		/// </summary>
 		internal static Guid activeControllerGuid = new Guid();
 
 		/// <summary>
-		/// Whether a supported controller is connected or not.
+		/// Whether the active controller is connected or not.
 		/// </summary>
 		internal static bool IsControllerConnected;
 
@@ -207,6 +212,12 @@ namespace DenshaDeGoInput
 			string id = GetControllerID(guid);
 			ControllerModels model;
 
+			model = ControllerPs2.GetControllerModel(id);
+			if (model != ControllerModels.Unsupported)
+			{
+				// The controller is a PlayStation 2 USB controller
+				return model;
+			}
 			model = ControllerUnbalance.GetControllerModel(id, capabilities);
 			if (model != ControllerModels.Unsupported)
 			{
@@ -249,6 +260,10 @@ namespace DenshaDeGoInput
 				case ControllerModels.UnbalanceStandard:
 				case ControllerModels.UnbalanceRyojouhen:
 					return ControllerUnbalance.ControllerBrakeNotches;
+				case ControllerModels.Ps2Type2:
+				case ControllerModels.Ps2Shinkansen:
+				case ControllerModels.Ps2Ryojouhen:
+					return ControllerPs2.ControllerBrakeNotches;
 			}
 			return 0;
 		}
@@ -266,6 +281,10 @@ namespace DenshaDeGoInput
 				case ControllerModels.UnbalanceStandard:
 				case ControllerModels.UnbalanceRyojouhen:
 					return ControllerUnbalance.ControllerPowerNotches;
+				case ControllerModels.Ps2Type2:
+				case ControllerModels.Ps2Shinkansen:
+				case ControllerModels.Ps2Ryojouhen:
+					return ControllerPs2.ControllerPowerNotches;
 			}
 			return 0;
 		}
@@ -286,6 +305,7 @@ namespace DenshaDeGoInput
 					if (Joystick.GetState(i).IsConnected && model != ControllerModels.Unsupported)
 					{
 						ConnectedControllers.Add(guid, i);
+						ConnectedModels.Add(guid, model);
 					}
 				}
 				else
@@ -294,6 +314,43 @@ namespace DenshaDeGoInput
 					ConnectedControllers[guid] = i;
 				}
 			}
+			
+			foreach (KeyValuePair<Guid, int> controller in ControllerPs2.FindControllers())
+			{
+				if (!ConnectedControllers.ContainsKey(controller.Key))
+				{
+					ControllerModels model = GetControllerModel(controller.Key, new JoystickCapabilities());
+					ConnectedControllers.Add(controller.Key, controller.Value);
+					ConnectedModels.Add(controller.Key, model);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the name of a controller by GUID.
+		/// </summary>
+		/// <returns>The name of the controller.</returns>
+		public static string GetControllerName(Guid guid)
+		{
+			if (guid.ToString().Substring(0,8) == "ffffffff")
+			{
+				// PS2 controller, handled via LibUsbDotNet instead of OpenTK
+				return ControllerPs2.GetControllerName(GetControllerID(guid));
+			}
+			else
+			{
+				int index = ConnectedControllers[guid];
+				return Joystick.GetName(index);
+			}
+		}
+
+		/// <summary>
+		/// Unloads certain controllers.
+		/// </summary>
+		public static void Unload()
+		{
+			if (ControllerModel == ControllerModels.Ps2Type2 || ControllerModel == ControllerModels.Ps2Shinkansen || ControllerModel == ControllerModels.Ps2Type2 || ControllerModel == ControllerModels.Ps2Ryojouhen)
+			ControllerPs2.Unload();
 		}
 
 		/// <summary>
@@ -305,15 +362,26 @@ namespace DenshaDeGoInput
 
 			if (ConnectedControllers.ContainsKey(activeControllerGuid))
 			{
-				if (ControllerModel == ControllerModels.Unknown)
+				ControllerModel = ConnectedModels[activeControllerGuid];
+				if (ControllerModel == ControllerModels.Ps2Type2 || ControllerModel == ControllerModels.Ps2Shinkansen || ControllerModel == ControllerModels.Ps2Ryojouhen)
 				{
-					ControllerModel = GetControllerModel(activeControllerGuid, Joystick.GetCapabilities(ConnectedControllers[activeControllerGuid]));
+					string id = GetControllerID(activeControllerGuid);
+					IsControllerConnected = ControllerPs2.IsControlledConnected(id);
 				}
-				IsControllerConnected = Joystick.GetState(ConnectedControllers[activeControllerGuid]).IsConnected;
+				else
+				{
+					IsControllerConnected = Joystick.GetState(ConnectedControllers[activeControllerGuid]).IsConnected;
+				}
 				if (IsControllerConnected)
 				{
-					// A valid controller is connected, get input
+					// The active controller is connected, get input
 					GetInput();
+				}
+				else
+				{
+					// The active controller is not connected, remove it
+					ConnectedControllers.Remove(activeControllerGuid);
+					ConnectedModels.Remove(activeControllerGuid);
 				}
 			}
 		}
@@ -336,6 +404,11 @@ namespace DenshaDeGoInput
 				case ControllerModels.UnbalanceStandard:
 				case ControllerModels.UnbalanceRyojouhen:
 					ControllerUnbalance.ReadInput(Joystick.GetState(ConnectedControllers[activeControllerGuid]));
+					return;
+				case ControllerModels.Ps2Type2:
+				case ControllerModels.Ps2Shinkansen:
+				case ControllerModels.Ps2Ryojouhen:
+					ControllerPs2.ReadInput();
 					return;
 			}
 		}

@@ -92,8 +92,7 @@ namespace DenshaDeGoInput
 
 			foreach (Guid guid in ControllerList)
 			{
-				int index = InputTranslator.ConnectedControllers[guid];
-				deviceBox.Items.Add(Joystick.GetName(index));
+				deviceBox.Items.Add(InputTranslator.GetControllerName(guid));
 			}
 
 			// Adjust the width of the device dropdown to prevent truncation
@@ -323,14 +322,25 @@ namespace DenshaDeGoInput
 			UpdateTranslation();
 		}
 
-		private void Config_FormClosed(Object sender, FormClosedEventArgs e)
+		private void Config_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			// Reload the previous config and close the config dialog
 			DenshaDeGoInput.LoadConfig();
+			ControllerPs2.ControllerDisplayEnabled = false;
 		}
 
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			InputTranslator.ControllerModels model = InputTranslator.ConnectedModels[ControllerList[deviceBox.SelectedIndex]];
+			if (model == InputTranslator.ControllerModels.Ps2Type2 || model == InputTranslator.ControllerModels.Ps2Shinkansen)
+			{
+				ControllerPs2.ControllerDisplayEnabled = true;
+			}
+			else
+			{
+				ControllerPs2.ControllerDisplayEnabled = false;
+			}
+			InputTranslator.Update();
 			InputTranslator.activeControllerGuid = ControllerList[deviceBox.SelectedIndex];
 		}
 
