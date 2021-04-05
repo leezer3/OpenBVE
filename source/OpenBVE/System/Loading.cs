@@ -284,7 +284,6 @@ namespace OpenBve {
 
 
 			// load trains
-			double progress = 0;
 			for (int k = 0; k < Program.TrainManager.Trains.Length; k++) {
 
 				AbstractTrain currentTrain = Program.TrainManager.Trains[k];

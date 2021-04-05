@@ -734,7 +734,7 @@ namespace TrainManager.Trains
 			this.Derailed = true;
 			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 			{
-				//TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Train " + Array.IndexOf(TrainManagerBase.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + CarIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 			}
 		}
 
@@ -744,11 +744,12 @@ namespace TrainManager.Trains
 			if (this.Cars.Contains(Car))
 			{
 				var c = Car as CarBase;
+				// ReSharper disable once PossibleNullReferenceException
 				c.Derailed = true;
 				this.Derailed = true;
 				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 				{
-					//TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Train " + Array.IndexOf(TrainManagerBase.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 		}

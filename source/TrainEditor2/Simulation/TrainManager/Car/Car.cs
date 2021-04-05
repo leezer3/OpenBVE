@@ -23,6 +23,8 @@ namespace TrainEditor2.Simulation.TrainManager
 			{
 				this.baseTrain = baseTrain;
 				this.Specs = new CarPhysics();
+				this.Sounds = new CarSounds();
+				InitializeCarSounds();
 			}
 
 			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
