@@ -705,7 +705,7 @@ namespace OpenBve.Graphics.Renderers
 					{
 						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 						double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
-						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;;
+						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;
 						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
 						{
@@ -736,7 +736,7 @@ namespace OpenBve.Graphics.Renderers
 							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 						}
 					}
-					 break;
+					break;
 				case "fps":
 					int fps = (int)Math.Round(Program.Renderer.FrameRate);
 					t = fps.ToString(Culture) + " fps";

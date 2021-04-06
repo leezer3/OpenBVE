@@ -613,7 +613,7 @@ namespace OpenBve {
 				ListViewItem[] Items = new ListViewItem[InputDevicePlugin.AvailablePluginInfos.Count];
 				for (int i = 0; i < Items.Length; i++)
 				{
-					Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
+					Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
 					UpdateInputDeviceListViewItem(Items[i], i, false);
 				}
 				listviewInputDevice.Items.AddRange(Items);
@@ -766,7 +766,7 @@ namespace OpenBve {
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
-					Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
+					Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
 					UpdateControlListElement(Items[i], i, false);
 				}
 				listviewControls.Items.AddRange(Items);

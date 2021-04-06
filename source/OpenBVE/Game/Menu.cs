@@ -110,8 +110,8 @@ namespace OpenBve
 		}
 		private class MenuCommand : MenuEntry
 		{
-			internal MenuTag Tag;
-			internal int Data;
+			internal readonly MenuTag Tag;
+			internal readonly int Data;
 			internal MenuCommand(string Text, MenuTag Tag, int Data)
 			{
 				this.Text = Text;

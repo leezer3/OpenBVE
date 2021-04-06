@@ -163,6 +163,7 @@ namespace OpenBve {
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
+		/// <param name="loadTexture">Whether the texture is to be pre-loaded</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {

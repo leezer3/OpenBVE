@@ -10,13 +10,12 @@ using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
-using OpenTK.Graphics.ES20;
 using RouteManager2;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
 {
-	internal partial class formMain : Form
+	internal partial class formMain
 	{
 		// ===============
 		// route selection
@@ -27,7 +26,7 @@ namespace OpenBve
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
 
-		private Dictionary<string, string> compatibilitySignals = new Dictionary<string, string>();
+		private readonly Dictionary<string, string> compatibilitySignals = new Dictionary<string, string>();
 
 		private void LoadCompatibilitySignalSets()
 		{
@@ -47,6 +46,7 @@ namespace OpenBve
 				}
 				catch
 				{
+					//Ignored
 				}
 
 			}
@@ -54,7 +54,7 @@ namespace OpenBve
 
 		private void textboxRouteFolder_TextChanged(object sender, EventArgs e)
 		{
-			if (listviewRouteFiles.Columns.Count == 0 || OpenBveApi.Path.ContainsInvalidChars(textboxRouteFolder.Text))
+			if (listviewRouteFiles.Columns.Count == 0 || Path.ContainsInvalidChars(textboxRouteFolder.Text))
 			{
 				return;
 			}
@@ -85,16 +85,19 @@ namespace OpenBve
 				{
 					//BUG: Mono's filesystem watcher can exceed the OS-X handles limit on some systems
 					//Triggered by NWM which has 600+ files in the route folder
-					routeWatcher = new FileSystemWatcher();
-					routeWatcher.Path = Folder;
-					routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-					routeWatcher.Filter = "*.*";
+					routeWatcher = new FileSystemWatcher
+					{
+						Path = Folder, 
+						NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName, 
+						Filter = "*.*"
+					};
 					routeWatcher.Changed += onRouteFolderChanged;
 					routeWatcher.EnableRaisingEvents = true;
 				}
 			}
 			catch
 			{
+				//Most likely some sort of permissions issue, only means we can't monitor for new files
 			}
 			if (listviewRouteFiles.Columns.Count > 0)
 			{
@@ -133,8 +136,7 @@ namespace OpenBve
 					listviewRouteFiles.Items.Clear();
 					try
 					{
-						// MoMA says that GetDrives is flagged with [MonoTodo]
-						System.IO.DriveInfo[] driveInfos = System.IO.DriveInfo.GetDrives();
+						DriveInfo[] driveInfos = DriveInfo.GetDrives();
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewRouteFiles.Items.Add(driveInfos[i].Name);
@@ -145,15 +147,16 @@ namespace OpenBve
 					}
 					catch
 					{
+						//Unable to get list of drives
 					}
 				}
-				else if (System.IO.Directory.Exists(Folder))
+				else if (Directory.Exists(Folder))
 				{
 					listviewRouteFiles.Items.Clear();
 					// parent
 					try
 					{
-						System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+						DirectoryInfo Info = Directory.GetParent(Folder);
 						if (Info != null)
 						{
 							ListViewItem Item = listviewRouteFiles.Items.Add("..");
@@ -171,16 +174,17 @@ namespace OpenBve
 					}
 					catch
 					{
+						//Another permissions issue??
 					}
 					// folders
 					try
 					{
-						string[] Folders = System.IO.Directory.GetDirectories(Folder);
-						Array.Sort<string>(Folders);
+						string[] Folders = Directory.GetDirectories(Folder);
+						Array.Sort(Folders);
 						for (int i = 0; i < Folders.Length; i++)
 						{
-							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(Folders[i]);
-							if ((info.Attributes & System.IO.FileAttributes.Hidden) == 0)
+							DirectoryInfo info = new DirectoryInfo(Folders[i]);
+							if ((info.Attributes & FileAttributes.Hidden) == 0)
 							{
 								string folderName = System.IO.Path.GetFileName(Folders[i]);
 								if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
@@ -194,15 +198,16 @@ namespace OpenBve
 					}
 					catch
 					{
+						//Another permissions issue??
 					}
 					// files
 					try
 					{
-						string[] Files = System.IO.Directory.GetFiles(Folder);
-						Array.Sort<string>(Files);
+						string[] Files = Directory.GetFiles(Folder);
+						Array.Sort(Files);
 						for (int i = 0; i < Files.Length; i++)
-						{
-							if (Files[i] == null) return;
+						{ 
+							if (string.IsNullOrEmpty(Files[i])) return;
 							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
 							switch (Extension)
 							{
@@ -230,6 +235,7 @@ namespace OpenBve
 											}
 											catch
 											{
+												//Most likely because the file is locked
 											}
 										}
 										else
@@ -244,11 +250,13 @@ namespace OpenBve
 					}
 					catch
 					{
+						//Ignore all errors
 					}
 				}
 			}
 			catch
 			{
+				//Ignore all errors
 			}
 		}
 
@@ -270,7 +278,7 @@ namespace OpenBve
 				if (t != null)
 				{
 
-					if (System.IO.File.Exists(t))
+					if (File.Exists(t))
 					{
 						Result.RouteFile = t;
 						ShowRoute(false);
@@ -291,7 +299,7 @@ namespace OpenBve
 				string t = listviewRouteFiles.SelectedItems[0].Tag as string;
 				if (t != null)
 				{
-					if (t.Length == 0 || System.IO.Directory.Exists(t))
+					if (t.Length == 0 || Directory.Exists(t))
 					{
 						textboxRouteFolder.Text = t;
 					}
@@ -310,7 +318,7 @@ namespace OpenBve
 					string t = listviewRouteFiles.Tag as string;
 					if (t != null)
 					{
-						if (t.Length == 0 || System.IO.Directory.Exists(t))
+						if (t.Length == 0 || Directory.Exists(t))
 						{
 							textboxRouteFolder.Text = t;
 						}
@@ -326,7 +334,7 @@ namespace OpenBve
 			{
 				string t = listviewRouteRecently.SelectedItems[0].Tag as string;
 				if (t == null) return;
-				if (!System.IO.File.Exists(t)) return;
+				if (!File.Exists(t)) return;
 				Result.RouteFile = t;
 				ShowRoute(false);
 			}
@@ -359,7 +367,7 @@ namespace OpenBve
 			{
 
 				if (!(i >= 0 & i < EncodingCodepages.Length)) return;
-				Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
+				Result.RouteEncoding = Encoding.GetEncoding(EncodingCodepages[i]);
 				if (i == 0)
 				{
 					// remove from cache
@@ -447,7 +455,7 @@ namespace OpenBve
 
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e)
 		{
-			if (listviewTrainFolders.Columns.Count == 0 || OpenBveApi.Path.ContainsInvalidChars(textboxTrainFolder.Text))
+			if (listviewTrainFolders.Columns.Count == 0 || Path.ContainsInvalidChars(textboxTrainFolder.Text))
 			{
 				return;
 			}
@@ -474,16 +482,19 @@ namespace OpenBve
 			{
 				if (!OpenTK.Configuration.RunningOnMacOS)
 				{
-					trainWatcher = new FileSystemWatcher();
-					trainWatcher.Path = Folder;
-					trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-					trainWatcher.Filter = "*.*";
+					trainWatcher = new FileSystemWatcher
+					{
+						Path = Folder, 
+						NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName, 
+						Filter = "*.*"
+					};
 					trainWatcher.Changed += onTrainFolderChanged;
 					trainWatcher.EnableRaisingEvents = true;
 				}
 			}
 			catch
 			{
+				//Most likely some sort of permissions issue, only means we can't monitor for new files
 			}
 			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
@@ -518,8 +529,7 @@ namespace OpenBve
 					listviewTrainFolders.Items.Clear();
 					try
 					{
-						// MoMA says that GetDrives is flagged with [MonoTodo]
-						System.IO.DriveInfo[] driveInfos = System.IO.DriveInfo.GetDrives();
+						DriveInfo[] driveInfos = DriveInfo.GetDrives();
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewTrainFolders.Items.Add(driveInfos[i].Name);
@@ -531,15 +541,16 @@ namespace OpenBve
 					}
 					catch
 					{
+						//Unable to get list of drives
 					}
 				}
-				else if (System.IO.Directory.Exists(Folder))
+				else if (Directory.Exists(Folder))
 				{
 					listviewTrainFolders.Items.Clear();
 					// parent
 					try
 					{
-						System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+						DirectoryInfo Info = Directory.GetParent(Folder);
 						if (Info != null)
 						{
 							ListViewItem Item = listviewTrainFolders.Items.Add("..");
@@ -557,23 +568,24 @@ namespace OpenBve
 					}
 					catch
 					{
+						//Another permisions issue?
 					}
 					// folders
 					try
 					{
-						string[] Folders = System.IO.Directory.GetDirectories(Folder);
-						Array.Sort<string>(Folders);
+						string[] Folders = Directory.GetDirectories(Folder);
+						Array.Sort(Folders);
 						for (int i = 0; i < Folders.Length; i++)
 						{
 							try
 							{
-								System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(Folders[i]);
-								if ((info.Attributes & System.IO.FileAttributes.Hidden) == 0)
+								DirectoryInfo info = new DirectoryInfo(Folders[i]);
+								if ((info.Attributes & FileAttributes.Hidden) == 0)
 								{
 									string folderName = System.IO.Path.GetFileName(Folders[i]);
 									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
 									{
-										string File = OpenBveApi.Path.CombineFile(Folders[i], "train.dat");
+										string File = Path.CombineFile(Folders[i], "train.dat");
 										ListViewItem Item = listviewTrainFolders.Items.Add(folderName);
 										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
 										Item.Tag = Folders[i];
@@ -582,16 +594,19 @@ namespace OpenBve
 							}
 							catch
 							{
+								//Most likely permissions
 							}
 						}
 					}
 					catch
 					{
+						//Ignore all errors
 					}
 				}
 			}
 			catch
 			{
+				//Ignore all errors
 			}
 		}
 
@@ -610,8 +625,8 @@ namespace OpenBve
 					return;
 				}
 				if (t != null) {
-					if (System.IO.Directory.Exists(t)) {
-						string File = OpenBveApi.Path.CombineFile(t, "train.dat");
+					if (Directory.Exists(t)) {
+						string File = Path.CombineFile(t, "train.dat");
 						if (System.IO.File.Exists(File)) {
 							Result.TrainFolder = t;
 							ShowTrain(false);
@@ -630,7 +645,7 @@ namespace OpenBve
 			if (listviewTrainFolders.SelectedItems.Count == 1) {
 				string t = listviewTrainFolders.SelectedItems[0].Tag as string;
 				if (t != null) {
-					if (t.Length == 0 || System.IO.Directory.Exists(t)) {
+					if (t.Length == 0 || Directory.Exists(t)) {
 						textboxTrainFolder.Text = t;
 					}
 				}
@@ -644,7 +659,7 @@ namespace OpenBve
 				case Keys.Back:
 					string t = listviewTrainFolders.Tag as string;
 					if (t != null) {
-						if (t.Length == 0 || System.IO.Directory.Exists(t)) {
+						if (t.Length == 0 || Directory.Exists(t)) {
 							textboxTrainFolder.Text = t;
 						}
 					} break;
@@ -656,8 +671,8 @@ namespace OpenBve
 			if (listviewTrainRecently.SelectedItems.Count == 1) {
 				string t = listviewTrainRecently.SelectedItems[0].Tag as string;
 				if (t != null) {
-					if (System.IO.Directory.Exists(t)) {
-						string File = OpenBveApi.Path.CombineFile(t, "train.dat");
+					if (Directory.Exists(t)) {
+						string File = Path.CombineFile(t, "train.dat");
 						if (System.IO.File.Exists(File)) {
 							Result.TrainFolder = t;
 							ShowTrain(false);
@@ -669,7 +684,7 @@ namespace OpenBve
 		}
 
 		// train default
-		void CheckboxTrainDefaultCheckedChanged(object sender, System.EventArgs e) {
+		void CheckboxTrainDefaultCheckedChanged(object sender, EventArgs e) {
 			if (checkboxTrainDefault.Checked) {
 				if (listviewTrainFolders.SelectedItems.Count == 1) {
 					listviewTrainFolders.SelectedItems[0].Selected = false;
@@ -698,7 +713,7 @@ namespace OpenBve
 			if (comboboxTrainEncoding.Tag == null) {
 				int i = comboboxTrainEncoding.SelectedIndex;
 				if (i >= 0 & i < EncodingCodepages.Length) {
-					Result.TrainEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
+					Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[i]);
 					if (i == 0) {
 						// remove from cache
 						for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
@@ -763,7 +778,7 @@ namespace OpenBve
 
 		private void buttonStart_Click(object sender, EventArgs e) {
 			if (Result.RouteFile != null & Result.TrainFolder != null) {
-				if (System.IO.File.Exists(Result.RouteFile) & System.IO.Directory.Exists(Result.TrainFolder)) {
+				if (File.Exists(Result.RouteFile) & Directory.Exists(Result.TrainFolder)) {
 					Result.Start = true;
 					buttonClose_Click(StartGame, e);
 					//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
@@ -800,10 +815,11 @@ namespace OpenBve
 			{
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(Result.RouteFile))
 				{
+					// ReSharper disable once RedundantCast
 					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
 					string RailwayFolder = Loading.GetRailwayFolder(Result.RouteFile);
-					string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
-					string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
+					string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
+					string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(Result.RouteFile, Result.RouteEncoding, null, ObjectFolder, SoundFolder, true, ref Route))
 					{
 						Program.CurrentRoute = (CurrentRoute) Route;
@@ -874,9 +890,9 @@ namespace OpenBve
 					int i;
 					for (i = 0; i < f.Length; i++)
 					{
-						string g = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(Result.RouteFile),
+						string g = Path.CombineFile(System.IO.Path.GetDirectoryName(Result.RouteFile),
 							System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile) + f[i]);
-						if (System.IO.File.Exists(g))
+						if (File.Exists(g))
 						{
 							try
 							{
@@ -900,14 +916,7 @@ namespace OpenBve
 
 				// description
 				string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
-				if (Description.Length != 0)
-				{
-					textboxRouteDescription.Text = Description;
-				}
-				else
-				{
-					textboxRouteDescription.Text = System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
-				}
+				textboxRouteDescription.Text = Description.Length != 0 ? Description : System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
 
 				textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
 				if (Interface.CurrentOptions.TrainName != null)
@@ -977,13 +986,13 @@ namespace OpenBve
 							for (j = 1; j < EncodingCodepages.Length; j++) {
 								if (EncodingCodepages[j] == Interface.CurrentOptions.RouteEncodings[i].Codepage) {
 									comboboxRouteEncoding.SelectedIndex = j;
-									Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[j]);
+									Result.RouteEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
 									break;
 								}
 							}
 							if (j == EncodingCodepages.Length) {
 								comboboxRouteEncoding.SelectedIndex = 0;
-								Result.RouteEncoding = System.Text.Encoding.UTF8;
+								Result.RouteEncoding = Encoding.UTF8;
 							}
 							break;
 						}
@@ -1015,13 +1024,13 @@ namespace OpenBve
 						for (j = 1; j < EncodingCodepages.Length; j++) {
 							if (EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[i].Codepage) {
 								comboboxTrainEncoding.SelectedIndex = j;
-								Result.TrainEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[j]);
+								Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
 								break;
 							}
 						}
 						if (j == EncodingCodepages.Length) {
 							comboboxTrainEncoding.SelectedIndex = 0;
-							Result.TrainEncoding = System.Text.Encoding.UTF8;
+							Result.TrainEncoding = Encoding.UTF8;
 						}
 						break;
 					}
@@ -1031,19 +1040,16 @@ namespace OpenBve
 			}
 			{
 				// train image
-				string File = OpenBveApi.Path.CombineFile(Result.TrainFolder, "train.png");
+				string File = Path.CombineFile(Result.TrainFolder, "train.png");
 				if (!System.IO.File.Exists(File)) {
-					File = OpenBveApi.Path.CombineFile(Result.TrainFolder, "train.bmp");
+					File = Path.CombineFile(Result.TrainFolder, "train.bmp");
 				}
-				if (System.IO.File.Exists(File)) {
-					TryLoadImage(pictureboxTrainImage, File);
-				} else {
-					TryLoadImage(pictureboxTrainImage, "train_unknown.png");
-				}
+
+				TryLoadImage(pictureboxTrainImage, System.IO.File.Exists(File) ? File : "train_unknown.png");
 			}
 			{
 				// train description
-				string File = OpenBveApi.Path.CombineFile(Result.TrainFolder, "train.txt");
+				string File = Path.CombineFile(Result.TrainFolder, "train.txt");
 				if (System.IO.File.Exists(File)) {
 					try {
 						string trainText = System.IO.File.ReadAllText(File, Result.TrainEncoding);
@@ -1080,9 +1086,9 @@ namespace OpenBve
 			try {
 				Folder = System.IO.Path.GetDirectoryName(Result.RouteFile);
 				if (Interface.CurrentOptions.TrainName[0] == '$') {
-					Folder = OpenBveApi.Path.CombineDirectory(Folder, Interface.CurrentOptions.TrainName);
-					if (System.IO.Directory.Exists(Folder)) {
-						string File = OpenBveApi.Path.CombineFile(Folder, "train.dat");
+					Folder = Path.CombineDirectory(Folder, Interface.CurrentOptions.TrainName);
+					if (Directory.Exists(Folder)) {
+						string File = Path.CombineFile(Folder, "train.dat");
 						if (System.IO.File.Exists(File)) {
 							
 							Result.TrainFolder = Folder;
@@ -1096,26 +1102,35 @@ namespace OpenBve
 			}
 			bool recursionTest = false;
 			string lastFolder = null;
-			try {
-				while (true) {
-					string TrainFolder = OpenBveApi.Path.CombineDirectory(Folder, "Train");
+			try
+			{
+				while (true)
+				{
+					string TrainFolder = Path.CombineDirectory(Folder, "Train");
 					var OldFolder = Folder;
-					if (System.IO.Directory.Exists(TrainFolder)) {
-						try {
-							Folder = OpenBveApi.Path.CombineDirectory(TrainFolder, Interface.CurrentOptions.TrainName);
-						} catch (Exception ex) {
+					if (Directory.Exists(TrainFolder))
+					{
+						try
+						{
+							Folder = Path.CombineDirectory(TrainFolder, Interface.CurrentOptions.TrainName);
+						}
+						catch (Exception ex)
+						{
 							if (ex is ArgumentException)
 							{
 								break; // Invalid character in path causes infinite recursion
 							}
+
 							Folder = null;
 						}
-						if (Folder != null) {
+
+						if (Folder != null)
+						{
 							char c = System.IO.Path.DirectorySeparatorChar;
-							if (System.IO.Directory.Exists(Folder))
+							if (Directory.Exists(Folder))
 							{
 
-								string File = OpenBveApi.Path.CombineFile(Folder, "train.dat");
+								string File = Path.CombineFile(Folder, "train.dat");
 								if (System.IO.File.Exists(File))
 								{
 									// train found
@@ -1123,11 +1138,13 @@ namespace OpenBve
 									ShowTrain(false);
 									return;
 								}
+
 								if (lastFolder == Folder || recursionTest)
 								{
 									break;
 								}
-								lastFolder = Folder;						
+
+								lastFolder = Folder;
 							}
 							else if (Folder.ToLowerInvariant().Contains(c + "railway" + c))
 							{
@@ -1143,15 +1160,23 @@ namespace OpenBve
 							}
 						}
 					}
+
 					if (Folder == null) continue;
-					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-					if (Info != null) {
+					DirectoryInfo Info = Directory.GetParent(Folder);
+					if (Info != null)
+					{
 						Folder = Info.FullName;
-					} else {
+					}
+					else
+					{
 						break;
 					}
 				}
-			} catch { }
+			}
+			catch
+			{
+				//Something broke, but we don't care as it just shows an error below
+			}
 			// train not found
 			Result.TrainFolder = null;
 			TryLoadImage(pictureboxTrainImage, "train_error.png");
