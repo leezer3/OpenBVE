@@ -385,12 +385,11 @@ namespace TrainManager.Trains
 						{
 							if (TrainManagerBase.CurrentRoute.SecondsSinceMidnight >= StationDepartureTime - buffer.Duration)
 							{
-								if (TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation)
+								if (TrainManagerBase.currentHost.SimulationState == SimulationState.Running)
 								{
 									TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, TrainManagerBase.CurrentRoute.Stations[i].SoundOrigin, null, false);
+									StationDepartureSoundPlayed = true;
 								}
-
-								StationDepartureSoundPlayed = true;
 							}
 						}
 					}
