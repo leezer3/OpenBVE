@@ -94,6 +94,24 @@
 		/// <summary>Sets the bottom edge of the main panel element relative to the texture</summary>
 		Bottom = 40,
 		/// <summary>Sets the center of the main panel element relative to the texture</summary>
-		Center = 41
+		Center = 41,
+		/// <summary>The element is a numerical value used when activated</summary>
+		/// <remarks>Screen switch, touch etc.</remarks>
+		Number = 42,
+		/// <summary>The element contains a size</summary>
+		Size = 43,
+		/// <summary>The element triggers a screen jump</summary>
+		JumpScreen = 44,
+		/// <summary>The element contains a sound index used when activated</summary>
+		SoundIndex = 45,
+		/// <summary>The element contains a list of sound indicies corresponding to states</summary>
+		SoundEntries = 46,
+		/// <summary>The element contains the command used when activated</summary>
+		Command = 47,
+		/// <summary>The element contains a list of command entries corresponding to states</summary>
+		CommandEntries = 48,
+		/// <summary>The option to be supplied to the command</summary>
+		/// <remarks>e.g. Power notch etc.</remarks>
+		CommandOption = 49
 	}
 }

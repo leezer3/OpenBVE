@@ -18,6 +18,10 @@
 		/// <summary>A timetable bitmap overlay</summary>
 		Timetable,
 		/// <summary>The windscreen and wipers overlays</summary>
-		Windscreen
+		Windscreen,
+		/// <summary>A screen switch element</summary>
+		Screen,
+		/// <summary>A touch element</summary>
+		Touch,
 	}
 }
