@@ -46,9 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Panel\Panel2CfgParser.cs" />
+    <Compile Include="Panel\Panel2Cfg\Panel2CfgParser.cs" />
+    <Compile Include="Panel\Panel2Cfg\Panel2CfgParser.Keys.cs" />
+    <Compile Include="Panel\Panel2Cfg\Panel2CfgParser.Sections.cs" />
     <Compile Include="Panel\PanelAnimatedXmlParser.cs" />
-    <Compile Include="Panel\PanelCfgParser.cs" />
+    <Compile Include="Panel\PanelCfg\PanelCfg.Keys.cs" />
+    <Compile Include="Panel\PanelCfg\PanelCfg.Sections.cs" />
+    <Compile Include="Panel\PanelCfg\PanelCfgParser.cs" />
     <Compile Include="Panel\PanelXmlParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
