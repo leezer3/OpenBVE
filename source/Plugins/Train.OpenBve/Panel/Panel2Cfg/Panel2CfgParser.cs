@@ -28,10 +28,7 @@ namespace Train.OpenBve
 			Plugin = plugin;
 		}
 
-		// constants
-		private  double StackDistance = 0.000001;
-		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
-		private const double EyeDistance = 1.0;
+		
 
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
@@ -55,11 +52,7 @@ namespace Train.OpenBve
 				}
 			}
 			// initialize
-			double PanelResolution = 1024.0;
-			double PanelLeft = 0.0, PanelRight = 1024.0;
-			double PanelTop = 0.0, PanelBottom = 1024.0;
-			Vector2 PanelCenter = new Vector2(0, 512);
-			Vector2 PanelOrigin = new Vector2(0, 512);
+			
 			string PanelDaytimeImage = null;
 			string PanelNighttimeImage = null;
 			Color24 PanelTransparentColor = Color24.Blue;
@@ -91,7 +84,7 @@ namespace Train.OpenBve
 												}
 												if (pr > 100)
 												{
-													PanelResolution = pr;
+													Panel.Resolution = pr;
 												}
 												else
 												{
@@ -101,33 +94,33 @@ namespace Train.OpenBve
 												}
 												break;
 											case Key.Left:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelLeft)) {
+												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Panel.TopLeft.X)) {
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line" + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case Key.Right:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelRight)) {
+												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Panel.BottomRight.X)) {
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												}
 
 												if (Plugin.CurrentOptions.EnableBveTsHacks)
 												{
-													switch ((int) PanelRight)
+													switch ((int)Panel.BottomRight.X)
 													{
 														case 1696:
-															if (PanelResolution == 1024 && trainName == "TOQ2000CN1EXP10" || trainName == "TOQ8500CS8EXP10")
+															if (Panel.Resolution == 1024 && trainName == "TOQ2000CN1EXP10" || trainName == "TOQ8500CS8EXP10")
 															{
-																PanelRight = 1024;
+																Panel.BottomRight.X = 1024;
 															}
 															break;
 													}
 												}
 												break;
 											case Key.Top:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelTop)) {
+												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Panel.TopLeft.Y)) {
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case Key.Bottom:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelBottom)) {
+												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Panel.BottomRight.Y)) {
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case Key.DaytimeImage:
@@ -165,15 +158,15 @@ namespace Train.OpenBve
 													{
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X)) {
+														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Panel.Center.X)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenter.Y)) {
+														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Panel.Center.Y)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 														if (Plugin.CurrentOptions.EnableBveTsHacks)
 														{
-															switch ((int)PanelCenter.Y)
+															switch ((int)Panel.Center.Y)
 															{
 																case 180:
 																	switch (trainName.ToUpperInvariant())
@@ -181,7 +174,7 @@ namespace Train.OpenBve
 																		case "LT_C69_77":
 																		case "LT_C69_77_V2":
 																			// Broken initial zoom
-																			PanelCenter.Y = 350;
+																			Panel.Center.Y = 350;
 																			break;
 																	}
 																	break;
@@ -190,19 +183,19 @@ namespace Train.OpenBve
 																	{
 																		case "HM05":
 																			// Broken initial zoom
-																			PanelCenter.Y = 350;
+																			Panel.Center.Y = 350;
 																			break;
 																	}
 																	break;
 																case 229:
-																	if (PanelBottom == 768 && PanelResolution == 1024)
+																	if (Panel.BottomRight.Y == 768 && Panel.Resolution == 1024)
 																	{
 																		// Martin Finken's BVE4 trams: Broken initial zoom
-																		PanelCenter.Y = 350;
+																		Panel.Center.Y = 350;
 																	}
 																	break;
 																case 255:
-																	if (PanelBottom == 1024 && PanelResolution == 1024)
+																	if (Panel.BottomRight.Y == 1024 && Panel.Resolution == 1024)
 																	{
 																		switch (trainName.ToUpperInvariant())
 																		{
@@ -214,13 +207,13 @@ namespace Train.OpenBve
 																			case "LT1938":
 																			case "LT1973 UNREFURB":
 																				// Broken initial zoom
-																				PanelCenter.Y = 350;
+																				Panel.Center.Y = 350;
 																				break;
 																			case "LT_A60_62":
 																			case "LT1972 MKII":
 																				// Broken initial zoom and black patch at bottom of panel
-																				PanelCenter.Y = 350;
-																				PanelBottom = 792;
+																				Panel.Center.Y = 350;
+																				Panel.BottomRight.Y = 792;
 																				break;
 																		}
 																	}
@@ -239,10 +232,10 @@ namespace Train.OpenBve
 													{
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X)) {
+														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Panel.Origin.X)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOrigin.Y)) {
+														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Panel.Origin.Y)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 														if (Plugin.CurrentOptions.EnableBveTsHacks)
@@ -250,10 +243,10 @@ namespace Train.OpenBve
 															switch (trainName)
 															{
 																case "8171BETA":
-																	if (PanelResolution == 768 && PanelOrigin.Y == 256)
+																	if (Panel.Resolution == 768 && Panel.Origin.Y == 256)
 																	{
 																		// 81-71: Bust panel origin means a flying cab....
-																		PanelOrigin.Y = 0;
+																		Panel.Origin.Y = 0;
 																	}
 																	break;
 															}
@@ -272,20 +265,20 @@ namespace Train.OpenBve
 			{ // camera restriction
 				double WorldWidth, WorldHeight;
 				if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
-					WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+					WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * Panel.EyeDistance;
 					WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
 				} else {
-					WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
+					WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * Panel.EyeDistance / Plugin.Renderer.Screen.AspectRatio;
 					WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
 				}
-				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
-				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-				Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
-				Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
-				Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
-				Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
+				double x0 = (Panel.TopLeft.X - Panel.Center.X) / Panel.Resolution;
+				double x1 = (Panel.BottomRight.X - Panel.Center.X) / Panel.Resolution;
+				double y0 = (Panel.Center.Y - Panel.BottomRight.Y) / Panel.Resolution * Plugin.Renderer.Screen.AspectRatio;
+				double y1 = (Panel.Center.Y - Panel.TopLeft.Y) / Panel.Resolution * Plugin.Renderer.Screen.AspectRatio;
+				Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, Panel.EyeDistance);
+				Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, Panel.EyeDistance);
+				Car.DriverYaw = Math.Atan((Panel.Center.X - Panel.Origin.X) * WorldWidth / Panel.Resolution);
+				Car.DriverPitch = Math.Atan((Panel.Origin.Y - Panel.Center.Y) * WorldWidth / Panel.Resolution);
 			}
 			// create panel
 			if (PanelDaytimeImage != null) {
@@ -302,7 +295,7 @@ namespace Train.OpenBve
 							Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight, true);
 						}
 					}
-					CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight);
+					Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, Car.Driver, tday, tnight);
 				}
 			}
 
@@ -416,7 +409,7 @@ namespace Train.OpenBve
 										}
 										int w = tday.Width;
 										int h = tday.Height;
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
+										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), Layer, Car.Driver, tday, tnight, Color32.White);
 										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
 										try
 										{
@@ -603,7 +596,7 @@ namespace Train.OpenBve
 										double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 										double nx = n * tday.Width;
 										double ny = n * tday.Height;
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color);
+										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), Layer, Car.Driver, tday, tnight, Color);
 										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
 										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
 										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection, Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection);
@@ -772,7 +765,7 @@ namespace Train.OpenBve
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight, true);
 										}
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
+										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), Layer, Car.Driver, tday, tnight, Color32.White);
 										if (Maximum < Minimum)
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -957,7 +950,7 @@ namespace Train.OpenBve
 											}
 											int j = -1;
 											for (int k = 0; k < tday.Length; k++) {
-												int l = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, wday, Interval, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday[k], tnight[k], Color32.White, k != 0);
+												int l = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, wday, Interval, new Vector2(0.5, 0.5), Layer, Car.Driver, tday[k], tnight[k], Color32.White, k != 0);
 												if (k == 0) j = l;
 											}
 											string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
@@ -976,20 +969,20 @@ namespace Train.OpenBve
 												{
 													if (Subject == "power")
 													{
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.Panel.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerDecrease } }, new Vector2(0.5, 0.5), 0, Car.Driver);
+														Plugin.Panel.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerIncrease } }, new Vector2(0.5, 0.5), 0, Car.Driver);
 													}
 
 													if (Subject == "brake")
 													{
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.Panel.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeIncrease } }, new Vector2(0.5, 0.5), 0, Car.Driver);
+														Plugin.Panel.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeDecrease } }, new Vector2(0.5, 0.5), 0, Car.Driver);
 													}
 
 													if (Subject == "reverser")
 													{
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserForward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserBackward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+														Plugin.Panel.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserForward } }, new Vector2(0.5, 0.5), 0, Car.Driver);
+														Plugin.Panel.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserBackward } }, new Vector2(0.5, 0.5), 0, Car.Driver);
 													}
 												}
 											}
@@ -1105,7 +1098,7 @@ namespace Train.OpenBve
 									}
 									if (Radius != 0.0) {
 										// create element
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color);
+										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), Layer, Car.Driver, null, null, Color);
 										InitialAngle = InitialAngle + Math.PI;
 										LastAngle = LastAngle + Math.PI;
 										double x0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
@@ -1236,7 +1229,7 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Width > 0.0 & Height > 0.0) {
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color32.White);
+										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), Layer, Car.Driver, null, null, Color32.White);
 										try
 										{
 											Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "panel2timetable", false);
@@ -1252,8 +1245,8 @@ namespace Train.OpenBve
 							case Panel2Cfg.Section.Windscreen:
 								{
 									i++;
-									Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
-									Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
+									Vector2 topLeft = new Vector2(Panel.TopLeft);
+									Vector2 bottomRight = new Vector2(Panel.BottomRight);
 									int numberOfDrops = 16, Layer = 0, dropSize = 16;
 									WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
 									List<string> daytimeDropFiles, nighttimeDropFiles, daytimeFlakeFiles, nighttimeFlakeFiles;
@@ -1481,8 +1474,8 @@ namespace Train.OpenBve
 										int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
 										double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
 										//Create both a drop and a snowflake at the same position, the windscreen code will determine which is shown
-										int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
-										int panelFlakeIndex = CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
+										int panelDropIndex = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer,  Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
+										int panelFlakeIndex = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
 										string f = drop + " raindrop";
 										string f2 = drop + " snowflake";
 										try
@@ -1719,98 +1712,7 @@ namespace Train.OpenBve
 			return Code + Suffix;
 		}
 
-		internal int CreateElement(ref ElementsGroup Group, double Left, double Top, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, bool AddStateToLastElement = false)
-		{
-			return CreateElement(ref Group, Left, Top, DaytimeTexture.Width, DaytimeTexture.Height, RelativeRotationCenter, Distance, PanelResolution, PanelBottom, PanelCenter, Driver, DaytimeTexture, NighttimeTexture, Color32.White, AddStateToLastElement);
-		}
-
-		internal int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
-		{
-			if (Width == 0 || Height == 0)
-			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
-			}
-			double WorldWidth, WorldHeight;
-			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
-				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
-			} else {
-				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
-				WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
-			}
-			double x0 = Left / PanelResolution;
-			double x1 = (Left + Width) / PanelResolution;
-			double y0 = (PanelBottom - Top) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			double xd = 0.5 - PanelCenter.X / PanelResolution;
-			x0 += xd; x1 += xd;
-			double yt = PanelBottom - PanelResolution / Plugin.Renderer.Screen.AspectRatio;
-			double yd = (PanelCenter.Y - yt) / (PanelBottom - yt) - 0.5;
-			y0 += yd; y1 += yd;
-			x0 = (x0 - 0.5) * WorldWidth;
-			x1 = (x1 - 0.5) * WorldWidth;
-			y0 = (y0 - 0.5) * WorldHeight;
-			y1 = (y1 - 0.5) * WorldHeight;
-			double xm = x0 * (1.0 - RelativeRotationCenter.X) + x1 * RelativeRotationCenter.X;
-			double ym = y0 * (1.0 - RelativeRotationCenter.Y) + y1 * RelativeRotationCenter.Y;
-			Vector3[] v = new Vector3[4];
-			v[0] = new Vector3(x0 - xm, y1 - ym, 0);
-			v[1] = new Vector3(x0 - xm, y0 - ym, 0);
-			v[2] = new Vector3(x1 - xm, y0 - ym, 0);
-			v[3] = new Vector3(x1 - xm, y1 - ym, 0);
-			Vertex t0 = new Vertex(v[0], new Vector2(0.0f, 1.0f));
-			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
-			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
-			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
-			StaticObject Object = new StaticObject(Plugin.currentHost);
-			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
-			Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 3 }) };
-			Object.Mesh.Materials = new MeshMaterial[1];
-			Object.Mesh.Materials[0].Flags = new MaterialFlags();
-			if (DaytimeTexture != null)
-			{
-				Object.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
-
-				if (NighttimeTexture != null)
-				{
-					// In BVE4 and versions of OpenBVE prior to v1.7.1.0, elements with NighttimeImage defined are rendered with lighting disabled.
-					Object.Mesh.Materials[0].Flags |= MaterialFlags.DisableLighting;
-				}
-			}
-			Object.Mesh.Materials[0].Color = Color;
-			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
-			Object.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
-			Object.Mesh.Materials[0].NighttimeTexture = NighttimeTexture;
-			Object.Dynamic = true;
-			// calculate offset
-			Vector3 o;
-			o.X = xm + Driver.X;
-			o.Y = ym + Driver.Y;
-			o.Z = EyeDistance - Distance + Driver.Z;
-			// add object
-			if (AddStateToLastElement) {
-				int n = Group.Elements.Length - 1;
-				int j = Group.Elements[n].States.Length;
-				Array.Resize(ref Group.Elements[n].States, j + 1);
-				Group.Elements[n].States[j] = new ObjectState
-				{
-					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
-					Prototype = Object
-				};
-				return n;
-			} else {
-				int n = Group.Elements.Length;
-				Array.Resize(ref Group.Elements, n + 1);
-				Group.Elements[n] = new AnimatedObject(Plugin.currentHost);
-				Group.Elements[n].States = new[] { new ObjectState() };
-				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Group.Elements[n].States[0].Prototype = Object;
-				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].internalObject = new ObjectState { Prototype = Object };
-				Plugin.currentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
-				return n;
-			}
-		}
+		
 
 	}
 }

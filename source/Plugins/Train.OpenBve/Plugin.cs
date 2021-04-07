@@ -55,6 +55,8 @@ namespace Train.OpenBve
 
 	    internal Control[] CurrentControls;
 
+	    internal Panel Panel;
+
 	    internal double LastProgress;
 
 		public Plugin()
@@ -83,6 +85,7 @@ namespace Train.OpenBve
 			    Panel2CfgParser = new Panel2CfgParser(this);
 			    PanelXmlParser = new PanelXmlParser(this);
 			    PanelAnimatedXmlParser = new PanelAnimatedXmlParser(this);
+			    Panel = new Panel(this);
 		    }
 
 		    if (TrainXmlParser == null)

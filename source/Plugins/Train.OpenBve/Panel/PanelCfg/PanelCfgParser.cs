@@ -27,7 +27,6 @@ namespace Train.OpenBve
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed</remarks>
 		private const double EyeDistance = 1.0;
 
-		private double WorldWidth, WorldHeight, WorldLeft, WorldTop;
 		private double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
 
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
@@ -55,19 +54,19 @@ namespace Train.OpenBve
 
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
 			{
-				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / AspectRatio;
+				Panel.BottomRight.X = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+				Panel.BottomRight.Y = Panel.BottomRight.X / AspectRatio;
 			}
 			else
 			{
-				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance;
-				WorldWidth = WorldHeight * AspectRatio;
+				Panel.BottomRight.Y = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance;
+				Panel.BottomRight.X = Panel.BottomRight.Y * AspectRatio;
 			}
 
-			Car.CameraRestriction.BottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
-			Car.CameraRestriction.TopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
-			WorldLeft = Car.Driver.X - 0.5 * WorldWidth;
-			WorldTop = Car.Driver.Y + 0.5 * WorldHeight;
+			Car.CameraRestriction.BottomLeft = new Vector3(-0.5 * Panel.BottomRight.X, -0.5 * Panel.BottomRight.Y, EyeDistance);
+			Car.CameraRestriction.TopRight = new Vector3(0.5 * Panel.BottomRight.X, 0.5 * Panel.BottomRight.Y, EyeDistance);
+			Panel.TopLeft.X = Car.Driver.X - 0.5 * Panel.BottomRight.X;
+			Panel.TopLeft.Y = Car.Driver.Y + 0.5 * Panel.BottomRight.Y;
 			double WorldZ = Car.Driver.Z;
 			const double UpDownAngleConstant = -0.191986217719376;
 			double PanelYaw = 0.0;
@@ -1533,8 +1532,8 @@ namespace Train.OpenBve
 			// create object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			Vector3[] v = new Vector3[4];
-			double sx = 0.5 * WorldWidth * Width / FullWidth;
-			double sy = 0.5 * WorldHeight * Height / FullHeight;
+			double sx = 0.5 * Panel.BottomRight.X * Width / FullWidth;
+			double sy = 0.5 * Panel.BottomRight.Y * Height / FullHeight;
 			v[0] = new Vector3(-sx, -sy, 0);
 			v[1] = new Vector3(-sx, sy, 0);
 			v[2] = new Vector3(sx, sy, 0);
@@ -1559,8 +1558,8 @@ namespace Train.OpenBve
 			Object.Dynamic = true;
 			// calculate offset
 			Vector3 o;
-			o.X = WorldLeft + sx + WorldWidth * Left / FullWidth;
-			o.Y = WorldTop - sy - WorldHeight * Top / FullHeight;
+			o.X = Panel.TopLeft.X + sx + Panel.BottomRight.X * Left / FullWidth;
+			o.Y = Panel.TopLeft.Y - sy - Panel.BottomRight.Y * Top / FullHeight;
 			o.Z = WorldZ;
 			// add object
 			if (AddStateToLastElement)
