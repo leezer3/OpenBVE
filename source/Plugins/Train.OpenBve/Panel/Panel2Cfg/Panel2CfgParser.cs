@@ -328,7 +328,7 @@ namespace Train.OpenBve
 							case Panel2Cfg.Section.PilotLamp:
 								{
 									string Subject = "true";
-									double LocationX = 0.0, LocationY = 0.0;
+									Vector2 Location = new Vector2();
 									string DaytimeImage = null, NighttimeImage = null;
 									Color24 TransparentColor = Color24.Blue;
 									int Layer = 0;
@@ -352,10 +352,10 @@ namespace Train.OpenBve
 													{
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
+														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Location.X)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
+														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Location.Y)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} else {
@@ -409,7 +409,7 @@ namespace Train.OpenBve
 										}
 										int w = tday.Width;
 										int h = tday.Height;
-										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), Layer, Car.Driver, tday, tnight, Color32.White);
+										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, w, h, new Vector2(0.5, 0.5), Layer, Car.Driver, tday, tnight, Color32.White);
 										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
 										try
 										{
@@ -425,11 +425,11 @@ namespace Train.OpenBve
 							case Panel2Cfg.Section.Needle:
 								{
 									string Subject = "true";
-									double LocationX = 0.0, LocationY = 0.0;
+									Vector2 Location = new Vector2();
 									string DaytimeImage = null, NighttimeImage = null;
 									Color32 Color = Color32.White;
 									Color24 TransparentColor = Color24.Blue;
-									double OriginX = -1.0, OriginY = -1.0;
+									Vector2 Origin = new Vector2(-1, -1);
 									bool OriginDefined = false;
 									double Layer = 0.0, Radius = 0.0;
 									double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
@@ -457,10 +457,10 @@ namespace Train.OpenBve
 														{
 															string a = Value.Substring(0, k).TrimEnd();
 															string b = Value.Substring(k + 1).TrimStart();
-															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
+															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Location.X)) {
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
-															if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
+															if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Location.Y)) {
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
 														} else {
@@ -513,12 +513,12 @@ namespace Train.OpenBve
 														{
 															string a = Value.Substring(0, k).TrimEnd();
 															string b = Value.Substring(k + 1).TrimStart();
-															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX)) {
+															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Origin.X)) {
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
-															if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out OriginY)) {
+															if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Origin.Y)) {
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-																OriginX = -OriginX;
+																Origin.X = -Origin.X;
 															}
 															OriginDefined = true;
 														} else {
@@ -588,15 +588,15 @@ namespace Train.OpenBve
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight, true);
 										}
 										if (!OriginDefined) {
-											OriginX = 0.5 * tday.Width;
-											OriginY = 0.5 * tday.Height;
+											Origin.X = 0.5 * tday.Width;
+											Origin.Y = 0.5 * tday.Height;
 										}
-										double ox = OriginX / tday.Width;
-										double oy = OriginY / tday.Height;
-										double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
+										double ox = Origin.X / tday.Width;
+										double oy = Origin.Y / tday.Height;
+										double n = Radius == 0.0 | Origin.Y == 0.0 ? 1.0 : Radius / Origin.Y;
 										double nx = n * tday.Width;
 										double ny = n * tday.Height;
-										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), Layer, Car.Driver, tday, tnight, Color);
+										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X - ox * nx, Location.Y - oy * ny, nx, ny, new Vector2(ox, oy), Layer, Car.Driver, tday, tnight, Color);
 										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
 										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
 										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection, Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection);
@@ -1165,7 +1165,7 @@ namespace Train.OpenBve
 								// timetable
 							case Panel2Cfg.Section.Timetable:
 								{
-									double LocationX = 0.0, LocationY = 0.0;
+									Vector2 Location = new Vector2();
 									double Width = 0.0, Height = 0.0;
 									//We read the transparent color for the timetable from the config file, but it is never used
 									//TODO: Fix or depreciate??
@@ -1189,10 +1189,10 @@ namespace Train.OpenBve
 													{
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
+														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Location.X)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
+														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Location.Y)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} else {
@@ -1229,7 +1229,7 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Width > 0.0 & Height > 0.0) {
-										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), Layer, Car.Driver, null, null, Color32.White);
+										int j = Plugin.Panel.CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, Width, Height, new Vector2(0.5, 0.5), Layer, Car.Driver, null, null, Color32.White);
 										try
 										{
 											Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "panel2timetable", false);
