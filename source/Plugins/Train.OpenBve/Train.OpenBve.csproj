@@ -86,6 +86,10 @@
       <Project>{d0fca2c5-ff75-42d8-ae80-310280a61fb1}</Project>
       <Name>TrainManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Formats.OpenBve\Formats.OpenBve.csproj">
+      <Project>{60adcb15-1e0e-4708-93a5-f1248df73a03}</Project>
+      <Name>Formats.OpenBve</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

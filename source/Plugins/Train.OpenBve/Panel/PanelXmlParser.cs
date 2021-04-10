@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Formats.OpenBve;
 using LibRender2.Trains;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
@@ -68,163 +69,32 @@ namespace Train.OpenBve
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
+			XmlBlock panelBlock = new XmlBlock(Plugin.currentHost, FileName, Element, "PanelXml");
 			// initialize
 
 			if (GroupIndex == 0)
 			{
-				string PanelDaytimeImage = null;
-				string PanelNighttimeImage = null;
-				Color24 PanelTransparentColor = Color24.Blue;
-
-				foreach (XElement SectionElement in Element.Elements())
+				Block mainBlock = panelBlock.ReadSubBlock(Section.This);
+				if (mainBlock == null)
 				{
-					if (!Enum.TryParse(SectionElement.Name.LocalName, true, out Section Section))
-					{
-						Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognised section " + SectionElement.Name.LocalName + " at line " + ((IXmlLineInfo)SectionElement).LineNumber.ToString(Culture) + " in " + FileName);
-					}
-					switch (Section)
-					{
-						case Section.This:
-							foreach (XElement KeyNode in SectionElement.Elements())
-							{
-								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
-								if (!Enum.TryParse(KeyNode.Name.LocalName, true, out Key Key))
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognised key " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-								}
-								string Value = KeyNode.Value;
-								
-								switch (Key)
-								{
-									case Key.Resolution:
-										double pr = 0.0;
-										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out pr))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										if (pr > 100)
-										{
-											Panel.Resolution = pr;
-										}
-										else
-										{
-											//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
-											//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										break;
-									case Key.Left:
-										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Panel.TopLeft.X))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line" + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										break;
-									case Key.Right:
-										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Panel.BottomRight.X))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										break;
-									case Key.Top:
-										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Panel.TopLeft.Y))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										break;
-									case Key.Bottom:
-										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Panel.BottomRight.Y))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										break;
-									case Key.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										else
-										{
-											PanelDaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(PanelDaytimeImage))
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												PanelDaytimeImage = null;
-											}
-										}
-										break;
-									case Key.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										else
-										{
-											PanelNighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(PanelNighttimeImage))
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												PanelNighttimeImage = null;
-											}
-										}
-										break;
-									case Key.TransparentColor:
-										if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out PanelTransparentColor))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-
-										break;
-									case Key.Center:
-										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Panel.Center.X))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Panel.Center.Y))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											break;
-										}
-									case Key.Origin:
-										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Panel.Origin.X))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Panel.Origin.Y))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
-											break;
-										}
-								}
-							}
-							break;
-					}
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The 'This' section was not found in panel file: " + FileName);
+					return;
 				}
+				double resolution = mainBlock.ReadDouble(Key.Resolution);
+				if (resolution > 100)
+				{
+					Panel.Resolution = resolution;
+				}
+
+				Panel.TopLeft.X = mainBlock.ReadDouble(Key.Left);
+				Panel.TopLeft.Y = mainBlock.ReadDouble(Key.Top);
+				Panel.BottomRight.X = mainBlock.ReadDouble(Key.Right);
+				Panel.BottomRight.Y = mainBlock.ReadDouble(Key.Bottom);
+				Color24 panelTransparentColor = mainBlock.ReadColor24(Key.TransparentColor, Color24.Blue);
+				Texture panelDaytimeImage = mainBlock.LoadTexture(Key.DaytimeImage, Train.TrainFolder, new TextureParameters(null, panelTransparentColor), true);
+				Texture panelNighttimeImage = mainBlock.LoadTexture(Key.NighttimeImage, Train.TrainFolder, new TextureParameters(null, panelTransparentColor), true);
+				Panel.Center = mainBlock.ReadVector2(Key.Center);
+				Panel.Origin = mainBlock.ReadVector2(Key.Origin);
 
 				// camera restriction
 				double WorldWidth, WorldHeight;
@@ -248,29 +118,13 @@ namespace Train.OpenBve
 				Train.Cars[Car].DriverPitch = Math.Atan((Panel.Origin.Y - Panel.Center.Y) * WorldWidth / Panel.Resolution);
 
 				// create panel
-				if (PanelDaytimeImage != null)
+				if (panelDaytimeImage != null)
 				{
-					if (!File.Exists(PanelDaytimeImage))
-					{
-						Plugin.currentHost.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
-					}
-					else
-					{
-						Plugin.currentHost.LoadTexture(PanelDaytimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out var tday);
-						Texture tnight = null;
-						if (PanelNighttimeImage != null)
-						{
-							if (!File.Exists(PanelNighttimeImage))
-							{
-								Plugin.currentHost.AddMessage(MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
-							}
-							else
-							{
-								Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
-							}
-						}
-						Plugin.Panel.CreateElement(ref CarSection.Groups[GroupIndex], 0, 0, new Vector2(0.5, 0.5), OffsetLayer, Train.Cars[Car].Driver, tday, tnight);
-					}
+					Plugin.Panel.CreateElement(ref CarSection.Groups[GroupIndex], 0, 0, new Vector2(0.5, 0.5), OffsetLayer, Train.Cars[Car].Driver, panelDaytimeImage, panelNighttimeImage);
+				}
+				else
+				{
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The main panel image was not found in panel file: " + FileName);
 				}
 			}
 
@@ -1126,35 +980,6 @@ namespace Train.OpenBve
 								if (wday > 0 & hday > 0)
 								{
 									int numFrames = hday / Interval;
-									if (Plugin.CurrentOptions.EnableBveTsHacks)
-									{
-										/*
-										 * With hacks enabled, the final frame does not necessarily need to be
-										 * completely within the confines of the texture
-										 * e.g. LT_C69_77
-										 * https://github.com/leezer3/OpenBVE/issues/247
-										 */
-										switch (Subject)
-										{
-											case "power":
-												if (Train.Handles.Power.MaximumNotch > numFrames)
-												{
-													numFrames = Train.Handles.Power.MaximumNotch;
-												}
-												break;
-											case "brake":
-												int b = Train.Handles.Brake.MaximumNotch + 2;
-												if (Train.Handles.HasHoldBrake)
-												{
-													b++;
-												}
-												if (b > numFrames)
-												{
-													numFrames = b;
-												}
-												break;
-										}
-									}
 									Texture[] tday = new Texture[numFrames];
 									Texture[] tnight;
 									for (int k = 0; k < numFrames; k++)
