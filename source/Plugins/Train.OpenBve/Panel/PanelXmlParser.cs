@@ -342,7 +342,7 @@ namespace Train.OpenBve
 					}
 					else
 					{
-						Plugin.currentHost.LoadTexture(PanelDaytimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out var tday);
+						Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out var tday, true);
 						Texture tnight = null;
 						if (PanelNighttimeImage != null)
 						{
@@ -352,7 +352,7 @@ namespace Train.OpenBve
 							}
 							else
 							{
-								Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
+								Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight, true);
 							}
 						}
 						Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], 0.0, 0.0, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight);
@@ -655,11 +655,11 @@ namespace Train.OpenBve
 							// create element
 							if (DaytimeImage != null)
 							{
-								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday);
+								Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday, true);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
-									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight, true);
 								}
 								int w = tday.Width;
 								int h = tday.Height;
@@ -870,11 +870,11 @@ namespace Train.OpenBve
 							// create element
 							if (DaytimeImage != null)
 							{
-								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday);
+								Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday, true);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
-									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight, true);
 								}
 								if (!OriginDefined)
 								{
@@ -1057,11 +1057,11 @@ namespace Train.OpenBve
 							// create element
 							if (DaytimeImage != null)
 							{
-								Plugin.currentHost.LoadTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday);
+								Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out var tday, true);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
-									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight, true);
 								}
 								int w = tday.Width;
 								int h = tday.Height;
@@ -1227,7 +1227,7 @@ namespace Train.OpenBve
 									{
 										if ((k + 1) * Interval <= hday)
 										{
-											Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+											Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k], true);
 										}
 										else if (k * Interval >= hday)
 										{
@@ -1236,7 +1236,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+											Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k], true);
 										}
 									}
 									if (NighttimeImage != null)
@@ -1247,7 +1247,7 @@ namespace Train.OpenBve
 										{
 											if ((k + 1) * Interval <= hnight)
 											{
-												Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+												Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k], true);
 											}
 											else if (k * Interval > hnight)
 											{
@@ -1255,7 +1255,7 @@ namespace Train.OpenBve
 											}
 											else
 											{
-												Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+												Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k], true);
 											}
 										}
 
@@ -1743,7 +1743,7 @@ namespace Train.OpenBve
 								TransparentColor = Color24.Blue;
 							}
 
-							Plugin.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop);
+							Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true);
 							daytimeDrops.Add(drop);
 
 						}
@@ -1757,7 +1757,7 @@ namespace Train.OpenBve
 								TransparentColor = Color24.Blue;
 							}
 
-							Plugin.Renderer.TextureManager.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop);
+							Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true);
 							nighttimeDrops.Add(drop);
 						}
 
