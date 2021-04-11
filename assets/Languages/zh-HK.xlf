@@ -12,7 +12,7 @@
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>Alvin Wong, I-Circle BVE, Kenny Hui@HKTSS</target>
+					<target>Alvin Wong@I-Circle, Kenny@HKTSS</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
@@ -65,7 +65,7 @@
 					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
-						<target>較新的 [version] 版本 ([date]) 經已於官方網站提供下載。最新版本的變更：\r\n\r\n</target>
+						<target>最新版本 [version] ([date]) 已經於官方網站提供下載。</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
@@ -73,7 +73,7 @@
 					</trans-unit>
 					<trans-unit id="packages">
 						<source>Package Management</source>
-						<target>包裝管理</target>
+						<target>擴展包管理</target>
 					</trans-unit>
 					<trans-unit id="reportbug">
 						<source>Report Problem</source>
@@ -137,7 +137,7 @@
 					</trans-unit>
 					<trans-unit id="controls_ingame">
 						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
-						<target>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</target>
+						<target>您目前正在使用 [platform] 後端。請使用遊戲菜單中的設置來配置搖桿。</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_version">
 						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
@@ -149,7 +149,7 @@
 					</trans-unit>
 					<trans-unit id="sound_openal_device">
 						<source>The OpenAL sound device could not be opened.</source>
-						<target>無法打開OpenAL聲音設備。</target>
+						<target>無法創建OpenAL聲音設備。</target>
 					</trans-unit>
 					<trans-unit id="fullscreen_switch1">
 						<source>An error occured whilst attempting to switch to fullscreen mode.</source>
@@ -192,11 +192,11 @@
 					</trans-unit>
 					<trans-unit id="package_directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>您嘗試保存包裝文件的目錄不存在: \r \n</target>
+						<target>您嘗試保存擴展包文件的目錄不存在: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
-						<target>嘗試保存包裝文件的目錄中沒有寫訪問權限: \r \n</target>
+						<target>嘗試保存擴展包文件的目錄中沒有寫訪問權限: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
@@ -209,12 +209,6 @@
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 						<target>如果您嘗試在&quot;Program Files&quot;或&quot;ProgramData&quot;文件夾中安裝插件，則可能需要管理員權限. \r\n\r\n 安全考慮，不建議這樣做</target>
-					</trans-unit>
-					<trans-unit id="database_newer_expected">
-						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-					</trans-unit>
-					<trans-unit id="database_invalid_xml">
-						<source>The package database XML was invalid, and has been re-created.</source>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -480,11 +474,11 @@
 					</trans-unit>
 					<trans-unit id="shownlist">
 						<source>These are shown in the list below:</source>
-						<target>These are shown in the list below:</target>
+						<target>這些內容將會在下方列表中列出:</target>
 					</trans-unit>
 					<trans-unit id="selection_none">
 						<source>No package selected.</source>
-						<target>沒有選擇任何包裝</target>
+						<target>沒有選擇任何擴展包</target>
 					</trans-unit>
 					<trans-unit id="selection_none_website">
 						<source>No website provided.</source>
@@ -492,11 +486,11 @@
 					</trans-unit>
 					<trans-unit id="list">
 						<source>Installed Packages</source>
-						<target>已安裝的包裝</target>
+						<target>已安裝的擴展包</target>
 					</trans-unit>
 					<trans-unit id="list_type">
 						<source>Select the type of packages you wish to view:</source>
-						<target>Select the type of packages you wish to view:</target>
+						<target>請選擇你需要查看的擴展包類型:</target>
 					</trans-unit>
 					<trans-unit id="list_name">
 						<source>Name</source>
@@ -532,35 +526,35 @@
 					</trans-unit>
 					<trans-unit id="install_button">
 						<source>Install Package</source>
-						<target>安裝包裝</target>
+						<target>安裝擴展包</target>
 					</trans-unit>
 					<trans-unit id="install_header">
 						<source>Install a Package</source>
-						<target>安裝包裝</target>
+						<target>安裝擴展包</target>
 					</trans-unit>
 					<trans-unit id="install_invalid">
 						<source>This file does not appear to be a valid openBVE package.</source>
-						<target>該文件似乎不是有效的OpenBVE包裝。</target>
+						<target>該文件似乎不是有效的OpenBVE擴展包。</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
 						<source>Package Version Error</source>
-						<target>包裝套件版本錯誤。</target>
+						<target>擴展包套件版本錯誤。</target>
 					</trans-unit>
 					<trans-unit id="install_version_new">
 						<source>The selected package is already installed, and is a newer version.</source>
-						<target>所選包裝已安裝，並且是較新的版本。</target>
+						<target>所選擴展包已安裝，並且是較新的版本。</target>
 					</trans-unit>
 					<trans-unit id="install_version_old">
 						<source>The selected package is already installed, and is an older version.</source>
-						<target>所選包裝已經安裝，並且是較舊的版本。</target>
+						<target>所選擴展包已經安裝，並且是較舊的版本。</target>
 					</trans-unit>
 					<trans-unit id="install_version_same">
 						<source>The selected package is already installed, and is an identical version.</source>
-						<target>所選包裝已安裝，並且是相同版本。</target>
+						<target>所選擴展包已安裝，並且是相同版本。</target>
 					</trans-unit>
 					<trans-unit id="install_success">
 						<source>Package installation was successful.</source>
-						<target>包裝安裝成功。</target>
+						<target>擴展包安裝成功。</target>
 					</trans-unit>
 					<trans-unit id="install_success_header">
 						<source>Installation Successful</source>
@@ -572,63 +566,63 @@
 					</trans-unit>
 					<trans-unit id="install_failure">
 						<source>Unfortunately, package installation failed.</source>
-						<target>軟件包安裝失敗</target>
+						<target>擴展包安裝失敗</target>
 					</trans-unit>
 					<trans-unit id="install_failure_header">
 						<source>Package Installation Failed</source>
-						<target>軟件包安裝失敗</target>
+						<target>擴展包安裝失敗</target>
 					</trans-unit>
 					<trans-unit id="install_select">
 						<source>Select Package......</source>
-						<target>選擇包裝......</target>
+						<target>選擇擴展包......</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_unmet">
 						<source>The current package has unmet dependancies.</source>
-						<target>The current package has unmet dependancies.</target>
+						<target>這個擴展包所依賴的擴展包還沒有被安裝。</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_unmet_header">
 						<source>Dependancy Error</source>
-						<target>相依包裝錯誤</target>
+						<target>相依擴展包錯誤</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_broken">
 						<source>The following dependancies may be broken by this action:</source>
-						<target>The following dependancies may be broken by this action:</target>
+						<target>有些依賴可能被這個動作破壞。</target>
 					</trans-unit>
 					<trans-unit id="install_reccomends_unmet">
 						<source>The following packages are recommended, but not installed:</source>
-						<target>The following packages are recommended, but not installed:</target>
+						<target>該擴展包的作者建議同時安裝以下擴展包:</target>
 					</trans-unit>
 					<trans-unit id="install_reccomends_unmet_header">
 						<source>Recommended Packages</source>
-						<target>建議包裝</target>
+						<target>建議擴展包</target>
 					</trans-unit>
 					<trans-unit id="install_name">
 						<source>Package Name:</source>
-						<target>包裝名稱:</target>
+						<target>擴展包名稱:</target>
 					</trans-unit>
 					<trans-unit id="install_author">
 						<source>Package Author:</source>
-						<target>包裝作者:</target>
+						<target>擴展包作者:</target>
 					</trans-unit>
 					<trans-unit id="install_version">
 						<source>Package Version:</source>
-						<target>包裝版本:</target>
+						<target>擴展包版本:</target>
 					</trans-unit>
 					<trans-unit id="install_website">
 						<source>Package Website:</source>
-						<target>包裝網頁:</target>
+						<target>擴展包網頁:</target>
 					</trans-unit>
 					<trans-unit id="install_description">
 						<source>Package Description:</source>
-						<target>包裝描述:</target>
+						<target>擴展包描述:</target>
 					</trans-unit>
 					<trans-unit id="creation_button">
 						<source>Create Package</source>
-						<target>創建包裝</target>
+						<target>創建擴展包</target>
 					</trans-unit>
 					<trans-unit id="creation_header">
 						<source>Create a Package</source>
-						<target>創建包裝</target>
+						<target>創建擴展包</target>
 					</trans-unit>
 					<trans-unit id="creation_saveas_button">
 						<source>Save As...</source>
@@ -636,15 +630,15 @@
 					</trans-unit>
 					<trans-unit id="creation_saveas_label">
 						<source>Save package as:</source>
-						<target>儲存包裝為</target>
+						<target>儲存擴展包為</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies">
 						<source>Select Dependancies</source>
-						<target>Select Dependancies</target>
+						<target>選擇依賴擴展包</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_add">
 						<source>Add Dependancy</source>
-						<target>Add Dependancy</target>
+						<target>添加依賴</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_remove">
 						<source>Remove</source>
@@ -652,11 +646,11 @@
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
-						<target>Package details and dependancies may be assigned in the following steps.</target>
+						<target>你可以在下一步添加擴展包的細節和依賴。</target>
 					</trans-unit>
 					<trans-unit id="creation_reccommends_add">
 						<source>Add Recommendation</source>
-						<target>Add Recommendation</target>
+						<target>增加建議</target>
 					</trans-unit>
 					<trans-unit id="creation_clearselection">
 						<source>Clear Selection</source>
@@ -668,54 +662,54 @@
 					</trans-unit>
 					<trans-unit id="creation_selecteditems">
 						<source>The following files and folders will be packaged:</source>
-						<target>The following files and folders will be packaged:</target>
+						<target>將會打包以下的檔案:</target>
 					</trans-unit>
 					<trans-unit id="creation_new_guid">
 						<source>The new package has been assigned the following GUID:</source>
-						<target>The new package has been assigned the following GUID:</target>
+						<target>新擴展包已分配了以下GUID：</target>
 					</trans-unit>
 					<trans-unit id="creation_header">
 						<source>Enter Package Details</source>
 					</trans-unit>
 					<trans-unit id="creation_name">
 						<source>Please enter a package name.</source>
-						<target>Please enter a package name.</target>
+						<target>請輸入擴展包名稱。</target>
 					</trans-unit>
 					<trans-unit id="creation_author">
 						<source>Please enter a package author.</source>
-						<target>Please enter a package author.</target>
+						<target>請輸入擴展包作者。</target>
 					</trans-unit>
 					<trans-unit id="creation_description">
 						<source>Please enter a package description.</source>
-						<target>Please enter a package description.</target>
+						<target>請輸入擴展包說明。</target>
 					</trans-unit>
 					<trans-unit id="creation_version">
 						<source>Please enter a valid package version number in the following format: \r\n 1.0.0</source>
-						<target>Please enter a valid package version number in the following format: \r\n 1.0.0</target>
+						<target>請使用以下格式輸入有效的擴展包版本: \r\n 1.0.0</target>
 					</trans-unit>
 					<trans-unit id="creation_version_invalid">
 						<source>You have entered an invalid version number. \r\n Please try again.</source>
-						<target>You have entered an invalid version number. \r\n Please try again.</target>
+						<target>您輸入了無效的版本. \r\n 請重試。</target>
 					</trans-unit>
 					<trans-unit id="creation_success">
 						<source>Package creation was successful.</source>
-						<target>Package creation was successful.</target>
+						<target>擴展包安裝成功。</target>
 					</trans-unit>
 					<trans-unit id="creation_success_header">
 						<source>Package Creation Successful</source>
-						<target>Package Creation Successful</target>
+						<target>擴展包安裝成功</target>
 					</trans-unit>
 					<trans-unit id="creation_success_files">
 						<source>The following files were added to your package:</source>
-						<target>The following files were added to your package:</target>
+						<target>已添加以下檔案到擴展包:</target>
 					</trans-unit>
 					<trans-unit id="creation_failure">
 						<source>Unfortunately, creation of your package failed.</source>
-						<target>Unfortunately, creation of your package failed.</target>
+						<target>創建擴展包失敗</target>
 					</trans-unit>
 					<trans-unit id="creation_failure_header">
 						<source>Package Creation Failed</source>
-						<target>Package Creation Failed</target>
+						<target>創建擴展包失敗</target>
 					</trans-unit>
 					<trans-unit id="creation_failure_error">
 						<source>The following error was encountered:</source>
@@ -735,19 +729,19 @@
 					</trans-unit>
 					<trans-unit id="creation_new_id">
 						<source>The new package has been assigned the following GUID:</source>
-						<target>新軟件包已分配了以下GUID：</target>
+						<target>新擴展包已分配了以下GUID：</target>
 					</trans-unit>
 					<trans-unit id="creation_replace_id">
 						<source>Replacing the package with the following GUID:</source>
-						<target>用以下GUID替換軟件包：</target>
+						<target>用以下GUID替換擴展包：</target>
 					</trans-unit>
 					<trans-unit id="creation_save">
 						<source>Save Package</source>
-						<target>儲存包裝</target>
+						<target>儲存擴展包</target>
 					</trans-unit>
 					<trans-unit id="creation_replace">
 						<source>Is this to replace an existing package?</source>
-						<target>Is this to replace an existing package?</target>
+						<target>這是替代前一個的擴展包的嗎？</target>
 					</trans-unit>
 					<trans-unit id="creation_yes">
 						<source>Yes</source>
@@ -759,15 +753,15 @@
 					</trans-unit>
 					<trans-unit id="replace_select">
 						<source>Replace this Package</source>
-						<target>Replace this Package</target>
+						<target>替代這個擴展包</target>
 					</trans-unit>
 					<trans-unit id="replace_choose">
 						<source>Please select the package you wish to replace:</source>
-						<target>Please select the package you wish to replace:</target>
+						<target>請選擇你想要讓它替代的擴展包:</target>
 					</trans-unit>
 					<trans-unit id="replace_noneavailable">
 						<source>No packages are currently installed.</source>
-						<target>No packages are currently installed.</target>
+						<target>沒有安裝任何擴展包</target>
 					</trans-unit>
 					<trans-unit id="type_route">
 						<source>Route</source>
@@ -783,11 +777,11 @@
 					</trans-unit>
 					<trans-unit id="type_select">
 						<source>Please select the package type:</source>
-						<target>請選擇包裝類型：</target>
+						<target>請選擇擴展包類型：</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure">
 						<source>Unfortunately, uninstallation of this package failed.</source>
-						<target>該軟件包的卸載失敗。</target>
+						<target>該擴展包的卸載失敗。</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure_header">
 						<source>Uninstallation Failed</source>
@@ -803,27 +797,27 @@
 					</trans-unit>
 					<trans-unit id="uninstall_log">
 						<source>A log is shown below:</source>
-						<target>A log is shown below:</target>
+						<target>在卸載過程中執行了下列操作:</target>
 					</trans-unit>
 					<trans-unit id="uninstall_button">
 						<source>Uninstall Package</source>
-						<target>卸載包裝</target>
+						<target>卸載擴展包</target>
 					</trans-unit>
 					<trans-unit id="uninstall_broken">
 						<source>Some existing packages may be broken by this action.</source>
-						<target>Some existing packages may be broken by this action.</target>
+						<target>有些擴展包可能被這個動作破壞。</target>
 					</trans-unit>
 					<trans-unit id="uninstall_missing_xml">
 						<source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
-						<target>Unable to uninstall the selected package. \r\n XML file list missing.</target>
+						<target>無法卸載這個擴展包。 \r\n XML文件缺失。</target>
 					</trans-unit>
 					<trans-unit id="uninstall_database_remove">
 						<source>Do you wish to remove this package from the database?</source>
-						<target>Do you wish to remove this package from the database?</target>
+						<target>你想要從數據庫中移除這個擴展包嗎?</target>
 					</trans-unit>
 					<trans-unit id="database_save_error">
 						<source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
-						<target>An error occured whilst saving the package database. \r\n Please check for write permissions.</target>
+						<target>保存擴展包數據時出現問題。 \r\n 請檢查寫入權限。</target>
 					</trans-unit>
 					<trans-unit id="version_new">
 						<source>New version:</source>
@@ -839,11 +833,11 @@
 					</trans-unit>
 					<trans-unit id="selected">
 						<source>Selected Packages</source>
-						<target>選擇包裝</target>
+						<target>選擇擴展包</target>
 					</trans-unit>
 					<trans-unit id="dependancy">
 						<source>Dependancy</source>
-						<target>相依包裝</target>
+						<target>相依擴展包</target>
 					</trans-unit>
 					<trans-unit id="recommendation">
 						<source>Recommendation</source>
@@ -851,23 +845,23 @@
 					</trans-unit>
 					<trans-unit id="error_action">
 						<source>Please select the action you wish to take:</source>
-						<target>Please select the action you wish to take:</target>
+						<target>請選擇你想採取的操作:</target>
 					</trans-unit>
 					<trans-unit id="error_overwrite">
 						<source>Overwrite</source>
-						<target>Overwrite</target>
+						<target>覆蓋</target>
 					</trans-unit>
 					<trans-unit id="error_replace">
 						<source>Replace</source>
-						<target>Replace</target>
+						<target>取代</target>
 					</trans-unit>
 					<trans-unit id="button_next">
 						<source>Next &gt;</source>
-						<target>下一頁 &gt;</target>
+						<target>下一頁...</target>
 					</trans-unit>
 					<trans-unit id="button_back">
 						<source>&lt; Back</source>
-						<target>&lt; 上一頁</target>
+						<target>上一頁...</target>
 					</trans-unit>
 					<trans-unit id="button_cancel">
 						<source>Cancel</source>
@@ -891,31 +885,31 @@
 					</trans-unit>
 					<trans-unit id="button_abort">
 						<source>Abort</source>
-						<target>Abort</target>
+						<target>停止</target>
 					</trans-unit>
 					<trans-unit id="filename_empty">
 						<source>Attempted to create a package with an empty filename.</source>
-						<target>Attempted to create a package with an empty filename.</target>
+						<target>試圖創建一個帶有空文件名的擴展包。</target>
 					</trans-unit>
 					<trans-unit id="directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>The directory in which you attempted to save the package file does not exist: \r \n</target>
+						<target>您嘗試保存擴展包文件的目錄不存在: \r \n</target>
 					</trans-unit>
 					<trans-unit id="directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
-						<target>No write access available in the directory in which you attempted to save the package file: \r \n</target>
+						<target>嘗試保存擴展包文件的目錄中沒有寫訪問權限: \r \n</target>
 					</trans-unit>
 					<trans-unit id="file_generic">
 						<source>Failed to create the following file: \r \n</source>
-						<target>Failed to create the following file: \r \n</target>
+						<target>無法創建以下文件: \r \n</target>
 					</trans-unit>
 					<trans-unit id="database_newer_expected">
 						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-						<target>包裝資料庫xml無效, 並已重新制造</target>
+						<target>擴展包資料庫xml無效, 並已重新制造</target>
 					</trans-unit>
 					<trans-unit id="database_invalid_xml">
 						<source>The package database XML was invalid, and has been re-created.</source>
-						<target>包裝資料庫xml無效, 並已重新制造</target>
+						<target>擴展包資料庫xml無效, 並已重新制造</target>
 					</trans-unit>
 				</group>
 				<group id="controls">
@@ -999,11 +993,11 @@
 					</trans-unit>
 					<trans-unit id="selection_keyboard_assignment_grab">
 						<source>Click here to enable keyboard grab to automatically select the desired key.</source>
-						<target>Click here to enable keyboard grab to automatically select the desired key.</target>
+						<target>接此啟動偵察鍵盤以自動地選擇適當的鍵。</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_assignment_grabbing">
 						<source>Please press any key...</source>
-						<target>Please press any key...</target>
+						<target> 請按下你想分配的按鍵...</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_key">
 						<source>Key:</source>
@@ -1157,7 +1151,7 @@
 					</trans-unit>
 					<trans-unit id="launch">
 						<source>Launch</source>
-						<target>Launch</target>
+						<target>開放</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
 						<source>No RailDriver conrollers detected.</source>
@@ -1478,7 +1472,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
-						<target>加速時間</target>
+						<target>加速倍數</target>
 					</trans-unit>
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
@@ -1530,11 +1524,11 @@
 					</trans-unit>
 					<trans-unit id="page_previous">
 						<source>Previous Page...</source>
-						<target>&lt; 上一頁</target>
+						<target>上一頁...</target>
 					</trans-unit>
 					<trans-unit id="page_next">
 						<source>Next Page...</source>
-						<target>下一頁 &gt;</target>
+						<target>下一頁...</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode">
 						<source>Kiosk Mode</source>
@@ -2122,7 +2116,7 @@
 					</trans-unit>
 					<trans-unit id="assignment_current">
 						<source>Current assignment:</source>
-						<target>Current assignment:</target>
+						<target>目前分配:</target>
 					</trans-unit>
 				</group>
 				<group id="lamps">
@@ -2585,7 +2579,7 @@
 					</trans-unit>
 					<trans-unit id="misc_gradient">
 						<source>Toggles through different gradient display modes</source>
-						<target>Toggles through different gradient display modes</target>
+						<target>切換到不同的坡度顯示模式</target>
 					</trans-unit>
 					<trans-unit id="misc_dist_next_station">
 						<source>Toggles through different next station remain distance display modes</source>
@@ -2765,15 +2759,15 @@
 					</trans-unit>
 					<trans-unit id="ampersand">
 						<source>Ampersand</source>
-						<target>Ampersand (&amp;)</target>
+						<target>&amp;</target>
 					</trans-unit>
 					<trans-unit id="asterisk">
 						<source>Asterisk</source>
-						<target>Asterisk (*)</target>
+						<target>*</target>
 					</trans-unit>
 					<trans-unit id="at">
 						<source>At</source>
-						<target>At (@)</target>
+						<target>@</target>
 					</trans-unit>
 					<trans-unit id="backquote">
 						<source>Backquote</source>
@@ -2797,7 +2791,7 @@
 					</trans-unit>
 					<trans-unit id="caret">
 						<source>Caret</source>
-						<target>Caret (^)</target>
+						<target>^</target>
 					</trans-unit>
 					<trans-unit id="clear">
 						<source>Clear</source>
@@ -2805,19 +2799,19 @@
 					</trans-unit>
 					<trans-unit id="colon">
 						<source>Colon</source>
-						<target>冒號 (:)</target>
+						<target>:</target>
 					</trans-unit>
 					<trans-unit id="comma">
 						<source>Comma</source>
-						<target>逗號 (,)</target>
+						<target>,</target>
 					</trans-unit>
 					<trans-unit id="delete">
 						<source>Delete</source>
-						<target>刪除鍵(Del)</target>
+						<target>Del</target>
 					</trans-unit>
 					<trans-unit id="dollar">
 						<source>Dollar</source>
-						<target>Dollar ($)</target>
+						<target>$</target>
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
@@ -2832,19 +2826,19 @@
 					</trans-unit>
 					<trans-unit id="equals">
 						<source>Equals</source>
-						<target>Equals (=)</target>
+						<target>=</target>
 					</trans-unit>
 					<trans-unit id="escape">
 						<source>Escape</source>
-						<target>Escape</target>
+						<target>Esc</target>
 					</trans-unit>
 					<trans-unit id="euro">
 						<source>Euro</source>
-						<target>Euro (€)</target>
+						<target>€</target>
 					</trans-unit>
 					<trans-unit id="exclaim">
 						<source>Exclamation</source>
-						<target>Exclamation (!)</target>
+						<target>!</target>
 					</trans-unit>
 					<trans-unit id="f1">
 						<source>F1</source>
@@ -2912,7 +2906,7 @@
 					</trans-unit>
 					<trans-unit id="hash">
 						<source>Hash</source>
-						<target>Hash (#)</target>
+						<target>#</target>
 					</trans-unit>
 					<trans-unit id="help">
 						<source>Help</source>
@@ -3271,9 +3265,6 @@
 						<source>Device:</source>
 						<target>裝置:</target>
 					</trans-unit>
-					<trans-unit id="joystick">
-						<source>[index]: [name]</source>
-					</trans-unit>
 					<trans-unit id="button_section">
 						<source>Button mapping</source>
 						<target>按鈕映射</target>
@@ -3374,11 +3365,11 @@
 					</trans-unit>
 					<trans-unit id="properties_one">
 						<source>Properties (1)</source>
-						<target>Properties (1)</target>
+						<target>特性 (1)</target>
 					</trans-unit>
 					<trans-unit id="properties_two">
 						<source>Properties (2)</source>
-						<target>Properties (2)</target>
+						<target>特性 (2)</target>
 					</trans-unit>
 				</group>
 				<group id="performance">
@@ -3487,33 +3478,33 @@
 					</trans-unit>
 					<trans-unit id="smee">
 						<source>Electromagnetic straight air brake</source>
-						<target>Electromagnetic straight air brake</target>
+						<target>直通式空氣製動</target>
 					</trans-unit>
 					<trans-unit id="ecb">
 						<source>Electro-pneumatic air brake without brake pipe</source>
-						<target>Electro-pneumatic air brake without brake pipe</target>
+						<target>電控空氣製動</target>
 					</trans-unit>
 					<trans-unit id="cl">
 						<source>Air brake with partial release feature</source>
-						<target>Air brake with partial release feature</target>
+						<target>三壓力機構自動空氣製動</target>
 					</trans-unit>
 					<trans-unit id="control_system_none">
 						<source>None</source>
-						<target>None</target>
+						<target>無控制</target>
 					</trans-unit>
 					<trans-unit id="lock_out_valve">
 						<source>Closing electromagnetic valve</source>
-						<target>Closing electromagnetic valve</target>
+						<target>電磁關斷閥</target>
 					</trans-unit>
 					<trans-unit id="delay_including_control">
 						<source>Delay-including control</source>
-						<target>Delay-including control</target>
+						<target>延遲補償控制</target>
 					</trans-unit>
 				</group>
 				<group id="pressure">
 					<trans-unit id="pressure">
 						<source>Pressure</source>
-						<target>Pressure</target>
+						<target>壓力</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_service_max">
 						<source>BrakeCylinderServiceMaximumPressure:</source>
@@ -3539,7 +3530,7 @@
 				<group id="handle">
 					<trans-unit id="handle">
 						<source>Handle</source>
-						<target>Handle</target>
+						<target>手柄</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>HandleType:</source>
@@ -3566,23 +3557,31 @@
 					</trans-unit>
 					<trans-unit id="separated">
 						<source>Separated</source>
-						<target>Separated</target>
+						<target>分開</target>
 					</trans-unit>
 					<trans-unit id="combined">
 						<source>Combined</source>
-						<target>Combined</target>
+						<target>聯控</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked">
+						<source>Separated (Interlocked)</source>
+						<target>分隔 (連鎖)</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked_reverser">
+						<source>Separated (Reverser Interlocked)</source>
+						<target>分隔 (反向器連鎖)</target>
 					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
 						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
-						<target>BrakeNotches must be at least 1 if HoldBrake is set.</target>
+						<target>如果HoldBrake沒有設置, BrakeNotches 一定至少為1 </target>
 					</trans-unit>
 					<trans-unit id="driver_power_notches_error_message">
 						<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
-						<target>DriverPowerNotches must be less than or equal to PowerNotches.</target>
+						<target>DriverPowerNotches 一定要少過或等於 PowerNotches。</target>
 					</trans-unit>
 					<trans-unit id="driver_brake_notches_error_message">
 						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
-						<target>DriverBrakeNotches must be less than or equal to BrakeNotches.</target>
+						<target>DriverBrakeNotches 一定要少過或等於 BrakeNotches。</target>
 					</trans-unit>
 				</group>
 				<group id="cab">
@@ -3596,7 +3595,7 @@
 					</trans-unit>
 					<trans-unit id="driver_car_error_message">
 						<source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
-						<target>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</target>
+						<target>DriverCar 一定要少過 NumberOfMotorCars + NumberOfTrailerCars.</target>
 					</trans-unit>
 				</group>
 				<group id="car">
@@ -3650,7 +3649,7 @@
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars_error_message">
 						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
-						<target>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</target>
+						<target>如果FrontCarIsAMotorCar沒有設置, NumberOfTrailerCars 一定至少為1 </target>
 					</trans-unit>
 				</group>
 				<group id="device">
@@ -3694,47 +3693,47 @@
 					</trans-unit>
 					<trans-unit id="manual_switching">
 						<source>Manual switching</source>
-						<target>Manual switching</target>
+						<target>手動切換</target>
 					</trans-unit>
 					<trans-unit id="automatic_switching">
 						<source>Automatic switching</source>
-						<target>Automatic switching</target>
+						<target>自動切換</target>
 					</trans-unit>
 					<trans-unit id="type_a">
 						<source>Type A (instant)</source>
-						<target>Type A (instant)</target>
+						<target>Type A (即時)</target>
 					</trans-unit>
 					<trans-unit id="type_b">
 						<source>Type B (slow)</source>
-						<target>Type B (slow)</target>
+						<target>Type B (緩慢)</target>
 					</trans-unit>
 					<trans-unit id="type_c">
 						<source>Type C (medium)</source>
-						<target>Type C (medium)</target>
+						<target>Type C (適中)</target>
 					</trans-unit>
 					<trans-unit id="type_d">
 						<source>Type D (fast)</source>
-						<target>Type D (fast)</target>
+						<target>Type D (快速)</target>
 					</trans-unit>
 					<trans-unit id="single">
 						<source>Single</source>
-						<target>Single</target>
+						<target>單一</target>
 					</trans-unit>
 					<trans-unit id="looping">
 						<source>Looping</source>
-						<target>Looping</target>
+						<target>重複</target>
 					</trans-unit>
 					<trans-unit id="semi_automatic">
 						<source>Semi-automatic</source>
-						<target>Semi-automatic</target>
+						<target>半自動</target>
 					</trans-unit>
 					<trans-unit id="automatic">
 						<source>Automatic</source>
-						<target>Automatic</target>
+						<target>自動</target>
 					</trans-unit>
 					<trans-unit id="manual">
 						<source>Manual</source>
-						<target>Manual</target>
+						<target>手動</target>
 					</trans-unit>
 				</group>
 				<group id="acceleration">
@@ -3746,15 +3745,15 @@
 					</trans-unit>
 					<trans-unit id="data">
 						<source>Data</source>
-						<target>Data</target>
+						<target>數據</target>
 					</trans-unit>
 					<trans-unit id="preview">
 						<source>Preview</source>
-						<target>Preview</target>
+						<target>預覽</target>
 					</trans-unit>
 					<trans-unit id="subtract_deceleration">
 						<source>Subtract deceleration due to air and rolling resistance</source>
-						<target>Subtract deceleration due to air and rolling resistance</target>
+						<target>減去由於空氣與滾動摩擦產生的阻力</target>
 					</trans-unit>
 					<trans-unit id="max_x">
 						<source>Xmax:</source>
@@ -3768,11 +3767,11 @@
 				<group id="motor">
 					<trans-unit id="sound">
 						<source>Motor Sound</source>
-						<target>Motor Sound</target>
+						<target>電機音</target>
 					</trans-unit>
 					<trans-unit id="edit">
 						<source>Edit mode</source>
-						<target>Edit mode</target>
+						<target>編輯模式</target>
 					</trans-unit>
 					<trans-unit id="sound_index">
 						<source>SoundIndex:</source>
@@ -3834,11 +3833,11 @@
 				<group id="extended">
 					<trans-unit id="features">
 						<source>Extended Features</source>
-						<target>Extended Features</target>
+						<target>擴展功能</target>
 					</trans-unit>
 					<trans-unit id="note">
 						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
-						<target>Please note: Features found on this page may require the following minimum version of openBVE:</target>
+						<target> 請注意: 本頁看到的特性至少需要以下的OpenBVE版本:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
@@ -3957,7 +3956,7 @@
 						</trans-unit>
 						<trans-unit id="wrongtype">
 							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
-							<target>您想要打開列車數據。 \n\n  然而 TrainEditor2 並不能直接讀取原版列車數據。 \n\n  請使用導入功能將這一列車數據導入為 TrainEditor2 格式。</target>
+							<target>您嘗試打開列車數據。 \n\n  但TrainEditor2不能直接讀取列車數據。 \n\n  請使用導入(Import)功能將列車數據導入到TrainEditor2格式。</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
@@ -4033,6 +4032,12 @@
 							</trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked">
+								<source>Separated (Interlocked)</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked_reverser">
+								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
 						<trans-unit id="power_notches">
@@ -4574,8 +4579,7 @@
 							</trans-unit>
 							<trans-unit id="line">
 								<source>Line</source>
-								<target> 
-線</target>
+								<target>線</target>
 							</trans-unit>
 						</group>
 					</group>
@@ -5315,7 +5319,7 @@
 					</trans-unit>
 					<trans-unit id="invalid_float">
 						<source>This value must be a {0}floating-point number.</source>
-						<target>呢個數值一定要係 {0}浮點數</target>
+						<target>數值一定要是 {0}浮點數</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
 						<source>invalid_color</source>
