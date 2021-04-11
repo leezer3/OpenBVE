@@ -28,7 +28,7 @@ namespace Train.OpenBve
 		}
 
 		// constants
-		private double StackDistance = 0.000001;
+		private const double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
 		private const double EyeDistance = 1.0;
 
