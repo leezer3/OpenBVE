@@ -115,8 +115,8 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			Simulation.TrainManager.TrainManager.PlayerTrain.Car.CurrentSpeed = Simulation.TrainManager.TrainManager.PlayerTrain.Car.Specs.CurrentPerceivedSpeed = nowSpeed / 3.6;
-			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Specs.CurrentAccelerationOutput = outputAcceleration / 3.6;
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.CurrentSpeed = Simulation.TrainManager.TrainManager.PlayerTrain.Car.Specs.PerceivedSpeed = nowSpeed / 3.6;
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Specs.Acceleration = outputAcceleration / 3.6;
 
 			Simulation.TrainManager.TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
 

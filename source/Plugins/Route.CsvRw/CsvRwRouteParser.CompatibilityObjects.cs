@@ -285,18 +285,18 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											names = c.InnerText.Split(new char[] { ';' });
+											names = c.InnerText.Split(';');
 										}
 										break;
 									case "path":
-											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim(new char[] { }));
+											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim());
 											if (System.IO.File.Exists(f))
 											{
 												o.ReplacementPath = f;
 											}
 											break;
 									case "message":
-										o.Message = c.InnerText.Trim(new char[] { });
+										o.Message = c.InnerText.Trim();
 										break;
 									default:
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
@@ -339,18 +339,18 @@ namespace CsvRwRouteParser
 											}
 											else
 											{
-												names = c.InnerText.Split(new char[] { ';' });
+												names = c.InnerText.Split(';');
 											}
 											break;
 										case "path":
-											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim(new char[] { }));
+											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim());
 											if (System.IO.File.Exists(f))
 											{
 												o.ReplacementPath = f;
 											}
 											break;
 										case "message":
-											o.Message = c.InnerText.Trim(new char[] { });
+											o.Message = c.InnerText.Trim();
 											break;
 										default:
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false,
@@ -385,7 +385,7 @@ namespace CsvRwRouteParser
 									switch (c.Name.ToLowerInvariant())
 									{
 										case "filename":
-											var f = c.InnerText.Trim(new char[] { });
+											var f = c.InnerText.Trim();
 											if (!System.IO.File.Exists(f))
 											{
 												try

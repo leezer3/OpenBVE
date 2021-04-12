@@ -33,9 +33,8 @@ jobs:
       solution: '$(solution)'
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-   - script: WindowsInstaller.ps1
-   - task: CopyFilesOverSSH@0
-    condition: and(succeeded())
+  - script: WindowsInstaller.ps1
+  - task: CopyFilesOverSSH@0
     inputs:
      sshEndpoint: 'BuildServer'
      sourceFolder: $(Pipeline.Workspace)/s/installers/Windows/Output
@@ -64,7 +63,6 @@ jobs:
   - script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 6_8_0
   - script: make publish 
   - task: CopyFilesOverSSH@0
-    condition: and(succeeded())
     inputs:
      sshEndpoint: 'BuildServer'
      sourceFolder: $(Pipeline.Workspace)/s/
@@ -90,7 +88,6 @@ jobs:
   - task: NuGetToolInstaller@1
   - script: make publish 
   - task: CopyFilesOverSSH@0
-    condition: and(succeeded())
     inputs:
      sshEndpoint: 'BuildServer'
      sourceFolder: $(Pipeline.Workspace)/s/

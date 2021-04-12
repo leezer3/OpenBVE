@@ -45,18 +45,12 @@ namespace OpenBveApi.World
 				X = Vector3.Right;
 				Y = Vector3.Down;
 				Z = Vector3.Forward;
-				double cosYaw = System.Math.Cos(Yaw);
-				double sinYaw = System.Math.Sin(Yaw);
-				double cosPitch = System.Math.Cos(-Pitch);
-				double sinPitch = System.Math.Sin(-Pitch);
-				double cosRoll = System.Math.Cos(-Roll);
-				double sinRoll = System.Math.Sin(-Roll);
-				X.Rotate(Y, cosYaw, sinYaw);
-				Z.Rotate(Y, cosYaw, sinYaw);
-				Y.Rotate(X, cosPitch, sinPitch);
-				Z.Rotate(X, cosPitch, sinPitch);
-				X.Rotate(Z, cosRoll, sinRoll);
-				Y.Rotate(Z, cosRoll, sinRoll);
+				X.Rotate(Y, Yaw);
+				Z.Rotate(Y, Yaw);
+				Y.Rotate(X, -Pitch);
+				Z.Rotate(X, -Pitch);
+				X.Rotate(Z, -Roll);
+				Y.Rotate(Z, -Roll);
 			}
 		}
 
@@ -70,18 +64,12 @@ namespace OpenBveApi.World
 			X = new Vector3(Transformation.X);
 			Y = new Vector3(Transformation.Y);
 			Z = new Vector3(Transformation.Z);
-			double cosYaw = System.Math.Cos(Yaw);
-			double sinYaw = System.Math.Sin(Yaw);
-			double cosPitch = System.Math.Cos(-Pitch);
-			double sinPitch = System.Math.Sin(-Pitch);
-			double cosRoll = System.Math.Cos(Roll);
-			double sinRoll = System.Math.Sin(Roll);
-			X.Rotate(Y, cosYaw, sinYaw);
-			Z.Rotate(Y, cosYaw, sinYaw);
-			Y.Rotate(X, cosPitch, sinPitch);
-			Z.Rotate(X, cosPitch, sinPitch);
-			X.Rotate(Z, cosRoll, sinRoll);
-			Y.Rotate(Z, cosRoll, sinRoll);
+			X.Rotate(Y, Yaw);
+			Z.Rotate(Y, Yaw);
+			Y.Rotate(X, -Pitch);
+			Z.Rotate(X, -Pitch);
+			X.Rotate(Z, Roll);
+			Y.Rotate(Z, Roll);
 		}
 
 		/// <summary>Creates a new transformation, based upon a base transformation and an auxiliary transformation</summary>

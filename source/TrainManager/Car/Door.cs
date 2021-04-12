@@ -3,10 +3,10 @@
 namespace TrainManager.Car
 {
 	/// <summary>A train door</summary>
-	public struct Door
+	public class Door
 	{
 		/// <summary>A value of -1 (left) or 1 (right).</summary>
-		public int Direction;
+		public readonly int Direction;
 		/// <summary>A value between 0 (closed) and 1 (opened).</summary>
 		public double State;
 		/// <summary>The value of the state at which a door lock simulation is scheduled.</summary>
@@ -32,8 +32,22 @@ namespace TrainManager.Car
 		/// <summary>Ratio that width of the obstacle to the overall width of the door</summary>
 		public double InterferingObjectRate;
 		/// <summary>The width of the door opening</summary>
-		public double Width;
+		public readonly double Width;
 		/// <summary>The maximum tolerance for an interfering object in the door opening before closure will not succeed</summary>
-		public double MaxTolerance;
+		public readonly double MaxTolerance;
+
+		/// <summary>Creates a new door</summary>
+		/// <param name="direction">The direction in which the door is to open</param>
+		/// <param name="width">The width of the door in millimeters</param>
+		/// <param name="tolerance">The maximum tolerance for the door to be considered closed</param>
+		public Door(int direction, double width, double tolerance)
+		{
+			Direction = direction;
+			Width = width;
+			MaxTolerance = tolerance;
+			OpenSound = new CarSound();
+			CloseSound = new CarSound();
+			State = 0.0;
+		}
 	}
 }

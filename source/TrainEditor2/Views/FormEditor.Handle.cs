@@ -23,7 +23,7 @@ namespace TrainEditor2.Views
 					z => z.SelectedIndex,
 					BindingMode.TwoWay,
 					z => (int)z,
-					z => (Handle.HandleTypes)z,
+					z => (HandleType)z,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxHandleType.SelectedIndexChanged += h,

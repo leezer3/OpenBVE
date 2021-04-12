@@ -226,7 +226,7 @@ namespace CsvRwRouteParser
 
 					if (Arguments.Length == 1 && Arguments[0].IndexOf(',') != -1)
 					{
-						Arguments = Arguments[0].Split(new char[] { ',' });
+						Arguments = Arguments[0].Split(',');
 					}
 					if (Arguments.Length != 2)
 					{
@@ -497,7 +497,7 @@ namespace CsvRwRouteParser
 							}
 						}
 
-						if (cv >= 0 && cv < 4)
+						if (cv >= 0 && cv <= 4)
 						{
 							Plugin.CurrentOptions.InitialViewpoint = cv;
 						}
@@ -517,13 +517,13 @@ namespace CsvRwRouteParser
 							break;
 						}
 
-						if (CurrentRoute.TrackFollowingObjects == null)
+						if (Plugin.TrainManager.TFOs == null)
 						{
-							CurrentRoute.TrackFollowingObjects = new AbstractTrain[] { };
+							Plugin.TrainManager.TFOs = new AbstractTrain[] { };
 						}
-						int n = CurrentRoute.TrackFollowingObjects.Length;
-						Array.Resize(ref CurrentRoute.TrackFollowingObjects, n + 1);
-						CurrentRoute.TrackFollowingObjects[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, tfoFile);
+						int n = Plugin.TrainManager.TFOs.Length;
+						Array.Resize(ref Plugin.TrainManager.TFOs, n + 1);
+						Plugin.TrainManager.TFOs[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, tfoFile);
 					}
 					break;
 			}

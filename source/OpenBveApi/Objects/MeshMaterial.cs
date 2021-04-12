@@ -21,8 +21,6 @@ namespace OpenBveApi.Objects
 		public Textures.Texture DaytimeTexture;         //BUG: Makefile requires this to be fully qualified
 		/// <summary>The night-time texture</summary>
 		public Textures.Texture NighttimeTexture;
-		/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
-		public byte DaytimeNighttimeBlend;
 		/// <summary>The blend mode for this material</summary>
 		public MeshMaterialBlendMode BlendMode;
 		/// <summary>A bit mask specifying the glow properties. Use GetGlowAttenuationData to create valid data for this field.</summary>

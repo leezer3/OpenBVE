@@ -29,7 +29,7 @@ namespace CsvRwRouteParser
 							case ';':
 								if (Level == 0)
 								{
-									Lines[i] = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+									Lines[i] = Lines[i].Substring(0, j).TrimEnd();
 									j = Lines[i].Length;
 								}
 								break;
@@ -55,7 +55,7 @@ namespace CsvRwRouteParser
 						Lines[i].StartsWith("$")
 					) {
 						AllowRwRouteDescription = false;
-						CurrentRoute.Comment = CurrentRoute.Comment.Trim(new char[] { });
+						CurrentRoute.Comment = CurrentRoute.Comment.Trim();
 					} else {
 						if (CurrentRoute.Comment.Length != 0) {
 							CurrentRoute.Comment += "\n";
@@ -134,7 +134,7 @@ namespace CsvRwRouteParser
 								break;
 							case ',':
 								if (Level == 0 & !IsRW) {
-									string t = Lines[i].Substring(a, j - a).Trim(new char[] { });
+									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
 										Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
@@ -171,7 +171,7 @@ namespace CsvRwRouteParser
 									}
 								}
 								if (Level == 0 & IsRW) {
-									string t = Lines[i].Substring(a, j - a).Trim(new char[] { });
+									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
 										Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
@@ -184,7 +184,7 @@ namespace CsvRwRouteParser
 						}
 					}
 					if (Lines[i].Length - a > 0) {
-						string t = Lines[i].Substring(a).Trim(new char[] { });
+						string t = Lines[i].Substring(a).Trim();
 						if (t.Length > 0 && !t.StartsWith(";"))
 						{
 							Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
@@ -217,7 +217,7 @@ namespace CsvRwRouteParser
 						}
 						if (k <= Expressions[i].Text.Length)
 						{
-							string t = Expressions[i].Text.Substring(j, k - j).TrimEnd(new char[] { });
+							string t = Expressions[i].Text.Substring(j, k - j).TrimEnd();
 							int l = 1, h;
 							for (h = k + 1; h < Expressions[i].Text.Length; h++) {
 								switch (Expressions[i].Text[h]) {
@@ -243,7 +243,7 @@ namespace CsvRwRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid parenthesis structure in " + t + Epilog);
 								break;
 							}
-							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim(new char[] { });
+							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim();
 							switch (t.ToLowerInvariant()) {
 								case "$if":
 									if (j != 0) {
@@ -345,9 +345,9 @@ namespace CsvRwRouteParser
 										continueWithNextExpression = true;
 										break;
 									}
-									string[] args = s.Split(new char[] { ';' });
+									string[] args = s.Split(';');
 									for (int ia = 0; ia < args.Length; ia++) {
-										args[ia] = args[ia].Trim(new char[] { });
+										args[ia] = args[ia].Trim();
 									}
 									int count = (args.Length + 1) / 2;
 									string[] files = new string[count];
@@ -360,8 +360,8 @@ namespace CsvRwRouteParser
 										int colon = args[2 * ia].IndexOf(':');
 										if (colon >= 0)
 										{
-											file = args[2 * ia].Substring(0, colon).TrimEnd(new char[] { });
-											string value = args[2 * ia].Substring(colon + 1).TrimStart(new char[] { });
+											file = args[2 * ia].Substring(0, colon).TrimEnd();
+											string value = args[2 * ia].Substring(colon + 1).TrimStart();
 											if (!double.TryParse(value, NumberStyles.Float, Culture, out offset)) {
 												continueWithNextExpression = true;
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The track position offset " + value + " is invalid in " + t + Epilog);
@@ -498,8 +498,8 @@ namespace CsvRwRouteParser
 										int m = s.IndexOf(";", StringComparison.Ordinal);
 										if (m >= 0)
 										{
-											string s1 = s.Substring(0, m).TrimEnd(new char[] { });
-											string s2 = s.Substring(m + 1).TrimStart(new char[] { });
+											string s1 = s.Substring(0, m).TrimEnd();
+											string s2 = s.Substring(m + 1).TrimStart();
 											int x; if (NumberFormats.TryParseIntVb6(s1, out x)) {
 												int y; if (NumberFormats.TryParseIntVb6(s2, out y)) {
 													int z = x + (int)Math.Floor(Plugin.RandomNumberGenerator.NextDouble() * (y - x + 1));
@@ -554,7 +554,7 @@ namespace CsvRwRouteParser
 													while (x >= Subs.Length) {
 														Array.Resize(ref Subs, Subs.Length << 1);
 													}
-													Subs[x] = Expressions[i].Text.Substring(m + 1, n - m - 1).Trim(new char[] { });
+													Subs[x] = Expressions[i].Text.Substring(m + 1, n - m - 1).Trim();
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Expressions[i].Text.Substring(n);
 												} else {
 													continueWithNextExpression = true;
@@ -593,7 +593,7 @@ namespace CsvRwRouteParser
 			{
 				int length = Expressions.Length;
 				for (int i = 0; i < length; i++) {
-					Expressions[i].Text = Expressions[i].Text.Trim(new char[] { });
+					Expressions[i].Text = Expressions[i].Text.Trim();
 					if (Expressions[i].Text.Length != 0) {
 						if (Expressions[i].Text[0] == ';') {
 							for (int j = i; j < length - 1; j++) {
@@ -626,7 +626,7 @@ namespace CsvRwRouteParser
 					// only check for track positions in the railway section for RW routes
 					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) && Expressions[i].Text.EndsWith("]", StringComparison.Ordinal))
 					{
-						string s = Expressions[i].Text.Substring(1, Expressions[i].Text.Length - 2).Trim(new char[] { });
+						string s = Expressions[i].Text.Substring(1, Expressions[i].Text.Length - 2).Trim();
 						NumberCheck = string.Compare(s, "Railway", StringComparison.OrdinalIgnoreCase) == 0;
 					}
 				}

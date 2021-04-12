@@ -120,11 +120,16 @@ namespace OpenBveApi.Objects
 			/// <inheritdoc/>
 			public override UnifiedObject Clone()
 			{
-				return new AnimatedObjectCollection(currentHost)
+				AnimatedObjectCollection aoc = new AnimatedObjectCollection(currentHost);
+				if (Objects != null)
 				{
-					Objects = Objects.Select(x => x?.Clone()).ToArray(),
-					Sounds = Sounds.Select(x => x?.Clone()).ToArray()
-				};
+					aoc.Objects = Objects.Select(x => x?.Clone()).ToArray();
+				}
+				if (Sounds != null)
+				{
+					aoc.Sounds = Sounds.Select(x => x?.Clone()).ToArray();
+				}
+				return aoc;
 			}
 
 			/// <summary>Creates a mirrored clone of this object</summary>

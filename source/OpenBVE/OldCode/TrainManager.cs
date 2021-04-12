@@ -1,23 +1,24 @@
 using System;
+using LibRender2;
+using OpenBveApi;
+using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 using TrainManager;
+using TrainManager.Trains;
 
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public partial class TrainManager : TrainManagerBase
+	public class TrainManager : TrainManagerBase
 	{
-		// trains
-		/// <summary>The list of trains available in the simulation.</summary>
-		internal static Train[] Trains = new Train[] { };
-		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
-		internal static Train PlayerTrain = null;
-		/// <summary>The list of TrackFollowingObject available on other tracks in the simulation.</summary>
-		internal static AbstractTrain[] TFOs = new AbstractTrain[] { };
+		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options, FileSystem fileSystem) : base(host, renderer, options, fileSystem)
+		{
+		}
 		
 		/// <summary>This method should be called once a frame to update the position, speed and state of all trains within the simulation</summary>
 		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
-		internal static void UpdateTrains(double TimeElapsed)
+		internal void UpdateTrains(double TimeElapsed)
 		{
 			for (int i = 0; i < Trains.Length; i++) {
 				Trains[i].Update(TimeElapsed);
@@ -272,7 +273,7 @@ namespace OpenBve
 											Trains[i].Cars[h].UpdateTrackFollowers(d, false, false);
 											if (Interface.CurrentOptions.Derailments &&
 												Math.Abs(Trains[i].Cars[h].CurrentSpeed) >
-												Trains[j].CriticalCollisionSpeedDifference)
+												Trains[i].CriticalCollisionSpeedDifference)
 											{
 												Trains[i].Derail(h, TimeElapsed);
 											}

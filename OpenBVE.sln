@@ -161,6 +161,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Train", "Train", "{F49789F2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainManager", "source\TrainManager\TrainManager.csproj", "{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Train.OpenBve", "source\Plugins\Train.OpenBve\Train.OpenBve.csproj", "{D3710390-CD0E-4E14-8E4F-80302D797D5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -579,6 +581,18 @@ Global
 		{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}.Release|x86.ActiveCfg = Release|Any CPU
 		{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}.Release|x86.Build.0 = Release|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Debug|x86.Build.0 = Debug|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -611,6 +625,7 @@ Global
 		{C841EA02-4918-4162-ADC1-C09F5BC28AF9} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{8D21C5C6-73E9-42E0-92FB-63500E321836} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{F49789F2-97F3-45B3-BC85-F4E09C0D120D} = {16553295-E70F-4596-AA78-848EEA576C4A}
+		{D3710390-CD0E-4E14-8E4F-80302D797D5E} = {F49789F2-97F3-45B3-BC85-F4E09C0D120D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}

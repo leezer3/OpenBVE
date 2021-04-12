@@ -104,7 +104,6 @@ namespace OpenBve
 			{
 				Program.LightingRelative = -1.0;
 				Game.Reset();
-				Interface.LogMessages.Clear();
 				for (int i = 0; i < Program.Files.Length; i++)
 				{
 					try

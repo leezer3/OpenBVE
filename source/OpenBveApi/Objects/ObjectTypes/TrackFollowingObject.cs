@@ -139,10 +139,8 @@ namespace OpenBveApi.Objects
 			// apply rolling
 			{
 				double a = CurrentRollDueToTopplingAngle - CurrentRollDueToCantAngle;
-				double cosa = System.Math.Cos(a);
-				double sina = System.Math.Sin(a);
-				Side.Rotate(Direction, cosa, sina);
-				Up.Rotate(Direction, cosa, sina);
+				Side.Rotate(Direction, a);
+				Up.Rotate(Direction, a);
 			}
 		}
 

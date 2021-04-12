@@ -147,13 +147,10 @@
     <Compile Include="Models\Trains\Performance.cs" />
     <Compile Include="Models\Trains\Pressure.cs" />
     <Compile Include="Models\Trains\Train.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Car.Specs.cs" />
     <Compile Include="Simulation\TrainManager\TrainManager.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Systems\Fonts.cs" />
-    <Compile Include="Systems\Functions\Plugins.cs" />
     <Compile Include="Systems\Host.cs" />
     <Compile Include="Systems\Interface.cs" />
     <Compile Include="Systems\Options.cs" />

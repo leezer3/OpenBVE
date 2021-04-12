@@ -351,6 +351,7 @@ namespace CsvRwRouteParser
 					break;
 				case TrackCommand.Turn:
 				{
+					Data.TurnUsed = true;
 					double s = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out s))
 					{
@@ -1272,7 +1273,7 @@ namespace CsvRwRouteParser
 						}
 						else if (Arguments[2].StartsWith("J:", StringComparison.InvariantCultureIgnoreCase))
 						{
-							string[] splitString = Arguments[2].Split(new char[] {':'});
+							string[] splitString = Arguments[2].Split(':');
 							for (int i = 0; i < splitString.Length; i++)
 							{
 								switch (i)
@@ -2610,11 +2611,20 @@ namespace CsvRwRouteParser
 								{
 									//The initial background for block 0 is always set to zero
 									//This handles the case where background idx #0 is not used
-									b = Data.Backgrounds[0] as StaticBackground;
-									if (b.Texture == null)
+									BackgroundHandle backgroundZero;
+									if (Data.Backgrounds.TryGetValue(0, out backgroundZero))
+									{
+										b = backgroundZero as StaticBackground;
+										if (b.Texture == null)
+										{
+											Data.Blocks[0].Background = typ;
+										}
+									}
+									else
 									{
 										Data.Blocks[0].Background = typ;
 									}
+									
 								}
 							}
 						}

@@ -5,13 +5,14 @@ using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenTK.Audio.OpenAL;
 using SoundManager;
+using TrainManager.Car;
 
 
 namespace OpenBve
 {
 	using OpenBveApi.Math;
 
-	internal partial class Sounds
+	internal partial class Sounds : SoundsBase
 	{
 
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
@@ -25,7 +26,7 @@ namespace OpenBve
 			Orientation3 listenerOrientation = new Orientation3(Program.Renderer.Camera.AbsoluteSide, Program.Renderer.Camera.AbsoluteUp, Program.Renderer.Camera.AbsoluteDirection);
 			Vector3 listenerVelocity;
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior) {
-				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+				CarBase car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
 				listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff) + Program.Renderer.Camera.AlignmentSpeed.Position;
 			} else {
@@ -264,7 +265,7 @@ namespace OpenBve
 			Orientation3 listenerOrientation = new Orientation3(Program.Renderer.Camera.AbsoluteSide, Program.Renderer.Camera.AbsoluteUp, Program.Renderer.Camera.AbsoluteDirection);
 			Vector3 listenerVelocity;
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior) {
-				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+				CarBase car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
 				if (diff.IsNullVector()) {
 					listenerVelocity = car.CurrentSpeed * Vector3.Forward;

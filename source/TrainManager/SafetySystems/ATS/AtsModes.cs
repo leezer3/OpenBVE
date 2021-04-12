@@ -1,4 +1,5 @@
-﻿namespace TrainManager.SafetySystems
+﻿// ReSharper disable UnusedMember.Global
+namespace TrainManager.SafetySystems
 {
 	/// <summary>The available modes for the internal ATS system</summary>
 	public enum AtsModes

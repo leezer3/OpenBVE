@@ -23,6 +23,8 @@ namespace OpenBve {
 		internal static double SecondsSinceMidnight = 0.0;
 		
 		internal static void Reset() {
+			Interface.LogMessages.Clear();
+			Program.CurrentHost.MissingFiles.Clear();
 			Program.Renderer.Reset();
 			Program.Renderer.InitializeVisibility();
 			ObjectManager.AnimatedWorldObjects = new WorldObject[4];

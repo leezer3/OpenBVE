@@ -1,7 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -12,6 +9,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using RouteManager2;
+using Control = OpenBveApi.Interface.Control;
 
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
@@ -40,9 +38,6 @@ namespace OpenBve {
 		/// <summary>The random number generator used by this program.</summary>
 		internal static readonly Random RandomNumberGenerator = new Random();
 
-		/// <summary>Whether the program will generate a considerably more verbose debug log (WIP)</summary>
-		internal static bool GenerateDebugLogging = false;
-
 		public static GameWindow currentGameWindow;
 
 		internal static JoystickManager Joysticks;
@@ -52,6 +47,8 @@ namespace OpenBve {
 		internal static Sounds Sounds;
 
 		internal static CurrentRoute CurrentRoute;
+
+		internal static TrainManager TrainManager;
 
 		// --- functions ---
 		
@@ -88,9 +85,8 @@ namespace OpenBve {
 
 			Renderer = new NewRenderer();
 			Sounds = new Sounds();
-			CurrentRoute = new CurrentRoute(Renderer);
-
-
+			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
+			
 			//Platform specific startup checks
 			// --- Check if we're running as root, and prompt not to ---
 			if (CurrentHost.Platform == HostPlatform.GNULinux && getuid() == 0)
@@ -110,6 +106,7 @@ namespace OpenBve {
 			{
 				// ignored
 			}
+			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
@@ -128,7 +125,7 @@ namespace OpenBve {
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			folder = Program.FileSystem.GetDataFolder("Controls");
 			string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
-			Interface.Control[] controls;
+			Control[] controls;
 			Interface.LoadControls(file, out controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
 			
@@ -150,9 +147,12 @@ namespace OpenBve {
 				}
 			}
 			// --- if a route was provided but no train, try to use the route default ---
-			if (result.RouteFile != null & result.TrainFolder == null) {
-				if (!Plugins.LoadPlugins())
+			if (result.RouteFile != null & result.TrainFolder == null)
+			{
+				string error;
+				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
 				{
+					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
 				Game.Reset(false);
@@ -171,7 +171,11 @@ namespace OpenBve {
 						break;
 					}
 				}
-				Plugins.UnloadPlugins();
+
+				if (!CurrentHost.UnloadPlugins(out error))
+				{
+					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
 				if (!loaded)
 				{
 					throw new Exception("No plugins capable of loading routefile " + result.RouteFile + " were found.");
@@ -295,8 +299,11 @@ namespace OpenBve {
 		
 		/// <summary>Initializes the program. A matching call to deinitialize must be made when the program is terminated.</summary>
 		/// <returns>Whether the initialization was successful.</returns>
-		private static bool Initialize() {
-			if (!Plugins.LoadPlugins()) {
+		private static bool Initialize()
+		{
+			string error;
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer)) {
+				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}
 			
@@ -310,13 +317,16 @@ namespace OpenBve {
 			Renderer.Camera.BackwardViewingDistance = 0.0;
 			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
-			FileSystem.ClearLogFile();
+			string programVersion = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
+			FileSystem.ClearLogFile(programVersion);
 			return true;
 		}
 		
 		/// <summary>Deinitializes the program.</summary>
-		private static void Deinitialize() {
-			Plugins.UnloadPlugins();
+		private static void Deinitialize()
+		{
+			string error;
+			Program.CurrentHost.UnloadPlugins(out error);
 			Sounds.Deinitialize();
 			if (currentGameWindow != null)
 			{

@@ -106,13 +106,14 @@ namespace OpenBveApi.Routes
 			Vector3[] midpointsWorldUps = new Vector3[newLength];
 			Vector3[] midpointsWorldSides = new Vector3[newLength];
 			double[] midpointsCant = new double[newLength];
+			TrackFollower follower = new TrackFollower(currentHost);
 			for (int i = 0; i < newLength; i++)
 			{
 				int m = i % subdivisions;
 				if (m != 0)
 				{
 					int q = i / subdivisions;
-					TrackFollower follower = new TrackFollower(currentHost);
+					
 					double r = (double) m / (double) subdivisions;
 					double p = (1.0 - r) * Elements[q].StartingTrackPosition + r * Elements[q + 1].StartingTrackPosition;
 					follower.UpdateAbsolute(-1.0, true, false);
@@ -154,7 +155,6 @@ namespace OpenBveApi.Routes
 			// find turns
 			bool[] isTurn = new bool[Elements.Length];
 			{
-				TrackFollower follower = new TrackFollower(currentHost);
 				for (int i = 1; i < Elements.Length - 1; i++)
 				{
 					int m = i % subdivisions;
@@ -237,7 +237,6 @@ namespace OpenBveApi.Routes
 						if (r * r > 1.0)
 						{
 							// apply radius
-							TrackFollower follower = new TrackFollower(currentHost);
 							Elements[i - 1].CurveRadius = r;
 							double p = 0.00000001 * Elements[i - 1].StartingTrackPosition + 0.99999999 * Elements[i].StartingTrackPosition;
 							follower.UpdateAbsolute(p - 1.0, true, false);
@@ -313,12 +312,10 @@ namespace OpenBveApi.Routes
 								for (int j = -1; j <= 1; j++)
 								{
 									double g = (double) j * originalAngle;
-									double cosg = System.Math.Cos(g);
-									double sing = System.Math.Sin(g);
 									Elements[i] = originalTrackElement;
-									Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
-									Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
-									Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
+									Elements[i].WorldDirection.Rotate(Vector3.Down, g);
+									Elements[i].WorldUp.Rotate(Vector3.Down, g);
+									Elements[i].WorldSide.Rotate(Vector3.Down, g);
 									p = 0.00000001 * Elements[i].StartingTrackPosition + 0.99999999 * Elements[i + 1].StartingTrackPosition;
 									follower.UpdateAbsolute(p - 1.0, true, false);
 									follower.UpdateAbsolute(p, true, false);
@@ -333,12 +330,10 @@ namespace OpenBveApi.Routes
 
 								{
 									double newAngle = (double) bestJ * originalAngle;
-									double cosg = System.Math.Cos(newAngle);
-									double sing = System.Math.Sin(newAngle);
 									Elements[i] = originalTrackElement;
-									Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
-									Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
-									Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
+									Elements[i].WorldDirection.Rotate(Vector3.Down, newAngle);
+									Elements[i].WorldUp.Rotate(Vector3.Down, newAngle);
+									Elements[i].WorldSide.Rotate(Vector3.Down, newAngle);
 								}
 								// iterate again to further shorten track element length
 								p = 0.00000001 * Elements[i].StartingTrackPosition + 0.99999999 * Elements[i + 1].StartingTrackPosition;
@@ -383,10 +378,8 @@ namespace OpenBveApi.Routes
 							double b = a2 - a1;
 							if (b * b > 0.00000001)
 							{
-								double cosa = System.Math.Cos(b);
-								double sina = System.Math.Sin(b);
-								Elements[i].WorldDirection.Rotate(Elements[i].WorldSide, cosa, sina);
-								Elements[i].WorldUp.Rotate(Elements[i].WorldSide, cosa, sina);
+								Elements[i].WorldDirection.Rotate(Elements[i].WorldSide, b);
+								Elements[i].WorldUp.Rotate(Elements[i].WorldSide, b);
 							}
 						}
 					}

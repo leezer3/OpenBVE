@@ -266,15 +266,15 @@ namespace CsvRwRouteParser
 				int a = 0, h = 0;
 				for (int k = 0; k < ArgumentSequence.Length; k++) {
 					if (IsRW && ArgumentSequence[k] == ',') {
-						Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
+						Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
 						a = k + 1; h++;
 					} else if (ArgumentSequence[k] == ';') {
-						Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
+						Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
 						a = k + 1; h++;
 					}
 				}
 				if (ArgumentSequence.Length - a > 0) {
-					Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
+					Arguments[h] = ArgumentSequence.Substring(a).Trim();
 					h++;
 				}
 				Array.Resize(ref Arguments, h);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -11,6 +11,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using TrainManager;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -22,7 +23,20 @@ namespace OpenBve {
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
 		public override void ReportProblem(ProblemType type, string text) {
-			Interface.AddMessage(MessageType.Error, false, text);
+			switch (type)
+			{
+				case ProblemType.DirectoryNotFound:
+				case ProblemType.FileNotFound:
+				case ProblemType.PathNotFound:
+					if (!MissingFiles.Contains(text))
+					{
+						Interface.AddMessage(MessageType.Error, true, type + " : " + text);
+					}
+					break;
+				default:
+					Interface.AddMessage(MessageType.Error, false, type + " : " + text);
+					break;
+			}
 		}
 
 		public override void AddMessage(MessageType type, bool FileNotFound, string text)
@@ -129,16 +143,15 @@ namespace OpenBve {
 			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 
-		/// <summary>Registers a texture and returns a handle to the texture.</summary>
-		/// <param name="path">The path to the file or folder that contains the texture.</param>
-		/// <param name="parameters">The parameters that specify how to process the texture.</param>
-		/// <param name="handle">Receives the handle to the texture.</param>
-		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			if (File.Exists(path) || Directory.Exists(path)) {
 				Texture data;
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
+					if (loadTexture)
+					{
+						LoadTexture(data, OpenGlTextureWrapMode.ClampClamp);
+					}
 					return true;
 				}
 			} else {
@@ -358,6 +371,29 @@ namespace OpenBve {
 		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
 		{
 			throw new NotImplementedException();
+		}
+
+		public override AbstractTrain[] Trains
+		{
+			get
+			{
+				// ReSharper disable once CoVariantArrayConversion
+				return Program.TrainManager.Trains;
+			}
+		}
+
+		public override AbstractTrain ClosestTrain(AbstractTrain Train)
+		{
+			/*
+			 * At present, there should only ever be the single player train ref present in ObjectViewer
+			 * This may change at some point, but for the minute it's fixed....
+			 */
+			return TrainManagerBase.PlayerTrain;
+		}
+
+		public override AbstractTrain ClosestTrain(double TrackPosition)
+		{
+			return TrainManagerBase.PlayerTrain;
 		}
 
 		public Host() : base(HostApplication.ObjectViewer)

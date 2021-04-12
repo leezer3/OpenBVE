@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using LibRender2.Screens;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -13,6 +15,8 @@ using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2.MessageManager;
+using SoundManager;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -23,8 +27,22 @@ namespace OpenBve {
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
-		public override void ReportProblem(OpenBveApi.Hosts.ProblemType type, string text) {
-			Interface.AddMessage(MessageType.Error, false, text);
+		public override void ReportProblem(ProblemType type, string text) {
+			switch (type)
+			{
+				case ProblemType.DirectoryNotFound:
+				case ProblemType.FileNotFound:
+				case ProblemType.PathNotFound:
+					if (!MissingFiles.Contains(text))
+					{
+						Interface.AddMessage(MessageType.Error, true, type + " : " + text);
+						MissingFiles.Add(text);
+					}
+					break;
+				default:
+					Interface.AddMessage(MessageType.Error, false, type + " : " + text);
+					break;
+			}
 		}
 
 		public override void AddMessage(MessageType type, bool FileNotFound, string text)
@@ -36,7 +54,12 @@ namespace OpenBve {
 		{
 			MessageManager.AddMessage((AbstractMessage)Message);
 		}
-		
+
+		public override void AddMessage(string Message, object MessageDependancy, GameMode Mode, MessageColor MessageColor, double MessageTimeOut, string Key)
+		{
+			MessageManager.AddMessage(Message, (MessageDependency)MessageDependancy, Mode, MessageColor, MessageTimeOut, Key);
+		}
+
 		// --- texture ---
 		
 		/// <summary>Queries the dimensions of a texture.</summary>
@@ -133,18 +156,28 @@ namespace OpenBve {
 		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
 			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+
 		}
 		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
+		/// <param name="loadTexture">Whether the texture is to be pre-loaded</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Texture data;
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
+					if (loadTexture)
+					{
+						OpenBVEGame.RunInRenderThread(() =>
+						{
+							LoadTexture(data, OpenGlTextureWrapMode.ClampClamp);
+						});
+
+					}
 					return true;
 				}
 			} else {
@@ -354,7 +387,7 @@ namespace OpenBve {
 
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
-			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainBase)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 
 		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
@@ -404,14 +437,28 @@ namespace OpenBve {
 
 		public override void StopSound(object SoundSource)
 		{
-			Program.Sounds.StopSound(SoundSource);
+			Program.Sounds.StopSound(SoundSource as SoundSource);
 		}
 
-		public override bool SimulationSetup
+		public override void StopAllSounds(object parent)
+		{
+			Program.Sounds.StopAllSounds(parent);
+		}
+
+		public override SimulationState SimulationState
 		{
 			get
 			{
-				return Loading.SimulationSetup;
+				if (!Loading.SimulationSetup)
+				{
+					return SimulationState.Loading;
+				}
+
+				if (Game.MinimalisticSimulation)
+				{
+					return SimulationState.MinimalisticSimulation;
+				}
+				return SimulationState.Running;
 			}
 		}
 
@@ -487,6 +534,107 @@ namespace OpenBve {
 		}
 
 		public override double InGameTime => Program.CurrentRoute.SecondsSinceMidnight;
+
+		public override void AddBlackBoxEntry()
+		{
+			Game.AddBlackBoxEntry();
+		}
+
+		public override void ProcessJump(AbstractTrain Train, int StationIndex)
+		{
+			ObjectManager.ProcessJump(Train);
+			if (Train.IsPlayerTrain)
+			{
+				if (Game.CurrentScore.ArrivalStation <= StationIndex)
+				{
+					Game.CurrentScore.ArrivalStation = StationIndex + 1;
+				}
+				Game.CurrentScore.DepartureStation = StationIndex;
+				Program.Renderer.CurrentInterface = InterfaceType.Normal;
+				Program.TrainManager.UnderailTrains();
+			}
+		}
+
+		public override void AddScore(int Score, string Message, MessageColor Color, double Timeout)
+		{
+			Game.CurrentScore.CurrentValue += Score;
+			int n = Game.ScoreMessages.Length;
+			Array.Resize(ref Game.ScoreMessages, n + 1);
+			Game.ScoreMessages[n] = new Game.ScoreMessage
+			{
+				Value = Score,
+				Color = Color,
+				RendererPosition = new Vector2(0, 0),
+				RendererAlpha = 0.0,
+				Text = Message,
+				Timeout = Timeout
+			};
+		}
+
+		public override AbstractTrain[] Trains
+		{
+			get
+			{
+				// ReSharper disable once CoVariantArrayConversion
+				return Program.TrainManager.Trains;
+			}
+		}
+
+		public override AbstractTrain ClosestTrain(AbstractTrain Train)
+		{
+			TrainBase baseTrain = Train as TrainBase;
+			AbstractTrain closestTrain = null;
+			double bestLocation = double.MaxValue;
+			if(baseTrain != null)
+			{
+				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+				{
+					if (Program.TrainManager.Trains[i] != baseTrain & Program.TrainManager.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
+					{
+						TrainBase train = Program.TrainManager.Trains[i] as TrainBase;
+						int c = train.Cars.Length - 1;
+						double z = train.Cars[c].RearAxle.Follower.TrackPosition - train.Cars[c].RearAxle.Position - 0.5 * train.Cars[c].Length;
+						if (z >= baseTrain.FrontCarTrackPosition() & z < bestLocation)
+						{
+							bestLocation = z;
+							closestTrain = Program.TrainManager.Trains[i];
+						}
+					}
+				}
+			}
+			return closestTrain;
+		}
+
+		public override AbstractTrain ClosestTrain(double TrackPosition)
+		{
+			AbstractTrain closestTrain = null;
+			double trainDistance = double.MaxValue;
+			for (int j = 0; j < Program.TrainManager.Trains.Length; j++)
+			{
+				if (Program.TrainManager.Trains[j].State == TrainState.Available)
+				{
+					double distance;
+					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
+					{
+						distance = TrackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
+					}
+					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
+					{
+						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
+					}
+					else
+					{
+						distance = 0;
+					}
+					if (distance < trainDistance)
+					{
+						closestTrain = Program.TrainManager.Trains[j];
+						trainDistance = distance;
+					}
+				}
+			}
+			return closestTrain;
+		}
 
 		public Host() : base(HostApplication.OpenBve)
 		{

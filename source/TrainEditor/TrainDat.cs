@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using OpenBveApi.Math;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -22,12 +23,16 @@ namespace TrainEditor {
 			internal Acceleration() {
 				const int n = 8;
 				this.Entries = new BveAccelerationCurve[n];
-				for (int i = 0; i < n; i++) {
-					this.Entries[i].StageZeroAcceleration = 1.0;
-					this.Entries[i].StageOneAcceleration = 1.0;
-					this.Entries[i].StageOneSpeed = 25.0;
-					this.Entries[i].StageTwoSpeed = 25.0;
-					this.Entries[i].StageTwoExponent = 1.0;
+				for (int i = 0; i < n; i++)
+				{
+					this.Entries[i] = new BveAccelerationCurve
+					{
+						StageZeroAcceleration = 1.0,
+						StageOneAcceleration = 1.0,
+						StageOneSpeed = 25.0,
+						StageTwoSpeed = 25.0,
+						StageTwoExponent = 1.0
+					};
 				}
 			}
 		}
@@ -127,11 +132,7 @@ namespace TrainEditor {
 		// handle
 		/// <summary>The Handle section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Handle {
-			internal enum HandleTypes {
-				Separate = 0,
-				Combined = 1
-			}
-			internal HandleTypes HandleType;
+			internal HandleType HandleType;
 			internal int PowerNotches;
 			internal int BrakeNotches;
 			internal int PowerNotchReduceSteps;
@@ -141,7 +142,7 @@ namespace TrainEditor {
 			internal int DriverPowerNotches;
 			internal int DriverBrakeNotches;
 			internal Handle() {
-				this.HandleType = HandleTypes.Separate;
+				this.HandleType = HandleType.TwinHandle;
 				this.PowerNotches = 8;
 				this.BrakeNotches = 8;
 				this.PowerNotchReduceSteps = 0;
@@ -155,15 +156,11 @@ namespace TrainEditor {
 		
 		// cab
 		/// <summary>The Cab section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
-		internal class Cab {
-			internal double X;
-			internal double Y;
-			internal double Z;
+		internal class Cab
+		{
+			internal Vector3 Driver;
 			internal double DriverCar;
 			internal Cab() {
-				this.X = 0.0;
-				this.Y = 0.0;
-				this.Z = 0.0;
 				this.DriverCar = 0;
 			}
 		}
@@ -280,7 +277,7 @@ namespace TrainEditor {
 			}
 		}
 
-		const int currentVersion = 15311;
+		const int currentVersion = 17250;
 
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>
@@ -345,6 +342,10 @@ namespace TrainEditor {
 						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase)) {
 							if (n == t.Acceleration.Entries.Length) {
 								Array.Resize(ref t.Acceleration.Entries, t.Acceleration.Entries.Length << 1);
+								for (int o = n; o < t.Acceleration.Entries.Length; o++)
+								{
+									t.Acceleration.Entries[o] = new BveAccelerationCurve();
+								}
 							}
 							string u = Lines[i] + ",";
 							int m = 0;
@@ -440,22 +441,22 @@ namespace TrainEditor {
 								switch (n)
 								{
 									case 0:
-										t.Delay.DelayPowerUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 1:
-										t.Delay.DelayPowerDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 2:
-										t.Delay.DelayBrakeUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 3:
-										t.Delay.DelayBrakeDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 4:
-										t.Delay.DelayLocoBrakeUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayLocoBrakeUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 5:
-										t.Delay.DelayLocoBrakeDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayLocoBrakeDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 								}
 							}
@@ -534,7 +535,7 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b == 0 | b == 1) t.Handle.HandleType = (Handle.HandleTypes)b;
+										if (b >= 0  && b <= 3) t.Handle.HandleType = (HandleType)b;
 										break;
 									case 1:
 										if (b > 0) t.Handle.PowerNotches = b;
@@ -569,13 +570,13 @@ namespace TrainEditor {
 							double a; if (double.TryParse(Lines[i], System.Globalization.NumberStyles.Float, Culture, out a)) {
 								switch (n) {
 									case 0:
-										t.Cab.X = a;
+										t.Cab.Driver.X = a;
 										break;
 									case 1:
-										t.Cab.Y = a;
+										t.Cab.Driver.Y = a;
 										break;
 									case 2:
-										t.Cab.Z = a;
+										t.Cab.Driver.Z = a;
 										break;
 									case 3:
 										t.Cab.DriverCar = (int)Math.Round(a);
@@ -832,9 +833,9 @@ namespace TrainEditor {
 			b.AppendLine(t.Handle.DriverPowerNotches.ToString(Culture).PadRight(n, ' ') + "; DriverPowerNotches");
 			b.AppendLine(t.Handle.DriverBrakeNotches.ToString(Culture).PadRight(n, ' ') + "; DriverBrakeNotches");
 			b.AppendLine("#CAB");
-			b.AppendLine(t.Cab.X.ToString(Culture).PadRight(n, ' ') + "; X");
-			b.AppendLine(t.Cab.Y.ToString(Culture).PadRight(n, ' ') + "; Y");
-			b.AppendLine(t.Cab.Z.ToString(Culture).PadRight(n, ' ') + "; Z");
+			b.AppendLine(t.Cab.Driver.X.ToString(Culture).PadRight(n, ' ') + "; X");
+			b.AppendLine(t.Cab.Driver.Y.ToString(Culture).PadRight(n, ' ') + "; Y");
+			b.AppendLine(t.Cab.Driver.Z.ToString(Culture).PadRight(n, ' ') + "; Z");
 			b.AppendLine(t.Cab.DriverCar.ToString(Culture).PadRight(n, ' ') + "; DriverCar");
 			b.AppendLine("#CAR");
 			b.AppendLine(t.Car.MotorCarMass.ToString(Culture).PadRight(n, ' ') + "; MotorCarMass");

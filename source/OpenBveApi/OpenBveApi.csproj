@@ -95,7 +95,12 @@
     <Compile Include="FunctionScripts\Instructions.cs" />
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
     <Compile Include="Graphics\Colors.cs" />
+    <Compile Include="Interface\Input\Control.cs" />
+    <Compile Include="Interface\Input\ControlMethod.cs" />
+    <Compile Include="Interface\Input\DigitalControlState.cs" />
     <Compile Include="Interface\Input\InputDevice.cs" />
+    <Compile Include="Interface\Input\JoystickComponent.cs" />
+    <Compile Include="Interface\Input\KeyboardModifier.cs" />
     <Compile Include="Interface\Key.cs" />
     <Compile Include="Interface\Logging\LogMessage.cs" />
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
@@ -191,6 +196,8 @@
     <Compile Include="Objects\Damping.cs" />
     <Compile Include="Objects\Glow.AttenuationMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
+    <Compile Include="System\Hosts.Plugins.cs" />
+    <Compile Include="System\SimulationState.cs" />
     <Compile Include="System\TextEncoding.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
@@ -200,6 +207,7 @@
     <Compile Include="Train\GeneralAI.cs" />
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\StopSkipMode.cs" />
+    <Compile Include="Train\TrainInterface.cs" />
     <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="Train\TrainState.cs" />
     <Compile Include="Train\TrainStopState.cs" />

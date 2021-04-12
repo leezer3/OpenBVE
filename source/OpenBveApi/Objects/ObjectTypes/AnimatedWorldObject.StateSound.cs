@@ -50,60 +50,44 @@ namespace OpenBveApi.Objects
 					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
 					Object.Update(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
-					if (this.Object.CurrentState != this.lastState && currentHost.SimulationSetup)
+					if (this.Object.CurrentState != this.lastState && currentHost.SimulationState != SimulationState.Loading)
 					{
-						if (this.SingleBuffer && this.Buffers[0] != null)
+						if (SingleBuffer)
 						{
-							switch (this.Object.CurrentState)
+							if (Buffers[0] != null)
 							{
-								case -1:
-									if (this.PlayOnHide)
-									{
-										Source = currentHost.PlaySound(Buffers[0], currentPitch, currentVolume, Position, null, false);
-									}
+								bool isToBePlayed = false;
 
-									break;
-								case 0:
-									if (this.PlayOnShow || this.lastState != -1)
+								if (Object.CurrentState == -1)
+								{
+									if (PlayOnHide)
 									{
-										Source = currentHost.PlaySound(Buffers[0], currentPitch, currentVolume, Position, null, false);
+										isToBePlayed = true;
 									}
+								}
+								else
+								{
+									if (PlayOnShow || lastState != -1)
+									{
+										isToBePlayed = true;
+									}
+								}
 
-									break;
-								default:
+								if (isToBePlayed)
+								{
 									Source = currentHost.PlaySound(Buffers[0], currentPitch, currentVolume, Position, null, false);
-									break;
+								}
 							}
 						}
 						else
 						{
-							int bufferIndex = this.Object.CurrentState + 1;
-							if (this.Buffers.Length - 1 < bufferIndex || this.Buffers[bufferIndex] == null)
+							int bufferIndex = Object.CurrentState;
+
+							if (bufferIndex >= 0 && bufferIndex < Buffers.Length && Buffers[bufferIndex] != null)
 							{
-								return;
-							}
-							switch (bufferIndex)
-							{
-								case 0:
-									if (this.PlayOnHide)
-									{
-										//Current state has changed to completely hidden, hence OnShow irrelevant
-										Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, null, false);
-									}
-									break;
-								case 1:
-									if (this.PlayOnShow || this.lastState != -1)
-									{
-										Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, null, false);
-									}
-									break;
-								default:
-									//PlayOnHide or PlayOnShow is set & we've already determined the buffer is valid so play
-									Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, null, false);
-									break;
+								Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, null, false);
 							}
 						}
-
 					}
 				}
 				else

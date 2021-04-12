@@ -109,11 +109,12 @@ namespace OpenBveApi.Objects
 		public bool isTimeTableObject;
 		/// <summary>Sets whether the openGL VAO should be updated by the renderer this frame</summary>
 		public bool UpdateVAO;
-
+		
 		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host)
 		{
 			currentHost = host;
+			States = new ObjectState[] { };
 		}
 
 		/// <summary>Clones this object</summary>
@@ -235,15 +236,13 @@ namespace OpenBveApi.Objects
 		/// <param name="Camera"></param>
 		public void Update(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false, dynamic Camera = null)
 		{
-			int s = CurrentState;
 			// state change
 			if (StateFunction != null & UpdateFunctions)
 			{
 				double sd = StateFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				int si = (int) System.Math.Round(sd);
-				int sn = States.Length;
-				if (si < 0 | si >= sn) si = -1;
-				if (s != si)
+				if (si < 0 | si >= States.Length) si = -1;
+				if (CurrentState != si)
 				{
 					ObjectType type = ObjectType.Dynamic;
 					if (Camera != null)
@@ -251,22 +250,18 @@ namespace OpenBveApi.Objects
 						type = ObjectType.Overlay;
 					}
 					Initialize(si, type, Show);
-					s = si;
+					CurrentState = si;
 				}
 			}
 
-			if (s == -1) return;
+			if (CurrentState == -1) return; //not visible state, so don't bother updating
 			// translation
 			if (TranslateXFunction != null)
 			{
-				double x;
+				double x = TranslateXFunction.LastResult;
 				if (UpdateFunctions)
 				{
 					x = TranslateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
-				}
-				else
-				{
-					x = TranslateXFunction.LastResult;
 				}
 
 				Vector3 translationVector = new Vector3(TranslateXDirection); //Must clone
@@ -307,14 +302,10 @@ namespace OpenBveApi.Objects
 
 			if (TranslateYFunction != null)
 			{
-				double y;
+				double y = TranslateYFunction.LastResult;
 				if (UpdateFunctions)
 				{
 					y = TranslateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
-				}
-				else
-				{
-					y = TranslateYFunction.LastResult;
 				}
 
 				Vector3 translationVector = new Vector3(TranslateYDirection); //Must clone
@@ -354,16 +345,12 @@ namespace OpenBveApi.Objects
 
 			if (TranslateZFunction != null)
 			{
-				double z;
+				double z = TranslateZFunction.LastResult;
 				if (UpdateFunctions)
 				{
 					z = TranslateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				else
-				{
-					z = TranslateZFunction.LastResult;
-				}
-
+				
 				Vector3 translationVector = new Vector3(TranslateZDirection); //Must clone
 				translationVector.Rotate(Direction, Up, Side);
 				translationVector *= z;
@@ -403,79 +390,49 @@ namespace OpenBveApi.Objects
 			bool rotateX = RotateXFunction != null;
 			bool rotateY = RotateYFunction != null;
 			bool rotateZ = RotateZFunction != null;
-			double radianX;
+			double radianX = 0.0;
 			if (rotateX)
 			{
-				double a;
+				radianX = RotateXFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					a = RotateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					radianX = RotateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				else
-				{
-					a = RotateXFunction.LastResult;
-				}
-
+				
 				if (RotateXDamping != null)
 				{
-					RotateXDamping.Update(TimeElapsed, ref a, EnableDamping);
+					RotateXDamping.Update(TimeElapsed, ref radianX, EnableDamping);
 				}
-
-				radianX = a;
-			}
-			else
-			{
-				radianX = 0.0;
 			}
 
-			double radianY;
+			double radianY = 0.0;
 			if (rotateY)
 			{
-				double a;
+				radianY = RotateYFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					a = RotateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					radianY = RotateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				else
-				{
-					a = RotateYFunction.LastResult;
-				}
-
+				
 				if (RotateYDamping != null)
 				{
-					RotateYDamping.Update(TimeElapsed, ref a, EnableDamping);
+					RotateYDamping.Update(TimeElapsed, ref radianY, EnableDamping);
 				}
-
-				radianY = a;
-			}
-			else
-			{
-				radianY = 0.0;
 			}
 
-			double radianZ;
+			double radianZ = 0.0;
 			if (rotateZ)
 			{
-				double a;
+				radianZ = RotateZFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					a = RotateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					radianZ = RotateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				else
-				{
-					a = RotateZFunction.LastResult;
-				}
-
+				
 				if (RotateZDamping != null)
 				{
-					RotateZDamping.Update(TimeElapsed, ref a, EnableDamping);
+					RotateZDamping.Update(TimeElapsed, ref radianZ, EnableDamping);
 				}
-
-				radianZ = a;
-			}
-			else
-			{
-				radianZ = 0.0;
 			}
 
 			// texture shift
@@ -487,32 +444,24 @@ namespace OpenBveApi.Objects
 			{
 				if (shiftx)
 				{
-					double x;
+					double x = TextureShiftXFunction.LastResult;
 					if (UpdateFunctions)
 					{
 						x = TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					}
-					else
-					{
-						x = TextureShiftXFunction.LastResult;
-					}
-
+					
 					x -= System.Math.Floor(x);
 					internalObject.TextureTranslation *= Matrix4D.CreateTranslation(x * TextureShiftXDirection.X, x * TextureShiftXDirection.Y, 1.0);
 				}
 
 				if (shifty)
 				{
-					double y;
+					double y = TextureShiftYFunction.LastResult;
 					if (UpdateFunctions)
 					{
 						y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					}
-					else
-					{
-						y = TextureShiftYFunction.LastResult;
-					}
-
+					
 					y -= System.Math.Floor(y);
 					internalObject.TextureTranslation *= Matrix4D.CreateTranslation(y * TextureShiftYDirection.X, y * TextureShiftYDirection.Y, 1.0);
 				}
@@ -520,25 +469,18 @@ namespace OpenBveApi.Objects
 
 			// led
 			bool led = LEDFunction != null;
-			double ledangle;
+			double ledangle = 0.0;
 			if (led)
 			{
+				ledangle = LEDFunction.LastResult;
 				if (UpdateFunctions)
 				{
 					ledangle = LEDFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				else
-				{
-					ledangle = LEDFunction.LastResult;
-				}
-			}
-			else
-			{
-				ledangle = 0.0;
 			}
 
 			// null object
-			if (States[s].Prototype == null)
+			if (States[CurrentState].Prototype == null)
 			{
 				return;
 			}
@@ -592,7 +534,7 @@ namespace OpenBveApi.Objects
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Z + t * LEDVectors[currentEdge].Z;
-								States[s].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
+								States[CurrentState].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
 								v++;
 							}
 							{
@@ -610,7 +552,7 @@ namespace OpenBveApi.Objects
 								double lx = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].X + t * LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Y + t * LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Z + t * LEDVectors[lastEdge].Z;
-								States[s].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
+								States[CurrentState].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
 								v++;
 							}
 						}
@@ -632,15 +574,15 @@ namespace OpenBveApi.Objects
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Z + t * LEDVectors[currentEdge].Z;
-								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = new Vector3(cx, cy, cz);
-								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[currentEdge];
+								States[CurrentState].Prototype.Mesh.Vertices[v + 0].Coordinates = new Vector3(cx, cy, cz);
+								States[CurrentState].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[currentEdge];
 								v += 2;
 							}
 							for (int j = currentEdge + 1; j < lastEdge; j++)
 							{
 								/* square-vertex to square-vertex */
-								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(j + 3) % 4];
-								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[j % 4];
+								States[CurrentState].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(j + 3) % 4];
+								States[CurrentState].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[j % 4];
 								v += 2;
 							}
 
@@ -660,8 +602,8 @@ namespace OpenBveApi.Objects
 								double lx = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].X + t * LEDVectors[lastEdge % 4].X;
 								double ly = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Y + t * LEDVectors[lastEdge % 4].Y;
 								double lz = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Z + t * LEDVectors[lastEdge % 4].Z;
-								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(lastEdge + 3) % 4];
-								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = new Vector3(lx, ly, lz);
+								States[CurrentState].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(lastEdge + 3) % 4];
+								States[CurrentState].Prototype.Mesh.Vertices[v + 1].Coordinates = new Vector3(lx, ly, lz);
 								v += 2;
 							}
 						}
@@ -704,7 +646,7 @@ namespace OpenBveApi.Objects
 								double lx = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].X + t * LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Y + t * LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Z + t * LEDVectors[lastEdge].Z;
-								States[s].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
+								States[CurrentState].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
 								v++;
 							}
 							{
@@ -723,7 +665,7 @@ namespace OpenBveApi.Objects
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Z + t * LEDVectors[currentEdge].Z;
-								States[s].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
+								States[CurrentState].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
 								v++;
 							}
 						}
@@ -745,15 +687,15 @@ namespace OpenBveApi.Objects
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge % 4].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge % 4].Y;
 								double cz = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Z + t * LEDVectors[currentEdge % 4].Z;
-								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(currentEdge + 3) % 4];
-								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = new Vector3(cx, cy, cz);
+								States[CurrentState].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(currentEdge + 3) % 4];
+								States[CurrentState].Prototype.Mesh.Vertices[v + 1].Coordinates = new Vector3(cx, cy, cz);
 								v += 2;
 							}
 							for (int j = currentEdge - 1; j > lastEdge; j--)
 							{
 								/* square-vertex to square-vertex */
-								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(j + 3) % 4];
-								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[j % 4];
+								States[CurrentState].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(j + 3) % 4];
+								States[CurrentState].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[j % 4];
 								v += 2;
 							}
 
@@ -773,8 +715,8 @@ namespace OpenBveApi.Objects
 								double lx = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].X + t * LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Y + t * LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Z + t * LEDVectors[lastEdge].Z;
-								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = new Vector3(lx, ly, lz);
-								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[lastEdge % 4];
+								States[CurrentState].Prototype.Mesh.Vertices[v + 0].Coordinates = new Vector3(lx, ly, lz);
+								States[CurrentState].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[lastEdge % 4];
 								v += 2;
 							}
 						}
@@ -783,12 +725,12 @@ namespace OpenBveApi.Objects
 
 				for (int j = v; v < 11; v++)
 				{
-					States[s].Prototype.Mesh.Vertices[j].Coordinates = LEDVectors[4];
+					States[CurrentState].Prototype.Mesh.Vertices[j].Coordinates = LEDVectors[4];
 				}
 			}
 
 			// update prototype
-			internalObject.Prototype = States[s].Prototype;
+			internalObject.Prototype = States[CurrentState].Prototype;
 
 			// update VAO for led if required
 			UpdateVAO = led;
@@ -814,7 +756,7 @@ namespace OpenBveApi.Objects
 
 			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D)
 			{
-				internalObject.Rotate *= States[s].Translation * Matrix4D.CreateTranslation(-Position.X, -Position.Y, Position.Z);
+				internalObject.Rotate *= States[CurrentState].Translation * Matrix4D.CreateTranslation(-Position.X, -Position.Y, Position.Z);
 				internalObject.Rotate *= (Matrix4D)new Transformation((Vector3)Camera.AbsoluteDirection, (Vector3)Camera.AbsoluteUp, (Vector3)Camera.AbsoluteSide);
 
 				// translate
@@ -826,7 +768,7 @@ namespace OpenBveApi.Objects
 			}
 			else
 			{
-				internalObject.Rotate *= States[s].Translation;
+				internalObject.Rotate *= States[CurrentState].Translation;
 				internalObject.Rotate *= (Matrix4D)new Transformation(Direction, Up, Side);
 
 				// translate

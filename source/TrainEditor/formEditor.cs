@@ -38,6 +38,8 @@ namespace TrainEditor {
 			comboboxBrakeControlSystem.Items.Add("Delay-including control");
 			comboboxHandleType.Items.Add("Separated");
 			comboboxHandleType.Items.Add("Combined");
+			comboboxHandleType.Items.Add("Separated (Interlocked)");
+			comboboxHandleType.Items.Add("Separated (Reverser Interlocked)");
 			comboboxAts.Items.Add("None");
 			comboboxAts.Items.Add("ATS-SN");
 			comboboxAts.Items.Add("ATS-SN / ATS-P");
@@ -162,9 +164,9 @@ namespace TrainEditor {
 			numericUpDownDriverBrakeNotches.Value = Train.Handle.DriverBrakeNotches;
 			textboxPowerNotchReduceSteps.Text = Train.Handle.PowerNotchReduceSteps.ToString(Culture);
 			// cab
-			textboxX.Text = Train.Cab.X.ToString(Culture);
-			textboxY.Text = Train.Cab.Y.ToString(Culture);
-			textboxZ.Text = Train.Cab.Z.ToString(Culture);
+			textboxX.Text = Train.Cab.Driver.X.ToString(Culture);
+			textboxY.Text = Train.Cab.Driver.Y.ToString(Culture);
+			textboxZ.Text = Train.Cab.Driver.Z.ToString(Culture);
 			textboxDriverCar.Text = Train.Cab.DriverCar.ToString(Culture);
 			// car
 			textboxMotorCarMass.Text = Train.Car.MotorCarMass.ToString(Culture);
@@ -221,7 +223,7 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxMainReservoirMaximumPressure, "MainReservoirMaximumPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.MainReservoirMaximumPressure)) return false;
 			if (!SaveControlContent(textboxBrakePipeNormalPressure, "BrakePipeNormalPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.BrakePipeNormalPressure)) return false;
 			// handle
-			Train.Handle.HandleType = (TrainDat.Handle.HandleTypes)comboboxHandleType.SelectedIndex;
+			Train.Handle.HandleType = (HandleType)comboboxHandleType.SelectedIndex;
 			Train.Handle.PowerNotches = (int)numericUpDownPowerNotches.Value;
 			Train.Handle.BrakeNotches = (int)numericUpDownBrakeNotches.Value;
 			if (Train.Handle.BrakeNotches == 0  & checkboxHoldBrake.Checked) {
@@ -247,9 +249,9 @@ namespace TrainEditor {
 			Train.Handle.HandleBehaviour = (EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
-			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;
-			if (!SaveControlContent(textboxY, "Y", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Y)) return false;
-			if (!SaveControlContent(textboxZ, "Z", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Z)) return false;
+			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.X)) return false;
+			if (!SaveControlContent(textboxY, "Y", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.Y)) return false;
+			if (!SaveControlContent(textboxZ, "Z", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.Z)) return false;
 			if (!SaveControlContent(textboxDriverCar, "DriverCar", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Cab.DriverCar)) return false;
 			// car
 			if (!SaveControlContent(textboxMotorCarMass, "MotorCarMass", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.MotorCarMass)) return false;
@@ -1507,6 +1509,8 @@ namespace TrainEditor {
 			labelPowerNotchReduceSteps.Text = Translations.GetInterfaceString("train_editor_handle_power_notch_reduce_steps");
 			comboboxHandleType.Items[0] = Translations.GetInterfaceString("train_editor_handle_separated");
 			comboboxHandleType.Items[1] = Translations.GetInterfaceString("train_editor_handle_combined");
+			comboboxHandleType.Items[2] = Translations.GetInterfaceString("train_editor_handle_separated_interlocked");
+			comboboxHandleType.Items[3] = Translations.GetInterfaceString("train_editor_handle_separated_interlocked_reverser");
 
 			groupboxCab.Text = Translations.GetInterfaceString("train_editor_cab_cab");
 			labelDriverCar.Text = Translations.GetInterfaceString("train_editor_cab_driver_car");

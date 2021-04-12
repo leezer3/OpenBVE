@@ -20,7 +20,7 @@ namespace TrainManager.BrakeSystems
 		public override void Update(double TimeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double deceleration)
 		{
 			airSound = null;
-			if (emergencyHandle.Actual == true)
+			if (emergencyHandle.Actual)
 			{
 				if (brakeType == BrakeType.Main)
 				{
@@ -124,15 +124,7 @@ namespace TrainManager.BrakeSystems
 			}
 
 			// electric command
-			bool emergency;
-			if (brakePipe.CurrentPressure + Tolerance < auxiliaryReservoir.CurrentPressure)
-			{
-				emergency = true;
-			}
-			else
-			{
-				emergency = emergencyHandle.Actual;
-			}
+			bool emergency = brakePipe.CurrentPressure + Tolerance < auxiliaryReservoir.CurrentPressure || emergencyHandle.Actual;
 
 			double targetPressure;
 			if (emergency)
@@ -143,7 +135,7 @@ namespace TrainManager.BrakeSystems
 			else
 			{
 				//Otherwise [BVE2 / BVE4 train.dat format] work out target pressure as a proportion of the max notch:
-				targetPressure = (double) brakeHandle.Actual / (double) brakeHandle.MaximumNotch;
+				targetPressure = brakeHandle.Actual / (double) brakeHandle.MaximumNotch;
 				targetPressure *= brakeCylinder.ServiceMaximumPressure;
 			}
 
@@ -256,22 +248,13 @@ namespace TrainManager.BrakeSystems
 			}
 			else
 			{
-				p = (double) brakeHandle.Actual / (double) brakeHandle.MaximumNotch;
+				p = brakeHandle.Actual / (double)brakeHandle.MaximumNotch;
 				p *= brakeCylinder.ServiceMaximumPressure;
 			}
 
 			if (p + Tolerance < straightAirPipe.CurrentPressure)
 			{
-				double r;
-				if (emergencyHandle.Actual)
-				{
-					r = straightAirPipe.EmergencyRate;
-				}
-				else
-				{
-					r = straightAirPipe.ReleaseRate;
-				}
-
+				double r = emergencyHandle.Actual ? straightAirPipe.EmergencyRate : straightAirPipe.ReleaseRate;
 				double d = straightAirPipe.CurrentPressure - p;
 				double m = brakeCylinder.EmergencyMaximumPressure;
 				r = GetRate(d / m, r * TimeElapsed);

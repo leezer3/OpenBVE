@@ -40,7 +40,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				Cab = ParseCabNode(parent.Element("Cab")),
 				Device = ParseDeviceNode(parent.Element("Device")),
 				Cars = new ObservableCollection<Car>(parent.XPathSelectElements("Cars/Car").Select(ParseCarNode)),
-				Couplers = new ObservableCollection<Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode))
+				Couplers = new ObservableCollection<Models.Trains.Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode))
 			};
 		}
 
@@ -48,7 +48,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Handle
 			{
-				HandleType = (Handle.HandleTypes)Enum.Parse(typeof(Handle.HandleTypes), (string)parent.Element("HandleType")),
+				HandleType = (HandleType)Enum.Parse(typeof(HandleType), (string)parent.Element("HandleType")),
 				PowerNotches = (int)parent.Element("PowerNotches"),
 				BrakeNotches = (int)parent.Element("BrakeNotches"),
 				PowerNotchReduceSteps = (int)parent.Element("PowerNotchReduceSteps"),
@@ -270,9 +270,9 @@ namespace TrainEditor2.IO.IntermediateFile
 			areas = new ObservableCollection<Motor.Area>(parent.XPathSelectElements("Areas/Area").Select(n => new Motor.Area((double)n.Element("LeftX"), (double)n.Element("RightX"), (int)n.Element("Index"))));
 		}
 
-		private static Coupler ParseCouplerNode(XElement parent)
+		private static Models.Trains.Coupler ParseCouplerNode(XElement parent)
 		{
-			return new Coupler
+			return new Models.Trains.Coupler
 			{
 				Min = (double)parent.Element("Min"),
 				Max = (double)parent.Element("Max"),

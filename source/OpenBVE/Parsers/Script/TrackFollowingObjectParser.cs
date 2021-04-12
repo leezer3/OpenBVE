@@ -12,6 +12,8 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using TrainManager.Trains;
+using TrackFollowingObject = TrainManager.Trains.TrackFollowingObject;
 
 namespace OpenBve
 {
@@ -22,7 +24,7 @@ namespace OpenBve
 		/// <summary>Parses a track following object</summary>
 		/// <param name="ObjectPath">Absolute path to the object folder of route data</param>
 		/// <param name="FileName">The XML file to parse</param>
-		internal static TrainManager.TrackFollowingObject ParseTrackFollowingObject(string ObjectPath, string FileName)
+		internal static TrackFollowingObject ParseTrackFollowingObject(string ObjectPath, string FileName)
 		{
 			// The current XML file to load
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
@@ -35,7 +37,7 @@ namespace OpenBve
 				throw new InvalidDataException();
 			}
 
-			TrainManager.TrackFollowingObject Train = new TrainManager.TrackFollowingObject(TrainState.Pending);
+			TrackFollowingObject Train = new TrackFollowingObject(TrainState.Pending);
 
 			foreach (XElement Element in TfoElements)
 			{
@@ -50,13 +52,13 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
 		/// <param name="Train">The track following object to parse this node into</param>
-		private static void ParseTrackFollowingObjectNode(string ObjectPath, string FileName, XElement SectionElement, TrainManager.TrackFollowingObject Train)
+		private static void ParseTrackFollowingObjectNode(string ObjectPath, string FileName, XElement SectionElement, TrackFollowingObject Train)
 		{
 			string Section = SectionElement.Name.LocalName;
 
 			string TrainDirectory = string.Empty;
 			bool ConsistReversed = false;
-			List<Game.TravelData> Data = new List<Game.TravelData>();
+			List<TravelData> Data = new List<TravelData>();
 
 			foreach (XElement KeyNode in SectionElement.Elements())
 			{
@@ -87,7 +89,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (!(Data.First() is Game.TravelStopData) || !(Data.Last() is Game.TravelStopData))
+			if (!(Data.First() is TravelStopData) || !(Data.Last() is TravelStopData))
 			{
 				Interface.AddMessage(MessageType.Error, false, $"The first and the last point to go through must be the \"Stop\" node in {FileName}");
 				return;
@@ -115,125 +117,16 @@ namespace OpenBve
 				Interface.AddMessage(MessageType.Error, true, $"The supplied train folder in TrackFollowingObject {FileName} did not contain a complete set of data.");
 				return;
 			}
-			TrainDatParser.ParseTrainData(TrainData, TextEncoding.GetSystemEncodingFromFile(TrainData), Train);
-			SoundCfgParser.ParseSoundConfig(TrainDirectory, Train);
-			Train.AI = new Game.TrackFollowingObjectAI(Train, Data.ToArray());
-
-			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
-			UnifiedObject[] BogieObjects = new UnifiedObject[Train.Cars.Length * 2];
-			UnifiedObject[] CouplerObjects = new UnifiedObject[Train.Cars.Length - 1];
-			bool[] VisibleFromInterior = new bool[Train.Cars.Length];
-			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior, Train, true);
-
-			int currentBogieObject = 0;
-			for (int i = 0; i < Train.Cars.Length; i++)
+			AbstractTrain currentTrain = Train;
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
-				if (CarObjects[i] == null)
+				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(TrainDirectory))
 				{
-					// load default exterior object
-					string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-					StaticObject so;
-					Program.CurrentHost.LoadStaticObject(file, Encoding.UTF8, false, out so);
-					if (so == null)
-					{
-						CarObjects[i] = null;
-					}
-					else
-					{
-						so.ApplyScale(Train.Cars[i].Width, Train.Cars[i].Height, Train.Cars[i].Length);
-						CarObjects[i] = so;
-					}
+						
+					Program.CurrentHost.Plugins[i].Train.LoadTrain(Encoding.UTF8, TrainDirectory, ref currentTrain, ref Interface.CurrentControls);
 				}
-				if (CarObjects[i] != null)
-				{
-					// add object
-					Train.Cars[i].LoadCarSections(CarObjects[i], false);
-				}
-
-				//Load bogie objects
-				if (BogieObjects[currentBogieObject] != null)
-				{
-					Train.Cars[i].FrontBogie.LoadCarSections(BogieObjects[currentBogieObject], false);
-				}
-				currentBogieObject++;
-				if (BogieObjects[currentBogieObject] != null)
-				{
-					Train.Cars[i].RearBogie.LoadCarSections(BogieObjects[currentBogieObject], false);
-				}
-				currentBogieObject++;
 			}
-
-			// door open/close speed
-			foreach (var Car in Train.Cars)
-			{
-				if (Car.Specs.DoorOpenFrequency <= 0.0)
-				{
-					if (Car.Doors[0].OpenSound.Buffer != null & Car.Doors[1].OpenSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						Program.Sounds.LoadBuffer(Car.Doors[1].OpenSound.Buffer);
-						double a = Car.Doors[0].OpenSound.Buffer.Duration;
-						double b = Car.Doors[1].OpenSound.Buffer.Duration;
-						Car.Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
-					}
-					else if (Car.Doors[0].OpenSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						double a = Car.Doors[0].OpenSound.Buffer.Duration;
-						Car.Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
-					}
-					else if (Car.Doors[1].OpenSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						double b = Car.Doors[1].OpenSound.Buffer.Duration;
-						Car.Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
-					}
-					else
-					{
-						Car.Specs.DoorOpenFrequency = 0.8;
-					}
-				}
-				if (Car.Specs.DoorCloseFrequency <= 0.0)
-				{
-					if (Car.Doors[0].CloseSound.Buffer != null & Car.Doors[1].CloseSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						Program.Sounds.LoadBuffer(Car.Doors[1].CloseSound.Buffer);
-						double a = Car.Doors[0].CloseSound.Buffer.Duration;
-						double b = Car.Doors[1].CloseSound.Buffer.Duration;
-						Car.Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
-					}
-					else if (Car.Doors[0].CloseSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						double a = Car.Doors[0].CloseSound.Buffer.Duration;
-						Car.Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
-					}
-					else if (Car.Doors[1].CloseSound.Buffer != null)
-					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						double b = Car.Doors[1].CloseSound.Buffer.Duration;
-						Car.Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
-					}
-					else
-					{
-						Car.Specs.DoorCloseFrequency = 0.8;
-					}
-				}
-				const double f = 0.015;
-				const double g = 2.75;
-				Car.Specs.DoorOpenPitch = Math.Exp(f * Math.Tan(g * (Program.RandomNumberGenerator.NextDouble() - 0.5)));
-				Car.Specs.DoorClosePitch = Math.Exp(f * Math.Tan(g * (Program.RandomNumberGenerator.NextDouble() - 0.5)));
-				Car.Specs.DoorOpenFrequency /= Car.Specs.DoorOpenPitch;
-				Car.Specs.DoorCloseFrequency /= Car.Specs.DoorClosePitch;
-				/*
-				 * Remove the following two lines, then the pitch at which doors play
-				 * takes their randomized opening and closing times into account.
-				 * */
-				Car.Specs.DoorOpenPitch = 1.0;
-				Car.Specs.DoorClosePitch = 1.0;
-			}
-
+			Train.AI = new TrackFollowingObjectAI(Train, Data.ToArray());
 			foreach (var Car in Train.Cars)
 			{
 				Car.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
@@ -257,7 +150,7 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
 		/// <param name="Train">The track following object to parse this node into</param>
-		private static void ParseDefinitionNode(string FileName, XElement SectionElement, TrainManager.TrackFollowingObject Train)
+		private static void ParseDefinitionNode(string FileName, XElement SectionElement, TrackFollowingObject Train)
 		{
 			string Section = SectionElement.Name.LocalName;
 
@@ -385,7 +278,7 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
 		/// <param name="Data">The list of travel data to add this to</param>
-		private static void ParseTravelDataNodes(string FileName, XElement SectionElement, ICollection<Game.TravelData> Data)
+		private static void ParseTravelDataNodes(string FileName, XElement SectionElement, ICollection<TravelData> Data)
 		{
 			string Section = SectionElement.Name.LocalName;
 
@@ -415,13 +308,14 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
 		/// <param name="Data">Travel data to which the parse results apply</param>
-		private static void ParseTravelDataNode(string FileName, XElement SectionElement, Game.TravelData Data)
+		private static void ParseTravelDataNode(string FileName, XElement SectionElement, TravelData Data)
 		{
 			string Section = SectionElement.Name.LocalName;
 
 			double Decelerate = 0.0;
 			double Accelerate = 0.0;
 			double TargetSpeed = 0.0;
+			bool targetSpeedSet = false;
 
 			foreach (XElement KeyNode in SectionElement.Elements())
 			{
@@ -455,6 +349,7 @@ namespace OpenBve
 						{
 							Interface.AddMessage(MessageType.Error, false, $"Value is expected to be a non-negative floating-point number in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
 						}
+						targetSpeedSet = true;
 						break;
 					case "rail":
 						if (Value.Any() && !NumberFormats.TryParseIntVb6(Value, out Data.RailIndex) || Data.RailIndex < 0)
@@ -466,6 +361,10 @@ namespace OpenBve
 				}
 			}
 
+			if (!targetSpeedSet)
+			{
+				Interface.AddMessage(MessageType.Warning, false, $"A TargetSpeed was not set in {Section}. This may cause unexpected results.");
+			}
 			Data.Decelerate = -Decelerate / 3.6;
 			Data.Accelerate = Accelerate / 3.6;
 			Data.TargetSpeed = TargetSpeed / 3.6;
@@ -477,11 +376,11 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
 		/// <returns>An instance of the new TravelStopData class with the parse result applied</returns>
-		private static Game.TravelStopData ParseTravelStopNode(string FileName, XElement SectionElement)
+		private static TravelStopData ParseTravelStopNode(string FileName, XElement SectionElement)
 		{
 			string Section = SectionElement.Name.LocalName;
 
-			Game.TravelStopData Data = new Game.TravelStopData();
+			TravelStopData Data = new TravelStopData();
 
 			ParseTravelDataNode(FileName, SectionElement, Data);
 
@@ -581,11 +480,11 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
 		/// <returns>An instance of the new TravelPointData class with the parse result applied</returns>
-		private static Game.TravelPointData ParseTravelPointNode(string FileName, XElement SectionElement)
+		private static TravelPointData ParseTravelPointNode(string FileName, XElement SectionElement)
 		{
 			string Section = SectionElement.Name.LocalName;
 
-			Game.TravelPointData Data = new Game.TravelPointData();
+			TravelPointData Data = new TravelPointData();
 
 			ParseTravelDataNode(FileName, SectionElement, Data);
 

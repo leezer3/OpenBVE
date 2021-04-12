@@ -44,12 +44,11 @@ namespace CsvRwRouteParser
 							string ts = null;
 							foreach (XmlNode c in n.ChildNodes)
 							{
-								string[] Arguments = c.InnerText.Split(new char[] { ',' });
+								string[] Arguments = c.InnerText.Split(',');
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "cablighting":
-										double b;
-										if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out b))
+										if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out var b))
 										{
 											cb = true;
 										}
@@ -62,8 +61,7 @@ namespace CsvRwRouteParser
 										currentLight.CabBrightness = b;
 										break;
 									case "time":
-										double t;
-										if (Parser.TryParseTime(Arguments[0].Trim(new char[] { }), out t))
+										if (Parser.TryParseTime(Arguments[0].Trim(), out var t))
 										{
 											currentLight.Time = (int)t;
 											tf = true;
@@ -76,97 +74,83 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "ambientlight":
-										if (Arguments.Length == 3)
+										switch (Arguments.Length)
 										{
-											double R, G, B;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] { }), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] { }), out B))
-											{
-												currentLight.AmbientColor = new Color24((byte)R,(byte)G,(byte)B);
-												al = true;
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
-											}
-										}
-										else
-										{
-											if (Arguments.Length == 1)
-											{
+											case 1:
 												if (Color24.TryParseHexColor(Arguments[0], out currentLight.AmbientColor))
 												{
 													al = true;
 													break;
 												}
-											}
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+												break;
+											case 3:
+												if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out var R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out var G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out var B))
+												{
+													currentLight.AmbientColor = new Color24((byte)R,(byte)G,(byte)B);
+													al = true;
+													break;
+												}
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+												break;
+											default:
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " must be either a hexadeciamal or RGB color in file  " + fileName);
+												break;
 										}
 										break;
 									case "directionallight":
-										if (Arguments.Length == 3)
+										switch (Arguments.Length)
 										{
-											double R, G, B;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] { }), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] { }), out B))
-											{
-												currentLight.DiffuseColor = new Color24((byte)R, (byte)G, (byte)B);
-												dl = true;
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
-											}
-										}
-										else
-										{
-											if (Arguments.Length == 1)
-											{
+											case 1:
 												if (Color24.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
 												{
-													dl = true;
+													al = true;
 													break;
 												}
-											}
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+												break;
+											case 3:
+												if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out var R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out var G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out var B))
+												{
+													currentLight.DiffuseColor = new Color24((byte)R,(byte)G,(byte)B);
+													al = true;
+													break;
+												}
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+												break;
+											default:
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " must be either a hexadeciamal or RGB color in file  " + fileName);
+												break;
 										}
 										break;
 									case "cartesianlightdirection":
 									case "lightdirection":
 										if (Arguments.Length == 3)
 										{
-											double X, Y, Z;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out X) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] { }), out Y) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] { }), out Z))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out var X) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out var Y) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out var Z))
 											{
 												currentLight.LightPosition = new Vector3(X, Y, Z);
 												ld = true;
+												break;
 											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
-											}
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
+											break;
 										}
-										else
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
-										}
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										break;
 									case "sphericallightdirection":
 										if (Arguments.Length == 2)
 										{
-											double theta, phi;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] { }), out theta) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] { }), out phi))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out var theta) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out var phi))
 											{
 												currentLight.LightPosition = new Vector3(Math.Cos(theta) * Math.Sin(phi), -Math.Sin(theta), Math.Cos(theta) * Math.Cos(phi));
 												ld = true;
+												break;
 											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
-											}
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
+											break;
 										}
-										else
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain two arguments in file " + fileName);
-										}
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain two arguments in file " + fileName);
 										break;
 								}
 							}

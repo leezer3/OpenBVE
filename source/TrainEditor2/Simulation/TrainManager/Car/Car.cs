@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
+using TrainManager.Car;
 using TrainManager.Motor;
 
 namespace TrainEditor2.Simulation.TrainManager
@@ -14,24 +16,27 @@ namespace TrainEditor2.Simulation.TrainManager
 		internal class Car : AbstractCar
 		{
 			private readonly Train baseTrain;
-			internal CarSpecs Specs;
+			internal CarPhysics Specs;
 			internal CarSounds Sounds;
 
 			internal Car(Train baseTrain)
 			{
 				this.baseTrain = baseTrain;
+				this.Specs = new CarPhysics();
+				this.Sounds = new CarSounds();
+				InitializeCarSounds();
 			}
 
 			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
 			internal void InitializeCarSounds()
 			{
-				Sounds.Run = new CarSound[] { };
-				Sounds.RunVolume = new double[] { };
+				Sounds.Run = new Dictionary<int, CarSound>();
+				Sounds.Flange = new Dictionary<int, CarSound>();
 			}
 
 			internal void UpdateRunSounds(double TimeElapsed, int RunIndex)
 			{
-				if (Sounds.Run == null || Sounds.Run.Length == 0)
+				if (Sounds.Run == null || Sounds.Run.Count == 0)
 				{
 					return;
 				}
@@ -41,50 +46,45 @@ namespace TrainEditor2.Simulation.TrainManager
 				double pitch = speed * factor;
 				double baseGain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
 
-				for (int j = 0; j < Sounds.Run.Length; j++)
+				for (int i = 0; i < Sounds.Run.Count; i++)
 				{
-					if (j == RunIndex)
+					int key = Sounds.Run.ElementAt(i).Key;
+					if (key == RunIndex)
 					{
-						Sounds.RunVolume[j] += 3.0 * TimeElapsed;
+						Sounds.Run[key].TargetVolume += 3.0 * TimeElapsed;
 
-						if (Sounds.RunVolume[j] > 1.0)
+						if (Sounds.Run[key].TargetVolume > 1.0)
 						{
-							Sounds.RunVolume[j] = 1.0;
+							Sounds.Run[key].TargetVolume = 1.0;
 						}
 					}
 					else
 					{
-						Sounds.RunVolume[j] -= 3.0 * TimeElapsed;
+						Sounds.Run[key].TargetVolume -= 3.0 * TimeElapsed;
 
-						if (Sounds.RunVolume[j] < 0.0)
+						if (Sounds.Run[key].TargetVolume < 0.0)
 						{
-							Sounds.RunVolume[j] = 0.0;
+							Sounds.Run[key].TargetVolume = 0.0;
 						}
 					}
 
-					double gain = baseGain * Sounds.RunVolume[j];
+					double gain = baseGain * Sounds.Run[key].TargetVolume;
 
-					if (Program.SoundApi.IsPlaying(Sounds.Run[j].Source))
+					if (Sounds.Run[key].IsPlaying)
 					{
 						if (pitch > 0.01 & gain > 0.001)
 						{
-							Sounds.Run[j].Source.Pitch = pitch;
-							Sounds.Run[j].Source.Volume = gain;
+							Sounds.Run[key].Source.Pitch = pitch;
+							Sounds.Run[key].Source.Volume = gain;
 						}
 						else
 						{
-							Program.SoundApi.StopSound(Sounds.Run[j]);
+							Sounds.Run[key].Stop();
 						}
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						SoundBuffer buffer = Sounds.Run[j].Buffer;
-
-						if (buffer != null)
-						{
-							Vector3 pos = Sounds.Run[j].Position;
-							Sounds.Run[j].Source = Program.SoundApi.PlaySound(buffer, pitch, gain, pos, baseTrain, true);
-						}
+						Sounds.Run[key].Play(pitch, gain, this, true);
 					}
 				}
 			}
@@ -92,10 +92,10 @@ namespace TrainEditor2.Simulation.TrainManager
 			internal void UpdateMotorSounds(bool isPlayTrack1, bool isPlayTrack2)
 			{
 				Vector3 pos = Sounds.Motor.Position;
-				double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
+				double speed = Math.Abs(Specs.PerceivedSpeed);
 				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
 				int odir = Sounds.Motor.CurrentAccelerationDirection;
-				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
+				int ndir = Math.Sign(Specs.Acceleration);
 
 				for (int h = 0; h < 2; h++)
 				{
@@ -194,8 +194,6 @@ namespace TrainEditor2.Simulation.TrainManager
 
 			internal void ApplySounds()
 			{
-				InitializeCarSounds();
-
 				//Default sound positions and radii
 				double mediumRadius = 10.0;
 
@@ -205,24 +203,9 @@ namespace TrainEditor2.Simulation.TrainManager
 				// run sound
 				foreach (var element in RunSounds)
 				{
-					int n = Sounds.Run.Length;
-
-					if (element.Key >= n)
-					{
-						Array.Resize(ref Sounds.Run, element.Key + 1);
-
-						for (int h = n; h < element.Key; h++)
-						{
-							Sounds.Run[h] = new CarSound();
-						}
-					}
-
 					Sounds.Run[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center);
 				}
-
-				Sounds.RunVolume = new double[Sounds.Run.Length];
-
-
+				
 				// motor sound
 				Sounds.Motor.Position = center;
 

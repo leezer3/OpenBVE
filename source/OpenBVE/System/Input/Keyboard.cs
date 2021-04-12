@@ -24,9 +24,9 @@ namespace OpenBve
 			}
 			BlockKeyRepeat = true;
 			//Check for modifiers
-			if (e.Shift) CurrentKeyboardModifier |= Interface.KeyboardModifier.Shift;
-			if (e.Control) CurrentKeyboardModifier |= Interface.KeyboardModifier.Ctrl;
-			if (e.Alt) CurrentKeyboardModifier |= Interface.KeyboardModifier.Alt;
+			if (e.Shift) CurrentKeyboardModifier |= KeyboardModifier.Shift;
+			if (e.Control) CurrentKeyboardModifier |= KeyboardModifier.Ctrl;
+			if (e.Alt) CurrentKeyboardModifier |= KeyboardModifier.Alt;
 			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				Game.Menu.SetControlKbdCustomData((OpenBveApi.Input.Key)e.Key, CurrentKeyboardModifier);
@@ -36,7 +36,7 @@ namespace OpenBve
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
 				//If we're using keyboard for this input
-				if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Keyboard)
+				if (Interface.CurrentControls[i].Method == ControlMethod.Keyboard)
 				{
 					//Compare the current and previous keyboard states
 					//Only process if they are different
@@ -45,7 +45,7 @@ namespace OpenBve
 					{
 
 						Interface.CurrentControls[i].AnalogState = 1.0;
-						Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+						Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
 						//Key repeats should not be added in non-game interface modes, unless they are Menu Up/ Menu Down commands
 						if (Program.Renderer.CurrentInterface == InterfaceType.Normal || Interface.CurrentControls[i].Command == Translations.Command.MenuUp || Interface.CurrentControls[i].Command == Translations.Command.MenuDown)
 						{
@@ -64,7 +64,7 @@ namespace OpenBve
 			}
 			BlockKeyRepeat = false;
 			//Remember to reset the keyboard modifier after we're done, else it repeats.....
-			CurrentKeyboardModifier = Interface.KeyboardModifier.None;
+			CurrentKeyboardModifier = KeyboardModifier.None;
 		}
 
 		/// <summary>Called when a KeyUp event is generated</summary>
@@ -89,15 +89,15 @@ namespace OpenBve
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
 				//If we're using keyboard for this input
-				if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Keyboard)
+				if (Interface.CurrentControls[i].Method == ControlMethod.Keyboard)
 				{
 					//Compare the current and previous keyboard states
 					//Only process if they are different
 					if (!Enum.IsDefined(typeof(OpenBveApi.Input.Key), Interface.CurrentControls[i].Key)) continue;
-					if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].AnalogState == 1.0 & Interface.CurrentControls[i].DigitalState > Interface.DigitalControlState.Released)
+					if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].AnalogState == 1.0 & Interface.CurrentControls[i].DigitalState > DigitalControlState.Released)
 					{
 						Interface.CurrentControls[i].AnalogState = 0.0;
-						Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+						Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
 						RemoveControlRepeat(i);
 					}
 				}

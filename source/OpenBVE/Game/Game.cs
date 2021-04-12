@@ -9,6 +9,7 @@ using RouteManager2;
 using RouteManager2.Climate;
 using RouteManager2.SignalManager.PreTrain;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve 
 {
@@ -32,9 +33,10 @@ namespace OpenBve
 				Program.CurrentRoute.Tracks[key] = new Track();
 			}
 			// train manager
-			TrainManager.Trains = new TrainManager.Train[] { };
+			Program.TrainManager.Trains = new TrainBase[] { };
 			// game
 			Interface.LogMessages.Clear();
+			Program.CurrentHost.MissingFiles.Clear();
 			Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
@@ -104,11 +106,11 @@ namespace OpenBve
 
 		internal static void UpdateBlackBox() {
 			if (Program.CurrentRoute.SecondsSinceMidnight >= BlackBoxNextUpdate) {
-				AddBlackBoxEntry(BlackBoxEventToken.None);
+				AddBlackBoxEntry();
 				BlackBoxNextUpdate = Program.CurrentRoute.SecondsSinceMidnight + 1.0;
 			}
 		}
-		internal static void AddBlackBoxEntry(BlackBoxEventToken EventToken) {
+		internal static void AddBlackBoxEntry() {
 			if (Interface.CurrentOptions.BlackBox) {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
 					Array.Resize(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
@@ -149,7 +151,7 @@ namespace OpenBve
 				} else {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = (BlackBoxBrake)TrainManager.PlayerTrain.Handles.Brake.Safety;
 				}
-				BlackBoxEntries[BlackBoxEntryCount].EventToken = EventToken;
+				BlackBoxEntries[BlackBoxEntryCount].EventToken = BlackBoxEventToken.None;
 				BlackBoxEntryCount++;
 			}
 		}

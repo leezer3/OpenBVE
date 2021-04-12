@@ -326,7 +326,7 @@ namespace OpenBveApi.FunctionScripting
 			Expression = " " + Expression + " ";
 			Expression = Expression.Replace(" 1 1 == -- ", " 0 ");
 			Expression = Expression.Replace(" 1 doors - 1 == -- ", " doors ! -- ");
-			string[] Arguments = Expression.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] Arguments = Expression.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			string[] Stack = new string[Arguments.Length];
 			int StackLength = 0;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;

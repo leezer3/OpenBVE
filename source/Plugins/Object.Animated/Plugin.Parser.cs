@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
@@ -65,7 +65,7 @@ namespace Plugin
 											{
 												case "position":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -177,7 +177,6 @@ namespace Plugin
 								}
 								Result.Objects[ObjectCount] = new AnimatedObject(currentHost)
 								{
-									States = new ObjectState[] {},
 									CurrentState = -1,
 									TranslateXDirection = Vector3.Right,
 									TranslateYDirection = Vector3.Down,
@@ -214,7 +213,7 @@ namespace Plugin
 											{
 												case "position":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -242,7 +241,7 @@ namespace Plugin
 													} break;
 												case "states":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length >= 1)
 														{
 															string Folder = System.IO.Path.GetDirectoryName(FileName);
@@ -300,7 +299,7 @@ namespace Plugin
 												case "translateydirection":
 												case "translatezdirection":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -429,7 +428,7 @@ namespace Plugin
 													{
 														double FrontAxlePosition;
 														double RearAxlePosition;
-														var splitValue = b.Split(new char[] { ',' });
+														var splitValue = b.Split(new[] { ',' });
 														if (!double.TryParse(splitValue[0], out FrontAxlePosition))
 														{
 															currentHost.AddMessage(MessageType.Error, false,"Invalid FrontAxlePosition in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
@@ -494,7 +493,7 @@ namespace Plugin
 												case "rotateydirection":
 												case "rotatezdirection":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -607,7 +606,7 @@ namespace Plugin
 												case "rotateydamping":
 												case "rotatezdamping":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 2)
 														{
 															double nf, dr;
@@ -651,7 +650,7 @@ namespace Plugin
 												case "textureshiftxdirection":
 												case "textureshiftydirection":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 2)
 														{
 															double x, y;
@@ -943,7 +942,7 @@ namespace Plugin
 											{
 												case "position":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1020,7 +1019,7 @@ namespace Plugin
 												case "translateydirection":
 												case "translatezdirection":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1229,7 +1228,7 @@ namespace Plugin
 											{
 												case "position":
 													{
-														string[] s = b.Split(new char[] { ',' });
+														string[] s = b.Split(new[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1279,7 +1278,7 @@ namespace Plugin
 												case "filenames":
 													{
 														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														string[] splitFiles = b.Split(new char[] { ',' });
+														string[] splitFiles = b.Split(new[] { ',' });
 														fileNames = new string[splitFiles.Length];
 														for (int k = 0; k < splitFiles.Length; k++)
 														{
@@ -1421,7 +1420,7 @@ namespace Plugin
 			//Update co-ords
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
-				Mesh.Vertices[i].Coordinates.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+				Mesh.Vertices[i].Coordinates.Rotate(RotationDirection, Angle);
 			}
 			//Update normals
 			for (int i = 0; i < Mesh.Faces.Length; i++)
@@ -1429,7 +1428,7 @@ namespace Plugin
 				for(int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
 					if (!Vector3.IsZero(Mesh.Faces[i].Vertices[j].Normal))
 					{
-						Mesh.Faces[i].Vertices[j].Normal.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+						Mesh.Faces[i].Vertices[j].Normal.Rotate(RotationDirection, Angle);
 					}
 			}
 		}

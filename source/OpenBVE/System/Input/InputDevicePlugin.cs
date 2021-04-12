@@ -8,7 +8,7 @@ namespace OpenBve
 		{
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				if (Interface.CurrentControls[i].Method != Interface.ControlMethod.InputDevicePlugin)
+				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin)
 				{
 					continue;
 				}
@@ -28,7 +28,7 @@ namespace OpenBve
 						continue;
 					}
 					Interface.CurrentControls[i].AnalogState = 1.0;
-					Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+					Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
 					AddControlRepeat(i);
 				}
 			}
@@ -38,7 +38,7 @@ namespace OpenBve
 		{
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				if (Interface.CurrentControls[i].Method != Interface.ControlMethod.InputDevicePlugin)
+				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin)
 				{
 					continue;
 				}
@@ -58,7 +58,7 @@ namespace OpenBve
 						continue;
 					}
 					Interface.CurrentControls[i].AnalogState = 0.0;
-					Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+					Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
 					RemoveControlRepeat(i);
 				}
 			}

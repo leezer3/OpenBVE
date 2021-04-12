@@ -1313,8 +1313,6 @@ namespace Plugin
 			double g = 0.5 * h;
 			double t = 0.0;
 			double a = h != 0.0 ? Math.Atan((r2 - r1) / h) : 0.0;
-			double cosa = Math.Cos(a);
-			double sina = Math.Sin(a);
 			// vertices and normals
 			int v = Builder.Vertices.Count;
 			for (int i = 0; i < n; i++) {
@@ -1328,7 +1326,7 @@ namespace Plugin
 				Builder.Vertices.Add(new Vertex(lx, -g, lz));
 				Vector3 normal = new Vector3(dx * ns, 0.0, dz * ns);
 				Vector3 s = Vector3.Cross(normal, Vector3.Down);
-				normal.Rotate(s, cosa, sina);
+				normal.Rotate(s, a);
 				Normals[2 * i + 0] = new Vector3(normal);
 				Normals[2 * i + 1] = new Vector3(normal);
 				t += d;
