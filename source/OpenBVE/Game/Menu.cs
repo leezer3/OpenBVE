@@ -554,7 +554,7 @@ namespace OpenBve
 		/// <param name="y">The screen-relative y coordinate of the move event</param>
 		internal bool ProcessMouseMove(int x, int y)
 		{
-			//
+			Program.currentGameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;
