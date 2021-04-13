@@ -37,7 +37,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Internal list of connected controllers.
 		/// </summary>
-		private List<Guid> ControllerList = new List<Guid>();
+		private List<Guid> controllerList = new List<Guid>();
 
 		public Config()
 		{
@@ -85,12 +85,12 @@ namespace DenshaDeGoInput
 		private void ListControllers()
 		{
 			// Clear the internal and visible lists
-			ControllerList.Clear();
+			controllerList.Clear();
 			deviceBox.Items.Clear();
 
-			ControllerList.AddRange(InputTranslator.ConnectedControllers.Keys);
+			controllerList.AddRange(InputTranslator.ConnectedControllers.Keys);
 
-			foreach (Guid guid in ControllerList)
+			foreach (Guid guid in controllerList)
 			{
 				deviceBox.Items.Add(InputTranslator.GetControllerName(guid));
 			}
@@ -171,7 +171,7 @@ namespace DenshaDeGoInput
 					label_pedal.Visible = false;
 					label_ldoor.Visible = false;
 					label_rdoor.Visible = false;
-					if (ControllerUnbalance.hasDirectionButtons)
+					if (ControllerUnbalance.HasDirectionButtons)
 					{
 						label_up.Visible = true;
 						label_down.Visible = true;
@@ -288,9 +288,9 @@ namespace DenshaDeGoInput
 			ListControllers();
 
 			// Try to select the current device
-			if (ControllerList.Contains(InputTranslator.activeControllerGuid))
+			if (controllerList.Contains(InputTranslator.ActiveControllerGuid))
 			{
-				deviceBox.SelectedIndex = ControllerList.IndexOf(InputTranslator.activeControllerGuid);
+				deviceBox.SelectedIndex = controllerList.IndexOf(InputTranslator.ActiveControllerGuid);
 			}
 
 			// Set command boxes
@@ -310,10 +310,10 @@ namespace DenshaDeGoInput
 
 
 			// Set checkboxes
-			convertnotchesCheck.Checked = DenshaDeGoInput.convertNotches;
-			minmaxCheck.Checked = DenshaDeGoInput.keepMaxMin;
-			holdbrakeCheck.Checked = DenshaDeGoInput.mapHoldBrake;
-			minmaxCheck.Enabled = DenshaDeGoInput.convertNotches;
+			convertnotchesCheck.Checked = DenshaDeGoInput.ConvertNotches;
+			minmaxCheck.Checked = DenshaDeGoInput.KeepMaxMin;
+			holdbrakeCheck.Checked = DenshaDeGoInput.MapHoldBrake;
+			minmaxCheck.Enabled = DenshaDeGoInput.ConvertNotches;
 
 			// Start timer
 			timer1.Enabled = true;
@@ -331,7 +331,7 @@ namespace DenshaDeGoInput
 
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			InputTranslator.ControllerModels model = InputTranslator.ConnectedModels[ControllerList[deviceBox.SelectedIndex]];
+			InputTranslator.ControllerModels model = InputTranslator.ConnectedModels[controllerList[deviceBox.SelectedIndex]];
 			if (model == InputTranslator.ControllerModels.Ps2Type2 || model == InputTranslator.ControllerModels.Ps2Shinkansen)
 			{
 				ControllerPs2.ControllerDisplayEnabled = true;
@@ -341,7 +341,7 @@ namespace DenshaDeGoInput
 				ControllerPs2.ControllerDisplayEnabled = false;
 			}
 			InputTranslator.Update();
-			InputTranslator.activeControllerGuid = ControllerList[deviceBox.SelectedIndex];
+			InputTranslator.ActiveControllerGuid = controllerList[deviceBox.SelectedIndex];
 		}
 
 		private void buttonselectBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -409,18 +409,18 @@ namespace DenshaDeGoInput
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.convertNotches = convertnotchesCheck.Checked;
-			minmaxCheck.Enabled = DenshaDeGoInput.convertNotches;
+			DenshaDeGoInput.ConvertNotches = convertnotchesCheck.Checked;
+			minmaxCheck.Enabled = DenshaDeGoInput.ConvertNotches;
 		}
 
 		private void minmaxCheck_CheckedChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.keepMaxMin = minmaxCheck.Checked;
+			DenshaDeGoInput.KeepMaxMin = minmaxCheck.Checked;
 		}
 
 		private void holdbrakeCheck_CheckedChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.mapHoldBrake = holdbrakeCheck.Checked;
+			DenshaDeGoInput.MapHoldBrake = holdbrakeCheck.Checked;
 		}
 
 		private void buttonCalibrate_Click(object sender, EventArgs e)

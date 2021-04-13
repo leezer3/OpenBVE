@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
 
@@ -47,19 +48,12 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// The USB controller.
 		/// </summary>
-		private static UsbDevice PS2Controller;
-
-		private static UsbEndpointReader ControllerReader;
+		private static UsbDevice ps2Controller;
 
 		/// <summary>
-		/// The setup packet needed to send data to the USB controller.
+		/// The setup packet needed to send data to the Shinkansen controller.
 		/// </summary>
-		private static UsbSetupPacket SetupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
-
-		/// <summary>
-		/// The transfer context for USB read requests.
-		/// </summary>
-		private static UsbTransfer transferContext;
+		private static UsbSetupPacket shinkansenSetupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
 
 		/// <summary>
 		/// The raw data read from the USB controller.
@@ -67,25 +61,20 @@ namespace DenshaDeGoInput
 		private static byte[] readBuffer = new byte[6];
 
 		/// <summary>
-		/// Whether there is a pending read from the USB controller.
-		/// </summary>
-		private static bool awaitingRead;
-
-		/// <summary>
-		/// The error code from read requests sent to the USB controller.
-		/// </summary>
-		private static ErrorCode readError;
-
-		/// <summary>
 		/// Whether the controller display or door lamp is enabled.
 		/// </summary>
-		public static bool ControllerDisplayEnabled;
+		internal static bool ControllerDisplayEnabled;
+
+		/// <summary>
+		/// The background worker used to read input asynchronously.
+		/// </summary>
+		private static BackgroundWorker inputWorker = new BackgroundWorker();
 
 		/// <summary>
 		/// Represents the bytes for each buttons.
 		/// </summary>
 		[Flags]
-		internal enum ButtonBytes
+		private enum ButtonBytes
 		{
 			None = 0x0,
 			Select = 0x10,
@@ -99,7 +88,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Represents the possible bytes for the pedal.
 		/// </summary>
-		internal enum PedalBytes
+		private enum PedalBytes
 		{
 			Released = 0xFF,
 			Pressed = 0x0
@@ -108,7 +97,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Represents the possible bytes for brake notches.
 		/// </summary>
-		internal enum BrakeByte
+		private enum BrakeByte
 		{
 			Released = 0x79,
 			B1 = 0x8A,
@@ -124,53 +113,9 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Dictionary storing the mapping of each brake notch.
-		/// </summary>
-		internal static readonly Dictionary<BrakeByte, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeByte, InputTranslator.BrakeNotches>
-		{
-			{ BrakeByte.Released, InputTranslator.BrakeNotches.Released },
-			{ BrakeByte.B1, InputTranslator.BrakeNotches.B1 },
-			{ BrakeByte.B2, InputTranslator.BrakeNotches.B2 },
-			{ BrakeByte.B3, InputTranslator.BrakeNotches.B3 },
-			{ BrakeByte.B4, InputTranslator.BrakeNotches.B4 },
-			{ BrakeByte.B5, InputTranslator.BrakeNotches.B5 },
-			{ BrakeByte.B6, InputTranslator.BrakeNotches.B6 },
-			{ BrakeByte.B7, InputTranslator.BrakeNotches.B7 },
-			{ BrakeByte.B8, InputTranslator.BrakeNotches.B8 },
-			{ BrakeByte.Emergency, InputTranslator.BrakeNotches.Emergency }
-		};
-
-		/// <summary>
-		/// Represents the possible bytes for power notches.
-		/// </summary>
-		internal enum PowerByte
-		{
-			N = 0x81,
-			P1 = 0x6D,
-			P2 = 0x54,
-			P3 = 0x3F,
-			P4 = 0x21,
-			P5 = 0x00,
-			Transition = 0xFF
-		}
-
-		/// <summary>
-		/// Dictionary storing the mapping of each power notch.
-		/// </summary>
-		internal static readonly Dictionary<PowerByte, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerByte, InputTranslator.PowerNotches>
-		{
-			{ PowerByte.N, InputTranslator.PowerNotches.N },
-			{ PowerByte.P1, InputTranslator.PowerNotches.P1 },
-			{ PowerByte.P2, InputTranslator.PowerNotches.P2 },
-			{ PowerByte.P3, InputTranslator.PowerNotches.P3 },
-			{ PowerByte.P4, InputTranslator.PowerNotches.P4 },
-			{ PowerByte.P5, InputTranslator.PowerNotches.P5 }
-		};
-
-		/// <summary>
 		/// Represents the possible bytes for brake notches (Shinkansen controller.
 		/// </summary>
-		internal enum BrakeByteShinkansen
+		private enum BrakeByteShinkansen
 		{
 			Released = 0x1C,
 			B1 = 0x38,
@@ -185,25 +130,23 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Dictionary storing the mapping of each brake notch (Shinkansen controller.
+		/// Represents the possible bytes for power notches.
 		/// </summary>
-		internal static readonly Dictionary<BrakeByteShinkansen, InputTranslator.BrakeNotches> BrakeNotchMapShinkansen = new Dictionary<BrakeByteShinkansen, InputTranslator.BrakeNotches>
+		private enum PowerByte
 		{
-			{ BrakeByteShinkansen.Released, InputTranslator.BrakeNotches.Released },
-			{ BrakeByteShinkansen.B1, InputTranslator.BrakeNotches.B1 },
-			{ BrakeByteShinkansen.B2, InputTranslator.BrakeNotches.B2 },
-			{ BrakeByteShinkansen.B3, InputTranslator.BrakeNotches.B3 },
-			{ BrakeByteShinkansen.B4, InputTranslator.BrakeNotches.B4 },
-			{ BrakeByteShinkansen.B5, InputTranslator.BrakeNotches.B5 },
-			{ BrakeByteShinkansen.B6, InputTranslator.BrakeNotches.B6 },
-			{ BrakeByteShinkansen.B7, InputTranslator.BrakeNotches.B7 },
-			{ BrakeByteShinkansen.Emergency, InputTranslator.BrakeNotches.Emergency }
-		};
+			N = 0x81,
+			P1 = 0x6D,
+			P2 = 0x54,
+			P3 = 0x3F,
+			P4 = 0x21,
+			P5 = 0x00,
+			Transition = 0xFF
+		}
 
 		/// <summary>
 		/// Represents the possible bytes for power notches (Shinkansen controller).
 		/// </summary>
-		internal enum PowerByteShinkansen
+		private enum PowerByteShinkansen
 		{
 			N = 0x12,
 			P1 = 0x24,
@@ -223,9 +166,55 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
+		/// Dictionary storing the mapping of each brake notch.
+		/// </summary>
+		private static readonly Dictionary<BrakeByte, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeByte, InputTranslator.BrakeNotches>
+		{
+			{ BrakeByte.Released, InputTranslator.BrakeNotches.Released },
+			{ BrakeByte.B1, InputTranslator.BrakeNotches.B1 },
+			{ BrakeByte.B2, InputTranslator.BrakeNotches.B2 },
+			{ BrakeByte.B3, InputTranslator.BrakeNotches.B3 },
+			{ BrakeByte.B4, InputTranslator.BrakeNotches.B4 },
+			{ BrakeByte.B5, InputTranslator.BrakeNotches.B5 },
+			{ BrakeByte.B6, InputTranslator.BrakeNotches.B6 },
+			{ BrakeByte.B7, InputTranslator.BrakeNotches.B7 },
+			{ BrakeByte.B8, InputTranslator.BrakeNotches.B8 },
+			{ BrakeByte.Emergency, InputTranslator.BrakeNotches.Emergency }
+		};
+
+		/// <summary>
+		/// Dictionary storing the mapping of each brake notch (Shinkansen controller.
+		/// </summary>
+		private static readonly Dictionary<BrakeByteShinkansen, InputTranslator.BrakeNotches> BrakeNotchMapShinkansen = new Dictionary<BrakeByteShinkansen, InputTranslator.BrakeNotches>
+		{
+			{ BrakeByteShinkansen.Released, InputTranslator.BrakeNotches.Released },
+			{ BrakeByteShinkansen.B1, InputTranslator.BrakeNotches.B1 },
+			{ BrakeByteShinkansen.B2, InputTranslator.BrakeNotches.B2 },
+			{ BrakeByteShinkansen.B3, InputTranslator.BrakeNotches.B3 },
+			{ BrakeByteShinkansen.B4, InputTranslator.BrakeNotches.B4 },
+			{ BrakeByteShinkansen.B5, InputTranslator.BrakeNotches.B5 },
+			{ BrakeByteShinkansen.B6, InputTranslator.BrakeNotches.B6 },
+			{ BrakeByteShinkansen.B7, InputTranslator.BrakeNotches.B7 },
+			{ BrakeByteShinkansen.Emergency, InputTranslator.BrakeNotches.Emergency }
+		};
+
+		/// <summary>
 		/// Dictionary storing the mapping of each power notch.
 		/// </summary>
-		internal static readonly Dictionary<PowerByteShinkansen, InputTranslator.PowerNotches> PowerNotchMapShinkansen = new Dictionary<PowerByteShinkansen, InputTranslator.PowerNotches>
+		private static readonly Dictionary<PowerByte, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerByte, InputTranslator.PowerNotches>
+		{
+			{ PowerByte.N, InputTranslator.PowerNotches.N },
+			{ PowerByte.P1, InputTranslator.PowerNotches.P1 },
+			{ PowerByte.P2, InputTranslator.PowerNotches.P2 },
+			{ PowerByte.P3, InputTranslator.PowerNotches.P3 },
+			{ PowerByte.P4, InputTranslator.PowerNotches.P4 },
+			{ PowerByte.P5, InputTranslator.PowerNotches.P5 }
+		};
+
+		/// <summary>
+		/// Dictionary storing the mapping of each power notch.
+		/// </summary>
+		private static readonly Dictionary<PowerByteShinkansen, InputTranslator.PowerNotches> PowerNotchMapShinkansen = new Dictionary<PowerByteShinkansen, InputTranslator.PowerNotches>
 		{
 			{ PowerByteShinkansen.N, InputTranslator.PowerNotches.N },
 			{ PowerByteShinkansen.P1, InputTranslator.PowerNotches.P1 },
@@ -282,11 +271,43 @@ namespace DenshaDeGoInput
 			// Shinkansen
 			if (id == "0ae4:0005")
 			{
-				ControllerBrakeNotches = 7;
+				ControllerBrakeNotches = 6;
 				ControllerPowerNotches = 13;
 				return InputTranslator.ControllerModels.Ps2Shinkansen;
 			}
 			return InputTranslator.ControllerModels.Unsupported;
+		}
+
+		/// <summary>
+		/// Does loading tasks for PS2 controllers.
+		/// </summary>
+		internal static void Load()
+		{
+			inputWorker.DoWork += new DoWorkEventHandler(InputWorker_DoWork);
+		}
+
+		/// <summary>
+		/// Does unloading tasks for PS2 controllers.
+		/// </summary>
+		internal static void Unload()
+		{
+			if (ps2Controller != null)
+			{
+				// Specially crafted array that blanks the display
+				byte[] writeBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
+				int bytesWritten;
+				ps2Controller.ControlTransfer(ref shinkansenSetupPacket, writeBuffer, 8, out bytesWritten);
+
+				IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
+				if (!ReferenceEquals(wholeUsbDevice, null))
+				{
+					// Release interface
+					wholeUsbDevice.ReleaseInterface(1);
+				}
+
+				ps2Controller.Close();
+				UsbDevice.Exit();
+			}
 		}
 
 		/// <summary>
@@ -302,114 +323,97 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Opens a device to read and write to it.
-		/// </summary>
-		/// <param name="id">A string representing the vendor and product ID.</param>
-		internal static void OpenDevice(string id)
-		{
-			int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-			int product = Convert.ToInt32(id.Substring(5, 4), 16);
-			UsbDeviceFinder UsbFinder = new UsbDeviceFinder(vendor, product);
-			PS2Controller = UsbDevice.OpenUsbDevice(UsbFinder);
-			IUsbDevice wholeUsbDevice = PS2Controller as IUsbDevice;
-			if (!ReferenceEquals(wholeUsbDevice, null))
-			{
-				// This is a "whole" USB device. Before it can be used,
-				// the desired configuration and interface must be selected.
-
-				// Select config
-				wholeUsbDevice.SetConfiguration(1);
-
-				// Claim interface
-				wholeUsbDevice.ClaimInterface(1);
-			}
-			ControllerReader = PS2Controller.OpenEndpointReader(ReadEndpointID.Ep01);
-			readBuffer[2] = 0xFF;
-			readBuffer[3] = 0x8;
-			ControllerDisplayEnabled = true;
-		}
-
-		/// <summary>
 		/// Reads the input from the controller.
 		/// </summary>
 		internal static void ReadInput()
 		{
 			// If running in-game, always enable the display
-			if (DenshaDeGoInput.ingame)
+			if (DenshaDeGoInput.Ingame)
 			{
 				ControllerDisplayEnabled = true;
 			}
 
-			if (PS2Controller == null || readError != ErrorCode.Success)
+			// Start the background worker if it is not active
+			if (!inputWorker.IsBusy)
 			{
-				OpenDevice(InputTranslator.GetControllerID(InputTranslator.activeControllerGuid));
+				inputWorker.RunWorkerAsync();
 			}
 
-			if (!awaitingRead)
+			switch (InputTranslator.ControllerModel)
 			{
-				awaitingRead = true;
-				readError = ControllerReader.SubmitAsyncTransfer(readBuffer, 0, 6, 100, out transferContext);
-			}
-			if (transferContext == null || transferContext.IsCompleted || transferContext.IsCancelled)
-			{
-				awaitingRead = false;
+				case InputTranslator.ControllerModels.Ps2Shinkansen:
+					byte brakeByte = readBuffer[0];
+					byte powerByte = readBuffer[1];
+					if (BrakeNotchMapShinkansen.ContainsKey((BrakeByteShinkansen)brakeByte))
+					{
+						// Change the brake notch if the brake byte is valid
+						InputTranslator.BrakeNotch = BrakeNotchMapShinkansen[(BrakeByteShinkansen)brakeByte];
+					}
+					if (PowerNotchMapShinkansen.ContainsKey((PowerByteShinkansen)powerByte))
+					{
+						// Change the power notch if the power byte is valid
+						InputTranslator.PowerNotch = PowerNotchMapShinkansen[(PowerByteShinkansen)powerByte];
+					}
+
+					// Standard buttons
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = (readBuffer[4] & (byte)ButtonBytes.Select) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = (readBuffer[4] & (byte)ButtonBytes.Start) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = (readBuffer[4] & (byte)ButtonBytes.A) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = (readBuffer[4] & (byte)ButtonBytes.B) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = (readBuffer[4] & (byte)ButtonBytes.C) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = (readBuffer[4] & (byte)ButtonBytes.D) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+
+					// Direction buttons
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (readBuffer[3] <= 1 || readBuffer[3] == 7) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (readBuffer[3] >= 1 && readBuffer[3] <= 3) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (readBuffer[3] >= 3 && readBuffer[3] <= 5) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (readBuffer[3] >= 5 && readBuffer[3] <= 7) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+
+					// Horn pedal
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] = readBuffer[2] == (byte)PedalBytes.Pressed ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+
+					double speed = Math.Round(DenshaDeGoInput.CurrentTrainSpeed, 0);
+					double limit = Math.Round((double)0, 0);
+					bool doors = true;
+					int speed1 = (int)(speed % 10);
+					int speed2 = (int)(speed % 100 / 10);
+					int speed3 = (int)(speed % 1000 / 100);
+					int limit1 = (int)(limit % 10);
+					int limit2 = (int)(limit % 100 / 10);
+					int limit3 = (int)(limit % 1000 / 100);
+					int limit_approach = 0;
+					if (speed >= limit)
+					{
+						limit_approach = 10;
+					}
+					else if (speed > limit - 10)
+					{
+						limit_approach = -(int)(limit - speed - 10);
+					}
+					// Specially crafted array that blanks the display
+					byte[] writeBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
+					if (ControllerDisplayEnabled)
+					{
+						// Door lamp + limit approach
+						writeBuffer[2] = (byte)((128 * (doors ? 1 : 0)) + limit_approach);
+						// Speed gauge
+						writeBuffer[3] = (byte)Math.Ceiling(Math.Round(DenshaDeGoInput.CurrentTrainSpeed) / 15);
+						// Train speed
+						writeBuffer[4] = (byte)(16 * speed2 + speed1);
+						writeBuffer[5] = (byte)speed3;
+						// Route limit
+						writeBuffer[6] = (byte)(16 * limit2 + limit1);
+						writeBuffer[7] = (byte)limit3;
+					}
+					if (ps2Controller != null)
+					{
+						// Send data to controller via control transfer
+						int bytesWritten;
+						ps2Controller.ControlTransfer(ref shinkansenSetupPacket, writeBuffer, 8, out bytesWritten);
+					}
+					break;
 			}
 
-			byte brakeByte = readBuffer[0];
-			byte powerByte = readBuffer[1];
-			if (BrakeNotchMapShinkansen.ContainsKey((BrakeByteShinkansen)brakeByte))
-			{
-				InputTranslator.BrakeNotch = BrakeNotchMapShinkansen[(BrakeByteShinkansen)brakeByte];
-			}
-			if (PowerNotchMapShinkansen.ContainsKey((PowerByteShinkansen)powerByte))
-			{
-				InputTranslator.PowerNotch = PowerNotchMapShinkansen[(PowerByteShinkansen)powerByte];
-			}
-
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = (readBuffer[4] & (byte)ButtonBytes.Select) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = (readBuffer[4] & (byte)ButtonBytes.Start) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = (readBuffer[4] & (byte)ButtonBytes.A) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = (readBuffer[4] & (byte)ButtonBytes.B) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = (readBuffer[4] & (byte)ButtonBytes.C) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = (readBuffer[4] & (byte)ButtonBytes.D) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (readBuffer[3] <= 1 || readBuffer[3] == 7) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (readBuffer[3] >= 1 && readBuffer[3] <= 3) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (readBuffer[3] >= 3 && readBuffer[3] <= 5) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (readBuffer[3] >= 5 && readBuffer[3] <= 7) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-
-			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] = readBuffer[2] == (byte)PedalBytes.Pressed ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-
-			double speed = Math.Round(DenshaDeGoInput.trainSpeed);
-			double limit = Math.Round((double)25);
-			bool doors = true;
-			int speed1 = (int)(speed % 10);
-			int speed2 = (int)(speed % 100 / 10);
-			int speed3 = (int)(speed % 1000 / 100);
-			int limit1 = (int)(limit % 10);
-			int limit2 = (int)(limit % 100 / 10);
-			int limit3 = (int)(limit % 1000 / 100);
-			int limit_approach = 0;
-			if (speed >= limit)
-			{
-				limit_approach = 10;
-			}
-			else if (speed > limit - 10)
-			{
-				limit_approach = -(int)(limit-speed-10);
-			}
-			byte[] writeBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
-			if (ControllerDisplayEnabled)
-			{
-				writeBuffer[2] = (byte)((128 * (doors ? 1 : 0)) + limit_approach);
-				writeBuffer[3] = (byte)Math.Ceiling(Math.Round(DenshaDeGoInput.trainSpeed) / 15);
-				writeBuffer[4] = (byte)(16 * speed2 + speed1);
-				writeBuffer[5] = (byte)speed3;
-				writeBuffer[6] = (byte)(16 * limit2 + limit1);
-				writeBuffer[7] = (byte)limit3;
-			}
-			int bytesWritten;
-			PS2Controller.ControlTransfer(ref SetupPacket, writeBuffer, 8, out bytesWritten);
 		}
 
 		internal static bool IsControlledConnected(string id)
@@ -423,27 +427,48 @@ namespace DenshaDeGoInput
 			return false;
 		}
 
-		/// <summary>
-		/// Unloads any PS2 controller.
-		/// </summary>
-		internal static void Unload()
+		private static void InputWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			if (PS2Controller != null)
+			// Store the current model to detect changes
+			InputTranslator.ControllerModels currentModel = InputTranslator.ControllerModel;
+
+			// Get the ID of the current controller
+			string id = InputTranslator.GetControllerID(InputTranslator.ActiveControllerGuid);
+
+			// Open the USB controller and the input endpoint
+			int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
+			int product = Convert.ToInt32(id.Substring(5, 4), 16);
+			UsbDeviceFinder UsbFinder = new UsbDeviceFinder(vendor, product);
+			ps2Controller = UsbDevice.OpenUsbDevice(UsbFinder);
+			IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
+			if (!ReferenceEquals(wholeUsbDevice, null))
 			{
-				byte[] writeBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
-				int bytesWritten;
-				PS2Controller.ControlTransfer(ref SetupPacket, writeBuffer, 8, out bytesWritten);
+				wholeUsbDevice.SetConfiguration(1);
+				wholeUsbDevice.ClaimInterface(1);
+			}
+			UsbEndpointReader controllerReader = ps2Controller.OpenEndpointReader(ReadEndpointID.Ep01);
 
-				IUsbDevice wholeUsbDevice = PS2Controller as IUsbDevice;
-				if (!ReferenceEquals(wholeUsbDevice, null))
-				{
-					// Release interface
-					wholeUsbDevice.ReleaseInterface(1);
-				}
+			// Set the initial state of the pedal and the D-pad to non-zero
+			switch (currentModel)
+			{
+				case InputTranslator.ControllerModels.Ps2Shinkansen:
+					readBuffer[2] = 0xFF;
+					readBuffer[3] = 0x08;
+					break;
+			}
 
-				PS2Controller.Close();
-				UsbDevice.Exit();
+			// Enable the display or door lamp
+			ControllerDisplayEnabled = true;
+
+			while (InputTranslator.IsControllerConnected && currentModel == InputTranslator.ControllerModel)
+			{
+				// Unless the controller is disconnected or the model changes, ask for input in a loop
+				UsbTransfer readContext;
+				int readCount;
+				ErrorCode readError = controllerReader.SubmitAsyncTransfer(readBuffer, 0, 6, 0, out readContext);
+				readContext.Wait(out readCount);
 			}
 		}
+
 	}
 }

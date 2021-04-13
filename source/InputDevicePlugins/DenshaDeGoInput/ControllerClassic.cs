@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -48,12 +48,12 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Whether the adapter uses a hat to map the direction buttons.
 		/// </summary>
-		internal static bool usesHat;
+		internal static bool UsesHat;
 
 		/// <summary>
 		/// The index of the hat used to map the direction buttons.
 		/// </summary>
-		internal static int hatIndex;
+		internal static int HatIndex;
 
 		/// <summary>
 		/// Class for the indices of the buttons used by the controller.
@@ -83,7 +83,7 @@ namespace DenshaDeGoInput
 		/// Enumeration representing brake notches.
 		/// </summary>
 		[Flags]
-		internal enum BrakeNotches
+		private enum BrakeNotches
 		{
 			// The controller has 4 physical buttons.
 			// These do *not* map directly to the simulation
@@ -128,7 +128,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Dictionary storing the mapping of each brake notch.
 		/// </summary>
-		internal static readonly Dictionary<BrakeNotches, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeNotches, InputTranslator.BrakeNotches>
+		private static readonly Dictionary<BrakeNotches, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeNotches, InputTranslator.BrakeNotches>
 		{
 			{ BrakeNotches.Released, InputTranslator.BrakeNotches.Released },
 			{ BrakeNotches.B1, InputTranslator.BrakeNotches.B1 },
@@ -146,7 +146,7 @@ namespace DenshaDeGoInput
 		/// Enumeration representing power notches.
 		/// </summary>
 		[Flags]
-		internal enum PowerNotches
+		private enum PowerNotches
 		{
 			// The controller has 3 physical buttons.
 			// These do *not* map directly to the simulation
@@ -181,7 +181,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Dictionary storing the mapping of each power notch.
 		/// </summary>
-		internal static readonly Dictionary<PowerNotches, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerNotches, InputTranslator.PowerNotches>
+		private static readonly Dictionary<PowerNotches, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerNotches, InputTranslator.PowerNotches>
 		{
 			{ PowerNotches.N, InputTranslator.PowerNotches.N },
 			{ PowerNotches.P1, InputTranslator.PowerNotches.P1 },
@@ -221,12 +221,12 @@ namespace DenshaDeGoInput
 			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake3) ? brakeNotch | BrakeNotches.Brake3 : brakeNotch & ~BrakeNotches.Brake3;
 			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake4) ? brakeNotch | BrakeNotches.Brake4 : brakeNotch & ~BrakeNotches.Brake4;
 
-			if (usesHat)
+			if (UsesHat)
 			{
 				// The adapter uses the hat to map the direction buttons.
 				// This is the case of some PlayStation adapters.
-				powerNotch = joystick.GetHat((JoystickHat)hatIndex).IsLeft ? powerNotch | PowerNotches.Power2 : powerNotch & ~PowerNotches.Power2;
-				powerNotch = joystick.GetHat((JoystickHat)hatIndex).IsRight ? powerNotch | PowerNotches.Power3 : powerNotch & ~PowerNotches.Power3;
+				powerNotch = joystick.GetHat((JoystickHat)HatIndex).IsLeft ? powerNotch | PowerNotches.Power2 : powerNotch & ~PowerNotches.Power2;
+				powerNotch = joystick.GetHat((JoystickHat)HatIndex).IsRight ? powerNotch | PowerNotches.Power3 : powerNotch & ~PowerNotches.Power3;
 			}
 			else
 			{
@@ -235,7 +235,7 @@ namespace DenshaDeGoInput
 				powerNotch = joystick.IsButtonDown(ButtonIndex.Power3) ? powerNotch | PowerNotches.Power3 : powerNotch & ~PowerNotches.Power3;
 			}
 
-			if (usesHat && powerNotch == PowerNotches.P4)
+			if (UsesHat && powerNotch == PowerNotches.P4)
 			{
 				// Hack for adapters using a hat where pressing left and right simultaneously reports only left being pressed
 				if (InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
@@ -247,7 +247,7 @@ namespace DenshaDeGoInput
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.P4;
 				}
 			}
-			else if (usesHat && powerNotch == PowerNotches.Transition)
+			else if (UsesHat && powerNotch == PowerNotches.Transition)
 			{
 				// Hack for adapters using a hat where pressing left and right simultaneously reports nothing being pressed, the same as the transition state
 				// Has the side effect of the power notch jumping P1>N>P2, but it is barely noticeable unless moving the handle very slowly
@@ -384,12 +384,12 @@ namespace DenshaDeGoInput
 				if (hat != -1 && i != 13)
 				{
 					// If a hat has changed, it means the converter is mapping the direction buttons 
-					usesHat = true;
-					hatIndex = hat;
+					UsesHat = true;
+					HatIndex = hat;
 				}
 				else
 				{
-					usesHat = false;
+					UsesHat = false;
 				}
 
 				switch (i)

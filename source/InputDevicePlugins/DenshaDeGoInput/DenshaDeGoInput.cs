@@ -51,42 +51,42 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Whether the input plugin has just started running.
 		/// </summary>
-		internal bool loading = true;
+		private bool loading = true;
 
 		/// <summary>
 		/// Whether the input plugin is running in-game.
 		/// </summary>
-		internal static bool ingame;
+		internal static bool Ingame;
 
 		/// <summary>
 		/// The specs of the driver's train.
 		/// </summary>
-		internal VehicleSpecs vehicleSpecs = new VehicleSpecs(5, BrakeTypes.AutomaticAirBrake, 8, false, 1);
+		internal VehicleSpecs TrainSpecs = new VehicleSpecs(5, BrakeTypes.AutomaticAirBrake, 8, false, 1);
 
 		/// <summary>
 		/// The current train speed in kilometers per hour.
 		/// </summary>
-		internal static double trainSpeed;
+		internal static double CurrentTrainSpeed;
 
 		/// <summary>
 		/// Whether the brake handle has been moved.
 		/// </summary>
-		internal bool brakeHandleMoved;
+		private bool brakeHandleMoved;
 
 		/// <summary>
 		/// Whether the power handle has been moved.
 		/// </summary>
-		internal bool powerHandleMoved;
+		private bool powerHandleMoved;
 
 		/// <summary>
 		/// An array with the command indices configured for each brake notch.
 		/// </summary>
-		internal static int[] brakeCommands = new int[10];
+		private static int[] brakeCommands = new int[10];
 
 		/// <summary>
 		/// An array with the command indices configured for each power notch.
 		/// </summary>
-		internal static int[] powerCommands = new int[14];
+		private static int[] powerCommands = new int[14];
 
 		/// <summary>
 		/// Class for the properties of the buttons.
@@ -107,27 +107,27 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Whether to convert the handle notches to match the driver's train.
 		/// </summary>
-		internal static bool convertNotches;
+		internal static bool ConvertNotches;
 
 		/// <summary>
 		/// Whether to assign the maximum and minimum notches to P1/P5 and B1/B8.
 		/// </summary>
-		internal static bool keepMaxMin;
+		internal static bool KeepMaxMin;
 
 		/// <summary>
 		/// Whether to map the hold brake to B1.
 		/// </summary>
-		internal static bool mapHoldBrake;
+		internal static bool MapHoldBrake;
 
 		/// <summary>
 		/// Initial delay when repeating a button press.
 		/// </summary>
-		internal static int repeatDelay = 500;
+		private static int repeatDelay = 500;
 
 		/// <summary>
 		/// Internval for repeating a button press.
 		/// </summary>
-		internal static int repeatInterval = 100;
+		private static int repeatInterval = 100;
 
 		/// <summary>
 		/// A function call when the Config button is pressed.
@@ -145,6 +145,8 @@ namespace DenshaDeGoInput
 		/// <returns>Whether the plugin has been loaded successfully.</returns>
 		public bool Load(FileSystem fileSystem)
 		{
+			InputTranslator.Load();
+
 			FileSystem = fileSystem;
 
 			// Initialize the array of button properties
@@ -273,10 +275,10 @@ namespace DenshaDeGoInput
 			// HACK: The number of stations cannot be zero in-game
 			if (data.Stations.Count > 0)
 			{
-				ingame = true;
+				Ingame = true;
 			}
 
-			trainSpeed = data.Vehicle.Speed.KilometersPerHour;
+			CurrentTrainSpeed = data.Vehicle.Speed.KilometersPerHour;
 
 			// Button timers
 			for (int i = 0; i < ButtonProperties.Length; i++)
@@ -303,7 +305,7 @@ namespace DenshaDeGoInput
 		/// <param name="specs">The train's specifications.</param>
 		public void SetVehicleSpecs(VehicleSpecs specs)
 		{
-			vehicleSpecs = specs;
+			TrainSpecs = specs;
 			ConfigureMappings();
 		}
 
@@ -312,36 +314,36 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal void ConfigureMappings()
 		{
-			int ControllerBrakeNotches = InputTranslator.GetControllerBrakeNotches();
-			int ControllerPowerNotches = InputTranslator.GetControllerPowerNotches();
+			int controllerBrakeNotches = InputTranslator.GetControllerBrakeNotches();
+			int controllerPowerNotches = InputTranslator.GetControllerPowerNotches();
 
-			if (!convertNotches)
+			if (!ConvertNotches)
 			{
 				// The notches are not supposed to be converted
 				// Brake notches
-				if (mapHoldBrake && vehicleSpecs.HasHoldBrake)
+				if (MapHoldBrake && TrainSpecs.HasHoldBrake)
 				{
 					brakeCommands[0] = 0;
 					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
-					for (int i = 2; i < ControllerBrakeNotches + 2; i++)
+					for (int i = 2; i < controllerBrakeNotches + 2; i++)
 					{
 						brakeCommands[i] = i - 1;
 					}
 				}
 				else
 				{
-					for (int i = 0; i < ControllerBrakeNotches + 2; i++)
+					for (int i = 0; i < controllerBrakeNotches + 2; i++)
 					{
 						brakeCommands[i] = i;
 					}
 				}
 				// Emergency brake, only if the train has the same or less notches than the controller
-				if (vehicleSpecs.BrakeNotches <= ControllerBrakeNotches)
+				if (TrainSpecs.BrakeNotches <= controllerBrakeNotches)
 				{
-					brakeCommands[ControllerBrakeNotches + 1] = 100 + (int)Translations.Command.BrakeEmergency;
+					brakeCommands[(int)InputTranslator.BrakeNotches.Emergency] = 100 + (int)Translations.Command.BrakeEmergency;
 				}
 				// Power notches
-				for (int i = 0; i < ControllerPowerNotches; i++)
+				for (int i = 0; i < controllerPowerNotches; i++)
 				{
 					powerCommands[i] = i;
 				}
@@ -350,66 +352,66 @@ namespace DenshaDeGoInput
 			{
 				// The notches are supposed to be converted
 				// Brake notches
-				if (mapHoldBrake && vehicleSpecs.HasHoldBrake)
+				if (MapHoldBrake && TrainSpecs.HasHoldBrake)
 				{
-					double brakeStep = (vehicleSpecs.BrakeNotches - 1) / (double)(ControllerBrakeNotches - 1);
+					double brakeStep = (TrainSpecs.BrakeNotches - 1) / (double)(controllerBrakeNotches - 1);
 					brakeCommands[0] = 0;
 					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
-					for (int i = 2; i < ControllerBrakeNotches + 1; i++)
+					for (int i = 2; i < controllerBrakeNotches + 1; i++)
 					{
 						brakeCommands[i] = (int)Math.Round(brakeStep * (i - 1), MidpointRounding.AwayFromZero);
 						if (i > 0 && brakeCommands[i] == 0)
 						{
 							brakeCommands[i] = 1;
 						}
-						if (keepMaxMin && i == 2)
+						if (KeepMaxMin && i == 2)
 						{
 							brakeCommands[i] = 1;
 						}
-						if (keepMaxMin && i == ControllerBrakeNotches)
+						if (KeepMaxMin && i == controllerBrakeNotches)
 						{
-							brakeCommands[i] = vehicleSpecs.BrakeNotches;
+							brakeCommands[i] = TrainSpecs.BrakeNotches - 1;
 						}
 					}
 				}
 				else
 				{
-					double brakeStep = vehicleSpecs.BrakeNotches / (double)ControllerBrakeNotches;
-					for (int i = 0; i < ControllerBrakeNotches + 1; i++)
+					double brakeStep = TrainSpecs.BrakeNotches / (double)controllerBrakeNotches;
+					for (int i = 0; i < controllerBrakeNotches + 1; i++)
 					{
 						brakeCommands[i] = (int)Math.Round(brakeStep * i, MidpointRounding.AwayFromZero);
 						if (i > 0 && brakeCommands[i] == 0)
 						{
 							brakeCommands[i] = 1;
 						}
-						if (keepMaxMin && i == 1)
+						if (KeepMaxMin && i == 1)
 						{
 							brakeCommands[i] = 1;
 						}
-						if (keepMaxMin && i == ControllerBrakeNotches)
+						if (KeepMaxMin && i == controllerBrakeNotches)
 						{
-							brakeCommands[i] = vehicleSpecs.BrakeNotches;
+							brakeCommands[i] = TrainSpecs.BrakeNotches;
 						}
 					}
 				}
 				// Emergency brake
-				brakeCommands[ControllerBrakeNotches + 1] = 100 + (int)Translations.Command.BrakeEmergency;
+				brakeCommands[(int)InputTranslator.BrakeNotches.Emergency] = 100 + (int)Translations.Command.BrakeEmergency;
 				// Power notches
-				double powerStep = vehicleSpecs.PowerNotches / (double)ControllerPowerNotches;
-				for (int i = 0; i < ControllerPowerNotches + 1; i++)
+				double powerStep = TrainSpecs.PowerNotches / (double)controllerPowerNotches;
+				for (int i = 0; i < controllerPowerNotches + 1; i++)
 				{
 					powerCommands[i] = (int)Math.Round(powerStep * i, MidpointRounding.AwayFromZero);
 					if (i > 0 && powerCommands[i] == 0)
 					{
 						powerCommands[i] = 1;
 					}
-					if (keepMaxMin && i == 1)
+					if (KeepMaxMin && i == 1)
 					{
 						powerCommands[i] = 1;
 					}
-					if (keepMaxMin && i == ControllerPowerNotches)
+					if (KeepMaxMin && i == controllerPowerNotches)
 					{
-						powerCommands[i] = vehicleSpecs.PowerNotches;
+						powerCommands[i] = TrainSpecs.PowerNotches;
 					}
 				}
 			}
@@ -466,7 +468,7 @@ namespace DenshaDeGoInput
 												Guid a;
 												if (Guid.TryParse(Value, out a))
 												{
-													InputTranslator.activeControllerGuid = a;
+													InputTranslator.ActiveControllerGuid = a;
 												}
 											}
 											break;
@@ -476,13 +478,13 @@ namespace DenshaDeGoInput
 									switch (Key)
 									{
 										case "convert_notches":
-											convertNotches = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											ConvertNotches = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "keep_max_min":
-											keepMaxMin = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											KeepMaxMin = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "map_hold_brake":
-											mapHoldBrake = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											MapHoldBrake = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 									}
 									break;
@@ -594,14 +596,14 @@ namespace DenshaDeGoInput
 									switch (Key)
 									{
 										case "hat":
-											ControllerClassic.usesHat = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											ControllerClassic.UsesHat = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "hat_index":
 											{
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.hatIndex = a;
+													ControllerClassic.HatIndex = a;
 												}
 											}
 											break;
@@ -799,12 +801,12 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("; Specific options file for the Densha de GO! controller input plugin");
 				Builder.AppendLine();
 				Builder.AppendLine("[general]");
-				Builder.AppendLine("guid = " + InputTranslator.activeControllerGuid.ToString());
+				Builder.AppendLine("guid = " + InputTranslator.ActiveControllerGuid.ToString());
 				Builder.AppendLine();
 				Builder.AppendLine("[handles]");
-				Builder.AppendLine("convert_notches = " + convertNotches.ToString(Culture).ToLower());
-				Builder.AppendLine("keep_max_min = " + keepMaxMin.ToString(Culture).ToLower());
-				Builder.AppendLine("map_hold_brake = " + mapHoldBrake.ToString(Culture).ToLower());
+				Builder.AppendLine("convert_notches = " + ConvertNotches.ToString(Culture).ToLower());
+				Builder.AppendLine("keep_max_min = " + KeepMaxMin.ToString(Culture).ToLower());
+				Builder.AppendLine("map_hold_brake = " + MapHoldBrake.ToString(Culture).ToLower());
 				Builder.AppendLine();
 				Builder.AppendLine("[buttons]");
 				Builder.AppendLine("select = " + ButtonProperties[0].Command.ToString(Culture));
@@ -820,8 +822,8 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("pedal = " + ButtonProperties[10].Command.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[classic]");
-				Builder.AppendLine("hat = " + ControllerClassic.usesHat.ToString(Culture).ToLower());
-				Builder.AppendLine("hat_index = " + ControllerClassic.hatIndex.ToString(Culture));
+				Builder.AppendLine("hat = " + ControllerClassic.UsesHat.ToString(Culture).ToLower());
+				Builder.AppendLine("hat_index = " + ControllerClassic.HatIndex.ToString(Culture));
 				Builder.AppendLine("select = " + ControllerClassic.ButtonIndex.Select.ToString(Culture));
 				Builder.AppendLine("start = " + ControllerClassic.ButtonIndex.Start.ToString(Culture));
 				Builder.AppendLine("a = " + ControllerClassic.ButtonIndex.A.ToString(Culture));
