@@ -502,7 +502,7 @@ namespace TrainEditor {
 										if (a >= 0.0) t.Brake.BrakeControlSpeed = a;
 										break;
 									case 3:
-										if (a <= 0 && a > 3) t.Brake.LocoBrakeType = (Brake.LocoBrakeTypes) b;
+										if (a >= 0 && a < 3) t.Brake.LocoBrakeType = (Brake.LocoBrakeTypes) b;
 										break;
 								}
 							} i++; n++;
