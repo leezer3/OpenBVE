@@ -1273,7 +1273,7 @@ namespace CsvRwRouteParser
 						}
 						else if (Arguments[2].StartsWith("J:", StringComparison.InvariantCultureIgnoreCase))
 						{
-							string[] splitString = Arguments[2].Split(new[] { ':'});
+							string[] splitString = Arguments[2].Split(':');
 							for (int i = 0; i < splitString.Length; i++)
 							{
 								switch (i)

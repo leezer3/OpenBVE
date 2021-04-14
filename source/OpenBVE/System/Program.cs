@@ -147,9 +147,12 @@ namespace OpenBve {
 				}
 			}
 			// --- if a route was provided but no train, try to use the route default ---
-			if (result.RouteFile != null & result.TrainFolder == null) {
-				if (!Plugins.LoadPlugins())
+			if (result.RouteFile != null & result.TrainFolder == null)
+			{
+				string error;
+				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
 				{
+					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
 				Game.Reset(false);
@@ -168,7 +171,11 @@ namespace OpenBve {
 						break;
 					}
 				}
-				Plugins.UnloadPlugins();
+
+				if (!CurrentHost.UnloadPlugins(out error))
+				{
+					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
 				if (!loaded)
 				{
 					throw new Exception("No plugins capable of loading routefile " + result.RouteFile + " were found.");
@@ -292,8 +299,11 @@ namespace OpenBve {
 		
 		/// <summary>Initializes the program. A matching call to deinitialize must be made when the program is terminated.</summary>
 		/// <returns>Whether the initialization was successful.</returns>
-		private static bool Initialize() {
-			if (!Plugins.LoadPlugins()) {
+		private static bool Initialize()
+		{
+			string error;
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer)) {
+				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}
 			
@@ -307,13 +317,16 @@ namespace OpenBve {
 			Renderer.Camera.BackwardViewingDistance = 0.0;
 			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
-			FileSystem.ClearLogFile();
+			string programVersion = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
+			FileSystem.ClearLogFile(programVersion);
 			return true;
 		}
 		
 		/// <summary>Deinitializes the program.</summary>
-		private static void Deinitialize() {
-			Plugins.UnloadPlugins();
+		private static void Deinitialize()
+		{
+			string error;
+			Program.CurrentHost.UnloadPlugins(out error);
 			Sounds.Deinitialize();
 			if (currentGameWindow != null)
 			{

@@ -86,18 +86,12 @@ namespace OpenBve
 										{
 											lMin = 255;
 										}
-										else if (lMin < 0)
-										{
-											lMin = 0;
-										}
+										
 										if (lMax >= 255)
 										{
 											lMax = 255;
 										}
-										else if (lMax < 0)
-										{
-											lMax = 0;
-										}
+										
 										if (lMin >= lMax)
 										{
 											throw new InvalidDataException(@"Maximum must be non-zero and greater than minimum.");

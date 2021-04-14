@@ -418,10 +418,10 @@ namespace OpenBveApi.FileSystem {
 		}
 		
 		/// <summary>Clears the log file.</summary>
-		public void ClearLogFile() {
+		public void ClearLogFile(string version) {
 			try {
 				string file = System.IO.Path.Combine(this.SettingsFolder, "log.txt");
-				System.IO.File.WriteAllText(file, @"openBVE Log: " + DateTime.Now + Environment.NewLine + Environment.NewLine, new System.Text.UTF8Encoding(true));
+				System.IO.File.WriteAllText(file, @"openBVE Log: " + DateTime.Now + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new System.Text.UTF8Encoding(true));
 			} catch { }
 		}
 

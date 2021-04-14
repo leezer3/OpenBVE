@@ -28,7 +28,7 @@ namespace Train.OpenBve
 		}
 
 		// constants
-		private  double StackDistance = 0.000001;
+		private const double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
 		private const double EyeDistance = 1.0;
 
@@ -46,11 +46,11 @@ namespace Train.OpenBve
 			string FileName = Path.CombineFile(TrainPath, PanelFile);
 			string[] Lines = File.ReadAllLines(FileName, Encoding);
 			for (int i = 0; i < Lines.Length; i++) {
-				Lines[i] = Lines[i].Trim(new char[] { });
+				Lines[i] = Lines[i].Trim();
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
 				}
 			}
 			// initialize
@@ -66,15 +66,15 @@ namespace Train.OpenBve
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
 						switch (Section.ToLowerInvariant()) {
 								// panel
 							case "this":
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('='); if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+										string Key = Lines[i].Substring(0, j).TrimEnd();
+										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key.ToLowerInvariant()) {
 											case "resolution":
 												double pr = 0.0;
@@ -155,8 +155,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -229,8 +229,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -284,8 +284,7 @@ namespace Train.OpenBve
 				if (!File.Exists(PanelDaytimeImage)) {
 					Plugin.currentHost.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 				} else {
-					Texture tday;
-					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out tday, true);
+					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true);
 					Texture tnight = null;
 					if (PanelNighttimeImage != null) {
 						if (!File.Exists(PanelNighttimeImage)) {
@@ -308,16 +307,16 @@ namespace Train.OpenBve
 			}
 
 			// parse lines for rest
-			double invfac = Lines.Length == 0 ? 1.0 : 1.0 / Lines.Length;
+			double invfac = Lines.Length == 0 ? 0.4 : 0.4 / Lines.Length;
 			for (int i = 0; i < Lines.Length; i++) {
-				Plugin.CurrentProgress = Plugin.CurrentProgress + invfac * i;
+				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
 				if ((i & 7) == 0) {
 					System.Threading.Thread.Sleep(1);
 					if (Plugin.Cancel) return;
 				}
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
 						switch (Section.ToLowerInvariant()) {
 								// pilotlamp
 							case "pilotlamp":
@@ -331,8 +330,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -341,8 +340,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -392,8 +391,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null) {
-										Texture tday;
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight, true);
@@ -431,8 +429,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -442,8 +440,8 @@ namespace Train.OpenBve
 														int k = Value.IndexOf(',');
 														if (k >= 0)
 														{
-															string a = Value.Substring(0, k).TrimEnd(new char[] { });
-															string b = Value.Substring(k + 1).TrimStart(new char[] { });
+															string a = Value.Substring(0, k).TrimEnd();
+															string b = Value.Substring(k + 1).TrimStart();
 															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
@@ -498,8 +496,8 @@ namespace Train.OpenBve
 														int k = Value.IndexOf(',');
 														if (k >= 0)
 														{
-															string a = Value.Substring(0, k).TrimEnd(new char[] { });
-															string b = Value.Substring(k + 1).TrimStart(new char[] { });
+															string a = Value.Substring(0, k).TrimEnd();
+															string b = Value.Substring(k + 1).TrimStart();
 															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX)) {
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
@@ -567,8 +565,7 @@ namespace Train.OpenBve
 									// create element
 									if (DaytimeImage != null)
 									{
-										Texture tday;
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
 										Texture tnight = null;
 										if (NighttimeImage != null)
 										{
@@ -640,8 +637,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -650,8 +647,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -679,21 +676,16 @@ namespace Train.OpenBve
 													break;
 												case "direction":
 													{
-														string[] s = Value.Split( new[] { ',' });
+														string[] s = Value.Split( ',');
 														if (s.Length == 2)
 														{
-															double x, y;
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out Direction.X))
 															{
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in LinearGauge Direction at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out Direction.Y))
 															{
 																Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in  LinearGauge Direction at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else
-															{
-																Direction = new Vector2(x, y);
 															}
 														}
 														else
@@ -742,8 +734,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null) {
-										Texture tday;
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight, true);
@@ -781,8 +772,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -791,8 +782,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -851,8 +842,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null & Interval > 0) {
-										int wday, hday;
-										Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out wday, out hday);
+										Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out var wday, out var hday);
 										if (wday > 0 & hday > 0) {
 											int numFrames = hday / Interval;
 											if (Plugin.CurrentOptions.EnableBveTsHacks)
@@ -903,8 +893,7 @@ namespace Train.OpenBve
 												}
 											}
 											if (NighttimeImage != null) {
-												int wnight, hnight;
-												Plugin.currentHost.QueryTextureDimensions(NighttimeImage, out wnight, out hnight);
+												Plugin.currentHost.QueryTextureDimensions(NighttimeImage, out var wnight, out var hnight);
 												tnight = new Texture[numFrames];
 												for (int k = 0; k < numFrames; k++) {
 													if ((k + 1) * Interval <= hnight)
@@ -983,8 +972,8 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -993,8 +982,8 @@ namespace Train.OpenBve
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -1074,8 +1063,8 @@ namespace Train.OpenBve
 									if (Radius != 0.0) {
 										// create element
 										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color);
-										InitialAngle = InitialAngle + Math.PI;
-										LastAngle = LastAngle + Math.PI;
+										InitialAngle += Math.PI;
+										LastAngle += Math.PI;
 										double x0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
 										double y0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
 										double z0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
@@ -1150,15 +1139,15 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key.ToLowerInvariant()) {
 												case "location":
 													int k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -1240,8 +1229,8 @@ namespace Train.OpenBve
 										if (j >= 0)
 										{
 											int k;
-											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+											string Key = Lines[i].Substring(0, j).TrimEnd();
+											string Value = Lines[i].Substring(j + 1).TrimStart();
 
 											switch (Key.ToLowerInvariant())
 											{
@@ -1249,8 +1238,8 @@ namespace Train.OpenBve
 													k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out topLeft.X))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -1271,8 +1260,8 @@ namespace Train.OpenBve
 													k = Value.IndexOf(',');
 													if (k >= 0)
 													{
-														string a = Value.Substring(0, k).TrimEnd(new char[] { });
-														string b = Value.Substring(k + 1).TrimStart(new char[] { });
+														string a = Value.Substring(0, k).TrimEnd();
+														string b = Value.Substring(k + 1).TrimStart();
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out bottomRight.X))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -1478,9 +1467,7 @@ namespace Train.OpenBve
 					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
 					TransparentColor = Color24.Blue;
 				}
-
-				Texture drop;
-				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out drop, true);
+				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true);
 				drops.Add(drop);
 			}
 
@@ -1529,8 +1516,7 @@ namespace Train.OpenBve
 				}
 				if (i >= 0 & i < Subject.Length - 1) {
 					if (Subject[i] == 'd' | Subject[i] == 'D') {
-						int n;
-						if (int.TryParse(Subject.Substring(i + 1), System.Globalization.NumberStyles.Integer, Culture, out n)) {
+						if (int.TryParse(Subject.Substring(i + 1), System.Globalization.NumberStyles.Integer, Culture, out var n)) {
 							if (n == 0) {
 								Suffix = " floor 10 mod";
 							} else {
@@ -1645,7 +1631,7 @@ namespace Train.OpenBve
 						bool unsupported = true;
 						if (Subject.StartsWith("ats", StringComparison.OrdinalIgnoreCase)) {
 							string a = Subject.Substring(3);
-							int n; if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n)) {
+							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n)) {
 								if (n >= 0 & n <= 255) {
 									Code = n.ToString(Culture) + " pluginstate";
 									unsupported = false;
@@ -1653,7 +1639,7 @@ namespace Train.OpenBve
 							}
 						} else if (Subject.StartsWith("doorl", StringComparison.OrdinalIgnoreCase)) {
 							string a = Subject.Substring(5);
-							int n; if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n)) {
+							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n)) {
 								if (n >= 0 & n < Train.NumberOfCars) {
 									Code = n.ToString(Culture) + " leftdoorsindex ceiling";
 									unsupported = false;
@@ -1664,7 +1650,7 @@ namespace Train.OpenBve
 							}
 						} else if (Subject.StartsWith("doorr", StringComparison.OrdinalIgnoreCase)) {
 							string a = Subject.Substring(5);
-							int n; if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n)) {
+							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n)) {
 								if (n >= 0 & n < Train.NumberOfCars) {
 									Code = n.ToString(Culture) + " rightdoorsindex ceiling";
 									unsupported = false;
@@ -1689,6 +1675,10 @@ namespace Train.OpenBve
 
 		internal int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
 		{
+			if (Width == 0 || Height == 0)
+			{
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
+			}
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
 				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;

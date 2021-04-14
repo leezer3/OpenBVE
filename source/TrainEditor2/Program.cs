@@ -8,7 +8,6 @@ using SoundManager;
 using TrainEditor2.Audio;
 using TrainEditor2.Graphics;
 using TrainEditor2.Systems;
-using TrainEditor2.Systems.Functions;
 using TrainEditor2.Views;
 
 namespace TrainEditor2
@@ -53,17 +52,19 @@ namespace TrainEditor2
 			SoundApi = new SoundApi();
 			SoundApi.Initialize(CurrentHost, SoundRange.Medium);
 
-			if (!Plugins.LoadPlugins())
+			string error;
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, null, Renderer))
 			{
 				SoundApi.Deinitialize();
+				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-
+			
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new FormEditor());
 
-			Plugins.UnloadPlugins();
+			CurrentHost.UnloadPlugins(out error);
 			SoundApi.Deinitialize();
 
 			Interface.SaveOptions();

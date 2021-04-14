@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBveApi.Trains;
 
 namespace TrainManager.Trains
 {
@@ -34,7 +33,7 @@ namespace TrainManager.Trains
 			}
 			else
 			{
-				CurrentAcceleration += (double) Math.Sign(accelerationDifference) * accelerationQuanta;
+				CurrentAcceleration += Math.Sign(accelerationDifference) * accelerationQuanta;
 				accelerationDifference = Acceleration - CurrentAcceleration;
 			}
 
@@ -47,20 +46,13 @@ namespace TrainManager.Trains
 			}
 			else
 			{
-				CurrentSpeedDifference -= (double) Math.Sign(CurrentSpeedDifference) * speedQuanta;
+				CurrentSpeedDifference -= Math.Sign(CurrentSpeedDifference) * speedQuanta;
 			}
 
 			if (PassengerRatio > 0.0)
 			{
 				double threshold = 1.0 / PassengerRatio;
-				if (Math.Abs(CurrentSpeedDifference) > threshold)
-				{
-					FallenOver = true;
-				}
-				else
-				{
-					FallenOver = false;
-				}
+				FallenOver = Math.Abs(CurrentSpeedDifference) > threshold;
 			}
 			else
 			{

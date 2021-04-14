@@ -48,7 +48,7 @@ namespace TrainManager.Handles
 			if ((int)newState != Driver)
 			{
 				// sound when moved to service
-				if ((AirBrakeHandleState)newState == AirBrakeHandleState.Service)
+				if (newState == AirBrakeHandleState.Service)
 				{
 					baseTrain.Cars[baseTrain.DriverCar].CarBrake.Release.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 				}

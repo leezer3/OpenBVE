@@ -21,7 +21,6 @@ namespace OpenBveApi.Trains
 		public abstract bool CanLoadTrain(string path);
 
 		/// <summary>Loads the specified train.</summary>
-		/// <param name="path">The path to the file or folder that contains the train.</param>
 		/// <param name="Encoding">The user-selected encoding (if appropriate)</param>
 		/// <param name="trainPath">The path to the selected train</param>
 		/// <param name="train">Receives the train.</param>

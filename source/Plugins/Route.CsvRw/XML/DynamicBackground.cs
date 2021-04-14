@@ -47,7 +47,7 @@ namespace CsvRwRouteParser
 							foreach (XmlNode c in n.ChildNodes)
 							{
 								
-								string[] Arguments = c.InnerText.Split(new[] { ',' });
+								string[] Arguments = c.InnerText.Split(',');
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "mode":
@@ -116,7 +116,7 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "time":
-										if (!Parser.TryParseTime(Arguments[0].Trim(new char[] { }), out DisplayTime))
+										if (!Parser.TryParseTime(Arguments[0].Trim(), out DisplayTime))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
 										}

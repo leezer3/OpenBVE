@@ -12,9 +12,10 @@ using TrainManager.Car;
 using TrainManager.Trains;
 
 namespace OpenBve {
-	internal static class Loading {
-		/// <summary>The current train loading progress</summary>
-		internal static double TrainProgress;
+	internal static class Loading
+	{
+		/// <summary>The current train loading index</summary>
+		internal static int CurrentTrain;
 		/// <summary>Set this member to true to cancel loading</summary>
 		internal static bool Cancel
 		{
@@ -59,19 +60,13 @@ namespace OpenBve {
 		private static string CurrentTrainFolder;
 		/// <summary>The character encoding of this train</summary>
 		private static Encoding CurrentTrainEncoding;
-		internal static double TrainProgressCurrentSum;
-		internal static double TrainProgressCurrentWeight;
 		
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>
 		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string TrainFolder, Encoding TrainEncoding) {
-			//Deliberately purge all plugins and reload in case a preview thread is running
-			Plugins.UnloadPlugins();
-			Plugins.LoadPlugins();
+			string error; //ignored
+			Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer);
 			// members
-			TrainProgress = 0.0;
-			TrainProgressCurrentSum = 0.0;
-			TrainProgressCurrentWeight = 1.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
@@ -289,7 +284,6 @@ namespace OpenBve {
 
 
 			// load trains
-
 			for (int k = 0; k < Program.TrainManager.Trains.Length; k++) {
 
 				AbstractTrain currentTrain = Program.TrainManager.Trains[k];
@@ -320,7 +314,6 @@ namespace OpenBve {
 					train.Specs.DoorCloseMode = DoorMode.Manual;
 				}
 			}
-			TrainProgress = 1.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
@@ -329,6 +322,9 @@ namespace OpenBve {
 				Program.CurrentRoute.UpdateAllSections();
 			}
 			// load plugin
+
+
+			CurrentTrain = 0;
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++) {
 				if ( Program.TrainManager.Trains[i].State != TrainState.Bogus) {
 					if ( Program.TrainManager.Trains[i].IsPlayerTrain) {
@@ -346,6 +342,8 @@ namespace OpenBve {
 						}
 					}
 				}
+				CurrentTrain++;
+
 			}
 		}
 

@@ -6,9 +6,10 @@ using OpenBveApi.Interface;
 using OpenTK.Input;
 using Key = OpenBveApi.Input.Key;
 using Control = OpenBveApi.Interface.Control;
+// ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 namespace OpenBve {
-	internal partial class formMain : Form {
+	internal partial class formMain {
 		
 		
 		// ========
@@ -262,7 +263,7 @@ namespace OpenBve {
 			int n = Interface.CurrentControls.Length;
 			Array.Resize(ref Interface.CurrentControls, n + 1);
 			Interface.CurrentControls[n].Command = Translations.Command.None;
-			ListViewItem Item = new ListViewItem(new string[] { "", "", "", "", "" });
+			ListViewItem Item = new ListViewItem(new[] { "", "", "", "", "" });
 			UpdateControlListElement(Item, n, true);
 			listviewControls.Items.Add(Item);
 			Item.Selected = true;
@@ -462,7 +463,7 @@ namespace OpenBve {
 					listviewControls.Items.Clear();
 					ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 					for (int i = 0; i < Interface.CurrentControls.Length; i++) {
-						Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
+						Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
 						UpdateControlListElement(Items[i], i, false);
 					}
 					listviewControls.Items.AddRange(Items);
@@ -486,7 +487,7 @@ namespace OpenBve {
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
-					Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
+					Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
 					UpdateControlListElement(Items[i], i, false);
 				}
 				listviewControls.Items.AddRange(Items);
@@ -550,7 +551,7 @@ namespace OpenBve {
 		{
 			//Required to avoid race condition with openTK recieving the same event internally
 			System.Threading.Thread.Sleep(1);
-			var kbState = OpenTK.Input.Keyboard.GetState();
+			var kbState = Keyboard.GetState();
 			if (KeyGrab == false)
 			{
 				return;
@@ -618,8 +619,8 @@ namespace OpenBve {
 				float w, h;
 				if (JoystickImage != null) {
 					e.Graphics.DrawImage(JoystickImage, x, y);
-					w = (float)JoystickImage.Width;
-					h = (float)JoystickImage.Height;
+					w = JoystickImage.Width;
+					h = JoystickImage.Height;
 					if (h < 64.0f) h = 64.0f;
 				} else {
 					w = 64.0f; h = 64.0f;
@@ -737,7 +738,7 @@ namespace OpenBve {
 						float v = y + h + 8.0f;
 						{ // axes
 							int n = JoystickManager.AttachedJoysticks[guid].AxisCount();
-							float g = (float)pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
+							float g = pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
 							for (int j = 0; j < n; j++) {
 								float r = (float)JoystickManager.AttachedJoysticks[guid].GetAxis(j);
 								float r0 = r < 0.0f ? r : 0.0f;
@@ -771,7 +772,7 @@ namespace OpenBve {
 						
 						{ // buttons
 							int n = JoystickManager.AttachedJoysticks[guid].ButtonCount();
-							float g = (float)0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
+							float g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 							for (int j = 0; j < n; j++) {
 								bool q = JoystickManager.AttachedJoysticks[guid].GetButton(j) != 0;
 								float dv = (float)(j & 1) * (g + 8.0f);

@@ -221,7 +221,7 @@ namespace OpenBve
 						CultureInfo Culture = CultureInfo.InvariantCulture;
 						System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 						string[][] Lines = new string[Game.BlackBoxEntryCount + 1][];
-						Lines[0] = new string[] {
+						Lines[0] = new[] {
 							Translations.GetInterfaceString("log_time"),
 							Translations.GetInterfaceString("log_position"),
 							Translations.GetInterfaceString("log_speed"),
@@ -239,11 +239,11 @@ namespace OpenBve
 							{
 								double x = Game.BlackBoxEntries[i].Time;
 								int h = (int)Math.Floor(x / 3600.0);
-								x -= (double)h * 3600.0;
+								x -= h * 3600.0;
 								int m = (int)Math.Floor(x / 60.0);
-								x -= (double)m * 60.0;
+								x -= m * 60.0;
 								int s = (int)Math.Floor(x);
-								x -= (double)s;
+								x -= s;
 								int n = (int)Math.Floor(1000.0 * x);
 								Lines[j][0] = h.ToString("00", Culture) + ":" + m.ToString("00", Culture) + ":" + s.ToString("00", Culture) + ":" + n.ToString("000", Culture);
 							}

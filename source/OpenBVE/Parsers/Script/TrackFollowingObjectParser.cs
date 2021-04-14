@@ -315,6 +315,7 @@ namespace OpenBve
 			double Decelerate = 0.0;
 			double Accelerate = 0.0;
 			double TargetSpeed = 0.0;
+			bool targetSpeedSet = false;
 
 			foreach (XElement KeyNode in SectionElement.Elements())
 			{
@@ -348,6 +349,7 @@ namespace OpenBve
 						{
 							Interface.AddMessage(MessageType.Error, false, $"Value is expected to be a non-negative floating-point number in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
 						}
+						targetSpeedSet = true;
 						break;
 					case "rail":
 						if (Value.Any() && !NumberFormats.TryParseIntVb6(Value, out Data.RailIndex) || Data.RailIndex < 0)
@@ -359,6 +361,10 @@ namespace OpenBve
 				}
 			}
 
+			if (!targetSpeedSet)
+			{
+				Interface.AddMessage(MessageType.Warning, false, $"A TargetSpeed was not set in {Section}. This may cause unexpected results.");
+			}
 			Data.Decelerate = -Decelerate / 3.6;
 			Data.Accelerate = Accelerate / 3.6;
 			Data.TargetSpeed = TargetSpeed / 3.6;

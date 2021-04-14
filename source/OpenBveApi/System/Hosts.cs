@@ -60,7 +60,7 @@ namespace OpenBveApi.Hosts {
 	}
 	
 	/// <summary>Represents the host application and functionality it exposes.</summary>
-	public abstract class HostInterface {
+	public abstract partial class HostInterface {
 
 		/// <summary>Returns whether the current host application is running under Mono</summary>
 		public bool MonoRuntime

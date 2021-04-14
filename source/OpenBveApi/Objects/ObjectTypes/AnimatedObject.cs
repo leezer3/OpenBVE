@@ -114,6 +114,7 @@ namespace OpenBveApi.Objects
 		public AnimatedObject(HostInterface host)
 		{
 			currentHost = host;
+			States = new ObjectState[] { };
 		}
 
 		/// <summary>Clones this object</summary>

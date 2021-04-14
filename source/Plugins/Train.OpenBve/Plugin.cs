@@ -55,7 +55,9 @@ namespace Train.OpenBve
 
 	    internal Control[] CurrentControls;
 
-	    public Plugin()
+	    internal double LastProgress;
+
+		public Plugin()
 	    {
 		    if (TrainDatParser == null)
 		    {
@@ -94,9 +96,10 @@ namespace Train.OpenBve
 		    currentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
+		    // ReSharper disable once MergeCastWithTypeCheck
 		    if (rendererReference is BaseRenderer)
 		    {
-			    Renderer = rendererReference as BaseRenderer;
+			    Renderer = (BaseRenderer)rendererReference;
 		    }
 	    }
 
@@ -139,11 +142,15 @@ namespace Train.OpenBve
 
 	    public override bool LoadTrain(Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
 	    {
+		    CurrentProgress = 0.0;
+		    LastProgress = 0.0;
+		    IsLoading = true;
 		    CurrentControls = currentControls;
 		    TrainBase currentTrain = train as TrainBase;
 		    if (currentTrain == null)
 		    {
 				currentHost.ReportProblem(ProblemType.InvalidData, "Train was not valid");
+				IsLoading = false;
 				return false;
 		    }
 
@@ -153,7 +160,12 @@ namespace Train.OpenBve
 			    string TrainData = Path.CombineFile(FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
 			    TrainDatParser.Parse(TrainData, Encoding.UTF8, currentTrain);
 			    Thread.Sleep(1);
-			    if (Cancel) return false;
+
+			    if (Cancel)
+			    {
+				    IsLoading = false;
+				    return false;
+			    }
 		    }
 		    else
 		    {
@@ -170,11 +182,17 @@ namespace Train.OpenBve
 
 			    string TrainData = Path.CombineFile(currentTrain.TrainFolder, "train.dat");
 			    TrainDatParser.Parse(TrainData, Encoding, currentTrain);
+			    LastProgress = 0.1;
 			    Thread.Sleep(1);
 			    if (Cancel) return false;
 			    SoundCfgParser.ParseSoundConfig(currentTrain);
+			    LastProgress = 0.2;
 			    Thread.Sleep(1);
-			    if (Cancel) return false;
+			    if (Cancel)
+			    {
+				    IsLoading = false;
+				    return false;
+			    }
 			    // door open/close speed
 			    for (int i = 0; i < currentTrain.Cars.Length; i++)
 			    {
@@ -184,13 +202,19 @@ namespace Train.OpenBve
 		    // add panel section
 		    if (currentTrain.IsPlayerTrain) {	
 			    ParsePanelConfig(currentTrain, Encoding);
-			    Thread.Sleep(1); if (Cancel) return false;
+			    LastProgress = 0.6;
+			    Thread.Sleep(1);
+			    if (Cancel)
+			    {
+				    IsLoading = false;
+				    return false;
+			    }
 			    FileSystem.AppendToLogFile("Train panel loaded sucessfully.");
 		    }
 			// add exterior section
 			if (currentTrain.State != TrainState.Bogus)
 			{
-				bool[] VisibleFromInterior = new bool[currentTrain.Cars.Length];
+				bool[] VisibleFromInterior;
 				UnifiedObject[] CarObjects = new UnifiedObject[currentTrain.Cars.Length];
 				UnifiedObject[] BogieObjects = new UnifiedObject[currentTrain.Cars.Length * 2];
 				UnifiedObject[] CouplerObjects = new UnifiedObject[currentTrain.Cars.Length];
@@ -198,16 +222,20 @@ namespace Train.OpenBve
 				string tXml = Path.CombineFile(currentTrain.TrainFolder, "train.xml");
 				if (File.Exists(tXml))
 				{
-					TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior);
+					TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
 				}
 				else
 				{
-					ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, ref VisibleFromInterior, currentTrain);
+					ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, currentTrain);
 				}
 
 				currentTrain.CameraCar = currentTrain.DriverCar;
 				Thread.Sleep(1);
-				if (Cancel) return false;
+				if (Cancel)
+				{
+					IsLoading = false;
+					return false;
+				}
 				//Stores the current array index of the bogie object to add
 				//Required as there are two bogies per car, and we're using a simple linear array....
 				int currentBogieObject = 0;
@@ -217,8 +245,7 @@ namespace Train.OpenBve
 					{
 						// load default exterior object
 						string file = Path.CombineFile(FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-						StaticObject so;
-						currentHost.LoadStaticObject(file, Encoding.UTF8, false, out so);
+						currentHost.LoadStaticObject(file, Encoding.UTF8, false, out var so);
 						if (so == null)
 						{
 							CarObjects[i] = null;
@@ -260,6 +287,7 @@ namespace Train.OpenBve
 			// place cars
 			currentTrain.PlaceCars(0.0);
 			currentControls = CurrentControls;
+			IsLoading = false;
 			return true;
 	    }
 
@@ -270,7 +298,7 @@ namespace Train.OpenBve
 	    internal void ParsePanelConfig(TrainBase Train, Encoding Encoding)
 	    {
 		    Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
-		    Train.Cars[Train.DriverCar].CarSections[0] = new CarSection(currentHost, ObjectType.Overlay);
+		    Train.Cars[Train.DriverCar].CarSections[0] = new CarSection(currentHost, ObjectType.Overlay, true);
 		    string File = Path.CombineFile(Train.TrainFolder, "panel.xml");
 		    if (!System.IO.File.Exists(File))
 		    {
@@ -336,9 +364,8 @@ namespace Train.OpenBve
 					    FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
 				    }
 
-				    UnifiedObject currentObject;
-				    currentHost.LoadObject(File, Encoding, out currentObject);
-				    var a = currentObject as AnimatedObjectCollection;
+				    currentHost.LoadObject(File, Encoding, out var currentObject);
+				    var a = (AnimatedObjectCollection)currentObject;
 				    if (a != null)
 				    {
 					    //HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg

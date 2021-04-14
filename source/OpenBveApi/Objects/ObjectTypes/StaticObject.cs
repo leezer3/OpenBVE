@@ -311,11 +311,9 @@ namespace OpenBveApi.Objects
 		/// <param name="Angle">The angle to rotate in degrees</param>
 		public void ApplyRotation(Vector3 Rotation, double Angle)
 		{
-			double cosa = System.Math.Cos(Angle);
-			double sina = System.Math.Sin(Angle);
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
 			{
-				Mesh.Vertices[j].Coordinates.Rotate(Rotation, cosa, sina);
+				Mesh.Vertices[j].Coordinates.Rotate(Rotation, Angle);
 
 			}
 
@@ -323,7 +321,7 @@ namespace OpenBveApi.Objects
 			{
 				for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
 				{
-					Mesh.Faces[j].Vertices[k].Normal.Rotate(Rotation, cosa, sina);
+					Mesh.Faces[j].Vertices[k].Normal.Rotate(Rotation, Angle);
 				}
 			}
 		}

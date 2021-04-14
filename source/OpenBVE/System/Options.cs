@@ -181,23 +181,23 @@ namespace OpenBve
 		internal static void LoadOptions()
 		{
 			CurrentOptions = new Options();
-			string OptionsDir = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+			string OptionsDir = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
 			if (!System.IO.Directory.Exists(OptionsDir))
 			{
 				System.IO.Directory.CreateDirectory(OptionsDir);
 			}
 			
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			string File = OpenBveApi.Path.CombineFile(OptionsDir, "options.cfg");
+			string File = Path.CombineFile(OptionsDir, "options.cfg");
 			if (!System.IO.File.Exists(File))
 			{
 				//Attempt to load and upgrade a prior configuration file
-				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
+				File = Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
 			}
 			if (System.IO.File.Exists(File))
 			{
 				// load options
-				string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
+				string[] Lines = System.IO.File.ReadAllLines(File, new UTF8Encoding());
 				string Section = "";
 				for (int i = 0; i < Lines.Length; i++)
 				{
@@ -215,7 +215,7 @@ namespace OpenBve
 							if (j >= 0)
 							{
 								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								Value = Lines[i].Substring(j + 1).TrimStart();
 							}
 							else
 							{
@@ -503,14 +503,14 @@ namespace OpenBve
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
 												if (a <= 0) a = 500;
-												Interface.CurrentOptions.KeyRepeatDelay = 0.001 * (double)a;
+												Interface.CurrentOptions.KeyRepeatDelay = 0.001 * a;
 											} break;
 										case "keyrepeatinterval":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
 												if (a <= 0) a = 100;
-												Interface.CurrentOptions.KeyRepeatInterval = 0.001 * (double)a;
+												Interface.CurrentOptions.KeyRepeatInterval = 0.001 * a;
 											} break;
 										case "raildrivermph":
 											Interface.CurrentOptions.RailDriverMPH = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
@@ -620,7 +620,7 @@ namespace OpenBve
 										int a;
 										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
 										{
-											a = System.Text.Encoding.UTF8.CodePage;
+											a = Encoding.UTF8.CodePage;
 										}
 										try
 										{
@@ -632,7 +632,7 @@ namespace OpenBve
 										}
 										catch
 										{
-											a = System.Text.Encoding.UTF8.CodePage;
+											a = Encoding.UTF8.CodePage;
 										}
 										int n = Interface.CurrentOptions.RouteEncodings.Length;
 										Array.Resize(ref Interface.CurrentOptions.RouteEncodings, n + 1);
@@ -644,7 +644,7 @@ namespace OpenBve
 										int a;
 										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
 										{
-											a = System.Text.Encoding.UTF8.CodePage;
+											a = Encoding.UTF8.CodePage;
 										}
 										try
 										{
@@ -656,7 +656,7 @@ namespace OpenBve
 										}
 										catch
 										{
-											a = System.Text.Encoding.UTF8.CodePage;
+											a = Encoding.UTF8.CodePage;
 										}
 										int n = Interface.CurrentOptions.TrainEncodings.Length;
 										Array.Resize(ref Interface.CurrentOptions.TrainEncodings, n + 1);
@@ -727,7 +727,7 @@ namespace OpenBve
 				// file not found
 				string Code = CultureInfo.CurrentUICulture.Name;
 				if (string.IsNullOrEmpty(Code)) Code = "en-US";
-				File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
+				File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
 				if (System.IO.File.Exists(File))
 				{
 					CurrentOptions.LanguageCode = Code;
@@ -740,7 +740,7 @@ namespace OpenBve
 						if (i > 0)
 						{
 							Code = Code.Substring(0, i);
-							File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
+							File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
 							if (System.IO.File.Exists(File))
 							{
 								CurrentOptions.LanguageCode = Code;
@@ -757,7 +757,7 @@ namespace OpenBve
 		internal static void SaveOptions()
 		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+			StringBuilder Builder = new StringBuilder();
 			Builder.AppendLine("; Options");
 			Builder.AppendLine("; =======");
 			Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
@@ -936,10 +936,10 @@ namespace OpenBve
 			Builder.AppendLine("cursor = " + CurrentOptions.CursorFileName);
 			Builder.AppendLine("panel2extended = " + (CurrentOptions.Panel2ExtendedMode ? "true" : "false"));
 			Builder.AppendLine("panel2extendedminsize = " + CurrentOptions.Panel2ExtendedMinSize.ToString(Culture));
-			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+			string File = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 			try
 			{
-				System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
+				System.IO.File.WriteAllText(File, Builder.ToString(), new UTF8Encoding(true));
 			}
 			catch
 			{

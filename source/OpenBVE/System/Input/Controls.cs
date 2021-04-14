@@ -111,6 +111,7 @@ namespace OpenBve
 			}
 			catch
 			{
+				//ignored
 			}
 			
 			if (FileOrNull == null)
@@ -147,13 +148,13 @@ namespace OpenBve
 
 			for (int i = 0; i < Lines.Length; i++)
 			{
-				Lines[i] = Lines[i].Trim(new char[] { });
+				Lines[i] = Lines[i].Trim();
 				if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
 				{
-					string[] Terms = Lines[i].Split(new[] { ',' });
+					string[] Terms = Lines[i].Split(',');
 					for (int j = 0; j < Terms.Length; j++)
 					{
-						Terms[j] = Terms[j].Trim(new char[] { });
+						Terms[j] = Terms[j].Trim();
 					}
 
 					if (Terms.Length >= 2)
@@ -258,7 +259,7 @@ namespace OpenBve
 								Guid Device = new Guid();
 								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out oldDevice))
 								{
-									Device = OpenTK.Input.Joystick.GetGuid(oldDevice);
+									Device = Joystick.GetGuid(oldDevice);
 								}
 								
 								if (Device != new Guid() || Guid.TryParse(Terms[2], out Device))
@@ -343,7 +344,7 @@ namespace OpenBve
 								Guid Device = new Guid();
 								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out oldDevice))
 								{
-									Device = OpenTK.Input.Joystick.GetGuid(oldDevice);
+									Device = Joystick.GetGuid(oldDevice);
 								}
 								
 								if (Device != new Guid() || Guid.TryParse(Terms[2], out Device))

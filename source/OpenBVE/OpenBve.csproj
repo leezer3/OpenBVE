@@ -132,7 +132,6 @@
     <Compile Include="Game\MessageManager.TextualMessages.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
@@ -290,7 +289,6 @@
     <Compile Include="System\Input\JoystickManager.StandardJoystick.cs">
       <DependentUpon>JoystickManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Program.cs" />
     <EmbeddedResource Include="UserInterface\formBugReport.resx">
       <DependentUpon>formBugReport.cs</DependentUpon>

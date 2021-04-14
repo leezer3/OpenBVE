@@ -21,7 +21,7 @@ namespace TrainManager.BrakeSystems
 		{
 			airSound = null;
 			double targetPressure;
-			if (emergencyHandle.Actual == true)
+			if (emergencyHandle.Actual)
 			{
 				if (brakeType == BrakeType.Main)
 				{
@@ -40,7 +40,7 @@ namespace TrainManager.BrakeSystems
 			}
 			else
 			{
-				targetPressure = (double) brakeHandle.Actual / (double) brakeHandle.MaximumNotch;
+				targetPressure = brakeHandle.Actual / (double)brakeHandle.MaximumNotch;
 				targetPressure *= brakeCylinder.ServiceMaximumPressure;
 			}
 
@@ -142,7 +142,7 @@ namespace TrainManager.BrakeSystems
 			}
 			else
 			{
-				pp = (double)brakeHandle.Actual / (double)brakeHandle.MaximumNotch;
+				pp = brakeHandle.Actual / (double)brakeHandle.MaximumNotch;
 				pp *= brakeCylinder.ServiceMaximumPressure;
 			}
 			straightAirPipe.CurrentPressure = pp;

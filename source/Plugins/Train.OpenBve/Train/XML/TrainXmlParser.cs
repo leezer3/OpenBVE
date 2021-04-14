@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
@@ -27,7 +25,7 @@ namespace Train.OpenBve
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
 		private static BveAccelerationCurve[] AccelerationCurves;
-		internal void Parse(string fileName, TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, ref bool[] interiorVisible)
+		internal void Parse(string fileName, TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, out bool[] interiorVisible)
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
@@ -109,7 +107,7 @@ namespace Train.OpenBve
 										string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 										if (System.IO.File.Exists(f))
 										{
-											Plugin.currentHost.LoadObject(f, System.Text.Encoding.Default, out CouplerObjects[carIndex - 1]);
+											Plugin.currentHost.LoadObject(f, Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
 								}
@@ -164,7 +162,7 @@ namespace Train.OpenBve
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "power":
-										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(new[] { ';' });
+										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.Handles.Power.NotchDescriptions.Length; j++)
 										{
 											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Power.NotchDescriptions[j]);
@@ -175,7 +173,7 @@ namespace Train.OpenBve
 										}
 										break;
 									case "brake":
-										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(new[] { ';' });
+										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.Handles.Brake.NotchDescriptions.Length; j++)
 										{
 											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Brake.NotchDescriptions[j]);
@@ -190,7 +188,7 @@ namespace Train.OpenBve
 										{
 											continue;
 										}
-										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(new[] { ';' });
+										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.Handles.LocoBrake.NotchDescriptions.Length; j++)
 										{
 											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.LocoBrake.NotchDescriptions[j]);
@@ -201,7 +199,7 @@ namespace Train.OpenBve
 										}
 										break;
 									case "reverser":
-										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(new[] { ';' });
+										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.Handles.Reverser.NotchDescriptions.Length; j++)
 										{
 											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Reverser.NotchDescriptions[j]);
@@ -264,14 +262,12 @@ namespace Train.OpenBve
 				}
 
 				//Check for bogie objects and reverse if necessary.....
-				int bogieObjects = 0;
 				for (int i = 0; i < Train.Cars.Length * 2; i++)
 				{
 					bool IsOdd = (i % 2 != 0);
 					int CarIndex = i / 2;
 					if (BogieObjects[i] != null)
 					{
-						bogieObjects++;
 						if (BogieObjectsReversed[i])
 						{
 							{

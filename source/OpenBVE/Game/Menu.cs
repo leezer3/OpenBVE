@@ -110,8 +110,8 @@ namespace OpenBve
 		}
 		private class MenuCommand : MenuEntry
 		{
-			internal MenuTag Tag;
-			internal int Data;
+			internal readonly MenuTag Tag;
+			internal readonly int Data;
 			internal MenuCommand(string Text, MenuTag Tag, int Data)
 			{
 				this.Text = Text;
@@ -554,7 +554,7 @@ namespace OpenBve
 		/// <param name="y">The screen-relative y coordinate of the move event</param>
 		internal bool ProcessMouseMove(int x, int y)
 		{
-			//
+			Program.currentGameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;
@@ -572,7 +572,7 @@ namespace OpenBve
 				menu.Selection = menu.TopItem - 1;
 				return true;
 			}
-			if (x < topItemY || x > menuXmax || y < menuYmin || y > menuYmax)
+			if (x < menuXmin || x > menuXmax || y < menuYmin || y > menuYmax)
 			{
 				return false;
 			}

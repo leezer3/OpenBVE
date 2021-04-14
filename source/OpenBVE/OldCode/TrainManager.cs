@@ -10,7 +10,7 @@ using TrainManager.Trains;
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public partial class TrainManager : TrainManagerBase
+	public class TrainManager : TrainManagerBase
 	{
 		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options, FileSystem fileSystem) : base(host, renderer, options, fileSystem)
 		{

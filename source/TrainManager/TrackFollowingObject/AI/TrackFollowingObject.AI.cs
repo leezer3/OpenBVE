@@ -51,12 +51,7 @@ namespace TrainManager.Trains
 			}
 
 			// Calculate the position where the train is at the present time.
-			double NewMileage;
-			double NewPosition;
-			TravelDirection NewDirection;
-			bool OpenLeftDoors;
-			bool OpenRightDoors;
-			GetNewState(TrainManagerBase.currentHost.InGameTime, out NewMileage, out NewPosition, out NewDirection, out OpenLeftDoors, out OpenRightDoors);
+			GetNewState(TrainManagerBase.currentHost.InGameTime, out var NewMileage, out var NewPosition, out var NewDirection, out var OpenLeftDoors, out var OpenRightDoors);
 
 			// Calculate the travel distance of the train.
 			double DeltaPosition = NewPosition - CurrentPosition;

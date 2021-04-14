@@ -342,6 +342,10 @@ namespace TrainEditor {
 						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase)) {
 							if (n == t.Acceleration.Entries.Length) {
 								Array.Resize(ref t.Acceleration.Entries, t.Acceleration.Entries.Length << 1);
+								for (int o = n; o < t.Acceleration.Entries.Length; o++)
+								{
+									t.Acceleration.Entries[o] = new BveAccelerationCurve();
+								}
 							}
 							string u = Lines[i] + ",";
 							int m = 0;
@@ -498,7 +502,7 @@ namespace TrainEditor {
 										if (a >= 0.0) t.Brake.BrakeControlSpeed = a;
 										break;
 									case 3:
-										if (a <= 0 && a > 3) t.Brake.LocoBrakeType = (Brake.LocoBrakeTypes) b;
+										if (a >= 0 && a < 3) t.Brake.LocoBrakeType = (Brake.LocoBrakeTypes) b;
 										break;
 								}
 							} i++; n++;

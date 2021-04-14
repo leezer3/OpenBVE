@@ -84,10 +84,12 @@ namespace Train.OpenBve
 				train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Plugin.currentHost, train.TrainFolder, "EmrBrake.wav", SoundCfgParser.mediumRadius, center);
 				train.Cars[i].Sounds.Flange = SoundCfgParser.TryLoadSoundDictionary(train.TrainFolder, "Flange", ".wav", center, SoundCfgParser.mediumRadius);
 				train.Cars[i].Sounds.Loop = new CarSound(Plugin.currentHost, train.TrainFolder, "Loop.wav", SoundCfgParser.mediumRadius, center);
+				// ReSharper disable once CoVariantArrayConversion
 				train.Cars[i].FrontAxle.PointSounds = new[]
 				{
 					new CarSound(Plugin.currentHost, train.TrainFolder, "Point.wav", SoundCfgParser.smallRadius, frontaxle)
 				};
+				// ReSharper disable once CoVariantArrayConversion
 				train.Cars[i].RearAxle.PointSounds = new[]
 				{
 					new CarSound(Plugin.currentHost, train.TrainFolder, "Point.wav", SoundCfgParser.smallRadius, rearaxle)

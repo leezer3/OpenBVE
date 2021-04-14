@@ -326,6 +326,23 @@ namespace OpenBve
 							return;
 						}
 					}
+
+					if (Interface.CurrentOptions.Toppling && Math.Abs(Train.Cars[Train.DriverCar].Specs.RollDueToTopplingAngle) > Train.Cars[Train.DriverCar].Specs.CriticalTopplingAngle * 0.3)
+					{
+						// react to train toppling angle on a curve
+						if (Train.Handles.Power.Driver > 0)
+						{
+							//Dump the power
+							Train.Handles.Power.ApplyState(0, false);
+						}
+						else
+						{
+							//Still toppling, so brake
+							Train.Handles.Brake.ApplyState(1, true);
+						}
+						this.CurrentInterval = 2.5;
+						return;
+					}
 					// initialize
 					double acc = Train.Specs.CurrentAverageAcceleration;
 					double lim = SpeedLimit * 1.2;

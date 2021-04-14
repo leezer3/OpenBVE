@@ -11,7 +11,7 @@ using TrackFollowingObject = TrainManager.Trains.TrackFollowingObject;
 namespace TrainManager
 {
 	/// <summary>The base train manager class</summary>
-	public abstract partial class TrainManagerBase
+	public abstract class TrainManagerBase
 	{
 		internal static HostInterface currentHost;
 		internal static BaseRenderer Renderer;

@@ -66,7 +66,7 @@ namespace OpenBve
                                 var BoundingBoxUpper = node.SelectSingleNode("boundingboxupper").InnerText;
                                 var BoundingBoxLower = node.SelectSingleNode("boundingboxlower").InnerText;
                                 Object.Mesh.BoundingBox = new Vector3[2];
-                                var splitStrings = BoundingBoxUpper.Split(new[] { ',' });
+                                var splitStrings = BoundingBoxUpper.Split(',');
                                 if (splitStrings.Length != 3)
                                 {
                                     //Throw exception, as this isn't a valid 3D point
@@ -75,7 +75,7 @@ namespace OpenBve
                                 Object.Mesh.BoundingBox[0].X = Double.Parse(splitStrings[0]);
                                 Object.Mesh.BoundingBox[0].Y = Double.Parse(splitStrings[1]);
                                 Object.Mesh.BoundingBox[0].Z = Double.Parse(splitStrings[2]);
-                                splitStrings = BoundingBoxLower.Split(new[] { ',' });
+                                splitStrings = BoundingBoxLower.Split(',');
                                 if (splitStrings.Length != 3)
                                 {
                                     //Throw exception, as this isn't a valid 3D point

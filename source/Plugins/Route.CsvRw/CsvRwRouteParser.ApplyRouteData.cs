@@ -105,8 +105,7 @@ namespace CsvRwRouteParser
 						 */
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No backgrounds were defined- Using default background.");
 						string f = OpenBveApi.Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
-						Texture t;
-						Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
+						Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out var t);
 						CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false, Plugin.CurrentOptions.ViewingDistance);
 					}
 					else if (Data.Backgrounds.Count > 0 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)

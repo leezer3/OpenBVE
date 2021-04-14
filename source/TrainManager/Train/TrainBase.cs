@@ -52,26 +52,14 @@ namespace TrainManager.Trains
 		/// <summary>Whether the train has currently derailed</summary>
 		public bool Derailed;
 		/// <summary>Stores the previous route speed limit</summary>
-		private double previousRouteLimit = 0.0;
+		private double previousRouteLimit;
 		/// <summary>Internal timer used for updates</summary>
 		private double InternalTimerTimeElapsed;
 		/// <inheritdoc/>
-		public override bool IsPlayerTrain
-		{
-			get
-			{
-				return this == TrainManagerBase.PlayerTrain;
-			}
-		}
+		public override bool IsPlayerTrain => this == TrainManagerBase.PlayerTrain;
 
 		/// <inheritdoc/>
-		public override int NumberOfCars
-		{
-			get
-			{
-				return this.Cars.Length;
-			}
-		}
+		public override int NumberOfCars => this.Cars.Length;
 
 		public TrainBase(TrainState state)
 		{
@@ -490,8 +478,7 @@ namespace TrainManager.Trains
 			}
 
 			// update brake system
-			double[] DecelerationDueToBrake, DecelerationDueToMotor;
-			UpdateBrakeSystem(TimeElapsed, out DecelerationDueToBrake, out DecelerationDueToMotor);
+			UpdateBrakeSystem(TimeElapsed, out var DecelerationDueToBrake, out var DecelerationDueToMotor);
 			// calculate new car speeds
 			double[] NewSpeeds = new double[Cars.Length];
 			for (int i = 0; i < Cars.Length; i++)
@@ -747,7 +734,7 @@ namespace TrainManager.Trains
 			this.Derailed = true;
 			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 			{
-				//TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Train " + Array.IndexOf(TrainManagerBase.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + CarIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 			}
 		}
 
@@ -757,11 +744,12 @@ namespace TrainManager.Trains
 			if (this.Cars.Contains(Car))
 			{
 				var c = Car as CarBase;
+				// ReSharper disable once PossibleNullReferenceException
 				c.Derailed = true;
 				this.Derailed = true;
 				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 				{
-					//TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Train " + Array.IndexOf(TrainManagerBase.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 		}

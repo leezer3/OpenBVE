@@ -607,16 +607,7 @@ namespace TrainManager.SafetySystems
 
 			if (sectionIndex >= 0)
 			{
-				SignalData signal;
-				if (sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length)
-				{
-					signal = TrainManagerBase.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
-				}
-				else
-				{
-					signal = new SignalData(0, double.MaxValue);
-				}
-
+				SignalData signal = sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length ? TrainManagerBase.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train) : new SignalData(0, double.MaxValue);
 				SetBeacon(new BeaconData(type, optional, signal));
 			}
 			else

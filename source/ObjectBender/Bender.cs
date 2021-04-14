@@ -291,8 +291,8 @@ namespace ObjectBender {
 											n.Y = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
 											n.Z = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
 											n.Normalize();
-											v.Rotate(new Vector3(x,y,z),  Math.Cos(a), Math.Sin(a));
-											n.Rotate(new Vector3(x,y,z),  Math.Cos(a), Math.Sin(a));
+											v.Rotate(new Vector3(x,y,z), a);
+											n.Rotate(new Vector3(x,y,z), a);
 											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", v.X.ToString("R", culture), v.Y.ToString("R", culture), v.Z.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
 										} else if (endAtMeshBuilder && (cells[j][0].Equals("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("[MeshBuilder]", StringComparison.OrdinalIgnoreCase))) {
 											break;
@@ -342,16 +342,12 @@ namespace ObjectBender {
 			 * taken care of, create the output file by duplicating
 			 * and bending the post-processed input file.
 			 * */
-			double cosB, sinB;
+			double b = 0;
 			bool rotateB;
 			if (options.BlockLength * options.Radius != 0.0) {
-				double b = -0.5 * options.BlockLength / options.Radius;
-				cosB = Math.Cos(b);
-				sinB = Math.Sin(b);
+				b = -0.5 * options.BlockLength / options.Radius;
 				rotateB = true;
 			} else {
-				cosB = 0.0;
-				sinB = 0.0;
 				rotateB = false;
 			}
 			double initialCantAngle, finalCantAngle;
@@ -415,11 +411,9 @@ namespace ObjectBender {
 											c = -c;
 										}
 										double sign = (double)Math.Sign(c);
-										double cosC = Math.Cos(c);
-										double sinC = Math.Sin(c);
 										v.X -= 0.5 * options.RailGauge * sign;
-										v.Rotate(Vector3.Backward, cosC, sinC);
-										n.Rotate(Vector3.Backward, cosC, sinC);
+										v.Rotate(Vector3.Backward, c);
+										n.Rotate(Vector3.Backward, c);
 										v.X += 0.5 * options.RailGauge * sign;
 									}
 									if (options.Radius != 0.0) {
@@ -429,11 +423,11 @@ namespace ObjectBender {
 										double sinA = Math.Sin(a);
 										v.X = options.Radius - cosA * r;
 										v.Z = sinA * r;
-										n.Rotate(Vector3.Down, cosA, sinA);
+										n.Rotate(Vector3.Down, a);
 									}
 									if (rotateB) {
-										v.Rotate(Vector3.Down, cosB, sinB);
-										n.Rotate(Vector3.Down, cosB, sinB);
+										v.Rotate(Vector3.Down, b);
+										n.Rotate(Vector3.Down, b);
 									}
 									if (isB3d) {
 										if (n.X == 0.0 & n.Y == 0.0 & n.Z == 0.0) {
@@ -555,8 +549,6 @@ namespace ObjectBender {
 			double angleCurrent = 0.0;
 			double angleDelta = 2.0 * Math.PI / (double)segments;
 			double slope = height != 0.0 ? Math.Atan((lowerRadius - upperRadius) / height) : 0.0;
-			double cosSlope = Math.Cos(slope);
-			double sinSlope = Math.Sin(slope);
 			double halfHeight = 0.5 * height;
 			double signHeight = (double)Math.Sign(height);
 			string[][] cells = new string[3 * segments + (upperCap ? 1 : 0) + (lowerCap ? 1 : 0)][];
@@ -574,7 +566,7 @@ namespace ObjectBender {
 				n.Y = 0.0;
 				n.Z = dirZ * signHeight;
 				Vector3 r = Vector3.Cross(n, Vector3.Down);
-				n.Rotate(r, cosSlope, sinSlope);
+				n.Rotate(r, slope);
 				cells[cellPointer + 0] = new string[] { "AddVertex", upperX.ToString("R", culture), halfHeight.ToString("R", culture), upperZ.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
 				cells[cellPointer + 1] = new string[] { "AddVertex", lowerX.ToString("R", culture), (-halfHeight).ToString("R", culture), lowerZ.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
 				cellPointer += 2;

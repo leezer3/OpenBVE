@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenBveApi.Math;
-using OpenBveApi.Sounds;
 using SoundManager;
 using TrainManager.Trains;
 
@@ -20,7 +19,7 @@ namespace Train.OpenBve
 		/// <param name="Train">The train to which to apply the new sound configuration</param>
 		internal void ParseSoundConfig(TrainBase Train)
 		{
-			LoadDefaultATSSounds(Train, Train.TrainFolder);
+			LoadDefaultATSSounds(Train);
 			string FileName = OpenBveApi.Path.CombineFile(Train.TrainFolder, "sound.xml");
 			if (System.IO.File.Exists(FileName))
 			{
@@ -75,19 +74,16 @@ namespace Train.OpenBve
 					if (a.StartsWith(FileStart, StringComparison.OrdinalIgnoreCase) & a.EndsWith(FileEnd, StringComparison.OrdinalIgnoreCase))
 					{
 						string b = a.Substring(FileStart.Length, a.Length - FileEnd.Length - FileStart.Length);
-						int n; 
-						if (int.TryParse(b, System.Globalization.NumberStyles.Integer, Culture, out n))
+						if (int.TryParse(b, System.Globalization.NumberStyles.Integer, Culture, out var n))
 						{
 							if (Sounds.ContainsKey(n))
 							{
-								SoundHandle snd;
-								Plugin.currentHost.RegisterSound(Files[i], Radius, out snd);
+								Plugin.currentHost.RegisterSound(Files[i], Radius, out var snd);
 								Sounds[n] = new CarSound(snd, Position);
 							}
 							else
 							{
-								SoundHandle snd;
-								Plugin.currentHost.RegisterSound(Files[i], Radius, out snd);
+								Plugin.currentHost.RegisterSound(Files[i], Radius, out var snd);
 								Sounds.Add(n, new CarSound(snd, Position));
 							}
 						}

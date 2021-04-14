@@ -70,7 +70,6 @@ namespace OpenBve
 			{
 				//Load the list of attached openTK joysticks
 				var state = OpenTK.Input.Joystick.GetState(i);
-				Guid foundGuid = OpenTK.Input.Joystick.GetGuid(i);
 				var description = OpenTK.Input.Joystick.GetCapabilities(i);
 				if (description.ToString() == "{Axes: 0; Buttons: 0; Hats: 0; IsConnected: True}")
 				{
@@ -107,7 +106,7 @@ namespace OpenBve
 					}
 				}
 			}
-			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows || devices == null || RailDriverInit == true)
+			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows || devices == null || RailDriverInit)
 			{
 				return;
 			}

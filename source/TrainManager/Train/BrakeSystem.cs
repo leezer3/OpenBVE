@@ -45,7 +45,7 @@ namespace TrainManager.Trains
 				TotalPressure += Cars[i].CarBrake.brakePipe.CurrentPressure;
 			}
 
-			double AveragePressure = TotalPressure / (double) Cars.Length;
+			double AveragePressure = TotalPressure / Cars.Length;
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].CarBrake.brakePipe.CurrentPressure = AveragePressure;
@@ -187,11 +187,11 @@ namespace TrainManager.Trains
 				double f;
 				if (Handles.LocoBrake.Actual != 0 && CarIndex == DriverCar)
 				{
-					f = (double) Handles.LocoBrake.Actual / (double) Handles.Brake.MaximumNotch;
+					f = Handles.LocoBrake.Actual / (double)Handles.LocoBrake.MaximumNotch;
 				}
 				else
 				{
-					f = (double) Handles.Brake.Actual / (double) Handles.Brake.MaximumNotch;
+					f = Handles.Brake.Actual / (double)Handles.Brake.MaximumNotch;
 				}
 
 				double a = Cars[CarIndex].CarBrake.motorDeceleration;
