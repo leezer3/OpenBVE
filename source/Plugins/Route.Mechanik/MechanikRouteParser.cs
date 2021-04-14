@@ -605,6 +605,7 @@ namespace MechanikRouteParser
 			}
 			//Insert a stop in the first block, as Mechanik always starts at pos 0, wheras BVE starts at the first stop
 			int blockZero = currentRouteData.FindBlock(0);
+			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, 0), true));
 			currentRouteData.Blocks[blockZero].stopMarker.Add(new StationStop(new Vector2(-10, 0), false));
 			int numTiles = (int)(currentRouteData.Blocks[currentRouteData.Blocks.Count - 1].StartingTrackPosition / 1000);
 			for (int i = 1; i < numTiles; i++)
@@ -667,26 +668,7 @@ namespace MechanikRouteParser
 			Vector3 trackPosition = new Vector3(0.0, 0.0, 0.0);
 			Vector2 trackDirection = new Vector2(0.0, 1.0);
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
-			Plugin.CurrentRoute.Stations = new[]
-			{
-				new RouteStation
-				{
-					Name = "Station 1",
-					OpenLeftDoors = true,
-					OpenRightDoors = true,
-					Stops = new[]
-					{
-						new RouteManager2.Stations.StationStop()
-						{
-							BackwardTolerance = 25,
-							ForwardTolerance = 25,
-							Cars = 0,
-							TrackPosition = 0
-						}
-					}
-				}
-				
-			};
+			
 			int CurrentTrackLength = 0;
 			double StartingDistance = 0;
 			for (int i = 0; i < currentRouteData.Blocks.Count; i++)
@@ -722,7 +704,45 @@ namespace MechanikRouteParser
 					blockLength = currentRouteData.Blocks[i + 1].StartingTrackPosition - currentRouteData.Blocks[i].StartingTrackPosition;
 				}
 				StartingDistance += blockLength;
-				
+				foreach (StationStop stop in currentRouteData.Blocks[i].stopMarker)
+				{
+					if (stop.Start)
+					{
+						int s = Plugin.CurrentRoute.Stations.Length;
+						Array.Resize(ref Plugin.CurrentRoute.Stations, s + 1);
+						Plugin.CurrentRoute.Stations[s] = new RouteStation
+						{
+							Name = "Station " + (s + 1),
+							OpenLeftDoors = true,
+							OpenRightDoors = true,
+							ArrivalTime = -1,
+							DepartureTime = -1,
+							DefaultTrackPosition = currentRouteData.Blocks[i].StartingTrackPosition,
+							StopTime = 30
+						};
+						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(0, s);
+					}
+					else
+					{
+						int s = Plugin.CurrentRoute.Stations.Length - 1;
+						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationEndEvent(0, s, Plugin.CurrentRoute, Plugin.CurrentHost);
+						Plugin.CurrentRoute.Stations[s].Stops = new[]
+						{
+							new RouteManager2.Stations.StationStop
+							{
+								BackwardTolerance = 25,
+								ForwardTolerance = 25,
+								Cars = 0,
+								TrackPosition = currentRouteData.Blocks[i].StartingTrackPosition
+							}
+						};
+					}
+					//TODO: Add the appropriate 3D face
+				}
 				if (!PreviewOnly)
 				{
 					Transformation t = new Transformation(Math.Atan2(worldDirection.X, worldDirection.Y), 0, 0);
@@ -754,7 +774,15 @@ namespace MechanikRouteParser
 						
 						if (signal.HeldAtRed)
 						{
-							Plugin.CurrentRoute.Sections[s].StationIndex = Plugin.CurrentRoute.Stations.Length -1;
+							Plugin.CurrentRoute.Sections[s].StationIndex = 0;
+							for (int k = Plugin.CurrentRoute.Stations.Length - 1; k > 0; k--)
+							{
+								if (Plugin.CurrentRoute.Stations[k].DefaultTrackPosition + 100 < currentRouteData.Blocks[i].StartingTrackPosition)
+								{
+									Plugin.CurrentRoute.Sections[s].StationIndex = k;
+									break;
+								}
+							}
 						}
 						else
 						{
@@ -800,43 +828,7 @@ namespace MechanikRouteParser
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position, Plugin.CurrentHost);
 				}
 
-				foreach (StationStop stop in currentRouteData.Blocks[i].stopMarker)
-				{
-					if (stop.Start)
-					{
-						int s = Plugin.CurrentRoute.Stations.Length;
-						Array.Resize(ref Plugin.CurrentRoute.Stations, s + 1);
-						Plugin.CurrentRoute.Stations[s] = new RouteStation
-						{
-							Name = "Station " + (s + 1),
-							OpenLeftDoors = true,
-							OpenRightDoors = true,
-							ArrivalTime = -1,
-							DepartureTime = -1
-						};
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(0, s);
-					}
-					else
-					{
-						int s = Plugin.CurrentRoute.Stations.Length - 1;
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationEndEvent(0, s, Plugin.CurrentRoute, Plugin.CurrentHost);
-						Plugin.CurrentRoute.Stations[s].Stops = new[]
-						{
-							new RouteManager2.Stations.StationStop
-							{
-								BackwardTolerance = 25,
-								ForwardTolerance = 25,
-								Cars = 0,
-								TrackPosition = currentRouteData.Blocks[i].StartingTrackPosition
-							}
-						};
-					}
-					//TODO: Add the appropriate 3D face
-				}
+				
 				
 			}
 			Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
