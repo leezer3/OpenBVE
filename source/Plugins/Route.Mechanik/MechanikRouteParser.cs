@@ -114,13 +114,13 @@ namespace MechanikRouteParser
 				}
 				routeLines[i] = Regex.Replace(routeLines[i], @"\s+", " ");
 				string[] Arguments = routeLines[i].Trim().Split(null);
-				double trackPosition, scaleFactor;
+				double scaleFactor;
 				int Idx = -1, blockIndex, textureIndex;
 				if(Arguments.Length < 2)
 				{
 					continue;
 				}
-				if (!TryParseDistance(Arguments[1], out trackPosition))
+				if (!TryParseDistance(Arguments[1], out var trackPosition))
 				{
 					//Second argument is always track position in KM
 					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid track position encountered in " + Arguments[0] + " at line " + i);
@@ -214,6 +214,10 @@ namespace MechanikRouteParser
 						Vector3 currentPoint = new Vector3();
 						for (int p = 3; p < 24; p += 3)
 						{
+							if (p > Arguments.Length - 1)
+							{
+								break;
+							}
 							if (!TryParseDistance(Arguments[p], out currentPoint.X))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid X encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
@@ -224,13 +228,13 @@ namespace MechanikRouteParser
 							}
 							currentPoint.Y = -currentPoint.Y;
 							currentPoint.Y += yOffset; //Mechanik stacks textures in order. Use this as a hack to stop Z-fighting
-							if (!TryParseDistance(Arguments[p + 2], out currentPoint.Z))
+							if (Arguments.Length > p + 2 && !TryParseDistance(Arguments[p + 2], out currentPoint.Z))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Z encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
 							}
 							points.Add(currentPoint);
 						}
-						if (!int.TryParse(Arguments[24], out firstPoint))
+						if (Arguments.Length < 25 || !int.TryParse(Arguments[24], out firstPoint))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FirstPoint encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -260,6 +264,13 @@ namespace MechanikRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid TextureIndex encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
+
+						if(numPoints > points.Count)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, numPoints + " points were declared, but the actual number of loaded points was " + points.Count + " in " + Arguments[0] + " at line " + i);
+							break;
+						}
+						
 						List<Vector3> sortedPoints = new List<Vector3>();
 						/*
 						 * Pull out the points making up our face
@@ -1007,8 +1018,7 @@ namespace MechanikRouteParser
 					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(sDat), s);
 					if (File.Exists(path))
 					{
-						SoundHandle handle;
-						Plugin.CurrentHost.RegisterSound(path, out handle);
+						Plugin.CurrentHost.RegisterSound(path, out var handle);
 						AvailableSounds.Add(k, handle);
 					}
 
@@ -1051,8 +1061,7 @@ namespace MechanikRouteParser
 		/// <returns>Whether parsing succeded</returns>
 		private static bool TryParseBool(string val, out bool boolean)
 		{
-			int value;
-			int.TryParse(val, out value);
+			int.TryParse(val, out var value);
 			switch (value)
 			{
 				case 0:
