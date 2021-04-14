@@ -1122,7 +1122,7 @@ namespace TrainManager.Car
 				const double angleTolerance = 0.001;
 				if (diff < -angleTolerance)
 				{
-					if (!Sounds.SpringL.IsPlaying)
+					if (Sounds.SpringL != null && !Sounds.SpringL.IsPlaying)
 					{
 						Sounds.SpringL.Play(this, false);
 					}
@@ -1131,7 +1131,7 @@ namespace TrainManager.Car
 				}
 				else if (diff > angleTolerance)
 				{
-					if (!Sounds.SpringR.IsPlaying)
+					if (Sounds.SpringR != null && !Sounds.SpringR.IsPlaying)
 					{
 						Sounds.SpringR.Play(this, false);
 					}

@@ -247,6 +247,7 @@ namespace TrainEditor {
 				return false;
 			}
 			Train.Handle.HandleBehaviour = (EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.LocoBrakeNotches = (int)numericUpDownLocoBrakeNotches.Value;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
 			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.X)) return false;

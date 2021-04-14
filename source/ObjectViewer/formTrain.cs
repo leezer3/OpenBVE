@@ -41,9 +41,9 @@ namespace OpenBve
 			numericUpDownEmergency.Enabled = false;
 			checkBoxSetHoldBrake.Enabled = false;
 			checkBoxSetConstSpeed.Enabled = false;
-			TrainManager.Train Train = Program.TrainManager.Trains[0] as TrainManager.Train;
 			if (checkBoxEnableTrain.Checked)
 			{
+				TrainManager.Train Train = Program.TrainManager.Trains[0] as TrainManager.Train;
 				numericUpDownCars.Value = Train.Cars.Length;
 				numericUpDownSpeed.Value = (decimal)(Train.Cars[0].CurrentSpeed * 3.6);
 				numericUpDownAccel.Value = (decimal)(Train.Cars[0].Specs.MotorAcceleration * 3.6);

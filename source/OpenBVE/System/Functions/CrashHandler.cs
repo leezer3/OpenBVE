@@ -235,8 +235,16 @@ namespace OpenBve
                     MemoryUsed = proc.PrivateMemorySize64;
                 }
                 outputFile.WriteLine("Current program memory usage: " + Math.Round((MemoryUsed / 1024 / 1024),2) + "mb");
-                var freeRamCounter = new PerformanceCounter("Memory", "Available MBytes");
-                outputFile.WriteLine("System memory free: " + freeRamCounter.NextValue() + "mb");
+                try
+                {
+	                var freeRamCounter = new PerformanceCounter("Memory", "Available MBytes");
+	                outputFile.WriteLine("System memory free: " + freeRamCounter.NextValue() + "mb");
+                }
+                catch
+                {
+	                outputFile.WriteLine("Unable to determine the current used / free memory figures.");
+	                outputFile.WriteLine("This may indicate a wider system issue.");
+                }
             }
 
         }
