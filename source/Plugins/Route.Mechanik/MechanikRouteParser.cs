@@ -671,6 +671,7 @@ namespace MechanikRouteParser
 			
 			int CurrentTrackLength = 0;
 			double StartingDistance = 0;
+			bool nextHeldAtRed = false;
 			for (int i = 0; i < currentRouteData.Blocks.Count; i++)
 			{
 				// normalize
@@ -771,8 +772,8 @@ namespace MechanikRouteParser
 							Plugin.CurrentRoute.Sections[s] = new Section(currentRouteData.Blocks[i].StartingTrackPosition, newAspects, SectionType.IndexBased, Plugin.CurrentRoute.Sections[s - 1]);
 							Plugin.CurrentRoute.Sections[s - 1].NextSection = Plugin.CurrentRoute.Sections[s];
 						}
-						
-						if (signal.HeldAtRed)
+						Plugin.CurrentRoute.Sections[s].StationIndex = -1;	
+						if (nextHeldAtRed)
 						{
 							Plugin.CurrentRoute.Sections[s].StationIndex = 0;
 							for (int k = Plugin.CurrentRoute.Stations.Length - 1; k > 0; k--)
@@ -783,12 +784,15 @@ namespace MechanikRouteParser
 									break;
 								}
 							}
-						}
-						else
-						{
-							Plugin.CurrentRoute.Sections[s].StationIndex = -1;	
+
+							nextHeldAtRed = false;
 						}
 
+						if (signal.HeldAtRed)
+						{
+							nextHeldAtRed = true;
+						}
+						
 						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance, 1.0);
 					}
 				}

@@ -165,8 +165,11 @@ namespace RouteManager2
 				return;
 			}
 
+			double timeElapsed = SecondsSinceMidnight - Section.LastUpdate;
+			Section.LastUpdate = SecondsSinceMidnight;
+
 			// preparations
-			int zeroAspect;
+			int zeroAspect = 0;
 			bool setToRed = false;
 
 			if (Section.Type == SectionType.ValueBased)
@@ -182,12 +185,7 @@ namespace RouteManager2
 					}
 				}
 			}
-			else
-			{
-				// index-based
-				zeroAspect = 0;
-			}
-
+			
 			// hold station departure signal at red
 			int d = Section.StationIndex;
 
@@ -268,6 +266,27 @@ namespace RouteManager2
 					else if (Stations[d].ArrivalTime >= 0.0)
 					{
 						t = Stations[d].ArrivalTime;
+					}
+
+					if (AccurateObjectDisposal == ObjectDisposalMode.Mechanik)
+					{
+						if (train.LastStation == d - 1 || train.Station == d)
+						{
+							if (Section.RedTimer == -1)
+							{
+								Section.RedTimer = 30;
+							}
+							else
+							{
+								Section.RedTimer -= timeElapsed;
+							}
+
+							setToRed = !(Section.RedTimer <= 0);
+						}
+						else
+						{
+							Section.RedTimer = -1;
+						}
 					}
 
 					if (train.IsPlayerTrain & Stations[d].Type != StationType.Normal & Stations[d].DepartureTime < 0.0)
