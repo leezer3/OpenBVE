@@ -240,7 +240,22 @@ namespace TrainManager.Trains
 
 			if (TrainManagerBase.currentHost.Platform != HostPlatform.MicrosoftWindows | IntPtr.Size != 4)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
+				if (TrainManagerBase.currentHost.Platform == HostPlatform.MicrosoftWindows && IntPtr.Size != 4)
+				{
+					//We can't load the plugin directly on x64 Windows, so use the proxy interface
+					Plugin = new ProxyPlugin(pluginFile, this);
+					if (Plugin.Load(vehicleSpecs(), mode))
+					{
+						return true;
+					}
+
+					Plugin = null;
+					TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " failed to load.");
+					return false;
+				}
+
+				//WINE doesn't seem to like the WCF proxy :(
+				TrainManagerBase.currentHost.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on Microsoft Windows or compatible.");
 				return false;
 			}
 

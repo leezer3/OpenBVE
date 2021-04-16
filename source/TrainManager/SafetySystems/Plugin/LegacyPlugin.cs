@@ -312,7 +312,7 @@ namespace TrainManager.SafetySystems
 		{
 		}
 
-		protected override void Elapse(ElapseData data)
+		protected override void Elapse(ref ElapseData data)
 		{
 			try
 			{

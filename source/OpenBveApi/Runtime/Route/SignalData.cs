@@ -1,12 +1,17 @@
-﻿namespace OpenBveApi.Runtime
+﻿using System.Runtime.Serialization;
+
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents information about a signal or section.</summary>
+	[DataContract]
 	public class SignalData
 	{
 		/// <summary>The aspect of the signal or section.</summary>
+		[DataMember]
 		private readonly int MyAspect;
 
 		/// <summary>The underlying section. Possible values are 0 for the current section, 1 for the upcoming section, or higher values for sections further ahead.</summary>
+		[DataMember]
 		private readonly double MyDistance;
 
 		/// <summary>Gets the aspect of the signal or section.</summary>
