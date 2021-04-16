@@ -1,0 +1,6 @@
+<!-- We need to ship both the x32 and x64 copies of the PIE HID library -->
+<Project>
+ <PropertyGroup>
+   <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+ </PropertyGroup>
+</Project>
