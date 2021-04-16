@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using OpenBveApi.Hosts;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interop;
 
@@ -73,7 +74,7 @@ namespace TrainManager.SafetySystems
                     var handle = Process.GetCurrentProcess().MainWindowHandle;
                     hostProcess.StartInfo.FileName = @"Win32PluginProxy.exe";
                     hostProcess.Start();
-                    Shared.eventHostReady.WaitOne();
+                    HostInterface.eventHostReady.WaitOne();
                     pipeProxy = getPipeProxy();
                     SetForegroundWindow(handle.ToInt32());
                 }
@@ -87,7 +88,7 @@ namespace TrainManager.SafetySystems
                 win32Dll_instances--;
                 if (win32Dll_instances == 0)
                 {
-                    Shared.eventHostShouldStop.Set();
+                    HostInterface.eventHostShouldStop.Set();
                     hostProcess.WaitForExit();
                 }
             }
@@ -99,7 +100,7 @@ namespace TrainManager.SafetySystems
         public IAtsPluginProxy getPipeProxy()
         {
 			callback = new Win32CallbackHandler();
-			DuplexChannelFactory<IAtsPluginProxy> pipeFactory = new DuplexChannelFactory<IAtsPluginProxy>(new InstanceContext(callback), new NetNamedPipeBinding(), new EndpointAddress(Shared.endpointAddress));
+			DuplexChannelFactory<IAtsPluginProxy> pipeFactory = new DuplexChannelFactory<IAtsPluginProxy>(new InstanceContext(callback), new NetNamedPipeBinding(), new EndpointAddress(HostInterface.endpointAddress));
 
             return pipeFactory.CreateChannel();
         }

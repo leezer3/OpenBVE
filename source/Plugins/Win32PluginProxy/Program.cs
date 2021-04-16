@@ -28,6 +28,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.Threading;
+using OpenBveApi.Hosts;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interop;
 
@@ -490,10 +491,10 @@ namespace WCFServer
 
 				host.AddServiceEndpoint(typeof(IAtsPluginProxy), new NetNamedPipeBinding(), @"pipename");
 				host.Open();
-				Shared.eventHostReady.Set();
+				HostInterface.eventHostReady.Set();
 				
 				Console.WriteLine(@"ATS Plugin Proxy Service is available.");
-				Shared.eventHostShouldStop.WaitOne();
+				HostInterface.eventHostShouldStop.WaitOne();
 				host.Close();
 			}
 		}
