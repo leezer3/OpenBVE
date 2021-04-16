@@ -623,10 +623,10 @@ namespace OpenBveApi.Hosts {
 		 */
 
 		/// <summary>The event raised when the 32-bit host application signals it is ready to accept connections from clients</summary>
-		public static readonly EventWaitHandle eventHostReady = new EventWaitHandle(false, EventResetMode.AutoReset, @"eventHostReady");
+		public static readonly EventWaitHandle Win32PluginHostReady = new EventWaitHandle(false, EventResetMode.AutoReset, @"eventHostReady");
 
 		/// <summary>The event raised when the proxy client quits and the host should stop</summary>
-		public static readonly EventWaitHandle eventHostShouldStop = new EventWaitHandle(false, EventResetMode.AutoReset, @"eventHostShouldStop");
+		public static readonly EventWaitHandle Win32PluginHostStopped = new EventWaitHandle(false, EventResetMode.AutoReset, @"eventHostShouldStop");
 
 		/// <summary>The base pipe address</summary>
 		public const string pipeBaseAddress = @"net.pipe://localhost";
@@ -638,6 +638,6 @@ namespace OpenBveApi.Hosts {
 		public static Uri baseAddress { get { return new Uri(pipeBaseAddress); } }
 
 		/// <summary>Complete address of the named pipe endpoint.</summary>
-		public static Uri endpointAddress { get { return new Uri(pipeBaseAddress + '/' + pipeName); } }
+		public static Uri Win32PluginHostEndpointAddress { get { return new Uri(pipeBaseAddress + '/' + pipeName); } }
 	}
 }

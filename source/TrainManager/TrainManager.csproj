@@ -96,7 +96,6 @@
     <Compile Include="SafetySystems\Plugin\NetPlugin.cs" />
     <Compile Include="SafetySystems\Plugin\Plugin.cs" />
     <Compile Include="SafetySystems\Plugin\Plugin.Functions.cs" />
-    <Compile Include="SafetySystems\Plugin\PluginProxy.cs" />
     <Compile Include="SafetySystems\Plugin\ProxyPlugin.cs" />
     <Compile Include="SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="SafetySystems\TrainSafetySystems.cs" />

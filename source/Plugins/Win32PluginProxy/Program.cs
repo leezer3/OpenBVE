@@ -491,10 +491,10 @@ namespace WCFServer
 
 				host.AddServiceEndpoint(typeof(IAtsPluginProxy), new NetNamedPipeBinding(), @"pipename");
 				host.Open();
-				HostInterface.eventHostReady.Set();
+				HostInterface.Win32PluginHostReady.Set();
 				
 				Console.WriteLine(@"ATS Plugin Proxy Service is available.");
-				HostInterface.eventHostShouldStop.WaitOne();
+				HostInterface.Win32PluginHostStopped.WaitOne();
 				host.Close();
 			}
 		}
