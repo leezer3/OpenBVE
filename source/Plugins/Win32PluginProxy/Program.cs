@@ -24,6 +24,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using OpenBveApi.Runtime;
@@ -33,6 +34,10 @@ namespace WCFServer
 {
 	public class AtsPluginProxyService : IAtsPluginProxy
 	{
+		private readonly int[] Panel = new int[256];
+		private readonly int[] Sound = new int[256];
+		private GCHandle PanelHandle = new GCHandle();
+		private GCHandle SoundHandle = new GCHandle();
 		/// <summary>The on-disk path to the proxied plugin</summary>
 		private string PluginFile;
 
@@ -118,6 +123,7 @@ namespace WCFServer
 
 			try
 			{
+				Console.WriteLine(@"Initializing in mode: " + mode);
 				Win32Initialize((int) mode);
 			}
 			catch (Exception ex)
@@ -127,6 +133,14 @@ namespace WCFServer
 			}
 
 			Console.WriteLine(@"Plugin loaded successfully.");
+			if (PanelHandle.IsAllocated) {
+				PanelHandle.Free();
+			}
+			if (SoundHandle.IsAllocated) {
+				SoundHandle.Free();
+			}
+			PanelHandle = GCHandle.Alloc(Panel, GCHandleType.Pinned);
+			SoundHandle = GCHandle.Alloc(Sound, GCHandleType.Pinned);
 			return true;
 		}
 
@@ -149,6 +163,7 @@ namespace WCFServer
 		{
 			try
 			{
+				Console.WriteLine(@"Starting jump with mode: " + mode);
 				Win32Initialize((int) mode);
 			}
 			catch (Exception ex)
@@ -187,7 +202,7 @@ namespace WCFServer
 					win32Handles.Power = ProxyData.Data.Handles.PowerNotch;
 					win32Handles.Reverser = ProxyData.Data.Handles.Reverser;
 					win32Handles.ConstantSpeed = ProxyData.Data.Handles.ConstSpeed ? 1 : 2;
-					Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref ProxyData.Panel[0], ref ProxyData.Sound[0]);
+					Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref Panel[0], ref Sound[0]);
 					ProxyData.Data.Handles.Reverser = win32Handles.Reverser;
 					ProxyData.Data.Handles.PowerNotch = win32Handles.Power;
 					ProxyData.Data.Handles.BrakeNotch = win32Handles.Brake;
@@ -205,8 +220,9 @@ namespace WCFServer
 						default:
 							Console.WriteLine(@"DEBUG: Invalid ConstantSpeed value recieved from plugin");
 							break;
-						
 					}
+					ProxyData.Panel = Panel;
+					ProxyData.Sound = Sound;
 				}
 			}
 			catch (Exception ex)

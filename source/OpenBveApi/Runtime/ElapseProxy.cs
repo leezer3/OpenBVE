@@ -16,11 +16,11 @@ namespace OpenBveApi.Runtime
 		[DataMember]
 		public int[] Sound;
 		/// <summary>Creates a new ElapseProxy from an ElapseData</summary>
-		public ElapseProxy(ElapseData data)
+		public ElapseProxy(ElapseData data, int[] panel, int[] sound)
 		{
 			this.Data = data;
-			Panel = new int[256];
-			Sound = new int[256];
+			Panel = panel;
+			Sound = sound;
 		}
 	}
 }
