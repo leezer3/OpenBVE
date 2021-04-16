@@ -31,7 +31,7 @@ namespace OpenBveApi.Interop
 	public interface IAtsPluginProxy
 	{
 		[OperationContract]
-		void SetPluginFile(string fileName);
+		void SetPluginFile(string fileName, int simulationProcessID);
 
 		[OperationContract]
 		bool Load(VehicleSpecs specs, InitializationModes mode);

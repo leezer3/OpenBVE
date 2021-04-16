@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using System.Threading;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interop;
 
@@ -40,10 +41,29 @@ namespace WCFServer
 		private GCHandle SoundHandle = new GCHandle();
 		/// <summary>The on-disk path to the proxied plugin</summary>
 		private string PluginFile;
+		private Process currentSimulation;
+		private Thread WatchDogThread;
+		private void WatchDog()
+		{
+			/*
+			 * Watchdog thread to cleanup the plugin host if the game terminates unexpectedly
+			 */
+			while (true)
+			{
+				if (currentSimulation.HasExited)
+				{
+					Environment.Exit(0);
+				}
+				Thread.Sleep(1000);
+			}
+		}
 
-		public void SetPluginFile(string fileName)
+		public void SetPluginFile(string fileName, int simulationProcessID)
 		{
 			Console.WriteLine(@"Setting plugin file " + fileName);
+			currentSimulation = Process.GetProcessById(simulationProcessID);
+			WatchDogThread = new Thread(WatchDog);
+			WatchDogThread.Start();
 			this.PluginFile = fileName;
 		}
 

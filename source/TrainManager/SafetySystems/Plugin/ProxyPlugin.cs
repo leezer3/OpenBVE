@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using OpenBveApi.Runtime;
 using SoundManager;
 using TrainManager.Trains;
@@ -27,7 +28,7 @@ namespace TrainManager.SafetySystems {
 		internal ProxyPlugin(string pluginFile, TrainBase train) {
 			base.PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			//Load the plugin via the proxy callback
-			pluginProxy.setPluginFile(pluginFile);
+			pluginProxy.setPluginFile(pluginFile, Process.GetCurrentProcess().Id);
 			base.PluginValid = true;
 			base.PluginMessage = null;
 			base.Train = train;

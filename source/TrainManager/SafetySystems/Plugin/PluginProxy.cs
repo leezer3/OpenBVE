@@ -10,7 +10,7 @@ namespace TrainManager.SafetySystems
     [Guid("1388460c-fc46-46f0-9a3a-98624f6304bd")]
     public interface IAtsPlugin
     {
-	    void setPluginFile(string fileName);
+	    void setPluginFile(string fileName, int simulationProcessID);
 
 	    bool load(VehicleSpecs specs, InitializationModes mode);
 
@@ -104,9 +104,9 @@ namespace TrainManager.SafetySystems
             return pipeFactory.CreateChannel();
         }
 
-	    public void setPluginFile(string fileName)
+	    public void setPluginFile(string fileName, int simulationProcessID)
 	    {
-		    pipeProxy.SetPluginFile(fileName);
+		    pipeProxy.SetPluginFile(fileName, simulationProcessID);
 	    }
 
 	    public bool load(VehicleSpecs specs, InitializationModes mode)
