@@ -84,7 +84,7 @@ namespace WCFServer
 				throw;
 			}
 
-			if (version != 131072)
+			if (version == 0 && System.IO.Path.GetFileName(PluginFile).ToLowerInvariant() != "ats2.dll" || version != 131072)
 			{
 				Callback.ReportError("Win32 plugin " + PluginFile + " is of an unsupported version.");
 				try
