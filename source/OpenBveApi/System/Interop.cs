@@ -82,7 +82,8 @@ namespace OpenBveApi.Interop
 	{
 		/// <summary>Raised when the underlying Win32 plugin reports an error or crashes</summary>
 		/// <param name="Error">The error information</param>
+		/// <param name="Critical">Whether this is critical and the plugin may not continue</param>
 		[OperationContract(IsOneWay = true)]
-		void ReportError(string Error);
+		void ReportError(string Error, bool Critical = false);
 	}
 }

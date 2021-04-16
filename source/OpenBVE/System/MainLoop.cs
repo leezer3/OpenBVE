@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using LibRender2;
 using LibRender2.Screens;
+using OpenBve.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenTK;
@@ -243,23 +244,23 @@ namespace OpenBve
 		{
 			if (Interface.CurrentOptions.UseJoysticks)
 			{
-				for (int k = 0; k < JoystickManager.AttachedJoysticks.Count; k++)
+				for (int k = 0; k < Program.Joysticks.AttachedJoysticks.Count; k++)
 				{
-					Guid guid = JoystickManager.AttachedJoysticks.ElementAt(k).Key;
-					JoystickManager.AttachedJoysticks[guid].Poll();
+					Guid guid = Program.Joysticks.AttachedJoysticks.ElementAt(k).Key;
+					Program.Joysticks.AttachedJoysticks[guid].Poll();
 				}
 			}
 			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				if (Interface.CurrentOptions.UseJoysticks)
 				{
-					for (int k = 0; k < JoystickManager.AttachedJoysticks.Count; k++)
+					for (int k = 0; k < Program.Joysticks.AttachedJoysticks.Count; k++)
 					{
-						Guid guid = JoystickManager.AttachedJoysticks.ElementAt(k).Key;
-						int axes = JoystickManager.AttachedJoysticks[guid].AxisCount();
+						Guid guid = Program.Joysticks.AttachedJoysticks.ElementAt(k).Key;
+						int axes = Program.Joysticks.AttachedJoysticks[guid].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{
-							double aa = JoystickManager.AttachedJoysticks[guid].GetAxis(i);
+							double aa = Program.Joysticks.AttachedJoysticks[guid].GetAxis(i);
 							if (aa < -0.75)
 							{
 								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Axis, i, -1);
@@ -271,19 +272,19 @@ namespace OpenBve
 								return;
 							}
 						}
-						int buttons = JoystickManager.AttachedJoysticks[guid].ButtonCount();
+						int buttons = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
 						for (int i = 0; i < buttons; i++)
 						{
-							if (JoystickManager.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
+							if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
 							{
 								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Button, i, 1);
 								return;
 							}
 						}
-						int hats = JoystickManager.AttachedJoysticks[guid].HatCount();
+						int hats = Program.Joysticks.AttachedJoysticks[guid].HatCount();
 						for (int i = 0; i < hats; i++)
 						{
-							JoystickHatState hat = JoystickManager.AttachedJoysticks[guid].GetHat(i);
+							JoystickHatState hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
 							if (hat.Position != HatPosition.Centered)
 							{
 								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Hat, i, (int)hat.Position);
@@ -319,19 +320,19 @@ namespace OpenBve
 				switch (Interface.CurrentControls[i].Method)
 				{
 					case ControlMethod.Joystick:
-						if (JoystickManager.AttachedJoysticks.Count == 0 || !JoystickManager.AttachedJoysticks.ContainsKey(Interface.CurrentControls[i].Device) || !JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].IsConnected())
+						if (Program.Joysticks.AttachedJoysticks.Count == 0 || !Program.Joysticks.AttachedJoysticks[Interface.CurrentControls[i].Device].IsConnected())
 						{
 							//Not currently connected
 							continue;
 						}
 						break;
 					case ControlMethod.RailDriver:
-						if (JoystickManager.RailDriverIndex == -1)
+						if (!Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 						{
 							//Not currently connected
 							continue;
 						}
-						currentDevice = JoystickManager.AbstractRailDriver.Guid;
+						currentDevice = AbstractRailDriver.Guid;
 						break;
 					default:
 						//Not a joystick / RD
@@ -342,7 +343,7 @@ namespace OpenBve
 				switch (Interface.CurrentControls[i].Component)
 				{
 					case JoystickComponent.Axis:
-						var axisState = JoystickManager.GetAxis(currentDevice, Interface.CurrentControls[i].Element);
+						var axisState = Program.Joysticks.GetAxis(currentDevice, Interface.CurrentControls[i].Element);
 						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 						{
 							Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);
@@ -423,7 +424,7 @@ namespace OpenBve
 						break;
 					case JoystickComponent.Button:
 						//Load the current state
-						var buttonState = JoystickManager.GetButton(currentDevice, Interface.CurrentControls[i].Element);
+						var buttonState = Program.Joysticks.GetButton(currentDevice, Interface.CurrentControls[i].Element);
 						//Test whether the state is the same as the last frame
 						if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
 						{
@@ -445,7 +446,7 @@ namespace OpenBve
 						break;
 					case JoystickComponent.Hat:
 						//Load the current state
-						var hatState = JoystickManager.GetHat(currentDevice, Interface.CurrentControls[i].Element).Position;
+						var hatState = Program.Joysticks.GetHat(currentDevice, Interface.CurrentControls[i].Element).Position;
 						//Test if the state is the same as last frame
 						if (hatState.ToString() != Interface.CurrentControls[i].LastState)
 						{

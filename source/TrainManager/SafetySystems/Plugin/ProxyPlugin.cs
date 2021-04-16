@@ -10,7 +10,7 @@ using TrainManager.Trains;
 
 namespace TrainManager.SafetySystems {
 	/// <summary>Represents a legacy Win32 plugin.</summary>
-	internal class ProxyPlugin : Plugin {
+	internal class ProxyPlugin : Plugin, IAtsPluginCallback {
 		
 		private static class SoundInstructions {
 			internal const int Stop = -10000;
@@ -20,14 +20,12 @@ namespace TrainManager.SafetySystems {
 		}
 		
 		// --- members ---
-		private readonly string PluginFile;
 		private int[] Sound;
 		private readonly int[] LastSound;
 		private GCHandle PanelHandle;
 		private GCHandle SoundHandle;
 
 		private readonly IAtsPluginProxy pipeProxy;
-		private readonly Process hostProcess;
 		private string lastError;
 		private bool externalCrashed;
 
@@ -37,10 +35,10 @@ namespace TrainManager.SafetySystems {
 			externalCrashed = false;
 			base.PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			//Load the plugin via the proxy callback
-			hostProcess = new Process();
 			var handle = Process.GetCurrentProcess().MainWindowHandle;
 			try
 			{
+				var hostProcess = new Process();
 				hostProcess.StartInfo.FileName = @"Win32PluginProxy.exe";
 				hostProcess.Start();
 				HostInterface.Win32PluginHostReady.WaitOne();
@@ -65,7 +63,6 @@ namespace TrainManager.SafetySystems {
 			base.LastAspects = new int[] { };
 			base.LastSection = -1;
 			base.LastException = null;
-			this.PluginFile = pluginFile;		
 			this.Sound = new int[256];
 			this.LastSound = new int[256];
 			this.PanelHandle = new GCHandle();
@@ -245,6 +242,14 @@ namespace TrainManager.SafetySystems {
 		{
 			//PerformAI is not relevant to legacy plugins, but we must implement it as an API member
 		}
-		
+
+		public void ReportError(string Error, bool Critical = false)
+		{
+			lastError = Error;
+			if (Critical)
+			{
+				externalCrashed = true;
+			}
+		}
 	}
 }

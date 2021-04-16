@@ -6,6 +6,7 @@ using System;
 using System.Drawing;
 using LibRender2.Screens;
 using LibRender2.Texts;
+using OpenBve.Input;
 using OpenBveApi;
 using OpenBveApi.Input;
 using OpenTK;
@@ -500,7 +501,7 @@ namespace OpenBve
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				if (JoystickManager.AttachedJoysticks[device] is JoystickManager.AbstractRailDriver)
+				if (Program.Joysticks.AttachedJoysticks[device] is AbstractRailDriver)
 				{
 					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.RailDriver;
 				}

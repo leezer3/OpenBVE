@@ -58,10 +58,16 @@ namespace WCFServer
 				}
 				Thread.Sleep(1000);
 			}
+			// ReSharper disable once FunctionNeverReturns
 		}
 
 		public void SetPluginFile(string fileName, int simulationProcessID)
 		{
+			if (!string.IsNullOrEmpty(PluginFile))
+			{
+				Callback.ReportError(PluginFile + " appears to already be loaded.", true);
+				return;
+			}
 			Console.WriteLine(@"Setting plugin file " + fileName);
 			currentSimulation = Process.GetProcessById(simulationProcessID);
 			WatchDogThread = new Thread(WatchDog);
@@ -108,7 +114,7 @@ namespace WCFServer
 			catch (Exception ex)
 			{
 				Callback.ReportError("Error loading Win32 plugin: " + ex);
-				throw;
+				return false;
 			}
 
 			if (version == 0 && System.IO.Path.GetFileName(PluginFile).ToLowerInvariant() != "ats2.dll" || version != 131072)
@@ -268,7 +274,6 @@ namespace WCFServer
 
 		public void SetReverser(int reverser)
 		{
-			Callback.ReportError("test");
 			try
 			{
 				Win32SetReverser(reverser);
@@ -500,9 +505,17 @@ namespace WCFServer
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false),SC_CLOSE, MF_BYCOMMAND);
 			using (ServiceHost host = new ServiceHost(typeof(AtsPluginProxyService), new Uri(@"net.pipe://localhost")))
 			{
-
-				host.AddServiceEndpoint(typeof(IAtsPluginProxy), new NetNamedPipeBinding(), @"pipename");
-				host.Open();
+				try
+				{
+					host.AddServiceEndpoint(typeof(IAtsPluginProxy), new NetNamedPipeBinding(), @"pipename");
+					host.Open();
+				}
+				catch
+				{
+					//Most likely another running copy, but this isn't going to work, so kill
+					Environment.Exit(0);
+				}
+				
 				HostInterface.Win32PluginHostReady.Set();
 				
 				Console.WriteLine(@"ATS Plugin Proxy Service is available.");
