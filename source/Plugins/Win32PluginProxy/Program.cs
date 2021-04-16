@@ -44,6 +44,7 @@ namespace WCFServer
 		private string PluginFile;
 		private Process currentSimulation;
 		private Thread WatchDogThread;
+		private readonly object UpdateLock = new object();
 		private void WatchDog()
 		{
 			/*
@@ -195,62 +196,73 @@ namespace WCFServer
 
 		public ElapseProxy Elapse(ElapseProxy ProxyData)
 		{
-			try
+			lock (UpdateLock)
 			{
-				if (ProxyData == null)
-				{
-					Console.WriteLine(@"DEBUG: The recieved ProxyData was null");
-				}
-				else if (ProxyData.Data.TotalTime == null)
-				{
-					Console.WriteLine(@"DEBUG: The total time in the recieved ProxyData was invalid");
-				}
-				else
-				{
-					double time = ProxyData.Data.TotalTime.Milliseconds;
-					Win32VehicleState win32State;
-					win32State.Location = ProxyData.Data.Vehicle.Location;
-					win32State.Speed = (float) ProxyData.Data.Vehicle.Speed.KilometersPerHour;
-					win32State.Time = (int) Math.Floor(time - 2073600000.0 * Math.Floor(time / 2073600000.0));
-					win32State.BcPressure = (float) ProxyData.Data.Vehicle.BcPressure;
-					win32State.MrPressure = (float) ProxyData.Data.Vehicle.MrPressure;
-					win32State.ErPressure = (float) ProxyData.Data.Vehicle.ErPressure;
-					win32State.BpPressure = (float) ProxyData.Data.Vehicle.BpPressure;
-					win32State.SapPressure = (float) ProxyData.Data.Vehicle.SapPressure;
-					win32State.Current = 0.0f;
-					Win32Handles win32Handles;
-					win32Handles.Brake = ProxyData.Data.Handles.BrakeNotch;
-					win32Handles.Power = ProxyData.Data.Handles.PowerNotch;
-					win32Handles.Reverser = ProxyData.Data.Handles.Reverser;
-					win32Handles.ConstantSpeed = ProxyData.Data.Handles.ConstSpeed ? 1 : 2;
-					Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref Panel[0], ref Sound[0]);
-					ProxyData.Data.Handles.Reverser = win32Handles.Reverser;
-					ProxyData.Data.Handles.PowerNotch = win32Handles.Power;
-					ProxyData.Data.Handles.BrakeNotch = win32Handles.Brake;
-					switch (win32Handles.ConstantSpeed)
-					{
-						case 0:
-							//Not fitted
-							break;
-						case 1:
-							ProxyData.Data.Handles.ConstSpeed = true;
-							break;
-						case 2:
-							ProxyData.Data.Handles.ConstSpeed = false;
-							break;
-						default:
-							Console.WriteLine(@"DEBUG: Invalid ConstantSpeed value recieved from plugin");
-							break;
-					}
-					ProxyData.Panel = Panel;
-					ProxyData.Sound = Sound;
-				}
-			}
-			catch (Exception ex)
-			{
-				Callback.ReportError(ex.ToString());
-			}
 
+
+				try
+				{
+					if (ProxyData == null)
+					{
+						Console.WriteLine(@"DEBUG: The recieved ProxyData was null");
+					}
+					else if (ProxyData.Data.TotalTime == null)
+					{
+						Console.WriteLine(@"DEBUG: The total time in the recieved ProxyData was invalid");
+					}
+					else
+					{
+						double time = ProxyData.Data.TotalTime.Milliseconds;
+						Win32VehicleState win32State;
+						win32State.Location = ProxyData.Data.Vehicle.Location;
+						win32State.Speed = (float) ProxyData.Data.Vehicle.Speed.KilometersPerHour;
+						win32State.Time = (int) Math.Floor(time - 2073600000.0 * Math.Floor(time / 2073600000.0));
+						win32State.BcPressure = (float) ProxyData.Data.Vehicle.BcPressure;
+						win32State.MrPressure = (float) ProxyData.Data.Vehicle.MrPressure;
+						win32State.ErPressure = (float) ProxyData.Data.Vehicle.ErPressure;
+						win32State.BpPressure = (float) ProxyData.Data.Vehicle.BpPressure;
+						win32State.SapPressure = (float) ProxyData.Data.Vehicle.SapPressure;
+						win32State.Current = 0.0f;
+						Win32Handles win32Handles;
+						win32Handles.Brake = ProxyData.Data.Handles.BrakeNotch;
+						win32Handles.Power = ProxyData.Data.Handles.PowerNotch;
+						win32Handles.Reverser = ProxyData.Data.Handles.Reverser;
+						win32Handles.ConstantSpeed = ProxyData.Data.Handles.ConstSpeed ? 1 : 2;
+						Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref Panel[0], ref Sound[0]);
+						ProxyData.Data.Handles.Reverser = win32Handles.Reverser;
+						ProxyData.Data.Handles.PowerNotch = win32Handles.Power;
+						ProxyData.Data.Handles.BrakeNotch = win32Handles.Brake;
+						switch (win32Handles.ConstantSpeed)
+						{
+							case 0:
+								//Not fitted
+								break;
+							case 1:
+								ProxyData.Data.Handles.ConstSpeed = true;
+								break;
+							case 2:
+								ProxyData.Data.Handles.ConstSpeed = false;
+								break;
+							default:
+								Console.WriteLine(@"DEBUG: Invalid ConstantSpeed value recieved from plugin");
+								break;
+						}
+						Array.Copy(Panel, ProxyData.Panel, 256);
+						Array.Copy(Sound, ProxyData.Sound, 256);
+						for (int i = 0; i < 256; i++)
+						{
+							if (Sound[i] == 1)
+							{
+								Sound[i] = 2;
+							}
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Callback.ReportError(ex.ToString());
+				}
+			}
 			return ProxyData;
 		}
 
