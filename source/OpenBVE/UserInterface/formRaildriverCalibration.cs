@@ -16,7 +16,7 @@ namespace OpenBve.UserInterface
 			pictureBox1.Image = main;
 			buttonCalibrationPrevious.Enabled = false;
 			labelCalibrationText.Text = Translations.GetInterfaceString("raildriver_calibration_start");
-			if (JoystickManager.devices.Length == 0)
+			if (JoystickManager.devices32.Length == 0 && JoystickManager.devices64.Length == 0)
 			{
 				MessageBox.Show(Translations.GetInterfaceString("raildriver_notdetected"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Load += (s, e) => Close();
@@ -28,9 +28,9 @@ namespace OpenBve.UserInterface
 
 		private void formRaildriverCalibration_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.Raildriver.Guid))
+			if (JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.AbstractRailDriver.Guid))
 			{
-				var j = JoystickManager.AttachedJoysticks[JoystickManager.Raildriver.Guid] as JoystickManager.Raildriver;
+				var j = JoystickManager.AttachedJoysticks[JoystickManager.AbstractRailDriver.Guid] as JoystickManager.AbstractRailDriver;
 				if (j == null)
 				{
 					return;
@@ -78,11 +78,11 @@ namespace OpenBve.UserInterface
 
 		private void buttonCalibrationNext_Click(object sender, EventArgs e)
 		{
-			if (!JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.Raildriver.Guid))
+			if (!JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.AbstractRailDriver.Guid))
 			{
 				return;
 			}
-			var j = JoystickManager.AttachedJoysticks[JoystickManager.Raildriver.Guid] as JoystickManager.Raildriver;
+			var j = JoystickManager.AttachedJoysticks[JoystickManager.AbstractRailDriver.Guid] as JoystickManager.AbstractRailDriver;
 			if (j == null)
 			{
 				return;

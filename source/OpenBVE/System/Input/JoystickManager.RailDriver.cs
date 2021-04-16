@@ -6,30 +6,23 @@ using System.Xml;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenTK.Input;
-using PIEHid32Net;
 using ButtonState = OpenTK.Input.ButtonState;
 
 namespace OpenBve
 {
 	internal partial class JoystickManager
 	{
-		internal class Raildriver : Joystick
+		/// <summary>The abstract base RailDriver class</summary>
+		internal abstract class AbstractRailDriver : Joystick
 		{
 
 			internal static readonly Guid Guid = new Guid("4d7641ef-95ce-44a5-b405-b051fb6139b4"); //completely random value, just used as a unique identifier
 
-			internal Raildriver()
-			{
-				for (int i = 0; i < Calibration.Length; i++)
-				{
-					Calibration[i] = new AxisCalibration();
-				}
-				LoadCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
-			}
+
 
 			internal readonly AxisCalibration[] Calibration = new AxisCalibration[7];
 
-			private void LoadCalibration(string calibrationFile)
+			internal void LoadCalibration(string calibrationFile)
 			{
 				if (!File.Exists(calibrationFile))
 				{
@@ -201,7 +194,6 @@ namespace OpenBve
 
 			internal override void Poll()
 			{
-				devices[0].ReadData(ref currentState);
 			}
 
 			internal override bool IsConnected()
@@ -222,37 +214,9 @@ namespace OpenBve
 
 			internal byte[] wData;
 
-			internal void SetDisplay(int speed)
-			{
-				int d1 = (int)((double)speed / 100 % 10); //1 digit
-				int d2 = (int)((double)speed / 10 % 10); //10 digit
-				int d3 = (int)((double)speed % 10); //100 digit
-				for (int i = 2; i < 5; i++)
-				{
-					switch (i)
-					{
-						//100 digit display
-						case 2:
-							wData[i] = GetDigit(d3);
-							break;
-						//10 digit display
-						case 3:
-							wData[i] = GetDigit(d2); 
-							break;
-						//1 digit display
-						case 4:
-							wData[i] = GetDigit(d1);
-							break;
-					}
-				}
-				int result = 404;
-				while (result == 404) { result = devices[Handle].WriteData(wData); }
-				if (result != 0)
-				{
-					throw new Exception();
-				}
-			}
-			private static byte GetDigit(int num)
+			internal abstract void SetDisplay(int speed);
+
+			internal static byte GetDigit(int num)
 			{
 				num = Math.Abs(num);
 				if (num > 9 || num < 0)
@@ -292,34 +256,6 @@ namespace OpenBve
 				internal int Minimum = 0;
 				internal int Maximum = 255;
 			}
-		}
-		/// <summary>Callback function from the PI Engineering DLL, raised each time the device pushes a data packet</summary>
-		/// <param name="data">The callback data</param>
-		/// <param name="sourceDevice">The source device</param>
-		/// <param name="error">The last error generated (if any)</param>
-		public void HandlePIEHidData(Byte[] data, PIEDevice sourceDevice, int error)
-		{
-			for (int i = 0; i < devices.Length; i++)
-			{
-				if (devices[i] == sourceDevice)
-				{
-					//Source device found, so map it
-					if (AttachedJoysticks.ContainsKey(Raildriver.Guid))
-					{
-						for (int r = 0; r < sourceDevice.ReadLength; r++)
-						{
-							AttachedJoysticks[Raildriver.Guid].currentState[r] = data[r];
-						}
-					}
-				}
-			}
-		}
-
-		/// <summary>Callback function from the PI Engineering DLL, raised if an error is encountered</summary>
-		/// <param name="sourceDevices">The source device</param>
-		/// <param name="error">The error</param>
-		public void HandlePIEHidError(PIEDevice sourceDevices, int error)
-		{
 		}
 	}
 }

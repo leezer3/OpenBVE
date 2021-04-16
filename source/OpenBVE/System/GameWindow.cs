@@ -180,9 +180,9 @@ namespace OpenBve
 			MainLoop.ProcessKeyboard();
 			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
-			if (JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.Raildriver.Guid))
+			if (JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.AbstractRailDriver.Guid))
 			{
-				var railDriver = JoystickManager.AttachedJoysticks[JoystickManager.Raildriver.Guid] as JoystickManager.Raildriver;
+				var railDriver = JoystickManager.AttachedJoysticks[JoystickManager.AbstractRailDriver.Guid] as JoystickManager.AbstractRailDriver;
 				if (railDriver != null)
 				{
 					if (Interface.CurrentOptions.RailDriverMPH)

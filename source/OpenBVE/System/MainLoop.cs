@@ -331,7 +331,7 @@ namespace OpenBve
 							//Not currently connected
 							continue;
 						}
-						currentDevice = JoystickManager.Raildriver.Guid;
+						currentDevice = JoystickManager.AbstractRailDriver.Guid;
 						break;
 					default:
 						//Not a joystick / RD

@@ -96,6 +96,10 @@
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
     </Reference>
+    <Reference Include="PIEHid64Net, Version=2.2.5.23674, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\PIEHid64Net.dll</HintPath>
+    </Reference>
     <Reference Include="SharpCompress, Version=0.25.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpCompress.0.25.1\lib\net46\SharpCompress.dll</HintPath>
     </Reference>
@@ -194,6 +198,7 @@
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Input\InputDevicePlugin.cs" />
+    
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
@@ -287,6 +292,12 @@
       <DependentUpon>JoystickManager.cs</DependentUpon>
     </Compile>
     <Compile Include="System\Input\JoystickManager.StandardJoystick.cs">
+      <DependentUpon>JoystickManager.cs</DependentUpon>
+    </Compile>
+	<Compile Include="System\Input\JoystickManager.RailDriver32.cs">
+      <DependentUpon>JoystickManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="System\Input\JoystickManager.RailDriver64.cs">
       <DependentUpon>JoystickManager.cs</DependentUpon>
     </Compile>
     <Compile Include="System\Program.cs" />

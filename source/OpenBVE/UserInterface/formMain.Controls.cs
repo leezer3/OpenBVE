@@ -617,10 +617,15 @@ namespace OpenBve {
 				Guid guid = JoystickManager.AttachedJoysticks.ElementAt(i).Key;
 				JoystickManager.AttachedJoysticks[guid].Poll();
 				float w, h;
-				if (JoystickImage != null) {
-					e.Graphics.DrawImage(JoystickImage, x, y);
-					w = JoystickImage.Width;
-					h = JoystickImage.Height;
+				Image image = JoystickImage;
+				if (JoystickManager.AttachedJoysticks[guid] is JoystickManager.AbstractRailDriver && RailDriverImage != null)
+				{
+					image = RailDriverImage;
+				}
+				if (image != null) {
+					e.Graphics.DrawImage(image, x, y);
+					w = image.Width;
+					h = image.Height;
 					if (h < 64.0f) h = 64.0f;
 				} else {
 					w = 64.0f; h = 64.0f;
