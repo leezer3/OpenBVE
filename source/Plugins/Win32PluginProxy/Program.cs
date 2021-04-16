@@ -254,11 +254,11 @@ namespace WCFServer
 			}
 		}
 
-		public void KeyDown(int key)
+		public void KeyDown(VirtualKeys key)
 		{
 			try
 			{
-				Win32KeyDown(key);
+				Win32KeyDown((int)key);
 			}
 			catch (Exception ex)
 			{
@@ -266,11 +266,11 @@ namespace WCFServer
 			}
 		}
 
-		public void KeyUp(int key)
+		public void KeyUp(VirtualKeys key)
 		{
 			try
 			{
-				Win32KeyUp(key);
+				Win32KeyUp((int)key);
 			}
 			catch (Exception ex)
 			{
@@ -278,11 +278,11 @@ namespace WCFServer
 			}
 		}
 
-		public void HornBlow(int type)
+		public void HornBlow(HornTypes type)
 		{
 			try
 			{
-				Win32HornBlow(type);
+				Win32HornBlow((int)type);
 			}
 			catch (Exception ex)
 			{
@@ -290,9 +290,9 @@ namespace WCFServer
 			}
 		}
 
-		public void DoorChange(int oldState, int newState)
+		public void DoorChange(DoorStates oldState, DoorStates newState)
 		{
-			if (oldState == 0 & newState != 0)
+			if (oldState == DoorStates.None & newState != DoorStates.None)
 			{
 				try
 				{
@@ -303,7 +303,7 @@ namespace WCFServer
 					Callback.ReportError(ex.ToString());
 				}
 			}
-			else if (oldState != 0 & newState == 0)
+			else if (oldState != DoorStates.None & newState == DoorStates.None)
 			{
 				try
 				{

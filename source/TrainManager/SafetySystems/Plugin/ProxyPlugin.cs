@@ -158,16 +158,16 @@ namespace TrainManager.SafetySystems {
 			pluginProxy.setBrake(brakeNotch);
 		}
 		public override void KeyDown(VirtualKeys key) {
-			pluginProxy.keyDown((int)key);
+			pluginProxy.keyDown(key);
 		}
 		public override void KeyUp(VirtualKeys key) {
-			pluginProxy.keyUp((int)key);
+			pluginProxy.keyUp(key);
 		}
 		public override void HornBlow(HornTypes type) {
-			pluginProxy.hornBlow((int)type);
+			pluginProxy.hornBlow(type);
 		}
 		public override void DoorChange(DoorStates oldState, DoorStates newState) {
-			pluginProxy.doorChange((int)oldState, (int)newState);
+			pluginProxy.doorChange(oldState, newState);
 		}
 
 		protected override void SetSignal(SignalData[] signal) {

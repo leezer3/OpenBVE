@@ -26,13 +26,13 @@ namespace TrainManager.SafetySystems
 
 	    void setBrake(int brakeNotch);
 
-	    void keyDown(int key);
+	    void keyDown(VirtualKeys key);
 
-	    void keyUp(int key);
+	    void keyUp(VirtualKeys key);
 
-	    void hornBlow(int type);
+	    void hornBlow(HornTypes type);
 
-	    void doorChange(int oldState, int newState);
+	    void doorChange(DoorStates oldState, DoorStates newState);
 
 	    void setSignal(int aspect);
 
@@ -153,22 +153,22 @@ namespace TrainManager.SafetySystems
 		    pipeProxy.SetBrake(brakeNotch);
 	    }
 
-	    public void keyDown(int key)
+	    public void keyDown(VirtualKeys key)
 	    {
 		    pipeProxy.KeyDown(key);
 	    }
 
-	    public void keyUp(int key)
+	    public void keyUp(VirtualKeys key)
 	    {
 		    pipeProxy.KeyUp(key);
 	    }
 
-	    public void hornBlow(int type)
+	    public void hornBlow(HornTypes type)
 	    {
 		    pipeProxy.HornBlow(type);
 	    }
 
-	    public void doorChange(int oldState, int newState)
+	    public void doorChange(DoorStates oldState, DoorStates newState)
 	    {
 		    pipeProxy.DoorChange(oldState, newState);
 	    }
