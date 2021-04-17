@@ -9,31 +9,24 @@ using SoundManager;
 using TrainManager.Trains;
 
 namespace TrainManager.SafetySystems {
-	/// <summary>Represents a legacy Win32 plugin.</summary>
-	internal class ProxyPlugin : Plugin, IAtsPluginCallback {
-		
-		private static class SoundInstructions {
-			internal const int Stop = -10000;
-			internal const int PlayLooping = 0;
-			internal const int PlayOnce = 1;
-			internal const int Continue = 2;
-		}
-		
-		// --- members ---
+	/// <summary>Represents a proxied legacy Win32 plugin.</summary>
+	internal class ProxyPlugin : Plugin, IAtsPluginCallback 
+	{
+		/// <summary>The current sound instructions</summary>
 		private int[] Sound;
+		/// <summary>The sound instructions on the previous frame</summary>
 		private readonly int[] LastSound;
-		private GCHandle PanelHandle;
-		private GCHandle SoundHandle;
-
+		/// <summary>The plugin proxy interface</summary>
 		private readonly IAtsPluginProxy pipeProxy;
+		/// <summary>The last error returned by the plugin</summary>
 		private string lastError;
+		/// <summary>Whether the external plugin proxy has encountered a critical error / crashed</summary>
 		private bool externalCrashed;
 
-		// --- constructors ---
 		internal ProxyPlugin(string pluginFile, TrainBase train)
 		{
 			externalCrashed = false;
-			base.PluginTitle = System.IO.Path.GetFileName(pluginFile);
+			PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			//Load the plugin via the proxy callback
 			var handle = Process.GetCurrentProcess().MainWindowHandle;
 			try
@@ -51,28 +44,25 @@ namespace TrainManager.SafetySystems {
 				//That didn't work
 				externalCrashed = true;
 			}
-			base.PluginValid = true;
-			base.PluginMessage = null;
-			base.Train = train;
-			base.Panel = new int[256];
-			base.SupportsAI = false;
-			base.LastTime = 0.0;
-			base.LastReverser = -2;
-			base.LastPowerNotch = -1;
-			base.LastBrakeNotch = -1;
-			base.LastAspects = new int[] { };
-			base.LastSection = -1;
-			base.LastException = null;
-			this.Sound = new int[256];
-			this.LastSound = new int[256];
-			this.PanelHandle = new GCHandle();
-			this.SoundHandle = new GCHandle();
+			PluginValid = true;
+			PluginMessage = null;
+			Train = train;
+			Panel = new int[256];
+			SupportsAI = false;
+			LastTime = 0.0;
+			LastReverser = -2;
+			LastPowerNotch = -1;
+			LastBrakeNotch = -1;
+			LastAspects = new int[] { };
+			LastSection = -1;
+			LastException = null;
+			Sound = new int[256];
+			LastSound = new int[256];
 		}
 
 		[DllImport("User32.dll")]
 		public static extern Int32 SetForegroundWindow(int hWnd);
 		
-		// --- functions ---
 		public override bool Load(VehicleSpecs specs, InitializationModes mode)
 		{
 			if (externalCrashed)
@@ -89,16 +79,14 @@ namespace TrainManager.SafetySystems {
 			}
 			return false;
 		}
-		public override void Unload() {
-			if (PanelHandle.IsAllocated) {
-				PanelHandle.Free();
-			}
-			if (SoundHandle.IsAllocated) {
-				SoundHandle.Free();
-			}
+
+		public override void Unload()
+		{
 			pipeProxy.Unload();
 		}
-		public override void BeginJump(InitializationModes mode) {
+
+		public override void BeginJump(InitializationModes mode)
+		{
 			pipeProxy.BeginJump(mode);
 		}
 
@@ -125,36 +113,36 @@ namespace TrainManager.SafetySystems {
 			if (!string.IsNullOrEmpty(lastError))
 			{
 				
-				//TrainManagerBase.currentHost.A("ERROR: The proxy plugin " + PluginFile + " generated the following error:");
+				//TrainManagercurrentHost.A("ERROR: The proxy plugin " + PluginFile + " generated the following error:");
 				//Program.FileSystem.AppendToLogFile(pluginProxy.callback.lastError);
 				lastError = string.Empty;
 			}
 
 			try
 			{
-				ElapseProxy e = new ElapseProxy(data, this.Panel, this.Sound);
+				ElapseProxy e = new ElapseProxy(data, Panel, Sound);
 				ElapseProxy proxyData = pipeProxy.Elapse(e);
-				this.Panel = proxyData.Panel;
-				this.Sound = proxyData.Sound;
-				for (int i = 0; i < this.Sound.Length; i++)
+				Panel = proxyData.Panel;
+				Sound = proxyData.Sound;
+				for (int i = 0; i < Sound.Length; i++)
 				{
-					if (this.Sound[i] != this.LastSound[i])
+					if (Sound[i] != LastSound[i])
 					{
-						if (this.Sound[i] == SoundInstructions.Stop)
+						if (Sound[i] == SoundInstructions.Stop)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
 							{
 								Train.Cars[Train.DriverCar].Sounds.Plugin[i].Stop();
 							}
 						}
-						else if (this.Sound[i] > SoundInstructions.Stop & this.Sound[i] <= SoundInstructions.PlayLooping)
+						else if (Sound[i] > SoundInstructions.Stop & Sound[i] <= SoundInstructions.PlayLooping)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
 							{
-								SoundBuffer buffer = base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Buffer;
+								SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer;
 								if (buffer != null)
 								{
-									double volume = (double) (this.Sound[i] - SoundInstructions.Stop) / (double) (SoundInstructions.PlayLooping - SoundInstructions.Stop);
+									double volume = (double) (Sound[i] - SoundInstructions.Stop) / (SoundInstructions.PlayLooping - SoundInstructions.Stop);
 									if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].IsPlaying)
 									{
 										Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source.Volume = volume;
@@ -166,31 +154,31 @@ namespace TrainManager.SafetySystems {
 								}
 							}
 						}
-						else if (this.Sound[i] == SoundInstructions.PlayOnce)
+						else if (Sound[i] == SoundInstructions.PlayOnce)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
 							{
-								SoundBuffer buffer = base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Buffer;
+								SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer;
 								if (buffer != null)
 								{
 									Train.Cars[Train.DriverCar].Sounds.Plugin[i].Play(1.0, 1.0, Train.Cars[Train.DriverCar], false);
 								}
 							}
 
-							this.Sound[i] = SoundInstructions.Continue;
+							Sound[i] = SoundInstructions.Continue;
 						}
-						else if (this.Sound[i] != SoundInstructions.Continue)
+						else if (Sound[i] != SoundInstructions.Continue)
 						{
-							this.PluginValid = false;
+							PluginValid = false;
 						}
 
-						this.LastSound[i] = this.Sound[i];
+						LastSound[i] = Sound[i];
 					}
 					else
 					{
-						if ((this.Sound[i] < SoundInstructions.Stop | this.Sound[i] > SoundInstructions.PlayLooping) && this.Sound[i] != SoundInstructions.PlayOnce & this.Sound[i] != SoundInstructions.Continue)
+						if ((Sound[i] < SoundInstructions.Stop | Sound[i] > SoundInstructions.PlayLooping) && Sound[i] != SoundInstructions.PlayOnce & Sound[i] != SoundInstructions.Continue)
 						{
-							this.PluginValid = false;
+							PluginValid = false;
 						}
 					}
 				}
@@ -203,38 +191,51 @@ namespace TrainManager.SafetySystems {
 			}
 		}
 
-		protected override void SetReverser(int reverser) {
+		protected override void SetReverser(int reverser)
+		{
 			pipeProxy.SetReverser(reverser);
 		}
 
-		protected override void SetPower(int powerNotch) {
+		protected override void SetPower(int powerNotch)
+		{
 			pipeProxy.SetPowerNotch(powerNotch);
 		}
 
-		protected override void SetBrake(int brakeNotch) {
+		protected override void SetBrake(int brakeNotch)
+		{
 			pipeProxy.SetBrake(brakeNotch);
 		}
-		public override void KeyDown(VirtualKeys key) {
+
+		public override void KeyDown(VirtualKeys key)
+		{
 			pipeProxy.KeyDown(key);
 		}
-		public override void KeyUp(VirtualKeys key) {
+
+		public override void KeyUp(VirtualKeys key)
+		{
 			pipeProxy.KeyUp(key);
 		}
-		public override void HornBlow(HornTypes type) {
+
+		public override void HornBlow(HornTypes type)
+		{
 			pipeProxy.HornBlow(type);
 		}
-		public override void DoorChange(DoorStates oldState, DoorStates newState) {
+
+		public override void DoorChange(DoorStates oldState, DoorStates newState)
+		{
 			pipeProxy.DoorChange(oldState, newState);
 		}
 
-		protected override void SetSignal(SignalData[] signal) {
-			if (base.LastAspects.Length == 0 || signal[0].Aspect != base.LastAspects[0])
+		protected override void SetSignal(SignalData[] signal)
+		{
+			if (LastAspects.Length == 0 || signal[0].Aspect != LastAspects[0])
 			{
 				pipeProxy.SetSignal(signal[0].Aspect);
 			}
 		}
 
-		protected override void SetBeacon(BeaconData beacon) {
+		protected override void SetBeacon(BeaconData beacon)
+		{
 			pipeProxy.SetBeacon(beacon);
 		}
 
