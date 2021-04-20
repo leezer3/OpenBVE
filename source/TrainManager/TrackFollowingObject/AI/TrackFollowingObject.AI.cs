@@ -91,8 +91,9 @@ namespace TrainManager.Trains
 
 			if (TimeElapsed != 0.0)
 			{
+				double oldSpeed = Train.CurrentSpeed;
 				Train.CurrentSpeed = DeltaPosition / TimeElapsed;
-				Train.Specs.CurrentAverageAcceleration = Math.Sign(Train.CurrentSpeed) * Train.CurrentSpeed / TimeElapsed;
+				Train.Specs.CurrentAverageAcceleration = (int)NewDirection * (Train.CurrentSpeed - oldSpeed) / TimeElapsed;
 			}
 			else
 			{
