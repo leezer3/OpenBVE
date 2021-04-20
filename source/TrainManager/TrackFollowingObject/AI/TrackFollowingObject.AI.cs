@@ -11,19 +11,37 @@ namespace TrainManager.Trains
 	{
 		private readonly TrackFollowingObject Train;
 
+		// Time to operate the door
+		private readonly double OpeningDoorsTime;
+		private readonly double ClosingDoorsTime;
+
 		/// <summary>Travel plan of train</summary>
 		private readonly TravelData[] Data;
 
+		private double AppearanceTime;
+		private double LeaveTime;
+
 		private double TimeLastProcessed;
 		private double CurrentPosition;
-		internal double AppearanceTime;
-		internal double LeaveTime;
 
 		public TrackFollowingObjectAI(TrackFollowingObject train, TravelData[] data)
 		{
 			Train = train;
 			Data = data;
 			TimeLastProcessed = 0.0;
+
+			if (Train.Cars[0].Specs.DoorOpenFrequency != 0.0)
+			{
+				OpeningDoorsTime = 1.0 / Train.Cars[0].Specs.DoorOpenFrequency;
+			}
+
+			if (Train.Cars[0].Specs.DoorCloseFrequency != 0.0)
+			{
+				ClosingDoorsTime = 1.0 / Train.Cars[0].Specs.DoorCloseFrequency;
+			}
+
+			SetupTravelData();
+			CheckTravelData();
 		}
 
 		public override void Trigger(double TimeElapsed)
@@ -36,8 +54,8 @@ namespace TrainManager.Trains
 			// Initialize
 			if (TimeLastProcessed == 0.0)
 			{
-				SetupTravelData(TrainManagerBase.currentHost.InGameTime);
-				CheckTravelData(TrainManagerBase.currentHost.InGameTime);
+				AppearanceTime = TrainManagerBase.currentHost.InGameTime;
+				LeaveTime = AppearanceTime + Train.LeaveTime;
 				CurrentPosition = Data[0].Position;
 			}
 
@@ -51,7 +69,7 @@ namespace TrainManager.Trains
 			}
 
 			// Calculate the position where the train is at the present time.
-			GetNewState(TrainManagerBase.currentHost.InGameTime, out var NewMileage, out var NewPosition, out var NewDirection, out var OpenLeftDoors, out var OpenRightDoors);
+			GetNewState(TrainManagerBase.currentHost.InGameTime - AppearanceTime, out double NewMileage, out double NewPosition, out TravelDirection NewDirection, out bool OpenLeftDoors, out bool OpenRightDoors);
 
 			// Calculate the travel distance of the train.
 			double DeltaPosition = NewPosition - CurrentPosition;
@@ -103,10 +121,10 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Create a train operation plan.</summary>
-		internal void SetupTravelData(double InitializeTime)
+		internal void SetupTravelData()
 		{
 			// The first point must be TravelStopData.
-			TravelStopData FirstData = (TravelStopData) Data[0];
+			TravelStopData FirstData = (TravelStopData)Data[0];
 
 			// Calculate the end point of acceleration and the start point of deceleration.
 			{
@@ -123,7 +141,7 @@ namespace TrainManager.Trains
 						DeltaPosition = Math.Pow(FirstData.TargetSpeed, 2.0) / (2.0 * FirstData.Accelerate);
 					}
 
-					FirstData.AccelerationEndPosition = FirstData.Position + (int) LastDirection * DeltaPosition;
+					FirstData.AccelerationEndPosition = FirstData.Position + (int)LastDirection * DeltaPosition;
 				}
 
 				for (int i = 1; i < Data.Length; i++)
@@ -134,7 +152,7 @@ namespace TrainManager.Trains
 						DeltaPosition = (Math.Pow(Data[i].PassingSpeed, 2.0) - Math.Pow(Data[i - 1].TargetSpeed, 2.0)) / (2.0 * Data[i].Decelerate);
 					}
 
-					Data[i].DecelerationStartPosition = Data[i].Position - (int) LastDirection * DeltaPosition;
+					Data[i].DecelerationStartPosition = Data[i].Position - (int)LastDirection * DeltaPosition;
 
 					Data[i].Mileage = Data[i - 1].Mileage + Math.Abs(Data[i].Position - Data[i - 1].Position);
 					LastDirection = (Data[i] as TravelStopData)?.Direction ?? LastDirection;
@@ -144,31 +162,12 @@ namespace TrainManager.Trains
 						DeltaPosition = (Math.Pow(Data[i].TargetSpeed, 2.0) - Math.Pow(Data[i].PassingSpeed, 2.0)) / (2.0 * Data[i].Accelerate);
 					}
 
-					Data[i].AccelerationEndPosition = Data[i].Position + (int) LastDirection * DeltaPosition;
+					Data[i].AccelerationEndPosition = Data[i].Position + (int)LastDirection * DeltaPosition;
 				}
-			}
-
-			// Time to operate the door
-			double OpeningDoorsTime = 0.0;
-			double ClosingDoorsTime = 0.0;
-
-			if (Train.Cars[0].Specs.DoorOpenFrequency != 0.0)
-			{
-				OpeningDoorsTime = 1.0 / Train.Cars[0].Specs.DoorOpenFrequency;
-			}
-
-			if (Train.Cars[0].Specs.DoorCloseFrequency != 0.0)
-			{
-				ClosingDoorsTime = 1.0 / Train.Cars[0].Specs.DoorCloseFrequency;
 			}
 
 			// Reflect the delay until the TFO becomes effective at the first point.
 			{
-				FirstData.ArrivalTime = InitializeTime;
-				AppearanceTime = InitializeTime;
-				LeaveTime = Train.LeaveTime + InitializeTime;
-
-				FirstData.OpeningDoorsEndTime = FirstData.ArrivalTime;
 				if (FirstData.OpenLeftDoors || FirstData.OpenRightDoors)
 				{
 					FirstData.OpeningDoorsEndTime += OpeningDoorsTime;
@@ -215,9 +214,7 @@ namespace TrainManager.Trains
 
 					Data[i].ArrivalTime = Data[i].DecelerationStartTime + DeltaT;
 
-					TravelStopData StopData = Data[i] as TravelStopData;
-
-					if (StopData != null)
+					if (Data[i] is TravelStopData StopData)
 					{
 						StopData.OpeningDoorsEndTime = StopData.ArrivalTime;
 						if (StopData.OpenLeftDoors || StopData.OpenRightDoors)
@@ -245,15 +242,15 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Check whether the travel plan of the train is valid.</summary>
-		private void CheckTravelData(double InitializeTime)
+		private void CheckTravelData()
 		{
 			bool Recalculation = false;
-			TravelDirection LastDirection = ((TravelStopData) Data[0]).Direction;
+			TravelDirection LastDirection = ((TravelStopData)Data[0]).Direction;
 
 			for (int i = 1; i < Data.Length; i++)
 			{
 				// The deceleration start point must appear after the acceleration end point.
-				if ((Data[i - 1].AccelerationEndPosition - Data[i].DecelerationStartPosition) * (int) LastDirection > 0)
+				if ((Data[i - 1].AccelerationEndPosition - Data[i].DecelerationStartPosition) * (int)LastDirection > 0)
 				{
 					// Reset acceleration and deceleration.
 					double Delta = Math.Abs(Data[i].Position - Data[i - 1].Position);
@@ -271,7 +268,7 @@ namespace TrainManager.Trains
 			// Recreate the operation plan of the train.
 			if (Recalculation)
 			{
-				SetupTravelData(InitializeTime);
+				SetupTravelData();
 			}
 		}
 
@@ -284,7 +281,7 @@ namespace TrainManager.Trains
 
 			{
 				// The first point must be TravelStopData.
-				TravelStopData FirstData = (TravelStopData) Data[0];
+				TravelStopData FirstData = (TravelStopData)Data[0];
 
 				NewMileage = FirstData.Mileage;
 				NewPosition = FirstData.Position;
@@ -313,7 +310,7 @@ namespace TrainManager.Trains
 					DeltaT = Time - FirstData.DepartureTime;
 					DeltaPosition = 0.5 * FirstData.Accelerate * Math.Pow(DeltaT, 2.0);
 					NewMileage += DeltaPosition;
-					NewPosition += (int) NewDirection * DeltaPosition;
+					NewPosition += (int)NewDirection * DeltaPosition;
 					return;
 				}
 
@@ -328,7 +325,7 @@ namespace TrainManager.Trains
 					DeltaT = Time - Data[i - 1].AccelerationEndTime;
 					DeltaPosition = Data[i - 1].TargetSpeed * DeltaT;
 					NewMileage += DeltaPosition;
-					NewPosition += (int) NewDirection * DeltaPosition;
+					NewPosition += (int)NewDirection * DeltaPosition;
 					return;
 				}
 
@@ -340,7 +337,7 @@ namespace TrainManager.Trains
 					DeltaT = Time - Data[i].DecelerationStartTime;
 					DeltaPosition = Data[i - 1].TargetSpeed * DeltaT + 0.5 * Data[i].Decelerate * Math.Pow(DeltaT, 2.0);
 					NewMileage += DeltaPosition;
-					NewPosition += (int) NewDirection * DeltaPosition;
+					NewPosition += (int)NewDirection * DeltaPosition;
 					return;
 				}
 
@@ -368,7 +365,7 @@ namespace TrainManager.Trains
 					DeltaT = Time - Data[i].DepartureTime;
 					DeltaPosition = Data[i].PassingSpeed * DeltaT + 0.5 * Data[i].Accelerate * Math.Pow(DeltaT, 2.0);
 					NewMileage += DeltaPosition;
-					NewPosition += (int) NewDirection * DeltaPosition;
+					NewPosition += (int)NewDirection * DeltaPosition;
 					return;
 				}
 
@@ -379,7 +376,7 @@ namespace TrainManager.Trains
 
 		private void SetRailIndex(double Mileage, TravelDirection Direction, TrackFollower TrackFollower)
 		{
-			TrackFollower.TrackIndex = Data.LastOrDefault(x => x.Mileage <= Mileage + (int) Direction * (TrackFollower.TrackPosition - CurrentPosition))?.RailIndex ?? Data[0].RailIndex;
+			TrackFollower.TrackIndex = Data.LastOrDefault(x => x.Mileage <= Mileage + (int)Direction * (TrackFollower.TrackPosition - CurrentPosition))?.RailIndex ?? Data[0].RailIndex;
 		}
 	}
 }
