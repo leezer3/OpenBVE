@@ -34,10 +34,12 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MechanikRouteParser.cs" />
     <Compile Include="MechanikRouteParser.RouteData.cs" />
+    <Compile Include="Structures\RouteProperties.Database.cs" />
     <Compile Include="Objects\MechanikObject.cs" />
     <Compile Include="Objects\MechanikObject.Types.cs" />
     <Compile Include="Objects\MechanikTexture.cs" />
@@ -48,6 +50,7 @@
     <Compile Include="Structures\Block.cs" />
     <Compile Include="Structures\Correction.cs" />
     <Compile Include="Structures\RouteObject.cs" />
+    <Compile Include="Structures\RouteProperties.cs" />
     <Compile Include="Structures\SoundEvent.cs" />
     <Compile Include="Structures\StationStop.cs" />
   </ItemGroup>

@@ -42,13 +42,14 @@ using Path = OpenBveApi.Path;
 
 namespace MechanikRouteParser
 {
-	internal class Parser
+	internal partial class Parser
 	{
 		private static RouteData currentRouteData;
 		private static List<MechanikObject> AvailableObjects = new List<MechanikObject>();
 		private static Dictionary<int, MechanikTexture> AvailableTextures = new Dictionary<int, MechanikTexture>();
 		private static Dictionary<int, SoundHandle> AvailableSounds = new Dictionary<int, SoundHandle>();
 		private static string RouteFolder;
+		private static string RouteFile;
 
 		internal void ParseRoute(string routeFile, bool PreviewOnly)
 		{
@@ -57,6 +58,7 @@ namespace MechanikRouteParser
 				return;
 			}
 
+			RouteFile = routeFile;
 			Plugin.CurrentRoute.AccurateObjectDisposal = ObjectDisposalMode.Mechanik;
 			AvailableObjects = new List<MechanikObject>();
 			AvailableTextures = new Dictionary<int, MechanikTexture>();
@@ -845,6 +847,12 @@ namespace MechanikRouteParser
 				}
 			}
 			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
+
+			// Attempt to load some nicer properties from our database
+			knownRoutes = new Dictionary<string, RouteProperties>();
+			RoutePropertiesDatabaseParser.LoadRoutePropertyDatabase(ref knownRoutes);
+			string routeHash = Path.GetChecksum(RouteFile);
+			GetProperties(routeHash);
 		}
 
 		private static int CreateHorizontalObject(List<Vector3> Points, int firstPoint, double scaleFactor, Vector2 textureScale, int textureIndex, bool transparent)

@@ -1,0 +1,9 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MechanikRoute>
+	<Route>
+		<Hash>2E4820ACC08EAE30F89DDF2258C8A502F49BBC818BD6B21823BAF98A96D769C0</Hash>
+		<StationNames>Oleander,Orabidoo,Paisley,Ewan,Wirrabara</StationNames>
+	</Route>
+  </MechanikRoute>
+</openBVE>
+  
