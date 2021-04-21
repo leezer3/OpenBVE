@@ -3,6 +3,35 @@
 	<Route>
 		<Hash>2E4820ACC08EAE30F89DDF2258C8A502F49BBC818BD6B21823BAF98A96D769C0</Hash>
 		<StationNames>Oleander,Orabidoo,Paisley,Ewan,Wirrabara</StationNames>
+		<Description>A journey through the Australian Outback, by Robert Shaw</Description>
+	</Route>
+	<Route>
+		<Hash>F481E0A4879FBF75854E7362E87064A1BE34D8233693DEB27C1040929A936376</Hash>
+		<Description>A Mechanik route featuring Japanese scenery and sounds, by Iskander</Description>
+	</Route>
+	<Route>
+		<Hash>896F2840BDB6B9E9E78065BD27421B5A8A49275E9919FE55240E4DC9B9CC7C50</Hash>
+		<Description>A Mechanik route based upon the New York IRT system</Description>
+	</Route>
+	<Route>
+		<Hash>34F581489BA2B2DFAA3A6305181931275457179E79C02F3191AF4B03025B3D3B</Hash>
+		<StationNames>Dijon- Ville, Beaune, Chagny, Chalons Sur Saone, Tournus, Macon, Villefranche Sur S., Lyon- Perrache</StationNames>
+		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
+	</Route>
+	<Route>
+		<Hash>84BB1D52166E3BF22AA9B6908B8FC88D3A87EB520E305062CF03932D4745363B</Hash>
+		<StationNames>Miramas, Berre L'Etang, Marigane, Marseille St. Charles</StationNames>
+		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
+	</Route>
+	<Route>
+		<Hash>754AE7FD63EE340E65EC935F8B7567FCD0965F7072E43DBE2E61350506FBA5A3</Hash>
+		<StationNames>Tours, St. Pierre des Corps</StationNames>
+		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
+	</Route>
+	<Route>
+		<Hash>3BB9C1CB0067FF5BDEE9B42AF0D7BB86C3A585EF83DFC2962FFC79A97F9EF93F</Hash>
+		<StationNames>Perpignan, Risevaltes, Leucate, Port La Nouvelle, Narbonne, Beziers</StationNames>
+		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
 	</Route>
   </MechanikRoute>
 </openBVE>
