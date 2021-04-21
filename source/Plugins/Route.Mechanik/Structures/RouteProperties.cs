@@ -17,6 +17,10 @@ namespace MechanikRouteParser
 			for (int i = 0; i < routeProperties.StationNames.Length; i++)
 			{
 				Plugin.CurrentRoute.Stations[i].Name = routeProperties.StationNames[i];
+				if (routeProperties.DepartureTimes.Length == routeProperties.StationNames.Length)
+				{
+					Plugin.CurrentRoute.Stations[i].DepartureTime = routeProperties.DepartureTimes[i];
+				}
 			}
 
 			Plugin.CurrentRoute.Comment = routeProperties.Description;
@@ -35,5 +39,7 @@ namespace MechanikRouteParser
 		internal string Description;
 		/// <summary>The default train to be used</summary>
 		internal string DefaultTrain;
+		/// <summary>The station departure times</summary>
+		internal double[] DepartureTimes;
 	}
 }

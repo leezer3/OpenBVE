@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 using Path = OpenBveApi.Path;
 using XmlElement = System.Xml.XmlElement;
 
@@ -82,6 +83,14 @@ namespace MechanikRouteParser
 						break;
 					case "DefaultTrain":
 						currentProperties.DefaultTrain = childNode.InnerText;
+						break;
+					case "DepartureTimes":
+						string[] splitTimes = childNode.InnerText.Split(',');
+						currentProperties.DepartureTimes = new double[splitTimes.Length];
+						for (int i = 0; i < splitTimes.Length; i++)
+						{
+							OpenBveApi.Time.TryParseTime(splitTimes[i], out currentProperties.DepartureTimes[i]);
+						}
 						break;
 				}
 			}

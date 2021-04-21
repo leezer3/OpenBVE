@@ -2,13 +2,14 @@
 
 namespace OpenBveApi
 {
-	class Time
+	/// <summary>Provides time related functionality</summary>
+	public class Time
 	{
 		/// <summary>Parses a string into OpenBVE's internal time representation (Seconds since midnight on the first day)</summary>
 		/// <param name="Expression">The time in string format</param>
 		/// <param name="Value">The number of seconds since midnight on the first day this represents, updated via 'out'</param>
 		/// <returns>True if the parse succeeds, false if it does not</returns>
-		internal static bool TryParseTime(string Expression, out double Value)
+		public static bool TryParseTime(string Expression, out double Value)
 		{
 			Expression = Expression.TrimInside();
 			if (Expression.Length != 0) {

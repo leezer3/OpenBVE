@@ -16,21 +16,25 @@
 	<Route>
 		<Hash>34F581489BA2B2DFAA3A6305181931275457179E79C02F3191AF4B03025B3D3B</Hash>
 		<StationNames>Dijon- Ville, Beaune, Chagny, Chalons Sur Saone, Tournus, Macon, Villefranche Sur S., Lyon- Perrache</StationNames>
+		<DepartureTimes>14:20,14:31,14:37,14:42,14:46,14:57,15:06,15:19</DepartureTimes>
 		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
 	</Route>
 	<Route>
 		<Hash>84BB1D52166E3BF22AA9B6908B8FC88D3A87EB520E305062CF03932D4745363B</Hash>
 		<StationNames>Miramas, Berre L'Etang, Marigane, Marseille St. Charles</StationNames>
+		<DepartureTimes>14:20,14:25,14:29,14:34</DepartureTimes>
 		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
 	</Route>
 	<Route>
 		<Hash>754AE7FD63EE340E65EC935F8B7567FCD0965F7072E43DBE2E61350506FBA5A3</Hash>
 		<StationNames>Tours, St. Pierre des Corps</StationNames>
+		<DepartureTimes>14:20,14:23</DepartureTimes>
 		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
 	</Route>
 	<Route>
 		<Hash>3BB9C1CB0067FF5BDEE9B42AF0D7BB86C3A585EF83DFC2962FFC79A97F9EF93F</Hash>
 		<StationNames>Perpignan, Risevaltes, Leucate, Port La Nouvelle, Narbonne, Beziers</StationNames>
+		<DepartureTimes>14:20,14:27,14:34,14:40,14:44,14:50</DepartureTimes>
 		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
 	</Route>
   </MechanikRoute>
