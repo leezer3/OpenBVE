@@ -713,7 +713,7 @@ namespace MechanikRouteParser
 						Array.Resize(ref Plugin.CurrentRoute.Stations, s + 1);
 						Plugin.CurrentRoute.Stations[s] = new RouteStation
 						{
-							Name = "Station " + (s + 1),
+							Name = "Station " + (s + 1) + " - " + $"{currentRouteData.Blocks[i].StartingTrackPosition / 1000 : 0.00}" + "km",
 							OpenLeftDoors = true,
 							OpenRightDoors = true,
 							ArrivalTime = -1,
