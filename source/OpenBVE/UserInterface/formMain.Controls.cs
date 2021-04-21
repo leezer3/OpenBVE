@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using OpenBve.Input;
 using OpenBveApi.Interface;
 using OpenTK.Input;
 using Key = OpenBveApi.Input.Key;
@@ -166,9 +167,9 @@ namespace OpenBve {
 			if (Interface.CurrentControls[Index].Method == ControlMethod.Joystick) {
 
 				string t = string.Empty;
-				if (JoystickManager.AttachedJoysticks.ContainsKey(Interface.CurrentControls[Index].Device))
+				if (Program.Joysticks.AttachedJoysticks.ContainsKey(Interface.CurrentControls[Index].Device))
 				{
-					t = Translations.GetInterfaceString("controls_assignment_joystick").Replace("[index]", JoystickManager.AttachedJoysticks[Interface.CurrentControls[Index].Device].Handle + 1.ToString(Culture));
+					t = Translations.GetInterfaceString("controls_assignment_joystick").Replace("[index]", Program.Joysticks.AttachedJoysticks[Interface.CurrentControls[Index].Device].Handle + 1.ToString(Culture));
 				}
 					
 				switch (Interface.CurrentControls[Index].Component) {
@@ -597,8 +598,8 @@ namespace OpenBve {
 			Translations.CommandType type = Translations.CommandType.Digital;
 			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
-				if (Interface.CurrentControls[j].Method == ControlMethod.Joystick && JoystickManager.AttachedJoysticks.ContainsKey(Interface.CurrentControls[j].Device)) {
-					device = JoystickManager.AttachedJoysticks[Interface.CurrentControls[j].Device].Handle;
+				if (Interface.CurrentControls[j].Method == ControlMethod.Joystick && Program.Joysticks.AttachedJoysticks.ContainsKey(Interface.CurrentControls[j].Device)) {
+					device = Program.Joysticks.AttachedJoysticks[Interface.CurrentControls[j].Device].Handle;
 					component = Interface.CurrentControls[j].Component;
 					element = Interface.CurrentControls[j].Element;
 					direction = Interface.CurrentControls[j].Direction;
@@ -612,15 +613,28 @@ namespace OpenBve {
 			Font f = new Font(this.Font.Name, 0.875f * this.Font.Size);
 			float x = 2.0f, y = 2.0f;
 			float threshold = ((float)trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (float)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
-			for (int i = 0; i < JoystickManager.AttachedJoysticks.Count; i++)
+			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
-				Guid guid = JoystickManager.AttachedJoysticks.ElementAt(i).Key;
-				JoystickManager.AttachedJoysticks[guid].Poll();
+				Guid guid = Program.Joysticks.AttachedJoysticks.ElementAt(i).Key;
+				Program.Joysticks.AttachedJoysticks[guid].Poll();
 				float w, h;
-				if (JoystickImage != null) {
-					e.Graphics.DrawImage(JoystickImage, x, y);
-					w = JoystickImage.Width;
-					h = JoystickImage.Height;
+				Image image = JoystickImage;
+				if (Program.Joysticks.AttachedJoysticks[guid] is AbstractRailDriver && RailDriverImage != null)
+				{
+					image = RailDriverImage;
+				}
+				else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("gamepad", StringComparison.InvariantCultureIgnoreCase) != -1 && GamepadImage != null)
+				{
+					image = GamepadImage;
+				}
+				else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1 && GamepadImage != null)
+				{
+					image = XboxImage;
+				}
+				if (image != null) {
+					e.Graphics.DrawImage(image, x, y);
+					w = image.Width;
+					h = image.Height;
 					if (h < 64.0f) h = 64.0f;
 				} else {
 					w = 64.0f; h = 64.0f;
@@ -634,7 +648,7 @@ namespace OpenBve {
 					e.Graphics.DrawString(t, f, Brushes.Black, x + w - 8.0f - 0.5f * s.Width, y + 8.0f - 0.5f * s.Height);
 				}
 				{ // joystick name
-					e.Graphics.DrawString(JoystickManager.AttachedJoysticks[guid].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
+					e.Graphics.DrawString(Program.Joysticks.AttachedJoysticks[guid].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
 				}
 				if (OpenTK.Configuration.RunningOnSdl2)
 				{
@@ -657,7 +671,7 @@ namespace OpenBve {
 						float v = y + 24.0f;
 						float g = h - 24.0f;
 						{ // hats
-							int n = JoystickManager.AttachedJoysticks[guid].HatCount();
+							int n = Program.Joysticks.AttachedJoysticks[guid].HatCount();
 							for (int j = 0; j < n; j++) {
 								if (device == i & component == JoystickComponent.Hat & element == j) {
 									e.Graphics.DrawEllipse(ps, u, v, g, g);
@@ -667,7 +681,7 @@ namespace OpenBve {
 								string t = "H" + (j + 1).ToString(Culture);
 								SizeF s = e.Graphics.MeasureString(t, f);
 								e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
-								JoystickHatState aa = JoystickManager.AttachedJoysticks[guid].GetHat(j);
+								JoystickHatState aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
 								HatPosition a = aa.Position;
 								if (a != HatPosition.Centered)
 								{
@@ -737,10 +751,10 @@ namespace OpenBve {
 						float u = x;
 						float v = y + h + 8.0f;
 						{ // axes
-							int n = JoystickManager.AttachedJoysticks[guid].AxisCount();
-							float g = pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
+							int n = Program.Joysticks.AttachedJoysticks[guid].AxisCount();
+							float g = (float)pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
 							for (int j = 0; j < n; j++) {
-								float r = (float)JoystickManager.AttachedJoysticks[guid].GetAxis(j);
+								float r = (float)Program.Joysticks.AttachedJoysticks[guid].GetAxis(j);
 								float r0 = r < 0.0f ? r : 0.0f;
 								float r1 = r > 0.0f ? r : 0.0f;
 								if ((float)Math.Abs((double)r) < threshold) {
@@ -771,10 +785,10 @@ namespace OpenBve {
 						}
 						
 						{ // buttons
-							int n = JoystickManager.AttachedJoysticks[guid].ButtonCount();
-							float g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
+							int n = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
+							float g = (float)0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 							for (int j = 0; j < n; j++) {
-								bool q = JoystickManager.AttachedJoysticks[guid].GetButton(j) != 0;
+								bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
 								float dv = (float)(j & 1) * (g + 8.0f);
 								if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
 								if (device == i & component == JoystickComponent.Button & element == j) {

@@ -1,35 +1,48 @@
-﻿using OpenBveApi.Routes;
+﻿using System.Runtime.Serialization;
+using OpenBveApi.Routes;
 
 namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents the current state of the train.</summary>
+	[DataContract]
 	public class VehicleState
 	{
 		/// <summary>The location of the front of the train, in meters.</summary>
+		[DataMember]
 		private readonly double MyLocation;
 
 		/// <summary>The speed of the train.</summary>
+		[DataMember]
 		private readonly Speed MySpeed;
 
 		/// <summary>The pressure in the brake cylinder, in pascal.</summary>
+		[DataMember]
 		private readonly double MyBcPressure;
 
 		/// <summary>The pressure in the main reservoir, in pascal.</summary>
+		[DataMember]
 		private readonly double MyMrPressure;
 
 		/// <summary>The pressure in the emergency reservoir, in pascal.</summary>
+		[DataMember]
 		private readonly double MyErPressure;
 
 		/// <summary>The pressure in the brake pipe, in pascal.</summary>
+		[DataMember]
 		private readonly double MyBpPressure;
 
 		/// <summary>The pressure in the straight air pipe, in pascal.</summary>
 		private readonly double MySapPressure;
 
+		[DataMember]
 		private readonly double MyRadius;
+		[DataMember]
 		private readonly double MyCant;
+		[DataMember]
 		private readonly double MyPitch;
+		[DataMember]
 		private readonly int MyRainIntensity;
+		[DataMember]
 		private readonly double MyAdhesion;
 
 		/// <summary>Gets the location of the front of the train, in meters.</summary>

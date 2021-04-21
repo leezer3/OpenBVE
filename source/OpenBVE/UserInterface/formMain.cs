@@ -7,6 +7,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using LibRender2.MotionBlurs;
+using OpenBve.Input;
 using OpenBve.UserInterface;
 using OpenBveApi;
 using OpenBveApi.Graphics;
@@ -80,6 +81,9 @@ namespace OpenBve {
 		private MainDialogResult Result;
 		private int[] EncodingCodepages = new int[0];
 		private Image JoystickImage = null;
+		private Image RailDriverImage = null;
+		private Image GamepadImage = null;
+		private Image XboxImage = null;
 
 		// ====
 		// form
@@ -99,6 +103,10 @@ namespace OpenBve {
 				this.CenterToScreen();
 			}
 			labelVersion.Text = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
+			if (IntPtr.Size != 4)
+			{
+				labelVersion.Text += @" 64-bit";
+			}
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// form icon
 			try
@@ -164,6 +172,9 @@ namespace OpenBve {
 			Image JoystickIcon = LoadImage(MenuFolder, "icon_joystick.png");
 			Image GamepadIcon = LoadImage(MenuFolder, "icon_gamepad.png");
 			JoystickImage = LoadImage(MenuFolder, "joystick.png");
+			RailDriverImage = LoadImage(MenuFolder, "raildriver2.png");
+			GamepadImage = LoadImage(MenuFolder, "gamepad.png");
+			XboxImage = LoadImage(MenuFolder, "xbox.png");
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
@@ -1416,23 +1427,23 @@ namespace OpenBve {
 		private void timerEvents_Tick(object sender, EventArgs e)
 		{
 			Program.Joysticks.RefreshJoysticks();
-			if (currentJoystickStates == null || currentJoystickStates.Length < JoystickManager.AttachedJoysticks.Values.Count)
+			if (currentJoystickStates == null || currentJoystickStates.Length < Program.Joysticks.AttachedJoysticks.Values.Count)
 			{
-				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Values.Count];
+				currentJoystickStates = new JoystickState[Program.Joysticks.AttachedJoysticks.Values.Count];
 			}	
 			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
 
-				for (int k = 0; k < JoystickManager.AttachedJoysticks.Count; k++)
+				for (int k = 0; k < Program.Joysticks.AttachedJoysticks.Count; k++)
 				{
-					Guid guid = JoystickManager.AttachedJoysticks.ElementAt(k).Key;
-					JoystickManager.AttachedJoysticks[guid].Poll();
-					bool railDriver = JoystickManager.AttachedJoysticks[guid] is JoystickManager.Raildriver;
-					int axes = JoystickManager.AttachedJoysticks[guid].AxisCount();
+					Guid guid = Program.Joysticks.AttachedJoysticks.ElementAt(k).Key;
+					Program.Joysticks.AttachedJoysticks[guid].Poll();
+					bool railDriver = Program.Joysticks.AttachedJoysticks[guid] is AbstractRailDriver;
+					int axes = Program.Joysticks.AttachedJoysticks[guid].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{
-							double a = JoystickManager.AttachedJoysticks[guid].GetAxis(i);
+							double a = Program.Joysticks.AttachedJoysticks[guid].GetAxis(i);
 							if (a < -0.75)
 							{
 								if (railDriver)
@@ -1469,10 +1480,10 @@ namespace OpenBve {
 								return;
 							}
 						}
-						int buttons = JoystickManager.AttachedJoysticks[guid].ButtonCount();
+						int buttons = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
 						for (int i = 0; i < buttons; i++)
 						{
-							if (JoystickManager.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
+							if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
 							{
 								if (railDriver)
 								{
@@ -1488,10 +1499,10 @@ namespace OpenBve {
 								return;
 							}
 						}
-						int hats = JoystickManager.AttachedJoysticks[guid].HatCount();
+						int hats = Program.Joysticks.AttachedJoysticks[guid].HatCount();
 						for (int i = 0; i < hats; i++)
 						{
-							JoystickHatState hat = JoystickManager.AttachedJoysticks[guid].GetHat(i);
+							JoystickHatState hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
 							if (hat.Position != HatPosition.Centered)
 							{
 								Interface.CurrentControls[j].Device = guid;

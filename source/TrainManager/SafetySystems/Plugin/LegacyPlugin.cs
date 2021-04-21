@@ -109,15 +109,7 @@ namespace TrainManager.SafetySystems
 			internal float Distance;
 			internal int Optional;
 		}
-
-		private static class SoundInstructions
-		{
-			internal const int Stop = -10000;
-			internal const int PlayLooping = 0;
-			internal const int PlayOnce = 1;
-			internal const int Continue = 2;
-		}
-
+		
 		private static class ConstSpeedInstructions
 		{
 			internal const int Continue = 0;
@@ -312,7 +304,7 @@ namespace TrainManager.SafetySystems
 		{
 		}
 
-		protected override void Elapse(ElapseData data)
+		protected override void Elapse(ref ElapseData data)
 		{
 			try
 			{
