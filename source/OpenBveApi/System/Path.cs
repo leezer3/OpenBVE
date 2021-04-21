@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace OpenBveApi {
 
@@ -242,6 +243,25 @@ namespace OpenBveApi {
 				}
 			}
 			return true;
+		}
+
+		/// <summary>Gets the SHA-256 checksum for a file</summary>
+		/// <param name="file">The file to hash</param>
+		/// <returns>The SHA-256 hash, or an empty string if not valid</returns>
+		public static string GetChecksum(string file)
+		{
+			if (string.IsNullOrEmpty(file) || !File.Exists(file))
+			{
+				return string.Empty;
+			}
+			using (FileStream stream = File.OpenRead(file))
+			{
+				using (SHA256Managed sha = new SHA256Managed())
+				{
+					byte[] checksum = sha.ComputeHash(stream);
+					return BitConverter.ToString(checksum).Replace("-", string.Empty);
+				}
+			}
 		}
 	}
 }

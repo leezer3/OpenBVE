@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using RouteManager2.SignalManager;
@@ -17,7 +18,7 @@ namespace CsvRwRouteParser
 				return;
 			}
 
-			string fileHash = GetChecksum(FileName);
+			string fileHash = Path.GetChecksum(FileName);
 			if (availableRoutefilePatches.ContainsKey(fileHash))
 			{
 				RoutefilePatch patch = availableRoutefilePatches[fileHash];
