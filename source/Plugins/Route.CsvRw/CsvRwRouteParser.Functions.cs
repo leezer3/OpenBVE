@@ -234,22 +234,6 @@ namespace CsvRwRouteParser
 			return staticObject;
 		}
 
-		internal static string GetChecksum(string file)
-		{
-			if (string.IsNullOrEmpty(file) || !File.Exists(file))
-			{
-				return string.Empty;
-			}
-			using (FileStream stream = File.OpenRead(file))
-			{
-				using (SHA256Managed sha = new SHA256Managed())
-				{
-					byte[] checksum = sha.ComputeHash(stream);
-					return BitConverter.ToString(checksum).Replace("-", string.Empty);
-				}
-			}
-		}
-
 		private string[] SplitArguments(string ArgumentSequence)
 		{
 			string[] Arguments;
