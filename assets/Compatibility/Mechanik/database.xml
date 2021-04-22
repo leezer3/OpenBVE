@@ -37,6 +37,11 @@
 		<DepartureTimes>14:20,14:27,14:34,14:40,14:44,14:50</DepartureTimes>
 		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
 	</Route>
+	<Route>
+		<Hash>CACDC0D0C0E7049E1487DD61A1140C97B3FFD66DB551873734010572D6841AA7</Hash>
+		<StationNames>LIGOTA GŁ.,Krzewiny,ŁĄKI WIELKIE</StationNames>
+		<DepartureTimes>14.20,14.23,14.30</DepartureTimes>
+	</Route>
   </MechanikRoute>
   <MechanikModule>
 		<ModuleList>Modules.xml</ModuleList>
