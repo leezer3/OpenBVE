@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -33,6 +34,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
 using RouteManager2.Stations;
+using Path = OpenBveApi.Path;
 
 namespace MechanikRouteParser
 {
@@ -58,6 +60,9 @@ namespace MechanikRouteParser
 		    CurrentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
+		    Parser.knownRoutes = new Dictionary<string, RouteProperties>();
+		    Parser.knownModules = new List<string>();
+			RoutePropertiesDatabaseParser.LoadRoutePropertyDatabase(ref Parser.knownRoutes, ref Parser.knownModules);
 	    }
 
 	    public override void Unload()
@@ -82,12 +87,10 @@ namespace MechanikRouteParser
 		    {
 			    try
 			    {
-
-
-				    if (File.ReadLines(path).Count() < 800)
+					if (Parser.knownModules.Contains(Path.GetChecksum(path)) || File.ReadLines(path).Count() < 800)
 				    {
 					    /*
-					     * Slightly hacky check:
+					     * Slightly hacky check if not found in the known modules list:
 					     * The original Mechanik download contained a route generator.
 					     * All this did was to append various module files to generate a
 					     * final route.

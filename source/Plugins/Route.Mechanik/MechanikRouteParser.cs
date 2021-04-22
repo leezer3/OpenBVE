@@ -833,9 +833,6 @@ namespace MechanikRouteParser
 					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position, Plugin.CurrentHost);
 				}
-
-				
-				
 			}
 			Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
 			for (int i = 0; i < Plugin.CurrentRoute.Stations.Length; i++)
@@ -848,9 +845,7 @@ namespace MechanikRouteParser
 			}
 			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
 
-			// Attempt to load some nicer properties from our database
-			knownRoutes = new Dictionary<string, RouteProperties>();
-			RoutePropertiesDatabaseParser.LoadRoutePropertyDatabase(ref knownRoutes);
+			
 			string routeHash = Path.GetChecksum(RouteFile);
 			GetProperties(routeHash);
 		}

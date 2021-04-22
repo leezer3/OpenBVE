@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using OpenBveApi.Interface;
-using OpenBveApi.Runtime;
 using Path = OpenBveApi.Path;
 using XmlElement = System.Xml.XmlElement;
 
@@ -11,9 +10,8 @@ namespace MechanikRouteParser
 {
 	class RoutePropertiesDatabaseParser
 	{
-		internal static void LoadRoutePropertyDatabase(ref Dictionary<string, RouteProperties> routeProperties, string databaseFile = "")
+		internal static void LoadRoutePropertyDatabase(ref Dictionary<string, RouteProperties> routeProperties, ref List<string> moduleList, string databaseFile = "")
 		{
-			routeProperties = new Dictionary<string, RouteProperties>();
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 
@@ -29,6 +27,7 @@ namespace MechanikRouteParser
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
+
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/MechanikRoute");
 				//Check this file actually contains OpenBVE route patch definition nodes
 				if (DocumentNodes != null)
@@ -52,7 +51,38 @@ namespace MechanikRouteParser
 										string newFile = Path.CombineFile(folder, childNode.InnerText);
 										if (File.Exists(newFile))
 										{
-											LoadRoutePropertyDatabase(ref routeProperties, newFile);
+											LoadRoutePropertyDatabase(ref routeProperties, ref moduleList, newFile);
+										}
+										break;
+								}
+								
+							}
+						}
+					}
+				}
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/MechanikModule");
+				if (DocumentNodes != null)
+				{
+					for (int i = 0; i < DocumentNodes.Count; i++)
+					{
+						if (DocumentNodes[i].HasChildNodes)
+						{
+							foreach (XmlElement childNode in DocumentNodes[i].ChildNodes.OfType<XmlElement>())
+							{
+								switch (childNode.Name)
+								{
+									case "Module":
+										if (!moduleList.Contains(childNode.InnerText))
+										{
+											moduleList.Add(childNode.InnerText);
+										}
+										break;
+									case "ModuleList":
+										string folder = System.IO.Path.GetDirectoryName(databaseFile);
+										string newFile = Path.CombineFile(folder, childNode.InnerText);
+										if (File.Exists(newFile))
+										{
+											LoadRoutePropertyDatabase(ref routeProperties, ref moduleList, newFile);
 										}
 										break;
 								}

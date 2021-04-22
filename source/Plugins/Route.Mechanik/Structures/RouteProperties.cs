@@ -5,6 +5,7 @@ namespace MechanikRouteParser
 	internal partial class Parser
 	{
 		internal static Dictionary<string, RouteProperties> knownRoutes;
+		internal static List<string> knownModules;
 
 		internal static void GetProperties(string hash)
 		{
@@ -41,5 +42,11 @@ namespace MechanikRouteParser
 		internal string DefaultTrain;
 		/// <summary>The station departure times</summary>
 		internal double[] DepartureTimes;
+
+		internal RouteProperties()
+		{
+			StationNames = new string[] { };
+			DepartureTimes = new double[] { };
+		}
 	}
 }
