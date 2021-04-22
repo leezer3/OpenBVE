@@ -263,7 +263,7 @@ namespace DenshaDeGoInput
 			buttonrightBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 			buttonpedalBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 			buttonldoorBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonrdoorBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonldoorBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
 
 			label_up.Text = Translations.GetInterfaceString("denshadego_label_up");
 			label_down.Text = Translations.GetInterfaceString("denshadego_label_down");
@@ -271,7 +271,7 @@ namespace DenshaDeGoInput
 			label_right.Text = Translations.GetInterfaceString("denshadego_label_right");
 			label_pedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
 			label_ldoor.Text = Translations.GetInterfaceString("denshadego_label_ldoor");
-			label_rdoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
+			label_ldoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
 			label_buttonup.Text = Translations.GetInterfaceString("denshadego_label_up");
 			label_buttondown.Text = Translations.GetInterfaceString("denshadego_label_down");
 			label_buttonleft.Text = Translations.GetInterfaceString("denshadego_label_left");
@@ -322,7 +322,7 @@ namespace DenshaDeGoInput
 			UpdateTranslation();
 		}
 
-		private void Config_FormClosed(object sender, FormClosedEventArgs e)
+		private void Config_FormClosed(Object sender, FormClosedEventArgs e)
 		{
 			// Reload the previous config and close the config dialog
 			DenshaDeGoInput.LoadConfig();

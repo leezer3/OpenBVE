@@ -24,7 +24,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Threading.Tasks;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
 
@@ -66,9 +66,9 @@ namespace DenshaDeGoInput
 		internal static bool ControllerDisplayEnabled;
 
 		/// <summary>
-		/// The background worker used to read input asynchronously.
-		/// </summary>
-		private static BackgroundWorker inputWorker = new BackgroundWorker();
+        /// The task used to read input asynchronously.
+        /// </summary>
+		internal static Task InputTask;
 
 		/// <summary>
 		/// Represents the bytes for each buttons.
@@ -271,19 +271,11 @@ namespace DenshaDeGoInput
 			// Shinkansen
 			if (id == "0ae4:0005")
 			{
-				ControllerBrakeNotches = 6;
+				ControllerBrakeNotches = 7;
 				ControllerPowerNotches = 13;
 				return InputTranslator.ControllerModels.Ps2Shinkansen;
 			}
 			return InputTranslator.ControllerModels.Unsupported;
-		}
-
-		/// <summary>
-		/// Does loading tasks for PS2 controllers.
-		/// </summary>
-		internal static void Load()
-		{
-			inputWorker.DoWork += new DoWorkEventHandler(InputWorker_DoWork);
 		}
 
 		/// <summary>
@@ -332,11 +324,10 @@ namespace DenshaDeGoInput
 			{
 				ControllerDisplayEnabled = true;
 			}
-
-			// Start the background worker if it is not active
-			if (!inputWorker.IsBusy)
+			// Start the input task if it is not active
+			if (InputTask == null || InputTask.IsCompleted)
 			{
-				inputWorker.RunWorkerAsync();
+				InputTask = Task.Run(() => PollDevice());
 			}
 
 			switch (InputTranslator.ControllerModel)
@@ -373,8 +364,7 @@ namespace DenshaDeGoInput
 					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] = readBuffer[2] == (byte)PedalBytes.Pressed ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
 
 					double speed = Math.Round(DenshaDeGoInput.CurrentTrainSpeed, 0);
-					double limit = Math.Round((double)0, 0);
-					bool doors = true;
+					double limit = Math.Round(DenshaDeGoInput.CurrentSpeedLimit, 0);
 					int speed1 = (int)(speed % 10);
 					int speed2 = (int)(speed % 100 / 10);
 					int speed3 = (int)(speed % 1000 / 100);
@@ -394,16 +384,25 @@ namespace DenshaDeGoInput
 					byte[] writeBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
 					if (ControllerDisplayEnabled)
 					{
-						// Door lamp + limit approach
-						writeBuffer[2] = (byte)((128 * (doors ? 1 : 0)) + limit_approach);
+						if (DenshaDeGoInput.CurrentSpeedLimit >= 0)
+						{
+							// Door lamp + limit approach
+							writeBuffer[2] = (byte)((128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0)) + limit_approach);
+							// Route limit
+							writeBuffer[6] = (byte)(16 * limit2 + limit1);
+							writeBuffer[7] = (byte)limit3;
+						}
+						else
+						{
+							// Door lamp
+							writeBuffer[2] = (byte)(128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0));
+						}
+
 						// Speed gauge
 						writeBuffer[3] = (byte)Math.Ceiling(Math.Round(DenshaDeGoInput.CurrentTrainSpeed) / 15);
 						// Train speed
 						writeBuffer[4] = (byte)(16 * speed2 + speed1);
 						writeBuffer[5] = (byte)speed3;
-						// Route limit
-						writeBuffer[6] = (byte)(16 * limit2 + limit1);
-						writeBuffer[7] = (byte)limit3;
 					}
 					if (ps2Controller != null)
 					{
@@ -427,7 +426,7 @@ namespace DenshaDeGoInput
 			return false;
 		}
 
-		private static void InputWorker_DoWork(object sender, DoWorkEventArgs e)
+		private static void PollDevice()
 		{
 			// Store the current model to detect changes
 			InputTranslator.ControllerModels currentModel = InputTranslator.ControllerModel;
@@ -463,10 +462,8 @@ namespace DenshaDeGoInput
 			while (InputTranslator.IsControllerConnected && currentModel == InputTranslator.ControllerModel)
 			{
 				// Unless the controller is disconnected or the model changes, ask for input in a loop
-				UsbTransfer readContext;
 				int readCount;
-				ErrorCode readError = controllerReader.SubmitAsyncTransfer(readBuffer, 0, 6, 0, out readContext);
-				readContext.Wait(out readCount);
+				ErrorCode readError = controllerReader.Read(readBuffer, 0, 6, 0, out readCount);
 			}
 		}
 

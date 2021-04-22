@@ -78,6 +78,21 @@
     <None Include="app.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
+    <None Include="Drivers\Ryojouhen.cfg">
+      <LogicalName>ryojouhen_driver</LogicalName>
+    </None>
+    <None Include="Drivers\Shinkansen.cfg">
+      <LogicalName>shinkansen_driver</LogicalName>
+    </None>
+    <None Include="Drivers\Type2.cfg">
+      <LogicalName>type2_driver</LogicalName>
+    </None>
+    <None Include="Drivers\99-densha-ps2-controllers.rules">
+      <LogicalName>udev_rules</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Drivers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

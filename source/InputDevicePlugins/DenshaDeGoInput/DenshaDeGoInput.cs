@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
@@ -58,6 +59,28 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static bool Ingame;
 
+		/// <summary>Represents a speed limit at a specific track position.</summary>
+		struct CompatibilityLimit
+		{
+			// --- members ---
+			/// <summary>The speed limit.</summary>
+			internal double Limit;
+			/// <summary>The track position.</summary>
+			internal double Location;
+			// --- constructors ---
+			/// <summary>Creates a new compatibility limit.</summary>
+			/// <param name="limit">The speed limit.</param>
+			/// <param name="location">The track position.</param>
+			internal CompatibilityLimit(double limit, double location)
+			{
+				Limit = limit;
+				Location = location;
+			}
+		}
+
+		/// <summary>A list of track positions and speed limits in the current route.</summary>
+		private static List<CompatibilityLimit> trackLimits = new List<CompatibilityLimit>();
+
 		/// <summary>
 		/// The specs of the driver's train.
 		/// </summary>
@@ -67,6 +90,16 @@ namespace DenshaDeGoInput
 		/// The current train speed in kilometers per hour.
 		/// </summary>
 		internal static double CurrentTrainSpeed;
+
+		/// <summary>
+		/// The current speed limit in kilometers per hour.
+		/// </summary>
+		internal static double CurrentSpeedLimit;
+
+		/// <summary>
+		/// Whether the doors are closed or not.
+		/// </summary>
+		internal static bool TrainDoorsClosed;
 
 		/// <summary>
 		/// Whether the brake handle has been moved.
@@ -145,8 +178,6 @@ namespace DenshaDeGoInput
 		/// <returns>Whether the plugin has been loaded successfully.</returns>
 		public bool Load(FileSystem fileSystem)
 		{
-			InputTranslator.Load();
-
 			FileSystem = fileSystem;
 
 			// Initialize the array of button properties
@@ -278,7 +309,11 @@ namespace DenshaDeGoInput
 				Ingame = true;
 			}
 
+			// Set the current train speed
 			CurrentTrainSpeed = data.Vehicle.Speed.KilometersPerHour;
+
+			// Set the current speed limit
+			CurrentSpeedLimit = GetCurrentSpeedLimit(data.Vehicle.Location);
 
 			// Button timers
 			for (int i = 0; i < ButtonProperties.Length; i++)
@@ -307,6 +342,31 @@ namespace DenshaDeGoInput
 		{
 			TrainSpecs = specs;
 			ConfigureMappings();
+		}
+
+		/// <summary>Is called when the state of the doors changes.</summary>
+		/// <param name="oldState">The old state of the doors.</param>
+		/// <param name="newState">The new state of the doors.</param>
+		public void DoorChange(DoorStates oldState, DoorStates newState)
+		{
+			TrainDoorsClosed = newState == DoorStates.None;
+		}
+
+		/// <summary>Is called when the train passes a beacon.</summary>
+		/// <param name="data">The beacon data.</param>
+		public void SetBeacon(BeaconData data)
+		{
+			if (data.Type == -16777214)
+			{
+				// ATC speed limit (.Limit command)
+				double limit = (data.Optional & 4095);
+				double position = (data.Optional >> 12);
+				var item = new CompatibilityLimit(limit, position);
+				if (!trackLimits.Contains(item))
+				{
+					trackLimits.Add(item);
+				}
+			}
 		}
 
 		/// <summary>
@@ -415,6 +475,42 @@ namespace DenshaDeGoInput
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Calculates the current speed limit.
+		/// </summary>
+		internal double GetCurrentSpeedLimit(double position)
+		{
+			int pointer = 0;
+
+			if (trackLimits.Count > 0)
+			{
+				if (trackLimits.Count == 1)
+				{
+					// Only one limit has been found
+					if (trackLimits[0].Location > position)
+					{
+						// Enforce the limit
+						return trackLimits[0].Limit;
+					}
+					// No limit
+					return -1;
+				}
+				while (pointer > 0 && trackLimits[pointer].Location > position)
+				{
+					// Detects speed limits when driving or jumping backwards
+					pointer--;
+				}
+				while (pointer < trackLimits.Count - 1 && trackLimits[pointer + 1].Location <= position)
+				{
+					// Detects speed limits when driving or jumping forwards
+					pointer++;
+				}
+				return trackLimits[pointer].Limit;
+			}
+			// No limit
+			return -1;
 		}
 
 		/// <summary>

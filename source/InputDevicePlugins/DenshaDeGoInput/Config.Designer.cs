@@ -106,6 +106,7 @@ namespace DenshaDeGoInput
             this.convertnotchesCheck = new System.Windows.Forms.CheckBox();
             this.deviceBox = new System.Windows.Forms.ComboBox();
             this.label_device = new System.Windows.Forms.Label();
+            this.linkLabel_driver = new System.Windows.Forms.LinkLabel();
             this.deviceInputBox.SuspendLayout();
             this.buttonMappingBox.SuspendLayout();
             this.handleMappingBox.SuspendLayout();
@@ -641,9 +642,9 @@ namespace DenshaDeGoInput
             // buttonSave
             // 
             this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSave.Location = new System.Drawing.Point(539, 356);
+            this.buttonSave.Location = new System.Drawing.Point(502, 356);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.Size = new System.Drawing.Size(94, 23);
             this.buttonSave.TabIndex = 3;
             this.buttonSave.Text = "Save";
             this.buttonSave.UseVisualStyleBackColor = true;
@@ -652,9 +653,9 @@ namespace DenshaDeGoInput
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(620, 356);
+            this.buttonCancel.Location = new System.Drawing.Point(602, 356);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.Size = new System.Drawing.Size(93, 23);
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -723,11 +724,22 @@ namespace DenshaDeGoInput
             this.label_device.Text = "Device";
             this.label_device.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // linkLabel_driver
+            // 
+            this.linkLabel_driver.AutoEllipsis = true;
+            this.linkLabel_driver.Location = new System.Drawing.Point(12, 361);
+            this.linkLabel_driver.Name = "linkLabel_driver";
+            this.linkLabel_driver.Size = new System.Drawing.Size(484, 21);
+            this.linkLabel_driver.TabIndex = 9;
+            this.linkLabel_driver.TabStop = true;
+            this.linkLabel_driver.Text = "My controller is not detected or does not work properly";
+            // 
             // Config
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 391);
+            this.Controls.Add(this.linkLabel_driver);
             this.Controls.Add(this.label_device);
             this.Controls.Add(this.deviceBox);
             this.Controls.Add(this.handleMappingBox);
@@ -802,5 +814,6 @@ namespace DenshaDeGoInput
 		private System.Windows.Forms.Label label_buttonrdoor;
 		private System.Windows.Forms.ComboBox buttonldoorBox;
 		private System.Windows.Forms.Label label_buttonldoor;
+		private System.Windows.Forms.LinkLabel linkLabel_driver;
 	}
 }

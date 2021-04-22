@@ -345,14 +345,6 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Does loading tasks for certain controllers.
-		/// </summary>
-		public static void Load()
-		{
-			ControllerPs2.Load();
-		}
-
-		/// <summary>
 		/// Does unloading tasks for certain controllers.
 		/// </summary>
 		public static void Unload()
@@ -389,7 +381,7 @@ namespace DenshaDeGoInput
 				}
 				else
 				{
-					// The active controller is not connected, remove it
+					// The active controller is no longer connected, remove it
 					ConnectedControllers.Remove(ActiveControllerGuid);
 					ConnectedModels.Remove(ActiveControllerGuid);
 				}
