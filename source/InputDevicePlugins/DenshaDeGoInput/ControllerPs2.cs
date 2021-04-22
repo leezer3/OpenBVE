@@ -464,6 +464,11 @@ namespace DenshaDeGoInput
 				// Unless the controller is disconnected or the model changes, ask for input in a loop
 				int readCount;
 				ErrorCode readError = controllerReader.Read(readBuffer, 0, 6, 0, out readCount);
+				if (readError != ErrorCode.Ok)
+				{
+					// Break if there's any error
+					break;
+				}
 			}
 		}
 
