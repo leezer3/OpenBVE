@@ -47,6 +47,10 @@ namespace Plugin
 			try
 			{
 				unifiedObject = ReadObject(path, Encoding);
+				if (unifiedObject == null)
+				{
+					return false;
+				}
 				return true;
 			}
 			catch
