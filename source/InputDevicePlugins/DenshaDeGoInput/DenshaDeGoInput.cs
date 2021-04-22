@@ -352,6 +352,12 @@ namespace DenshaDeGoInput
 			TrainDoorsClosed = newState == DoorStates.None;
 		}
 
+		/// <summary>Is called when the aspect in the current or in any of the upcoming sections changes, or when passing section boundaries.</summary>
+		/// <remarks>The signal array is guaranteed to have at least one element. When accessing elements other than index 0, you must check the bounds of the array first.</remarks>
+		public void SetSignal(SignalData[] signal)
+		{
+		}
+
 		/// <summary>Is called when the train passes a beacon.</summary>
 		/// <param name="data">The beacon data.</param>
 		public void SetBeacon(BeaconData data)
