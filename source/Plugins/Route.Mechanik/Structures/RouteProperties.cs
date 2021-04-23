@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OpenBveApi.Runtime;
 
 namespace MechanikRouteParser
 {
@@ -15,12 +16,20 @@ namespace MechanikRouteParser
 			}
 
 			RouteProperties routeProperties = knownRoutes[hash];
-			for (int i = 0; i < routeProperties.StationNames.Length; i++)
+			for (int i = 0; i < Plugin.CurrentRoute.Stations.Length; i++)
 			{
-				Plugin.CurrentRoute.Stations[i].Name = routeProperties.StationNames[i];
-				if (routeProperties.DepartureTimes.Length == routeProperties.StationNames.Length)
+				if (routeProperties.StationNames.Length == Plugin.CurrentRoute.Stations.Length)
+				{
+					Plugin.CurrentRoute.Stations[i].Name = routeProperties.StationNames[i];
+				}
+				if (routeProperties.DepartureTimes.Length == Plugin.CurrentRoute.Stations.Length)
 				{
 					Plugin.CurrentRoute.Stations[i].DepartureTime = routeProperties.DepartureTimes[i];
+				}
+				if (routeProperties.Doors.Length == Plugin.CurrentRoute.Stations.Length)
+				{
+					Plugin.CurrentRoute.Stations[i].OpenLeftDoors = (routeProperties.Doors[i] & DoorStates.Left) != 0;
+					Plugin.CurrentRoute.Stations[i].OpenRightDoors = (routeProperties.Doors[i] & DoorStates.Right) != 0;
 				}
 			}
 
@@ -42,11 +51,14 @@ namespace MechanikRouteParser
 		internal string DefaultTrain;
 		/// <summary>The station departure times</summary>
 		internal double[] DepartureTimes;
+		/// <summary>The doors to be opened at this station</summary>
+		internal DoorStates[] Doors;
 
 		internal RouteProperties()
 		{
 			StationNames = new string[] { };
 			DepartureTimes = new double[] { };
+			Doors = new DoorStates[] { };
 		}
 	}
 }

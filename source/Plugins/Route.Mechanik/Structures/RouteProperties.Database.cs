@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 using Path = OpenBveApi.Path;
 using XmlElement = System.Xml.XmlElement;
 
@@ -120,6 +122,17 @@ namespace MechanikRouteParser
 						for (int i = 0; i < splitTimes.Length; i++)
 						{
 							OpenBveApi.Time.TryParseTime(splitTimes[i], out currentProperties.DepartureTimes[i]);
+						}
+						break;
+					case "Doors":
+						string[] splitDoors = childNode.InnerText.Split(',');
+						currentProperties.Doors = new DoorStates[splitDoors.Length];
+						for (int i = 0; i < splitDoors.Length; i++)
+						{
+							if (!Enum.TryParse(splitDoors[i], true, out currentProperties.Doors[i]))
+							{
+								currentProperties.Doors[i] = DoorStates.None;
+							}
 						}
 						break;
 				}
