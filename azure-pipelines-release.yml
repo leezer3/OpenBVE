@@ -33,7 +33,10 @@ jobs:
       solution: '$(solution)'
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-  - script: WindowsInstaller.ps1
+  - task: PowerShell@2
+    inputs:
+      filePath: $(Pipeline.Workspace)/s/WindowsInstaller.ps1
+      arguments: $(git describe --tags)
   - task: CopyFilesOverSSH@0
     inputs:
      sshEndpoint: 'BuildServer'
