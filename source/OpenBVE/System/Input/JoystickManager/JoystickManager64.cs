@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Hosts;
 using PIEHid64Net;
 
@@ -10,7 +10,10 @@ namespace OpenBve.Input
 
 		internal JoystickManager64()
 		{
-			devices = PIEDevice.EnumeratePIE();
+			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				devices = PIEDevice.EnumeratePIE();
+			}
 		}
 		
 		internal override int RailDriverCount
