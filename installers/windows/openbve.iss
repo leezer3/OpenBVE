@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openBVE"
-#define MyAppVersion "1.7.1.8"
+#define MyAppVersion "1.8.0.0"
 #define MyAppPublisher "The OpenBVE Project"
 #define MyAppURL "http://www.openbve-project.net"
 #define OpenBVEExecutable "OpenBve.exe"
@@ -72,6 +72,7 @@ Source: "InstallerData\NDP461-KB3102438-Web.exe"; DestDir: "{app}"; Flags: delet
 Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#OpenBVEExecutable}"; Tasks: desktopicon
 Name: "{userdesktop}\openBVE Addons"; Filename:"{code:GetDataDir}"; Tasks: desktopicon2
 Name: "{group}\{#MyAppName}"; Filename: "{app}\OpenBVE.exe"
+Name: "{group}\{#MyAppName} (32-bit)"; Filename: "{app}\OpenBVE-32.exe"
 Name: "{group}\Developer Tools\Route Viewer"; Filename: "{app}\RouteViewer.exe"
 Name: "{group}\Developer Tools\Object Viewer"; Filename: "{app}\ObjectViewer.exe"
 Name: "{group}\Developer Tools\Train Editor"; Filename: "{app}\TrainEditor2.exe"
