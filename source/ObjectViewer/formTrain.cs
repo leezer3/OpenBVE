@@ -315,6 +315,15 @@ namespace OpenBve
 						{
 							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, Train.Handles.EmergencyBrake, Train.Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] {});
 						}
+
+						if (Train.Cars.Length > 1)
+						{
+							Train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
+						}
+						else
+						{
+							Train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, Train.Cars[i / 2], null, Train);
+						}
 						//At the minute, Object Viewer uses dummy brake systems
 						Train.Cars[i].CarBrake.mainReservoir = new MainReservoir((int)numericUpDownMain.Value * 1000);
 						Train.Cars[i].CarBrake.brakePipe = new BrakePipe((int)numericUpDownPipe.Value * 1000);

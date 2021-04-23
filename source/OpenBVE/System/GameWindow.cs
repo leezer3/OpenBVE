@@ -12,6 +12,7 @@ using LibRender2.Screens;
 using LibRender2.Trains;
 using LibRender2.Viewports;
 using OpenBve.Graphics;
+using OpenBve.Input;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
@@ -180,9 +181,9 @@ namespace OpenBve
 			MainLoop.ProcessKeyboard();
 			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
-			if (JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.Raildriver.Guid))
+			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 			{
-				var railDriver = JoystickManager.AttachedJoysticks[JoystickManager.Raildriver.Guid] as JoystickManager.Raildriver;
+				var railDriver = Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] as AbstractRailDriver;
 				if (railDriver != null)
 				{
 					if (Interface.CurrentOptions.RailDriverMPH)

@@ -1,44 +1,58 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents data given to the plugin in the Elapse call.</summary>
+	[DataContract]
 	public class ElapseData
 	{
 		/// <summary>The state of the train.</summary>
+		[DataMember]
 		private readonly VehicleState MyVehicle;
 
 		/// <summary>The state of the preceding train, or a null reference if there is no preceding train.</summary>
+		[DataMember]
 		private readonly PrecedingVehicleState MyPrecedingVehicle;
 
 		/// <summary>The virtual handles.</summary>
+		[DataMember]
 		private Handles MyHandles;
 
 		/// <summary>The state of the door interlock.</summary>
+		[DataMember]
 		private DoorInterlockStates MyDoorInterlockState;
 
 		/// <summary>The current absolute time.</summary>
+		[DataMember]
 		private readonly Time MyTotalTime;
 
 		/// <summary>The elapsed time since the last call to Elapse.</summary>
+		[DataMember]
 		private readonly Time MyElapsedTime;
 
 		/// <summary>The debug message the plugin wants the host application to display.</summary>
+		[DataMember]
 		private string MyDebugMessage;
 
 		/// <summary>Whether the plugin requests that time acceleration is disabled.</summary>
+		[DataMember]
 		private bool MyDisableTimeAcceleration;
 
 		/// <summary>Stores the list of current stations.</summary>
+		[DataMember]
 		private readonly List<Station> MyStations;
 
 		/// <summary>The current camera view mode.</summary>
+		[DataMember]
 		private readonly CameraViewMode MyCameraViewMode;
 
 		/// <summary>The current interface language code.</summary>
+		[DataMember]
 		private readonly string MyLanguageCode;
 
 		/// <summary>The current destination code</summary>
+		[DataMember]
 		private readonly int CurrentDestination;
 
 		/// <summary>Creates a new instance of this class.</summary>

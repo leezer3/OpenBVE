@@ -1,15 +1,21 @@
-﻿namespace OpenBveApi.Runtime
+﻿using System.Runtime.Serialization;
+
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents data trasmitted by a beacon.</summary>
+	[DataContract]
 	public class BeaconData
 	{
 		/// <summary>The type of beacon.</summary>
+		[DataMember]
 		private readonly int MyType;
 
 		/// <summary>Optional data the beacon transmits.</summary>
+		[DataMember]
 		private readonly int MyOptional;
 
 		/// <summary>The section the beacon is attached to.</summary>
+		[DataMember]
 		private readonly SignalData MySignal;
 
 		/// <summary>Gets the type of beacon.</summary>

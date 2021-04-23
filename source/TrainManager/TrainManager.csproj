@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,11 +30,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Brake\AirBrake\AutomaticAirBrake.cs" />
@@ -95,6 +96,8 @@
     <Compile Include="SafetySystems\Plugin\NetPlugin.cs" />
     <Compile Include="SafetySystems\Plugin\Plugin.cs" />
     <Compile Include="SafetySystems\Plugin\Plugin.Functions.cs" />
+    <Compile Include="SafetySystems\Plugin\Plugin.SoundInstructions.cs" />
+    <Compile Include="SafetySystems\Plugin\ProxyPlugin.cs" />
     <Compile Include="SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="SafetySystems\TrainSafetySystems.cs" />
     <Compile Include="TrackFollowingObject\AI\TrackFollowingObject.AI.cs" />

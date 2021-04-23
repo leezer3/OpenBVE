@@ -33,7 +33,7 @@ namespace CsvRwRouteParser
 								continue;
 							}
 
-							if (o > 43200 && Plugin.CurrentOptions.EnableBveTsHacks)
+							if (Math.Abs(o) > 43200 && Plugin.CurrentOptions.EnableBveTsHacks)
 							{
 								//Southern Blighton- Treston park has a runinterval of well over 24 hours, and there are likely others
 								//Discard this
@@ -41,7 +41,7 @@ namespace CsvRwRouteParser
 								continue;
 							}
 
-							if (o < 120 && Plugin.CurrentOptions.EnableBveTsHacks)
+							if (Math.Abs(o) < 120 && Plugin.CurrentOptions.EnableBveTsHacks)
 							{
 								/*
 								 * An AI train follows the same schedule / rules as the player train
@@ -53,7 +53,7 @@ namespace CsvRwRouteParser
 								 * When the runinterval is below ~2minutes, on large numbers of routes, this
 								 * shows up as a train overlapping the player train (bad....)
 								 */
-								o = 120;
+								o = Math.Abs(o) != o ? -120 : 120;
 							}
 
 							intervals.Add(o);

@@ -1,9 +1,13 @@
-﻿namespace OpenBveApi.Runtime
+﻿using System.Runtime.Serialization;
+
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents a time.</summary>
+	[DataContract]
 	public class Time
 	{
 		/// <summary>The time in seconds.</summary>
+		[DataMember]
 		private readonly double MyValue;
 
 		/// <summary>Gets the time in seconds.</summary>

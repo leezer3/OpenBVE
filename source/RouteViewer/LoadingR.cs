@@ -7,6 +7,7 @@
 
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -74,39 +75,73 @@ namespace OpenBve {
 			RouteViewer.LoadingScreenLoop();
 		}
 
-		// get railway folder
-		private static string GetRailwayFolder(string RouteFile) {
-			try {
-				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
-				while (true) {
-					string Subfolder = OpenBveApi.Path.CombineDirectory(Folder, "Railway");
-					if (System.IO.Directory.Exists(Subfolder)) {
-						return Subfolder;
-					}
-					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-					if (Info == null) break;
-					Folder = Info.FullName;
-				}
-			} catch { }
-			//If the Route, Object and Sound folders exist, but are not in a railway folder...
+		/// <summary>Gets the absolute Railway folder for a given route file</summary>
+		/// <returns>The absolute on-disk path of the railway folder</returns>
+		internal static string GetRailwayFolder(string RouteFile) {
 			try
 			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+
 				while (true)
 				{
-					string RouteFolder = OpenBveApi.Path.CombineDirectory(Folder, "Route");
-					string ObjectFolder = OpenBveApi.Path.CombineDirectory(Folder, "Object"); 
-					string SoundFolder = OpenBveApi.Path.CombineDirectory(Folder, "Sound");
-					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder) && System.IO.Directory.Exists(SoundFolder))
+					string Subfolder = OpenBveApi.Path.CombineDirectory(Folder, "Railway");
+					if (System.IO.Directory.Exists(Subfolder))
 					{
-						return Folder;
+						if (System.IO.Directory.EnumerateDirectories(Subfolder).Any() || System.IO.Directory.EnumerateFiles(Subfolder).Any())
+						{
+							//HACK: Ignore completely empty directories
+							//Doesn't handle wrong directories, or those with stuff missing, TODO.....
+							return Subfolder;
+						}
 					}
+
+					if (Folder == null) continue;
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
 					if (Info == null) break;
 					Folder = Info.FullName;
 				}
 			}
-			catch { }
+			catch
+			{
+				//ignored
+			}
+			
+			//If the Route, Object and Sound folders exist, but are not in a railway folder.....
+			try
+			{
+				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				string candidate = null;
+				while (true)
+				{
+					string RouteFolder = OpenBveApi.Path.CombineDirectory(Folder, "Route");
+					string ObjectFolder = OpenBveApi.Path.CombineDirectory(Folder, "Object");
+					string SoundFolder = OpenBveApi.Path.CombineDirectory(Folder, "Sound");
+					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder) && System.IO.Directory.Exists(SoundFolder))
+					{
+						return Folder;
+					}
+
+					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder))
+					{
+						candidate = Folder;
+					}
+
+					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+					if (Info == null)
+					{
+						if (candidate != null)
+						{
+							return candidate;
+						}
+						break;
+					}
+					Folder = Info.FullName;
+				}
+			}
+			catch
+			{
+				//ignored
+			}
 			return Application.StartupPath;
 		}
 

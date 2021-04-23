@@ -1,15 +1,21 @@
-﻿namespace OpenBveApi.Runtime
+﻿using System.Runtime.Serialization;
+
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents the current state of the preceding train.</summary>
+	[DataContract]
 	public class PrecedingVehicleState
 	{
 		/// <summary>The location of the back of the preceding train, in meters.</summary>
+		[DataMember]
 		private readonly double MyLocation;
 
 		/// <summary>The distance from the front of the current train to the back of the preceding train, in meters.</summary>
+		[DataMember]
 		private readonly double MyDistance;
 
 		/// <summary>The current speed of the preceding train.</summary>
+		[DataMember]
 		private readonly Speed MySpeed;
 
 		/// <summary>Gets the location of the back of the preceding train, in meters.</summary>

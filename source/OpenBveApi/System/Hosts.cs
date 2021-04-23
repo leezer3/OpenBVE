@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -616,5 +617,27 @@ namespace OpenBveApi.Hosts {
 		{
 			return null;
 		}
+
+		/*
+		 * Used for interop with the 32-bit plugin host
+		 */
+
+		/// <summary>The event raised when the 32-bit host application signals it is ready to accept connections from clients</summary>
+		public static readonly EventWaitHandle Win32PluginHostReady = new EventWaitHandle(false, EventResetMode.AutoReset, @"eventHostReady");
+
+		/// <summary>The event raised when the proxy client quits and the host should stop</summary>
+		public static readonly EventWaitHandle Win32PluginHostStopped = new EventWaitHandle(false, EventResetMode.AutoReset, @"eventHostShouldStop");
+
+		/// <summary>The base pipe address</summary>
+		public const string pipeBaseAddress = @"net.pipe://localhost";
+
+		/// <summary>Pipe name</summary>
+		public const string pipeName = @"pipename";
+
+		/// <summary>Base addresses for the hosted service.</summary>
+		public static Uri baseAddress { get { return new Uri(pipeBaseAddress); } }
+
+		/// <summary>Complete address of the named pipe endpoint.</summary>
+		public static Uri Win32PluginHostEndpointAddress { get { return new Uri(pipeBaseAddress + '/' + pipeName); } }
 	}
 }

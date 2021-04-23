@@ -303,8 +303,11 @@ namespace OpenBve {
 				    else
 				    {
 					    UnifiedObject o;
-					    Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-					    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
+					    if (CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o))
+					    {
+						    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
+					    }
+					    
 				    }
 
 			    }

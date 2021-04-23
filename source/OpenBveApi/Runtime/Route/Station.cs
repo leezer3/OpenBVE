@@ -1,37 +1,55 @@
+using System.Runtime.Serialization;
+
 namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents a station.</summary>
+	[DataContract]
 	public class Station
 	{
 		/// <summary>The name of the station.</summary>
+		[DataMember]
 		public string Name;
 		/// <summary>The expected arrival time.</summary>
+		[DataMember]
 		public double ArrivalTime;
 		/// <summary>The expected departure time.</summary>
+		[DataMember]
 		public double DepartureTime;
 		/// <summary>Whether the next signal is held red until departure.</summary>
+		[DataMember]
 		public bool ForceStopSignal;
 		/// <summary>Whether the left doors are to open.</summary>
+		[DataMember]
 		public bool OpenLeftDoors;
 		/// <summary>Whether the right doors are to open.</summary>
+		[DataMember]
 		public bool OpenRightDoors;
 		/// <summary>The track position of this station.</summary>
+		[DataMember]
 		public double DefaultTrackPosition;
 		/// <summary>The stop position applicable to the current train.</summary>
+		[DataMember]
 		public double StopPosition;
 		/// <summary>The stop mode for this station</summary>
+		[DataMember]
 		public StationStopMode StopMode;
 		/// <summary>The type of this station</summary>
+		[DataMember]
 		public StationType Type;
 		/// <summary>The incidence of reopening of the door</summary>
+		[DataMember]
 		public double ReopenDoor;
 		/// <summary>The upper limit of the number of times reopen the door</summary>
+		[DataMember]
 		public int ReopenStationLimit;
 		/// <summary>The duration of interference in the door</summary>
+		[DataMember]
 		public double InterferenceInDoor;
 		/// <summary>The maximum width of the obstacle to the overall width of the door</summary>
+		[DataMember]
 		public int MaxInterferingObjectRate;
 		/// <summary>If departing this station triggers a jump, contains the index of the station to jump to</summary>
+		[DataMember]
 		public int JumpIndex;
 		/// <summary>The expected time stopped.</summary>
 		public double StopTime

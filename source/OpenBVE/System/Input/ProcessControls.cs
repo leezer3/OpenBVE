@@ -24,17 +24,17 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed in ms since the last call to this function</param>
 		internal static void ProcessControls(double TimeElapsed)
 		{
-			for (int i = 0; i < JoystickManager.AttachedJoysticks.Count; i++)
+			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
 				/*
 				 * Prequisite checks:
 				 * Is our joystick connected?
 				 * Have we already detected the disconnection?
 				 */
-				Guid guid = JoystickManager.AttachedJoysticks.ElementAt(i).Key;
-				if (!JoystickManager.AttachedJoysticks[guid].IsConnected() && JoystickManager.AttachedJoysticks[guid].Disconnected == false)
+				Guid guid = Program.Joysticks.AttachedJoysticks.ElementAt(i).Key;
+				if (!Program.Joysticks.AttachedJoysticks[guid].IsConnected() && Program.Joysticks.AttachedJoysticks[guid].Disconnected == false)
 				{
-					JoystickManager.AttachedJoysticks[guid].Disconnected = true;
+					Program.Joysticks.AttachedJoysticks[guid].Disconnected = true;
 					for (int j = 0; j < Interface.CurrentControls.Length; j++)
 					{
 						if (Interface.CurrentControls[j].Method == ControlMethod.Joystick && Interface.CurrentControls[i].Device == guid)
@@ -44,11 +44,11 @@ namespace OpenBve
 						}
 					}
 				}
-				else if (JoystickManager.AttachedJoysticks[guid].IsConnected() && JoystickManager.AttachedJoysticks[guid].Disconnected)
+				else if (Program.Joysticks.AttachedJoysticks[guid].IsConnected() && Program.Joysticks.AttachedJoysticks[guid].Disconnected)
 				{
 					//Reconnected, so kick out of pause mode
 					Program.Renderer.CurrentInterface = InterfaceType.Normal;
-					JoystickManager.AttachedJoysticks[guid].Disconnected = false;
+					Program.Joysticks.AttachedJoysticks[guid].Disconnected = false;
 				}
 
 			}

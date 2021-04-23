@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBve.Graphics;
+using OpenBve.Input;
 using OpenTK;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -74,7 +75,14 @@ namespace OpenBve {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			CurrentHost = new Host();
-			Joysticks = new JoystickManager();
+			if (IntPtr.Size == 4)
+			{
+				Joysticks = new JoystickManager32();
+			}
+			else
+			{
+				Joysticks = new JoystickManager64();	
+			}
 			try {
 				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 				FileSystem.CreateFileSystem();

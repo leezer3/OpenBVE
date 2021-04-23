@@ -255,6 +255,34 @@ namespace OpenBve
 					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Point(32, 24), TextAlignment.TopLeft, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Point(32, 44), TextAlignment.TopLeft, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Point(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
+					if (Interface.LogMessages.Count == 1)
+					{
+						Keys.Render(4, 64, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
+
+						if (Interface.LogMessages[0].Type != MessageType.Information)
+						{
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+						}
+						else
+						{
+							//If all of our messages are information, then print the message text in grey
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 64), TextAlignment.TopLeft, TextColor);
+						}
+					}
+					else if (Interface.LogMessages.Count > 1)
+					{
+						Keys.Render(4, 64, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
+						bool error = Interface.LogMessages.Any(x => x.Type != MessageType.Information);
+
+						if (error)
+						{
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Point(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+						}
+						else
+						{
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Point(32, 64), TextAlignment.TopLeft, TextColor);
+						}
+					}
 				}
 				else
 				{
