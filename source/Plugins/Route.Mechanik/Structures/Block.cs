@@ -48,6 +48,8 @@ namespace MechanikRouteParser
 		internal List<Semaphore> Signals;
 		/// <summary>The block Y offset</summary>
 		internal double YOffset;
+		/// <summary>Whether a HornBlow event should be issued in this block</summary>
+		internal bool HornBlow;
 
 		internal Block(double TrackPosition, double Offset)
 		{

@@ -31,7 +31,7 @@ using System.Text.RegularExpressions;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenBveApi.Sounds;
+using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
 using Route.Mechanik;
@@ -39,6 +39,7 @@ using RouteManager2.Events;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 using Path = OpenBveApi.Path;
+using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace MechanikRouteParser
 {
@@ -187,7 +188,7 @@ namespace MechanikRouteParser
 						{
 							continue;
 						}
-						yOffset -= 0.001;
+						yOffset -= 0.00035;
 						/*
 						 * HORIZONTAL PLANE OBJECTS
 						 * => Track Position
@@ -572,6 +573,19 @@ namespace MechanikRouteParser
 						 * => Location X, Z
 						 * => Control- 1 for start, 0 for stop
 						 */
+						bool shouldBlow;
+						if (Arguments.Length < 6 || !TryParseBool(Arguments[5], out shouldBlow))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HornControl variable encountered in " + Arguments[0] + " at line " + i);
+							continue;
+						}
+						if (shouldBlow)
+						{
+							
+							//Add 25m to the section start trigger for a reasonable single position AI horn event
+							blockIndex = currentRouteData.FindBlock(trackPosition + 25);
+							currentRouteData.Blocks[blockIndex].HornBlow = true;
+						}
 						break;
 					case "'z_shp":
 						/*
@@ -796,6 +810,13 @@ namespace MechanikRouteParser
 						}
 						
 						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance, 1.0);
+					}
+
+					if (currentRouteData.Blocks[i].HornBlow)
+					{
+						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new HornBlowEvent(0, HornTypes.Primary, true);
 					}
 				}
 				
