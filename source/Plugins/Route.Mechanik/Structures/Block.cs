@@ -50,6 +50,8 @@ namespace MechanikRouteParser
 		internal double YOffset;
 		/// <summary>Whether a HornBlow event should be issued in this block</summary>
 		internal bool HornBlow;
+		/// <summary>Whether a signal beacon is present</summary>
+		internal bool SignalBeacon;
 
 		internal Block(double TrackPosition, double Offset)
 		{

@@ -591,11 +591,20 @@ namespace MechanikRouteParser
 						/*
 						 * AUTO-BRAKE MARKER
 						 * Unclear, but let's treat this as a brake application if signal is at aspect 0
+						 * For the moment, add a default ATS-S / ATS-P transponder
 						 *
 						 * => Track position
 						 * => Location X, Z
 						 * => Control- Must be 1
 						 */
+						int control;
+						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out control) || control != 1)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid AutoBrake Control variable encountered in " + Arguments[0] + " at line " + i);
+							continue;
+						}
+						blockIndex = currentRouteData.FindBlock(trackPosition);
+						currentRouteData.Blocks[blockIndex].SignalBeacon = true;
 						break;
 					case "'z_jb":
 						/*
@@ -817,6 +826,12 @@ namespace MechanikRouteParser
 						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
 						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
 						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new HornBlowEvent(0, HornTypes.Primary, true);
+					}
+					if (currentRouteData.Blocks[i].SignalBeacon)
+					{
+						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
+						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new TransponderEvent(Plugin.CurrentRoute, 0, 2, 0, Plugin.CurrentRoute.Sections.Length - 1, true);
 					}
 				}
 				
