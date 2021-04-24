@@ -21,8 +21,8 @@ namespace OpenBve
 		// route selection
 		// ===============
 
-		// route folder
-		private string rf;
+		/// <summary>The current routefile search folder</summary>
+		private string currentRouteFolder;
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
 
@@ -63,6 +63,7 @@ namespace OpenBve
 			{
 				try
 				{
+					// ReSharper disable once PossibleNullReferenceException
 					Folder = Directory.GetParent(Folder).ToString();
 				}
 				catch
@@ -74,11 +75,11 @@ namespace OpenBve
 				
 			}
 
-			if (rf != Folder)
+			if (currentRouteFolder != Folder)
 			{
 				populateRouteList(Folder);
 			}
-			rf = Folder;
+			currentRouteFolder = Folder;
 			try
 			{
 				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
@@ -116,7 +117,7 @@ namespace OpenBve
 				});
 				return;
 			}
-			populateRouteList(rf);
+			populateRouteList(currentRouteFolder);
 			//If this method is triggered whilst the form is disposing, bad things happen...
 			if (listviewRouteFiles.Columns.Count > 0)
 			{
@@ -449,9 +450,8 @@ namespace OpenBve
 		// train selection
 		// ===============
 
-		// train folder
-
-		private string tf;
+		/// <summary>The current train search folder</summary>
+		private string currentTrainFolder;
 
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e)
 		{
@@ -464,6 +464,7 @@ namespace OpenBve
 			{
 				try
 				{
+					// ReSharper disable once PossibleNullReferenceException
 					Folder = Directory.GetParent(Folder).ToString();
 				}
 				catch
@@ -473,11 +474,11 @@ namespace OpenBve
 					return;
 				}
 			}
-			if (tf != Folder)
+			if (currentTrainFolder != Folder)
 			{
 				populateTrainList(Folder);
 			}
-			tf = Folder;
+			currentTrainFolder = Folder;
 			try
 			{
 				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
@@ -510,7 +511,7 @@ namespace OpenBve
 				});
 				return;
 			}
-			populateTrainList(tf);
+			populateTrainList(currentTrainFolder);
 			if (listviewTrainFolders.Columns.Count > 0)
 			{
 				listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
