@@ -66,7 +66,7 @@ namespace DenshaDeGoInput
 		internal static bool ControllerDisplayEnabled;
 
 		/// <summary>
-        /// The task used to read input asynchronously.
+        /// The task used to read input in the background.
         /// </summary>
 		internal static Task InputTask;
 
@@ -415,6 +415,11 @@ namespace DenshaDeGoInput
 
 		}
 
+		/// <summary>
+		/// Checks whether the controller is connected or not.
+		/// </summary>
+		/// <param name="id">A string representing the vendor and product ID.</param>
+		/// <returns>Whether the controller is connected or not.</returns>
 		internal static bool IsControlledConnected(string id)
 		{
 			int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
@@ -426,6 +431,9 @@ namespace DenshaDeGoInput
 			return false;
 		}
 
+		/// <summary>
+		/// Polls the device for input.
+		/// </summary>
 		private static void PollDevice()
 		{
 			// Store the current model to detect changes
