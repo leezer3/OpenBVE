@@ -8,7 +8,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
-using SoundManager;
 using TrainManager.Car;
 using Vector2 = OpenTK.Vector2;
 

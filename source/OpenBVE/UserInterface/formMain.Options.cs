@@ -5,7 +5,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 
 namespace OpenBve {
-	internal partial class formMain : Form {
+	internal partial class formMain {
 		
 		
 		// =======

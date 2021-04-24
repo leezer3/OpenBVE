@@ -376,10 +376,10 @@ namespace OpenBve {
 					trackBarHUDSize.Value = 1;
 					break;
 			}
-			updownWindowWidth.Value = (decimal)Interface.CurrentOptions.WindowWidth;
-			updownWindowHeight.Value = (decimal)Interface.CurrentOptions.WindowHeight;
-			updownFullscreenWidth.Value = (decimal)Interface.CurrentOptions.FullscreenWidth;
-			updownFullscreenHeight.Value = (decimal)Interface.CurrentOptions.FullscreenHeight;
+			updownWindowWidth.Value = Interface.CurrentOptions.WindowWidth;
+			updownWindowHeight.Value = Interface.CurrentOptions.WindowHeight;
+			updownFullscreenWidth.Value = Interface.CurrentOptions.FullscreenWidth;
+			updownFullscreenHeight.Value = Interface.CurrentOptions.FullscreenHeight;
 			comboboxFullscreenBits.Items.Clear();
 			comboboxFullscreenBits.Items.Add("16");
 			comboboxFullscreenBits.Items.Add("32");
@@ -407,22 +407,22 @@ namespace OpenBve {
 			{
 				labelAnisotropic.Enabled = false;
 				updownAnisotropic.Enabled = false;
-				updownAnisotropic.Minimum = (decimal)0;
-				updownAnisotropic.Maximum = (decimal)0;
+				updownAnisotropic.Minimum = 0;
+				updownAnisotropic.Maximum = 0;
 			}
 			else {
-				updownAnisotropic.Minimum = (decimal)1;
-				updownAnisotropic.Maximum = (decimal)Interface.CurrentOptions.AnisotropicFilteringMaximum;
-				if ((decimal)Interface.CurrentOptions.AnisotropicFilteringLevel >= updownAnisotropic.Minimum & (decimal)Interface.CurrentOptions.AnisotropicFilteringLevel <= updownAnisotropic.Maximum)
+				updownAnisotropic.Minimum = 1;
+				updownAnisotropic.Maximum = Interface.CurrentOptions.AnisotropicFilteringMaximum;
+				if (Interface.CurrentOptions.AnisotropicFilteringLevel >= updownAnisotropic.Minimum & Interface.CurrentOptions.AnisotropicFilteringLevel <= updownAnisotropic.Maximum)
 				{
-					updownAnisotropic.Value = (decimal)Interface.CurrentOptions.AnisotropicFilteringLevel;
+					updownAnisotropic.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
 				}
 				else {
 					updownAnisotropic.Value = updownAnisotropic.Minimum;
 				}
 			}
-			updownAntiAliasing.Value = (decimal)Interface.CurrentOptions.AntiAliasingLevel;
-			updownDistance.Value = (decimal)Interface.CurrentOptions.ViewingDistance;
+			updownAntiAliasing.Value = Interface.CurrentOptions.AntiAliasingLevel;
+			updownDistance.Value = Interface.CurrentOptions.ViewingDistance;
 			comboboxMotionBlur.Items.Clear();
 			comboboxMotionBlur.Items.AddRange(new object[] { "", "", "", "" });
 			comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
@@ -447,13 +447,13 @@ namespace OpenBve {
 				if (b > trackbarJoystickAxisThreshold.Maximum) b = trackbarJoystickAxisThreshold.Maximum;
 				trackbarJoystickAxisThreshold.Value = b;
 			}
-			updownSoundNumber.Value = (decimal)Interface.CurrentOptions.SoundNumber;
+			updownSoundNumber.Value = Interface.CurrentOptions.SoundNumber;
 			checkboxWarningMessages.Checked = Interface.CurrentOptions.ShowWarningMessages;
 			checkboxErrorMessages.Checked = Interface.CurrentOptions.ShowErrorMessages;
 			comboBoxCompressionFormat.SelectedIndex = (int)Interface.CurrentOptions.packageCompressionType;
 			comboBoxRailDriverUnits.SelectedIndex = Interface.CurrentOptions.RailDriverMPH ? 0 : 1;
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
-			numericUpDownKioskTimeout.Value = (Decimal)Interface.CurrentOptions.KioskModeTimer;
+			numericUpDownKioskTimeout.Value = (decimal)Interface.CurrentOptions.KioskModeTimer;
 			ListInputDevicePlugins();
 			if (Program.CurrentHost.MonoRuntime)
 			{
@@ -636,7 +636,7 @@ namespace OpenBve {
 			 * Localisation for strings in the game start pane
 			 */
 			labelStartTitle.Text = Translations.GetInterfaceString("start_title");
-			labelRoute.Text = @" " + Translations.GetInterfaceString("start_route");
+			labelRoute.Text = Translations.GetInterfaceString("start_route");
 			groupboxRouteSelection.Text = Translations.GetInterfaceString("start_route_selection");
 			tabpageRouteBrowse.Text = Translations.GetInterfaceString("start_route_browse");
 			tabpageRouteRecently.Text = Translations.GetInterfaceString("start_route_recently");
@@ -648,7 +648,7 @@ namespace OpenBve {
 			labelRouteEncoding.Text = Translations.GetInterfaceString("start_route_settings_encoding");
 			comboboxRouteEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
 			labelRouteEncodingPreview.Text = Translations.GetInterfaceString("start_route_settings_encoding_preview");
-			labelTrain.Text = " " + Translations.GetInterfaceString("start_train");
+			labelTrain.Text = Translations.GetInterfaceString("start_train");
 			groupboxTrainSelection.Text = Translations.GetInterfaceString("start_train_selection");
 			tabpageTrainBrowse.Text = Translations.GetInterfaceString("start_train_browse");
 			tabpageTrainRecently.Text = Translations.GetInterfaceString("start_train_recently");
@@ -661,7 +661,7 @@ namespace OpenBve {
 			labelReverseConsist.Text = Translations.GetInterfaceString("start_train_settings_reverseconsist");
 			comboboxTrainEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
 			labelTrainEncodingPreview.Text = Translations.GetInterfaceString("start_train_settings_encoding_preview");
-			labelStart.Text = @" " + Translations.GetInterfaceString("start_start");
+			labelStart.Text = Translations.GetInterfaceString("start_start");
 			labelMode.Text = Translations.GetInterfaceString("start_start_mode");
 			buttonStart.Text = Translations.GetInterfaceString("start_start_start");
 			comboboxMode.Items[0] = Translations.GetInterfaceString("mode_arcade");
@@ -1375,7 +1375,7 @@ namespace OpenBve {
 			const string Url = "http://github.com/leezer3/OpenBVE/";
 			try
 			{
-				System.Diagnostics.Process.Start(Url);
+				Process.Start(Url);
 			}
 			catch (Exception ex)
 			{
@@ -1562,7 +1562,7 @@ namespace OpenBve {
 				if (!System.IO.File.Exists(File))
 				{
 					string Folder = Program.FileSystem.GetDataFolder("Menu");
-					File = OpenBveApi.Path.CombineFile(Folder, File);
+					File = Path.CombineFile(Folder, File);
 				}
 				if (System.IO.File.Exists(File))
 				{
@@ -1685,7 +1685,7 @@ namespace OpenBve {
 				question = question.Replace("[date]", date);
 				if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
 				{
-					System.Diagnostics.Process.Start(url);
+					Process.Start(url);
 				}
 			}
 			else

@@ -20,7 +20,7 @@ using TrainManager.Trains;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
-	internal class Host : OpenBveApi.Hosts.HostInterface {
+	internal class Host : HostInterface {
 		
 		// --- functions ---
 		
@@ -68,7 +68,7 @@ namespace OpenBve {
 		/// <param name="height">Receives the height of the texture.</param>
 		/// <returns>Whether querying the dimensions was successful.</returns>
 		public override bool QueryTextureDimensions(string path, out int width, out int height) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Texture != null) {
 						try {
@@ -103,7 +103,7 @@ namespace OpenBve {
 					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
 				}
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			width = 0;
 			height = 0;
@@ -116,7 +116,7 @@ namespace OpenBve {
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Texture != null) {
 						try {
@@ -147,7 +147,7 @@ namespace OpenBve {
 					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
 				}
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			texture = null;
 			return false;
@@ -166,7 +166,7 @@ namespace OpenBve {
 		/// <param name="loadTexture">Whether the texture is to be pre-loaded</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				Texture data;
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
@@ -181,7 +181,7 @@ namespace OpenBve {
 					return true;
 				}
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			handle = null;
 			return false;
@@ -198,7 +198,7 @@ namespace OpenBve {
 			return true;
 		}
 		
-		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out OpenBveApi.Textures.Texture handle)
+		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle)
 		{
 			handle = new Texture(texture, parameters);
 			return true;
@@ -210,8 +210,8 @@ namespace OpenBve {
 		/// <param name="path">The path to the file or folder that contains the sound.</param>
 		/// <param name="sound">Receives the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public override bool LoadSound(string path, out OpenBveApi.Sounds.Sound sound) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+		public override bool LoadSound(string path, out Sound sound) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Sound != null) {
 						try {
@@ -232,7 +232,7 @@ namespace OpenBve {
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading sound " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			sound = null;
 			return false;
@@ -243,16 +243,14 @@ namespace OpenBve {
 		/// <param name="path">The path to the file or folder that contains the sound.</param>
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public override bool RegisterSound(string path, out OpenBveApi.Sounds.SoundHandle handle)
+		public override bool RegisterSound(string path, out SoundHandle handle)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			if (File.Exists(path) || Directory.Exists(path))
 			{
 				handle = Program.Sounds.RegisterBuffer(path, 0.0);
+				return true;
 			}
-			else
-			{
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
-			}
+			ReportProblem(ProblemType.PathNotFound, path);
 			handle = null;
 			return false;
 		}
@@ -262,14 +260,14 @@ namespace OpenBve {
 		/// /// <param name="radius">The sound radius</param>
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public override bool RegisterSound(string path, double radius, out OpenBveApi.Sounds.SoundHandle handle)
+		public override bool RegisterSound(string path, double radius, out SoundHandle handle)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			if (File.Exists(path) || Directory.Exists(path))
 			{
 				handle = Program.Sounds.RegisterBuffer(path, radius);
 				return true;
 			}
-			ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+			ReportProblem(ProblemType.PathNotFound, path);
 			handle = null;
 			return false;
 		}
@@ -278,7 +276,7 @@ namespace OpenBve {
 		/// <param name="sound">The sound data.</param>
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public override bool RegisterSound(OpenBveApi.Sounds.Sound sound, out OpenBveApi.Sounds.SoundHandle handle)
+		public override bool RegisterSound(Sound sound, out SoundHandle handle)
 		{
 			handle = Program.Sounds.RegisterBuffer(sound, 0.0);
 			return true;
@@ -291,7 +289,7 @@ namespace OpenBve {
 				return true;
 			}
 
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
@@ -325,7 +323,7 @@ namespace OpenBve {
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			Object = null;
 			return false;
@@ -338,7 +336,7 @@ namespace OpenBve {
 				return true;
 			}
 
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
@@ -379,7 +377,7 @@ namespace OpenBve {
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			Object = null;
 			return false;
@@ -430,7 +428,7 @@ namespace OpenBve {
 			return Program.Sounds.PlaySound(buffer, pitch, volume, position, parent, looped);
 		}
 
-		public override void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		public override void PlayMicSound(Vector3 position, double backwardTolerance, double forwardTolerance)
 		{
 			Program.Sounds.PlayMicSound(position, backwardTolerance, forwardTolerance);
 		}
@@ -591,7 +589,7 @@ namespace OpenBve {
 				{
 					if (Program.TrainManager.Trains[i] != baseTrain & Program.TrainManager.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
 					{
-						TrainBase train = Program.TrainManager.Trains[i] as TrainBase;
+						TrainBase train = Program.TrainManager.Trains[i];
 						int c = train.Cars.Length - 1;
 						double z = train.Cars[c].RearAxle.Follower.TrackPosition - train.Cars[c].RearAxle.Position - 0.5 * train.Cars[c].Length;
 						if (z >= baseTrain.FrontCarTrackPosition() & z < bestLocation)

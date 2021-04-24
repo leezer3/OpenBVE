@@ -3,10 +3,10 @@ using System.Windows.Forms;
 using OpenBveApi.Interface;
 
 namespace OpenBve {
-	internal partial class formMain : Form {
+	internal partial class formMain {
 		
 		
-				// ================
+		// ================
 		// review last game
 		// ================
 
@@ -61,9 +61,9 @@ namespace OpenBve {
 				if (!PenaltiesOnly | Game.ScoreLogs[i].Value < 0) {
 					double x = Game.ScoreLogs[i].Time;
 					int h = (int)Math.Floor(x / 3600.0);
-					x -= 3600.0 * (double)h;
+					x -= 3600.0 * h;
 					int m = (int)Math.Floor(x / 60.0);
-					x -= 60.0 * (double)m;
+					x -= 60.0 * m;
 					int s = (int)Math.Floor(x);
 					ListViewItem Item = listviewScore.Items.Add(h.ToString("00", Culture) + ":" + m.ToString("00", Culture) + ":" + s.ToString("00", Culture));
 					Item.SubItems.Add(Game.ScoreLogs[i].Position.ToString("0", Culture));

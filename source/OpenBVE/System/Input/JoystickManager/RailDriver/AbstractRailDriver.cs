@@ -83,10 +83,6 @@ namespace OpenBve.Input
 									{
 										lMin = 255;
 									}
-									else if (lMin < 0)
-									{
-										lMin = 0;
-									}
 
 									if (lMax >= 255)
 									{
@@ -178,6 +174,11 @@ namespace OpenBve.Input
 			}
 			catch
 			{
+				/*
+				 * Saving the calibration failed
+				 * All this means is that it might be off next time, no real big deal
+				 */
+
 			}
 
 		}
@@ -239,7 +240,7 @@ namespace OpenBve.Input
 		internal static byte GetDigit(int num)
 		{
 			num = Math.Abs(num);
-			if (num > 9 || num < 0)
+			if (num > 9)
 			{
 				//Invalid data
 				return 0;
@@ -267,6 +268,7 @@ namespace OpenBve.Input
 					return 127;
 				case 9:
 					return 103;
+				// ReSharper disable once UnreachableSwitchCaseDueToIntegerAnalysis
 				default:
 					return 0;
 			}
