@@ -10,6 +10,7 @@
 		<Hash>F481E0A4879FBF75854E7362E87064A1BE34D8233693DEB27C1040929A936376</Hash>
 		<Description>A Mechanik route featuring Japanese scenery and sounds, by Iskander</Description>
 		<Doors>Right,Right,Right,Right,Left,Right,Right,Right,Left,Left,Right</Doors>
+		<Train>113_6</Train>
 	</Route>
 	<Route>
 		<Hash>896F2840BDB6B9E9E78065BD27421B5A8A49275E9919FE55240E4DC9B9CC7C50</Hash>
@@ -49,6 +50,18 @@
 		<StationNames>LIGOTA GŁ.,Krzewiny,ŁĄKI WIELKIE</StationNames>
 		<DepartureTimes>14.20,14.23,14.30</DepartureTimes>
 		<Doors>Right,Right,Right</Doors>
+	</Route>
+	<Route>
+		<Hash>D36E2E6F1632C573892BF6527791CB8969674C41EF2BD5968F52EE61E48237B3</Hash>
+		<Description>A ficticious UK DMU route, by Steve Green</Description>
+		<Doors>Both,Left,Left,Right,Left,Right,Left,Left,Right,None,Right,None,None,None,None,None,Right</Doors>
+		<Train>cl104_DMC_2CAR_BLUE</Train>
+	</Route>
+	<Route>
+		<Hash>E3A9CCE204FBD74777B941F7A99BD8C4A4192F35CD96F840A1A52BA62A7E563C</Hash>
+		<Description>A ficticious UK EMU route, by Steve Green</Description>
+		<Doors>Both,None,Left,None,None,Right,None,Right,None,Left,Right</Doors>
+		<Train>Cl323 refurb_LM_openbve</Train>
 	</Route>
   </MechanikRoute>
   <MechanikModule>
