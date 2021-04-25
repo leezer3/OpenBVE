@@ -122,7 +122,7 @@ namespace OpenBve
 			{
 				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(TrainData))
 				{
-					//Program.CurrentHost.Plugins[i].Train.LoadTrain(Encoding.UTF8, TrainDirectory, ref currentTrain, ref Interface.CurrentControls);
+					Program.CurrentHost.Plugins[i].Train.LoadTrain(Encoding.UTF8, TrainDirectory, ref currentTrain, ref Interface.CurrentControls);
 				}
 			}
 
