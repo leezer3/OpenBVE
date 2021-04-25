@@ -1067,6 +1067,17 @@ namespace OpenBve {
 							}
 						}
 						break;
+					case Instructions.TrainCarNumber:
+						if (!IsPartOfTrain)
+						{
+							Function.Stack[s] = -1;
+						}
+						else
+						{
+							Function.Stack[s] = CarIndex;
+						}
+						s++;
+						break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}

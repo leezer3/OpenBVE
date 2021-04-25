@@ -1029,6 +1029,17 @@ namespace OpenBve {
 						s++; break;
 						case Instructions.Panel2Timetable:
 						throw new InvalidOperationException("The instruction " + Function.InstructionSet[i].ToString() + " is for internal use only, and should not be added to objects.");
+					case Instructions.TrainCarNumber:
+						if (!IsPartOfTrain)
+						{
+							Function.Stack[s] = -1;
+						}
+						else
+						{
+							Function.Stack[s] = CarIndex;
+						}
+						s++;
+						break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}
