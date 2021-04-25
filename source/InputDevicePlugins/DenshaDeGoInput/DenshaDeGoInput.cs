@@ -283,6 +283,25 @@ namespace DenshaDeGoInput
 			ConfigureMappings();
 		}
 
+		/// <summary>Is called when the state of the doors changes.</summary>
+		/// <param name="oldState">The old state of the doors.</param>
+		/// <param name="newState">The new state of the doors.</param>
+		public void DoorChange(DoorStates oldState, DoorStates newState)
+		{
+		}
+
+		/// <summary>Is called when the aspect in the current or in any of the upcoming sections changes, or when passing section boundaries.</summary>
+		/// <remarks>The signal array is guaranteed to have at least one element. When accessing elements other than index 0, you must check the bounds of the array first.</remarks>
+		public void SetSignal(SignalData[] signal)
+		{
+		}
+
+		/// <summary>Is called when the train passes a beacon.</summary>
+		/// <param name="data">The beacon data.</param>
+		public void SetBeacon(BeaconData data)
+		{
+		}
+
 		/// <summary>
 		/// Configures the correct mappings for the buttons and notches according to the user settings.
 		/// </summary>
