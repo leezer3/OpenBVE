@@ -120,12 +120,18 @@ namespace OpenBve
 			AbstractTrain currentTrain = Train;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
-				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(TrainDirectory))
+				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(TrainData))
 				{
-						
 					Program.CurrentHost.Plugins[i].Train.LoadTrain(Encoding.UTF8, TrainDirectory, ref currentTrain, ref Interface.CurrentControls);
 				}
 			}
+
+			if (!Train.Cars.Any())
+			{
+				Interface.AddMessage(MessageType.Error, false, $"Failed to load the specified train in {FileName}");
+				return;
+			}
+
 			Train.AI = new TrackFollowingObjectAI(Train, Data.ToArray());
 			foreach (var Car in Train.Cars)
 			{

@@ -91,54 +91,96 @@ namespace Train.OpenBve
 		    }
 	    }
 
-	    public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions Options, object rendererReference)
-	    {
-		    currentHost = host;
-		    FileSystem = fileSystem;
-		    CurrentOptions = Options;
-		    // ReSharper disable once MergeCastWithTypeCheck
-		    if (rendererReference is BaseRenderer)
-		    {
-			    Renderer = (BaseRenderer)rendererReference;
-		    }
-	    }
+		public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions Options, object rendererReference)
+		{
+			currentHost = host;
+			FileSystem = fileSystem;
+			CurrentOptions = Options;
+			// ReSharper disable once MergeCastWithTypeCheck
+			if (rendererReference is BaseRenderer)
+			{
+				Renderer = (BaseRenderer)rendererReference;
+			}
+		}
 
-	    public override bool CanLoadTrain(string path)
-	    {
-		    string vehicleTxt = Path.CombineFile(path, "vehicle.txt");
-		    if (File.Exists(vehicleTxt))
-		    {
-			    string[] lines = File.ReadAllLines(vehicleTxt);
-			    for (int i = 10; i < lines.Length; i++)
-			    {
-				    if (lines[i].StartsWith(@"bvets vehicle ", StringComparison.InvariantCultureIgnoreCase))
-				    {
-						/*
-						 * BVE5 format train
-						 * When the BVE5 plugin is implemented, this should return false, as BVE5 trains
-						 * often seem to keep the train.dat lying around and we need to use the right plugin
-						 *
-						 * For the moment however, this is ignored....
-						 */
-				    }
-			    }
-		    }
-			string trainDat = Path.CombineFile(path, "train.dat");
-			if (File.Exists(trainDat))
+		public override bool CanLoadTrain(string path)
+		{
+			if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
 			{
-				return true;
+				string vehicleTxt = Path.CombineFile(path, "vehicle.txt");
+				if (File.Exists(vehicleTxt))
+				{
+					string[] lines = File.ReadAllLines(vehicleTxt);
+					for (int i = 10; i < lines.Length; i++)
+					{
+						if (lines[i].StartsWith(@"bvets vehicle ", StringComparison.InvariantCultureIgnoreCase))
+						{
+							/*
+							 * BVE5 format train
+							 * When the BVE5 plugin is implemented, this should return false, as BVE5 trains
+							 * often seem to keep the train.dat lying around and we need to use the right plugin
+							 *
+							 * For the moment however, this is ignored....
+							 */
+						}
+					}
+				}
+
+				string trainDat = Path.CombineFile(path, "train.dat");
+				if (File.Exists(trainDat))
+				{
+					if (TrainDatParser.CanLoad(trainDat))
+					{
+						return true;
+					}
+				}
+
+				string trainXML = Path.CombineFile(path, "train.xml");
+				if (File.Exists(trainXML))
+				{
+					/*
+					 * XML format train
+					 * At present, XML is used only as an extension, but acceleration etc. will be implemented
+					 * When this is done, return true here
+					 */
+				}
+
+				return false;
 			}
-			string trainXML = Path.CombineFile(path, "train.xml");
-			if (File.Exists(trainXML))
+
+			if (File.Exists(path))
 			{
-				/*
-				 * XML format train
-				 * At present, XML is used only as an extension, but acceleration etc. will be implemented
-				 * When this is done, return true here
-				 */
+				if (path.EndsWith("vehicle.txt", StringComparison.InvariantCultureIgnoreCase))
+				{
+					/*
+					 * BVE5 format train
+					 * When the BVE5 plugin is implemented, this should return false, as BVE5 trains
+					 * often seem to keep the train.dat lying around and we need to use the right plugin
+					 *
+					 * For the moment however, this is ignored....
+					 */
+				}
+
+				if (path.EndsWith("train.dat", StringComparison.InvariantCultureIgnoreCase) || path.EndsWith("train.ai", StringComparison.InvariantCultureIgnoreCase))
+				{
+					if (TrainDatParser.CanLoad(path))
+					{
+						return true;
+					}
+				}
+
+				if (path.EndsWith("train.xml", StringComparison.InvariantCultureIgnoreCase))
+				{
+					/*
+					 * XML format train
+					 * At present, XML is used only as an extension, but acceleration etc. will be implemented
+					 * When this is done, return true here
+					 */
+				}
 			}
-		    return false;
-	    }
+
+			return false;
+		}
 
 	    public override bool LoadTrain(Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
 	    {
@@ -180,8 +222,16 @@ namespace Train.OpenBve
 				    FileSystem.AppendToLogFile("Loading AI train: " + currentTrain.TrainFolder);
 			    }
 
-			    string TrainData = Path.CombineFile(currentTrain.TrainFolder, "train.dat");
-			    TrainDatParser.Parse(TrainData, Encoding, currentTrain);
+				string TrainData = null;
+				if (!currentTrain.IsPlayerTrain)
+				{
+					TrainData = Path.CombineFile(currentTrain.TrainFolder, "train.ai");
+				}
+				if (currentTrain.IsPlayerTrain || !File.Exists(TrainData))
+				{
+					TrainData = Path.CombineFile(currentTrain.TrainFolder, "train.dat");
+				}
+				TrainDatParser.Parse(TrainData, Encoding, currentTrain);
 			    LastProgress = 0.1;
 			    Thread.Sleep(1);
 			    if (Cancel) return false;
