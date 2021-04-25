@@ -8,7 +8,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
-using SoundManager;
 using TrainManager.Car;
 using Vector2 = OpenTK.Vector2;
 
@@ -427,7 +426,7 @@ namespace OpenBve.Graphics.Renderers
 					Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
 					Car.ChangeCarSection(CarSectionType.Interior);
 
-					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && x < Car.Sounds.Touch.Length))
+					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && Car.Sounds.Touch != null &&  x < Car.Sounds.Touch.Length))
 					{
 						Car.Sounds.Touch[index].Play(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
 					}

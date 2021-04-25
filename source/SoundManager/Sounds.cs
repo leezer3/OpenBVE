@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -86,6 +88,17 @@ namespace SoundManager
 		/// <returns>Whether initializing audio was successful.</returns>
 		public void Initialize(HostInterface host, SoundRange range)
 		{
+			if (host.Platform == HostPlatform.MicrosoftWindows)
+			{
+				/*
+				*  If shipping an AnyCPU build and OpenALSoft / SDL, these are architecture specific PInvokes
+				*  Add the appropriate search path so this will work (common convention)
+				*/
+				string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+				path = Path.Combine(path, IntPtr.Size == 4 ? "x86" : "x64");
+				bool ok = SetDllDirectory(path);
+				if (!ok) throw new System.ComponentModel.Win32Exception();
+			}
 			Deinitialize();
 
 			CurrentHost = host;
@@ -128,6 +141,7 @@ namespace SoundManager
 			}
 			catch
 			{
+				OpenAlMic = null;
 			}
 
 			if (OpenAlDevice != IntPtr.Zero)
@@ -149,8 +163,11 @@ namespace SoundManager
 				}
 				Alc.CloseDevice(OpenAlDevice);
 				OpenAlDevice = IntPtr.Zero;
-				OpenAlMic.Dispose();
-				OpenAlMic = null;
+				if (OpenAlMic != null)
+				{
+					OpenAlMic.Dispose();
+					OpenAlMic = null;
+				}
 				MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_context"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
@@ -407,13 +424,19 @@ namespace SoundManager
 			}
 			throw new NotSupportedException();
 		}
-		
+
 		/// <summary>Register the position to play microphone input.</summary>
 		/// <param name="position">The position.</param>
 		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
 		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
 		public void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
 		{
+			if (OpenAlMic == null)
+			{
+				// This hardware has no AudioCapture device.
+				return;
+			}
+
 			MicSources.Add(new MicSource(OpenAlMic, MicStore, position, backwardTolerance, forwardTolerance));
 		}
 
@@ -555,5 +578,8 @@ namespace SoundManager
 			}
 			return count;
 		}
+
+		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		private static extern bool SetDllDirectory(string path);
 	}
 }

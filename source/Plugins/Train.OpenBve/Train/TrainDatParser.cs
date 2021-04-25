@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LibRender2.Trains;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
@@ -25,106 +27,170 @@ namespace Train.OpenBve
 			Plugin = plugin;
 		}
 
-		/// <summary>Parses a BVE2 / BVE4 / openBVE train.dat file</summary>
-		/// <param name="FileName">The train.dat file to parse</param>
-		/// <param name="Encoding">The text encoding to use</param>
-		/// <param name="Train">The train</param>
-		internal void Parse(string FileName, Encoding Encoding, TrainBase Train) {
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+		/// <summary>
+		/// Read the file of the specified train.dat
+		/// </summary>
+		/// <param name="fileName">The file path of the specified train.dat</param>
+		/// <param name="encoding">The text encoding to use</param>
+		/// <returns>The array read from the specified train.dat</returns>
+		private static string[] ReadFile(string fileName, Encoding encoding)
+		{
 			//Create the array using the default compatibility train.dat
-			string[] Lines = {"BVE2000000","#CAR","1","1","1","0","1","1"};
+			string[] lines = { "BVE2000000", "#CAR", "1", "1", "1", "0", "1", "1" };
+
 			// load file
 			try
 			{
-				Lines = System.IO.File.ReadAllLines(FileName, Encoding);
+				lines = System.IO.File.ReadAllLines(fileName, encoding);
 			}
 			catch
 			{
 				//ignore and load default
 			}
-			if (Lines.Length == 1 && Encoding.Equals(Encoding.Unicode))
+			if (lines.Length == 1 && encoding.Equals(Encoding.Unicode))
 			{
 				/*
 				 * Probably not unicode after all
 				 * Stuff edited with BVE2 / BVE4 tools should either be ASCII or SHIFT_JIS
 				 * both of which should read OK with ASCII for our purposes
 				 */
-				Encoding = Encoding.ASCII;
-				Lines = System.IO.File.ReadAllLines(FileName, Encoding);
+				encoding = Encoding.ASCII;
+				lines = System.IO.File.ReadAllLines(fileName, encoding);
 			}
-			else if (Lines.Length == 0)
+			else if (lines.Length == 0)
 			{
 				//Catch zero-length train.dat files
-				throw new Exception("The train.dat file " + FileName + " is of zero length.");
+				throw new Exception("The train.dat file " + fileName + " is of zero length.");
 			}
-			
-			for (int i = 0; i < Lines.Length; i++) {
-				int j = Lines[i].IndexOf(';');
-				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).Trim();
-				} else {
-					Lines[i] = Lines[i].Trim();
+
+			for (int i = 0; i < lines.Length; i++)
+			{
+				int j = lines[i].IndexOf(';');
+				if (j >= 0)
+				{
+					lines[i] = lines[i].Substring(0, j).Trim();
 				}
-				if(Lines[i].EndsWith(","))
+				else
+				{
+					lines[i] = lines[i].Trim();
+				}
+				if (lines[i].EndsWith(","))
 				{
 					//File edited with MSExcel may have additional commas at the end of a line
-					Lines[i] = Lines[i].TrimEnd(',');
+					lines[i] = lines[i].TrimEnd(',');
 				}
 			}
-			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
+
+			return lines;
+		}
+
+		/// <summary>
+		/// Parse the format of the specified train.dat
+		/// </summary>
+		/// <param name="lines">The array of the specified train.dat</param>
+		/// <param name="format">The format of the specified train.dat</param>
+		/// <param name="version">The version of the specified OpenBVE train.dat</param>
+		private static TrainDatFormats ParseFormat(IReadOnlyList<string> lines, out int version)
+		{
+			version = -1;
+			for (int i = 0; i < lines.Count; i++)
+			{
+				if (lines[i].Length <= 0)
+				{
+					continue;
+				}
+
+				string t = lines[i].ToLowerInvariant();
+				switch (t)
+				{
+					case "bve1200000":
+						return TrainDatFormats.BVE1200000;
+					case "bve1210000":
+						return TrainDatFormats.BVE1210000;
+					case "bve1220000":
+						return TrainDatFormats.BVE1220000;
+					case "bve2000000":
+						return TrainDatFormats.BVE2000000;
+					case "bve2060000":
+						return TrainDatFormats.BVE2060000;
+					case "openbve":
+						return TrainDatFormats.openBVE;
+					default:
+						if (t.ToLowerInvariant().StartsWith("openbve"))
+						{
+							string tt = t.Substring(7, t.Length - 7);
+							if (!NumberFormats.TryParseIntVb6(tt, out version))
+							{
+								version = -1;
+							}
+							return TrainDatFormats.openBVE;
+						}
+						else if (t.ToLowerInvariant().StartsWith("bve"))
+						{
+							return TrainDatFormats.UnknownBVE;
+						}
+						else
+						{
+							return TrainDatFormats.Unsupported;
+						}
+				}
+			}
+			return TrainDatFormats.Unsupported;
+		}
+
+		/// <summary>
+		/// Checks whether the parser can load the specified file.
+		/// </summary>
+		/// <param name="fileName">The file path of the specified train.dat</param>
+		/// <returns>Whether the parser can load the specified file.</returns>
+		internal bool CanLoad(string fileName)
+		{
+			Encoding encoding = TextEncoding.GetSystemEncodingFromFile(fileName);
+			
+			string[] lines;
+			try
+			{
+				lines = ReadFile(fileName, encoding);
+			}
+			catch
+			{
+				return false;
+			}
+
+			TrainDatFormats format = ParseFormat(lines, out _);
+
+			return format != TrainDatFormats.Unsupported;
+		}
+
+		/// <summary>Parses a BVE2 / BVE4 / openBVE train.dat file</summary>
+		/// <param name="FileName">The train.dat file to parse</param>
+		/// <param name="Encoding">The text encoding to use</param>
+		/// <param name="Train">The train</param>
+		internal void Parse(string FileName, Encoding Encoding, TrainBase Train) {
+			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+
+			string[] Lines = ReadFile(FileName, Encoding);
+
+			// Check version
 			const int currentVersion = 17250;
-			int myVersion = -1;
-			for (int i = 0; i < Lines.Length; i++) {
-				if (Lines[i].Length > 0) {
-					string t = Lines[i].ToLowerInvariant();
-					switch (t)
-					{
-						case "bve1200000":
-							currentFormat = TrainDatFormats.BVE1200000;
-							break;
-						case "bve1210000":
-							currentFormat = TrainDatFormats.BVE1210000;
-							break;
-						case "bve1220000":
-							currentFormat = TrainDatFormats.BVE1220000;
-							break;
-						case "bve2000000":
-							currentFormat = TrainDatFormats.BVE2000000;
-							break;
-						case "bve2060000":
-							currentFormat = TrainDatFormats.BVE2060000;
-							break;
-						case "openbve":
-							currentFormat = TrainDatFormats.openBVE;
-							break;
-						default:
-							if (t.ToLowerInvariant().StartsWith("openbve"))
-							{
-								string tt = t.Substring(7, t.Length - 7);
-								if (NumberFormats.TryParseIntVb6(tt, out myVersion))
-								{
-									currentFormat = TrainDatFormats.openBVE;
-									if (myVersion > currentVersion)
-									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
-									}
-								}
-								else
-								{
-									currentFormat = TrainDatFormats.Unsupported;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
-								}
-							}
-							else
-							{
-								currentFormat = TrainDatFormats.Unsupported;
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
-							}
-							break;
-					}
-					break;
+			TrainDatFormats currentFormat = ParseFormat(Lines, out int myVersion);
+
+			if (currentFormat == TrainDatFormats.openBVE)
+			{
+				if (myVersion == -1)
+				{
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
+				}
+				else if (myVersion > currentVersion)
+				{
+					Plugin.currentHost.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
 				}
 			}
+			else if (currentFormat == TrainDatFormats.Unsupported)
+			{
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+			}
+
 			// initialize
 			double BrakeCylinderServiceMaximumPressure = 440000.0;
 			double BrakeCylinderEmergencyMaximumPressure = 440000.0;

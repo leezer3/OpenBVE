@@ -91,8 +91,27 @@ namespace Plugin
 					int idx = SecondIndexOfAny(Lines[i], CsvCommands);
 					if (idx != -1)
 					{
-						Lines[i] = Lines[i].Substring(0, idx);
 						string s = Lines[i].Substring(idx);
+						string e = System.IO.Path.GetExtension(s).TrimEnd(',');
+						if (!string.IsNullOrEmpty(e))
+						{
+							switch (e.ToLowerInvariant())
+							{
+								case ".bmp":
+								case ".png":
+								case ".gif":
+								case ".ace":
+									/*
+									 * Texture file named as a command:
+									 * https://github.com/leezer3/OpenBVE/issues/613
+									 */
+									continue;
+								default:
+									//Carry on
+									break;
+							}
+						}
+						Lines[i] = Lines[i].Substring(0, idx);
 						Lines.Add(s);
 					}
 				}

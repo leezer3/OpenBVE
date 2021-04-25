@@ -64,22 +64,7 @@ namespace OpenBve.Input
 		{
 			return Guid;
 		}
-
-		/// <summary>Callback function from the PI Engineering DLL, raised each time the device pushes a data packet</summary>
-		/// <param name="data">The callback data</param>
-		/// <param name="sourceDevice">The source device</param>
-		/// <param name="error">The last error generated (if any)</param>
-		public void HandlePIEHidData(byte[] data, PIEDevice sourceDevice, long error)
-		{
-			if (myDevice == sourceDevice)
-			{
-				for (int r = 0; r < sourceDevice.ReadLength; r++)
-				{
-					currentState[r] = data[r];
-				}
-			}
-		}
-
+		
 		/// <summary>Callback function from the PI Engineering DLL, raised if an error is encountered</summary>
 		/// <param name="sourceDevices">The source device</param>
 		/// <param name="error">The error</param>

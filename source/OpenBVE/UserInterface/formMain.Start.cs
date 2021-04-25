@@ -21,8 +21,8 @@ namespace OpenBve
 		// route selection
 		// ===============
 
-		// route folder
-		private string rf;
+		/// <summary>The current routefile search folder</summary>
+		private string currentRouteFolder;
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
 
@@ -63,6 +63,7 @@ namespace OpenBve
 			{
 				try
 				{
+					// ReSharper disable once PossibleNullReferenceException
 					Folder = Directory.GetParent(Folder).ToString();
 				}
 				catch
@@ -74,14 +75,14 @@ namespace OpenBve
 				
 			}
 
-			if (rf != Folder)
+			if (currentRouteFolder != Folder)
 			{
 				populateRouteList(Folder);
 			}
-			rf = Folder;
+			currentRouteFolder = Folder;
 			try
 			{
-				if (!OpenTK.Configuration.RunningOnMacOS && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
+				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
 				{
 					//BUG: Mono's filesystem watcher can exceed the OS-X handles limit on some systems
 					//Triggered by NWM which has 600+ files in the route folder
@@ -116,7 +117,7 @@ namespace OpenBve
 				});
 				return;
 			}
-			populateRouteList(rf);
+			populateRouteList(currentRouteFolder);
 			//If this method is triggered whilst the form is disposing, bad things happen...
 			if (listviewRouteFiles.Columns.Count > 0)
 			{
@@ -449,9 +450,8 @@ namespace OpenBve
 		// train selection
 		// ===============
 
-		// train folder
-
-		private string tf;
+		/// <summary>The current train search folder</summary>
+		private string currentTrainFolder;
 
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e)
 		{
@@ -464,6 +464,7 @@ namespace OpenBve
 			{
 				try
 				{
+					// ReSharper disable once PossibleNullReferenceException
 					Folder = Directory.GetParent(Folder).ToString();
 				}
 				catch
@@ -473,14 +474,14 @@ namespace OpenBve
 					return;
 				}
 			}
-			if (tf != Folder)
+			if (currentTrainFolder != Folder)
 			{
 				populateTrainList(Folder);
 			}
-			tf = Folder;
+			currentTrainFolder = Folder;
 			try
 			{
-				if (!OpenTK.Configuration.RunningOnMacOS)
+				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
 				{
 					trainWatcher = new FileSystemWatcher
 					{
@@ -510,7 +511,7 @@ namespace OpenBve
 				});
 				return;
 			}
-			populateTrainList(tf);
+			populateTrainList(currentTrainFolder);
 			if (listviewTrainFolders.Columns.Count > 0)
 			{
 				listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -1009,7 +1010,29 @@ namespace OpenBve
 		}
 
 		// show train
-		private void ShowTrain(bool UserSelectedEncoding) {
+		private void ShowTrain(bool UserSelectedEncoding)
+		{
+			string error; //ignored in this case, background thread
+			if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			{
+				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+			}
+			bool canLoad = false;
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			{
+				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))
+				{
+					canLoad = true;
+				}
+			}
+
+			if (!canLoad)
+			{
+				groupboxTrainDetails.Visible = false;
+				buttonStart.Enabled = false;
+				//No plugin capable of loading train found
+				return;
+			}
 			if (!UserSelectedEncoding) {
 				Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
 				comboboxTrainEncoding.Tag = new object();

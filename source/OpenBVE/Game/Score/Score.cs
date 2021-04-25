@@ -287,7 +287,7 @@ namespace OpenBve
 										double y = (double)this.CurrentValue / (double)Maximum;
 										if (y < 0.0) y = 0.0;
 										if (y > 1.0) y = 1.0;
-										int k = (int)Math.Floor(y * (double)Translations.RatingsCount);
+										int k = (int)Math.Floor(y * Translations.RatingsCount);
 										if (k >= Translations.RatingsCount) k = Translations.RatingsCount - 1;
 										System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 										AddScore(Translations.GetInterfaceString("score_rating"), 20.0);

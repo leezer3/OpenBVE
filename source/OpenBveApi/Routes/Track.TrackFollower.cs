@@ -128,10 +128,31 @@ namespace OpenBveApi.Routes
 			}
 			if (!currentHost.Tracks.ContainsKey(TrackIndex) || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
 			int i = LastTrackElement;
-			while (i >= 0 && NewTrackPosition < currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
+			while (i >= 0)
 			{
+				if (currentHost.Tracks[TrackIndex].Elements[i].InvalidElement)
+				{
+					var prevTrackEnded = currentHost.Tracks[TrackIndex].Elements.Select((x, j) => new { Index = j, Element = x }).Take(i + 1).LastOrDefault(x => !x.Element.InvalidElement);
+
+					if (prevTrackEnded == null)
+					{
+						break;
+					}
+
+					i = prevTrackEnded.Index;
+
+					if (i == 0)
+					{
+						break;
+					}
+				}
+
+				if (NewTrackPosition >= currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
+				{
+					break;
+				}
 				double ta = TrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
-				double tb = -0.01;
+				const double tb = -0.01;
 				CheckEvents(i, -1, ta, tb);
 				i--;
 			}
@@ -186,8 +207,8 @@ namespace OpenBveApi.Routes
 						double h = s * p;
 						double b = s / System.Math.Abs(r);
 						double f = 2.0 * r * r * (1.0 - System.Math.Cos(b));
-						double c = (double) System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
-						double a = 0.5 * (double) System.Math.Sign(r) * b;
+						double c = (double)System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
+						double a = 0.5 * (double)System.Math.Sign(r) * b;
 						Vector3 D = new Vector3(currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.X, 0.0, currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Z);
 						D.Normalize();
 						D.Rotate(Vector3.Down, a);

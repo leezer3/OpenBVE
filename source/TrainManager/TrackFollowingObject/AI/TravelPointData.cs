@@ -6,25 +6,13 @@
 		private double PassingTime;
 		internal override double ArrivalTime
 		{
-			get
-			{
-				return PassingTime;
-			}
-			set
-			{
-				PassingTime = value;
-			}
+			get => PassingTime;
+			set => PassingTime = value;
 		}
 		internal override double DepartureTime
 		{
-			get
-			{
-				return PassingTime;
-			}
-			set
-			{
-				PassingTime = value;
-			}
+			get => PassingTime;
+			set => PassingTime = value;
 		}
 	}
 }
