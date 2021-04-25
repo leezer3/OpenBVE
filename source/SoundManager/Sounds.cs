@@ -141,6 +141,7 @@ namespace SoundManager
 			}
 			catch
 			{
+				OpenAlMic = null;
 			}
 
 			if (OpenAlDevice != IntPtr.Zero)
@@ -162,8 +163,11 @@ namespace SoundManager
 				}
 				Alc.CloseDevice(OpenAlDevice);
 				OpenAlDevice = IntPtr.Zero;
-				OpenAlMic.Dispose();
-				OpenAlMic = null;
+				if (OpenAlMic != null)
+				{
+					OpenAlMic.Dispose();
+					OpenAlMic = null;
+				}
 				MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_context"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
@@ -420,13 +424,19 @@ namespace SoundManager
 			}
 			throw new NotSupportedException();
 		}
-		
+
 		/// <summary>Register the position to play microphone input.</summary>
 		/// <param name="position">The position.</param>
 		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
 		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
 		public void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
 		{
+			if (OpenAlMic == null)
+			{
+				// This hardware has no AudioCapture device.
+				return;
+			}
+
 			MicSources.Add(new MicSource(OpenAlMic, MicStore, position, backwardTolerance, forwardTolerance));
 		}
 
