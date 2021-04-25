@@ -90,11 +90,9 @@ namespace Train.OpenBve
 		/// <param name="lines">The array of the specified train.dat</param>
 		/// <param name="format">The format of the specified train.dat</param>
 		/// <param name="version">The version of the specified OpenBVE train.dat</param>
-		private static void ParseFormat(IReadOnlyList<string> lines, out TrainDatFormats format, out int version)
+		private static TrainDatFormats ParseFormat(IReadOnlyList<string> lines, out int version)
 		{
-			format = TrainDatFormats.openBVE;
 			version = -1;
-
 			for (int i = 0; i < lines.Count; i++)
 			{
 				if (lines[i].Length <= 0)
@@ -106,42 +104,38 @@ namespace Train.OpenBve
 				switch (t)
 				{
 					case "bve1200000":
-						format = TrainDatFormats.BVE1200000;
-						break;
+						return TrainDatFormats.BVE1200000;
 					case "bve1210000":
-						format = TrainDatFormats.BVE1210000;
-						break;
+						return TrainDatFormats.BVE1210000;
 					case "bve1220000":
-						format = TrainDatFormats.BVE1220000;
-						break;
+						return TrainDatFormats.BVE1220000;
 					case "bve2000000":
-						format = TrainDatFormats.BVE2000000;
-						break;
+						return TrainDatFormats.BVE2000000;
 					case "bve2060000":
-						format = TrainDatFormats.BVE2060000;
-						break;
+						return TrainDatFormats.BVE2060000;
 					case "openbve":
-						format = TrainDatFormats.openBVE;
-						break;
+						return TrainDatFormats.openBVE;
 					default:
 						if (t.ToLowerInvariant().StartsWith("openbve"))
 						{
-							format = TrainDatFormats.openBVE;
-
 							string tt = t.Substring(7, t.Length - 7);
 							if (!NumberFormats.TryParseIntVb6(tt, out version))
 							{
 								version = -1;
 							}
+							return TrainDatFormats.openBVE;
+						}
+						else if (t.ToLowerInvariant().StartsWith("bve"))
+						{
+							return TrainDatFormats.UnknownBVE;
 						}
 						else
 						{
-							format = TrainDatFormats.Unsupported;
+							return TrainDatFormats.Unsupported;
 						}
-						break;
 				}
-				break;
 			}
+			return TrainDatFormats.Unsupported;
 		}
 
 		/// <summary>
@@ -163,7 +157,7 @@ namespace Train.OpenBve
 				return false;
 			}
 
-			ParseFormat(lines, out TrainDatFormats format, out _);
+			TrainDatFormats format = ParseFormat(lines, out _);
 
 			return format != TrainDatFormats.Unsupported;
 		}
@@ -179,7 +173,7 @@ namespace Train.OpenBve
 
 			// Check version
 			const int currentVersion = 17250;
-			ParseFormat(Lines, out TrainDatFormats currentFormat, out int myVersion);
+			TrainDatFormats currentFormat = ParseFormat(Lines, out int myVersion);
 
 			if (currentFormat == TrainDatFormats.openBVE)
 			{
