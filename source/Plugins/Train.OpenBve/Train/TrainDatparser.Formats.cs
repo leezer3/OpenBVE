@@ -16,6 +16,6 @@
 		/// <summary>The train.dat was written for BVE 2.0.6</summary>
 		BVE2060000 = 4,
 		/// <summary>The train.dat was written for openBVE</summary>
-		openBVE = 3,
+		openBVE = 5,
 	}
 }
