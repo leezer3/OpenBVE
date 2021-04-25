@@ -102,6 +102,11 @@ namespace DenshaDeGoInput
 		internal static bool TrainDoorsClosed;
 
 		/// <summary>
+		/// Whether the train is in an ATC section or not.
+		/// </summary>
+		internal static bool ATCSection;
+
+		/// <summary>
 		/// Whether the brake handle has been moved.
 		/// </summary>
 		private bool brakeHandleMoved;
@@ -362,16 +367,22 @@ namespace DenshaDeGoInput
 		/// <param name="data">The beacon data.</param>
 		public void SetBeacon(BeaconData data)
 		{
-			if (data.Type == -16777214)
+			switch (data.Type)
 			{
-				// ATC speed limit (.Limit command)
-				double limit = (data.Optional & 4095);
-				double position = (data.Optional >> 12);
-				var item = new CompatibilityLimit(limit, position);
-				if (!trackLimits.Contains(item))
-				{
-					trackLimits.Add(item);
-				}
+				case -16777214:
+					// ATC speed limit (.Limit command)
+					double limit = (data.Optional & 4095);
+					double position = (data.Optional >> 12);
+					var item = new CompatibilityLimit(limit, position);
+					if (!trackLimits.Contains(item))
+					{
+						trackLimits.Add(item);
+					}
+					break;
+				case -16777215:
+					// ATC track compatibility
+					ATCSection = (data.Optional >= 1 && data.Optional <= 3);
+					break;
 			}
 		}
 

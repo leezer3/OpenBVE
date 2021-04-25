@@ -384,7 +384,7 @@ namespace DenshaDeGoInput
 					byte[] writeBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
 					if (ControllerDisplayEnabled)
 					{
-						if (DenshaDeGoInput.CurrentSpeedLimit >= 0)
+						if (DenshaDeGoInput.CurrentSpeedLimit >= 0 && DenshaDeGoInput.ATCSection)
 						{
 							// Door lamp + limit approach
 							writeBuffer[2] = (byte)((128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0)) + limit_approach);
