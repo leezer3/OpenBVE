@@ -1010,7 +1010,29 @@ namespace OpenBve
 		}
 
 		// show train
-		private void ShowTrain(bool UserSelectedEncoding) {
+		private void ShowTrain(bool UserSelectedEncoding)
+		{
+			string error; //ignored in this case, background thread
+			if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			{
+				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+			}
+			bool canLoad = false;
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			{
+				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))
+				{
+					canLoad = true;
+				}
+			}
+
+			if (!canLoad)
+			{
+				groupboxTrainDetails.Visible = false;
+				buttonStart.Enabled = false;
+				//No plugin capable of loading train found
+				return;
+			}
 			if (!UserSelectedEncoding) {
 				Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
 				comboboxTrainEncoding.Tag = new object();
