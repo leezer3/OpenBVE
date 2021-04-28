@@ -2598,7 +2598,7 @@ to separate buttons to avoid compatibility issues.
 						<source>Extract files (Linux)</source>
 					</trans-unit>
 					<trans-unit id="help_ok_button">
-						<source>Ok</source>
+						<source>OK</source>
 					</trans-unit>
 				</group>
 			</group>
