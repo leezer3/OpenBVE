@@ -51,9 +51,9 @@ namespace DenshaDeGoInput
 		private static UsbDevice ps2Controller;
 
 		/// <summary>
-		/// The setup packet needed to send data to the Shinkansen controller.
+		/// The setup packet needed to send data to the controller.
 		/// </summary>
-		private static UsbSetupPacket shinkansenSetupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
+		private static UsbSetupPacket setupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
 
 		/// <summary>
 		/// The raw data read from the USB controller.
@@ -71,10 +71,25 @@ namespace DenshaDeGoInput
 		internal static Task InputTask;
 
 		/// <summary>
-		/// Represents the bytes for each buttons.
+		/// Represents the bytes for each button.
 		/// </summary>
 		[Flags]
-		private enum ButtonBytes
+		private enum ButtonByte
+		{
+			None = 0x0,
+			Select = 0x10,
+			Start = 0x20,
+			A = 0x2,
+			B = 0x1,
+			C = 0x4,
+			D = 0x8
+		}
+
+		/// <summary>
+		/// Represents the bytes for each button (Shinkansen controller).
+		/// </summary>
+		[Flags]
+		private enum ButtonByteShinkansen
 		{
 			None = 0x0,
 			Select = 0x10,
@@ -113,7 +128,7 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Represents the possible bytes for brake notches (Shinkansen controller.
+		/// Represents the possible bytes for brake notches (Shinkansen controller).
 		/// </summary>
 		private enum BrakeByteShinkansen
 		{
@@ -285,10 +300,18 @@ namespace DenshaDeGoInput
 		{
 			if (ps2Controller != null)
 			{
-				// Specially crafted array that blanks the display
-				byte[] writeBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
+				// Specially crafted array that blanks the display and turns off the door lamp
+				byte[] writeBuffer;
+				if (InputTranslator.ControllerModel == InputTranslator.ControllerModels.Ps2Shinkansen)
+				{
+					writeBuffer = new byte[] { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
+				}
+				else
+				{
+					writeBuffer = new byte[] { 0x0, 0x3 };
+				}
 				int bytesWritten;
-				ps2Controller.ControlTransfer(ref shinkansenSetupPacket, writeBuffer, 8, out bytesWritten);
+				ps2Controller.ControlTransfer(ref setupPacket, writeBuffer, 8, out bytesWritten);
 
 				IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
 				if (!ReferenceEquals(wholeUsbDevice, null))
@@ -328,13 +351,73 @@ namespace DenshaDeGoInput
 			if (InputTask == null || InputTask.IsCompleted)
 			{
 				InputTask = Task.Run(() => PollDevice());
+
+				// Set the initial state of the pedal and the D-pad to non-zero
+				switch (InputTranslator.ControllerModel)
+				{
+					case InputTranslator.ControllerModels.Ps2Type2:
+						readBuffer[3] = 0xFF;
+						readBuffer[4] = 0x08;
+						break;
+					case InputTranslator.ControllerModels.Ps2Shinkansen:
+						readBuffer[2] = 0xFF;
+						readBuffer[3] = 0x08;
+						break;
+				}
 			}
 
+			byte brakeByte;
+			byte powerByte;
 			switch (InputTranslator.ControllerModel)
 			{
+				case InputTranslator.ControllerModels.Ps2Type2:
+					brakeByte = readBuffer[1];
+					powerByte = readBuffer[2];
+					if (BrakeNotchMap.ContainsKey((BrakeByte)brakeByte))
+					{
+						// Change the brake notch if the brake byte is valid
+						InputTranslator.BrakeNotch = BrakeNotchMap[(BrakeByte)brakeByte];
+					}
+					if (PowerNotchMap.ContainsKey((PowerByte)powerByte))
+					{
+						// Change the power notch if the power byte is valid
+						InputTranslator.PowerNotch = PowerNotchMap[(PowerByte)powerByte];
+					}
+
+					// Standard buttons
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = (readBuffer[5] & (byte)ButtonByteShinkansen.Select) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = (readBuffer[5] & (byte)ButtonByteShinkansen.Start) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = (readBuffer[5] & (byte)ButtonByteShinkansen.A) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = (readBuffer[5] & (byte)ButtonByteShinkansen.B) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = (readBuffer[5] & (byte)ButtonByteShinkansen.C) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = (readBuffer[5] & (byte)ButtonByteShinkansen.D) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+
+					// Direction buttons
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (readBuffer[4] <= 1 || readBuffer[4] == 7) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (readBuffer[4] >= 1 && readBuffer[4] <= 3) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (readBuffer[4] >= 3 && readBuffer[4] <= 5) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (readBuffer[4] >= 5 && readBuffer[4] <= 7) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+
+					// Horn pedal
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] = readBuffer[3] == (byte)PedalBytes.Pressed ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+
+					// Specially crafted array that turns off the door lamp
+					byte[] writeBuffer = { 0x0, 0x3 };
+					if (ControllerDisplayEnabled)
+					{
+						// Door lamp
+						writeBuffer[1] = (byte)(DenshaDeGoInput.TrainDoorsClosed ? 1 : 0);
+					}
+					if (ps2Controller != null)
+					{
+						// Send data to controller via control transfer
+						int bytesWritten;
+						ps2Controller.ControlTransfer(ref setupPacket, writeBuffer, 2, out bytesWritten);
+					}
+					break;
 				case InputTranslator.ControllerModels.Ps2Shinkansen:
-					byte brakeByte = readBuffer[0];
-					byte powerByte = readBuffer[1];
+					brakeByte = readBuffer[0];
+					powerByte = readBuffer[1];
 					if (BrakeNotchMapShinkansen.ContainsKey((BrakeByteShinkansen)brakeByte))
 					{
 						// Change the brake notch if the brake byte is valid
@@ -347,12 +430,12 @@ namespace DenshaDeGoInput
 					}
 
 					// Standard buttons
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = (readBuffer[4] & (byte)ButtonBytes.Select) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = (readBuffer[4] & (byte)ButtonBytes.Start) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = (readBuffer[4] & (byte)ButtonBytes.A) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = (readBuffer[4] & (byte)ButtonBytes.B) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = (readBuffer[4] & (byte)ButtonBytes.C) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = (readBuffer[4] & (byte)ButtonBytes.D) != (byte)ButtonBytes.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = (readBuffer[4] & (byte)ButtonByteShinkansen.Select) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = (readBuffer[4] & (byte)ButtonByteShinkansen.Start) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = (readBuffer[4] & (byte)ButtonByteShinkansen.A) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = (readBuffer[4] & (byte)ButtonByteShinkansen.B) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = (readBuffer[4] & (byte)ButtonByteShinkansen.C) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = (readBuffer[4] & (byte)ButtonByteShinkansen.D) != (byte)ButtonByteShinkansen.None ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
 
 					// Direction buttons
 					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (readBuffer[3] <= 1 || readBuffer[3] == 7) ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
@@ -381,34 +464,34 @@ namespace DenshaDeGoInput
 						limit_approach = -(int)(limit - speed - 10);
 					}
 					// Specially crafted array that blanks the display
-					byte[] writeBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
+					byte[] shinkansenWriteBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
 					if (ControllerDisplayEnabled)
 					{
 						if (DenshaDeGoInput.CurrentSpeedLimit >= 0 && DenshaDeGoInput.ATCSection)
 						{
 							// Door lamp + limit approach
-							writeBuffer[2] = (byte)((128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0)) + limit_approach);
+							shinkansenWriteBuffer[2] = (byte)((128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0)) + limit_approach);
 							// Route limit
-							writeBuffer[6] = (byte)(16 * limit2 + limit1);
-							writeBuffer[7] = (byte)limit3;
+							shinkansenWriteBuffer[6] = (byte)(16 * limit2 + limit1);
+							shinkansenWriteBuffer[7] = (byte)limit3;
 						}
 						else
 						{
 							// Door lamp
-							writeBuffer[2] = (byte)(128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0));
+							shinkansenWriteBuffer[2] = (byte)(128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0));
 						}
 
 						// Speed gauge
-						writeBuffer[3] = (byte)Math.Ceiling(Math.Round(DenshaDeGoInput.CurrentTrainSpeed) / 15);
+						shinkansenWriteBuffer[3] = (byte)Math.Ceiling(Math.Round(DenshaDeGoInput.CurrentTrainSpeed) / 15);
 						// Train speed
-						writeBuffer[4] = (byte)(16 * speed2 + speed1);
-						writeBuffer[5] = (byte)speed3;
+						shinkansenWriteBuffer[4] = (byte)(16 * speed2 + speed1);
+						shinkansenWriteBuffer[5] = (byte)speed3;
 					}
 					if (ps2Controller != null)
 					{
 						// Send data to controller via control transfer
 						int bytesWritten;
-						ps2Controller.ControlTransfer(ref shinkansenSetupPacket, writeBuffer, 8, out bytesWritten);
+						ps2Controller.ControlTransfer(ref setupPacket, shinkansenWriteBuffer, 8, out bytesWritten);
 					}
 					break;
 			}
@@ -454,15 +537,6 @@ namespace DenshaDeGoInput
 				wholeUsbDevice.ClaimInterface(1);
 			}
 			UsbEndpointReader controllerReader = ps2Controller.OpenEndpointReader(ReadEndpointID.Ep01);
-
-			// Set the initial state of the pedal and the D-pad to non-zero
-			switch (currentModel)
-			{
-				case InputTranslator.ControllerModels.Ps2Shinkansen:
-					readBuffer[2] = 0xFF;
-					readBuffer[3] = 0x08;
-					break;
-			}
 
 			// Enable the display or door lamp
 			ControllerDisplayEnabled = true;
