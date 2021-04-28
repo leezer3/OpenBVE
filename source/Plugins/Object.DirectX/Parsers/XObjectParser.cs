@@ -522,7 +522,7 @@ namespace Plugin {
 											Position++;
 											break;
 										} else if (!char.IsWhiteSpace(Content, Position)) {
-											if (char.IsDigit(Content[Position]) && t.Name == "Coords2d")
+											if ((char.IsDigit(Content[Position]) || Content[Position] == '-') && t.Name == "Coords2d")
 											{
 												/*
 												 * Handles objects with a Coords2d structure which omit the comma from the array

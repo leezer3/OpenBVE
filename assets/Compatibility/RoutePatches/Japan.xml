@@ -47,5 +47,10 @@
 		<FileName>3828M.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<Patch>
+		<Hash>94B3668DA703C844D66E9C819714E1F7491C1CF71E4804198EFCD4768B6279C5</Hash>
+		<FileName>moha5250-Train.csv</FileName>
+		<XParser>new</XParser>
+	</Patch>
   </RoutePatches>
 </openBVE>
