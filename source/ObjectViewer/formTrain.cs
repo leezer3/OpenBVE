@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrainManager.BrakeSystems;
 using OpenBveApi.Trains;
+using TrainManager;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -388,6 +389,7 @@ namespace OpenBve
 					}
 
 					Program.TrainManager.Trains[0] = Train;
+					TrainManagerBase.PlayerTrain = Train;
 				}
 			}
 		}
