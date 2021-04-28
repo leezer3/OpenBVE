@@ -200,6 +200,7 @@ namespace WCFServer
 			}
 		}
 
+		private bool invalidConstSpeed = false;
 		public ElapseProxy Elapse(ElapseProxy ProxyData)
 		{
 			lock (UpdateLock)
@@ -241,16 +242,27 @@ namespace WCFServer
 						switch (win32Handles.ConstantSpeed)
 						{
 							case 0:
+								invalidConstSpeed = false;
 								//Not fitted
 								break;
 							case 1:
+								invalidConstSpeed = false;
 								ProxyData.Data.Handles.ConstSpeed = true;
 								break;
 							case 2:
+								invalidConstSpeed = false;
 								ProxyData.Data.Handles.ConstSpeed = false;
 								break;
 							default:
-								Console.WriteLine(@"DEBUG: Invalid ConstantSpeed value recieved from plugin");
+								if (invalidConstSpeed == false)
+								{
+									/*
+									 * ATS.dll seems to submit an invalid ConstantSpeed value every frame (most likely just reading random memory value?)
+									 * so let's just log this once
+									 */
+									Console.WriteLine(@"DEBUG: Invalid ConstantSpeed value recieved from plugin- " + win32Handles.ConstantSpeed);
+									invalidConstSpeed = true;
+								}
 								break;
 						}
 						Array.Copy(Panel, ProxyData.Panel, 256);
