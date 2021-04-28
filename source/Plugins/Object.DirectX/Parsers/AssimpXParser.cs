@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
@@ -176,7 +177,7 @@ namespace Plugin
 				Color24 mSpecular = new Color24((byte)mesh.Materials[i].Specular.R, (byte)mesh.Materials[i].Specular.G, (byte)mesh.Materials[i].Specular.B);
 				builder.Materials[m].EmissiveColor = new Color24((byte)(255 * mesh.Materials[i].Emissive.R), (byte)(255 * mesh.Materials[i].Emissive.G), (byte)(255 * mesh.Materials[i].Emissive.B));
 				builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
-				if (Plugin.BlackTransparency)
+				if (Plugin.EnabledHacks.BlackTransparency)
 				{
 					builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
 					builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
@@ -184,8 +185,27 @@ namespace Plugin
 				
 				if (mesh.Materials[i].Textures.Count > 0)
 				{
-					builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, mesh.Materials[i].Textures[0].Name);
-					if (!System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
+					string texturePath = mesh.Materials[i].Textures[0].Name;
+
+					// If the specified file name is an absolute path, make it the file name only.
+					// Some object files specify absolute paths.
+					// And BVE4/5 doesn't allow textures to be placed in a different directory than the object file.
+					if (Plugin.EnabledHacks.BveTsHacks && OpenBveApi.Path.IsAbsolutePath(texturePath))
+					{
+						texturePath = texturePath.Split('/', '\\').Last();
+					}
+
+					try
+					{
+						builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texturePath);
+					}
+					catch (Exception e)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+						builder.Materials[m].DaytimeTexture = null;
+					}
+
+					if (builder.Materials[m].DaytimeTexture != null && !System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
 					{
 						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
 						builder.Materials[m].DaytimeTexture = null;
