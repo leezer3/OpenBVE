@@ -55,6 +55,12 @@
     <Compile Include="Config.Designer.cs">
       <DependentUpon>Config.cs</DependentUpon>
     </Compile>
+    <Compile Include="Help.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Help.Designer.cs">
+      <DependentUpon>Help.cs</DependentUpon>
+    </Compile>
     <Compile Include="DenshaDeGoInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InputTranslator.cs" />
@@ -65,6 +71,21 @@
   <ItemGroup>
     <EmbeddedResource Include="Config.resx">
       <DependentUpon>Config.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Help.resx">
+      <DependentUpon>Help.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Drivers\99-ps2-train-controllers.rules">
+      <LogicalName>udev_rules</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Drivers\Ryojouhen.cfg">
+      <LogicalName>ryojouhen_driver</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Drivers\Shinkansen.cfg">
+      <LogicalName>shinkansen_driver</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Drivers\Type2.cfg">
+      <LogicalName>type2_driver</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -78,18 +99,6 @@
     <None Include="app.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
-    <None Include="Drivers\Ryojouhen.cfg">
-      <LogicalName>ryojouhen_driver</LogicalName>
-    </None>
-    <None Include="Drivers\Shinkansen.cfg">
-      <LogicalName>shinkansen_driver</LogicalName>
-    </None>
-    <None Include="Drivers\Type2.cfg">
-      <LogicalName>type2_driver</LogicalName>
-    </None>
-    <None Include="Drivers\99-densha-ps2-controllers.rules">
-      <LogicalName>udev_rules</LogicalName>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Drivers\" />

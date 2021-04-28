@@ -733,10 +733,12 @@ namespace DenshaDeGoInput
             this.linkLabel_driver.TabIndex = 9;
             this.linkLabel_driver.TabStop = true;
             this.linkLabel_driver.Text = "My controller is not detected or does not work properly";
-            // 
-            // Config
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.linkLabel_driver.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_LinkClicked);
+
+			// 
+			// Config
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 391);
             this.Controls.Add(this.linkLabel_driver);

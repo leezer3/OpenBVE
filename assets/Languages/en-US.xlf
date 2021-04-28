@@ -2549,6 +2549,57 @@
 					<trans-unit id="label_rdoor">
 						<source>R DOOR</source>
 					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:
+
+1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
+to separate buttons to avoid compatibility issues.
+2. Calibrate the controller from the configuration window, if necessary.</source>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.
+2. Download and run Zadig.
+3. Load the appropriate CFG file for your device ("Device &gt; Load Preset Device").
+4. Press "Install Driver" and wait for installation to complete.</source>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.
+2. Copy the file to "/etc/udev/rules.d/" (root permissions required).
+3. Reboot or reload udev rules manually.</source>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>Ok</source>
+					</trans-unit>
 				</group>
 			</group>
 			<group id="train_editor">

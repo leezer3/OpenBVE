@@ -1,6 +1,6 @@
 //Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -235,7 +235,7 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Retranslates the configutarion interface.
+		/// Retranslates the configuration interface.
 		/// </summary>
 		private void UpdateTranslation()
 		{
@@ -279,6 +279,8 @@ namespace DenshaDeGoInput
 			label_buttonpedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
 			label_buttonldoor.Text = Translations.GetInterfaceString("denshadego_label_ldoor");
 			label_buttonrdoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
+
+			linkLabel_driver.Text = Translations.GetInterfaceString("denshadego_linkLabel_driver");
 		}
 
 		private void Config_Shown(object sender, EventArgs e)
@@ -442,6 +444,12 @@ namespace DenshaDeGoInput
 			// Reload the previous config and close the config dialog
 			DenshaDeGoInput.LoadConfig();
 			Close();
+		}
+
+		private void linkLabel_LinkClicked(object sender, EventArgs e)
+		{
+			Help helpForm = new Help();
+			helpForm.ShowDialog(this);
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)
