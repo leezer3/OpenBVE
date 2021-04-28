@@ -84,6 +84,7 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using ZlibWithDictionary;
@@ -109,6 +110,9 @@ namespace AssimpNET.X
 		protected readonly uint BinaryFloatSize; // float size in bytes, either 4 or 8
 		// counter for number arrays in binary format
 		protected uint BinaryNumCount;
+
+		// text encoding of text format
+		private readonly Encoding textEncoding;
 
 		protected int currentPosition;
 		protected int End;
@@ -297,6 +301,11 @@ namespace AssimpNET.X
 			{
 				// start reading here
 				ReadUntilEndOfLine();
+			}
+
+			if (!IsBinaryFormat)
+			{
+				textEncoding = TextEncoding.GetSystemEncodingFromBytes(Buffer);
 			}
 
 			Scene = new Scene();
@@ -1426,8 +1435,6 @@ namespace AssimpNET.X
 
 		protected void GetNextTokenAsString(out string token)
 		{
-			token = string.Empty;
-
 			if (IsBinaryFormat)
 			{
 				token = GetNextToken();
@@ -1446,10 +1453,12 @@ namespace AssimpNET.X
 			}
 			++currentPosition;
 
+			List<byte> textBuffer = new List<byte>();
 			while (currentPosition < End && Buffer[currentPosition] != '"')
 			{
-				token += (char)Buffer[currentPosition++];
+				textBuffer.Add(Buffer[currentPosition++]);
 			}
+			token = textEncoding.GetString(textBuffer.ToArray());
 
 			if (currentPosition >= End - 1)
 			{
