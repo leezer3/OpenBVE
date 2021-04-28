@@ -300,7 +300,7 @@ namespace OpenBveApi
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "people6.b3d" && fInfo.Length == 377)
 						{
 							//Polish Warsaw metro object file uses diacritics in filenames
-							return Encoding.GB18030;
+							return Encoding.WIN1252;
 						}
 
 						return Encoding.GB18030;
