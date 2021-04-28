@@ -65,7 +65,6 @@ namespace SoundManager
 			{
 				Type = SoundType.Undefined;
 			}
-
 		}
 
 		/// <summary>Creates a new sound source.</summary>

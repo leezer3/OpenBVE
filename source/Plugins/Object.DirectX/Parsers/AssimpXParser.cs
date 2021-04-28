@@ -1,4 +1,29 @@
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2020, S520, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 using System;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
@@ -99,7 +124,7 @@ namespace Plugin
 
 		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
 		{
-			if (builder.Vertices.Length != 0)
+			if (builder.Vertices.Count != 0)
 			{
 				builder.Apply(ref obj);
 				builder = new MeshBuilder(Plugin.currentHost);
@@ -111,16 +136,12 @@ namespace Plugin
 				//Some null objects contain an empty mesh
 				Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + mesh.Name);
 			}
-			int v = builder.Vertices.Length;
-			Array.Resize(ref builder.Vertices, v + nVerts);
 			for (int i = 0; i < nVerts; i++)
 			{
-				builder.Vertices[v + i] = new Vertex(mesh.Positions[i]);
+				builder.Vertices.Add(new Vertex(mesh.Positions[i]));
 			}
 
 			int nFaces = mesh.PosFaces.Count;
-			int f = builder.Faces.Length;
-			Array.Resize(ref builder.Faces, f + nFaces);
 			for (int i = 0; i < nFaces; i++)
 			{
 				int fVerts = mesh.PosFaces[i].Indices.Count;
@@ -128,12 +149,13 @@ namespace Plugin
 				{
 					throw new Exception("fVerts must be greater than zero");
 				}
-				builder.Faces[f + i] = new MeshFace();
-				builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
+				MeshFace f = new MeshFace();
+				f.Vertices = new MeshFaceVertex[fVerts];
 				for (int j = 0; j < fVerts; j++)
 				{
-					builder.Faces[f + i].Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];
+					f.Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];
 				}
+				builder.Faces.Add(f);
 			}
 
 			int nMaterials = mesh.Materials.Count;
@@ -141,7 +163,9 @@ namespace Plugin
 			for (int i = 0; i < nFaceIndices; i++)
 			{
 				int fMaterial = (int)mesh.FaceMaterials[i];
-				builder.Faces[i].Material = (ushort)(fMaterial + 1);
+				MeshFace f = builder.Faces[i];
+				f.Material = (ushort)(fMaterial + 1);
+				builder.Faces[i] = f;
 			}
 			for (int i = 0; i < nMaterials; i++)
 			{
@@ -153,13 +177,35 @@ namespace Plugin
 				Color24 mSpecular = new Color24((byte)mesh.Materials[i].Specular.R, (byte)mesh.Materials[i].Specular.G, (byte)mesh.Materials[i].Specular.B);
 				builder.Materials[m].EmissiveColor = new Color24((byte)(255 * mesh.Materials[i].Emissive.R), (byte)(255 * mesh.Materials[i].Emissive.G), (byte)(255 * mesh.Materials[i].Emissive.B));
 				builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
-				builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
-				builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
-
+				if (Plugin.EnabledHacks.BlackTransparency)
+				{
+					builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
+					builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+				}
+				
 				if (mesh.Materials[i].Textures.Count > 0)
 				{
-					builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, mesh.Materials[i].Textures[0].Name);
-					if (!System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
+					string texturePath = mesh.Materials[i].Textures[0].Name;
+
+					// If the specified file name is an absolute path, make it the file name only.
+					// Some object files specify absolute paths.
+					// And BVE4/5 doesn't allow textures to be placed in a different directory than the object file.
+					if (Plugin.EnabledHacks.BveTsHacks && OpenBveApi.Path.IsAbsolutePath(texturePath))
+					{
+						texturePath = texturePath.Split('/', '\\').Last();
+					}
+
+					try
+					{
+						builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texturePath);
+					}
+					catch (Exception e)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+						builder.Materials[m].DaytimeTexture = null;
+					}
+
+					if (builder.Materials[m].DaytimeTexture != null && !System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
 					{
 						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
 						builder.Materials[m].DaytimeTexture = null;
@@ -184,7 +230,7 @@ namespace Plugin
 				normals[i].Normalize();
 			}
 			int nFaceNormals = mesh.NormFaces.Count;
-			if (nFaceNormals > builder.Faces.Length)
+			if (nFaceNormals > builder.Faces.Count)
 			{
 				throw new Exception("nFaceNormals must match the number of faces in the mesh");
 			}

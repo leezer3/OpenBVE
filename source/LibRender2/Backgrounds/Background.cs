@@ -366,11 +366,11 @@ namespace LibRender2.Backgrounds
 
 				if (renderer.AvailableNewRenderer)
 				{
-					renderer.RenderFace(renderer.DefaultShader, new ObjectState { Prototype = data.Object }, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
+					renderer.RenderFace(renderer.DefaultShader, new ObjectState(data.Object), face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
 				}
 				else
 				{
-					renderer.RenderFaceImmediateMode(new ObjectState { Prototype = data.Object }, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
+					renderer.RenderFaceImmediateMode(new ObjectState(data.Object), face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
 				}
 			}
 

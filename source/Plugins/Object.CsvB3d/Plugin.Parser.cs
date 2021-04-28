@@ -81,7 +81,7 @@ namespace Plugin
 
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			if (!IsB3D && BveTsHacks)
+			if (!IsB3D && enabledHacks.BveTsHacks)
 			{
 				/*
 				 * Handles multi-column CSV objects [Hide behind the hacks option in the main program]
@@ -91,8 +91,27 @@ namespace Plugin
 					int idx = SecondIndexOfAny(Lines[i], CsvCommands);
 					if (idx != -1)
 					{
-						Lines[i] = Lines[i].Substring(0, idx);
 						string s = Lines[i].Substring(idx);
+						string e = System.IO.Path.GetExtension(s).TrimEnd(',');
+						if (!string.IsNullOrEmpty(e))
+						{
+							switch (e.ToLowerInvariant())
+							{
+								case ".bmp":
+								case ".png":
+								case ".gif":
+								case ".ace":
+									/*
+									 * Texture file named as a command:
+									 * https://github.com/leezer3/OpenBVE/issues/613
+									 */
+									continue;
+								default:
+									//Carry on
+									break;
+							}
+						}
+						Lines[i] = Lines[i].Substring(0, idx);
 						Lines.Add(s);
 					}
 				}
@@ -100,7 +119,7 @@ namespace Plugin
 			// parse lines
 			bool firstMeshBuilder = false;
 			MeshBuilder Builder = new MeshBuilder(currentHost);
-			Vector3[] Normals = new Vector3[4];
+			List<Vector3> Normals = new List<Vector3>();
 			bool CommentStarted = false;
 			for (int i = 0; i < Lines.Count; i++) {
 				{
@@ -160,7 +179,7 @@ namespace Plugin
 					}
 				}
 				// collect arguments
-				string[] Arguments = Lines[i].Split(new char[] { ',' }, StringSplitOptions.None);
+				string[] Arguments = Lines[i].Split(new[] { ',' }, StringSplitOptions.None);
 				for (int j = 0; j < Arguments.Length; j++) {
 					Arguments[j] = Arguments[j].Trim(new char[] { });
 				}
@@ -185,7 +204,7 @@ namespace Plugin
 						Command = Arguments[0];
 						bool resetArguments = true;
 						if (Arguments.Length != 1) {
-							if (!BveTsHacks || !IsCommand(Command))
+							if (!enabledHacks.BveTsHacks || !IsCommand(Command))
 							{
 								currentHost.AddMessage(MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							}
@@ -240,9 +259,9 @@ namespace Plugin
 								if (Arguments.Length > 0) {
 									currentHost.AddMessage(MessageType.Warning, false, "0 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Builder.Apply(ref Object, Plugin.BveTsHacks);
+								Builder.Apply(ref Object, enabledHacks.BveTsHacks);
 								Builder = new MeshBuilder(currentHost);
-								Normals = new Vector3[4];
+								Normals = new List<Vector3>();
 							} break;
 						case "addvertex":
 						case "vertex":
@@ -288,12 +307,8 @@ namespace Plugin
 									currentNormal.Z = 0.0;
 								}
 								currentNormal.Normalize();
-								Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
-								while (Builder.Vertices.Length >= Normals.Length) {
-									Array.Resize(ref Normals, Normals.Length << 1);
-								}
-								Builder.Vertices[Builder.Vertices.Length - 1] = currentVertex;
-								Normals[Builder.Vertices.Length - 1] = currentNormal;
+								Builder.Vertices.Add(currentVertex);
+								Normals.Add(currentNormal);
 							} break;
 						case "addface":
 						case "addface2":
@@ -320,7 +335,7 @@ namespace Plugin
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
-											if (BveTsHacks)
+											if (enabledHacks.BveTsHacks)
 											{
 												if (IsB3D && j == 0 && Arguments[j] == string.Empty)
 												{
@@ -344,7 +359,7 @@ namespace Plugin
 											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											q = false;
 											break;
-										} else if (a[j] < 0 | a[j] >= Builder.Vertices.Length) {
+										} else if (a[j] < 0 | a[j] >= Builder.Vertices.Count) {
 											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											q = false;
 											break;
@@ -355,26 +370,26 @@ namespace Plugin
 										}
 									}
 									if (q) {
-										int f = Builder.Faces.Length;
-										Array.Resize(ref Builder.Faces, f + 1);
-										Builder.Faces[f] = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
-										while (Builder.Vertices.Length > Normals.Length) {
-											Array.Resize(ref Normals, Normals.Length << 1);
-										}
+										MeshFace f = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
 										for (int j = 0; j < Arguments.Length; j++) {
-											Builder.Faces[f].Vertices[j].Index = (ushort)a[j];
-											Builder.Faces[f].Vertices[j].Normal = Normals[a[j]];
+											f.Vertices[j].Index = (ushort)a[j];
+											if (j < Normals.Count)
+											{
+												f.Vertices[j].Normal = Normals[a[j]];
+											}
+											
 										}
-										if (Builder.isCylinder && BveTsHacks && CylinderHack)
+										if (Builder.isCylinder && enabledHacks.BveTsHacks && enabledHacks.CylinderHack)
 										{
-											int l = Builder.Faces[f].Vertices.Length;
-											MeshFaceVertex v = Builder.Faces[f].Vertices[l - 1];
-											Builder.Faces[f].Vertices[l - 1] = Builder.Faces[f].Vertices[l - 2];
-											Builder.Faces[f].Vertices[l - 2] = v;
+											int l = f.Vertices.Length;
+											MeshFaceVertex v = f.Vertices[l - 1];
+											f.Vertices[l - 1] = f.Vertices[l - 2];
+											f.Vertices[l - 2] = v;
 										}
 										if (cmd == "addface2" | cmd == "face2") {
-											Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
+											f.Flags = FaceFlags.Face2Mask;
 										}
+										Builder.Faces.Add(f);
 									}
 								}
 							} break;
@@ -667,6 +682,15 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Alpha is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									a = a < 0 ? 0 : 255;
 								}
+
+								if (a == 0 && enabledHacks.BveTsHacks || enabledHacks.DisableSemiTransparentFaces)
+								{
+									/*
+									 * BVE2 didn't support semi-transparent faces at all
+									 * BVE4 treats faces with an opacity value of 0 as having an opacity value of 1
+									 */
+									a = 255;
+								}
 								int m = Builder.Materials.Length;
 								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
@@ -682,8 +706,11 @@ namespace Plugin
 										WrapMode = Builder.Materials[0].WrapMode
 									};
 								}
-								for (int j = 0; j < Builder.Faces.Length; j++) {
-									Builder.Faces[j].Material += (ushort)m;
+								for (int j = 0; j < Builder.Faces.Count; j++)
+								{
+									MeshFace f = Builder.Faces[j];
+									f.Material += (ushort) m;
+									Builder.Faces[j] = f;
 								}
 							} break;
 						case "setemissivecolor":
@@ -732,8 +759,11 @@ namespace Plugin
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
 									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
 								}
-								for (int j = 0; j < Builder.Faces.Length; j++) {
-									Builder.Faces[j].Material += (ushort)m;
+								for (int j = 0; j < Builder.Faces.Count; j++)
+								{
+									MeshFace f = Builder.Faces[j];
+									f.Material += (ushort)m;
+									Builder.Faces[j] = f;
 								}
 							} break;
 						case "setdecaltransparentcolor":
@@ -888,7 +918,7 @@ namespace Plugin
 									} else {
 										try
 										{
-											tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+											tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 										}
 										catch
 										{
@@ -898,7 +928,7 @@ namespace Plugin
 										if (!System.IO.File.Exists(tday))
 										{
 											bool hackFound = false;
-											if (BveTsHacks)
+											if (enabledHacks.BveTsHacks)
 											{
 												//Original BVE2 signal graphics
 												Match m = Regex.Match(tday, @"(signal\d{1,2}\.bmp)", RegexOptions.IgnoreCase);
@@ -912,7 +942,7 @@ namespace Plugin
 												if (Arguments[0].StartsWith("swiss1/", StringComparison.InvariantCultureIgnoreCase))
 												{
 													Arguments[0] = Arguments[0].Substring(7);
-													tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 													if (System.IO.File.Exists(tday))
 													{
 														hackFound = true;
@@ -939,7 +969,7 @@ namespace Plugin
 											bool ignoreAsInvalid = false;
 											try
 											{
-												tnight = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
+												tnight = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
 											}
 											catch
 											{
@@ -1158,7 +1188,7 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									y = 0.0f;
 								}
-								if (j >= 0 & j < Builder.Vertices.Length) {
+								if (j >= 0 & j < Builder.Vertices.Count) {
 									Builder.Vertices[j].TextureCoordinates = new Vector2(x, y);
 								} else {
 									currentHost.AddMessage(MessageType.Error, false, "VertexIndex references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -1217,7 +1247,7 @@ namespace Plugin
 				}
 			}
 			// finalize object
-			Builder.Apply(ref Object, Plugin.BveTsHacks);
+			Builder.Apply(ref Object, enabledHacks.BveTsHacks);
 			Object.Mesh.CreateNormals();
 			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
 			{
@@ -1260,31 +1290,30 @@ namespace Plugin
 		}
 
 		// create cube
-		private static void CreateCube(ref MeshBuilder Builder, double sx, double sy, double sz) {
-			int v = Builder.Vertices.Length;
-			Array.Resize(ref Builder.Vertices, v + 8);
-			Builder.Vertices[v + 0] = new Vertex(sx, sy, -sz);
-			Builder.Vertices[v + 1] = new Vertex(sx, -sy, -sz);
-			Builder.Vertices[v + 2] = new Vertex(-sx, -sy, -sz);
-			Builder.Vertices[v + 3] = new Vertex(-sx, sy, -sz);
-			Builder.Vertices[v + 4] = new Vertex(sx, sy, sz);
-			Builder.Vertices[v + 5] = new Vertex(sx, -sy, sz);
-			Builder.Vertices[v + 6] = new Vertex(-sx, -sy, sz);
-			Builder.Vertices[v + 7] = new Vertex(-sx, sy, sz);
-			int f = Builder.Faces.Length;
-			Array.Resize(ref Builder.Faces, f + 6);
-			Builder.Faces[f + 0].Vertices = new[]  { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };
-			Builder.Faces[f + 0].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 1].Vertices = new[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 1) };
-			Builder.Faces[f + 1].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 2].Vertices = new[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 4) };
-			Builder.Faces[f + 2].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 3].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 7) };
-			Builder.Faces[f + 3].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 4].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 2) };
-			Builder.Faces[f + 4].Flags |= MeshFace.FaceTypeTriangles;
-			Builder.Faces[f + 5].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 1) , new MeshFaceVertex(v + 5) };
-			Builder.Faces[f + 5].Flags |= MeshFace.FaceTypeTriangles;
+		private static void CreateCube(ref MeshBuilder Builder, double sx, double sy, double sz)
+		{
+			int v = Builder.Vertices.Count;
+			Builder.Vertices.Add(new Vertex(sx, sy, -sz));
+			Builder.Vertices.Add(new Vertex(sx, -sy, -sz));
+			Builder.Vertices.Add(new Vertex(-sx, -sy, -sz));
+			Builder.Vertices.Add(new Vertex(-sx, sy, -sz));
+			Builder.Vertices.Add(new Vertex(sx, sy, sz));
+			Builder.Vertices.Add(new Vertex(sx, -sy, sz));
+			Builder.Vertices.Add(new Vertex(-sx, -sy, sz));
+			Builder.Vertices.Add(new Vertex(-sx, sy, sz));
+			MeshFace f0 = new MeshFace(new[] {v + 0, v + 1, v + 2, v + 0, v + 2, v + 3}, FaceFlags.Triangles);
+			Builder.Faces.Add(f0);
+			MeshFace f1 = new MeshFace(new[] {v + 0, v + 4, v + 5, v + 0, v + 5, v + 1}, FaceFlags.Triangles);
+			Builder.Faces.Add(f1);
+			MeshFace f2 = new MeshFace(new[] {v + 0, v + 3, v + 7, v + 0, v + 7, v + 4}, FaceFlags.Triangles);
+			Builder.Faces.Add(f2);
+			MeshFace f3 = new MeshFace(new[] {v + 6, v + 5, v + 4, v + 6, v + 4, v + 7}, FaceFlags.Triangles);
+			Builder.Faces.Add(f3);
+			MeshFace f4 = new MeshFace(new[] {v + 6, v + 7, v + 3, v + 6, v + 3, v + 2}, FaceFlags.Triangles);
+			Builder.Faces.Add(f4);
+			MeshFace f5 = new MeshFace(new[] {v + 6, v + 2, v + 1, v + 6, v + 1, v + 5}, FaceFlags.Triangles);
+			Builder.Faces.Add(f5);
+			
 		}
 
 		// create cylinder
@@ -1298,16 +1327,13 @@ namespace Plugin
 			r2 = Math.Abs(r2);
 			double ns = h >= 0.0 ? 1.0 : -1.0;
 			// initialization
-			int v = Builder.Vertices.Length;
-			Array.Resize(ref Builder.Vertices, v + 2 * n);
 			Vector3[] Normals = new Vector3[2 * n];
-			double d = 2.0 * Math.PI / (double)n;
+			double d = 2.0 * Math.PI / n;
 			double g = 0.5 * h;
 			double t = 0.0;
 			double a = h != 0.0 ? Math.Atan((r2 - r1) / h) : 0.0;
-			double cosa = Math.Cos(a);
-			double sina = Math.Sin(a);
 			// vertices and normals
+			int v = Builder.Vertices.Count;
 			for (int i = 0; i < n; i++) {
 				double dx = Math.Cos(t);
 				double dz = Math.Sin(t);
@@ -1315,26 +1341,25 @@ namespace Plugin
 				double lz = dz * r2;
 				double ux = dx * r1;
 				double uz = dz * r1;
-				Builder.Vertices[v + 2 * i + 0] = new Vertex(ux, g, uz);
-				Builder.Vertices[v + 2 * i + 1] = new Vertex(lx, -g, lz);
+				Builder.Vertices.Add(new Vertex(ux, g, uz));
+				Builder.Vertices.Add(new Vertex(lx, -g, lz));
 				Vector3 normal = new Vector3(dx * ns, 0.0, dz * ns);
 				Vector3 s = Vector3.Cross(normal, Vector3.Down);
-				normal.Rotate(s, cosa, sina);
+				normal.Rotate(s, a);
 				Normals[2 * i + 0] = new Vector3(normal);
 				Normals[2 * i + 1] = new Vector3(normal);
 				t += d;
 			}
 			// faces
-			int f = Builder.Faces.Length;
-			Array.Resize(ref Builder.Faces, f + n + m);
+
 			for (int i = 0; i < n; i++) {
-				Builder.Faces[f + i].Flags = 0;
 				int i0 = (2 * i + 2) % (2 * n);
 				int i1 = (2 * i + 3) % (2 * n);
 				int i2 = 2 * i + 1;
 				int i3 = 2 * i;
-				Builder.Faces[f + i].Vertices = new[] { new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3]) };
-				Builder.Faces[f + i].Flags |= MeshFace.FaceTypeTriangles;
+				MeshFace f = new MeshFace(new[] {new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3])}, 0);
+				f.Flags = FaceFlags.Triangles;
+				Builder.Faces.Add(f);
 			}
 
 			for (int i = 0; i < m; i++) {
@@ -1357,16 +1382,16 @@ namespace Plugin
 				verts.Add(verts[0]);
 				verts.Add(verts[verts.Count - 1]);
 				verts.Add(verts[1]);
-				Builder.Faces[f + n + i].Vertices = verts.ToArray();
-				Builder.Faces[f + n + i].Flags |= MeshFace.FaceTypeTriangles;
-				
+				MeshFace f = new MeshFace(verts.ToArray(), 0);
+				f.Flags = FaceFlags.Triangles;
+				Builder.Faces.Add(f);
 			}
 
 		}
 		
 		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>
 		/// <param name="Encoding">The Encoding</param>
-		private static bool IsUtf(System.Text.Encoding Encoding)
+		private static bool IsUtf(Encoding Encoding)
 		{
 			switch (Encoding.WindowsCodePage)
 			{

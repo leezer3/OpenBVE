@@ -82,11 +82,11 @@ namespace OpenBve
 			case state.map:
 				Program.Renderer.Rectangle.Draw(mapImage, origin, mapSize);
 				// get current train position
-				int n = TrainManager.Trains.Length;
+				int n = Program.TrainManager.Trains.Length;
 				for (int i = 0; i < n; i++)
 				{
-					int trainX = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
-					int trainZ = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
+					int trainX = (int)Program.TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
+					int trainZ = (int)Program.TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
 					// convert to route map coordinates
 					xPos = mapSize.X * (trainX - Program.CurrentRoute.Information.RouteMinX) /
 							(Program.CurrentRoute.Information.RouteMaxX - Program.CurrentRoute.Information.RouteMinX) - trainDotRadius;
@@ -95,7 +95,7 @@ namespace OpenBve
 						// draw a dot at current train position
 						Program.Renderer.Rectangle.Draw(null, new Vector2(xPos, zPos),
 							new Vector2(trainDotDiameter, trainDotDiameter),
-							TrainManager.Trains[i].IsPlayerTrain ? playerTrainDotColour : trainDotColour);
+							Program.TrainManager.Trains[i].IsPlayerTrain ? playerTrainDotColour : trainDotColour);
 				}
 				break;
 			case state.gradient:

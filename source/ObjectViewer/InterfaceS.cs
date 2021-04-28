@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	// --- PluginManager.cs ---
@@ -22,7 +23,12 @@ namespace OpenBve {
 	internal static class Game {
 		internal static double SecondsSinceMidnight = 0.0;
 		
-		internal static void Reset() {
+		internal static void Reset()
+		{
+			Program.TrainManager.Trains = new TrainBase[] { };
+			TrainManager.PlayerTrain = null;
+			Interface.LogMessages.Clear();
+			Program.CurrentHost.MissingFiles.Clear();
 			Program.Renderer.Reset();
 			Program.Renderer.InitializeVisibility();
 			ObjectManager.AnimatedWorldObjects = new WorldObject[4];

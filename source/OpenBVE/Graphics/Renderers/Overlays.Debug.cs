@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
-using OpenBve.BrakeSystems;
+using TrainManager.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using SoundManager;
+using TrainManager.Handles;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -18,15 +19,15 @@ namespace OpenBve.Graphics.Renderers
 			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
 			// actual handles
 			{
-				string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Forwards ? "F" : "N");
-				if (TrainManager.PlayerTrain.Handles.SingleHandle)
+				string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "F" : "N");
+				if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Actual ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Actual != 0 ? "B" + TrainManager.PlayerTrain.Handles.Brake.Actual.ToString(Culture) : TrainManager.PlayerTrain.Handles.HoldBrake.Actual ? "HLD" : TrainManager.PlayerTrain.Handles.Power.Actual != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Actual.ToString(Culture) : "N");
 				}
-				else if (TrainManager.PlayerTrain.Handles.Brake is TrainManager.AirBrakeHandle)
+				else if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.Power.Actual != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Actual.ToString(Culture) : "N");
-					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Actual ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Actual == (int)TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.Brake.Actual == (int)TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Actual ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Actual == (int)AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.Brake.Actual == (int)AirBrakeHandleState.Lap ? "LAP" : "REL");
 				}
 				else
 				{
@@ -35,28 +36,28 @@ namespace OpenBve.Graphics.Renderers
 				}
 				if (TrainManager.PlayerTrain.Handles.HasLocoBrake)
 				{
-					if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
+					if (TrainManager.PlayerTrain.Handles.LocoBrake is LocoAirBrakeHandle)
 					{
-						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)AirBrakeHandleState.Lap ? "LAP" : "REL");
 					}
 					else
 					{
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				renderer.OpenGlString.Draw(Fonts.SmallFont, t, new Point(2, renderer.Screen.Height - 46), TextAlignment.TopLeft, Color128.White, true);
+				renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, t, new Point(2, renderer.Screen.Height - 46), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// safety handles
 			{
-				string t = "safety: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Forwards ? "F" : "N");
-				if (TrainManager.PlayerTrain.Handles.SingleHandle)
+				string t = "safety: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "F" : "N");
+				if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Safety ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Safety != 0 ? "B" + TrainManager.PlayerTrain.Handles.Brake.Safety.ToString(Culture) : TrainManager.PlayerTrain.Handles.HoldBrake.Actual ? "HLD" : TrainManager.PlayerTrain.Handles.Power.Safety != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Safety.ToString(Culture) : "N");
 				}
-				else if (TrainManager.PlayerTrain.Handles.Brake is TrainManager.AirBrakeHandle)
+				else if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.Power.Safety != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Safety.ToString(Culture) : "N");
-					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Safety ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Safety == (int)TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.Brake.Safety == (int)TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Safety ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Safety == (int)AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.Brake.Safety == (int)AirBrakeHandleState.Lap ? "LAP" : "REL");
 				}
 				else
 				{
@@ -66,28 +67,28 @@ namespace OpenBve.Graphics.Renderers
 
 				if (TrainManager.PlayerTrain.Handles.HasLocoBrake)
 				{
-					if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
+					if (TrainManager.PlayerTrain.Handles.LocoBrake is LocoAirBrakeHandle)
 					{
-						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)AirBrakeHandleState.Lap ? "LAP" : "REL");
 					}
 					else
 					{
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				renderer.OpenGlString.Draw(Fonts.SmallFont, t, new Point(2, renderer.Screen.Height - 32), TextAlignment.TopLeft, Color128.White, true);
+				renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, t, new Point(2, renderer.Screen.Height - 32), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// driver handles
 			{
-				string t = "driver: " + (TrainManager.PlayerTrain.Handles.Reverser.Driver == TrainManager.ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Driver == TrainManager.ReverserPosition.Forwards ? "F" : "N");
-				if (TrainManager.PlayerTrain.Handles.SingleHandle)
+				string t = "driver: " + (TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Forwards ? "F" : "N");
+				if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Driver != 0 ? "B" + TrainManager.PlayerTrain.Handles.Brake.Driver.ToString(Culture) : TrainManager.PlayerTrain.Handles.HoldBrake.Driver ? "HLD" : TrainManager.PlayerTrain.Handles.Power.Driver != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Driver.ToString(Culture) : "N");
 				}
-				else if (TrainManager.PlayerTrain.Handles.Brake is TrainManager.AirBrakeHandle)
+				else if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.Power.Driver != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Driver.ToString(Culture) : "N");
-					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Driver == (int)AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.Brake.Driver == (int)AirBrakeHandleState.Lap ? "LAP" : "REL");
 				}
 				else
 				{
@@ -96,16 +97,16 @@ namespace OpenBve.Graphics.Renderers
 				}
 				if (TrainManager.PlayerTrain.Handles.HasLocoBrake)
 				{
-					if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
+					if (TrainManager.PlayerTrain.Handles.LocoBrake is LocoAirBrakeHandle)
 					{
-						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)AirBrakeHandleState.Lap ? "LAP" : "REL");
 					}
 					else
 					{
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				renderer.OpenGlString.Draw(Fonts.SmallFont, t, new Point(2, renderer.Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
+				renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, t, new Point(2, renderer.Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// debug information
 			int texturesLoaded = renderer.TextureManager.GetNumberOfLoadedTextures();
@@ -128,6 +129,12 @@ namespace OpenBve.Graphics.Renderers
 			{
 				mass += TrainManager.PlayerTrain.Cars[i].CurrentMass;
 			}
+
+			string rainIntensity = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.legacyRainEvents ? "Legacy beacon based." : TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.RainIntensity + "%";
+			double elevation = Program.Renderer.Camera.AbsolutePosition.Y + Program.CurrentRoute.Atmosphere.InitialElevation;
+			double airTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
+			double airPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, airTemperature);
+			double airDensity = Program.CurrentRoute.Atmosphere.GetAirDensity(airPressure, airTemperature);
 			int hours = (int)Program.CurrentRoute.SecondsSinceMidnight / 3600,
 				remainder = (int)Program.CurrentRoute.SecondsSinceMidnight % 3600,
 				minutes = remainder / 60,
@@ -140,14 +147,15 @@ namespace OpenBve.Graphics.Renderers
 				"",
 				"=train",
 				"speed: " + (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) * 3.6).ToString("0.00", Culture) + " km/h",
-				"power (car " + car.ToString(Culture) +  "): " + (TrainManager.PlayerTrain.Cars[car].Specs.CurrentAccelerationOutput < 0.0 ? TrainManager.PlayerTrain.Cars[car].Specs.CurrentAccelerationOutput * Math.Sign(TrainManager.PlayerTrain.Cars[car].CurrentSpeed) : TrainManager.PlayerTrain.Cars[car].Specs.CurrentAccelerationOutput * (double)TrainManager.PlayerTrain.Handles.Reverser.Actual).ToString("0.0000", Culture) + " m/s²",
+				"power (car " + car.ToString(Culture) +  "): " + (TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration < 0.0 ? TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration * Math.Sign(TrainManager.PlayerTrain.Cars[car].CurrentSpeed) : TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration * (double)TrainManager.PlayerTrain.Handles.Reverser.Actual).ToString("0.0000", Culture) + " m/s²",
 				"acceleration: " + TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration.ToString("0.0000", Culture) + " m/s²",
 				"position: " + TrainManager.PlayerTrain.FrontCarTrackPosition().ToString("0.00", Culture) + " m",
+				"rain intensity: " + rainIntensity,
 				"elevation: " + (Program.CurrentRoute.Atmosphere.InitialElevation + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.WorldPosition.Y).ToString("0.00", Culture) + " m",
-				"temperature: " + (TrainManager.PlayerTrain.Specs.CurrentAirTemperature - 273.15).ToString("0.00", Culture) + " °C",
-				"air pressure: " + (0.001 * TrainManager.PlayerTrain.Specs.CurrentAirPressure).ToString("0.00", Culture) + " kPa",
-				"air density: " + TrainManager.PlayerTrain.Specs.CurrentAirDensity.ToString("0.0000", Culture) + " kg/m³",
-				"speed of sound: " + (Program.CurrentRoute.Atmosphere.GetSpeedOfSound(TrainManager.PlayerTrain.Specs.CurrentAirDensity) * 3.6).ToString("0.00", Culture) + " km/h",
+				"temperature: " + (airTemperature - 273.15).ToString("0.00", Culture) + " °C",
+				"air pressure: " + (0.001 * airPressure).ToString("0.00", Culture) + " kPa",
+				"air density: " + airDensity.ToString("0.0000", Culture) + " kg/m³",
+				"speed of sound: " + (Program.CurrentRoute.Atmosphere.GetSpeedOfSound(airDensity) * 3.6).ToString("0.00", Culture) + " km/h",
 				"passenger ratio: " + TrainManager.PlayerTrain.Passengers.PassengerRatio.ToString("0.00"),
 				"total mass: " + mass.ToString("0.00", Culture) + " kg",
 				"",
@@ -196,13 +204,13 @@ namespace OpenBve.Graphics.Renderers
 					if (Lines[i][0] == '=')
 					{
 						string text = Lines[i].Substring(1);
-						Size size = Fonts.SmallFont.MeasureString(text);
+						Size size = renderer.Fonts.SmallFont.MeasureString(text);
 						renderer.Rectangle.Draw(null, new Vector2((float)x, (float)y), new Vector2(size.Width + 6.0f, size.Height + 2.0f), new Color128(0.35f, 0.65f, 0.90f, 0.8f));
-						renderer.OpenGlString.Draw(Fonts.SmallFont, text, new Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, text, new Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, Lines[i], new Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, Lines[i], new Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
 					}
 					y += 14.0;
 				}
@@ -249,13 +257,13 @@ namespace OpenBve.Graphics.Renderers
 					if (Lines[i][0] == '=')
 					{
 						string text = Lines[i].Substring(1);
-						Size size = Fonts.SmallFont.MeasureString(text);
+						Size size = renderer.Fonts.SmallFont.MeasureString(text);
 						renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(size.Width + 6.0f, size.Height + 2.0f), new Color128(0.35f, 0.65f, 0.9f, 0.8f));
-						renderer.OpenGlString.Draw(Fonts.SmallFont, text, new Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, text, new Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, Lines[i], new Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, Lines[i], new Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
 					}
 					y += 14.0;
 					if (y > renderer.Screen.Height - 20.0)
@@ -284,7 +292,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (!heading[0])
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, "Brake pipe", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, "Brake pipe", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[0] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
@@ -298,7 +306,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (!heading[1])
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, "Auxillary reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, "Auxillary reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[1] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
@@ -311,7 +319,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (!heading[2])
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, "Brake cylinder", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, "Brake cylinder", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[2] = true;
 					}
 
@@ -326,7 +334,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (!heading[3])
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, "Main reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, "Main reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[3] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
@@ -340,7 +348,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (!heading[4])
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, "Equalizing reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, "Equalizing reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[4] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
@@ -354,7 +362,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (!heading[5])
 					{
-						renderer.OpenGlString.Draw(Fonts.SmallFont, "Straight air pipe", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, "Straight air pipe", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[5] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2((float)w, (float)h), Color128.Black);

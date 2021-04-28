@@ -229,6 +229,42 @@ namespace OpenBveApi {
 			return false;
 		}
 
+		/// <summary>
+		/// Checks whether the specified path is an absolute path.
+		/// </summary>
+		/// <param name="path">The path to test</param>
+		/// <returns>True if this path is an absolute path, false otherwise</returns>
+		public static bool IsAbsolutePath(string path)
+		{
+			if (path.Length < 1)
+			{
+				return false;
+			}
+
+			if (path[0] == PathSeparationChars[0] || path[0] == PathSeparationChars[1])
+			{
+				// e.g.
+				// \Test\Foo.txt (Windows)
+				// /Test/Foo.txt (Windows, Unix)
+				return true;
+			}
+
+			if (path.Length < 3)
+			{
+				return false;
+			}
+
+			if (path[1] == ':' && (path[2] == PathSeparationChars[0] || path[2] == PathSeparationChars[1]))
+			{
+				// e.g.
+				// C:\Test\Foo.txt (Windows)
+				// C:/Test/Foo.txt (Windows)
+				return true;
+			}
+
+			return false;
+		}
+
 
 		// --- private functions ---
 		

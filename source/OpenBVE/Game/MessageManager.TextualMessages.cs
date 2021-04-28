@@ -26,7 +26,7 @@ namespace OpenBve
 			public override void AddMessage(double currentTime)
 			{
 				//HACK: No way of changing this at the minute....
-				Font = Fonts.SmallFont;
+				Font = Program.Renderer.Fonts.SmallFont;
 				QueueForRemoval = false;
 				MessageToDisplay = InternalText;
 			}

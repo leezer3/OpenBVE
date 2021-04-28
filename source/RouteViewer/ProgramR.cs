@@ -10,7 +10,6 @@ using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
-using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -22,6 +21,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -62,20 +62,28 @@ namespace OpenBve
 
 		internal static Sounds Sounds;
 
-		// main
+		internal static TrainManager TrainManager;
+
+			// main
 		[STAThread]
 		internal static void Main(string[] args)
 		{
 			CurrentHost = new Host();
 			// file system
-			FileSystem = FileSystem.FromCommandLineArgs(args);
+			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 			FileSystem.CreateFileSystem();
 			Renderer = new NewRenderer();
-			CurrentRoute = new CurrentRoute(Renderer);
+			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			Sounds = new Sounds();
-			
 			Options.LoadOptions();
-			Plugins.LoadPlugins();
+			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
+			string error;
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+			{
+				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+			
 			// command line arguments
 			StringBuilder objectsToLoad = new StringBuilder();
 			if (args.Length != 0)
@@ -112,7 +120,13 @@ namespace OpenBve
 							{
 								if (CurrentHost.Plugins[j].Object != null)
 								{
-									CurrentHost.Plugins[j].Object.SetCompatibilityHacks(true, false);
+									CompatabilityHacks enabledHacks = new CompatabilityHacks
+									{
+										BveTsHacks = true, 
+										CylinderHack = false,
+										BlackTransparency =  true
+									};
+									CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 								}
 							}
 						}
@@ -136,7 +150,11 @@ namespace OpenBve
 			}
 
 			var options = new ToolkitOptions();
-			Plugins.LoadPlugins();
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+			{
+				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
 			options.Backend = PlatformBackend.PreferX11;
 			Toolkit.Init(options);
 			string folder = Program.FileSystem.GetDataFolder("Languages");

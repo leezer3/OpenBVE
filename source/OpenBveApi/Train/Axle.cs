@@ -36,6 +36,7 @@ namespace OpenBveApi.Trains
 			coefficientOfFriction = CoefficientOfFriction;
 			coefficientOfRollingResistance = CoefficentOfRollingResistance;
 			aerodynamicDragCoefficient = AerodynamicDragCoefficient;
+			PointSounds = new object[] { };
 		}
 
 		/// <summary>Gets the resistance value for this axle in the current direction</summary>

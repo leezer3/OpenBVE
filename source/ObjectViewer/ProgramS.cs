@@ -7,17 +7,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows.Forms;
-using OpenBveApi.World;
+using LibRender2.Trains;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
 using RouteManager2;
+using TrainManager.Trains;
 using ButtonState = OpenTK.Input.ButtonState;
+using Control = OpenBveApi.Interface.Control;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve {
@@ -53,6 +57,8 @@ namespace OpenBve {
 
 		internal static CurrentRoute CurrentRoute;
 
+		internal static TrainManager TrainManager;
+
 		internal static readonly Object LockObj = new Object();
 
 		// main
@@ -61,18 +67,24 @@ namespace OpenBve {
 	    {
 		    CurrentHost = new Host();
 			// file system
-	        FileSystem = FileSystem.FromCommandLineArgs(args);
+	        FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 	        FileSystem.CreateFileSystem();
 	        Renderer = new NewRenderer();
-	        CurrentRoute = new CurrentRoute(Renderer);
+	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        Options.LoadOptions();
+	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {
 		        Renderer.Screen.Width = 960;
 		        Renderer.Screen.Height = 600;
 	        }
-		    Plugins.LoadPlugins();
+	        string error;
+	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+	        {
+		        MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		        return;
+	        }
 	        // command line arguments
 	        List<string> filesToLoad = new List<string>();
 	        
@@ -110,7 +122,13 @@ namespace OpenBve {
 					        {
 						        if (CurrentHost.Plugins[j].Object != null)
 						        {
-							        CurrentHost.Plugins[j].Object.SetCompatibilityHacks(true, false);
+							        CompatabilityHacks enabledHacks = new CompatabilityHacks
+							        {
+								        BveTsHacks = true, 
+								        CylinderHack = false,
+								        BlackTransparency =  true
+							        };
+							        CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 						        }
 					        }
 				        }
@@ -189,7 +207,6 @@ namespace OpenBve {
 			// reset
 			LightingRelative = -1.0;
 			Game.Reset();
-			Interface.LogMessages.Clear();
 			RefreshObjects();
 			Renderer.InitializeVisibility();
 			Renderer.UpdateVisibility(0.0, true);
@@ -213,18 +230,14 @@ namespace OpenBve {
 		            Renderer.Camera.AbsoluteSide = MouseCameraSide;
                     {
                         double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
-                        double cosa = Math.Cos(dx);
-                        double sina = Math.Sin(dx);
-                        Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
-                        Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
-                        Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
+                        Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, dx);
+                        Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, dx);
+                        Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, dx);
                     }
                     {
                         double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
-                        double cosa = Math.Cos(dy);
-                        double sina = Math.Sin(dy);
-                        Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, cosa, sina);
-                        Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, cosa, sina);
+                        Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, dy);
+                        Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, dy);
                     }
 	            }
 	            else if(MouseButton == 2)
@@ -250,76 +263,53 @@ namespace OpenBve {
 	    {
 		    LightingRelative = -1.0;
 		    Game.Reset();
-		    Interface.LogMessages.Clear();
 		    for (int i = 0; i < Files.Length; i++)
 		    {
 			    try
 			    {
 				    if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 				    {
-					    UnifiedObject[] carObjects, bogieObjects, couplerObjects;
-					    double[] axleLocations, couplerDistances;
-					    TrainManager.Train train;
-					    ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
-					    double z = 0.0;
-					    for (int j = 0; j < carObjects.Length; j++)
+					    string currentTrainFolder = System.IO.Path.GetDirectoryName(Files[i]);
+
+					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
-						    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						    if (j < train.Cars.Length - 1)
+						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
 						    {
-							    z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
-							    z -= couplerDistances[j];
+							    TrainManager.Trains = new TrainBase[1];
+							    Control[] dummyControls = new Control[0];
+							    TrainManager.Trains[0] = new TrainManager.Train();
+								AbstractTrain playerTrain = TrainManager.Trains[0] as AbstractTrain;
+								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
+								TrainManager.PlayerTrain = TrainManager.Trains[0];
+								break;
 						    }
 					    }
-
-					    z = 0.0;
-					    int trainCar = 0;
-					    for (int j = 0; j < bogieObjects.Length; j++)
+						TrainManager.PlayerTrain.Initialize();
+					    foreach (var Car in TrainManager.PlayerTrain.Cars)
 					    {
-						    if (bogieObjects[j] == null)
-						    {
-							    continue;
-						    }
-
-						    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						    j++;
-						    if (bogieObjects[j] == null)
-						    {
-							    continue;
-						    }
-
-						    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-						    if (trainCar < train.Cars.Length - 1)
-						    {
-							    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
-							    z -= couplerDistances[trainCar];
-						    }
-
-						    trainCar++;
+						    double length = TrainManager.PlayerTrain.Cars[0].Length;
+						    Car.Move(-length);
+						    Car.Move(length);
 					    }
-
-					    z = 0.0;
-					    for (int j = 0; j < couplerObjects.Length; j++)
+					    TrainManager.PlayerTrain.PlaceCars(0);
+					    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					    {
-						    z -= train.Cars[j].Length / 2.0;
-						    z -= couplerDistances[j] / 2.0;
-						    if (couplerObjects[j] == null)
-						    {
-							    continue;
-						    }
-
-						    couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
-
-						    z -= couplerDistances[j] / 2.0;
-						    z -= train.Cars[j + 1].Length / 2.0;
+							TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
+							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
+							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 					    }
 				    }
 				    else
 				    {
 					    UnifiedObject o;
-					    Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-					    o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
+					    if (CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o))
+					    {
+						    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
+					    }
+					    
 				    }
+
 			    }
 			    catch (Exception ex)
 			    {
@@ -329,8 +319,10 @@ namespace OpenBve {
 		    }
 
 		    Renderer.InitializeVisibility();
+		    Renderer.UpdateViewingDistances(600);
 		    Renderer.UpdateVisibility(0.0, true);
 		    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
+		    Program.TrainManager.UpdateTrainObjects(0.0, true);
 		    Renderer.ApplyBackgroundColor();
 	    }
 
@@ -391,8 +383,7 @@ namespace OpenBve {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-	                Interface.LogMessages.Clear();
-	                Files = new string[] {};
+		            Files = new string[] {};
 					Renderer.ApplyBackgroundColor();
 	                break;
 	            case Key.Left:

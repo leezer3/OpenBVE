@@ -47,23 +47,17 @@ namespace OpenBve {
 			double cy = Program.Renderer.CameraTrackFollower.WorldPosition.Y + sF.Y * pF.X + ux2.Y * pF.Y + dx2.Y * pF.Z;
 			double cz = Program.Renderer.CameraTrackFollower.WorldPosition.Z + sF.Z * pF.X + ux2.Z * pF.Y + dx2.Z * pF.Z;
 			if (Program.Renderer.Camera.Alignment.Yaw != 0.0) {
-				double cosa = Math.Cos(Program.Renderer.Camera.Alignment.Yaw);
-				double sina = Math.Sin(Program.Renderer.Camera.Alignment.Yaw);
-				dF.Rotate(uF, cosa, sina);
-				sF.Rotate(uF, cosa, sina);
+				dF.Rotate(uF, Program.Renderer.Camera.Alignment.Yaw);
+				sF.Rotate(uF, Program.Renderer.Camera.Alignment.Yaw);
 			}
 			double p = Program.Renderer.Camera.Alignment.Pitch;
 			if (p != 0.0) {
-				double cosa = Math.Cos(-p);
-				double sina = Math.Sin(-p);
-				dF.Rotate(sF, cosa, sina);
-				uF.Rotate(sF, cosa, sina);
+				dF.Rotate(sF, -p);
+				uF.Rotate(sF, -p);
 			}
 			if (Program.Renderer.Camera.Alignment.Roll != 0.0) {
-				double cosa = Math.Cos(-Program.Renderer.Camera.Alignment.Roll);
-				double sina = Math.Sin(-Program.Renderer.Camera.Alignment.Roll);
-				uF.Rotate(dF, cosa, sina);
-				sF.Rotate(dF, cosa, sina);
+				uF.Rotate(dF, -Program.Renderer.Camera.Alignment.Roll);
+				sF.Rotate(dF, -Program.Renderer.Camera.Alignment.Roll);
 			}
 
 			Program.Renderer.Camera.AbsolutePosition = new Vector3(cx, cy, cz);

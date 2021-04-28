@@ -116,7 +116,7 @@ namespace OpenBve.Graphics
 		}
 		
 		// render scene
-		internal void RenderScene(double TimeElapsed)
+		internal void RenderScene(double TimeElapsed, double RealTimeElapsed)
 		{
 			ReleaseResources();
 			// initialize
@@ -145,9 +145,11 @@ namespace OpenBve.Graphics
 
 			// set up camera
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
+			TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
+			TransformedLightPosition.Transform(CurrentViewMatrix);
 			if (!AvailableNewRenderer)
 			{
-				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z, 0.0f });
+				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)TransformedLightPosition.X, (float)TransformedLightPosition.Y, (float)TransformedLightPosition.Z, 0.0f });
 			}
 
 			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
@@ -212,7 +214,6 @@ namespace OpenBve.Graphics
 				if (OptionLighting)
 				{
 					DefaultShader.SetIsLight(true);
-					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
 					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
@@ -457,7 +458,7 @@ namespace OpenBve.Graphics
 			UnsetAlphaFunc();
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Disable(EnableCap.DepthTest);
-			overlays.Render(TimeElapsed);
+			overlays.Render(RealTimeElapsed);
 			OptionLighting = true;
 		}
 	}

@@ -76,5 +76,15 @@ namespace OpenBveApi
 		public int SoundNumber;
 		/// <summary>Whether to use the new rendering method.</summary>
 		public bool IsUseNewRenderer;
+		/// <summary>Whether debug logs should be generated</summary>
+		public bool GenerateDebugLogging;
+		/// <summary>Whether loading sway is added</summary>
+		public bool LoadingSway;
+		/// <summary>The game mode- Affects how the score is calculated</summary>
+		public GameMode GameMode;
+		/// <summary>Whether Panel2 is loaded using the extended touch controls mode</summary>
+		public bool Panel2ExtendedMode;
+		/// <summary>The minimum size for a Panel2 control to be considered touch sensitive</summary>
+		public int Panel2ExtendedMinSize;
 	}
 }

@@ -96,8 +96,8 @@ namespace OpenBve
 					byteArray = Encoding.Default.GetBytes(textBoxPackageAuthor.Text);
 					s = Encoding.UTF8.GetString(byteArray);
 					currentPackage.Author = s;
-					byteArray = System.Text.Encoding.Default.GetBytes(textBoxPackageDescription.Text);
-					s = System.Text.Encoding.UTF8.GetString(byteArray);
+					byteArray = Encoding.Default.GetBytes(textBoxPackageDescription.Text);
+					s = Encoding.UTF8.GetString(byteArray);
 					currentPackage.Description = s.Replace("\r\n", "\\r\\n");
 				}
 				else
@@ -176,7 +176,7 @@ namespace OpenBve
 				labelNewVersionNumber.Text = currentPackage.PackageVersion.ToString();
 				if (currentPackage.Dependancies.Count != 0)
 				{
-					List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage,
+					List<Package> brokenDependancies = Information.UpgradeDowngradeDependancies(currentPackage,
 						Database.currentDatabase.InstalledRoutes, Database.currentDatabase.InstalledTrains);
 					if (brokenDependancies != null)
 					{
@@ -404,8 +404,8 @@ namespace OpenBve
 			else
 			{
 				//Non-localised string as this is a specific error message
-				textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" +
-				                             e.CurrentFile + " at " + e.Progress + "% completion.";
+				textBoxFilesInstalled.Text = e.Exception + @"\r\n \r\n encountered whilst processing the following file: \r\n\r\n" +
+				                             e.CurrentFile + @" at " + e.Progress + @"% completion.";
 				//Create crash dump file
 				CrashHandler.LogCrash(e.Exception + Environment.StackTrace);
 			}
@@ -594,7 +594,8 @@ namespace OpenBve
 					PopulatePackageList(currentPackage.Reccomendations, dataGridViewPackages3, false, false, true);
 			}
 			catch
-			{				
+			{		
+				//Ignored at the minute
 			}
 		}
 
@@ -603,7 +604,7 @@ namespace OpenBve
 
 		private void dataGridViewPackages_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewPackages.SelectedRows.Count == 0 || listPopulating == true)
+			if (dataGridViewPackages.SelectedRows.Count == 0 || listPopulating)
 			{
 				currentPackage = null;
 				return;
@@ -760,7 +761,7 @@ namespace OpenBve
 
 		private void dataGridViewPackages2_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewPackages2.SelectedRows.Count == 0 || listPopulating == true)
+			if (dataGridViewPackages2.SelectedRows.Count == 0 || listPopulating)
 			{
 				buttonDepends.Enabled = false;
 				buttonReccomends.Enabled = false;
@@ -796,7 +797,7 @@ namespace OpenBve
 
 		private void dataGridViewPackages3_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewPackages3.SelectedRows.Count == 0 || listPopulating == true)
+			if (dataGridViewPackages3.SelectedRows.Count == 0 || listPopulating)
 			{
 				buttonRemove.Enabled = false;
 				return;
@@ -837,6 +838,7 @@ namespace OpenBve
 			}
 			catch
 			{
+				//Ignored at the minute
 			}
 		}
 
@@ -941,13 +943,14 @@ namespace OpenBve
 				return;
 			}
 			currentPackage.FileName = textBoxPackageFileName.Text;
-			System.IO.FileInfo fi = null;
+			FileInfo fi = null;
 			try
 			{
-				fi = new System.IO.FileInfo(currentPackage.FileName);
+				fi = new FileInfo(currentPackage.FileName);
 			}
 			catch
 			{
+				//Checked below
 			}
 			if (fi == null)
 			{
@@ -957,7 +960,7 @@ namespace OpenBve
 			}
 			try
 			{
-				System.IO.File.Delete(currentPackage.FileName);
+				File.Delete(currentPackage.FileName);
 			}
 			catch
 			{
@@ -1028,8 +1031,8 @@ namespace OpenBve
 		private void Q1_CheckedChanged(object sender, EventArgs e)
 		{
 			filesToPackage = null;
-			filesToPackageBox.Text = String.Empty;
-			if (radioButtonQ1Yes.Checked == true)
+			filesToPackageBox.Text = string.Empty;
+			if (radioButtonQ1Yes.Checked)
 			{
 				if (Database.currentDatabase.InstalledRoutes.Count == 0 && Database.currentDatabase.InstalledTrains.Count == 0 && Database.currentDatabase.InstalledOther.Count == 0)
 				{
@@ -1096,7 +1099,7 @@ namespace OpenBve
 			{
 				newPackageType = PackageType.Other;
 			}
-			if (radioButtonQ1Yes.Checked == true)
+			if (radioButtonQ1Yes.Checked)
 			{
 				panelReplacePackage.Show();
 				panelNewPackage.Hide();
@@ -1212,7 +1215,7 @@ namespace OpenBve
 					launchLink += currentPackage.Website;
 					Uri URL;
 					bool result = Uri.TryCreate(launchLink, UriKind.Absolute, out URL) && (URL.Scheme == Uri.UriSchemeHttp || URL.Scheme == Uri.UriSchemeHttps);
-					if (result == true)
+					if (result)
 					{
 						Process.Start(launchLink);
 					}
@@ -1223,41 +1226,41 @@ namespace OpenBve
 		/// <summary>Shows a popup text input box to add a website link</summary>
 		private static DialogResult ShowInputDialog(ref string input)
 		{
-			System.Drawing.Size size = new System.Drawing.Size(200, 70);
+			Size size = new Size(200, 70);
 			Form inputBox = new Form
 			{
-				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
+				FormBorderStyle = FormBorderStyle.FixedDialog,
 				MaximizeBox = false,
 				MinimizeBox = false,
 				StartPosition = FormStartPosition.CenterScreen,
 				ClientSize = size,
 				Text = Translations.GetInterfaceString("packages_list_website")
 			};
-			System.Windows.Forms.TextBox textBox = new TextBox
+			TextBox textBox = new TextBox
 			{
-				Size = new System.Drawing.Size(size.Width - 10, 23),
-				Location = new System.Drawing.Point(5, 5),
+				Size = new Size(size.Width - 10, 23),
+				Location = new Point(5, 5),
 				Text = input
 			};
 			inputBox.Controls.Add(textBox);
 
 			Button okButton = new Button
 			{
-				DialogResult = System.Windows.Forms.DialogResult.OK,
+				DialogResult = DialogResult.OK,
 				Name = "okButton",
-				Size = new System.Drawing.Size(75, 23),
+				Size = new Size(75, 23),
 				Text = Translations.GetInterfaceString("packages_button_ok"),
-				Location = new System.Drawing.Point(size.Width - 80 - 80, 39)
+				Location = new Point(size.Width - 80 - 80, 39)
 			};
 			inputBox.Controls.Add(okButton);
 
 			Button cancelButton = new Button
 			{
-				DialogResult = System.Windows.Forms.DialogResult.Cancel,
+				DialogResult = DialogResult.Cancel,
 				Name = "cancelButton",
-				Size = new System.Drawing.Size(75, 23),
+				Size = new Size(75, 23),
 				Text = Translations.GetInterfaceString("packages_button_cancel"),
-				Location = new System.Drawing.Point(size.Width - 80, 39)
+				Location = new Point(size.Width - 80, 39)
 			};
 			inputBox.Controls.Add(cancelButton);
 
@@ -1272,64 +1275,65 @@ namespace OpenBve
 
 		private static DialogResult ShowVersionDialog(ref Version minimumVersion, ref Version maximumVersion, string currentVersion, string label)
 		{
-			System.Drawing.Size size = new System.Drawing.Size(300, 80);
+			Size size = new Size(300, 80);
+			
 			Form inputBox = new Form
 			{
-				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
+				FormBorderStyle = FormBorderStyle.FixedDialog,
 				MaximizeBox = false,
 				MinimizeBox = false,
 				StartPosition = FormStartPosition.CenterScreen,
 				ClientSize = size,
-				Text = Translations.GetInterfaceString("packages_list_version")
+				Text = Translations.GetInterfaceString(label),
 			};
 
-			System.Windows.Forms.Label minLabel = new Label
+			Label minLabel = new Label
 			{
 				Text = Translations.GetInterfaceString("packages_list_minimum"),
-				Location = new System.Drawing.Point(5, 6),
+				Location = new Point(5, 6),
 			};
 			inputBox.Controls.Add(minLabel);
 
-			System.Windows.Forms.TextBox textBox = new TextBox
+			TextBox textBox = new TextBox
 			{
-				Size = new System.Drawing.Size(size.Width - 110, 23),
-				Location = new System.Drawing.Point(105, 5),
+				Size = new Size(size.Width - 110, 23),
+				Location = new Point(105, 5),
 				Text = currentVersion
 			};
 			inputBox.Controls.Add(textBox);
 
-			System.Windows.Forms.Label maxLabel = new Label
+			Label maxLabel = new Label
 			{
 				Text = Translations.GetInterfaceString("packages_list_maximum"),
-				Location = new System.Drawing.Point(5, 26),
+				Location = new Point(5, 26),
 			};
 			inputBox.Controls.Add(maxLabel);
 
-			System.Windows.Forms.TextBox textBox2 = new TextBox
+			TextBox textBox2 = new TextBox
 			{
-				Size = new System.Drawing.Size(size.Width - 110, 23),
-				Location = new System.Drawing.Point(105, 25),
+				Size = new Size(size.Width - 110, 23),
+				Location = new Point(105, 25),
 				Text = currentVersion
 			};
 			inputBox.Controls.Add(textBox2);
 
 			Button okButton = new Button
 			{
-				DialogResult = System.Windows.Forms.DialogResult.OK,
+				DialogResult = DialogResult.OK,
 				Name = "okButton",
-				Size = new System.Drawing.Size(75, 23),
+				Size = new Size(75, 23),
 				Text = Translations.GetInterfaceString("packages_button_ok"),
-				Location = new System.Drawing.Point(size.Width - 80 - 80, 49)
+				Location = new Point(size.Width - 80 - 80, 49)
 			};
 			inputBox.Controls.Add(okButton);
 
 			Button cancelButton = new Button
 			{
-				DialogResult = System.Windows.Forms.DialogResult.Cancel,
+				DialogResult = DialogResult.Cancel,
 				Name = "cancelButton",
-				Size = new System.Drawing.Size(75, 23),
+				Size = new Size(75, 23),
 				Text = Translations.GetInterfaceString("packages_button_cancel"),
-				Location = new System.Drawing.Point(size.Width - 80, 49)
+				Location = new Point(size.Width - 80, 49)
 			};
 			inputBox.Controls.Add(cancelButton);
 
@@ -1401,9 +1405,9 @@ namespace OpenBve
 				var MonoDialog = new FolderBrowserDialog();
 				if (MonoDialog.ShowDialog() == DialogResult.OK)
 				{
-					folder = System.IO.Directory.GetParent(MonoDialog.SelectedPath).ToString();
+					folder = Directory.GetParent(MonoDialog.SelectedPath).ToString();
 					folderDisplay = MonoDialog.SelectedPath;
-					files = System.IO.Directory.GetFiles(folderDisplay, "*.*", System.IO.SearchOption.AllDirectories);
+					files = Directory.GetFiles(folderDisplay, "*.*", SearchOption.AllDirectories);
 					DialogOK = true;
 				}
 			}
@@ -1414,9 +1418,9 @@ namespace OpenBve
 				if (dialog.Show(Handle))
 				{
 					DialogOK = true;
-					folder = System.IO.Directory.GetParent(dialog.FileName).ToString();
+					folder = Directory.GetParent(dialog.FileName).ToString();
 					folderDisplay = dialog.FileName;
-					files = System.IO.Directory.GetFiles(dialog.FileName, "*.*", System.IO.SearchOption.AllDirectories);
+					files = Directory.GetFiles(dialog.FileName, "*.*", SearchOption.AllDirectories);
 				}
 
 			}

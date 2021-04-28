@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -15,6 +16,9 @@ namespace RouteManager2
 {
 	public class CurrentRoute
 	{
+
+		private readonly HostInterface currentHost;
+
 		private readonly BaseRenderer renderer;
 
 		/// <summary>Holds the information properties of the route</summary>
@@ -26,12 +30,6 @@ namespace RouteManager2
 
 		/// <summary>The list of tracks available in the simulation.</summary>
 		public Dictionary<int, Track> Tracks;
-
-		/// <summary>Holds a reference to the base TrainManager.Trains array</summary>
-		public AbstractTrain[] Trains;
-
-		/// <summary>Holds a reference to the base TrainManager.TFOs array</summary>
-		public AbstractTrain[] TrackFollowingObjects;
 
 		/// <summary>Holds all signal sections within the current route</summary>
 		public Section[] Sections;
@@ -100,8 +98,9 @@ namespace RouteManager2
 		/// </remarks>
 		public bool AccurateObjectDisposal;
 
-		public CurrentRoute(BaseRenderer renderer)
+		public CurrentRoute(HostInterface host, BaseRenderer renderer)
 		{
+			currentHost = host;
 			this.renderer = renderer;
 			
 			Tracks = new Dictionary<int, Track>();
@@ -110,7 +109,6 @@ namespace RouteManager2
 				Elements = new TrackElement[0]
 			};
 			Tracks.Add(0, t);
-			Trains = new AbstractTrain[0];
 			Sections = new Section[0];
 			Stations = new RouteStation[0];
 			BogusPreTrainInstructions = new BogusPreTrainInstruction[0];
@@ -131,22 +129,42 @@ namespace RouteManager2
 		/// <summary>Updates all sections within the route</summary>
 		public void UpdateAllSections()
 		{
-			UpdateSection(Sections.LastOrDefault());
+			/*
+			 * When there are an insane amount of sections, updating via a reference chain
+			 * may trigger a StackOverflowException
+			 *
+			 * Instead, pull out the reference to the next section in an out variable
+			 * and use a while loop
+			 * https://github.com/leezer3/OpenBVE/issues/557
+			 */
+			Section nextSectionToUpdate;
+			UpdateSection(Sections.LastOrDefault(), out nextSectionToUpdate);
+			while (nextSectionToUpdate != null)
+			{
+				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
+			}
 		}
 
 		/// <summary>Updates the specified signal section</summary>
 		/// <param name="SectionIndex"></param>
 		public void UpdateSection(int SectionIndex)
 		{
-			UpdateSection(Sections[SectionIndex]);
+			Section nextSectionToUpdate;
+			UpdateSection(Sections[SectionIndex], out nextSectionToUpdate);
+			while (nextSectionToUpdate != null)
+			{
+				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
+			}
 		}
 
 		/// <summary>Updates the specified signal section</summary>
 		/// <param name="Section"></param>
-		public void UpdateSection(Section Section)
+		/// <param name="PreviousSection"></param>
+		public void UpdateSection(Section Section, out Section PreviousSection)
 		{
 			if (Section == null)
 			{
+				PreviousSection = null;
 				return;
 			}
 
@@ -205,7 +223,7 @@ namespace RouteManager2
 				{
 					double b = -Double.MaxValue;
 
-					foreach (AbstractTrain t in Trains)
+					foreach (AbstractTrain t in currentHost.Trains)
 					{
 						if (t.State == TrainState.Available)
 						{
@@ -355,7 +373,7 @@ namespace RouteManager2
 			Section.CurrentAspect = newAspect;
 
 			// update previous section
-			UpdateSection(Section.PreviousSection);
+			PreviousSection = Section.PreviousSection;
 		}
 
 		/// <summary>Updates the currently displayed background</summary>

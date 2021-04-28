@@ -380,7 +380,15 @@ namespace OpenBveApi.Math {
 			this.Y *= factor.Y;
 			this.Z *= factor.Z;
 		}
-		
+
+		/// <summary>Rotates the vector on the plane perpendicular to a specified direction by a specified angle.</summary>
+		/// <param name="direction">The direction perpendicular to the plane on which to rotate.</param>
+		/// <param name="angle">The angle to rotate by.</param>
+		public void Rotate(Vector3 direction, double angle)
+		{
+			Rotate(direction, System.Math.Cos(angle), System.Math.Sin(angle));
+		}
+
 		/// <summary>Rotates the vector on the plane perpendicular to a specified direction by a specified angle.</summary>
 		/// <param name="direction">The direction perpendicular to the plane on which to rotate.</param>
 		/// <param name="cosineOfAngle">The cosine of the angle.</param>
@@ -627,11 +635,23 @@ namespace OpenBveApi.Math {
 
 		/// <summary>Transforms the Vector based upon the given transform matrix</summary>
 		/// <param name="transformMatrix">The matrix by which to transform the Vector</param>
-		public void Transform(Matrix4D transformMatrix)
+		/// <param name="ignoreW">Whether the W component of the matrix should be ignored</param>
+		public void Transform(Matrix4D transformMatrix, bool ignoreW = true)
 		{
 			double x = (X * transformMatrix.Row0.X) + (Y * transformMatrix.Row1.X) + (Z * transformMatrix.Row2.X);
 			double y = (X * transformMatrix.Row0.Y) + (Y * transformMatrix.Row1.Y) + (Z * transformMatrix.Row2.Y);
 			double z = (X * transformMatrix.Row0.Z) + (Y * transformMatrix.Row1.Z) + (Z * transformMatrix.Row2.Z);
+			if (!ignoreW)
+			{
+				/*
+				 * Multiplying a Vector3 by a Matrix4 is actually mathematically undefined behaviour
+				 * Some implementations appear to expect a constant W value to be added to the vector,
+				 * whereas others ignore it
+				 */
+				x += (1 * transformMatrix.Row3.X);
+				y += (1 * transformMatrix.Row3.Y);
+				z += (1 * transformMatrix.Row3.Z);
+			}
 			X = x;
 			Y = y;
 			Z = z;

@@ -1,4 +1,29 @@
-﻿using System;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -27,7 +52,7 @@ namespace Plugin
 			//Initialise the object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
-			Vector3[] Normals = new Vector3[4];
+			List<Vector3> Normals = new List<Vector3>();
 			bool PropertiesFound = false;
 
 			VertexTemplate[] tempVertices = new VertexTemplate[0];
@@ -241,16 +266,11 @@ namespace Plugin
 												Plugin.currentHost.AddMessage(MessageType.Warning, true, "Vertex with no co-ordinates supplied encountered in Ls3d object file.");
 												continue;
 											}
-											tempVertices[tempVertices.Length - 1] = new Vertex((Vector3)v);
+											tempVertices[tempVertices.Length - 1] = new Vertex(v);
 											tempNormals[tempNormals.Length - 1] = new Vector3(n);
 											tempNormals[tempNormals.Length - 1].Normalize();
-											Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
-											while (Builder.Vertices.Length >= Normals.Length)
-											{
-												Array.Resize(ref Normals, Normals.Length << 1);
-											}
-											Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(new Vector3((Vector3)v));
-											Normals[Builder.Vertices.Length - 1] = new Vector3(n);
+											Builder.Vertices.Add(new Vertex(new Vector3(v)));
+											Normals.Add(new Vector3(n));
 										}
 									}
 								}
@@ -266,17 +286,10 @@ namespace Plugin
 											if (childNode.Attributes["Points"] != null)
 											{
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
-												int f = Builder.Faces.Length;
 												//Add 1 to the length of the face array
-												Array.Resize(ref Builder.Faces, f + 1);
-												Builder.Faces[f] = new MeshFace();
+												MeshFace f = new MeshFace();
 												//Create the vertex array for the face
-												Builder.Faces[f].Vertices = new MeshFaceVertex[Verticies.Length];
-												while (Builder.Vertices.Length > Normals.Length)
-												{
-													Array.Resize(ref Normals,
-														Normals.Length << 1);
-												}
+												f.Vertices = new MeshFaceVertex[Verticies.Length];
 												//Run through the vertices list and grab from the temp array
 
 												int smallestX = TextureWidth;
@@ -291,13 +304,12 @@ namespace Plugin
 														continue;
 													}
 													//Add one to the actual vertex array
-													Array.Resize(ref Builder.Vertices, Builder.Vertices.Length + 1);
 													//Set coordinates
-													Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(tempVertices[currentVertex].Coordinates);
+													Builder.Vertices.Add(new Vertex(tempVertices[currentVertex].Coordinates));
 													//Set the vertex index
-													Builder.Faces[f].Vertices[j].Index = (ushort)(Builder.Vertices.Length - 1);
+													f.Vertices[j].Index = (ushort)(Builder.Vertices.Count - 1);
 													//Set the normals
-													Builder.Faces[f].Vertices[j].Normal = tempNormals[currentVertex];
+													f.Vertices[j].Normal = tempNormals[currentVertex];
 													//Now deal with the texture
 													//Texture mapping points are in pixels X,Y and are relative to the face in question rather than the vertex
 													if (childNode.Attributes["Texture"] != null)
@@ -336,7 +348,7 @@ namespace Plugin
 															currentCoords.X = 0;
 															currentCoords.Y = 0;
 														}
-														Builder.Vertices[Builder.Vertices.Length - 1].TextureCoordinates = currentCoords;
+														Builder.Vertices[Builder.Vertices.Count - 1].TextureCoordinates = currentCoords;
 
 
 													}
@@ -344,8 +356,9 @@ namespace Plugin
 												if (Face2)
 												{
 													//Add face2 flag if required
-													Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
+													f.Flags = FaceFlags.Face2Mask;
 												}
+												Builder.Faces.Add(f);
 											}
 
 										}
@@ -400,7 +413,7 @@ namespace Plugin
 						Builder.Materials[j].TransparencyTexture = transtex;
 					}
 				}
-				if (TransparencyUsed == true)
+				if (TransparencyUsed)
 				{
 					for (int j = 0; j < Builder.Materials.Length; j++)
 					{

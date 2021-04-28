@@ -84,6 +84,7 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using ZlibWithDictionary;
@@ -109,6 +110,9 @@ namespace AssimpNET.X
 		protected readonly uint BinaryFloatSize; // float size in bytes, either 4 or 8
 		// counter for number arrays in binary format
 		protected uint BinaryNumCount;
+
+		// text encoding of text format
+		private readonly Encoding textEncoding;
 
 		protected int currentPosition;
 		protected int End;
@@ -297,6 +301,11 @@ namespace AssimpNET.X
 			{
 				// start reading here
 				ReadUntilEndOfLine();
+			}
+
+			if (!IsBinaryFormat)
+			{
+				textEncoding = TextEncoding.GetSystemEncodingFromBytes(Buffer);
 			}
 
 			Scene = new Scene();
@@ -488,22 +497,21 @@ namespace AssimpNET.X
 			// read its components
 			matrix = new Matrix4D();
 			matrix.Row0.X = ReadFloat();
-			matrix.Row1.X = ReadFloat();
-			matrix.Row2.X = ReadFloat();
-			matrix.Row3.X = ReadFloat();
 			matrix.Row0.Y = ReadFloat();
-			matrix.Row1.Y = ReadFloat();
-			matrix.Row2.Y = ReadFloat();
-			matrix.Row3.Y = ReadFloat();
 			matrix.Row0.Z = ReadFloat();
-			matrix.Row1.Z = ReadFloat();
-			matrix.Row2.Z = ReadFloat();
-			matrix.Row3.Z = ReadFloat();
 			matrix.Row0.W = ReadFloat();
+			matrix.Row1.X = ReadFloat();
+			matrix.Row1.Y = ReadFloat();
+			matrix.Row1.Z = ReadFloat();
 			matrix.Row1.W = ReadFloat();
+			matrix.Row2.X = ReadFloat();
+			matrix.Row2.Y = ReadFloat();
+			matrix.Row2.Z = ReadFloat();
 			matrix.Row2.W = ReadFloat();
+			matrix.Row3.X = ReadFloat();
+			matrix.Row3.Y = ReadFloat();
+			matrix.Row3.Z = ReadFloat();
 			matrix.Row3.W = ReadFloat();
-
 			// trailing symbols
 			CheckForSemicolon();
 			CheckForClosingBrace();
@@ -1427,8 +1435,6 @@ namespace AssimpNET.X
 
 		protected void GetNextTokenAsString(out string token)
 		{
-			token = string.Empty;
-
 			if (IsBinaryFormat)
 			{
 				token = GetNextToken();
@@ -1447,10 +1453,12 @@ namespace AssimpNET.X
 			}
 			++currentPosition;
 
+			List<byte> textBuffer = new List<byte>();
 			while (currentPosition < End && Buffer[currentPosition] != '"')
 			{
-				token += (char)Buffer[currentPosition++];
+				textBuffer.Add(Buffer[currentPosition++]);
 			}
+			token = textEncoding.GetString(textBuffer.ToArray());
 
 			if (currentPosition >= End - 1)
 			{

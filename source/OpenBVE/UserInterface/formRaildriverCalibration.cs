@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using OpenBve.Input;
 using OpenBveApi.Interface;
 
 namespace OpenBve.UserInterface
@@ -16,18 +17,11 @@ namespace OpenBve.UserInterface
 			pictureBox1.Image = main;
 			buttonCalibrationPrevious.Enabled = false;
 			labelCalibrationText.Text = Translations.GetInterfaceString("raildriver_calibration_start");
-			if (JoystickManager.devices.Length == 0)
+			if (Program.Joysticks.RailDriverCount == 0)
 			{
 				MessageBox.Show(Translations.GetInterfaceString("raildriver_notdetected"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Load += (s, e) => Close();
 				return;
-			}
-			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
-			{
-				if (JoystickManager.AttachedJoysticks[i] is JoystickManager.Raildriver)
-				{
-					joystickIDX = i;
-				}
 			}
 			buttonCalibrationNext.Text = Translations.GetInterfaceString("packages_button_next");
 			buttonCalibrationPrevious.Text = Translations.GetInterfaceString("packages_button_back");
@@ -35,9 +29,9 @@ namespace OpenBve.UserInterface
 
 		private void formRaildriverCalibration_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (joystickIDX != -1)
+			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 			{
-				var j = JoystickManager.AttachedJoysticks[joystickIDX] as JoystickManager.Raildriver;
+				var j = Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] as AbstractRailDriver;
 				if (j == null)
 				{
 					return;
@@ -77,7 +71,6 @@ namespace OpenBve.UserInterface
 		}
 
 		private int calibrationStage;
-		private readonly int joystickIDX = -1;
 
 		//Stores the main bitmap
 		private readonly Bitmap main;
@@ -86,7 +79,11 @@ namespace OpenBve.UserInterface
 
 		private void buttonCalibrationNext_Click(object sender, EventArgs e)
 		{
-			var j = JoystickManager.AttachedJoysticks[joystickIDX] as JoystickManager.Raildriver;
+			if (!Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
+			{
+				return;
+			}
+			var j = Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] as AbstractRailDriver;
 			if (j == null)
 			{
 				return;
@@ -304,8 +301,9 @@ namespace OpenBve.UserInterface
 				{
 					components.Dispose();
 				}
-				main.Dispose();
-				Modified.Dispose();
+				main?.Dispose();
+				Modified?.Dispose();
+
 			}
 			base.Dispose(disposing);
 		}

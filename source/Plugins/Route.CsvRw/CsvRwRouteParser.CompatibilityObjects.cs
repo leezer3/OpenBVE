@@ -122,7 +122,32 @@ namespace CsvRwRouteParser
 				//The object exists, and does not require a compatibility object
 				return true;
 			}
-			//We haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
+
+			if (!System.IO.Path.HasExtension(fileName))
+			{
+				/*
+				 * Marginally hacky: No extension, so let's try as WAV
+				 * (In some cases will produce results)
+				 */
+				fileName += ".wav";
+			}
+			try
+			{
+				//Catch completely malformed path references
+				n = OpenBveApi.Path.CombineFile(objectPath, fileName);
+			}
+			catch
+			{
+				return false;
+			}
+			if (System.IO.File.Exists(n))
+			{
+				fileName = n;
+				//The object exists, and does not require a compatibility object
+				return true;
+			}
+
+			//We still haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
 			for (int i = 0; i < CompatibilityObjects.AvailableSounds.Length; i++)
 			{
 				if (CompatibilityObjects.AvailableSounds[i].ObjectNames.Length == 0)
@@ -260,18 +285,18 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											names = c.InnerText.Split(new char[] { ';' });
+											names = c.InnerText.Split(';');
 										}
 										break;
 									case "path":
-											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim(new char[] { }));
+											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim());
 											if (System.IO.File.Exists(f))
 											{
 												o.ReplacementPath = f;
 											}
 											break;
 									case "message":
-										o.Message = c.InnerText.Trim(new char[] { });
+										o.Message = c.InnerText.Trim();
 										break;
 									default:
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
@@ -314,18 +339,18 @@ namespace CsvRwRouteParser
 											}
 											else
 											{
-												names = c.InnerText.Split(new char[] { ';' });
+												names = c.InnerText.Split(';');
 											}
 											break;
 										case "path":
-											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim(new char[] { }));
+											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim());
 											if (System.IO.File.Exists(f))
 											{
 												o.ReplacementPath = f;
 											}
 											break;
 										case "message":
-											o.Message = c.InnerText.Trim(new char[] { });
+											o.Message = c.InnerText.Trim();
 											break;
 										default:
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false,
@@ -360,7 +385,7 @@ namespace CsvRwRouteParser
 									switch (c.Name.ToLowerInvariant())
 									{
 										case "filename":
-											var f = c.InnerText.Trim(new char[] { });
+											var f = c.InnerText.Trim();
 											if (!System.IO.File.Exists(f))
 											{
 												try

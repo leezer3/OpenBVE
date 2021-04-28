@@ -1,9 +1,13 @@
-﻿namespace OpenBveApi.Runtime
+﻿using System.Runtime.Serialization;
+
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents a speed.</summary>
+	[DataContract]
 	public class Speed
 	{
 		/// <summary>The speed in meters per second.</summary>
+		[DataMember]
 		private readonly double MyValue;
 
 		/// <summary>Gets the speed in meters per second.</summary>

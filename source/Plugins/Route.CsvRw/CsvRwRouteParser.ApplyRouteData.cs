@@ -105,8 +105,7 @@ namespace CsvRwRouteParser
 						 */
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No backgrounds were defined- Using default background.");
 						string f = OpenBveApi.Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
-						Texture t;
-						Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
+						Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out var t);
 						CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false, Plugin.CurrentOptions.ViewingDistance);
 					}
 					else if (Data.Backgrounds.Count > 0 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
@@ -154,6 +153,7 @@ namespace CsvRwRouteParser
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
+			double lastRainIntensity = 0.0;
 			Fog PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, -Data.BlockInterval);
 			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
@@ -230,6 +230,15 @@ namespace CsvRwRouteParser
 				CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(CurrentRoute.Tracks[0].Elements[n].WorldDirection, CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
 				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
+				CurrentRoute.Tracks[0].Elements[n].RainIntensity = Data.Blocks[i].RainIntensity;
+				CurrentRoute.Tracks[0].Elements[n].SnowIntensity = Data.Blocks[i].SnowIntensity;
+				if (Data.Blocks[i].RainIntensity != lastRainIntensity)
+				{
+					//Insert compatability beacon for OS_ATS et. al
+					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
+					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+					CurrentRoute.Tracks[0].Elements[n].Events[m] = new TransponderEvent(Plugin.CurrentRoute, 0.0, 21, Data.Blocks[i].RainIntensity, -1, false);
+				}
 				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
@@ -557,7 +566,7 @@ namespace CsvRwRouteParser
 					int gi = Data.Blocks[i].Cycle[ci];
 					if (Data.Structure.Ground.ContainsKey(gi))
 					{
-						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, StartingDistance, EndingDistance, StartingDistance);
 					}
 				}
 				// ground-aligned free objects
@@ -567,6 +576,11 @@ namespace CsvRwRouteParser
 					{
 						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance);
 					}
+				}
+				if (!PreviewOnly && Data.Structure.WeatherObjects.ContainsKey(Data.Blocks[i].WeatherObject))
+				{
+					UnifiedObject obj = Data.Structure.WeatherObjects[Data.Blocks[i].WeatherObject];
+					obj.CreateObject(Position, GroundTransformation, Data.Blocks[i].Height, StartingDistance, EndingDistance);
 				}
 				// rail-aligned objects
 				if (!PreviewOnly)
@@ -689,7 +703,7 @@ namespace CsvRwRouteParser
 						{
 							if (Data.Structure.RailObjects[Data.Blocks[i].RailType[j]] != null)
 							{
-								Data.Structure.RailObjects[Data.Blocks[i].RailType[j]].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+								Data.Structure.RailObjects[Data.Blocks[i].RailType[j]].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 							}
 						}
 						// points of interest
@@ -784,6 +798,10 @@ namespace CsvRwRouteParser
 							{
 								Data.Blocks[i].DestinationChanges[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
 							}
+							for (int k = 0; k < Data.Blocks[i].HornBlows.Length; k++)
+							{
+								Data.Blocks[i].HornBlows[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
+							}
 						}
 						// sections/signals/transponders
 						if (j == 0)
@@ -860,6 +878,14 @@ namespace CsvRwRouteParser
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
 						CurrentRoute.Tracks[0].Elements[n].Events[m] = new RouteManager2.Events.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
+					}
+					for (int j = 0; j < Data.Blocks[i].HornBlows.Length; j++)
+					{
+						int n = i - Data.FirstUsedBlock;
+						int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
+						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+						double d = Data.Blocks[i].HornBlows[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+						CurrentRoute.Tracks[0].Elements[n].Events[m] = new RouteManager2.Events.HornBlowEvent(d, Data.Blocks[i].HornBlows[j].Type, Data.Blocks[i].HornBlows[j].TriggerOnce);
 					}
 				}
 			}
@@ -1103,7 +1129,10 @@ namespace CsvRwRouteParser
 				int subdivisions = (int)Math.Floor(Data.BlockInterval / 5.0);
 				if (subdivisions >= 2)
 				{
-					Plugin.CurrentRoute.Tracks[0].SmoothTurns(subdivisions, Plugin.CurrentHost);
+					if (Data.TurnUsed)
+					{
+						Plugin.CurrentRoute.Tracks[0].SmoothTurns(subdivisions, Plugin.CurrentHost);
+					}
 					ComputeCantTangents();
 				}
 			}

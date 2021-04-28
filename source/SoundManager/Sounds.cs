@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -28,10 +30,10 @@ namespace SoundManager
 		private int BufferCount = 0;
 
 		/// <summary>A list of all sound sources.</summary>
-		protected SoundSource[] Sources = new SoundSource[16];
+		protected internal static SoundSource[] Sources = new SoundSource[16];
 
 		/// <summary>The number of sound sources.</summary>
-		protected int SourceCount = 0;
+		protected internal static int SourceCount = 0;
 
 		/// <summary>The gain threshold. Sounds with gains below this value are not played.</summary>
 		protected const double GainThreshold = 0.0001;
@@ -86,6 +88,17 @@ namespace SoundManager
 		/// <returns>Whether initializing audio was successful.</returns>
 		public void Initialize(HostInterface host, SoundRange range)
 		{
+			if (host.Platform == HostPlatform.MicrosoftWindows)
+			{
+				/*
+				*  If shipping an AnyCPU build and OpenALSoft / SDL, these are architecture specific PInvokes
+				*  Add the appropriate search path so this will work (common convention)
+				*/
+				string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+				path = Path.Combine(path, IntPtr.Size == 4 ? "x86" : "x64");
+				bool ok = SetDllDirectory(path);
+				if (!ok) throw new System.ComponentModel.Win32Exception();
+			}
 			Deinitialize();
 
 			CurrentHost = host;
@@ -118,7 +131,7 @@ namespace SoundManager
 				 * Creative OpenAL implementation on Windows seems to be limited to max 16 simulataneous sounds
 				 * Now shipping OpenAL Soft, but detect this and don't glitch
 				 * Further note that the current version of OpenAL Soft (1.20.0 at the time of writing) does not like OpenTK
-				 * The version in use is 1.15.1 found here: https://github.com/opentk/opentk-dependencies
+				 * The version in use is 1.17.0 found here: https://openal-soft.org/openal-binaries/
 				 */
 				systemMaxSounds = 16;
 			}
@@ -128,6 +141,7 @@ namespace SoundManager
 			}
 			catch
 			{
+				OpenAlMic = null;
 			}
 
 			if (OpenAlDevice != IntPtr.Zero)
@@ -149,8 +163,11 @@ namespace SoundManager
 				}
 				Alc.CloseDevice(OpenAlDevice);
 				OpenAlDevice = IntPtr.Zero;
-				OpenAlMic.Dispose();
-				OpenAlMic = null;
+				if (OpenAlMic != null)
+				{
+					OpenAlMic.Dispose();
+					OpenAlMic = null;
+				}
 				MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_context"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
@@ -280,29 +297,7 @@ namespace SoundManager
 		/// <returns>Whether loading the buffer was successful.</returns>
 		public void LoadBuffer(SoundBuffer buffer)
 		{
-			if (buffer.Loaded)
-			{
-				return;
-			}
-			if (buffer.Ignore)
-			{
-				return;
-			}
-			Sound sound;
-			if (buffer.Origin.GetSound(out sound))
-			{
-				if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16)
-				{
-					byte[] bytes = sound.GetMonoMix();
-					AL.GenBuffers(1, out buffer.OpenAlBufferName);
-					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
-					AL.BufferData(buffer.OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
-					buffer.Duration = sound.Duration;
-					buffer.Loaded = true;
-					return;
-				}
-			}
-			buffer.Ignore = true;
+			buffer.Load();
 		}
 
 		/// <summary>Loads all sound buffers immediately.</summary>
@@ -429,39 +424,26 @@ namespace SoundManager
 			}
 			throw new NotSupportedException();
 		}
-		
+
 		/// <summary>Register the position to play microphone input.</summary>
 		/// <param name="position">The position.</param>
 		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
 		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
 		public void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
 		{
+			if (OpenAlMic == null)
+			{
+				// This hardware has no AudioCapture device.
+				return;
+			}
+
 			MicSources.Add(new MicSource(OpenAlMic, MicStore, position, backwardTolerance, forwardTolerance));
 		}
 
 		/// <summary>Stops the specified sound source.</summary>
-		/// <param name="sound">The sound source, or a null reference.</param>
-		public void StopSound(CarSound sound)
+		/// <param name="source">The sound source, or a null reference.</param>
+		public void StopSound(SoundSource source)
 		{
-			if (sound != null)
-			{
-				if (sound.Source != null)
-				{
-					if (sound.Source.State == SoundSourceState.Playing)
-					{
-						AL.DeleteSources(1, ref sound.Source.OpenAlSourceName);
-						sound.Source.OpenAlSourceName = 0;
-					}
-					sound.Source.State = SoundSourceState.Stopped;
-				}
-			}
-		}
-
-		/// <summary>Stops the specified sound source.</summary>
-		/// <param name="Source">The sound source, or a null reference.</param>
-		public void StopSound(object Source)
-		{
-			SoundSource source = Source as SoundSource;
 			if (source != null)
 			{
 				if (source.State == SoundSourceState.Playing)
@@ -547,16 +529,6 @@ namespace SoundManager
 			return false;
 		}
 
-		/// <summary>Gets the duration of the specified sound buffer in seconds.</summary>
-		/// <param name="buffer">The sound buffer.</param>
-		/// <returns>The duration of the sound buffer in seconds, or zero if the buffer could not be loaded.</returns>
-		public double GetDuration(SoundBuffer buffer)
-		{
-			LoadBuffer(buffer);
-			return buffer.Duration;
-		}
-
-
 		// --- statistics ---
 
 		/// <summary>Gets the number of registered sound buffers.</summary>
@@ -606,5 +578,8 @@ namespace SoundManager
 			}
 			return count;
 		}
+
+		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		private static extern bool SetDllDirectory(string path);
 	}
 }

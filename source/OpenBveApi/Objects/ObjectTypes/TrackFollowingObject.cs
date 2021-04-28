@@ -87,6 +87,30 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		/// <inheritdoc/>
+		public override bool IsVisible(Vector3 CameraPosition, double ExtraViewingDistance, double BackgroundImageDistance)
+		{
+			double z = 0;
+			if (Object != null && Object.TranslateZFunction != null)
+			{
+				z += Object.TranslateZFunction.LastResult;
+			}
+			double pa = TrackPosition + z - Radius - 10.0;
+			double pb = TrackPosition + z + Radius + 10.0;
+			double ta = CameraPosition.Z - BackgroundImageDistance - ExtraViewingDistance;
+			double tb = CameraPosition.Z + BackgroundImageDistance + ExtraViewingDistance;
+			bool isVisible = pb >= ta & pa <= tb;
+			if (isVisible == false)
+			{
+				//Not found at the inital track position, so let's check to see if it's moved
+				pa = FrontAxleFollower.TrackPosition + z - Radius - 10.0;
+				pb = FrontAxleFollower.TrackPosition + z + Radius + 10.0;
+				return pb >= ta & pa <= tb;
+			}
+
+			return true;
+		}
+
 		/// <summary>Updates the position and rotation of an animated object which follows a track</summary>
 		private void UpdateObjectPosition()
 		{
@@ -115,10 +139,8 @@ namespace OpenBveApi.Objects
 			// apply rolling
 			{
 				double a = CurrentRollDueToTopplingAngle - CurrentRollDueToCantAngle;
-				double cosa = System.Math.Cos(a);
-				double sina = System.Math.Sin(a);
-				Side.Rotate(Direction, cosa, sina);
-				Up.Rotate(Direction, cosa, sina);
+				Side.Rotate(Direction, a);
+				Up.Rotate(Direction, a);
 			}
 		}
 
@@ -127,14 +149,7 @@ namespace OpenBveApi.Objects
 			double x = 0.0;
 			if (Object.TrackFollowerFunction != null)
 			{
-				if (UpdateFunctions)
-				{
-					x = Object.TrackFollowerFunction.Perform(Train, CarIndex, WorldPosition, currentTrackPosition, currentSectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
-				}
-				else
-				{
-					x = Object.TrackFollowerFunction.LastResult;
-				}
+				x = UpdateFunctions ? Object.TrackFollowerFunction.Perform(Train, CarIndex, WorldPosition, currentTrackPosition, currentSectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState) : Object.TrackFollowerFunction.LastResult;
 			}
 
 			return x;

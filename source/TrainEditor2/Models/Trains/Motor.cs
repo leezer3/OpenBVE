@@ -8,9 +8,7 @@ using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
-using TrainEditor2.Simulation.TrainManager;
-
-//using TrainEditor2.Simulation.TrainManager;
+using TrainManager.Motor;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -247,13 +245,6 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal struct Entry
-		{
-			internal int SoundIndex;
-			internal double Pitch;
-			internal double Volume;
-		}
-
 		internal class Track : ICloneable
 		{
 			internal VertexLibrary PitchVertices;
@@ -290,7 +281,7 @@ namespace TrainEditor2.Models.Trains
 				return track;
 			}
 
-			internal static Track EntriesToTrack(Entry[] entries)
+			internal static Track EntriesToTrack(BVEMotorSoundTableEntry[] entries)
 			{
 				Track track = new Track();
 
@@ -316,13 +307,13 @@ namespace TrainEditor2.Models.Trains
 						KeyValuePair<int, Vertex>[] leftVertices = new KeyValuePair<int, Vertex>[] { track.VolumeVertices.ElementAt(track.VolumeVertices.Count - 2), track.VolumeVertices.Last() };
 						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
 
-						if (f(velocity) == entries[i].Volume)
+						if (f(velocity) == entries[i].Gain)
 						{
 							track.VolumeVertices.Remove(leftVertices[1].Key);
 						}
 					}
 
-					track.VolumeVertices.Add(new Vertex(velocity, 0.01 * Math.Round(100.0 * entries[i].Volume)));
+					track.VolumeVertices.Add(new Vertex(velocity, 0.01 * Math.Round(100.0 * entries[i].Gain)));
 
 					if (track.SoundIndices.Any())
 					{
@@ -367,7 +358,7 @@ namespace TrainEditor2.Models.Trains
 				return track;
 			}
 
-			internal static Entry[] TrackToEntries(Track track)
+			internal static BVEMotorSoundTableEntry[] TrackToEntries(Track track)
 			{
 				int n = 0;
 
@@ -381,7 +372,7 @@ namespace TrainEditor2.Models.Trains
 					n = Math.Max(n, (int)Math.Round(5.0 * track.VolumeVertices.Last().Value.X));
 				}
 
-				Entry[] entries = Enumerable.Repeat(new Entry { SoundIndex = -1, Pitch = 100.0, Volume = 128.0 }, n + 1).ToArray();
+				BVEMotorSoundTableEntry[] entries = Enumerable.Repeat(new BVEMotorSoundTableEntry { SoundIndex = -1, Pitch = 100.0f, Gain = 128.0f }, n + 1).ToArray();
 
 				for (int i = 0; i < entries.Length; i++)
 				{
@@ -396,7 +387,7 @@ namespace TrainEditor2.Models.Trains
 
 						Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
 
-						entries[i].Pitch = 0.01 * Math.Round(100.0 * Math.Max(f(velocity), 0.0));
+						entries[i].Pitch = (float)(0.01 * Math.Round(100.0 * Math.Max(f(velocity), 0.0)));
 					}
 
 					Line volumeLine = track.VolumeLines.FirstOrDefault(l => track.VolumeVertices[l.LeftID].X <= velocity && track.VolumeVertices[l.RightID].X >= velocity);
@@ -408,7 +399,7 @@ namespace TrainEditor2.Models.Trains
 
 						Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
 
-						entries[i].Volume = 0.01 * Math.Round(100.0 * Math.Max(f(velocity), 0.0));
+						entries[i].Gain = (float)(0.01 * Math.Round(100.0 * Math.Max(f(velocity), 0.0)));
 					}
 
 					Area area = track.SoundIndices.FirstOrDefault(a => a.LeftX <= velocity && a.RightX >= velocity);
@@ -422,17 +413,17 @@ namespace TrainEditor2.Models.Trains
 				return entries;
 			}
 
-			internal static TrainManager.MotorSoundTable EntriesToMotorSoundTable(Entry[] entries)
+			internal static BVEMotorSoundTable EntriesToMotorSoundTable(BVEMotorSoundTableEntry[] entries)
 			{
-				TrainManager.MotorSoundTable table = new TrainManager.MotorSoundTable
+				BVEMotorSoundTable table = new BVEMotorSoundTable
 				{
-					Entries = new TrainManager.MotorSoundTableEntry[entries.Length]
+					Entries = new BVEMotorSoundTableEntry[entries.Length]
 				};
 
 				for (int i = 0; i < entries.Length; i++)
 				{
 					table.Entries[i].Pitch = (float)(0.01 * entries[i].Pitch);
-					table.Entries[i].Gain = (float)Math.Pow(0.0078125 * entries[i].Volume, 0.25);
+					table.Entries[i].Gain = (float)Math.Pow(0.0078125 * entries[i].Gain, 0.25);
 					table.Entries[i].SoundIndex = entries[i].SoundIndex;
 				}
 

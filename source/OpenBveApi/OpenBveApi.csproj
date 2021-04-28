@@ -44,14 +44,14 @@
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>..\..\bin_debug\</OutputPath>
     <DocumentationFile>..\..\bin_debug\OpenBveApi.xml</DocumentationFile>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>..\..\bin_release\</OutputPath>
     <DocumentationFile>..\..\bin_release\OpenBveApi.xml</DocumentationFile>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -71,13 +71,14 @@
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -95,7 +96,12 @@
     <Compile Include="FunctionScripts\Instructions.cs" />
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
     <Compile Include="Graphics\Colors.cs" />
+    <Compile Include="Interface\Input\Control.cs" />
+    <Compile Include="Interface\Input\ControlMethod.cs" />
+    <Compile Include="Interface\Input\DigitalControlState.cs" />
     <Compile Include="Interface\Input\InputDevice.cs" />
+    <Compile Include="Interface\Input\JoystickComponent.cs" />
+    <Compile Include="Interface\Input\KeyboardModifier.cs" />
     <Compile Include="Interface\Key.cs" />
     <Compile Include="Interface\Logging\LogMessage.cs" />
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
@@ -106,6 +112,7 @@
     <Compile Include="Math\Vectors\Vector2f.cs" />
     <Compile Include="Math\Vectors\Vector3f.cs" />
     <Compile Include="Math\Vectors\Vector4.cs" />
+    <Compile Include="Objects\FaceType.cs" />
     <Compile Include="Objects\Glow.cs" />
     <Compile Include="Objects\Helpers\Material.cs" />
     <Compile Include="Objects\Helpers\MeshBuilder.cs" />
@@ -147,6 +154,7 @@
     <Compile Include="Routes\Track.cs" />
     <Compile Include="Routes\Track.TrackElement.cs" />
     <Compile Include="Routes\Track.TrackFollower.cs" />
+    <Compile Include="Runtime\ElapseProxy.cs" />
     <Compile Include="Runtime\Train\AIData.cs" />
     <Compile Include="Runtime\Train\AIResponse.cs" />
     <Compile Include="Runtime\Train\AISupport.cs" />
@@ -190,6 +198,9 @@
     <Compile Include="Objects\Damping.cs" />
     <Compile Include="Objects\Glow.AttenuationMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
+    <Compile Include="System\Hosts.Plugins.cs" />
+    <Compile Include="System\Interop.cs" />
+    <Compile Include="System\SimulationState.cs" />
     <Compile Include="System\TextEncoding.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
@@ -199,6 +210,7 @@
     <Compile Include="Train\GeneralAI.cs" />
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\StopSkipMode.cs" />
+    <Compile Include="Train\TrainInterface.cs" />
     <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="Train\TrainState.cs" />
     <Compile Include="Train\TrainStopState.cs" />

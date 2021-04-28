@@ -3,12 +3,13 @@ using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Models.Trains;
+using TrainManager.Handles;
 
 namespace TrainEditor2.ViewModels.Trains
 {
 	internal class HandleViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<Handle.HandleTypes> HandleType
+		internal ReactiveProperty<HandleType> HandleType
 		{
 			get;
 		}
@@ -28,12 +29,12 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<Handle.EbHandleBehaviour> HandleBehaviour
+		internal ReactiveProperty<EbHandleBehaviour> HandleBehaviour
 		{
 			get;
 		}
 
-		internal ReactiveProperty<Handle.LocoBrakeType> LocoBrake
+		internal ReactiveProperty<LocoBrakeType> LocoBrake
 		{
 			get;
 		}

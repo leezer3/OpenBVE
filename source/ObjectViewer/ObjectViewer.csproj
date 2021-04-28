@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -88,8 +88,6 @@
     <Compile Include="Hosts.cs" />
     <Compile Include="NewRendererS.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="Parsers\ExtensionsCfgParser.cs" />
-    <Compile Include="Plugins.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Fonts.cs" />
@@ -130,6 +128,10 @@
     <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
       <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
       <Name>RouteManager2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TrainManager\TrainManager.csproj">
+      <Project>{d0fca2c5-ff75-42d8-ae80-310280a61fb1}</Project>
+      <Name>TrainManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

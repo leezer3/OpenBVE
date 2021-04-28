@@ -1,24 +1,47 @@
-﻿using OpenBveApi.Objects;
+﻿using OpenBveApi.Hosts;
+using OpenBveApi.Objects;
 
 namespace LibRender2.Trains
 {
 	/// <summary>An animated object attached to a car (Exterior, cab etc.)</summary>
 	public class CarSection
 	{
-		/// <summary>Holds a reference to the base renderer</summary>
-		private readonly BaseRenderer renderer;
+		/// <summary>Holds a reference to the current host</summary>
+		private readonly HostInterface currentHost;
 		/// <summary>The groups of animated objects</summary>
 		public ElementsGroup[] Groups;
 		/// <summary>The current additional group (touch etc.)</summary>
 		public int CurrentAdditionalGroup;
 		/// <summary>Whether this is visible from internal views</summary>
-		public bool VisibleFromInterior;
+		public readonly bool VisibleFromInterior;
 
-		public CarSection(BaseRenderer Renderer, bool Overlay)
+		public CarSection(HostInterface Host, ObjectType Type, bool visibleFromInterior, UnifiedObject Object = null)
 		{
-			renderer = Renderer;
+			currentHost = Host;
 			Groups = new ElementsGroup[1];
-			Groups[0] = new ElementsGroup(Overlay);
+			Groups[0] = new ElementsGroup(Type);
+			VisibleFromInterior = visibleFromInterior;
+			if (Object is StaticObject)
+			{
+				StaticObject s = (StaticObject) Object;
+				Groups[0].Elements = new AnimatedObject[1];
+				Groups[0].Elements[0] = new AnimatedObject(Host)
+				{
+					States = new[] {new ObjectState(s)},
+					CurrentState = 0
+				};
+				currentHost.CreateDynamicObject(ref Groups[0].Elements[0].internalObject);
+			}
+			else if (Object is AnimatedObjectCollection)
+			{
+				AnimatedObjectCollection a = (AnimatedObjectCollection)Object;
+				Groups[0].Elements = new AnimatedObject[a.Objects.Length];
+				for (int h = 0; h < a.Objects.Length; h++)
+				{
+					Groups[0].Elements[h] = a.Objects[h].Clone();
+					currentHost.CreateDynamicObject(ref Groups[0].Elements[h].internalObject);
+				}
+			}
 		}
 
 		/// <summary>Initalizes the CarSection</summary>
@@ -38,14 +61,7 @@ namespace LibRender2.Trains
 			{
 				for (int i = 0; i < Groups[0].Elements.Length; i++)
 				{
-					if (Groups[0].Overlay)
-					{
-						renderer.VisibleObjects.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Overlay);
-					}
-					else
-					{
-						renderer.VisibleObjects.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Dynamic);
-					}
+					currentHost.ShowObject(Groups[0].Elements[i].internalObject, Groups[0].Type);
 				}
 			}
 
@@ -54,14 +70,8 @@ namespace LibRender2.Trains
 			{
 				for (int i = 0; i < Groups[add].Elements.Length; i++)
 				{
-					if (Groups[add].Overlay)
-					{
-						renderer.VisibleObjects.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Overlay);
-					}
-					else
-					{
-						renderer.VisibleObjects.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Dynamic);
-					}
+					currentHost.ShowObject(Groups[add].Elements[i].internalObject, Groups[add].Type);
+					
 				}
 			}
 		}

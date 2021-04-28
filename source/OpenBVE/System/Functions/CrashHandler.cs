@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using LibRender2;
 
 namespace OpenBve
 {
@@ -138,18 +137,28 @@ namespace OpenBve
                 }
                 catch
                 {
+					//Most likely died before the render init
                 }
                 
                 outputFile.WriteLine("The exception caught was as follows: ");
                 outputFile.WriteLine(ExceptionText);
-                double MemoryUsed;
-                using (Process proc = Process.GetCurrentProcess())
+                try
                 {
-                    MemoryUsed = proc.PrivateMemorySize64;
+	                double MemoryUsed;
+	                using (Process proc = Process.GetCurrentProcess())
+	                {
+		                MemoryUsed = proc.PrivateMemorySize64;
+	                }
+	                outputFile.WriteLine("Current program memory usage: " + Math.Round((MemoryUsed / 1024 / 1024), 2) + "mb");
+	                var freeRamCounter = new PerformanceCounter("Memory", "Available MBytes");
+	                outputFile.WriteLine("System memory free: " + freeRamCounter.NextValue() + "mb");
                 }
-                outputFile.WriteLine("Current program memory usage: " + Math.Round((MemoryUsed / 1024 / 1024), 2) + "mb");
-                var freeRamCounter = new PerformanceCounter("Memory", "Available MBytes");
-                outputFile.WriteLine("System memory free: " + freeRamCounter.NextValue() + "mb");
+                catch
+                {
+	                outputFile.WriteLine("Unable to determine the current used / free memory figures.");
+	                outputFile.WriteLine("This may indicate a wider system issue.");
+                }
+               
             }
 
         }
@@ -200,6 +209,7 @@ namespace OpenBve
                 }
                 catch
                 {
+					//Ignored
                 }
                 //Errors and Warnings
                 if (Program.CurrentRoute.Information.FilesNotFound != null)
@@ -225,8 +235,16 @@ namespace OpenBve
                     MemoryUsed = proc.PrivateMemorySize64;
                 }
                 outputFile.WriteLine("Current program memory usage: " + Math.Round((MemoryUsed / 1024 / 1024),2) + "mb");
-                var freeRamCounter = new PerformanceCounter("Memory", "Available MBytes");
-                outputFile.WriteLine("System memory free: " + freeRamCounter.NextValue() + "mb");
+                try
+                {
+	                var freeRamCounter = new PerformanceCounter("Memory", "Available MBytes");
+	                outputFile.WriteLine("System memory free: " + freeRamCounter.NextValue() + "mb");
+                }
+                catch
+                {
+	                outputFile.WriteLine("Unable to determine the current used / free memory figures.");
+	                outputFile.WriteLine("This may indicate a wider system issue.");
+                }
             }
 
         }

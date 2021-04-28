@@ -5,6 +5,7 @@ using OpenBveApi.Objects;
 using System.Linq;
 using System.Text;
 using OpenBve.Formats.DirectX;
+using OpenBveApi;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 
@@ -12,7 +13,7 @@ namespace Plugin {
 	internal static class XObjectParser {
 
 		// read object
-		internal static StaticObject ReadObject(string FileName, System.Text.Encoding Encoding) {
+		internal static StaticObject ReadObject(string FileName, Encoding Encoding) {
 			byte[] Data = System.IO.File.ReadAllBytes(FileName);
 			// floating-point format
 			int FloatingPointSize;
@@ -27,10 +28,12 @@ namespace Plugin {
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32) {
 				// textual flavor
 				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName, Encoding));
-			} else if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32) {
+			}
+			if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32) {
 				// binary flavor
 				return LoadBinaryX(FileName, Data, 16, FloatingPointSize);
-			} else if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
+			}
+			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed textual flavor
 				try {
 					byte[] Uncompressed = MSZip.Decompress(Data);
@@ -40,7 +43,8 @@ namespace Plugin {
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
 					return null;
 				}
-			} else if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
+			}
+			if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed binary flavor
 
 				try {
@@ -50,11 +54,10 @@ namespace Plugin {
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
 					return null;
 				}
-			} else {
-				// unsupported flavor
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
-				return null;
 			}
+			// unsupported flavor
+			Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
+			return null;
 		}
 
 		
@@ -78,26 +81,26 @@ namespace Plugin {
 			}
 		}
 		private static readonly Template[] Templates = new Template[] {
-			new Template("Mesh", new string[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]", "[...]" }),
-			new Template("Vector", new string[] { "float", "float", "float" }),
-			new Template("MeshFace", new string[] { "DWORD", "DWORD[0]" }),
-			new Template("MeshMaterialList", new string[] { "DWORD", "DWORD", "DWORD[1]", "[...]" }),
-			new Template("Material", new string[] { "ColorRGBA", "float", "ColorRGB", "ColorRGB", "[...]" }),
-			new Template("ColorRGBA", new string[] { "float", "float", "float", "float" }),
-			new Template("ColorRGB", new string[] { "float", "float", "float" }),
-			new Template("TextureFilename", new string[] { "string" }),
-			new Template("MeshTextureCoords", new string[] { "DWORD", "Coords2d[0]" }),
-			new Template("Coords2d", new string[] { "float", "float" }),
-			new Template("MeshVertexColors", new string[] { "DWORD","VertexColor[0]"}),
-			new Template("MeshNormals", new string[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]" }),
+			new Template("Mesh", new[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]", "[...]" }),
+			new Template("Vector", new[] { "float", "float", "float" }),
+			new Template("MeshFace", new[] { "DWORD", "DWORD[0]" }),
+			new Template("MeshMaterialList", new[] { "DWORD", "DWORD", "DWORD[1]", "[...]" }),
+			new Template("Material", new[] { "ColorRGBA", "float", "ColorRGB", "ColorRGB", "[...]" }),
+			new Template("ColorRGBA", new[] { "float", "float", "float", "float" }),
+			new Template("ColorRGB", new[] { "float", "float", "float" }),
+			new Template("TextureFilename", new[] { "string" }),
+			new Template("MeshTextureCoords", new[] { "DWORD", "Coords2d[0]" }),
+			new Template("Coords2d", new[] { "float", "float" }),
+			new Template("MeshVertexColors", new[] { "DWORD","VertexColor[0]"}),
+			new Template("MeshNormals", new[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]" }),
 			// Index , ColorRGBA
-			new Template("VertexColor", new string[] { "DWORD", "ColorRGBA" }),
+			new Template("VertexColor", new[] { "DWORD", "ColorRGBA" }),
 			//Root frame around the model itself
-			new Template("Frame Root", new string[] { "[...]" }),
+			new Template("Frame Root", new[] { "[...]" }),
 			//Presumably appears around each Mesh (??), Blender exported models
-			new Template("Frame", new string[] { "[...]" }),
+			new Template("Frame", new[] { "[...]" }),
 			//Transforms the mesh, UNSUPPORTED
-			new Template("FrameTransformMatrix", new string[] { "[???]" }),
+			new Template("FrameTransformMatrix", new[] { "[???]" }),
 		};
 
 		// data
@@ -141,13 +144,13 @@ namespace Plugin {
 			if (splitName[0].ToLowerInvariant() == "material")
 			{
 				AlternateStructure = true;
-				return new Template("Material", new string[] { "ColorRGBA", "float", "ColorRGB", "ColorRGB", "[...]" }, splitName[1]);
+				return new Template("Material", new[] { "ColorRGBA", "float", "ColorRGB", "ColorRGB", "[...]" }, splitName[1]);
 			}
 			if (splitName[0].ToLowerInvariant() == "mesh")
 			{
-				return new Template("Mesh", new string[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]", "[...]" });
+				return new Template("Mesh", new[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]", "[...]" });
 			}
-			return new Template(Name, new string[] { "[???]" });
+			return new Template(Name, new[] { "[???]" });
 		}
 
 		// ================================
@@ -155,7 +158,7 @@ namespace Plugin {
 		// load textual x
 		private static StaticObject LoadTextualX(string FileName, string Text) {
 			// load
-			string[] Lines = Text.Replace("\u000D\u000A", "\u2028").Split(new char[] { '\u000A', '\u000C', '\u000D', '\u0085', '\u2028', '\u2029' }, StringSplitOptions.None);
+			string[] Lines = Text.Replace("\u000D\u000A", "\u2028").Split(new[] { '\u000A', '\u000C', '\u000D', '\u0085', '\u2028', '\u2029' }, StringSplitOptions.None);
 			AlternateStructure = false;
 			LoadedMaterials = new Structure[] {};
 			// strip away comments
@@ -178,7 +181,7 @@ namespace Plugin {
 			//Preprocess the string array to get the variants to something we understand....
 			for (int i = 0; i < Lines.Length; i++)
 			{
-				string[] splitLine = Lines[i].Split(new char[] { ',' });
+				string[] splitLine = Lines[i].Split(new[] { ',' });
 				if (splitLine.Length == 2 && splitLine[1].Trim(new char[] { }).Length > 0)
 				{
 					if (!splitLine[1].EndsWith(";"))
@@ -218,7 +221,7 @@ namespace Plugin {
 			// parse file
 			int Position = 0;
 			Structure Structure;
-			if (!ReadTextualTemplate(FileName, Content, ref Position, new Template("", new string[] { "[...]" }), false, out Structure)) {
+			if (!ReadTextualTemplate(FileName, Content, ref Position, new Template("", new[] { "[...]" }), false, out Structure)) {
 				return null;
 			}
 			// process structure
@@ -285,7 +288,7 @@ namespace Plugin {
 		private static bool ReadTextualTemplate(string FileName, string Content, ref int Position, Template Template, bool Inline, out Structure Structure) {
 			if (Template.Name == "MeshMaterialList" && AlternateStructure)
 			{
-				Template = new Template("MeshMaterialList", new string[] { "DWORD", "DWORD", "DWORD[1]", "string2", "[...]" });
+				Template = new Template("MeshMaterialList", new[] { "DWORD", "DWORD", "DWORD[1]", "string2", "[...]" });
 			}
 			Structure = new Structure(Template.Name, new object[] { }, Template.Key);
 			int i = Position; bool q = false;
@@ -519,6 +522,15 @@ namespace Plugin {
 											Position++;
 											break;
 										} else if (!char.IsWhiteSpace(Content, Position)) {
+											if ((char.IsDigit(Content[Position]) || Content[Position] == '-') && t.Name == "Coords2d")
+											{
+												/*
+												 * Handles objects with a Coords2d structure which omit the comma from the array
+												 * e.g. Marumado
+												 */
+												Position++;
+												break;
+											}
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										} else {
@@ -816,7 +828,7 @@ namespace Plugin {
 						BinaryCache Cache = new BinaryCache();
 						Cache.IntegersRemaining = 0;
 						Cache.FloatsRemaining = 0;
-						Result = ReadBinaryTemplate(FileName, Reader, FloatingPointSize, new Template("", new string[] { "[...]" }), false, ref Cache, out Structure);
+						Result = ReadBinaryTemplate(FileName, Reader, FloatingPointSize, new Template("", new[] { "[...]" }), false, ref Cache, out Structure);
 						Reader.Close();
 					}
 					Stream.Close();
@@ -844,7 +856,7 @@ namespace Plugin {
 		private static bool ReadBinaryTemplate(string FileName, System.IO.BinaryReader Reader, int FloatingPointSize, Template Template, bool Inline, ref BinaryCache Cache, out Structure Structure) {
 			Structure = new Structure(Template.Name, new object[] { }, Template.Key);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			System.Text.ASCIIEncoding Ascii = new System.Text.ASCIIEncoding();
+			ASCIIEncoding Ascii = new ASCIIEncoding();
 			int m; for (m = 0; m < Template.Members.Length; m++) {
 				if (Template.Members[m] == "[???]") {
 					// unknown template
@@ -1051,7 +1063,7 @@ namespace Plugin {
 											Cache.Floats = new double[n];
 											for (int j = 0; j < n; j++) {
 												if (FloatingPointSize == 32) {
-													Cache.Floats[n - j - 1] = (double)Reader.ReadSingle();
+													Cache.Floats[n - j - 1] = Reader.ReadSingle();
 												} else if (FloatingPointSize == 64) {
 													Cache.Floats[n - j - 1] = Reader.ReadDouble();
 												}
@@ -1152,7 +1164,7 @@ namespace Plugin {
 											Cache.Floats = new double[n];
 											for (int i = 0; i < n; i++) {
 												if (FloatingPointSize == 32) {
-													Cache.Floats[n - i - 1] = (double)Reader.ReadSingle();
+													Cache.Floats[n - i - 1] = Reader.ReadSingle();
 												} else if (FloatingPointSize == 64) {
 													Cache.Floats[n - i - 1] = Reader.ReadDouble();
 												}
@@ -1391,7 +1403,7 @@ namespace Plugin {
 								}
 							}
 							int ds = 4;
-							if (AlternateStructure == true)
+							if (AlternateStructure)
 							{
 								ds = f.Data.Length - 1;
 								//If this file has the alternate structure, find the templates (if existing) after the mesh declaration
@@ -1808,7 +1820,23 @@ namespace Plugin {
 																		}
 																		else
 																		{
-																			string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);
+																			string File;
+																			if (Path.IsAbsolutePath(filename))
+																			{
+																				if (Plugin.EnabledHacks.BveTsHacks)
+																				{
+																					filename = filename.Split('/', '\\').Last();
+																					File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);
+																				}
+																				else
+																				{
+																					File = filename;
+																				}
+																			}
+																			else
+																			{
+																				File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);	
+																			}
 																			if (System.IO.File.Exists(File))
 																			{
 																				Materials[MaterialIndex].TextureFilename = File;
@@ -1974,7 +2002,7 @@ namespace Plugin {
 											
 											double red = (double)colorStructure.Data[0], green = (double)colorStructure.Data[1], blue = (double)colorStructure.Data[2], alpha = (double)colorStructure.Data[3];
 
-											OpenBveApi.Colors.Color128 c = new Color128((float)red, (float)green, (float)blue, (float)alpha);
+											Color128 c = new Color128((float)red, (float)green, (float)blue, (float)alpha);
 											Vertices[idx] = new ColoredVertex((Vertex)Vertices[idx], c);
 										}
 										break;

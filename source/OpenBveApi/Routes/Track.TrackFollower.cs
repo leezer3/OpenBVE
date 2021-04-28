@@ -31,6 +31,10 @@ namespace OpenBveApi.Routes
 		public double CantDueToInaccuracy;
 		/// <summary>The adhesion multiplier at the current location</summary>
 		public double AdhesionMultiplier;
+		/// <summary>The rain intensity at the current location</summary>
+		public int RainIntensity;
+		/// <summary>The rain intensity at the current location</summary>
+		public int SnowIntensity;
 		/// <summary>The event types to be triggered</summary>
 		public EventTriggerType TriggerType;
 		/// <summary>The train the follower is attached to, or a null reference</summary>
@@ -76,6 +80,8 @@ namespace OpenBveApi.Routes
 			Odometer = 0;
 			CantDueToInaccuracy = 0;
 			AdhesionMultiplier = 0;
+			RainIntensity = 0;
+			SnowIntensity = 0;
 			TriggerType = EventTriggerType.None;
 			TrackIndex = 0;
 		}
@@ -111,12 +117,42 @@ namespace OpenBveApi.Routes
 		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
 		public void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
+			if (TrackIndex == 0 && (currentHost.Tracks[0].Elements == null || currentHost.Tracks[TrackIndex].Elements.Length == 0))
+			{
+				/*
+				 * Used for displaying trains in Object Viewer
+				 * As we have no track, just update the Z value with the new pos
+				 */
+				WorldPosition.Z = NewTrackPosition;
+				return;
+			}
 			if (!currentHost.Tracks.ContainsKey(TrackIndex) || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
 			int i = LastTrackElement;
-			while (i >= 0 && NewTrackPosition < currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
+			while (i >= 0)
 			{
+				if (currentHost.Tracks[TrackIndex].Elements[i].InvalidElement)
+				{
+					var prevTrackEnded = currentHost.Tracks[TrackIndex].Elements.Select((x, j) => new { Index = j, Element = x }).Take(i + 1).LastOrDefault(x => !x.Element.InvalidElement);
+
+					if (prevTrackEnded == null)
+					{
+						break;
+					}
+
+					i = prevTrackEnded.Index;
+
+					if (i == 0)
+					{
+						break;
+					}
+				}
+
+				if (NewTrackPosition >= currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
+				{
+					break;
+				}
 				double ta = TrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
-				double tb = -0.01;
+				const double tb = -0.01;
 				CheckEvents(i, -1, ta, tb);
 				i--;
 			}
@@ -171,25 +207,21 @@ namespace OpenBveApi.Routes
 						double h = s * p;
 						double b = s / System.Math.Abs(r);
 						double f = 2.0 * r * r * (1.0 - System.Math.Cos(b));
-						double c = (double) System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
-						double a = 0.5 * (double) System.Math.Sign(r) * b;
+						double c = (double)System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
+						double a = 0.5 * (double)System.Math.Sign(r) * b;
 						Vector3 D = new Vector3(currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.X, 0.0, currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Z);
 						D.Normalize();
-						double cosa = System.Math.Cos(a);
-						double sina = System.Math.Sin(a);
-						D.Rotate(Vector3.Down, cosa, sina);
+						D.Rotate(Vector3.Down, a);
 						WorldPosition.X = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.X + c * D.X;
 						WorldPosition.Y = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.Y + h;
 						WorldPosition.Z = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.Z + c * D.Z;
-						D.Rotate(Vector3.Down, cosa, sina);
+						D.Rotate(Vector3.Down, a);
 						WorldDirection.X = D.X;
 						WorldDirection.Y = p;
 						WorldDirection.Z = D.Z;
 						WorldDirection.Normalize();
-						double cos2a = System.Math.Cos(2.0 * a);
-						double sin2a = System.Math.Sin(2.0 * a);
 						WorldSide = currentHost.Tracks[TrackIndex].Elements[i].WorldSide;
-						WorldSide.Rotate(Vector3.Down, cos2a, sin2a);
+						WorldSide.Rotate(Vector3.Down, 2.0 * a);
 						WorldUp = Vector3.Cross(WorldDirection, WorldSide);
 
 					}
@@ -247,14 +279,7 @@ namespace OpenBveApi.Routes
 			{
 				if (db != 0.0)
 				{
-					if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
-					{
-						CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
-					}
-					else
-					{
-						CurveRadius = 0.0;
-					}
+					CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0 ? currentHost.Tracks[TrackIndex].Elements[i].CurveRadius : 0.0;
 
 					if (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
 					{
@@ -290,6 +315,8 @@ namespace OpenBveApi.Routes
 			}
 
 			AdhesionMultiplier = currentHost.Tracks[TrackIndex].Elements[i].AdhesionMultiplier;
+			RainIntensity = currentHost.Tracks[TrackIndex].Elements[i].RainIntensity;
+			SnowIntensity = currentHost.Tracks[TrackIndex].Elements[i].SnowIntensity;
 			//Pitch added for Plugin Data usage
 			//Mutliply this by 1000 to get the original value
 			Pitch = currentHost.Tracks[TrackIndex].Elements[i].Pitch * 1000;

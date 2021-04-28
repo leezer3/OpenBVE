@@ -1,24 +1,33 @@
-﻿namespace OpenBveApi.Runtime
+﻿using System.Runtime.Serialization;
+
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents the handles of the cab.</summary>
+	[DataContract]
 	public class Handles
 	{
 		/// <summary>The reverser position.</summary>
+		[DataMember]
 		private int MyReverser;
 
 		/// <summary>The power notch.</summary>
+		[DataMember]
 		private int MyPowerNotch;
 
 		/// <summary>The brake notch.</summary>
+		[DataMember]
 		private int MyBrakeNotch;
 
 		/// <summary>The loco brake notch.</summary>
+		[DataMember]
 		private int MyLocoBrakeNotch;
 
 		/// <summary>Whether the const speed system is enabled.</summary>
+		[DataMember]
 		private bool MyConstSpeed;
 
 		/// <summary>Whether the hold brake system is enabled.</summary>
+		[DataMember]
 		private bool MyHoldBrake;
 
 		/// <summary>Gets or sets the reverser position.</summary>

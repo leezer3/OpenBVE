@@ -108,6 +108,20 @@ namespace OpenBveApi.Interface
 		/// </summary>
 		/// <param name="mySpecs"></param>
 		void SetVehicleSpecs(VehicleSpecs mySpecs);
+
+		/// <summary>Is called when the state of the doors changes.</summary>
+		/// <param name="oldState">The old state of the doors.</param>
+		/// <param name="newState">The new state of the doors.</param>
+		void DoorChange(DoorStates oldState, DoorStates newState);
+
+		/// <summary>Is called when the aspect in the current or in any of the upcoming sections changes, or when passing section boundaries.</summary>
+		/// <param name="data">Signal information per section. In the array, index 0 is the current section, index 1 the upcoming section, and so on.</param>
+		/// <remarks>The signal array is guaranteed to have at least one element. When accessing elements other than index 0, you must check the bounds of the array first.</remarks>
+		void SetSignal(SignalData[] data);
+
+		/// <summary>Is called when the train passes a beacon.</summary>
+		/// <param name="data">The beacon data.</param>
+		void SetBeacon(BeaconData data);
 	}
 
 	/// <summary>
@@ -248,7 +262,7 @@ namespace OpenBveApi.Interface
 		}
 
 		/// <summary>
-		/// The function that calls the plugin's load funcion
+		/// The function that calls the plugin's load function
 		/// </summary>
 		/// <param name="index">The index number which can use the plugins</param>
 		public static void CallPluginLoad(int index)
@@ -261,14 +275,7 @@ namespace OpenBveApi.Interface
 			{
 				return;
 			}
-			if (AvailablePlugins[index].Load(FileSystem))
-			{
-				AvailablePluginInfos[index].Status = PluginInfo.PluginStatus.Enable;
-			}
-			else
-			{
-				AvailablePluginInfos[index].Status = PluginInfo.PluginStatus.Failure;
-			}
+			AvailablePluginInfos[index].Status = AvailablePlugins[index].Load(FileSystem) ? PluginInfo.PluginStatus.Enable : PluginInfo.PluginStatus.Failure;
 		}
 
 		/// <summary>

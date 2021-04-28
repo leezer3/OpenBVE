@@ -26,5 +26,31 @@
 		<XParser>new</XParser>
 		<SplitLineHack>true</SplitLineHack>
 	</Patch>
+	<!-- JR Kobe & Kyoto Line -->
+	<Patch>
+		<Hash>012CE199398687018EE6552D194B8EA51EC41D36A62AEB49B52EB042A1448B5B</Hash>
+		<FileName>3828M(1st part).csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>CEA82B3812B2854157EC82D29E5A737755A3624F77CF334B72CE97AF734DE44B</Hash>
+		<FileName>3828M(2nd part - sparse graphics).csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>3ED47E66AC54E1018ACC44FD274E52A5B5CCFED35560685D9F5AE2D5287453B5</Hash>
+		<FileName>3828M(2nd part).csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>6E54479FE79D45E632954227FBAF15780DCF1487F1977452676B45B2E5DA9F35</Hash>
+		<FileName>3828M.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>94B3668DA703C844D66E9C819714E1F7491C1CF71E4804198EFCD4768B6279C5</Hash>
+		<FileName>moha5250-Train.csv</FileName>
+		<XParser>new</XParser>
+	</Patch>
   </RoutePatches>
 </openBVE>

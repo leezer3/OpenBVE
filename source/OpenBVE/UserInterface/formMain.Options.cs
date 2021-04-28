@@ -5,7 +5,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 
 namespace OpenBve {
-	internal partial class formMain : Form {
+	internal partial class formMain {
 		
 		
 		// =======
@@ -58,7 +58,7 @@ namespace OpenBve {
 				if (Array.Exists(Interface.CurrentOptions.EnableInputDevicePlugins, element => element.Equals(Info.FileName))) {
 					InputDevicePlugin.CallPluginLoad(i);
 				}
-				Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
+				Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
 				UpdateInputDeviceListViewItem(Items[i], i, false);
 			}
 			listviewInputDevice.Items.AddRange(Items);

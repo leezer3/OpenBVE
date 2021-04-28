@@ -34,7 +34,7 @@ namespace OpenBve
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 			string[][] Lines = new string[Game.ScoreLogCount + 1][];
-			Lines[0] = new string[] {
+			Lines[0] = new[] {
 				Translations.GetInterfaceString("log_time"),
 				Translations.GetInterfaceString("log_position"),
 				Translations.GetInterfaceString("log_value"),

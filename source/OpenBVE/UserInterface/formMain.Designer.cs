@@ -1491,6 +1491,9 @@
 			// 
 			// groupBoxInputDevice
 			// 
+			this.groupBoxInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxInputDevice.Controls.Add(this.labelInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);

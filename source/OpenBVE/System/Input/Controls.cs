@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using OpenTK.Input;
 using OpenBveApi.Interface;
+using Control = OpenBveApi.Interface.Control;
 
 namespace OpenBve
 {
@@ -33,7 +34,7 @@ namespace OpenBve
 						Builder.Append("keyboard, " + controlsToSave[i].Key + ", " + ((int)controlsToSave[i].Modifier).ToString(Culture) + ", " + controlsToSave[i].Option.ToString(Culture));
 						break;
 					case ControlMethod.Joystick:
-						Builder.Append("joystick, " + controlsToSave[i].Device.ToString(Culture) + ", ");
+						Builder.Append("joystick, " + controlsToSave[i].Device + ", ");
 						switch (controlsToSave[i].Component) {
 							case JoystickComponent.Axis:
 								Builder.Append("axis, " + controlsToSave[i].Element.ToString(Culture) + ", " + controlsToSave[i].Direction.ToString(Culture));
@@ -110,6 +111,7 @@ namespace OpenBve
 			}
 			catch
 			{
+				//ignored
 			}
 			
 			if (FileOrNull == null)
@@ -146,13 +148,13 @@ namespace OpenBve
 
 			for (int i = 0; i < Lines.Length; i++)
 			{
-				Lines[i] = Lines[i].Trim(new char[] { });
+				Lines[i] = Lines[i].Trim();
 				if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
 				{
-					string[] Terms = Lines[i].Split(new char[] { ',' });
+					string[] Terms = Lines[i].Split(',');
 					for (int j = 0; j < Terms.Length; j++)
 					{
-						Terms[j] = Terms[j].Trim(new char[] { });
+						Terms[j] = Terms[j].Trim();
 					}
 
 					if (Terms.Length >= 2)
@@ -173,7 +175,7 @@ namespace OpenBve
 							Controls[Length].Command = Translations.Command.None;
 							Controls[Length].InheritedType = Translations.CommandType.Digital;
 							Controls[Length].Method = ControlMethod.Invalid;
-							Controls[Length].Device = -1;
+							Controls[Length].Device = new Guid();
 							Controls[Length].Component = JoystickComponent.Invalid;
 							Controls[Length].Element = -1;
 							Controls[Length].Direction = 0;
@@ -234,7 +236,7 @@ namespace OpenBve
 									if (int.TryParse(Terms[3], NumberStyles.Integer, Culture, out Modifiers))
 									{
 										Controls[Length].Method = ControlMethod.Keyboard;
-										Controls[Length].Device = -1;
+										Controls[Length].Device = new Guid(); //will create invalid all zero GUID
 										Controls[Length].Component = JoystickComponent.Invalid;
 										Controls[Length].Key = (OpenBveApi.Input.Key)CurrentKey;
 										Controls[Length].Direction = 0;
@@ -253,8 +255,14 @@ namespace OpenBve
 
 							else if (Method == "joystick" & Terms.Length >= 4)
 							{
-								int Device;
-								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device))
+								int oldDevice;
+								Guid Device = new Guid();
+								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out oldDevice))
+								{
+									Device = Joystick.GetGuid(oldDevice);
+								}
+								
+								if (Device != new Guid() || Guid.TryParse(Terms[2], out Device))
 								{
 									string Component = Terms[3].ToLowerInvariant();
 									if (Component == "axis" & Terms.Length >= 6)
@@ -332,8 +340,14 @@ namespace OpenBve
 							}
 							else if (Method == "raildriver" & Terms.Length >= 4)
 							{
-								int Device;
-								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device))
+								int oldDevice;
+								Guid Device = new Guid();
+								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out oldDevice))
+								{
+									Device = Joystick.GetGuid(oldDevice);
+								}
+								
+								if (Device != new Guid() || Guid.TryParse(Terms[2], out Device))
 								{
 									string Component = Terms[3].ToLowerInvariant();
 									if (Component == "axis" & Terms.Length >= 6)
@@ -388,7 +402,7 @@ namespace OpenBve
 							if (!Valid)
 							{
 								Controls[Length].Method = ControlMethod.Invalid;
-								Controls[Length].Device = -1;
+								Controls[Length].Device = new Guid(); //Invalid all zero GUID
 								Controls[Length].Component = JoystickComponent.Invalid;
 								Controls[Length].Element = -1;
 								Controls[Length].Direction = 0;

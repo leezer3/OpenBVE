@@ -11,6 +11,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	internal static class World {
@@ -92,11 +93,11 @@ namespace OpenBve {
 				double zoomMultiplier;
 				{
 					const double heightFactor = 0.75;
-					TrainManager.Train bestTrain = null;
+					TrainBase bestTrain = null;
 					double bestDistanceSquared = double.MaxValue;
-					TrainManager.Train secondBestTrain = null;
+					TrainBase secondBestTrain = null;
 					double secondBestDistanceSquared = double.MaxValue;
-					foreach (TrainManager.Train train in TrainManager.Trains) {
+					foreach (TrainBase train in Program.TrainManager.Trains) {
 						if (train.State == TrainState.Available) {
 							double x = 0.5 * (train.Cars[0].FrontAxle.Follower.WorldPosition.X + train.Cars[0].RearAxle.Follower.WorldPosition.X);
 							double y = 0.5 * (train.Cars[0].FrontAxle.Follower.WorldPosition.Y + train.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * train.Cars[0].Height;
@@ -249,17 +250,14 @@ namespace OpenBve {
 					if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 						int c = TrainManager.PlayerTrain.DriverCar;
 						if (c >= 0) {
-							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || !TrainManager.PlayerTrain.Cars[c].CarSections[0].Groups[0].Overlay) {
-								double a = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch;
-								double cosa = Math.Cos(-a);
-								double sina = Math.Sin(-a);
-								d2.Rotate(sF, cosa, sina);
-								u2.Rotate(sF, cosa, sina);
+							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || TrainManager.PlayerTrain.Cars[c].CarSections[0].Groups[0].Type != ObjectType.Overlay) {
+								d2.Rotate(sF, -TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch);
+								u2.Rotate(sF, -TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch);
 							}
 						}
 					}
 
-					cF += sF * Program.Renderer.Camera.Alignment.Position.X + u2 * Program.Renderer.Camera.Alignment.Position + d2 * Program.Renderer.Camera.Alignment.Position.Z;
+					cF += sF * Program.Renderer.Camera.Alignment.Position.X + u2 * Program.Renderer.Camera.Alignment.Position.Y + d2 * Program.Renderer.Camera.Alignment.Position.Z;
 
 				}
 				// yaw, pitch, roll
@@ -293,10 +291,8 @@ namespace OpenBve {
 						double rz = Math.Sin(-bodyPitch) * bodyHeight;
 						cF += dF * rz + uF * ry;
 						if (bodyPitch != 0.0) {
-							double cosa = Math.Cos(-bodyPitch);
-							double sina = Math.Sin(-bodyPitch);
-							dF.Rotate(sF, cosa, sina);
-							uF.Rotate(sF, cosa, sina);
+							dF.Rotate(sF, -bodyPitch);
+							uF.Rotate(sF, -bodyPitch);
 						}
 					}
 					{
@@ -305,10 +301,8 @@ namespace OpenBve {
 						double ry = (Math.Cos(bodyRoll) - 1.0) * bodyHeight;
 						cF += sF * rx + uF * ry;
 						if (bodyRoll != 0.0) {
-							double cosa = Math.Cos(-bodyRoll);
-							double sina = Math.Sin(-bodyRoll);
-							uF.Rotate(dF, cosa, sina);
-							sF.Rotate(dF, cosa, sina);
+							uF.Rotate(dF, -bodyRoll);
+							sF.Rotate(dF, -bodyRoll);
 						}
 					}
 					{
@@ -317,10 +311,8 @@ namespace OpenBve {
 						double rz = (Math.Cos(headYaw) - 1.0) * headHeight;
 						cF += sF * rx + dF * rz;
 						if (headYaw != 0.0) {
-							double cosa = Math.Cos(headYaw);
-							double sina = Math.Sin(headYaw);
-							dF.Rotate(uF, cosa, sina);
-							sF.Rotate(uF, cosa, sina);
+							dF.Rotate(uF, headYaw);
+							sF.Rotate(uF, headYaw);
 						}
 					}
 					{
@@ -329,10 +321,8 @@ namespace OpenBve {
 						double rz = Math.Sin(-headPitch) * headHeight;
 						cF += dF * rz + uF * ry;
 						if (headPitch != 0.0) {
-							double cosa = Math.Cos(-headPitch);
-							double sina = Math.Sin(-headPitch);
-							dF.Rotate(sF, cosa, sina);
-							uF.Rotate(sF, cosa, sina);
+							dF.Rotate(sF, -headPitch);
+							uF.Rotate(sF, -headPitch);
 						}
 					}
 					{
@@ -341,10 +331,8 @@ namespace OpenBve {
 						double ry = (Math.Cos(headRoll) - 1.0) * headHeight;
 						cF += sF * rx + uF * ry;
 						if (headRoll != 0.0) {
-							double cosa = Math.Cos(-headRoll);
-							double sina = Math.Sin(-headRoll);
-							uF.Rotate(dF, cosa, sina);
-							sF.Rotate(dF, cosa, sina);
+							uF.Rotate(dF, -headRoll);
+							sF.Rotate(dF, -headRoll);
 						}
 					}
 				} else {
@@ -353,22 +341,16 @@ namespace OpenBve {
 					double totalPitch = headPitch + bodyPitch;
 					double totalRoll = bodyRoll + headRoll;
 					if (totalYaw != 0.0) {
-						double cosa = Math.Cos(totalYaw);
-						double sina = Math.Sin(totalYaw);
-						dF.Rotate(uF, cosa, sina);
-						sF.Rotate(uF, cosa, sina);
+						dF.Rotate(uF, totalYaw);
+						sF.Rotate(uF, totalYaw);
 					}
 					if (totalPitch != 0.0) {
-						double cosa = Math.Cos(-totalPitch);
-						double sina = Math.Sin(-totalPitch);
-						dF.Rotate(sF, cosa, sina);
-						uF.Rotate(sF, cosa, sina);
+						dF.Rotate(sF, -totalPitch);
+						uF.Rotate(sF, -totalPitch);
 					}
 					if (totalRoll != 0.0) {
-						double cosa = Math.Cos(-totalRoll);
-						double sina = Math.Sin(-totalRoll);
-						uF.Rotate(dF, cosa, sina);
-						sF.Rotate(dF, cosa, sina);
+						uF.Rotate(dF, -totalRoll);
+						sF.Rotate(dF, -totalRoll);
 					}
 				}
 				// finish

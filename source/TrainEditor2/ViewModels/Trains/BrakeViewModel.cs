@@ -3,12 +3,13 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
+using TrainManager.BrakeSystems;
 
 namespace TrainEditor2.ViewModels.Trains
 {
 	internal class BrakeViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<Brake.BrakeTypes> BrakeType
+		internal ReactiveProperty<BrakeSystemType> BrakeType
 		{
 			get;
 		}
@@ -18,7 +19,7 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<Brake.BrakeControlSystems> BrakeControlSystem
+		internal ReactiveProperty<EletropneumaticBrakeType> BrakeControlSystem
 		{
 			get;
 		}

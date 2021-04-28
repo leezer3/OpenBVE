@@ -148,7 +148,7 @@ namespace OpenBve.Graphics.Renderers
 			{
 				// pause
 				renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.0f, 0.0f, 0.0f, 0.5f));
-				renderer.OpenGlString.Draw(Fonts.VeryLargeFont, "PAUSE", new Point(renderer.Screen.Width / 2, renderer.Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
+				renderer.OpenGlString.Draw(renderer.Fonts.VeryLargeFont, "PAUSE", new Point(renderer.Screen.Width / 2, renderer.Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
 			}
 			else if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
 			{

@@ -94,9 +94,11 @@ namespace OpenBve
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			UpdateViewport(ViewportChangeMode.ChangeToScenery);
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
+			TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
+			TransformedLightPosition.Transform(CurrentViewMatrix);
 			if (!AvailableNewRenderer)
 			{
-				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z, 0.0f });
+				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)TransformedLightPosition.X, (float)TransformedLightPosition.Y, (float)TransformedLightPosition.Z, 0.0f });
 			}
 
 			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
@@ -137,7 +139,6 @@ namespace OpenBve
 				if (OptionLighting)
 				{
 					DefaultShader.SetIsLight(true);
-					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
 					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
@@ -254,6 +255,34 @@ namespace OpenBve
 					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Point(32, 24), TextAlignment.TopLeft, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Point(32, 44), TextAlignment.TopLeft, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Point(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
+					if (Interface.LogMessages.Count == 1)
+					{
+						Keys.Render(4, 64, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
+
+						if (Interface.LogMessages[0].Type != MessageType.Information)
+						{
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+						}
+						else
+						{
+							//If all of our messages are information, then print the message text in grey
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 64), TextAlignment.TopLeft, TextColor);
+						}
+					}
+					else if (Interface.LogMessages.Count > 1)
+					{
+						Keys.Render(4, 64, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
+						bool error = Interface.LogMessages.Any(x => x.Type != MessageType.Information);
+
+						if (error)
+						{
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Point(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+						}
+						else
+						{
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Point(32, 64), TextAlignment.TopLeft, TextColor);
+						}
+					}
 				}
 				else
 				{

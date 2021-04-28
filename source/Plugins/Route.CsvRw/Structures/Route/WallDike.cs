@@ -41,7 +41,7 @@ namespace CsvRwRouteParser
 			{
 				if (leftObjects.ContainsKey(Type))
 				{
-					leftObjects[Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);	
+					leftObjects[Type].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);	
 				}
 				
 			}
@@ -49,7 +49,7 @@ namespace CsvRwRouteParser
 			{
 				if (rightObjects.ContainsKey(Type))
 				{
-					rightObjects[Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, StartingDistance, EndingDistance, StartingDistance);
+					rightObjects[Type].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}
 				
 			}

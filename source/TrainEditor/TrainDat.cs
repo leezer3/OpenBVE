@@ -1,6 +1,14 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Forms;
+using OpenBveApi.Math;
+using TrainManager.BrakeSystems;
+using TrainManager.Car;
+using TrainManager.Handles;
+using TrainManager.Motor;
+using TrainManager.Power;
+using TrainManager.SafetySystems;
+
 
 namespace TrainEditor {
 	internal static class TrainDat {
@@ -10,23 +18,21 @@ namespace TrainEditor {
 		// acceleration
 		/// <summary>The Acceleration section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Acceleration {
-			internal struct Entry {
-				internal double a0;
-				internal double a1;
-				internal double v1;
-				internal double v2;
-				internal double e;
-			}
-			internal Entry[] Entries;
+			
+			internal BveAccelerationCurve[] Entries;
 			internal Acceleration() {
 				const int n = 8;
-				this.Entries = new Entry[n];
-				for (int i = 0; i < n; i++) {
-					this.Entries[i].a0 = 1.0;
-					this.Entries[i].a1 = 1.0;
-					this.Entries[i].v1 = 25.0;
-					this.Entries[i].v2 = 25.0;
-					this.Entries[i].e = 1.0;
+				this.Entries = new BveAccelerationCurve[n];
+				for (int i = 0; i < n; i++)
+				{
+					this.Entries[i] = new BveAccelerationCurve
+					{
+						StageZeroAcceleration = 1.0,
+						StageOneAcceleration = 1.0,
+						StageOneSpeed = 25.0,
+						StageTwoSpeed = 25.0,
+						StageTwoExponent = 1.0
+					};
 				}
 			}
 		}
@@ -87,29 +93,21 @@ namespace TrainEditor {
 		// brake
 		/// <summary>The Brake section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Brake {
-			internal enum BrakeTypes {
-				ElectromagneticStraightAirBrake = 0,
-				ElectricCommandBrake = 1,
-				AutomaticAirBrake = 2
-			}
+		
 			internal enum LocoBrakeTypes {
 				NotFitted = 0,
 				NotchedAirBrake = 1,
 				AutomaticAirBrake = 2
 			}
-			internal enum BrakeControlSystems {
-				None = 0,
-				ClosingElectromagneticValve = 1,
-				DelayIncludingSystem = 2
-			}
-			internal BrakeTypes BrakeType;
+			
+			internal BrakeSystemType BrakeType;
 			internal LocoBrakeTypes LocoBrakeType;
-			internal BrakeControlSystems BrakeControlSystem;
+			internal EletropneumaticBrakeType BrakeControlSystem;
 			internal double BrakeControlSpeed;
 			internal Brake() {
-				this.BrakeType = BrakeTypes.ElectromagneticStraightAirBrake;
+				this.BrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
 				this.LocoBrakeType = LocoBrakeTypes.NotFitted;
-				this.BrakeControlSystem = BrakeControlSystems.None;
+				this.BrakeControlSystem = EletropneumaticBrakeType.None;
 				this.BrakeControlSpeed = 0.0;
 			}
 		}
@@ -134,25 +132,7 @@ namespace TrainEditor {
 		// handle
 		/// <summary>The Handle section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Handle {
-			internal enum HandleTypes {
-				Separate = 0,
-				Combined = 1
-			}
-			internal enum EbHandleBehaviour
-			{
-				NoAction = 0,
-				PowerNeutral = 1,
-				ReverserNeutral = 2,
-				PowerReverserNeutral = 3
-			}
-
-			internal enum LocoBrakeType
-			{
-				Combined = 0,
-				Independant = 1, 
-				Blocking = 2
-			}
-			internal HandleTypes HandleType;
+			internal HandleType HandleType;
 			internal int PowerNotches;
 			internal int BrakeNotches;
 			internal int PowerNotchReduceSteps;
@@ -162,7 +142,7 @@ namespace TrainEditor {
 			internal int DriverPowerNotches;
 			internal int DriverBrakeNotches;
 			internal Handle() {
-				this.HandleType = HandleTypes.Separate;
+				this.HandleType = HandleType.TwinHandle;
 				this.PowerNotches = 8;
 				this.BrakeNotches = 8;
 				this.PowerNotchReduceSteps = 0;
@@ -176,15 +156,11 @@ namespace TrainEditor {
 		
 		// cab
 		/// <summary>The Cab section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
-		internal class Cab {
-			internal double X;
-			internal double Y;
-			internal double Z;
+		internal class Cab
+		{
+			internal Vector3 Driver;
 			internal double DriverCar;
 			internal Cab() {
-				this.X = 0.0;
-				this.Y = 0.0;
-				this.Z = 0.0;
 				this.DriverCar = 0;
 			}
 		}
@@ -222,43 +198,16 @@ namespace TrainEditor {
 		// device
 		/// <summary>The Device section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Device {
-			internal enum AtsModes {
-				None = -1,
-				AtsSn = 0,
-				AtsSnP = 1
-			}
-			internal enum AtcModes {
-				None = 0,
-				Manual = 1,
-				Automatic = 2
-			}
-			internal enum ReAdhesionDevices {
-				None = -1,
-				TypeA = 0,
-				TypeB = 1,
-				TypeC = 2,
-				TypeD = 3
-			}
-			internal enum PassAlarmModes {
-				None = 0,
-				Single = 1,
-				Looping = 2
-			}
-			internal enum DoorModes {
-				SemiAutomatic = 0,
-				Automatic = 1,
-				Manual = 2
-			}
 			internal AtsModes Ats;
 			internal AtcModes Atc;
 			internal bool Eb;
 			internal bool ConstSpeed;
 			internal bool HoldBrake;
-			internal ReAdhesionDevices ReAdhesionDevice;
+			internal ReadhesionDeviceType ReAdhesionDevice;
 			internal double LoadCompensatingDevice;
-			internal PassAlarmModes PassAlarm;
-			internal DoorModes DoorOpenMode;
-			internal DoorModes DoorCloseMode;
+			internal PassAlarmType PassAlarm;
+			internal DoorMode DoorOpenMode;
+			internal DoorMode DoorCloseMode;
 			internal double DoorWidth;
 			internal double DoorMaxTolerance;
 			internal Device() {
@@ -267,11 +216,11 @@ namespace TrainEditor {
 				this.Eb = false;
 				this.ConstSpeed = false;
 				this.HoldBrake = false;
-				this.ReAdhesionDevice = ReAdhesionDevices.TypeA;
+				this.ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 				this.LoadCompensatingDevice = 0.0;
-				this.PassAlarm = PassAlarmModes.None;
-				this.DoorOpenMode = DoorModes.SemiAutomatic;
-				this.DoorCloseMode = DoorModes.SemiAutomatic;
+				this.PassAlarm = PassAlarmType.None;
+				this.DoorOpenMode = DoorMode.AutomaticManualOverride;
+				this.DoorCloseMode = DoorMode.AutomaticManualOverride;
 				this.DoorWidth = 1000.0;
 				this.DoorMaxTolerance = 0.0;
 			}
@@ -280,19 +229,15 @@ namespace TrainEditor {
 		// motor
 		/// <summary>Any of the Motor sections of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Motor {
-			internal struct Entry {
-				internal int SoundIndex;
-				internal double Pitch;
-				internal double Volume;
-			}
-			internal Entry[] Entries;
+			
+			internal BVEMotorSoundTableEntry[] Entries;
 			internal Motor() {
 				const int n = 800;
-				this.Entries = new Entry[n];
+				this.Entries = new BVEMotorSoundTableEntry[n];
 				for (int i = 0; i < n; i++) {
 					this.Entries[i].SoundIndex = -1;
-					this.Entries[i].Pitch = 100.0;
-					this.Entries[i].Volume = 128.0;
+					this.Entries[i].Pitch = 100.0f;
+					this.Entries[i].Gain = 128.0f;
 				}
 			}
 		}
@@ -332,7 +277,7 @@ namespace TrainEditor {
 			}
 		}
 
-		const int currentVersion = 15311;
+		const int currentVersion = 17250;
 
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>
@@ -397,6 +342,10 @@ namespace TrainEditor {
 						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase)) {
 							if (n == t.Acceleration.Entries.Length) {
 								Array.Resize(ref t.Acceleration.Entries, t.Acceleration.Entries.Length << 1);
+								for (int o = n; o < t.Acceleration.Entries.Length; o++)
+								{
+									t.Acceleration.Entries[o] = new BveAccelerationCurve();
+								}
 							}
 							string u = Lines[i] + ",";
 							int m = 0;
@@ -408,35 +357,35 @@ namespace TrainEditor {
 								double a; if (double.TryParse(s, System.Globalization.NumberStyles.Float, Culture, out a)) {
 									switch (m) {
 										case 0:
-											t.Acceleration.Entries[n].a0 = Math.Max(a, 0.0);
+											t.Acceleration.Entries[n].StageZeroAcceleration = Math.Max(a, 0.0);
 											break;
 										case 1:
-											t.Acceleration.Entries[n].a1 = Math.Max(a, 0.0);
+											t.Acceleration.Entries[n].StageOneAcceleration = Math.Max(a, 0.0);
 											break;
 										case 2:
-											t.Acceleration.Entries[n].v1 = Math.Max(a, 0.0);
+											t.Acceleration.Entries[n].StageOneSpeed = Math.Max(a, 0.0);
 											break;
 										case 3:
-											t.Acceleration.Entries[n].v2 = Math.Max(a, 0.0);
-											if (t.Acceleration.Entries[n].v2 < t.Acceleration.Entries[n].v1) {
-												double x = t.Acceleration.Entries[n].v1;
-												t.Acceleration.Entries[n].v1 = t.Acceleration.Entries[n].v2;
-												t.Acceleration.Entries[n].v2 = x;
+											t.Acceleration.Entries[n].StageTwoSpeed = Math.Max(a, 0.0);
+											if (t.Acceleration.Entries[n].StageTwoSpeed < t.Acceleration.Entries[n].StageOneSpeed) {
+												double x = t.Acceleration.Entries[n].StageOneSpeed;
+												t.Acceleration.Entries[n].StageOneSpeed = t.Acceleration.Entries[n].StageTwoSpeed;
+												t.Acceleration.Entries[n].StageTwoSpeed = x;
 											}
 											break;
 										case 4:
 											if (ver1220000) {
 												if (a <= 0.0) {
-													t.Acceleration.Entries[n].e = 1.0;
+													t.Acceleration.Entries[n].StageTwoExponent = 1.0;
 												} else {
 													const double c = 1.23315173118822;
-													t.Acceleration.Entries[n].e = 1.0 - Math.Log(a) * t.Acceleration.Entries[n].v2 * c;
-													if (t.Acceleration.Entries[n].e > 4.0) {
-														t.Acceleration.Entries[n].e = 4.0;
+													t.Acceleration.Entries[n].StageTwoExponent = 1.0 - Math.Log(a) * t.Acceleration.Entries[n].StageTwoSpeed * c;
+													if (t.Acceleration.Entries[n].StageTwoExponent > 4.0) {
+														t.Acceleration.Entries[n].StageTwoExponent = 4.0;
 													}
 												}
 											} else {
-												t.Acceleration.Entries[n].e = a;
+												t.Acceleration.Entries[n].StageTwoExponent = a;
 											}
 											break;
 									}
@@ -492,22 +441,22 @@ namespace TrainEditor {
 								switch (n)
 								{
 									case 0:
-										t.Delay.DelayPowerUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 1:
-										t.Delay.DelayPowerDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 2:
-										t.Delay.DelayBrakeUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 3:
-										t.Delay.DelayBrakeDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 4:
-										t.Delay.DelayLocoBrakeUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayLocoBrakeUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 5:
-										t.Delay.DelayLocoBrakeDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayLocoBrakeDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 								}
 							}
@@ -544,16 +493,16 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b >= 0 & b <= 2) t.Brake.BrakeType = (Brake.BrakeTypes)b;
+										if (b >= 0 & b <= 2) t.Brake.BrakeType = (BrakeSystemType)b;
 										break;
 									case 1:
-										if (b >= 0 & b <= 2) t.Brake.BrakeControlSystem = (Brake.BrakeControlSystems)b;
+										if (b >= 0 & b <= 2) t.Brake.BrakeControlSystem = (EletropneumaticBrakeType)b;
 										break;
 									case 2:
 										if (a >= 0.0) t.Brake.BrakeControlSpeed = a;
 										break;
 									case 3:
-										if (a <= 0 && a > 3) t.Brake.LocoBrakeType = (Brake.LocoBrakeTypes) b;
+										if (a >= 0 && a < 3) t.Brake.LocoBrakeType = (Brake.LocoBrakeTypes) b;
 										break;
 								}
 							} i++; n++;
@@ -586,7 +535,7 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b == 0 | b == 1) t.Handle.HandleType = (Handle.HandleTypes)b;
+										if (b >= 0  && b <= 3) t.Handle.HandleType = (HandleType)b;
 										break;
 									case 1:
 										if (b > 0) t.Handle.PowerNotches = b;
@@ -598,13 +547,13 @@ namespace TrainEditor {
 										if (b >= 0) t.Handle.PowerNotchReduceSteps = b;
 										break;
 									case 4:
-										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
+										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (EbHandleBehaviour) b;
 										break;
 									case 5:
 										if (b > 0) t.Handle.LocoBrakeNotches = b;
 										break;
 									case 6:
-										if (a <= 0 && a > 3) t.Handle.LocoBrake = (Handle.LocoBrakeType) b;
+										if (a <= 0 && a > 3) t.Handle.LocoBrake = (LocoBrakeType) b;
 										break;
 									case 7:
 										if (b > 0) t.Handle.DriverPowerNotches = b;
@@ -621,13 +570,13 @@ namespace TrainEditor {
 							double a; if (double.TryParse(Lines[i], System.Globalization.NumberStyles.Float, Culture, out a)) {
 								switch (n) {
 									case 0:
-										t.Cab.X = a;
+										t.Cab.Driver.X = a;
 										break;
 									case 1:
-										t.Cab.Y = a;
+										t.Cab.Driver.Y = a;
 										break;
 									case 2:
-										t.Cab.Z = a;
+										t.Cab.Driver.Z = a;
 										break;
 									case 3:
 										t.Cab.DriverCar = (int)Math.Round(a);
@@ -682,10 +631,10 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b >= -1 & b <= 1) t.Device.Ats = (Device.AtsModes)b;
+										if (b >= -1 & b <= 1) t.Device.Ats = (AtsModes)b;
 										break;
 									case 1:
-										if (b >= 0 & b <= 2) t.Device.Atc = (Device.AtcModes)b;
+										if (b >= 0 & b <= 2) t.Device.Atc = (AtcModes)b;
 										break;
 									case 2:
 										t.Device.Eb = a == 1.0;
@@ -697,19 +646,19 @@ namespace TrainEditor {
 										t.Device.HoldBrake = a == 1.0;
 										break;
 									case 5:
-										if (b >= -1 & b <= 3) t.Device.ReAdhesionDevice = (Device.ReAdhesionDevices)b;
+										if (b >= -1 & b <= 3) t.Device.ReAdhesionDevice = (ReadhesionDeviceType)b;
 										break;
 									case 6:
 										t.Device.LoadCompensatingDevice = a;
 										break;
 									case 7:
-										if (b >= 0 & b <= 2) t.Device.PassAlarm = (Device.PassAlarmModes)b;
+										if (b >= 0 & b <= 2) t.Device.PassAlarm = (PassAlarmType)b;
 										break;
 									case 8:
-										if (b >= 0 & b <= 2) t.Device.DoorOpenMode = (Device.DoorModes)b;
+										if (b >= 0 & b <= 2) t.Device.DoorOpenMode = (DoorMode)b;
 										break;
 									case 9:
-										if (b >= 0 & b <= 2) t.Device.DoorCloseMode = (Device.DoorModes)b;
+										if (b >= 0 & b <= 2) t.Device.DoorCloseMode = (DoorMode)b;
 										break;
 									case 10:
 										if (a >= 0.0) t.Device.DoorWidth = a;
@@ -746,10 +695,10 @@ namespace TrainEditor {
 												m.Entries[n].SoundIndex = b >= 0 ? b : -1;
 												break;
 											case 1:
-												m.Entries[n].Pitch = Math.Max(a, 0.0);
+												m.Entries[n].Pitch = (float)Math.Max(a, 0.0);
 												break;
 											case 2:
-												m.Entries[n].Volume = Math.Max(a, 0.0);
+												m.Entries[n].Gain = (float)Math.Max(a, 0.0);
 												break;
 										}
 									} k++;
@@ -797,7 +746,7 @@ namespace TrainEditor {
 				}
 			}
 			if (t.Pressure.BrakePipeNormalPressure <= 0.0) {
-				if (t.Brake.BrakeType == Brake.BrakeTypes.AutomaticAirBrake) {
+				if (t.Brake.BrakeType == BrakeSystemType.AutomaticAirBrake) {
 					t.Pressure.BrakePipeNormalPressure = t.Pressure.BrakeCylinderEmergencyMaximumPressure + 0.75 * (t.Pressure.MainReservoirMinimumPressure - t.Pressure.BrakeCylinderEmergencyMaximumPressure);
 					if (t.Pressure.BrakePipeNormalPressure > t.Pressure.MainReservoirMinimumPressure) {
 						t.Pressure.BrakePipeNormalPressure = t.Pressure.MainReservoirMinimumPressure;
@@ -810,7 +759,7 @@ namespace TrainEditor {
 					}
 				}
 			}
-			if (t.Brake.BrakeType == Brake.BrakeTypes.AutomaticAirBrake) {
+			if (t.Brake.BrakeType == BrakeSystemType.AutomaticAirBrake) {
 				t.Device.HoldBrake = false;
 			}
 			if (t.Device.HoldBrake & t.Handle.BrakeNotches <= 0) {
@@ -835,11 +784,11 @@ namespace TrainEditor {
 				Array.Resize(ref t.Acceleration.Entries, t.Handle.PowerNotches);
 			}
 			for (int i = 0; i < t.Acceleration.Entries.Length; i++) {
-				b.Append(t.Acceleration.Entries[i].a0.ToString(Culture) + ",");
-				b.Append(t.Acceleration.Entries[i].a1.ToString(Culture) + ",");
-				b.Append(t.Acceleration.Entries[i].v1.ToString(Culture) + ",");
-				b.Append(t.Acceleration.Entries[i].v2.ToString(Culture) + ",");
-				b.AppendLine(t.Acceleration.Entries[i].e.ToString(Culture));
+				b.Append(t.Acceleration.Entries[i].StageZeroAcceleration.ToString(Culture) + ",");
+				b.Append(t.Acceleration.Entries[i].StageOneAcceleration.ToString(Culture) + ",");
+				b.Append(t.Acceleration.Entries[i].StageOneSpeed.ToString(Culture) + ",");
+				b.Append(t.Acceleration.Entries[i].StageTwoSpeed.ToString(Culture) + ",");
+				b.AppendLine(t.Acceleration.Entries[i].StageTwoExponent.ToString(Culture));
 			}
 			int n = 15;
 			b.AppendLine("#PERFORMANCE");
@@ -884,9 +833,9 @@ namespace TrainEditor {
 			b.AppendLine(t.Handle.DriverPowerNotches.ToString(Culture).PadRight(n, ' ') + "; DriverPowerNotches");
 			b.AppendLine(t.Handle.DriverBrakeNotches.ToString(Culture).PadRight(n, ' ') + "; DriverBrakeNotches");
 			b.AppendLine("#CAB");
-			b.AppendLine(t.Cab.X.ToString(Culture).PadRight(n, ' ') + "; X");
-			b.AppendLine(t.Cab.Y.ToString(Culture).PadRight(n, ' ') + "; Y");
-			b.AppendLine(t.Cab.Z.ToString(Culture).PadRight(n, ' ') + "; Z");
+			b.AppendLine(t.Cab.Driver.X.ToString(Culture).PadRight(n, ' ') + "; X");
+			b.AppendLine(t.Cab.Driver.Y.ToString(Culture).PadRight(n, ' ') + "; Y");
+			b.AppendLine(t.Cab.Driver.Z.ToString(Culture).PadRight(n, ' ') + "; Z");
 			b.AppendLine(t.Cab.DriverCar.ToString(Culture).PadRight(n, ' ') + "; DriverCar");
 			b.AppendLine("#CAR");
 			b.AppendLine(t.Car.MotorCarMass.ToString(Culture).PadRight(n, ' ') + "; MotorCarMass");
@@ -942,7 +891,7 @@ namespace TrainEditor {
 				for (int j = 0; j < m.Entries.Length; j++) {
 					b.Append(m.Entries[j].SoundIndex.ToString(Culture) + ",");
 					b.Append(m.Entries[j].Pitch.ToString(Culture) + ",");
-					b.AppendLine(m.Entries[j].Volume.ToString(Culture));
+					b.AppendLine(m.Entries[j].Gain.ToString(Culture));
 				}
 			}
 			System.IO.File.WriteAllText(FileName, b.ToString(), new System.Text.UTF8Encoding(true));

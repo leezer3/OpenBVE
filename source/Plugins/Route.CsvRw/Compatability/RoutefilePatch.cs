@@ -28,7 +28,8 @@ namespace CsvRwRouteParser
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, patch.LogMessage);
 				}
 
-				CylinderHack = patch.CylinderHack;
+				EnabledHacks.CylinderHack = patch.CylinderHack;
+				EnabledHacks.DisableSemiTransparentFaces = patch.DisableSemiTransparentFaces;
 				Data.AccurateObjectDisposal = patch.AccurateObjectDisposal;
 				for (int i = 0; i < patch.ExpressionFixes.Count; i++)
 				{
@@ -106,5 +107,7 @@ namespace CsvRwRouteParser
 		/// <summary>Allows arguments after track positions</summary>
 		/// <remarks>Some files use these as comments</remarks>
 		internal bool AllowTrackPositionArguments;
+		/// <summary>Disables semi-transparent faces</summary>
+		internal bool DisableSemiTransparentFaces;
 	}
 }

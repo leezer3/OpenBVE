@@ -111,6 +111,11 @@
 		PointOfInterest,
 		/// <summary>Adds a PointOfInterest</summary>
 		POI,
-
+		/// <summary>Adds a horn blow event</summary>
+		HornBlow,
+		/// <summary>Sets the rain intensity</summary>
+		Rain,
+		/// <summary>Sets the snow intensity</summary>
+		Snow
 	}
 }

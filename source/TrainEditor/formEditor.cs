@@ -5,6 +5,10 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
+using TrainManager.BrakeSystems;
+using TrainManager.Car;
+using TrainManager.Handles;
+using TrainManager.SafetySystems;
 
 namespace TrainEditor {
 	public partial class formEditor : Form {
@@ -34,6 +38,8 @@ namespace TrainEditor {
 			comboboxBrakeControlSystem.Items.Add("Delay-including control");
 			comboboxHandleType.Items.Add("Separated");
 			comboboxHandleType.Items.Add("Combined");
+			comboboxHandleType.Items.Add("Separated (Interlocked)");
+			comboboxHandleType.Items.Add("Separated (Reverser Interlocked)");
 			comboboxAts.Items.Add("None");
 			comboboxAts.Items.Add("ATS-SN");
 			comboboxAts.Items.Add("ATS-SN / ATS-P");
@@ -158,9 +164,9 @@ namespace TrainEditor {
 			numericUpDownDriverBrakeNotches.Value = Train.Handle.DriverBrakeNotches;
 			textboxPowerNotchReduceSteps.Text = Train.Handle.PowerNotchReduceSteps.ToString(Culture);
 			// cab
-			textboxX.Text = Train.Cab.X.ToString(Culture);
-			textboxY.Text = Train.Cab.Y.ToString(Culture);
-			textboxZ.Text = Train.Cab.Z.ToString(Culture);
+			textboxX.Text = Train.Cab.Driver.X.ToString(Culture);
+			textboxY.Text = Train.Cab.Driver.Y.ToString(Culture);
+			textboxZ.Text = Train.Cab.Driver.Z.ToString(Culture);
 			textboxDriverCar.Text = Train.Cab.DriverCar.ToString(Culture);
 			// car
 			textboxMotorCarMass.Text = Train.Car.MotorCarMass.ToString(Culture);
@@ -207,8 +213,8 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxBrakeCylinderUp, "BrakeCylinderUp", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Move.BrakeCylinderUp)) return false;
 			if (!SaveControlContent(textboxBrakeCylinderDown, "BrakeCylinderDown", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Move.BrakeCylinderDown)) return false;
 			// brake
-			Train.Brake.BrakeType = (TrainDat.Brake.BrakeTypes)comboboxBrakeType.SelectedIndex;
-			Train.Brake.BrakeControlSystem = (TrainDat.Brake.BrakeControlSystems)comboboxBrakeControlSystem.SelectedIndex;
+			Train.Brake.BrakeType = (BrakeSystemType)comboboxBrakeType.SelectedIndex;
+			Train.Brake.BrakeControlSystem = (EletropneumaticBrakeType)comboboxBrakeControlSystem.SelectedIndex;
 			if (!SaveControlContent(textboxBrakeControlSpeed, "BrakeControlSpeed", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Brake.BrakeControlSpeed)) return false;
 			// pressure
 			if (!SaveControlContent(textboxBrakeCylinderServiceMaximumPressure, "BrakeCylinderServiceMaximumPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.BrakeCylinderServiceMaximumPressure)) return false;
@@ -217,7 +223,7 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxMainReservoirMaximumPressure, "MainReservoirMaximumPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.MainReservoirMaximumPressure)) return false;
 			if (!SaveControlContent(textboxBrakePipeNormalPressure, "BrakePipeNormalPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.BrakePipeNormalPressure)) return false;
 			// handle
-			Train.Handle.HandleType = (TrainDat.Handle.HandleTypes)comboboxHandleType.SelectedIndex;
+			Train.Handle.HandleType = (HandleType)comboboxHandleType.SelectedIndex;
 			Train.Handle.PowerNotches = (int)numericUpDownPowerNotches.Value;
 			Train.Handle.BrakeNotches = (int)numericUpDownBrakeNotches.Value;
 			if (Train.Handle.BrakeNotches == 0  & checkboxHoldBrake.Checked) {
@@ -240,12 +246,13 @@ namespace TrainEditor {
 				numericUpDownDriverBrakeNotches.Focus();
 				return false;
 			}
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.LocoBrakeNotches = (int)numericUpDownLocoBrakeNotches.Value;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
-			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;
-			if (!SaveControlContent(textboxY, "Y", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Y)) return false;
-			if (!SaveControlContent(textboxZ, "Z", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Z)) return false;
+			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.X)) return false;
+			if (!SaveControlContent(textboxY, "Y", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.Y)) return false;
+			if (!SaveControlContent(textboxZ, "Z", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.Driver.Z)) return false;
 			if (!SaveControlContent(textboxDriverCar, "DriverCar", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Cab.DriverCar)) return false;
 			// car
 			if (!SaveControlContent(textboxMotorCarMass, "MotorCarMass", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.MotorCarMass)) return false;
@@ -274,15 +281,15 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxExposedFrontalArea, "ExposedFrontalArea", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.ExposedFrontalArea)) return false;
 			if (!SaveControlContent(textboxUnexposedFrontalArea, "UnexposedFrontalArea", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.UnexposedFrontalArea)) return false;
 			// device
-			Train.Device.Ats = (TrainDat.Device.AtsModes)(comboboxAts.SelectedIndex - 1);
-			Train.Device.Atc = (TrainDat.Device.AtcModes)comboboxAtc.SelectedIndex;
+			Train.Device.Ats = (AtsModes)(comboboxAts.SelectedIndex - 1);
+			Train.Device.Atc = (AtcModes)comboboxAtc.SelectedIndex;
 			Train.Device.Eb = checkboxEb.Checked;
 			Train.Device.ConstSpeed = checkboxConstSpeed.Checked;
 			Train.Device.HoldBrake = checkboxHoldBrake.Checked;
-			Train.Device.ReAdhesionDevice = (TrainDat.Device.ReAdhesionDevices)(comboboxReAdhesionDevice.SelectedIndex - 1);
-			Train.Device.PassAlarm = (TrainDat.Device.PassAlarmModes)comboboxPassAlarm.SelectedIndex;
-			Train.Device.DoorOpenMode = (TrainDat.Device.DoorModes)comboboxDoorOpenMode.SelectedIndex;
-			Train.Device.DoorCloseMode = (TrainDat.Device.DoorModes)comboboxDoorCloseMode.SelectedIndex;
+			Train.Device.ReAdhesionDevice = (ReadhesionDeviceType)(comboboxReAdhesionDevice.SelectedIndex - 1);
+			Train.Device.PassAlarm = (PassAlarmType)comboboxPassAlarm.SelectedIndex;
+			Train.Device.DoorOpenMode = (DoorMode)comboboxDoorOpenMode.SelectedIndex;
+			Train.Device.DoorCloseMode = (DoorMode)comboboxDoorCloseMode.SelectedIndex;
 			if (!SaveControlContent(textboxDoorWidth, "DoorWidth", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Device.DoorWidth)) return false;
 			if (!SaveControlContent(textboxDoorMaxTolerance, "DoorMaxTolerance", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Device.DoorMaxTolerance)) return false;
 			// finish
@@ -511,11 +518,11 @@ namespace TrainEditor {
 				if (Train.Handle.PowerNotches > n) {
 					Array.Resize(ref Train.Acceleration.Entries, Train.Handle.PowerNotches);
 					for (int i = n; i < Train.Handle.PowerNotches; i++) {
-						Train.Acceleration.Entries[i].a0 = 1.0;
-						Train.Acceleration.Entries[i].a1 = 1.0;
-						Train.Acceleration.Entries[i].v1 = 25.0;
-						Train.Acceleration.Entries[i].v2 = 25.0;
-						Train.Acceleration.Entries[i].e = 1.0;
+						Train.Acceleration.Entries[i].StageZeroAcceleration = 1.0;
+						Train.Acceleration.Entries[i].StageOneAcceleration = 1.0;
+						Train.Acceleration.Entries[i].StageOneSpeed = 25.0;
+						Train.Acceleration.Entries[i].StageTwoSpeed = 25.0;
+						Train.Acceleration.Entries[i].StageTwoExponent = 1.0;
 					}
 				}
 				comboboxAccelerationNotch.Items.Clear();
@@ -606,13 +613,13 @@ namespace TrainEditor {
 			e.Graphics.DrawLines(new Pen(color), points);
 			// points
 			{
-				double v = Train.Acceleration.Entries[Index].v1;
-				double a = Train.Acceleration.Entries[Index].a1;
+				double v = Train.Acceleration.Entries[Index].StageOneSpeed;
+				double a = Train.Acceleration.Entries[Index].StageOneAcceleration;
 				if (resistance) a -= GetDeceleration(v);
 				int x = (int)Math.Round(v / factorX);
 				int y = (int)Math.Round(offsetY + a * factorY);
 				e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(x - 2, y - 2, 5, 5));
-				v = Train.Acceleration.Entries[Index].v2;
+				v = Train.Acceleration.Entries[Index].StageTwoSpeed;
 				a = GetAcceleration(Index, v);
 				if (resistance) a -= GetDeceleration(v);
 				x = (int)Math.Round(v / factorX);
@@ -654,11 +661,11 @@ namespace TrainEditor {
 			if (i >= 0 & i < Train.Acceleration.Entries.Length) {
 				CultureInfo Culture = CultureInfo.InvariantCulture;
 				this.Tag = new object();
-				textboxA0.Text = Train.Acceleration.Entries[i].a0.ToString(Culture);
-				textboxA1.Text = Train.Acceleration.Entries[i].a1.ToString(Culture);
-				textboxV1.Text = Train.Acceleration.Entries[i].v1.ToString(Culture);
-				textboxV2.Text = Train.Acceleration.Entries[i].v2.ToString(Culture);
-				textboxE.Text = Train.Acceleration.Entries[i].e.ToString(Culture);
+				textboxA0.Text = Train.Acceleration.Entries[i].StageZeroAcceleration.ToString(Culture);
+				textboxA1.Text = Train.Acceleration.Entries[i].StageOneAcceleration.ToString(Culture);
+				textboxV1.Text = Train.Acceleration.Entries[i].StageOneSpeed.ToString(Culture);
+				textboxV2.Text = Train.Acceleration.Entries[i].StageTwoSpeed.ToString(Culture);
+				textboxE.Text = Train.Acceleration.Entries[i].StageTwoExponent.ToString(Culture);
 				this.Tag = null;
 			}
 			pictureboxAcceleration.Invalidate();
@@ -670,7 +677,7 @@ namespace TrainEditor {
 			if (i >= 0 & i < Train.Acceleration.Entries.Length & this.Tag == null) {
 				double a0;
 				if (double.TryParse(textboxA0.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out a0)) {
-					Train.Acceleration.Entries[i].a0 = Math.Max(a0, 0.0);
+					Train.Acceleration.Entries[i].StageZeroAcceleration = Math.Max(a0, 0.0);
 					pictureboxAcceleration.Invalidate();
 				}
 			}
@@ -680,7 +687,7 @@ namespace TrainEditor {
 			if (i >= 0 & i < Train.Acceleration.Entries.Length & this.Tag == null) {
 				double a1;
 				if (double.TryParse(textboxA1.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out a1)) {
-					Train.Acceleration.Entries[i].a1 = Math.Max(a1, 0.0);
+					Train.Acceleration.Entries[i].StageOneAcceleration = Math.Max(a1, 0.0);
 					pictureboxAcceleration.Invalidate();
 				}
 			}
@@ -690,9 +697,9 @@ namespace TrainEditor {
 			if (i >= 0 & i < Train.Acceleration.Entries.Length & this.Tag == null) {
 				double v1;
 				if (double.TryParse(textboxV1.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out v1)) {
-					Train.Acceleration.Entries[i].v1 = Math.Max(v1, 0.0);
-					if (Train.Acceleration.Entries[i].v2 < Train.Acceleration.Entries[i].v1) {
-						Train.Acceleration.Entries[i].v2 = Train.Acceleration.Entries[i].v1;
+					Train.Acceleration.Entries[i].StageOneSpeed = Math.Max(v1, 0.0);
+					if (Train.Acceleration.Entries[i].StageTwoSpeed < Train.Acceleration.Entries[i].StageOneSpeed) {
+						Train.Acceleration.Entries[i].StageTwoSpeed = Train.Acceleration.Entries[i].StageOneSpeed;
 					}
 					pictureboxAcceleration.Invalidate();
 				}
@@ -703,7 +710,7 @@ namespace TrainEditor {
 			if (i >= 0 & i < Train.Acceleration.Entries.Length & this.Tag == null) {
 				double v2;
 				if (double.TryParse(textboxV2.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out v2)) {
-					Train.Acceleration.Entries[i].v2 = Math.Max(v2, Train.Acceleration.Entries[i].v1);
+					Train.Acceleration.Entries[i].StageTwoSpeed = Math.Max(v2, Train.Acceleration.Entries[i].StageOneSpeed);
 					pictureboxAcceleration.Invalidate();
 				}
 			}
@@ -713,7 +720,7 @@ namespace TrainEditor {
 			if (i >= 0 & i < Train.Acceleration.Entries.Length & this.Tag == null) {
 				double e2;
 				if (double.TryParse(textboxE.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out e2)) {
-					Train.Acceleration.Entries[i].e = e2;
+					Train.Acceleration.Entries[i].StageTwoExponent = e2;
 					pictureboxAcceleration.Invalidate();
 				}
 			}
@@ -1093,7 +1100,7 @@ namespace TrainEditor {
 				float v = 0.2f * (float)i;
 				float x = (v - MotorMinimumX) * factorX;
 				float yPitch = offsetY + (float)Motor.Entries[i].Pitch * factorYpitch;
-				float yVolume = offsetY + (float)Motor.Entries[i].Volume * factorYvolume;
+				float yVolume = offsetY + (float)Motor.Entries[i].Gain * factorYvolume;
 				if (soundIndex != Motor.Entries[i].SoundIndex & length != 0) {
 					pointsPitch[length] = new PointF(x, pointsPitch[length - 1].Y);
 					pointsVolume[length] = new PointF(x, pointsVolume[length - 1].Y);
@@ -1148,7 +1155,7 @@ namespace TrainEditor {
 					float v = 0.2f * (float)i;
 					float x = (v - MotorMinimumX) * factorX;
 					float yPitch = offsetY + (float)Motor.Entries[i].Pitch * factorYpitch;
-					float yVolume = offsetY + (float)Motor.Entries[i].Volume * factorYvolume;
+					float yVolume = offsetY + (float)Motor.Entries[i].Gain * factorYvolume;
 					Color colorPitch, colorVolume;
 					if (Motor.Entries[i].SoundIndex >= 0) {
 						double hue = huefactor * (double)Motor.Entries[i].SoundIndex;
@@ -1277,8 +1284,8 @@ namespace TrainEditor {
 					Array.Resize(ref Motor.Entries, ib + 1);
 					for (int i = n; i < Motor.Entries.Length; i++) {
 						Motor.Entries[i].SoundIndex = -1;
-						Motor.Entries[i].Pitch = 100.0;
-						Motor.Entries[i].Volume = 128.0;
+						Motor.Entries[i].Pitch = 100.0f;
+						Motor.Entries[i].Gain = 128.0f;
 					}
 				}
 				if (ia <= ib) {
@@ -1300,7 +1307,7 @@ namespace TrainEditor {
 						float y = swap ? yPitch : MotorSelectionStartYPitch;
 						float dy = 0.2f * (yPitch - MotorSelectionStartYPitch) / (x - MotorSelectionStartX);
 						for (int i = ia ; i <= ib; i++) {
-							Motor.Entries[i].Pitch = Math.Max(y, 1.0);
+							Motor.Entries[i].Pitch = (float)Math.Max(y, 1.0);
 							y += dy;
 						}
 					} else if (radiobuttonVolume.Checked) {
@@ -1308,7 +1315,7 @@ namespace TrainEditor {
 						float y = swap ? yVolume : MotorSelectionStartYVolume;
 						float dy = 0.2f * (yVolume - MotorSelectionStartYVolume) / (x - MotorSelectionStartX);
 						for (int i = ia ; i <= ib; i++) {
-							Motor.Entries[i].Volume = Math.Max(y, 0.0);
+							Motor.Entries[i].Gain = (float)Math.Max(y, 0.0);
 							y += dy;
 						}
 					}
@@ -1375,11 +1382,11 @@ namespace TrainEditor {
 		/// <returns>The acceleration in km/h/s.</returns>
 		private double GetAcceleration(int Index, double Speed) {
 			Speed *= 0.277777777777778;
-			double a0 = 0.277777777777778 * Train.Acceleration.Entries[Index].a0;
-			double a1 = 0.277777777777778 * Train.Acceleration.Entries[Index].a1;
-			double v1 = 0.277777777777778 * Train.Acceleration.Entries[Index].v1;
-			double v2 = 0.277777777777778 * Train.Acceleration.Entries[Index].v2;
-			double e = Train.Acceleration.Entries[Index].e;
+			double a0 = 0.277777777777778 * Train.Acceleration.Entries[Index].StageZeroAcceleration;
+			double a1 = 0.277777777777778 * Train.Acceleration.Entries[Index].StageOneAcceleration;
+			double v1 = 0.277777777777778 * Train.Acceleration.Entries[Index].StageOneSpeed;
+			double v2 = 0.277777777777778 * Train.Acceleration.Entries[Index].StageTwoSpeed;
+			double e = Train.Acceleration.Entries[Index].StageTwoExponent;
 			double a;
 			if (Speed == 0.0) {
 				a = a0;
@@ -1503,6 +1510,8 @@ namespace TrainEditor {
 			labelPowerNotchReduceSteps.Text = Translations.GetInterfaceString("train_editor_handle_power_notch_reduce_steps");
 			comboboxHandleType.Items[0] = Translations.GetInterfaceString("train_editor_handle_separated");
 			comboboxHandleType.Items[1] = Translations.GetInterfaceString("train_editor_handle_combined");
+			comboboxHandleType.Items[2] = Translations.GetInterfaceString("train_editor_handle_separated_interlocked");
+			comboboxHandleType.Items[3] = Translations.GetInterfaceString("train_editor_handle_separated_interlocked_reverser");
 
 			groupboxCab.Text = Translations.GetInterfaceString("train_editor_cab_cab");
 			labelDriverCar.Text = Translations.GetInterfaceString("train_editor_cab_driver_car");
@@ -1735,12 +1744,12 @@ namespace TrainEditor {
 
 		private void comboBoxEBHandleBehaviour_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
 		}
 
 		private void comboBoxLocoBrakeType_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Train.Handle.LocoBrake = (TrainDat.Handle.LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
+			Train.Handle.LocoBrake = (LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
 		}
 
 		private void comboBoxLocoBrakeSystemType_SelectedIndexChanged(object sender, EventArgs e)

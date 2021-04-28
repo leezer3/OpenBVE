@@ -298,5 +298,16 @@
 		<FileName>Milngavie to Springburn FOGGY.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
 	</Patch>
+	<!-- Moorgate - Drayton Park -->
+	<Patch>
+		<Hash>FA18FCFEFAAF29FB14156DF78C1DAB4DFBF4EC6644B6CD6513BB872C47632F5F</Hash>
+		<FileName>MGtoDP.csv</FileName>
+		<DisableSemiTransparentFaces>true</DisableSemiTransparentFaces>
+	</Patch>
+	<Patch>
+		<Hash>75585130809679CBB658BB9FDCEE8C7B1B0DDEB1D8A72D28A5C60A953EF2DD73</Hash>
+		<FileName>MGtoFP.csv</FileName>
+		<DisableSemiTransparentFaces>true</DisableSemiTransparentFaces>
+	</Patch>
   </RoutePatches>
 </openBVE>

@@ -51,7 +51,9 @@
 		/// <summary>If Background N is an image, sets the aspect ratio used in wrapping</summary>
 		BackgroundAspect,
 		/// <summary>If Background N is an image, sets the aspect ratio used in wrapping</summary>
-		BackAspect
+		BackAspect,
+		/// <summary>The object used for RainType N</summary>
+		Weather
 
 	}
 }

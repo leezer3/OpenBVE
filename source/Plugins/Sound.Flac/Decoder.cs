@@ -75,7 +75,7 @@ namespace Flac {
 						streaminfoPresent = true;
 					} else if (blockType >= 1 & blockType <= 6) {
 						// --- ignored ---
-						reader.BytePosition += (int)blockLength;
+						reader.BytePosition += blockLength;
 					} else {
 						// --- invalid ---
 						throw new InvalidDataException();
@@ -89,7 +89,7 @@ namespace Flac {
 					throw new InvalidDataException();
 				}
 				int[][] samples = new int[numberOfChannels][];
-				int sampleCount = totalNumberOfSamples != 0 ? (int)totalNumberOfSamples : 65536;
+				int sampleCount = totalNumberOfSamples != 0 ? totalNumberOfSamples : 65536;
 				for (int i = 0; i < numberOfChannels; i++) {
 					samples[i] = new int[sampleCount];
 				}
@@ -118,9 +118,9 @@ namespace Flac {
 					} else if (blockNumberOfSamples == 1) {
 						blockNumberOfSamples = 192;
 					} else if (blockNumberOfSamples >= 2 & blockNumberOfSamples <= 5) {
-						blockNumberOfSamples = 576 << (int)(blockNumberOfSamples - 2);
+						blockNumberOfSamples = 576 << (blockNumberOfSamples - 2);
 					} else if (blockNumberOfSamples >= 8 & blockNumberOfSamples <= 15) {
-						blockNumberOfSamples = 256 << (int)(blockNumberOfSamples - 8);
+						blockNumberOfSamples = 256 << (blockNumberOfSamples - 8);
 					}
 					int blockSampleRate = (int)reader.ReadBits(4);
 					if (blockSampleRate == 0) {
@@ -207,7 +207,7 @@ namespace Flac {
 					while (samplesUsed + blockNumberOfSamples > sampleCount) {
 						sampleCount <<= 1;
 						for (int i = 0; i < numberOfChannels; i++) {
-							Array.Resize(ref samples[i], (int)sampleCount);
+							Array.Resize(ref samples[i], sampleCount);
 						}
 					}
 					for (int i = 0; i < numberOfChannels; i++) {
@@ -230,7 +230,7 @@ namespace Flac {
 						}
 						if (subframeType == 0) {
 							// --- SUBFRAME_CONSTANT ---
-							int value = FromTwosComplement(reader.ReadBits((int)subframeBitsPerSample), (uint)1 << subframeBitsPerSample) << (int)(32 - subframeBitsPerSample);
+							int value = FromTwosComplement(reader.ReadBits(subframeBitsPerSample), (uint)1 << subframeBitsPerSample) << (32 - subframeBitsPerSample);
 							int numberOfSamples = blockNumberOfSamples * bitsPerSample / subframeBitsPerSample;
 							for (int j = 0; j < numberOfSamples; j++) {
 								samples[i][samplesUsed + j] = value;
@@ -239,7 +239,7 @@ namespace Flac {
 							// --- SUBFRAME_VERBATIM ---
 							if (blockSampleRate == sampleRate) {
 								for (int j = 0; j < blockNumberOfSamples; j++) {
-									int value = FromTwosComplement(reader.ReadBits((int)subframeBitsPerSample), (uint)1 << subframeBitsPerSample) << (int)(32 - subframeBitsPerSample);
+									int value = FromTwosComplement(reader.ReadBits(subframeBitsPerSample), (uint)1 << subframeBitsPerSample) << (32 - subframeBitsPerSample);
 									samples[i][samplesUsed + j] = value;
 								}
 							} else {
@@ -286,7 +286,7 @@ namespace Flac {
 							}
 							if (blockSampleRate == sampleRate) {
 								for (int j = 0; j < blockNumberOfSamples; j++) {
-									samples[i][samplesUsed + j] = blockSamples[j] << (int)(32 - subframeBitsPerSample);
+									samples[i][samplesUsed + j] = blockSamples[j] << (32 - subframeBitsPerSample);
 								}
 							} else {
 								throw new NotSupportedException("Variable sample rates are not supported by this decoder.");
@@ -296,7 +296,7 @@ namespace Flac {
 							int predictorOrder = ((int)subframeType & 0x1F) + 1;
 							int[] blockSamples = new int[blockNumberOfSamples];
 							for (int j = 0; j < predictorOrder; j++) {
-								blockSamples[j] = FromTwosComplement(reader.ReadBits((int)subframeBitsPerSample), (uint)1 << subframeBitsPerSample);
+								blockSamples[j] = FromTwosComplement(reader.ReadBits(subframeBitsPerSample), (uint)1 << subframeBitsPerSample);
 							}
 							int coefficientPrecision = (int)reader.ReadBits(4) + 1;
 							if (coefficientPrecision == 16) {
@@ -309,7 +309,7 @@ namespace Flac {
 							}
 							int[] coefficients = new int[predictorOrder];
 							for (int j = 0; j < predictorOrder; j++) {
-								coefficients[j] = FromTwosComplement(reader.ReadBits((int)coefficientPrecision), (uint)coefficientRange);
+								coefficients[j] = FromTwosComplement(reader.ReadBits(coefficientPrecision), (uint)coefficientRange);
 							}
 							int[] residuals = ReadResiduals(reader, predictorOrder, blockNumberOfSamples);
 							if (subframeBitsPerSample == 8) {

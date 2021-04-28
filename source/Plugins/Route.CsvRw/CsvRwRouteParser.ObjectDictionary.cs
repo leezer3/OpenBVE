@@ -44,7 +44,7 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		internal new void Add(int key, UnifiedObject unifiedObject, bool overwriteWarning = true)
+		internal void Add(int key, UnifiedObject unifiedObject, bool overwriteWarning = true)
 		{
 			if (this.ContainsKey(key))
 			{
@@ -118,6 +118,8 @@ namespace CsvRwRouteParser
 		}
 	}
 
+	/// <inheritdoc />
+	/// <summary>Defines a dictionary of poles</summary>
 	internal class PoleDictionary : Dictionary<int, ObjectDictionary>
 	{
 		/// <summary>Adds a new set of poles to the dictionary</summary>

@@ -1,24 +1,33 @@
-﻿namespace OpenBveApi.Runtime
+﻿using System.Runtime.Serialization;
+
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents the specification of the train.</summary>
+	[DataContract]
 	public class VehicleSpecs
 	{
 		/// <summary>The number of power notches the train has.</summary>
+		[DataMember]
 		private readonly int MyPowerNotches;
 
 		/// <summary>The type of brake the train uses.</summary>
+		[DataMember]
 		private readonly BrakeTypes MyBrakeType;
 
 		/// <summary>Whether the train has a hold brake.</summary>
+		[DataMember]
 		private readonly bool MyHasHoldBrake;
 
 		/// <summary>Whether the train has a hold brake.</summary>
+		[DataMember]
 		private readonly bool MyHasLocoBrake;
 
 		/// <summary>The number of brake notches the train has, including the hold brake, but excluding the emergency brake.</summary>
+		[DataMember]
 		private readonly int MyBrakeNotches;
 
 		/// <summary>The number of cars the train has.</summary>
+		[DataMember]
 		private readonly int MyCars;
 
 		/// <summary>Gets the number of power notches the train has.</summary>

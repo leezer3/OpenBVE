@@ -8,7 +8,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
-using SoundManager;
+using TrainManager.Car;
 using Vector2 = OpenTK.Vector2;
 
 namespace OpenBve.Graphics.Renderers
@@ -78,7 +78,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
 
 			if (add >= Car.CarSections[0].Groups.Length)
@@ -309,7 +309,7 @@ namespace OpenBve.Graphics.Renderers
 
 			Status = Cursor.Status.Default;
 
-			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
 
 			if (add >= Car.CarSections[0].Groups.Length)
@@ -361,7 +361,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
 
 			if (add >= Car.CarSections[0].Groups.Length)
@@ -383,7 +383,7 @@ namespace OpenBve.Graphics.Renderers
 				foreach (int index in TouchElement.ControlIndices)
 				{
 					Interface.CurrentControls[index].AnalogState = 1.0;
-					Interface.CurrentControls[index].DigitalState = Interface.DigitalControlState.Pressed;
+					Interface.CurrentControls[index].DigitalState = DigitalControlState.Pressed;
 					MainLoop.AddControlRepeat(index);
 				}
 			}
@@ -403,7 +403,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
 			if (add >= Car.CarSections[0].Groups.Length)
 			{
@@ -426,11 +426,9 @@ namespace OpenBve.Graphics.Renderers
 					Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
 					Car.ChangeCarSection(CarSectionType.Interior);
 
-					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && x < Car.Sounds.Touch.Length))
+					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && Car.Sounds.Touch != null &&  x < Car.Sounds.Touch.Length))
 					{
-						SoundBuffer Buffer = Car.Sounds.Touch[index].Buffer;
-						Vector3 Position = Car.Sounds.Touch[index].Position;
-						Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
+						Car.Sounds.Touch[index].Play(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
 					}
 				}
 
@@ -440,7 +438,7 @@ namespace OpenBve.Graphics.Renderers
 					foreach (int index in TouchElement.ControlIndices)
 					{
 						Interface.CurrentControls[index].AnalogState = 0.0;
-						Interface.CurrentControls[index].DigitalState = Interface.DigitalControlState.Released;
+						Interface.CurrentControls[index].DigitalState = DigitalControlState.Released;
 						MainLoop.RemoveControlRepeat(index);
 					}
 				}
