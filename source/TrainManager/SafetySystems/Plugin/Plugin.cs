@@ -562,6 +562,14 @@ namespace TrainManager.SafetySystems
 					{
 						this.LastAspects[i] = data[i].Aspect;
 					}
+					for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
+					{
+						if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+						{
+							ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+							trainInputDevice.SetSignal(data);
+						}
+					}
 				}
 			}
 		}
@@ -584,10 +592,10 @@ namespace TrainManager.SafetySystems
 				Train.Cars[Train.DriverCar].Windscreen.SetRainIntensity(optional);
 			}
 
+			SignalData signal = null;
 			if (sectionIndex == -1)
 			{
 				sectionIndex = this.Train.CurrentSectionIndex + 1;
-				SignalData signal = null;
 				while (sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length)
 				{
 					signal = TrainManagerBase.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
@@ -595,24 +603,28 @@ namespace TrainManager.SafetySystems
 					sectionIndex++;
 				}
 
-				if (sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length)
+				if (sectionIndex >= TrainManagerBase.CurrentRoute.Sections.Length)
 				{
-					SetBeacon(new BeaconData(type, optional, signal));
-				}
-				else
-				{
-					SetBeacon(new BeaconData(type, optional, new SignalData(-1, double.MaxValue)));
+					signal = new SignalData(-1, double.MaxValue);
 				}
 			}
 
 			if (sectionIndex >= 0)
 			{
-				SignalData signal = sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length ? TrainManagerBase.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train) : new SignalData(0, double.MaxValue);
-				SetBeacon(new BeaconData(type, optional, signal));
+				signal = sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length ? TrainManagerBase.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train) : new SignalData(0, double.MaxValue);
 			}
 			else
 			{
-				SetBeacon(new BeaconData(type, optional, new SignalData(-1, double.MaxValue)));
+				signal = new SignalData(-1, double.MaxValue);
+			}
+			SetBeacon(new BeaconData(type, optional, signal));
+			for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
+			{
+				if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+				{
+					ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+					trainInputDevice.SetBeacon(new BeaconData(type, optional, signal));
+				}
 			}
 		}
 

@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Runtime;
+﻿using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 using TrainManager.Car;
 
 namespace TrainManager.Trains
@@ -260,6 +261,14 @@ namespace TrainManager.Trains
 				if (Plugin != null)
 				{
 					Plugin.DoorChange(oldState, newState);
+				}
+				for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
+				{
+					if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+					{
+						ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+						trainInputDevice.DoorChange(oldState, newState);
+					}
 				}
 			}
 		}
