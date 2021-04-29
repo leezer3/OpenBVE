@@ -123,6 +123,9 @@
 					<trans-unit id="fullscreen_switch2">
 						<source>Please check your fullscreen resolution settings.</source>
 					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
 						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
 					</trans-unit>

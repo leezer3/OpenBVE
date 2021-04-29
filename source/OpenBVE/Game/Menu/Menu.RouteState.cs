@@ -9,7 +9,9 @@
 			/// <summary>The background thread is currently loading the routefile data</summary>
 			Loading,
 			/// <summary>The background thread has processed the route data</summary>
-			Processed
+			Processed,
+			/// <summary>An error was encountered loading the route data</summary>
+			Error
 
 		}
 	}

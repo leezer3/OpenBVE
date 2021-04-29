@@ -815,6 +815,8 @@ namespace OpenBve
 				return;
 			if (menu.Selection == int.MaxValue)
 			{
+				if (RoutefileState == RouteState.Error)
+					return;
 				if (menu.Type == MenuType.TrainDefault)
 				{
 					//Launch the game!
@@ -877,6 +879,7 @@ namespace OpenBve
 							// route menu commands
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("errors_route_please_select");
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
 								RouteSearchDirectory = RouteSearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : OpenBveApi.Path.CombineDirectory(RouteSearchDirectory, menu.Items[menu.Selection].Text);
@@ -1080,12 +1083,20 @@ namespace OpenBve
 				Program.Renderer.Rectangle.Draw(null, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White);
 				switch (RoutefileState)
 				{
+					case RouteState.NoneSelected:
+						Program.Renderer.Rectangle.Draw(null, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
+						routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
+						break;
 					case RouteState.Loading:
 						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
 							routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
 						}
+						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;
 					case RouteState.Processed:
 						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
@@ -1105,6 +1116,12 @@ namespace OpenBve
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White);	
 						}
+						break;
+					case RouteState.Error:
+						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
+						routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;
 				}
 			}
