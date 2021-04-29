@@ -229,20 +229,36 @@ namespace OpenBve {
 				}
 				Game.Reset(false);
 			}
-			/*
+			
 			// --- show the main menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {
 				Joysticks.RefreshJoysticks();
-				
-				// end HACK //
-				result = formMain.ShowMainDialog(result);
+
+				if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+				{
+					//WinForms are not supported on 64-bit Apple, so show the experimental GL menu
+					result.ExperimentalGLMenu = true;
+				}
+				else
+				{
+					if (!result.ExperimentalGLMenu)
+					{
+						result = formMain.ShowMainDialog(result);
+					}
+				}
 			} else {
 				result.Start = true;
 				//Apply translations
 				Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			}
-			*/
-			result.Start = true;
+
+			if (result.ExperimentalGLMenu)
+			{
+				result.Start = true;
+				result.RouteFile = null;
+				result.TrainFolder = null;
+			}
+			
 			// --- start the actual program ---
 			if (result.Start) {
 				if (Initialize()) {
