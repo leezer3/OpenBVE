@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -33,9 +33,19 @@ namespace DenshaDeGoInput
 	internal static class ControllerUnbalance
 	{
 		/// <summary>
+		/// The number of brake notches, excluding the emergency brake.
+		/// </summary>
+		internal static int ControllerBrakeNotches = 8;
+
+		/// <summary>
+		/// The number of power notches.
+		/// </summary>
+		internal static int ControllerPowerNotches = 5;
+
+		/// <summary>
 		/// Class for the indices of the buttons used by the controller.
 		/// </summary>
-		internal class ButtonIndices
+		private class ButtonIndices
 		{
 			internal int Select = 4;
 			internal int Start = 5;
@@ -48,7 +58,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Represents the possible bytes for brake notches.
 		/// </summary>
-		internal enum BrakeByte
+		private enum BrakeByte
 		{
 			Released = 0x79,
 			B1 = 0x8A,
@@ -64,9 +74,23 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
+		/// Represents the possible bytes for power notches.
+		/// </summary>
+		private enum PowerByte
+		{
+			N = 0x81,
+			P1 = 0x6D,
+			P2 = 0x54,
+			P3 = 0x3F,
+			P4 = 0x21,
+			P5 = 0x00,
+			Transition = 0xFF
+		}
+
+		/// <summary>
 		/// Dictionary storing the mapping of each brake notch.
 		/// </summary>
-		internal static readonly Dictionary<BrakeByte, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeByte, InputTranslator.BrakeNotches>
+		private static readonly Dictionary<BrakeByte, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeByte, InputTranslator.BrakeNotches>
 		{
 			{ BrakeByte.Released, InputTranslator.BrakeNotches.Released },
 			{ BrakeByte.B1, InputTranslator.BrakeNotches.B1 },
@@ -81,23 +105,9 @@ namespace DenshaDeGoInput
 		};
 
 		/// <summary>
-		/// Represents the possible bytes for power notches.
-		/// </summary>
-		internal enum PowerByte
-		{
-			N = 0x81,
-			P1 = 0x6D,
-			P2 = 0x54,
-			P3 = 0x3F,
-			P4 = 0x21,
-			P5 = 0x00,
-			Transition = 0xFF
-		}
-
-		/// <summary>
 		/// Dictionary storing the mapping of each power notch.
 		/// </summary>
-		internal static readonly Dictionary<PowerByte, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerByte, InputTranslator.PowerNotches>
+		private static readonly Dictionary<PowerByte, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerByte, InputTranslator.PowerNotches>
 		{
 			{ PowerByte.N, InputTranslator.PowerNotches.N },
 			{ PowerByte.P1, InputTranslator.PowerNotches.P1 },
@@ -110,29 +120,31 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// The button indices of the buttons used by the controller.
 		/// </summary>
-		internal static ButtonIndices ButtonIndex = new ButtonIndices();
+		private static ButtonIndices ButtonIndex = new ButtonIndices();
 
 		/// <summary>
 		/// Whether the controller has direction buttons.
 		/// </summary>
-		internal static bool hasDirectionButtons;
+		internal static bool HasDirectionButtons;
 
 		/// <summary>
-		/// Checks whether a joystick is an Unbalance controller.
+		/// Checks the controller model.
 		/// </summary>
 		/// <param name="id">A string representing the vendor and product ID.</param>
 		/// <param name="capabilities">the capabilities of the joystick.</param>
-		/// <returns>Whether the controller is compatible.</returns>
-		internal static bool IsCompatibleController(string id, JoystickCapabilities capabilities)
+		/// <returns>The controller model.</returns>
+		internal static InputTranslator.ControllerModels GetControllerModel(string id, JoystickCapabilities capabilities)
 		{
 			// DGC-255/DGOC-44U
 			if (id == "0ae4:0003")
 			{
 				// DGC-255 has direction buttons
-				hasDirectionButtons = capabilities.HatCount > 0;
-				return true;
+				HasDirectionButtons = capabilities.HatCount > 0;
+				ControllerBrakeNotches = 8;
+				ControllerPowerNotches = 5;
+				return InputTranslator.ControllerModels.UnbalanceStandard;
 			}
-			return false;
+			return InputTranslator.ControllerModels.Unsupported;
 		}
 
 		/// <summary>
@@ -165,7 +177,7 @@ namespace DenshaDeGoInput
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = joystick.GetButton(ButtonIndex.C);
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = joystick.GetButton(ButtonIndex.D);
 
-			if (hasDirectionButtons)
+			if (HasDirectionButtons)
 			{
 				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsUp ? 1 : 0);
 				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsDown ? 1 : 0);
