@@ -485,7 +485,12 @@ namespace OpenBve
 						{
 							string trimmedText = Items[i].Text.Substring(0, j);
 							size = Game.Menu.MenuFont.MeasureString(trimmedText);
-							if (size.X < MaxWidth)
+							double mwi = MaxWidth;
+							if (Items[i].Icon != null)
+							{
+								mwi -= size.Y * 1.25;
+							}
+							if (size.X < mwi)
 							{
 								Items[i].DisplayLength = trimmedText.Length;
 								break;
@@ -1072,7 +1077,7 @@ namespace OpenBve
 
 					if (itemLeft == 0)
 					{
-						Program.Renderer.Rectangle.Draw(null, new Vector2(MenuItemBorderX, itemY /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + 2.0f * MenuItemBorderX, em + MenuItemBorderY * 2), color);
+						Program.Renderer.Rectangle.Draw(null, new Vector2(MenuItemBorderX, itemY /*-MenuItemBorderY*/), new Vector2(menu.Width + 2.0f * MenuItemBorderX, em + MenuItemBorderY * 2), color);
 					}
 					else
 					{
