@@ -110,6 +110,8 @@ namespace OpenBve
 					timer = 0;
 				}
 			}
+			/// <summary>The icon to draw for this menu entry</summary>
+			internal Texture Icon;
 
 			private double timer;
 			private int scroll;
@@ -136,6 +138,15 @@ namespace OpenBve
 				this.Text = Text;
 				this.Tag = Tag;
 				this.Data = Data;
+				this.Icon = null;
+			}
+
+			internal MenuCommand(string Text, MenuTag Tag, int Data, Texture Icon)
+			{
+				this.Text = Text;
+				this.Tag = Tag;
+				this.Data = Data;
+				this.Icon = Icon;
 			}
 		}
 
@@ -228,6 +239,7 @@ namespace OpenBve
 					case MenuType.RouteList:
 						string[] potentialFiles = { };
 						string[] directoryList;
+						bool drives = false;
 						if (RouteSearchDirectory != string.Empty)
 						{
 							potentialFiles = Directory.GetFiles(RouteSearchDirectory);
@@ -241,6 +253,7 @@ namespace OpenBve
 							{
 								directoryList[k] = systemDrives[k].Name;
 							}
+							drives = true;
 						}
 						
 						Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
@@ -251,6 +264,15 @@ namespace OpenBve
 						for (j = 0; j < directoryList.Length; j++)
 						{
 							Items[totalEntries] = new MenuCommand(new DirectoryInfo(directoryList[j]).Name, MenuTag.Directory, 0);
+							if (drives)
+							{
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+							}
+							else
+							{
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);	
+							}
+							
 							totalEntries++;
 						}
 
@@ -260,6 +282,7 @@ namespace OpenBve
 							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".rw"))
 							{
 								Items[totalEntries] = new MenuCommand(fileName, MenuTag.RouteFile, 0);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_route.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
 								totalEntries++;
 							}
 						}
@@ -447,6 +470,10 @@ namespace OpenBve
 						continue;
 					}
 					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
+					if (Items[i].Icon != null)
+					{
+						size.X += size.Y * 1.25;
+					}
 					if (size.X > Width)
 					{
 						Width = size.X;
@@ -1012,6 +1039,13 @@ namespace OpenBve
 				{
 					continue;
 				}
+
+				double itemHeight = MenuFont.MeasureString(menu.Items[i].Text).Y;
+				double iconX = itemX;
+				if (menu.Items[i].Icon != null)
+				{
+					itemX += itemHeight * 1.25;
+				}
 				if (i == menu.Selection)
 				{
 					// draw a solid highlight rectangle under the text
@@ -1056,6 +1090,11 @@ namespace OpenBve
 					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				itemY += lineHeight;
+				if (menu.Items[i].Icon != null)
+				{
+					Program.Renderer.Rectangle.Draw(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight));
+					itemX = iconX;
+				}
 			}
 
 
