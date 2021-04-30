@@ -1087,7 +1087,7 @@ namespace OpenBve
 						Program.Renderer.Rectangle.Draw(null, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
 						routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
+						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;
 					case RouteState.Loading:
 						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
@@ -1096,7 +1096,7 @@ namespace OpenBve
 							routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
 						}
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
+						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;
 					case RouteState.Processed:
 						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
@@ -1109,19 +1109,19 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);	
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);	
 						}
 						else
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White);	
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White);	
 						}
 						break;
 					case RouteState.Error:
 						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
 						routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
+						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;
 				}
 			}

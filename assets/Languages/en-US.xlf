@@ -212,6 +212,9 @@
 					<trans-unit id="train">
 						<source>Train</source>
 					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
 					</trans-unit>
