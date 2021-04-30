@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.IO;
 using System.Text;
-using LibRender2;
 using LibRender2.Primitives;
 using OpenBveApi;
+using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using RouteManager2;
 using Path = OpenBveApi.Path;
@@ -14,9 +14,8 @@ namespace OpenBve
 	public partial class Menu
 	{
 		private static BackgroundWorker routeWorkerThread;
-		private static string RouteSearchDirectory;
+		private static string SearchDirectory;
 		private static string RouteFile;
-		private static string TrainFolder;
 		private static Encoding RouteEncoding;
 		private static RouteState RoutefileState;
 		private static Texture routeTexture;
@@ -30,6 +29,7 @@ namespace OpenBve
 			}
 			RouteEncoding = TextEncoding.GetSystemEncodingFromFile(RouteFile);
 			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routeTexture);
+			routeDescriptionBox.Text = Translations.GetInterfaceString("start_route_processing");
 			Game.Reset(false);
 			bool loaded = false;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -75,22 +75,11 @@ namespace OpenBve
 					routeDescriptionBox.Text = e.Error.Message;
 					RoutefileState = RouteState.Error;
 				}
-				//pictureboxRouteMap.Image = null;
-				//pictureboxRouteGradient.Image = null;
-				//Result.ErrorFile = Result.RouteFile;
-				//RouteFile = string.Empty;
-				//checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 				routeWorkerThread.Dispose();
 				return;
 			}
 			try
 			{
-				lock (BaseRenderer.GdiPlusLock)
-				{
-					//pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
-					//pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
-					//	pictureboxRouteGradient.Height, false);
-				}
 				// image
 				if (!string.IsNullOrEmpty(Program.CurrentRoute.Image))
 				{
@@ -152,28 +141,12 @@ namespace OpenBve
 				{
 					routeDescriptionBox.Text = System.IO.Path.GetFileNameWithoutExtension(RouteFile);
 				}
-
-				//textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
-				if (Interface.CurrentOptions.TrainName != null)
-				{
-				//	checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault") + @" (" + Interface.CurrentOptions.TrainName + @")";
-				}
-				else
-				{
-				//	checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
-				}
-				//Result.ErrorFile = null;
 			}
 			catch (Exception ex)
 			{
 				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), new TextureParameters(null, null), out routeTexture);
 				routeDescriptionBox.Text = ex.Message;
-				//textboxRouteEncodingPreview.Text = "";
-				//pictureboxRouteMap.Image = null;
-				//pictureboxRouteGradient.Image = null;
-				//Result.ErrorFile = Result.RouteFile;
 				RouteFile = null;
-				//checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 			}
 		}
 	}

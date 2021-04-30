@@ -233,17 +233,17 @@ namespace OpenBve
 						{
 							Array.Resize(ref Items, Items.Length - 2);
 						}
-						RouteSearchDirectory = Program.FileSystem.InitialRouteFolder;
+						SearchDirectory = Program.FileSystem.InitialRouteFolder;
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.RouteList:
 						string[] potentialFiles = { };
 						string[] directoryList;
 						bool drives = false;
-						if (RouteSearchDirectory != string.Empty)
+						if (SearchDirectory != string.Empty)
 						{
-							potentialFiles = Directory.GetFiles(RouteSearchDirectory);
-							directoryList = Directory.GetDirectories(RouteSearchDirectory);
+							potentialFiles = Directory.GetFiles(SearchDirectory);
+							directoryList = Directory.GetDirectories(SearchDirectory);
 						}
 						else
 						{
@@ -257,11 +257,10 @@ namespace OpenBve
 						}
 						
 						Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
-						Items[0] = new MenuCaption(RouteSearchDirectory);
+						Items[0] = new MenuCaption(SearchDirectory);
 						Items[1] = new MenuCommand("...", MenuTag.ParentDirectory, 0);
-						int j;
 						int totalEntries = 2;
-						for (j = 0; j < directoryList.Length; j++)
+						for (int j = 0; j < directoryList.Length; j++)
 						{
 							Items[totalEntries] = new MenuCommand(new DirectoryInfo(directoryList[j]).Name, MenuTag.Directory, 0);
 							if (drives)
@@ -276,7 +275,7 @@ namespace OpenBve
 							totalEntries++;
 						}
 
-						for (j = 0; j < potentialFiles.Length; j++)
+						for (int j = 0; j < potentialFiles.Length; j++)
 						{
 							string fileName = System.IO.Path.GetFileName(potentialFiles[j]);
 							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".rw"))
@@ -289,7 +288,64 @@ namespace OpenBve
 						Array.Resize(ref Items, totalEntries);
 						Align = TextAlignment.TopLeft;
 						break;
+					case MenuType.TrainList:
+						potentialFiles = new string[]{ };
+						directoryList = new string[] { };
+						drives = false;
+						if (SearchDirectory != string.Empty)
+						{
+							potentialFiles = Directory.GetFiles(SearchDirectory);
+							directoryList = Directory.GetDirectories(SearchDirectory);
+						}
+						else
+						{
+							DriveInfo[] systemDrives = DriveInfo.GetDrives();
+							directoryList = new string[systemDrives.Length];
+							for (int k = 0; k < systemDrives.Length; k++)
+							{
+								directoryList[k] = systemDrives[k].Name;
+							}
+							drives = true;
+						}
+						
+						Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
+						Items[0] = new MenuCaption(SearchDirectory);
+						Items[1] = new MenuCommand("...", MenuTag.ParentDirectory, 0);
+						totalEntries = 2;
+						for (int j = 0; j < directoryList.Length; j++)
+						{
+							bool isTrain = false;
+							for (int k = 0; k < Program.CurrentHost.Plugins.Length; k++)
+							{
+								if (Program.CurrentHost.Plugins[k].Train != null && Program.CurrentHost.Plugins[k].Train.CanLoadTrain(directoryList[j]))
+								{
+									isTrain = true;
+									break;
+								}
+							}
 
+							if (isTrain)
+							{
+								Items[totalEntries] = new MenuCommand(new DirectoryInfo(directoryList[j]).Name, MenuTag.Directory, 0);
+								if (drives)
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+								}
+								else
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);	
+								}
+							}
+							else
+							{
+								Items[totalEntries] = new MenuCommand(new DirectoryInfo(directoryList[j]).Name, MenuTag.TrainDirectory, 0);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_train.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);	
+							}
+							totalEntries++;
+						}
+						Array.Resize(ref Items, totalEntries);
+						Align = TextAlignment.TopLeft;
+						break;
 					case MenuType.Top:          // top level menu
 						if (Interface.CurrentOptions.ScreenReaderAvailable)
 						{
@@ -762,7 +818,7 @@ namespace OpenBve
 				menu.Selection = menu.TopItem - 1;
 				return true;
 			}
-			if (menu.Type == MenuType.RouteList)
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
 			{
 				//HACK: Use this to trigger our menu start button!
 				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
@@ -834,7 +890,7 @@ namespace OpenBve
 			{
 				if (menu.Type == MenuType.GameStart)
 				{
-					Menu.instance.PushMenu(MenuType.Quit);
+					Instance.PushMenu(MenuType.Quit);
 				}
 				else
 				{
@@ -859,7 +915,7 @@ namespace OpenBve
 					Program.Renderer.CurrentInterface = InterfaceType.Normal;
 					return;
 				}
-				Menu.instance.PushMenu(MenuType.TrainDefault);
+				Instance.PushMenu(MenuType.TrainDefault);
 				return;
 
 			}
@@ -915,21 +971,21 @@ namespace OpenBve
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routeTexture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
-								RouteSearchDirectory = RouteSearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : OpenBveApi.Path.CombineDirectory(RouteSearchDirectory, menu.Items[menu.Selection].Text);
-								Menu.instance.PushMenu(MenuType.RouteList, 0, true);
+								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : OpenBveApi.Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
+								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.ParentDirectory:		// SHOWS THE LIST OF FILES IN THE PARENT DIR
-								if (string.IsNullOrEmpty(RouteSearchDirectory))
+								if (string.IsNullOrEmpty(SearchDirectory))
 								{
 									return;
 								}
-								DirectoryInfo newDirectory = Directory.GetParent(RouteSearchDirectory);
-								RouteSearchDirectory = newDirectory == null ? string.Empty : Directory.GetParent(RouteSearchDirectory).ToString();
-								Menu.instance.PushMenu(MenuType.RouteList, 0, true);
+								DirectoryInfo newDirectory = Directory.GetParent(SearchDirectory);
+								SearchDirectory = newDirectory == null ? string.Empty : Directory.GetParent(SearchDirectory).ToString();
+								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.RouteFile:
 								RoutefileState = RouteState.Loading;
-								RouteFile = Path.CombineFile(RouteSearchDirectory, menu.Items[menu.Selection].Text);
+								RouteFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
 								if (!routeWorkerThread.IsBusy)
 								{
 									routeWorkerThread.RunWorkerAsync();
@@ -971,7 +1027,10 @@ namespace OpenBve
 							case MenuTag.No:
 								if (menu.Type == MenuType.TrainDefault)
 								{
-									Menu.instance.PushMenu(MenuType.TrainList);
+									SearchDirectory = Program.FileSystem.InitialTrainFolder;
+									Instance.PushMenu(MenuType.TrainList);
+									routeDescriptionBox.Text = Translations.GetInterfaceString("start_train_choose");
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routeTexture);
 								}
 								break;
 						}
@@ -1008,7 +1067,7 @@ namespace OpenBve
 
 			
 			double itemLeft, itemX;
-			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList)
+			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
 			{
 				itemLeft = 0;
 				itemX = 16;
@@ -1112,7 +1171,7 @@ namespace OpenBve
 			if (i < menu.Items.Length - 1)
 				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Vector2(itemX, itemY),
 					menu.Align, ColourDimmed, false);
-			if (menu.Type == MenuType.RouteList)
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
 			{
 				//Background to route image box
 				int quarterWidth = (int) (Program.Renderer.Screen.Width / 4.0);
@@ -1194,7 +1253,7 @@ namespace OpenBve
 				 */
 				menu.Items[i].DisplayLength = menu.Items[i].DisplayLength;
 			}
-			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList)
+			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
 			{
 				// Left aligned, used for route browser
 				menuXmin = 0;

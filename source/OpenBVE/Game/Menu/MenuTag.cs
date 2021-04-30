@@ -40,6 +40,8 @@
 		/// <summary>Selects Yes for a menu choice</summary>
 		Yes,
 		/// <summary>Selects No for a menu choice</summary>
-		No
+		No,
+		/// <summary>A train directory</summary>
+		TrainDirectory
 	}
 }
