@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using LibRender2.Texts;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -35,10 +34,18 @@ namespace LibRender2.Primitives
 					{
 						// Exceeded length, back up to last space
 						int moveback = 0;
+						int lastChar = i - 1;
 						while (currentChar != ' ')
 						{
 							moveback++;
 							i--;
+							if (i == 0)
+							{
+								//No spaces found, so just drop back one char
+								i = lastChar;
+								moveback = 1;
+								break;
+							}
 							currentChar = firstSplit[j][i];
 						}
 						string lineToAdd = currentLine.Substring(0, currentLine.Length - moveback);
