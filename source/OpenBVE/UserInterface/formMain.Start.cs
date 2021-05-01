@@ -1178,11 +1178,42 @@ namespace OpenBve
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
 			bool canLoad = false;
+			Image trainImage = null;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
 				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))
 				{
 					canLoad = true;
+					trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(Result.TrainFolder);
+					if (!UserSelectedEncoding) {
+						Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
+						comboboxTrainEncoding.Tag = new object();
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = $"{Result.TrainEncoding.EncodingName} - {Result.TrainEncoding.CodePage}";
+
+						comboboxTrainEncoding.Tag = null;
+						for (int k = 0; k < Interface.CurrentOptions.TrainEncodings.Length; k++) {
+							if (Interface.CurrentOptions.TrainEncodings[k].Value == Result.TrainFolder) {
+								int j;
+								for (j = 1; j < EncodingCodepages.Length; j++) {
+									if (EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[k].Codepage) {
+										comboboxTrainEncoding.SelectedIndex = j;
+										Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
+										break;
+									}
+								}
+								if (j == EncodingCodepages.Length) {
+									comboboxTrainEncoding.SelectedIndex = 0;
+									Result.TrainEncoding = Encoding.UTF8;
+								}
+								break;
+							}
+						}
+						panelTrainEncoding.Enabled = true;
+						comboboxTrainEncoding.Tag = null;
+					}
+					textboxTrainDescription.Text = Program.CurrentHost.Plugins[i].Train.GetDescription(Result.TrainFolder, Result.TrainEncoding);
+					break;
 				}
 			}
 
@@ -1193,61 +1224,18 @@ namespace OpenBve
 				//No plugin capable of loading train found
 				return;
 			}
-			if (!UserSelectedEncoding) {
-				Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
-				comboboxTrainEncoding.Tag = new object();
-				comboboxTrainEncoding.SelectedIndex = 0;
-				comboboxTrainEncoding.Items[0] = $"{Result.TrainEncoding.EncodingName} - {Result.TrainEncoding.CodePage}";
 
-				comboboxTrainEncoding.Tag = null;
-				int i;
-				for (i = 0; i < Interface.CurrentOptions.TrainEncodings.Length; i++) {
-					if (Interface.CurrentOptions.TrainEncodings[i].Value == Result.TrainFolder) {
-						int j;
-						for (j = 1; j < EncodingCodepages.Length; j++) {
-							if (EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[i].Codepage) {
-								comboboxTrainEncoding.SelectedIndex = j;
-								Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
-								break;
-							}
-						}
-						if (j == EncodingCodepages.Length) {
-							comboboxTrainEncoding.SelectedIndex = 0;
-							Result.TrainEncoding = Encoding.UTF8;
-						}
-						break;
-					}
-				}
-				panelTrainEncoding.Enabled = true;
-				comboboxTrainEncoding.Tag = null;
-			}
+			if (trainImage != null)
 			{
-				// train image
-				string File = Path.CombineFile(Result.TrainFolder, "train.png");
-				if (!System.IO.File.Exists(File)) {
-					File = Path.CombineFile(Result.TrainFolder, "train.bmp");
-				}
+				pictureboxTrainImage.Image = trainImage;
+				pictureboxTrainImage.Enabled = true;
+			}
+			else
+			{
+				TryLoadImage(pictureboxTrainImage, "train_unknown.png");
+				pictureboxTrainImage.Enabled = false;
+			}
 
-				TryLoadImage(pictureboxTrainImage, System.IO.File.Exists(File) ? File : "train_unknown.png");
-			}
-			{
-				// train description
-				string File = Path.CombineFile(Result.TrainFolder, "train.txt");
-				if (System.IO.File.Exists(File)) {
-					try {
-						string trainText = System.IO.File.ReadAllText(File, Result.TrainEncoding);
-						trainText = trainText.ConvertNewlinesToCrLf();
-						textboxTrainDescription.Text = trainText;
-						textboxTrainEncodingPreview.Text = trainText;
-					} catch {
-						textboxTrainDescription.Text = System.IO.Path.GetFileName(Result.TrainFolder);
-						textboxTrainEncodingPreview.Text = "";
-					}
-				} else {
-					textboxTrainDescription.Text = System.IO.Path.GetFileName(Result.TrainFolder);
-					textboxTrainEncodingPreview.Text = "";
-				}
-			}
 			groupboxTrainDetails.Visible = true;
 			labelTrainEncoding.Enabled = true;
 			labelTrainEncodingPreview.Enabled = true;

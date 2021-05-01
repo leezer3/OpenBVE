@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Text;
 using OpenBveApi.Interface;
 
 namespace OpenBveApi.Trains
@@ -27,6 +29,17 @@ namespace OpenBveApi.Trains
 		/// <param name="currentControls">The current control array (modified if touch elements are present)</param>
 		/// <returns>Whether loading the route was successful.</returns>
 		public abstract bool LoadTrain(System.Text.Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls);
+
+		/// <summary>Gets the description for the selected train</summary>
+		/// <param name="trainPath">The path to the selected train</param>
+		/// <param name="userSelectedEncoding">The user selected text encoding</param>
+		/// <returns>The description</returns>
+		public abstract string GetDescription(string trainPath, Encoding userSelectedEncoding = null);
+
+		/// <summary>Gets the image for the selected train</summary>
+		/// <param name="trainPath">The path to the selected train</param>
+		/// <returns>The image</returns>
+		public abstract Image GetImage(string trainPath);
 
 		/// <summary>Holds whether loading is currently in progress</summary>
 		public bool IsLoading;
