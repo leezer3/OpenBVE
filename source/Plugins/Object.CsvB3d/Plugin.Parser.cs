@@ -644,7 +644,7 @@ namespace Plugin
 							break;
 						case "setcolor":
 						case "color":
-							{
+						{
 								if (cmd == "setcolor" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "SetColor is not a supported command - did you mean Color? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "color" & !IsB3D) {
@@ -713,6 +713,89 @@ namespace Plugin
 									Builder.Faces[j] = f;
 								}
 							} break;
+						case "colorall":
+						case "setcolorall":
+						{
+							{
+								if (cmd == "setcolorall" & IsB3D) {
+									currentHost.AddMessage(MessageType.Warning, false, "SetColorAll is not a supported command - did you mean ColorAll? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (cmd == "colorall" & !IsB3D) {
+									currentHost.AddMessage(MessageType.Warning, false, "ColorAll is not a supported command - did you mean SetColorAll? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length > 4) {
+									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								int r = 0, g = 0, b = 0, a = 255;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									r = 0;
+								} else if (r < 0 | r > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									r = r < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									g = 0;
+								} else if (g < 0 | g > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									g = g < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									b = 0;
+								} else if (b < 0 | b > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									b = b < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out a)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Alpha in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									a = 255;
+								} else if (a < 0 | a > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Alpha is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									a = a < 0 ? 0 : 255;
+								}
+								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
+								Object.ApplyColor(newColor, false);
+							}
+						} break;
+						case "emissivecolorall":
+						case "setemissivecolorall":
+						{
+							{
+								if (cmd == "setemissivecolorall" & IsB3D) {
+									currentHost.AddMessage(MessageType.Warning, false, "SetEmissiveColorAll is not a supported command - did you mean EmissiveColorAll? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (cmd == "emissivecolorall" & !IsB3D) {
+									currentHost.AddMessage(MessageType.Warning, false, "EmissiveColorAll is not a supported command - did you mean SetEmissiveColorAll? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length > 4) {
+									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								int r = 0, g = 0, b = 0;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									r = 0;
+								} else if (r < 0 | r > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									r = r < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									g = 0;
+								} else if (g < 0 | g > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									g = g < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									b = 0;
+								} else if (b < 0 | b > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									b = b < 0 ? 0 : 255;
+								}
+								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)255);
+								Object.ApplyColor(newColor, true);
+							}
+						} break;
 						case "setemissivecolor":
 						case "emissivecolor":
 							{

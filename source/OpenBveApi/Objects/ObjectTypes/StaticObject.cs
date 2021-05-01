@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.World;
 
@@ -406,6 +407,24 @@ namespace OpenBveApi.Objects
 				for (int i = 0; i < Mesh.Faces.Length; i++)
 				{
 					Array.Reverse(Mesh.Faces[i].Vertices);
+				}
+			}
+		}
+
+		/// <summary>Applys a color to all materials in the mesh</summary>
+		/// <param name="newColor">The color</param>
+		/// <param name="emissive">Whether this is an emissive color</param>
+		public void ApplyColor(Color32 newColor, bool emissive)
+		{
+			for (int i = 0; i < Mesh.Materials.Length; i++)
+			{
+				if (emissive)
+				{
+					Mesh.Materials[i].EmissiveColor = (Color24) newColor;
+				}
+				else
+				{
+					Mesh.Materials[i].Color = newColor;
 				}
 			}
 		}
