@@ -84,11 +84,8 @@ namespace Train.OpenBve
 			return lines;
 		}
 
-		/// <summary>
-		/// Parse the format of the specified train.dat
-		/// </summary>
+		/// <summary>Parse the format of the specified train.dat</summary>
 		/// <param name="lines">The array of the specified train.dat</param>
-		/// <param name="format">The format of the specified train.dat</param>
 		/// <param name="version">The version of the specified OpenBVE train.dat</param>
 		private static TrainDatFormats ParseFormat(IReadOnlyList<string> lines, out int version)
 		{

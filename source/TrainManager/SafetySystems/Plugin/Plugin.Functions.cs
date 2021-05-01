@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
@@ -168,6 +169,20 @@ namespace TrainManager.Trains
 			catch (BadImageFormatException)
 			{
 				assembly = null;
+				try
+				{
+					AssemblyName myAssembly = AssemblyName.GetAssemblyName(pluginFile);
+					if (IntPtr.Size != 4 && myAssembly.ProcessorArchitecture == ProcessorArchitecture.X86)
+					{
+						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " can only be used with the 32-bit version of OpenBVE");
+						return false;
+					}
+				}
+				catch
+				{
+					//ignored
+				}
+				
 			}
 			catch (Exception ex)
 			{
