@@ -530,6 +530,7 @@ namespace OpenBve
 						}
 						else
 						{
+							SearchDirectory = Program.FileSystem.InitialTrainFolder;
 							//Default train not found or not valid
 							Instance.PushMenu(MenuType.TrainList);
 						}
@@ -924,6 +925,7 @@ namespace OpenBve
 					return;
 				if (menu.Type == MenuType.TrainDefault || menu.Type == MenuType.TrainList)
 				{
+					Reset();
 					//Launch the game!
 					Loading.Complete = false;
 					Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
@@ -1026,7 +1028,15 @@ namespace OpenBve
 											//Show details
 											Interface.CurrentOptions.TrainFolder = trainDir;
 											routeDescriptionBox.Text = Program.CurrentHost.Plugins[i].Train.GetDescription(trainDir);
-											Program.CurrentHost.RegisterTexture(new Bitmap(Program.CurrentHost.Plugins[i].Train.GetImage(trainDir)), new TextureParameters(null, null), out routeTexture);
+											Image trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(trainDir);
+											if (trainImage != null)
+											{
+												Program.CurrentHost.RegisterTexture(new Bitmap(trainImage), new TextureParameters(null, null), out routeTexture);
+											}
+											else
+											{
+												Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\train_unknown.png"), new TextureParameters(null, null), out routeTexture);
+											}
 										}
 									}
 								}
@@ -1055,6 +1065,7 @@ namespace OpenBve
 							case MenuTag.Yes:
 								if (menu.Type == MenuType.TrainDefault)
 								{
+									Reset();
 									//Launch the game!
 									Loading.Complete = false;
 									Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
