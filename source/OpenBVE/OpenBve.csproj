@@ -136,6 +136,9 @@
     <Compile Include="Game\AI\AI.SimpleHuman.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game\Menu\Menu.MenuCaption.cs" />
+    <Compile Include="Game\Menu\Menu.MenuCommand.cs" />
+    <Compile Include="Game\Menu\Menu.MenuEntry.cs" />
     <Compile Include="Game\Menu\Menu.Route.cs" />
     <Compile Include="Game\Menu\Menu.RouteState.cs" />
     <Compile Include="Game\Menu\MenuTag.cs" />
