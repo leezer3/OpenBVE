@@ -664,6 +664,16 @@ namespace OpenBve
 					break;
 				}
 			}
+			int quarterWidth = (int) (Program.Renderer.Screen.Width / 4.0);
+			int descriptionLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
+			int descriptionWidth = quarterWidth + quarterWidth / 2;
+			int descriptionHeight = descriptionWidth;
+			if (descriptionHeight + quarterWidth > Program.Renderer.Screen.Height - 50)
+			{
+				descriptionHeight = Program.Renderer.Screen.Height - quarterWidth - 50;
+			}
+			routeDescriptionBox.Location = new Vector2(descriptionLoc, quarterWidth);
+			routeDescriptionBox.Size = new Vector2(descriptionWidth, descriptionHeight);
 			isInitialized = true;
 		}
 
@@ -675,6 +685,7 @@ namespace OpenBve
 			CurrMenu = -1;
 			Menus = new SingleMenu[] { };
 			isCustomisingControl = false;
+			routeDescriptionBox.CurrentlySelected = false;
 		}
 
 		//
@@ -793,6 +804,21 @@ namespace OpenBve
 		{
 			// Load the current menu
 			SingleMenu menu = Menus[CurrMenu];
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+			{
+				if (routeDescriptionBox.CurrentlySelected)
+				{
+					if (Math.Abs(Scroll) == Scroll)
+					{
+						routeDescriptionBox.VerticalScroll(-1);
+					}
+					else
+					{
+						routeDescriptionBox.VerticalScroll(1);
+					}
+					return;
+				}
+			}
 			if (Math.Abs(Scroll) == Scroll)
 			{
 				//Negative
@@ -800,7 +826,6 @@ namespace OpenBve
 				{
 					menu.TopItem--;
 				}
-
 			}
 			else
 			{
@@ -838,6 +863,14 @@ namespace OpenBve
 			}
 			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
 			{
+				if (x > routeDescriptionBox.Location.X && x < routeDescriptionBox.Location.X + routeDescriptionBox.Size.X && y > routeDescriptionBox.Location.Y && y < routeDescriptionBox.Location.Y + routeDescriptionBox.Size.Y)
+				{
+					routeDescriptionBox.CurrentlySelected = true;
+				}
+				else
+				{
+					routeDescriptionBox.CurrentlySelected = false;
+				}
 				//HACK: Use this to trigger our menu start button!
 				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
 				{
@@ -1226,20 +1259,12 @@ namespace OpenBve
 				//Background to route image box
 				int quarterWidth = (int) (Program.Renderer.Screen.Width / 4.0);
 				int imageLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 4;
-				int descriptionLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
-				int descriptionWidth = quarterWidth + quarterWidth / 2;
-				int descriptionHeight = descriptionWidth;
-				if (descriptionHeight + quarterWidth > Program.Renderer.Screen.Height - 50)
-				{
-					descriptionHeight = Program.Renderer.Screen.Height - quarterWidth - 50;
-				}
-
 				Program.Renderer.Rectangle.Draw(null, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White);
 				switch (RoutefileState)
 				{
 					case RouteState.NoneSelected:
 						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
-						routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+						routeDescriptionBox.Draw(null, Color128.Black);
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;
@@ -1247,7 +1272,7 @@ namespace OpenBve
 						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
-							routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+							routeDescriptionBox.Draw(null, Color128.Black);
 						}
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
@@ -1256,7 +1281,7 @@ namespace OpenBve
 						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
-							routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+							routeDescriptionBox.Draw(null, Color128.Black);
 						}
 						//Game start button
 						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
@@ -1287,7 +1312,7 @@ namespace OpenBve
 						break;
 					case RouteState.Error:
 						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
-						routeDescriptionBox.Draw(null, new Vector2(descriptionLoc, quarterWidth), new Vector2(descriptionWidth,descriptionHeight), Color128.Black);
+						routeDescriptionBox.Draw(null, Color128.Black);
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using LibRender2.Shaders;
+﻿using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;

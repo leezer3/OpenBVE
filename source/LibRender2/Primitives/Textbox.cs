@@ -15,9 +15,32 @@ namespace LibRender2.Primitives
 		/// <summary>The font the items in this textbox are to be drawn with</summary>
 		private readonly OpenGlFont myFont;
 		/// <summary>The string contents of the textbox</summary>
-		public string Text;
+		public string Text
+		{
+			get
+			{
+				return myText;
+			}
+			set
+			{
+				myText = value;
+				//reset the scroll value
+				topLine = 0;
+			}
+		}
+		/// <summary>Backing property for the textbox text</summary>
+		private string myText;
+
 		/// <summary>The border width of the textbox </summary>
 		public readonly int Border;
+		/// <summary>The top line to be renderered</summary>
+		private int topLine;
+		/// <summary>The stored location for the textbox</summary>
+		public Vector2 Location;
+		/// <summary>The stored size for the textbox</summary>
+		public Vector2 Size;
+		/// <summary>Whether the textbox is currently selected by the mouse</summary>
+		public bool CurrentlySelected;
 
 		private List<string> WrappedLines(int width)
 		{
@@ -69,6 +92,21 @@ namespace LibRender2.Primitives
 			renderer = Renderer;
 			myFont = Font;
 			Border = 5;
+			topLine = 0;
+		}
+
+		public void VerticalScroll(int numberOfLines)
+		{
+			topLine += numberOfLines;
+			if (topLine < 0)
+			{
+				topLine = 0;
+			}
+		}
+
+		public void Draw(Texture texture, Color128? color)
+		{
+			Draw(texture, Location, Size, color);
 		}
 
 		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color)
@@ -88,10 +126,17 @@ namespace LibRender2.Primitives
 			}
 			else
 			{
-				//DRAW SPLIT LINES
-				for (int i = 0; i < splitString.Count; i++)
+				int maxFittingLines = (int)(size.Y / myFont.MeasureString(Text).Y);
+				if (topLine + maxFittingLines > splitString.Count)
 				{
-					renderer.OpenGlString.Draw(myFont, splitString[i], new Vector2(point.X + Border, point.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, Color128.White);
+					topLine = Math.Max(0, splitString.Count - maxFittingLines);
+				}
+				//DRAW SPLIT LINES
+				int currentLine = topLine;
+				for (int i = 0; i < Math.Min(maxFittingLines, splitString.Count); i++)
+				{
+					renderer.OpenGlString.Draw(myFont, splitString[currentLine], new Vector2(point.X + Border, point.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, Color128.White);
+					currentLine++;
 				}
 				
 			}
