@@ -215,6 +215,15 @@
 					<trans-unit id="train_choose">
 						<source>Choose Train...</source>
 					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
+					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
 					</trans-unit>

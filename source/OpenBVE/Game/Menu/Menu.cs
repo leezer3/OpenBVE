@@ -290,7 +290,6 @@ namespace OpenBve
 						break;
 					case MenuType.TrainList:
 						potentialFiles = new string[]{ };
-						directoryList = new string[] { };
 						drives = false;
 						if (SearchDirectory != string.Empty)
 						{
@@ -324,7 +323,7 @@ namespace OpenBve
 								}
 							}
 
-							if (isTrain)
+							if (!isTrain)
 							{
 								Items[totalEntries] = new MenuCommand(new DirectoryInfo(directoryList[j]).Name, MenuTag.Directory, 0);
 								if (drives)
@@ -377,7 +376,6 @@ namespace OpenBve
 							Array.Resize(ref Items, Items.Length -3);
 						}
 						break;
-
 					case MenuType.JumpToStation:    // list of stations to jump to
 													// count the number of available stations
 						menuItem = 0;
@@ -511,11 +509,30 @@ namespace OpenBve
 						Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_assign"), MenuTag.None, 0);
 						break;
 					case MenuType.TrainDefault:
-						Items = new MenuEntry[3];
-						Items[0] = new MenuCaption("Do you wish to use the default train?");
-						Items[1] = new MenuCommand("Yes", MenuTag.Yes, 0);
-						Items[2] = new MenuCommand("No", MenuTag.No, 0);
-						Selection = 1;
+						Interface.CurrentOptions.TrainFolder = Loading.GetDefaultTrainFolder(RouteFile);
+						bool canLoad = false;
+						for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+						{
+							if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(Interface.CurrentOptions.TrainFolder))
+							{
+								canLoad = true;
+								break;
+							}
+						}
+
+						if (canLoad)
+						{
+							Items = new MenuEntry[3];
+							Items[0] = new MenuCaption(Translations.GetInterfaceString("start_train_default"));
+							Items[1] = new MenuCommand(Translations.GetInterfaceString("start_train_default_yes"), MenuTag.Yes, 0);
+							Items[2] = new MenuCommand(Translations.GetInterfaceString("start_train_default_no"), MenuTag.No, 0);
+							Selection = 1;
+						}
+						else
+						{
+							//Default train not found or not valid
+							Instance.PushMenu(MenuType.TrainList);
+						}
 						break;
 				}
 				// compute menu extent
@@ -905,11 +922,11 @@ namespace OpenBve
 			{
 				if (RoutefileState == RouteState.Error)
 					return;
-				if (menu.Type == MenuType.TrainDefault)
+				if (menu.Type == MenuType.TrainDefault || menu.Type == MenuType.TrainList)
 				{
 					//Launch the game!
 					Loading.Complete = false;
-					Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, "D:\\Program Files\\BVE\\Train\\D1015", Encoding.UTF8);
+					Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
 					OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
 					g.LoadingScreenLoop();
 					Program.Renderer.CurrentInterface = InterfaceType.Normal;
@@ -971,7 +988,7 @@ namespace OpenBve
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routeTexture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
-								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : OpenBveApi.Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
+								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
 								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.ParentDirectory:		// SHOWS THE LIST OF FILES IN THE PARENT DIR
@@ -991,6 +1008,28 @@ namespace OpenBve
 									routeWorkerThread.RunWorkerAsync();
 								}
 								
+								break;
+							case MenuTag.TrainDirectory:
+								for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+								{
+									string trainDir = Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
+									if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(trainDir))
+									{
+										if (Interface.CurrentOptions.TrainFolder == trainDir)
+										{
+											//enter folder
+											SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : OpenBveApi.Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
+											Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+										}
+										else
+										{
+											//Show details
+											Interface.CurrentOptions.TrainFolder = trainDir;
+											routeDescriptionBox.Text = Program.CurrentHost.Plugins[i].Train.GetDescription(trainDir);
+											Program.CurrentHost.RegisterTexture(new Bitmap(Program.CurrentHost.Plugins[i].Train.GetImage(trainDir)), new TextureParameters(null, null), out routeTexture);
+										}
+									}
+								}
 								break;
 								// simulation commands
 							case MenuTag.JumpToStation:         // JUMP TO STATION
@@ -1018,7 +1057,7 @@ namespace OpenBve
 								{
 									//Launch the game!
 									Loading.Complete = false;
-									Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, null, Encoding.UTF8);
+									Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
 									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
 									g.LoadingScreenLoop();
 									Program.Renderer.CurrentInterface = InterfaceType.Normal;
@@ -1213,12 +1252,26 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);	
+							if (menu.Type == MenuType.RouteList)
+							{
+								Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+							}
+							else
+							{
+								Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+							}
 						}
 						else
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White);	
+							if (menu.Type == MenuType.RouteList)
+							{
+								Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+							}
+							else
+							{
+								Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+							}
 						}
 						break;
 					case RouteState.Error:
@@ -1285,7 +1338,7 @@ namespace OpenBve
 				menu.TopItem = menu.Selection - (menu.Selection % visibleItems);
 				visibleItems = menu.Items.Length - menu.TopItem < visibleItems ?    // in the last chunk,
 					menu.Items.Length - menu.TopItem : visibleItems;                // display remaining items only
-				menuYmin = (Program.Renderer.Screen.Height - numOfLines * lineHeight) / 2;
+				menuYmin = (Program.Renderer.Screen.Height - numOfLines * lineHeight) / 2.0;
 				menuYmax = menuYmin + numOfLines * lineHeight;
 				// first menu item is drawn on second line (first line is empty
 				// on first screen and contains an ellipsis on following screens

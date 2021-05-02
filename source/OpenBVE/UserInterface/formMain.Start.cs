@@ -1245,108 +1245,12 @@ namespace OpenBve
 
 		// show default train
 		private void ShowDefaultTrain() {
-			
-			if (string.IsNullOrEmpty(Result.RouteFile)) {
-				return;
-			}
-			if (string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
-				return;
-			}
-			
-			string Folder;
-			try {
-				Folder = System.IO.Path.GetDirectoryName(Result.RouteFile);
-				if (Interface.CurrentOptions.TrainName[0] == '$') {
-					Folder = Path.CombineDirectory(Folder, Interface.CurrentOptions.TrainName);
-					if (Directory.Exists(Folder)) {
-						string File = Path.CombineFile(Folder, "train.dat");
-						if (System.IO.File.Exists(File)) {
-							
-							Result.TrainFolder = Folder;
-							ShowTrain(false);
-							return;
-						}
-					}
-				}
-			} catch {
-				Folder = null;
-			}
-			bool recursionTest = false;
-			string lastFolder = null;
-			try
+			string trainFolder = Loading.GetDefaultTrainFolder(Result.RouteFile);
+			if (!string.IsNullOrEmpty(trainFolder))
 			{
-				while (true)
-				{
-					string TrainFolder = Path.CombineDirectory(Folder, "Train");
-					var OldFolder = Folder;
-					if (Directory.Exists(TrainFolder))
-					{
-						try
-						{
-							Folder = Path.CombineDirectory(TrainFolder, Interface.CurrentOptions.TrainName);
-						}
-						catch (Exception ex)
-						{
-							if (ex is ArgumentException)
-							{
-								break; // Invalid character in path causes infinite recursion
-							}
-
-							Folder = null;
-						}
-
-						if (Folder != null)
-						{
-							char c = System.IO.Path.DirectorySeparatorChar;
-							if (Directory.Exists(Folder))
-							{
-
-								string File = Path.CombineFile(Folder, "train.dat");
-								if (System.IO.File.Exists(File))
-								{
-									// train found
-									Result.TrainFolder = Folder;
-									ShowTrain(false);
-									return;
-								}
-
-								if (lastFolder == Folder || recursionTest)
-								{
-									break;
-								}
-
-								lastFolder = Folder;
-							}
-							else if (Folder.ToLowerInvariant().Contains(c + "railway" + c))
-							{
-								//If we have a misplaced Train folder in either our Railway\Route
-								//or Railway folders, this can cause the train search to fail
-								//Detect the presence of a railway folder and carry on traversing upwards if this is the case
-								recursionTest = true;
-								Folder = OldFolder;
-							}
-							else
-							{
-								break;
-							}
-						}
-					}
-
-					if (Folder == null) continue;
-					DirectoryInfo Info = Directory.GetParent(Folder);
-					if (Info != null)
-					{
-						Folder = Info.FullName;
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-			catch
-			{
-				//Something broke, but we don't care as it just shows an error below
+				Result.TrainFolder = trainFolder;
+				ShowTrain(false);
+				return;
 			}
 			// train not found
 			Result.TrainFolder = null;

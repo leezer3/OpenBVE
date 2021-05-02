@@ -106,7 +106,7 @@ namespace Train.OpenBve
 
 		public override bool CanLoadTrain(string path)
 		{
-			if (path == null)
+			if (string.IsNullOrEmpty(path))
 			{
 				return false;
 			}
