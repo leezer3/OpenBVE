@@ -176,6 +176,12 @@ namespace CsvRwRouteParser
 							break;
 						}
 
+						if (idx == 0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The command " + Command + " is invalid for Rail 0 at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							break;
+						}
+
 						if (idx < 0 || !Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " references a non-existing rail in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
