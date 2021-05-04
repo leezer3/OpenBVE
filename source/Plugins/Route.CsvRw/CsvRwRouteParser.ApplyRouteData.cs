@@ -45,7 +45,7 @@ namespace CsvRwRouteParser
 			
 			// initialize
 			int LastBlock = (int)Math.Floor((Data.TrackPosition + 600.0) / Data.BlockInterval + 0.001) + 1;
-			if (Data.Blocks[Data.Blocks.Count - 1].CurrentTrackState.CurveRadius < 300)
+			if (Math.Abs(Data.Blocks[Data.Blocks.Count - 1].CurrentTrackState.CurveRadius) < 300)
 			{
 				/*
 				 * The track end event is placed 600m after the end of the final block
