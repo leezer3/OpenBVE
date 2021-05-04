@@ -127,7 +127,7 @@ namespace OpenBveApi.Routes
 				return;
 			}
 			if (!currentHost.Tracks.ContainsKey(TrackIndex) || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
-			int i = LastTrackElement;
+			int i = System.Math.Min(currentHost.Tracks[TrackIndex].Elements.Length - 1, LastTrackElement);
 			while (i >= 0)
 			{
 				if (currentHost.Tracks[TrackIndex].Elements[i].InvalidElement)
