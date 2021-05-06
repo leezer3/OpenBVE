@@ -14,6 +14,7 @@ using OpenBveApi;
 using OpenBveApi.Input;
 using OpenBveApi.Textures;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using Path = OpenBveApi.Path;
 using Vector2 = OpenBveApi.Math.Vector2;
 
@@ -122,7 +123,7 @@ namespace OpenBve
 							routeWorkerThread.DoWork += routeWorkerThread_doWork;
 							routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
 							//Load texture
-							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routeTexture);
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 						}
 						Items = new MenuEntry[3];
 						Items[0] = new MenuCommand("Open Route File", MenuTag.RouteList, 0);
@@ -578,6 +579,9 @@ namespace OpenBve
 			}
 			routeDescriptionBox.Location = new Vector2(descriptionLoc, quarterWidth);
 			routeDescriptionBox.Size = new Vector2(descriptionWidth, descriptionHeight);
+			int imageLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 4;
+			routePictureBox.Location = new Vector2(imageLoc, 0);
+			routePictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			isInitialized = true;
 		}
 
@@ -924,7 +928,7 @@ namespace OpenBve
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString("errors_route_please_select");
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routeTexture);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
 								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
@@ -968,11 +972,11 @@ namespace OpenBve
 											Image trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(trainDir);
 											if (trainImage != null)
 											{
-												Program.CurrentHost.RegisterTexture(new Bitmap(trainImage), new TextureParameters(null, null), out routeTexture);
+												Program.CurrentHost.RegisterTexture(new Bitmap(trainImage), new TextureParameters(null, null), out routePictureBox.Texture);
 											}
 											else
 											{
-												Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\train_unknown.png"), new TextureParameters(null, null), out routeTexture);
+												Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\train_unknown.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 											}
 										}
 									}
@@ -1017,7 +1021,7 @@ namespace OpenBve
 									SearchDirectory = Program.FileSystem.InitialTrainFolder;
 									Instance.PushMenu(MenuType.TrainList);
 									routeDescriptionBox.Text = Translations.GetInterfaceString("start_train_choose");
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routeTexture);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								}
 								break;
 						}
@@ -1144,7 +1148,16 @@ namespace OpenBve
 				itemY += lineHeight;
 				if (menu.Items[i].Icon != null)
 				{
-					Program.Renderer.Rectangle.Draw(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight));
+					Program.Renderer.UnsetBlendFunc();
+					Program.Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					GL.DepthMask(true);
+					Program.Renderer.Rectangle.Draw(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
+					Program.Renderer.SetBlendFunc();
+					Program.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
+					GL.DepthMask(false);
+					Program.Renderer.Rectangle.Draw(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
+					Program.Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					
 					itemX = iconX;
 				}
 			}
@@ -1167,26 +1180,20 @@ namespace OpenBve
 				switch (RoutefileState)
 				{
 					case RouteState.NoneSelected:
-						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
-						routeDescriptionBox.Draw(null, Color128.Black);
+						routePictureBox.Draw();
+						routeDescriptionBox.Draw();
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;
 					case RouteState.Loading:
-						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
-						{
-							Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
-							routeDescriptionBox.Draw(null, Color128.Black);
-						}
+						routePictureBox.Draw();
+						routeDescriptionBox.Draw();
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;
 					case RouteState.Processed:
-						if (Program.CurrentHost.LoadTexture(routeTexture, OpenGlTextureWrapMode.ClampClamp))
-						{
-							Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
-							routeDescriptionBox.Draw(null, Color128.Black);
-						}
+						routePictureBox.Draw();
+						routeDescriptionBox.Draw();
 						//Game start button
 						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
 						{
@@ -1215,8 +1222,8 @@ namespace OpenBve
 						}
 						break;
 					case RouteState.Error:
-						Program.Renderer.Rectangle.Draw(routeTexture, new Vector2(imageLoc, 0), new Vector2(quarterWidth, quarterWidth), Color128.White); //needs to be square to match original
-						routeDescriptionBox.Draw(null, Color128.Black);
+						routePictureBox.Draw();
+						routeDescriptionBox.Draw();
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 						Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 						break;

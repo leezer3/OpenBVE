@@ -70,6 +70,7 @@
     <Compile Include="Overlays\Marker.cs" />
     <Compile Include="Overlays\TimeTableMode.cs" />
     <Compile Include="Primitives\Cube.cs" />
+    <Compile Include="Primitives\Picturebox.cs" />
     <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="openGL\Vertex.cs" />
     <Compile Include="Primitives\Textbox.cs" />
@@ -95,9 +96,9 @@
     <EmbeddedResource Include="..\..\assets\Shaders\default.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\default.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\picking.frag" />
-	<EmbeddedResource Include="..\..\assets\Shaders\rectangle.frag" />
-	<EmbeddedResource Include="..\..\assets\Shaders\rectangle.vert" />
-	<EmbeddedResource Include="..\..\assets\Shaders\text.vert" />
+    <EmbeddedResource Include="..\..\assets\Shaders\rectangle.frag" />
+    <EmbeddedResource Include="..\..\assets\Shaders\rectangle.vert" />
+    <EmbeddedResource Include="..\..\assets\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">

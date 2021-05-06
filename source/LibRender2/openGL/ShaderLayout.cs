@@ -179,6 +179,11 @@
 		public short Color;
 
 		/// <summary>
+		/// The handle of "uCoordinates" within the shader
+		/// </summary>
+		public short Coordinates;
+
+		/// <summary>
 		/// The handle of "uAtlasLocation" within the shader
 		/// </summary>
 		public short AtlasLocation;

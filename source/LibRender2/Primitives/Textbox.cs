@@ -14,6 +14,8 @@ namespace LibRender2.Primitives
 		private readonly BaseRenderer renderer;
 		/// <summary>The font the items in this textbox are to be drawn with</summary>
 		private readonly OpenGlFont myFont;
+		/// <summary>The font color</summary>
+		private readonly Color128 myFontColor;
 		/// <summary>The string contents of the textbox</summary>
 		public string Text
 		{
@@ -28,6 +30,10 @@ namespace LibRender2.Primitives
 				topLine = 0;
 			}
 		}
+		/// <summary>The background texture</summary>
+		public Texture BackgroundTexture;
+		/// <summary>The background color</summary>
+		public Color128 BackgroundColor;
 		/// <summary>Backing property for the textbox text</summary>
 		private string myText;
 
@@ -87,12 +93,15 @@ namespace LibRender2.Primitives
 			return wrappedLines;
 		}
 
-		public Textbox(BaseRenderer Renderer, OpenGlFont Font)
+		public Textbox(BaseRenderer Renderer, OpenGlFont Font, Color128 FontColor, Color128 backgroundColor)
 		{
 			renderer = Renderer;
 			myFont = Font;
+			myFontColor = FontColor;
 			Border = 5;
 			topLine = 0;
+			BackgroundTexture = null;
+			BackgroundColor = backgroundColor;
 		}
 
 		public void VerticalScroll(int numberOfLines)
@@ -104,29 +113,23 @@ namespace LibRender2.Primitives
 			}
 		}
 
-		public void Draw(Texture texture, Color128? color)
+		public void Draw()
 		{
-			Draw(texture, Location, Size, color);
-		}
-
-		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color)
-		{
-			renderer.LastBoundTexture = null;
-			renderer.Rectangle.Draw(texture, point, size, color); //Draw the backing rectangle first
+			renderer.Rectangle.Draw(BackgroundTexture, Location, Size, BackgroundColor); //Draw the backing rectangle first
 			if (string.IsNullOrEmpty(Text))
 			{
 				return;
 			}
 
-			List<string> splitString = WrappedLines((int)size.Y - Border * 2);
+			List<string> splitString = WrappedLines((int)Size.Y - Border * 2);
 			if (splitString.Count == 1)
 			{
 				//DRAW SINGLE LINE
-				renderer.OpenGlString.Draw(myFont, Text, new Vector2(point.X + Border, point.Y + Border), TextAlignment.TopLeft, Color128.White);
+				renderer.OpenGlString.Draw(myFont, Text, new Vector2(Location.X + Border, Location.Y + Border), TextAlignment.TopLeft, myFontColor);
 			}
 			else
 			{
-				int maxFittingLines = (int)(size.Y / myFont.MeasureString(Text).Y);
+				int maxFittingLines = (int)(Size.Y / myFont.MeasureString(Text).Y);
 				if (topLine + maxFittingLines > splitString.Count)
 				{
 					topLine = Math.Max(0, splitString.Count - maxFittingLines);
@@ -135,7 +138,7 @@ namespace LibRender2.Primitives
 				int currentLine = topLine;
 				for (int i = 0; i < Math.Min(maxFittingLines, splitString.Count); i++)
 				{
-					renderer.OpenGlString.Draw(myFont, splitString[currentLine], new Vector2(point.X + Border, point.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, Color128.White);
+					renderer.OpenGlString.Draw(myFont, splitString[currentLine], new Vector2(Location.X + Border, Location.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, myFontColor);
 					currentLine++;
 				}
 				

@@ -45,20 +45,27 @@ namespace LibRender2.Primitives
 		/// <param name="point">The top-left coordinates in pixels.</param>
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
-		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null)
+		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
+		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null)
 		{
 			if (renderer.AvailableNewRenderer && Shader != null)
 			{
-				DrawWithShader(texture, point, size, color);	
+				if (textureCoordinates == null)
+				{
+					DrawWithShader(texture, point, size, color, Vector2.One);
+				}
+				else
+				{
+					DrawWithShader(texture, point, size, color, (Vector2)textureCoordinates);
+				}
 			}
 			else
 			{
-				DrawImmediate(texture, point, size, color);	
+				DrawImmediate(texture, point, size, color, textureCoordinates);	
 			}
-			
 		}
 
-		private void DrawImmediate(Texture texture, Vector2 point, Vector2 size, Color128? color)
+		private void DrawImmediate(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2? textureCoordinates = null)
 		{
 			renderer.LastBoundTexture = null;
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
@@ -105,14 +112,29 @@ namespace LibRender2.Primitives
 				}
 
 				GL.Begin(PrimitiveType.Quads);
-				GL.TexCoord2(0.0f, 0.0f);
-				GL.Vertex2(point.X, point.Y);
-				GL.TexCoord2(1.0f, 0.0f);
-				GL.Vertex2(point.X + size.X, point.Y);
-				GL.TexCoord2(1.0f, 1.0f);
-				GL.Vertex2(point.X + size.X, point.Y + size.Y);
-				GL.TexCoord2(0.0f, 1.0f);
-				GL.Vertex2(point.X, point.Y + size.Y);
+				if (textureCoordinates == null)
+				{
+					GL.TexCoord2(0,0);
+					GL.Vertex2(point.X, point.Y);
+					GL.TexCoord2(1,0);
+					GL.Vertex2(point.X + size.X, point.Y);
+					GL.TexCoord2(1,1);
+					GL.Vertex2(point.X + size.X, point.Y + size.Y);
+					GL.TexCoord2(0,1);
+					GL.Vertex2(point.X, point.Y + size.Y);
+				}
+				else
+				{
+					Vector2 v = (Vector2) textureCoordinates;
+					GL.TexCoord2(0,0);
+					GL.Vertex2(point.X, point.Y);
+					GL.TexCoord2(v.X, 0);
+					GL.Vertex2(point.X + size.X, point.Y);
+					GL.TexCoord2(v.X, v.Y);
+					GL.Vertex2(point.X + size.X, point.Y + size.Y);
+					GL.TexCoord2(0, v.Y);
+					GL.Vertex2(point.X, point.Y + size.Y);
+				}
 				GL.End();
 				GL.Disable(EnableCap.Texture2D);
 			}
@@ -123,7 +145,7 @@ namespace LibRender2.Primitives
 			GL.PopMatrix();
 		}
 
-		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color)
+		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates)
 		{
 			Shader.Activate();
 			renderer.CurrentShader = Shader;
@@ -143,6 +165,7 @@ namespace LibRender2.Primitives
 			Shader.SetColor(color == null ? Color128.White : color.Value);
 			Shader.SetPoint(point);
 			Shader.SetSize(size);
+			Shader.SetCoordinates(coordinates);
 			/*
 			 * In order to call GL.DrawArrays with procedural data within the shader,
 			 * we first need to bind a dummy VAO
