@@ -290,10 +290,10 @@ namespace LibRender2
 
 			Background = new Background(this);
 			Fog = new Fog();
-			OpenGlString = new OpenGlString(this, new Shader(this, "text", "rectangle", true)); //text shader shares the rectangle fragment shader
+			OpenGlString = new OpenGlString(this); //text shader shares the rectangle fragment shader
 			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
-			Rectangle = new Rectangle(this, new Shader(this, "rectangle", "rectangle", true));
+			Rectangle = new Rectangle(this);
 			Loading = new Loading(this);
 			Keys = new Keys(this);
 			MotionBlur = new MotionBlur(this);

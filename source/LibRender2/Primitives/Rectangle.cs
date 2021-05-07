@@ -1,4 +1,5 @@
-﻿using LibRender2.Shaders;
+﻿using System;
+using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
@@ -13,10 +14,17 @@ namespace LibRender2.Primitives
 		/// <summary>If using GL3, the shader to draw the rectangle with</summary>
 		private readonly Shader Shader;
 
-		internal Rectangle(BaseRenderer renderer, Shader shader)
+		internal Rectangle(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
-			this.Shader = shader;
+			try
+			{
+				Shader = new Shader(renderer, "rectangle", "rectangle", true);
+			}
+			catch
+			{
+				renderer.ForceLegacyOpenGL = true;
+			}
 		}
 
 		/// <summary>Renders an overlay texture</summary>

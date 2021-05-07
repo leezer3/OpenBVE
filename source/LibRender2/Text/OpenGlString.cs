@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -14,10 +15,18 @@ namespace LibRender2.Texts
 
 		private readonly Shader Shader;
 
-		internal OpenGlString(BaseRenderer renderer, Shader shader)
+		internal OpenGlString(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
-			this.Shader = shader;
+			try
+			{
+				this.Shader = new Shader(renderer, "text", "rectangle", true);
+			}
+			catch
+			{
+				renderer.ForceLegacyOpenGL = true;
+			}
+			
 		}
 
 		/// <summary>Renders a string to the screen.</summary>
