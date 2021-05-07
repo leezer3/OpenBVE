@@ -7,6 +7,7 @@ using LibRender2;
 using LibRender2.Objects;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -45,9 +46,9 @@ namespace OpenBve
 		private Texture PointSoundTexture;
 		private Texture RunSoundTexture;
 		
-		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
+		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
 		{
-			base.Initialize(CurrentHost, CurrentOptions);
+			base.Initialize(CurrentHost, CurrentOptions, FileSystem);
 
 			string Folder = Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);

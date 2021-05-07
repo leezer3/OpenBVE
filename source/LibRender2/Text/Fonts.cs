@@ -24,6 +24,29 @@ namespace LibRender2.Text
 
 		public readonly OpenGlFont EvenLargerFont;
 
+		/// <summary>Gets the next smallest font</summary>
+		/// <param name="currentFont">The font we require the smaller version for</param>
+		/// <returns>The next smallest font</returns>
+		public OpenGlFont NextSmallestFont(OpenGlFont currentFont)
+		{
+			switch ((int)currentFont.FontSize)
+			{
+				case 9:
+				case 12:
+					return VerySmallFont;
+				case 16:
+					return SmallFont;
+				case 21:
+					return NormalFont;
+				case 27:
+					return LargeFont;
+				case 34:
+					return VeryLargeFont;
+				default:
+					return EvenLargerFont;
+			}
+		}
+
 		internal Fonts()
 		{
 			VerySmallFont = new OpenGlFont(FontFamily.GenericSansSerif, 9.0f);

@@ -18,6 +18,7 @@ using LibRender2.Textures;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -41,6 +42,8 @@ namespace LibRender2
 
 		/// <summary>The callback to the host application</summary>
 		internal HostInterface currentHost;
+		/// <summary>The host filesystem</summary>
+		internal FileSystem fileSystem;
 
 		/// <summary>Holds a reference to the current options</summary>
 		internal BaseOptions currentOptions;
@@ -196,6 +199,43 @@ namespace LibRender2
 			set;
 		}
 
+		protected internal Texture _programLogo;
+
+		private bool logoError;
+
+		/// <summary>Gets the current program logo</summary>
+		public Texture ProgramLogo
+		{
+			get
+			{
+				if (_programLogo != null || logoError)
+				{
+					return _programLogo;
+				}
+				try
+				{
+					if (Screen.Width > 1024)
+					{
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_1024.png"), new TextureParameters(null, null), out _programLogo, true);
+					}
+					else if (Screen.Width > 512)
+					{
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_512.png"), new TextureParameters(null, null), out _programLogo, true);
+					}
+					else
+					{
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_256.png"), new TextureParameters(null, null), out _programLogo, true);
+					}
+				}
+				catch
+				{
+					_programLogo = null;
+					logoError = true;
+				}
+				return _programLogo;
+			}
+		}
+
 		/*
 		 * List of VBO and IBO to delete on the next frame pass
 		 * This needs to be done here as opposed to in the finalizer
@@ -221,10 +261,11 @@ namespace LibRender2
 		/// <summary>
 		/// Call this once to initialise the renderer
 		/// </summary>
-		public virtual void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
+		public virtual void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
 		{
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
+			fileSystem = FileSystem;
 
 			try
 			{
@@ -367,7 +408,7 @@ namespace LibRender2
 			currentHost.StaticObjectCache.Clear();
 			TextureManager.UnloadAllTextures();
 
-			Initialize(currentHost, currentOptions);
+			Initialize(currentHost, currentOptions, fileSystem);
 		}
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)

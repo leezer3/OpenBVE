@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using LibRender2.Texts;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -30,9 +29,7 @@ namespace LibRender2.Loadings
 		private bool showLogo;
 		private bool showProgress;
 		private Texture TextureLoadingBkg;
-		private Texture TextureLogo;
 		private string ProgramVersion = "1.0";
-		private readonly string[] LogoFileName = { "logo_256.png", "logo_512.png", "logo_1024.png" };
 
 		internal Loading(BaseRenderer renderer)
 		{
@@ -63,40 +60,6 @@ namespace LibRender2.Loadings
 				if (System.IO.File.Exists(backgroundFile))
 				{
 					renderer.TextureManager.RegisterTexture(backgroundFile, out TextureLoadingBkg);
-				}
-			}
-
-			if (TextureLogo == null)
-			{
-				// choose logo size according to screen width
-				string fName;
-
-				if (renderer.Screen.Width > 2048)
-				{
-					fName = LogoFileName[2];
-				}
-				else if (renderer.Screen.Width > 1024)
-				{
-					fName = LogoFileName[1];
-				}
-				else
-				{
-					fName = LogoFileName[0];
-				}
-
-				string logoFile = string.Empty;
-				try
-				{
-					logoFile = OpenBveApi.Path.CombineFile(Path, fName);
-				}
-				catch
-				{
-					//ignored
-				}
-
-				if (System.IO.File.Exists(logoFile))
-				{
-					renderer.TextureManager.RegisterTexture(logoFile, out TextureLogo);
 				}
 			}
 		}
@@ -158,18 +121,18 @@ namespace LibRender2.Loadings
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
 			if (!customLoadScreen)
 			{
-				if (showLogo && TextureLogo != null && renderer.currentHost.LoadTexture(TextureLogo, OpenGlTextureWrapMode.ClampClamp))
+				if (showLogo && renderer.ProgramLogo != null)
 				{
 					// place the centre of the logo at from the screen top
-					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - TextureLogo.Height / 2.0);
+					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - renderer.ProgramLogo.Height / 2.0);
 					renderer.UnsetBlendFunc();
 					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 					GL.DepthMask(true);
-					renderer.Rectangle.Draw(TextureLogo, new Vector2((renderer.Screen.Width - TextureLogo.Width) / 2.0, logoTop), new Vector2(TextureLogo.Width, TextureLogo.Height), Color128.White);
+					renderer.Rectangle.Draw(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), new Vector2(renderer.ProgramLogo.Width, renderer.ProgramLogo.Height), Color128.White);
 					renderer.SetBlendFunc();
 					renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 					GL.DepthMask(false);
-					renderer.Rectangle.Draw(TextureLogo, new Vector2((renderer.Screen.Width - TextureLogo.Width) / 2.0, logoTop), new Vector2(TextureLogo.Width, TextureLogo.Height), Color128.White);
+					renderer.Rectangle.Draw(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), new Vector2(renderer.ProgramLogo.Width, renderer.ProgramLogo.Height), Color128.White);
 					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				}
 			}
