@@ -22,6 +22,7 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
@@ -46,6 +47,10 @@ namespace OpenBve
 		//We need to explicitly specify the default constructor
 		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default)
 		{
+			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+			{
+				return;
+			}
 			try
 			{
 				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

@@ -57,6 +57,25 @@ namespace OpenBve {
 		/// <param name="args">The command-line arguments.</param>
 		[STAThread]
 		private static void Main(string[] args) {
+			// --- load options and controls ---
+			try
+			{
+				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
+				FileSystem.CreateFileSystem();
+				Interface.LoadOptions();
+			}
+			catch
+			{
+				// ignored
+			}
+			//Switch between SDL2 and native backends; use native backend by default
+			var options = new ToolkitOptions();
+			if (Interface.CurrentOptions.PreferNativeBackend)
+			{
+				options.Backend = PlatformBackend.PreferNative;
+			}
+			Toolkit.Init(options);
+			
 			// Add handler for UI thread exceptions
 			Application.ThreadException += (CrashHandler.UIThreadException);
 
@@ -105,24 +124,9 @@ namespace OpenBve {
 			}
 
 
-			// --- load options and controls ---
-			try
-			{
-				Interface.LoadOptions();
-			}
-			catch
-			{
-				// ignored
-			}
+			
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			
-			//Switch between SDL2 and native backends; use native backend by default
-			var options = new ToolkitOptions();
-			if (Interface.CurrentOptions.PreferNativeBackend)
-			{
-				options.Backend = PlatformBackend.PreferNative;
-			}
-			Toolkit.Init(options);
 			// --- load language ---
 			string folder = Program.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
