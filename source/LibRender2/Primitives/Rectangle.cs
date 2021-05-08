@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -160,7 +160,6 @@ namespace LibRender2.Primitives
 			if (texture != null && renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
 			{
 				Shader.SetIsTexture(true);
-				GL.Enable(EnableCap.Texture2D);
 				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 			}
 			else

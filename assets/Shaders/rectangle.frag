@@ -4,6 +4,7 @@ uniform bool uIsTexture;
 uniform bool uRectangleHasColour;
 uniform vec4 uColor;
 uniform sampler2D uTexture;
+out vec4 fragColor;
 
 void main(void)
 {
@@ -12,6 +13,6 @@ void main(void)
 	{
 		textureColour *= texture(uTexture, textureCoord);
 	}
-	gl_FragData[0] = textureColour * uColor;
+	fragColor = textureColour * uColor;
 	
 }

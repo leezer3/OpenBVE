@@ -315,11 +315,14 @@ namespace LibRender2
 			GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
 			GL.Enable(EnableCap.CullFace);
 			GL.CullFace(CullFaceMode.Front);
-			GL.Disable(EnableCap.Texture2D);
 			GL.Disable(EnableCap.Dither);
 			GL.Disable(EnableCap.Lighting);
 			GL.Disable(EnableCap.Fog);
-			GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
+			if (!AvailableNewRenderer)
+			{
+				GL.Disable(EnableCap.Texture2D);
+				GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
+			}
 		}
 
 		/// <summary>Performs cleanup of disposed resources</summary>
@@ -730,10 +733,18 @@ namespace LibRender2
 				currentOptions.AnisotropicFilteringMaximum = 16;
 				return;
 			}
+			
 			string[] Extensions;
 			try
 			{
 				Extensions = GL.GetString(StringName.Extensions).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+				ErrorCode error = GL.GetError();
+				if (error == ErrorCode.InvalidEnum)
+				{
+					// Doing this on a forward compatible GL context fails with invalid enum
+					currentOptions.AnisotropicFilteringMaximum = 16;
+					return;
+				}
 			}
 			catch
 			{

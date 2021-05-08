@@ -137,6 +137,8 @@ namespace LibRender2.Shaders
 			isActive = true;
 			renderer.lastVAO = -1;
 			renderer.CurrentShader = this;
+			GL.BindFragDataLocation(handle, 0, "fragColor");
+			GL.LinkProgram(handle);
 		}
 
 		public VertexLayout GetVertexLayout()

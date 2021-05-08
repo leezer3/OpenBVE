@@ -454,7 +454,10 @@ namespace RouteManager2
 				renderer.Fog.Color = CurrentFog.Color;
 				renderer.Fog.Density = CurrentFog.Density;
 				renderer.Fog.IsLinear = CurrentFog.IsLinear;
-				renderer.Fog.SetForImmediateMode();
+				if (!renderer.AvailableNewRenderer)
+				{
+					renderer.Fog.SetForImmediateMode();
+				}
 			}
 			else
 			{

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
@@ -206,7 +206,6 @@ namespace LibRender2.Texts
 			renderer.CurrentShader = Shader;
 			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
-			GL.Enable(EnableCap.Texture2D);
 			Shader.SetIsTexture(true);
 			
 			for (int i = 0; i < text.Length; i++)
@@ -243,7 +242,6 @@ namespace LibRender2.Texts
 				left += data.TypographicSize.X;
 			}
 			renderer.RestoreBlendFunc();
-			GL.Disable(EnableCap.Texture2D);
 			Shader.Deactivate();
 		}
 

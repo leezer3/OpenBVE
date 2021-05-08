@@ -86,7 +86,6 @@ namespace OpenBve
 				{
 					Thread.Sleep(10);
 				}
-				//Renderer.UpdateLighting();
 				Program.Renderer.RenderScene(TimeElapsed, RealTimeElapsed);
 				Program.currentGameWindow.SwapBuffers();
 				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)

@@ -16,6 +16,7 @@ uniform float uFogEnd;
 uniform vec3  uFogColor;
 uniform float uFogDensity;
 uniform bool uFogIsLinear;
+out vec4 fragColor;
 
 void main(void)
 {
@@ -48,5 +49,5 @@ void main(void)
 		}
 	}
 
-	gl_FragData[0] = vec4(mix(uFogColor, finalColor.rgb, fogFactor), finalColor.a);
+	fragColor = vec4(mix(uFogColor, finalColor.rgb, fogFactor), finalColor.a);
 }

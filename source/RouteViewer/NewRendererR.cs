@@ -151,7 +151,10 @@ namespace OpenBve
 				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
 				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
 				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;
-				Fog.SetForImmediateMode();
+				if (!AvailableNewRenderer)
+				{
+					Fog.SetForImmediateMode();
+				}
 			}
 			else
 			{
