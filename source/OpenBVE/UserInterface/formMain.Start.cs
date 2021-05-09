@@ -627,16 +627,24 @@ namespace OpenBve
 				}
 				if (t != null) {
 					if (Directory.Exists(t)) {
-						string File = Path.CombineFile(t, "train.dat");
-						if (System.IO.File.Exists(File)) {
-							Result.TrainFolder = t;
-							ShowTrain(false);
-							if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
-						}
-						else
+						try
 						{
-							groupboxTrainDetails.Visible = false;
-							buttonStart.Enabled = false;
+							string File = Path.CombineFile(t, "train.dat");
+							if (System.IO.File.Exists(File))
+							{
+								Result.TrainFolder = t;
+								ShowTrain(false);
+								if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
+							}
+							else
+							{
+								groupboxTrainDetails.Visible = false;
+								buttonStart.Enabled = false;
+							}
+						}
+						catch
+						{
+							//Ignored
 						}
 					}
 				}
