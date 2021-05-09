@@ -12,7 +12,7 @@
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>Alvin Wong@I-Circle, Kenny@HKTSS</target>
+					<target>Alvin Wong, I-Circle BVE, Kenny Hui@HKTSS</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
@@ -3257,6 +3257,14 @@
 						<source>Device input</source>
 						<target>裝置輸入</target>
 					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+						<target>制動: [notch]</target>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+						<target>動力: [notch]</target>
+					</trans-unit>
 					<trans-unit id="calibration_button">
 						<source>Start calibration</source>
 						<target>開始校準：</target>
@@ -3328,6 +3336,87 @@
 					<trans-unit id="label_pedal">
 						<source>PEDAL</source>
 						<target>踏板</target>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+						<target>L DOOR</target>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
+						<target>R DOOR</target>
+					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+						<target>未檢測到我的控制器 或 控制器無法正常工作</target>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+						<target>幫助</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+						<target>我的控制器無法正常工作</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+						<target>未檢測到我的PS2控制器</target>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+						<target>Windows</target>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+						<target>Linux</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:
+
+1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
+to separate buttons to avoid compatibility issues.
+2. Calibrate the controller from the configuration window, if necessary.</source>
+						<target>如果您的非USB控制器未提供正確的輸入，請執行以下操作：
+
+1.確保USB適配器正常工作。 正常情況下，適配器應將標準控制器的方向按鈕映射到單獨的按鈕，以避免兼容性問題。 
+2.如有必要，請從配置窗口中校準控制器。</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+						<target>如果您的PS2控制器未出現在列表中，請按照下列步驟操作:</target>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.
+2. Download and run Zadig.
+3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
+4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<target>1.解壓縮Windows驅動程序。
+2.下載並運行Zadig。
+3.加載適合您設備的cfg文件(&quot;設備 &gt; 加載預設設備&quot;)。
+4.按“安裝驅動程序”，然後等待安裝完成。</target>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.
+2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
+3. Reboot or reload udev rules manually.</source>
+						<target>1.解壓縮Linux udev文件。
+2.將文件複製到 &quot;/etc/udev/rules.d/&quot; (需root權限)。
+3.重啟電腦或重新加載udev規則。</target>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+						<target>獲取Zadig</target>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+						<target>解壓縮檔案 (Windows)</target>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+						<target>解壓縮檔案 (Linux)</target>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
+						<target>確定</target>
 					</trans-unit>
 				</group>
 			</group>
