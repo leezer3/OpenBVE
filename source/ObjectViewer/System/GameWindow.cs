@@ -37,6 +37,11 @@ namespace OpenBve
             lock (Program.LockObj)
             {
                 ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
+
+				if (Program.TrainManager.Trains.Length != 0)
+				{
+					Program.TrainManager.Trains[0].UpdateObjects(timeElapsed, false);
+				}
             }
             bool updatelight = false;
             // rotate x

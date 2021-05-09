@@ -30,7 +30,8 @@ namespace OpenBve {
 
 		// members
 	    internal static string[] Files = { };
-		
+		internal static bool IsExtensionsCfg;
+
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
 		internal static Vector3 MouseCameraDirection = Vector3.Forward;
@@ -275,10 +276,9 @@ namespace OpenBve {
 					    {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
 						    {
-							    TrainManager.Trains = new TrainBase[1];
 							    Control[] dummyControls = new Control[0];
-							    TrainManager.Trains[0] = new TrainManager.Train();
-								AbstractTrain playerTrain = TrainManager.Trains[0] as AbstractTrain;
+								TrainManager.Trains = new[] { new TrainBase(TrainState.Available) };
+								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
 								break;
@@ -315,8 +315,9 @@ namespace OpenBve {
 			    {
 				    Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
 			    }
-
 		    }
+
+			IsExtensionsCfg = TrainManager.Trains.Length != 0;
 
 		    Renderer.InitializeVisibility();
 		    Renderer.UpdateViewingDistances(600);

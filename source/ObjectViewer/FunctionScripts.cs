@@ -5,12 +5,13 @@ using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using TrainManager.Handles;
+using TrainManager.Trains;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
 
 		// execute function script
-		internal static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.InstructionSet.Length; i++) {
 				switch (Function.InstructionSet[i]) {
@@ -965,8 +966,7 @@ namespace OpenBve {
 						// safety
 					case Instructions.SafetyPluginAvailable:
 						if (Train != null && Train.IsPlayerTrain) {
-							TrainManager.Train tTrain = Train as TrainManager.Train;
-							Function.Stack[s] = tTrain.SafetySystemPlugin ? 1.0 : 0.0;
+							Function.Stack[s] = Program.TrainManager.EnablePluginSimulation ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -976,7 +976,7 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						} else {
 							int n = (int)Math.Round(Function.Stack[s - 1]);
-							if (Train.SafetySystemPlugin) {
+							if (Program.TrainManager.EnablePluginSimulation) {
 								if (n >= 0 & n < PluginManager.CurrentPlugin.Panel.Length) {
 									Function.Stack[s - 1] = (double)PluginManager.CurrentPlugin.Panel[n];
 								} else {
