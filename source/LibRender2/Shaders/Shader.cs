@@ -77,7 +77,7 @@ namespace LibRender2.Shaders
 
 			GL.DeleteShader(vertexShader);
 			GL.DeleteShader(fragmentShader);
-
+			GL.BindFragDataLocation(handle, 0, "fragColor");
 			GL.LinkProgram(handle);
 			GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out status);
 
@@ -137,8 +137,6 @@ namespace LibRender2.Shaders
 			isActive = true;
 			renderer.lastVAO = -1;
 			renderer.CurrentShader = this;
-			GL.BindFragDataLocation(handle, 0, "fragColor");
-			GL.LinkProgram(handle);
 		}
 
 		public VertexLayout GetVertexLayout()
