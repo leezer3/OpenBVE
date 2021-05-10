@@ -7,8 +7,8 @@
 <#
 	int major = 1;
 	int minor = 7;
-	string version;
-	string infoVersion;
+	string version = string.Empty;
+	string infoVersion = string.Empty;
 
 	try
 	{
@@ -17,7 +17,16 @@
 			version = ExecuteGitCommand("describe --tags");
 			infoVersion = version;
 		}
-		else
+	}
+	catch
+	{
+		version = string.Empty;
+		infoVersion = string.Empty;
+	}
+
+	if (string.IsNullOrEmpty(version))
+	{
+		try
 		{
 			//This is a quick and easy hack to increment the build number once a day if built
 			int build = (int)(DateTime.UtcNow - new DateTime(2019, 10, 29)).TotalDays;
@@ -26,11 +35,11 @@
 			version = string.Format("{0}.{1}.{2}.{3}", major, minor, build, revision);
 			infoVersion = string.Format("{0}-{1}", version, Environment.UserName);
 		}
-	}
-	catch
-	{
-		version = string.Format("{0}.{1}.0.0", major, minor);
-		infoVersion = string.Format("{0}-unknown", version);
+		catch
+		{
+			version = string.Format("{0}.{1}.0.0", major, minor);
+			infoVersion = string.Format("{0}-unknown", version);
+		}
 	}
  #>
 
