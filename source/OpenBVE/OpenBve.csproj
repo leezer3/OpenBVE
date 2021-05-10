@@ -399,7 +399,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">$(ProjectDir)..\DevTools\TextTransform\TextTransform.exe $(ProjectDir)\Properties\AssemblyInfo.tt</PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">mono $(ProjectDir)../DevTools/TextTransform/TextTransform.exe $(ProjectDir)Properties/AssemblyInfo.tt</PreBuildEvent>
   </PropertyGroup>
   <Target Name="AfterBuild">
     <!-- Set LBA flag -->
@@ -411,5 +411,8 @@
       <AssetFiles Include="$(SolutionDir)assets\**\*.*" />
     </ItemGroup>
     <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="AfterClean">
+    <Delete Files="Properties\AssemblyInfo.cs" />
   </Target>
 </Project>
