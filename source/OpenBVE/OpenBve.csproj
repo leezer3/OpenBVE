@@ -370,10 +370,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Properties\AssemblyInfo.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
-    </Content>
+    <Content Include="Properties\AssemblyInfo.tt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -398,8 +395,10 @@
     <TransformOutOfDateOnly>true</TransformOutOfDateOnly>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">$(ProjectDir)..\DevTools\TextTransform\TextTransform.exe $(ProjectDir)\Properties\AssemblyInfo.tt</PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
+    <!-- Generate AssemblyInfo.cs -->
+    <!-- NOTE: Microsoft.TextTemplating.targets cannot process files that contain LF. -->
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">$(ProjectDir)..\DevTools\TextTransform\TextTransform.exe $(ProjectDir)\Properties\AssemblyInfo.tt</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">mono $(ProjectDir)../DevTools/TextTransform/TextTransform.exe $(ProjectDir)Properties/AssemblyInfo.tt</PreBuildEvent>
   </PropertyGroup>
   <Target Name="AfterBuild">
     <!-- Set LBA flag -->
@@ -411,5 +410,8 @@
       <AssetFiles Include="$(SolutionDir)assets\**\*.*" />
     </ItemGroup>
     <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="AfterClean">
+    <Delete Files="Properties\AssemblyInfo.cs" />
   </Target>
 </Project>
