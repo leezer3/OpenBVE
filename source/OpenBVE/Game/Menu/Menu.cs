@@ -1158,15 +1158,7 @@ namespace OpenBve
 				itemY += lineHeight;
 				if (menu.Items[i].Icon != null)
 				{
-					Program.Renderer.UnsetBlendFunc();
-					Program.Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-					GL.DepthMask(true);
-					Program.Renderer.Rectangle.Draw(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
-					Program.Renderer.SetBlendFunc();
-					Program.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					GL.DepthMask(false);
-					Program.Renderer.Rectangle.Draw(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
-					Program.Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					Program.Renderer.Rectangle.DrawAlpha(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
 					itemX = iconX;
 				}
 			}

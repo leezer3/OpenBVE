@@ -125,15 +125,7 @@ namespace LibRender2.Loadings
 				{
 					// place the centre of the logo at from the screen top
 					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - renderer.ProgramLogo.Height / 2.0);
-					renderer.UnsetBlendFunc();
-					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-					GL.DepthMask(true);
-					renderer.Rectangle.Draw(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), new Vector2(renderer.ProgramLogo.Width, renderer.ProgramLogo.Height), Color128.White);
-					renderer.SetBlendFunc();
-					renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					GL.DepthMask(false);
-					renderer.Rectangle.Draw(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), new Vector2(renderer.ProgramLogo.Width, renderer.ProgramLogo.Height), Color128.White);
-					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					renderer.Rectangle.DrawAlpha(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), new Vector2(renderer.ProgramLogo.Width, renderer.ProgramLogo.Height), Color128.White);
 				}
 			}
 			// ReSharper disable once RedundantIfElseBlock

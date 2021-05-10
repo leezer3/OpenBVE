@@ -53,15 +53,7 @@ namespace LibRender2.Primitives
 						newSize.Y = Size.Y;
 					}
 					//Two-pass draw the texture in appropriate place
-					Renderer.UnsetBlendFunc();
-					Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-					GL.DepthMask(true);
-					Renderer.Rectangle.Draw(Texture, Location, newSize, Color128.White, new Vector2(newSize / Size));
-					Renderer.SetBlendFunc();
-					Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					GL.DepthMask(false);
-					Renderer.Rectangle.Draw(Texture, Location, newSize, Color128.White, new Vector2(newSize / Size));
-					Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					Renderer.Rectangle.DrawAlpha(Texture, Location, newSize, Color128.White, new Vector2(newSize / Size));
 					break;
 				case ImageSizeMode.Center:
 					//Draw box containing backing color first
@@ -78,15 +70,7 @@ namespace LibRender2.Primitives
 						newSize.Y = Size.Y;
 					}
 					//Two-pass draw the texture in appropriate place
-					Renderer.UnsetBlendFunc();
-					Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-					GL.DepthMask(true);
-					Renderer.Rectangle.Draw(Texture, Location + new Vector2(newSize - Size) / 2, newSize, Color128.White, new Vector2(newSize / Size));
-					Renderer.SetBlendFunc();
-					Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					GL.DepthMask(false);
-					Renderer.Rectangle.Draw(Texture, Location + new Vector2(newSize - Size) / 2, newSize, Color128.White, new Vector2(newSize / Size));
-					Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					Renderer.Rectangle.DrawAlpha(Texture, Location + new Vector2(newSize - Size) / 2, newSize, Color128.White, new Vector2(newSize / Size));
 					break;
 				case ImageSizeMode.Stretch:
 					//No neeed to draw a backing color box as texture covers the whole thing
@@ -100,16 +84,7 @@ namespace LibRender2.Primitives
 					double ratioH = Size.Y / Texture.Height;
 					double newRatio = ratioW < ratioH ? ratioW : ratioH;
 					newSize = new Vector2(Texture.Width, Texture.Height) * newRatio;
-					//Two-pass draw the texture in appropriate place
-					Renderer.UnsetBlendFunc();
-					Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-					GL.DepthMask(true);
-					Renderer.Rectangle.Draw(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White);
-					Renderer.SetBlendFunc();
-					Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					GL.DepthMask(false);
-					Renderer.Rectangle.Draw(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White);
-					Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					Renderer.Rectangle.DrawAlpha(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White);
 					break;
 			}
 			

@@ -48,6 +48,25 @@ namespace LibRender2.Primitives
 			Draw(null, new Vector2(left, top), new Vector2((right - left), (bottom - top)));
 		}
 
+		/// <summary>Draws a simple 2D rectangle using two-pass alpha blending.</summary>
+		/// <param name="texture">The texture, or a null reference.</param>
+		/// <param name="point">The top-left coordinates in pixels.</param>
+		/// <param name="size">The size in pixels.</param>
+		/// <param name="color">The color, or a null reference.</param>
+		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
+		public void DrawAlpha(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null)
+		{
+			renderer.UnsetBlendFunc();
+			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+			GL.DepthMask(true);
+			Draw(texture, point, size, color, textureCoordinates);
+			renderer.SetBlendFunc();
+			renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
+			GL.DepthMask(false);
+			Draw(texture, point, size, color, textureCoordinates);
+			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+		}
+
 		/// <summary>Draws a simple 2D rectangle.</summary>
 		/// <param name="texture">The texture, or a null reference.</param>
 		/// <param name="point">The top-left coordinates in pixels.</param>
