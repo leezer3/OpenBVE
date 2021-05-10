@@ -99,32 +99,6 @@ namespace OpenBve
 				Program.Renderer.UpdateViewport();
 			}
 
-			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
-			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel)
-			{
-				Program.LightingRelative = -1.0;
-				Game.Reset();
-				for (int i = 0; i < Program.Files.Length; i++)
-				{
-					try
-					{
-						UnifiedObject o;
-						Program.CurrentHost.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, out o);
-						o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
-
-					}
-					catch (Exception ex)
-					{
-						Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Program.Files[i] + ".");
-					}
-				}
-
-				Program.Renderer.InitializeVisibility();
-				Program.Renderer.UpdateVisibility(0.0, true);
-				ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
-
-			}
-
 			Interface.CurrentOptions.CurrentXParser = (XParsers) comboBoxNewXParser.SelectedIndex;
 			Interface.CurrentOptions.CurrentObjParser = (ObjParsers) comboBoxNewObjParser.SelectedIndex;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -147,6 +121,7 @@ namespace OpenBve
 				Interface.CurrentOptions.ObjectOptimizationFullThreshold = 0;
 			}
 			Options.SaveOptions();
+			Program.RefreshObjects();
 			this.Close();
 		}
 	}
