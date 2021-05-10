@@ -1,10 +1,11 @@
 #version 150
-
 in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
 in vec4 oLightResult;
-
+uniform bool uAlphaTestEnabled;
+uniform int uAlphaFunction;
+uniform float uAlphaComparison;
 uniform bool uIsTexture;
 uniform sampler2D uTexture;
 uniform int uMaterialFlags;
@@ -33,6 +34,51 @@ void main(void)
 	finalColor.a *= uOpacity;
 	//Apply the lighting results *after* the final color has been calculated
 	finalColor *= oLightResult;
+
+	if(uAlphaTestEnabled)
+	{
+		switch(uAlphaFunction)
+		{
+			case 512: // Never
+				discard;
+			case 513: // Less
+				if(finalColor.a >= uAlphaComparison)
+				{
+					discard;
+				}
+				break;
+			case 514: // Equal
+				if(!(abs(finalColor.a - 1.0) < 0.00001))
+				{
+					discard;
+				}
+				break;
+			case 515: // LEqual
+				if(finalColor.a > uAlphaComparison)
+				{
+					discard;
+				}
+				break;
+			case 516: // Greater
+				if(finalColor.a <= uAlphaComparison)
+				{
+					discard;
+				}
+				break;
+			case 517: // NotEqual
+				if((abs(finalColor.a - 1.0) < 0.00001))
+				{
+					discard;
+				}
+				break;
+			case 518: // GEqual
+				if(finalColor.a < uAlphaComparison)
+				{
+					discard;
+				}
+				break;
+		}
+	}
 
 	// Fog
 	float fogFactor = 1.0;

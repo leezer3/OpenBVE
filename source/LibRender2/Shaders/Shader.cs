@@ -185,7 +185,10 @@ namespace LibRender2.Shaders
 				Size = (short)GL.GetUniformLocation(handle, "uSize"),
 				Color = (short)GL.GetUniformLocation(handle, "uColor"),
 				Coordinates = (short)GL.GetUniformLocation(handle, "uCoordinates"),
-				AtlasLocation = (short)GL.GetUniformLocation(handle, "uAtlasLocation")
+				AtlasLocation = (short)GL.GetUniformLocation(handle, "uAtlasLocation"),
+				AlphaFunction = (short)GL.GetUniformLocation(handle, "uAlphaFunction"),
+				AlphaComparison = (short)GL.GetUniformLocation(handle, "uAlphaComparison"),
+				AlphaTestEnabled = (short)GL.GetUniformLocation(handle, "uAlphaTestEnabled")
 			};
 		}
 
@@ -227,7 +230,7 @@ namespace LibRender2.Shaders
 		public void SetCurrentProjectionMatrix(Matrix4D ProjectionMatrix)
 		{
 			Matrix4 matrix = ConvertToMatrix4(ProjectionMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentProjectionMatrix, false, ref matrix);
+			GL.ProgramUniformMatrix4(handle, UniformLayout.CurrentProjectionMatrix, false, ref matrix);
 		}
 
 		/// <summary>
@@ -237,7 +240,7 @@ namespace LibRender2.Shaders
 		public void SetCurrentModelViewMatrix(Matrix4D ModelViewMatrix)
 		{
 			Matrix4 matrix = ConvertToMatrix4(ModelViewMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentModelViewMatrix, false, ref matrix);
+			GL.ProgramUniformMatrix4(handle, UniformLayout.CurrentModelViewMatrix, false, ref matrix);
 		}
 		
 		/// <summary>
@@ -247,131 +250,142 @@ namespace LibRender2.Shaders
 		public void SetCurrentTextureMatrix(Matrix4D TextureMatrix)
 		{
 			Matrix4 matrix = ConvertToMatrix4(TextureMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentTextureMatrix, false, ref matrix);
+			GL.ProgramUniformMatrix4(handle, UniformLayout.CurrentTextureMatrix, false, ref matrix);
 		}
 
 		public void SetIsLight(bool IsLight)
 		{
-			GL.Uniform1(UniformLayout.IsLight, IsLight ? 1 : 0);
+			GL.ProgramUniform1(handle, UniformLayout.IsLight, IsLight ? 1 : 0);
 		}
 
 		public void SetLightPosition(Vector3 LightPosition)
 		{
-			GL.Uniform3(UniformLayout.LightPosition, (float)LightPosition.X, (float)LightPosition.Y, (float)LightPosition.Z);
+			GL.ProgramUniform3(handle, UniformLayout.LightPosition, (float)LightPosition.X, (float)LightPosition.Y, (float)LightPosition.Z);
 		}
 
 		public void SetLightAmbient(Color24 LightAmbient)
 		{
-			GL.Uniform3(UniformLayout.LightAmbient, LightAmbient.R / 255.0f, LightAmbient.G / 255.0f, LightAmbient.B / 255.0f);
+			GL.ProgramUniform3(handle, UniformLayout.LightAmbient, LightAmbient.R / 255.0f, LightAmbient.G / 255.0f, LightAmbient.B / 255.0f);
 		}
 
 		public void SetLightDiffuse(Color24 LightDiffuse)
 		{
-			GL.Uniform3(UniformLayout.LightDiffuse, LightDiffuse.R / 255.0f, LightDiffuse.G / 255.0f, LightDiffuse.B / 255.0f);
+			GL.ProgramUniform3(handle, UniformLayout.LightDiffuse, LightDiffuse.R / 255.0f, LightDiffuse.G / 255.0f, LightDiffuse.B / 255.0f);
 		}
 
 		public void SetLightSpecular(Color24 LightSpecular)
 		{
-			GL.Uniform3(UniformLayout.LightSpecular, LightSpecular.R / 255.0f, LightSpecular.G / 255.0f, LightSpecular.B / 255.0f);
+			GL.ProgramUniform3(handle, UniformLayout.LightSpecular, LightSpecular.R / 255.0f, LightSpecular.G / 255.0f, LightSpecular.B / 255.0f);
 		}
 
 		public void SetLightModel(Vector4 LightModel)
 		{
-			GL.Uniform4(UniformLayout.LightModel, (float)LightModel.X, (float)LightModel.Y, (float)LightModel.Z, (float)LightModel.W);
+			GL.ProgramUniform4(handle, UniformLayout.LightModel, (float)LightModel.X, (float)LightModel.Y, (float)LightModel.Z, (float)LightModel.W);
 		}
 
 		public void SetMaterialAmbient(Color32 MaterialAmbient)
 		{
-			GL.Uniform4(UniformLayout.MaterialAmbient, MaterialAmbient.R / 255.0f, MaterialAmbient.G / 255.0f, MaterialAmbient.B / 255.0f, MaterialAmbient.A / 255.0f);
+			GL.ProgramUniform4(handle, UniformLayout.MaterialAmbient, MaterialAmbient.R / 255.0f, MaterialAmbient.G / 255.0f, MaterialAmbient.B / 255.0f, MaterialAmbient.A / 255.0f);
 		}
 
 		public void SetMaterialDiffuse(Color32 MaterialDiffuse)
 		{
-			GL.Uniform4(UniformLayout.MaterialDiffuse, MaterialDiffuse.R / 255.0f, MaterialDiffuse.G / 255.0f, MaterialDiffuse.B / 255.0f, MaterialDiffuse.A / 255.0f);
+			GL.ProgramUniform4(handle, UniformLayout.MaterialDiffuse, MaterialDiffuse.R / 255.0f, MaterialDiffuse.G / 255.0f, MaterialDiffuse.B / 255.0f, MaterialDiffuse.A / 255.0f);
 		}
 
 		public void SetMaterialSpecular(Color32 MaterialSpecular)
 		{
-			GL.Uniform4(UniformLayout.MaterialSpecular, MaterialSpecular.R / 255.0f, MaterialSpecular.G / 255.0f, MaterialSpecular.B / 255.0f, MaterialSpecular.A / 255.0f);
+			GL.ProgramUniform4(handle, UniformLayout.MaterialSpecular, MaterialSpecular.R / 255.0f, MaterialSpecular.G / 255.0f, MaterialSpecular.B / 255.0f, MaterialSpecular.A / 255.0f);
 		}
 
 		public void SetMaterialEmission(Color24 MaterialEmission)
 		{
-			GL.Uniform3(UniformLayout.MaterialEmission, MaterialEmission.R / 255.0f, MaterialEmission.G / 255.0f, MaterialEmission.B / 255.0f);
+			GL.ProgramUniform3(handle, UniformLayout.MaterialEmission, MaterialEmission.R / 255.0f, MaterialEmission.G / 255.0f, MaterialEmission.B / 255.0f);
 		}
 
 		public void SetMaterialShininess(float MaterialShininess)
 		{
-			GL.Uniform1(UniformLayout.MaterialShininess, MaterialShininess);
+			GL.ProgramUniform1(handle, UniformLayout.MaterialShininess, MaterialShininess);
 		}
 
 		public void SetMaterialFlags(MaterialFlags Flags)
 		{
-			GL.Uniform1(UniformLayout.MaterialFlags, (int)Flags);
+			GL.ProgramUniform1(handle, UniformLayout.MaterialFlags, (int)Flags);
 		}
 
 		public void SetIsFog(bool IsFog)
 		{
-			GL.Uniform1(UniformLayout.IsFog, IsFog ? 1 : 0);
+			GL.ProgramUniform1(handle, UniformLayout.IsFog, IsFog ? 1 : 0);
 		}
 
 		public void SetFog(Fog Fog)
 		{
-			GL.Uniform1(UniformLayout.FogStart, Fog.Start);
-			GL.Uniform1(UniformLayout.FogEnd, Fog.End);
-			GL.Uniform3(UniformLayout.FogColor, Fog.Color.R / 255.0f, Fog.Color.G / 255.0f, Fog.Color.B / 255.0f);
-			GL.Uniform1(UniformLayout.FogIsLinear, Fog.IsLinear ? 1 : 0);
-			GL.Uniform1(UniformLayout.FogDensity, Fog.Density);
+			GL.ProgramUniform1(handle, UniformLayout.FogStart, Fog.Start);
+			GL.ProgramUniform1(handle, UniformLayout.FogEnd, Fog.End);
+			GL.ProgramUniform3(handle, UniformLayout.FogColor, Fog.Color.R / 255.0f, Fog.Color.G / 255.0f, Fog.Color.B / 255.0f);
+			GL.ProgramUniform1(handle, UniformLayout.FogIsLinear, Fog.IsLinear ? 1 : 0);
+			GL.ProgramUniform1(handle, UniformLayout.FogDensity, Fog.Density);
 		}
 		
 		public void SetIsTexture(bool IsTexture)
 		{
-			GL.Uniform1(UniformLayout.IsTexture, IsTexture ? 1 : 0);
+			GL.ProgramUniform1(handle, UniformLayout.IsTexture, IsTexture ? 1 : 0);
 		}
 
 		public void SetTexture(int TextureUnit)
 		{
-			GL.Uniform1(UniformLayout.Texture, TextureUnit);
+			GL.ProgramUniform1(handle, UniformLayout.Texture, TextureUnit);
 		}
 
 		public void SetBrightness(float Brightness)
 		{
-			GL.Uniform1(UniformLayout.Brightness, Brightness);
+			GL.ProgramUniform1(handle, UniformLayout.Brightness, Brightness);
 		}
 
 		public void SetOpacity(float Opacity)
 		{
-			GL.Uniform1(UniformLayout.Opacity, Opacity);
+			GL.ProgramUniform1(handle, UniformLayout.Opacity, Opacity);
 		}
 
 		public void SetObjectIndex(int ObjectIndex)
 		{
-			GL.Uniform1(UniformLayout.ObjectIndex, ObjectIndex);
+			GL.ProgramUniform1(handle, UniformLayout.ObjectIndex, ObjectIndex);
 		}
 
 		public void SetPoint(Vector2 point)
 		{
-			GL.Uniform2(UniformLayout.Point, (float)point.X, (float)point.Y);
+			GL.ProgramUniform2(handle, UniformLayout.Point, (float)point.X, (float)point.Y);
 		}
 
 		public void SetSize(Vector2 size)
 		{
-			GL.Uniform2(UniformLayout.Size, (float) size.X, (float) size.Y);
+			GL.ProgramUniform2(handle, UniformLayout.Size, (float) size.X, (float) size.Y);
 		}
 
 		public void SetColor(Color128 color)
 		{
-			GL.Uniform4(UniformLayout.Color, color.R, color.G, color.B, color.A);
+			GL.ProgramUniform4(handle, UniformLayout.Color, color.R, color.G, color.B, color.A);
 		}
 
 		public void SetCoordinates(Vector2 coordinates)
 		{
-			GL.Uniform2(UniformLayout.Coordinates, (float)coordinates.X, (float)coordinates.Y);
+			GL.ProgramUniform2(handle, UniformLayout.Coordinates, (float)coordinates.X, (float)coordinates.Y);
 		}
 
 		public void SetAtlasLocation(Vector4 atlasLocation)
 		{
-			GL.Uniform4(UniformLayout.AtlasLocation, (float)atlasLocation.X, (float)atlasLocation.Y, (float)atlasLocation.Z, (float)atlasLocation.W);
+			GL.ProgramUniform4(handle, UniformLayout.AtlasLocation, (float)atlasLocation.X, (float)atlasLocation.Y, (float)atlasLocation.Z, (float)atlasLocation.W);
+		}
+
+		public void SetAlphaFunction(AlphaFunction alphaFunction, float alphaComparison)
+		{
+			GL.ProgramUniform1(handle, UniformLayout.AlphaFunction, (int)alphaFunction);
+			GL.ProgramUniform1(handle, UniformLayout.AlphaComparison, alphaComparison);
+		}
+
+		public void SetAlphaTest(bool enabled)
+		{
+			GL.ProgramUniform1(handle, UniformLayout.AlphaTestEnabled, enabled ? 1 : 0);
 		}
 
 		#endregion

@@ -187,5 +187,20 @@
 		/// The handle of "uAtlasLocation" within the shader
 		/// </summary>
 		public short AtlasLocation;
+
+		/// <summary>
+		/// The handle of "uAlphaFunction" within the shader
+		/// </summary>
+		public short AlphaFunction;
+
+		/// <summary>
+		/// The handle of "uAlphaComparison" within the shader
+		/// </summary>
+		public short AlphaComparison;
+
+		/// <summary>
+		/// The handle of "uAlphaTestEnabled" within the shader
+		/// </summary>
+		public short AlphaTestEnabled;
 	}
 }

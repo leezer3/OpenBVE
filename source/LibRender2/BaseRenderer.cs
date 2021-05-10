@@ -120,7 +120,7 @@ namespace LibRender2
 #pragma warning restore 0219
 
 		/// <summary>The current shader in use</summary>
-		internal Shader CurrentShader;
+		protected internal Shader CurrentShader;
 
 		public Shader DefaultShader;
 
@@ -898,15 +898,32 @@ namespace LibRender2
 			alphaTestEnabled = true;
 			alphaFuncComparison = Comparison;
 			alphaFuncValue = Value;
-			GL.Enable(EnableCap.AlphaTest);
-			GL.AlphaFunc(Comparison, Value);
+			if (AvailableNewRenderer)
+			{
+				CurrentShader.SetAlphaTest(true);
+				CurrentShader.SetAlphaFunction(Comparison, Value);
+			}
+			else
+			{
+				GL.Enable(EnableCap.AlphaTest);
+				GL.AlphaFunc(Comparison, Value);	
+			}
+			
 		}
 
 		/// <summary>Disables OpenGL alpha testing</summary>
 		public void UnsetAlphaFunc()
 		{
 			alphaTestEnabled = false;
-			GL.Disable(EnableCap.AlphaTest);
+			if (AvailableNewRenderer)
+			{
+				CurrentShader.SetAlphaTest(false);
+			}
+			else
+			{
+				GL.Disable(EnableCap.AlphaTest);	
+			}
+			
 		}
 
 		/// <summary>Restores the OpenGL alpha function to it's previous state</summary>
@@ -914,12 +931,28 @@ namespace LibRender2
 		{
 			if (alphaTestEnabled)
 			{
-				GL.Enable(EnableCap.AlphaTest);
-				GL.AlphaFunc(alphaFuncComparison, alphaFuncValue);
+				if (AvailableNewRenderer)
+				{
+					CurrentShader.SetAlphaTest(true);
+					CurrentShader.SetAlphaFunction(alphaFuncComparison, alphaFuncValue);
+				}
+				else
+				{
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(alphaFuncComparison, alphaFuncValue);
+				}
+				
 			}
 			else
 			{
-				GL.Disable(EnableCap.AlphaTest);
+				if (AvailableNewRenderer)
+				{
+					CurrentShader.SetAlphaTest(false);
+				}
+				else
+				{
+					GL.Disable(EnableCap.AlphaTest);
+				}
 			}
 		}
 
@@ -1111,9 +1144,9 @@ namespace LibRender2
 				GL.Enable(EnableCap.Blend);
 
 				// alpha test
-				GL.Enable(EnableCap.AlphaTest);
-				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
-
+				Shader.SetAlphaTest(true);
+				Shader.SetAlphaFunction(AlphaFunction.Greater, 0.0f);
+				
 				// blend mode
 				float alphaFactor = distanceFactor * blendFactor;
 

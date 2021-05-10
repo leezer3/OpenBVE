@@ -1,4 +1,3 @@
-using System;
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -25,27 +24,6 @@ namespace LibRender2.Primitives
 			{
 				renderer.ForceLegacyOpenGL = true;
 			}
-		}
-
-		/// <summary>Renders an overlay texture</summary>
-		/// <param name="texture">The texture</param>
-		/// <param name="left">The left co-ordinate</param>
-		/// <param name="top">The top co-ordinate</param>
-		/// <param name="right">The right co-ordinate</param>
-		/// <param name="bottom">The bottom co-ordinate</param>
-		public void RenderOverlayTexture(Texture texture, double left, double top, double right, double bottom)
-		{
-			Draw(texture, new Vector2(left, top), new Vector2((right - left), (bottom - top)));
-		}
-
-		/// <summary>Renders a solid color rectangular overlay</summary>
-		/// <param name="left">The left co-ordinate</param>
-		/// <param name="top">The top co-ordinate</param>
-		/// <param name="right">The right co-ordinate</param>
-		/// <param name="bottom">The bottom co-ordinate</param>
-		public void RenderOverlaySolid(double left, double top, double right, double bottom)
-		{
-			Draw(null, new Vector2(left, top), new Vector2((right - left), (bottom - top)));
 		}
 
 		/// <summary>Draws a simple 2D rectangle using two-pass alpha blending.</summary>
