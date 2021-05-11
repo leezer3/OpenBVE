@@ -115,8 +115,12 @@ namespace Train.OpenBve
 					default:
 						if (t.ToLowerInvariant().StartsWith("openbve"))
 						{
-							string tt = t.Substring(7, t.Length - 7);
-							if (!NumberFormats.TryParseIntVb6(tt, out version))
+							string tt = t.Substring(7, t.Length - 7).Trim();
+							if (string.IsNullOrEmpty(tt))
+							{
+								version = 0;
+							}
+							else if (!NumberFormats.TryParseIntVb6(tt, out version))
 							{
 								version = -1;
 							}
@@ -171,21 +175,26 @@ namespace Train.OpenBve
 			// Check version
 			const int currentVersion = 17250;
 			TrainDatFormats currentFormat = ParseFormat(Lines, out int myVersion);
-
-			if (currentFormat == TrainDatFormats.openBVE)
+			string versionString = Lines.FirstOrDefault(x => x.Length > 0) ?? Lines[0];
+			switch (currentFormat)
 			{
-				if (myVersion == -1)
+				case TrainDatFormats.openBVE when myVersion == -1:
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat version " + versionString + " is invalid in " + FileName);
+					break;
+				case TrainDatFormats.openBVE:
 				{
-					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
+					if (myVersion > currentVersion)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " with version " + versionString + " was created with a newer version of openBVE. Please check for an update.");
+					}
+					break;
 				}
-				else if (myVersion > currentVersion)
-				{
-					Plugin.currentHost.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
-				}
-			}
-			else if (currentFormat == TrainDatFormats.Unsupported)
-			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+				case TrainDatFormats.Unsupported:
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + versionString + " is not supported in " + FileName);
+					break;
+				case TrainDatFormats.UnknownBVE:
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + versionString + " appears to have been created by an unknown BVE version. in " + FileName + " - Please report this.");
+					break;
 			}
 
 			// initialize
