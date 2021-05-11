@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -188,7 +187,6 @@ namespace LibRender2.Shaders
 				AtlasLocation = (short)GL.GetUniformLocation(handle, "uAtlasLocation"),
 				AlphaFunction = (short)GL.GetUniformLocation(handle, "uAlphaFunction"),
 				AlphaComparison = (short)GL.GetUniformLocation(handle, "uAlphaComparison"),
-				AlphaTestEnabled = (short)GL.GetUniformLocation(handle, "uAlphaTestEnabled")
 			};
 		}
 
@@ -385,7 +383,7 @@ namespace LibRender2.Shaders
 
 		public void SetAlphaTest(bool enabled)
 		{
-			GL.ProgramUniform1(handle, UniformLayout.AlphaTestEnabled, enabled ? 1 : 0);
+			GL.ProgramUniform1(handle, UniformLayout.AlphaFunction, (int)AlphaFunction.Always);
 		}
 
 		#endregion

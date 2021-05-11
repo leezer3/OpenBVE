@@ -197,10 +197,5 @@
 		/// The handle of "uAlphaComparison" within the shader
 		/// </summary>
 		public short AlphaComparison;
-
-		/// <summary>
-		/// The handle of "uAlphaTestEnabled" within the shader
-		/// </summary>
-		public short AlphaTestEnabled;
 	}
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
