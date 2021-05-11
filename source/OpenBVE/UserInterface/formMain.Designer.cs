@@ -1492,8 +1492,8 @@
 			// groupBoxInputDevice
 			// 
 			this.groupBoxInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-			| System.Windows.Forms.AnchorStyles.Left) 
-			| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxInputDevice.Controls.Add(this.labelInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
@@ -1540,6 +1540,7 @@
 			this.listviewInputDevice.UseCompatibleStateImageBehavior = false;
 			this.listviewInputDevice.View = System.Windows.Forms.View.Details;
 			this.listviewInputDevice.SelectedIndexChanged += new System.EventHandler(this.listviewInputDevice_SelectedIndexChanged);
+			this.listviewInputDevice.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listviewInputDevice_MouseDoubleClick);
 			// 
 			// columnheaderInputDeviceName
 			// 
@@ -1564,6 +1565,7 @@
 			// 
 			// checkBoxInputDeviceEnable
 			// 
+			this.checkBoxInputDeviceEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.checkBoxInputDeviceEnable.AutoSize = true;
 			this.checkBoxInputDeviceEnable.Enabled = false;
 			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 116);
@@ -5663,8 +5665,8 @@
 			this.Controls.Add(this.labelFillerOne);
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
-			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelOptions);
+			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelReview);

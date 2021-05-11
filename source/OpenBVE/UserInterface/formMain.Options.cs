@@ -143,6 +143,14 @@ namespace OpenBve {
 				UpdateInputDeviceListViewItem(listviewInputDevice.Items[index], index, true);
 			}
 		}
+		
+		private void listviewInputDevice_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (listviewInputDevice.SelectedIndices.Count == 1)
+			{
+				checkBoxInputDeviceEnable.Checked = !checkBoxInputDeviceEnable.Checked;
+			}
+		}
 
 		// Input Device Plugin Config
 		private void buttonInputDeviceConfig_Click(object sender, EventArgs e) {
