@@ -78,10 +78,24 @@ namespace Plugin
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
 			StaticObject Object = new StaticObject(currentHost);
-
+			string fileHash = Path.GetChecksum(FileName);
+			bool multiColumn = !IsB3D;
+			switch (fileHash)
+			{
+				case "C605832CCDC73883AC4A557EB3AD0D3EAAB678D64B2659D6A342EAD5BEECD2B9":
+				case "5283E317C51CBAB6015C178D425C06724225605D0662530AE93B850A908FE55A":
+				case "3078438BCF679CB1DE2F2372A8791A2C10D29FAED6871C25348EE5C2F977C2E6":
+				case "0F928CE5BC277C056E7174545C8DA9326D99463DA59C541317FC831D3443E273":
+					/*
+					 * RailJet 2012 objects
+					 * Total mess....
+					 */
+					multiColumn = false;
+					break;
+			}
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			if (!IsB3D && enabledHacks.BveTsHacks)
+			if (enabledHacks.BveTsHacks && multiColumn)
 			{
 				/*
 				 * Handles multi-column CSV objects [Hide behind the hacks option in the main program]
