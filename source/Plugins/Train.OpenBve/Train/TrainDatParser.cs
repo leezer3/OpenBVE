@@ -86,8 +86,9 @@ namespace Train.OpenBve
 
 		/// <summary>Parse the format of the specified train.dat</summary>
 		/// <param name="lines">The array of the specified train.dat</param>
+		/// <param name="format">The format of the specified train.dat</param>
 		/// <param name="version">The version of the specified OpenBVE train.dat</param>
-		private static TrainDatFormats ParseFormat(IReadOnlyList<string> lines, out int version)
+		private static bool TryParseFormat(IReadOnlyList<string> lines, out TrainDatFormats format, out int version)
 		{
 			version = -1;
 			for (int i = 0; i < lines.Count; i++)
@@ -101,38 +102,50 @@ namespace Train.OpenBve
 				switch (t)
 				{
 					case "bve1200000":
-						return TrainDatFormats.BVE1200000;
+						format = TrainDatFormats.BVE1200000;
+						return true;
 					case "bve1210000":
-						return TrainDatFormats.BVE1210000;
+						format = TrainDatFormats.BVE1210000;
+						return true;
 					case "bve1220000":
-						return TrainDatFormats.BVE1220000;
+						format = TrainDatFormats.BVE1220000;
+						return true;
 					case "bve2000000":
-						return TrainDatFormats.BVE2000000;
+						format = TrainDatFormats.BVE2000000;
+						return true;
 					case "bve2060000":
-						return TrainDatFormats.BVE2060000;
+						format = TrainDatFormats.BVE2060000;
+						return true;
 					case "openbve":
-						return TrainDatFormats.openBVE;
+						format = TrainDatFormats.openBVE;
+						return true;
 					default:
 						if (t.ToLowerInvariant().StartsWith("openbve"))
 						{
+							format = TrainDatFormats.openBVE;
 							string tt = t.Substring(7, t.Length - 7);
 							if (!NumberFormats.TryParseIntVb6(tt, out version))
 							{
 								version = -1;
+								return false;
 							}
-							return TrainDatFormats.openBVE;
+							return true;
 						}
 						else if (t.ToLowerInvariant().StartsWith("bve"))
 						{
-							return TrainDatFormats.UnknownBVE;
+							format = TrainDatFormats.UnknownBVE;
+							return true;
 						}
 						else
 						{
-							return TrainDatFormats.Unsupported;
+							format = TrainDatFormats.Unsupported;
+							return false;
 						}
 				}
 			}
-			return TrainDatFormats.Unsupported;
+
+			format = TrainDatFormats.Unsupported;
+			return false;
 		}
 
 		/// <summary>
@@ -143,7 +156,7 @@ namespace Train.OpenBve
 		internal bool CanLoad(string fileName)
 		{
 			Encoding encoding = TextEncoding.GetSystemEncodingFromFile(fileName);
-			
+
 			string[] lines;
 			try
 			{
@@ -154,9 +167,7 @@ namespace Train.OpenBve
 				return false;
 			}
 
-			TrainDatFormats format = ParseFormat(lines, out _);
-
-			return format != TrainDatFormats.Unsupported;
+			return TryParseFormat(lines, out _, out _);
 		}
 
 		/// <summary>Parses a BVE2 / BVE4 / openBVE train.dat file</summary>
@@ -170,22 +181,25 @@ namespace Train.OpenBve
 
 			// Check version
 			const int currentVersion = 17250;
-			TrainDatFormats currentFormat = ParseFormat(Lines, out int myVersion);
-
-			if (currentFormat == TrainDatFormats.openBVE)
+			if (TryParseFormat(Lines, out TrainDatFormats currentFormat, out int myVersion))
 			{
-				if (myVersion == -1)
-				{
-					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
-				}
-				else if (myVersion > currentVersion)
+				if (currentFormat == TrainDatFormats.openBVE && myVersion > currentVersion)
 				{
 					Plugin.currentHost.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
 				}
 			}
-			else if (currentFormat == TrainDatFormats.Unsupported)
+			else
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+				string versionString = Lines.FirstOrDefault(x => x.Length > 0) ?? Lines[0];
+
+				if (currentFormat == TrainDatFormats.openBVE)
+				{
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat version " + versionString.ToLowerInvariant() + " is invalid in " + FileName);
+				}
+				else
+				{
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + versionString.ToLowerInvariant() + " is not supported in " + FileName);
+				}
 			}
 
 			// initialize
