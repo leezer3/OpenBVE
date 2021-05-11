@@ -70,7 +70,6 @@ namespace DenshaDeGoInput
             this.label_c = new System.Windows.Forms.Label();
             this.label_b = new System.Windows.Forms.Label();
             this.label_a = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.buttonMappingBox = new System.Windows.Forms.GroupBox();
             this.buttonrdoorBox = new System.Windows.Forms.ComboBox();
             this.label_buttonrdoor = new System.Windows.Forms.Label();
@@ -352,10 +351,6 @@ namespace DenshaDeGoInput
             this.label_a.TabIndex = 16;
             this.label_a.Text = "A";
             this.label_a.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // buttonMappingBox
             // 
@@ -764,7 +759,6 @@ namespace DenshaDeGoInput
 
 		#endregion
 		private System.Windows.Forms.GroupBox deviceInputBox;
-		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.Label label_select;
 		private System.Windows.Forms.Label label_start;
 		private System.Windows.Forms.Label label_d;

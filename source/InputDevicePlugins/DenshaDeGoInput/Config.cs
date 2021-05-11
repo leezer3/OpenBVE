@@ -27,8 +27,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Timers;
 using OpenTK.Input;
 using OpenBveApi.Interface;
+using Timer = System.Timers.Timer;
 
 namespace DenshaDeGoInput
 {
@@ -38,6 +40,8 @@ namespace DenshaDeGoInput
 		/// Internal list of connected controllers.
 		/// </summary>
 		private List<Guid> controllerList = new List<Guid>();
+
+		private Timer Timer1;
 
 		public Config()
 		{
@@ -77,6 +81,9 @@ namespace DenshaDeGoInput
 				buttonldoorBox.Items.Add(commands[i].Name);
 				buttonrdoorBox.Items.Add(commands[i].Name);
 			}
+
+			Timer1 = new Timer {Interval = 100};
+			Timer1.Elapsed += timer1_Tick;
 		}
 
 		/// <summary>
@@ -316,9 +323,8 @@ namespace DenshaDeGoInput
 			minmaxCheck.Checked = DenshaDeGoInput.KeepMaxMin;
 			holdbrakeCheck.Checked = DenshaDeGoInput.MapHoldBrake;
 			minmaxCheck.Enabled = DenshaDeGoInput.ConvertNotches;
-
 			// Start timer
-			timer1.Enabled = true;
+			Timer1.Enabled = true;
 
 			// Translate the interface to the current language
 			UpdateTranslation();
@@ -427,9 +433,13 @@ namespace DenshaDeGoInput
 
 		private void buttonCalibrate_Click(object sender, EventArgs e)
 		{
-			timer1.Stop();
+			if (controllerList.Count == 0)
+			{
+				return;
+			}
+			Timer1.Stop();
 			ControllerClassic.Calibrate();
-			timer1.Start();
+			Timer1.Start();
 		}
 
 		private void buttonSave_Click(object sender, EventArgs e)
