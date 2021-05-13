@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2.Trains;
+using ObjectViewer.Graphics;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -147,8 +148,6 @@ namespace OpenBve {
 		        Backend = PlatformBackend.PreferX11
 	        };
 	        Toolkit.Init(options);
-            Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 	        // initialize camera
 
 	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);

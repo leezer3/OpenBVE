@@ -85,12 +85,12 @@
       <DependentUpon>formTrain.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
+    <Compile Include="Graphics\ObjectOptimizationMode.cs" />
     <Compile Include="Hosts.cs" />
-    <Compile Include="NewRendererS.cs" />
+    <Compile Include="Graphics\NewRendererS.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
-    <Compile Include="Fonts.cs" />
     <Compile Include="formMessages.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,6 +141,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <!-- Copy in dependancies -->

@@ -6,6 +6,7 @@ using LibRender2;
 using LibRender2.Objects;
 using LibRender2.Primitives;
 using LibRender2.Viewports;
+using OpenBve;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -15,7 +16,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenBve
+namespace ObjectViewer.Graphics
 {
 	internal class NewRenderer : BaseRenderer
 	{

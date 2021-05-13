@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using ObjectViewer.Graphics;
 using OpenBveApi.Graphics;
-using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.World;
 using OpenTK.Graphics;
 
 namespace OpenBve
@@ -22,7 +20,7 @@ namespace OpenBve
 			height.Value = Program.Renderer.Screen.Height;
 			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
 			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
-			checkBoxOptimizeObjects.Checked = Interface.CurrentOptions.ObjectOptimizationBasicThreshold != 0;
+			comboBoxOptimizeObjects.SelectedIndex = (int)Interface.CurrentOptions.ObjectOptimizationMode;
 		}
 
 		internal static DialogResult ShowOptions()
@@ -110,16 +108,8 @@ namespace OpenBve
 				}
 			}
 
-			if (checkBoxOptimizeObjects.Checked)
-			{
-				Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-				Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
-			}
-			else
-			{
-				Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 0;
-				Interface.CurrentOptions.ObjectOptimizationFullThreshold = 0;
-			}
+			Interface.CurrentOptions.ObjectOptimizationMode = (ObjectOptimizationMode)comboBoxOptimizeObjects.SelectedIndex;
+
 			Options.SaveOptions();
 			Program.RefreshObjects();
 			this.Close();
