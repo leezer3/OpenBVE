@@ -1079,7 +1079,7 @@ namespace Train.OpenBve
 										Texture[] t = new Texture[n];
 										for (int j = 0; j < n; j++)
 										{
-											Plugin.currentHost.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j], true);
+											Plugin.currentHost.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
 										}
 
 										{
@@ -1461,7 +1461,7 @@ namespace Train.OpenBve
 										for (int j = 0; j < n; j++)
 										{
 											TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
-											Plugin.currentHost.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out var t, true);
+											Plugin.currentHost.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out var t);
 											if (j == 0)
 											{
 												k = CreateElement(Car, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White);
