@@ -254,18 +254,31 @@ namespace DenshaDeGoInput
 		{
 			Dictionary<Guid, int> controllerList = new Dictionary<Guid, int>();
 			controllerList.Clear();
-
-			UsbDeviceFinder[] FinderPS2 = { new UsbDeviceFinder(0x0ae4, 0x0004), new UsbDeviceFinder(0x0ae4, 0x0005) };
-			foreach (UsbDeviceFinder device in FinderPS2)
+			if (DenshaDeGoInput.LibUsbIssue)
 			{
-				UsbDevice controller = UsbDevice.OpenUsbDevice(device);
-				if (controller != null)
+				return controllerList;
+			}
+			
+			try
+			{
+				UsbDeviceFinder[] FinderPS2 = { new UsbDeviceFinder(0x0ae4, 0x0004), new UsbDeviceFinder(0x0ae4, 0x0005) };
+				foreach (UsbDeviceFinder device in FinderPS2)
 				{
-					string vendor = device.Vid.ToString("X4").ToLower().Substring(2, 2) + device.Vid.ToString("X4").ToLower().Substring(0, 2);
-					string product = device.Pid.ToString("X4").ToLower().Substring(2, 2) + device.Pid.ToString("X4").ToLower().Substring(0, 2);
-					controllerList.Add(new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff"), -1);
+					UsbDevice controller = UsbDevice.OpenUsbDevice(device);
+					if (controller != null)
+					{
+						string vendor = device.Vid.ToString("X4").ToLower().Substring(2, 2) + device.Vid.ToString("X4").ToLower().Substring(0, 2);
+						string product = device.Pid.ToString("X4").ToLower().Substring(2, 2) + device.Pid.ToString("X4").ToLower().Substring(0, 2);
+						controllerList.Add(new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff"), -1);
+					}
 				}
 			}
+			catch
+			{
+				//LibUsb isn't working right
+				DenshaDeGoInput.LibUsbIssue = true;
+			}
+			
 			return controllerList;
 		}
 

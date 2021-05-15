@@ -52,179 +52,179 @@ namespace DenshaDeGoInput
 		/// </summary>
 		private void InitializeComponent()
 		{
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Help));
-            this.labelController1 = new System.Windows.Forms.Label();
-            this.textBoxController1 = new System.Windows.Forms.TextBox();
-            this.labelController2 = new System.Windows.Forms.Label();
-            this.textBoxController2 = new System.Windows.Forms.TextBox();
-            this.labelWindows = new System.Windows.Forms.Label();
-            this.labelLinux = new System.Windows.Forms.Label();
-            this.textBoxWindows = new System.Windows.Forms.TextBox();
-            this.textBoxLinux = new System.Windows.Forms.TextBox();
-            this.buttonZadig = new System.Windows.Forms.Button();
-            this.buttonWindows = new System.Windows.Forms.Button();
-            this.buttonLinux = new System.Windows.Forms.Button();
-            this.buttonOk = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-            // 
-            // labelController1
-            // 
-            this.labelController1.AutoSize = true;
-            this.labelController1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelController1.Location = new System.Drawing.Point(12, 9);
-            this.labelController1.Name = "labelController1";
-            this.labelController1.Size = new System.Drawing.Size(400, 25);
-            this.labelController1.TabIndex = 0;
-			this.labelController1.TabStop = false;
-            this.labelController1.Text = "My controller is not working correctly";
-            // 
-            // textBoxController1
-            // 
-            this.textBoxController1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxController1.Location = new System.Drawing.Point(17, 37);
-            this.textBoxController1.Multiline = true;
-            this.textBoxController1.Name = "textBoxController1";
-            this.textBoxController1.ReadOnly = true;
-            this.textBoxController1.Size = new System.Drawing.Size(605, 71);
-            this.textBoxController1.TabIndex = 1;
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Help));
+			this.labelController1 = new System.Windows.Forms.Label();
+			this.textBoxController1 = new System.Windows.Forms.TextBox();
+			this.labelController2 = new System.Windows.Forms.Label();
+			this.textBoxController2 = new System.Windows.Forms.TextBox();
+			this.labelWindows = new System.Windows.Forms.Label();
+			this.labelLinux = new System.Windows.Forms.Label();
+			this.textBoxWindows = new System.Windows.Forms.TextBox();
+			this.textBoxLinux = new System.Windows.Forms.TextBox();
+			this.buttonZadig = new System.Windows.Forms.Button();
+			this.buttonWindows = new System.Windows.Forms.Button();
+			this.buttonLinux = new System.Windows.Forms.Button();
+			this.buttonOk = new System.Windows.Forms.Button();
+			this.SuspendLayout();
+			// 
+			// labelController1
+			// 
+			this.labelController1.AutoSize = true;
+			this.labelController1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelController1.Location = new System.Drawing.Point(12, 9);
+			this.labelController1.Name = "labelController1";
+			this.labelController1.Size = new System.Drawing.Size(400, 25);
+			this.labelController1.TabIndex = 0;
+			this.labelController1.Text = "My controller is not working correctly";
+			// 
+			// textBoxController1
+			// 
+			this.textBoxController1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBoxController1.Location = new System.Drawing.Point(17, 37);
+			this.textBoxController1.Multiline = true;
+			this.textBoxController1.Name = "textBoxController1";
+			this.textBoxController1.ReadOnly = true;
+			this.textBoxController1.Size = new System.Drawing.Size(605, 71);
+			this.textBoxController1.TabIndex = 1;
 			this.textBoxController1.TabStop = false;
 			this.textBoxController1.Text = resources.GetString("textBoxController1.Text");
-            // 
-            // labelController2
-            // 
-            this.labelController2.AutoSize = true;
-            this.labelController2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelController2.Location = new System.Drawing.Point(12, 111);
-            this.labelController2.Name = "labelController2";
-            this.labelController2.Size = new System.Drawing.Size(362, 25);
-            this.labelController2.TabIndex = 2;
-			this.labelController2.TabStop = false;
+			// 
+			// labelController2
+			// 
+			this.labelController2.AutoSize = true;
+			this.labelController2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelController2.Location = new System.Drawing.Point(12, 111);
+			this.labelController2.Name = "labelController2";
+			this.labelController2.Size = new System.Drawing.Size(362, 25);
+			this.labelController2.TabIndex = 2;
 			this.labelController2.Text = "My PS2 controller is not detected";
-            // 
-            // textBoxController2
-            // 
-            this.textBoxController2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxController2.Location = new System.Drawing.Point(17, 139);
-            this.textBoxController2.Multiline = true;
-            this.textBoxController2.Name = "textBoxController2";
-            this.textBoxController2.ReadOnly = true;
-            this.textBoxController2.Size = new System.Drawing.Size(605, 19);
-            this.textBoxController2.TabIndex = 3;
+			// 
+			// textBoxController2
+			// 
+			this.textBoxController2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBoxController2.Location = new System.Drawing.Point(17, 139);
+			this.textBoxController2.Multiline = true;
+			this.textBoxController2.Name = "textBoxController2";
+			this.textBoxController2.ReadOnly = true;
+			this.textBoxController2.Size = new System.Drawing.Size(605, 19);
+			this.textBoxController2.TabIndex = 3;
 			this.textBoxController2.TabStop = false;
 			this.textBoxController2.Text = "If your PS2 controller does not appear in the list, follow these steps:";
-            // 
-            // labelWindows
-            // 
-            this.labelWindows.AutoSize = true;
-            this.labelWindows.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelWindows.Location = new System.Drawing.Point(13, 161);
-            this.labelWindows.Name = "labelWindows";
-            this.labelWindows.Size = new System.Drawing.Size(80, 20);
-            this.labelWindows.TabIndex = 4;
-			this.labelWindows.TabStop = false;
+			// 
+			// labelWindows
+			// 
+			this.labelWindows.AutoSize = true;
+			this.labelWindows.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelWindows.Location = new System.Drawing.Point(13, 161);
+			this.labelWindows.Name = "labelWindows";
+			this.labelWindows.Size = new System.Drawing.Size(80, 20);
+			this.labelWindows.TabIndex = 4;
 			this.labelWindows.Text = "Windows";
-            // 
-            // labelLinux
-            // 
-            this.labelLinux.AutoSize = true;
-            this.labelLinux.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLinux.Location = new System.Drawing.Point(13, 250);
-            this.labelLinux.Name = "labelLinux";
-            this.labelLinux.Size = new System.Drawing.Size(51, 20);
-            this.labelLinux.TabIndex = 6;
-			this.labelLinux.TabStop = false;
+			// 
+			// labelLinux
+			// 
+			this.labelLinux.AutoSize = true;
+			this.labelLinux.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelLinux.Location = new System.Drawing.Point(13, 250);
+			this.labelLinux.Name = "labelLinux";
+			this.labelLinux.Size = new System.Drawing.Size(51, 20);
+			this.labelLinux.TabIndex = 6;
 			this.labelLinux.Text = "Linux";
-            // 
-            // textBoxWindows
-            // 
-            this.textBoxWindows.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxWindows.Location = new System.Drawing.Point(17, 184);
-            this.textBoxWindows.Multiline = true;
-            this.textBoxWindows.Name = "textBoxWindows";
-            this.textBoxWindows.ReadOnly = true;
-            this.textBoxWindows.Size = new System.Drawing.Size(605, 63);
-            this.textBoxWindows.TabIndex = 5;
+			// 
+			// textBoxWindows
+			// 
+			this.textBoxWindows.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBoxWindows.Location = new System.Drawing.Point(17, 184);
+			this.textBoxWindows.Multiline = true;
+			this.textBoxWindows.Name = "textBoxWindows";
+			this.textBoxWindows.ReadOnly = true;
+			this.textBoxWindows.Size = new System.Drawing.Size(605, 63);
+			this.textBoxWindows.TabIndex = 5;
 			this.textBoxWindows.TabStop = false;
 			this.textBoxWindows.Text = resources.GetString("textBoxWindows.Text");
-            // 
-            // textBoxLinux
-            // 
-            this.textBoxLinux.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxLinux.Location = new System.Drawing.Point(17, 273);
-            this.textBoxLinux.Multiline = true;
-            this.textBoxLinux.Name = "textBoxLinux";
-            this.textBoxLinux.ReadOnly = true;
-            this.textBoxLinux.Size = new System.Drawing.Size(605, 47);
-            this.textBoxLinux.TabIndex = 7;
+			// 
+			// textBoxLinux
+			// 
+			this.textBoxLinux.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBoxLinux.Location = new System.Drawing.Point(17, 273);
+			this.textBoxLinux.Multiline = true;
+			this.textBoxLinux.Name = "textBoxLinux";
+			this.textBoxLinux.ReadOnly = true;
+			this.textBoxLinux.Size = new System.Drawing.Size(605, 150);
+			this.textBoxLinux.TabIndex = 7;
 			this.textBoxLinux.TabStop = false;
 			this.textBoxLinux.Text = "1. Extract the Linux udev file.\r\n2. Copy the file to \"/etc/udev/rules.d/\" (root p" +
     "ermissions required).\r\n3. Reboot or reload udev rules manually.";
-            // 
-            // buttonZadig
-            // 
-            this.buttonZadig.Location = new System.Drawing.Point(12, 331);
-            this.buttonZadig.Name = "buttonZadig";
-            this.buttonZadig.Size = new System.Drawing.Size(148, 23);
-            this.buttonZadig.TabIndex = 8;
-            this.buttonZadig.Text = "Get Zadig";
-            this.buttonZadig.UseVisualStyleBackColor = true;
-            this.buttonZadig.Click += new System.EventHandler(this.buttonZadig_Click);
-            // 
-            // buttonWindows
-            // 
-            this.buttonWindows.Location = new System.Drawing.Point(166, 331);
-            this.buttonWindows.Name = "buttonWindows";
-            this.buttonWindows.Size = new System.Drawing.Size(148, 23);
-            this.buttonWindows.TabIndex = 9;
-            this.buttonWindows.Text = "Extract files (Windows)";
-            this.buttonWindows.UseVisualStyleBackColor = true;
-            this.buttonWindows.Click += new System.EventHandler(this.buttonWindows_Click);
-            // 
-            // buttonLinux
-            // 
-            this.buttonLinux.Location = new System.Drawing.Point(320, 331);
-            this.buttonLinux.Name = "buttonLinux";
-            this.buttonLinux.Size = new System.Drawing.Size(148, 23);
-            this.buttonLinux.TabIndex = 10;
-            this.buttonLinux.Text = "Extract files (Linux)";
-            this.buttonLinux.UseVisualStyleBackColor = true;
-            this.buttonLinux.Click += new System.EventHandler(this.buttonLinux_Click);
-            // 
-            // buttonOk
-            // 
-            this.buttonOk.Location = new System.Drawing.Point(526, 331);
-            this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(96, 23);
-            this.buttonOk.TabIndex = 11;
-            this.buttonOk.Text = "OK";
-            this.buttonOk.UseVisualStyleBackColor = true;
-            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
-            // 
-            // Help
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 366);
-            this.Controls.Add(this.buttonOk);
-            this.Controls.Add(this.buttonLinux);
-            this.Controls.Add(this.buttonWindows);
-            this.Controls.Add(this.buttonZadig);
-            this.Controls.Add(this.textBoxLinux);
-            this.Controls.Add(this.textBoxWindows);
-            this.Controls.Add(this.labelLinux);
-            this.Controls.Add(this.labelWindows);
-            this.Controls.Add(this.textBoxController2);
-            this.Controls.Add(this.labelController2);
-            this.Controls.Add(this.textBoxController1);
-            this.Controls.Add(this.labelController1);
-			this.Shown += new System.EventHandler(this.Help_Shown);
+			// 
+			// buttonZadig
+			// 
+			this.buttonZadig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonZadig.Location = new System.Drawing.Point(12, 429);
+			this.buttonZadig.Name = "buttonZadig";
+			this.buttonZadig.Size = new System.Drawing.Size(148, 23);
+			this.buttonZadig.TabIndex = 8;
+			this.buttonZadig.Text = "Get Zadig";
+			this.buttonZadig.UseVisualStyleBackColor = true;
+			this.buttonZadig.Click += new System.EventHandler(this.buttonZadig_Click);
+			// 
+			// buttonWindows
+			// 
+			this.buttonWindows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonWindows.Location = new System.Drawing.Point(166, 429);
+			this.buttonWindows.Name = "buttonWindows";
+			this.buttonWindows.Size = new System.Drawing.Size(148, 23);
+			this.buttonWindows.TabIndex = 9;
+			this.buttonWindows.Text = "Extract files (Windows)";
+			this.buttonWindows.UseVisualStyleBackColor = true;
+			this.buttonWindows.Click += new System.EventHandler(this.buttonWindows_Click);
+			// 
+			// buttonLinux
+			// 
+			this.buttonLinux.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonLinux.Location = new System.Drawing.Point(320, 429);
+			this.buttonLinux.Name = "buttonLinux";
+			this.buttonLinux.Size = new System.Drawing.Size(148, 23);
+			this.buttonLinux.TabIndex = 10;
+			this.buttonLinux.Text = "Extract files (Linux)";
+			this.buttonLinux.UseVisualStyleBackColor = true;
+			this.buttonLinux.Click += new System.EventHandler(this.buttonLinux_Click);
+			// 
+			// buttonOk
+			// 
+			this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonOk.Location = new System.Drawing.Point(526, 429);
+			this.buttonOk.Name = "buttonOk";
+			this.buttonOk.Size = new System.Drawing.Size(96, 23);
+			this.buttonOk.TabIndex = 11;
+			this.buttonOk.Text = "OK";
+			this.buttonOk.UseVisualStyleBackColor = true;
+			this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
+			// 
+			// Help
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(634, 464);
+			this.Controls.Add(this.buttonOk);
+			this.Controls.Add(this.buttonLinux);
+			this.Controls.Add(this.buttonWindows);
+			this.Controls.Add(this.buttonZadig);
+			this.Controls.Add(this.textBoxLinux);
+			this.Controls.Add(this.textBoxWindows);
+			this.Controls.Add(this.labelLinux);
+			this.Controls.Add(this.labelWindows);
+			this.Controls.Add(this.textBoxController2);
+			this.Controls.Add(this.labelController2);
+			this.Controls.Add(this.textBoxController1);
+			this.Controls.Add(this.labelController1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.ShowInTaskbar = false;
 			this.MinimizeBox = false;
-            this.Name = "Help";
-            this.Text = "Help";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			this.Name = "Help";
+			this.ShowInTaskbar = false;
+			this.Text = "Help";
+			this.Shown += new System.EventHandler(this.Help_Shown);
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 

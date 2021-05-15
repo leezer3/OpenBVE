@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 using OpenBveApi.Runtime;
 
 namespace OpenBveApi.Interface
@@ -67,9 +68,10 @@ namespace OpenBveApi.Interface
 		/// A function called when the plugin is loading
 		/// </summary>
 		/// <param name="fileSystem">The instance of FileSytem class</param>
+		/// <param name="currentHost">A reference to the current host</param>
 		/// <returns>Check the plugin loading process is successfully</returns>
-		bool Load(FileSystem.FileSystem fileSystem);
-
+		bool Load(FileSystem.FileSystem fileSystem, HostInterface currentHost);
+		
 		/// <summary>
 		/// A function call when the plugin is unload
 		/// </summary>
@@ -265,7 +267,8 @@ namespace OpenBveApi.Interface
 		/// The function that calls the plugin's load function
 		/// </summary>
 		/// <param name="index">The index number which can use the plugins</param>
-		public static void CallPluginLoad(int index)
+		/// <param name="currentHost">A reference to the current host</param>
+		public static void CallPluginLoad(int index, HostInterface currentHost)
 		{
 			if (index < 0 || index >= AvailablePlugins.Count || index >= AvailablePluginInfos.Count)
 			{
@@ -275,7 +278,7 @@ namespace OpenBveApi.Interface
 			{
 				return;
 			}
-			AvailablePluginInfos[index].Status = AvailablePlugins[index].Load(FileSystem) ? PluginInfo.PluginStatus.Enable : PluginInfo.PluginStatus.Failure;
+			AvailablePluginInfos[index].Status = AvailablePlugins[index].Load(FileSystem, currentHost) ? PluginInfo.PluginStatus.Enable : PluginInfo.PluginStatus.Failure;
 		}
 
 		/// <summary>

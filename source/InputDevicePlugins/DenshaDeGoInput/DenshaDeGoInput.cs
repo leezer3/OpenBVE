@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 
@@ -39,6 +40,9 @@ namespace DenshaDeGoInput
 	{
 		public event EventHandler<InputEventArgs> KeyDown;
 		public event EventHandler<InputEventArgs> KeyUp;
+		internal static HostInterface CurrentHost;
+		/// <summary>Whether an issue has been encountered with LibUsb</summary>
+		internal static bool LibUsbIssue;
 
 		public InputControl[] Controls
 		{
@@ -180,9 +184,11 @@ namespace DenshaDeGoInput
 		/// A function called when the plugin is loaded.
 		/// </summary>
 		/// <param name="fileSystem">The instance of FileSytem class</param>
+		/// <param name="currentHost">A reference to the host application</param>
 		/// <returns>Whether the plugin has been loaded successfully.</returns>
-		public bool Load(FileSystem fileSystem)
+		public bool Load(FileSystem fileSystem, HostInterface currentHost)
 		{
+			CurrentHost = currentHost;
 			FileSystem = fileSystem;
 
 			// Initialize the array of button properties

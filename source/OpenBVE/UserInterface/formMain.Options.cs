@@ -56,7 +56,7 @@ namespace OpenBve {
 			for (int i = 0; i < Items.Length; i++) {
 				InputDevicePlugin.PluginInfo Info = InputDevicePlugin.AvailablePluginInfos[i];
 				if (Array.Exists(Interface.CurrentOptions.EnableInputDevicePlugins, element => element.Equals(Info.FileName))) {
-					InputDevicePlugin.CallPluginLoad(i);
+					InputDevicePlugin.CallPluginLoad(i, Program.CurrentHost);
 				}
 				Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
 				UpdateInputDeviceListViewItem(Items[i], i, false);
@@ -135,7 +135,7 @@ namespace OpenBve {
 			if (this.Tag ==  null && listviewInputDevice.SelectedIndices.Count == 1) {
 				int index = listviewInputDevice.SelectedIndices[0];
 				if (checkBoxInputDeviceEnable.Checked) {
-					InputDevicePlugin.CallPluginLoad(index);
+					InputDevicePlugin.CallPluginLoad(index, Program.CurrentHost);
 				} else {
 					InputDevicePlugin.CallPluginUnload(index);
 				}

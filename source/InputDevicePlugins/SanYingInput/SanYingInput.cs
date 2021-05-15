@@ -22,6 +22,7 @@
 using System;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 
@@ -60,8 +61,9 @@ namespace SanYingInput
 		/// A function call when the plugin is loading
 		/// </summary>
 		/// <param name="fileSystem">The instance of FileSytem class</param>
+		/// <param name="currentHost">Holds a reference to the host application</param>
 		/// <returns>Check the plugin loading process is successfully</returns>
-		public bool Load(FileSystem fileSystem)
+		public bool Load(FileSystem fileSystem, HostInterface currentHost)
 		{
 			m_first = true;
 			JoystickApi.Init();
