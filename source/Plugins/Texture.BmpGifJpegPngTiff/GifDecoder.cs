@@ -663,6 +663,7 @@ namespace Plugin
 					bgColor = 0;
 			}
 			int save = 0;
+			
 			if (transparency) 
 			{
 				save = act[transIndex];
@@ -684,7 +685,7 @@ namespace Plugin
 			frameCount++;
 
 			// create new image to receive frame data
-			bitmap = new Bitmap( width, height );
+			bitmap = new Bitmap(width, height);
 			image = bitmap;
 			SetPixels(); // transfer pixel data to image
 

@@ -104,11 +104,10 @@ namespace OpenBveApi.Textures {
 		/// <param name="bitsPerPixel">The number of bits per pixel. Must be 32.</param>
 		/// <param name="bytes">The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</param>
 		/// <param name="frameInterval">The frame interval</param>
-		/// <param name="totalFrames">The total number of frames</param>
 		/// <exception cref="System.ArgumentException">Raised when the number of bits per pixel is not 32.</exception>
 		/// <exception cref="System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
 		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
-		public Texture(int width, int height, int bitsPerPixel, byte[][] bytes, double frameInterval, int totalFrames)
+		public Texture(int width, int height, int bitsPerPixel, byte[][] bytes, double frameInterval)
 		{
 			if (bitsPerPixel != 32)
 			{
@@ -125,6 +124,7 @@ namespace OpenBveApi.Textures {
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
 
+			this.Origin = new ByteArrayOrigin(width, height, bytes, frameInterval);
 			this.MyWidth = width;
 			this.MyHeight = height;
 			this.MyBitsPerPixel = bitsPerPixel;
@@ -132,7 +132,7 @@ namespace OpenBveApi.Textures {
 			this.MyPalette = null;
 			this.MultipleFrames = true;
 			this.FrameInterval = frameInterval;
-			this.TotalFrames = totalFrames;
+			this.TotalFrames = bytes.Length;
 			this.MyOpenGlTextures = new OpenGlTexture[bytes.Length][];
 			for (int i = 0; i < bytes.Length; i++)
 			{
@@ -322,15 +322,15 @@ namespace OpenBveApi.Textures {
 			if (ReferenceEquals(obj, null)) return false;
 			if (!(obj is Texture)) return false;
 			Texture x = (Texture) obj;
-			if (this.MultipleFrames != x.MultipleFrames) return false;
-			if (this.Origin != x.Origin) return false;
-			if (this.MyWidth != x.MyWidth) return false;
-			if (this.MyHeight != x.MyHeight) return false;
-			if (this.MyBitsPerPixel != x.MyBitsPerPixel) return false;
-			if (this.MyBytes.Length != x.MyBytes.Length) return false;
-			for (int i = 0; i < this.MyBytes.Length; i++)
+			if (MultipleFrames != x.MultipleFrames) return false;
+			if (Origin != x.Origin) return false;
+			if (MyWidth != x.MyWidth) return false;
+			if (MyHeight != x.MyHeight) return false;
+			if (MyBitsPerPixel != x.MyBitsPerPixel) return false;
+			if (MyBytes.Length != x.MyBytes.Length) return false;
+			for (int i = 0; i < MyBytes.Length; i++)
 			{
-				if (this.MyBytes[i] != x.MyBytes[i]) return false;
+				if (MyBytes[i] != x.MyBytes[i]) return false;
 			}
 			return true;
 		}
@@ -351,21 +351,19 @@ namespace OpenBveApi.Textures {
 		/// <exception cref="System.NotSupportedException">Raised when the bits per pixel in the texture is not supported.</exception>
 		public TextureTransparencyType GetTransparencyType()
 		{
-			for (int frame = 0; frame < MyBytes.Length; frame++)
+			for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
 			{
-				for (int i = 3; i < this.MyBytes[frame].Length; i += 4)
+				if (this.MyBytes[CurrentFrame][i] != 255)
 				{
-					if (this.MyBytes[frame][i] != 255)
+					for (int j = i; j < this.MyBytes[CurrentFrame].Length; j += 4)
 					{
-						for (int j = i; j < this.MyBytes[frame].Length; j += 4)
+						if (this.MyBytes[CurrentFrame][j] != 0 & this.MyBytes[CurrentFrame][j] != 255)
 						{
-							if (this.MyBytes[frame][j] != 0 & this.MyBytes[frame][j] != 255)
-							{
-								return TextureTransparencyType.Alpha;
-							}
+							return TextureTransparencyType.Alpha;
 						}
-						return TextureTransparencyType.Partial;
 					}
+
+					return TextureTransparencyType.Partial;
 				}
 			}
 			return TextureTransparencyType.Opaque;

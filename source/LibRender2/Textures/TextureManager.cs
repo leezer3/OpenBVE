@@ -214,7 +214,7 @@ namespace LibRender2.Textures
 			
 			if (handle.MultipleFrames)
 			{
-				if (!(animatedTextures.ContainsKey(handle.Origin)))
+				if (!animatedTextures.ContainsKey(handle.Origin))
 				{
 					if (!handle.Origin.GetTexture(out texture))
 					{
@@ -232,13 +232,13 @@ namespace LibRender2.Textures
 				if (elapsedFrames > 0)
 				{
 					texture.CurrentFrame += elapsedFrames;
-					texture.CurrentFrame = texture.CurrentFrame % texture.TotalFrames;
+					texture.CurrentFrame %= texture.TotalFrames;
 					handle.LastAccess = currentTicks;
 				}
 			}
 			else
 			{
-				handle.LastAccess = currentTicks;	
+				handle.LastAccess = currentTicks;
 			}
 			//Set last access time
 
