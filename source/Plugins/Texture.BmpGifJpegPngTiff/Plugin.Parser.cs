@@ -26,14 +26,37 @@ namespace Plugin {
 				if (image.RawFormat.Equals(ImageFormat.Gif))
 				{
 					List<Bitmap> frames = new List<Bitmap>();
-
+					GifDecoder decoder = new GifDecoder();
+					decoder.Read(file);
+					int frameCount = decoder.GetFrameCount();
+					int duration = 0;
+					if (frameCount != 1)
+					{
+						for (int i = 0; i < frameCount; i++)
+						{
+							Image frameImage = decoder.GetFrame(i);
+							int frameDelay = decoder.GetDuration(i);
+							frames.Add(new Bitmap(frameImage));
+							duration += decoder.GetDuration(i);
+						}
+						List<byte[]> frameBytes = new List<byte[]>();
+						for (int i = 0; i < frames.Count; i++)
+						{
+							//pallette is unused here, but don't clone the method- BVE2 had no support for animted gif
+							frameBytes.Add(GetRawBitmapData(frames[i], out width, out height, out palette));
+						}
+						texture = new Texture(frames[0].Width, frames[0].Height, 32, frameBytes.ToArray(), ((double)duration / frameCount) / 10000000.0, frameCount);
+						return true;
+					}
+					
+					/*
 					if (ImageAnimator.CanAnimate(image))
 					{
 						var dimension = new FrameDimension(image.FrameDimensionsList[0]);
 						int frameCount = image.GetFrameCount(dimension);
 
 						int index = 0;
-						int duration = 0;
+						
 						
 						for (int i = 0; i < frameCount; i++)
 						{
@@ -43,7 +66,7 @@ namespace Plugin {
 							/*
 							 * Mono difference:
 							 * They return the delay for the selected frame only, .Net returns an array containing the delay for all frames
-							 */
+							 
 							int delay = times.Length == 4 ? BitConverter.ToInt32(times, 0) * 10 : BitConverter.ToInt32(times, index) * 10;
 							duration += (delay < 100 ? 100 : delay);
 
@@ -59,6 +82,7 @@ namespace Plugin {
 						texture = new Texture(frames[0].Width, frames[0].Height, 32, frameBytes.ToArray(), ((double)duration / frameCount) / 10000000.0, frameCount);
 						return true;
 					}
+					*/
 				}
 				Bitmap bitmap = new Bitmap(image);
 				byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
