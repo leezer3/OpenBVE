@@ -9,7 +9,6 @@ namespace OpenBveApi.Textures {
 	/// <summary>Represents a texture.</summary>
 	public class Texture
 	{
-		// --- members ---
 		/// <summary>The width of the texture in pixels.</summary>
 		private int MyWidth;
 		/// <summary>The height of the texture in pixels.</summary>
@@ -27,6 +26,7 @@ namespace OpenBveApi.Textures {
 		/// <remarks>Used by the engine when deciding to unload unused textures</remarks>
 		public int LastAccess;
 		/// <summary>Holds the OpenGL textures</summary>
+		/// <remarks>An 3D array containing the OpenGL texture array for each frame</remarks>
 		private readonly OpenGlTexture[][] MyOpenGlTextures;
 		/// <summary>Holds the origin where this texture may be loaded from</summary>
 		public readonly TextureOrigin Origin;
@@ -36,11 +36,10 @@ namespace OpenBveApi.Textures {
 		public bool MultipleFrames;
 		/// <summary>The current frame if multiple frames</summary>
 		public int CurrentFrame = 0;
-		/// <summary>The current frame interval if multiple frames</summary>
+		/// <summary>The current frame interval in milliseconds if multiple frames</summary>
 		public double FrameInterval = -1;
 		/// <summary>The total number of frames</summary>
 		public int TotalFrames;
-
 		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted pallete)</summary>
 		public bool CompatibleTransparencyMode;
 
@@ -137,7 +136,7 @@ namespace OpenBveApi.Textures {
 			this.MyOpenGlTextures = new OpenGlTexture[bytes.Length][];
 			for (int i = 0; i < bytes.Length; i++)
 			{
-				MyOpenGlTextures[i] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+				MyOpenGlTextures[i] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			}
 		}
 
@@ -149,7 +148,7 @@ namespace OpenBveApi.Textures {
 		{
 			this.Origin = new PathOrigin(path, parameters, currentHost);
 			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			
 		}
 
@@ -159,7 +158,7 @@ namespace OpenBveApi.Textures {
 		{
 			this.Origin = new BitmapOrigin(bitmap);
 			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -169,28 +168,27 @@ namespace OpenBveApi.Textures {
 		{
 			this.Origin = new BitmapOrigin(bitmap, parameters);
 			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
 		/// <param name="texture">The texture raw data.</param>
-		public Texture(OpenBveApi.Textures.Texture texture)
+		public Texture(Texture texture)
 		{
 			this.Origin = new RawOrigin(texture);
 			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture from a texture origin.</summary>
 		/// <param name="origin">The texture raw data.</param>
-		public Texture(OpenBveApi.Textures.TextureOrigin origin)
+		public Texture(TextureOrigin origin)
 		{
 			this.Origin = origin;
 			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
-		// --- properties ---
 		/// <summary>Gets the width of the texture in pixels.</summary>
 		public int Width
 		{
@@ -252,13 +250,12 @@ namespace OpenBveApi.Textures {
 				{
 					return this.MyBytes[0];
 				}
-				else
-				{
-					return this.MyBytes[CurrentFrame];
-				}
+				return this.MyBytes[CurrentFrame];
 			}
 		}
 
+		/// <summary>Gets the OpenGL textures for this texture</summary>
+		/// <remarks>If multiple frames, returns those for the current frame</remarks>
 		public OpenGlTexture[] OpenGlTextures
 		{
 			get
@@ -267,23 +264,20 @@ namespace OpenBveApi.Textures {
 				{
 					return this.MyOpenGlTextures[0];
 				}
-				else
-				{
-					return this.MyOpenGlTextures[CurrentFrame];
-				}
+				return this.MyOpenGlTextures[CurrentFrame];
 			}
 		}
 
-		// --- operators ---
 		/// <summary>Checks whether two textures are equal.</summary>
 		/// <param name="a">The first texture.</param>
 		/// <param name="b">The second texture.</param>
 		/// <returns>Whether the two textures are equal.</returns>
 		public static bool operator ==(Texture a, Texture b)
 		{
-			if (object.ReferenceEquals(a, b)) return true;
-			if (object.ReferenceEquals(a, null)) return false;
-			if (object.ReferenceEquals(b, null)) return false;
+			if (ReferenceEquals(a, b)) return true;
+			if (ReferenceEquals(a, null)) return false;
+			if (ReferenceEquals(b, null)) return false;
+			if (a.MultipleFrames != b.MultipleFrames) return false;
 			if (a.Origin != b.Origin) return false;
 			if (a.MyWidth != b.MyWidth) return false;
 			if (a.MyHeight != b.MyHeight) return false;
@@ -302,9 +296,10 @@ namespace OpenBveApi.Textures {
 		/// <returns>Whether the two textures are unequal.</returns>
 		public static bool operator !=(Texture a, Texture b)
 		{
-			if (object.ReferenceEquals(a, b)) return false;
-			if (object.ReferenceEquals(a, null)) return true;
-			if (object.ReferenceEquals(b, null)) return true;
+			if (ReferenceEquals(a, b)) return false;
+			if (ReferenceEquals(a, null)) return true;
+			if (ReferenceEquals(b, null)) return true;
+			if (a.MultipleFrames != b.MultipleFrames) return true;
 			if (a.Origin != b.Origin) return true;
 			if (a.MyWidth != b.MyWidth) return true;
 			if (a.MyHeight != b.MyHeight) return true;
@@ -322,11 +317,12 @@ namespace OpenBveApi.Textures {
 		/// <returns>Whether this instance is equal to the specified object.</returns>
 		public override bool Equals(object obj)
 		{
-			if (object.ReferenceEquals(this, obj)) return true;
-			if (object.ReferenceEquals(this, null)) return false;
-			if (object.ReferenceEquals(obj, null)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(this, null)) return false;
+			if (ReferenceEquals(obj, null)) return false;
 			if (!(obj is Texture)) return false;
 			Texture x = (Texture) obj;
+			if (this.MultipleFrames != x.MultipleFrames) return false;
 			if (this.Origin != x.Origin) return false;
 			if (this.MyWidth != x.MyWidth) return false;
 			if (this.MyHeight != x.MyHeight) return false;
@@ -353,14 +349,9 @@ namespace OpenBveApi.Textures {
 		/// <summary>Gets the type of transparency encountered in this texture.</summary>
 		/// <returns>The type of transparency encountered in this texture.</returns>
 		/// <exception cref="System.NotSupportedException">Raised when the bits per pixel in the texture is not supported.</exception>
-		public TextureTransparencyType GetTransparencyType(int frame = 0)
+		public TextureTransparencyType GetTransparencyType()
 		{
-			if (this.MyBitsPerPixel == 24)
-			{
-				return TextureTransparencyType.Opaque;
-			}
-
-			if (this.MyBitsPerPixel == 32)
+			for (int frame = 0; frame < MyBytes.Length; frame++)
 			{
 				for (int i = 3; i < this.MyBytes[frame].Length; i += 4)
 				{
@@ -373,44 +364,43 @@ namespace OpenBveApi.Textures {
 								return TextureTransparencyType.Alpha;
 							}
 						}
-
 						return TextureTransparencyType.Partial;
 					}
 				}
-
-				return TextureTransparencyType.Opaque;
 			}
-
-			throw new NotSupportedException();
+			return TextureTransparencyType.Opaque;
 		}
 
 		/// <summary>Inverts the lightness values of a texture used for a glow</summary>
-		public void InvertLightness(int frame = 0)
+		public void InvertLightness()
 		{
-			for (int i = 0; i < MyBytes.Length; i += 4)
+			for (int frame = 0; frame < MyBytes.Length; frame++)
 			{
-				if (MyBytes[frame][i] != 0 | MyBytes[frame][i + 1] != 0 | MyBytes[frame][i + 2] != 0)
+				for (int i = 0; i < MyBytes.Length; i += 4)
 				{
-					int r = MyBytes[frame][i + 0];
-					int g = MyBytes[frame][i + 1];
-					int b = MyBytes[frame][i + 2];
-					if (g <= r & r <= b | b <= r & r <= g)
+					if (MyBytes[frame][i] != 0 | MyBytes[frame][i + 1] != 0 | MyBytes[frame][i + 2] != 0)
 					{
-						MyBytes[frame][i + 0] = (byte)(255 + r - g - b);
-						MyBytes[frame][i + 1] = (byte)(255 - b);
-						MyBytes[frame][i + 2] = (byte)(255 - g);
-					}
-					else if (r <= g & g <= b | b <= g & g <= r)
-					{
-						MyBytes[frame][i + 0] = (byte)(255 - b);
-						MyBytes[frame][i + 1] = (byte)(255 + g - r - b);
-						MyBytes[frame][i + 2] = (byte)(255 - r);
-					}
-					else
-					{
-						MyBytes[frame][i + 0] = (byte)(255 - g);
-						MyBytes[frame][i + 1] = (byte)(255 - r);
-						MyBytes[frame][i + 2] = (byte)(255 + b - r - g);
+						int r = MyBytes[frame][i + 0];
+						int g = MyBytes[frame][i + 1];
+						int b = MyBytes[frame][i + 2];
+						if (g <= r & r <= b | b <= r & r <= g)
+						{
+							MyBytes[frame][i + 0] = (byte)(255 + r - g - b);
+							MyBytes[frame][i + 1] = (byte)(255 - b);
+							MyBytes[frame][i + 2] = (byte)(255 - g);
+						}
+						else if (r <= g & g <= b | b <= g & g <= r)
+						{
+							MyBytes[frame][i + 0] = (byte)(255 - b);
+							MyBytes[frame][i + 1] = (byte)(255 + g - r - b);
+							MyBytes[frame][i + 2] = (byte)(255 - r);
+						}
+						else
+						{
+							MyBytes[frame][i + 0] = (byte)(255 - g);
+							MyBytes[frame][i + 1] = (byte)(255 - r);
+							MyBytes[frame][i + 2] = (byte)(255 + b - r - g);
+						}
 					}
 				}
 			}

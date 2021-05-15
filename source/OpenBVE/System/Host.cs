@@ -173,7 +173,7 @@ namespace OpenBve {
 					{
 						OpenBVEGame.RunInRenderThread(() =>
 						{
-							LoadTexture(data, OpenGlTextureWrapMode.ClampClamp);
+							LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
 						});
 
 					}

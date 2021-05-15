@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
@@ -20,9 +19,10 @@ namespace Plugin {
 			 * any format, not necessarily the one that allows
 			 * us to extract the bitmap data easily.
 			 * */
-			int width, height;
 			using (var image = Image.FromFile(file))
 			{
+				int width, height;
+				Color24[] palette;
 				if (image.RawFormat.Equals(ImageFormat.Gif))
 				{
 					List<Bitmap> frames = new List<Bitmap>();
@@ -53,30 +53,23 @@ namespace Plugin {
 						List<byte[]> frameBytes = new List<byte[]>();
 						for (int i = 0; i < frames.Count; i++)
 						{
-							Color24[] p; //unused here, but don't clone the method- BVE2 had no support for animted gif
-							frameBytes.Add(GetRawBitmapData(frames[i], out width, out height, out p));
+							//pallette is unused here, but don't clone the method- BVE2 had no support for animted gif
+							frameBytes.Add(GetRawBitmapData(frames[i], out width, out height, out palette));
 						}
-
 						texture = new Texture(frames[0].Width, frames[0].Height, 32, frameBytes.ToArray(), ((double)duration / frameCount) / 10000000.0, frameCount);
 						return true;
 					}
 				}
+				Bitmap bitmap = new Bitmap(image);
+				byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
+				if (raw != null)
+				{
+					texture = new Texture(width, height, 32, raw, palette);
+					return true;
+				}
 			}
-
-			Bitmap bitmap = new Bitmap(file);
-			Color24[] pallete;
-			
-			byte[] raw = GetRawBitmapData(bitmap, out width, out height, out pallete);
-			if (raw != null)
-			{
-				texture = new Texture(width, height, 32, raw, pallete);
-				return true;
-			}
-			else
-			{
-				texture = null;
-				return false;
-			}
+			texture = null;
+			return false;
 		}
 
 		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height, out Color24[] p)

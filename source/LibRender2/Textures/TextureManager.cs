@@ -279,7 +279,6 @@ namespace LibRender2.Textures
 					handle.Width = texture.Width;
 					handle.Height = texture.Height;
 					handle.Transparency = texture.GetTransparencyType();
-					//texture = ResizeToPowerOfTwo(texture);
 
 					switch (Interpolation)
 					{

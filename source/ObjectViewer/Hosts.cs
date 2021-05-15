@@ -151,7 +151,7 @@ namespace ObjectViewer {
 					handle = data;
 					if (loadTexture)
 					{
-						LoadTexture(data, OpenGlTextureWrapMode.ClampClamp);
+						LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
 					}
 					return true;
 				}
