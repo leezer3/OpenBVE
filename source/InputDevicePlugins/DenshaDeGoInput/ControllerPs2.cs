@@ -27,6 +27,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
+using OpenBveApi;
+using OpenBveApi.Interface;
 
 namespace DenshaDeGoInput
 {
@@ -275,6 +277,10 @@ namespace DenshaDeGoInput
 			}
 			catch
 			{
+				if (DenshaDeGoInput.CurrentHost.SimulationState == SimulationState.Running)
+				{
+					DenshaDeGoInput.CurrentHost.AddMessage(MessageType.Error, false, "The DenshaDeGo! Input Plugin encountered a critical error whilst attempting to update the connected controller list.");
+				}
 				//LibUsb isn't working right
 				DenshaDeGoInput.LibUsbIssue = true;
 			}
@@ -345,9 +351,19 @@ namespace DenshaDeGoInput
 		/// <returns>The controller name.</returns>
 		internal static string GetControllerName(string id)
 		{
-			int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-			int product = Convert.ToInt32(id.Substring(5, 4), 16);
-			return UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vendor, product)).Info.ProductString;
+			try
+			{
+				int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
+				int product = Convert.ToInt32(id.Substring(5, 4), 16);
+				return UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vendor, product)).Info.ProductString;
+			}
+			catch
+			{
+				DenshaDeGoInput.CurrentHost.AddMessage(MessageType.Error, false, "The DenshaDeGo! Input Plugin encountered a critical error whilst attempting to get the controller name for " + id);
+				DenshaDeGoInput.LibUsbIssue = true;
+				return string.Empty;
+			}
+			
 		}
 
 		/// <summary>
@@ -518,12 +534,20 @@ namespace DenshaDeGoInput
 		/// <returns>Whether the controller is connected or not.</returns>
 		internal static bool IsControlledConnected(string id)
 		{
-			int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-			int product = Convert.ToInt32(id.Substring(5, 4), 16);
-			if (UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vendor, product)) != null)
+			try
 			{
-				return true;
+				int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
+				int product = Convert.ToInt32(id.Substring(5, 4), 16);
+				if (UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vendor, product)) != null)
+				{
+					return true;
+				}
 			}
+			catch
+			{
+				//Ignore this one, we're only checking if a specific controller is connected, and if it fails somehow it obviously isn't
+			}
+			
 			return false;
 		}
 
@@ -537,34 +561,45 @@ namespace DenshaDeGoInput
 
 			// Get the ID of the current controller
 			string id = InputTranslator.GetControllerID(InputTranslator.ActiveControllerGuid);
-
-			// Open the USB controller and the input endpoint
-			int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-			int product = Convert.ToInt32(id.Substring(5, 4), 16);
-			UsbDeviceFinder UsbFinder = new UsbDeviceFinder(vendor, product);
-			ps2Controller = UsbDevice.OpenUsbDevice(UsbFinder);
-			IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
-			if (!ReferenceEquals(wholeUsbDevice, null))
+			try
 			{
-				wholeUsbDevice.SetConfiguration(1);
-				wholeUsbDevice.ClaimInterface(1);
-			}
-			UsbEndpointReader controllerReader = ps2Controller.OpenEndpointReader(ReadEndpointID.Ep01);
-
-			// Enable the display or door lamp
-			ControllerDisplayEnabled = true;
-
-			while (InputTranslator.IsControllerConnected && currentModel == InputTranslator.ControllerModel)
-			{
-				// Unless the controller is disconnected or the model changes, ask for input in a loop
-				int readCount;
-				ErrorCode readError = controllerReader.Read(readBuffer, 0, 6, 0, out readCount);
-				if (readError != ErrorCode.Ok)
+				// Open the USB controller and the input endpoint
+				int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
+				int product = Convert.ToInt32(id.Substring(5, 4), 16);
+				UsbDeviceFinder UsbFinder = new UsbDeviceFinder(vendor, product);
+				ps2Controller = UsbDevice.OpenUsbDevice(UsbFinder);
+				IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
+				if (!ReferenceEquals(wholeUsbDevice, null))
 				{
-					// Break if there's any error
-					break;
+					wholeUsbDevice.SetConfiguration(1);
+					wholeUsbDevice.ClaimInterface(1);
+				}
+				UsbEndpointReader controllerReader = ps2Controller.OpenEndpointReader(ReadEndpointID.Ep01);
+
+				// Enable the display or door lamp
+				ControllerDisplayEnabled = true;
+
+				while (InputTranslator.IsControllerConnected && currentModel == InputTranslator.ControllerModel)
+				{
+					// Unless the controller is disconnected or the model changes, ask for input in a loop
+					int readCount;
+					ErrorCode readError = controllerReader.Read(readBuffer, 0, 6, 0, out readCount);
+					if (readError != ErrorCode.Ok)
+					{
+						// Break if there's any error
+						break;
+					}
 				}
 			}
+			catch
+			{
+				if (DenshaDeGoInput.CurrentHost.SimulationState == SimulationState.Running)
+				{
+					DenshaDeGoInput.CurrentHost.AddMessage(MessageType.Error, false, "The DenshaDeGo! Input Plugin encountered a critical error whilst attempting to poll controller " + InputTranslator.ActiveControllerGuid);
+					DenshaDeGoInput.LibUsbIssue = true;
+				}
+			}
+			
 		}
 
 	}
