@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using OpenBveApi.Math;
@@ -51,9 +51,9 @@ namespace Plugin
 		protected int blockSize = 0; // block size
 
 		// last graphic control extension info
-		protected int dispose = 0;
+		protected DisposeMode dispose = DisposeMode.NoAction;
 		// 0=no action; 1=leave in place; 2=restore to bg; 3=restore to prev
-		protected int lastDispose = 0;
+		protected DisposeMode lastDispose = DisposeMode.NoAction;
 		protected bool transparency = false; // use transparent color
 		protected int delay = 0; // delay in milliseconds
 		protected int transIndex; // transparent color index
@@ -67,12 +67,12 @@ namespace Plugin
 		protected byte[] pixelStack;
 		protected byte[] pixels;
 
-		protected ArrayList frames; // frames read from current file
+		protected List<GifFrame> frames; // frames read from current file
 		protected int frameCount;
 
 		public class GifFrame 
 		{
-			public GifFrame( Image im, int del) 
+			public GifFrame(Image im, int del) 
 			{
 				image = im;
 				delay = del;
@@ -88,9 +88,9 @@ namespace Plugin
 		public int GetDuration(int n) 
 		{
 			delay = -1;
-			if ((n >= 0) && (n < frameCount)) 
+			if (n >= 0 && n < frameCount) 
 			{
-				delay = ((GifFrame) frames[n]).delay;
+				delay = frames[n].delay;
 			}
 			return delay;
 		}
@@ -104,21 +104,18 @@ namespace Plugin
 		/// <summary>Creates the pixels for a new frame based upon a bitmap and previous frame data</summary>
 		/// <param name="newBitmap">The bitmap</param>
 		/// <returns>The new pixel array</returns>
-		int [] GetPixels( Bitmap newBitmap)
+		int[] GetPixels(Bitmap newBitmap)
 		{
-			int [] newPixels = new int [ 3 * image.Width * image.Height ];
+			int [] newPixels = new int [image.Width * image.Height ];
 			int count = 0;
 			for (int th = 0; th < image.Height; th++)
 			{
 				for (int tw = 0; tw < image.Width; tw++)
 				{
 					Color color = newBitmap.GetPixel(tw, th);
-					newPixels[count] = color.R;
+					newPixels[count] = color.ToArgb();
 					count++;
-					newPixels[count] = color.G;
-					count++;
-					newPixels[count] = color.B;
-					count++;
+					
 				}
 			}
 			return newPixels;
@@ -128,26 +125,29 @@ namespace Plugin
 		/// <param name="newPixels">The new pixel aray</param>
 		void SetPixels(int[] newPixels)
 		{
+
 			int count = 0;
 			for (int th = 0; th < image.Height; th++)
 			{
 				for (int tw = 0; tw < image.Width; tw++)
 				{
-					Color color = Color.FromArgb( newPixels[count++] );
-					bitmap.SetPixel( tw, th, color );
+					Color color = Color.FromArgb(newPixels[count]);
+					bitmap.SetPixel(tw, th, color);
+					count++;
 				}
 			}
+			
 		}
-
+		
 		/// <summary>Sets the pixels for a GIF frame from the current bitmap</summary>
 		protected void SetPixels() 
 		{
-			int[] dest = GetPixels( bitmap );
-
+			int[] dest = new int[width * height];
 			// fill in starting image contents based on last image's dispose code
-			if (lastDispose > 0) 
+			if (lastDispose > DisposeMode.NoAction)
 			{
-				if (lastDispose == 3)
+				dest = GetPixels(bitmap);
+				if (lastDispose == DisposeMode.RestoreToPrevious)
 				{
 					// use image before last
 					int n = frameCount - 2;
@@ -156,30 +156,34 @@ namespace Plugin
 
 				if (lastImage != null) 
 				{
-					int[] prev = GetPixels( new Bitmap( lastImage ) );
-					Array.Copy(prev, 0, dest, 0, width * height);
 					// copy pixels
-
-					if (lastDispose == 2) 
+					if (lastDispose == DisposeMode.RestoreToBackground) 
 					{
 						// fill last image rect area with background color
-						Graphics g = Graphics.FromImage( image );
+						Graphics g = Graphics.FromImage(image);
 						Color c;
 						if (transparency) 
 						{
-							c = Color.FromArgb( 0, 0, 0, 0 ); 	// assume background is transparent
+							c = Color.FromArgb(0, 0, 0, 0); 	// assume background is transparent
 						} 
 						else 
 						{
-							c = Color.FromArgb( lastBgColor ); // use given background color
+							c = Color.FromArgb(lastBgColor); // use given background color
 						}
-						Brush brush = new SolidBrush( c );
-						g.FillRectangle( brush, lastRect );
+						Brush brush = new SolidBrush(c);
+						g.FillRectangle(brush, lastRect);
 						brush.Dispose();
 						g.Dispose();
 					}
+					else
+					{
+						int[] prev = GetPixels((Bitmap)lastImage);
+						Array.Copy(prev, 0, dest, 0, width * height);
+						SetPixels(dest);
+					}
 				}
 			}
+
 
 			// copy each source line to the appropriate place in the destination
 			int pass = 1;
@@ -217,7 +221,7 @@ namespace Plugin
 					int k = line * width;
 					int dx = k + ix; // start of line in dest
 					int dlim = dx + iw; // end of dest line
-					if ((k + width) < dlim) 
+					if (k + width < dlim) 
 					{
 						dlim = k + width; // past dest edge
 					}
@@ -235,7 +239,7 @@ namespace Plugin
 					}
 				}
 			}
-			SetPixels( dest );
+			SetPixels(dest);
 		}
 
 		/// <summary>Gets an image containing the contents of the specified frame</summary>
@@ -244,9 +248,9 @@ namespace Plugin
 		public Image GetFrame(int n) 
 		{
 			Image im = null;
-			if ((n >= 0) && (n < frameCount)) 
+			if (n >= 0 && n < frameCount) 
 			{
-				im = ((GifFrame) frames[n] ).image;
+				im = frames[n].image;
 			}
 			return im;
 		}
@@ -261,10 +265,10 @@ namespace Plugin
 		/// <summary>Reads a GIF file from the specified stream</summary>
 		/// <param name="inputStream">The source stream</param>
 		/// <returns>The status code</returns>
-		public DecoderStatus Read( Stream inputStream ) 
+		public DecoderStatus Read(Stream inputStream) 
 		{
 			Init();
-			if ( inputStream != null) 
+			if (inputStream != null) 
 			{
 				this.inStream = inputStream;
 				ReadHeader();
@@ -294,7 +298,7 @@ namespace Plugin
 			try 
 			{
 				name = name.Trim().ToLower();
-				status = Read( new FileInfo( name ).OpenRead() );
+				status = Read(new FileInfo(name).OpenRead());
 			} 
 			catch (IOException) 
 			{
@@ -327,7 +331,7 @@ namespace Plugin
 				bi,
 				pi;
 
-			if ((pixels == null) || (pixels.Length < npix)) 
+			if (pixels == null || pixels.Length < npix) 
 			{
 				pixels = new byte[npix]; // allocate new pixel array
 			}
@@ -384,7 +388,7 @@ namespace Plugin
 
 					//  Interpret the code
 
-					if ((code > available) || (code == end_of_information))
+					if (code > available || code == end_of_information)
 						break;
 					if (code == clear) 
 					{
@@ -423,8 +427,8 @@ namespace Plugin
 					prefix[available] = (short) old_code;
 					suffix[available] = (byte) first;
 					available++;
-					if (((available & code_mask) == 0)
-						&& (available < MaxStackSize)) 
+					if ((available & code_mask) == 0
+						&& available < MaxStackSize) 
 					{
 						code_size++;
 						code_mask += available;
@@ -457,7 +461,7 @@ namespace Plugin
 		{
 			status = DecoderStatus.OK;
 			frameCount = 0;
-			frames = new ArrayList();
+			frames = new List<GifFrame>();
 			gct = null;
 			lct = null;
 		}
@@ -518,7 +522,7 @@ namespace Plugin
 			int n = 0;
 			try 
 			{
-				n = inStream.Read(c, 0, c.Length );
+				n = inStream.Read(c, 0, c.Length);
 			} 
 			catch (IOException) 
 			{
@@ -588,7 +592,7 @@ namespace Plugin
 					case 0x3b : // terminator
 						done = true;
 						break;
-						case 0x00 : // bad byte, but keep going and see what happens
+					case 0x00 : // bad byte, but keep going and see what happens
 						break;
 					default :
 						status = DecoderStatus.FormatError;
@@ -602,10 +606,10 @@ namespace Plugin
 		{
 			Read(); // block size
 			int packed = Read(); // packed fields
-			dispose = (packed & 0x1c) >> 2; // disposal method
-			if (dispose == 0) 
+			dispose = (DisposeMode)((packed & 0x1c) >> 2); // disposal method
+			if (dispose == DisposeMode.NoAction) 
 			{
-				dispose = 1; // elect to keep old image if discretionary
+				dispose = DisposeMode.LeaveInPlace; // elect to keep old image if discretionary
 			}
 			transparency = (packed & 1) != 0;
 			delay = ReadShort() * 10; // delay in milliseconds
@@ -683,7 +687,6 @@ namespace Plugin
 			if (Error()) return;
 
 			frameCount++;
-
 			// create new image to receive frame data
 			bitmap = new Bitmap(width, height);
 			image = bitmap;
@@ -732,7 +735,7 @@ namespace Plugin
 					int b2 = block[2] & 0xff;
 					loopCount = (b2 << 8) | b1;
 				}
-			} while ((blockSize > 0) && !Error());
+			} while (blockSize > 0 && !Error());
 		}
 
 		/// <summary>Reads the next 16-bit value, LSB first</summary>
@@ -752,6 +755,7 @@ namespace Plugin
 			transparency = false;
 			delay = 0;
 			lct = null;
+			dispose = DisposeMode.NoAction;
 		}
 
 		/// <summary>Skips variable length blocks upto and including the next zero length block</summary>
@@ -760,7 +764,7 @@ namespace Plugin
 			do 
 			{
 				ReadBlock();
-			} while ((blockSize > 0) && !Error());
+			} while (blockSize > 0 && !Error());
 		}
 	}
 }
