@@ -68,9 +68,8 @@ namespace OpenBveApi.Interface
 		/// A function called when the plugin is loading
 		/// </summary>
 		/// <param name="fileSystem">The instance of FileSytem class</param>
-		/// <param name="currentHost">A reference to the current host</param>
 		/// <returns>Check the plugin loading process is successfully</returns>
-		bool Load(FileSystem.FileSystem fileSystem, HostInterface currentHost);
+		bool Load(FileSystem.FileSystem fileSystem);
 		
 		/// <summary>
 		/// A function call when the plugin is unload
@@ -278,7 +277,7 @@ namespace OpenBveApi.Interface
 			{
 				return;
 			}
-			AvailablePluginInfos[index].Status = AvailablePlugins[index].Load(FileSystem, currentHost) ? PluginInfo.PluginStatus.Enable : PluginInfo.PluginStatus.Failure;
+			AvailablePluginInfos[index].Status = AvailablePlugins[index].Load(FileSystem) ? PluginInfo.PluginStatus.Enable : PluginInfo.PluginStatus.Failure;
 		}
 
 		/// <summary>

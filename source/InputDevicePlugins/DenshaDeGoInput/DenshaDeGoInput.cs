@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -184,12 +185,12 @@ namespace DenshaDeGoInput
 		/// A function called when the plugin is loaded.
 		/// </summary>
 		/// <param name="fileSystem">The instance of FileSytem class</param>
-		/// <param name="currentHost">A reference to the host application</param>
 		/// <returns>Whether the plugin has been loaded successfully.</returns>
-		public bool Load(FileSystem fileSystem, HostInterface currentHost)
+		public bool Load(FileSystem fileSystem)
 		{
-			CurrentHost = currentHost;
 			FileSystem = fileSystem;
+			//HACK: In order to avoid meddling with a shipped interface (or making this field public and increasing the mess), let's grab it via reflection
+			CurrentHost = (HostInterface)typeof(FileSystem).GetField("currentHost", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(fileSystem);
 
 			// Initialize the array of button properties
 			for (int i = 0; i < ButtonProperties.Length; i++)
