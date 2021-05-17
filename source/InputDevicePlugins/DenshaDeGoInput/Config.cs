@@ -465,7 +465,17 @@ namespace DenshaDeGoInput
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			InputTranslator.Update();
-			UpdateInterface();
+			//grab a random control, as we need something from the UI thread to check for invoke
+			//WinForms is a pain
+			if (buttonCalibrate.InvokeRequired)
+			{
+				buttonCalibrate.Invoke((MethodInvoker) UpdateInterface);
+			}
+			else
+			{
+				UpdateInterface();	
+			}
+			
 		}
 
 	}
