@@ -162,6 +162,7 @@ namespace OpenBve {
 			// quit
 			Renderer.TextureManager.UnloadAllTextures();
 
+			formTrain.WaitTaskFinish();
 	    }
 
 	    // reset camera

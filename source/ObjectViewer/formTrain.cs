@@ -27,9 +27,35 @@ namespace OpenBve
 			}
 		}
 
+		private static Task FormTrainTask;
+		internal static formTrain Instance;
+
 		private readonly List<PluginState> PluginStates;
 
-		private static Task FormTrainTask;
+		internal static void ShowTrainSettings()
+		{
+			if (FormTrainTask == null || FormTrainTask.IsCompleted)
+			{
+				FormTrainTask = Task.Run(() =>
+				{
+					Instance = new formTrain();
+					Instance.ShowDialog();
+					Instance.Dispose();
+				});
+			}
+		}
+
+		internal static void WaitTaskFinish()
+		{
+			if (FormTrainTask == null || FormTrainTask.IsCompleted)
+			{
+				return;
+			}
+
+			Console.WriteLine(@"Wait for Sub UI Thread to finish...");
+			FormTrainTask.Wait();
+			Console.WriteLine(@"Sub UI Thread finished.");
+		}
 
 		private formTrain()
 		{
@@ -118,15 +144,20 @@ namespace OpenBve
 			ListPluginStates();
 		}
 
-		internal static void ShowTrainSettings()
+		internal void CloseUI()
 		{
-			if (FormTrainTask == null || FormTrainTask.IsCompleted)
+			if (IsDisposed)
 			{
-				FormTrainTask = Task.Factory.StartNew(() =>
-				{
-					formTrain dialog = new formTrain();
-					dialog.ShowDialog();
-				});
+				return;
+			}
+
+			if (InvokeRequired)
+			{
+				BeginInvoke((MethodInvoker)Close);
+			}
+			else
+			{
+				Close();
 			}
 		}
 

@@ -266,5 +266,10 @@ namespace OpenBve
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Program.RefreshObjects();
         }
+
+		protected override void OnUnload(EventArgs e)
+		{
+			formTrain.Instance?.CloseUI();
+		}
     }
 }
