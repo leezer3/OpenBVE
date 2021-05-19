@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
+using OpenBveApi.Math;
 
 namespace Plugin {
 	public partial class Plugin {
@@ -25,26 +26,23 @@ namespace Plugin {
 				Color24[] palette;
 				if (image.RawFormat.Equals(ImageFormat.Gif))
 				{
-					List<Bitmap> frames = new List<Bitmap>();
 					GifDecoder decoder = new GifDecoder();
 					decoder.Read(file);
 					int frameCount = decoder.GetFrameCount();
 					int duration = 0;
 					if (frameCount != 1)
 					{
+						Vector2 frameSize = decoder.GetFrameSize();
+						List<byte[]> frameBytes = new List<byte[]>();
 						for (int i = 0; i < frameCount; i++)
 						{
-							Image frameImage = decoder.GetFrame(i);
-							frames.Add(new Bitmap(frameImage));
+							int[] framePixels = decoder.GetFrame(i);
+							byte[] result = new byte[framePixels.Length * sizeof(int)];
+							Buffer.BlockCopy(framePixels, 0, result, 0, result.Length);
+							frameBytes.Add(result);
 							duration += decoder.GetDuration(i);
 						}
-						List<byte[]> frameBytes = new List<byte[]>();
-						for (int i = 0; i < frames.Count; i++)
-						{
-							//pallette is unused here, but don't clone the method- BVE2 had no support for animted gif
-							frameBytes.Add(GetRawBitmapData(frames[i], out width, out height, out palette));
-						}
-						texture = new Texture(frames[0].Width, frames[0].Height, 32, frameBytes.ToArray(), ((double)duration / frameCount) / 10000000.0);
+						texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes.ToArray(), ((double)duration / frameCount) / 10000000.0);
 						return true;
 					}
 				}

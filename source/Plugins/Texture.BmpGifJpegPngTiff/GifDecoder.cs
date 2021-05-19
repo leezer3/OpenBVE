@@ -24,13 +24,15 @@ namespace Plugin
 
 		protected int width; // full image width
 		protected int height; // full image height
-		protected bool gctFlag; // global color table used
+		/// <summary>Flag set to true when the global color table is in use</summary>
+		protected bool golbalColorTableFlag;
 		protected int gctSize; // size of global color table
 		protected int loopCount = 1; // iterations; 0 = repeat forever
 
-		protected int[] gct; // global color table
-		protected int[] lct; // local color table
-		protected int[] act; // active color table
+		protected int[] globalColorTable; // global color table
+		protected int[] localColorTable; // local color table
+		/// <summary>Gets the active color table</summary>
+		protected int[] activeColorTable => lctFlag ? localColorTable : globalColorTable;
 
 		protected int bgIndex; // background color index
 		protected int bgColor; // background color
@@ -43,16 +45,15 @@ namespace Plugin
 
 		protected int ix, iy, iw, ih; // current image rectangle
 		protected Rectangle lastRect; // last image rect
-		protected Image image; // current frame
-		protected Bitmap bitmap;
-		protected Image lastImage; // previous frame
+		protected int[] image; // current frame
+		protected int[] bitmap;
+		protected int[] lastImage; // previous frame
 
 		protected byte[] block = new byte[256]; // current data block
 		protected int blockSize = 0; // block size
 
 		// last graphic control extension info
 		protected DisposeMode dispose = DisposeMode.NoAction;
-		// 0=no action; 1=leave in place; 2=restore to bg; 3=restore to prev
 		protected DisposeMode lastDispose = DisposeMode.NoAction;
 		protected bool transparency = false; // use transparent color
 		protected int delay = 0; // delay in milliseconds
@@ -67,21 +68,11 @@ namespace Plugin
 		protected byte[] pixelStack;
 		protected byte[] pixels;
 
-		protected List<GifFrame> frames; // frames read from current file
+		protected List<int[]> frames;
+		protected List<int> delays;
+
 		protected int frameCount;
 
-		public class GifFrame 
-		{
-			public GifFrame(Image im, int del) 
-			{
-				image = im;
-				delay = del;
-			}
-			public Image image;
-			public int delay;
-		}
-
-		
 		/// <summary>Gets the duration of the specified frame</summary>
 		/// <param name="n">The frame index</param>
 		/// <returns>The frame duration in milliseconds</returns>
@@ -90,7 +81,7 @@ namespace Plugin
 			delay = -1;
 			if (n >= 0 && n < frameCount) 
 			{
-				delay = frames[n].delay;
+				delay = delays[n];
 			}
 			return delay;
 		}
@@ -100,44 +91,6 @@ namespace Plugin
 		{
 			return frameCount;
 		}
-
-		/// <summary>Creates the pixels for a new frame based upon a bitmap and previous frame data</summary>
-		/// <param name="newBitmap">The bitmap</param>
-		/// <returns>The new pixel array</returns>
-		int[] GetPixels(Bitmap newBitmap)
-		{
-			int [] newPixels = new int [image.Width * image.Height ];
-			int count = 0;
-			for (int th = 0; th < image.Height; th++)
-			{
-				for (int tw = 0; tw < image.Width; tw++)
-				{
-					Color color = newBitmap.GetPixel(tw, th);
-					newPixels[count] = color.ToArgb();
-					count++;
-					
-				}
-			}
-			return newPixels;
-		}
-
-		/// <summary>Sets the pixels for the current frame</summary>
-		/// <param name="newPixels">The new pixel aray</param>
-		void SetPixels(int[] newPixels)
-		{
-
-			int count = 0;
-			for (int th = 0; th < image.Height; th++)
-			{
-				for (int tw = 0; tw < image.Width; tw++)
-				{
-					Color color = Color.FromArgb(newPixels[count]);
-					bitmap.SetPixel(tw, th, color);
-					count++;
-				}
-			}
-			
-		}
 		
 		/// <summary>Sets the pixels for a GIF frame from the current bitmap</summary>
 		protected void SetPixels() 
@@ -146,7 +99,8 @@ namespace Plugin
 			// fill in starting image contents based on last image's dispose code
 			if (lastDispose > DisposeMode.NoAction)
 			{
-				dest = GetPixels(bitmap);
+				Array.Copy(bitmap, dest, bitmap.Length);
+				
 				if (lastDispose == DisposeMode.RestoreToPrevious)
 				{
 					// use image before last
@@ -160,26 +114,22 @@ namespace Plugin
 					if (lastDispose == DisposeMode.RestoreToBackground) 
 					{
 						// fill last image rect area with background color
-						Graphics g = Graphics.FromImage(image);
-						Color c;
-						if (transparency) 
+						for (int i = 0; i < image.Length; i++)
 						{
-							c = Color.FromArgb(0, 0, 0, 0); 	// assume background is transparent
-						} 
-						else 
-						{
-							c = Color.FromArgb(lastBgColor); // use given background color
+							if (transparency)
+							{
+								image[i] = BitConverter.ToInt32(new byte[] {0,0,0,byte.MaxValue}, 0); 	// assume background is transparent
+							} 
+							else
+							{
+								image[i] = lastBgColor; // use given background color
+							}
 						}
-						Brush brush = new SolidBrush(c);
-						g.FillRectangle(brush, lastRect);
-						brush.Dispose();
-						g.Dispose();
 					}
 					else
 					{
-						int[] prev = GetPixels((Bitmap)lastImage);
-						Array.Copy(prev, 0, dest, 0, width * height);
-						SetPixels(dest);
+						Array.Copy(lastImage, 0, dest, 0, lastImage.Length);
+						Array.Copy(lastImage, 0, bitmap, 0, lastImage.Length);
 					}
 				}
 			}
@@ -230,7 +180,7 @@ namespace Plugin
 					{
 						// map color and insert in destination
 						int index = pixels[sx++] & 0xff;
-						int c = act[index];
+						int c = activeColorTable[index];
 						if (c != 0) 
 						{
 							dest[dx] = c;
@@ -239,18 +189,18 @@ namespace Plugin
 					}
 				}
 			}
-			SetPixels(dest);
+			Array.Copy(dest, bitmap, dest.Length);
 		}
 
 		/// <summary>Gets an image containing the contents of the specified frame</summary>
 		/// <param name="n">The frame number</param>
 		/// <returns>The image</returns>
-		public Image GetFrame(int n) 
+		public int[] GetFrame(int n) 
 		{
-			Image im = null;
+			int[] im = null;
 			if (n >= 0 && n < frameCount) 
 			{
-				im = frames[n].image;
+				im = frames[n];
 			}
 			return im;
 		}
@@ -272,7 +222,7 @@ namespace Plugin
 			{
 				this.inStream = inputStream;
 				ReadHeader();
-				if (!Error()) 
+				if (!Error) 
 				{
 					ReadContents();
 					if (frameCount < 0) 
@@ -451,19 +401,17 @@ namespace Plugin
 		}
 
 		/// <summary>Returns whether an error was encountered whilst reading the GIF</summary>
-		protected bool Error() 
-		{
-			return status != DecoderStatus.OK;
-		}
+		protected bool Error => status != DecoderStatus.OK;
 
 		/// <summary>Initializes or reinitalizes the reader</summary>
 		protected void Init() 
 		{
 			status = DecoderStatus.OK;
 			frameCount = 0;
-			frames = new List<GifFrame>();
-			gct = null;
-			lct = null;
+			frames = new List<int[]>();
+			delays = new List<int>();
+			globalColorTable = null;
+			localColorTable = null;
 		}
 
 		/// <summary>Reads a single byte from the input stream</summary>
@@ -512,11 +460,11 @@ namespace Plugin
 		}
 
 		/// <summary>Reads the GIF Color Table as 256 integer values</summary>
-		/// <param name="ncolors">The number of colors to read</param>
+		/// <param name="numberOfColors">The number of colors to read</param>
 		/// <returns>The GIF color table</returns>
-		protected int[] ReadColorTable(int ncolors) 
+		protected int[] ReadColorTable(int numberOfColors) 
 		{
-			int nbytes = 3 * ncolors;
+			int nbytes = 3 * numberOfColors;
 			int[] tab = null;
 			byte[] c = new byte[nbytes];
 			int n = 0;
@@ -536,12 +484,12 @@ namespace Plugin
 				tab = new int[256]; // max size to avoid bounds checks
 				int i = 0;
 				int j = 0;
-				while (i < ncolors) 
+				while (i < numberOfColors) 
 				{
 					byte r = (byte) (c[j++] & 0xff);
 					byte g = (byte) (c[j++] & 0xff);
 					byte b = (byte) (c[j++] & 0xff);
-					tab[i++] = BitConverter.ToInt32(new[] {b,g,r,byte.MaxValue}, 0);
+					tab[i++] = BitConverter.ToInt32(new[] {r,g,b,byte.MaxValue}, 0);
 				}
 			}
 			return tab;
@@ -552,7 +500,7 @@ namespace Plugin
 		{
 			// read GIF file content blocks
 			bool done = false;
-			while (!(done || Error())) 
+			while (!(done || Error)) 
 			{
 				int code = Read();
 				switch (code) 
@@ -620,7 +568,7 @@ namespace Plugin
 		/// <summary>Reads the GIF header</summary>
 		protected void ReadHeader() 
 		{
-			String id = "";
+			string id = "";
 			for (int i = 0; i < 6; i++) 
 			{
 				id += (char) Read();
@@ -632,10 +580,10 @@ namespace Plugin
 			}
 
 			ReadLSD();
-			if (gctFlag && !Error()) 
+			if (golbalColorTableFlag && !Error) 
 			{
-				gct = ReadColorTable(gctSize);
-				bgColor = gct[bgIndex];
+				globalColorTable = ReadColorTable(gctSize);
+				bgColor = globalColorTable[bgIndex];
 			}
 		}
 
@@ -656,13 +604,10 @@ namespace Plugin
 
 			if (lctFlag) 
 			{
-
-				lct = ReadColorTable(lctSize); // read table
-				act = lct; // make local table active
+				localColorTable = ReadColorTable(lctSize); // read table
 			} 
 			else 
 			{
-				act = gct; // make global table active
 				if (bgIndex == transIndex)
 					bgColor = 0;
 			}
@@ -670,33 +615,34 @@ namespace Plugin
 			
 			if (transparency) 
 			{
-				save = act[transIndex];
-				act[transIndex] = 0; // set transparent color if specified
+				save = activeColorTable[transIndex];
+				activeColorTable[transIndex] = 0; // set transparent color if specified
 			}
 
-			if (act == null) 
+			if (activeColorTable == null) 
 			{
 				status = DecoderStatus.FormatError; // no color table defined
 			}
 
-			if (Error()) return;
+			if (Error) return;
 
 			DecodeImageData(); // decode pixel data
 			Skip();
 
-			if (Error()) return;
+			if (Error) return;
 
 			frameCount++;
 			// create new image to receive frame data
-			bitmap = new Bitmap(width, height);
+			bitmap = new int[width * height];
 			image = bitmap;
 			SetPixels(); // transfer pixel data to image
 
-			frames.Add(new GifFrame(bitmap, delay)); // add image to frame list
+			frames.Add(bitmap); // add image to frame list
+			delays.Add(delay);
 
 			if (transparency) 
 			{
-				act[transIndex] = save;
+				activeColorTable[transIndex] = save;
 			}
 			ResetFrame();
 
@@ -712,7 +658,7 @@ namespace Plugin
 
 			// packed fields
 			int packed = Read();
-			gctFlag = (packed & 0x80) != 0; // 1   : global color table flag
+			golbalColorTableFlag = (packed & 0x80) != 0; // 1   : global color table flag
 			// 2-4 : color resolution
 			// 5   : gct sort flag
 			gctSize = 2 << (packed & 7); // 6-8 : gct size
@@ -735,7 +681,7 @@ namespace Plugin
 					int b2 = block[2] & 0xff;
 					loopCount = (b2 << 8) | b1;
 				}
-			} while (blockSize > 0 && !Error());
+			} while (blockSize > 0 && !Error);
 		}
 
 		/// <summary>Reads the next 16-bit value, LSB first</summary>
@@ -754,7 +700,7 @@ namespace Plugin
 			lastBgColor = bgColor;
 			transparency = false;
 			delay = 0;
-			lct = null;
+			localColorTable = null;
 			dispose = DisposeMode.NoAction;
 		}
 
@@ -764,7 +710,7 @@ namespace Plugin
 			do 
 			{
 				ReadBlock();
-			} while (blockSize > 0 && !Error());
+			} while (blockSize > 0 && !Error);
 		}
 	}
 }
