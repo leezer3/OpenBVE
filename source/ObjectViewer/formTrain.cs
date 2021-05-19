@@ -43,6 +43,10 @@ namespace OpenBve
 					Instance.Dispose();
 				});
 			}
+			else
+			{
+				Instance?.ActivateUI();
+			}
 		}
 
 		internal static void WaitTaskFinish()
@@ -142,6 +146,23 @@ namespace OpenBve
 				}
 			}
 			ListPluginStates();
+		}
+
+		private void ActivateUI()
+		{
+			if (IsDisposed)
+			{
+				return;
+			}
+
+			if (InvokeRequired)
+			{
+				BeginInvoke((MethodInvoker)Activate);
+			}
+			else
+			{
+				Activate();
+			}
 		}
 
 		internal void CloseUI()
