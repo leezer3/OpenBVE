@@ -46,7 +46,7 @@ namespace Plugin {
 						return true;
 					}
 				}
-				Bitmap bitmap = new Bitmap(image);
+				Bitmap bitmap = new Bitmap(file);
 				byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
 				if (raw != null)
 				{
