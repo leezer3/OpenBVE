@@ -35,3 +35,12 @@ Please only contribute code which is licenced under either Public Domain, or loo
 - Connor Fitzgerald
 - Marc Riera
 - s520
+
+### Third Party Code
+
+Some parts of OpenBVE and the underlying libraries have been adapted from third party code. If it is covered by a different licence, this and the contributors for this code will be noted in the header of any such file.
+A list is also provided here:
+
+- Animated GIF decoder based upon work by Kevin Weiner, FM Software; LZW decoder adapted from John Cristy's ImageMagick
+- Some Matrix & Quaternion math code derived from work by the OpenTK team
+- DDS decoder based upon work by NVIDIA Corporation
