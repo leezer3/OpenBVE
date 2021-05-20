@@ -111,16 +111,13 @@ namespace Train.OpenBve
 					case "bve2060000":
 						return TrainDatFormats.BVE2060000;
 					case "openbve":
+						version = 0;
 						return TrainDatFormats.openBVE;
 					default:
 						if (t.ToLowerInvariant().StartsWith("openbve"))
 						{
 							string tt = t.Substring(7, t.Length - 7).Trim();
-							if (string.IsNullOrEmpty(tt))
-							{
-								version = 0;
-							}
-							else if (!NumberFormats.TryParseIntVb6(tt, out version))
+							if (!NumberFormats.TryParseIntVb6(tt, out version))
 							{
 								version = -1;
 							}
