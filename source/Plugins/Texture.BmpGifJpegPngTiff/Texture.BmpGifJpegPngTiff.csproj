@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{4B775819-3574-443E-95AD-B40BC6EA6469}</ProjectGuid>
@@ -59,9 +59,9 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GifDecoder.cs" />
-    <Compile Include="GifDecoder.DisposeMode.cs" />
-    <Compile Include="GifDecoder.Status.cs" />
+    <Compile Include="GIF\GifDecoder.cs" />
+    <Compile Include="GIF\DisposeMode.cs" />
+    <Compile Include="GIF\Status.cs" />
     <Compile Include="Plugin.Parser.cs">
       <DependentUpon>Plugin.cs</DependentUpon>
     </Compile>

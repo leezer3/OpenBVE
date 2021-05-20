@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using OpenBveApi.Colors;
@@ -33,16 +32,15 @@ namespace Plugin {
 					if (frameCount != 1)
 					{
 						Vector2 frameSize = decoder.GetFrameSize();
-						List<byte[]> frameBytes = new List<byte[]>();
+						byte[][] frameBytes = new byte[frameCount][];
 						for (int i = 0; i < frameCount; i++)
 						{
 							int[] framePixels = decoder.GetFrame(i);
-							byte[] result = new byte[framePixels.Length * sizeof(int)];
-							Buffer.BlockCopy(framePixels, 0, result, 0, result.Length);
-							frameBytes.Add(result);
+							frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
+							Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
 							duration += decoder.GetDuration(i);
 						}
-						texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes.ToArray(), ((double)duration / frameCount) / 10000000.0);
+						texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
 						return true;
 					}
 				}

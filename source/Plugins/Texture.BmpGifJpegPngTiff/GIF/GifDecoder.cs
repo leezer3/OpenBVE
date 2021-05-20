@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using OpenBveApi.Math;
 
@@ -21,42 +20,47 @@ namespace Plugin
 	{
 		protected Stream inStream;
 		protected DecoderStatus status;
-
-		protected int width; // full image width
-		protected int height; // full image height
+		/// <summary>The width of the image canvas</summary>
+		protected int width;
+		/// <summary>The height of the image canvas</summary>
+		protected int height;
 		/// <summary>Flag set to true when the global color table is in use</summary>
 		protected bool golbalColorTableFlag;
-		protected int gctSize; // size of global color table
-		protected int loopCount = 1; // iterations; 0 = repeat forever
-
-		protected int[] globalColorTable; // global color table
-		protected int[] localColorTable; // local color table
+		/// <summary>The number of colors in the global color table</summary>
+		protected int golbalColorTableSize;
+		/// <summary>The number of itinerations the animation loops for</summary>
+		/// <remarks>0 repeats forever</remarks>
+		protected int loopCount = 1;
+		/// <summary>Stores the global indexed color table</summary>
+		protected int[] globalColorTable;
+		/// <summary>Stores the current local indexed color table</summary>
+		protected int[] localColorTable;
 		/// <summary>Gets the active color table</summary>
 		protected int[] activeColorTable => lctFlag ? localColorTable : globalColorTable;
-
-		protected int bgIndex; // background color index
+		/// <summary>The index of the background color within the global color table</summary>
+		protected int bgIndex;
 		protected int bgColor; // background color
 		protected int lastBgColor; // previous bg color
-		protected int pixelAspect; // pixel aspect ratio
-
-		protected bool lctFlag; // local color table flag
-		protected bool interlace; // interlace flag
-		protected int lctSize; // local color table size
+		/// <summary>The pixel aspect ratio</summary>
+		protected int pixelAspect;
+		/// <summary>Whether the local color table is in use</summary>
+		protected bool lctFlag;
+		/// <summary>Whether the current image is endcoded as interlaced</summary>
+		protected bool interlace;
 
 		protected int ix, iy, iw, ih; // current image rectangle
-		protected Rectangle lastRect; // last image rect
 		protected int[] image; // current frame
 		protected int[] bitmap;
 		protected int[] lastImage; // previous frame
 
 		protected byte[] block = new byte[256]; // current data block
-		protected int blockSize = 0; // block size
+		protected int blockSize; // block size
 
 		// last graphic control extension info
 		protected DisposeMode dispose = DisposeMode.NoAction;
 		protected DisposeMode lastDispose = DisposeMode.NoAction;
 		protected bool transparency = false; // use transparent color
-		protected int delay = 0; // delay in milliseconds
+		protected int delay; // delay in milliseconds
 		protected int transIndex; // transparent color index
 
 		protected static readonly int MaxStackSize = 4096;
@@ -532,6 +536,9 @@ namespace Plugin
 									Skip(); // don't care
 								}
 								break;
+							case 0x01: // draw text onto image
+								Skip();
+								break;
 							default: // uninteresting extension
 								Skip();
 								break;
@@ -582,7 +589,7 @@ namespace Plugin
 			ReadLSD();
 			if (golbalColorTableFlag && !Error) 
 			{
-				globalColorTable = ReadColorTable(gctSize);
+				globalColorTable = ReadColorTable(golbalColorTableSize);
 				bgColor = globalColorTable[bgIndex];
 			}
 		}
@@ -600,11 +607,11 @@ namespace Plugin
 			interlace = (packed & 0x40) != 0; // 2 - interlace flag
 			// 3 - sort flag
 			// 4-5 - reserved
-			lctSize = 2 << (packed & 7); // 6-8 - local color table size
+			int localColorTableSize = 2 << (packed & 7); // 6-8 - local color table size
 
 			if (lctFlag) 
 			{
-				localColorTable = ReadColorTable(lctSize); // read table
+				localColorTable = ReadColorTable(localColorTableSize); // read table
 			} 
 			else 
 			{
@@ -661,7 +668,7 @@ namespace Plugin
 			golbalColorTableFlag = (packed & 0x80) != 0; // 1   : global color table flag
 			// 2-4 : color resolution
 			// 5   : gct sort flag
-			gctSize = 2 << (packed & 7); // 6-8 : gct size
+			golbalColorTableSize = 2 << (packed & 7); // 6-8 : gct size
 
 			bgIndex = Read(); // background color index
 			pixelAspect = Read(); // pixel aspect ratio
@@ -695,7 +702,6 @@ namespace Plugin
 		protected void ResetFrame() 
 		{
 			lastDispose = dispose;
-			lastRect = new Rectangle(ix, iy, iw, ih);
 			lastImage = image;
 			lastBgColor = bgColor;
 			transparency = false;
