@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using OpenTK.Input;
 
 namespace DenshaDeGoInput
@@ -368,7 +369,10 @@ namespace DenshaDeGoInput
 				if (ControllerModel == ControllerModels.Ps2Type2 || ControllerModel == ControllerModels.Ps2Shinkansen || ControllerModel == ControllerModels.Ps2Ryojouhen)
 				{
 					string id = GetControllerID(ActiveControllerGuid);
-					IsControllerConnected = ControllerPs2.IsControlledConnected(id);
+					var task = Task.Run(() => ControllerPs2.IsControlledConnected(id));
+					bool success = task.Wait(TimeSpan.FromMilliseconds(250));
+					IsControllerConnected = success && task.Result;
+					
 				}
 				else
 				{
