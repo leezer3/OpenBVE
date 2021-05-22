@@ -44,6 +44,8 @@ namespace DenshaDeGoInput
 		internal static HostInterface CurrentHost;
 		/// <summary>Whether an issue has been encountered with LibUsb</summary>
 		internal static bool LibUsbIssue;
+		/// <summary>Lock object for LibUsb functions</summary>
+		internal static object LibUsbLock = new object();
 
 		public InputControl[] Controls
 		{

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
@@ -329,14 +330,22 @@ namespace DenshaDeGoInput
 				{
 					writeBuffer = new byte[] { 0x0, 0x3 };
 				}
-				int bytesWritten;
-				ps2Controller.ControlTransfer(ref setupPacket, writeBuffer, 8, out bytesWritten);
 
-				IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
-				if (!ReferenceEquals(wholeUsbDevice, null))
+				try
 				{
-					// Release interface
-					wholeUsbDevice.ReleaseInterface(1);
+					int bytesWritten;
+					ps2Controller.ControlTransfer(ref setupPacket, writeBuffer, 8, out bytesWritten);
+
+					IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
+					if (!ReferenceEquals(wholeUsbDevice, null))
+					{
+						// Release interface
+						wholeUsbDevice.ReleaseInterface(1);
+					}
+				}
+				catch
+				{
+					//Only trying to unload
 				}
 
 				ps2Controller.Close();
@@ -439,9 +448,21 @@ namespace DenshaDeGoInput
 					}
 					if (ps2Controller != null)
 					{
-						// Send data to controller via control transfer
-						int bytesWritten;
-						ps2Controller.ControlTransfer(ref setupPacket, writeBuffer, 2, out bytesWritten);
+						
+						try
+						{
+							// Send data to controller via control transfer
+							lock (DenshaDeGoInput.LibUsbLock)
+							{
+								int bytesWritten;
+								ps2Controller.ControlTransfer(ref setupPacket, writeBuffer, 2, out bytesWritten);
+							}
+						}
+						catch
+						{
+							//ignore
+						}
+						
 					}
 					break;
 				case InputTranslator.ControllerModels.Ps2Shinkansen:
@@ -518,9 +539,21 @@ namespace DenshaDeGoInput
 					}
 					if (ps2Controller != null)
 					{
-						// Send data to controller via control transfer
-						int bytesWritten;
-						ps2Controller.ControlTransfer(ref setupPacket, shinkansenWriteBuffer, 8, out bytesWritten);
+						lock (DenshaDeGoInput.LibUsbLock)
+						{
+							try
+							{
+								// Send data to controller via control transfer
+								int bytesWritten;
+								ps2Controller.ControlTransfer(ref setupPacket, shinkansenWriteBuffer, 8, out bytesWritten);
+							}
+							catch
+							{
+								//ignore
+							}
+							
+						}
+						
 					}
 					break;
 			}
@@ -536,11 +569,14 @@ namespace DenshaDeGoInput
 		{
 			try
 			{
-				int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-				int product = Convert.ToInt32(id.Substring(5, 4), 16);
-				if (UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vendor, product)) != null)
+				lock (DenshaDeGoInput.LibUsbLock)
 				{
-					return true;
+					int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
+					int product = Convert.ToInt32(id.Substring(5, 4), 16);
+					if (UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vendor, product)) != null)
+					{
+						return true;
+					}
 				}
 			}
 			catch
@@ -563,32 +599,41 @@ namespace DenshaDeGoInput
 			string id = InputTranslator.GetControllerID(InputTranslator.ActiveControllerGuid);
 			try
 			{
-				// Open the USB controller and the input endpoint
-				int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-				int product = Convert.ToInt32(id.Substring(5, 4), 16);
-				UsbDeviceFinder UsbFinder = new UsbDeviceFinder(vendor, product);
-				ps2Controller = UsbDevice.OpenUsbDevice(UsbFinder);
-				IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
-				if (!ReferenceEquals(wholeUsbDevice, null))
+				UsbEndpointReader controllerReader;
+				lock (DenshaDeGoInput.LibUsbLock)
 				{
-					wholeUsbDevice.SetConfiguration(1);
-					wholeUsbDevice.ClaimInterface(1);
+					// Open the USB controller and the input endpoint
+					int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
+					int product = Convert.ToInt32(id.Substring(5, 4), 16);
+					UsbDeviceFinder UsbFinder = new UsbDeviceFinder(vendor, product);
+					ps2Controller = UsbDevice.OpenUsbDevice(UsbFinder);
+					IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
+					if (!ReferenceEquals(wholeUsbDevice, null))
+					{
+						wholeUsbDevice.SetConfiguration(1);
+						wholeUsbDevice.ClaimInterface(1);
+					}
+					controllerReader = ps2Controller.OpenEndpointReader(ReadEndpointID.Ep01);
 				}
-				UsbEndpointReader controllerReader = ps2Controller.OpenEndpointReader(ReadEndpointID.Ep01);
-
+				
 				// Enable the display or door lamp
 				ControllerDisplayEnabled = true;
 
 				while (InputTranslator.IsControllerConnected && currentModel == InputTranslator.ControllerModel)
 				{
-					// Unless the controller is disconnected or the model changes, ask for input in a loop
-					int readCount;
-					ErrorCode readError = controllerReader.Read(readBuffer, 0, 6, 0, out readCount);
-					if (readError != ErrorCode.Ok)
+					lock (DenshaDeGoInput.LibUsbLock)
 					{
-						// Break if there's any error
-						break;
+						// Unless the controller is disconnected or the model changes, ask for input in a loop
+						int readCount;
+						ErrorCode readError = controllerReader.Read(readBuffer, 0, 6, 0, out readCount);
+						if (readError != ErrorCode.Ok)
+						{
+							// Break if there's any error
+							break;
+						}
 					}
+					// Short sleep to ensure that we don't keep the lock by spinning back into the loop
+					Thread.Sleep(50);
 				}
 			}
 			catch

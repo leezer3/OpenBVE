@@ -361,8 +361,11 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public static void Update()
 		{
-			RefreshControllers();
-
+			lock (DenshaDeGoInput.LibUsbLock)
+			{
+				RefreshControllers();
+			}
+			
 			if (ConnectedControllers.ContainsKey(ActiveControllerGuid))
 			{
 				ControllerModel = ConnectedModels[ActiveControllerGuid];
