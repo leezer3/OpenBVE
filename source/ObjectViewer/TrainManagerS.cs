@@ -15,9 +15,6 @@ namespace OpenBve
 {
 	internal class TrainManager : TrainManagerBase
 	{
-		internal bool EnableSimulation;
-		internal bool EnablePluginSimulation;
-
 		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options, FileSystem fileSystem) : base(host, renderer, options, fileSystem)
 		{
 		}

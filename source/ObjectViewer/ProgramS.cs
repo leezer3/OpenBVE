@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
+using ObjectViewer.Trains;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -31,7 +32,6 @@ namespace OpenBve {
 
 		// members
 	    internal static string[] Files = { };
-		internal static bool IsExtensionsCfg;
 
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
@@ -60,8 +60,6 @@ namespace OpenBve {
 		internal static CurrentRoute CurrentRoute;
 
 		internal static TrainManager TrainManager;
-
-		internal static readonly Object LockObj = new Object();
 
 		// main
 	    [STAThread]
@@ -262,6 +260,7 @@ namespace OpenBve {
 	    {
 		    LightingRelative = -1.0;
 		    Game.Reset();
+			formTrain.Instance?.DisableUI();
 		    for (int i = 0; i < Files.Length; i++)
 		    {
 			    try
@@ -316,7 +315,9 @@ namespace OpenBve {
 			    }
 		    }
 
-			IsExtensionsCfg = TrainManager.Trains.Length != 0;
+			NearestTrain.UpdateSpecs();
+			NearestTrain.Apply();
+			formTrain.Instance?.EnableUI();
 
 		    Renderer.InitializeVisibility();
 		    Renderer.UpdateViewingDistances(600);
@@ -384,6 +385,7 @@ namespace OpenBve {
 		            LightingRelative = -1.0;
 	                Game.Reset();
 		            Files = new string[] {};
+					NearestTrain.UpdateSpecs();
 					Renderer.ApplyBackgroundColor();
 	                break;
 	            case Key.Left:

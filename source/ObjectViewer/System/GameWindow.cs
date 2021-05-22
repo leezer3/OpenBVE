@@ -1,4 +1,5 @@
 ﻿using System;
+using ObjectViewer.Trains;
 using OpenTK;
 using OpenTK.Graphics;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -34,15 +35,14 @@ namespace OpenBve
             double timeElapsed = CPreciseTimer.GetElapsedTime();
             DateTime time = DateTime.Now;
             Game.SecondsSinceMidnight = (double)(3600 * time.Hour + 60 * time.Minute + time.Second) + 0.001 * (double)time.Millisecond;
-            lock (Program.LockObj)
-            {
-                ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
 
-				if (Program.TrainManager.Trains.Length != 0)
-				{
-					Program.TrainManager.Trains[0].UpdateObjects(timeElapsed, false);
-				}
-            }
+			ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
+
+			if (Program.TrainManager.Trains.Length != 0)
+			{
+				Program.TrainManager.Trains[0].UpdateObjects(timeElapsed, false);
+			}
+
             bool updatelight = false;
             // rotate x
             if (Program.RotateX == 0)
@@ -240,6 +240,11 @@ namespace OpenBve
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.RenderScene();
             SwapBuffers();
+        }
+
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+	        NearestTrain.Apply();
         }
 
         protected override void OnResize(EventArgs e)

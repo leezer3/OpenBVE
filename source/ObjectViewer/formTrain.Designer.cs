@@ -82,6 +82,7 @@ namespace OpenBve {
             this.checkBoxEnablePlugin = new System.Windows.Forms.CheckBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonApply = new System.Windows.Forms.Button();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAccel)).BeginInit();
@@ -552,6 +553,7 @@ namespace OpenBve {
             this.numericUpDownBrakeNotches.TabIndex = 10;
             this.numericUpDownBrakeNotches.Minimum = 1;
             this.numericUpDownBrakeNotches.Value = 8;
+            this.numericUpDownBrakeNotches.ValueChanged += new System.EventHandler(this.numericUpDownBrakeNotches_ValueChanged);
             // 
             // labelBrakeNotch
             // 
@@ -597,6 +599,7 @@ namespace OpenBve {
             this.numericUpDownPowerNotches.TabIndex = 5;
             this.numericUpDownPowerNotches.Minimum = 1;
             this.numericUpDownPowerNotches.Value = 8;
+            this.numericUpDownPowerNotches.ValueChanged += new System.EventHandler(this.numericUpDownPowerNotches_ValueChanged);
             // 
             // labelPowerNotch
             // 
@@ -794,11 +797,22 @@ namespace OpenBve {
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
+            // buttonReset
+            // 
+            this.buttonReset.Location = new System.Drawing.Point(43, 288);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(75, 23);
+            this.buttonReset.TabIndex = 2;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
+            // 
             // formTrain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 323);
+            this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.tabControlSettings);
@@ -808,6 +822,7 @@ namespace OpenBve {
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Train settings";
+            this.Load += new System.EventHandler(this.formTrain_Load);
             this.tabControlSettings.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();
@@ -852,6 +867,7 @@ namespace OpenBve {
         private System.Windows.Forms.TabPage tabPageDoors;
         private System.Windows.Forms.TabPage tabPageMisc;
         private System.Windows.Forms.TabPage tabPagePlugin;
+        private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelCars;
