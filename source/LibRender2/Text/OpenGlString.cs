@@ -233,10 +233,10 @@ namespace LibRender2.Texts
 					* If this is not done, it will generate an InvalidOperation error code
 					*/
 					renderer.dummyVao.Bind();
-					GL.DrawArrays(PrimitiveType.Quads, 0, 4);
+					GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetColor(color);
-					GL.DrawArrays(PrimitiveType.Quads, 0, 4);
+					GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
 					renderer.dummyVao.UnBind();
 				}
 				left += data.TypographicSize.X;

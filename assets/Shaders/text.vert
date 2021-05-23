@@ -14,19 +14,27 @@ void main()
 	{
 		case 0:
 			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x,uAtlasLocation.y);
+			textureCoord = vec2(uAtlasLocation.x, uAtlasLocation.y);
 		break;
 		case 1:
 			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x + uAtlasLocation.z,uAtlasLocation.y);
+			textureCoord = vec2(uAtlasLocation.x + uAtlasLocation.z, uAtlasLocation.y);
 		break;
 		case 2:
 			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y + uSize.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x + uAtlasLocation.z,uAtlasLocation.y + uAtlasLocation.w);
+			textureCoord = vec2(uAtlasLocation.x + uAtlasLocation.z, uAtlasLocation.y + uAtlasLocation.w);
 		break;
 		case 3:
+			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y, 0), 1.0);
+			textureCoord = vec2(uAtlasLocation.x, uAtlasLocation.y);
+		break;
+		case 4:
 			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y + uSize.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x,uAtlasLocation.y + uAtlasLocation.w);
+			textureCoord = vec2(uAtlasLocation.x, uAtlasLocation.y + uAtlasLocation.w);
+		break;
+		case 5:
+			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y + uSize.y, 0), 1.0);
+			textureCoord = vec2(uAtlasLocation.x + uAtlasLocation.z, uAtlasLocation.y + uAtlasLocation.w);
 		break;
 	}
 	gl_Position = uCurrentProjectionMatrix * viewPos;

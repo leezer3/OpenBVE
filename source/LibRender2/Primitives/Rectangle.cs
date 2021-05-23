@@ -176,7 +176,7 @@ namespace LibRender2.Primitives
 			 * If this is not done, it will generate an InvalidOperation error code
 			 */
 			renderer.dummyVao.Bind();
-			GL.DrawArrays(PrimitiveType.Quads, 0, 4);
+			GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
 			renderer.dummyVao.UnBind();
 			Shader.Deactivate();
 		}
