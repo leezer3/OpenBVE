@@ -116,7 +116,7 @@ namespace OpenBve {
             this.checkBoxEnableTrain.Name = "checkBoxEnableTrain";
             this.checkBoxEnableTrain.Size = new System.Drawing.Size(88, 16);
             this.checkBoxEnableTrain.TabIndex = 0;
-            this.checkBoxEnableTrain.Text = "Enable Train";
+            this.checkBoxEnableTrain.Text = "Enable train simulation";
             this.checkBoxEnableTrain.UseVisualStyleBackColor = true;
             this.checkBoxEnableTrain.CheckedChanged += new System.EventHandler(this.checkBoxEnableTrain_Check);
             // 
@@ -773,7 +773,7 @@ namespace OpenBve {
             this.checkBoxEnablePlugin.Name = "checkBoxEnablePlugin";
             this.checkBoxEnablePlugin.Size = new System.Drawing.Size(93, 16);
             this.checkBoxEnablePlugin.TabIndex = 0;
-            this.checkBoxEnablePlugin.Text = "Enable Plugin";
+            this.checkBoxEnablePlugin.Text = "Enable plugin simulation";
             this.checkBoxEnablePlugin.UseVisualStyleBackColor = true;
             this.checkBoxEnablePlugin.CheckedChanged += new System.EventHandler(this.checkBoxEnablePlugin_Check);
             // 
