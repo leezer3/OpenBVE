@@ -1,5 +1,8 @@
 ﻿namespace ObjectViewer.Trains
 {
+	/// <summary>
+	/// A class that represents the specs of the train nearest to the object
+	/// </summary>
 	internal class NearestTrainSpecs
 	{
 		internal int NumberOfCars;

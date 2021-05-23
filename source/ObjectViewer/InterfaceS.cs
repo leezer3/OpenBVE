@@ -50,7 +50,7 @@ namespace OpenBve {
 			private ObjectOptimizationMode objectOptimizationMode;
 
 			/// <summary>
-			/// Mode of optimization performed on the object
+			/// The mode of optimization to be performed on an object
 			/// </summary>
 			internal ObjectOptimizationMode ObjectOptimizationMode
 			{

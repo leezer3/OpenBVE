@@ -6,6 +6,9 @@ using TrainManager.Trains;
 
 namespace ObjectViewer.Trains
 {
+	/// <summary>
+	/// A class that represents the status of the train nearest to the object
+	/// </summary>
 	internal class NearestTrainStatus
 	{
 		// Physics
@@ -40,6 +43,10 @@ namespace ObjectViewer.Trains
 			PluginStates = new PluginState[0];
 		}
 
+		/// <summary>
+		/// Applies the status to the specified train
+		/// </summary>
+		/// <param name="train">The train loaded from extensions.cfg or dummy train</param>
 		internal void Apply(TrainBase train)
 		{
 			foreach (CarBase car in train.Cars)
@@ -95,6 +102,10 @@ namespace ObjectViewer.Trains
 			}
 		}
 
+		/// <summary>
+		/// Initializes the status of the specified train
+		/// </summary>
+		/// <param name="train">The train loaded from extensions.cfg</param>
 		internal static void Initialize(TrainBase train)
 		{
 			foreach (CarBase car in train.Cars)

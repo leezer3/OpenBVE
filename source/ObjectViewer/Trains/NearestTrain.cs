@@ -10,14 +10,25 @@ using TrainManager.Trains;
 
 namespace ObjectViewer.Trains
 {
+	/// <summary>
+	/// A class that represents the train nearest to the object
+	/// </summary>
 	internal static class NearestTrain
 	{
+		/// <summary>
+		/// A synchronization object to be use when writing to members of this class
+		/// </summary>
 		internal static readonly object LockObj;
 
 		internal static bool IsExtensionsCfg;
 		internal static bool EnableSimulation;
 		internal static bool EnablePluginSimulation;
+
+		/// <summary>
+		/// Whether to apply the status in the next frame
+		/// </summary>
 		internal static bool RequiredApply;
+
 		internal static NearestTrainSpecs Specs;
 		internal static NearestTrainStatus Status;
 
@@ -28,6 +39,10 @@ namespace ObjectViewer.Trains
 			Status = new NearestTrainStatus();
 		}
 
+		/// <summary>
+		/// Creates a dummy train from the specs
+		/// </summary>
+		/// <returns>A dummy train</returns>
 		private static TrainBase CreateDummyTrain()
 		{
 			TrainBase train = new TrainBase(TrainState.Available);
@@ -77,6 +92,10 @@ namespace ObjectViewer.Trains
 			return train;
 		}
 
+		/// <summary>
+		/// Updates the specs from the loaded object
+		/// </summary>
+		/// <remarks>Calls only from the main UI thread.</remarks>
 		internal static void UpdateSpecs()
 		{
 			lock (LockObj)
@@ -123,6 +142,10 @@ namespace ObjectViewer.Trains
 			formTrain.Instance?.UpdateSpecsUI();
 		}
 
+		/// <summary>
+		/// Applies the status
+		/// </summary>
+		/// <remarks>Calls only from the main UI thread.</remarks>
 		internal static void Apply()
 		{
 			lock (LockObj)

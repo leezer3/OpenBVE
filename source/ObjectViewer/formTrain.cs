@@ -31,6 +31,10 @@ namespace OpenBve
 			}
 		}
 
+		/// <summary>
+		/// Waits for the task running this form to finish
+		/// </summary>
+		/// <remarks>On Linux, you may get System.Threading.ThreadAbortException if you don't wait.</remarks>
 		internal static void WaitTaskFinish()
 		{
 			if (FormTrainTask == null || FormTrainTask.IsCompleted)
