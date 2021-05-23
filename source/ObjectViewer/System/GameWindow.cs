@@ -22,20 +22,20 @@ namespace OpenBve
 	            //Ignored
             }
         }
-        
+
+		private double RenderRealTimeElapsed;
+
         private static double RotateXSpeed = 0.0;
         private static double RotateYSpeed = 0.0;
         
         private static double MoveXSpeed = 0.0;
         private static double MoveYSpeed = 0.0;
         private static double MoveZSpeed = 0.0;
+
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             Program.MouseMovement();
-            double timeElapsed = CPreciseTimer.GetElapsedTime();
-            DateTime time = DateTime.Now;
-            Game.SecondsSinceMidnight = (double)(3600 * time.Hour + 60 * time.Minute + time.Second) + 0.001 * (double)time.Millisecond;
-
+			double timeElapsed = RenderRealTimeElapsed;
 			ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
 
 			if (Program.TrainManager.Trains.Length != 0)
@@ -240,12 +240,26 @@ namespace OpenBve
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.RenderScene();
             SwapBuffers();
+
+			RenderRealTimeElapsed = 0.0;
         }
 
-        protected override void OnUpdateFrame(FrameEventArgs e)
-        {
-	        NearestTrain.Apply();
-        }
+		protected override void OnUpdateFrame(FrameEventArgs e)
+		{
+			double RealTimeElapsed = CPreciseTimer.GetElapsedTime();
+			DateTime time = DateTime.Now;
+			Game.SecondsSinceMidnight = 3600 * time.Hour + 60 * time.Minute + time.Second + 0.001 * time.Millisecond;
+
+			NearestTrain.Apply();
+
+			if (NearestTrain.IsExtensionsCfg)
+			{
+				double[] decelerationDueToBrake, decelerationDueToMotor;
+				Program.TrainManager.Trains[0].UpdateBrakeSystem(RealTimeElapsed, out decelerationDueToBrake, out decelerationDueToMotor);
+			}
+
+			RenderRealTimeElapsed += RealTimeElapsed;
+		}
 
         protected override void OnResize(EventArgs e)
         {
@@ -274,7 +288,7 @@ namespace OpenBve
 
 		protected override void OnUnload(EventArgs e)
 		{
-			formTrain.Instance?.CloseUI();
+			formTrain.Instance?.CloseUI_Async();
 		}
     }
 }

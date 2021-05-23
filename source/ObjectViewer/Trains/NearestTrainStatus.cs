@@ -14,6 +14,7 @@ namespace ObjectViewer.Trains
 
 		// Brake system
 		internal double MainReservoirPressure;
+		internal double EqualizingReservoirPressure;
 		internal double BrakePipePressure;
 		internal double BrakeCylinderPressure;
 		internal double StraightAirPipePressure;
@@ -47,10 +48,14 @@ namespace ObjectViewer.Trains
 				car.Specs.PerceivedSpeed = Speed / 3.6;
 				car.Specs.Acceleration = Acceleration / 3.6;
 
-				car.CarBrake.mainReservoir.CurrentPressure = MainReservoirPressure * 1000;
-				car.CarBrake.brakePipe.CurrentPressure = BrakePipePressure * 1000;
-				car.CarBrake.brakeCylinder.CurrentPressure = BrakeCylinderPressure * 1000;
-				car.CarBrake.straightAirPipe.CurrentPressure = StraightAirPipePressure * 1000;
+				if (!NearestTrain.IsExtensionsCfg)
+				{
+					car.CarBrake.mainReservoir.CurrentPressure = MainReservoirPressure * 1000.0;
+					car.CarBrake.equalizingReservoir.CurrentPressure = EqualizingReservoirPressure * 1000.0;
+					car.CarBrake.brakePipe.CurrentPressure = BrakePipePressure * 1000.0;
+					car.CarBrake.brakeCylinder.CurrentPressure = BrakeCylinderPressure * 1000.0;
+					car.CarBrake.straightAirPipe.CurrentPressure = StraightAirPipePressure * 1000.0;
+				}
 
 				car.Doors[0].State = LeftDoorState;
 				car.Doors[0].AnticipatedOpen = LeftDoorAnticipatedOpen;
@@ -61,12 +66,16 @@ namespace ObjectViewer.Trains
 			train.Handles.Reverser.Driver = (ReverserPosition)Reverser;
 			train.Handles.Reverser.Actual = (ReverserPosition)Reverser;
 			train.Handles.Power.Driver = PowerNotch;
+			train.Handles.Power.Actual = PowerNotch;
 			train.Handles.Brake.Driver = BrakeNotch;
+			train.Handles.Brake.Actual = BrakeNotch;
 			if (train.Handles.HasHoldBrake)
 			{
 				train.Handles.HoldBrake.Driver = HoldBrake;
+				train.Handles.HoldBrake.Actual = HoldBrake;
 			}
 			train.Handles.EmergencyBrake.Driver = EmergencyBrake;
+			train.Handles.EmergencyBrake.Actual = EmergencyBrake;
 			if (train.Specs.HasConstSpeed)
 			{
 				train.Specs.CurrentConstSpeed = ConstSpeed;
@@ -103,12 +112,16 @@ namespace ObjectViewer.Trains
 			train.Handles.Reverser.Driver = ReverserPosition.Neutral;
 			train.Handles.Reverser.Actual = ReverserPosition.Neutral;
 			train.Handles.Power.Driver = 0;
+			train.Handles.Power.Actual = 0;
 			train.Handles.Brake.Driver = 0;
+			train.Handles.Brake.Actual = 0;
 			if (train.Handles.HasHoldBrake)
 			{
 				train.Handles.HoldBrake.Driver = false;
+				train.Handles.HoldBrake.Actual = false;
 			}
 			train.Handles.EmergencyBrake.Driver = false;
+			train.Handles.EmergencyBrake.Actual = false;
 			if (train.Specs.HasConstSpeed)
 			{
 				train.Specs.CurrentConstSpeed = false;

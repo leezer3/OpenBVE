@@ -27,7 +27,7 @@ namespace OpenBve
 			}
 			else
 			{
-				Instance?.ActivateUI();
+				Instance?.ActivateUI_Async();
 			}
 		}
 
@@ -121,9 +121,19 @@ namespace OpenBve
 				numericUpDownSpeed.Value = (decimal)status.Speed;
 				numericUpDownAccel.Value = (decimal)status.Acceleration;
 
+				numericUpDownMain.Enabled = !NearestTrain.IsExtensionsCfg;
 				numericUpDownMain.Value = (decimal)status.MainReservoirPressure;
+
+				numericUpDownEmergency.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownEmergency.Value = (decimal)status.EqualizingReservoirPressure;
+
+				numericUpDownPipe.Enabled = !NearestTrain.IsExtensionsCfg;
 				numericUpDownPipe.Value = (decimal)status.BrakePipePressure;
+
+				numericUpDownCylinder.Enabled = !NearestTrain.IsExtensionsCfg;
 				numericUpDownCylinder.Value = (decimal)status.BrakeCylinderPressure;
+
+				numericUpDownAirPipe.Enabled = !NearestTrain.IsExtensionsCfg;
 				numericUpDownAirPipe.Value = (decimal)status.StraightAirPipePressure;
 
 				numericUpDownLeft.Value = (decimal)status.LeftDoorState;
@@ -193,10 +203,14 @@ namespace OpenBve
 				status.Acceleration = (int)numericUpDownAccel.Value;
 
 				// Brake system
-				status.MainReservoirPressure = (int)numericUpDownMain.Value;
-				status.BrakePipePressure = (int)numericUpDownPipe.Value;
-				status.BrakeCylinderPressure = (int)numericUpDownCylinder.Value;
-				status.StraightAirPipePressure = (int)numericUpDownAirPipe.Value;
+				if (!NearestTrain.IsExtensionsCfg)
+				{
+					status.MainReservoirPressure = (int)numericUpDownMain.Value;
+					status.EqualizingReservoirPressure = (int)numericUpDownEmergency.Value;
+					status.BrakePipePressure = (int)numericUpDownPipe.Value;
+					status.BrakeCylinderPressure = (int)numericUpDownCylinder.Value;
+					status.StraightAirPipePressure = (int)numericUpDownAirPipe.Value;
+				}
 
 				// Door
 				status.LeftDoorState = (double)numericUpDownLeft.Value;
@@ -229,7 +243,7 @@ namespace OpenBve
 
 			if (InvokeRequired)
 			{
-				BeginInvoke((MethodInvoker)(() => Enabled = true));
+				Invoke((MethodInvoker)(() => Enabled = true));
 			}
 			else
 			{
@@ -246,7 +260,7 @@ namespace OpenBve
 
 			if (InvokeRequired)
 			{
-				BeginInvoke((MethodInvoker)(() => Enabled = false));
+				Invoke((MethodInvoker)(() => Enabled = false));
 			}
 			else
 			{
@@ -263,7 +277,7 @@ namespace OpenBve
 
 			if (InvokeRequired)
 			{
-				BeginInvoke((MethodInvoker)UpdateTrain);
+				Invoke((MethodInvoker)UpdateTrain);
 			}
 			else
 			{
@@ -271,7 +285,7 @@ namespace OpenBve
 			}
 		}
 
-		private void ActivateUI()
+		private void ActivateUI_Async()
 		{
 			if (IsDisposed)
 			{
@@ -288,7 +302,7 @@ namespace OpenBve
 			}
 		}
 
-		internal void CloseUI()
+		internal void CloseUI_Async()
 		{
 			if (IsDisposed)
 			{
