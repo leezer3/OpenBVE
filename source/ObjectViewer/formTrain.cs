@@ -124,8 +124,8 @@ namespace OpenBve
 				numericUpDownMain.Enabled = !NearestTrain.IsExtensionsCfg;
 				numericUpDownMain.Value = (decimal)status.MainReservoirPressure;
 
-				numericUpDownEmergency.Enabled = !NearestTrain.IsExtensionsCfg;
-				numericUpDownEmergency.Value = (decimal)status.EqualizingReservoirPressure;
+				numericUpDownEqualizing.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownEqualizing.Value = (decimal)status.EqualizingReservoirPressure;
 
 				numericUpDownPipe.Enabled = !NearestTrain.IsExtensionsCfg;
 				numericUpDownPipe.Value = (decimal)status.BrakePipePressure;
@@ -206,7 +206,7 @@ namespace OpenBve
 				if (!NearestTrain.IsExtensionsCfg)
 				{
 					status.MainReservoirPressure = (int)numericUpDownMain.Value;
-					status.EqualizingReservoirPressure = (int)numericUpDownEmergency.Value;
+					status.EqualizingReservoirPressure = (int)numericUpDownEqualizing.Value;
 					status.BrakePipePressure = (int)numericUpDownPipe.Value;
 					status.BrakeCylinderPressure = (int)numericUpDownCylinder.Value;
 					status.StraightAirPipePressure = (int)numericUpDownAirPipe.Value;

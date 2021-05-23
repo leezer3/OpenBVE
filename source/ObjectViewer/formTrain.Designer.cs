@@ -40,8 +40,8 @@ namespace OpenBve {
             this.numericUpDownCylinder = new System.Windows.Forms.NumericUpDown();
             this.labelPipe = new System.Windows.Forms.Label();
             this.numericUpDownPipe = new System.Windows.Forms.NumericUpDown();
-            this.labelEmergency = new System.Windows.Forms.Label();
-            this.numericUpDownEmergency = new System.Windows.Forms.NumericUpDown();
+            this.labelEqualizing = new System.Windows.Forms.Label();
+            this.numericUpDownEqualizing = new System.Windows.Forms.NumericUpDown();
             this.labelMain = new System.Windows.Forms.Label();
             this.numericUpDownMain = new System.Windows.Forms.NumericUpDown();
             this.tabPageDoors = new System.Windows.Forms.TabPage();
@@ -92,7 +92,7 @@ namespace OpenBve {
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAirPipe)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCylinder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPipe)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEmergency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEqualizing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMain)).BeginInit();
             this.tabPageDoors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRight)).BeginInit();
@@ -242,8 +242,8 @@ namespace OpenBve {
             this.tabPageBrake.Controls.Add(this.numericUpDownCylinder);
             this.tabPageBrake.Controls.Add(this.labelPipe);
             this.tabPageBrake.Controls.Add(this.numericUpDownPipe);
-            this.tabPageBrake.Controls.Add(this.labelEmergency);
-            this.tabPageBrake.Controls.Add(this.numericUpDownEmergency);
+            this.tabPageBrake.Controls.Add(this.labelEqualizing);
+            this.tabPageBrake.Controls.Add(this.numericUpDownEqualizing);
             this.tabPageBrake.Controls.Add(this.labelMain);
             this.tabPageBrake.Controls.Add(this.numericUpDownMain);
             this.tabPageBrake.Location = new System.Drawing.Point(4, 22);
@@ -326,26 +326,26 @@ namespace OpenBve {
             this.numericUpDownPipe.Size = new System.Drawing.Size(120, 19);
             this.numericUpDownPipe.TabIndex = 5;
             // 
-            // labelEmergency
+            // labelEqualizing
             // 
-            this.labelEmergency.AutoSize = true;
-            this.labelEmergency.Location = new System.Drawing.Point(6, 33);
-            this.labelEmergency.Name = "labelEmergency";
-            this.labelEmergency.Size = new System.Drawing.Size(112, 12);
-            this.labelEmergency.TabIndex = 2;
-            this.labelEmergency.Text = "Emergency reservoir:";
+            this.labelEqualizing.AutoSize = true;
+            this.labelEqualizing.Location = new System.Drawing.Point(6, 33);
+            this.labelEqualizing.Name = "labelEqualizing";
+            this.labelEqualizing.Size = new System.Drawing.Size(112, 12);
+            this.labelEqualizing.TabIndex = 2;
+            this.labelEqualizing.Text = "Equalizing reservoir:";
             // 
-            // numericUpDownEmergency
+            // numericUpDownEqualizing
             // 
-            this.numericUpDownEmergency.Location = new System.Drawing.Point(133, 31);
-            this.numericUpDownEmergency.Maximum = new decimal(new int[] {
+            this.numericUpDownEqualizing.Location = new System.Drawing.Point(133, 31);
+            this.numericUpDownEqualizing.Maximum = new decimal(new int[] {
             999,
             0,
             0,
             0});
-            this.numericUpDownEmergency.Name = "numericUpDownEmergency";
-            this.numericUpDownEmergency.Size = new System.Drawing.Size(120, 19);
-            this.numericUpDownEmergency.TabIndex = 3;
+            this.numericUpDownEqualizing.Name = "numericUpDownEqualizing";
+            this.numericUpDownEqualizing.Size = new System.Drawing.Size(120, 19);
+            this.numericUpDownEqualizing.TabIndex = 3;
             // 
             // labelMain
             // 
@@ -834,7 +834,7 @@ namespace OpenBve {
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAirPipe)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCylinder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPipe)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEmergency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEqualizing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMain)).EndInit();
             this.tabPageDoors.ResumeLayout(false);
             this.tabPageDoors.PerformLayout();
@@ -878,8 +878,8 @@ namespace OpenBve {
         private System.Windows.Forms.NumericUpDown numericUpDownAccel;
         private System.Windows.Forms.Label labelMain;
         private System.Windows.Forms.NumericUpDown numericUpDownMain;
-        private System.Windows.Forms.Label labelEmergency;
-        private System.Windows.Forms.NumericUpDown numericUpDownEmergency;
+        private System.Windows.Forms.Label labelEqualizing;
+        private System.Windows.Forms.NumericUpDown numericUpDownEqualizing;
         private System.Windows.Forms.Label labelPipe;
         private System.Windows.Forms.NumericUpDown numericUpDownPipe;
         private System.Windows.Forms.Label labelCylinder;
