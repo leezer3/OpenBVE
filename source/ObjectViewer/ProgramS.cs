@@ -477,6 +477,9 @@ namespace OpenBve {
 				case Key.R:
 					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
 					break;
+				case Key.F11:
+					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
+					break;
 	        }
 	    }
 

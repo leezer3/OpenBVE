@@ -24,6 +24,7 @@ namespace OpenBve
         }
 
 		private double RenderRealTimeElapsed;
+		private double TotalTimeElapsedForInfo;
 
         private static double RotateXSpeed = 0.0;
         private static double RotateYSpeed = 0.0;
@@ -34,8 +35,18 @@ namespace OpenBve
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            Program.MouseMovement();
 			double timeElapsed = RenderRealTimeElapsed;
+
+			// Use the OpenTK frame rate as this is much more accurate
+			// Also avoids running a calculation
+			if (TotalTimeElapsedForInfo >= 0.2)
+			{
+				Program.Renderer.FrameRate = RenderFrequency;
+				TotalTimeElapsedForInfo = 0.0;
+			}
+
+            Program.MouseMovement();
+
 			ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
 
 			if (Program.TrainManager.Trains.Length != 0)
@@ -258,6 +269,7 @@ namespace OpenBve
 				Program.TrainManager.Trains[0].UpdateBrakeSystem(RealTimeElapsed, out decelerationDueToBrake, out decelerationDueToMotor);
 			}
 
+			TotalTimeElapsedForInfo += RealTimeElapsed;
 			RenderRealTimeElapsed += RealTimeElapsed;
 		}
 
