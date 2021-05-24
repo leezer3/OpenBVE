@@ -1028,6 +1028,13 @@ namespace OpenBve {
 					Interface.CurrentOptions.RecentlyUsedTrains[0] = Result.TrainFolder;
 				}
 			}
+			else
+			{
+				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+				{
+					InputDevicePlugin.CallPluginUnload(i);
+				}
+			}
 			// remove non-existing recently used routes
 			{
 				int n = 0;

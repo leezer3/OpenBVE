@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using OpenTK.Input;
 
 namespace DenshaDeGoInput
@@ -316,12 +315,12 @@ namespace DenshaDeGoInput
 				}
 			}
 			
-			foreach (KeyValuePair<Guid, int> controller in ControllerPs2.FindControllers())
+			foreach (KeyValuePair<Guid, UsbController> controller in ControllerPs2.connectedUsbControllers)
 			{
 				if (!ConnectedControllers.ContainsKey(controller.Key))
 				{
 					ControllerModels model = GetControllerModel(controller.Key, new JoystickCapabilities());
-					ConnectedControllers.Add(controller.Key, controller.Value);
+					ConnectedControllers.Add(controller.Key, -1);
 					ConnectedModels.Add(controller.Key, model);
 				}
 			}
@@ -336,13 +335,11 @@ namespace DenshaDeGoInput
 			if (guid.ToString().Substring(0,8) == "ffffffff")
 			{
 				// PS2 controller, handled via LibUsbDotNet instead of OpenTK
-				return ControllerPs2.GetControllerName(GetControllerID(guid));
+				return ControllerPs2.connectedUsbControllers[guid].ControllerName;
 			}
-			else
-			{
-				int index = ConnectedControllers[guid];
-				return Joystick.GetName(index);
-			}
+
+			int index = ConnectedControllers[guid];
+			return Joystick.GetName(index);
 		}
 
 		/// <summary>
@@ -352,7 +349,7 @@ namespace DenshaDeGoInput
 		{
 			if (ControllerModel == ControllerModels.Ps2Type2 || ControllerModel == ControllerModels.Ps2Shinkansen || ControllerModel == ControllerModels.Ps2Ryojouhen)
 			{
-				ControllerPs2.Unload();
+				
 			}
 		}
 
@@ -361,21 +358,13 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public static void Update()
 		{
-			lock (DenshaDeGoInput.LibUsbLock)
-			{
-				RefreshControllers();
-			}
-			
+			RefreshControllers();
 			if (ConnectedControllers.ContainsKey(ActiveControllerGuid))
 			{
 				ControllerModel = ConnectedModels[ActiveControllerGuid];
 				if (ControllerModel == ControllerModels.Ps2Type2 || ControllerModel == ControllerModels.Ps2Shinkansen || ControllerModel == ControllerModels.Ps2Ryojouhen)
 				{
-					string id = GetControllerID(ActiveControllerGuid);
-					var task = Task.Run(() => ControllerPs2.IsControlledConnected(id));
-					bool success = task.Wait(TimeSpan.FromMilliseconds(250));
-					IsControllerConnected = success && task.Result;
-					
+					IsControllerConnected = ControllerPs2.connectedUsbControllers[ActiveControllerGuid].IsConnected;
 				}
 				else
 				{

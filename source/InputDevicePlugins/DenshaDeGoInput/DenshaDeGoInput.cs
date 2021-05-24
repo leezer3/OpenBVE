@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -193,7 +194,8 @@ namespace DenshaDeGoInput
 			FileSystem = fileSystem;
 			//HACK: In order to avoid meddling with a shipped interface (or making this field public and increasing the mess), let's grab it via reflection
 			CurrentHost = (HostInterface)typeof(FileSystem).GetField("currentHost", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(fileSystem);
-
+			ControllerPs2.LibUsbThread = new Thread(ControllerPs2.LibUsbLoop);
+			ControllerPs2.LibUsbThread.Start();
 			// Initialize the array of button properties
 			for (int i = 0; i < ButtonProperties.Length; i++)
 			{
@@ -230,7 +232,7 @@ namespace DenshaDeGoInput
 
 			// Configure the mappings for the buttons and notches
 			ConfigureMappings();
-
+			
 			return true;
 		}
 
@@ -239,6 +241,7 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public void Unload()
 		{
+			ControllerPs2.LibUsbShouldLoop = false;
 			InputTranslator.Unload();
 			configForm.Dispose();
 		}

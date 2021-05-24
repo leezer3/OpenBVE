@@ -24,19 +24,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using LibUsbDotNet;
-using LibUsbDotNet.Main;
-using OpenBveApi;
-using OpenBveApi.Interface;
 
 namespace DenshaDeGoInput
 {
 	/// <summary>
 	/// Class for USB Densha de GO! controllers for the Sony Playstation 2.
 	/// </summary>
-	public class ControllerPs2
+	public partial class ControllerPs2
 	{
 		/// <summary>
 		/// The number of brake notches, excluding the emergency brake.
@@ -47,31 +41,21 @@ namespace DenshaDeGoInput
 		/// The number of power notches.
 		/// </summary>
 		internal static int ControllerPowerNotches;
-
-		/// <summary>
-		/// The USB controller.
-		/// </summary>
-		private static UsbDevice ps2Controller;
-
-		/// <summary>
-		/// The setup packet needed to send data to the controller.
-		/// </summary>
-		private static UsbSetupPacket setupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
-
+		
 		/// <summary>
 		/// The raw data read from the USB controller.
 		/// </summary>
-		private static byte[] readBuffer = new byte[6];
+		internal static byte[] readBuffer = new byte[6];
+
+		/// <summary>
+		/// The raw data to be written to the USB controller.
+		/// </summary>
+		internal static byte[] writeBuffer;
 
 		/// <summary>
 		/// Whether the controller display or door lamp is enabled.
 		/// </summary>
 		internal static bool ControllerDisplayEnabled;
-
-		/// <summary>
-        /// The task used to read input in the background.
-        /// </summary>
-		internal static Task InputTask;
 
 		/// <summary>
 		/// Represents the bytes for each button.
@@ -251,45 +235,6 @@ namespace DenshaDeGoInput
 		};
 
 		/// <summary>
-		/// Finds compatible non-standard controllers.
-		/// </summary>
-		internal static Dictionary<Guid, int> FindControllers()
-		{
-			Dictionary<Guid, int> controllerList = new Dictionary<Guid, int>();
-			controllerList.Clear();
-			if (DenshaDeGoInput.LibUsbIssue)
-			{
-				return controllerList;
-			}
-			
-			try
-			{
-				UsbDeviceFinder[] FinderPS2 = { new UsbDeviceFinder(0x0ae4, 0x0004), new UsbDeviceFinder(0x0ae4, 0x0005) };
-				foreach (UsbDeviceFinder device in FinderPS2)
-				{
-					UsbDevice controller = UsbDevice.OpenUsbDevice(device);
-					if (controller != null)
-					{
-						string vendor = device.Vid.ToString("X4").ToLower().Substring(2, 2) + device.Vid.ToString("X4").ToLower().Substring(0, 2);
-						string product = device.Pid.ToString("X4").ToLower().Substring(2, 2) + device.Pid.ToString("X4").ToLower().Substring(0, 2);
-						controllerList.Add(new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff"), -1);
-					}
-				}
-			}
-			catch
-			{
-				if (DenshaDeGoInput.CurrentHost.SimulationState == SimulationState.Running)
-				{
-					DenshaDeGoInput.CurrentHost.AddMessage(MessageType.Error, false, "The DenshaDeGo! Input Plugin encountered a critical error whilst attempting to update the connected controller list.");
-				}
-				//LibUsb isn't working right
-				DenshaDeGoInput.LibUsbIssue = true;
-			}
-			
-			return controllerList;
-		}
-
-		/// <summary>
 		/// Checks the controller model.
 		/// </summary>
 		/// <param name="id">A string representing the vendor and product ID.</param>
@@ -314,68 +259,6 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Does unloading tasks for PS2 controllers.
-		/// </summary>
-		internal static void Unload()
-		{
-			if (ps2Controller != null)
-			{
-				// Specially crafted array that blanks the display and turns off the door lamp
-				byte[] writeBuffer;
-				if (InputTranslator.ControllerModel == InputTranslator.ControllerModels.Ps2Shinkansen)
-				{
-					writeBuffer = new byte[] { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
-				}
-				else
-				{
-					writeBuffer = new byte[] { 0x0, 0x3 };
-				}
-
-				try
-				{
-					int bytesWritten;
-					ps2Controller.ControlTransfer(ref setupPacket, writeBuffer, 8, out bytesWritten);
-
-					IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
-					if (!ReferenceEquals(wholeUsbDevice, null))
-					{
-						// Release interface
-						wholeUsbDevice.ReleaseInterface(1);
-					}
-				}
-				catch
-				{
-					//Only trying to unload
-				}
-
-				ps2Controller.Close();
-				UsbDevice.Exit();
-			}
-		}
-
-		/// <summary>
-		/// Checks the controller name.
-		/// </summary>
-		/// <param name="id">A string representing the vendor and product ID.</param>
-		/// <returns>The controller name.</returns>
-		internal static string GetControllerName(string id)
-		{
-			try
-			{
-				int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-				int product = Convert.ToInt32(id.Substring(5, 4), 16);
-				return UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vendor, product)).Info.ProductString;
-			}
-			catch
-			{
-				DenshaDeGoInput.CurrentHost.AddMessage(MessageType.Error, false, "The DenshaDeGo! Input Plugin encountered a critical error whilst attempting to get the controller name for " + id);
-				DenshaDeGoInput.LibUsbIssue = true;
-				return string.Empty;
-			}
-			
-		}
-
-		/// <summary>
 		/// Reads the input from the controller.
 		/// </summary>
 		internal static void ReadInput()
@@ -385,25 +268,7 @@ namespace DenshaDeGoInput
 			{
 				ControllerDisplayEnabled = true;
 			}
-			// Start the input task if it is not active
-			if (InputTask == null || InputTask.IsCompleted)
-			{
-				InputTask = Task.Run(() => PollDevice());
-
-				// Set the initial state of the pedal and the D-pad to non-zero
-				switch (InputTranslator.ControllerModel)
-				{
-					case InputTranslator.ControllerModels.Ps2Type2:
-						readBuffer[3] = 0xFF;
-						readBuffer[4] = 0x08;
-						break;
-					case InputTranslator.ControllerModels.Ps2Shinkansen:
-						readBuffer[2] = 0xFF;
-						readBuffer[3] = 0x08;
-						break;
-				}
-			}
-
+			
 			byte brakeByte;
 			byte powerByte;
 			switch (InputTranslator.ControllerModel)
@@ -440,29 +305,11 @@ namespace DenshaDeGoInput
 					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] = readBuffer[3] == (byte)PedalBytes.Pressed ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
 
 					// Specially crafted array that turns off the door lamp
-					byte[] writeBuffer = { 0x0, 0x3 };
+					writeBuffer = new byte[]{ 0x0, 0x3 };
 					if (ControllerDisplayEnabled)
 					{
 						// Door lamp
 						writeBuffer[1] = (byte)(DenshaDeGoInput.TrainDoorsClosed ? 1 : 0);
-					}
-					if (ps2Controller != null)
-					{
-						
-						try
-						{
-							// Send data to controller via control transfer
-							lock (DenshaDeGoInput.LibUsbLock)
-							{
-								int bytesWritten;
-								ps2Controller.ControlTransfer(ref setupPacket, writeBuffer, 2, out bytesWritten);
-							}
-						}
-						catch
-						{
-							//ignore
-						}
-						
 					}
 					break;
 				case InputTranslator.ControllerModels.Ps2Shinkansen:
@@ -514,138 +361,32 @@ namespace DenshaDeGoInput
 						limit_approach = -(int)(limit - speed - 10);
 					}
 					// Specially crafted array that blanks the display
-					byte[] shinkansenWriteBuffer = { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
+					writeBuffer = new byte[]{ 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
 					if (ControllerDisplayEnabled)
 					{
 						if (DenshaDeGoInput.CurrentSpeedLimit >= 0 && DenshaDeGoInput.ATCSection)
 						{
 							// Door lamp + limit approach
-							shinkansenWriteBuffer[2] = (byte)((128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0)) + limit_approach);
+							writeBuffer[2] = (byte)((128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0)) + limit_approach);
 							// Route limit
-							shinkansenWriteBuffer[6] = (byte)(16 * limit2 + limit1);
-							shinkansenWriteBuffer[7] = (byte)limit3;
+							writeBuffer[6] = (byte)(16 * limit2 + limit1);
+							writeBuffer[7] = (byte)limit3;
 						}
 						else
 						{
 							// Door lamp
-							shinkansenWriteBuffer[2] = (byte)(128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0));
+							writeBuffer[2] = (byte)(128 * (DenshaDeGoInput.TrainDoorsClosed ? 1 : 0));
 						}
 
 						// Speed gauge
-						shinkansenWriteBuffer[3] = (byte)Math.Ceiling(Math.Round(DenshaDeGoInput.CurrentTrainSpeed) / 15);
+						writeBuffer[3] = (byte)Math.Ceiling(Math.Round(DenshaDeGoInput.CurrentTrainSpeed) / 15);
 						// Train speed
-						shinkansenWriteBuffer[4] = (byte)(16 * speed2 + speed1);
-						shinkansenWriteBuffer[5] = (byte)speed3;
-					}
-					if (ps2Controller != null)
-					{
-						lock (DenshaDeGoInput.LibUsbLock)
-						{
-							try
-							{
-								// Send data to controller via control transfer
-								int bytesWritten;
-								ps2Controller.ControlTransfer(ref setupPacket, shinkansenWriteBuffer, 8, out bytesWritten);
-							}
-							catch
-							{
-								//ignore
-							}
-							
-						}
-						
+						writeBuffer[4] = (byte)(16 * speed2 + speed1);
+						writeBuffer[5] = (byte)speed3;
 					}
 					break;
 			}
 
 		}
-
-		/// <summary>
-		/// Checks whether the controller is connected or not.
-		/// </summary>
-		/// <param name="id">A string representing the vendor and product ID.</param>
-		/// <returns>Whether the controller is connected or not.</returns>
-		internal static bool IsControlledConnected(string id)
-		{
-			try
-			{
-				lock (DenshaDeGoInput.LibUsbLock)
-				{
-					int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-					int product = Convert.ToInt32(id.Substring(5, 4), 16);
-					if (UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vendor, product)) != null)
-					{
-						return true;
-					}
-				}
-			}
-			catch
-			{
-				//Ignore this one, we're only checking if a specific controller is connected, and if it fails somehow it obviously isn't
-			}
-			
-			return false;
-		}
-
-		/// <summary>
-		/// Polls the device for input.
-		/// </summary>
-		private static void PollDevice()
-		{
-			// Store the current model to detect changes
-			InputTranslator.ControllerModels currentModel = InputTranslator.ControllerModel;
-
-			// Get the ID of the current controller
-			string id = InputTranslator.GetControllerID(InputTranslator.ActiveControllerGuid);
-			try
-			{
-				UsbEndpointReader controllerReader;
-				lock (DenshaDeGoInput.LibUsbLock)
-				{
-					// Open the USB controller and the input endpoint
-					int vendor = Convert.ToInt32(id.Substring(0, 4), 16);
-					int product = Convert.ToInt32(id.Substring(5, 4), 16);
-					UsbDeviceFinder UsbFinder = new UsbDeviceFinder(vendor, product);
-					ps2Controller = UsbDevice.OpenUsbDevice(UsbFinder);
-					IUsbDevice wholeUsbDevice = ps2Controller as IUsbDevice;
-					if (!ReferenceEquals(wholeUsbDevice, null))
-					{
-						wholeUsbDevice.SetConfiguration(1);
-						wholeUsbDevice.ClaimInterface(1);
-					}
-					controllerReader = ps2Controller.OpenEndpointReader(ReadEndpointID.Ep01);
-				}
-				
-				// Enable the display or door lamp
-				ControllerDisplayEnabled = true;
-
-				while (InputTranslator.IsControllerConnected && currentModel == InputTranslator.ControllerModel)
-				{
-					lock (DenshaDeGoInput.LibUsbLock)
-					{
-						// Unless the controller is disconnected or the model changes, ask for input in a loop
-						int readCount;
-						ErrorCode readError = controllerReader.Read(readBuffer, 0, 6, 0, out readCount);
-						if (readError != ErrorCode.Ok)
-						{
-							// Break if there's any error
-							break;
-						}
-					}
-					// Short sleep to ensure that we don't keep the lock by spinning back into the loop
-					Thread.Sleep(50);
-				}
-			}
-			catch
-			{
-				if (DenshaDeGoInput.CurrentHost.SimulationState == SimulationState.Running)
-				{
-					DenshaDeGoInput.CurrentHost.AddMessage(MessageType.Error, false, "The DenshaDeGo! Input Plugin encountered a critical error whilst attempting to poll controller " + InputTranslator.ActiveControllerGuid);
-					DenshaDeGoInput.LibUsbIssue = true;
-				}
-			}
-			
-		}
-
 	}
 }
