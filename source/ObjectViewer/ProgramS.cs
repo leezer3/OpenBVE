@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2.Trains;
+using ObjectViewer.Graphics;
+using ObjectViewer.Trains;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -30,7 +32,7 @@ namespace OpenBve {
 
 		// members
 	    internal static string[] Files = { };
-		
+
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
 		internal static Vector3 MouseCameraDirection = Vector3.Forward;
@@ -58,8 +60,6 @@ namespace OpenBve {
 		internal static CurrentRoute CurrentRoute;
 
 		internal static TrainManager TrainManager;
-
-		internal static readonly Object LockObj = new Object();
 
 		// main
 	    [STAThread]
@@ -146,10 +146,6 @@ namespace OpenBve {
 		        Backend = PlatformBackend.PreferX11
 	        };
 	        Toolkit.Init(options);
-            Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
-	        Interface.CurrentOptions.AntiAliasingLevel = 16;
-	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
 	        // initialize camera
 
 	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
@@ -164,6 +160,7 @@ namespace OpenBve {
 			// quit
 			Renderer.TextureManager.UnloadAllTextures();
 
+			formTrain.WaitTaskFinish();
 	    }
 
 	    // reset camera
@@ -263,6 +260,7 @@ namespace OpenBve {
 	    {
 		    LightingRelative = -1.0;
 		    Game.Reset();
+			formTrain.Instance?.DisableUI();
 		    for (int i = 0; i < Files.Length; i++)
 		    {
 			    try
@@ -275,10 +273,9 @@ namespace OpenBve {
 					    {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
 						    {
-							    TrainManager.Trains = new TrainBase[1];
 							    Control[] dummyControls = new Control[0];
-							    TrainManager.Trains[0] = new TrainManager.Train();
-								AbstractTrain playerTrain = TrainManager.Trains[0] as AbstractTrain;
+								TrainManager.Trains = new[] { new TrainBase(TrainState.Available) };
+								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
 								break;
@@ -295,6 +292,7 @@ namespace OpenBve {
 					    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					    {
 							TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
+							TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
 							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
@@ -315,8 +313,11 @@ namespace OpenBve {
 			    {
 				    Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
 			    }
-
 		    }
+
+			NearestTrain.UpdateSpecs();
+			NearestTrain.Apply();
+			formTrain.Instance?.EnableUI();
 
 		    Renderer.InitializeVisibility();
 		    Renderer.UpdateViewingDistances(600);
@@ -384,6 +385,7 @@ namespace OpenBve {
 		            LightingRelative = -1.0;
 	                Game.Reset();
 		            Files = new string[] {};
+					NearestTrain.UpdateSpecs();
 					Renderer.ApplyBackgroundColor();
 	                break;
 	            case Key.Left:
@@ -474,6 +476,9 @@ namespace OpenBve {
 	                break;
 				case Key.R:
 					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+					break;
+				case Key.F11:
+					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
 					break;
 	        }
 	    }

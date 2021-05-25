@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using ObjectViewer.Graphics;
 using OpenBveApi.Graphics;
-using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.World;
 using OpenTK.Graphics;
 
 namespace OpenBve
@@ -22,7 +20,7 @@ namespace OpenBve
 			height.Value = Program.Renderer.Screen.Height;
 			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
 			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
-			checkBoxOptimizeObjects.Checked = Interface.CurrentOptions.ObjectOptimizationBasicThreshold != 0;
+			comboBoxOptimizeObjects.SelectedIndex = (int)Interface.CurrentOptions.ObjectOptimizationMode;
 		}
 
 		internal static DialogResult ShowOptions()
@@ -99,32 +97,6 @@ namespace OpenBve
 				Program.Renderer.UpdateViewport();
 			}
 
-			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
-			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel)
-			{
-				Program.LightingRelative = -1.0;
-				Game.Reset();
-				for (int i = 0; i < Program.Files.Length; i++)
-				{
-					try
-					{
-						UnifiedObject o;
-						Program.CurrentHost.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, out o);
-						o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
-
-					}
-					catch (Exception ex)
-					{
-						Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Program.Files[i] + ".");
-					}
-				}
-
-				Program.Renderer.InitializeVisibility();
-				Program.Renderer.UpdateVisibility(0.0, true);
-				ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
-
-			}
-
 			Interface.CurrentOptions.CurrentXParser = (XParsers) comboBoxNewXParser.SelectedIndex;
 			Interface.CurrentOptions.CurrentObjParser = (ObjParsers) comboBoxNewObjParser.SelectedIndex;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -136,17 +108,10 @@ namespace OpenBve
 				}
 			}
 
-			if (checkBoxOptimizeObjects.Checked)
-			{
-				Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-				Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
-			}
-			else
-			{
-				Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 0;
-				Interface.CurrentOptions.ObjectOptimizationFullThreshold = 0;
-			}
+			Interface.CurrentOptions.ObjectOptimizationMode = (ObjectOptimizationMode)comboBoxOptimizeObjects.SelectedIndex;
+
 			Options.SaveOptions();
+			Program.RefreshObjects();
 			this.Close();
 		}
 	}

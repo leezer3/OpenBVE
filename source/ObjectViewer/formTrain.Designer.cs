@@ -40,8 +40,8 @@ namespace OpenBve {
             this.numericUpDownCylinder = new System.Windows.Forms.NumericUpDown();
             this.labelPipe = new System.Windows.Forms.Label();
             this.numericUpDownPipe = new System.Windows.Forms.NumericUpDown();
-            this.labelEmergency = new System.Windows.Forms.Label();
-            this.numericUpDownEmergency = new System.Windows.Forms.NumericUpDown();
+            this.labelEqualizing = new System.Windows.Forms.Label();
+            this.numericUpDownEqualizing = new System.Windows.Forms.NumericUpDown();
             this.labelMain = new System.Windows.Forms.Label();
             this.numericUpDownMain = new System.Windows.Forms.NumericUpDown();
             this.tabPageDoors = new System.Windows.Forms.TabPage();
@@ -82,6 +82,7 @@ namespace OpenBve {
             this.checkBoxEnablePlugin = new System.Windows.Forms.CheckBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonApply = new System.Windows.Forms.Button();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAccel)).BeginInit();
@@ -91,7 +92,7 @@ namespace OpenBve {
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAirPipe)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCylinder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPipe)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEmergency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEqualizing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMain)).BeginInit();
             this.tabPageDoors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRight)).BeginInit();
@@ -115,7 +116,7 @@ namespace OpenBve {
             this.checkBoxEnableTrain.Name = "checkBoxEnableTrain";
             this.checkBoxEnableTrain.Size = new System.Drawing.Size(88, 16);
             this.checkBoxEnableTrain.TabIndex = 0;
-            this.checkBoxEnableTrain.Text = "Enable Train";
+            this.checkBoxEnableTrain.Text = "Enable train simulation";
             this.checkBoxEnableTrain.UseVisualStyleBackColor = true;
             this.checkBoxEnableTrain.CheckedChanged += new System.EventHandler(this.checkBoxEnableTrain_Check);
             // 
@@ -241,8 +242,8 @@ namespace OpenBve {
             this.tabPageBrake.Controls.Add(this.numericUpDownCylinder);
             this.tabPageBrake.Controls.Add(this.labelPipe);
             this.tabPageBrake.Controls.Add(this.numericUpDownPipe);
-            this.tabPageBrake.Controls.Add(this.labelEmergency);
-            this.tabPageBrake.Controls.Add(this.numericUpDownEmergency);
+            this.tabPageBrake.Controls.Add(this.labelEqualizing);
+            this.tabPageBrake.Controls.Add(this.numericUpDownEqualizing);
             this.tabPageBrake.Controls.Add(this.labelMain);
             this.tabPageBrake.Controls.Add(this.numericUpDownMain);
             this.tabPageBrake.Location = new System.Drawing.Point(4, 22);
@@ -325,26 +326,26 @@ namespace OpenBve {
             this.numericUpDownPipe.Size = new System.Drawing.Size(120, 19);
             this.numericUpDownPipe.TabIndex = 5;
             // 
-            // labelEmergency
+            // labelEqualizing
             // 
-            this.labelEmergency.AutoSize = true;
-            this.labelEmergency.Location = new System.Drawing.Point(6, 33);
-            this.labelEmergency.Name = "labelEmergency";
-            this.labelEmergency.Size = new System.Drawing.Size(112, 12);
-            this.labelEmergency.TabIndex = 2;
-            this.labelEmergency.Text = "Emergency reservoir:";
+            this.labelEqualizing.AutoSize = true;
+            this.labelEqualizing.Location = new System.Drawing.Point(6, 33);
+            this.labelEqualizing.Name = "labelEqualizing";
+            this.labelEqualizing.Size = new System.Drawing.Size(112, 12);
+            this.labelEqualizing.TabIndex = 2;
+            this.labelEqualizing.Text = "Equalizing reservoir:";
             // 
-            // numericUpDownEmergency
+            // numericUpDownEqualizing
             // 
-            this.numericUpDownEmergency.Location = new System.Drawing.Point(133, 31);
-            this.numericUpDownEmergency.Maximum = new decimal(new int[] {
+            this.numericUpDownEqualizing.Location = new System.Drawing.Point(133, 31);
+            this.numericUpDownEqualizing.Maximum = new decimal(new int[] {
             999,
             0,
             0,
             0});
-            this.numericUpDownEmergency.Name = "numericUpDownEmergency";
-            this.numericUpDownEmergency.Size = new System.Drawing.Size(120, 19);
-            this.numericUpDownEmergency.TabIndex = 3;
+            this.numericUpDownEqualizing.Name = "numericUpDownEqualizing";
+            this.numericUpDownEqualizing.Size = new System.Drawing.Size(120, 19);
+            this.numericUpDownEqualizing.TabIndex = 3;
             // 
             // labelMain
             // 
@@ -552,6 +553,7 @@ namespace OpenBve {
             this.numericUpDownBrakeNotches.TabIndex = 10;
             this.numericUpDownBrakeNotches.Minimum = 1;
             this.numericUpDownBrakeNotches.Value = 8;
+            this.numericUpDownBrakeNotches.ValueChanged += new System.EventHandler(this.numericUpDownBrakeNotches_ValueChanged);
             // 
             // labelBrakeNotch
             // 
@@ -597,6 +599,7 @@ namespace OpenBve {
             this.numericUpDownPowerNotches.TabIndex = 5;
             this.numericUpDownPowerNotches.Minimum = 1;
             this.numericUpDownPowerNotches.Value = 8;
+            this.numericUpDownPowerNotches.ValueChanged += new System.EventHandler(this.numericUpDownPowerNotches_ValueChanged);
             // 
             // labelPowerNotch
             // 
@@ -770,7 +773,7 @@ namespace OpenBve {
             this.checkBoxEnablePlugin.Name = "checkBoxEnablePlugin";
             this.checkBoxEnablePlugin.Size = new System.Drawing.Size(93, 16);
             this.checkBoxEnablePlugin.TabIndex = 0;
-            this.checkBoxEnablePlugin.Text = "Enable Plugin";
+            this.checkBoxEnablePlugin.Text = "Enable plugin simulation";
             this.checkBoxEnablePlugin.UseVisualStyleBackColor = true;
             this.checkBoxEnablePlugin.CheckedChanged += new System.EventHandler(this.checkBoxEnablePlugin_Check);
             // 
@@ -794,11 +797,22 @@ namespace OpenBve {
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
+            // buttonReset
+            // 
+            this.buttonReset.Location = new System.Drawing.Point(43, 288);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(75, 23);
+            this.buttonReset.TabIndex = 2;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
+            // 
             // formTrain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 323);
+            this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.tabControlSettings);
@@ -808,6 +822,7 @@ namespace OpenBve {
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Train settings";
+            this.Load += new System.EventHandler(this.formTrain_Load);
             this.tabControlSettings.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();
@@ -819,7 +834,7 @@ namespace OpenBve {
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAirPipe)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCylinder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPipe)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEmergency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEqualizing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMain)).EndInit();
             this.tabPageDoors.ResumeLayout(false);
             this.tabPageDoors.PerformLayout();
@@ -852,6 +867,7 @@ namespace OpenBve {
         private System.Windows.Forms.TabPage tabPageDoors;
         private System.Windows.Forms.TabPage tabPageMisc;
         private System.Windows.Forms.TabPage tabPagePlugin;
+        private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelCars;
@@ -862,8 +878,8 @@ namespace OpenBve {
         private System.Windows.Forms.NumericUpDown numericUpDownAccel;
         private System.Windows.Forms.Label labelMain;
         private System.Windows.Forms.NumericUpDown numericUpDownMain;
-        private System.Windows.Forms.Label labelEmergency;
-        private System.Windows.Forms.NumericUpDown numericUpDownEmergency;
+        private System.Windows.Forms.Label labelEqualizing;
+        private System.Windows.Forms.NumericUpDown numericUpDownEqualizing;
         private System.Windows.Forms.Label labelPipe;
         private System.Windows.Forms.NumericUpDown numericUpDownPipe;
         private System.Windows.Forms.Label labelCylinder;

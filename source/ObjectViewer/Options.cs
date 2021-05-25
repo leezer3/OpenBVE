@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
+using ObjectViewer.Graphics;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 
@@ -156,6 +157,20 @@ namespace OpenBve
 	                                            break;
                                             }
 									} break;
+								case "objectoptimization":
+									switch (Key)
+									{
+										case "mode":
+											{
+												ObjectOptimizationMode mode;
+												if (Enum.TryParse(Value, out mode))
+												{
+													Interface.CurrentOptions.ObjectOptimizationMode = mode;
+												}
+											}
+											break;
+									}
+									break;
                             }
                         }
                     }
@@ -200,6 +215,9 @@ namespace OpenBve
                 Builder.AppendLine("[Parsers]");
                 Builder.AppendLine("xObject = " + Interface.CurrentOptions.CurrentXParser);
                 Builder.AppendLine("objObject = " + Interface.CurrentOptions.CurrentObjParser);
+                Builder.AppendLine();
+				Builder.AppendLine("[objectOptimization]");
+				Builder.AppendLine($"mode = {Interface.CurrentOptions.ObjectOptimizationMode}");
                 string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
                 System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }

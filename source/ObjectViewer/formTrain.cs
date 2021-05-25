@@ -3,122 +3,329 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TrainManager.BrakeSystems;
-using OpenBveApi.Trains;
-using TrainManager;
-using TrainManager.Car;
-using TrainManager.Handles;
-using TrainManager.Power;
-using TrainManager.Trains;
+using ObjectViewer.Trains;
 
 namespace OpenBve
 {
 	public partial class formTrain : Form
 	{
-		private class PluginState
-		{
-			internal int Number;
-			internal int State;
-
-			internal PluginState(int number, int state)
-			{
-				Number = number;
-				State = state;
-			}
-		}
-
-		private readonly List<PluginState> PluginStates;
-
 		private static Task FormTrainTask;
+		internal static formTrain Instance;
 
-		private formTrain()
-		{
-			InitializeComponent();
-
-			checkBoxEnableTrain.Checked = Program.TrainManager.Trains.Length != 0;
-			tabControlSettings.Enabled = checkBoxEnableTrain.Checked;
-
-			labelEmergency.Enabled = false;
-			numericUpDownEmergency.Enabled = false;
-			checkBoxSetHoldBrake.Enabled = false;
-			checkBoxSetConstSpeed.Enabled = false;
-			if (checkBoxEnableTrain.Checked)
-			{
-				TrainManager.Train Train = Program.TrainManager.Trains[0] as TrainManager.Train;
-				numericUpDownCars.Value = Train.Cars.Length;
-				numericUpDownSpeed.Value = (decimal)(Train.Cars[0].CurrentSpeed * 3.6);
-				numericUpDownAccel.Value = (decimal)(Train.Cars[0].Specs.MotorAcceleration * 3.6);
-
-				numericUpDownMain.Value = (decimal)(Train.Cars[0].CarBrake.mainReservoir.CurrentPressure / 1000.0);
-				numericUpDownPipe.Value = (decimal)(Train.Cars[0].CarBrake.brakePipe.CurrentPressure / 1000.0);
-				numericUpDownCylinder.Value = (decimal)(Train.Cars[0].CarBrake.brakeCylinder.CurrentPressure / 1000.0);
-				numericUpDownAirPipe.Value = (decimal)(Train.Cars[0].CarBrake.straightAirPipe.CurrentPressure / 1000.0);
-
-				numericUpDownLeft.Value = (decimal)Train.Cars[0].Doors[0].State;
-				numericUpDownRight.Value = (decimal)Train.Cars[0].Doors[1].State;
-				checkBoxLeftTarget.Checked = Train.Cars[0].Doors[0].AnticipatedOpen;
-				checkBoxRightTarget.Checked = Train.Cars[0].Doors[1].AnticipatedOpen;
-
-				numericUpDownReverser.Value = (decimal)Train.Handles.Reverser.Driver;
-				numericUpDownPowerNotch.Value = Train.Handles.Power.Driver;
-				numericUpDownPowerNotches.Value = Train.Handles.Power.MaximumNotch;
-				checkBoxAirBrake.Checked = Train.Cars[0].CarBrake is AutomaticAirBrake;
-				if (checkBoxAirBrake.Checked)
-				{
-					numericUpDownBrakeNotch.Value = (int)Train.Handles.Brake.Driver;
-					numericUpDownBrakeNotch.Maximum = 2;
-					numericUpDownBrakeNotches.Value = 2;
-					numericUpDownBrakeNotches.Enabled = false;
-					checkBoxHoldBrake.Enabled = false;
-				}
-				else
-				{
-					numericUpDownBrakeNotch.Value = Train.Handles.Brake.Driver;
-					numericUpDownBrakeNotches.Value = Train.Handles.Brake.MaximumNotch;
-					checkBoxHoldBrake.Checked = Train.Handles.HasHoldBrake;
-					if (checkBoxHoldBrake.Checked)
-					{
-						checkBoxSetHoldBrake.Enabled = true;
-						checkBoxSetHoldBrake.Checked = Train.Handles.HoldBrake.Driver;
-					}
-				}
-				checkBoxSetEmergency.Checked = Train.Handles.EmergencyBrake.Driver;
-				checkBoxConstSpeed.Checked = Train.Specs.HasConstSpeed;
-				if (checkBoxConstSpeed.Checked)
-				{
-					checkBoxSetConstSpeed.Enabled = true;
-					checkBoxSetConstSpeed.Checked = Train.Specs.CurrentConstSpeed;
-				}
-
-				checkBoxEnablePlugin.Checked = Train.SafetySystemPlugin;
-			}
-			panelPlugin.Enabled = checkBoxEnablePlugin.Checked;
-			buttonRemove.Enabled = false;
-			labelNumber.Enabled = false;
-			numericUpDownNumber.Enabled = false;
-			labelState.Enabled = false;
-			numericUpDownState.Enabled = false;
-			PluginStates = new List<PluginState>();
-			for (int i = 0; i < PluginManager.CurrentPlugin.Panel.Length; i++)
-			{
-				if (PluginManager.CurrentPlugin.Panel[i] != 0)
-				{
-					PluginStates.Add(new PluginState(i, PluginManager.CurrentPlugin.Panel[i]));
-				}
-			}
-			ListPluginStates();
-		}
+		private List<PluginState> PluginStates;
 
 		internal static void ShowTrainSettings()
 		{
 			if (FormTrainTask == null || FormTrainTask.IsCompleted)
 			{
-				FormTrainTask = Task.Factory.StartNew(() =>
+				FormTrainTask = Task.Run(() =>
 				{
-					formTrain dialog = new formTrain();
-					dialog.ShowDialog();
+					Instance = new formTrain();
+					Instance.ShowDialog();
+					Instance.Dispose();
 				});
 			}
+			else
+			{
+				Instance?.ActivateUI_Async();
+			}
+		}
+
+		/// <summary>
+		/// Waits for the task running this form to finish
+		/// </summary>
+		/// <remarks>On Linux, you may get System.Threading.ThreadAbortException if you don't wait.</remarks>
+		internal static void WaitTaskFinish()
+		{
+			if (FormTrainTask == null || FormTrainTask.IsCompleted)
+			{
+				return;
+			}
+
+			Console.WriteLine(@"Wait for Sub UI Thread to finish...");
+			FormTrainTask.Wait();
+			Console.WriteLine(@"Sub UI Thread finished.");
+		}
+
+		private formTrain()
+		{
+			InitializeComponent();
+		}
+
+		private void UpdatePluginListView()
+		{
+			listViewPlugin.Items.Clear();
+			buttonRemove.Enabled = false;
+			labelNumber.Enabled = false;
+			numericUpDownNumber.Enabled = false;
+			labelState.Enabled = false;
+			numericUpDownState.Enabled = false;
+
+			ListViewItem[] items = new ListViewItem[PluginStates.Count];
+			for (int i = 0; i < items.Length; i++)
+			{
+				items[i] = new ListViewItem(new[] { "", "" });
+				UpdatePluginListViewItem(items[i], i, false);
+			}
+			listViewPlugin.Items.AddRange(items);
+			listViewPlugin.AutoResizeColumns(items.Length != 0 ? ColumnHeaderAutoResizeStyle.HeaderSize : ColumnHeaderAutoResizeStyle.None);
+		}
+
+		private void UpdatePluginListViewItem(ListViewItem item, int index, bool resizeColumns)
+		{
+			item.SubItems[0].Text = PluginStates[index].Index.ToString();
+			item.SubItems[1].Text = PluginStates[index].Value.ToString();
+			if (resizeColumns)
+			{
+				listViewPlugin.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+			}
+		}
+
+		private void UpdatePluginComponent(PluginState state)
+		{
+			buttonRemove.Enabled = true;
+			labelNumber.Enabled = true;
+			numericUpDownNumber.Enabled = true;
+			numericUpDownNumber.Value = state.Index;
+			labelState.Enabled = true;
+			numericUpDownState.Enabled = true;
+			numericUpDownState.Value = state.Value;
+		}
+
+		private void UpdateTrain()
+		{
+			lock (NearestTrain.LockObj)
+			{
+				checkBoxEnableTrain.Checked = NearestTrain.EnableSimulation;
+				tabControlSettings.Enabled = checkBoxEnableTrain.Checked;
+
+				// Update Spec
+				NearestTrainSpecs specs = NearestTrain.Specs;
+				numericUpDownCars.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownCars.Value = specs.NumberOfCars;
+
+				numericUpDownPowerNotches.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownPowerNotches.Value = specs.PowerNotches;
+
+				checkBoxAirBrake.Enabled = !NearestTrain.IsExtensionsCfg;
+				checkBoxAirBrake.Checked = specs.IsAirBrake;
+
+				numericUpDownBrakeNotches.Enabled = !NearestTrain.IsExtensionsCfg && !specs.IsAirBrake;
+				numericUpDownBrakeNotches.Value = specs.BrakeNotches;
+
+				checkBoxHoldBrake.Enabled = !NearestTrain.IsExtensionsCfg && !specs.IsAirBrake;
+				checkBoxHoldBrake.Checked = specs.HasHoldBrake;
+
+				checkBoxConstSpeed.Enabled = !NearestTrain.IsExtensionsCfg;
+				checkBoxConstSpeed.Checked = specs.HasConstSpeed;
+
+				// Update Status
+				NearestTrainStatus status = NearestTrain.Status;
+
+				numericUpDownSpeed.Value = (decimal)status.Speed;
+				numericUpDownAccel.Value = (decimal)status.Acceleration;
+
+				numericUpDownMain.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownMain.Value = (decimal)status.MainReservoirPressure;
+
+				numericUpDownEqualizing.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownEqualizing.Value = (decimal)status.EqualizingReservoirPressure;
+
+				numericUpDownPipe.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownPipe.Value = (decimal)status.BrakePipePressure;
+
+				numericUpDownCylinder.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownCylinder.Value = (decimal)status.BrakeCylinderPressure;
+
+				numericUpDownAirPipe.Enabled = !NearestTrain.IsExtensionsCfg;
+				numericUpDownAirPipe.Value = (decimal)status.StraightAirPipePressure;
+
+				numericUpDownLeft.Value = (decimal)status.LeftDoorState;
+				checkBoxLeftTarget.Checked = status.LeftDoorAnticipatedOpen;
+				numericUpDownRight.Value = (decimal)status.RightDoorState;
+				checkBoxRightTarget.Checked = status.RightDoorAnticipatedOpen;
+
+				numericUpDownReverser.Value = status.Reverser;
+				numericUpDownPowerNotch.Maximum = specs.PowerNotches;
+				numericUpDownPowerNotch.Value = status.PowerNotch;
+				numericUpDownBrakeNotch.Maximum = specs.BrakeNotches;
+				numericUpDownBrakeNotch.Value = status.BrakeNotch;
+				checkBoxSetHoldBrake.Enabled = checkBoxHoldBrake.Checked;
+				checkBoxSetHoldBrake.Checked = status.HoldBrake;
+				checkBoxSetEmergency.Checked = status.EmergencyBrake;
+				checkBoxSetConstSpeed.Enabled = checkBoxConstSpeed.Checked;
+				checkBoxSetConstSpeed.Checked = status.ConstSpeed;
+
+				checkBoxEnablePlugin.Checked = NearestTrain.EnablePluginSimulation;
+				panelPlugin.Enabled = checkBoxEnablePlugin.Checked;
+				PluginStates = status.PluginStates.ToList();
+			}
+
+			UpdatePluginListView();
+		}
+
+		private void ResetTrain()
+		{
+			lock (NearestTrain.LockObj)
+			{
+				NearestTrain.EnableSimulation = checkBoxEnableTrain.Checked;
+
+				if (!NearestTrain.IsExtensionsCfg)
+				{
+					NearestTrain.Specs = new NearestTrainSpecs();
+				}
+
+				NearestTrain.Status = new NearestTrainStatus();
+				NearestTrain.EnablePluginSimulation = false;
+				NearestTrain.RequiredApply = true;
+			}
+
+			UpdateTrain();
+		}
+
+		private void ApplyTrain()
+		{
+			lock (NearestTrain.LockObj)
+			{
+				NearestTrain.EnableSimulation = checkBoxEnableTrain.Checked;
+
+				if (!NearestTrain.IsExtensionsCfg)
+				{
+					NearestTrainSpecs specs = NearestTrain.Specs;
+					specs.NumberOfCars = (int)numericUpDownCars.Value;
+					specs.PowerNotches = (int)numericUpDownPowerNotches.Value;
+					specs.IsAirBrake = checkBoxAirBrake.Checked;
+					specs.BrakeNotches = (int)numericUpDownBrakeNotches.Value;
+					specs.HasHoldBrake = checkBoxHoldBrake.Checked;
+					specs.HasConstSpeed = checkBoxConstSpeed.Checked;
+				}
+
+				NearestTrainStatus status = NearestTrain.Status;
+
+				// Physics
+				status.Speed = (int)numericUpDownSpeed.Value;
+				status.Acceleration = (int)numericUpDownAccel.Value;
+
+				// Brake system
+				if (!NearestTrain.IsExtensionsCfg)
+				{
+					status.MainReservoirPressure = (int)numericUpDownMain.Value;
+					status.EqualizingReservoirPressure = (int)numericUpDownEqualizing.Value;
+					status.BrakePipePressure = (int)numericUpDownPipe.Value;
+					status.BrakeCylinderPressure = (int)numericUpDownCylinder.Value;
+					status.StraightAirPipePressure = (int)numericUpDownAirPipe.Value;
+				}
+
+				// Door
+				status.LeftDoorState = (double)numericUpDownLeft.Value;
+				status.LeftDoorAnticipatedOpen = checkBoxLeftTarget.Checked;
+				status.RightDoorState = (double)numericUpDownRight.Value;
+				status.RightDoorAnticipatedOpen = checkBoxRightTarget.Checked;
+
+				// Handle
+				status.Reverser = (int)numericUpDownReverser.Value;
+				status.PowerNotch = (int)numericUpDownPowerNotch.Value;
+				status.BrakeNotch = (int)numericUpDownBrakeNotch.Value;
+				status.HoldBrake = checkBoxSetHoldBrake.Checked;
+				status.EmergencyBrake = checkBoxSetEmergency.Checked;
+				status.ConstSpeed = checkBoxSetConstSpeed.Checked;
+
+				// Plugin
+				NearestTrain.EnablePluginSimulation = checkBoxEnablePlugin.Checked;
+				NearestTrain.Status.PluginStates = PluginStates.ToArray();
+
+				NearestTrain.RequiredApply = true;
+			}
+		}
+
+		internal void EnableUI()
+		{
+			if (IsDisposed)
+			{
+				return;
+			}
+
+			if (InvokeRequired)
+			{
+				Invoke((MethodInvoker)(() => Enabled = true));
+			}
+			else
+			{
+				Enabled = true;
+			}
+		}
+
+		internal void DisableUI()
+		{
+			if (IsDisposed)
+			{
+				return;
+			}
+
+			if (InvokeRequired)
+			{
+				Invoke((MethodInvoker)(() => Enabled = false));
+			}
+			else
+			{
+				Enabled = false;
+			}
+		}
+
+		internal void UpdateSpecsUI()
+		{
+			if (IsDisposed)
+			{
+				return;
+			}
+
+			if (InvokeRequired)
+			{
+				Invoke((MethodInvoker)UpdateTrain);
+			}
+			else
+			{
+				UpdateTrain();
+			}
+		}
+
+		private void ActivateUI_Async()
+		{
+			if (IsDisposed)
+			{
+				return;
+			}
+
+			if (InvokeRequired)
+			{
+				BeginInvoke((MethodInvoker)Activate);
+			}
+			else
+			{
+				Activate();
+			}
+		}
+
+		internal void CloseUI_Async()
+		{
+			if (IsDisposed)
+			{
+				return;
+			}
+
+			if (InvokeRequired)
+			{
+				BeginInvoke((MethodInvoker)Close);
+			}
+			else
+			{
+				Close();
+			}
+		}
+
+		private void formTrain_Load(object sender, EventArgs e)
+		{
+			UpdateTrain();
 		}
 
 		private void checkBoxEnableTrain_Check(object sender, EventArgs e)
@@ -130,12 +337,7 @@ namespace OpenBve
 		{
 			if (checkBoxAirBrake.Checked)
 			{
-				if (numericUpDownBrakeNotch.Value > 2)
-				{
-					numericUpDownBrakeNotch.Value = 2;
-				}
-				numericUpDownBrakeNotch.Maximum = 2;
-				numericUpDownBrakeNotches.Value = 2;
+				numericUpDownBrakeNotches.Value = 3;
 				numericUpDownBrakeNotches.Enabled = false;
 				checkBoxHoldBrake.Checked = false;
 				checkBoxHoldBrake.Enabled = false;
@@ -144,10 +346,27 @@ namespace OpenBve
 			}
 			else
 			{
-				numericUpDownBrakeNotch.Maximum = 100;
 				numericUpDownBrakeNotches.Enabled = true;
 				checkBoxHoldBrake.Enabled = true;
 			}
+		}
+
+		private void numericUpDownPowerNotches_ValueChanged(object sender, EventArgs e)
+		{
+			if (numericUpDownPowerNotch.Value > numericUpDownPowerNotches.Value)
+			{
+				numericUpDownPowerNotch.Value = numericUpDownPowerNotches.Value;
+			}
+			numericUpDownPowerNotch.Maximum = numericUpDownPowerNotches.Value;
+		}
+
+		private void numericUpDownBrakeNotches_ValueChanged(object sender, EventArgs e)
+		{
+			if (numericUpDownBrakeNotch.Value > numericUpDownBrakeNotches.Value)
+			{
+				numericUpDownBrakeNotch.Value = numericUpDownBrakeNotches.Value;
+			}
+			numericUpDownBrakeNotch.Maximum = numericUpDownBrakeNotches.Value;
 		}
 
 		private void checkBoxHoldBrake_Check(object sender, EventArgs e)
@@ -181,64 +400,24 @@ namespace OpenBve
 			panelPlugin.Enabled = checkBoxEnablePlugin.Checked;
 		}
 
-		private void ListPluginStates()
-		{
-			ListViewItem[] items = new ListViewItem[PluginStates.Count];
-			for (int i = 0; i < items.Length; i++)
-			{
-				items[i] = new ListViewItem(new[] { "", "" });
-				UpdatePluginListViewItem(items[i], i, false);
-			}
-			listViewPlugin.Items.AddRange(items);
-			if (items.Length != 0)
-			{
-				listViewPlugin.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-			}
-			else
-			{
-				listViewPlugin.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
-			}
-		}
-
-		private void UpdatePluginListViewItem(ListViewItem item, int index, bool resizeColumns)
-		{
-			item.SubItems[0].Text = PluginStates[index].Number.ToString();
-			item.SubItems[1].Text = PluginStates[index].State.ToString();
-			if (resizeColumns)
-			{
-				listViewPlugin.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-			}
-		}
-
-		private void UpdatePluginComponent(PluginState state)
-		{
-			buttonRemove.Enabled = true;
-			labelNumber.Enabled = true;
-			numericUpDownNumber.Enabled = true;
-			numericUpDownNumber.Value = state.Number;
-			labelState.Enabled = true;
-			numericUpDownState.Enabled = true;
-			numericUpDownState.Value = state.State;
-		}
-
 		private void listViewPlugin_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (listViewPlugin.SelectedIndices.Count == 1)
 			{
 				int i = listViewPlugin.SelectedIndices[0];
-				Tag = new object();
+				listViewPlugin.Tag = new object();
 				UpdatePluginComponent(PluginStates[i]);
-				Tag = null;
+				listViewPlugin.Tag = null;
 			}
 			else
 			{
-				Tag = new object();
+				listViewPlugin.Tag = new object();
 				buttonRemove.Enabled = false;
 				labelNumber.Enabled = false;
 				numericUpDownNumber.Enabled = false;
 				labelState.Enabled = false;
 				numericUpDownState.Enabled = false;
-				Tag = null;
+				listViewPlugin.Tag = null;
 			}
 		}
 
@@ -268,130 +447,27 @@ namespace OpenBve
 
 		private void numericUpDownNumber_ValueChanged(object sender, EventArgs e)
 		{
-			if (Tag == null && listViewPlugin.SelectedIndices.Count == 1)
+			if (listViewPlugin.Tag == null && listViewPlugin.SelectedIndices.Count == 1)
 			{
 				int i = listViewPlugin.SelectedIndices[0];
-				PluginStates[i].Number = (int)numericUpDownNumber.Value;
+				PluginStates[i] = new PluginState((int)numericUpDownNumber.Value, PluginStates[i].Value);
 				UpdatePluginListViewItem(listViewPlugin.Items[i], i, true);
 			}
 		}
 
 		private void numericUpDownState_ValueChanged(object sender, EventArgs e)
 		{
-			if (Tag == null && listViewPlugin.SelectedIndices.Count == 1)
+			if (listViewPlugin.Tag == null && listViewPlugin.SelectedIndices.Count == 1)
 			{
 				int i = listViewPlugin.SelectedIndices[0];
-				PluginStates[i].State = (int)numericUpDownState.Value;
+				PluginStates[i] = new PluginState(PluginStates[i].Index, (int)numericUpDownState.Value);
 				UpdatePluginListViewItem(listViewPlugin.Items[i], i, true);
 			}
 		}
 
-		private void ApplyTrain()
+		private void buttonReset_Click(object sender, EventArgs e)
 		{
-			lock (Program.LockObj)
-			{
-				Program.TrainManager.Trains = new TrainBase[] { };
-				if (checkBoxEnableTrain.Checked)
-				{
-					Array.Resize(ref Program.TrainManager.Trains, 1);
-					TrainManager.Train Train = new TrainManager.Train
-					{
-						State = TrainState.Available
-					};
-					Array.Resize(ref Train.Cars, (int)numericUpDownCars.Value);
-					for (int i = 0; i < Train.Cars.Length; i++)
-					{
-						Train.Cars[i] = new CarBase(Train, i);
-						Train.Cars[i].CurrentSpeed = (int)numericUpDownSpeed.Value / 3.6;
-						Train.Cars[i].Specs = new CarPhysics
-						{
-							PerceivedSpeed = (int) numericUpDownSpeed.Value / 3.6, 
-							Acceleration = (int) numericUpDownAccel.Value / 3.6
-						};
-						if (checkBoxAirBrake.Checked)
-						{
-							Train.Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, Train.Handles.EmergencyBrake, Train.Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] {});
-						}
-						else
-						{
-							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, Train.Handles.EmergencyBrake, Train.Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] {});
-						}
-
-						if (Train.Cars.Length > 1)
-						{
-							Train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
-						}
-						else
-						{
-							Train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, Train.Cars[i / 2], null, Train);
-						}
-						//At the minute, Object Viewer uses dummy brake systems
-						Train.Cars[i].CarBrake.mainReservoir = new MainReservoir((int)numericUpDownMain.Value * 1000);
-						Train.Cars[i].CarBrake.brakePipe = new BrakePipe((int)numericUpDownPipe.Value * 1000);
-						Train.Cars[i].CarBrake.brakeCylinder = new BrakeCylinder((int)numericUpDownCylinder.Value * 1000);
-						Train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe((int)numericUpDownAirPipe.Value * 1000);
-
-						Train.Cars[i].Doors[0] = new Door(-1, 1000, 0)
-						{
-							State = (double) numericUpDownLeft.Value,
-							AnticipatedOpen = checkBoxLeftTarget.Checked
-						};
-						Train.Cars[i].Doors[1] = new Door(1, 1000, 0)
-						{
-							State = (double) numericUpDownRight.Value,
-							AnticipatedOpen = checkBoxRightTarget.Checked
-						};
-					}
-
-					Train.Handles.Reverser.Driver = (ReverserPosition)numericUpDownReverser.Value;
-					Train.Handles.Reverser.Actual = (ReverserPosition)numericUpDownReverser.Value;
-					if ((int)numericUpDownPowerNotches.Value != Train.Handles.Power.MaximumNotch)
-					{
-						Train.Handles.Power = new PowerHandle((int)numericUpDownPowerNotches.Value, (int)numericUpDownPowerNotches.Value, new double[] {}, new double[] {}, Train);
-					}
-					Train.Handles.Power.Driver = (int)numericUpDownPowerNotch.Value;
-					if (checkBoxAirBrake.Checked)
-					{
-						Train.Handles.Brake.Driver = (int)numericUpDownBrakeNotch.Value;
-					}
-					else
-					{
-						if ((int)numericUpDownBrakeNotches.Value != Train.Handles.Brake.MaximumNotch)
-						{
-							Train.Handles.Brake = new BrakeHandle((int)numericUpDownBrakeNotches.Value, (int)numericUpDownBrakeNotches.Value, null, new double[] {}, new double[] {}, Train);
-						}
-						Train.Handles.Brake.Driver = (int)numericUpDownBrakeNotch.Value;
-						Train.Handles.HasHoldBrake = checkBoxHoldBrake.Checked;
-						if (checkBoxHoldBrake.Checked)
-						{
-							Train.Handles.HoldBrake.Driver = checkBoxSetHoldBrake.Checked;
-						}
-					}
-					Train.Handles.EmergencyBrake.Driver = checkBoxSetEmergency.Checked;
-					Train.Specs.HasConstSpeed = checkBoxConstSpeed.Checked;
-					if (checkBoxConstSpeed.Checked)
-					{
-						Train.Specs.CurrentConstSpeed = checkBoxSetConstSpeed.Checked;
-					}
-
-					Train.SafetySystemPlugin = checkBoxEnablePlugin.Checked;
-					if (checkBoxEnablePlugin.Checked && PluginStates.Count != 0)
-					{
-						PluginManager.CurrentPlugin.Panel = new int[PluginStates.Max(value => value.Number) + 1];
-						foreach (PluginState state in PluginStates)
-						{
-							PluginManager.CurrentPlugin.Panel[state.Number] = state.State;
-						}
-					}
-					else
-					{
-						PluginManager.CurrentPlugin.Panel = new int[] { };
-					}
-
-					Program.TrainManager.Trains[0] = Train;
-					TrainManagerBase.PlayerTrain = Train;
-				}
-			}
+			ResetTrain();
 		}
 
 		private void buttonApply_Click(object sender, EventArgs e)

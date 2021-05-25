@@ -47,6 +47,15 @@ namespace TrainManager.BrakeSystems
 			ChargeRate = chargeRate;
 			CurrentPressure = 0.0;
 		}
+
+		/// <summary>Creates a dummy equalizing reservoir</summary>
+		public EqualizingReservoir(double pressure)
+		{
+			ServiceRate = 0.0;
+			EmergencyRate = 0.0;
+			ChargeRate = 0.0;
+			CurrentPressure = pressure;
+		}
 	}
 
 	/// <summary>A main reservoir</summary>
