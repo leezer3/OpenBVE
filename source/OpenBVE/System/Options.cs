@@ -84,6 +84,11 @@ namespace OpenBve
 			/// <remarks>Set to zero to never hide the cursor</remarks>
 			internal double CursorHideDelay;
 			internal string CursorFileName;
+			/// <summary>Whether various accessibility helpers are enabled</summary>
+			internal bool Accessibility;
+			/// <summary>Whether a screen reader is available</summary>
+			/// <remarks>Not saved, detected on game init</remarks>
+			internal bool ScreenReaderAvailable;
 			
 			internal TimeTableMode TimeTableStyle;
 
@@ -173,6 +178,8 @@ namespace OpenBve
 				this.CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
 				this.CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
 				this.CursorHideDelay = 10;
+				this.Accessibility = false;
+				this.ScreenReaderAvailable = false;
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -268,6 +275,9 @@ namespace OpenBve
 												d = 300;
 											}
 											Interface.CurrentOptions.KioskModeTimer = d;
+											break;
+										case "accessibility":
+											Interface.CurrentOptions.Accessibility = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
 											break;
 									} break;
 								case "display":
@@ -780,6 +790,7 @@ namespace OpenBve
 			}
 			Builder.AppendLine("kioskMode = " + (CurrentOptions.KioskMode ? "true" : "false"));
 			Builder.AppendLine("kioskModeTimer = " + CurrentOptions.KioskModeTimer);
+			Builder.AppendLine("accessibility = " + (CurrentOptions.Accessibility ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[display]");
 			Builder.AppendLine("preferNativeBackend = " + (CurrentOptions.PreferNativeBackend ? "true" : "false"));
