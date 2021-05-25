@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -654,8 +655,39 @@ namespace OpenBve
 			if (listviewTrainFolders.SelectedItems.Count == 1) {
 				string t = listviewTrainFolders.SelectedItems[0].Tag as string;
 				if (t != null) {
-					if (t.Length == 0 || Directory.Exists(t)) {
+					if (t.Length == 0)
+					{
+						//Pop up to parent directory
 						textboxTrainFolder.Text = t;
+						return;
+					}
+					if (Directory.Exists(t))
+					{
+						string[] newDirectories = Directory.EnumerateDirectories(t).ToArray();
+						if (newDirectories.Length > 5)
+						{
+							//More than 5 subdirectories, assume it may be a false positive
+							textboxTrainFolder.Text = t;
+							return;
+						}
+
+						foreach (string dir in newDirectories)
+						{
+							for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+							{
+								if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(dir))
+								{
+									textboxTrainFolder.Text = t;
+									return;
+								}
+							}
+						}
+						string[] splitPath = t.Split('\\', '/');
+						if (splitPath.Length < 3)
+						{
+							//If we're on less than the 3rd level subdir assume it may be a false positive
+							textboxTrainFolder.Text = t;
+						}
 					}
 				}
 			}
