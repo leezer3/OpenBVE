@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
+using OpenBveApi.Sounds;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -10,12 +12,19 @@ namespace OpenBve
 		/// <summary>The current HUD elements to render</summary>
 		internal static Element[] CurrentHudElements = { };
 
+		/// <summary>Sound source used by the accessibility station adjust tone</summary>
+		internal static SoundSource stationAdjustBeepSource;
+		/// <summary>Station adjust beep sound used by accessibility</summary>
+		internal static SoundBuffer stationAdjustBeep;
+
 		/// <summary>Loads the current HUD</summary>
 		internal static void LoadHUD()
 		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string Folder = Program.FileSystem.GetDataFolder("In-game", Interface.CurrentOptions.UserInterfaceFolder);
 			string File = OpenBveApi.Path.CombineFile(Folder, "interface.cfg");
+			Program.CurrentHost.RegisterSound(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("In-game"), "beep.wav"), 50, out var beep);
+			stationAdjustBeep = beep as SoundBuffer;
 			CurrentHudElements = new Element[16];
 			int Length = 0;
 			if (System.IO.File.Exists(File))
