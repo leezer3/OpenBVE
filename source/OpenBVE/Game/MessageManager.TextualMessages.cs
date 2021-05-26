@@ -1,4 +1,5 @@
 ﻿using System;
+using DavyKager;
 using LibRender2.Texts;
 using OpenBveApi;
 using OpenBveApi.Trains;
@@ -22,6 +23,8 @@ namespace OpenBve
 
 			/// <summary>The font used for this message</summary>
 			internal OpenGlFont Font;
+			/// <summary>Whether the message has been announced by the screen reader</summary>
+			private bool ScreenReaderAnnounced;
 
 			public override void AddMessage(double currentTime)
 			{
@@ -29,6 +32,7 @@ namespace OpenBve
 				Font = Program.Renderer.Fonts.SmallFont;
 				QueueForRemoval = false;
 				MessageToDisplay = InternalText;
+				ScreenReaderAnnounced = false;
 			}
 
 			public override void Update()
@@ -106,6 +110,15 @@ namespace OpenBve
 					default:
 						MessageToDisplay = InternalText;
 						break;
+				}
+
+				if (Interface.CurrentOptions.ScreenReaderAvailable && !ScreenReaderAnnounced)
+				{
+					if (!Tolk.Output((string) MessageToDisplay))
+					{
+						Interface.CurrentOptions.ScreenReaderAvailable = false;
+					}
+					ScreenReaderAnnounced = true;
 				}
 				if (remove)
 				{
