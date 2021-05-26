@@ -52,20 +52,16 @@ namespace OpenBve
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
-			Interface.CurrentOptions.Accessibility = true;
-			if (Interface.CurrentOptions.Accessibility)
+			Tolk.Load();
+			string name = Tolk.DetectScreenReader();
+			if (!string.IsNullOrEmpty(name))
 			{
-				Tolk.Load();
-				string name = Tolk.DetectScreenReader();
-				if (!string.IsNullOrEmpty(name))
-				{
-					Interface.CurrentOptions.ScreenReaderAvailable = true;
-					Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
-				}
-				else
-				{
-					Program.FileSystem.AppendToLogFile("No supported screen reader found.");
-				}
+				Interface.CurrentOptions.ScreenReaderAvailable = true;
+				Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
+			}
+			else
+			{
+				Program.FileSystem.AppendToLogFile("No supported screen reader found.");
 			}
 			//Process extra command line arguments supplied
 			if (result.InitialStation != null)
