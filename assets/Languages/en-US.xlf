@@ -1554,6 +1554,12 @@
 					</trans-unit>
 				</group>
 				<group id="menu">
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+					</trans-unit>
 					<trans-unit id="resume">
 						<source>Resume simulation</source>
 					</trans-unit>

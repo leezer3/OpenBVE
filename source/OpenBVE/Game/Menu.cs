@@ -179,6 +179,14 @@ namespace OpenBve
 				switch (menuType)
 				{
 					case MenuType.Top:          // top level menu
+						if (Interface.CurrentOptions.ScreenReaderAvailable)
+						{
+							if (!Tolk.Output(Translations.GetInterfaceString("menu_title")))
+							{
+								// failed to output to screen reader, so don't keep trying
+								Interface.CurrentOptions.ScreenReaderAvailable = false;
+							}
+						}
 						for (i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 							if (Program.CurrentRoute.Stations[i].PlayerStops() & Program.CurrentRoute.Stations[i].Stops.Length > 0)
 							{
