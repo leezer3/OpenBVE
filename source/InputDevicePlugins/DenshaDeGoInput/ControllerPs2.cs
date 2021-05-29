@@ -41,21 +41,20 @@ namespace DenshaDeGoInput
 		/// The number of power notches.
 		/// </summary>
 		internal static int ControllerPowerNotches;
-		
-		/// <summary>
-		/// The raw data read from the USB controller.
-		/// </summary>
-		internal static byte[] readBuffer = new byte[6];
-
-		/// <summary>
-		/// The raw data to be written to the USB controller.
-		/// </summary>
-		internal static byte[] writeBuffer;
 
 		/// <summary>
 		/// Whether the controller display or door lamp is enabled.
 		/// </summary>
 		internal static bool ControllerDisplayEnabled;
+
+		/// <summary>
+		/// Represents the special GUIDs for PS2 controllers.
+		/// </summary>
+		private static Guid[] Ps2Guids =
+		{
+			new Guid("ffffffff-e40a-ffff-0400-ffffffffffff"),
+			new Guid("ffffffff-e40a-ffff-0500-ffffffffffff")
+		};
 
 		/// <summary>
 		/// Represents the bytes for each button.
@@ -235,6 +234,19 @@ namespace DenshaDeGoInput
 		};
 
 		/// <summary>
+		/// Adds the supported controller models to the LibUsb list.
+		/// </summary>
+		internal static void AddSupportedControllers()
+		{
+			// Type 2 controller
+			UsbController controllerType2 = new UsbController(0x0ae4, 0x0004, new byte[] { 0x1, 0x0, 0x0, 0xFF, 0x8, 0x0 }, new byte[] { 0x0, 0x3 });
+			supportedUsbControllers.Add(Ps2Guids[0], controllerType2);
+			// Shinkansen controller
+			UsbController controllerShinkansen = new UsbController(0x0ae4, 0x0005, new byte[] { 0x0, 0x0, 0xFF, 0x8, 0x0, 0x0 }, new byte[] { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF });
+			supportedUsbControllers.Add(Ps2Guids[1], controllerShinkansen);
+		}
+
+		/// <summary>
 		/// Checks the controller model.
 		/// </summary>
 		/// <param name="id">A string representing the vendor and product ID.</param>
@@ -268,7 +280,9 @@ namespace DenshaDeGoInput
 			{
 				ControllerDisplayEnabled = true;
 			}
-			
+
+			byte[] readBuffer = supportedUsbControllers[InputTranslator.ActiveControllerGuid].ReadBuffer;
+			byte[] writeBuffer = new byte[0];
 			byte brakeByte;
 			byte powerByte;
 			switch (InputTranslator.ControllerModel)
@@ -305,7 +319,7 @@ namespace DenshaDeGoInput
 					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] = readBuffer[3] == (byte)PedalBytes.Pressed ? OpenTK.Input.ButtonState.Pressed : OpenTK.Input.ButtonState.Released;
 
 					// Specially crafted array that turns off the door lamp
-					writeBuffer = new byte[]{ 0x0, 0x3 };
+					writeBuffer = new byte[] { 0x0, 0x3 };
 					if (ControllerDisplayEnabled)
 					{
 						// Door lamp
@@ -361,7 +375,7 @@ namespace DenshaDeGoInput
 						limit_approach = -(int)(limit - speed - 10);
 					}
 					// Specially crafted array that blanks the display
-					writeBuffer = new byte[]{ 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
+					writeBuffer = new byte[] { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
 					if (ControllerDisplayEnabled)
 					{
 						if (DenshaDeGoInput.CurrentSpeedLimit >= 0 && DenshaDeGoInput.ATCSection)
@@ -386,7 +400,7 @@ namespace DenshaDeGoInput
 					}
 					break;
 			}
-
+			supportedUsbControllers[InputTranslator.ActiveControllerGuid].WriteBuffer = writeBuffer;
 		}
 	}
 }

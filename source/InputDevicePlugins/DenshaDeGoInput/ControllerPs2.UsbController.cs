@@ -39,21 +39,35 @@ namespace DenshaDeGoInput
 		internal readonly int ProductID;
 		/// <summary>Backing property containing the cached controller name</summary>
 		private string controllerName;
+		/// <summary>An array to be sent to the controller upon unload</summary>
+		private readonly byte[] unloadBuffer;
 		/// <summary>The USB controller.</summary>
 		internal UsbDevice ControllerDevice;
 		/// <summary>The USB endpoint reader</summary>
 		internal UsbEndpointReader ControllerReader;
 		/// <summary>Whether the controller is connected</summary>
 		internal bool IsConnected;
+		/// <summary>Byte array containing the data received from the controller</summary>
+		internal byte[] ReadBuffer;
+		/// <summary>Byte array containing the data to be sent to the controller</summary>
+		internal byte[] WriteBuffer;
 
-		internal UsbController(int vid, int pid)
+		/// <summary>
+		/// Initializes a controller
+		/// <param name="vid">A string representing the vendor ID.</param>
+		/// <param name="pid">A string representing the product ID.</param>
+		/// <param name="load">A byte array representing the initial input for the controller.</param>
+		/// <param name="unload">A byte array to be sent to the controller upon unload.</param>
+		/// </summary>
+		internal UsbController(int vid, int pid, byte[] load, byte[] unload)
 		{
 			VendorID = vid;
 			ProductID = pid;
 			controllerName = string.Empty;
-			ControllerDevice = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(vid, pid));
-			ControllerReader = ControllerDevice.OpenEndpointReader(ReadEndpointID.Ep01);
+			unloadBuffer = unload;
 			IsConnected = false;
+			ReadBuffer = load;
+			WriteBuffer = new byte[0];
 		}
 
 		/// <summary>Gets the name of the controller</summary>
@@ -68,14 +82,13 @@ namespace DenshaDeGoInput
 
 				try
 				{
-					controllerName = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(VendorID, ProductID)).Info.ProductString;
+					controllerName = ControllerDevice.Info.ProductString;
 				}
 				catch
 				{
-					//Something failed in the LibUsb call
-					controllerName = @"Unknown";
+					// Default name
+					controllerName = @"LibUsbController";
 				}
-
 				return controllerName;
 			}
 		}
@@ -85,21 +98,14 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal void Unload()
 		{
-			// Specially crafted array that blanks the display and turns off the door lamp
-			byte[] writeBuffer;
-			if (InputTranslator.ControllerModel == InputTranslator.ControllerModels.Ps2Shinkansen)
-			{
-				writeBuffer = new byte[] { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
-			}
-			else
-			{
-				writeBuffer = new byte[] { 0x0, 0x3 };
-			}
-
 			try
 			{
-				int bytesWritten;
-				ControllerDevice.ControlTransfer(ref ControllerPs2.setupPacket, writeBuffer, 8, out bytesWritten);
+				if (ControllerDevice != null && unloadBuffer.Length > 0)
+				{
+					// Send unload buffer to turn off controller
+					int bytesWritten;
+					ControllerDevice.ControlTransfer(ref ControllerPs2.setupPacket, unloadBuffer, unloadBuffer.Length, out bytesWritten);
+				}
 
 				IUsbDevice wholeUsbDevice = ControllerDevice as IUsbDevice;
 				if (!ReferenceEquals(wholeUsbDevice, null))
@@ -113,8 +119,10 @@ namespace DenshaDeGoInput
 				//Only trying to unload
 			}
 
-			ControllerDevice.Close();
-			UsbDevice.Exit();
+			if (ControllerDevice != null)
+			{
+				ControllerDevice.Close();
+			}
 		}
 
 		/// <summary>
@@ -128,16 +136,21 @@ namespace DenshaDeGoInput
 			}
 			try
 			{
+				// Ask for input
 				int readCount;
-				ErrorCode readError = ControllerReader.Read(ControllerPs2.readBuffer, 0, 6, 0, out readCount);
-				if (readError != ErrorCode.Ok)
+				ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out readCount);
+				if (readError != ErrorCode.Success && readError != ErrorCode.IoTimedOut)
 				{
 					DenshaDeGoInput.LibUsbIssue = true;
 					return;
 				}
 
-				int bytesWritten;
-				ControllerDevice.ControlTransfer(ref ControllerPs2.setupPacket, ControllerPs2.writeBuffer, ControllerPs2.writeBuffer.Length, out bytesWritten);
+				if (WriteBuffer.Length > 0)
+				{
+					// Send output buffer
+					int bytesWritten;
+					ControllerDevice.ControlTransfer(ref ControllerPs2.setupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
+				}
 			}
 			catch
 			{

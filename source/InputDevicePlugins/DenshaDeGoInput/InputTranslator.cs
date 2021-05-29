@@ -315,9 +315,9 @@ namespace DenshaDeGoInput
 				}
 			}
 			
-			foreach (KeyValuePair<Guid, UsbController> controller in ControllerPs2.connectedUsbControllers)
+			foreach (KeyValuePair<Guid, UsbController> controller in ControllerPs2.supportedUsbControllers)
 			{
-				if (!ConnectedControllers.ContainsKey(controller.Key))
+				if (!ConnectedControllers.ContainsKey(controller.Key) && controller.Value.IsConnected)
 				{
 					ControllerModels model = GetControllerModel(controller.Key, new JoystickCapabilities());
 					ConnectedControllers.Add(controller.Key, -1);
@@ -335,7 +335,7 @@ namespace DenshaDeGoInput
 			if (guid.ToString().Substring(0,8) == "ffffffff")
 			{
 				// PS2 controller, handled via LibUsbDotNet instead of OpenTK
-				return ControllerPs2.connectedUsbControllers[guid].ControllerName;
+				return ControllerPs2.supportedUsbControllers[guid].ControllerName;
 			}
 
 			int index = ConnectedControllers[guid];
@@ -364,7 +364,7 @@ namespace DenshaDeGoInput
 				ControllerModel = ConnectedModels[ActiveControllerGuid];
 				if (ControllerModel == ControllerModels.Ps2Type2 || ControllerModel == ControllerModels.Ps2Shinkansen || ControllerModel == ControllerModels.Ps2Ryojouhen)
 				{
-					IsControllerConnected = ControllerPs2.connectedUsbControllers[ActiveControllerGuid].IsConnected;
+					IsControllerConnected = ControllerPs2.supportedUsbControllers[ActiveControllerGuid].IsConnected;
 				}
 				else
 				{

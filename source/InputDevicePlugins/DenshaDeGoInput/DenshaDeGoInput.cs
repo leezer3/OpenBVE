@@ -194,8 +194,12 @@ namespace DenshaDeGoInput
 			FileSystem = fileSystem;
 			//HACK: In order to avoid meddling with a shipped interface (or making this field public and increasing the mess), let's grab it via reflection
 			CurrentHost = (HostInterface)typeof(FileSystem).GetField("currentHost", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(fileSystem);
+
+			// Start thread for LibUsb-based controllers
+			ControllerPs2.AddSupportedControllers();
 			ControllerPs2.LibUsbThread = new Thread(ControllerPs2.LibUsbLoop);
 			ControllerPs2.LibUsbThread.Start();
+
 			// Initialize the array of button properties
 			for (int i = 0; i < ButtonProperties.Length; i++)
 			{
