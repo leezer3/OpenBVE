@@ -196,9 +196,9 @@ namespace DenshaDeGoInput
 			CurrentHost = (HostInterface)typeof(FileSystem).GetField("currentHost", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(fileSystem);
 
 			// Start thread for LibUsb-based controllers
-			ControllerPs2.AddSupportedControllers();
-			ControllerPs2.LibUsbThread = new Thread(ControllerPs2.LibUsbLoop);
-			ControllerPs2.LibUsbThread.Start();
+			//ControllerPs2.AddSupportedControllers();
+			//ControllerPs2.LibUsbThread = new Thread(ControllerPs2.LibUsbLoop);
+			//ControllerPs2.LibUsbThread.Start();
 
 			// Initialize the array of button properties
 			for (int i = 0; i < ButtonProperties.Length; i++)
@@ -246,7 +246,6 @@ namespace DenshaDeGoInput
 		public void Unload()
 		{
 			ControllerPs2.LibUsbShouldLoop = false;
-			InputTranslator.Unload();
 			configForm.Dispose();
 		}
 
@@ -725,14 +724,14 @@ namespace DenshaDeGoInput
 									switch (Key)
 									{
 										case "hat":
-											ControllerClassic.UsesHat = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											ClassicController.UsesHat = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "hat_index":
 											{
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.HatIndex = a;
+													ClassicController.HatIndex = a;
 												}
 											}
 											break;
@@ -741,7 +740,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Select = a;
+													ClassicController.ButtonIndex.Select = a;
 												}
 											}
 											break;
@@ -750,7 +749,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Start = a;
+													ClassicController.ButtonIndex.Start = a;
 												}
 											}
 											break;
@@ -759,7 +758,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.A = a;
+													ClassicController.ButtonIndex.A = a;
 												}
 											}
 											break;
@@ -768,7 +767,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.B = a;
+													ClassicController.ButtonIndex.B = a;
 												}
 											}
 											break;
@@ -777,7 +776,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.C = a;
+													ClassicController.ButtonIndex.C = a;
 												}
 											}
 											break;
@@ -786,7 +785,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Power1 = a;
+													ClassicController.ButtonIndex.Power1 = a;
 												}
 											}
 											break;
@@ -795,7 +794,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Power2 = a;
+													ClassicController.ButtonIndex.Power2 = a;
 												}
 											}
 											break;
@@ -804,7 +803,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Power3 = a;
+													ClassicController.ButtonIndex.Power3 = a;
 												}
 											}
 											break;
@@ -813,7 +812,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Brake1 = a;
+													ClassicController.ButtonIndex.Brake1 = a;
 												}
 											}
 											break;
@@ -822,7 +821,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Brake2 = a;
+													ClassicController.ButtonIndex.Brake2 = a;
 												}
 											}
 											break;
@@ -831,7 +830,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Brake3 = a;
+													ClassicController.ButtonIndex.Brake3 = a;
 												}
 											}
 											break;
@@ -840,7 +839,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ControllerClassic.ButtonIndex.Brake4 = a;
+													ClassicController.ButtonIndex.Brake4 = a;
 												}
 											}
 											break;
@@ -951,20 +950,20 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("pedal = " + ButtonProperties[10].Command.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[classic]");
-				Builder.AppendLine("hat = " + ControllerClassic.UsesHat.ToString(Culture).ToLower());
-				Builder.AppendLine("hat_index = " + ControllerClassic.HatIndex.ToString(Culture));
-				Builder.AppendLine("select = " + ControllerClassic.ButtonIndex.Select.ToString(Culture));
-				Builder.AppendLine("start = " + ControllerClassic.ButtonIndex.Start.ToString(Culture));
-				Builder.AppendLine("a = " + ControllerClassic.ButtonIndex.A.ToString(Culture));
-				Builder.AppendLine("b = " + ControllerClassic.ButtonIndex.B.ToString(Culture));
-				Builder.AppendLine("c = " + ControllerClassic.ButtonIndex.C.ToString(Culture));
-				Builder.AppendLine("power1 = " + ControllerClassic.ButtonIndex.Power1.ToString(Culture));
-				Builder.AppendLine("power2 = " + ControllerClassic.ButtonIndex.Power2.ToString(Culture));
-				Builder.AppendLine("power3 = " + ControllerClassic.ButtonIndex.Power3.ToString(Culture));
-				Builder.AppendLine("brake1 = " + ControllerClassic.ButtonIndex.Brake1.ToString(Culture));
-				Builder.AppendLine("brake2 = " + ControllerClassic.ButtonIndex.Brake2.ToString(Culture));
-				Builder.AppendLine("brake3 = " + ControllerClassic.ButtonIndex.Brake3.ToString(Culture));
-				Builder.AppendLine("brake4 = " + ControllerClassic.ButtonIndex.Brake4.ToString(Culture));
+				Builder.AppendLine("hat = " + ClassicController.UsesHat.ToString(Culture).ToLower());
+				Builder.AppendLine("hat_index = " + ClassicController.HatIndex.ToString(Culture));
+				Builder.AppendLine("select = " + ClassicController.ButtonIndex.Select.ToString(Culture));
+				Builder.AppendLine("start = " + ClassicController.ButtonIndex.Start.ToString(Culture));
+				Builder.AppendLine("a = " + ClassicController.ButtonIndex.A.ToString(Culture));
+				Builder.AppendLine("b = " + ClassicController.ButtonIndex.B.ToString(Culture));
+				Builder.AppendLine("c = " + ClassicController.ButtonIndex.C.ToString(Culture));
+				Builder.AppendLine("power1 = " + ClassicController.ButtonIndex.Power1.ToString(Culture));
+				Builder.AppendLine("power2 = " + ClassicController.ButtonIndex.Power2.ToString(Culture));
+				Builder.AppendLine("power3 = " + ClassicController.ButtonIndex.Power3.ToString(Culture));
+				Builder.AppendLine("brake1 = " + ClassicController.ButtonIndex.Brake1.ToString(Culture));
+				Builder.AppendLine("brake2 = " + ClassicController.ButtonIndex.Brake2.ToString(Culture));
+				Builder.AppendLine("brake3 = " + ClassicController.ButtonIndex.Brake3.ToString(Culture));
+				Builder.AppendLine("brake4 = " + ClassicController.ButtonIndex.Brake4.ToString(Culture));
 
 				string optionsFolder = OpenBveApi.Path.CombineDirectory(FileSystem.SettingsFolder, "1.5.0");
 				string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_denshadego.cfg");

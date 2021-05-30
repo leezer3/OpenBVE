@@ -31,28 +31,17 @@ using OpenTK.Input;
 namespace DenshaDeGoInput
 {
 	/// <summary>
-	/// Class for Densha de GO! controllers for classic consoles.
+	/// Class representing a classic console controller
 	/// </summary>
-	internal static class ControllerClassic
+	internal class ClassicController : Controller
 	{
-		/// <summary>
-		/// The number of brake notches, excluding the emergency brake.
-		/// </summary>
-		internal static int ControllerBrakeNotches = 8;
+		/// <summary>The OpenTK joystick index for this controller.</summary>
+		private int joystickIndex;
 
-		/// <summary>
-		/// The number of power notches.
-		/// </summary>
-		internal static int ControllerPowerNotches = 5;
-
-		/// <summary>
-		/// Whether the adapter uses a hat to map the direction buttons.
-		/// </summary>
+		/// <summary>Whether the adapter uses a hat to map the direction buttons.</summary>
 		internal static bool UsesHat;
 
-		/// <summary>
-		/// The index of the hat used to map the direction buttons.
-		/// </summary>
+		/// <summary>The index of the hat used to map the direction buttons.</summary>
 		internal static int HatIndex;
 
 		/// <summary>
@@ -83,7 +72,7 @@ namespace DenshaDeGoInput
 		/// Enumeration representing brake notches.
 		/// </summary>
 		[Flags]
-		private enum BrakeNotches
+		private enum BrakeNotchesEnum
 		{
 			// The controller has 4 physical buttons.
 			// These do *not* map directly to the simulation
@@ -128,25 +117,25 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Dictionary storing the mapping of each brake notch.
 		/// </summary>
-		private static readonly Dictionary<BrakeNotches, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeNotches, InputTranslator.BrakeNotches>
+		private static readonly Dictionary<BrakeNotchesEnum, InputTranslator.BrakeNotches> BrakeNotchMap = new Dictionary<BrakeNotchesEnum, InputTranslator.BrakeNotches>
 		{
-			{ BrakeNotches.Released, InputTranslator.BrakeNotches.Released },
-			{ BrakeNotches.B1, InputTranslator.BrakeNotches.B1 },
-			{ BrakeNotches.B2, InputTranslator.BrakeNotches.B2 },
-			{ BrakeNotches.B3, InputTranslator.BrakeNotches.B3 },
-			{ BrakeNotches.B4, InputTranslator.BrakeNotches.B4 },
-			{ BrakeNotches.B5, InputTranslator.BrakeNotches.B5 },
-			{ BrakeNotches.B6, InputTranslator.BrakeNotches.B6 },
-			{ BrakeNotches.B7, InputTranslator.BrakeNotches.B7 },
-			{ BrakeNotches.B8, InputTranslator.BrakeNotches.B8 },
-			{ BrakeNotches.Emergency, InputTranslator.BrakeNotches.Emergency }
+			{ BrakeNotchesEnum.Released, InputTranslator.BrakeNotches.Released },
+			{ BrakeNotchesEnum.B1, InputTranslator.BrakeNotches.B1 },
+			{ BrakeNotchesEnum.B2, InputTranslator.BrakeNotches.B2 },
+			{ BrakeNotchesEnum.B3, InputTranslator.BrakeNotches.B3 },
+			{ BrakeNotchesEnum.B4, InputTranslator.BrakeNotches.B4 },
+			{ BrakeNotchesEnum.B5, InputTranslator.BrakeNotches.B5 },
+			{ BrakeNotchesEnum.B6, InputTranslator.BrakeNotches.B6 },
+			{ BrakeNotchesEnum.B7, InputTranslator.BrakeNotches.B7 },
+			{ BrakeNotchesEnum.B8, InputTranslator.BrakeNotches.B8 },
+			{ BrakeNotchesEnum.Emergency, InputTranslator.BrakeNotches.Emergency }
 		};
 
 		/// <summary>
 		/// Enumeration representing power notches.
 		/// </summary>
 		[Flags]
-		private enum PowerNotches
+		private enum PowerNotchesEnum
 		{
 			// The controller has 3 physical buttons.
 			// These do *not* map directly to the simulation
@@ -181,61 +170,59 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Dictionary storing the mapping of each power notch.
 		/// </summary>
-		private static readonly Dictionary<PowerNotches, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerNotches, InputTranslator.PowerNotches>
+		private static readonly Dictionary<PowerNotchesEnum, InputTranslator.PowerNotches> PowerNotchMap = new Dictionary<PowerNotchesEnum, InputTranslator.PowerNotches>
 		{
-			{ PowerNotches.N, InputTranslator.PowerNotches.N },
-			{ PowerNotches.P1, InputTranslator.PowerNotches.P1 },
-			{ PowerNotches.P2, InputTranslator.PowerNotches.P2 },
-			{ PowerNotches.P3, InputTranslator.PowerNotches.P3 },
-			{ PowerNotches.P4, InputTranslator.PowerNotches.P4 },
-			{ PowerNotches.P5, InputTranslator.PowerNotches.P5 }
+			{ PowerNotchesEnum.N, InputTranslator.PowerNotches.N },
+			{ PowerNotchesEnum.P1, InputTranslator.PowerNotches.P1 },
+			{ PowerNotchesEnum.P2, InputTranslator.PowerNotches.P2 },
+			{ PowerNotchesEnum.P3, InputTranslator.PowerNotches.P3 },
+			{ PowerNotchesEnum.P4, InputTranslator.PowerNotches.P4 },
+			{ PowerNotchesEnum.P5, InputTranslator.PowerNotches.P5 }
 		};
 
 
 		/// <summary>
-		/// Checks the controller model.
+		/// Initializes a classic controller.
 		/// </summary>
-		/// <param name="capabilities">the capabilities of the joystick.</param>
-		/// <returns>The controller model.</returns>
-		internal static InputTranslator.ControllerModels GetControllerModel(JoystickCapabilities capabilities)
+		internal ClassicController()
 		{
-			// A valid controller needs at least 12 buttons or 10 buttons plus a hat. If there are more than 20 buttons, the joystick is unlikely a valid controller.
-			if ((capabilities.ButtonCount >= 12 || (capabilities.ButtonCount >= 10 && capabilities.HatCount > 0)) && capabilities.ButtonCount <= 20)
-			{
-				return InputTranslator.ControllerModels.Classic;
-			}
-			return InputTranslator.ControllerModels.Unsupported;
+			ControllerName = string.Empty;
+			joystickIndex = -1;
+			RequiresCalibration = true;
+			BrakeNotches = 8;
+			PowerNotches = 5;
+			Buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C;
 		}
 
 		/// <summary>
 		/// Reads the input from the controller.
 		/// </summary>
-		/// <param name="joystick">The state of the joystick to read input from.</param>
-		internal static void ReadInput(JoystickState joystick)
+		internal override void ReadInput()
 		{
-			PowerNotches powerNotch = PowerNotches.None;
-			BrakeNotches brakeNotch = BrakeNotches.None;
-			powerNotch = joystick.IsButtonDown(ButtonIndex.Power1) ? powerNotch | PowerNotches.Power1 : powerNotch & ~PowerNotches.Power1;
-			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake1) ? brakeNotch | BrakeNotches.Brake1 : brakeNotch & ~BrakeNotches.Brake1;
-			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake2) ? brakeNotch | BrakeNotches.Brake2 : brakeNotch & ~BrakeNotches.Brake2;
-			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake3) ? brakeNotch | BrakeNotches.Brake3 : brakeNotch & ~BrakeNotches.Brake3;
-			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake4) ? brakeNotch | BrakeNotches.Brake4 : brakeNotch & ~BrakeNotches.Brake4;
+			JoystickState joystick = Joystick.GetState(joystickIndex);
+			PowerNotchesEnum powerNotch = PowerNotchesEnum.None;
+			BrakeNotchesEnum brakeNotch = BrakeNotchesEnum.None;
+			powerNotch = joystick.IsButtonDown(ButtonIndex.Power1) ? powerNotch | PowerNotchesEnum.Power1 : powerNotch & ~PowerNotchesEnum.Power1;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake1) ? brakeNotch | BrakeNotchesEnum.Brake1 : brakeNotch & ~BrakeNotchesEnum.Brake1;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake2) ? brakeNotch | BrakeNotchesEnum.Brake2 : brakeNotch & ~BrakeNotchesEnum.Brake2;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake3) ? brakeNotch | BrakeNotchesEnum.Brake3 : brakeNotch & ~BrakeNotchesEnum.Brake3;
+			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake4) ? brakeNotch | BrakeNotchesEnum.Brake4 : brakeNotch & ~BrakeNotchesEnum.Brake4;
 
 			if (UsesHat)
 			{
 				// The adapter uses the hat to map the direction buttons.
 				// This is the case of some PlayStation adapters.
-				powerNotch = joystick.GetHat((JoystickHat)HatIndex).IsLeft ? powerNotch | PowerNotches.Power2 : powerNotch & ~PowerNotches.Power2;
-				powerNotch = joystick.GetHat((JoystickHat)HatIndex).IsRight ? powerNotch | PowerNotches.Power3 : powerNotch & ~PowerNotches.Power3;
+				powerNotch = joystick.GetHat((JoystickHat)HatIndex).IsLeft ? powerNotch | PowerNotchesEnum.Power2 : powerNotch & ~PowerNotchesEnum.Power2;
+				powerNotch = joystick.GetHat((JoystickHat)HatIndex).IsRight ? powerNotch | PowerNotchesEnum.Power3 : powerNotch & ~PowerNotchesEnum.Power3;
 			}
 			else
 			{
 				// The adapter maps the direction buttons to independent buttons.
-				powerNotch = joystick.IsButtonDown(ButtonIndex.Power2) ? powerNotch | PowerNotches.Power2 : powerNotch & ~PowerNotches.Power2;
-				powerNotch = joystick.IsButtonDown(ButtonIndex.Power3) ? powerNotch | PowerNotches.Power3 : powerNotch & ~PowerNotches.Power3;
+				powerNotch = joystick.IsButtonDown(ButtonIndex.Power2) ? powerNotch | PowerNotchesEnum.Power2 : powerNotch & ~PowerNotchesEnum.Power2;
+				powerNotch = joystick.IsButtonDown(ButtonIndex.Power3) ? powerNotch | PowerNotchesEnum.Power3 : powerNotch & ~PowerNotchesEnum.Power3;
 			}
 
-			if (UsesHat && powerNotch == PowerNotches.P4)
+			if (UsesHat && powerNotch == PowerNotchesEnum.P4)
 			{
 				// Hack for adapters using a hat where pressing left and right simultaneously reports only left being pressed
 				if (InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
@@ -247,7 +234,7 @@ namespace DenshaDeGoInput
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.P4;
 				}
 			}
-			else if (UsesHat && powerNotch == PowerNotches.Transition)
+			else if (UsesHat && powerNotch == PowerNotchesEnum.Transition)
 			{
 				// Hack for adapters using a hat where pressing left and right simultaneously reports nothing being pressed, the same as the transition state
 				// Has the side effect of the power notch jumping P1>N>P2, but it is barely noticeable unless moving the handle very slowly
@@ -256,12 +243,12 @@ namespace DenshaDeGoInput
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
 				}
 			}
-			else if (powerNotch != PowerNotches.Transition)
+			else if (powerNotch != PowerNotchesEnum.Transition)
 			{
 				// Set notch only if it is not a transition
 				InputTranslator.PowerNotch = PowerNotchMap[powerNotch];
 			}
-			if (brakeNotch != BrakeNotches.Transition && (brakeNotch == BrakeNotches.Emergency || brakeNotch >= BrakeNotches.B8))
+			if (brakeNotch != BrakeNotchesEnum.Transition && (brakeNotch == BrakeNotchesEnum.Emergency || brakeNotch >= BrakeNotchesEnum.B8))
 			{
 				// Set notch only if it is not a transition nor an unmarked notch
 				InputTranslator.BrakeNotch = BrakeNotchMap[brakeNotch];
@@ -273,6 +260,35 @@ namespace DenshaDeGoInput
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = joystick.GetButton(ButtonIndex.C);
 		}
 
+		/// <summary>
+		/// Gets the list of connected controllers
+		/// </summary>
+		internal static Dictionary<Guid, Controller> GetControllers()
+		{
+			Dictionary<Guid, Controller> controllers = new Dictionary<Guid, Controller>();
+
+			for (int i = 0; i < 10; i++)
+			{
+				Guid guid = Joystick.GetGuid(i);
+				string name = Joystick.GetName(i);
+
+				// A valid controller needs at least 12 buttons or 10 buttons plus a hat. If there are more than 20 buttons, the joystick is unlikely a valid controller.
+				JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
+				if ((capabilities.ButtonCount >= 12 || (capabilities.ButtonCount >= 10 && capabilities.HatCount > 0)) && capabilities.ButtonCount <= 20)
+				{
+					ClassicController newcontroller = new ClassicController
+					{
+						Guid = guid,
+						joystickIndex = i,
+						ControllerName = name,
+						IsConnected = true
+					};
+					controllers.Add(guid, newcontroller);
+				}
+			}
+
+			return controllers;
+		}
 
 		/// <summary>
 		/// Launches the calibration wizard to guess the button indices used by the adapter.
@@ -298,9 +314,9 @@ namespace DenshaDeGoInput
 				Translations.QuickReferences.HandlePower + "5",
 			};
 
-			List<OpenTK.Input.ButtonState> ButtonState = InputTranslator.GetButtonsState();
+			List<OpenTK.Input.ButtonState> buttonState = GetButtonsState();
 			List<OpenTK.Input.ButtonState> PreviousButtonState;
-			List<HatPosition> HatPositions = InputTranslator.GetHatPositions();
+			List<HatPosition> HatPositions = GetHatPositions();
 			List<HatPosition> PreviousHatPositions;
 			List<int> ignored = new List<int>();
 
@@ -308,9 +324,9 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < 5; i++)
 			{
 				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_button").Replace("[button]", input[i]));
-				PreviousButtonState = ButtonState;
-				ButtonState = InputTranslator.GetButtonsState();
-				int index = InputTranslator.GetDifferentPressedIndex(PreviousButtonState, ButtonState, ignored);
+				PreviousButtonState = buttonState;
+				buttonState = GetButtonsState();
+				int index = GetDifferentPressedIndex(PreviousButtonState, buttonState, ignored);
 				ignored.Add(index);
 				switch (i)
 				{
@@ -339,9 +355,9 @@ namespace DenshaDeGoInput
 			for (int i = 6; i < 10; i++)
 			{
 				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_brake").Replace("[notch]", input[i]));
-				PreviousButtonState = ButtonState;
-				ButtonState = InputTranslator.GetButtonsState();
-				int index = InputTranslator.GetDifferentPressedIndex(PreviousButtonState, ButtonState, ignored);
+				PreviousButtonState = buttonState;
+				buttonState = GetButtonsState();
+				int index = GetDifferentPressedIndex(PreviousButtonState, buttonState, ignored);
 				ignored.Add(index);
 				switch (i)
 				{
@@ -366,21 +382,21 @@ namespace DenshaDeGoInput
 
 			// Clear previous data before calibrating the power handle
 			ignored.Clear();
-			ButtonState = InputTranslator.GetButtonsState();
-			HatPositions = InputTranslator.GetHatPositions();
+			buttonState = GetButtonsState();
+			HatPositions = GetHatPositions();
 
 			// Power handle calibration
 			for (int i = 12; i < 15; i++)
 			{
 				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[i]));
-				PreviousButtonState = ButtonState;
+				PreviousButtonState = buttonState;
 				PreviousHatPositions = HatPositions;
-				ButtonState = InputTranslator.GetButtonsState();
-				HatPositions = InputTranslator.GetHatPositions();
-				int index = InputTranslator.GetDifferentPressedIndex(PreviousButtonState, ButtonState, ignored);
+				buttonState = GetButtonsState();
+				HatPositions = GetHatPositions();
+				int index = GetDifferentPressedIndex(PreviousButtonState, buttonState, ignored);
 				ignored.Add(index);
 
-				int hat = InputTranslator.GetChangedHat(PreviousHatPositions, HatPositions);
+				int hat = GetChangedHat(PreviousHatPositions, HatPositions);
 				if (hat != -1 && i != 13)
 				{
 					// If a hat has changed, it means the converter is mapping the direction buttons 
@@ -406,5 +422,77 @@ namespace DenshaDeGoInput
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets the state of the buttons of the current controller
+		/// </summary>
+		/// <returns>State of the buttons of the current controller</returns>
+		private static List<OpenTK.Input.ButtonState> GetButtonsState()
+		{
+			List<OpenTK.Input.ButtonState> buttonsState = new List<OpenTK.Input.ButtonState>();
+
+			if (InputTranslator.IsControllerConnected)
+			{
+				int index = (((ClassicController)InputTranslator.Controllers[InputTranslator.ActiveControllerGuid]).joystickIndex);
+				for (int i = 0; i < Joystick.GetCapabilities(index).ButtonCount; i++)
+				{
+					buttonsState.Add(Joystick.GetState(index).GetButton(i));
+				}
+			}
+			return buttonsState;
+		}
+
+		/// <summary>
+		/// Gets the position of the hats of the current controller
+		/// </summary>
+		/// <returns>Position of the hats of the current controller</returns>
+		private static List<HatPosition> GetHatPositions()
+		{
+			List<HatPosition> hatPositions = new List<HatPosition>();
+
+			if (InputTranslator.IsControllerConnected)
+			{
+				int index = (((ClassicController)InputTranslator.Controllers[InputTranslator.ActiveControllerGuid]).joystickIndex);
+				for (int i = 0; i < Joystick.GetCapabilities(index).HatCount; i++)
+				{
+					hatPositions.Add(Joystick.GetState(index).GetHat((JoystickHat)i).Position);
+				}
+			}
+			return hatPositions;
+		}
+
+		/// <summary>
+		/// Compares two button states to find the index of the button that has been pressed.
+		/// </summary>
+		/// <param name="previousState">The previous state of the buttons.</param>
+		/// <param name="newState">The new state of the buttons.</param>
+		/// <param name="ignored">The list of ignored buttons.</param>
+		/// <returns>Index of the button that has been pressed.</returns>
+		private static int GetDifferentPressedIndex(List<OpenTK.Input.ButtonState> previousState, List<OpenTK.Input.ButtonState> newState, List<int> ignored)
+		{
+			for (int i = 0; i < newState.Count; i++)
+			{
+				if (!ignored.Contains(i) && newState[i] != previousState[i])
+					return i;
+			}
+			return -1;
+		}
+
+		/// <summary>
+		/// Compares two hat states to find the index of the hat that has changed.
+		/// </summary>
+		/// <param name="previousPosition">The previous position of the hat.</param>
+		/// <param name="newPosition">The new position of the hat.</param>
+		/// <returns>Index of the hat that has changed.</returns>
+		private static int GetChangedHat(List<HatPosition> previousPosition, List<HatPosition> newPosition)
+		{
+			for (int i = 0; i < newPosition.Count; i++)
+			{
+				if (newPosition[i] != previousPosition[i])
+					return i;
+			}
+			return -1;
+		}
+
 	}
 }
