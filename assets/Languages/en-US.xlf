@@ -1381,6 +1381,9 @@
 					<trans-unit id="route_overspeed">
 						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
 					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
 					</trans-unit>

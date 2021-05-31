@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using DavyKager;
 using LibRender2.Texts;
 using OpenBveApi;
@@ -42,6 +43,7 @@ namespace OpenBve
 
 				switch (Depencency)
 				{
+					case MessageDependency.AccessibilityHelper:
 					case MessageDependency.RouteLimit:
 					{
 						double spd = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed);
@@ -51,16 +53,25 @@ namespace OpenBve
 						lim = Math.Round(lim * 3.6);
 						remove = spd <= lim;
 						string s = InternalText, t;
-						if (Interface.CurrentOptions.SpeedConversionFactor != 0.0)
+						if (lim == double.PositiveInfinity)
 						{
-							spd = Math.Round(spd * Interface.CurrentOptions.SpeedConversionFactor);
-							lim = Math.Round(lim * Interface.CurrentOptions.SpeedConversionFactor);
+							s = s.Replace("[limit]", "unlimited");
+							s = s.Replace("[unit]", string.Empty);
 						}
-						t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
-						s = s.Replace("[speed]", t);
-						t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
-						s = s.Replace("[limit]", t);
-						s = s.Replace("[unit]", Interface.CurrentOptions.UnitOfSpeed);
+						else
+						{
+							if (Interface.CurrentOptions.SpeedConversionFactor != 0.0)
+							{
+								spd = Math.Round(spd * Interface.CurrentOptions.SpeedConversionFactor);
+								lim = Math.Round(lim * Interface.CurrentOptions.SpeedConversionFactor);
+							}
+							t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							s = s.Replace("[speed]", t);
+							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							s = s.Replace("[limit]", t);
+							s = s.Replace("[unit]", Interface.CurrentOptions.UnitOfSpeed);
+						}
+						
 						MessageToDisplay = s;
 					} break;
 					case MessageDependency.PassedRedSignal:

@@ -84,8 +84,7 @@ namespace OpenBve
 			/// <remarks>Set to zero to never hide the cursor</remarks>
 			internal double CursorHideDelay;
 			internal string CursorFileName;
-			/// <summary>Whether various accessibility helpers are enabled</summary>
-			internal bool Accessibility;
+			
 			/// <summary>Whether a screen reader is available</summary>
 			/// <remarks>Not saved, detected on game init</remarks>
 			internal bool ScreenReaderAvailable;

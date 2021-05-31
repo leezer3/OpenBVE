@@ -86,5 +86,7 @@ namespace OpenBveApi
 		public bool Panel2ExtendedMode;
 		/// <summary>The minimum size for a Panel2 control to be considered touch sensitive</summary>
 		public int Panel2ExtendedMinSize;
+		/// <summary>Whether various accessibility helpers are enabled</summary>
+		public bool Accessibility;
 	}
 }

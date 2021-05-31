@@ -295,11 +295,15 @@ namespace TrainManager.Trains
 						 * HACK: If the limit has changed, or we are in arcade mode, notify the player
 						 *       This conforms to the original behaviour, but doesn't need to raise the message from the event.
 						 */
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
+						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 					}
-
 				}
 
+				if (TrainManagerBase.CurrentOptions.Accessibility && previousRouteLimit != CurrentRouteLimit)
+				{
+					//Show for 10s and announce the current speed limit if screen reader present
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_newlimit"), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+				}
 				previousRouteLimit = CurrentRouteLimit;
 				if (TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
 				{
@@ -309,7 +313,7 @@ namespace TrainManager.Trains
 					}
 					else if (CurrentSpeed > CurrentSectionLimit)
 					{
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
+						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 					}
 				}
 
