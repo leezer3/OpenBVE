@@ -546,12 +546,12 @@ namespace OpenBve.Graphics.Renderers
 									{
 										if (HUD.stationAdjustBeepSource != null && HUD.stationAdjustBeepSource.IsPlaying())
 										{
-											HUD.stationAdjustBeepSource.Pitch = beepSpeed;
+											HUD.stationAdjustBeepSource.Volume = beepSpeed * 0.25;
 											HUD.stationAdjustBeepSource.Position = Program.Renderer.Camera.AbsolutePosition;
 										}
 										else
 										{
-											HUD.stationAdjustBeepSource = (SoundSource)Program.CurrentHost.PlaySound((SoundHandle)HUD.stationAdjustBeep, beepSpeed, 0.25, Program.Renderer.Camera.AbsolutePosition, null, true);
+											HUD.stationAdjustBeepSource = (SoundSource)Program.CurrentHost.PlaySound((SoundHandle)HUD.stationAdjustBeep, 2.0, beepSpeed * 0.25, Program.Renderer.Camera.AbsolutePosition, null, true);
 										}	
 									}
 									
