@@ -41,6 +41,9 @@ namespace RouteManager2.SignalManager
 		/// <summary>The number of free sections ahead of this section</summary>
 		public int FreeSections;
 
+		/// <summary>Whether this section has been announced with accessibility in use</summary>
+		public bool AccessibilityAnnounced;
+
 		public Section(double trackPosition, SectionAspect[] aspects, SectionType type, Section previousSection = null)
 		{
 			TrackPosition = trackPosition;

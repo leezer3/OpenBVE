@@ -1384,6 +1384,9 @@
 					<trans-unit id="route_newlimit">
 						<source>New speed limit: [limit] [unit].</source>
 					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
 					</trans-unit>

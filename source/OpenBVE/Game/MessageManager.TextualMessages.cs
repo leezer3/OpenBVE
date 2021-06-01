@@ -71,7 +71,6 @@ namespace OpenBve
 							s = s.Replace("[limit]", t);
 							s = s.Replace("[unit]", Interface.CurrentOptions.UnitOfSpeed);
 						}
-						
 						MessageToDisplay = s;
 					} break;
 					case MessageDependency.PassedRedSignal:

@@ -8,6 +8,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
+using RouteManager2.SignalManager;
 using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
@@ -299,10 +300,27 @@ namespace TrainManager.Trains
 					}
 				}
 
-				if (TrainManagerBase.CurrentOptions.Accessibility && previousRouteLimit != CurrentRouteLimit)
+				if (TrainManagerBase.CurrentOptions.Accessibility)
 				{
-					//Show for 10s and announce the current speed limit if screen reader present
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_newlimit"), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+					if (previousRouteLimit != CurrentRouteLimit)
+					{
+						//Show for 10s and announce the current speed limit if screen reader present
+						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_newlimit"), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+					}
+
+					Section nextSection = TrainManagerBase.CurrentRoute.NextSection(FrontCarTrackPosition());
+					if (nextSection != null)
+					{
+						//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
+						//Aspect announce to be triggered via a separate keybind
+						double tPos = nextSection.TrackPosition - FrontCarTrackPosition();
+						if (!nextSection.AccessibilityAnnounced && tPos < 500)
+						{
+							string s = Translations.GetInterfaceString("message_route_nextsection").Replace("[distance]", $"{tPos:0.0}") + "m";
+							TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+							nextSection.AccessibilityAnnounced = true;
+						}
+					}
 				}
 				previousRouteLimit = CurrentRouteLimit;
 				if (TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
@@ -802,6 +820,13 @@ namespace TrainManager.Trains
 
 		public override void Jump(int stationIndex)
 		{
+			if (IsPlayerTrain)
+			{
+				for (int i = 0; i < TrainManagerBase.CurrentRoute.Sections.Length; i++)
+				{
+					TrainManagerBase.CurrentRoute.Sections[i].AccessibilityAnnounced = false;
+				}
+			}
 			SafetySystems.PassAlarm.Halt();
 			int currentTrackElement = Cars[0].FrontAxle.Follower.LastTrackElement;
 			StationState = TrainStopState.Jumping;

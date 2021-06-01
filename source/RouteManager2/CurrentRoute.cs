@@ -376,6 +376,24 @@ namespace RouteManager2
 			PreviousSection = Section.PreviousSection;
 		}
 
+		/// <summary>Gets the next section from the specified track position</summary>
+		/// <param name="trackPosition">The track position</param>
+		public Section NextSection(double trackPosition)
+		{
+			if (Sections == null || Sections.Length < 2)
+			{
+				return null;
+			}
+			for (int i = 1; i < Sections.Length; i++)
+			{
+				if (Sections[i].TrackPosition > trackPosition && Sections[i -1].TrackPosition <= trackPosition)
+				{
+					return Sections[i];
+				}
+			}
+			return null;
+		}
+
 		/// <summary>Updates the currently displayed background</summary>
 		/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
 		/// <param name="GamePaused">Whether the game is currently paused</param>
