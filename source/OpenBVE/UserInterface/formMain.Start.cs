@@ -207,17 +207,19 @@ namespace OpenBve
 						string[] Files = Directory.GetFiles(Folder);
 						Array.Sort(Files);
 						for (int i = 0; i < Files.Length; i++)
-						{ 
+						{
+							string fileName;
+							ListViewItem Item;
 							if (string.IsNullOrEmpty(Files[i])) return;
 							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
 							switch (Extension)
 							{
 								case ".rw":
 								case ".csv":
-									string fileName = System.IO.Path.GetFileName(Files[i]);
+									fileName = System.IO.Path.GetFileName(Files[i]);
 									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
 									{
-										ListViewItem Item = listviewRouteFiles.Items.Add(fileName);
+										Item = listviewRouteFiles.Items.Add(fileName);
 										if (Extension == ".csv")
 										{
 											try
@@ -229,7 +231,7 @@ namespace OpenBve
 													text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
 													text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
 													{
-														Item.ImageKey = @"route";
+														Item.ImageKey = @"csvroute";
 													}
 												}
 												
@@ -241,9 +243,31 @@ namespace OpenBve
 										}
 										else
 										{
-											Item.ImageKey = @"route";
+											Item.ImageKey = @"rwroute";
 										}
 										Item.Tag = Files[i];
+									}
+									break;
+								case ".dat":
+									fileName = System.IO.Path.GetFileName(Files[i]);
+									if (fileName == null || isInvalidDatName(fileName))
+									{
+										continue;
+									}
+
+									string error;
+									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+									{
+										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+									}
+									for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+									{
+										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
+										{
+											Item = listviewRouteFiles.Items.Add(fileName);
+											Item.ImageKey = @"mechanik";
+											Item.Tag = Files[i];
+										}
 									}
 									break;
 							}
@@ -258,6 +282,30 @@ namespace OpenBve
 			catch
 			{
 				//Ignore all errors
+			}
+		}
+
+		private bool isInvalidDatName(string fileName)
+		{
+			/*
+			 * Blacklist a bunch of invalid .dat files so they don't show up in the route browser
+			 */
+			switch (fileName.ToLowerInvariant())
+			{
+				case "train.dat":		//BVE Train data
+				case "tekstury.dat":	//Mechanik texture list
+				case "dzweiki.dat":		//Mechanik sound list
+				case "moduly.dat":		//Mechnik route generator dat list
+				case "dzw_osob.dat":	//Mechanik route generator sound list
+				case "dzw_posp.dat":	//Mechanik route generator sound list
+				case "log.dat":			//Mechanik route generator logfile
+				case "s80_text.dat":	//S80 Mechanik routefile sounds
+				case "s80_snd.dat":		//S80 Mechanik routefile textures
+				case "gensc.dat":		//Mechanik route generator (?)
+				case "scenerio.dat":	//Mechanik route generator (?)
+					return true;
+				default:
+					return false;
 			}
 		}
 

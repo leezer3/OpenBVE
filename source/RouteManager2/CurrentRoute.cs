@@ -92,11 +92,8 @@ namespace RouteManager2
 		/// <summary>The length of a block in meters</summary>
 		public double BlockLength = 25.0;
 
-		/// <summary>Controls whether accurate object disposal is in use</summary>
-		/// <remarks>If this bool is set to FALSE, then objects will disappear when the block in which their command is placed is exited via by the camera
-		/// Certain BVE2/4 era routes used this as an animation trick
-		/// </remarks>
-		public bool AccurateObjectDisposal;
+		/// <summary>Controls the object disposal mode</summary>
+		public ObjectDisposalMode AccurateObjectDisposal;
 
 		public CurrentRoute(HostInterface host, BaseRenderer renderer)
 		{
@@ -168,8 +165,11 @@ namespace RouteManager2
 				return;
 			}
 
+			double timeElapsed = SecondsSinceMidnight - Section.LastUpdate;
+			Section.LastUpdate = SecondsSinceMidnight;
+
 			// preparations
-			int zeroAspect;
+			int zeroAspect = 0;
 			bool setToRed = false;
 
 			if (Section.Type == SectionType.ValueBased)
@@ -185,12 +185,7 @@ namespace RouteManager2
 					}
 				}
 			}
-			else
-			{
-				// index-based
-				zeroAspect = 0;
-			}
-
+			
 			// hold station departure signal at red
 			int d = Section.StationIndex;
 
@@ -271,6 +266,27 @@ namespace RouteManager2
 					else if (Stations[d].ArrivalTime >= 0.0)
 					{
 						t = Stations[d].ArrivalTime;
+					}
+
+					if (AccurateObjectDisposal == ObjectDisposalMode.Mechanik)
+					{
+						if (train.LastStation == d - 1 || train.Station == d)
+						{
+							if (Section.RedTimer == -1)
+							{
+								Section.RedTimer = 30;
+							}
+							else
+							{
+								Section.RedTimer -= timeElapsed;
+							}
+
+							setToRed = !(Section.RedTimer <= 0);
+						}
+						else
+						{
+							Section.RedTimer = -1;
+						}
 					}
 
 					if (train.IsPlayerTrain & Stations[d].Type != StationType.Normal & Stations[d].DepartureTime < 0.0)

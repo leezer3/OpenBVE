@@ -300,12 +300,12 @@ namespace OpenBve {
 
 		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, true, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
 		}
 
 		public override int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, true, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)

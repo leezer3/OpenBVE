@@ -30,7 +30,7 @@ namespace CsvRwRouteParser
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/RoutePatches");
-				//Check this file actually contains OpenBVE light definition nodes
+				//Check this file actually contains OpenBVE route patch definition nodes
 				if (DocumentNodes != null)
 				{
 					for (int i = 0; i < DocumentNodes.Count; i++)

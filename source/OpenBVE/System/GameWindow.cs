@@ -754,7 +754,10 @@ namespace OpenBve
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 			{
 				int s = Program.TrainManager.Trains[i].CurrentSectionIndex;
-				Program.CurrentRoute.Sections[s].Enter(Program.TrainManager.Trains[i]);
+				if (Program.CurrentRoute.Sections.Length > Program.TrainManager.Trains[i].CurrentSectionIndex)
+				{
+					Program.CurrentRoute.Sections[s].Enter(Program.TrainManager.Trains[i]);
+				}
 			}
 			if (Program.CurrentRoute.Sections.Length > 0)
 			{

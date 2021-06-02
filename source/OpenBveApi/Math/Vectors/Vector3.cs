@@ -685,6 +685,21 @@ namespace OpenBveApi.Math {
 			result = vec + temp2;
 		}
 
+		/// <summary>Projects a vector onto a second vector</summary>
+		/// <param name="firstVector">The first vector</param>
+		/// <param name="secondVector">The second vector</param>
+		/// <returns>The projected vector</returns>
+		public static Vector3 Project(Vector3 firstVector, Vector3 secondVector)
+		{
+			double squareMagnitude = Dot(secondVector, secondVector);
+			if (squareMagnitude < double.Epsilon)
+			{
+				return Zero;
+			}
+			double dot = Dot(firstVector, secondVector);
+			return new Vector3(secondVector.X * dot / squareMagnitude, secondVector.Y * dot / squareMagnitude, secondVector.Z * dot / squareMagnitude);
+		}
+
 		/// <summary>Determines whether this is a zero (0,0,0) vector</summary>
 		/// <param name="Vector"></param>
 		/// <returns>True if this is a zero vector, false otherwise</returns>

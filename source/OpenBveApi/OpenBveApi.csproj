@@ -149,6 +149,7 @@
     <Compile Include="Routes\Events.cs" />
     <Compile Include="Routes\Events.TriggerTypes.cs" />
     <Compile Include="Routes\LightDefinition.cs" />
+    <Compile Include="Routes\ObjectDisposalMode.cs" />
     <Compile Include="Routes\RouteInterface.cs" />
     <Compile Include="Routes\StaticBackground.cs" />
     <Compile Include="Routes\Track.cs" />
