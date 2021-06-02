@@ -17,7 +17,6 @@ using OpenBveApi.Objects;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
-using Path = System.IO.Path;
 
 namespace OpenBve {
 	internal partial class formMain : Form
@@ -215,7 +214,7 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
-				string extension = Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
+				string extension = System.IO.Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
 				switch (extension)
 				{
 					case ".dat":
