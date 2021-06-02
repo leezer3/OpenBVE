@@ -809,7 +809,7 @@ namespace OpenBve
 			if (Game.InitialAIDriver)
 			{
 				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
-				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
+				if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 				{
 					MessageManager.AddMessage(Translations.GetInterfaceString("notification_aiunable"),MessageDependency.None, GameMode.Expert,
 						MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);

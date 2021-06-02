@@ -64,7 +64,7 @@ namespace TrainManager.SafetySystems
 			base.PluginMessage = null;
 			base.Train = train;
 			base.Panel = null;
-			base.SupportsAI = false;
+			base.SupportsAI = AISupport.None;
 			base.LastTime = 0.0;
 			base.LastReverser = -2;
 			base.LastPowerNotch = -1;
@@ -87,7 +87,7 @@ namespace TrainManager.SafetySystems
 			try
 			{
 				success = this.Api.Load(properties);
-				base.SupportsAI = properties.AISupport == AISupport.Basic;
+				base.SupportsAI = properties.AISupport;
 			}
 			catch (Exception ex)
 			{

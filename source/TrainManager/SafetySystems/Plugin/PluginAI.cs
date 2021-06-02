@@ -4,7 +4,11 @@ namespace TrainManager.SafetySystems
 {
 	internal static class PluginAI
 	{
+		/// <summary>Control variable used to determine next AI step</summary>
 		private static int currentStep;
+		/*
+		 * Variables used by AI for UKDT plugin
+		 */
 		private static bool overCurrentTrip;
 		private static double overCurrentSpeed;
 		private static int overCurrentNotch;
@@ -69,9 +73,16 @@ namespace TrainManager.SafetySystems
 
 					if (Plugin.Panel[51] == 1)
 					{
+						/*
+						 * Over current has tripped
+						 * Let's back off to N and drop the max notch by 1
+						 *
+						 * Repeat until we move off properly
+						 * NOTE: UKDT does have an ammeter, but we'll cheat this way, to
+						 * avoid having to configure the max on a per-train basis
+						 */
 						if (!overCurrentTrip)
 						{
-							//over current trip
 							overCurrentSpeed = Plugin.Train.CurrentSpeed;
 							overCurrentNotch = data.Handles.PowerNotch - 1;
 							data.Handles.PowerNotch = 0;
@@ -98,6 +109,7 @@ namespace TrainManager.SafetySystems
 
 					if (Plugin.Sound[2] == 0)
 					{
+						//AWS horn active, so wait a sec before triggering cancel
 						switch (currentStep)
 						{
 							case 100:
