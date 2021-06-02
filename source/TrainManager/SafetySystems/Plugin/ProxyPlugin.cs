@@ -12,8 +12,6 @@ namespace TrainManager.SafetySystems {
 	/// <summary>Represents a proxied legacy Win32 plugin.</summary>
 	internal class ProxyPlugin : Plugin, IAtsPluginCallback 
 	{
-		/// <summary>The current sound instructions</summary>
-		private int[] Sound;
 		/// <summary>The sound instructions on the previous frame</summary>
 		private readonly int[] LastSound;
 		/// <summary>The plugin proxy interface</summary>
@@ -48,7 +46,13 @@ namespace TrainManager.SafetySystems {
 			PluginMessage = null;
 			Train = train;
 			Panel = new int[256];
-			SupportsAI = false;
+			SupportsAI = AISupport.None;
+			switch (PluginTitle.ToLowerInvariant())
+			{
+				case "ukdt.dll":
+					base.SupportsAI = AISupport.Program;
+					break;
+			}
 			LastTime = 0.0;
 			LastReverser = -2;
 			LastPowerNotch = -1;
@@ -241,7 +245,10 @@ namespace TrainManager.SafetySystems {
 
 		protected override void PerformAI(AIData data)
 		{
-			//PerformAI is not relevant to legacy plugins, but we must implement it as an API member
+			if (SupportsAI == AISupport.Program)
+			{
+				PluginAI.Perform(this, data);
+			}
 		}
 
 		public void ReportError(string Error, bool Critical = false)

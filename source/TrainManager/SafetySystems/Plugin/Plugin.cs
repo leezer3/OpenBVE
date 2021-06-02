@@ -31,8 +31,11 @@ namespace TrainManager.SafetySystems
 		/// <summary>The array of panel variables.</summary>
 		public int[] Panel;
 
+		/// <summary>The array of sound variables used by legacy plugins</summary>
+		internal int[] Sound;
+
 		/// <summary>Whether the plugin supports the AI.</summary>
-		public bool SupportsAI;
+		public AISupport SupportsAI;
 
 		/// <summary>The last in-game time reported to the plugin.</summary>
 		public double LastTime;
@@ -637,7 +640,7 @@ namespace TrainManager.SafetySystems
 		/// <returns>The AI response.</returns>
 		public AIResponse UpdateAI()
 		{
-			if (this.SupportsAI)
+			if (this.SupportsAI != AISupport.None)
 			{
 				AIData data = new AIData(GetHandles());
 				this.PerformAI(data);
