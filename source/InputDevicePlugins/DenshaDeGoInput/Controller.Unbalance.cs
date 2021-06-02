@@ -29,10 +29,13 @@ using OpenTK.Input;
 namespace DenshaDeGoInput
 {
 	/// <summary>
-	/// Class representing a generic controller
+	/// Class representing an Unbalance controller
 	/// </summary>
 	internal class UnbalanceController : Controller
 	{
+		/// <summary>A cached list of supported connected controllers.</summary>
+		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
+
 		/// <summary>The OpenTK joystick index for this controller.</summary>
 		private int joystickIndex;
 
@@ -45,7 +48,7 @@ namespace DenshaDeGoInput
 		/// <summary>The byte for each power notch, from Released to maximum.</summary>
 		private readonly byte[] powerBytes;
 
-		/// <summary>The index for each button.</summary>
+		/// <summary>The index for each button. Follows order in InputTranslator.</summary>
 		private readonly int[] buttonIndex;
 
 		/// <summary>
@@ -105,6 +108,8 @@ namespace DenshaDeGoInput
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.B]);
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.C]);
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.D]);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.LDoor] = joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.LDoor]);
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.RDoor] = joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.RDoor]);
 
 			if (Buttons.HasFlag(ControllerButtons.DPad))
 			{
@@ -143,8 +148,6 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static Dictionary<Guid, Controller> GetControllers()
 		{
-			Dictionary<Guid, Controller> controllers = new Dictionary<Guid, Controller>();
-
 			for (int i = 0; i < 10; i++)
 			{
 				Guid guid = Joystick.GetGuid(i);
@@ -152,30 +155,38 @@ namespace DenshaDeGoInput
 				string name = Joystick.GetName(i);
 				bool comboDpad = name == "TAITO Densha de Go! Plug & Play";
 
-				// DGC-255/DGOC-44U/P&P
-				if (id == "0ae4:0003")
+				if (!cachedControllers.ContainsKey(guid))
 				{
-					ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D;
-					if (Joystick.GetCapabilities(i).HatCount > 0 || comboDpad)
+					// DGC-255/DGOC-44U/P&P
+					if (id == "0ae4:0003")
 					{
-						// DGC-255 and P&P have a D-pad
-						buttons = buttons | ControllerButtons.DPad;
+						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D;
+						if (Joystick.GetCapabilities(i).HatCount > 0 || comboDpad)
+						{
+							// DGC-255 and P&P have a D-pad
+							buttons = buttons | ControllerButtons.DPad;
+						}
+						int[] buttonIndices = { 4, 5, 1, 0, 2, 3, -1, -1, -1, -1, -1, -1, -1 };
+						byte[] brakeBytes = { 0x79, 0x8A, 0x94, 0x9A, 0xA2, 0xA8, 0xAF, 0xB2, 0xB5, 0xB9 };
+						byte[] powerBytes = { 0x81, 0x6D, 0x54, 0x3F, 0x21, 0x00 };
+						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
+						{
+							Guid = guid,
+							joystickIndex = i,
+							ControllerName = name,
+							IsConnected = true
+						};
+						cachedControllers.Add(guid, newcontroller);
 					}
-					int[] buttonIndices = { 4, 5, 1, 0, 2, 3 };
-					byte[] brakeBytes = { 0x79, 0x8A, 0x94, 0x9A, 0xA2, 0xA8, 0xAF, 0xB2, 0xB5, 0xB9 };
-					byte[] powerBytes = { 0x81, 0x6D, 0x54, 0x3F, 0x21, 0x00 };
-					UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
-					{
-						Guid = guid,
-						joystickIndex = i,
-						ControllerName = name,
-						IsConnected = true
-					};
-					controllers.Add(guid, newcontroller);
+				}
+				else
+				{
+					// Cached controller, update index
+					((UnbalanceController)cachedControllers[guid]).joystickIndex = i;
 				}
 			}
 
-			return controllers;
+			return cachedControllers;
 		}
 
 		/// <summary>Gets the minimum value for a notch byte.</summary>

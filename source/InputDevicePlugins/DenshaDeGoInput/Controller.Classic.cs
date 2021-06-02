@@ -35,14 +35,17 @@ namespace DenshaDeGoInput
 	/// </summary>
 	internal class ClassicController : Controller
 	{
-		/// <summary>The OpenTK joystick index for this controller.</summary>
-		private int joystickIndex;
+		/// <summary>A cached list of supported connected controllers.</summary>
+		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
 
 		/// <summary>Whether the adapter uses a hat to map the direction buttons.</summary>
 		internal static bool UsesHat;
 
 		/// <summary>The index of the hat used to map the direction buttons.</summary>
 		internal static int HatIndex;
+
+		/// <summary>The OpenTK joystick index for this controller.</summary>
+		private int joystickIndex;
 
 		/// <summary>
 		/// Class for the indices of the buttons used by the controller.
@@ -265,29 +268,35 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static Dictionary<Guid, Controller> GetControllers()
 		{
-			Dictionary<Guid, Controller> controllers = new Dictionary<Guid, Controller>();
-
 			for (int i = 0; i < 10; i++)
 			{
 				Guid guid = Joystick.GetGuid(i);
 				string name = Joystick.GetName(i);
 
-				// A valid controller needs at least 12 buttons or 10 buttons plus a hat. If there are more than 20 buttons, the joystick is unlikely a valid controller.
-				JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
-				if ((capabilities.ButtonCount >= 12 || (capabilities.ButtonCount >= 10 && capabilities.HatCount > 0)) && capabilities.ButtonCount <= 20)
+				if (!cachedControllers.ContainsKey(guid))
 				{
-					ClassicController newcontroller = new ClassicController
+					// A valid controller needs at least 12 buttons or 10 buttons plus a hat. If there are more than 20 buttons, the joystick is unlikely a valid controller.
+					JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
+					if ((capabilities.ButtonCount >= 12 || (capabilities.ButtonCount >= 10 && capabilities.HatCount > 0)) && capabilities.ButtonCount <= 20)
 					{
-						Guid = guid,
-						joystickIndex = i,
-						ControllerName = name,
-						IsConnected = true
-					};
-					controllers.Add(guid, newcontroller);
+						ClassicController newcontroller = new ClassicController
+						{
+							Guid = guid,
+							joystickIndex = i,
+							ControllerName = name,
+							IsConnected = true
+						};
+						cachedControllers.Add(guid, newcontroller);
+					}
+				}
+				else
+				{
+					// Cached controller, update index
+					((ClassicController)cachedControllers[guid]).joystickIndex = i;
 				}
 			}
 
-			return controllers;
+			return cachedControllers;
 		}
 
 		/// <summary>
