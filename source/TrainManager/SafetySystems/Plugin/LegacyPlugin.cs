@@ -136,7 +136,11 @@ namespace TrainManager.SafetySystems
 			{
 				case "ukdt.dll":
 					base.SupportsAI = AISupport.Program;
-					base.AI = new UKDTAI(this);
+					base.AI = new UKDtAI(this);
+					break;
+				case "ukspt.dll":
+					base.SupportsAI = AISupport.Program;
+					base.AI = new UKSptAI(this);
 					break;
 			}
 			

@@ -94,6 +94,7 @@
     <Compile Include="SafetySystems\PilotLamp.cs" />
     <Compile Include="SafetySystems\Plugin\AI\PluginAI.cs" />
     <Compile Include="SafetySystems\Plugin\AI\PluginAI.UKDt.cs" />
+    <Compile Include="SafetySystems\Plugin\AI\PluginAI.UKSpt.cs" />
     <Compile Include="SafetySystems\Plugin\LegacyPlugin.cs" />
     <Compile Include="SafetySystems\Plugin\NetPlugin.cs" />
     <Compile Include="SafetySystems\Plugin\Plugin.cs" />

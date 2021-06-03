@@ -1,22 +1,18 @@
-﻿using OpenBveApi.Runtime;
+﻿using System.Reflection;
+using OpenBveApi.Runtime;
+using TrainManager.Car;
 
 namespace TrainManager.SafetySystems
 {
-	/// <summary>An AI to control the legacy Win32 UKDt plugin</summary>
-	internal class UKDtAI : PluginAI
+	/// <summary>An AI to control the legacy Win32 UKSpt plugin</summary>
+	internal class UKSptAI : PluginAI
 	{
 		/// <summary>Control variable used to determine next AI step</summary>
 		private int currentStep;
-		/// <summary>Whether the overcurrent trip has occurred</summary>
-		private bool overCurrentTrip;
-		/// <summary>The speed at which the overcurrent trip occurred</summary>
-		private double overCurrentSpeed;
-		/// <summary>The notch at which the overcurrent trip occurred</summary>
-		private int overCurrentNotch;
+		/// <summary>Variable controlling whether the door startup hack has been performed</summary>
+		private bool doorStart;
 
-		
-
-		internal UKDtAI(Plugin plugin)
+		internal UKSptAI(Plugin plugin)
 		{
 			Plugin = plugin;
 			currentStep = 0;
@@ -79,41 +75,37 @@ namespace TrainManager.SafetySystems
 				currentStep = 5;
 			}
 
-			if (Plugin.Panel[51] == 1)
+			if (!doorStart)
 			{
-				/*
-				 * Over current has tripped
-				 * Let's back off to N and drop the max notch by 1
-				 *
-				 * Repeat until we move off properly
-				 * NOTE: UKDT does have an ammeter, but we'll cheat this way, to
-				 * avoid having to configure the max on a per-train basis
-				 */
-				if (!overCurrentTrip)
+				TrainDoorState state = Plugin.Train.GetDoorsState(true, true);
+				if (Plugin.Train.GetDoorsState(true, true) == (TrainDoorState.Closed | TrainDoorState.AllClosed) && Plugin.Train.CurrentSpeed == 0)
 				{
-					overCurrentSpeed = Plugin.Train.CurrentSpeed;
-					overCurrentNotch = data.Handles.PowerNotch - 1;
-					data.Handles.PowerNotch = 0;
-					data.Response = AIResponse.Long;
-					overCurrentTrip = true;
+					/*
+					 * HACK: Work around the fact that the guard AI isn't designed to start somewhere with no open doors
+					 */
+					data.Response = AIResponse.Medium;
+					Plugin.DoorChange(DoorStates.None, DoorStates.Left);
+					Plugin.DoorChange(DoorStates.Left, DoorStates.None);
+					doorStart = true;
 					return;
 				}
+			}
 
-				data.Response = AIResponse.Long;
+			if (Plugin.Panel[13] == 1)
+			{
+				//DRA is enabled, so toggle off
+				Plugin.KeyDown(VirtualKeys.S);
+				data.Response = AIResponse.Medium;
+				currentStep = 99;
 				return;
 			}
 
-			overCurrentTrip = false;
-			if (overCurrentSpeed != double.MaxValue)
+			if (currentStep == 99)
 			{
-				if (Plugin.Train.CurrentSpeed < overCurrentSpeed + 10)
-				{
-					data.Handles.PowerNotch = overCurrentNotch;
-				}
-				else
-				{
-					overCurrentSpeed = double.MaxValue;
-				}
+				Plugin.KeyUp(VirtualKeys.S);
+				data.Response = AIResponse.Medium;
+				currentStep++;
+				return;
 			}
 
 			if (Plugin.Sound[2] == 0)
@@ -144,9 +136,9 @@ namespace TrainManager.SafetySystems
 
 			if (TrainManagerBase.currentHost.InGameTime > nextPluginAction)
 			{
-				//If nothing else has happened recently, hit the vigilance reset key
-				Plugin.KeyDown(VirtualKeys.A2);
-				Plugin.KeyUp(VirtualKeys.A2);
+				//If nothing else has happened recently, hit the AWS reset key to ensure vigilance doesn't trigger
+				Plugin.KeyDown(VirtualKeys.A1);
+				Plugin.KeyUp(VirtualKeys.A1);
 				data.Response = AIResponse.Short;
 				nextPluginAction = TrainManagerBase.currentHost.InGameTime + 20.0;
 				return;
