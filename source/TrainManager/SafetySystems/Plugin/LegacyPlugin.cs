@@ -136,6 +136,7 @@ namespace TrainManager.SafetySystems
 			{
 				case "ukdt.dll":
 					base.SupportsAI = AISupport.Program;
+					base.AI = new UKDTAI(this);
 					break;
 			}
 			
@@ -558,7 +559,7 @@ namespace TrainManager.SafetySystems
 		{
 			if (SupportsAI == AISupport.Program)
 			{
-				PluginAI.Perform(this, data);
+				AI.Perform(data);
 			}
 		}
 

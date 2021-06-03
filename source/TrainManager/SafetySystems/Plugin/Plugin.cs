@@ -65,6 +65,8 @@ namespace TrainManager.SafetySystems
 		private List<Station> currentRouteStations;
 
 		private bool StationsLoaded;
+		/// <summary>Holds the plugin specific AI class</summary>
+		internal PluginAI AI;
 
 		// --- functions ---
 		/// <summary>Called to load and initialize the plugin.</summary>

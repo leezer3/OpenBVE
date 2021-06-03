@@ -51,6 +51,7 @@ namespace TrainManager.SafetySystems {
 			{
 				case "ukdt.dll":
 					base.SupportsAI = AISupport.Program;
+					AI = new UKDTAI(this);
 					break;
 			}
 			LastTime = 0.0;
@@ -247,7 +248,7 @@ namespace TrainManager.SafetySystems {
 		{
 			if (SupportsAI == AISupport.Program)
 			{
-				PluginAI.Perform(this, data);
+				AI.Perform(data);
 			}
 		}
 
