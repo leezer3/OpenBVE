@@ -66,7 +66,7 @@ namespace OpenBve {
 				MainDialogResult result = Dialog.Result;
 				//Dispose of the worker thread when closing the form
 				//If it's still running, it attempts to update a non-existant form and crashes nastily
-				Dialog.routeWorkerThread.Dispose();
+				Dialog.DisposePreviewRouteThread();
 				if (!OpenTK.Configuration.RunningOnMacOS)
 				{
 					Dialog.trainWatcher.Dispose();
@@ -486,9 +486,7 @@ namespace OpenBve {
 			// result
 			Result.Start = false;
 
-			routeWorkerThread = new BackgroundWorker();
-			routeWorkerThread.DoWork += routeWorkerThread_doWork;
-			routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
+			InitializePreviewRouteThread();
 			Manipulation.ProgressChanged += OnWorkerProgressChanged;
 			Manipulation.ProblemReport += OnWorkerReportsProblem;
 			updownTimeAccelerationFactor.ValueChanged += updownTimeAccelerationFactor_ValueChanged;
@@ -1127,8 +1125,11 @@ namespace OpenBve {
 				Array.Resize(ref a, n);
 				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}
-			Program.Sounds.Deinitialize();
-			routeWorkerThread.Dispose();
+			DisposePreviewRouteThread();
+			{
+				string error;
+				Program.CurrentHost.UnloadPlugins(out error);
+			}
 			if (!OpenTK.Configuration.RunningOnMacOS)
 			{
 				routeWatcher.Dispose();
