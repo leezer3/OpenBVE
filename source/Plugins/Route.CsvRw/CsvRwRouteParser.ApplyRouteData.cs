@@ -410,7 +410,7 @@ namespace CsvRwRouteParser
 					int s = Data.Blocks[i].Station;
 					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
 					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(0.0, s);
+					CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(Plugin.CurrentHost, 0.0, s);
 					double dx, dy = 3.0;
 					if (CurrentRoute.Stations[s].OpenLeftDoors && !CurrentRoute.Stations[s].OpenRightDoors)
 					{
@@ -902,7 +902,7 @@ namespace CsvRwRouteParser
 						double d = p - (k + Data.FirstUsedBlock) * Data.BlockInterval;
 						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(d, i, CurrentRoute, Plugin.CurrentHost);
+						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(Plugin.CurrentHost, CurrentRoute, d, i);
 					}
 				}
 			}
