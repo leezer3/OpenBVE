@@ -309,10 +309,15 @@ namespace TrainManager.SafetySystems
 				base.LastException = ex;
 				throw;
 			}
+			if (SupportsAI == AISupport.Program)
+			{
+				AI.BeginJump(mode);
+			}
 		}
 
 		public override void EndJump()
 		{
+			AI.EndJump();
 		}
 
 		protected override void Elapse(ref ElapseData data)

@@ -5,15 +5,12 @@ namespace TrainManager.SafetySystems
 	/// <summary>An AI to control the legacy Win32 UKDt plugin</summary>
 	internal class UKDtAI : PluginAI
 	{
-		/// <summary>Control variable used to determine next AI step</summary>
-		private int currentStep;
 		/// <summary>Whether the overcurrent trip has occurred</summary>
 		private bool overCurrentTrip;
 		/// <summary>The speed at which the overcurrent trip occurred</summary>
 		private double overCurrentSpeed;
 		/// <summary>The notch at which the overcurrent trip occurred</summary>
 		private int overCurrentNotch;
-
 		
 
 		internal UKDtAI(Plugin plugin)
@@ -46,7 +43,6 @@ namespace TrainManager.SafetySystems
 							data.Response = AIResponse.Medium;
 							currentStep++;
 						}
-
 						return;
 					case 3:
 						Plugin.KeyDown(VirtualKeys.A1);
@@ -98,7 +94,6 @@ namespace TrainManager.SafetySystems
 					overCurrentTrip = true;
 					return;
 				}
-
 				data.Response = AIResponse.Long;
 				return;
 			}
@@ -151,6 +146,24 @@ namespace TrainManager.SafetySystems
 				nextPluginAction = TrainManagerBase.currentHost.InGameTime + 20.0;
 				return;
 			}
+
+		}
+
+		public override void BeginJump(InitializationModes mode)
+		{
+			overCurrentTrip = false;
+			if (mode == InitializationModes.OffEmergency)
+			{
+				currentStep = 0;
+			}
+			else
+			{
+				currentStep = 100;
+			}
+		}
+
+		public override void EndJump()
+		{
 
 		}
 	}

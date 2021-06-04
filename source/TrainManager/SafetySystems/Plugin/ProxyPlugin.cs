@@ -97,11 +97,18 @@ namespace TrainManager.SafetySystems {
 		public override void BeginJump(InitializationModes mode)
 		{
 			pipeProxy.BeginJump(mode);
+			if (SupportsAI == AISupport.Program)
+			{
+				AI.BeginJump(mode);
+			}
 		}
 
 		public override void EndJump()
 		{
-			//EndJump is not relevant to legacy plugins, but we must implement it as an API member
+			if (SupportsAI == AISupport.Program)
+			{
+				AI.EndJump();
+			}
 		}
 
 		protected override void Elapse(ref ElapseData data)

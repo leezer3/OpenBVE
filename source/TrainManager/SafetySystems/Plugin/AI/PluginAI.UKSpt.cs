@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using OpenBveApi.Runtime;
+﻿using OpenBveApi.Runtime;
 using TrainManager.Car;
 
 namespace TrainManager.SafetySystems
@@ -7,8 +6,6 @@ namespace TrainManager.SafetySystems
 	/// <summary>An AI to control the legacy Win32 UKSpt plugin</summary>
 	internal class UKSptAI : PluginAI
 	{
-		/// <summary>Control variable used to determine next AI step</summary>
-		private int currentStep;
 		/// <summary>Variable controlling whether the door startup hack has been performed</summary>
 		private bool doorStart;
 
@@ -42,7 +39,6 @@ namespace TrainManager.SafetySystems
 							data.Response = AIResponse.Medium;
 							currentStep++;
 						}
-
 						return;
 					case 3:
 						Plugin.KeyDown(VirtualKeys.A1);
@@ -77,7 +73,6 @@ namespace TrainManager.SafetySystems
 
 			if (!doorStart)
 			{
-				TrainDoorState state = Plugin.Train.GetDoorsState(true, true);
 				if (Plugin.Train.GetDoorsState(true, true) == (TrainDoorState.Closed | TrainDoorState.AllClosed) && Plugin.Train.CurrentSpeed == 0)
 				{
 					/*
@@ -144,6 +139,24 @@ namespace TrainManager.SafetySystems
 				return;
 			}
 
+		}
+
+		public override void BeginJump(InitializationModes mode)
+		{
+			if (mode == InitializationModes.OffEmergency)
+			{
+				currentStep = 0;
+				doorStart = false;
+			}
+			else
+			{
+				currentStep = 100;
+			}
+		}
+
+		public override void EndJump()
+		{
+			
 		}
 	}
 }
