@@ -57,6 +57,10 @@ namespace TrainManager.SafetySystems {
 					base.SupportsAI = AISupport.Program;
 					AI = new UKSptAI(this);
 					break;
+				case "ukmut.dll":
+					base.SupportsAI = AISupport.Program;
+					base.AI = new UKMUtAI(this);
+					break;
 			}
 			LastTime = 0.0;
 			LastReverser = -2;

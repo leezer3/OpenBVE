@@ -142,6 +142,10 @@ namespace TrainManager.SafetySystems
 					base.SupportsAI = AISupport.Program;
 					base.AI = new UKSptAI(this);
 					break;
+				case "ukmut.dll":
+					base.SupportsAI = AISupport.Program;
+					base.AI = new UKMUtAI(this);
+					break;
 			}
 			
 			base.LastTime = 0.0;
