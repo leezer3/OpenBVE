@@ -370,8 +370,7 @@ namespace LibRender2
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
-			//FIXME: This seems to need to be the 'wrong' way around. Need to standardise on Matrices throughout?
-			Matrix4D Rotate = (Matrix4D)new Transformation(AuxTransformation, BaseTransformation);
+			Matrix4D Rotate = (Matrix4D)new Transformation(BaseTransformation, AuxTransformation);
 			return CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
