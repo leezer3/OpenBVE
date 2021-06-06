@@ -9,6 +9,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
+using RouteManager2.Stations;
 using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
@@ -319,6 +320,19 @@ namespace TrainManager.Trains
 							string s = Translations.GetInterfaceString("message_route_nextsection").Replace("[distance]", $"{tPos:0.0}") + "m";
 							TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 							nextSection.AccessibilityAnnounced = true;
+						}
+					}
+					RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(FrontCarTrackPosition());
+					if (nextStation != null)
+					{
+						//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
+						//Aspect announce to be triggered via a separate keybind
+						double tPos = nextStation.DefaultTrackPosition - FrontCarTrackPosition();
+						if (!nextStation.AccessibilityAnnounced && tPos < 500)
+						{
+							string s = Translations.GetInterfaceString("message_route_nextstation").Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
+							TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+							nextStation.AccessibilityAnnounced = true;
 						}
 					}
 				}

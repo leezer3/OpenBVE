@@ -394,6 +394,24 @@ namespace RouteManager2
 			return null;
 		}
 
+		/// <summary>Gets the next station from the specified track position</summary>
+		/// <param name="trackPosition">The track position</param>
+		public RouteStation NextStation(double trackPosition)
+		{
+			if (Stations == null || Stations.Length == 0)
+			{
+				return null;
+			}
+			for (int i = 1; i < Stations.Length; i++)
+			{
+				if (Stations[i].DefaultTrackPosition > trackPosition && Stations[i -1].DefaultTrackPosition <= trackPosition)
+				{
+					return Stations[i];
+				}
+			}
+			return null;
+		}
+
 		/// <summary>Updates the currently displayed background</summary>
 		/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
 		/// <param name="GamePaused">Whether the game is currently paused</param>
