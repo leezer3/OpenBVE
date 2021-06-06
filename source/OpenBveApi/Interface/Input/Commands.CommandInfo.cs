@@ -257,6 +257,10 @@
 			new CommandInfo(Command.ShowEvents, CommandType.Digital, "SHOW_EVENTS"),
 			new CommandInfo(Command.DebugRendererMode, CommandType.Digital, "DEBUG_RENDERER_MODE"), 
 			new CommandInfo(Command.RailDriverSpeedUnits, CommandType.Digital, "RAILDRIVER_SPEED_UNITS"),
+			//Accessibility
+			new CommandInfo(Command.AccessibilityCurrentSpeed, CommandType.Digital, "ACCESSIBILITY_CURRENT_SPEED"),
+			new CommandInfo(Command.AccessibilityNextSignal, CommandType.Digital, "ACCESSIBILITY_NEXT_SIGNAL"),
+			new CommandInfo(Command.AccessibilityNextStation, CommandType.Digital, "ACCESSIBILITY_NEXT_STATION"),
 		};
 	}
 }

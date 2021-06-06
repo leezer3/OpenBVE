@@ -1387,6 +1387,12 @@
 					<trans-unit id="route_nextsection">
 						<source>Next signal in [distance]</source>
 					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
 					</trans-unit>
@@ -1425,6 +1431,9 @@
 					</trans-unit>
 					<trans-unit id="station_passed_boarding">
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
+					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train's current speed is [speed]</source>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
