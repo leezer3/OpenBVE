@@ -93,9 +93,9 @@ namespace OpenBve.Input
 									0,134,0,0,0,0,0,0,0
 								}
 							};
-							if (!AttachedJoysticks.ContainsKey(new Guid()))
+							if (!AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 							{
-								AttachedJoysticks.Add(new Guid(), newJoystick);
+								AttachedJoysticks.Add(AbstractRailDriver.Guid, newJoystick);
 								devices[i].SetupInterface();
 								devices[i].SetDataCallback(newJoystick);
 								devices[i].SetErrorCallback(newJoystick);
