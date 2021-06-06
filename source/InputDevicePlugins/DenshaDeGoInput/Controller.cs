@@ -83,18 +83,24 @@ namespace DenshaDeGoInput
 			get;
 			protected set;
 		}
-		/// <summary>The amount of power notches</summary>
+
+		/// <summary>The Guid for the controller</summary>
 		internal protected Guid Guid
 		{
 			get;
 			protected set;
 		}
-		/// <summary>Whether the controller is connected</summary>
-		internal protected bool IsConnected
+
+		/// <summary>A string with the vendor and product ID for the controller</summary>
+		internal protected string Id
 		{
 			get;
 			protected set;
 		}
+
+		/// <summary>Whether the controller is connected</summary>
+		internal protected bool IsConnected;
+
 		/// <summary>Whether the controller requires calibration</summary>
 		internal protected bool RequiresCalibration
 		{
@@ -104,6 +110,8 @@ namespace DenshaDeGoInput
 
 		internal Controller()
 		{
+			Guid = Guid.Empty;
+			Id = string.Empty;
 			ControllerName = string.Empty;
 			IsConnected = false;
 			RequiresCalibration = false;

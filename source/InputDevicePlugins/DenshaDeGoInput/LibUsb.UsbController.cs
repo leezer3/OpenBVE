@@ -104,7 +104,7 @@ namespace DenshaDeGoInput
 				{
 					// Send unload buffer to turn off controller
 					int bytesWritten;
-					ControllerDevice.ControlTransfer(ref ControllerPs2.setupPacket, unloadBuffer, unloadBuffer.Length, out bytesWritten);
+					ControllerDevice.ControlTransfer(ref LibUsbController.setupPacket, unloadBuffer, unloadBuffer.Length, out bytesWritten);
 				}
 
 				IUsbDevice wholeUsbDevice = ControllerDevice as IUsbDevice;
@@ -149,7 +149,7 @@ namespace DenshaDeGoInput
 				{
 					// Send output buffer
 					int bytesWritten;
-					ControllerDevice.ControlTransfer(ref ControllerPs2.setupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
+					ControllerDevice.ControlTransfer(ref LibUsbController.setupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
 				}
 			}
 			catch

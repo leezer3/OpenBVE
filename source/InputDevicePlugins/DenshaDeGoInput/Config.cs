@@ -214,7 +214,7 @@ namespace DenshaDeGoInput
 			label_right.Text = Translations.GetInterfaceString("denshadego_label_right");
 			label_pedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
 			label_ldoor.Text = Translations.GetInterfaceString("denshadego_label_ldoor");
-			label_ldoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
+			label_rdoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
 			label_buttonup.Text = Translations.GetInterfaceString("denshadego_label_up");
 			label_buttondown.Text = Translations.GetInterfaceString("denshadego_label_down");
 			label_buttonleft.Text = Translations.GetInterfaceString("denshadego_label_left");
@@ -239,19 +239,19 @@ namespace DenshaDeGoInput
 			}
 
 			// Set command boxes
-			buttonselectBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[0].Command;
-			buttonstartBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[1].Command;
-			buttonaBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[2].Command;
-			buttonbBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[3].Command;
-			buttoncBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[4].Command;
-			buttondBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[5].Command;
-			buttonupBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[6].Command;
-			buttondownBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[7].Command;
-			buttonleftBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[8].Command;
-			buttonrightBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[9].Command;
-			buttonpedalBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[10].Command;
-			buttonldoorBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[11].Command;
-			buttonrdoorBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[12].Command;
+			buttonselectBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Select].Command;
+			buttonstartBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Start].Command;
+			buttonaBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.A].Command;
+			buttonbBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.B].Command;
+			buttoncBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.C].Command;
+			buttondBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.D].Command;
+			buttonupBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Up].Command;
+			buttondownBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Down].Command;
+			buttonleftBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Left].Command;
+			buttonrightBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Right].Command;
+			buttonpedalBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Pedal].Command;
+			buttonldoorBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.LDoor].Command;
+			buttonrdoorBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.RDoor].Command;
 
 
 			// Set checkboxes
@@ -270,7 +270,7 @@ namespace DenshaDeGoInput
 		{
 			// Reload the previous config and close the config dialog
 			DenshaDeGoInput.LoadConfig();
-			ControllerPs2.ControllerDisplayEnabled = false;
+			//ControllerPs2.ControllerDisplayEnabled = false;
 		}
 
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)

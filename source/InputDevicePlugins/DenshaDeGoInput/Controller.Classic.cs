@@ -189,7 +189,6 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal ClassicController()
 		{
-			ControllerName = string.Empty;
 			joystickIndex = -1;
 			RequiresCalibration = true;
 			BrakeNotches = 8;
@@ -271,6 +270,7 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < 10; i++)
 			{
 				Guid guid = Joystick.GetGuid(i);
+				string id = GetControllerID(guid);
 				string name = Joystick.GetName(i);
 
 				if (!cachedControllers.ContainsKey(guid))
@@ -279,9 +279,10 @@ namespace DenshaDeGoInput
 					JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
 					if ((capabilities.ButtonCount >= 12 || (capabilities.ButtonCount >= 10 && capabilities.HatCount > 0)) && capabilities.ButtonCount <= 20)
 					{
-						ClassicController newcontroller = new ClassicController
+						ClassicController newcontroller = new ClassicController()
 						{
 							Guid = guid,
+							Id = id,
 							joystickIndex = i,
 							ControllerName = name,
 							IsConnected = true

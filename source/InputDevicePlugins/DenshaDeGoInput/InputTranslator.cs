@@ -141,20 +141,20 @@ namespace DenshaDeGoInput
 			C = 4,
 			/// <summary>D button</summary>
 			D = 5,
-			/// <summary>Up button</summary>
-			Up = 6,
-			/// <summary>Down button</summary>
-			Down = 7,
-			/// <summary>Left button</summary>
-			Left = 8,
-			/// <summary>Right button</summary>
-			Right = 9,
-			/// <summary>Pedal button</summary>
-			Pedal = 10,
 			/// <summary>Left door button</summary>
-			LDoor = 11,
+			LDoor = 6,
 			/// <summary>Right door button</summary>
-			RDoor = 12,
+			RDoor = 7,
+			/// <summary>Up button</summary>
+			Up = 8,
+			/// <summary>Down button</summary>
+			Down = 9,
+			/// <summary>Left button</summary>
+			Left = 10,
+			/// <summary>Right button</summary>
+			Right = 11,
+			/// <summary>Pedal button</summary>
+			Pedal = 12,
 		}
 
 		/// <summary>
@@ -229,17 +229,17 @@ namespace DenshaDeGoInput
 		public static void RefreshControllers()
 		{
 			// PlayStation 2 controllers
-			//foreach (KeyValuePair<Guid, Controller> controller in Ps2Controller.GetControllers())
-			//{
-			//	if (!Controllers.ContainsKey(controller.Key))
-			//	{
-			//		Controllers.Add(controller.Key, controller.Value);
-			//	}
-			//	else
-			//	{
-			//		Controllers[controller.Key] = controller.Value;
-			//	}
-			//}
+			foreach (KeyValuePair<Guid, Controller> controller in Ps2Controller.GetControllers())
+			{
+				if (!Controllers.ContainsKey(controller.Key))
+				{
+					Controllers.Add(controller.Key, controller.Value);
+				}
+				else
+				{
+					Controllers[controller.Key] = controller.Value;
+				}
+			}
 			// Unbalance controllers
 			foreach (KeyValuePair<Guid, Controller> controller in UnbalanceController.GetControllers())
 			{

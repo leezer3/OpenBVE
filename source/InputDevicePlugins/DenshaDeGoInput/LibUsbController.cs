@@ -22,18 +22,46 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
 using OpenBveApi;
 using OpenBveApi.Interface;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace DenshaDeGoInput
 {
-	public partial class ControllerPs2
+	/// <summary>
+	/// Class for USB Densha de GO! controllers for the Sony Playstation 2.
+	/// </summary>
+	internal static class LibUsbController
 	{
+		/// <summary>
+		/// Adds the supported controller models to the LibUsb list.
+		/// </summary>
+		internal static void AddSupportedControllers()
+		{
+			// Type 2 controller
+			UsbController controllerType2 = new UsbController(0x0ae4, 0x0004, new byte[] { 0x1, 0x0, 0x0, 0xFF, 0x8, 0x0 }, new byte[] { 0x0, 0x3 });
+			supportedUsbControllers.Add(Ps2Guids[0], controllerType2);
+			// Shinkansen controller
+			UsbController controllerShinkansen = new UsbController(0x0ae4, 0x0005, new byte[] { 0x0, 0x0, 0xFF, 0x8, 0x0, 0x0 }, new byte[] { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF });
+			supportedUsbControllers.Add(Ps2Guids[1], controllerShinkansen);
+			// Ryojouhen controller
+			UsbController controllerRyojouhen = new UsbController(0x0ae4, 0x0007, new byte[] { 0x0, 0x0, 0xFF, 0x8, 0x0, 0x0, 0x0, 0x0 }, new byte[] { });
+			supportedUsbControllers.Add(Ps2Guids[2], controllerRyojouhen);
+		}
+		/// <summary>
+		/// Represents the special GUIDs for PS2 controllers.
+		/// </summary>
+		private static Guid[] Ps2Guids =
+		{
+			new Guid("ffffffff-e40a-ffff-0400-ffffffffffff"),
+			new Guid("ffffffff-e40a-ffff-0500-ffffffffffff"),
+			new Guid("ffffffff-e40a-ffff-0700-ffffffffffff")
+		};
+
 		/// <summary>
 		/// Dictionary containing the supported USB controllers
 		/// </summary>

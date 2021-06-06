@@ -166,12 +166,13 @@ namespace DenshaDeGoInput
 							// DGC-255 and P&P have a D-pad
 							buttons = buttons | ControllerButtons.DPad;
 						}
-						int[] buttonIndices = { 4, 5, 1, 0, 2, 3, -1, -1, -1, -1, -1, -1, -1 };
+						int[] buttonIndices = { 4, 5, 1, 0, 2, 3, -1, -1 };
 						byte[] brakeBytes = { 0x79, 0x8A, 0x94, 0x9A, 0xA2, 0xA8, 0xAF, 0xB2, 0xB5, 0xB9 };
 						byte[] powerBytes = { 0x81, 0x6D, 0x54, 0x3F, 0x21, 0x00 };
 						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
 						{
 							Guid = guid,
+							Id = id,
 							joystickIndex = i,
 							ControllerName = name,
 							IsConnected = true
@@ -181,7 +182,7 @@ namespace DenshaDeGoInput
 				}
 				else
 				{
-					// Cached controller, update index
+					// Cached controller, update it
 					((UnbalanceController)cachedControllers[guid]).joystickIndex = i;
 				}
 			}
