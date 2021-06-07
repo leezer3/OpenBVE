@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
-using LibRender2;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -169,7 +167,7 @@ namespace OpenBve
 						routeProgress = Program.CurrentHost.Plugins[i].Route.CurrentProgress;
 					}
 				}
-				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, routeProgress);
+				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress);
 				Program.currentGameWindow.SwapBuffers();
 
 				if (Loading.JobAvailable)

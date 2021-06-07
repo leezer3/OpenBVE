@@ -36,7 +36,6 @@ namespace OpenBve
 		internal static bool CpuAutomaticMode = true;
 		internal static string CurrentRouteFile = null;
 		internal static bool CurrentlyLoading = false;
-		internal static int CurrentStation = -1;
 		internal static bool JumpToPositionEnabled = false;
 		internal static string JumpToPositionValue = "";
 		internal static double MinimumJumpToPositionValue =  0;
@@ -182,7 +181,6 @@ namespace OpenBve
 			{
 				return false;
 			}
-			CurrentStation = -1;
 			Renderer.UpdateViewport();
 			bool result;
 			try
@@ -216,7 +214,6 @@ namespace OpenBve
 						if (p < Program.Renderer.CameraTrackFollower.TrackPosition - 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
-							CurrentStation = i;
 							break;
 						}
 					}
@@ -228,7 +225,6 @@ namespace OpenBve
 						if (p > Program.Renderer.CameraTrackFollower.TrackPosition + 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
-							CurrentStation = i;
 							break;
 						}
 					}

@@ -14,54 +14,57 @@ namespace RouteManager2.Events
 		/// <summary>The index of the next signalling section</summary>
 		public readonly int NextSectionIndex;
 
-		public SectionChangeEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, int PreviousSectionIndex, int NextSectionIndex)
+		public SectionChangeEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, int PreviousSectionIndex, int NextSectionIndex) : base(TrackPositionDelta)
 		{
 			currentRoute = CurrentRoute;
 
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 			this.PreviousSectionIndex = PreviousSectionIndex;
 			this.NextSectionIndex = NextSectionIndex;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (Train != null)
+			AbstractTrain train = trackFollower.Train;
+
+			if (train != null)
 			{
-				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
+				switch (trackFollower.TriggerType)
 				{
-					if (Direction < 0)
-					{
-						if (NextSectionIndex >= 0)
+					case EventTriggerType.FrontCarFrontAxle:
+						if (direction < 0)
 						{
-							currentRoute.Sections[NextSectionIndex].TrainReachedStopPoint = false;
-						}
+							if (NextSectionIndex >= 0)
+							{
+								currentRoute.Sections[NextSectionIndex].TrainReachedStopPoint = false;
+							}
 
-						UpdateFrontBackward(Train);
-					}
-					else if (Direction > 0)
-					{
-						UpdateFrontForward(Train);
-					}
-				}
-				else if (TriggerType == EventTriggerType.RearCarRearAxle)
-				{
-					if (Direction < 0)
-					{
-						UpdateRearBackward(Train);
-					}
-					else if (Direction > 0)
-					{
-						if (PreviousSectionIndex >= 0)
+							UpdateFrontBackward(train);
+						}
+						else if (direction > 0)
 						{
-							currentRoute.Sections[PreviousSectionIndex].TrainReachedStopPoint = false;
+							UpdateFrontForward(train);
 						}
+						break;
+					case EventTriggerType.RearCarRearAxle:
+						if (direction < 0)
+						{
+							UpdateRearBackward(train);
+						}
+						else if (direction > 0)
+						{
+							if (PreviousSectionIndex >= 0)
+							{
+								currentRoute.Sections[PreviousSectionIndex].TrainReachedStopPoint = false;
+							}
 
-						UpdateRearForward(Train);
-					}
+							UpdateRearForward(train);
+						}
+						break;
 				}
 			}
 		}
+
 		private void UpdateFrontBackward(AbstractTrain Train)
 		{
 			// update sections

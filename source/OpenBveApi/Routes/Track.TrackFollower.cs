@@ -43,6 +43,9 @@ namespace OpenBveApi.Routes
 		public AbstractCar Car;
 		/// <summary>The track index the follower is currently following</summary>
 		public int TrackIndex;
+		/// <summary>The station index at the current location</summary>
+		public int StationIndex;
+
 		private readonly Hosts.HostInterface currentHost;
 
 
@@ -84,6 +87,7 @@ namespace OpenBveApi.Routes
 			SnowIntensity = 0;
 			TriggerType = EventTriggerType.None;
 			TrackIndex = 0;
+			StationIndex = -1;
 		}
 
 		/// <summary>Gets the rail gauge for the track this is following</summary>
@@ -399,7 +403,7 @@ namespace OpenBveApi.Routes
 
 					if (OldDelta > e.TrackPositionDelta & NewDelta <= e.TrackPositionDelta)
 					{
-						e.TryTrigger(-1, this.TriggerType, this.Train, this.Car);
+						e.TryTrigger(-1, this);
 					}
 				}
 			}
@@ -410,7 +414,7 @@ namespace OpenBveApi.Routes
 					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
 					if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta)
 					{
-						e.TryTrigger(1, this.TriggerType, this.Train, this.Car);
+						e.TryTrigger(1, this);
 					}
 				}
 			}
@@ -419,6 +423,42 @@ namespace OpenBveApi.Routes
 			{
 				//We have swapped tracks, so need to check the events on the new track also
 				CheckEvents(ElementIndex, Direction, OldDelta, NewDelta);
+			}
+		}
+
+		/// <summary>Called when a follower enters a station</summary>
+		/// <param name="stationIndex">The index of the station</param>
+		/// <param name="direction">The direction of travel</param>
+		public void EnterStation(int stationIndex, int direction)
+		{
+			if (direction < 0)
+			{
+				if (StationIndex == stationIndex)
+				{
+					StationIndex = -1;
+				}
+			}
+			else if (direction > 0)
+			{
+				StationIndex = stationIndex;
+			}
+		}
+
+		/// <summary>Called when a follower leaves a station</summary>
+		/// <param name="stationIndex">The index of the station</param>
+		/// <param name="direction">The direction of travel</param>
+		public void LeaveStation(int stationIndex, int direction)
+		{
+			if (direction < 0)
+			{
+				StationIndex = stationIndex;
+			}
+			else if (direction > 0)
+			{
+				if (StationIndex == stationIndex)
+				{
+					StationIndex = -1;
+				}
 			}
 		}
 	}
