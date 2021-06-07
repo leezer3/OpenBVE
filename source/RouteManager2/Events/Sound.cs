@@ -10,6 +10,8 @@ namespace RouteManager2.Events
 	/// <summary>Called when a generic sound should be played</summary>
 		public class SoundEvent : GeneralEvent
 		{
+			/// <summary>Holds a reference to the host application callback function</summary>
+			private readonly HostInterface currentHost;
 			/// <summary>The sound buffer to play</summary>
 			public readonly SoundBuffer SoundBuffer;
 			/// <summary>Whether this sound is triggered by the player train only, or all trains</summary>
@@ -22,11 +24,10 @@ namespace RouteManager2.Events
 			public Vector3 Position;
 			/// <summary>The speed in km/h at which the sound is played at it's original pitch</summary>
 			private readonly double Speed;
-			/// <summary>Holds a reference to the host application callback function</summary>
-			private readonly HostInterface currentHost;
 			/// <summary>Whether this triggers for all cars</summary>
 			private readonly bool AllCars;
 
+			/// <param name="Host">The </param>
 			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
 			/// <param name="SoundBuffer">The sound buffer to play.</param>
 			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
@@ -35,9 +36,9 @@ namespace RouteManager2.Events
 			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
 			/// <param name="Position">The position of the sound relative to it's track location</param>
 			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
-			/// <param name="Host">The </param>
-			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position, double Speed, HostInterface Host) : base(TrackPositionDelta)
+			public SoundEvent(HostInterface Host, double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position, double Speed) : base(TrackPositionDelta)
 			{
+				this.currentHost = Host;
 				this.DontTriggerAnymore = false;
 				this.SoundBuffer = (SoundBuffer)SoundBuffer;
 				this.PlayerTrainOnly = PlayerTrainOnly;
@@ -45,10 +46,10 @@ namespace RouteManager2.Events
 				this.Dynamic = Dynamic;
 				this.Position = Position;
 				this.Speed = Speed;
-				this.currentHost = Host;
 				this.AllCars = AllCars;
 			}
 
+			/// <param name="Host">The </param>
 			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
 			/// <param name="SoundBuffer">The sound buffer to play.</param>
 			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
@@ -56,21 +57,20 @@ namespace RouteManager2.Events
 			/// <param name="Once">Defines whether this sound repeats looped, or plays once</param>
 			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
 			/// <param name="Position">The position of the sound relative to it's track location</param>
-			/// <param name="Host">The </param>
-			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position, HostInterface Host)
-				: this(TrackPositionDelta, SoundBuffer, PlayerTrainOnly, AllCars, Once, Dynamic, Position, 0.0, Host)
+			public SoundEvent(HostInterface Host, double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position)
+				: this(Host, TrackPositionDelta, SoundBuffer, PlayerTrainOnly, AllCars, Once, Dynamic, Position, 0.0)
 			{
 			}
 
+			/// <param name="Host">The </param>
 			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
 			/// <param name="SoundBuffer">The sound buffer to play.</param>
 			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
 			/// <param name="Once">Defines whether this sound repeats looped, or plays once</param>
 			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
 			/// <param name="Position">The position of the sound relative to it's track location</param>
-			/// <param name="Host">The </param>
-			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, HostInterface Host)
-				: this(TrackPositionDelta, SoundBuffer, PlayerTrainOnly, false, Once, Dynamic, Position, Host)
+			public SoundEvent(HostInterface Host, double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position)
+				: this(Host, TrackPositionDelta, SoundBuffer, PlayerTrainOnly, false, Once, Dynamic, Position)
 			{
 			}
 

@@ -29,19 +29,19 @@ namespace RouteManager2.Events
 	/// <summary>Placed at the end of every station (as defined by the last possible stop point)</summary>
 	public class StationEndEvent : GeneralEvent
 	{
+		private readonly HostInterface currentHost;
+
+		private readonly CurrentRoute currentRoute;
+
 		/// <summary>The index of the station this event describes</summary>
 		public readonly int StationIndex;
 
-		private readonly HostInterface currentHost;
-
-		private readonly CurrentRoute Route;
-
-		public StationEndEvent(double TrackPositionDelta, int StationIndex, CurrentRoute Route, HostInterface Host) : base(TrackPositionDelta)
+		public StationEndEvent(HostInterface Host, CurrentRoute CurrentRoute, double TrackPositionDelta, int StationIndex) : base(TrackPositionDelta)
 		{
+			this.currentHost = Host;
+			this.currentRoute = CurrentRoute;
 			this.DontTriggerAnymore = false;
 			this.StationIndex = StationIndex;
-			this.Route = Route;
-			this.currentHost = Host;
 		}
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
@@ -55,7 +55,7 @@ namespace RouteManager2.Events
 					{
 						if (trackFollower.Train.IsPlayerTrain)
 						{
-							currentHost.UpdateCustomTimetable(Route.Stations[StationIndex].TimetableDaytimeTexture, Route.Stations[StationIndex].TimetableNighttimeTexture);
+							currentHost.UpdateCustomTimetable(currentRoute.Stations[StationIndex].TimetableDaytimeTexture, currentRoute.Stations[StationIndex].TimetableNighttimeTexture);
 						}
 					}
 					break;

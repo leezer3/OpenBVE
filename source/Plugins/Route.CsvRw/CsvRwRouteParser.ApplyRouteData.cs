@@ -487,16 +487,16 @@ namespace CsvRwRouteParser
 							switch (Data.Blocks[i].SoundEvents[j].Type)
 							{
 								case SoundType.TrainStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero, Plugin.CurrentHost);
+									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero);
 									break;
 								case SoundType.TrainAllCarStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, true, false, Vector3.Zero, Plugin.CurrentHost);
+									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, true, false, Vector3.Zero);
 									break;
 								case SoundType.TrainDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed, Plugin.CurrentHost);
+									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
 									break;
 								case SoundType.TrainAllCarDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, true, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed, Plugin.CurrentHost);
+									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, true, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
 									break;
 							}
 						}
@@ -902,7 +902,7 @@ namespace CsvRwRouteParser
 						double d = p - (k + Data.FirstUsedBlock) * Data.BlockInterval;
 						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(d, i, CurrentRoute, Plugin.CurrentHost);
+						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(Plugin.CurrentHost, CurrentRoute, d, i);
 					}
 				}
 			}

@@ -9,16 +9,16 @@ namespace RouteManager2.Events
 	/// <summary>Is calld when a marker or message is removed from the in-game display</summary>
 	public class MarkerEndEvent : GeneralEvent
 	{
+		private readonly HostInterface currentHost;
+
 		/// <summary>The marker or message to remove (Note: May have already timed-out)</summary>
 		private readonly AbstractMessage message;
 
-		private readonly HostInterface currentHost;
-
-		public MarkerEndEvent(double TrackPositionDelta, AbstractMessage Message, HostInterface Host) : base(TrackPositionDelta)
+		public MarkerEndEvent(HostInterface Host, double TrackPositionDelta, AbstractMessage Message) : base(TrackPositionDelta)
 		{
+			currentHost = Host;
 			DontTriggerAnymore = false;
 			message = Message;
-			currentHost = Host;
 		}
 
 		public override void Trigger(int direction, TrackFollower trackFollower)

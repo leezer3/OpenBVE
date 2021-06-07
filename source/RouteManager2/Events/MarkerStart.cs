@@ -9,16 +9,16 @@ namespace RouteManager2.Events
 	/// <summary>Is called when a marker or message is added to the in-game display</summary>
 	public class MarkerStartEvent : GeneralEvent
 	{
+		private readonly HostInterface currentHost;
+
 		/// <summary>The marker or message to add</summary>
 		private readonly AbstractMessage message;
 
-		private readonly HostInterface currentHost;
-
-		public MarkerStartEvent(double TrackPositionDelta, AbstractMessage Message, HostInterface Host) : base(TrackPositionDelta)
+		public MarkerStartEvent(HostInterface Host, double TrackPositionDelta, AbstractMessage Message) : base(TrackPositionDelta)
 		{
+			currentHost = Host;
 			DontTriggerAnymore = false;
 			message = Message;
-			currentHost = Host;
 		}
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
