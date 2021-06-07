@@ -292,7 +292,17 @@ namespace OpenBveApi.Interface {
 			/// <summary>Shows or hides the route information window</summary>
 			RouteInformation,
 			/// <summary>Toggles the speed units in the RailDriver's display</summary>
-			RailDriverSpeedUnits
+			RailDriverSpeedUnits,
+			/*
+			 * These keys were added in 1.8.1.0
+			 * Used to trigger accessibility messages
+			 */
+			/// <summary>Triggers a screen reader message with the current speed</summary>
+			AccessibilityCurrentSpeed,
+			/// <summary>Triggers a screen reader message with the distance and aspect to the next signal</summary>
+			AccessibilityNextSignal,
+			/// <summary>Triggers a screen reader message with the distance and aspect to the next station</summary>
+			AccessibilityNextStation
 		}
 
 		/// <summary>Defines the possible command types</summary>

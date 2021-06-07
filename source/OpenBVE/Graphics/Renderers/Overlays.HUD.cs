@@ -1,14 +1,13 @@
 using System;
-using System.Drawing;
-using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
-using RouteManager2;
+using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
 
@@ -478,17 +477,17 @@ namespace OpenBve.Graphics.Renderers
 						if (c >= 0)
 						{
 							bool cond;
-							if (Command == "stoplefttick")
+							switch (Command)
 							{
-								cond = Program.CurrentRoute.Stations[s].OpenLeftDoors;
-							}
-							else if (Command == "stoprighttick")
-							{
-								cond = Program.CurrentRoute.Stations[s].OpenRightDoors;
-							}
-							else
-							{
-								cond = !Program.CurrentRoute.Stations[s].OpenLeftDoors & !Program.CurrentRoute.Stations[s].OpenRightDoors;
+								case "stoplefttick":
+									cond = Program.CurrentRoute.Stations[s].OpenLeftDoors;
+									break;
+								case "stoprighttick":
+									cond = Program.CurrentRoute.Stations[s].OpenRightDoors;
+									break;
+								default:
+									cond = !Program.CurrentRoute.Stations[s].OpenLeftDoors & !Program.CurrentRoute.Stations[s].OpenRightDoors;
+									break;
 							}
 							if (TrainManager.PlayerTrain.StationState == TrainStopState.Pending & cond)
 							{
@@ -513,6 +512,52 @@ namespace OpenBve.Graphics.Renderers
 							if (r < -1.0) r = -1.0;
 							if (r > 1.0) r = 1.0;
 							y -= r * (double)Element.Value1;
+							if (Interface.CurrentOptions.Accessibility)
+							{
+								double beepSpeed = Math.Abs(r);
+								if (beepSpeed < 0.01)
+								{
+									beepSpeed = 0;
+								}
+								else
+								{
+									beepSpeed = 1.0 / beepSpeed;
+								}
+
+
+								if (TrainManager.PlayerTrain.StationState != TrainStopState.Pending || beepSpeed == 0)
+								{
+									// We're stopped or beep is not required
+									if (HUD.stationAdjustBeepSource != null)
+									{
+										HUD.stationAdjustBeepSource.Stop();
+									}
+								}
+								else
+								{
+									if (Element.TransitionState == 0.0)
+									{
+										if (HUD.stationAdjustBeepSource != null)
+										{
+											HUD.stationAdjustBeepSource.Stop();
+										}
+									}
+									else
+									{
+										if (HUD.stationAdjustBeepSource != null && HUD.stationAdjustBeepSource.IsPlaying())
+										{
+											HUD.stationAdjustBeepSource.Volume = beepSpeed * 0.25;
+											HUD.stationAdjustBeepSource.Position = Program.Renderer.Camera.AbsolutePosition;
+										}
+										else
+										{
+											HUD.stationAdjustBeepSource = (SoundSource)Program.CurrentHost.PlaySound((SoundHandle)HUD.stationAdjustBeep, 2.0, beepSpeed * 0.25, Program.Renderer.Camera.AbsolutePosition, null, true);
+										}	
+									}
+									
+								}
+								
+							}
 						}
 						else
 						{

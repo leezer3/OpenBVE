@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using DavyKager;
 using LibRender2.Overlays;
 using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
@@ -21,6 +23,8 @@ namespace OpenBve.Graphics.Renderers
 		 * -------------------------------------------------------------- */
 
 		private readonly NewRenderer renderer;
+
+		private bool PauseAnnounced;
 
 		// fade to black
 		private double FadeToBlackDueToChangeEnds;
@@ -143,16 +147,31 @@ namespace OpenBve.Graphics.Renderers
 				RenderBrakeSystemDebug();
 			}
 
-			//If paused, fade out the screen & write PAUSE
-			if (Program.Renderer.CurrentInterface == InterfaceType.Pause)
+			switch (Program.Renderer.CurrentInterface)
 			{
-				// pause
-				renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.0f, 0.0f, 0.0f, 0.5f));
-				renderer.OpenGlString.Draw(renderer.Fonts.VeryLargeFont, "PAUSE", new Point(renderer.Screen.Width / 2, renderer.Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
-			}
-			else if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
-			{
-				Game.Menu.Draw();
+				case InterfaceType.Pause:
+				{
+					//If paused, fade out the screen & write PAUSE
+					renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.0f, 0.0f, 0.0f, 0.5f));
+					renderer.OpenGlString.Draw(renderer.Fonts.VeryLargeFont, Translations.GetInterfaceString("menu_pause_title"), new Point(renderer.Screen.Width / 2, renderer.Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
+					if (!PauseAnnounced)
+					{
+						if (!Tolk.Output(Translations.GetInterfaceString("menu_pause_title")))
+						{
+							Interface.CurrentOptions.ScreenReaderAvailable = false;
+						}
+						PauseAnnounced = true;
+					}
+					break;
+				}
+				case InterfaceType.Menu:
+					Game.Menu.Draw();
+					PauseAnnounced = false;
+					break;
+				default:
+					PauseAnnounced = false;
+					break;
+					 
 			}
 
 			//Fade to black on change ends

@@ -1,4 +1,4 @@
-﻿namespace OpenBve {
+namespace OpenBve {
     partial class formMain {
         /// <summary>
         /// Required designer variable.
@@ -449,6 +449,7 @@
 			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
+			this.checkBoxAccessibility = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -2672,6 +2673,7 @@
 			// 
 			this.groupboxVerbosity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxVerbosity.Controls.Add(this.checkBoxAccessibility);
 			this.groupboxVerbosity.Controls.Add(this.checkboxErrorMessages);
 			this.groupboxVerbosity.Controls.Add(this.checkboxWarningMessages);
 			this.groupboxVerbosity.ForeColor = System.Drawing.Color.Black;
@@ -5651,6 +5653,16 @@
 			this.labelNewGUID.TabIndex = 24;
 			this.labelNewGUID.Text = "The new package has been assigned the following GUID:";
 			// 
+			// checkBoxAccessibility
+			// 
+			this.checkBoxAccessibility.AutoSize = true;
+			this.checkBoxAccessibility.Location = new System.Drawing.Point(176, 22);
+			this.checkBoxAccessibility.Name = "checkBoxAccessibility";
+			this.checkBoxAccessibility.Size = new System.Drawing.Size(106, 17);
+			this.checkBoxAccessibility.TabIndex = 2;
+			this.checkBoxAccessibility.Text = "Accessibility Aids";
+			this.checkBoxAccessibility.UseVisualStyleBackColor = true;
+			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -6252,5 +6264,6 @@
 		private System.Windows.Forms.Label labelReverseConsist;
 		private System.Windows.Forms.Label labelCompatibilitySignalSet;
 		private System.Windows.Forms.ComboBox comboBoxCompatibilitySignals;
+		private System.Windows.Forms.CheckBox checkBoxAccessibility;
 	}
 }

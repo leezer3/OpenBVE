@@ -1,9 +1,9 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using System;
 using System.Drawing;
+using DavyKager;
 using LibRender2.Screens;
 using LibRender2.Texts;
 using OpenBve.Input;
@@ -137,7 +137,30 @@ namespace OpenBve
 			public readonly int ItemWidth = 0;
 			public readonly int Width = 0;
 			public readonly int Height = 0;
-			public int Selection;
+
+			private int lastSelection = int.MaxValue;
+			private int currentSelection;
+			
+			public int Selection
+			{
+				get
+				{
+					return currentSelection;
+				}
+				set
+				{
+					lastSelection = currentSelection;
+					currentSelection = value;
+					if (currentSelection != lastSelection && Interface.CurrentOptions.ScreenReaderAvailable)
+					{
+						if (!Tolk.Output(Items[currentSelection].Text))
+						{
+							// failed to output to screen reader, so don't keep trying
+							Interface.CurrentOptions.ScreenReaderAvailable = false;
+						}
+					}
+				}
+			}
 			public int TopItem;         // the top displayed menu item
 			
 
@@ -156,6 +179,14 @@ namespace OpenBve
 				switch (menuType)
 				{
 					case MenuType.Top:          // top level menu
+						if (Interface.CurrentOptions.ScreenReaderAvailable)
+						{
+							if (!Tolk.Output(Translations.GetInterfaceString("menu_title")))
+							{
+								// failed to output to screen reader, so don't keep trying
+								Interface.CurrentOptions.ScreenReaderAvailable = false;
+							}
+						}
 						for (i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 							if (Program.CurrentRoute.Stations[i].PlayerStops() & Program.CurrentRoute.Stations[i].Stops.Length > 0)
 							{

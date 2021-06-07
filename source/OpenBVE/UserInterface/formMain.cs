@@ -474,6 +474,7 @@ namespace OpenBve {
 			comboBoxRailDriverUnits.SelectedIndex = Interface.CurrentOptions.RailDriverMPH ? 0 : 1;
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (decimal)Interface.CurrentOptions.KioskModeTimer;
+			checkBoxAccessibility.Checked = Interface.CurrentOptions.Accessibility;
 			ListInputDevicePlugins();
 			if (Program.CurrentHost.MonoRuntime)
 			{
@@ -979,6 +980,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxXparser.SelectedIndex;
 			Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxObjparser.SelectedIndex;
 			Interface.CurrentOptions.Panel2ExtendedMode = checkBoxPanel2Extended.Checked;
+			Interface.CurrentOptions.Accessibility = checkBoxAccessibility.Checked;
 			switch (trackBarHUDSize.Value)
 			{
 				case 0:

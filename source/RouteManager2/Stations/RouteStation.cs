@@ -33,6 +33,9 @@ namespace RouteManager2.Stations
 		/// <summary>The available stop points for this station</summary>
 		public StationStop[] Stops;
 
+		/// <summary>Whether this station has been announced with accessibility in use</summary>
+		public bool AccessibilityAnnounced;
+
 		/// <summary>Gets the index of the stop corresponding to the train's number of cars</summary>
 		/// <param name="Cars">The number of cars the train has</param>
 		public int GetStopIndex(int Cars)

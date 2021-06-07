@@ -96,6 +96,7 @@ namespace OpenBve
 							case MessageDependency.PointOfInterest:
 							case MessageDependency.StationArrival:
 							case MessageDependency.CameraView:
+							case MessageDependency.AccessibilityHelper:
 								//Show only the latest message of these types
 								c.QueueForRemoval = true;
 								break;
