@@ -3,7 +3,6 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
-using OpenBveApi.Trains;
 using SoundManager;
 
 namespace RouteManager2.Events
@@ -37,9 +36,8 @@ namespace RouteManager2.Events
 			/// <param name="Position">The position of the sound relative to it's track location</param>
 			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
 			/// <param name="Host">The </param>
-			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position, double Speed, HostInterface Host)
+			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position, double Speed, HostInterface Host) : base(TrackPositionDelta)
 			{
-				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 				this.SoundBuffer = (SoundBuffer)SoundBuffer;
 				this.PlayerTrainOnly = PlayerTrainOnly;
@@ -60,17 +58,8 @@ namespace RouteManager2.Events
 			/// <param name="Position">The position of the sound relative to it's track location</param>
 			/// <param name="Host">The </param>
 			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool AllCars, bool Once, bool Dynamic, Vector3 Position, HostInterface Host)
+				: this(TrackPositionDelta, SoundBuffer, PlayerTrainOnly, AllCars, Once, Dynamic, Position, 0.0, Host)
 			{
-				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
-				this.SoundBuffer = (SoundBuffer)SoundBuffer;
-				this.PlayerTrainOnly = PlayerTrainOnly;
-				this.Once = Once;
-				this.Dynamic = Dynamic;
-				this.Position = Position;
-				this.Speed = 0.0;
-				this.currentHost = Host;
-				this.AllCars = AllCars;
 			}
 
 			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
@@ -81,32 +70,22 @@ namespace RouteManager2.Events
 			/// <param name="Position">The position of the sound relative to it's track location</param>
 			/// <param name="Host">The </param>
 			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, HostInterface Host)
+				: this(TrackPositionDelta, SoundBuffer, PlayerTrainOnly, false, Once, Dynamic, Position, Host)
 			{
-				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
-				this.SoundBuffer = (SoundBuffer)SoundBuffer;
-				this.PlayerTrainOnly = PlayerTrainOnly;
-				this.Once = Once;
-				this.Dynamic = Dynamic;
-				this.Position = Position;
-				this.Speed = 0.0;
-				this.currentHost = Host;
-				this.AllCars = false;
 			}
 
 			/// <summary>Triggers the playback of a sound</summary>
-			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
-			/// <param name="TriggerType">They type of event which triggered this sound</param>
-			/// <param name="Train">The root train which triggered this sound</param>
-			/// <param name="Car">The car which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+			/// <param name="direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
+			/// <param name="trackFollower">The TrackFollower</param>
+			public override void Trigger(int direction, TrackFollower trackFollower)
 			{
 				if (SoundsBase.SuppressSoundEvents) return;
-				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
+				EventTriggerType triggerType = trackFollower.TriggerType;
+				if (triggerType == EventTriggerType.FrontCarFrontAxle | triggerType == EventTriggerType.OtherCarFrontAxle | triggerType == EventTriggerType.OtherCarRearAxle | triggerType == EventTriggerType.RearCarRearAxle)
 				{
-					if (!PlayerTrainOnly | Train.IsPlayerTrain)
+					if (!PlayerTrainOnly | trackFollower.Train.IsPlayerTrain)
 					{
-						if (AllCars && TriggerType == EventTriggerType.OtherCarRearAxle)
+						if (AllCars && triggerType == EventTriggerType.OtherCarRearAxle)
 						{
 							/*
 							 * For a multi-car announce, we only want the front axles to trigger
@@ -122,7 +101,7 @@ namespace RouteManager2.Events
 						{
 							if (this.Dynamic)
 							{
-								double spd = Math.Abs(Train.CurrentSpeed);
+								double spd = Math.Abs(trackFollower.Train.CurrentSpeed);
 								pitch = spd / this.Speed;
 								gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
 								if (pitch < 0.2 | gain < 0.2)
@@ -132,13 +111,13 @@ namespace RouteManager2.Events
 							}
 							if (buffer != null)
 							{
-								if (AllCars || TriggerType != EventTriggerType.RearCarRearAxle)
+								if (AllCars || triggerType != EventTriggerType.RearCarRearAxle)
 								{
-									currentHost.PlaySound(buffer, pitch, gain, Position, Car, false);
+									currentHost.PlaySound(buffer, pitch, gain, Position, trackFollower.Car, false);
 								}
 							}
 						}
-						if (!AllCars || TriggerType == EventTriggerType.RearCarRearAxle)
+						if (!AllCars || triggerType == EventTriggerType.RearCarRearAxle)
 						{
 							this.DontTriggerAnymore = this.Once;
 						}

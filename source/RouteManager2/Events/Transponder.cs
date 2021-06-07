@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenBveApi.Routes;
-using OpenBveApi.Trains;
 
 namespace RouteManager2.Events
 {
@@ -26,11 +25,10 @@ namespace RouteManager2.Events
 		{
 		}
 
-		public TransponderEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, int Type, int Data, int SectionIndex, bool ClipToFirstRedSection)
+		public TransponderEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, int Type, int Data, int SectionIndex, bool ClipToFirstRedSection) : base(TrackPositionDelta)
 		{
 			currentRoute = CurrentRoute;
 
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 			this.Type = Type;
 			this.Data = Data;
@@ -38,9 +36,9 @@ namespace RouteManager2.Events
 			this.ClipToFirstRedSection = ClipToFirstRedSection;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (TriggerType == EventTriggerType.TrainFront)
+			if (trackFollower.TriggerType == EventTriggerType.TrainFront)
 			{
 				int s = SectionIndex;
 
@@ -50,7 +48,7 @@ namespace RouteManager2.Events
 					{
 						while (true)
 						{
-							if (currentRoute.Sections[s].Exists(Train))
+							if (currentRoute.Sections[s].Exists(trackFollower.Train))
 							{
 								s = SectionIndex;
 								break;
@@ -77,7 +75,7 @@ namespace RouteManager2.Events
 					}
 				}
 
-				Train.UpdateBeacon(Type, s, Data);
+				trackFollower.Train.UpdateBeacon(Type, s, Data);
 			}
 		}
 	}

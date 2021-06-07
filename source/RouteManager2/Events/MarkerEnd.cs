@@ -14,23 +14,25 @@ namespace RouteManager2.Events
 
 		private readonly HostInterface currentHost;
 
-		public MarkerEndEvent(double TrackPositionDelta, AbstractMessage Message, HostInterface Host)
+		public MarkerEndEvent(double TrackPositionDelta, AbstractMessage Message, HostInterface Host) : base(TrackPositionDelta)
 		{
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 			message = Message;
 			currentHost = Host;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (TriggerType == EventTriggerType.FrontCarFrontAxle && Train.IsPlayerTrain || TriggerType == EventTriggerType.Camera && currentHost.Application == HostApplication.RouteViewer)
+			AbstractTrain train = trackFollower.Train;
+			EventTriggerType triggerType = trackFollower.TriggerType;
+
+			if (triggerType == EventTriggerType.FrontCarFrontAxle && train.IsPlayerTrain || triggerType == EventTriggerType.Camera && currentHost.Application == HostApplication.RouteViewer)
 			{
-				if (message != null && Train != null)
+				if (message != null && train != null)
 				{
-					if (Direction < 0)
+					if (direction < 0)
 					{
-						if (message.Trains != null && !message.Trains.Contains(new System.IO.DirectoryInfo(Train.TrainFolder).Name))
+						if (message.Trains != null && !message.Trains.Contains(new System.IO.DirectoryInfo(train.TrainFolder).Name))
 						{
 							//Our train is NOT in the list of trains which this message triggers for
 							return;
@@ -38,7 +40,7 @@ namespace RouteManager2.Events
 
 						currentHost.AddMessage(message);
 					}
-					else if (Direction > 0)
+					else if (direction > 0)
 					{
 						message.QueueForRemoval = true;
 					}

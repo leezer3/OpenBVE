@@ -9,30 +9,31 @@ namespace RouteManager2.Events
 	{
 		private readonly HostInterface currentHost;
 
-		public TrackEndEvent(HostInterface Host, double TrackPositionDelta)
+		public TrackEndEvent(HostInterface Host, double TrackPositionDelta) : base(TrackPositionDelta)
 		{
 			currentHost = Host;
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (Train == null)
+			AbstractTrain train = trackFollower.Train;
+
+			if (train == null)
 			{
 				return;
 			}
 
-			if (TriggerType == EventTriggerType.RearCarRearAxle & !Train.IsPlayerTrain)
+			if (trackFollower.TriggerType == EventTriggerType.RearCarRearAxle & !train.IsPlayerTrain)
 			{
-				Train.Dispose();
+				train.Dispose();
 			}
-			else if (Train.IsPlayerTrain)
+			else if (train.IsPlayerTrain)
 			{
-				Train.Derail(Car, 0.0);
+				train.Derail(trackFollower.Car, 0.0);
 			}
 
-			if (TriggerType == EventTriggerType.Camera)
+			if (trackFollower.TriggerType == EventTriggerType.Camera)
 			{
 				currentHost.CameraAtWorldEnd();
 			}

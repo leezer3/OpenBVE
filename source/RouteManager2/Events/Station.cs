@@ -1,6 +1,5 @@
 ﻿using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
-using OpenBveApi.Trains;
 
 namespace RouteManager2.Events
 {
@@ -10,18 +9,19 @@ namespace RouteManager2.Events
 		/// <summary>The index of the station this event describes</summary>
 		public readonly int StationIndex;
 
-		public StationStartEvent(double TrackPositionDelta, int StationIndex)
+		public StationStartEvent(double TrackPositionDelta, int StationIndex) : base(TrackPositionDelta)
 		{
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 			this.StationIndex = StationIndex;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (TriggerType == EventTriggerType.TrainFront)
+			trackFollower.EnterStation(StationIndex, direction);
+
+			if (trackFollower.TriggerType == EventTriggerType.TrainFront)
 			{
-				Train.EnterStation(StationIndex, Direction);
+				trackFollower.Train.EnterStation(StationIndex, direction);
 			}
 		}
 	}
@@ -36,30 +36,32 @@ namespace RouteManager2.Events
 
 		private readonly CurrentRoute Route;
 
-		public StationEndEvent(double TrackPositionDelta, int StationIndex, CurrentRoute Route, HostInterface Host)
+		public StationEndEvent(double TrackPositionDelta, int StationIndex, CurrentRoute Route, HostInterface Host) : base(TrackPositionDelta)
 		{
-			this.TrackPositionDelta = TrackPositionDelta;
 			this.DontTriggerAnymore = false;
 			this.StationIndex = StationIndex;
 			this.Route = Route;
 			this.currentHost = Host;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (TriggerType == EventTriggerType.FrontCarFrontAxle)
+			trackFollower.LeaveStation(StationIndex, direction);
+
+			switch (trackFollower.TriggerType)
 			{
-				if (Direction > 0)
-				{
-					if (Train.IsPlayerTrain)
+				case EventTriggerType.FrontCarFrontAxle:
+					if (direction > 0)
 					{
-						currentHost.UpdateCustomTimetable(Route.Stations[this.StationIndex].TimetableDaytimeTexture, Route.Stations[this.StationIndex].TimetableNighttimeTexture);
+						if (trackFollower.Train.IsPlayerTrain)
+						{
+							currentHost.UpdateCustomTimetable(Route.Stations[StationIndex].TimetableDaytimeTexture, Route.Stations[StationIndex].TimetableNighttimeTexture);
+						}
 					}
-				}
-			}
-			else if (TriggerType == EventTriggerType.RearCarRearAxle)
-			{
-				Train.LeaveStation(StationIndex, Direction);
+					break;
+				case EventTriggerType.RearCarRearAxle:
+					trackFollower.Train.LeaveStation(StationIndex, direction);
+					break;
 			}
 		}
 	}

@@ -21,9 +21,8 @@ namespace RouteManager2.Events
 		/// <summary>The distance to the next brightness change (Used in interpolation)</summary>
 		public double NextDistance;
 
-		public BrightnessChangeEvent(double TrackPositionDelta, float CurrentBrightness, float PreviousBrightness, double PreviousDistance)
+		public BrightnessChangeEvent(double TrackPositionDelta, float CurrentBrightness, float PreviousBrightness, double PreviousDistance) : base(TrackPositionDelta)
 		{
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 			this.CurrentBrightness = CurrentBrightness;
 			this.PreviousBrightness = PreviousBrightness;
@@ -36,23 +35,27 @@ namespace RouteManager2.Events
 			NextDistance = 0.0;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
+			EventTriggerType triggerType = trackFollower.TriggerType;
+
+			if (triggerType == EventTriggerType.FrontCarFrontAxle | triggerType == EventTriggerType.OtherCarFrontAxle)
 			{
-				if (Direction < 0)
+				AbstractCar car = trackFollower.Car;
+
+				if (direction < 0)
 				{
-					Car.Brightness.NextBrightness = CurrentBrightness;
-					Car.Brightness.NextTrackPosition = Car.TrackPosition;
-					Car.Brightness.PreviousBrightness = PreviousBrightness;
-					Car.Brightness.PreviousTrackPosition = Car.TrackPosition - PreviousDistance;
+					car.Brightness.NextBrightness = CurrentBrightness;
+					car.Brightness.NextTrackPosition = car.TrackPosition;
+					car.Brightness.PreviousBrightness = PreviousBrightness;
+					car.Brightness.PreviousTrackPosition = car.TrackPosition - PreviousDistance;
 				}
-				else if (Direction > 0)
+				else if (direction > 0)
 				{
-					Car.Brightness.PreviousBrightness = CurrentBrightness;
-					Car.Brightness.PreviousTrackPosition = Car.TrackPosition;
-					Car.Brightness.NextBrightness = NextBrightness;
-					Car.Brightness.NextTrackPosition = Car.TrackPosition + NextDistance;
+					car.Brightness.PreviousBrightness = CurrentBrightness;
+					car.Brightness.PreviousTrackPosition = car.TrackPosition;
+					car.Brightness.NextBrightness = NextBrightness;
+					car.Brightness.NextTrackPosition = car.TrackPosition + NextDistance;
 				}
 			}
 		}

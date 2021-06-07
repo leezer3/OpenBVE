@@ -1,5 +1,4 @@
 ﻿using OpenBveApi.Routes;
-using OpenBveApi.Trains;
 
 namespace RouteManager2.Events
 {
@@ -10,30 +9,28 @@ namespace RouteManager2.Events
 
 		/// <summary>The background which applies previously to this point</summary>
 		private readonly BackgroundHandle previousBackground;
-		
+
 		/// <summary>The background which applies after this point</summary>
 		private readonly BackgroundHandle nextBackground;
 
-		public BackgroundChangeEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, BackgroundHandle PreviousBackground, BackgroundHandle NextBackground)
+		public BackgroundChangeEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, BackgroundHandle PreviousBackground, BackgroundHandle NextBackground) : base(TrackPositionDelta)
 		{
 			currentRoute = CurrentRoute;
-
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 			previousBackground = PreviousBackground;
 			nextBackground = NextBackground;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (TriggerType == EventTriggerType.Camera)
+			if (trackFollower.TriggerType == EventTriggerType.Camera)
 			{
-				if (Direction < 0)
+				if (direction < 0)
 				{
 					currentRoute.TargetBackground = previousBackground;
 					currentRoute.TargetBackground.Countdown = 0;
 				}
-				else if (Direction > 0)
+				else if (direction > 0)
 				{
 					currentRoute.TargetBackground = nextBackground;
 					currentRoute.TargetBackground.Countdown = 0;
