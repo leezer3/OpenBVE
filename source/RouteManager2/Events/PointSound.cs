@@ -8,7 +8,7 @@ namespace RouteManager2.Events
 	{
 		public PointSoundEvent()
 		{
-			this.DontTriggerAnymore = false;
+			DontTriggerAnymore = false;
 		}
 
 		/// <summary>Triggers the playback of a sound</summary>

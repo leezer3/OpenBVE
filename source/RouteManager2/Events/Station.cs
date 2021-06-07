@@ -38,9 +38,9 @@ namespace RouteManager2.Events
 
 		public StationEndEvent(HostInterface Host, CurrentRoute CurrentRoute, double TrackPositionDelta, int StationIndex) : base(TrackPositionDelta)
 		{
-			this.currentHost = Host;
-			this.currentRoute = CurrentRoute;
-			this.DontTriggerAnymore = false;
+			currentHost = Host;
+			currentRoute = CurrentRoute;
+			DontTriggerAnymore = false;
 			this.StationIndex = StationIndex;
 		}
 

@@ -7,7 +7,6 @@ namespace RouteManager2.Events
 	/// <summary>Called when the AI driver should blow the horn</summary>
 	public class HornBlowEvent : GeneralEvent
 	{
-
 		private readonly HornTypes Type;
 		private readonly bool TriggerOnce;
 
@@ -26,7 +25,7 @@ namespace RouteManager2.Events
 			{
 				AbstractCar car = trackFollower.Car;
 
-				if (this.DontTriggerAnymore || car == null)
+				if (DontTriggerAnymore || car == null)
 				{
 					return;
 				}

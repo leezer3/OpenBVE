@@ -7,7 +7,7 @@ namespace RouteManager2.Events
 	{
 		public StationPassAlarmEvent(double TrackPositionDelta) : base(TrackPositionDelta)
 		{
-			this.DontTriggerAnymore = false;
+			DontTriggerAnymore = false;
 		}
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
@@ -18,14 +18,14 @@ namespace RouteManager2.Events
 				{
 					dynamic t = trackFollower.Train;
 					t.SafetySystems.PassAlarm.Trigger();
-					this.DontTriggerAnymore = true;
+					DontTriggerAnymore = true;
 				}
 			}
 		}
 
 		public override void Reset()
 		{
-			this.DontTriggerAnymore = false;
+			DontTriggerAnymore = false;
 		}
 	}
 }
