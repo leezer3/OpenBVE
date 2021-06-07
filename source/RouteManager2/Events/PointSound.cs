@@ -19,17 +19,16 @@ namespace RouteManager2.Events
 		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (SoundsBase.SuppressSoundEvents) return;
-			dynamic c = Car;
 			switch (TriggerType)
 			{
 				case EventTriggerType.FrontCarFrontAxle:
 				case EventTriggerType.OtherCarFrontAxle:
-					c.FrontAxle.PointSoundTriggered = true;
+					Car.FrontAxle.PointSoundTriggered = true;
 					DontTriggerAnymore = false;
 					break;
 				case EventTriggerType.OtherCarRearAxle:
 				case EventTriggerType.RearCarRearAxle:
-					c.RearAxle.PointSoundTriggered = true;
+					Car.RearAxle.PointSoundTriggered = true;
 					DontTriggerAnymore = false;
 					break;
 			}

@@ -393,7 +393,7 @@ namespace OpenBveApi.Routes
 				double endingTrackPosition = Elements[i + 1].StartingTrackPosition;
 				for (int j = 0; j < Elements[i].Events.Length; j++)
 				{
-					dynamic e = Elements[i].Events[j];
+					GeneralEvent e = Elements[i].Events[j];
 					double p = startingTrackPosition + e.TrackPositionDelta;
 					if (p >= endingTrackPosition)
 					{
