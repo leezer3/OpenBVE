@@ -565,22 +565,6 @@ namespace OpenBveApi.Hosts {
 
 		}
 
-		/// <summary>Called when a follower enters a station</summary>
-		/// <param name="stationIndex">The index of the station</param>
-		/// <param name="direction">The direction of travel</param>
-		public virtual void CameraEnterStation(int stationIndex, int direction)
-		{
-
-		}
-
-		/// <summary>Called when a follower leaves a station</summary>
-		/// <param name="stationIndex">The index of the station</param>
-		/// <param name="direction">The direction of travel</param>
-		public virtual void CameraLeaveStation(int stationIndex, int direction)
-		{
-
-		}
-
 		/// <summary>Gets the current in-game time</summary>
 		/// <returns>The time in seconds since midnight on the first day</returns>
 		public virtual double InGameTime => 0.0;

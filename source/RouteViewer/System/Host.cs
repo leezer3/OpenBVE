@@ -477,36 +477,6 @@ namespace OpenBve
 			return null;
 		}
 
-		public override void CameraEnterStation(int stationIndex, int direction)
-		{
-			if (direction < 0)
-			{
-				if (Program.CurrentStation == stationIndex)
-				{
-					Program.CurrentStation = -1;
-				}
-			}
-			else if (direction > 0)
-			{
-				Program.CurrentStation = stationIndex;
-			}
-		}
-
-		public override void CameraLeaveStation(int stationIndex, int direction)
-		{
-			if (direction < 0)
-			{
-				Program.CurrentStation = stationIndex;
-			}
-			else if (direction > 0)
-			{
-				if (Program.CurrentStation == stationIndex)
-				{
-					Program.CurrentStation = -1;
-				}
-			}
-		}
-
 		public override AbstractTrain[] Trains
 		{
 			get
