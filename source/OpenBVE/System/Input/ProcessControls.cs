@@ -1831,7 +1831,7 @@ namespace OpenBve
 									Game.routeInfoOverlay.ProcessCommand(Translations.Command.RouteInformation);
 									break;
 								case Translations.Command.AccessibilityCurrentSpeed:
-									string s = Translations.GetInterfaceString("message_train_currentspeed").Replace("[speed]", $"{TrainManagerBase.PlayerTrain.CurrentSpeed:0.0}") + "kph";
+									string s = Translations.GetInterfaceString("message_train_currentspeed").Replace("[speed]", $"{TrainManagerBase.PlayerTrain.CurrentSpeed * 3.6:0.0}") + "km/h";
 									Program.CurrentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
 									break;
 								case Translations.Command.AccessibilityNextSignal:
