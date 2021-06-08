@@ -38,30 +38,6 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static Dictionary<Guid, Controller> Controllers = new Dictionary<Guid, Controller>();
 
-
-		/// <summary>
-		/// Enumeration representing controller models.
-		/// </summary>
-		internal enum ControllerModels
-		{
-			/// <summary>Unsupported controller</summary>
-			Unsupported = -1,
-			/// <summary>Unknown controller</summary>
-			Unknown = 0,
-			/// <summary>Classic non-USB console controller</summary>
-			Classic = 1,
-			/// <summary>Unbalance standard USB controller for PC</summary>
-			UnbalanceStandard = 2,
-			/// <summary>Unbalance Ryojōhen USB controller for PC</summary>
-			UnbalanceRyojouhen = 3,
-			/// <summary>Type II USB controller for PlayStation 2</summary>
-			Ps2Type2 = 4,
-			/// <summary>Shinkansen USB controller for PlayStation 2</summary>
-			Ps2Shinkansen = 5,
-			/// <summary>Ryojōhen USB controller for PlayStation 2</summary>
-			Ps2Ryojouhen = 6,
-		};
-
 		/// <summary>
 		/// Enumeration representing brake notches.
 		/// </summary>
@@ -193,9 +169,12 @@ namespace DenshaDeGoInput
 		internal static bool IsControllerConnected;
 
 		/// <summary>
-		/// The controller model.
+		/// Configures controller-specific settings on load.
 		/// </summary>
-		internal static ControllerModels ControllerModel;
+		internal static void Load()
+		{
+			Ps2Controller.ConfigureControllers();
+		}
 
 		/// <summary>
 		/// Gets the number of brake notches, excluding the emergency brake.

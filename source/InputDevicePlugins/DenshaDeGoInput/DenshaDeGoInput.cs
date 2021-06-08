@@ -42,9 +42,12 @@ namespace DenshaDeGoInput
 	{
 		public event EventHandler<InputEventArgs> KeyDown;
 		public event EventHandler<InputEventArgs> KeyUp;
+
 		internal static HostInterface CurrentHost;
+
 		/// <summary>Whether an issue has been encountered with LibUsb</summary>
 		internal static bool LibUsbIssue;
+
 		/// <summary>Lock object for LibUsb functions</summary>
 		internal static object LibUsbLock = new object();
 
@@ -195,11 +198,6 @@ namespace DenshaDeGoInput
 			//HACK: In order to avoid meddling with a shipped interface (or making this field public and increasing the mess), let's grab it via reflection
 			CurrentHost = (HostInterface)typeof(FileSystem).GetField("currentHost", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(fileSystem);
 
-			// Start thread for LibUsb-based controllers
-			LibUsbController.AddSupportedControllers();
-			LibUsbController.LibUsbThread = new Thread(LibUsbController.LibUsbLoop);
-			LibUsbController.LibUsbThread.Start();
-
 			// Initialize the array of button properties
 			for (int i = 0; i < ButtonProperties.Length; i++)
 			{
@@ -236,7 +234,13 @@ namespace DenshaDeGoInput
 
 			// Configure the mappings for the buttons and notches
 			ConfigureMappings();
-			
+
+			InputTranslator.Load();
+
+			// Start thread for LibUsb-based controllers
+			LibUsb.LibUsbThread = new Thread(LibUsb.LibUsbLoop);
+			LibUsb.LibUsbThread.Start();
+
 			return true;
 		}
 
@@ -245,7 +249,7 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public void Unload()
 		{
-			LibUsbController.LibUsbShouldLoop = false;
+			LibUsb.LibUsbShouldLoop = false;
 			configForm.Dispose();
 		}
 

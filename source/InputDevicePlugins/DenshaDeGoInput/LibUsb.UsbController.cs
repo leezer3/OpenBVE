@@ -29,135 +29,125 @@ using OpenBveApi.Interface;
 namespace DenshaDeGoInput
 {
 	/// <summary>
-	/// Class representing a USB controller accessed via LibUsb
+	/// Class LibUsb-related functions.
 	/// </summary>
-	internal class UsbController
+	internal partial class LibUsb
 	{
-		/// <summary>The USB Vendor ID</summary>
-		internal readonly int VendorID;
-		/// <summary>The USB product ID</summary>
-		internal readonly int ProductID;
-		/// <summary>Backing property containing the cached controller name</summary>
-		private string controllerName;
-		/// <summary>An array to be sent to the controller upon unload</summary>
-		private readonly byte[] unloadBuffer;
-		/// <summary>The USB controller.</summary>
-		internal UsbDevice ControllerDevice;
-		/// <summary>The USB endpoint reader</summary>
-		internal UsbEndpointReader ControllerReader;
-		/// <summary>Whether the controller is connected</summary>
-		internal bool IsConnected;
-		/// <summary>Byte array containing the data received from the controller</summary>
-		internal byte[] ReadBuffer;
-		/// <summary>Byte array containing the data to be sent to the controller</summary>
-		internal byte[] WriteBuffer;
-
 		/// <summary>
-		/// Initializes a controller
-		/// <param name="vid">A string representing the vendor ID.</param>
-		/// <param name="pid">A string representing the product ID.</param>
-		/// <param name="load">A byte array representing the initial input for the controller.</param>
-		/// <param name="unload">A byte array to be sent to the controller upon unload.</param>
+		/// Class representing a USB controller accessed via LibUsb
 		/// </summary>
-		internal UsbController(int vid, int pid, byte[] load, byte[] unload)
+		internal class UsbController
 		{
-			VendorID = vid;
-			ProductID = pid;
-			controllerName = string.Empty;
-			unloadBuffer = unload;
-			IsConnected = false;
-			ReadBuffer = load;
-			WriteBuffer = new byte[0];
-		}
+			/// <summary>The USB Vendor ID</summary>
+			internal readonly int VendorID;
+			/// <summary>The USB product ID</summary>
+			internal readonly int ProductID;
+			/// <summary>Backing property containing the cached controller name</summary>
+			private string controllerName;
+			/// <summary>An array to be sent to the controller upon unload</summary>
+			internal byte[] UnloadBuffer;
+			/// <summary>The USB controller.</summary>
+			internal UsbDevice ControllerDevice;
+			/// <summary>The USB endpoint reader</summary>
+			internal UsbEndpointReader ControllerReader;
+			/// <summary>Whether the controller is connected</summary>
+			internal bool IsConnected;
+			/// <summary>Byte array containing the data received from the controller</summary>
+			internal byte[] ReadBuffer;
+			/// <summary>Byte array containing the data to be sent to the controller</summary>
+			internal byte[] WriteBuffer;
 
-		/// <summary>Gets the name of the controller</summary>
-		internal string ControllerName
-		{
-			get
+			/// <summary>
+			/// Initializes a controller
+			/// <param name="vid">A string representing the vendor ID.</param>
+			/// <param name="pid">A string representing the product ID.</param>
+			/// </summary>
+			internal UsbController(int vid, int pid)
 			{
-				if (!string.IsNullOrEmpty(controllerName))
+				VendorID = vid;
+				ProductID = pid;
+				controllerName = string.Empty;
+				UnloadBuffer = new byte[0];
+				IsConnected = false;
+				ReadBuffer = new byte[0];
+				WriteBuffer = new byte[0];
+			}
+
+			/// <summary>Gets the name of the controller</summary>
+			internal string ControllerName
+			{
+				get
 				{
+					if (!string.IsNullOrEmpty(controllerName))
+					{
+						return controllerName;
+					}
+
+					try
+					{
+						controllerName = ControllerDevice.Info.ProductString;
+					}
+					catch
+					{
+						// Default name
+						controllerName = @"LibUsbController";
+					}
 					return controllerName;
 				}
+			}
 
+			/// <summary>
+			/// Unloads the controller
+			/// </summary>
+			internal void Unload()
+			{
 				try
 				{
-					controllerName = ControllerDevice.Info.ProductString;
+					if (ControllerDevice != null && UnloadBuffer.Length > 0)
+					{
+						// Send unload buffer to turn off controller
+						int bytesWritten;
+						ControllerDevice.ControlTransfer(ref setupPacket, UnloadBuffer, UnloadBuffer.Length, out bytesWritten);
+					}
 				}
 				catch
 				{
-					// Default name
-					controllerName = @"LibUsbController";
-				}
-				return controllerName;
-			}
-		}
-
-		/// <summary>
-		/// Unloads the controller
-		/// </summary>
-		internal void Unload()
-		{
-			try
-			{
-				if (ControllerDevice != null && unloadBuffer.Length > 0)
-				{
-					// Send unload buffer to turn off controller
-					int bytesWritten;
-					ControllerDevice.ControlTransfer(ref LibUsbController.setupPacket, unloadBuffer, unloadBuffer.Length, out bytesWritten);
-				}
-
-				IUsbDevice wholeUsbDevice = ControllerDevice as IUsbDevice;
-				if (!ReferenceEquals(wholeUsbDevice, null))
-				{
-					// Release interface
-					wholeUsbDevice.ReleaseInterface(1);
+					//Only trying to unload
 				}
 			}
-			catch
-			{
-				//Only trying to unload
-			}
 
-			if (ControllerDevice != null)
+			/// <summary>
+			/// Polls the controller for input
+			/// </summary>
+			internal void Poll()
 			{
-				ControllerDevice.Close();
-			}
-		}
-
-		/// <summary>
-		/// Polls the controller for input
-		/// </summary>
-		internal void Poll()
-		{
-			if (DenshaDeGoInput.LibUsbIssue)
-			{
-				return;
-			}
-			try
-			{
-				// Ask for input
-				int readCount;
-				ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out readCount);
-				if (readError != ErrorCode.Success && readError != ErrorCode.IoTimedOut)
+				if (DenshaDeGoInput.LibUsbIssue)
 				{
-					DenshaDeGoInput.LibUsbIssue = true;
 					return;
 				}
-
-				if (WriteBuffer.Length > 0)
+				try
 				{
+					// Ask for input
+					if (ReadBuffer.Length > 0)
+					{
+						int readCount;
+						ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out readCount);
+					}
+
 					// Send output buffer
-					int bytesWritten;
-					ControllerDevice.ControlTransfer(ref LibUsbController.setupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
+					if (WriteBuffer.Length > 0)
+					{
+						int bytesWritten;
+						ControllerDevice.ControlTransfer(ref LibUsb.setupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
+					}
 				}
+				catch
+				{
+					DenshaDeGoInput.LibUsbIssue = true;
+					DenshaDeGoInput.CurrentHost.AddMessage(MessageType.Error, false, "The DenshaDeGo! Input Plugin encountered a critical error whilst attempting to poll controller " + activeControllerGuid);
+				}
+
 			}
-			catch
-			{
-				DenshaDeGoInput.LibUsbIssue = true;
-				DenshaDeGoInput.CurrentHost.AddMessage(MessageType.Error, false, "The DenshaDeGo! Input Plugin encountered a critical error whilst attempting to poll controller " + InputTranslator.ActiveControllerGuid);
-			}
-			
 		}
 	}
 }

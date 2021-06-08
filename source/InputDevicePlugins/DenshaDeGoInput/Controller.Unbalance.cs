@@ -179,6 +179,23 @@ namespace DenshaDeGoInput
 						};
 						cachedControllers.Add(guid, newcontroller);
 					}
+					// DRC-184/DYC-288
+					if (id == "0ae4:0008")
+					{
+						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
+						int[] buttonIndices = { 5, 6, 2, 1, 0, -1, 4, 3 };
+						byte[] brakeBytes = { };
+						byte[] powerBytes = { 0x0, 0x3C, 0x78, 0xB4, 0xF0 };
+						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
+						{
+							Guid = guid,
+							Id = id,
+							joystickIndex = i,
+							ControllerName = name,
+							IsConnected = true
+						};
+						cachedControllers.Add(guid, newcontroller);
+					}
 				}
 				else
 				{

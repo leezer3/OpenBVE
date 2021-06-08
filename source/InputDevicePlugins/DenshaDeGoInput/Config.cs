@@ -270,20 +270,10 @@ namespace DenshaDeGoInput
 		{
 			// Reload the previous config and close the config dialog
 			DenshaDeGoInput.LoadConfig();
-			//ControllerPs2.ControllerDisplayEnabled = false;
 		}
 
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			//InputTranslator.ControllerModels model = InputTranslator.ConnectedModels[controllerList[deviceBox.SelectedIndex]];
-			//if (model == InputTranslator.ControllerModels.Ps2Type2 || model == InputTranslator.ControllerModels.Ps2Shinkansen)
-			//{
-			//	ControllerPs2.ControllerDisplayEnabled = true;
-			//}
-			//else
-			//{
-			//	ControllerPs2.ControllerDisplayEnabled = false;
-			//}
 			InputTranslator.Update();
 			InputTranslator.ActiveControllerGuid = controllerList[deviceBox.SelectedIndex];
 		}

@@ -36,6 +36,16 @@ namespace DenshaDeGoInput
 		/// <summary>A cached list of supported connected controllers.</summary>
 		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
 
+		private static string[] controllerIds =
+		{
+			// TCPP-20009 (Type II)
+			"0ae4:0004",
+			// TCPP-20011 (Shinkansen)
+			"0ae4:0005",
+			// TCPP-20014 (Ryojouhen)
+			"0ae4:0007"
+		};
+
 		/// <summary>The byte for each brake notch, from Released to Emergency.</summary>
 		private readonly byte[] brakeBytes;
 
@@ -73,14 +83,7 @@ namespace DenshaDeGoInput
 		internal override void ReadInput()
 		{
 			// Sync input/output data
-			inputBuffer = LibUsbController.supportedUsbControllers[Guid].ReadBuffer;
-			LibUsbController.supportedUsbControllers[Guid].WriteBuffer = outputBuffer;
-
-			// If running in-game, always enable the display
-			//if (DenshaDeGoInput.Ingame)
-			//{
-			//	ControllerDisplayEnabled = true;
-			//}
+			LibUsb.SyncController(Guid, inputBuffer, outputBuffer);
 
 			byte brakeData;
 			byte powerData;
@@ -158,7 +161,7 @@ namespace DenshaDeGoInput
 				// TCPP-20009 (Type II)
 				case "0ae4:0004":
 					outputBuffer = new byte[] { 0x0, 0x3 };
-					//if (ControllerDisplayEnabled)
+					if (DenshaDeGoInput.Ingame)
 					{
 						// Door lamp
 						outputBuffer[1] = (byte)(DenshaDeGoInput.TrainDoorsClosed ? 1 : 0);
@@ -185,7 +188,7 @@ namespace DenshaDeGoInput
 					}
 					// Specially crafted array that blanks the display
 					outputBuffer = new byte[] { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF };
-					//if (ControllerDisplayEnabled)
+					if (DenshaDeGoInput.Ingame)
 					{
 						if (DenshaDeGoInput.CurrentSpeedLimit >= 0 && DenshaDeGoInput.ATCSection)
 						{
@@ -212,11 +215,19 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
+		/// Configures the supported controllers with LibUsb.
+		/// </summary>
+		internal static void ConfigureControllers()
+		{
+			LibUsb.AddSupportedControllers(controllerIds);
+		}
+
+		/// <summary>
 		/// Gets the list of connected controllers
 		/// </summary>
 		internal static Dictionary<Guid, Controller> GetControllers()
 		{
-			foreach (KeyValuePair<Guid, UsbController> usbController in LibUsbController.supportedUsbControllers)
+			foreach (KeyValuePair<Guid, LibUsb.UsbController> usbController in LibUsb.GetSupportedControllers())
 			{
 				Guid guid = usbController.Key;
 				string id = GetControllerID(guid);
@@ -283,7 +294,6 @@ namespace DenshaDeGoInput
 				// Update connection status
 				cachedControllers[guid].IsConnected = usbController.Value.IsConnected;
 			}
-
 			return cachedControllers;
 		}
 	}

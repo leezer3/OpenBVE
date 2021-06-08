@@ -28,44 +28,25 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 
 namespace DenshaDeGoInput
 {
 	/// <summary>
-	/// Class for USB Densha de GO! controllers for the Sony Playstation 2.
+	/// Class LibUsb-related functions.
 	/// </summary>
-	internal static class LibUsbController
+	internal partial class LibUsb
 	{
-		/// <summary>
-		/// Adds the supported controller models to the LibUsb list.
-		/// </summary>
-		internal static void AddSupportedControllers()
-		{
-			// Type 2 controller
-			UsbController controllerType2 = new UsbController(0x0ae4, 0x0004, new byte[] { 0x1, 0x0, 0x0, 0xFF, 0x8, 0x0 }, new byte[] { 0x0, 0x3 });
-			supportedUsbControllers.Add(Ps2Guids[0], controllerType2);
-			// Shinkansen controller
-			UsbController controllerShinkansen = new UsbController(0x0ae4, 0x0005, new byte[] { 0x0, 0x0, 0xFF, 0x8, 0x0, 0x0 }, new byte[] { 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF });
-			supportedUsbControllers.Add(Ps2Guids[1], controllerShinkansen);
-			// Ryojouhen controller
-			UsbController controllerRyojouhen = new UsbController(0x0ae4, 0x0007, new byte[] { 0x0, 0x0, 0xFF, 0x8, 0x0, 0x0, 0x0, 0x0 }, new byte[] { });
-			supportedUsbControllers.Add(Ps2Guids[2], controllerRyojouhen);
-		}
-		/// <summary>
-		/// Represents the special GUIDs for PS2 controllers.
-		/// </summary>
-		private static Guid[] Ps2Guids =
-		{
-			new Guid("ffffffff-e40a-ffff-0400-ffffffffffff"),
-			new Guid("ffffffff-e40a-ffff-0500-ffffffffffff"),
-			new Guid("ffffffff-e40a-ffff-0700-ffffffffffff")
-		};
-
 		/// <summary>
 		/// Dictionary containing the supported USB controllers
 		/// </summary>
-		internal static Dictionary<Guid, UsbController> supportedUsbControllers = new Dictionary<Guid, UsbController>();
+		private static Dictionary<Guid, UsbController> supportedUsbControllers = new Dictionary<Guid, UsbController>();
+
+		/// <summary>
+		/// GUID of the active controller
+		/// </summary>
+		private static Guid activeControllerGuid = new Guid();
 
 		/// <summary>
 		/// The thread which spins to poll for LibUsb input
@@ -80,7 +61,36 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// The setup packet needed to send data to the controller.
 		/// </summary>
-		internal static UsbSetupPacket setupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
+		private static UsbSetupPacket setupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
+
+		/// <summary>
+		/// Adds the supported controller models to the LibUsb list.
+		/// </summary>
+		internal static void AddSupportedControllers(string[] ids)
+		{
+			lock (DenshaDeGoInput.LibUsbLock)
+			{
+				foreach (string id in ids)
+				{
+					int vid = int.Parse(id.Substring(0, 4), NumberStyles.HexNumber);
+					int pid = int.Parse(id.Substring(5, 4), NumberStyles.HexNumber);
+					string vendor = id.Substring(2, 2) + id.Substring(0, 2);
+					string product = id.Substring(7, 2) + id.Substring(5, 2);
+					Guid guid = new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff");
+					UsbController controller = new UsbController(vid, pid);
+					if (!supportedUsbControllers.ContainsKey(guid))
+					{
+						// Add new controller
+						supportedUsbControllers.Add(guid, controller);
+					}
+					else
+					{
+						// Replace existing controller
+						supportedUsbControllers[guid] = controller;
+					}
+				}
+			}
+		}
 
 		internal static void LibUsbLoop()
 		{
@@ -89,10 +99,20 @@ namespace DenshaDeGoInput
 				// First, let's check which USB devices are connected
 				CheckConnectedControllers();
 
-				// If the current controller is a supported controller and is connected, poll it for input
-				if (supportedUsbControllers.ContainsKey(InputTranslator.ActiveControllerGuid) && supportedUsbControllers[InputTranslator.ActiveControllerGuid].IsConnected)
+				if (activeControllerGuid != InputTranslator.ActiveControllerGuid)
 				{
-					supportedUsbControllers[InputTranslator.ActiveControllerGuid].Poll();
+					if (supportedUsbControllers.ContainsKey(activeControllerGuid))
+					{
+						// If the selected controller has changed, unload the previous one
+						supportedUsbControllers[activeControllerGuid].Unload();
+					}
+					activeControllerGuid = InputTranslator.ActiveControllerGuid;
+				}
+
+				// If the current controller is a supported controller and is connected, poll it for input
+				if (supportedUsbControllers.ContainsKey(activeControllerGuid) && supportedUsbControllers[activeControllerGuid].IsConnected)
+				{
+					supportedUsbControllers[activeControllerGuid].Poll();
 				}
 			}
 
@@ -105,7 +125,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Checks the connection status of supported LibUsb controllers.
 		/// </summary>
-		internal static void CheckConnectedControllers()
+		private static void CheckConnectedControllers()
 		{
 			if (DenshaDeGoInput.LibUsbIssue)
 			{
@@ -148,5 +168,36 @@ namespace DenshaDeGoInput
 				DenshaDeGoInput.LibUsbIssue = true;
 			}
 		}
+
+		/// <summary>
+		/// Gets the list of supported  the connection status of supported LibUsb controllers.
+		/// </summary>
+		internal static Dictionary<Guid, UsbController> GetSupportedControllers()
+		{
+			return supportedUsbControllers;
+		}
+
+		/// <summary>
+		/// Syncs the read and input buffers for the controller with the specified GUID.
+		/// </summary>
+		internal static byte[] SyncController(Guid guid, byte[] read, byte[] write)
+		{
+			// If the read buffer's length is 0, copy the initial input bytes to get the required read length
+			if (supportedUsbControllers[guid].ReadBuffer.Length == 0)
+			{
+				supportedUsbControllers[guid].ReadBuffer = read;
+			}
+			// Copy the output bytes to the write buffer
+			supportedUsbControllers[guid].WriteBuffer = write;
+			// If the length of the byte array to be sent to the controller when unloaded is 0, use the write buffer
+			if (supportedUsbControllers[guid].UnloadBuffer.Length == 0)
+			{
+				supportedUsbControllers[guid].UnloadBuffer = write;
+			}
+			// Return the bytes from the read buffer
+			return supportedUsbControllers[guid].ReadBuffer;
+		}
+
+
 	}
 }

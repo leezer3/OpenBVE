@@ -65,7 +65,7 @@
     <Compile Include="DenshaDeGoInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InputTranslator.cs" />
-    <Compile Include="LibUsbController.cs" />
+    <Compile Include="LibUsb.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Controller.Classic.cs" />
     <Compile Include="Controller.Unbalance.cs" />
