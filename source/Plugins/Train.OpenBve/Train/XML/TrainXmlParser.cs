@@ -236,23 +236,7 @@ namespace Train.OpenBve
 							else if (CarObjects[i] is AnimatedObjectCollection)
 							{
 								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i].Clone();
-								for (int j = 0; j < obj.Objects.Length; j++)
-								{
-									for (int h = 0; h < obj.Objects[j].States.Length; h++)
-									{
-										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-										Matrix4D t = obj.Objects[j].States[h].Translation;
-										t.Row3.X *= -1.0f;
-										t.Row3.Z *= -1.0f;
-										obj.Objects[j].States[h].Translation = t;
-									}
-									obj.Objects[j].TranslateXDirection.X *= -1.0;
-									obj.Objects[j].TranslateXDirection.Z *= -1.0;
-									obj.Objects[j].TranslateYDirection.X *= -1.0;
-									obj.Objects[j].TranslateYDirection.Z *= -1.0;
-									obj.Objects[j].TranslateZDirection.X *= -1.0;
-									obj.Objects[j].TranslateZDirection.Z *= -1.0;
-								}
+								obj.Reverse();
 								CarObjects[i] = obj;
 							}
 							else
@@ -296,23 +280,7 @@ namespace Train.OpenBve
 							else if (BogieObjects[i] is AnimatedObjectCollection)
 							{
 								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i].Clone();
-								for (int j = 0; j < obj.Objects.Length; j++)
-								{
-									for (int h = 0; h < obj.Objects[j].States.Length; h++)
-									{
-										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-										Matrix4D t = obj.Objects[j].States[h].Translation;
-										t.Row3.X *= -1.0f;
-										t.Row3.Z *= -1.0f;
-										obj.Objects[j].States[h].Translation = t;
-									}
-									obj.Objects[j].TranslateXDirection.X *= -1.0;
-									obj.Objects[j].TranslateXDirection.Z *= -1.0;
-									obj.Objects[j].TranslateYDirection.X *= -1.0;
-									obj.Objects[j].TranslateYDirection.Z *= -1.0;
-									obj.Objects[j].TranslateZDirection.X *= -1.0;
-									obj.Objects[j].TranslateZDirection.Z *= -1.0;
-								}
+								obj.Reverse();
 								BogieObjects[i] = obj;
 							}
 							else

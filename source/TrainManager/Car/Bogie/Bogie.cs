@@ -129,25 +129,11 @@ namespace TrainManager.Car
 				return;
 			}
 
-			int idxToReverse = 0; //cannot have an interior view
+			const int idxToReverse = 0; //cannot have an interior view
 
-			for (int i = 0; i < CarSections[idxToReverse].Groups[0].Elements.Length; i++)
+			foreach (AnimatedObject animatedObject in CarSections[idxToReverse].Groups[0].Elements)
 			{
-				for (int h = 0; h < CarSections[idxToReverse].Groups[0].Elements[i].States.Length; h++)
-				{
-					CarSections[idxToReverse].Groups[0].Elements[i].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-					Matrix4D t = CarSections[idxToReverse].Groups[0].Elements[i].States[h].Translation;
-					t.Row3.X *= -1.0f;
-					t.Row3.Z *= -1.0f;
-					CarSections[idxToReverse].Groups[0].Elements[i].States[h].Translation = t;
-				}
-
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateXDirection.X *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateXDirection.Z *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateYDirection.X *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateYDirection.Z *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateZDirection.X *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateZDirection.Z *= -1.0;
+				animatedObject.Reverse();
 			}
 		}
 
