@@ -147,6 +147,51 @@ namespace TrainManager.SafetySystems
 				return;
 			}
 
+			//Count number of shown raindrops
+			int numShownRaindrops = 0;
+			for (int i = 200; i < 250; i++)
+			{
+				if (Plugin.Panel[i] == 1)
+				{
+					numShownRaindrops++;
+				}
+			}
+			//Greater than 10 drops, always clear the screen
+			bool shouldWipe = numShownRaindrops > 10;
+
+			switch (Plugin.Panel[198])
+			{
+				case 0:
+					if (currentRainIntensity > 30 || shouldWipe)
+					{
+						Plugin.KeyDown(VirtualKeys.B1);
+						Plugin.KeyUp(VirtualKeys.B1);
+						data.Response = AIResponse.Short;
+					}
+					return;
+				case 1:
+					if (currentRainIntensity > 45)
+					{
+						Plugin.KeyDown(VirtualKeys.B1);
+						Plugin.KeyUp(VirtualKeys.B1);
+						data.Response = AIResponse.Short;
+					}
+					else
+					{
+						Plugin.KeyDown(VirtualKeys.B2);
+						Plugin.KeyUp(VirtualKeys.B2);
+						data.Response = AIResponse.Short;
+					}
+					return;
+				case 2:
+					if (currentRainIntensity < 60)
+					{
+						Plugin.KeyDown(VirtualKeys.B2);
+						Plugin.KeyUp(VirtualKeys.B2);
+						data.Response = AIResponse.Short;
+					}
+					return;
+			}
 		}
 
 		public override void BeginJump(InitializationModes mode)
@@ -165,6 +210,14 @@ namespace TrainManager.SafetySystems
 		public override void EndJump()
 		{
 
+		}
+
+		public override void SetBeacon(BeaconData beacon)
+		{
+			if (beacon.Type == 21)
+			{
+				currentRainIntensity = beacon.Optional;
+			}
 		}
 	}
 }

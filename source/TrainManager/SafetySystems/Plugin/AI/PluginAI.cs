@@ -11,8 +11,10 @@ namespace TrainManager.SafetySystems
 		internal int currentStep;
 		/// <summary>Timer variable controlling the next plugin action</summary>
 		internal double nextPluginAction;
+		/// <summary>Stores the current rain intensity</summary>
+		internal int currentRainIntensity;
 		/// <summary>Called once a frame to perform any AI specific tasks</summary>
-		/// <param name="data"></param>
+		/// <param name="data">The AI Data</param>
 		internal abstract void Perform(AIData data);
 
 		/// <summary>Called before the train jumps to a different location.</summary>
@@ -21,5 +23,9 @@ namespace TrainManager.SafetySystems
 
 		/// <summary>Called when the train has finished jumping to a different location.</summary>
 		public abstract void EndJump();
+
+		/// <summary>Called when the train passes a beacon.</summary>
+		/// <param name="beacon">The beacon data.</param>
+		public abstract void SetBeacon(BeaconData beacon);
 	}
 }

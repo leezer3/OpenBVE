@@ -552,6 +552,10 @@ namespace TrainManager.SafetySystems
 
 		protected override void SetBeacon(BeaconData beacon)
 		{
+			if (AI != null)
+			{
+				AI.SetBeacon(beacon);
+			}
 			try
 			{
 				Win32BeaconData win32Beacon;
