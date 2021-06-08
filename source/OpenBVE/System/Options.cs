@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -736,7 +736,7 @@ namespace OpenBve
 				// file not found
 				string Code = CultureInfo.CurrentUICulture.Name;
 				if (string.IsNullOrEmpty(Code)) Code = "en-US";
-				File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
+				File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".xlf");
 				if (System.IO.File.Exists(File))
 				{
 					CurrentOptions.LanguageCode = Code;
@@ -749,7 +749,7 @@ namespace OpenBve
 						if (i > 0)
 						{
 							Code = Code.Substring(0, i);
-							File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
+							File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".xlf");
 							if (System.IO.File.Exists(File))
 							{
 								CurrentOptions.LanguageCode = Code;
