@@ -229,12 +229,13 @@ namespace Train.OpenBve
 							}
 							if (CarObjects[i] is StaticObject)
 							{
-								StaticObject obj = (StaticObject)CarObjects[i];
+								StaticObject obj = (StaticObject)CarObjects[i].Clone();
 								obj.ApplyScale(-1.0, 1.0, -1.0);
+								CarObjects[i] = obj;
 							}
 							else if (CarObjects[i] is AnimatedObjectCollection)
 							{
-								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i];
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i].Clone();
 								for (int j = 0; j < obj.Objects.Length; j++)
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
@@ -252,6 +253,7 @@ namespace Train.OpenBve
 									obj.Objects[j].TranslateZDirection.X *= -1.0;
 									obj.Objects[j].TranslateZDirection.Z *= -1.0;
 								}
+								CarObjects[i] = obj;
 							}
 							else
 							{
@@ -287,12 +289,13 @@ namespace Train.OpenBve
 							}
 							if (BogieObjects[i] is StaticObject)
 							{
-								StaticObject obj = (StaticObject)BogieObjects[i];
+								StaticObject obj = (StaticObject)BogieObjects[i].Clone();
 								obj.ApplyScale(-1.0, 1.0, -1.0);
+								BogieObjects[i] = obj;
 							}
 							else if (BogieObjects[i] is AnimatedObjectCollection)
 							{
-								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i];
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i].Clone();
 								for (int j = 0; j < obj.Objects.Length; j++)
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
@@ -310,6 +313,7 @@ namespace Train.OpenBve
 									obj.Objects[j].TranslateZDirection.X *= -1.0;
 									obj.Objects[j].TranslateZDirection.Z *= -1.0;
 								}
+								BogieObjects[i] = obj;
 							}
 							else
 							{
