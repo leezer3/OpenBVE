@@ -244,23 +244,9 @@ namespace TrainManager.Car
 			int idxToReverse = HasInteriorView ? 1 : 0;
 			if (CarSections != null && CarSections.Length > 0)
 			{
-				foreach (var carSection in CarSections[idxToReverse].Groups[0].Elements)
+				foreach (AnimatedObject animatedObject in CarSections[idxToReverse].Groups[0].Elements)
 				{
-					for (int h = 0; h < carSection.States.Length; h++)
-					{
-						carSection.States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-						Matrix4D t = carSection.States[h].Translation;
-						t.Row3.X *= -1.0f;
-						t.Row3.Z *= -1.0f;
-						carSection.States[h].Translation = t;
-					}
-
-					carSection.TranslateXDirection.X *= -1.0;
-					carSection.TranslateXDirection.Z *= -1.0;
-					carSection.TranslateYDirection.X *= -1.0;
-					carSection.TranslateYDirection.Z *= -1.0;
-					carSection.TranslateZDirection.X *= -1.0;
-					carSection.TranslateZDirection.Z *= -1.0;
+					animatedObject.Reverse();
 				}
 			}
 
