@@ -127,6 +127,7 @@ namespace TrainManager.Car
 				new Horn(this),
 				new Horn(this)
 			};
+			Brightness = new Brightness(this);
 		}
 
 		/// <summary>Moves the car</summary>
@@ -674,30 +675,7 @@ namespace TrainManager.Car
 			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + Length;
 			CurrentlyVisible = dist < bid * bid;
 			// Updates the brightness value
-			byte dnb;
-			{
-				float b = (float) (Brightness.NextTrackPosition - Brightness.PreviousTrackPosition);
-
-				//1.0f represents a route brightness value of 255
-				//0.0f represents a route brightness value of 0
-
-				if (b != 0.0f)
-				{
-					b = (float) (FrontAxle.Follower.TrackPosition - Brightness.PreviousTrackPosition) / b;
-					if (b < 0.0f) b = 0.0f;
-					if (b > 1.0f) b = 1.0f;
-					b = Brightness.PreviousBrightness * (1.0f - b) + Brightness.NextBrightness * b;
-				}
-				else
-				{
-					b = Brightness.PreviousBrightness;
-				}
-
-				//Calculate the cab brightness
-				double ccb = Math.Round(255.0 * (1.0 - b));
-				//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-				dnb = (byte) Math.Min(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, ccb);
-			}
+			byte dnb = (byte)Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness);
 			// update current section
 			int cs = CurrentCarSection;
 			if (cs >= 0 && cs < CarSections.Length)

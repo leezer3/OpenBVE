@@ -1410,24 +1410,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								float b = (float) (Train.Cars[j].Brightness.NextTrackPosition - Train.Cars[j].Brightness.PreviousTrackPosition);
-								//1.0f represents a route brightness value of 255
-								//0.0f represents a route brightness value of 0
-								if (b != 0.0f)
-								{
-									b = (float) (Train.Cars[j].RearAxle.Follower.TrackPosition - Train.Cars[j].Brightness.PreviousTrackPosition) / b;
-									if (b < 0.0f) b = 0.0f;
-									if (b > 1.0f) b = 1.0f;
-									b = Train.Cars[j].Brightness.PreviousBrightness * (1.0f - b) + Train.Cars[j].Brightness.NextBrightness * b;
-								}
-								else
-								{
-									b = Train.Cars[j].Brightness.PreviousBrightness;
-								}
-								//Calculate the cab brightness
-								double ccb = Math.Round(255.0 * (1.0 - b));
-								//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-								Function.Stack[s - 1] = Math.Min(Program.Renderer.Lighting.DynamicCabBrightness, ccb);
+								Function.Stack[s - 1] = Train.Cars[j].Brightness.CurrentBrightness(Program.Renderer.Lighting.DynamicCabBrightness);
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
