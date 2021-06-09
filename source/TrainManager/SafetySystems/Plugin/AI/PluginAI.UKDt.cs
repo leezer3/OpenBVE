@@ -137,6 +137,57 @@ namespace TrainManager.SafetySystems
 				return;
 			}
 
+			/*
+			 * Assume that with a brightness value below 180 we want night headlights
+			 * Further assume that the driver only sets these at the initial station once
+			 */
+			if (!lightsSet)
+			{
+				float currentBrightness = Plugin.Train.Cars[Plugin.Train.DriverCar].Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness);
+				switch (Plugin.Panel[20])
+				{
+					case 0:
+						//off
+						Plugin.KeyDown(VirtualKeys.G);
+						Plugin.KeyUp(VirtualKeys.G);
+						data.Response = AIResponse.Medium;
+						return;
+					case 1:
+						//day
+						if (currentBrightness < 180)
+						{
+							Plugin.KeyDown(VirtualKeys.G);
+							Plugin.KeyUp(VirtualKeys.G);
+							data.Response = AIResponse.Medium;
+						}
+						else
+						{
+							lightsSet = true;
+						}
+						return;
+					case 2:
+						//marker
+						Plugin.KeyDown(VirtualKeys.G);
+						Plugin.KeyUp(VirtualKeys.G);
+						data.Response = AIResponse.Medium;
+						return;
+					case 3:
+						//night
+						if (currentBrightness > 180)
+						{
+							Plugin.KeyDown(VirtualKeys.G);
+							Plugin.KeyUp(VirtualKeys.G);
+							data.Response = AIResponse.Medium;
+						}
+						else
+						{
+							lightsSet = true;
+						}
+						return;
+				}
+			}
+			//UKDT fitted trains generally use the tail lights toggle for something else dummy (ETS etc.) which isn't directly relevant to the AI or the external appearance, so do nothing here
+
 			if (TrainManagerBase.currentHost.InGameTime > nextPluginAction)
 			{
 				//If nothing else has happened recently, hit the vigilance reset key

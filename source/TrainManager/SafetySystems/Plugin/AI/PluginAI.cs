@@ -13,6 +13,8 @@ namespace TrainManager.SafetySystems
 		internal double nextPluginAction;
 		/// <summary>Stores the current rain intensity</summary>
 		internal int currentRainIntensity;
+		/// <summary>Whether the plugin has set the lights</summary>
+		internal bool lightsSet;
 		/// <summary>Called once a frame to perform any AI specific tasks</summary>
 		/// <param name="data">The AI Data</param>
 		internal abstract void Perform(AIData data);
