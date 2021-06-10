@@ -1756,8 +1756,8 @@ namespace OpenBve {
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
 					Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+					textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 				}
-				textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 			}
 		}
 
@@ -1768,8 +1768,8 @@ namespace OpenBve {
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
 					Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+					textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 				}
-				textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 			}
 		}
 
@@ -1780,8 +1780,8 @@ namespace OpenBve {
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
 					Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+					textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 				}
-				textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 			}
 		}
 
