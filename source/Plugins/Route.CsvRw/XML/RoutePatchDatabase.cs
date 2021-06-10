@@ -232,6 +232,17 @@ namespace CsvRwRouteParser
 							currentPatch.DisableSemiTransparentFaces = false;
 						}
 						break;
+					case "ReducedColorTransparency":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.ReducedColorTransparency = true;
+						}
+						else
+						{
+							currentPatch.ReducedColorTransparency = false;
+						}
+						break;
 				}
 			}
 

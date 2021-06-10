@@ -4,6 +4,7 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using RouteManager2.SignalManager;
+using CompatabilityHacks = OpenBveApi.Textures.CompatabilityHacks;
 
 namespace CsvRwRouteParser
 {
@@ -67,6 +68,18 @@ namespace CsvRwRouteParser
 				{
 					CompatibilitySignalObject.ReadCompatibilitySignalXML(Plugin.CurrentHost, patch.CompatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
 				}
+
+				if (patch.ReducedColorTransparency)
+				{
+					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
+					{
+						CompatabilityHacks hacks = new CompatabilityHacks { ReduceTransparencyColorDepth = true };
+						if (Plugin.CurrentHost.Plugins[i].Texture != null)
+						{
+							Plugin.CurrentHost.Plugins[i].Texture.SetCompatabilityHacks(hacks);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -110,5 +123,7 @@ namespace CsvRwRouteParser
 		internal bool AllowTrackPositionArguments;
 		/// <summary>Disables semi-transparent faces</summary>
 		internal bool DisableSemiTransparentFaces;
+		/// <summary>Whether reduced color transparency should be used</summary>
+		internal bool ReducedColorTransparency;
 	}
 }

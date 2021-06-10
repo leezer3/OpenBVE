@@ -52,5 +52,10 @@
 		<FileName>moha5250-Train.csv</FileName>
 		<XParser>new</XParser>
 	</Patch>
+	<Patch>
+		<Hash>90C6412E4E4A51E8176E2C6C486A0E9DE91A9B1CF945A417557112ACCC7E92A5</Hash>
+		<FileName>2001.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>
