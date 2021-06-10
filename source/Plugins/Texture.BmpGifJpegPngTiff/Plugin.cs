@@ -12,7 +12,8 @@ namespace Plugin {
 		
 		/// <summary>The host that loaded the plugin.</summary>
 		private HostInterface CurrentHost = null;
-		
+		/// <summary>The list of enabled hacks</summary>
+		internal static CompatabilityHacks EnabledHacks;
 		
 		// --- functions ---
 		
@@ -21,7 +22,12 @@ namespace Plugin {
 		public override void Load(HostInterface host) {
 			CurrentHost = host;
 		}
-		
+
+		public override void SetCompatabilityHacks(CompatabilityHacks enabledHacks)
+		{
+			EnabledHacks = enabledHacks;
+		}
+
 		/// <summary>Queries the dimensions of a texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="width">Receives the width of the texture.</param>

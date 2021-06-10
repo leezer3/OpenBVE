@@ -5,7 +5,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
 
 namespace Plugin {
-	public partial class Plugin : TextureInterface {
+	public partial class Plugin {
 		
 		/// <summary>Loads a texture from the specified file.</summary>
 		/// <param name="file">The file that holds the texture.</param>
@@ -16,16 +16,27 @@ namespace Plugin {
 			 * Read the bitmap. This will be a bitmap of just
 			 * any format, not necessarily the one that allows
 			 * us to extract the bitmap data easily.
-			 * */
-			System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(file);
+			 */
+			Bitmap bitmap = new Bitmap(file);
 			Color24[] p = null;
+			if (file.ToLowerInvariant().EndsWith(".bmp") && EnabledHacks.ReduceTransparencyColorDepth && (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format24bppRgb))
+			{
+				/*
+				 * Reduce our bitmap to 256 colors
+				 * WARNING: This is *slow* for lots of textures, so should
+				 * be used sparingly, if at all!
+				 */
+				bitmap = bitmap.Clone(new Rectangle(0, 0, bitmap.Width, bitmap.Height), PixelFormat.Format8bppIndexed);
+			}
+			
+			
 			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
 			{
-				/* Only store the color palette data for
+				/* Otherwise, only store the color palette data for
 				 * textures using a restricted palette
 				 * With a large number of textures loaded at
 				 * once, this can save a decent chunk of memory
-				 * */
+				 */
 				p = new Color24[bitmap.Palette.Entries.Length];
 				for (int i = 0; i < bitmap.Palette.Entries.Length; i++)
 				{
@@ -36,7 +47,7 @@ namespace Plugin {
 			/* 
 			 * If the bitmap format is not already 32-bit BGRA,
 			 * then convert it to 32-bit BGRA.
-			 * */
+			 */
 			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb) {
 				Bitmap compatibleBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
 				Graphics graphics = Graphics.FromImage(compatibleBitmap);
@@ -47,13 +58,13 @@ namespace Plugin {
 			}
 			/*
 			 * Extract the raw bitmap data.
-			 * */
+			 */
 			BitmapData data = bitmap.LockBits(rect, ImageLockMode.ReadOnly, bitmap.PixelFormat);
 			if (data.Stride == 4 * data.Width) {
 				/*
 				 * Copy the data from the bitmap
 				 * to the array in BGRA format.
-				 * */
+				 */
 				byte[] raw = new byte[data.Stride * data.Height];
 				System.Runtime.InteropServices.Marshal.Copy(data.Scan0, raw, 0, data.Stride * data.Height);
 				bitmap.UnlockBits(data);
@@ -62,7 +73,7 @@ namespace Plugin {
 				
 				/*
 				 * Change the byte order from BGRA to RGBA.
-				 * */
+				 */
 				for (int i = 0; i < raw.Length; i += 4) {
 					byte temp = raw[i];
 					raw[i] = raw[i + 2];
@@ -71,20 +82,20 @@ namespace Plugin {
 				texture = new Texture(width, height, 32, raw, p);
 				bitmap.Dispose();
 				return true;
-			} else {
-				/*
-				 * The stride is invalid. This indicates that the
-				 * CLI either does not implement the conversion to
-				 * 32-bit BGRA correctly, or that the CLI has
-				 * applied additional padding that we do not
-				 * support.
-				 * */
-				bitmap.UnlockBits(data);
-				bitmap.Dispose();
-				CurrentHost.ReportProblem(ProblemType.InvalidOperation, "Invalid stride encountered.");
-				texture = null;
-				return false;
 			}
+
+			/*
+			 * The stride is invalid. This indicates that the
+			 * CLI either does not implement the conversion to
+			 * 32-bit BGRA correctly, or that the CLI has
+			 * applied additional padding that we do not
+			 * support.
+			 */
+			bitmap.UnlockBits(data);
+			bitmap.Dispose();
+			CurrentHost.ReportProblem(ProblemType.InvalidOperation, "Invalid stride encountered.");
+			texture = null;
+			return false;
 		}
 		
 	}
