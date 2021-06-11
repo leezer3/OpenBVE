@@ -931,13 +931,25 @@ namespace OpenBve
 				}
 
 				// Load the route.
+				Exception ex = null;
 				previewRouteIsLoading = true;
-				PreviewLoadRoute(result);
+				try
+				{
+					PreviewLoadRoute(result);
+				}
+				catch (Exception e)
+				{
+					ex = e;
+				}
+				
 
 				// If it is not canceled during loading, show the route information.
 				if (!Loading.Cancel)
 				{
-					Invoke((MethodInvoker)(ShowRouteInformation));
+					Invoke((MethodInvoker) delegate
+					{
+						ShowRouteInformation(ex);
+					});
 				}
 				else
 				{
@@ -985,10 +997,14 @@ namespace OpenBve
 			throw new Exception($"An unknown error was encountered whilst attempting to parser the route file {result.RouteFile}");
 		}
 
-		private void ShowRouteInformation()
+		private void ShowRouteInformation(Exception e)
 		{
 			try
 			{
+				if (e != null)
+				{
+					throw e;
+				}
 				lock (BaseRenderer.GdiPlusLock)
 				{
 					pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
