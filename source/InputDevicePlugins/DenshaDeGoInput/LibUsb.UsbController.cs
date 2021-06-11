@@ -132,6 +132,12 @@ namespace DenshaDeGoInput
 					{
 						int readCount;
 						ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out readCount);
+
+						if (readError == ErrorCode.DeviceNotFound)
+						{
+							// If the device is not found during read, mark it as disconnected
+							IsConnected = false;
+						}
 					}
 
 					// Send output buffer

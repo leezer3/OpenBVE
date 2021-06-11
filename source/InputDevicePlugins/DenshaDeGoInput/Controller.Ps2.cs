@@ -46,10 +46,10 @@ namespace DenshaDeGoInput
 			"0ae4:0007"
 		};
 
-		/// <summary>The byte for each brake notch, from Released to Emergency.</summary>
+		/// <summary>The min/max byte for each brake notch, from Released to Emergency. Each notch consists of two bytes.</summary>
 		private readonly byte[] brakeBytes;
 
-		/// <summary>The byte for each power notch, from Released to maximum.</summary>
+		/// <summary>The min/max byte for each power notch, from Released to maximum. Each notch consists of two bytes.</summary>
 		private readonly byte[] powerBytes;
 
 		/// <summary>The button mask for the buttons. Follows order in InputTranslator.</summary>
@@ -69,8 +69,8 @@ namespace DenshaDeGoInput
 			ControllerName = string.Empty;
 			IsConnected = false;
 			RequiresCalibration = false;
-			BrakeNotches = brake.Length - 2;
-			PowerNotches = power.Length - 1;
+			BrakeNotches = brake.Length / 2 - 2;
+			PowerNotches = power.Length / 2 - 1;
 			brakeBytes = brake;
 			powerBytes = power;
 			Buttons = buttons;
@@ -111,11 +111,12 @@ namespace DenshaDeGoInput
 					break;
 			}
 
-			for (int i = 0; i < brakeBytes.Length; i++)
+			for (int i = 0; i < brakeBytes.Length; i+=2)
 			{
-				if (brakeData >= brakeBytes[i] - 2 && brakeData <= brakeBytes[i] + 2)
+				// Each notch uses two bytes, minimum value and maximum value
+				if (brakeData >= brakeBytes[i] && brakeData <= brakeBytes[i + 1])
 				{
-					if (brakeBytes.Length == i + 1)
+					if (brakeBytes.Length == i + 2)
 					{
 						// Last notch should be Emergency
 						InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.Emergency;
@@ -123,16 +124,17 @@ namespace DenshaDeGoInput
 					else
 					{
 						// Regular brake notch
-						InputTranslator.BrakeNotch = (InputTranslator.BrakeNotches)i;
+						InputTranslator.BrakeNotch = (InputTranslator.BrakeNotches)(i / 2);
 					}
 					break;
 				}
 			}
-			for (int i = 0; i < powerBytes.Length; i++)
+			for (int i = 0; i < powerBytes.Length; i+=2)
 			{
-				if (powerData >= powerBytes[i] - 2 && powerData <= powerBytes[i] + 2)
+				// Each notch uses two bytes, minimum value and maximum value
+				if (powerData >= powerBytes[i] && powerData <= powerBytes[i + 1])
 				{
-					InputTranslator.PowerNotch = (InputTranslator.PowerNotches)i;
+					InputTranslator.PowerNotch = (InputTranslator.PowerNotches)(i / 2);
 					break;
 				}
 			}
@@ -225,6 +227,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the list of connected controllers
 		/// </summary>
+		/// <returns>The list of controllers handled by this class.</returns>
 		internal static Dictionary<Guid, Controller> GetControllers()
 		{
 			foreach (KeyValuePair<Guid, LibUsb.UsbController> usbController in LibUsb.GetSupportedControllers())
@@ -240,8 +243,8 @@ namespace DenshaDeGoInput
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
 						byte[] buttonBytes = { 0x10, 0x20, 0x2, 0x1, 0x4, 0x8, 0x0, 0x0 };
-						byte[] brakeBytes = { 0x79, 0x8A, 0x94, 0x9A, 0xA2, 0xA8, 0xAF, 0xB2, 0xB5, 0xB9 };
-						byte[] powerBytes = { 0x81, 0x6D, 0x54, 0x3F, 0x21, 0x00 };
+						byte[] brakeBytes = { 0x79, 0x79, 0x8A, 0x8A, 0x94, 0x94, 0x9A, 0x9A, 0xA2, 0xA2, 0xA8, 0xA8, 0xAF, 0xAF, 0xB2, 0xB2, 0xB5, 0xB5, 0xB9, 0xB9 };
+						byte[] powerBytes = { 0x81, 0x81, 0x6D, 0x6D, 0x54, 0x54, 0x3F, 0x3F, 0x21, 0x21, 0x00, 0x00 };
 						Ps2Controller newcontroller = new Ps2Controller(buttons, buttonBytes, brakeBytes, powerBytes)
 						{
 							// 6 bytes for input, 2 for output
@@ -258,8 +261,8 @@ namespace DenshaDeGoInput
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
 						byte[] buttonBytes = { 0x10, 0x20, 0x8, 0x4, 0x2, 0x1, 0x0, 0x0 };
-						byte[] brakeBytes = { 0x1C, 0x38, 0x54, 0x70, 0x8B, 0xA7, 0xC3, 0xDF, 0xFB };
-						byte[] powerBytes = { 0x12, 0x24, 0x36, 0x48, 0x5A, 0x6C, 0x7E, 0x90, 0xA2, 0xB4, 0xC6, 0xD7, 0xE9, 0xFB };
+						byte[] brakeBytes = { 0x1C, 0x1C, 0x38, 0x38, 0x54, 0x54, 0x70, 0x70, 0x8B, 0x8B, 0xA7, 0xA7, 0xC3, 0xC3, 0xDF, 0xDF, 0xFB, 0xFB };
+						byte[] powerBytes = { 0x12, 0x12, 0x24, 0x24, 0x36, 0x36, 0x48, 0x48, 0x5A, 0x5A, 0x6C, 0x6C, 0x7E, 0x7E, 0x90, 0x90, 0xA2, 0xA2, 0xB4, 0xB4, 0xC6, 0xC6, 0xD7, 0xD7, 0xE9, 0xE9, 0xFB, 0xFB };
 						Ps2Controller newcontroller = new Ps2Controller(buttons, buttonBytes, brakeBytes, powerBytes)
 						{
 							// 6 bytes for input, 8 for output
@@ -276,8 +279,8 @@ namespace DenshaDeGoInput
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.Pedal | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						byte[] buttonBytes = { 0x20, 0x40, 0x4, 0x2, 0x1, 0x0, 0x10, 0x8 };
-						byte[] brakeBytes = { };
-						byte[] powerBytes = { 0x0, 0x3C, 0x78, 0xB4, 0xF0 };
+						byte[] brakeBytes = { 0x23, 0x2A, 0x2B, 0x3C, 0x3D, 0x4E, 0x4F, 0x63, 0x64, 0x8A, 0x8B, 0xB0, 0xB1, 0xD6, 0xD7, 0xD7 };
+						byte[] powerBytes = { 0x0, 0x0, 0x3C, 0x3C, 0x78, 0x78, 0xB4, 0xB4, 0xF0, 0xF0 };
 						Ps2Controller newcontroller = new Ps2Controller(buttons, buttonBytes, brakeBytes, powerBytes)
 						{
 							// 8 bytes for input, no output

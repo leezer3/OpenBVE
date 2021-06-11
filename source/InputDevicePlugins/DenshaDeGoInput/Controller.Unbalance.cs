@@ -42,10 +42,10 @@ namespace DenshaDeGoInput
 		/// <summary>Whether the controller supports a D-Pad using Select+A/B/C/D.</summary>
 		private readonly bool comboDpad;
 
-		/// <summary>The byte for each brake notch, from Released to Emergency.</summary>
+		/// <summary>The min/max byte for each brake notch, from Released to Emergency. Each notch consists of two bytes.</summary>
 		private readonly byte[] brakeBytes;
 
-		/// <summary>The byte for each power notch, from Released to maximum.</summary>
+		/// <summary>The min/max byte for each power notch, from Released to maximum. Each notch consists of two bytes.</summary>
 		private readonly byte[] powerBytes;
 
 		/// <summary>The index for each button. Follows order in InputTranslator.</summary>
@@ -59,8 +59,8 @@ namespace DenshaDeGoInput
 			ControllerName = string.Empty;
 			IsConnected = false;
 			RequiresCalibration = false;
-			BrakeNotches = brake.Length - 2;
-			PowerNotches = power.Length - 1;
+			BrakeNotches = brake.Length / 2 - 2;
+			PowerNotches = power.Length / 2 - 1;
 			brakeBytes = brake;
 			powerBytes = power;
 			Buttons = buttons;
@@ -74,13 +74,14 @@ namespace DenshaDeGoInput
 		internal override void ReadInput()
 		{
 			JoystickState joystick = Joystick.GetState(joystickIndex);
-			double brakeAxis = joystick.GetAxis(0);
-			double powerAxis = joystick.GetAxis(1);
-			for (int i = 0; i < brakeBytes.Length; i++)
+			double brakeAxis = Math.Round(joystick.GetAxis(0),4);
+			double powerAxis = Math.Round(joystick.GetAxis(1),4);
+			for (int i = 0; i < brakeBytes.Length; i+=2)
 			{
-				if (brakeAxis >= GetRangeMin(brakeBytes[i]) && brakeAxis <= GetRangeMax(brakeBytes[i]))
+				// Each notch uses two bytes, minimum value and maximum value
+				if (brakeAxis >= GetAxisValue(brakeBytes[i]) && brakeAxis <= GetAxisValue(brakeBytes[i + 1]))
 				{
-					if (brakeBytes.Length == i + 1)
+					if (brakeBytes.Length == i + 2)
 					{
 						// Last notch should be Emergency
 						InputTranslator.BrakeNotch = InputTranslator.BrakeNotches.Emergency;
@@ -88,16 +89,17 @@ namespace DenshaDeGoInput
 					else
 					{
 						// Regular brake notch
-						InputTranslator.BrakeNotch = (InputTranslator.BrakeNotches)i;
+						InputTranslator.BrakeNotch = (InputTranslator.BrakeNotches)(i / 2);
 					}
 					break;
 				}
 			}
-			for (int i = 0; i < powerBytes.Length; i++)
+			for (int i = 0; i < powerBytes.Length; i+=2)
 			{
-				if (powerAxis >= GetRangeMin(powerBytes[i]) && powerAxis <= GetRangeMax(powerBytes[i]))
+				// Each notch uses two bytes, minimum value and maximum value
+				if (powerAxis >= GetAxisValue(powerBytes[i]) && powerAxis <= GetAxisValue(powerBytes[i + 1]))
 				{
-					InputTranslator.PowerNotch = (InputTranslator.PowerNotches)i;
+					InputTranslator.PowerNotch = (InputTranslator.PowerNotches)(i / 2);
 					break;
 				}
 			}
@@ -146,6 +148,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the list of connected controllers
 		/// </summary>
+		/// <returns>The list of controllers handled by this class.</returns>
 		internal static Dictionary<Guid, Controller> GetControllers()
 		{
 			for (int i = 0; i < 10; i++)
@@ -167,8 +170,8 @@ namespace DenshaDeGoInput
 							buttons = buttons | ControllerButtons.DPad;
 						}
 						int[] buttonIndices = { 4, 5, 1, 0, 2, 3, -1, -1 };
-						byte[] brakeBytes = { 0x79, 0x8A, 0x94, 0x9A, 0xA2, 0xA8, 0xAF, 0xB2, 0xB5, 0xB9 };
-						byte[] powerBytes = { 0x81, 0x6D, 0x54, 0x3F, 0x21, 0x00 };
+						byte[] brakeBytes = { 0x78, 0x7A, 0x89, 0x8B, 0x93, 0x95, 0x99, 0x9B, 0xA1, 0xA3, 0xA7, 0xA9, 0xAE, 0xB0, 0xB1, 0xB3, 0xB4, 0xB6, 0xB8, 0xBA };
+						byte[] powerBytes = { 0x80, 0x82, 0x6C, 0x6E, 0x53, 0x55, 0x3E, 0x40, 0x20, 0x22, 0x0, 0x2 };
 						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
 						{
 							Guid = guid,
@@ -184,8 +187,8 @@ namespace DenshaDeGoInput
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 5, 6, 2, 1, 0, -1, 4, 3 };
-						byte[] brakeBytes = { };
-						byte[] powerBytes = { 0x0, 0x3C, 0x78, 0xB4, 0xF0 };
+						byte[] brakeBytes = { 0x23, 0x2A, 0x2B, 0x3C, 0x3D, 0x4E, 0x4F, 0x63, 0x64, 0x8A, 0x8B, 0xB0, 0xB1, 0xD6, 0xD7, 0xD9 };
+						byte[] powerBytes = { 0x0, 0x2, 0x3B, 0x3D, 0x77, 0x79, 0xB3, 0xB5, 0xEF, 0xF1 };
 						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
 						{
 							Guid = guid,
@@ -201,27 +204,20 @@ namespace DenshaDeGoInput
 				{
 					// Cached controller, update it
 					((UnbalanceController)cachedControllers[guid]).joystickIndex = i;
+					// HACK: IsConnected is broken, we check the capabilities instead to know if the controller is connected or not
+					cachedControllers[guid].IsConnected = Joystick.GetCapabilities(i).ButtonCount > 0;
 				}
 			}
 
 			return cachedControllers;
 		}
 
-		/// <summary>Gets the minimum value for a notch byte.</summary>
+		/// <summary>Gets the equivalent axis value for a notch byte.</summary>
 		/// <param name="notch">A notch byte.</param>
-		/// <returns>The minimum value for a notch byte.</returns>
-		private static double GetRangeMin(byte notch)
+		/// <returns>The axis value for a notch byte.</returns>
+		private static double GetAxisValue(byte notch)
 		{
-			double value = (notch - 1) * (2.0 / 255) - 1;
-			return value;
-		}
-
-		/// <summary>Gets the maximum value for a notch byte.</summary>
-		/// <param name="notch">A notch byte.</param>
-		/// <returns>The maximum value for a notch byte.</returns>
-		private static double GetRangeMax(byte notch)
-		{
-			double value = (notch + 1) * (2.0 / 255) - 1;
+			double value = Math.Round(notch * (2.0 / 255) - 1, 4);
 			return value;
 		}
 	}

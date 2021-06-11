@@ -66,6 +66,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Adds the supported controller models to the LibUsb list.
 		/// </summary>
+		/// <param name="ids">A list of VID+PID identifiers to search</param>
 		internal static void AddSupportedControllers(string[] ids)
 		{
 			lock (DenshaDeGoInput.LibUsbLock)
@@ -92,6 +93,9 @@ namespace DenshaDeGoInput
 			}
 		}
 
+		/// <summary>
+		/// Loop to be executed on a separate thread to handle LibUsb work.
+		/// </summary>
 		internal static void LibUsbLoop()
 		{
 			while (LibUsbShouldLoop && !DenshaDeGoInput.LibUsbIssue)
@@ -135,7 +139,7 @@ namespace DenshaDeGoInput
 			{
 				foreach (UsbController controller in supportedUsbControllers.Values)
 				{
-					if (controller.ControllerDevice == null)
+					if (controller.ControllerDevice == null || !controller.IsConnected)
 					{
 						// The device is not configured, try to find it
 						controller.ControllerDevice = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(controller.VendorID, controller.ProductID));
@@ -147,13 +151,13 @@ namespace DenshaDeGoInput
 					}
 					else
 					{
-						// The controller is connected
-						controller.IsConnected = true;
-						if (controller.ControllerReader == null)
+						if (!controller.IsConnected)
 						{
-							// Open endpoint reader if necessary
+							// Open endpoint reader, if necessary
 							controller.ControllerReader = controller.ControllerDevice.OpenEndpointReader(ReadEndpointID.Ep01);
 						}
+						// The controller is connected
+						controller.IsConnected = true;
 					}
 				}
 			}
@@ -170,8 +174,9 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
-		/// Gets the list of supported  the connection status of supported LibUsb controllers.
+		/// Gets the list of supported controllers.
 		/// </summary>
+		/// <returns>The list of supported controllers.</returns>
 		internal static Dictionary<Guid, UsbController> GetSupportedControllers()
 		{
 			return supportedUsbControllers;
@@ -180,6 +185,10 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Syncs the read and input buffers for the controller with the specified GUID.
 		/// </summary>
+		/// <param name="guid">The GUID of the controller</param>
+		/// <param name="read">An array containing the previous read buffer</param>
+		/// <param name="write">The bytes to be sent to the controller</param>
+		/// <returns>The bytes read from the controller.</returns>
 		internal static byte[] SyncController(Guid guid, byte[] read, byte[] write)
 		{
 			// If the read buffer's length is 0, copy the initial input bytes to get the required read length

@@ -265,6 +265,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Gets the list of connected controllers
 		/// </summary>
+		/// <returns>The list of controllers handled by this class.</returns>
 		internal static Dictionary<Guid, Controller> GetControllers()
 		{
 			for (int i = 0; i < 10; i++)
@@ -294,6 +295,8 @@ namespace DenshaDeGoInput
 				{
 					// Cached controller, update index
 					((ClassicController)cachedControllers[guid]).joystickIndex = i;
+					// HACK: IsConnected is broken, we check the capabilities instead to know if the controller is connected or not
+					cachedControllers[guid].IsConnected = Joystick.GetCapabilities(i).ButtonCount > 0;
 				}
 			}
 
