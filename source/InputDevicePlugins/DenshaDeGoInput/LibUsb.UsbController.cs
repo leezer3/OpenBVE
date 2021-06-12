@@ -85,12 +85,13 @@ namespace DenshaDeGoInput
 
 					try
 					{
-						controllerName = ControllerDevice.Info.ProductString;
+						if (ControllerDevice != null)
+						{
+							controllerName = ControllerDevice.Info.ProductString;
+						}
 					}
 					catch
 					{
-						// Default name
-						controllerName = @"LibUsbController";
 					}
 					return controllerName;
 				}
@@ -133,7 +134,7 @@ namespace DenshaDeGoInput
 						int readCount;
 						ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out readCount);
 
-						if (readError == ErrorCode.DeviceNotFound)
+						if (readError == ErrorCode.DeviceNotFound || readError == ErrorCode.Win32Error)
 						{
 							// If the device is not found during read, mark it as disconnected
 							IsConnected = false;

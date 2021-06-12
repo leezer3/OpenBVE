@@ -75,9 +75,18 @@ namespace DenshaDeGoInput
 				{
 					int vid = int.Parse(id.Substring(0, 4), NumberStyles.HexNumber);
 					int pid = int.Parse(id.Substring(5, 4), NumberStyles.HexNumber);
-					string vendor = id.Substring(2, 2) + id.Substring(0, 2);
-					string product = id.Substring(7, 2) + id.Substring(5, 2);
-					Guid guid = new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff");
+					Guid guid;
+					switch (DenshaDeGoInput.CurrentHost.Platform)
+					{
+						case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
+							guid = new Guid(id.Substring(5, 4) + id.Substring(0, 4) + "-ffff-ffff-ffff-ffffffffffff");
+							break;
+						default:
+							string vendor = id.Substring(2, 2) + id.Substring(0, 2);
+							string product = id.Substring(7, 2) + id.Substring(5, 2);
+							guid = new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff");
+							break;
+					}
 					UsbController controller = new UsbController(vid, pid);
 					if (!supportedUsbControllers.ContainsKey(guid))
 					{

@@ -294,8 +294,9 @@ namespace DenshaDeGoInput
 					}
 				}
 
-				// Update connection status
+				// Update connection status and name
 				cachedControllers[guid].IsConnected = usbController.Value.IsConnected;
+				cachedControllers[guid].ControllerName = name;
 			}
 			return cachedControllers;
 		}

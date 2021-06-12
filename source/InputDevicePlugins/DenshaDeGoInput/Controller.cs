@@ -66,11 +66,8 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>The name of the controller</summary>
-		internal protected string ControllerName
-		{
-			get;
-			protected set;
-		}
+		internal protected string ControllerName;
+
 		/// <summary>The amount of brake notches</summary>
 		internal protected int BrakeNotches
 		{
@@ -133,8 +130,16 @@ namespace DenshaDeGoInput
 		internal static string GetControllerID(Guid guid)
 		{
 			string id = guid.ToString("N");
-			// OpenTK joysticks have a GUID which contains the vendor and product ID.
-			id = id.Substring(10, 2) + id.Substring(8, 2) + ":" + id.Substring(18, 2) + id.Substring(16, 2);
+			// OpenTK joysticks have a GUID which contains the vendor and product ID. It differs between platforms.
+			switch (DenshaDeGoInput.CurrentHost.Platform)
+			{
+				case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
+					id = id.Substring(4, 4) + ":" + id.Substring(0, 4);
+					break;
+				default:
+					id = id.Substring(10, 2) + id.Substring(8, 2) + ":" + id.Substring(18, 2) + id.Substring(16, 2);
+					break;
+			}
 			return id;
 		}
 

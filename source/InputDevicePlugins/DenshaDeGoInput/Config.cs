@@ -270,6 +270,7 @@ namespace DenshaDeGoInput
 		{
 			// Reload the previous config and close the config dialog
 			DenshaDeGoInput.LoadConfig();
+			Timer1.Enabled = false;
 		}
 
 		private void deviceBox_SelectedIndexChanged(object sender, EventArgs e)
