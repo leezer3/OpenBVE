@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+using System;
+using OpenBveApi.Math;
 
 namespace OpenBveApi.World
 {
@@ -42,6 +43,22 @@ namespace OpenBveApi.World
 			}
 			else
 			{
+				/*
+				 * HACK:
+				 * Horrible, non-reccomended workaround for a bug in the matrix math code
+				 */
+				if (System.Math.Abs(Yaw) == 180 * 0.0174532925199433)
+				{
+					Yaw += 0.0000002;
+				}
+				if (System.Math.Abs(Pitch) == 180 * 0.0174532925199433)
+				{
+					Pitch += 0.0000002;
+				}
+				if (System.Math.Abs(Roll) == 180 * 0.0174532925199433)
+				{
+					Roll += 0.0000002;
+				}
 				X = Vector3.Right;
 				Y = Vector3.Down;
 				Z = Vector3.Forward;
@@ -80,6 +97,19 @@ namespace OpenBveApi.World
 			X = new Vector3(BaseTransformation.X);
 			Y = new Vector3(BaseTransformation.Y);
 			Z = new Vector3(BaseTransformation.Z);
+			if (BaseTransformation.Equals(NullTransformation))
+			{
+				X = new Vector3(AuxTransformation.X);
+				Y = new Vector3(AuxTransformation.Y);
+				Z = new Vector3(AuxTransformation.Z);
+				return;
+			}
+
+			if (AuxTransformation.Equals(NullTransformation))
+			{
+				return;
+			}
+			
 			X.Rotate(AuxTransformation.Z, AuxTransformation.Y, AuxTransformation.X);
 			Y.Rotate(AuxTransformation.Z, AuxTransformation.Y, AuxTransformation.X);
 			Z.Rotate(AuxTransformation.Z, AuxTransformation.Y, AuxTransformation.X);
