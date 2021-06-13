@@ -104,16 +104,32 @@ namespace DenshaDeGoInput
 			{
 				try
 				{
-					if (ControllerDevice != null && UnloadBuffer.Length > 0)
+					if (ControllerDevice != null)
 					{
-						// Send unload buffer to turn off controller
-						int bytesWritten;
-						ControllerDevice.ControlTransfer(ref setupPacket, UnloadBuffer, UnloadBuffer.Length, out bytesWritten);
+						if (UnloadBuffer.Length > 0)
+						{
+							// Send unload buffer to turn off controller
+							int bytesWritten;
+							ControllerDevice.ControlTransfer(ref setupPacket, UnloadBuffer, UnloadBuffer.Length, out bytesWritten);
+						}
+						IUsbDevice wholeUsbDevice = ControllerDevice as IUsbDevice;
+						if (!ReferenceEquals(wholeUsbDevice, null))
+						{
+							// Release interface
+							wholeUsbDevice.ReleaseInterface(1);
+						}
+						ControllerDevice.Close();
+						UsbDevice.Exit();
 					}
 				}
 				catch
 				{
 					//Only trying to unload
+				}
+
+				if (ControllerDevice != null)
+				{
+
 				}
 			}
 
@@ -134,7 +150,7 @@ namespace DenshaDeGoInput
 						int readCount;
 						ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out readCount);
 
-						if (readError == ErrorCode.DeviceNotFound || readError == ErrorCode.Win32Error)
+						if (readError == ErrorCode.DeviceNotFound || readError == ErrorCode.Win32Error || readError == ErrorCode.MonoApiError)
 						{
 							// If the device is not found during read, mark it as disconnected
 							IsConnected = false;

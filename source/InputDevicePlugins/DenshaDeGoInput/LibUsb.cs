@@ -69,35 +69,32 @@ namespace DenshaDeGoInput
 		/// <param name="ids">A list of VID+PID identifiers to search</param>
 		internal static void AddSupportedControllers(string[] ids)
 		{
-			lock (DenshaDeGoInput.LibUsbLock)
+			foreach (string id in ids)
 			{
-				foreach (string id in ids)
+				int vid = int.Parse(id.Substring(0, 4), NumberStyles.HexNumber);
+				int pid = int.Parse(id.Substring(5, 4), NumberStyles.HexNumber);
+				Guid guid;
+				switch (DenshaDeGoInput.CurrentHost.Platform)
 				{
-					int vid = int.Parse(id.Substring(0, 4), NumberStyles.HexNumber);
-					int pid = int.Parse(id.Substring(5, 4), NumberStyles.HexNumber);
-					Guid guid;
-					switch (DenshaDeGoInput.CurrentHost.Platform)
-					{
-						case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
-							guid = new Guid(id.Substring(5, 4) + id.Substring(0, 4) + "-ffff-ffff-ffff-ffffffffffff");
-							break;
-						default:
-							string vendor = id.Substring(2, 2) + id.Substring(0, 2);
-							string product = id.Substring(7, 2) + id.Substring(5, 2);
-							guid = new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff");
-							break;
-					}
-					UsbController controller = new UsbController(vid, pid);
-					if (!supportedUsbControllers.ContainsKey(guid))
-					{
-						// Add new controller
-						supportedUsbControllers.Add(guid, controller);
-					}
-					else
-					{
-						// Replace existing controller
-						supportedUsbControllers[guid] = controller;
-					}
+					case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
+						guid = new Guid(id.Substring(5, 4) + id.Substring(0, 4) + "-ffff-ffff-ffff-ffffffffffff");
+						break;
+					default:
+						string vendor = id.Substring(2, 2) + id.Substring(0, 2);
+						string product = id.Substring(7, 2) + id.Substring(5, 2);
+						guid = new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff");
+						break;
+				}
+				UsbController controller = new UsbController(vid, pid);
+				if (!supportedUsbControllers.ContainsKey(guid))
+				{
+					// Add new controller
+					supportedUsbControllers.Add(guid, controller);
+				}
+				else
+				{
+					// Replace existing controller
+					supportedUsbControllers[guid] = controller;
 				}
 			}
 		}
@@ -215,7 +212,6 @@ namespace DenshaDeGoInput
 			// Return the bytes from the read buffer
 			return supportedUsbControllers[guid].ReadBuffer;
 		}
-
 
 	}
 }

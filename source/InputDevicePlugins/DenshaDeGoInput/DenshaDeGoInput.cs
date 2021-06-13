@@ -48,9 +48,6 @@ namespace DenshaDeGoInput
 		/// <summary>Whether an issue has been encountered with LibUsb</summary>
 		internal static bool LibUsbIssue;
 
-		/// <summary>Lock object for LibUsb functions</summary>
-		internal static object LibUsbLock = new object();
-
 		public InputControl[] Controls
 		{
 			get; private set;
@@ -198,6 +195,15 @@ namespace DenshaDeGoInput
 			//HACK: In order to avoid meddling with a shipped interface (or making this field public and increasing the mess), let's grab it via reflection
 			CurrentHost = (HostInterface)typeof(FileSystem).GetField("currentHost", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(fileSystem);
 
+			if (loading)
+			{
+				InputTranslator.Load();
+			}
+
+			// Start thread for LibUsb-based controllers
+			LibUsb.LibUsbThread = new Thread(LibUsb.LibUsbLoop);
+			LibUsb.LibUsbThread.Start();
+
 			// Initialize the array of button properties
 			for (int i = 0; i < ButtonProperties.Length; i++)
 			{
@@ -234,12 +240,6 @@ namespace DenshaDeGoInput
 
 			// Configure the mappings for the buttons and notches
 			ConfigureMappings();
-
-			InputTranslator.Load();
-
-			// Start thread for LibUsb-based controllers
-			LibUsb.LibUsbThread = new Thread(LibUsb.LibUsbLoop);
-			LibUsb.LibUsbThread.Start();
 
 			return true;
 		}
