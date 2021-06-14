@@ -84,23 +84,7 @@ namespace TrainManager.Car
 			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + Length;
 			CurrentlyVisible = dist < bid * bid;
 			// brightness
-			byte dnb;
-			{
-				float Brightness = (float) (baseCar.Brightness.NextTrackPosition - baseCar.Brightness.PreviousTrackPosition);
-				if (Brightness != 0.0f)
-				{
-					Brightness = (float) (baseCar.FrontAxle.Follower.TrackPosition - baseCar.Brightness.PreviousTrackPosition) / Brightness;
-					if (Brightness < 0.0f) Brightness = 0.0f;
-					if (Brightness > 1.0f) Brightness = 1.0f;
-					Brightness = baseCar.Brightness.PreviousBrightness * (1.0f - Brightness) + baseCar.Brightness.NextBrightness * Brightness;
-				}
-				else
-				{
-					Brightness = baseCar.Brightness.PreviousBrightness;
-				}
-
-				dnb = (byte) Math.Round(255.0 * (1.0 - Brightness));
-			}
+			byte dnb = (byte)baseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness);
 			// update current section
 			int cs = CurrentCarSection;
 			if (cs >= 0)

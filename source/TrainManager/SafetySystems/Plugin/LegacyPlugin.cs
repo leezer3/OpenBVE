@@ -119,7 +119,6 @@ namespace TrainManager.SafetySystems
 
 		// --- members ---
 		private readonly string PluginFile;
-		private readonly int[] Sound;
 		private readonly int[] LastSound;
 		private GCHandle PanelHandle;
 		private GCHandle SoundHandle;
@@ -132,7 +131,23 @@ namespace TrainManager.SafetySystems
 			base.PluginMessage = null;
 			base.Train = train;
 			base.Panel = new int[256];
-			base.SupportsAI = false;
+			base.SupportsAI = AISupport.None;
+			switch (PluginTitle.ToLowerInvariant())
+			{
+				case "ukdt.dll":
+					base.SupportsAI = AISupport.Program;
+					base.AI = new UKDtAI(this);
+					break;
+				case "ukspt.dll":
+					base.SupportsAI = AISupport.Program;
+					base.AI = new UKSptAI(this);
+					break;
+				case "ukmut.dll":
+					base.SupportsAI = AISupport.Program;
+					base.AI = new UKMUtAI(this);
+					break;
+			}
+			
 			base.LastTime = 0.0;
 			base.LastReverser = -2;
 			base.LastPowerNotch = -1;
@@ -298,10 +313,15 @@ namespace TrainManager.SafetySystems
 				base.LastException = ex;
 				throw;
 			}
+			if (SupportsAI == AISupport.Program)
+			{
+				AI.BeginJump(mode);
+			}
 		}
 
 		public override void EndJump()
 		{
+			AI.EndJump();
 		}
 
 		protected override void Elapse(ref ElapseData data)
@@ -532,6 +552,10 @@ namespace TrainManager.SafetySystems
 
 		protected override void SetBeacon(BeaconData beacon)
 		{
+			if (AI != null)
+			{
+				AI.SetBeacon(beacon);
+			}
 			try
 			{
 				Win32BeaconData win32Beacon;
@@ -550,6 +574,10 @@ namespace TrainManager.SafetySystems
 
 		protected override void PerformAI(AIData data)
 		{
+			if (SupportsAI == AISupport.Program)
+			{
+				AI.Perform(data);
+			}
 		}
 
 		/// <summary>Checks whether a specified file is a valid Win32 plugin.</summary>

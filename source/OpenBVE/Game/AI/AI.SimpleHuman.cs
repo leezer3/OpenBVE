@@ -999,7 +999,7 @@ namespace OpenBve
 					doorWaitingTimer -= Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed;
 					wiperTimer -= Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed;
 					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
-					if (Train.Plugin != null && Train.Plugin.SupportsAI)
+					if (Train.Plugin != null && Train.Plugin.SupportsAI != AISupport.None)
 					{
 						if (PerformPlugin() != AIResponse.None)
 						{
