@@ -55,6 +55,7 @@
     <Compile Include="Config.Designer.cs">
       <DependentUpon>Config.cs</DependentUpon>
     </Compile>
+    <Compile Include="LibUsb.UsbController.cs" />
     <Compile Include="Help.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,9 +65,11 @@
     <Compile Include="DenshaDeGoInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InputTranslator.cs" />
-    <Compile Include="ControllerClassic.cs" />
-    <Compile Include="ControllerUnbalance.cs" />
-    <Compile Include="ControllerPs2.cs" />
+    <Compile Include="LibUsb.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Controller.Classic.cs" />
+    <Compile Include="Controller.Unbalance.cs" />
+    <Compile Include="Controller.Ps2.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config.resx">
@@ -100,9 +103,7 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Drivers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>

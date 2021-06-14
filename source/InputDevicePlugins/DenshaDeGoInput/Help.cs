@@ -26,6 +26,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
 namespace DenshaDeGoInput
@@ -35,27 +36,23 @@ namespace DenshaDeGoInput
 		public Help()
 		{
 			InitializeComponent();
-
-			if (Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT)
+			switch (DenshaDeGoInput.CurrentHost.Platform)
 			{
-				// Running on Windows
-				buttonZadig.Enabled = true;
-				buttonWindows.Enabled = true;
-				buttonLinux.Enabled = false;
-			}
-			else if (System.IO.File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
-			{
-				// Running on Mac
-				buttonZadig.Enabled = false;
-				buttonWindows.Enabled = false;
-				buttonLinux.Enabled = false;
-			}
-			else
-			{
-				// Running on Linux
-				buttonZadig.Enabled = false;
-				buttonWindows.Enabled = false;
-				buttonLinux.Enabled = true;
+				case HostPlatform.MicrosoftWindows:
+					buttonZadig.Enabled = true;
+					buttonWindows.Enabled = true;
+					buttonLinux.Enabled = false;
+					break;
+				case HostPlatform.GNULinux:
+					buttonZadig.Enabled = false;
+					buttonWindows.Enabled = false;
+					buttonLinux.Enabled = true;
+					break;
+				case HostPlatform.AppleOSX:
+					buttonZadig.Enabled = false;
+					buttonWindows.Enabled = false;
+					buttonLinux.Enabled = false;
+					break;
 			}
 		}
 
@@ -72,7 +69,14 @@ namespace DenshaDeGoInput
 			textBoxController1.Text = Translations.GetInterfaceString("denshadego_help_controller1_textbox");
 			textBoxController2.Text = Translations.GetInterfaceString("denshadego_help_controller2_textbox");
 			textBoxWindows.Text = Translations.GetInterfaceString("denshadego_help_windows_textbox");
-			textBoxLinux.Text = Translations.GetInterfaceString("denshadego_help_linux_textbox");
+			if (DenshaDeGoInput.LibUsbIssue)
+			{
+				textBoxLinux.Text = Translations.GetInterfaceString("denshadego_help_libusb_symlink");
+			}
+			else
+			{
+				textBoxLinux.Text = Translations.GetInterfaceString("denshadego_help_linux_textbox");	
+			}
 			buttonZadig.Text = Translations.GetInterfaceString("denshadego_help_zadig_button");
 			buttonWindows.Text = Translations.GetInterfaceString("denshadego_help_windows_button");
 			buttonLinux.Text = Translations.GetInterfaceString("denshadego_help_linux_button");

@@ -2621,6 +2621,16 @@ to separate buttons to avoid compatibility issues.
 					<trans-unit id="help_ok_button">
 						<source>OK</source>
 					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
+Please follow the following instructions:
+
+1. Check that the "libusb-1.0" package is installed.
+2. Find the location of "libusb-1.0.so.0" - On recent Ubuntu and Debian versions, this is likely to be "/lib/x86_64-linux-gnu/"
+3. Open the directory in the terminal.
+4. Check this location to see if "libusb-1.0.so" exists.
+5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</source>
+					</trans-unit>
 				</group>
 			</group>
 			<group id="train_editor">

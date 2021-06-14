@@ -1108,6 +1108,7 @@ namespace OpenBve {
 				Array.Resize(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
+			// Remember enabled input device plugins
 			{
 				int n = 0;
 				string[] a = new string[InputDevicePlugin.AvailablePluginInfos.Count];
@@ -1127,6 +1128,15 @@ namespace OpenBve {
 				Array.Resize(ref a, n);
 				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}
+			// Unload input device plugins if we're closing the program
+			if (!Result.Start)
+			{
+				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+				{
+					InputDevicePlugin.CallPluginUnload(i);
+				}
+			}
+			Program.Sounds.Deinitialize();
 			DisposePreviewRouteThread();
 			{
 				string error;
