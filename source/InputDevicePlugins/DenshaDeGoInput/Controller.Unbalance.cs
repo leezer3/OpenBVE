@@ -187,7 +187,7 @@ namespace DenshaDeGoInput
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 5, 6, 2, 1, 0, -1, 4, 3 };
-						byte[] brakeBytes = { 0x23, 0x2A, 0x2B, 0x3C, 0x3D, 0x4E, 0x4F, 0x63, 0x64, 0x8A, 0x8B, 0xB0, 0xB1, 0xD6, 0xD7, 0xD9 };
+						byte[] brakeBytes = { 0x23, 0x2C, 0x2D, 0x3E, 0x3F, 0x4E, 0x4F, 0x63, 0x64, 0x8A, 0x8B, 0xB0, 0xB1, 0xD4, 0xD5, 0xDF };
 						byte[] powerBytes = { 0x0, 0x2, 0x3B, 0x3D, 0x77, 0x79, 0xB3, 0xB5, 0xEF, 0xF1 };
 						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
 						{
