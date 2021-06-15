@@ -86,6 +86,7 @@ namespace TrainManager.Car
 		public CarBase(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 		{
 			Specs = new CarPhysics();
+			Brightness = new Brightness(this);
 			baseTrain = train;
 			Index = index;
 			CarSections = new CarSection[] { };
