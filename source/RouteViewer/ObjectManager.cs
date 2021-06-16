@@ -1,3 +1,4 @@
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 
@@ -11,7 +12,9 @@ namespace OpenBve {
 			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
 				AbstractTrain train = null;
-				bool visible = AnimatedWorldObjects[i].IsVisible(Program.Renderer.Camera.AbsolutePosition, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, Program.Renderer.Camera.ExtraViewingDistance);
+				Vector3 cameraPos = Program.Renderer.Camera.Alignment.Position;
+				cameraPos.Z += Program.Renderer.CameraTrackFollower.TrackPosition;
+				bool visible = AnimatedWorldObjects[i].IsVisible(cameraPos, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, Program.Renderer.Camera.ExtraViewingDistance);
 				if (visible | ForceUpdate)
 				{
 					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);

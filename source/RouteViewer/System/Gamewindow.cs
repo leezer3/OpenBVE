@@ -86,7 +86,7 @@ namespace OpenBve
 	            Game.SecondsSinceMidnight = (double)(3600 * d.Hour + 60 * d.Minute + d.Second) + 0.001 * (double)d.Millisecond;
 	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 	            World.UpdateAbsoluteCamera(TimeElapsed);
-				Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
+	            Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
             }
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
