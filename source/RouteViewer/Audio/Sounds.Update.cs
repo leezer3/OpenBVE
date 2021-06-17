@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
@@ -10,9 +11,7 @@ using TrainManager.Car;
 
 namespace OpenBve
 {
-	using OpenBveApi.Math;
-
-	internal partial class Sounds : SoundsBase
+	internal class Sounds : SoundsBase
 	{
 
 		/// <summary>Updates the sound component. Should be called every frame.</summary>

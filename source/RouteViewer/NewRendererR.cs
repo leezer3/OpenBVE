@@ -16,7 +16,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
-using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
 using Vector2 = OpenBveApi.Math.Vector2;

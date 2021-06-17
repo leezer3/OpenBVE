@@ -5,10 +5,7 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using System;
-using LibRender2;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 
 namespace OpenBve {
 	public static class World

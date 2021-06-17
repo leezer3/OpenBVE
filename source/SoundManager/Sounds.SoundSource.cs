@@ -133,6 +133,8 @@ namespace SoundManager
 
 		// --- constructors ---
 		/// <summary>Creates a new microphone source.</summary>
+		/// <param name="openAlMic">The OpenAL microphone handle</param>
+		/// <param name="micStore">The databuffer to read to</param>
 		/// <param name="position">The position.</param>
 		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
 		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>

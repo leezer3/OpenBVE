@@ -597,7 +597,7 @@ namespace TrainManager.SafetySystems
 				Train.Cars[Train.DriverCar].Windscreen.SetRainIntensity(optional);
 			}
 
-			SignalData signal = null;
+			SignalData signal;
 			if (sectionIndex == -1)
 			{
 				sectionIndex = this.Train.CurrentSectionIndex + 1;

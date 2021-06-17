@@ -105,8 +105,7 @@ namespace SoundManager
 			VolumeFunction = null;
 		}
 
-		/// <summary>Creates a clone of the specified sound buffer</summary>
-		/// <param name="b">The buffer to clone</param>
+		/// <summary>Creates a clone of this sound buffer</summary>
 		/// <returns>The new buffer</returns>
 		public SoundBuffer Clone()
 		{

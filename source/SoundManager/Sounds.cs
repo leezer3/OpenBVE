@@ -94,10 +94,13 @@ namespace SoundManager
 				*  If shipping an AnyCPU build and OpenALSoft / SDL, these are architecture specific PInvokes
 				*  Add the appropriate search path so this will work (common convention)
 				*/
-				string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-				path = Path.Combine(path, IntPtr.Size == 4 ? "x86" : "x64");
-				bool ok = SetDllDirectory(path);
-				if (!ok) throw new System.ComponentModel.Win32Exception();
+				string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+				if (path != null)
+				{
+					path = Path.Combine(path, IntPtr.Size == 4 ? "x86" : "x64");
+					bool ok = SetDllDirectory(path);
+					if (!ok) throw new System.ComponentModel.Win32Exception();
+				}
 			}
 			Deinitialize();
 
@@ -390,7 +393,7 @@ namespace SoundManager
 		{
 			if (buffer is SoundBuffer)
 			{
-				SoundBuffer b = buffer as SoundBuffer;
+				SoundBuffer b = (SoundBuffer)buffer;
 				if (Sources.Length == SourceCount)
 				{
 					Array.Resize(ref Sources, Sources.Length << 1);
@@ -413,7 +416,7 @@ namespace SoundManager
 		{
 			if (buffer is SoundBuffer)
 			{
-				SoundBuffer b = buffer as SoundBuffer;
+				SoundBuffer b = (SoundBuffer)buffer;
 				if (Sources.Length == SourceCount)
 				{
 					Array.Resize(ref Sources, Sources.Length << 1);
