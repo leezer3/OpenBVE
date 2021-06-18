@@ -34,53 +34,38 @@ void main(void)
 	//Apply the lighting results *after* the final color has been calculated
 	finalColor *= oLightResult;
 
-	switch(uAlphaFunction)
+	/*
+	 * NOTES:
+	 * Unused alpha functions must not be added to the shader
+	 * This has a nasty affect on framerates
+	 *
+	 * A switch case block is also ~30% slower than the else-if
+	 *
+	 * Numbers used are those from the GL.AlphaFunction enum to allow
+	 * for direct casts
+	 */
+	if(uAlphaFunction == 513) // Less
 	{
-		/*
-		* NOTE:
-		* Unused alpha functions must not be added to the shader
-		* This has a nasty affect on framerates
-		*/
-		//case 512: // Never
-		//	discard;
-		case 513: // Less
-			if(finalColor.a >= uAlphaComparison)
-			{
-				discard;
-			}
-			break;
-		case 514: // Equal
-			if(!(abs(finalColor.a - 1.0) < 0.00001))
-			{
-				discard;
-			}
-			break;
-		//case 515: // LEqual
-		//	if(finalColor.a > uAlphaComparison)
-		//	{
-		//		discard;
-		//	}
-		//	break;
-		case 516: // Greater
-			if(finalColor.a <= uAlphaComparison)
-			{
-				discard;
-			}
-			break;
-		//case 517: // NotEqual
-		//	if((abs(finalColor.a - 1.0) < 0.00001))
-		//	{
-		//		discard;
-		//	}
-		//	break;
-		//case 518: // GEqual
-		//	if(finalColor.a < uAlphaComparison)
-		//	{
-		//		discard;
-		//	}
-		//	break;
+		if(finalColor.a >= uAlphaComparison)
+		{
+			discard;
+		}
 	}
-
+	else if(uAlphaFunction == 514) // Equal
+	{
+		if(!(abs(finalColor.a - 1.0) < 0.00001))
+		{
+			discard;
+		}
+	}
+	else if(uAlphaFunction == 516) // Greater
+	{
+		if(finalColor.a <= uAlphaComparison)
+		{
+			discard;
+		}
+	}
+	
 	// Fog
 	float fogFactor = 1.0;
 
