@@ -136,6 +136,7 @@ namespace LibRender2.Shaders
 			isActive = true;
 			renderer.lastVAO = -1;
 			renderer.CurrentShader = this;
+			renderer.RestoreAlphaFunc();
 		}
 
 		public VertexLayout GetVertexLayout()
@@ -383,7 +384,10 @@ namespace LibRender2.Shaders
 
 		public void SetAlphaTest(bool enabled)
 		{
-			GL.ProgramUniform1(handle, UniformLayout.AlphaFunction, (int)AlphaFunction.Always);
+			if (!enabled)
+			{
+				GL.ProgramUniform1(handle, UniformLayout.AlphaFunction, (int)AlphaFunction.Never);
+			}
 		}
 
 		#endregion

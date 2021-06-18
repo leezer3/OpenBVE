@@ -849,6 +849,7 @@ namespace LibRender2
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
+			Shader.SetAlphaTest(false);
 		}
 
 		public void SetBlendFunc()
