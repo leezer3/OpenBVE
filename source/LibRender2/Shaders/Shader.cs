@@ -6,6 +6,7 @@ using LibRender2.Fogs;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector2 = OpenBveApi.Math.Vector2;
@@ -176,7 +177,6 @@ namespace LibRender2.Shaders
 				FogColor = (short)GL.GetUniformLocation(handle, "uFogColor"),
 				FogIsLinear = (short)GL.GetUniformLocation(handle, "uFogIsLinear"),
 				FogDensity = (short)GL.GetUniformLocation(handle, "uFogDensity"),
-				IsTexture = (short)GL.GetUniformLocation(handle, "uIsTexture"),
 				Texture = (short)GL.GetUniformLocation(handle, "uTexture"),
 				Brightness = (short)GL.GetUniformLocation(handle, "uBrightness"),
 				Opacity = (short)GL.GetUniformLocation(handle, "uOpacity"),
@@ -328,7 +328,16 @@ namespace LibRender2.Shaders
 		
 		public void SetIsTexture(bool IsTexture)
 		{
-			GL.ProgramUniform1(handle, UniformLayout.IsTexture, IsTexture ? 1 : 0);
+			if (!IsTexture && renderer.LastBoundTexture != renderer.whitePixel.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp]) 
+			{
+				/*
+				 * If we do not want to use a texture, set a single white pixel instead
+				 * This eliminates some shader branching, and is marginally faster in some cases
+				 */
+				renderer.currentHost.LoadTexture(renderer.whitePixel, OpenGlTextureWrapMode.ClampClamp);
+				GL.BindTexture(TextureTarget.Texture2D, renderer.whitePixel.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+				renderer.LastBoundTexture = renderer.whitePixel.OpenGlTextures[(int) OpenGlTextureWrapMode.ClampClamp];
+			}
 		}
 
 		public void SetTexture(int TextureUnit)

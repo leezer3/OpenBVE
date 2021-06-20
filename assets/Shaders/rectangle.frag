@@ -2,7 +2,6 @@
 in vec2 textureCoord;
 uniform int uAlphaFunction;
 uniform float uAlphaComparison;
-uniform bool uIsTexture;
 uniform bool uRectangleHasColour;
 uniform vec4 uColor;
 uniform sampler2D uTexture;
@@ -10,11 +9,8 @@ out vec4 fragColor;
 
 void main(void)
 {
-	vec4 textureColour = vec4(1.0,1.0,1.0,1.0);
-	if(uIsTexture)
-	{
-		textureColour *= texture(uTexture, textureCoord);
-	}
+	vec4 textureColour = texture(uTexture, textureCoord);
+	
 	vec4 finalColor = textureColour * uColor;
 
 	/*

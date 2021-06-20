@@ -137,12 +137,7 @@
 		/// The handle of "uFogDensity" within the shader
 		/// </summary>
 		public short FogDensity = -1;
-
-		/// <summary>
-		/// The handle of "uIsTexture" within the shader
-		/// </summary>
-		public short IsTexture = -1;
-
+		
 		/// <summary>
 		/// The handle of "uTexture" within the shader
 		/// </summary>

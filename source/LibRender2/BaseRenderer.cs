@@ -201,6 +201,8 @@ namespace LibRender2
 
 		protected internal Texture _programLogo;
 
+		protected internal Texture whitePixel;
+
 		private bool logoError;
 
 		/// <summary>Gets the current program logo</summary>
@@ -301,7 +303,7 @@ namespace LibRender2
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
-
+			whitePixel = new Texture(new Texture(1, 1, 32, new byte[] {255, 255, 255, 255}, null));
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);

@@ -5,7 +5,6 @@ in vec4 oColor;
 in vec4 oLightResult;
 uniform int uAlphaFunction;
 uniform float uAlphaComparison;
-uniform bool uIsTexture;
 uniform sampler2D uTexture;
 uniform int uMaterialFlags;
 uniform float uBrightness;
@@ -20,11 +19,8 @@ out vec4 fragColor;
 
 void main(void)
 {
-	vec4 finalColor = vec4(oColor.rgb, 1.0);
-	if(uIsTexture)
-	{
-		finalColor *= texture2D(uTexture, oUv);
-	}
+	vec4 finalColor = vec4(oColor.rgb, 1.0) * texture2D(uTexture, oUv);
+
 	if((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
 	{
 		//Material is not emissive and lighting is enabled, so multiply by brightness
