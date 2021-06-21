@@ -164,7 +164,6 @@ namespace LibRender2.Backgrounds
 				}
 
 				// texture
-				renderer.DefaultShader.SetIsTexture(true);
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				renderer.LastBoundTexture = null;
 

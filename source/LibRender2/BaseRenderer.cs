@@ -846,7 +846,7 @@ namespace LibRender2
 			lastColor = Color32.White;
 			Shader.SetMaterialShininess(1.0f);
 			Shader.SetIsFog(false);
-			Shader.SetIsTexture(false);
+			Shader.DisableTexturing();
 			Shader.SetTexture(0);
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
@@ -1086,7 +1086,6 @@ namespace LibRender2
 				// texture
 				if (material.DaytimeTexture != null && currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 				{
-					Shader.SetIsTexture(true);
 					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
 					{
 						GL.BindTexture(TextureTarget.Texture2D,
@@ -1096,7 +1095,7 @@ namespace LibRender2
 				}
 				else
 				{
-					Shader.SetIsTexture(false);
+					Shader.DisableTexturing();
 				}
 				// Calculate the brightness of the poly to render
 				float factor;
@@ -1136,7 +1135,6 @@ namespace LibRender2
 			if (material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
-				Shader.SetIsTexture(true);
 				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
 				{
 					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
@@ -1165,7 +1163,7 @@ namespace LibRender2
 			// normals
 			if (OptionNormals)
 			{
-				Shader.SetIsTexture(false);
+				Shader.DisableTexturing();
 				Shader.SetBrightness(1.0f);
 				Shader.SetOpacity(1.0f);
 				VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;

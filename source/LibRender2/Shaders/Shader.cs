@@ -326,9 +326,9 @@ namespace LibRender2.Shaders
 			GL.ProgramUniform1(handle, UniformLayout.FogDensity, Fog.Density);
 		}
 		
-		public void SetIsTexture(bool IsTexture)
+		public void DisableTexturing()
 		{
-			if (!IsTexture && renderer.LastBoundTexture != renderer.whitePixel.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp]) 
+			if (renderer.LastBoundTexture != renderer.whitePixel.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp]) 
 			{
 				/*
 				 * If we do not want to use a texture, set a single white pixel instead

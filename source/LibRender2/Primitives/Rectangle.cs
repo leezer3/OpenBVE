@@ -156,12 +156,11 @@ namespace LibRender2.Primitives
 			renderer.CurrentShader = Shader;
 			if (texture != null && renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
 			{
-				Shader.SetIsTexture(true);
 				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 			}
 			else
 			{
-				Shader.SetIsTexture(false);
+				Shader.DisableTexturing();
 			}
 			
 			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);

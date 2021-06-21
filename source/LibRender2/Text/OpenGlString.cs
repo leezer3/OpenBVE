@@ -206,8 +206,7 @@ namespace LibRender2.Texts
 			renderer.CurrentShader = Shader;
 			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
-			Shader.SetIsTexture(true);
-			
+
 			for (int i = 0; i < text.Length; i++)
 			{
 				Texture texture;
