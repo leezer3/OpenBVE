@@ -85,9 +85,9 @@
       <DependentUpon>formTrain.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
+    <Compile Include="Graphics\NewRendererS.cs" />
     <Compile Include="Graphics\ObjectOptimizationMode.cs" />
     <Compile Include="Hosts.cs" />
-    <Compile Include="Graphics\NewRendererS.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />

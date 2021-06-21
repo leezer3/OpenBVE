@@ -74,9 +74,10 @@ namespace OpenBve
 			*********************/
 			public readonly TextAlignment Align;
 			public readonly MenuEntry[] Items = { };
-			public readonly int ItemWidth = 0;
-			public readonly int Width = 0;
-			public readonly int Height = 0;
+			public readonly double ItemWidth = 0;
+			public readonly double Width = 0;
+			public readonly double Height = 0; 
+			public readonly double MaxWidth;
 
 			private int lastSelection = int.MaxValue;
 			private int currentSelection;
