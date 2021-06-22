@@ -154,7 +154,7 @@ namespace OpenBve.Graphics.Renderers
 					//If paused, fade out the screen & write PAUSE
 					renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.0f, 0.0f, 0.0f, 0.5f));
 					renderer.OpenGlString.Draw(renderer.Fonts.VeryLargeFont, Translations.GetInterfaceString("menu_pause_title"), new Point(renderer.Screen.Width / 2, renderer.Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
-					if (!PauseAnnounced)
+					if (Interface.CurrentOptions.ScreenReaderAvailable && !PauseAnnounced)
 					{
 						if (!Tolk.Output(Translations.GetInterfaceString("menu_pause_title")))
 						{
