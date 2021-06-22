@@ -191,6 +191,8 @@ $(DEBIAN_BUILD_RESULT): all-release
 #Generate current dpkg control file
 	@./DebianControl.sh
 #Mark launch script as executable before packaging
+#Also deliberately chmod assets directory to 755- https://github.com/leezer3/OpenBVE/issues/656#issuecomment-865164917
+	@chmod -R 755 bin_release/Data
 	@chmod +x installers/debian/usr/games/openbve
 	@cp -r -f $(CP_UPDATE_FLAG) $(RELEASE_DIR)/* installers/debian/usr/lib/openbve
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(DEBIAN_BUILD_RESULT)$(COLOR_END)
