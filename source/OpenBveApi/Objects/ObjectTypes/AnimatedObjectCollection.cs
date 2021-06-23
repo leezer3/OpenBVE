@@ -61,7 +61,7 @@ namespace OpenBveApi.Objects
 						{
 							if (free[i])
 							{
-								Matrix4D transformationMatrix = (Matrix4D) AuxTransformation * (Matrix4D) BaseTransformation;
+								Matrix4D transformationMatrix = (Matrix4D)new Transformation(AuxTransformation, BaseTransformation);
 								Matrix4D mat = Matrix4D.Identity;
 								mat *= Objects[i].States[0].Translation;
 								mat *= transformationMatrix;
