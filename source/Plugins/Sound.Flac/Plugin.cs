@@ -17,7 +17,7 @@ namespace Plugin {
 		/// <returns>Whether the plugin can load the specified sound.</returns>
 		public override bool CanLoadSound(string path) {
 			if (File.Exists(path)) {
-				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read)) {
+				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
 					using (BinaryReader reader = new BinaryReader(stream)) {
 						if (reader.ReadUInt32() != 0x43614C66) {
 							return false;

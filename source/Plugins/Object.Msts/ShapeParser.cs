@@ -323,7 +323,7 @@ namespace Plugin
 			};
 
 			currentFolder = Path.GetDirectoryName(fileName);
-			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
 			byte[] buffer = new byte[34];
 			fb.Read(buffer, 0, 2);

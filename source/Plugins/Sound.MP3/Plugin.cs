@@ -21,7 +21,7 @@ namespace Plugin
 		{
 			if (File.Exists(path))
 			{
-				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
 				{
 					using (BinaryReader reader = new BinaryReader(stream))
 					{

@@ -34,7 +34,7 @@ namespace Plugin {
 		/// <param name="height">Receives the height of the texture.</param>
 		/// <returns>Whether querying the dimensions was successful.</returns>
 		public override bool QueryTextureDimensions(string path, out int width, out int height) {
-			using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read)) {
+			using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
 					uint identifier1 = reader.ReadUInt32();
 					uint identifier2 = reader.ReadUInt32();
@@ -82,7 +82,7 @@ namespace Plugin {
 				{
 					return false;
 				}
-				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read)) {
+				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
 					using (BinaryReader reader = new BinaryReader(stream)) {
 						if (stream.Length < 8)
 						{
