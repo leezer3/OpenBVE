@@ -68,8 +68,8 @@ namespace OpenBveApi.World
 			Z.Rotate(Y, Yaw);
 			Y.Rotate(X, -Pitch);
 			Z.Rotate(X, -Pitch);
-			X.Rotate(Z, Roll);
-			Y.Rotate(Z, Roll);
+			X.Rotate(Z, -Roll);
+			Y.Rotate(Z, -Roll);
 		}
 
 		/// <summary>Creates a new transformation, based upon a base transformation and an auxiliary transformation</summary>
