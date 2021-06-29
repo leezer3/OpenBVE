@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.ServiceModel.Security;
 using OpenBveApi.Colors;
 
 namespace OpenBveApi.Textures {
@@ -88,6 +89,10 @@ namespace OpenBveApi.Textures {
 
 		private static Color24 GetClosestColor(Color24[] colorArray, Color24 baseColor)
 		{
+			if (colorArray.Contains(baseColor))
+			{
+				return baseColor;
+			}
 			int colorDiffs = colorArray.Select(n => GetDiff(n, baseColor)).Min(n => n);
 			Color24 c = colorArray[Array.FindIndex(colorArray,n => GetDiff(n, baseColor) == colorDiffs)];
 			return new Color24(c.R, c.G, c.B);
@@ -116,8 +121,10 @@ namespace OpenBveApi.Textures {
 			{
 				switch (texture.Palette.Length)
 				{
-					case 16:
-					case 256:
+					case 0:
+						//ignore if no reduced pallette
+						break;
+					default:
 						Color24 c = (Color24)color;
 						color = GetClosestColor(texture.Palette, c);
 						break;

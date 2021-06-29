@@ -26,5 +26,10 @@
 		<FileName>Pinda_Expedicionaria.rw</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<Patch>
+		<Hash>9322D87D6B32EB7789BE8856D9941EA076F834F12B6049586EF150C9B8EAC2E8</Hash>
+		<FileName>carrega.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>
