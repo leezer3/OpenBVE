@@ -757,6 +757,18 @@ namespace DenshaDeGoInput
 												}
 											}
 											break;
+										case "axis":
+											ClassicController.UsesAxis = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+										case "axis_index":
+											{
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													ClassicController.AxisIndex = a;
+												}
+											}
+											break;
 										case "select":
 											{
 												int a;
@@ -976,6 +988,8 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("[classic]");
 				Builder.AppendLine("hat = " + ClassicController.UsesHat.ToString(Culture).ToLower());
 				Builder.AppendLine("hat_index = " + ClassicController.HatIndex.ToString(Culture));
+				Builder.AppendLine("axis = " + ClassicController.UsesAxis.ToString(Culture).ToLower());
+				Builder.AppendLine("axis_index = " + ClassicController.AxisIndex.ToString(Culture));
 				Builder.AppendLine("select = " + ClassicController.ButtonIndex.Select.ToString(Culture));
 				Builder.AppendLine("start = " + ClassicController.ButtonIndex.Start.ToString(Culture));
 				Builder.AppendLine("a = " + ClassicController.ButtonIndex.A.ToString(Culture));
