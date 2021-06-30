@@ -18,38 +18,38 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates the object within the worldspace using a single track based transforms</summary>
 		/// <param name="Position">The world position</param>
-		/// <param name="BaseTransformation">The base transformation to be applied</param>
+		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
 		/// <param name="StartingDistance">The track distance at which this is displayed by the renderer</param>
 		/// <param name="EndingDistance">The track distance at which this hidden by the renderer</param>
 		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
-		public void CreateObject(Vector3 Position, Transformation BaseTransformation, double StartingDistance, double EndingDistance, double TrackPosition)
+		public void CreateObject(Vector3 Position, Transformation WorldTransformation, double StartingDistance, double EndingDistance, double TrackPosition)
 		{
-			CreateObject(Position, BaseTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, 1.0);
+			CreateObject(Position, WorldTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, 1.0);
 		}
 
 		/// <summary>Creates the object within the world</summary>
 		/// <param name="Position">The world position</param>
-		/// <param name="BaseTransformation">The base transformation to be applied</param>
-		/// <param name="AuxTransformation">The auxiliary transformation to be applied</param>
+		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
 		/// <param name="StartingDistance">The track distance at which this is displayed by the renderer</param>
 		/// <param name="EndingDistance">The track distance at which this hidden by the renderer</param>
 		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
-		public void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, double StartingDistance, double EndingDistance, double TrackPosition)
+		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double StartingDistance, double EndingDistance, double TrackPosition)
 		{
-			CreateObject(Position, BaseTransformation, AuxTransformation, -1, StartingDistance, EndingDistance, TrackPosition, 1.0);
+			CreateObject(Position, WorldTransformation, LocalTransformation, -1, StartingDistance, EndingDistance, TrackPosition, 1.0);
 		}
 
 		/// <summary>Creates the object within the world</summary>
 		/// <param name="Position">The world position</param>
-		/// <param name="BaseTransformation">The base transformation to be applied</param>
-		/// <param name="AuxTransformation">The auxiliary transformation to be applied</param>
+		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
 		/// <param name="SectionIndex">The section index (If placed via Track.SigF)</param>
 		/// <param name="StartingDistance">The track distance at which this is displayed by the renderer</param>
 		/// <param name="EndingDistance">The track distance at which this hidden by the renderer</param>
 		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
 		/// <param name="Brightness">The brightness value of this object</param>
 		/// <param name="DuplicateMaterials">Whether the materials are to be duplicated (Not set when creating BVE4 signals)</param>
-		public abstract void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness, bool DuplicateMaterials = false);
+		public abstract void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int SectionIndex, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness, bool DuplicateMaterials = false);
 
 		/// <summary>Call this method to optimize the object</summary>
 		/// <param name="PreserveVerticies">Whether duplicate verticies are to be preserved (Takes less time)</param>
