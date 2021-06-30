@@ -5,5 +5,11 @@
 		<FileName>S75 daytime.csv</FileName>
 		<SignalSet>SV.xml</SignalSet>
 	</Patch>
+	<Patch>
+		<Hash>BB3EC7F141DB94660E96F52D654CD7163D8F69451376F09CBF956535729C0798</Hash>
+		<FileName>Tram_NeustadtL4_v2.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

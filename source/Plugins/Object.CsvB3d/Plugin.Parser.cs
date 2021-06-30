@@ -135,6 +135,7 @@ namespace Plugin
 			MeshBuilder Builder = new MeshBuilder(currentHost);
 			List<Vector3> Normals = new List<Vector3>();
 			bool CommentStarted = false;
+			Color24? lastTransparentColor = null;
 			for (int i = 0; i < Lines.Count; i++) {
 				{
 					// Strip OpenBVE original standard comments
@@ -866,6 +867,7 @@ namespace Plugin
 						case "setdecaltransparentcolor":
 						case "transparent":
 							{
+								
 								if (cmd == "setdecaltransparentcolor" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "SetDecalTransparentColor is not a supported command - did you mean Transparent? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "transparent" & !IsB3D) {
@@ -873,6 +875,17 @@ namespace Plugin
 								}
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (Arguments.Length == 0) {
+									currentHost.AddMessage(MessageType.Warning, false, "No color was specified in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName + "- This may produce unexpected results.");
+									if (enabledHacks.BveTsHacks && lastTransparentColor != null)
+									{
+										// The BVE2 / BVE4 parser uses the *last* transparent color if no transparent color is specified
+										for (int j = 0; j < Builder.Materials.Length; j++) { 
+											Builder.Materials[j].TransparentColor = lastTransparentColor.Value;
+											Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
+										}
+										break;
+									}
 								}
 								int r = 0, g = 0, b = 0;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
@@ -896,8 +909,9 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									b = b < 0 ? 0 : 255;
 								}
+								lastTransparentColor = new Color24((byte) r, (byte) g, (byte) b);
 								for (int j = 0; j < Builder.Materials.Length; j++) {
-									Builder.Materials[j].TransparentColor = new Color24((byte)r, (byte)g, (byte)b);
+									Builder.Materials[j].TransparentColor = lastTransparentColor.Value;
 									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 								}
 							} break;
