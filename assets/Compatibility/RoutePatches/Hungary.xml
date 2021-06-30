@@ -7,5 +7,16 @@
 		<Expression Number="207"></Expression>
 		<Expression Number="208"></Expression>
 	</Patch>
+	<!-- Felsopataj - Bogard -->
+	<Patch>
+		<Hash>A6AB359B0BB96E3CD3C93CA854CF90F75D7549D86B36432B0B4DB9A21D9E87DF</Hash>
+		<FileName>fp-bo-3302-bve4.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>D39C7329F5CA4BCE6245ECD22A647E48F9FF29ECC9A159321C3687A6C32A9010</Hash>
+		<FileName>fp-bo-3306-bve4-winter.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>
