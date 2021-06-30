@@ -364,9 +364,12 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											powerDelayUp = new[] {a};
 										}
-
 										break;
 									case 1:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
@@ -375,9 +378,12 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											powerDelayDown = new[] {a};
 										}
-
 										break;
 									case 2:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
@@ -386,9 +392,12 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											brakeDelayUp = new[] {a};
 										}
-
 										break;
 									case 3:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
@@ -397,6 +406,10 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											brakeDelayDown = new[] {a};
 										}
 										break;
@@ -407,6 +420,10 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											locoBrakeDelayUp = new[] {a};
 										}
 										break;
@@ -417,6 +434,10 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											locoBrakeDelayDown = new[] {a};
 										}
 										break;
