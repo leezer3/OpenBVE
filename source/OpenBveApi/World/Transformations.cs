@@ -15,9 +15,9 @@ namespace OpenBveApi.World
 		/// <summary>Creates a new empty transformation</summary>
 		public Transformation()
 		{
-			this.X = Vector3.Right;
-			this.Y = Vector3.Down;
-			this.Z = Vector3.Forward;
+			X = Vector3.Right;
+			Y = Vector3.Down;
+			Z = Vector3.Forward;
 		}
 
 		/// <summary>Creates a new transformation, based upon yaw pitch and roll values</summary>
@@ -37,17 +37,17 @@ namespace OpenBveApi.World
 		{
 			if (Yaw == 0.0 & Pitch == 0.0 & Roll == 0.0)
 			{
-				this.X = Vector3.Right;
-				this.Y = Vector3.Down;
-				this.Z = Vector3.Forward;
+				X = Vector3.Right;
+				Y = Vector3.Down;
+				Z = Vector3.Forward;
 			}
 			else if (Pitch == 0.0 & Roll == 0.0)
 			{
 				double cosYaw = System.Math.Cos(Yaw);
 				double sinYaw = System.Math.Sin(Yaw);
-				this.X = new Vector3(cosYaw, 0.0, -sinYaw);
-				this.Y = Vector3.Down;
-				this.Z = new Vector3(sinYaw, 0.0, cosYaw);
+				X = new Vector3(cosYaw, 0.0, -sinYaw);
+				Y = Vector3.Down;
+				Z = new Vector3(sinYaw, 0.0, cosYaw);
 			}
 			else
 			{
@@ -102,9 +102,9 @@ namespace OpenBveApi.World
 			X = new Vector3(firstTransformation.X);
 			Y = new Vector3(firstTransformation.Y);
 			Z = new Vector3(firstTransformation.Z);
-			X.Rotate(secondTransformation.Z, secondTransformation.Y, secondTransformation.X);
-			Y.Rotate(secondTransformation.Z, secondTransformation.Y, secondTransformation.X);
-			Z.Rotate(secondTransformation.Z, secondTransformation.Y, secondTransformation.X);
+			X.Rotate(secondTransformation);
+			Y.Rotate(secondTransformation);
+			Z.Rotate(secondTransformation);
 		}
 
 		/// <summary>Creates a new transformation, based upon three other vectors</summary>
@@ -148,5 +148,4 @@ namespace OpenBveApi.World
 		/// <summary>A transformation which leaves the input unchanged</summary>
 		public static readonly Transformation NullTransformation = new Transformation();
 	}
-
 }
