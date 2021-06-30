@@ -31,5 +31,11 @@
 		<FileName>carrega.rw</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
+	<Patch>
+		<Hash>4B8D49C0E2F2C4424401F059A21321B93E5C32919A26DC143FD75B3BBFE68B8F</Hash>
+		<FileName>Guaianazes_MogiCruzes.csv</FileName>
+		<!-- Fixes nastily glitched catenary at final station -->
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
   </RoutePatches>
 </openBVE>

@@ -23,5 +23,11 @@
 		<Toppling>false</Toppling>
 		<Derailments>false</Derailments>
 	</Patch>
+	<Patch>
+		<Hash>EDB673ED7BC2B4B5F80F48AE11ED75A604E92C6BFCDF3C177B19DB4791C6A9B4</Hash>
+		<FileName>montserrat.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>
