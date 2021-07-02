@@ -70,7 +70,7 @@ namespace Plugin
 		}
 
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
-		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
+		/// <param name="FileName">The text file to load the CSB or B3D object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The object loaded.</returns>
 		private static StaticObject ReadObject(string FileName, Encoding Encoding) {
@@ -382,6 +382,17 @@ namespace Plugin
 											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " indexes a vertex above 65535 which is not currently supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											q = false;
 											break;
+										}
+									}
+
+									if (enabledHacks.BveTsHacks)
+									{
+										if ((FileName.ToLowerInvariant().Contains("hira2\\car") || FileName.ToLowerInvariant().Contains("hira2/car")) && a.SequenceEqual(new[] {0, 1, 4, 5}))
+										{
+											/*
+											* Fix glitchy Hirakami railway stock
+											*/
+											a = new[] {0, 1, 5, 4};
 										}
 									}
 									if (q) {
