@@ -107,19 +107,20 @@ namespace OpenBveApi.World
 			Z = firstVector;
 		}
 
-		/// <summary>Converts a Transformation into an openGL rotation matrix</summary>
+		/// <summary>Converts a Transformation into a rotation row-major matrix in the right-handed coordinate system</summary>
 		/// <param name="t">The transformation to convert</param>
 		public static explicit operator Matrix4D(Transformation t)
 		{
-			Vector3 v = new Vector3(t.Z.X, t.Z.Y, -t.Z.Z);
-			v.Normalize();
-			Quaternion rot1 = Quaternion.RotationBetweenVectors(new Vector3(0.0, 0.0, 1.0) * -1.0, v);
-			Vector3 newUp = new Vector3(0.0, 1.0, 0.0);
-			newUp = Vector3.Transform(newUp, rot1);
-			Vector3 v2 = new Vector3(t.Y.X, t.Y.Y, -t.Y.Z);
-			v2.Normalize();
-			Quaternion rot2 = Quaternion.RotationBetweenVectors(newUp, v2);
-			return Matrix4D.CreateFromQuaternion(rot2 * rot1);
+			// X, Y and Z represent the basis vector.
+			// Arrange them in row-major to create a rotation matrix.
+			// And converting from the left-handed coordinate system to the right-handed coordinate system by reversing the Z axis.
+			return new Matrix4D(new[]
+			{
+				t.X.X, t.X.Y, -t.X.Z, 0.0,
+				t.Y.X, t.Y.Y, -t.Y.Z, 0.0,
+				-t.Z.X, -t.Z.Y, t.Z.Z, 0.0,
+				0.0, 0.0, 0.0, 1.0
+			});
 		}
 
 		/// <summary>A transformation which leaves the input unchanged</summary>
