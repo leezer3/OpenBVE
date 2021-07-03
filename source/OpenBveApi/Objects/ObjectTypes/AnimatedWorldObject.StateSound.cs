@@ -131,15 +131,15 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates the animated object within the game world</summary>
 		/// <param name="WorldPosition">The absolute position</param>
-		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>
-		/// <param name="AuxTransformation">The auxilary transformation (Placed rail)</param>
+		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
 		/// <param name="FinalSectionIndex">The index of the section if placed using a SigF command</param>
 		/// <param name="FinalTrackPosition">The absolute track position</param>
 		/// <param name="Brightness">The brightness value at the track position</param>
-		public void Create(Vector3 WorldPosition, Transformation BaseTransformation, Transformation AuxTransformation, int FinalSectionIndex, double FinalTrackPosition, double Brightness)
+		public void Create(Vector3 WorldPosition, Transformation WorldTransformation, Transformation LocalTransformation, int FinalSectionIndex, double FinalTrackPosition, double Brightness)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
-			Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
+			Transformation FinalTransformation = new Transformation(LocalTransformation, WorldTransformation);
 
 			AnimatedWorldObjectStateSound currentObject = (AnimatedWorldObjectStateSound)Clone();
 			currentObject.Position = WorldPosition;

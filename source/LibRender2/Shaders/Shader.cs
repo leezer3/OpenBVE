@@ -227,10 +227,33 @@ namespace LibRender2.Shaders
 		/// <summary>
 		/// Set the model view matrix
 		/// </summary>
-		/// <param name="ModelViewMatrix"></param>
+		/// <param name="ModelViewMatrix">
+		/// <para>The model view matrix computed with row-major</para>
+		/// <para>ScaleMatrix * RotateMatrix * TranslationMatrix * ViewMatrix</para>
+		/// </param>
 		public void SetCurrentModelViewMatrix(Matrix4D ModelViewMatrix)
 		{
 			Matrix4 matrix = ConvertToMatrix4(ModelViewMatrix);
+
+			// When transpose is false, B is equal to the transposed matrix of A.
+			// B = transpose(A) = transpose(M * V) = transpose(V) * transpose(M)
+			//
+			// The symbols are defined as follows:
+			// M: ModelMatrix, V: ViewMatrix
+			//
+			// Matrix4 (row-major)
+			// A =
+			// | m11 m12 m13 m14 |
+			// | m21 m22 m23 m24 |
+			// | m31 m32 m33 m34 |
+			// | m41 m42 m43 m44 |
+			//
+			// OpenGL (column-major)
+			// B =
+			// | m11 m21 m31 m41 |
+			// | m12 m22 m32 m42 |
+			// | m13 m23 m33 m43 |
+			// | m14 m24 m34 m44 |
 			GL.UniformMatrix4(UniformLayout.CurrentModelViewMatrix, false, ref matrix);
 		}
 		
