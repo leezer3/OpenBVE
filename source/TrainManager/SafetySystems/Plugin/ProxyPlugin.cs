@@ -50,16 +50,20 @@ namespace TrainManager.SafetySystems {
 			switch (PluginTitle.ToLowerInvariant())
 			{
 				case "ukdt.dll":
-					base.SupportsAI = AISupport.Program;
+					SupportsAI = AISupport.Program;
 					AI = new UKDtAI(this);
 					break;
 				case "ukspt.dll":
-					base.SupportsAI = AISupport.Program;
+					SupportsAI = AISupport.Program;
 					AI = new UKSptAI(this);
 					break;
 				case "ukmut.dll":
-					base.SupportsAI = AISupport.Program;
-					base.AI = new UKMUtAI(this);
+					SupportsAI = AISupport.Program;
+					AI = new UKMUtAI(this);
+					break;
+				case "hei_ats.dll":
+					SupportsAI = AISupport.Program;
+					AI = new HeiAtsAI(this);
 					break;
 			}
 			LastTime = 0.0;
