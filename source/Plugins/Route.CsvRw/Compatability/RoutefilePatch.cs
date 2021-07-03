@@ -80,6 +80,11 @@ namespace CsvRwRouteParser
 						}
 					}
 				}
+
+				if (patch.ViewingDistance != int.MaxValue)
+				{
+					Plugin.CurrentOptions.ViewingDistance = patch.ViewingDistance;
+				}
 			}
 		}
 	}
@@ -125,5 +130,7 @@ namespace CsvRwRouteParser
 		internal bool DisableSemiTransparentFaces;
 		/// <summary>Whether reduced color transparency should be used</summary>
 		internal bool ReducedColorTransparency;
+		/// <summary>The viewing distance to use</summary>
+		internal int ViewingDistance = int.MaxValue;
 	}
 }

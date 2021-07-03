@@ -37,5 +37,10 @@
 		<!-- Fixes nastily glitched catenary at final station -->
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 	</Patch>
+	<Patch>
+		<Hash>0F49FDA83D4A9EC91D258C089EFB1585D1F02C232ADD2901C518D3BE441DA2CE</Hash>
+		<FileName>Coastline.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

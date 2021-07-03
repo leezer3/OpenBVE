@@ -2,6 +2,7 @@
 
 namespace TrainManager.SafetySystems
 {
+	/// <summary>An AI to control the Hei_ats.dll plugin found in Hirakami railway trains</summary>
 	class HeiAtsAI : PluginAI
 	{
 		internal HeiAtsAI(Plugin plugin)
@@ -10,7 +11,7 @@ namespace TrainManager.SafetySystems
 			currentStep = 2;
 			nextPluginAction = 0;
 		}
-
+		/// <summary>Used to store the current state of the wipers</summary>
 		private int wiperState;
 		internal override void Perform(AIData data)
 		{
