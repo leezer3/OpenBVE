@@ -267,19 +267,10 @@ namespace Plugin
 		{
 			int NullCode = -1;
 			int npix = iw * ih;
-			int available, 
-				clear,
-				code_mask,
-				code_size,
-				end_of_information,
-				in_code,
-				old_code,
-				bits,
+			int bits,
 				code,
 				count,
 				i,
-				datum,
-				data_size,
 				first,
 				top,
 				bi,
@@ -295,13 +286,13 @@ namespace Plugin
 
 			//  Initialize GIF data stream decoder.
 
-			data_size = Read();
-			clear = 1 << data_size;
-			end_of_information = clear + 1;
-			available = clear + 2;
-			old_code = NullCode;
-			code_size = data_size + 1;
-			code_mask = (1 << code_size) - 1;
+			int data_size = Read();
+			int clear = 1 << data_size;
+			int end_of_information = clear + 1;
+			int available = clear + 2;
+			int old_code = NullCode;
+			int code_size = data_size + 1;
+			int code_mask = (1 << code_size) - 1;
 			for (code = 0; code < clear; code++) 
 			{
 				prefix[code] = 0;
@@ -310,7 +301,7 @@ namespace Plugin
 
 			//  Decode GIF pixel stream.
 
-			datum = bits = count = first = top = pi = bi = 0;
+			int datum = bits = count = first = top = pi = bi = 0;
 
 			for (i = 0; i < npix;) 
 			{
@@ -360,7 +351,7 @@ namespace Plugin
 						first = code;
 						continue;
 					}
-					in_code = code;
+					int in_code = code;
 					if (code == available) 
 					{
 						pixelStack[top++] = (byte) first;
@@ -431,6 +422,13 @@ namespace Plugin
 				status = DecoderStatus.FormatError;
 			}
 			return curByte;
+		}
+
+		/// <summary>Reads the next decoder control code from the input stream</summary>
+		protected ControlCode ReadControlCode()
+		{
+			int curByte = Read();
+			return (ControlCode)curByte;
 		}
 
 		/// <summary>Reads the next variable length input block</summary>
@@ -506,20 +504,20 @@ namespace Plugin
 			bool done = false;
 			while (!(done || Error)) 
 			{
-				int code = Read();
+				ControlCode code = ReadControlCode();
 				switch (code) 
 				{
-					case 0x2C : // image separator
+					case ControlCode.ImageSeparator:
 						ReadNextFrame();
 						break;
-					case 0x21 : // extension
-						code = Read();
+					case ControlCode.ExtensionBlock:
+						code = ReadControlCode();
 						switch (code)
 						{
-							case 0xf9: // graphics control extension
+							case ControlCode.GraphicsExtension:
 								ReadGraphicControlExt();
 								break;
-							case 0xff: // application extension
+							case ControlCode.ApplicationExtension:
 								ReadBlock();
 								string app = "";
 								for (int i = 0; i < 11; i++)
@@ -527,7 +525,7 @@ namespace Plugin
 									app += (char) block[i];
 								}
 
-								if (app.Equals("NETSCAPE2.0"))
+								if (app.Equals("NETSCAPE2.0") || app.Equals("ANIMEXTS1.0"))
 								{
 									ReadNetscapeExt();
 								}
@@ -536,18 +534,18 @@ namespace Plugin
 									Skip(); // don't care
 								}
 								break;
-							case 0x01: // draw text onto image
+							case ControlCode.TextOverlay:
 								Skip();
 								break;
-							default: // uninteresting extension
+							default:
 								Skip();
 								break;
 						}
 						break;
-					case 0x3b : // terminator
+					case ControlCode.Terminator:
 						done = true;
 						break;
-					case 0x00 : // bad byte, but keep going and see what happens
+					case ControlCode.BadByte:
 						break;
 					default :
 						status = DecoderStatus.FormatError;
