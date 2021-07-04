@@ -345,7 +345,9 @@ namespace Plugin
 								}
 								if (Arguments.Length < 3) {
 									currentHost.AddMessage(MessageType.Error, false, "At least 3 arguments are required in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								} else {
+								} else
+								{
+									bool isFace2 = cmd == "addface2" | cmd == "face2";
 									bool q = true;
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
@@ -394,6 +396,47 @@ namespace Plugin
 											*/
 											a = new[] {0, 1, 5, 4};
 										}
+
+										int[] vertexIndices = (int[])a.Clone();
+										Array.Sort(vertexIndices);
+										for (int k = 0; k < Builder.Faces.Count; k++)
+										{
+											/*
+											 * Some BVE2 content declares a Face2 twice with the vertices in a differing order, e.g.
+											 *
+											 * Face2 0, 1, 3, 2
+											 * Face2 1, 0, 2, 3
+											 *
+											 * Doing this in OpenBVE causes some very funky glitches with Z-fighting,
+											 * as it attempts to render both faces in the same space
+											 *
+											 * With this hack, the lighting may be off but the Z-fighting is gone
+											 * (BVE2 / BVE4 operate in a strict draw-order, so the most recent face is always on top,
+											 * wheras OpenBVE has no fixed draw order)
+											 */
+											MeshFace currentFace = Builder.Faces[k];
+											if (!isFace2 || (currentFace.Flags & FaceFlags.Face2Mask) == 0)
+											{
+												continue;
+											}
+
+											if (currentFace.Vertices.Length != a.Length)
+											{
+												continue;
+											}
+
+											int[] faceVertexIndices = new int[a.Length];
+											for (int v = 0; v < currentFace.Vertices.Length; v++)
+											{
+												faceVertexIndices[v] = currentFace.Vertices[v].Index;
+											}
+											Array.Sort(faceVertexIndices);
+											if (vertexIndices.SequenceEqual(faceVertexIndices))
+											{
+												q = false;
+											}
+											
+										}
 									}
 									if (q) {
 										MeshFace f = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
@@ -412,7 +455,7 @@ namespace Plugin
 											f.Vertices[l - 1] = f.Vertices[l - 2];
 											f.Vertices[l - 2] = v;
 										}
-										if (cmd == "addface2" | cmd == "face2") {
+										if (isFace2) {
 											f.Flags = FaceFlags.Face2Mask;
 										}
 										Builder.Faces.Add(f);
