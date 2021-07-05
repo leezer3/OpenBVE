@@ -47,6 +47,7 @@ namespace Train.OpenBve
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
+			int emptyLines = 0;
 			for (int i = Lines.Count - 1; i >= 0; i--)
 			{
 				/*
@@ -66,11 +67,11 @@ namespace Train.OpenBve
 				}
 				if (string.IsNullOrEmpty(Lines[i]))
 				{
-					Lines.RemoveAt(i);
+					emptyLines++;
 				}
 			}
 
-			if (Lines.Count == 0)
+			if (Lines.Count == 0 || emptyLines == Lines.Count)
 			{
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Empty sound.cfg encountered in " + FileName + ".");
 			}
@@ -82,6 +83,10 @@ namespace Train.OpenBve
 			double invfac = Lines.Count == 0 ? 0.1 : 0.1 / Lines.Count;
 			for (int i = 0; i < Lines.Count; i++)
 			{
+				if (string.IsNullOrEmpty(Lines[i]))
+				{
+					continue;
+				}
 				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
 				if ((i & 7) == 0)
 				{

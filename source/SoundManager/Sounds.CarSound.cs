@@ -30,7 +30,7 @@ namespace SoundManager
 		{
 			if (soundFile.Length == 0 || Path.ContainsInvalidChars(soundFile))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + currentLine + " in file " + configurationFile);
+				currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (currentLine + 1) + " in file " + configurationFile);
 				return;
 			}
 
@@ -41,7 +41,7 @@ namespace SoundManager
 				if (configurationFile != string.Empty)
 				{
 					//Only add missing file message for BVE4 / XML sound configs, not default
-					currentHost.AddMessage(MessageType.Error, false, "The SoundFile " + soundFile + " was not found at line " + currentLine + " in file " + configurationFile);
+					currentHost.AddMessage(MessageType.Error, false, "The SoundFile " + soundFile + " was not found at line " + (currentLine + 1) + " in file " + configurationFile);
 				}
 				return;
 			}
