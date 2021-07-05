@@ -47,8 +47,10 @@ namespace Plugin
 		protected bool lctFlag;
 		/// <summary>Whether the current image is endcoded as interlaced</summary>
 		protected bool interlace;
-
-		protected int ix, iy, iw, ih; // current image rectangle
+		/// <summary>Position of the current sub-image</summary>
+		protected Vector2 imagePosition;
+		/// <summary>Size of the current sub-image</summary>
+		protected Vector2 imageSize;
 		protected int[] image; // current frame
 		protected int[] bitmap;
 		protected int[] lastImage; // previous frame
@@ -143,12 +145,12 @@ namespace Plugin
 			int pass = 1;
 			int inc = 8;
 			int iline = 0;
-			for (int i = 0; i < ih; i++) 
+			for (int i = 0; i < imageSize.Y; i++) 
 			{
 				int line = i;
 				if (interlace) 
 				{
-					if (iline >= ih) 
+					if (iline >= imageSize.Y) 
 					{
 						pass++;
 						switch (pass) 
@@ -169,17 +171,17 @@ namespace Plugin
 					line = iline;
 					iline += inc;
 				}
-				line += iy;
+				line += (int)imagePosition.Y;
 				if (line < height) 
 				{
 					int k = line * width;
-					int dx = k + ix; // start of line in dest
-					int dlim = dx + iw; // end of dest line
+					int dx = k + (int)imagePosition.X; // start of line in dest
+					int dlim = dx + (int)imageSize.X; // end of dest line
 					if (k + width < dlim) 
 					{
 						dlim = k + width; // past dest edge
 					}
-					int sx = i * iw; // start of line in source
+					int sx = i * (int)imageSize.X; // start of line in source
 					while (dx < dlim) 
 					{
 						// map color and insert in destination
@@ -266,7 +268,7 @@ namespace Plugin
 		protected void DecodeImageData() 
 		{
 			int NullCode = -1;
-			int npix = iw * ih;
+			int npix = (int)(imageSize.X * imageSize.Y);
 			int bits,
 				code,
 				count,
@@ -593,13 +595,10 @@ namespace Plugin
 		}
 
 		/// <summary>Reads the next frame image</summary>
-		protected void ReadNextFrame() 
+		protected void ReadNextFrame()
 		{
-			ix = ReadShort(); // (sub)image position & size
-			iy = ReadShort();
-			iw = ReadShort();
-			ih = ReadShort();
-
+			imagePosition = ReadVector2();
+			imageSize = ReadVector2();
 			int packed = Read();
 			lctFlag = (packed & 0x80) != 0; // 1 - local color table flag
 			interlace = (packed & 0x40) != 0; // 2 - interlace flag
@@ -689,13 +688,19 @@ namespace Plugin
 			} while (blockSize > 0 && !Error);
 		}
 
+		/// <summary>Reads the next Vector2, LSB first</summary>
+		protected Vector2 ReadVector2()
+		{
+			return new Vector2(ReadShort(), ReadShort());
+		}
+
 		/// <summary>Reads the next 16-bit value, LSB first</summary>
 		protected int ReadShort() 
 		{
 			// read 16-bit value, LSB first
 			return Read() | (Read() << 8);
 		}
-
+		
 		/// <summary>Resets the frame state before reading the next image</summary>
 		protected void ResetFrame() 
 		{
