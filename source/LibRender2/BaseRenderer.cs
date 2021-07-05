@@ -510,6 +510,10 @@ namespace LibRender2
 
 		public void UpdateVisibility(double TrackPosition)
 		{
+			if (ObjectsSortedByStart == null || ObjectsSortedByStart.Length == 0)
+			{
+				return;
+			}
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
 			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;

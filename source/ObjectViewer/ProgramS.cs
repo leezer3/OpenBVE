@@ -31,7 +31,7 @@ namespace OpenBve {
 		internal static FileSystem FileSystem = null;
 
 		// members
-	    internal static string[] Files = { };
+	    internal static List<string> Files = new List<string>();
 
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
@@ -137,7 +137,7 @@ namespace OpenBve {
 
 				if (filesToLoad.Count != 0)
 				{
-					Files = filesToLoad.ToArray();
+					Files = filesToLoad;
 				}
 	        }
 
@@ -198,9 +198,7 @@ namespace OpenBve {
 
 		internal static void DragFile(object sender, FileDropEventArgs e)
 		{
-			int n = Files.Length;
-			Array.Resize(ref Files, n + 1);
-			Files[n] = e.FileName;
+			Files.Add(e.FileName);
 			// reset
 			LightingRelative = -1.0;
 			Game.Reset();
@@ -261,7 +259,7 @@ namespace OpenBve {
 		    LightingRelative = -1.0;
 		    Game.Reset();
 			formTrain.Instance?.DisableUI();
-		    for (int i = 0; i < Files.Length; i++)
+		    for (int i = 0; i < Files.Count; i++)
 		    {
 			    try
 			    {
@@ -354,12 +352,30 @@ namespace OpenBve {
 						{
 							Application.DoEvents();
 							string[] f = Dialog.FileNames;
-							int n = Files.Length;
-						    Array.Resize(ref Files, n + f.Length);
 							for (int i = 0; i < f.Length; i++)
 				            {
-					            Files[n + i] = f[i];
+
+					            for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+					            {
+									if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(f[i]))
+						            {
+							            // oops, that's actually a routefile- Let's show Route Viewer
+							            string File = System.IO.Path.Combine(Application.StartupPath, "RouteViewer.exe");
+							            if (System.IO.File.Exists(File))
+							            {
+								            System.Diagnostics.Process.Start(File, "\"" + f[i] + "\"");
+							            }
+						            }
+
+						            if (Program.CurrentHost.Plugins[j].Object != null && Program.CurrentHost.Plugins[j].Object.CanLoadObject(f[i]))
+						            {
+							            Files.Add(f[i]);
+						            }
+									
+					            }
+					            
 				            }
+							
 						}
 						else
 						{
@@ -384,7 +400,7 @@ namespace OpenBve {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-		            Files = new string[] {};
+		            Files = new List<string>();
 					NearestTrain.UpdateSpecs();
 					Renderer.ApplyBackgroundColor();
 	                break;

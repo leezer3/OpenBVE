@@ -1,4 +1,6 @@
-﻿using OpenBveApi;
+﻿using System;
+using System.IO;
+using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -34,10 +36,30 @@ namespace Plugin
 			    {
 				    return false;
 			    }
-			    return true;
+			    using (StreamReader fileReader = new StreamReader(path))
+			    {
+				    for (int i = 0; i < 100; i++)
+				    {
+					    try
+					    {
+						    string readLine = fileReader.ReadLine();
+						    if (!string.IsNullOrEmpty(readLine) && readLine.IndexOf("meshbuilder", StringComparison.InvariantCultureIgnoreCase) != -1)
+						    {
+							    //We have found the MeshBuilder statement within the first 100 lines
+							    //This must be an object (we hope)
+								//Use a slightly larger value than for routes, as we're hoping for a positive match
+							    return true;
+						    }
+					    }
+					    catch
+					    {
+						    //ignored
+					    }
+						
+				    }
+			    }
 		    }
-
-		    return false;
+			return false;
 	    }
 
 	    public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject)
