@@ -702,7 +702,13 @@ namespace OpenBve
 				}
 			}
 		}
-		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e) {
+		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e)
+		{
+			string error;
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			{
+				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+			}
 			if (listviewTrainFolders.SelectedItems.Count == 1) {
 				string t = listviewTrainFolders.SelectedItems[0].Tag as string;
 				if (t != null) {
@@ -715,9 +721,21 @@ namespace OpenBve
 					if (Directory.Exists(t))
 					{
 						string[] newDirectories = Directory.EnumerateDirectories(t).ToArray();
-						if (newDirectories.Length > 5)
+						bool shouldEnter = true;
+						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 						{
-							//More than 5 subdirectories, assume it may be a false positive
+							if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(t))
+							{
+								shouldEnter = false;
+								break;
+							}
+						}
+						if (shouldEnter || newDirectories.Length > 5)
+						{
+							/*
+							 * Either a train folder with more than 5 subdirs (false positive?)
+							 * Or a plain folder
+							 */
 							textboxTrainFolder.Text = t;
 							return;
 						}
