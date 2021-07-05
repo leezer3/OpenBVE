@@ -32,6 +32,7 @@ namespace OpenBveApi
 				//We're running on Linux/ OSX, so we must use the environment ticks
 				//This actually has much better precision than under Windows too
 				UseEnvTicks = true;
+				_ticksPerSecond = TimeSpan.TicksPerSecond;
 				GetElapsedTime();
 			}
 		}
@@ -69,14 +70,7 @@ namespace OpenBveApi
 		/// <summary>Gets the elapsed time in seconds between two ticks</summary>
 		public static double GetElapsedTime(int oldTicks, int newTicks)
 		{
-			if (UseEnvTicks)
-			{
-				return (newTicks - oldTicks) / 1000.0;
-			}
-			else
-			{
-				return (newTicks - oldTicks) / (double)_ticksPerSecond;
-			}
+			return (newTicks - oldTicks) / (double)_ticksPerSecond;
 		}
 
 		/// <summary>Gets the current environment tick count</summary>
