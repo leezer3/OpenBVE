@@ -29,34 +29,41 @@ namespace Plugin
 
 	    public override bool CanLoadObject(string path)
 	    {
-		    path = path.ToLowerInvariant();
-		    if (path.EndsWith(".b3d") || path.EndsWith(".csv"))
+		    if (path.EndsWith(".b3d", StringComparison.InvariantCultureIgnoreCase) || path.ToLowerInvariant().EndsWith(".csv", StringComparison.InvariantCultureIgnoreCase))
 		    {
-			    if (System.IO.File.Exists(path) && FileFormats.IsNautilusFile(path))
+			    if (File.Exists(path) && FileFormats.IsNautilusFile(path))
 			    {
 				    return false;
 			    }
-			    using (StreamReader fileReader = new StreamReader(path))
+
+			    try
 			    {
-				    for (int i = 0; i < 100; i++)
+				    using (StreamReader fileReader = new StreamReader(path))
 				    {
-					    try
+					    for (int i = 0; i < 100; i++)
 					    {
-						    string readLine = fileReader.ReadLine();
-						    if (!string.IsNullOrEmpty(readLine) && readLine.IndexOf("meshbuilder", StringComparison.InvariantCultureIgnoreCase) != -1)
+						    try
 						    {
-							    //We have found the MeshBuilder statement within the first 100 lines
-							    //This must be an object (we hope)
-								//Use a slightly larger value than for routes, as we're hoping for a positive match
-							    return true;
+							    string readLine = fileReader.ReadLine();
+							    if (!string.IsNullOrEmpty(readLine) && readLine.IndexOf("meshbuilder", StringComparison.InvariantCultureIgnoreCase) != -1)
+							    {
+								    //We have found the MeshBuilder statement within the first 100 lines
+								    //This must be an object (we hope)
+								    //Use a slightly larger value than for routes, as we're hoping for a positive match
+								    return true;
+							    }
 						    }
-					    }
-					    catch
-					    {
-						    //ignored
-					    }
+						    catch
+						    {
+							    //ignored
+						    }
 						
+					    }
 				    }
+			    }
+			    catch
+			    {
+				    return false;
 			    }
 		    }
 			return false;
