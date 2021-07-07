@@ -50,6 +50,11 @@ namespace OpenBveApi.Interface
 
 						Id = (string)unit.Attribute("id");
 						Value = (languageCode != "en-US" ? (string)target : (string)source).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
+						if (string.IsNullOrEmpty(Value))
+						{
+							//if target is empty / null, let's use the untranslated value https://github.com/leezer3/OpenBVE/issues/663
+							Value = ((string)target).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
+						}
 					}
 				}
 
