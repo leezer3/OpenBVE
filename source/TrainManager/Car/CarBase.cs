@@ -95,8 +95,8 @@ namespace TrainManager.Car
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			RearAxle.Follower.TriggerType = index == baseTrain.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this);
-			RearBogie = new Bogie(train, this);
+			FrontBogie = new Bogie(train, this, false);
+			RearBogie = new Bogie(train, this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -119,8 +119,8 @@ namespace TrainManager.Car
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this);
-			RearBogie = new Bogie(train, this);
+			FrontBogie = new Bogie(train, this, false);
+			RearBogie = new Bogie(train, this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -662,7 +662,7 @@ namespace TrainManager.Car
 			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + Length;
 			CurrentlyVisible = dist < bid * bid;
 			// Updates the brightness value
-			byte dnb = (byte)Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness);
+			byte dnb = (byte)Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, 0.0);
 			// update current section
 			int cs = CurrentCarSection;
 			if (cs >= 0 && cs < CarSections.Length)
