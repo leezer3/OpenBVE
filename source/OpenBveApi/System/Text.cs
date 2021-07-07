@@ -119,7 +119,9 @@ namespace OpenBveApi
 					Builder.Append(Text.Substring(i, 2));
 					i++;
 				}
-			} return Builder.ToString();
+			}
+			Builder = Builder.Replace("\\n\\n", "\r\n\r\n");
+			return Builder.ToString();
 		}
 
 		/// <summary>Trims any multiple whitespace characters within the string</summary>
