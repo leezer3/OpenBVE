@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Runtime;
 
@@ -139,6 +139,10 @@ namespace Plugin {
 				if (this.PrecedingTrain == null) {
 					return this.CompatibilitySpeeds[11];
 				} else {
+					if (this.PrecedingTrain.Location == double.MaxValue)
+					{
+						return this.CompatibilitySpeeds[11];
+					}
 					const double blockLength = 100.0;
 					int a = (int)Math.Floor(this.PrecedingTrain.Location / blockLength);
 					int b = (int)Math.Floor(this.Train.State.Location / blockLength);
