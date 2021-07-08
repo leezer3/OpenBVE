@@ -471,7 +471,7 @@ namespace OpenBve.Graphics.Renderers
 				case "stopnonetick":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Program.CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert)
+					if (s >= 0 && Program.CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert && !Program.CurrentRoute.Stations[s].Dummy)
 					{
 						int c = Program.CurrentRoute.Stations[s].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 						if (c >= 0)

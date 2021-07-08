@@ -45,8 +45,19 @@ namespace CsvRwRouteParser
 			int t = Stations[StationIndex].Stops.Length;
 			Array.Resize(ref Stations[StationIndex].Stops, t + 1);
 			Stations[StationIndex].Stops[t].TrackPosition = TrackPosition;
-			Stations[StationIndex].Stops[t].ForwardTolerance = ForwardTolerance;
-			Stations[StationIndex].Stops[t].BackwardTolerance = BackwardTolerance;
+			if (Stations[StationIndex].Dummy)
+			{
+				//If our station is dummy (for signalling), use an overlarge backstop range as stop pos doesn't matter
+				//Overshooting the signal will be caught be the signalling code
+				Stations[StationIndex].Stops[t].ForwardTolerance = 5;
+				Stations[StationIndex].Stops[t].BackwardTolerance = 250;
+			}
+			else
+			{
+				Stations[StationIndex].Stops[t].ForwardTolerance = ForwardTolerance;
+				Stations[StationIndex].Stops[t].BackwardTolerance = BackwardTolerance;	
+			}
+			
 			Stations[StationIndex].Stops[t].Cars = Cars;
 			double dx, dy = 2.0;
 			if (Stations[StationIndex].OpenLeftDoors & !Stations[StationIndex].OpenRightDoors)

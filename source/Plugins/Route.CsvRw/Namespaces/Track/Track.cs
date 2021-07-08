@@ -1242,6 +1242,10 @@ namespace CsvRwRouteParser
 						{
 							/* Treat a single period as a blank space */
 						}
+						else if (string.Equals(Arguments[1], "D", StringComparison.OrdinalIgnoreCase))
+						{
+							CurrentRoute.Stations[CurrentStation].Dummy = true;
+						}
 						else if (!TryParseTime(Arguments[1], out arr))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -1559,11 +1563,6 @@ namespace CsvRwRouteParser
 						}
 					}
 
-					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
-					{
-						CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
-					}
-
 					CurrentRoute.Stations[CurrentStation].ArrivalTime = arr;
 					CurrentRoute.Stations[CurrentStation].ArrivalSoundBuffer = arrsnd;
 					CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
@@ -1586,6 +1585,18 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].StationPassAlarm = passalarm == 1;
 					CurrentStop = -1;
 					DepartureSignalUsed = false;
+					//Detect common BVE2 / BVE4 dummy stations, missing names etc.
+					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
+					{
+						if (CurrentRoute.Stations[CurrentStation].OpenLeftDoors || CurrentRoute.Stations[CurrentStation].OpenRightDoors)
+						{
+							CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture);
+						}
+						else if(CurrentRoute.Stations[CurrentStation].ForceStopSignal)
+						{
+							CurrentRoute.Stations[CurrentStation].Dummy = true;
+						}
+					}
 				}
 					break;
 				case TrackCommand.Station:
@@ -1727,12 +1738,7 @@ namespace CsvRwRouteParser
 							}
 						}
 					}
-
-					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
-					{
-						CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
-					}
-
+					
 					CurrentRoute.Stations[CurrentStation].ArrivalTime = arr;
 					CurrentRoute.Stations[CurrentStation].ArrivalSoundBuffer = null;
 					CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
@@ -1755,6 +1761,18 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].StationPassAlarm = false;
 					CurrentStop = -1;
 					DepartureSignalUsed = false;
+					//Detect common BVE2 / BVE4 dummy stations, missing names etc.
+					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
+					{
+						if (CurrentRoute.Stations[CurrentStation].OpenLeftDoors || CurrentRoute.Stations[CurrentStation].OpenRightDoors)
+						{
+							CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture);
+						}
+						else if(CurrentRoute.Stations[CurrentStation].ForceStopSignal)
+						{
+							CurrentRoute.Stations[CurrentStation].Dummy = true;
+						}
+					}
 				}
 					break;
 				case TrackCommand.StationXML:
