@@ -30,12 +30,42 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
 	<!-- Some Sanford Mace demo stuff -->
-		<Patch>
+	<Patch>
 		<Hash>449E92E323EE340FF740E392C12FF81DB483E58533FFDC78AE286899D987CBF1</Hash>
 		<FileName>Circulator-csv.csv</FileName>
 		<AccurateObjectDisposal>false</AccurateObjectDisposal>
 		<!-- Ignore the distance in the comment, designed for BVE2 renderer -->
 		<ViewingDistance>500</ViewingDistance>
+	</Patch>
+	<Patch>
+		<Hash>11B53D67BACB601E575597B46365AFFA93595E5E7AD760536B5D05680441A616</Hash>
+		<FileName>Dogbone_BVE2-BVE4-Lo.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>3D2AC5D22E424A279A956CB94E2DB6182814451DD9AF7755A0E2AE53A625CAD2</Hash>
+		<FileName>Dogbone_BVE4-Hi.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>5958EAE5DA2E2AB569EF1BAC12844FF90D1876A96C22B12561F9B1AF2DFD06A3</Hash>
+		<FileName>Great circle.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>9C03EE03E6C0B8749092E999C21B9881E4D5725691F695FF1F982DD2A95B7C3F</Hash>
+		<FileName>Loop back.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>E486A420A35FAC1EA2D7CF9AFA5C5D5913850483F342E0FE4AB83E5F7C6CA605</Hash>
+		<FileName>Straigt circle.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>CDAD46F4AACD69E143BC36A409952A630D173913E8FD728197B68013EB0AE339</Hash>
