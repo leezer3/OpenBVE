@@ -1764,13 +1764,27 @@ namespace CsvRwRouteParser
 					//Detect common BVE2 / BVE4 dummy stations, missing names etc.
 					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
 					{
-						if (CurrentRoute.Stations[CurrentStation].OpenLeftDoors || CurrentRoute.Stations[CurrentStation].OpenRightDoors)
+						//Set default name
+						CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture);
+						if(CurrentRoute.Stations[CurrentStation].ForceStopSignal)
 						{
-							CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture);
-						}
-						else if(CurrentRoute.Stations[CurrentStation].ForceStopSignal)
-						{
-							CurrentRoute.Stations[CurrentStation].Dummy = true;
+							if (IsRW)
+							{
+								/*
+								 * NOTE: The Track.Sta command is not valid in RW format routes (and this is what allows the
+								 * door direction to be set). Let's assume that no name and a forced red signal
+								 * is actualy a signalling control station
+								 * e.g. Rocky Mountains Express
+								 *
+								 * However, the Station format command can *also* be used in a CSV route,
+								 * where according to the documentation, both doors are assumed to open. Assume that in this case
+								 * it was deliberate....
+								 */
+								CurrentRoute.Stations[CurrentStation].Dummy = true;
+								CurrentRoute.Stations[CurrentStation].Name = string.Empty;
+								CurrentRoute.Stations[CurrentStation].OpenLeftDoors = false;
+								CurrentRoute.Stations[CurrentStation].OpenRightDoors = false;
+							}
 						}
 					}
 				}
