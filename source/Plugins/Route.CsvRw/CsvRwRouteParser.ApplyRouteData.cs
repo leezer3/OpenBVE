@@ -24,6 +24,13 @@ namespace CsvRwRouteParser
 			{
 				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Warning: " + CompatibilityObjectsUsed + " compatibility objects were used.");
 			}
+
+			if (Data.FirstUsedBlock == -1)
+			{
+				//Not a routefile after all then....
+				throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_noobjects"));
+			}
+
 			if (PreviewOnly)
 			{
 				if (freeObjCount == 0 && railtypeCount == 0)

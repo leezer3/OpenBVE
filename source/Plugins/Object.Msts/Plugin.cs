@@ -51,6 +51,10 @@ namespace Plugin
 
 		public override bool CanLoadObject(string path)
 		{
+			if (string.IsNullOrEmpty(path) || !File.Exists(path))
+			{
+				return false;
+			}
 			Stream fb = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 
 			byte[] buffer = new byte[34];

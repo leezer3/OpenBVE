@@ -57,6 +57,10 @@ namespace CsvRwRouteParser
 	    /// <returns>Whether the plugin can load the specified route.</returns>
 	    public override bool CanLoadRoute(string path)
 	    {
+		    if (string.IsNullOrEmpty(path) || !File.Exists(path))
+		    {
+			    return false;
+		    }
 		    if (path.EndsWith(".rw", StringComparison.InvariantCultureIgnoreCase))
 		    {
 			    return true;

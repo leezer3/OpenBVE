@@ -19,29 +19,30 @@ namespace Plugin
 		/// <returns>Whether the plugin can load the specified sound.</returns>
 		public override bool CanLoadSound(string path)
 		{
-			if (File.Exists(path))
+			if (string.IsNullOrEmpty(path) || !File.Exists(path))
 			{
-				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+				return false;
+			}
+
+			using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+				using (BinaryReader reader = new BinaryReader(stream))
 				{
-					using (BinaryReader reader = new BinaryReader(stream))
+					byte[] magicNumber = reader.ReadBytes(3);
+
+					// without an ID3 tag or with an ID3v1 tag
+					if (magicNumber[0] == 0xFF && magicNumber[1] == 0xFB)
 					{
-						byte[] magicNumber = reader.ReadBytes(3);
+						return true;
+					}
 
-						// without an ID3 tag or with an ID3v1 tag
-						if (magicNumber[0] == 0xFF && magicNumber[1] == 0xFB)
-						{
-							return true;
-						}
-
-						// with an ID3v2 tag
-						if (magicNumber[0] == 0x49 && magicNumber[1] == 0x44 && magicNumber[2] == 0x33)
-						{
-							return true;
-						}
+					// with an ID3v2 tag
+					if (magicNumber[0] == 0x49 && magicNumber[1] == 0x44 && magicNumber[2] == 0x33)
+					{
+						return true;
 					}
 				}
 			}
-
 			return false;
 		}
 

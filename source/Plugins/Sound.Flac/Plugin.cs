@@ -16,17 +16,21 @@ namespace Plugin {
 		/// <param name="path">The path to the file or folder that contains the sound.</param>
 		/// <returns>Whether the plugin can load the specified sound.</returns>
 		public override bool CanLoadSound(string path) {
-			if (File.Exists(path)) {
-				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-					using (BinaryReader reader = new BinaryReader(stream)) {
-						if (reader.ReadUInt32() != 0x43614C66) {
-							return false;
-						}
+			if (string.IsNullOrEmpty(path) || !File.Exists(path))
+			{
+				return false;
+			}
+			using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+				using (BinaryReader reader = new BinaryReader(stream))
+				{
+					if (reader.ReadUInt32() != 0x43614C66)
+					{
+						return false;
 					}
 				}
-				return true;
 			}
-			return false;
+			return true;
 		}
 		
 		/// <summary>Loads the specified sound.</summary>
