@@ -91,7 +91,6 @@ namespace OpenBve
 				{
 					if (args[i] != null)
 					{
-						MessageBox.Show(args[i]);
 						if (System.IO.File.Exists(args[i]))
 						{
 							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
