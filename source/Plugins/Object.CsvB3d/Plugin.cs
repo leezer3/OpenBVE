@@ -40,15 +40,15 @@ namespace Plugin
 				    return false;
 			    }
 
-			    bool currentlyLoadingRoute = false;
+			    bool currentlyLoading = false;
 
 			    if (currentHost.Application != HostApplication.ObjectViewer)
 			    {
 					for (int i = 0; i < currentHost.Plugins.Length; i++)
 				    {
-					    if (currentHost.Plugins[i].Route != null && currentHost.Plugins[i].Route.IsLoading)
+					    if (currentHost.Plugins[i].Route != null && currentHost.Plugins[i].Route.IsLoading || currentHost.Plugins[i].Train != null && currentHost.Plugins[i].Train.IsLoading)
 					    {
-						    currentlyLoadingRoute = true;
+						    currentlyLoading = true;
 						    break;
 					    }
 				    }
@@ -84,7 +84,7 @@ namespace Plugin
 				    return false;
 			    }
 
-			    if (currentlyLoadingRoute)
+			    if (currentlyLoading)
 			    {
 					/*
 					 * https://github.com/leezer3/OpenBVE/issues/666
