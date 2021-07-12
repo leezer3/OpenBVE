@@ -27,6 +27,7 @@ namespace OpenBve
 
 		/// <summary>The current routefile search folder</summary>
 		private string currentRouteFolder;
+		private bool populateRouteOnce;
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
 
@@ -121,7 +122,19 @@ namespace OpenBve
 				});
 				return;
 			}
+			if (populateRouteOnce)
+			{
+				/*
+				 * If we attempt to browse to the temp folder, we'll likely get an infinite loop
+				 * from FS changed events, unless we only populate the folder once
+				 */
+				if (currentRouteFolder == System.IO.Path.GetTempPath())
+				{
+					return;
+				}
+			}
 			populateRouteList(currentRouteFolder);
+			populateRouteOnce = currentRouteFolder == System.IO.Path.GetTempPath();
 			//If this method is triggered whilst the form is disposing, bad things happen...
 			if (listviewRouteFiles.Columns.Count > 0)
 			{
@@ -504,6 +517,7 @@ namespace OpenBve
 
 		/// <summary>The current train search folder</summary>
 		private string currentTrainFolder;
+		private bool populateTrainOnce;
 
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e)
 		{
@@ -563,7 +577,19 @@ namespace OpenBve
 				});
 				return;
 			}
+			if (populateTrainOnce)
+			{
+				/*
+				 * If we attempt to browse to the temp folder, we'll likely get an infinite loop
+				 * from FS changed events, unless we only populate the folder once
+				 */
+				if (currentTrainFolder == System.IO.Path.GetTempPath())
+				{
+					return;
+				}
+			}
 			populateTrainList(currentTrainFolder);
+			populateTrainOnce = currentTrainFolder == System.IO.Path.GetTempPath();
 			if (listviewTrainFolders.Columns.Count > 0)
 			{
 				listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
