@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
@@ -76,15 +76,22 @@ namespace TrainManager.SafetySystems {
 		[DllImport("User32.dll")]
 		public static extern Int32 SetForegroundWindow(int hWnd);
 		
-		public override bool Load(VehicleSpecs specs, InitializationModes mode)
+		public override bool Load()
 		{
 			if (externalCrashed)
 			{
 				//Most likely the plugin proxy app failed to launch or something
 				return false;
 			}
-			if (pipeProxy.Load(specs, mode))
+			if (pipeProxy.Load())
 			{
+				return true;
+			}
+			return false;
+		}
+
+		public override bool Initialize(VehicleSpecs specs, InitializationModes mode) {
+			if (pipeProxy.Initialize(specs, mode)) {
 				UpdatePower();
 				UpdateBrake();
 				UpdateReverser();

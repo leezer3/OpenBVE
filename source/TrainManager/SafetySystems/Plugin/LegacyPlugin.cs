@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -163,7 +163,7 @@ namespace TrainManager.SafetySystems
 		}
 
 		// --- functions ---
-		public override bool Load(VehicleSpecs specs, InitializationModes mode)
+		public override bool Load()
 		{
 			int result;
 			bool retry = true;
@@ -235,35 +235,6 @@ namespace TrainManager.SafetySystems
 				return false;
 			}
 
-			try
-			{
-				Win32VehicleSpec win32Spec;
-				win32Spec.BrakeNotches = specs.BrakeNotches;
-				win32Spec.PowerNotches = specs.PowerNotches;
-				win32Spec.AtsNotch = specs.AtsNotch;
-				win32Spec.B67Notch = specs.B67Notch;
-				win32Spec.Cars = specs.Cars;
-				Win32SetVehicleSpec(ref win32Spec.BrakeNotches);
-			}
-			catch (Exception ex)
-			{
-				base.LastException = ex;
-				throw;
-			}
-
-			try
-			{
-				Win32Initialize((int) mode);
-			}
-			catch (Exception ex)
-			{
-				base.LastException = ex;
-				throw;
-			}
-
-			UpdatePower();
-			UpdateBrake();
-			UpdateReverser();
 			if (PanelHandle.IsAllocated)
 			{
 				PanelHandle.Free();
@@ -276,6 +247,35 @@ namespace TrainManager.SafetySystems
 
 			PanelHandle = GCHandle.Alloc(Panel, GCHandleType.Pinned);
 			SoundHandle = GCHandle.Alloc(Sound, GCHandleType.Pinned);
+			return true;
+		}
+
+		public override bool Initialize(VehicleSpecs specs, InitializationModes mode) {
+
+			try {
+				Win32VehicleSpec win32Spec;
+				win32Spec.BrakeNotches = specs.BrakeNotches;
+				win32Spec.PowerNotches = specs.PowerNotches;
+				win32Spec.AtsNotch = specs.AtsNotch;
+				win32Spec.B67Notch = specs.B67Notch;
+				win32Spec.Cars = specs.Cars;
+				Win32SetVehicleSpec(ref win32Spec.BrakeNotches);
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+
+			try {
+				Win32Initialize((int)mode);
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+
+			UpdatePower();
+			UpdateBrake();
+			UpdateReverser();
+
 			return true;
 		}
 

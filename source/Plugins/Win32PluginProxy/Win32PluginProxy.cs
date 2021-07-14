@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -75,7 +75,7 @@ namespace WCFServer
 			this.PluginFile = fileName;
 		}
 
-		public bool Load(VehicleSpecs specs, InitializationModes mode)
+		public bool Load()
 		{
 			int result;
 			try
@@ -133,33 +133,6 @@ namespace WCFServer
 				return false;
 			}
 
-			try
-			{
-				Win32VehicleSpec win32Spec;
-				win32Spec.BrakeNotches = specs.BrakeNotches;
-				win32Spec.PowerNotches = specs.PowerNotches;
-				win32Spec.AtsNotch = specs.AtsNotch;
-				win32Spec.B67Notch = specs.B67Notch;
-				win32Spec.Cars = specs.Cars;
-				Win32SetVehicleSpec(ref win32Spec.BrakeNotches);
-			}
-			catch (Exception ex)
-			{
-				Callback.ReportError("Error loading Win32 plugin: " + ex);
-				return false;
-			}
-
-			try
-			{
-				Console.WriteLine(@"Initializing in mode: " + mode);
-				Win32Initialize((int) mode);
-			}
-			catch (Exception ex)
-			{
-				Callback.ReportError("Error loading Win32 plugin: " + ex);
-				return false;
-			}
-
 			Console.WriteLine(@"Plugin loaded successfully.");
 			if (PanelHandle.IsAllocated) {
 				PanelHandle.Free();
@@ -169,6 +142,31 @@ namespace WCFServer
 			}
 			PanelHandle = GCHandle.Alloc(Panel, GCHandleType.Pinned);
 			SoundHandle = GCHandle.Alloc(Sound, GCHandleType.Pinned);
+			return true;
+		}
+
+		public bool Initialize(VehicleSpecs specs, InitializationModes mode) {
+			try {
+				Win32VehicleSpec win32Spec;
+				win32Spec.BrakeNotches = specs.BrakeNotches;
+				win32Spec.PowerNotches = specs.PowerNotches;
+				win32Spec.AtsNotch = specs.AtsNotch;
+				win32Spec.B67Notch = specs.B67Notch;
+				win32Spec.Cars = specs.Cars;
+				Win32SetVehicleSpec(ref win32Spec.BrakeNotches);
+			} catch (Exception ex) {
+				Callback.ReportError("Error loading Win32 plugin: " + ex);
+				return false;
+			}
+
+			try {
+				Console.WriteLine(@"Initializing in mode: " + mode);
+				Win32Initialize((int)mode);
+			} catch (Exception ex) {
+				Callback.ReportError("Error loading Win32 plugin: " + ex);
+				return false;
+			}
+
 			return true;
 		}
 

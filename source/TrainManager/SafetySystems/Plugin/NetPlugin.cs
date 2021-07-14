@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -80,7 +80,7 @@ namespace TrainManager.SafetySystems
 		}
 
 		// --- functions ---
-		public override bool Load(VehicleSpecs specs, InitializationModes mode)
+		public override bool Load()
 		{
 			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.PlaySound, this.AddInterfaceMessage, this.AddScore);
 			bool success;
@@ -107,20 +107,6 @@ namespace TrainManager.SafetySystems
 			if (success)
 			{
 				base.Panel = properties.Panel ?? new int[] { };
-#if !DEBUG
-				try {
-#endif
-				Api.SetVehicleSpecs(specs);
-				Api.Initialize(mode);
-#if !DEBUG
-				} catch (Exception ex) {
-					base.LastException = ex;
-					throw;
-				}
-#endif
-				UpdatePower();
-				UpdateBrake();
-				UpdateReverser();
 				return true;
 			}
 
@@ -131,6 +117,24 @@ namespace TrainManager.SafetySystems
 			}
 			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for an unspecified reason.");
 			return false;
+		}
+
+		public override bool Initialize(VehicleSpecs specs, InitializationModes mode) {
+#if !DEBUG
+				try {
+#endif
+			Api.SetVehicleSpecs(specs);
+			Api.Initialize(mode);
+#if !DEBUG
+				} catch (Exception ex) {
+					base.LastException = ex;
+					throw;
+				}
+#endif
+			UpdatePower();
+			UpdateBrake();
+			UpdateReverser();
+			return true;
 		}
 
 		public override void Unload()

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -153,11 +153,6 @@ namespace TrainManager.Trains
 			}
 
 			/*
-			 * Prepare initialization data for the plugin.
-			 * */
-
-			InitializationModes mode = (InitializationModes) TrainManagerBase.CurrentOptions.TrainStart;
-			/*
 			 * Check if the plugin is a .NET plugin.
 			 * */
 			Assembly assembly;
@@ -218,7 +213,7 @@ namespace TrainManager.Trains
 
 						IRuntime api = assembly.CreateInstance(type.FullName) as IRuntime;
 						Plugin = new NetPlugin(pluginFile, trainFolder, api, this);
-						if (Plugin.Load(vehicleSpecs(), mode))
+						if (Plugin.Load())
 						{
 							return true;
 						}
@@ -258,7 +253,7 @@ namespace TrainManager.Trains
 				{
 					//We can't load the plugin directly on x64 Windows, so use the proxy interface
 					Plugin = new ProxyPlugin(pluginFile, this);
-					if (Plugin.Load(vehicleSpecs(), mode))
+					if (Plugin.Load())
 					{
 						return true;
 					}
@@ -280,7 +275,7 @@ namespace TrainManager.Trains
 			}
 
 			Plugin = new Win32Plugin(pluginFile, this);
-			if (Plugin.Load(vehicleSpecs(), mode))
+			if (Plugin.Load())
 			{
 				return true;
 			}
@@ -303,6 +298,20 @@ namespace TrainManager.Trains
 			{
 				Plugin.IsDefault = true;
 			}
+		}
+
+		public bool InitializePlugin() {
+			/*
+			 * Prepare initialization data for the plugin.
+			 * */
+
+			InitializationModes mode = (InitializationModes)TrainManagerBase.CurrentOptions.TrainStart;
+
+			if (Plugin.Initialize(vehicleSpecs(), mode)) {
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>Unloads the currently loaded plugin, if any.</summary>

@@ -1,4 +1,4 @@
-﻿using System.ServiceModel;
+using System.ServiceModel;
 using OpenBveApi.Runtime;
 
 namespace OpenBveApi.Interop
@@ -14,11 +14,16 @@ namespace OpenBveApi.Interop
 		void SetPluginFile(string fileName, int SimulationProcessID);
 
 		/// <summary>Called to load and initialize the plugin.</summary>
-		/// <param name="specs">The train specifications.</param>
-		/// <param name="mode">The initialization mode of the train.</param>
 		/// <returns>Whether loading the plugin was successful.</returns>
 		[OperationContract]
-		bool Load(VehicleSpecs specs, InitializationModes mode);
+		bool Load();
+
+		/// <summary>Called to initialize the plugin.</summary>
+		/// <param name="specs">The train specifications.</param>
+		/// <param name="mode">The initialization mode of the train.</param>
+		/// <returns>Whether initializing the plugin was successful.</returns>
+		[OperationContract]
+		bool Initialize(VehicleSpecs specs, InitializationModes mode);
 
 		/// <summary>Called to unload the plugin</summary>
 		[OperationContract]

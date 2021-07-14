@@ -200,6 +200,27 @@ namespace OpenBve {
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Route loading plugins available.");
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableObjectPluginCount + " Object loading plugins available.");
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Sound loading plugins available.");
+
+			// initialize trains
+			Program.TrainManager.Trains = new TrainBase[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
+			for (int k = 0; k < Program.TrainManager.Trains.Length; k++)
+			{
+				if (k == Program.TrainManager.Trains.Length - 1 & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0) {
+					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Bogus);
+				} else {
+					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Pending);
+				}
+
+			}
+			TrainManager.PlayerTrain = Program.TrainManager.Trains[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length];
+
+			// load player train plugin
+			if (!TrainManager.PlayerTrain.LoadCustomPlugin(CurrentTrainFolder, CurrentTrainEncoding))
+			{
+				TrainManager.PlayerTrain.LoadDefaultPlugin(CurrentTrainFolder);
+			}
+
+			// load route
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
@@ -262,24 +283,8 @@ namespace OpenBve {
 				Program.FileSystem.AppendToLogFile("The processed route file only contains a single station.");
 			}
 			Program.FileSystem.AppendToLogFile("Route file loaded successfully.");
-			// initialize trains
+
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			Program.TrainManager.Trains = new TrainBase[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
-			for (int k = 0; k < Program.TrainManager.Trains.Length; k++)
-			{
-				if (k == Program.TrainManager.Trains.Length - 1 & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0)
-				{
-					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Bogus);
-				}
-				else
-				{
-					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Pending);
-				}
-				
-			}
-			TrainManager.PlayerTrain = Program.TrainManager.Trains[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length];
-
-
 
 			// load trains
 			for (int k = 0; k < Program.TrainManager.Trains.Length; k++) {
@@ -312,6 +317,7 @@ namespace OpenBve {
 					train.Specs.DoorCloseMode = DoorMode.Manual;
 				}
 			}
+
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
@@ -319,19 +325,15 @@ namespace OpenBve {
 			if (Program.CurrentRoute.Sections.Length > 0) {
 				Program.CurrentRoute.UpdateAllSections();
 			}
-			// load plugin
 
-
+			// load other train plugin
 			CurrentTrain = 0;
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++) {
 				if ( Program.TrainManager.Trains[i].State != TrainState.Bogus) {
-					if ( Program.TrainManager.Trains[i].IsPlayerTrain) {
-						if (! Program.TrainManager.Trains[i].LoadCustomPlugin(Program.TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
-							Program.TrainManager.Trains[i].LoadDefaultPlugin(Program.TrainManager.Trains[i].TrainFolder);
-						}
-					} else {
+					if (!Program.TrainManager.Trains[i].IsPlayerTrain) {
 						Program.TrainManager.Trains[i].LoadDefaultPlugin( Program.TrainManager.Trains[i].TrainFolder);
 					}
+					Program.TrainManager.Trains[i].InitializePlugin();
 					for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++) {
 						if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
 						{

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
@@ -69,11 +69,15 @@ namespace TrainManager.SafetySystems
 		internal PluginAI AI;
 
 		// --- functions ---
-		/// <summary>Called to load and initialize the plugin.</summary>
+		/// <summary>Called to load the plugin.</summary>
+		/// <returns>Whether loading the plugin was successful.</returns>
+		public abstract bool Load();
+
+		/// <summary>Called to initialize the plugin.</summary>
 		/// <param name="specs">The train specifications.</param>
 		/// <param name="mode">The initialization mode of the train.</param>
-		/// <returns>Whether loading the plugin was successful.</returns>
-		public abstract bool Load(VehicleSpecs specs, InitializationModes mode);
+		/// <returns>Whether initializing the plugin was successful.</returns>
+		public abstract bool Initialize(VehicleSpecs specs, InitializationModes mode);
 
 		/// <summary>Called to unload the plugin.</summary>
 		public abstract void Unload();
