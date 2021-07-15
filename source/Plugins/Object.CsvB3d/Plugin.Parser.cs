@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using OpenBveApi;
@@ -1161,6 +1162,63 @@ namespace Plugin
 									Builder.Materials[j].NighttimeTexture = tnight;
 								}
 							} break;
+						case "url":
+							string tUday = null, tUnight = null;
+							if (Arguments.Length >= 1 && !string.IsNullOrEmpty(Arguments[0]))
+							{
+								string tDayURL = Arguments[0];
+								if (!Regex.IsMatch(tDayURL, @"^https?:\/\/", RegexOptions.IgnoreCase))
+								{
+									//If no http, add it
+									tDayURL = "http://" + tDayURL;
+								}
+							
+								Uri textureUri;
+								if (Uri.TryCreate(tDayURL, UriKind.Absolute, out textureUri))
+								{
+									using (MyWebClient downloadClient = new MyWebClient())
+									{
+										string tempFile = System.IO.Path.GetTempFileName();
+										downloadClient.DownloadFile(tDayURL, tempFile);
+										tUday = tempFile;
+									}
+								}
+								else
+								{
+									currentHost.AddMessage(MessageType.Error, false, "Not a valid URL in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+
+							}
+							if (Arguments.Length >= 2 && !string.IsNullOrEmpty(Arguments[1]))
+							{
+								string tNightURL = Arguments[1];
+								if (!Regex.IsMatch(tNightURL, @"^https?:\/\/", RegexOptions.IgnoreCase))
+								{
+									//If no http, add it
+									tNightURL = "http://" + tNightURL;
+								}
+							
+								Uri textureUri;
+								if (Uri.TryCreate(tNightURL, UriKind.Absolute, out textureUri))
+								{
+									using (MyWebClient downloadClient = new MyWebClient())
+									{
+										string tempFile = System.IO.Path.GetTempFileName();
+										downloadClient.DownloadFile(tNightURL, tempFile);
+										tUnight = tempFile;
+									}
+								}
+								else
+								{
+									currentHost.AddMessage(MessageType.Error, false, "Not a valid URL in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+
+							}
+							for (int j = 0; j < Builder.Materials.Length; j++) {
+								Builder.Materials[j].DaytimeTexture = tUday;
+								Builder.Materials[j].NighttimeTexture = tUnight;
+							}
+							break;
 						case "settext":
 						case "text":
 							{
@@ -1568,6 +1626,19 @@ namespace Plugin
 					return true;
 			}
 			return false;
+		}
+
+		private class MyWebClient : WebClient
+		{
+			/*
+			 * Minor helper class in order to set a 5s timeout, not the default 30s
+			 */
+			protected override WebRequest GetWebRequest(Uri uri)
+			{
+				WebRequest w = base.GetWebRequest(uri);
+				w.Timeout = 5000;
+				return w;
+			}
 		}
 	}
 }
