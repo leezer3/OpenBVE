@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using Path = OpenBveApi.Path;
 
 namespace Plugin
 {
@@ -1167,50 +1168,82 @@ namespace Plugin
 							if (Arguments.Length >= 1 && !string.IsNullOrEmpty(Arguments[0]))
 							{
 								string tDayURL = Arguments[0];
-								if (!Regex.IsMatch(tDayURL, @"^https?:\/\/", RegexOptions.IgnoreCase))
+								try
 								{
-									//If no http, add it
-									tDayURL = "http://" + tDayURL;
-								}
-							
-								Uri textureUri;
-								if (Uri.TryCreate(tDayURL, UriKind.Absolute, out textureUri))
-								{
-									using (MyWebClient downloadClient = new MyWebClient())
+									if (!Regex.IsMatch(tDayURL, @"^https?:\/\/", RegexOptions.IgnoreCase))
 									{
-										string tempFile = System.IO.Path.GetTempFileName();
-										downloadClient.DownloadFile(tDayURL, tempFile);
-										tUday = tempFile;
+										//If no http, add it
+										tDayURL = "http://" + tDayURL;
+									}
+
+									Uri textureUri;
+									if (Uri.TryCreate(tDayURL, UriKind.Absolute, out textureUri))
+									{
+										using (MyWebClient downloadClient = new MyWebClient())
+										{
+											string tempFile = System.IO.Path.GetTempFileName();
+											downloadClient.DownloadFile(tDayURL, tempFile);
+											FileInfo fi = new FileInfo(tempFile);
+											if (fi.Length < 100)
+											{
+												//Zero byte / 404 text probably
+												currentHost.AddMessage(MessageType.Error, false, "Invalid texture downloaded in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											}
+											else
+											{
+												tUday = tempFile;
+											}
+										}
+									}
+									else
+									{
+										currentHost.AddMessage(MessageType.Error, false, "Not a valid URL in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
-								else
+								catch
 								{
-									currentHost.AddMessage(MessageType.Error, false, "Not a valid URL in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured whilst attempting to download " + Arguments[0] + " in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
 							}
 							if (Arguments.Length >= 2 && !string.IsNullOrEmpty(Arguments[1]))
 							{
 								string tNightURL = Arguments[1];
-								if (!Regex.IsMatch(tNightURL, @"^https?:\/\/", RegexOptions.IgnoreCase))
+								try
 								{
-									//If no http, add it
-									tNightURL = "http://" + tNightURL;
-								}
-							
-								Uri textureUri;
-								if (Uri.TryCreate(tNightURL, UriKind.Absolute, out textureUri))
-								{
-									using (MyWebClient downloadClient = new MyWebClient())
+									if (!Regex.IsMatch(tNightURL, @"^https?:\/\/", RegexOptions.IgnoreCase))
 									{
-										string tempFile = System.IO.Path.GetTempFileName();
-										downloadClient.DownloadFile(tNightURL, tempFile);
-										tUnight = tempFile;
+										//If no http, add it
+										tNightURL = "http://" + tNightURL;
+									}
+
+									Uri textureUri;
+									if (Uri.TryCreate(tNightURL, UriKind.Absolute, out textureUri))
+									{
+										using (MyWebClient downloadClient = new MyWebClient())
+										{
+											string tempFile = System.IO.Path.GetTempFileName();
+											downloadClient.DownloadFile(tNightURL, tempFile);
+											FileInfo fi = new FileInfo(tempFile);
+											if (fi.Length < 100)
+											{
+												//Zero byte / 404 text probably
+												currentHost.AddMessage(MessageType.Error, false, "Invalid texture downloaded in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											}
+											else
+											{
+												tUnight = tempFile;
+											}
+										}
+									}
+									else
+									{
+										currentHost.AddMessage(MessageType.Error, false, "Not a valid URL in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
-								else
+								catch
 								{
-									currentHost.AddMessage(MessageType.Error, false, "Not a valid URL in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured whilst attempting to download " + Arguments[0] + " in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
 							}
