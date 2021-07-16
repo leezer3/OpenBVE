@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,17 +43,19 @@ namespace OpenBveApi.Interface
 						XElement source = unit.Element(xmlns + "source");
 						XElement target = unit.Element(xmlns + "target");
 
+						Id = (string)unit.Attribute("id");
+
 						if (target == null && languageCode != "en-US")
 						{
+							Value = ((string)source).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
 							return;
 						}
-
-						Id = (string)unit.Attribute("id");
+						
 						Value = (languageCode != "en-US" ? (string)target : (string)source).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
 						if (string.IsNullOrEmpty(Value))
 						{
 							//if target is empty / null, let's use the untranslated value https://github.com/leezer3/OpenBVE/issues/663
-							Value = ((string)target).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
+							Value = ((string)source).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
 						}
 					}
 				}
