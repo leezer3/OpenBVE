@@ -66,6 +66,24 @@ namespace OpenBve
 			}
 		}
 
+		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default, DisplayDevice.Default, 3,0, flags)
+		{
+			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+			{
+				return;
+			}
+			try
+			{
+				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+				Icon ico = new Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
+				this.Icon = ico;
+			}
+			catch
+			{
+				//it's only an icon
+			}
+		}
+
 
 		//This renders the frame
 		protected override void OnRenderFrame(FrameEventArgs e)

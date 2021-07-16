@@ -37,12 +37,25 @@ namespace OpenBve
 						try
 						{
 							DisplayDevice.Default.ChangeResolution(currentResolution);
-							Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
-								GameWindowFlags.Default)
+							if (Interface.CurrentOptions.IsUseNewRenderer)
 							{
-								Visible = true,
-								WindowState = WindowState.Fullscreen,
-							};
+								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
+									GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
+								{
+									Visible = true,
+									WindowState = WindowState.Fullscreen,
+								};
+							}
+							else
+							{
+								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
+									GameWindowFlags.Default)
+								{
+									Visible = true,
+									WindowState = WindowState.Fullscreen,
+								};	
+							}
+							
 							resolutionFound = true;
 							break;
 						}
@@ -71,11 +84,23 @@ namespace OpenBve
 			{
 				try
 				{
-					Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
-						Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+					if (Interface.CurrentOptions.IsUseNewRenderer)
 					{
-						Visible = true
-					};
+						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
+							Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
+						{
+							Visible = true
+						};
+					}
+					else
+					{
+						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
+							Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+						{
+							Visible = true
+						};
+					}
+					
 				}
 				catch
 				{

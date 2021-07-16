@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -133,8 +133,6 @@ namespace LibRender2.Backgrounds
 			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
 				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
-				GL.Enable(EnableCap.Texture2D);
-
 				if (alpha == 1.0f)
 				{
 					GL.Disable(EnableCap.Blend);
@@ -177,15 +175,11 @@ namespace LibRender2.Backgrounds
 				VertexArrayObject VAO = (VertexArrayObject)data.VAO;
 				VAO.Bind();
 				renderer.lastVAO = VAO.handle;
-				for (int i = 0; i + 9 < 32 * 10; i += 10)
+				for (int i = 0; i + 11 < 32 * 12; i += 12)
 				{
-					VAO.Draw(PrimitiveType.Quads, i, 4);
-					VAO.Draw(PrimitiveType.Triangles, i + 4, 3);
-					VAO.Draw(PrimitiveType.Triangles, i + 7, 3);
+					VAO.Draw(PrimitiveType.Triangles, i, 12);
 				}
 				renderer.DefaultShader.Deactivate();
-
-				GL.Disable(EnableCap.Texture2D);
 				renderer.RestoreBlendFunc();
 			}
 		}

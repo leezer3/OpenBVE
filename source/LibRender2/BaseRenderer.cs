@@ -365,9 +365,13 @@ namespace LibRender2
 		public virtual void ResetOpenGlState()
 		{
 			GL.Enable(EnableCap.CullFace);
-			GL.Disable(EnableCap.Lighting);
-			GL.Disable(EnableCap.Fog);
-			GL.Disable(EnableCap.Texture2D);
+			if (!AvailableNewRenderer)
+			{
+				GL.Disable(EnableCap.Lighting);
+				GL.Disable(EnableCap.Fog);
+				GL.Disable(EnableCap.Texture2D);
+			}
+			
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
@@ -984,7 +988,6 @@ namespace LibRender2
 
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
-			GL.Disable(EnableCap.Lighting);
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
 				return;
