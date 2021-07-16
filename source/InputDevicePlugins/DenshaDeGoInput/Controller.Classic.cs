@@ -41,8 +41,14 @@ namespace DenshaDeGoInput
 		/// <summary>Whether the adapter uses a hat to map the direction buttons.</summary>
 		internal static bool UsesHat;
 
+		/// <summary>Whether the adapter uses an axis to map the direction buttons.</summary>
+		internal static bool UsesAxis;
+
 		/// <summary>The index of the hat used to map the direction buttons.</summary>
 		internal static int HatIndex;
+
+		/// <summary>The index of the axis used to map the direction buttons.</summary>
+		internal static int AxisIndex;
 
 		/// <summary>The OpenTK joystick index for this controller.</summary>
 		private int joystickIndex;
@@ -210,7 +216,14 @@ namespace DenshaDeGoInput
 			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake3) ? brakeNotch | BrakeNotchesEnum.Brake3 : brakeNotch & ~BrakeNotchesEnum.Brake3;
 			brakeNotch = joystick.IsButtonDown(ButtonIndex.Brake4) ? brakeNotch | BrakeNotchesEnum.Brake4 : brakeNotch & ~BrakeNotchesEnum.Brake4;
 
-			if (UsesHat)
+			if (UsesAxis)
+			{
+				// The adapter uses an axis to map the direction buttons.
+				// This is the case of some PlayStation adapters.
+				powerNotch = joystick.GetAxis(AxisIndex) < -0.5 ? powerNotch | PowerNotchesEnum.Power2 : powerNotch & ~PowerNotchesEnum.Power2;
+				powerNotch = joystick.GetAxis(AxisIndex) > 0.5 ? powerNotch | PowerNotchesEnum.Power3 : powerNotch & ~PowerNotchesEnum.Power3;
+			}
+			else if (UsesHat)
 			{
 				// The adapter uses the hat to map the direction buttons.
 				// This is the case of some PlayStation adapters.
@@ -224,9 +237,9 @@ namespace DenshaDeGoInput
 				powerNotch = joystick.IsButtonDown(ButtonIndex.Power3) ? powerNotch | PowerNotchesEnum.Power3 : powerNotch & ~PowerNotchesEnum.Power3;
 			}
 
-			if (UsesHat && powerNotch == PowerNotchesEnum.P4)
+			if ((UsesHat || UsesAxis) && powerNotch == PowerNotchesEnum.P4)
 			{
-				// Hack for adapters using a hat where pressing left and right simultaneously reports only left being pressed
+				// Hack for adapters using a hat/axis where pressing left and right simultaneously reports only left being pressed
 				if (InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P3)
 				{
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.N;
@@ -236,9 +249,9 @@ namespace DenshaDeGoInput
 					InputTranslator.PowerNotch = InputTranslator.PowerNotches.P4;
 				}
 			}
-			else if (UsesHat && powerNotch == PowerNotchesEnum.Transition)
+			else if ((UsesHat || UsesAxis ) && powerNotch == PowerNotchesEnum.Transition)
 			{
-				// Hack for adapters using a hat where pressing left and right simultaneously reports nothing being pressed, the same as the transition state
+				// Hack for adapters using a hat/axis where pressing left and right simultaneously reports nothing being pressed, the same as the transition state
 				// Has the side effect of the power notch jumping P1>N>P2, but it is barely noticeable unless moving the handle very slowly
 				if (InputTranslator.PreviousPowerNotch < InputTranslator.PowerNotches.P2)
 				{
@@ -327,10 +340,17 @@ namespace DenshaDeGoInput
 				Translations.QuickReferences.HandlePower + "5",
 			};
 
+			UsesHat = false;
+			HatIndex = -1;
+			UsesAxis = false;
+			AxisIndex = -1;
+
 			List<OpenTK.Input.ButtonState> buttonState = GetButtonsState();
 			List<OpenTK.Input.ButtonState> PreviousButtonState;
-			List<HatPosition> HatPositions = GetHatPositions();
-			List<HatPosition> PreviousHatPositions;
+			List<HatPosition> hatPositions = GetHatPositions();
+			List<HatPosition> previousHatPositions;
+			List<float> axisValues = GetAxisValues();
+			List<float> previousAxisValues;
 			List<int> ignored = new List<int>();
 
 			// Button calibration
@@ -396,29 +416,36 @@ namespace DenshaDeGoInput
 			// Clear previous data before calibrating the power handle
 			ignored.Clear();
 			buttonState = GetButtonsState();
-			HatPositions = GetHatPositions();
+			hatPositions = GetHatPositions();
+			axisValues = GetAxisValues();
 
 			// Power handle calibration
 			for (int i = 12; i < 15; i++)
 			{
 				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[i]));
 				PreviousButtonState = buttonState;
-				PreviousHatPositions = HatPositions;
+				previousHatPositions = hatPositions;
+				previousAxisValues = axisValues;
 				buttonState = GetButtonsState();
-				HatPositions = GetHatPositions();
+				hatPositions = GetHatPositions();
+				axisValues = GetAxisValues();
 				int index = GetDifferentPressedIndex(PreviousButtonState, buttonState, ignored);
 				ignored.Add(index);
 
-				int hat = GetChangedHat(PreviousHatPositions, HatPositions);
-				if (hat != -1 && i != 13)
+				int axis = GetChangedAxis(previousAxisValues, axisValues);
+				if (axis != -1 && i == 12)
+				{
+					// If an axis has changed, it means the converter is mapping the direction buttons 
+					UsesAxis = true;
+					AxisIndex = axis;
+				}
+
+				int hat = GetChangedHat(previousHatPositions, hatPositions);
+				if (!UsesAxis && hat != -1 && i == 12)
 				{
 					// If a hat has changed, it means the converter is mapping the direction buttons 
 					UsesHat = true;
 					HatIndex = hat;
-				}
-				else
-				{
-					UsesHat = false;
 				}
 
 				switch (i)
@@ -475,6 +502,25 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>
+		/// Gets the value of the axes of the current controller
+		/// </summary>
+		/// <returns>Value of the axes of the current controller</returns>
+		private static List<float> GetAxisValues()
+		{
+			List<float> axisValues = new List<float>();
+
+			if (InputTranslator.IsControllerConnected)
+			{
+				int index = (((ClassicController)InputTranslator.Controllers[InputTranslator.ActiveControllerGuid]).joystickIndex);
+				for (int i = 0; i < Joystick.GetCapabilities(index).AxisCount; i++)
+				{
+					axisValues.Add(Joystick.GetState(index).GetAxis(i));
+				}
+			}
+			return axisValues;
+		}
+
+		/// <summary>
 		/// Compares two button states to find the index of the button that has been pressed.
 		/// </summary>
 		/// <param name="previousState">The previous state of the buttons.</param>
@@ -502,6 +548,22 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < newPosition.Count; i++)
 			{
 				if (newPosition[i] != previousPosition[i])
+					return i;
+			}
+			return -1;
+		}
+
+		/// <summary>
+		/// Compares two axis values to find the index of the axis that has changed.
+		/// </summary>
+		/// <param name="previousValue">The previous value of the axis.</param>
+		/// <param name="newValue">The new value of the axis.</param>
+		/// <returns>Index of the hat that has changed.</returns>
+		private static int GetChangedAxis(List<float> previousValue, List<float> newValue)
+		{
+			for (int i = 0; i < newValue.Count; i++)
+			{
+				if (newValue[i] != previousValue[i])
 					return i;
 			}
 			return -1;

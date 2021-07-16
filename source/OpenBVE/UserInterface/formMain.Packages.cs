@@ -1542,7 +1542,6 @@ namespace OpenBve
 								Database.currentDatabase.InstalledRoutes.RemoveAt(i);
 							}
 						}
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref result);
 						break;
 					case PackageType.Train:
 						for (int i = Database.currentDatabase.InstalledTrains.Count - 1; i >= 0; i--)
@@ -1552,7 +1551,6 @@ namespace OpenBve
 								Database.currentDatabase.InstalledTrains.RemoveAt(i);
 							}
 						}
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref result);
 						break;
 					case PackageType.Other:
 						for (int i = Database.currentDatabase.InstalledOther.Count - 1; i >= 0; i--)

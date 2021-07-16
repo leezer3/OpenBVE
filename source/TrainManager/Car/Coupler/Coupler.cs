@@ -71,7 +71,7 @@ namespace TrainManager.Car
 			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + baseCar.Length;
 			bool CurrentlyVisible = dist < bid * bid;
 			// Updates the brightness value
-			byte dnb = (byte)baseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness);
+			byte dnb = (byte)baseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, 1.0);
 			
 			// update current section
 			int cs = CurrentCarSection;

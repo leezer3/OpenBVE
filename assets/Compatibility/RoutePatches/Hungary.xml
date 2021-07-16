@@ -7,5 +7,56 @@
 		<Expression Number="207"></Expression>
 		<Expression Number="208"></Expression>
 	</Patch>
+	<!-- Felsopataj - Bogard -->
+	<Patch>
+		<Hash>A6AB359B0BB96E3CD3C93CA854CF90F75D7549D86B36432B0B4DB9A21D9E87DF</Hash>
+		<FileName>fp-bo-3302-bve4.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>D39C7329F5CA4BCE6245ECD22A647E48F9FF29ECC9A159321C3687A6C32A9010</Hash>
+		<FileName>fp-bo-3306-bve4-winter.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- Sellye - Pecs -->
+	<Patch>
+		<Hash>188D837838B3856FF3E8A52BF93719C19077A94085F4D4FEC101E417A4098BA3</Hash>
+		<FileName>Sellye-Pecs IC.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>27604A798B64F6D355572FD3B83FA39F80B0B92F74DB18F41997CE86A3E9FEF9</Hash>
+		<FileName>Sellye-Pecs V43.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>EF7F994D6D75B5661CCA47AECFE53F8C4CFDD572E756C1DE120E9662D67D7E6F</Hash>
+		<FileName>Sellye-Pecs.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- Panorama line -->
+	<Patch>
+		<Hash>CD8CDEBDCE403F31DCFFF204F695EEA0AC4C3DA4947E8A362B727EA256CA025E</Hash>
+		<FileName>Panorama 1.1 - Y1.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>38951241E9A7E33D70972F2861C72FA4C7ED573674785B459253AC921CA43B99</Hash>
+		<FileName>PanoramaLine-ver.1.1.-in developing version.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Vallis Aurea -->
+	<Patch>
+		<Hash>034BE6FF7650947E19CDAE7350608E3D9932CFB848DA6E2F1296C973F2D82503</Hash>
+		<FileName>Vallis Aurea 1.05 - original slow line.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>EF825F873D5D13AC749DD2E7DD9A2E0D5F113D76D28C7F3223D1EC780215464E</Hash>
+		<FileName>Vallis Aurea 1.06 - original slow line.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

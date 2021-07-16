@@ -243,6 +243,23 @@ namespace CsvRwRouteParser
 							currentPatch.ReducedColorTransparency = false;
 						}
 						break;
+					case "ViewingDistance":
+						if (!int.TryParse(childNode.InnerText.Trim(), out currentPatch.ViewingDistance))
+						{
+							currentPatch.ViewingDistance = int.MaxValue;
+						}
+						break;
+					case "Incompatible":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.Incompatible = true;
+						}
+						else
+						{
+							currentPatch.Incompatible = false;
+						}
+						break;
 				}
 			}
 

@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.IO;
 using System.Text;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -49,6 +50,10 @@ namespace Plugin
 
 		public override bool CanLoadObject(string path)
 		{
+			if (string.IsNullOrEmpty(path) || !File.Exists(path))
+			{
+				return false;
+			}
 			if (path.ToLowerInvariant().EndsWith(".l3dobj", StringComparison.InvariantCultureIgnoreCase) || path.ToLowerInvariant().EndsWith(".l3dgrp", StringComparison.InvariantCultureIgnoreCase))
 			{
 				return true;

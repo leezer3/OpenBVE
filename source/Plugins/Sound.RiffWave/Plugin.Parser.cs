@@ -75,7 +75,7 @@ namespace Plugin
 		/// <returns>The wave data.</returns>
 		private static Sound LoadFromFile(string fileName)
 		{
-			using (FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+			using (FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
 				using (BinaryReader reader = new BinaryReader(stream))
 				{

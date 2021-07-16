@@ -415,13 +415,13 @@ namespace OpenBveApi.Math {
 		}
 
 		/// <summary>Rotates the vector based upon three other vectors</summary>
-		/// <param name="firstVector">The first vector</param>
-		/// <param name="secondVector">The second vector</param>
-		/// <param name="thirdVector">The third vector</param>
-		public void Rotate(Vector3 firstVector, Vector3 secondVector, Vector3 thirdVector) {
-			var x = thirdVector.X * this.X + secondVector.X * this.Y + firstVector.X * this.Z;
-			var y = thirdVector.Y * this.X + secondVector.Y * this.Y + firstVector.Y * this.Z;
-			var z = thirdVector.Z * this.X + secondVector.Z * this.Y + firstVector.Z * this.Z;
+		/// <param name="direction">The vector in the Z axis direction</param>
+		/// <param name="up">The vector in the Y axis direction</param>
+		/// <param name="side">The vector in the X axis direction</param>
+		public void Rotate(Vector3 direction, Vector3 up, Vector3 side) {
+			var x = side.X * this.X + up.X * this.Y + direction.X * this.Z;
+			var y = side.Y * this.X + up.Y * this.Y + direction.Y * this.Z;
+			var z = side.Z * this.X + up.Z * this.Y + direction.Z * this.Z;
 			X = x;
 			Y = y;
 			Z = z;

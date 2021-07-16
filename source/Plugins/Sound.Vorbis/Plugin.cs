@@ -20,23 +20,24 @@ namespace Plugin
 		/// <returns>Whether the plugin can load the specified sound.</returns>
 		public override bool CanLoadSound(string path)
 		{
-			if (File.Exists(path))
+			if (string.IsNullOrEmpty(path) || !File.Exists(path))
 			{
-				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
-				{
-					using (BinaryReader reader = new BinaryReader(stream))
-					{
-						uint headerCkID = reader.ReadUInt32();
+				return false;
+			}
 
-						// OggS
-						if (headerCkID == 0x5367674F)
-						{
-							return true;
-						}
+			using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+				using (BinaryReader reader = new BinaryReader(stream))
+				{
+					uint headerCkID = reader.ReadUInt32();
+
+					// OggS
+					if (headerCkID == 0x5367674F)
+					{
+						return true;
 					}
 				}
 			}
-
 			return false;
 		}
 

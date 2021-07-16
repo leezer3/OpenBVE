@@ -95,5 +95,10 @@
 		<!-- Trees and stuff disappearing at first station -->
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<Patch>
+		<Hash>B517C133252145FB5BEBD2FEFA55A8598D3634DA27E904A6964E3E3E35A10AC4</Hash>
+		<FileName>_montagnina.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>

@@ -68,7 +68,7 @@ namespace Plugin {
 		/// <returns>Whether the file can be load as an ACE texture.</returns>
 		private static bool CanLoadFile(string file) {
 			ulong identifier;
-			using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read)) {
+			using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
 					if (stream.Length < 8)
 					{

@@ -6,5 +6,10 @@
 		<FileName>cclc.csv</FileName>
 		<AllowTrackPositionArguments>true</AllowTrackPositionArguments>
 	</Patch>
+	<Patch>
+		<Hash>F3ECCC2ABA65EFFB3D1B62B351DAD0FB1E28262EC70384246A92679DB765AAF0</Hash>
+		<FileName>飼聾s.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>	
   </RoutePatches>
 </openBVE>

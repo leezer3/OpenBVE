@@ -153,7 +153,7 @@ namespace CsvRwRouteParser
 				else
 				{
 					double d0 = currentBlock.Rails[s].RailStart.X - px0;
-					double d1 = currentBlock.Rails[s].RailEnd.X - px1;
+					double d1 = nextBlock.Rails[s].RailEnd.X - px1;
 					if (d0 < 0.0)
 					{
 						if (!Structure.FormL.ContainsKey(FormType))

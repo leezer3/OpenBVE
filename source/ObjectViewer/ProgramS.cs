@@ -1,4 +1,4 @@
-﻿// ╔═════════════════════════════════════════════════════════════╗
+// ╔═════════════════════════════════════════════════════════════╗
 // ║ Program.cs for the Structure Viewer                         ║
 // ╠═════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.       ║
@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
+using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -31,7 +32,7 @@ namespace OpenBve {
 		internal static FileSystem FileSystem = null;
 
 		// members
-	    internal static string[] Files = { };
+	    internal static List<string> Files = new List<string>();
 
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
@@ -137,7 +138,7 @@ namespace OpenBve {
 
 				if (filesToLoad.Count != 0)
 				{
-					Files = filesToLoad.ToArray();
+					Files = filesToLoad;
 				}
 	        }
 
@@ -198,9 +199,7 @@ namespace OpenBve {
 
 		internal static void DragFile(object sender, FileDropEventArgs e)
 		{
-			int n = Files.Length;
-			Array.Resize(ref Files, n + 1);
-			Files[n] = e.FileName;
+			Files.Add(e.FileName);
 			// reset
 			LightingRelative = -1.0;
 			Game.Reset();
@@ -261,14 +260,14 @@ namespace OpenBve {
 		    LightingRelative = -1.0;
 		    Game.Reset();
 			formTrain.Instance?.DisableUI();
-		    for (int i = 0; i < Files.Length; i++)
+		    for (int i = 0; i < Files.Count; i++)
 		    {
 			    try
 			    {
 				    if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 				    {
 					    string currentTrainFolder = System.IO.Path.GetDirectoryName(Files[i]);
-
+					    bool canLoad = false;
 					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
@@ -278,24 +277,34 @@ namespace OpenBve {
 								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
+								canLoad = true;
 								break;
 						    }
 					    }
-						TrainManager.PlayerTrain.Initialize();
-					    foreach (var Car in TrainManager.PlayerTrain.Cars)
+
+					    if (canLoad)
 					    {
-						    double length = TrainManager.PlayerTrain.Cars[0].Length;
-						    Car.Move(-length);
-						    Car.Move(length);
+						    TrainManager.PlayerTrain.Initialize();
+						    foreach (var Car in TrainManager.PlayerTrain.Cars)
+						    {
+							    double length = TrainManager.PlayerTrain.Cars[0].Length;
+							    Car.Move(-length);
+							    Car.Move(length);
+						    }
+						    TrainManager.PlayerTrain.PlaceCars(0);
+						    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+						    {
+							    TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
+							    TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
+							    TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
+							    TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+							    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+						    }
 					    }
-					    TrainManager.PlayerTrain.PlaceCars(0);
-					    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					    else
 					    {
-							TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
-							TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
-							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+							//As we now attempt to load the train as a whole, the most likely outcome is that the train.dat file is MIA
+						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + Files[i] + ".");
 					    }
 				    }
 				    else
@@ -354,12 +363,30 @@ namespace OpenBve {
 						{
 							Application.DoEvents();
 							string[] f = Dialog.FileNames;
-							int n = Files.Length;
-						    Array.Resize(ref Files, n + f.Length);
 							for (int i = 0; i < f.Length; i++)
 				            {
-					            Files[n + i] = f[i];
+
+					            for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+					            {
+									if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(f[i]))
+						            {
+							            // oops, that's actually a routefile- Let's show Route Viewer
+							            string File = System.IO.Path.Combine(Application.StartupPath, "RouteViewer.exe");
+							            if (System.IO.File.Exists(File))
+							            {
+								            System.Diagnostics.Process.Start(File, "\"" + f[i] + "\"");
+							            }
+						            }
+
+						            if (Program.CurrentHost.Plugins[j].Object != null && Program.CurrentHost.Plugins[j].Object.CanLoadObject(f[i]))
+						            {
+							            Files.Add(f[i]);
+						            }
+									
+					            }
+					            
 				            }
+							
 						}
 						else
 						{
@@ -384,7 +411,7 @@ namespace OpenBve {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-		            Files = new string[] {};
+		            Files = new List<string>();
 					NearestTrain.UpdateSpecs();
 					Renderer.ApplyBackgroundColor();
 	                break;

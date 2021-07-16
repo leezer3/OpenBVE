@@ -79,7 +79,7 @@ namespace MechanikRouteParser
 	    /// <returns>Whether the plugin can load the specified route.</returns>
 	    public override bool CanLoadRoute(string path)
 	    {
-		    if (!File.Exists(path))
+		    if (string.IsNullOrEmpty(path) || !File.Exists(path))
 		    {
 			    return false;
 		    }

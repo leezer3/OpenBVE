@@ -416,7 +416,30 @@ namespace OpenBve
 						}
 						else
 						{
-							MessageBox.Show("No plugins found capable of loading routefile: " +Environment.NewLine + CurrentRouteFile);
+							bool isObject = false;
+							for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+							{
+								if (Program.CurrentHost.Plugins[i].Object != null && Program.CurrentHost.Plugins[i].Object.CanLoadObject(CurrentRouteFile))
+								{
+									isObject = true;
+									break;
+								}
+							}
+
+							if (isObject)
+							{
+								// oops, that's actually an object- Let's show Object Viewer
+								string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
+								if (System.IO.File.Exists(File))
+								{
+									System.Diagnostics.Process.Start(File, CurrentRouteFile);
+								}
+							}
+							else
+							{
+								MessageBox.Show("No plugins found capable of loading routefile: " +Environment.NewLine + CurrentRouteFile);
+							}
+							
 							Renderer.Camera.Alignment.Yaw = 0.0;
 							Renderer.Camera.Alignment.Pitch = 0.0;
 							Renderer.Camera.Alignment.Roll = 0.0;
@@ -427,7 +450,8 @@ namespace OpenBve
 							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
-							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+							CurrentRouteFile = null;
+							Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						CurrentlyLoading = false;
 						UpdateCaption();

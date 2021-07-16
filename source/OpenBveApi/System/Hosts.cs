@@ -329,22 +329,25 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Creates a static object within the world of the host application, and returns the ObjectManager ID</summary>
 		/// <param name="Prototype">The prototype (un-transformed) static object</param>
 		/// <param name="Position">The world position</param>
-		/// <param name="BaseTransformation">The base world transformation to apply</param>
-		/// <param name="AuxTransformation">The secondary rail transformation to apply</param>
+		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
 		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
 		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
 		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
 		/// <param name="TrackPosition">The absolute route based track position</param>
 		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
 			return -1;
 		}
 
 		/// <summary>Creates a static object within the world of the host application, and returns the ObjectManager ID</summary>
 		/// <param name="Prototype">The prototype (un-transformed) static object</param>
-		/// <param name="AuxTransformation">The secondary rail transformation to apply NOTE: Only used for object disposal calcs</param>
+		/// <param name="LocalTransformation">
+		/// <para>The local transformation to apply in order to rotate the model</para>
+		/// <para>NOTE: Only used for object disposal calcs</para>
+		/// </param>
 		/// <param name="Rotate">The rotation matrix to apply</param>
 		/// <param name="Translate">The translation matrix to apply</param>
 		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
@@ -353,7 +356,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="TrackPosition">The absolute route based track position</param>
 		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public virtual int CreateStaticObject(StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
 			return -1;
 		}

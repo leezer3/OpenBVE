@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 
 namespace OpenBveApi.Math
 {
-	/// <summary>Represents a 4x4 double-precision matrix</summary>
+	/// <summary>Represents a 4x4 double-precision row-major matrix</summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Matrix4D
 	{

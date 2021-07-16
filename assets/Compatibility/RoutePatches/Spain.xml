@@ -1,0 +1,25 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<Patch>
+		<Hash>377C737A49295F5E2B8C3366A6B1D7076EFBC3DAC09165016585DA40D52EA0B3</Hash>
+		<FileName>muntanya.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>E77EF08645607E6C05967DDE937AA4EBC1D88154DAC9B47F78629D62DC249D3F</Hash>
+		<FileName>muntanya_hivern.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>EA83262AB1A49342065D6D173B4B92307A4026929E8DCDC3BDC2DD7E245A930C</Hash>
+		<FileName>muntanya_hivern_nit.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+  </RoutePatches>
+</openBVE>

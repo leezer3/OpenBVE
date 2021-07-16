@@ -23,5 +23,128 @@
 		<Toppling>false</Toppling>
 		<Derailments>false</Derailments>
 	</Patch>
+	<Patch>
+		<Hash>EDB673ED7BC2B4B5F80F48AE11ED75A604E92C6BFCDF3C177B19DB4791C6A9B4</Hash>
+		<FileName>montserrat.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Some Sanford Mace demo stuff -->
+	<Patch>
+		<Hash>449E92E323EE340FF740E392C12FF81DB483E58533FFDC78AE286899D987CBF1</Hash>
+		<FileName>Circulator-csv.csv</FileName>
+		<AccurateObjectDisposal>false</AccurateObjectDisposal>
+		<!-- Ignore the distance in the comment, designed for BVE2 renderer -->
+		<ViewingDistance>500</ViewingDistance>
+	</Patch>
+	<Patch>
+		<Hash>11B53D67BACB601E575597B46365AFFA93595E5E7AD760536B5D05680441A616</Hash>
+		<FileName>Dogbone_BVE2-BVE4-Lo.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>3D2AC5D22E424A279A956CB94E2DB6182814451DD9AF7755A0E2AE53A625CAD2</Hash>
+		<FileName>Dogbone_BVE4-Hi.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>5958EAE5DA2E2AB569EF1BAC12844FF90D1876A96C22B12561F9B1AF2DFD06A3</Hash>
+		<FileName>Great circle.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>9C03EE03E6C0B8749092E999C21B9881E4D5725691F695FF1F982DD2A95B7C3F</Hash>
+		<FileName>Loop back.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>E486A420A35FAC1EA2D7CF9AFA5C5D5913850483F342E0FE4AB83E5F7C6CA605</Hash>
+		<FileName>Straigt circle.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>CDAD46F4AACD69E143BC36A409952A630D173913E8FD728197B68013EB0AE339</Hash>
+		<FileName>Figure-8-basic.rw</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Crossing the player track is not supported by OpenBVE.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>D7FF7DF534138E800028D3CCDFD5835E4D86E4085EF38805E44A39D59B6EC669</Hash>
+		<FileName>Figure-8-w-scenery.rw</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Crossing the player track is not supported by OpenBVE.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>58F3691118C684ED7C13C7746A66D1C7E0EB39FA5D8BB932A009C449F3E3EA1A</Hash>
+		<FileName>test curve.rw</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Crossing the player track is not supported by OpenBVE.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>79BCA08160F0D4DCB7C52CEF4B8DF8251261FA88A2E6A42738A73E487EF6931F</Hash>
+		<FileName>tight curve.rw</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Crossing the player track is not supported by OpenBVE.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>24AD4D7DF787E74A879304C986C37E535F032589C33E18D8A0FF38410FB123D4</Hash>
+		<FileName>tightcurve-csv.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Crossing the player track is not supported by OpenBVE.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>4A66BDAF081C1FA9C14E2DCA6154E50CA5EDC33B31C90E973388F6A803F0F9C0</Hash>
+		<FileName>BVE_4_Xmas.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>525F7EC422A01881DF8004B479A825CF1EB9C9A884D64324CF0558B9310ECAA4</Hash>
+		<FileName>BVE_4_Xmas_2006.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>79564316DBFDA62452EDA9E7C09681BB6495A7C38C07CE62211D5F5A93865BB5</Hash>
+		<FileName>BVE_4_Xmas_2006_crr8.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>42A59A109D5E95F699C652323FC5B39F8E5E464BC0FDF1895509544644F9CFC4</Hash>
+		<FileName>Xmas_2005.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>D7C31DF8033F4C69309B9A3A00184CF3351CC600746A77CF09C11D92B79E6260</Hash>
+		<FileName>Xmas_2006.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>672007628752E3B793A4EA47D16A340FD06E4DA30A6592CD222F3E8EDEF93079</Hash>
+		<FileName>Xmasmonorail.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<Patch>
+		<Hash>F4D2A78CC77960F5AE05B63001E82284FE62FFCCD7F0875FAE8FA38019401173</Hash>
+		<FileName>Xmasmonorail_2006.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Repeating circular routefiles are not supported.</LogMessage>
+	</Patch>
+	<!-- Fun Coaster Night -->
+	<Patch>
+		<Hash>B3141D4CC1880C635F04413F54EA66D8B32DA308F9F9484AD2BB5FD642C5959B</Hash>
+		<FileName>FCN.csv</FileName>
+		<Incompatible>true</Incompatible>
+		<LogMessage>Ground and rail transformations are broken, due to excessive gradients.</LogMessage>
+	</Patch>
   </RoutePatches>
 </openBVE>

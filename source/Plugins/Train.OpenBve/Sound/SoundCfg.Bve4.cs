@@ -47,6 +47,7 @@ namespace Train.OpenBve
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
+			int emptyLines = 0;
 			for (int i = Lines.Count - 1; i >= 0; i--)
 			{
 				/*
@@ -66,11 +67,11 @@ namespace Train.OpenBve
 				}
 				if (string.IsNullOrEmpty(Lines[i]))
 				{
-					Lines.RemoveAt(i);
+					emptyLines++;
 				}
 			}
 
-			if (Lines.Count == 0)
+			if (Lines.Count == 0 || emptyLines == Lines.Count)
 			{
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Empty sound.cfg encountered in " + FileName + ".");
 			}
@@ -82,6 +83,10 @@ namespace Train.OpenBve
 			double invfac = Lines.Count == 0 ? 0.1 : 0.1 / Lines.Count;
 			for (int i = 0; i < Lines.Count; i++)
 			{
+				if (string.IsNullOrEmpty(Lines[i]))
+				{
+					continue;
+				}
 				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
 				if ((i & 7) == 0)
 				{
@@ -375,76 +380,84 @@ namespace Train.OpenBve
 							{
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
+								try
 								{
-									//PRIMARY HORN (Enter)
-									case "primarystart":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryStart);
-										train.Cars[train.DriverCar].Horns[0].StartSound = primaryStart as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
-										break;
-									case "primaryend":
-									case "primaryrelease":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryEnd);
-										train.Cars[train.DriverCar].Horns[0].EndSound = primaryEnd as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
-										break;
-									case "primaryloop":
-									case "primary":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryLoop);
-										train.Cars[train.DriverCar].Horns[0].LoopSound = primaryLoop as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[0].Loop = false;
-										break;
-									//SECONDARY HORN (Numpad Enter)
-									case "secondarystart":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryStart);
-										train.Cars[train.DriverCar].Horns[1].StartSound = secondaryStart as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
-										break;
-									case "secondaryend":
-									case "secondaryrelease":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryEnd);
-										train.Cars[train.DriverCar].Horns[1].EndSound = secondaryEnd as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
-										break;
-									case "secondaryloop":
-									case "secondary":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryLoop);
-										train.Cars[train.DriverCar].Horns[1].LoopSound = secondaryLoop as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[1].Loop = false;
-										break;
-									//MUSIC HORN
-									case "musicstart":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicStart);
-										train.Cars[train.DriverCar].Horns[2].StartSound = musicStart as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[2].StartEndSounds = true;
-										break;
-									case "musicend":
-									case "musicrelease":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicEnd);
-										train.Cars[train.DriverCar].Horns[2].EndSound = musicEnd as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[2].StartEndSounds = true;
-										break;
-									case "musicloop":
-									case "music":
-										Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicLoop);
-										train.Cars[train.DriverCar].Horns[2].LoopSound = musicLoop as SoundBuffer;
-										train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
-										train.Cars[train.DriverCar].Horns[2].Loop = true;
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
+									switch (a.ToLowerInvariant())
+									{
+										//PRIMARY HORN (Enter)
+										case "primarystart":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryStart);
+											train.Cars[train.DriverCar].Horns[0].StartSound = primaryStart as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
+											break;
+										case "primaryend":
+										case "primaryrelease":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryEnd);
+											train.Cars[train.DriverCar].Horns[0].EndSound = primaryEnd as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
+											break;
+										case "primaryloop":
+										case "primary":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryLoop);
+											train.Cars[train.DriverCar].Horns[0].LoopSound = primaryLoop as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[0].Loop = false;
+											break;
+										//SECONDARY HORN (Numpad Enter)
+										case "secondarystart":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryStart);
+											train.Cars[train.DriverCar].Horns[1].StartSound = secondaryStart as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
+											break;
+										case "secondaryend":
+										case "secondaryrelease":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryEnd);
+											train.Cars[train.DriverCar].Horns[1].EndSound = secondaryEnd as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
+											break;
+										case "secondaryloop":
+										case "secondary":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryLoop);
+											train.Cars[train.DriverCar].Horns[1].LoopSound = secondaryLoop as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[1].Loop = false;
+											break;
+										//MUSIC HORN
+										case "musicstart":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicStart);
+											train.Cars[train.DriverCar].Horns[2].StartSound = musicStart as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[2].StartEndSounds = true;
+											break;
+										case "musicend":
+										case "musicrelease":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicEnd);
+											train.Cars[train.DriverCar].Horns[2].EndSound = musicEnd as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[2].StartEndSounds = true;
+											break;
+										case "musicloop":
+										case "music":
+											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicLoop);
+											train.Cars[train.DriverCar].Horns[2].LoopSound = musicLoop as SoundBuffer;
+											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[2].Loop = true;
+											break;
+										default:
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											break;
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Warning, false, "FileName contains illegal characters or is empty in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 							}
+
 							i++;
 						}
 						i--; break;

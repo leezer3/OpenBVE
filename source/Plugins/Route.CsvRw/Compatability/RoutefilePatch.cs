@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -23,6 +24,10 @@ namespace CsvRwRouteParser
 			if (availableRoutefilePatches.ContainsKey(fileHash))
 			{
 				RoutefilePatch patch = availableRoutefilePatches[fileHash];
+				if (patch.Incompatible)
+				{
+					throw new Exception("This routefile is incompatible with OpenBVE: " + Environment.NewLine + Environment.NewLine + patch.LogMessage);
+				}
 				Data.LineEndingFix = patch.LineEndingFix;
 				Data.IgnorePitchRoll = patch.IgnorePitchRoll;
 				if (!string.IsNullOrEmpty(patch.LogMessage))
@@ -80,6 +85,11 @@ namespace CsvRwRouteParser
 						}
 					}
 				}
+
+				if (patch.ViewingDistance != int.MaxValue)
+				{
+					Plugin.CurrentOptions.ViewingDistance = patch.ViewingDistance;
+				}
 			}
 		}
 	}
@@ -125,5 +135,9 @@ namespace CsvRwRouteParser
 		internal bool DisableSemiTransparentFaces;
 		/// <summary>Whether reduced color transparency should be used</summary>
 		internal bool ReducedColorTransparency;
+		/// <summary>The viewing distance to use</summary>
+		internal int ViewingDistance = int.MaxValue;
+		/// <summary>Whether the route is incompatible with OpenBVE</summary>
+		internal bool Incompatible = false;
 	}
 }

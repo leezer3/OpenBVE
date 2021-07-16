@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.IO;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -51,6 +52,10 @@ namespace Plugin
 
 	    public override bool CanLoadObject(string path)
 	    {
+		    if (string.IsNullOrEmpty(path) || !File.Exists(path))
+		    {
+			    return false;
+		    }
 		    if (path.EndsWith(".obj", StringComparison.InvariantCultureIgnoreCase))
 		    {
 			    return true;

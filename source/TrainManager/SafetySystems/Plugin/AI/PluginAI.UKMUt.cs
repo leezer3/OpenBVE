@@ -130,7 +130,7 @@ namespace TrainManager.SafetySystems
 			 */
 			if (!lightsSet)
 			{
-				float currentBrightness = Plugin.Train.Cars[Plugin.Train.DriverCar].Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness);
+				float currentBrightness = Plugin.Train.Cars[Plugin.Train.DriverCar].Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, 0.0);
 				switch (Plugin.Panel[20])
 				{
 					case 0:

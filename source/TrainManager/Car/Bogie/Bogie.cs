@@ -37,15 +37,19 @@ namespace TrainManager.Car
 		/// <summary>Holds a reference to the base car</summary>
 		private readonly CarBase baseCar;
 
+		/// <summary>Whether the bogie is the rear bogie</summary>
+		private readonly bool Rear;
+
 		/// <summary>Holds a reference to the base train</summary>
 		// We don't want this to be read-only if we ever manage to uncouple cars...
 		// ReSharper disable once FieldCanBeMadeReadOnly.Local
 		private AbstractTrain baseTrain;
 
-		public Bogie(AbstractTrain train, CarBase car)
+		public Bogie(AbstractTrain train, CarBase car, bool IsRear)
 		{
 			baseTrain = train;
 			baseCar = car;
+			Rear = IsRear;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, car);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, car);
@@ -84,7 +88,8 @@ namespace TrainManager.Car
 			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + Length;
 			CurrentlyVisible = dist < bid * bid;
 			// brightness
-			byte dnb = (byte)baseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness);
+			byte dnb = (byte)baseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, Rear ? 1 : 0);
+			
 			// update current section
 			int cs = CurrentCarSection;
 			if (cs >= 0)

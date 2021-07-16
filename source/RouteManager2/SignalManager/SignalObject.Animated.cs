@@ -20,9 +20,9 @@ namespace RouteManager2.SignalManager
 		private readonly UnifiedObject Object;
 
 		/// <summary>Creates the object within the game world</summary>
-		public override void Create(Vector3 wpos, Transformation railTransformation, Transformation auxTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness)
+		public override void Create(Vector3 wpos, Transformation railTransformation, Transformation localTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness)
 		{
-			Object.CreateObject(wpos, railTransformation, auxTransformation, sectionIndex, startingDistance, endingDistance, trackPosition, 1.0);
+			Object.CreateObject(wpos, railTransformation, localTransformation, sectionIndex, startingDistance, endingDistance, trackPosition, 1.0);
 		}
 	}
 }

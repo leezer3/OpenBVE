@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
@@ -22,15 +24,75 @@ namespace Plugin {
 			if (file.ToLowerInvariant().EndsWith(".bmp") && EnabledHacks.ReduceTransparencyColorDepth && (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format24bppRgb))
 			{
 				/*
-				 * Reduce our bitmap to 256 colors
-				 * WARNING: This is *slow* for lots of textures, so should
-				 * be used sparingly, if at all!
+				 * Our source bitmap is *not* a 256 color bitmap but has been made for BVE2 / BVE4.
+				 * These process transparency in 256 colors (even if the file is 24bpp / 32bpp), thus:
+				 * Let's open the bitmap, and attempt to construct a reduced color pallette
+				 * If our bitmap contains more than 256 unique colors, we break out of the loop
+				 * and assume that this file is an incorrect match
+				 *
+				 * WARNING NOTE:
+				 * Unfortunately, we can't just pull out the color pallette from the bitmap, as there
+				 * is no native way to remove unused entries. We therefore have to itinerate through
+				 * each pixel.....
+				 * This is *slow* so use with caution!
+				 *
 				 */
-				bitmap = bitmap.Clone(new Rectangle(0, 0, bitmap.Width, bitmap.Height), PixelFormat.Format8bppIndexed);
+
+				BitmapData inputData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+				HashSet<Color24> reducedPallette = new HashSet<Color24>();
+				unsafe
+				{
+					byte* bmpPtr = (byte*) inputData.Scan0.ToPointer();
+					int ic, oc, r;
+					if (bitmap.PixelFormat == PixelFormat.Format24bppRgb)
+					{
+						for (r = 0; r < inputData.Height; r++)
+						for (ic = oc = 0; oc < inputData.Width; ic += 3, oc++)
+						{
+							byte blue = bmpPtr[r * inputData.Stride + ic];
+							byte green = bmpPtr[r * inputData.Stride + ic + 1];
+							byte red = bmpPtr[r * inputData.Stride + ic + 2];
+							Color24 c = new Color24(red, green, blue);
+							if (!reducedPallette.Contains(c))
+							{
+								reducedPallette.Add(c);
+							}
+							if (reducedPallette.Count > 256)
+							{
+								//as breaking out of nested loops is a pita
+								goto EndLoop;
+							}
+						}
+					}
+					else
+					{
+						for (r = 0; r < inputData.Height; r++)
+						for (ic = oc = 0; oc < inputData.Width; ic += 4, oc++)
+						{
+							byte blue = bmpPtr[r * inputData.Stride + ic];
+							byte green = bmpPtr[r * inputData.Stride + ic + 1];
+							byte red = bmpPtr[r * inputData.Stride + ic + 2];
+							Color24 c = new Color24(red, green, blue);
+							if (!reducedPallette.Contains(c))
+							{
+								reducedPallette.Add(c);
+							}
+							if (reducedPallette.Count > 256)
+							{
+								//as breaking out of nested loops is a pita
+								goto EndLoop;
+							}
+						}
+					}
+				}
+
+				p = reducedPallette.ToArray();
+				EndLoop:
+				bitmap.UnlockBits(inputData);
 			}
 			
 			
-			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
+			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb && p == null)
 			{
 				/* Otherwise, only store the color palette data for
 				 * textures using a restricted palette

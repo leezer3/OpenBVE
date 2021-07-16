@@ -5,6 +5,7 @@ using System.Linq;
 using DavyKager;
 using LibRender2.Screens;
 using OpenBve.Input;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenTK;
@@ -52,17 +53,21 @@ namespace OpenBve
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
-			Tolk.Load();
-			string name = Tolk.DetectScreenReader();
-			if (!string.IsNullOrEmpty(name))
+			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
-				Interface.CurrentOptions.ScreenReaderAvailable = true;
-				Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
+				Tolk.Load();
+				string name = Tolk.DetectScreenReader();
+				if (!string.IsNullOrEmpty(name))
+				{
+					Interface.CurrentOptions.ScreenReaderAvailable = true;
+					Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
+				}
+				else
+				{
+					Program.FileSystem.AppendToLogFile("No supported screen reader found.");
+				}
 			}
-			else
-			{
-				Program.FileSystem.AppendToLogFile("No supported screen reader found.");
-			}
+			
 			//Process extra command line arguments supplied
 			if (result.InitialStation != null)
 			{

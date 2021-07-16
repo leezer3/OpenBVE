@@ -41,26 +41,46 @@ namespace CsvRwRouteParser
 			double tpos = TrackPosition;
 			if (Speed <= 0.0 | Speed >= 1000.0)
 			{
+				if (CompatibilityObjects.LimitPostInfinite == null)
+				{
+					return;
+				}
 				CompatibilityObjects.LimitPostInfinite.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
 			}
 			else
 			{
 				if (Cource < 0)
 				{
+					if (CompatibilityObjects.LimitPostLeft == null)
+					{
+						return;
+					}
 					CompatibilityObjects.LimitPostLeft.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
 				}
 				else if (Cource > 0)
 				{
+					if (CompatibilityObjects.LimitPostRight == null)
+					{
+						return;
+					}
 					CompatibilityObjects.LimitPostRight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
 				}
 				else
 				{
+					if (CompatibilityObjects.LimitPostStraight == null)
+					{
+						return;
+					}
 					CompatibilityObjects.LimitPostStraight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
 				}
 
 				double lim = Speed / UnitOfSpeed;
 				if (lim < 10.0)
 				{
+					if (CompatibilityObjects.LimitOneDigit == null)
+					{
+						return;
+					}
 					if (CompatibilityObjects.LimitOneDigit is StaticObject)
 					{
 						int d0 = (int) Math.Round(lim);
@@ -80,6 +100,10 @@ namespace CsvRwRouteParser
 				}
 				else if (lim < 100.0)
 				{
+					if (CompatibilityObjects.LimitTwoDigits == null)
+					{
+						return;
+					}
 					if (CompatibilityObjects.LimitTwoDigits is StaticObject)
 					{
 						int d1 = (int) Math.Round(lim);
@@ -105,6 +129,10 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
+					if (CompatibilityObjects.LimitThreeDigits == null)
+					{
+						return;
+					}
 					if (CompatibilityObjects.LimitThreeDigits is StaticObject)
 					{
 						int d2 = (int) Math.Round(lim);

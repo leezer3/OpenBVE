@@ -27,6 +27,7 @@ namespace OpenBve
 
 		/// <summary>The current routefile search folder</summary>
 		private string currentRouteFolder;
+		private bool populateRouteOnce;
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
 
@@ -121,7 +122,19 @@ namespace OpenBve
 				});
 				return;
 			}
+			if (populateRouteOnce)
+			{
+				/*
+				 * If we attempt to browse to the temp folder, we'll likely get an infinite loop
+				 * from FS changed events, unless we only populate the folder once
+				 */
+				if (currentRouteFolder == System.IO.Path.GetTempPath())
+				{
+					return;
+				}
+			}
 			populateRouteList(currentRouteFolder);
+			populateRouteOnce = currentRouteFolder == System.IO.Path.GetTempPath();
 			//If this method is triggered whilst the form is disposing, bad things happen...
 			if (listviewRouteFiles.Columns.Count > 0)
 			{
@@ -504,6 +517,7 @@ namespace OpenBve
 
 		/// <summary>The current train search folder</summary>
 		private string currentTrainFolder;
+		private bool populateTrainOnce;
 
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e)
 		{
@@ -563,7 +577,19 @@ namespace OpenBve
 				});
 				return;
 			}
+			if (populateTrainOnce)
+			{
+				/*
+				 * If we attempt to browse to the temp folder, we'll likely get an infinite loop
+				 * from FS changed events, unless we only populate the folder once
+				 */
+				if (currentTrainFolder == System.IO.Path.GetTempPath())
+				{
+					return;
+				}
+			}
 			populateTrainList(currentTrainFolder);
+			populateTrainOnce = currentTrainFolder == System.IO.Path.GetTempPath();
 			if (listviewTrainFolders.Columns.Count > 0)
 			{
 				listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -702,7 +728,13 @@ namespace OpenBve
 				}
 			}
 		}
-		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e) {
+		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e)
+		{
+			string error;
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			{
+				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+			}
 			if (listviewTrainFolders.SelectedItems.Count == 1) {
 				string t = listviewTrainFolders.SelectedItems[0].Tag as string;
 				if (t != null) {
@@ -715,9 +747,21 @@ namespace OpenBve
 					if (Directory.Exists(t))
 					{
 						string[] newDirectories = Directory.EnumerateDirectories(t).ToArray();
-						if (newDirectories.Length > 5)
+						bool shouldEnter = true;
+						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 						{
-							//More than 5 subdirectories, assume it may be a false positive
+							if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(t))
+							{
+								shouldEnter = false;
+								break;
+							}
+						}
+						if (shouldEnter || newDirectories.Length > 5)
+						{
+							/*
+							 * Either a train folder with more than 5 subdirs (false positive?)
+							 * Or a plain folder
+							 */
 							textboxTrainFolder.Text = t;
 							return;
 						}

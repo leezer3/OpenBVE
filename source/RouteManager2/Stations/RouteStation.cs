@@ -36,6 +36,10 @@ namespace RouteManager2.Stations
 		/// <summary>Whether this station has been announced with accessibility in use</summary>
 		public bool AccessibilityAnnounced;
 
+		/// <summary>Whether this station is a dummy station for signalling purposes</summary>
+		/// <remarks>Used by some BVE2 / BVE4 routes in conjunction with forced redsignal</remarks>
+		public bool Dummy;
+
 		/// <summary>Gets the index of the stop corresponding to the train's number of cars</summary>
 		/// <param name="Cars">The number of cars the train has</param>
 		public int GetStopIndex(int Cars)

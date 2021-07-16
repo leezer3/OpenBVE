@@ -519,7 +519,7 @@ namespace OpenBveApi.Packages
 			{
 				cleanDirectory(directory, ref Result);		
 			}
-			IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(currentDirectory);
+			IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(currentDirectory,"*", SearchOption.AllDirectories);
 			if (!entries.Any())
 			{
 				Directory.Delete(currentDirectory, false);

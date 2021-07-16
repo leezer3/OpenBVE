@@ -70,7 +70,7 @@ namespace Plugin
 		}
 
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
-		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
+		/// <param name="FileName">The text file to load the CSB or B3D object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The object loaded.</returns>
 		private static StaticObject ReadObject(string FileName, Encoding Encoding) {
@@ -135,6 +135,7 @@ namespace Plugin
 			MeshBuilder Builder = new MeshBuilder(currentHost);
 			List<Vector3> Normals = new List<Vector3>();
 			bool CommentStarted = false;
+			Color24? lastTransparentColor = null;
 			for (int i = 0; i < Lines.Count; i++) {
 				{
 					// Strip OpenBVE original standard comments
@@ -344,7 +345,9 @@ namespace Plugin
 								}
 								if (Arguments.Length < 3) {
 									currentHost.AddMessage(MessageType.Error, false, "At least 3 arguments are required in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								} else {
+								} else
+								{
+									bool isFace2 = cmd == "addface2" | cmd == "face2";
 									bool q = true;
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
@@ -383,6 +386,58 @@ namespace Plugin
 											break;
 										}
 									}
+
+									if (enabledHacks.BveTsHacks)
+									{
+										if ((FileName.ToLowerInvariant().Contains("hira2\\car") || FileName.ToLowerInvariant().Contains("hira2/car")) && a.SequenceEqual(new[] {0, 1, 4, 5}))
+										{
+											/*
+											* Fix glitchy Hirakami railway stock
+											*/
+											a = new[] {0, 1, 5, 4};
+										}
+
+										int[] vertexIndices = (int[])a.Clone();
+										Array.Sort(vertexIndices);
+										for (int k = 0; k < Builder.Faces.Count; k++)
+										{
+											/*
+											 * Some BVE2 content declares a Face2 twice with the vertices in a differing order, e.g.
+											 *
+											 * Face2 0, 1, 3, 2
+											 * Face2 1, 0, 2, 3
+											 *
+											 * Doing this in OpenBVE causes some very funky glitches with Z-fighting,
+											 * as it attempts to render both faces in the same space
+											 *
+											 * With this hack, the lighting may be off but the Z-fighting is gone
+											 * (BVE2 / BVE4 operate in a strict draw-order, so the most recent face is always on top,
+											 * wheras OpenBVE has no fixed draw order)
+											 */
+											MeshFace currentFace = Builder.Faces[k];
+											if (!isFace2 || (currentFace.Flags & FaceFlags.Face2Mask) == 0)
+											{
+												continue;
+											}
+
+											if (currentFace.Vertices.Length != a.Length)
+											{
+												continue;
+											}
+
+											int[] faceVertexIndices = new int[a.Length];
+											for (int v = 0; v < currentFace.Vertices.Length; v++)
+											{
+												faceVertexIndices[v] = currentFace.Vertices[v].Index;
+											}
+											Array.Sort(faceVertexIndices);
+											if (vertexIndices.SequenceEqual(faceVertexIndices))
+											{
+												q = false;
+											}
+											
+										}
+									}
 									if (q) {
 										MeshFace f = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
 										for (int j = 0; j < Arguments.Length; j++) {
@@ -400,7 +455,7 @@ namespace Plugin
 											f.Vertices[l - 1] = f.Vertices[l - 2];
 											f.Vertices[l - 2] = v;
 										}
-										if (cmd == "addface2" | cmd == "face2") {
+										if (isFace2) {
 											f.Flags = FaceFlags.Face2Mask;
 										}
 										Builder.Faces.Add(f);
@@ -866,6 +921,7 @@ namespace Plugin
 						case "setdecaltransparentcolor":
 						case "transparent":
 							{
+								
 								if (cmd == "setdecaltransparentcolor" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "SetDecalTransparentColor is not a supported command - did you mean Transparent? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "transparent" & !IsB3D) {
@@ -873,6 +929,17 @@ namespace Plugin
 								}
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (Arguments.Length == 0) {
+									currentHost.AddMessage(MessageType.Warning, false, "No color was specified in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName + "- This may produce unexpected results.");
+									if (enabledHacks.BveTsHacks && lastTransparentColor != null)
+									{
+										// The BVE2 / BVE4 parser uses the *last* transparent color if no transparent color is specified
+										for (int j = 0; j < Builder.Materials.Length; j++) { 
+											Builder.Materials[j].TransparentColor = lastTransparentColor.Value;
+											Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
+										}
+										break;
+									}
 								}
 								int r = 0, g = 0, b = 0;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
@@ -896,8 +963,9 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									b = b < 0 ? 0 : 255;
 								}
+								lastTransparentColor = new Color24((byte) r, (byte) g, (byte) b);
 								for (int j = 0; j < Builder.Materials.Length; j++) {
-									Builder.Materials[j].TransparentColor = new Color24((byte)r, (byte)g, (byte)b);
+									Builder.Materials[j].TransparentColor = lastTransparentColor.Value;
 									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 								}
 							} break;

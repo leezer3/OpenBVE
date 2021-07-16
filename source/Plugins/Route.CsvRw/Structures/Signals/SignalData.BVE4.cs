@@ -20,7 +20,7 @@ namespace CsvRwRouteParser
 		internal Texture[] SignalTextures;
 		internal Texture[] GlowTextures;
 
-		public override void Create(Vector3 wpos, Transformation RailTransformation, Transformation AuxTransformation, int SectionIndex, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public override void Create(Vector3 wpos, Transformation RailTransformation, Transformation LocalTransformation, int SectionIndex, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
 			if (SignalTextures.Length != 0)
 			{
@@ -112,7 +112,7 @@ namespace CsvRwRouteParser
 
 				aoc.Objects[0].StateFunction = new FunctionScript(Plugin.CurrentHost, expr, false);
 				aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Plugin.RandomNumberGenerator.NextDouble();
-				aoc.CreateObject(wpos, RailTransformation, AuxTransformation, SectionIndex, StartingDistance, EndingDistance, TrackPosition, 1.0);
+				aoc.CreateObject(wpos, RailTransformation, LocalTransformation, SectionIndex, StartingDistance, EndingDistance, TrackPosition, 1.0);
 			}
 		}
 	}

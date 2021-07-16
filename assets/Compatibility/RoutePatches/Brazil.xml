@@ -26,5 +26,21 @@
 		<FileName>Pinda_Expedicionaria.rw</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<Patch>
+		<Hash>9322D87D6B32EB7789BE8856D9941EA076F834F12B6049586EF150C9B8EAC2E8</Hash>
+		<FileName>carrega.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>4B8D49C0E2F2C4424401F059A21321B93E5C32919A26DC143FD75B3BBFE68B8F</Hash>
+		<FileName>Guaianazes_MogiCruzes.csv</FileName>
+		<!-- Fixes nastily glitched catenary at final station -->
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>0F49FDA83D4A9EC91D258C089EFB1585D1F02C232ADD2901C518D3BE441DA2CE</Hash>
+		<FileName>Coastline.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

@@ -22,10 +22,30 @@
 
 		/// <summary>Gets the current brightness</summary>
 		/// <param name="CabBrightness">The current cab brightness</param>
+		/// <param name="mu">The relative position within the car between the two axles</param>
 		/// <returns>The current brightness value</returns>
-		public float CurrentBrightness(double CabBrightness)
+		public float CurrentBrightness(double CabBrightness, double mu)
 		{
 			float b = (float) (Car.Brightness.NextTrackPosition - Car.Brightness.PreviousTrackPosition);
+			//1.0f represents a route brightness value of 255
+			//0.0f represents a route brightness value of 0
+			if (b != 0.0f)
+			{
+				b = (float) (Car.FrontAxle.Follower.TrackPosition - Car.Brightness.PreviousTrackPosition) / b;
+				if (b < 0.0f) b = 0.0f;
+				if (b > 1.0f) b = 1.0f;
+				b = Car.Brightness.PreviousBrightness * (1.0f - b) + Car.Brightness.NextBrightness * b;
+			}
+			else
+			{
+				b = Car.Brightness.PreviousBrightness;
+			}
+
+			//Calculate the cab brightness
+			double ccb = System.Math.Round(255.0 * (1.0 - b));
+			//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
+			double frontDNB = System.Math.Min(CabBrightness, ccb);
+			b = (float) (Car.Brightness.NextTrackPosition - Car.Brightness.PreviousTrackPosition);
 			//1.0f represents a route brightness value of 255
 			//0.0f represents a route brightness value of 0
 			if (b != 0.0f)
@@ -41,9 +61,11 @@
 			}
 
 			//Calculate the cab brightness
-			double ccb = System.Math.Round(255.0 * (1.0 - b));
+			ccb = System.Math.Round(255.0 * (1.0 - b));
 			//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-			return (float) System.Math.Min(CabBrightness, ccb);
+			double rearDNB = System.Math.Min(CabBrightness, ccb);
+
+			return (float)(frontDNB + ((rearDNB - frontDNB) * mu));
 		}
 	}
 }
