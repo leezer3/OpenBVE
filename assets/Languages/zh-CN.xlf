@@ -16,7 +16,7 @@
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
-					<target>2021-06-08</target>
+					<target>2021-07-16</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -214,6 +214,7 @@
 				<group id="start">
 					<trans-unit id="title">
 						<source>Start new game</source>
+            <target>开始新游戏</target>
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route</source>
@@ -329,6 +330,7 @@
 					</trans-unit>
 					<trans-unit id="start">
 						<source>Start</source>
+            <target>开始游戏</target>
 					</trans-unit>
 					<trans-unit id="start_mode">
 						<source>Mode of driving:</source>
@@ -342,6 +344,7 @@
 				<group id="review">
 					<trans-unit id="title">
 						<source>Review last game</source>
+            <target>查看上一次计分模式的分数</target>
 					</trans-unit>
 					<trans-unit id="conditions">
 						<source>Conditions</source>
@@ -455,6 +458,7 @@
 				<group id="packages">
 					<trans-unit id="title">
 						<source>Package Management</source>
+            <target>扩展包管理</target>
 					</trans-unit>
 					<trans-unit id="proceed">
 						<source>Proceed...</source>
@@ -915,6 +919,7 @@
 				<group id="controls">
 					<trans-unit id="title">
 						<source>Customize controls</source>
+            <target>自定义控制与键位</target>
 					</trans-unit>
 					<trans-unit id="list_command">
 						<source>Command</source>
@@ -1229,6 +1234,7 @@
 				<group id="options">
 					<trans-unit id="title">
 						<source>Options</source>
+            <target>偏好设置</target>
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
@@ -1532,15 +1538,15 @@
 					</trans-unit>
 					<trans-unit id="kiosk_mode">
 						<source>Kiosk Mode</source>
-						<target>街机模式</target>
+						<target>展会模式</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode_enable">
 						<source>Enable Kiosk Mode</source>
-						<target>启动街机模式</target>
+						<target>启动展会模式</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode_timer">
 						<source>Control Timeout (s)</source>
-						<target>可控时间 (s)</target>
+						<target>无人操作这一时间后\r\n改为自动驾驶 (s)</target>
 					</trans-unit>
 					<trans-unit id="hud_size">
 						<source>HUD Size</source>
@@ -1696,9 +1702,11 @@
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route:</source>
+            <target>线路:</target>
 					</trans-unit>
 					<trans-unit id="train">
 						<source>Train:</source>
+            <target>列车:</target>
 					</trans-unit>
 					<trans-unit id="date">
 						<source>Date:</source>
@@ -1807,7 +1815,7 @@
 					</trans-unit>
 					<trans-unit id="signal_stop">
 						<source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
-						<target>已冒进停止信号, 请使用紧急制动立刻停车！</target>
+						<target>已冒进停止信号, 请使用紧急制动立刻停车。</target>
 					</trans-unit>
 					<trans-unit id="signal_overspeed">
 						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
@@ -1823,11 +1831,11 @@
 					</trans-unit>
 					<trans-unit id="route_nextsection">
 						<source>Next signal in [distance]</source>
-						<target>下一信号距离[distance]。</target>
+						<target>下一信号距离 [distance]。</target>
 					</trans-unit>
 					<trans-unit id="route_nextsection_aspect">
 						<source>Next signal in [distance], with aspect [aspect]</source>
-						<target>下一信号现示 [aspect]，距离[distance]。</target>
+						<target>下一信号现示 [aspect]，距离 [distance]。</target>
 					</trans-unit>
 					<trans-unit id="route_nextstation">
 						<source>Next station is [name] in [distance]</source>
@@ -1891,6 +1899,7 @@
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
+            <target>正在载入。请稍等……</target>
 					</trans-unit>
 				</group>
 				<group id="notification">
@@ -1900,7 +1909,7 @@
 					</trans-unit>
 					<trans-unit id="interior_lookahead">
 						<source>Interior camera (look ahead)</source>
-						<target>车内视点 (向前看)</target>
+						<target>车内视点 (向正前方看)</target>
 					</trans-unit>
 					<trans-unit id="exterior">
 						<source>Exterior camera</source>
@@ -1940,7 +1949,7 @@
 					</trans-unit>
 					<trans-unit id="aiunable">
 						<source>The AI might be unable to fully operate this train.</source>
-						<target>由于不了解如何使用该车配备的安全系统，AI可能难以完全正确控制列车。</target>
+						<target>AI有可能不能完全正确地操作此列车，由于该车作者设置的ATS插件未与AI特定适配。</target>
 					</trans-unit>
 					<trans-unit id="camerarestriction_on">
 						<source>Camera restriction: on</source>
@@ -2014,6 +2023,7 @@
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Your rating:</source>
+            <target>您的评价:</target>
 					</trans-unit>
 				</group>
 				<group id="rating">
@@ -2064,6 +2074,7 @@
 				<group id="menu">
 					<trans-unit id="title">
 						<source>In-Game Menu</source>
+            <target>即时菜单</target>
 					</trans-unit>
 					<trans-unit id="pause_title">
 						<source>PAUSE</source>
@@ -2083,7 +2094,7 @@
 					</trans-unit>
 					<trans-unit id="exit_question">
 						<source>Do you really want to exit to the main menu?</source>
-						<target>是否要返回菜单？</target>
+						<target>是否要返回主菜单？</target>
 					</trans-unit>
 					<trans-unit id="exit_no">
 						<source>No</source>
@@ -2269,6 +2280,7 @@
 				<group id="misc">
 					<trans-unit id="score">
 						<source>Score:\x20</source>
+            <target>分数:\x20</target>
 					</trans-unit>
 				</group>
 				<group id="commands">
@@ -2370,7 +2382,7 @@
 					</trans-unit>
 					<trans-unit id="doors_right">
 						<source>Opens or closes the right doors</source>
-						<target>操作右测车门</target>
+						<target>操作右侧车门</target>
 					</trans-unit>
 					<trans-unit id="horn_primary">
 						<source>Plays the primary horn</source>
