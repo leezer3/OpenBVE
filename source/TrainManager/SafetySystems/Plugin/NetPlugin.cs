@@ -119,6 +119,35 @@ namespace TrainManager.SafetySystems
 			return false;
 		}
 
+		public bool PreLoad() {
+			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.PlaySound, this.AddInterfaceMessage, this.AddScore);
+			var preLoadMethod = Api.GetType().GetMethod("PreLoad");
+			if (preLoadMethod == null 
+				|| preLoadMethod.GetParameters().Length != 1
+				|| preLoadMethod.GetParameters()[0].ParameterType != typeof(LoadProperties)
+				|| preLoadMethod.ReturnType != typeof(bool)
+				) return true;
+
+			bool success;
+			try {
+				success = (bool)preLoadMethod.Invoke(Api, new object[] { properties });
+			} catch (Exception ex) {
+				success = false;
+				properties.FailureReason = ex.Message;
+			}
+
+			if (success) {
+				return true;
+			}
+
+			if (properties.FailureReason != null) {
+				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to preload for the following reason: " + properties.FailureReason);
+				return false;
+			}
+			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to preload for an unspecified reason.");
+			return false;
+		}
+
 		public override bool Initialize(VehicleSpecs specs, InitializationModes mode) {
 #if !DEBUG
 				try {
