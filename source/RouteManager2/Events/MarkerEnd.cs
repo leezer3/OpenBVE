@@ -9,28 +9,30 @@ namespace RouteManager2.Events
 	/// <summary>Is calld when a marker or message is removed from the in-game display</summary>
 	public class MarkerEndEvent : GeneralEvent
 	{
+		private readonly HostInterface currentHost;
+
 		/// <summary>The marker or message to remove (Note: May have already timed-out)</summary>
 		private readonly AbstractMessage message;
 
-		private readonly HostInterface currentHost;
-
-		public MarkerEndEvent(double TrackPositionDelta, AbstractMessage Message, HostInterface Host)
+		public MarkerEndEvent(HostInterface Host, double TrackPositionDelta, AbstractMessage Message) : base(TrackPositionDelta)
 		{
-			this.TrackPositionDelta = TrackPositionDelta;
+			currentHost = Host;
 			DontTriggerAnymore = false;
 			message = Message;
-			currentHost = Host;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (TriggerType == EventTriggerType.FrontCarFrontAxle && Train.IsPlayerTrain || TriggerType == EventTriggerType.Camera && currentHost.Application == HostApplication.RouteViewer)
+			AbstractTrain train = trackFollower.Train;
+			EventTriggerType triggerType = trackFollower.TriggerType;
+
+			if (triggerType == EventTriggerType.FrontCarFrontAxle && train.IsPlayerTrain || triggerType == EventTriggerType.Camera && currentHost.Application == HostApplication.RouteViewer)
 			{
-				if (message != null && Train != null)
+				if (message != null && train != null)
 				{
-					if (Direction < 0)
+					if (direction < 0)
 					{
-						if (message.Trains != null && !message.Trains.Contains(new System.IO.DirectoryInfo(Train.TrainFolder).Name))
+						if (message.Trains != null && !message.Trains.Contains(new System.IO.DirectoryInfo(train.TrainFolder).Name))
 						{
 							//Our train is NOT in the list of trains which this message triggers for
 							return;
@@ -38,7 +40,7 @@ namespace RouteManager2.Events
 
 						currentHost.AddMessage(message);
 					}
-					else if (Direction > 0)
+					else if (direction > 0)
 					{
 						message.QueueForRemoval = true;
 					}

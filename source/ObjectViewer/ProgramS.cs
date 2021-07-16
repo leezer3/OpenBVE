@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2.Trains;
+using ObjectViewer.Graphics;
+using ObjectViewer.Trains;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -29,8 +31,8 @@ namespace OpenBve {
 		internal static FileSystem FileSystem = null;
 
 		// members
-	    internal static string[] Files = { };
-		
+	    internal static List<string> Files = new List<string>();
+
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
 		internal static Vector3 MouseCameraDirection = Vector3.Forward;
@@ -58,8 +60,6 @@ namespace OpenBve {
 		internal static CurrentRoute CurrentRoute;
 
 		internal static TrainManager TrainManager;
-
-		internal static readonly Object LockObj = new Object();
 
 		// main
 	    [STAThread]
@@ -137,7 +137,7 @@ namespace OpenBve {
 
 				if (filesToLoad.Count != 0)
 				{
-					Files = filesToLoad.ToArray();
+					Files = filesToLoad;
 				}
 	        }
 
@@ -146,10 +146,6 @@ namespace OpenBve {
 		        Backend = PlatformBackend.PreferX11
 	        };
 	        Toolkit.Init(options);
-            Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
-	        Interface.CurrentOptions.AntiAliasingLevel = 16;
-	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
 	        // initialize camera
 
 	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
@@ -164,6 +160,7 @@ namespace OpenBve {
 			// quit
 			Renderer.TextureManager.UnloadAllTextures();
 
+			formTrain.WaitTaskFinish();
 	    }
 
 	    // reset camera
@@ -201,9 +198,7 @@ namespace OpenBve {
 
 		internal static void DragFile(object sender, FileDropEventArgs e)
 		{
-			int n = Files.Length;
-			Array.Resize(ref Files, n + 1);
-			Files[n] = e.FileName;
+			Files.Add(e.FileName);
 			// reset
 			LightingRelative = -1.0;
 			Game.Reset();
@@ -263,7 +258,8 @@ namespace OpenBve {
 	    {
 		    LightingRelative = -1.0;
 		    Game.Reset();
-		    for (int i = 0; i < Files.Length; i++)
+			formTrain.Instance?.DisableUI();
+		    for (int i = 0; i < Files.Count; i++)
 		    {
 			    try
 			    {
@@ -275,10 +271,9 @@ namespace OpenBve {
 					    {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
 						    {
-							    TrainManager.Trains = new TrainBase[1];
 							    Control[] dummyControls = new Control[0];
-							    TrainManager.Trains[0] = new TrainManager.Train();
-								AbstractTrain playerTrain = TrainManager.Trains[0] as AbstractTrain;
+								TrainManager.Trains = new[] { new TrainBase(TrainState.Available) };
+								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
 								break;
@@ -295,6 +290,7 @@ namespace OpenBve {
 					    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					    {
 							TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
+							TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
 							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
@@ -315,8 +311,11 @@ namespace OpenBve {
 			    {
 				    Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
 			    }
-
 		    }
+
+			NearestTrain.UpdateSpecs();
+			NearestTrain.Apply();
+			formTrain.Instance?.EnableUI();
 
 		    Renderer.InitializeVisibility();
 		    Renderer.UpdateViewingDistances(600);
@@ -353,12 +352,30 @@ namespace OpenBve {
 						{
 							Application.DoEvents();
 							string[] f = Dialog.FileNames;
-							int n = Files.Length;
-						    Array.Resize(ref Files, n + f.Length);
 							for (int i = 0; i < f.Length; i++)
 				            {
-					            Files[n + i] = f[i];
+
+					            for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+					            {
+									if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(f[i]))
+						            {
+							            // oops, that's actually a routefile- Let's show Route Viewer
+							            string File = System.IO.Path.Combine(Application.StartupPath, "RouteViewer.exe");
+							            if (System.IO.File.Exists(File))
+							            {
+								            System.Diagnostics.Process.Start(File, "\"" + f[i] + "\"");
+							            }
+						            }
+
+						            if (Program.CurrentHost.Plugins[j].Object != null && Program.CurrentHost.Plugins[j].Object.CanLoadObject(f[i]))
+						            {
+							            Files.Add(f[i]);
+						            }
+									
+					            }
+					            
 				            }
+							
 						}
 						else
 						{
@@ -383,7 +400,8 @@ namespace OpenBve {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-		            Files = new string[] {};
+		            Files = new List<string>();
+					NearestTrain.UpdateSpecs();
 					Renderer.ApplyBackgroundColor();
 	                break;
 	            case Key.Left:
@@ -474,6 +492,9 @@ namespace OpenBve {
 	                break;
 				case Key.R:
 					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+					break;
+				case Key.F11:
+					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
 					break;
 	        }
 	    }

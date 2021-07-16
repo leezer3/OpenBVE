@@ -10,83 +10,85 @@ namespace RouteManager2.Events
 		public readonly double PreviousSpeedLimit;
 		public readonly double NextSpeedLimit;
 
-		public LimitChangeEvent(double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit)
+		public LimitChangeEvent(double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit) : base(TrackPositionDelta)
 		{
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 			this.PreviousSpeedLimit = PreviousSpeedLimit;
 			this.NextSpeedLimit = NextSpeedLimit;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (Train == null)
+			AbstractTrain train = trackFollower.Train;
+			EventTriggerType triggerType = trackFollower.TriggerType;
+
+			if (train == null)
 			{
 				return;
 			}
 
-			if (Train.RouteLimits == null)
+			if (train.RouteLimits == null)
 			{
-				Train.RouteLimits = new double[] { };
+				train.RouteLimits = new double[] { };
 			}
 
-			if (Direction < 0)
+			if (direction < 0)
 			{
-				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
+				if (triggerType == EventTriggerType.FrontCarFrontAxle)
 				{
-					int n = Train.RouteLimits.Length;
+					int n = train.RouteLimits.Length;
 					if (n > 0)
 					{
-						Array.Resize(ref Train.RouteLimits, n - 1);
-						Train.CurrentRouteLimit = double.PositiveInfinity;
+						Array.Resize(ref train.RouteLimits, n - 1);
+						train.CurrentRouteLimit = double.PositiveInfinity;
 						for (int i = 0; i < n - 1; i++)
 						{
-							if (Train.RouteLimits[i] < Train.CurrentRouteLimit)
+							if (train.RouteLimits[i] < train.CurrentRouteLimit)
 							{
-								Train.CurrentRouteLimit = Train.RouteLimits[i];
+								train.CurrentRouteLimit = train.RouteLimits[i];
 							}
 						}
 					}
 				}
-				else if (TriggerType == EventTriggerType.RearCarRearAxle)
+				else if (triggerType == EventTriggerType.RearCarRearAxle)
 				{
-					int n = Train.RouteLimits.Length;
-					Array.Resize(ref Train.RouteLimits, n + 1);
+					int n = train.RouteLimits.Length;
+					Array.Resize(ref train.RouteLimits, n + 1);
 					for (int i = n; i > 0; i--)
 					{
-						Train.RouteLimits[i] = Train.RouteLimits[i - 1];
+						train.RouteLimits[i] = train.RouteLimits[i - 1];
 					}
 
-					Train.RouteLimits[0] = PreviousSpeedLimit;
+					train.RouteLimits[0] = PreviousSpeedLimit;
 				}
 			}
-			else if (Direction > 0)
+			else if (direction > 0)
 			{
-				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
+				if (triggerType == EventTriggerType.FrontCarFrontAxle)
 				{
-					int n = Train.RouteLimits.Length;
-					Array.Resize(ref Train.RouteLimits, n + 1);
-					Train.RouteLimits[n] = NextSpeedLimit;
-					if (NextSpeedLimit < Train.CurrentRouteLimit)
+					int n = train.RouteLimits.Length;
+					Array.Resize(ref train.RouteLimits, n + 1);
+					train.RouteLimits[n] = NextSpeedLimit;
+					if (NextSpeedLimit < train.CurrentRouteLimit)
 					{
-						Train.CurrentRouteLimit = NextSpeedLimit;
+						train.CurrentRouteLimit = NextSpeedLimit;
 					}
 				}
-				else if (TriggerType == EventTriggerType.RearCarRearAxle)
+				else if (triggerType == EventTriggerType.RearCarRearAxle)
 				{
-					int n = Train.RouteLimits.Length;
+					int n = train.RouteLimits.Length;
 					if (n > 0)
 					{
-						Train.CurrentRouteLimit = double.PositiveInfinity;
+						train.CurrentRouteLimit = double.PositiveInfinity;
 						for (int i = 0; i < n - 1; i++)
 						{
-							Train.RouteLimits[i] = Train.RouteLimits[i + 1];
-							if (Train.RouteLimits[i] < Train.CurrentRouteLimit)
+							train.RouteLimits[i] = train.RouteLimits[i + 1];
+							if (train.RouteLimits[i] < train.CurrentRouteLimit)
 							{
-								Train.CurrentRouteLimit = Train.RouteLimits[i];
+								train.CurrentRouteLimit = train.RouteLimits[i];
 							}
 						}
-						Array.Resize(ref Train.RouteLimits, n - 1);
+						Array.Resize(ref train.RouteLimits, n - 1);
 					}
 				}
 			}

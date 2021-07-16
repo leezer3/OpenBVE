@@ -799,16 +799,16 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates the animated object within the game world</summary>
 		/// <param name="Position">The absolute position</param>
-		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>
-		/// <param name="AuxTransformation">The auxilary transformation (Placed rail)</param>
+		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
 		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
 		/// <param name="TrackPosition">The absolute track position</param>
 		/// <param name="Brightness">The brightness value at the track position</param>
-		public void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
+		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int SectionIndex, double TrackPosition, double Brightness)
 		{
 
 			int a = currentHost.AnimatedWorldObjectsUsed;
-			Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
+			Transformation FinalTransformation = new Transformation(LocalTransformation, WorldTransformation);
 
 			//Place track followers if required
 			if (TrackFollowerFunction != null)
@@ -898,6 +898,27 @@ namespace OpenBveApi.Objects
 			}
 
 			currentHost.AnimatedWorldObjectsUsed++;
+		}
+
+		/// <summary>Reverses the object</summary>
+		public void Reverse()
+		{
+			foreach (ObjectState state in States)
+			{
+				state.Prototype = (StaticObject)state.Prototype.Clone();
+				state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
+				Matrix4D t = state.Translation;
+				t.Row3.X *= -1.0f;
+				t.Row3.Z *= -1.0f;
+				state.Translation = t;
+			}
+			TranslateXDirection.X *= -1.0;
+			TranslateXDirection.Z *= -1.0;
+			TranslateYDirection.X *= -1.0;
+			TranslateYDirection.Z *= -1.0;
+			TranslateZDirection.X *= -1.0;
+			TranslateZDirection.Z *= -1.0;
+			//As we are using a rotation matrix, we only need to reverse the translation and not the rotation
 		}
 	}
 }

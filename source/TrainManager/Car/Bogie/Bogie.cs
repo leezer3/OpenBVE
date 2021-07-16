@@ -37,15 +37,19 @@ namespace TrainManager.Car
 		/// <summary>Holds a reference to the base car</summary>
 		private readonly CarBase baseCar;
 
+		/// <summary>Whether the bogie is the rear bogie</summary>
+		private readonly bool Rear;
+
 		/// <summary>Holds a reference to the base train</summary>
 		// We don't want this to be read-only if we ever manage to uncouple cars...
 		// ReSharper disable once FieldCanBeMadeReadOnly.Local
 		private AbstractTrain baseTrain;
 
-		public Bogie(AbstractTrain train, CarBase car)
+		public Bogie(AbstractTrain train, CarBase car, bool IsRear)
 		{
 			baseTrain = train;
 			baseCar = car;
+			Rear = IsRear;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, car);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, car);
@@ -84,23 +88,8 @@ namespace TrainManager.Car
 			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + Length;
 			CurrentlyVisible = dist < bid * bid;
 			// brightness
-			byte dnb;
-			{
-				float Brightness = (float) (baseCar.Brightness.NextTrackPosition - baseCar.Brightness.PreviousTrackPosition);
-				if (Brightness != 0.0f)
-				{
-					Brightness = (float) (baseCar.FrontAxle.Follower.TrackPosition - baseCar.Brightness.PreviousTrackPosition) / Brightness;
-					if (Brightness < 0.0f) Brightness = 0.0f;
-					if (Brightness > 1.0f) Brightness = 1.0f;
-					Brightness = baseCar.Brightness.PreviousBrightness * (1.0f - Brightness) + baseCar.Brightness.NextBrightness * Brightness;
-				}
-				else
-				{
-					Brightness = baseCar.Brightness.PreviousBrightness;
-				}
-
-				dnb = (byte) Math.Round(255.0 * (1.0 - Brightness));
-			}
+			byte dnb = (byte)baseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, Rear ? 1 : 0);
+			
 			// update current section
 			int cs = CurrentCarSection;
 			if (cs >= 0)
@@ -129,25 +118,11 @@ namespace TrainManager.Car
 				return;
 			}
 
-			int idxToReverse = 0; //cannot have an interior view
+			const int idxToReverse = 0; //cannot have an interior view
 
-			for (int i = 0; i < CarSections[idxToReverse].Groups[0].Elements.Length; i++)
+			foreach (AnimatedObject animatedObject in CarSections[idxToReverse].Groups[0].Elements)
 			{
-				for (int h = 0; h < CarSections[idxToReverse].Groups[0].Elements[i].States.Length; h++)
-				{
-					CarSections[idxToReverse].Groups[0].Elements[i].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-					Matrix4D t = CarSections[idxToReverse].Groups[0].Elements[i].States[h].Translation;
-					t.Row3.X *= -1.0f;
-					t.Row3.Z *= -1.0f;
-					CarSections[idxToReverse].Groups[0].Elements[i].States[h].Translation = t;
-				}
-
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateXDirection.X *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateXDirection.Z *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateYDirection.X *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateYDirection.Z *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateZDirection.X *= -1.0;
-				CarSections[idxToReverse].Groups[0].Elements[i].TranslateZDirection.Z *= -1.0;
+				animatedObject.Reverse();
 			}
 		}
 

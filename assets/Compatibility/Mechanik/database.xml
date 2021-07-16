@@ -1,0 +1,71 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MechanikRoute>
+	<Route>
+		<Hash>2E4820ACC08EAE30F89DDF2258C8A502F49BBC818BD6B21823BAF98A96D769C0</Hash>
+		<StationNames>Oleander,Orabidoo,Paisley,Ewan,Wirrabara</StationNames>
+		<Description>A journey through the Australian Outback, by Robert Shaw</Description>
+		<Doors>Left,Left,Right,Right,Left</Doors>
+	</Route>
+	<Route>
+		<Hash>F481E0A4879FBF75854E7362E87064A1BE34D8233693DEB27C1040929A936376</Hash>
+		<Description>A Mechanik route featuring Japanese scenery and sounds, by Iskander</Description>
+		<Doors>Right,Right,Right,Right,Left,Right,Right,Right,Left,Left,Right</Doors>
+		<Train>113_6</Train>
+	</Route>
+	<Route>
+		<Hash>896F2840BDB6B9E9E78065BD27421B5A8A49275E9919FE55240E4DC9B9CC7C50</Hash>
+		<Description>A Mechanik route based upon the New York IRT system</Description>
+		<Doors>Right,None,Right,Left,Left,None,None,Left,Right,None,None,None,Right,Right,Right,Left,None,None,Right</Doors>
+	</Route>
+	<Route>
+		<Hash>34F581489BA2B2DFAA3A6305181931275457179E79C02F3191AF4B03025B3D3B</Hash>
+		<StationNames>Dijon- Ville, Beaune, Chagny, Chalons Sur Saone, Tournus, Macon, Villefranche Sur S., Lyon- Perrache</StationNames>
+		<DepartureTimes>14:20,14:31,14:37,14:42,14:46,14:57,15:06,15:19</DepartureTimes>
+		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
+		<Doors>Right,Right,Right,Left,Right,Left,Left,Right</Doors>
+	</Route>
+	<Route>
+		<Hash>84BB1D52166E3BF22AA9B6908B8FC88D3A87EB520E305062CF03932D4745363B</Hash>
+		<StationNames>Miramas, Berre L'Etang, Marigane, Marseille St. Charles</StationNames>
+		<DepartureTimes>14:20,14:25,14:29,14:34</DepartureTimes>
+		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
+		<Doors>Both,Left,Right,Right</Doors>
+	</Route>
+	<Route>
+		<Hash>754AE7FD63EE340E65EC935F8B7567FCD0965F7072E43DBE2E61350506FBA5A3</Hash>
+		<StationNames>Tours, St. Pierre des Corps</StationNames>
+		<DepartureTimes>14:20,14:23</DepartureTimes>
+		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
+		<Doors>Both,Left</Doors>
+	</Route>
+	<Route>
+		<Hash>3BB9C1CB0067FF5BDEE9B42AF0D7BB86C3A585EF83DFC2962FFC79A97F9EF93F</Hash>
+		<StationNames>Perpignan, Risevaltes, Leucate, Port La Nouvelle, Narbonne, Beziers</StationNames>
+		<DepartureTimes>14:20,14:27,14:34,14:40,14:44,14:50</DepartureTimes>
+		<Description>A ficticious French Mechanik route, by Romain Martin</Description>
+		<Doors>Both,Right,Left,Left,Right,Right</Doors>
+	</Route>
+	<Route>
+		<Hash>CACDC0D0C0E7049E1487DD61A1140C97B3FFD66DB551873734010572D6841AA7</Hash>
+		<StationNames>LIGOTA GŁ.,Krzewiny,ŁĄKI WIELKIE</StationNames>
+		<DepartureTimes>14.20,14.23,14.30</DepartureTimes>
+		<Doors>Right,Right,Right</Doors>
+	</Route>
+	<Route>
+		<Hash>D36E2E6F1632C573892BF6527791CB8969674C41EF2BD5968F52EE61E48237B3</Hash>
+		<Description>A ficticious UK DMU route, by Steve Green</Description>
+		<Doors>Both,Left,Left,Right,Left,Right,Left,Left,Right,None,Right,None,None,None,None,None,Right</Doors>
+		<Train>cl104_DMC_2CAR_BLUE</Train>
+	</Route>
+	<Route>
+		<Hash>E3A9CCE204FBD74777B941F7A99BD8C4A4192F35CD96F840A1A52BA62A7E563C</Hash>
+		<Description>A ficticious UK EMU route, by Steve Green</Description>
+		<Doors>Both,None,Left,None,None,Right,None,Right,None,Left,Right</Doors>
+		<Train>Cl323 refurb_LM_openbve</Train>
+	</Route>
+  </MechanikRoute>
+  <MechanikModule>
+		<ModuleList>Modules.xml</ModuleList>
+  </MechanikModule>
+</openBVE>
+  

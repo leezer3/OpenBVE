@@ -79,10 +79,11 @@ namespace OpenBveApi.Interface {
 		/// <param name="FlagFolder">The folder containing flag images</param>
 		/// <param name="CurrentLanguageCodeArgument">The language code we wish to get the flag for</param>
 		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
-		/// <param name="pictureboxLanguage">A reference to the picturebox in which to display the flag</param>
+		/// <param name="LanguageImage">The path to the returned language image</param>
 		/// <returns>True if we have found and successfully loaded the flag image</returns>
-        public static bool SelectedLanguage(string FlagFolder, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, PictureBox pictureboxLanguage)
+		public static bool SelectedLanguage(string FlagFolder, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, out string LanguageImage)
 		{
+			LanguageImage = null;
 			int i = comboboxLanguages.SelectedIndex;
 			if (i != -1)
 			{
@@ -97,12 +98,12 @@ namespace OpenBveApi.Interface {
 				if (!System.IO.File.Exists(File)) {
 					File = Path.CombineFile(FlagFolder, "unknown.png");
 				}
-				if (System.IO.File.Exists(File)) {
+				if (System.IO.File.Exists(File))
+				{
+					
 					using (var fs = new System.IO.FileStream(File, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
-						pictureboxLanguage.Image = System.Drawing.Image.FromStream(fs);
+						LanguageImage = File;
 					}
-				} else {
-					pictureboxLanguage.Image = null;
 				}
 				return true;
 			}

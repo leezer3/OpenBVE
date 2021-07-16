@@ -1,15 +1,19 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using RouteManager2;
 using Path = OpenBveApi.Path;
 
@@ -23,6 +27,7 @@ namespace OpenBve
 
 		/// <summary>The current routefile search folder</summary>
 		private string currentRouteFolder;
+		private bool populateRouteOnce;
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
 
@@ -117,7 +122,19 @@ namespace OpenBve
 				});
 				return;
 			}
+			if (populateRouteOnce)
+			{
+				/*
+				 * If we attempt to browse to the temp folder, we'll likely get an infinite loop
+				 * from FS changed events, unless we only populate the folder once
+				 */
+				if (currentRouteFolder == System.IO.Path.GetTempPath())
+				{
+					return;
+				}
+			}
 			populateRouteList(currentRouteFolder);
+			populateRouteOnce = currentRouteFolder == System.IO.Path.GetTempPath();
 			//If this method is triggered whilst the form is disposing, bad things happen...
 			if (listviewRouteFiles.Columns.Count > 0)
 			{
@@ -207,17 +224,19 @@ namespace OpenBve
 						string[] Files = Directory.GetFiles(Folder);
 						Array.Sort(Files);
 						for (int i = 0; i < Files.Length; i++)
-						{ 
+						{
+							string fileName;
+							ListViewItem Item;
 							if (string.IsNullOrEmpty(Files[i])) return;
 							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
 							switch (Extension)
 							{
 								case ".rw":
 								case ".csv":
-									string fileName = System.IO.Path.GetFileName(Files[i]);
+									fileName = System.IO.Path.GetFileName(Files[i]);
 									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
 									{
-										ListViewItem Item = listviewRouteFiles.Items.Add(fileName);
+										Item = listviewRouteFiles.Items.Add(fileName);
 										if (Extension == ".csv")
 										{
 											try
@@ -229,7 +248,7 @@ namespace OpenBve
 													text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
 													text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
 													{
-														Item.ImageKey = @"route";
+														Item.ImageKey = @"csvroute";
 													}
 												}
 												
@@ -241,9 +260,31 @@ namespace OpenBve
 										}
 										else
 										{
-											Item.ImageKey = @"route";
+											Item.ImageKey = @"rwroute";
 										}
 										Item.Tag = Files[i];
+									}
+									break;
+								case ".dat":
+									fileName = System.IO.Path.GetFileName(Files[i]);
+									if (fileName == null || isInvalidDatName(fileName))
+									{
+										continue;
+									}
+
+									string error;
+									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+									{
+										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+									}
+									for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+									{
+										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
+										{
+											Item = listviewRouteFiles.Items.Add(fileName);
+											Item.ImageKey = @"mechanik";
+											Item.Tag = Files[i];
+										}
 									}
 									break;
 							}
@@ -258,6 +299,30 @@ namespace OpenBve
 			catch
 			{
 				//Ignore all errors
+			}
+		}
+
+		private bool isInvalidDatName(string fileName)
+		{
+			/*
+			 * Blacklist a bunch of invalid .dat files so they don't show up in the route browser
+			 */
+			switch (fileName.ToLowerInvariant())
+			{
+				case "train.dat":		//BVE Train data
+				case "tekstury.dat":	//Mechanik texture list
+				case "dzweiki.dat":		//Mechanik sound list
+				case "moduly.dat":		//Mechnik route generator dat list
+				case "dzw_osob.dat":	//Mechanik route generator sound list
+				case "dzw_posp.dat":	//Mechanik route generator sound list
+				case "log.dat":			//Mechanik route generator logfile
+				case "s80_text.dat":	//S80 Mechanik routefile sounds
+				case "s80_snd.dat":		//S80 Mechanik routefile textures
+				case "gensc.dat":		//Mechanik route generator (?)
+				case "scenerio.dat":	//Mechanik route generator (?)
+					return true;
+				default:
+					return false;
 			}
 		}
 
@@ -452,6 +517,7 @@ namespace OpenBve
 
 		/// <summary>The current train search folder</summary>
 		private string currentTrainFolder;
+		private bool populateTrainOnce;
 
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e)
 		{
@@ -511,7 +577,19 @@ namespace OpenBve
 				});
 				return;
 			}
+			if (populateTrainOnce)
+			{
+				/*
+				 * If we attempt to browse to the temp folder, we'll likely get an infinite loop
+				 * from FS changed events, unless we only populate the folder once
+				 */
+				if (currentTrainFolder == System.IO.Path.GetTempPath())
+				{
+					return;
+				}
+			}
 			populateTrainList(currentTrainFolder);
+			populateTrainOnce = currentTrainFolder == System.IO.Path.GetTempPath();
 			if (listviewTrainFolders.Columns.Count > 0)
 			{
 				listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -627,27 +705,84 @@ namespace OpenBve
 				}
 				if (t != null) {
 					if (Directory.Exists(t)) {
-						string File = Path.CombineFile(t, "train.dat");
-						if (System.IO.File.Exists(File)) {
-							Result.TrainFolder = t;
-							ShowTrain(false);
-							if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
-						}
-						else
+						try
 						{
-							groupboxTrainDetails.Visible = false;
-							buttonStart.Enabled = false;
+							string File = Path.CombineFile(t, "train.dat");
+							if (System.IO.File.Exists(File))
+							{
+								Result.TrainFolder = t;
+								ShowTrain(false);
+								if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
+							}
+							else
+							{
+								groupboxTrainDetails.Visible = false;
+								buttonStart.Enabled = false;
+							}
+						}
+						catch
+						{
+							//Ignored
 						}
 					}
 				}
 			}
 		}
-		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e) {
+		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e)
+		{
+			string error;
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			{
+				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+			}
 			if (listviewTrainFolders.SelectedItems.Count == 1) {
 				string t = listviewTrainFolders.SelectedItems[0].Tag as string;
 				if (t != null) {
-					if (t.Length == 0 || Directory.Exists(t)) {
+					if (t.Length == 0)
+					{
+						//Pop up to parent directory
 						textboxTrainFolder.Text = t;
+						return;
+					}
+					if (Directory.Exists(t))
+					{
+						string[] newDirectories = Directory.EnumerateDirectories(t).ToArray();
+						bool shouldEnter = true;
+						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+						{
+							if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(t))
+							{
+								shouldEnter = false;
+								break;
+							}
+						}
+						if (shouldEnter || newDirectories.Length > 5)
+						{
+							/*
+							 * Either a train folder with more than 5 subdirs (false positive?)
+							 * Or a plain folder
+							 */
+							textboxTrainFolder.Text = t;
+							return;
+						}
+
+						foreach (string dir in newDirectories)
+						{
+							for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+							{
+								if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(dir))
+								{
+									textboxTrainFolder.Text = t;
+									return;
+								}
+							}
+						}
+						string[] splitPath = t.Split('\\', '/');
+						if (splitPath.Length < 3)
+						{
+							//If we're on less than the 3rd level subdir assume it may be a false positive
+							textboxTrainFolder.Text = t;
+						}
 					}
 				}
 			}
@@ -796,90 +931,131 @@ namespace OpenBve
 		// functions
 		// =========
 
-		private BackgroundWorker routeWorkerThread;
+		private BlockingCollection<MainDialogResult> previewRouteResultQueue;
+		private CancellationTokenSource previewRouteCancelTokenSource;
+		private Task previewRouteTask;
+		private bool previewRouteIsLoading;
 
-		private void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
+		private void InitializePreviewRouteThread()
 		{
-			if (string.IsNullOrEmpty(Result.RouteFile))
-			{
-				return;
-			}
+			previewRouteResultQueue = new BlockingCollection<MainDialogResult>();
+			previewRouteCancelTokenSource = new CancellationTokenSource();
+			previewRouteTask = Task.Run(() => PreviewRoute(previewRouteCancelTokenSource.Token));
+		}
 
+		private void PreviewRoute(CancellationToken cancelToken)
+		{
+			while (!previewRouteResultQueue.IsCompleted)
+			{
+				// Wait for a item to be put into the queue.
+				MainDialogResult result;
+				try
+				{
+					bool takeSuccess = previewRouteResultQueue.TryTake(out result, Timeout.Infinite, cancelToken);
+
+					if (!takeSuccess)
+					{
+						continue;
+					}
+				}
+				catch (OperationCanceledException)
+				{
+					// Preview thread has been cancelled.
+					return;
+				}
+
+				// Gets the last item put into the queue at this time.
+				{
+					MainDialogResult tmp;
+					while (previewRouteResultQueue.TryTake(out tmp))
+					{
+						result = tmp;
+					}
+					// The queue is empty.
+				}
+
+				// Load the route.
+				Exception ex = null;
+				previewRouteIsLoading = true;
+				try
+				{
+					PreviewLoadRoute(result);
+				}
+				catch (Exception e)
+				{
+					ex = e;
+				}
+				
+
+				// If it is not canceled during loading, show the route information.
+				if (!Loading.Cancel)
+				{
+					Invoke((MethodInvoker) delegate
+					{
+						ShowRouteInformation(ex);
+					});
+				}
+				else
+				{
+					Loading.Cancel = false;
+				}
+
+				previewRouteIsLoading = false;
+			}
+		}
+
+		private void PreviewLoadRoute(MainDialogResult result)
+		{
 			string error; //ignored in this case, background thread
-			if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
+
 			Game.Reset(false);
-			bool loaded = false;
-			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+
+			RouteInterface routeInterface = Program.CurrentHost.Plugins.Select(x => x.Route).FirstOrDefault(x => x != null && x.CanLoadRoute(result.RouteFile));
+
+			if (routeInterface == null)
 			{
-				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(Result.RouteFile))
-				{
-					// ReSharper disable once RedundantCast
-					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-					string RailwayFolder = Loading.GetRailwayFolder(Result.RouteFile);
-					string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
-					string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
-					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(Result.RouteFile, Result.RouteEncoding, null, ObjectFolder, SoundFolder, true, ref Route))
-					{
-						Program.CurrentRoute = (CurrentRoute) Route;
-					}
-					else
-					{
-						if (Program.CurrentHost.Plugins[i].Route.LastException != null)
-						{
-							throw Program.CurrentHost.Plugins[i].Route.LastException; //Re-throw last exception generated by the route parser plugin so that the UI thread captures it
-						}
-						else
-						{
-							throw new Exception("An unknown error was enountered whilst attempting to parser the routefile " + Result.RouteFile);
-						}
-					}
-					loaded = true;
-					break;
-				}
+				throw new Exception($"No plugins capable of loading route file {result.RouteFile} were found.");
 			}
 
-			if (Loading.Complete)
-			{
-				Program.CurrentHost.UnloadPlugins(out error);
-			}
-			
-			if (!loaded)
-			{
-				throw new Exception("No plugins capable of loading routefile " + Result.RouteFile + " were found.");
-			}
+			// ReSharper disable once RedundantCast
+			object route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+			string railwayFolder = Loading.GetRailwayFolder(result.RouteFile);
+			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
+			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
 
-		}
-
-		private void routeWorkerThread_completed(object sender, RunWorkerCompletedEventArgs e)
-		{
-			if (e.Error != null || Program.CurrentRoute == null)
+			if (routeInterface.LoadRoute(result.RouteFile, result.RouteEncoding, null, objectFolder, soundFolder, true, ref route))
 			{
-				TryLoadImage(pictureboxRouteImage, "route_error.png");
-				if (e.Error != null)
-				{
-					textboxRouteDescription.Text = e.Error.Message;
-				}
-				textboxRouteEncodingPreview.Text = "";
-				pictureboxRouteMap.Image = null;
-				pictureboxRouteGradient.Image = null;
-				Result.ErrorFile = Result.RouteFile;
-				Result.RouteFile = null;
-				checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
-				routeWorkerThread.Dispose();
-				this.Cursor = System.Windows.Forms.Cursors.Default;
+				Program.CurrentRoute = (CurrentRoute)route;
 				return;
 			}
+
+			if (routeInterface.LastException != null)
+			{
+				throw routeInterface.LastException; //Re-throw last exception generated by the route parser plugin so that the UI thread captures it
+			}
+
+			throw new Exception($"An unknown error was encountered whilst attempting to parser the route file {result.RouteFile}");
+		}
+
+		private void ShowRouteInformation(Exception e)
+		{
 			try
 			{
+				if (e != null)
+				{
+					throw e;
+				}
 				lock (BaseRenderer.GdiPlusLock)
 				{
 					pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
 					pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
 						pictureboxRouteGradient.Height, false);
 				}
+
 				// image
 				if (!string.IsNullOrEmpty(Program.CurrentRoute.Image))
 				{
@@ -887,7 +1063,7 @@ namespace OpenBve
 				}
 				else
 				{
-					string[] f = {".png", ".bmp", ".gif", ".tiff", ".tif", ".jpeg", ".jpg"};
+					string[] f = { ".png", ".bmp", ".gif", ".tiff", ".tif", ".jpeg", ".jpg" };
 					int i;
 					for (i = 0; i < f.Length; i++)
 					{
@@ -918,16 +1094,16 @@ namespace OpenBve
 				// description
 				string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
 				textboxRouteDescription.Text = Description.Length != 0 ? Description : System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
-
 				textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
 				if (Interface.CurrentOptions.TrainName != null)
 				{
-					checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault") + @" (" + Interface.CurrentOptions.TrainName + @")";
+					checkboxTrainDefault.Text = $@"{Translations.GetInterfaceString("start_train_usedefault")} ({Interface.CurrentOptions.TrainName})";
 				}
 				else
 				{
 					checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 				}
+
 				Result.ErrorFile = null;
 			}
 			catch (Exception ex)
@@ -941,79 +1117,107 @@ namespace OpenBve
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 			}
-			
 
 			if (checkboxTrainDefault.Checked)
 			{
 				ShowDefaultTrain();
 			}
 
-			this.Cursor = System.Windows.Forms.Cursors.Default;
+			Cursor = System.Windows.Forms.Cursors.Default;
 			//Deliberately select the tab when the process is complete
 			//This hopefully fixes another instance of the 'grey tabs' bug
-			
+
 			tabcontrolRouteDetails.SelectedTab = tabpageRouteDescription;
 
 			buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
 		}
 
+		internal void DisposePreviewRouteThread()
+		{
+			if (previewRouteIsLoading)
+			{
+				Loading.Cancel = true;
+			}
+
+			previewRouteResultQueue?.CompleteAdding();
+			previewRouteCancelTokenSource?.Cancel();
+
+			if (previewRouteTask != null && !previewRouteTask.IsCompleted)
+			{
+				Console.WriteLine(@"Wait for Preview Thread to finish...");
+				previewRouteTask.Wait();
+				previewRouteTask = null;
+				Console.WriteLine(@"Preview Thread finished.");
+			}
+
+			previewRouteResultQueue?.Dispose();
+			previewRouteCancelTokenSource?.Dispose();
+
+			previewRouteResultQueue = null;
+			previewRouteCancelTokenSource = null;
+		}
+
 
 		// show route
-		private void ShowRoute(bool UserSelectedEncoding) {
-			if (routeWorkerThread == null)
-			{
-				return;
-			}
-			if (Result.RouteFile != null && !routeWorkerThread.IsBusy)
-			{
-				this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
-				TryLoadImage(pictureboxRouteImage, "loading.png");
-				groupboxRouteDetails.Visible = true;
-				textboxRouteDescription.Text = Translations.GetInterfaceString("start_route_processing");
+		private void ShowRoute(bool UserSelectedEncoding)
+		{
+			this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+			TryLoadImage(pictureboxRouteImage, "loading.png");
+			groupboxRouteDetails.Visible = true;
+			textboxRouteDescription.Text = Translations.GetInterfaceString("start_route_processing");
 
-				// determine encoding
-				if (!UserSelectedEncoding) {
-					Result.RouteEncoding = TextEncoding.GetSystemEncodingFromFile(Result.RouteFile);
-					comboboxRouteEncoding.Tag = new object();
-					comboboxRouteEncoding.SelectedIndex = 0;
-					comboboxRouteEncoding.Items[0] = $"{Result.RouteEncoding.EncodingName} - {Result.RouteEncoding.CodePage}";
-					comboboxRouteEncoding.Tag = null;
+			// determine encoding
+			if (!UserSelectedEncoding)
+			{
+				Result.RouteEncoding = TextEncoding.GetSystemEncodingFromFile(Result.RouteFile);
+				comboboxRouteEncoding.Tag = new object();
+				comboboxRouteEncoding.SelectedIndex = 0;
+				comboboxRouteEncoding.Items[0] = $"{Result.RouteEncoding.EncodingName} - {Result.RouteEncoding.CodePage}";
+				comboboxRouteEncoding.Tag = null;
 
-					comboboxRouteEncoding.Tag = new object();
-					int i;
-					for (i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++) {
-						if (Interface.CurrentOptions.RouteEncodings[i].Value == Result.RouteFile) {
-							int j;
-							for (j = 1; j < EncodingCodepages.Length; j++) {
-								if (EncodingCodepages[j] == Interface.CurrentOptions.RouteEncodings[i].Codepage) {
-									comboboxRouteEncoding.SelectedIndex = j;
-									Result.RouteEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
-									break;
-								}
-							}
-							if (j == EncodingCodepages.Length) {
-								comboboxRouteEncoding.SelectedIndex = 0;
-								Result.RouteEncoding = Encoding.UTF8;
-							}
-							break;
-						}
-					}
-					comboboxRouteEncoding.Tag = null;
-				}
-				if (!routeWorkerThread.IsBusy)
+				comboboxRouteEncoding.Tag = new object();
+				int i;
+				for (i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++)
 				{
-					//HACK: If clicking very rapidly or holding down an arrow
-					//		we can sometimes try to spawn two worker threads
-					routeWorkerThread.RunWorkerAsync();
+					if (Interface.CurrentOptions.RouteEncodings[i].Value == Result.RouteFile)
+					{
+						int j;
+						for (j = 1; j < EncodingCodepages.Length; j++)
+						{
+							if (EncodingCodepages[j] == Interface.CurrentOptions.RouteEncodings[i].Codepage)
+							{
+								comboboxRouteEncoding.SelectedIndex = j;
+								Result.RouteEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
+								break;
+							}
+						}
+
+						if (j == EncodingCodepages.Length)
+						{
+							comboboxRouteEncoding.SelectedIndex = 0;
+							Result.RouteEncoding = Encoding.UTF8;
+						}
+
+						break;
+					}
 				}
+
+				comboboxRouteEncoding.Tag = null;
 			}
+
+			if (previewRouteIsLoading)
+			{
+				Loading.Cancel = true;
+			}
+
+			previewRouteResultQueue.Add(Result);
 		}
 
 		// show train
 		private void ShowTrain(bool UserSelectedEncoding)
 		{
 			string error; //ignored in this case, background thread
-			if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}

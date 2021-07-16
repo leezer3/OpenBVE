@@ -229,29 +229,15 @@ namespace Train.OpenBve
 							}
 							if (CarObjects[i] is StaticObject)
 							{
-								StaticObject obj = (StaticObject)CarObjects[i];
+								StaticObject obj = (StaticObject)CarObjects[i].Clone();
 								obj.ApplyScale(-1.0, 1.0, -1.0);
+								CarObjects[i] = obj;
 							}
 							else if (CarObjects[i] is AnimatedObjectCollection)
 							{
-								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i];
-								for (int j = 0; j < obj.Objects.Length; j++)
-								{
-									for (int h = 0; h < obj.Objects[j].States.Length; h++)
-									{
-										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-										Matrix4D t = obj.Objects[j].States[h].Translation;
-										t.Row3.X *= -1.0f;
-										t.Row3.Z *= -1.0f;
-										obj.Objects[j].States[h].Translation = t;
-									}
-									obj.Objects[j].TranslateXDirection.X *= -1.0;
-									obj.Objects[j].TranslateXDirection.Z *= -1.0;
-									obj.Objects[j].TranslateYDirection.X *= -1.0;
-									obj.Objects[j].TranslateYDirection.Z *= -1.0;
-									obj.Objects[j].TranslateZDirection.X *= -1.0;
-									obj.Objects[j].TranslateZDirection.Z *= -1.0;
-								}
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i].Clone();
+								obj.Reverse();
+								CarObjects[i] = obj;
 							}
 							else
 							{
@@ -287,29 +273,15 @@ namespace Train.OpenBve
 							}
 							if (BogieObjects[i] is StaticObject)
 							{
-								StaticObject obj = (StaticObject)BogieObjects[i];
+								StaticObject obj = (StaticObject)BogieObjects[i].Clone();
 								obj.ApplyScale(-1.0, 1.0, -1.0);
+								BogieObjects[i] = obj;
 							}
 							else if (BogieObjects[i] is AnimatedObjectCollection)
 							{
-								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i];
-								for (int j = 0; j < obj.Objects.Length; j++)
-								{
-									for (int h = 0; h < obj.Objects[j].States.Length; h++)
-									{
-										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-										Matrix4D t = obj.Objects[j].States[h].Translation;
-										t.Row3.X *= -1.0f;
-										t.Row3.Z *= -1.0f;
-										obj.Objects[j].States[h].Translation = t;
-									}
-									obj.Objects[j].TranslateXDirection.X *= -1.0;
-									obj.Objects[j].TranslateXDirection.Z *= -1.0;
-									obj.Objects[j].TranslateYDirection.X *= -1.0;
-									obj.Objects[j].TranslateYDirection.Z *= -1.0;
-									obj.Objects[j].TranslateZDirection.X *= -1.0;
-									obj.Objects[j].TranslateZDirection.Z *= -1.0;
-								}
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i].Clone();
+								obj.Reverse();
+								BogieObjects[i] = obj;
 							}
 							else
 							{

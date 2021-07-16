@@ -62,7 +62,7 @@ namespace OpenBve {
 					for (int j = 0; j < Program.CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 					{
 						StationStartEvent sse = Program.CurrentRoute.Tracks[0].Elements[i].Events[j] as StationStartEvent;
-						if (sse != null && Program.CurrentRoute.Stations[sse.StationIndex].Name != string.Empty)
+						if (sse != null && Program.CurrentRoute.Stations[sse.StationIndex].Name != string.Empty && !Program.CurrentRoute.Stations[sse.StationIndex].Dummy)
 						{
 							if (Limit == -1.0) Limit = LastLimit;
 							// update station

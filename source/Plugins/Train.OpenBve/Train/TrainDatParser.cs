@@ -84,11 +84,8 @@ namespace Train.OpenBve
 			return lines;
 		}
 
-		/// <summary>
-		/// Parse the format of the specified train.dat
-		/// </summary>
+		/// <summary>Parse the format of the specified train.dat</summary>
 		/// <param name="lines">The array of the specified train.dat</param>
-		/// <param name="format">The format of the specified train.dat</param>
 		/// <param name="version">The version of the specified OpenBVE train.dat</param>
 		private static TrainDatFormats ParseFormat(IReadOnlyList<string> lines, out int version)
 		{
@@ -114,11 +111,12 @@ namespace Train.OpenBve
 					case "bve2060000":
 						return TrainDatFormats.BVE2060000;
 					case "openbve":
+						version = 0;
 						return TrainDatFormats.openBVE;
 					default:
 						if (t.ToLowerInvariant().StartsWith("openbve"))
 						{
-							string tt = t.Substring(7, t.Length - 7);
+							string tt = t.Substring(7, t.Length - 7).Trim();
 							if (!NumberFormats.TryParseIntVb6(tt, out version))
 							{
 								version = -1;
@@ -174,21 +172,26 @@ namespace Train.OpenBve
 			// Check version
 			const int currentVersion = 17250;
 			TrainDatFormats currentFormat = ParseFormat(Lines, out int myVersion);
-
-			if (currentFormat == TrainDatFormats.openBVE)
+			string versionString = Lines.FirstOrDefault(x => x.Length > 0) ?? Lines[0];
+			switch (currentFormat)
 			{
-				if (myVersion == -1)
+				case TrainDatFormats.openBVE when myVersion == -1:
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat version " + versionString + " is invalid in " + FileName);
+					break;
+				case TrainDatFormats.openBVE:
 				{
-					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
+					if (myVersion > currentVersion)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " with version " + versionString + " was created with a newer version of openBVE. Please check for an update.");
+					}
+					break;
 				}
-				else if (myVersion > currentVersion)
-				{
-					Plugin.currentHost.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
-				}
-			}
-			else if (currentFormat == TrainDatFormats.Unsupported)
-			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+				case TrainDatFormats.Unsupported:
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + versionString + " is not supported in " + FileName);
+					break;
+				case TrainDatFormats.UnknownBVE:
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + versionString + " appears to have been created by an unknown BVE version. in " + FileName + " - Please report this.");
+					break;
 			}
 
 			// initialize
@@ -361,9 +364,12 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											powerDelayUp = new[] {a};
 										}
-
 										break;
 									case 1:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
@@ -372,9 +378,12 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											powerDelayDown = new[] {a};
 										}
-
 										break;
 									case 2:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
@@ -383,9 +392,12 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											brakeDelayUp = new[] {a};
 										}
-
 										break;
 									case 3:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
@@ -394,6 +406,10 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											brakeDelayDown = new[] {a};
 										}
 										break;
@@ -404,6 +420,10 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											locoBrakeDelayUp = new[] {a};
 										}
 										break;
@@ -414,6 +434,10 @@ namespace Train.OpenBve
 										}
 										else
 										{
+											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+											{
+												break;
+											}
 											locoBrakeDelayDown = new[] {a};
 										}
 										break;
@@ -921,10 +945,22 @@ namespace Train.OpenBve
 			}
 			
 			if (TrailerCars > 0 & TrailerCarMass <= 0.0) {
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
-				TrailerCarMass = 1.0;
+				if (currentFormat < TrainDatFormats.openBVE && Plugin.CurrentOptions.EnableBveTsHacks && TrailerCars == 1 && TrailerCarMass == 0)
+				{
+					/*
+					 * Early BVE train editor versions appear to have been unable to create a train with no trailer cars,
+					 * hence the use of a single zero-mass variety as a workaround e.g. EvA6
+					 */
+					TrailerCars = 0;
+				}
+				else
+				{
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
+					TrailerCarMass = 1.0;	
+				}
+				
 			}
-
+			
 			if (powerNotches == 0)
 			{
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfPowerNotches was not set in " + FileName);

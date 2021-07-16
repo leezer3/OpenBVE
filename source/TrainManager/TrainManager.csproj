@@ -92,6 +92,11 @@
     <Compile Include="SafetySystems\DefaultSafetySystems.cs" />
     <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="SafetySystems\PilotLamp.cs" />
+    <Compile Include="SafetySystems\Plugin\AI\PluginAI.cs" />
+    <Compile Include="SafetySystems\Plugin\AI\PluginAI.HeiAts.cs" />
+    <Compile Include="SafetySystems\Plugin\AI\PluginAI.UKDt.cs" />
+    <Compile Include="SafetySystems\Plugin\AI\PluginAI.UKMUt.cs" />
+    <Compile Include="SafetySystems\Plugin\AI\PluginAI.UKSpt.cs" />
     <Compile Include="SafetySystems\Plugin\LegacyPlugin.cs" />
     <Compile Include="SafetySystems\Plugin\NetPlugin.cs" />
     <Compile Include="SafetySystems\Plugin\Plugin.cs" />

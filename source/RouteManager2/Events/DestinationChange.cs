@@ -18,9 +18,8 @@ namespace RouteManager2.Events
 		/// <summary>Whether this event is triggered by AI only (-1), both (0) or player only (1)</summary>
 		public readonly int Type;
 
-		public DestinationEvent(double TrackPositionDelta, int Type, int NextDestination, int PreviousDestination, bool TriggerOnce)
+		public DestinationEvent(double TrackPositionDelta, int Type, int NextDestination, int PreviousDestination, bool TriggerOnce) : base(TrackPositionDelta)
 		{
-			this.TrackPositionDelta = TrackPositionDelta;
 			DontTriggerAnymore = false;
 			this.NextDestination = NextDestination;
 			this.PreviousDestination = PreviousDestination;
@@ -28,9 +27,11 @@ namespace RouteManager2.Events
 			this.Type = Type;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (Train == null || Type == -1 && Train.IsPlayerTrain || Type == 1 && !Train.IsPlayerTrain)
+			AbstractTrain train = trackFollower.Train;
+
+			if (train == null || Type == -1 && train.IsPlayerTrain || Type == 1 && !train.IsPlayerTrain)
 			{
 				return;
 			}
@@ -40,13 +41,13 @@ namespace RouteManager2.Events
 				return;
 			}
 
-			if (TriggerType == EventTriggerType.TrainFront)
+			if (trackFollower.TriggerType == EventTriggerType.TrainFront)
 			{
-				if (Direction > 0)
+				if (direction > 0)
 				{
 					if (NextDestination != -1)
 					{
-						Train.Destination = NextDestination;
+						train.Destination = NextDestination;
 					}
 
 					if (TriggerOnce)
@@ -58,7 +59,7 @@ namespace RouteManager2.Events
 				{
 					if (PreviousDestination != -1)
 					{
-						Train.Destination = PreviousDestination;
+						train.Destination = PreviousDestination;
 					}
 
 					if (TriggerOnce)

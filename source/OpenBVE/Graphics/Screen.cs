@@ -9,7 +9,6 @@ using OpenTK.Graphics.OpenGL;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
-using RouteManager2;
 
 namespace OpenBve
 {
@@ -26,7 +25,7 @@ namespace OpenBve
 			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
-				IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
+				IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
 				bool resolutionFound = false;
 				foreach (DisplayResolution currentResolution in resolutions)
 				{
@@ -37,7 +36,7 @@ namespace OpenBve
 					{
 						try
 						{
-							OpenTK.DisplayDevice.Default.ChangeResolution(currentResolution);
+							DisplayDevice.Default.ChangeResolution(currentResolution);
 							Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
 								GameWindowFlags.Default)
 							{
@@ -70,7 +69,6 @@ namespace OpenBve
 			}
 			else
 			{
-
 				try
 				{
 					Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,

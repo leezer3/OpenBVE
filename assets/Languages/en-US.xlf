@@ -1381,6 +1381,18 @@
 					<trans-unit id="route_overspeed">
 						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
 					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
 					</trans-unit>
@@ -1419,6 +1431,9 @@
 					</trans-unit>
 					<trans-unit id="station_passed_boarding">
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
+					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train's current speed is [speed]</source>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
@@ -1554,6 +1569,12 @@
 					</trans-unit>
 				</group>
 				<group id="menu">
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+					</trans-unit>
 					<trans-unit id="resume">
 						<source>Resume simulation</source>
 					</trans-unit>
@@ -2483,6 +2504,12 @@
 					<trans-unit id="input_section">
 						<source>Device input</source>
 					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+					</trans-unit>
 					<trans-unit id="calibration_button">
 						<source>Start calibration</source>
 					</trans-unit>
@@ -2536,6 +2563,73 @@
 					</trans-unit>
 					<trans-unit id="label_pedal">
 						<source>PEDAL</source>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
+					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:
+
+1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
+to separate buttons to avoid compatibility issues.
+2. Calibrate the controller from the configuration window, if necessary.</source>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.
+2. Download and run Zadig.
+3. Load the appropriate CFG file for your device ("Device &gt; Load Preset Device").
+4. Press "Install Driver" and wait for installation to complete.</source>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.
+2. Copy the file to "/etc/udev/rules.d/" (root permissions required).
+3. Reboot or reload udev rules manually.</source>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
+					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
+Please follow the following instructions:
+
+1. Check that the "libusb-1.0" package is installed.
+2. Find the location of "libusb-1.0.so.0" - On recent Ubuntu and Debian versions, this is likely to be "/lib/x86_64-linux-gnu/"
+3. Open the directory in the terminal.
+4. Check this location to see if "libusb-1.0.so" exists.
+5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</source>
 					</trans-unit>
 				</group>
 			</group>

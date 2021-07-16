@@ -805,11 +805,15 @@ namespace Plugin
 											{
 												Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
 											}
-											else
+											else if (currentObject is AnimatedObjectCollection)
 											{
 												currentHost.AddMessage(MessageType.Error, false, "Attempted to load the animated object " + StateFiles[k] + " where only static objects are allowed at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												continue;
 											}
+											/*
+											 * NOTE: If loading the object fails, or the prototype is null (empty), then we will get a
+											 * non-shown state
+											 */
 											if (Result.Objects[ObjectCount].States[k].Prototype != null)
 											{
 												Result.Objects[ObjectCount].States[k].Prototype.Dynamic = true;

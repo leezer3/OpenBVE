@@ -86,6 +86,7 @@ namespace TrainManager.Car
 		public CarBase(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 		{
 			Specs = new CarPhysics();
+			Brightness = new Brightness(this);
 			baseTrain = train;
 			Index = index;
 			CarSections = new CarSection[] { };
@@ -94,8 +95,8 @@ namespace TrainManager.Car
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			RearAxle.Follower.TriggerType = index == baseTrain.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this);
-			RearBogie = new Bogie(train, this);
+			FrontBogie = new Bogie(train, this, false);
+			RearBogie = new Bogie(train, this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -118,8 +119,8 @@ namespace TrainManager.Car
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this);
-			RearBogie = new Bogie(train, this);
+			FrontBogie = new Bogie(train, this, false);
+			RearBogie = new Bogie(train, this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -127,6 +128,7 @@ namespace TrainManager.Car
 				new Horn(this),
 				new Horn(this)
 			};
+			Brightness = new Brightness(this);
 		}
 
 		/// <summary>Moves the car</summary>
@@ -244,23 +246,9 @@ namespace TrainManager.Car
 			int idxToReverse = HasInteriorView ? 1 : 0;
 			if (CarSections != null && CarSections.Length > 0)
 			{
-				foreach (var carSection in CarSections[idxToReverse].Groups[0].Elements)
+				foreach (AnimatedObject animatedObject in CarSections[idxToReverse].Groups[0].Elements)
 				{
-					for (int h = 0; h < carSection.States.Length; h++)
-					{
-						carSection.States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-						Matrix4D t = carSection.States[h].Translation;
-						t.Row3.X *= -1.0f;
-						t.Row3.Z *= -1.0f;
-						carSection.States[h].Translation = t;
-					}
-
-					carSection.TranslateXDirection.X *= -1.0;
-					carSection.TranslateXDirection.Z *= -1.0;
-					carSection.TranslateYDirection.X *= -1.0;
-					carSection.TranslateYDirection.Z *= -1.0;
-					carSection.TranslateZDirection.X *= -1.0;
-					carSection.TranslateZDirection.Z *= -1.0;
+					animatedObject.Reverse();
 				}
 			}
 
@@ -674,30 +662,7 @@ namespace TrainManager.Car
 			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + Length;
 			CurrentlyVisible = dist < bid * bid;
 			// Updates the brightness value
-			byte dnb;
-			{
-				float b = (float) (Brightness.NextTrackPosition - Brightness.PreviousTrackPosition);
-
-				//1.0f represents a route brightness value of 255
-				//0.0f represents a route brightness value of 0
-
-				if (b != 0.0f)
-				{
-					b = (float) (FrontAxle.Follower.TrackPosition - Brightness.PreviousTrackPosition) / b;
-					if (b < 0.0f) b = 0.0f;
-					if (b > 1.0f) b = 1.0f;
-					b = Brightness.PreviousBrightness * (1.0f - b) + Brightness.NextBrightness * b;
-				}
-				else
-				{
-					b = Brightness.PreviousBrightness;
-				}
-
-				//Calculate the cab brightness
-				double ccb = Math.Round(255.0 * (1.0 - b));
-				//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-				dnb = (byte) Math.Min(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, ccb);
-			}
+			byte dnb = (byte)Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, 0.0);
 			// update current section
 			int cs = CurrentCarSection;
 			if (cs >= 0 && cs < CarSections.Length)

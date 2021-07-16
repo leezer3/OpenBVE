@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 

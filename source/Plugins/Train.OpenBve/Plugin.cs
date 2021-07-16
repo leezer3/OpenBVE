@@ -105,6 +105,10 @@ namespace Train.OpenBve
 
 		public override bool CanLoadTrain(string path)
 		{
+			if (path == null)
+			{
+				return false;
+			}
 			if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
 			{
 				string vehicleTxt = Path.CombineFile(path, "vehicle.txt");

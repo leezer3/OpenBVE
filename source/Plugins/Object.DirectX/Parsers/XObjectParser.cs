@@ -5,6 +5,7 @@ using OpenBveApi.Objects;
 using System.Linq;
 using System.Text;
 using OpenBve.Formats.DirectX;
+using OpenBveApi;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 
@@ -27,10 +28,12 @@ namespace Plugin {
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32) {
 				// textual flavor
 				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName, Encoding));
-			} else if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32) {
+			}
+			if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32) {
 				// binary flavor
 				return LoadBinaryX(FileName, Data, 16, FloatingPointSize);
-			} else if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
+			}
+			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed textual flavor
 				try {
 					byte[] Uncompressed = MSZip.Decompress(Data);
@@ -40,7 +43,8 @@ namespace Plugin {
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
 					return null;
 				}
-			} else if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
+			}
+			if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed binary flavor
 
 				try {
@@ -50,11 +54,10 @@ namespace Plugin {
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
 					return null;
 				}
-			} else {
-				// unsupported flavor
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
-				return null;
 			}
+			// unsupported flavor
+			Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
+			return null;
 		}
 
 		
@@ -519,6 +522,15 @@ namespace Plugin {
 											Position++;
 											break;
 										} else if (!char.IsWhiteSpace(Content, Position)) {
+											if ((char.IsDigit(Content[Position]) || Content[Position] == '-') && t.Name == "Coords2d")
+											{
+												/*
+												 * Handles objects with a Coords2d structure which omit the comma from the array
+												 * e.g. Marumado
+												 */
+												Position++;
+												break;
+											}
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										} else {
@@ -1808,7 +1820,23 @@ namespace Plugin {
 																		}
 																		else
 																		{
-																			string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);
+																			string File;
+																			if (Path.IsAbsolutePath(filename))
+																			{
+																				if (Plugin.EnabledHacks.BveTsHacks)
+																				{
+																					filename = filename.Split('/', '\\').Last();
+																					File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);
+																				}
+																				else
+																				{
+																					File = filename;
+																				}
+																			}
+																			else
+																			{
+																				File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);	
+																			}
 																			if (System.IO.File.Exists(File))
 																			{
 																				Materials[MaterialIndex].TextureFilename = File;

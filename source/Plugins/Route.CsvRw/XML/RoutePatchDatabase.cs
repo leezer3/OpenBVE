@@ -30,7 +30,7 @@ namespace CsvRwRouteParser
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/RoutePatches");
-				//Check this file actually contains OpenBVE light definition nodes
+				//Check this file actually contains OpenBVE route patch definition nodes
 				if (DocumentNodes != null)
 				{
 					for (int i = 0; i < DocumentNodes.Count; i++)
@@ -230,6 +230,34 @@ namespace CsvRwRouteParser
 						else
 						{
 							currentPatch.DisableSemiTransparentFaces = false;
+						}
+						break;
+					case "ReducedColorTransparency":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.ReducedColorTransparency = true;
+						}
+						else
+						{
+							currentPatch.ReducedColorTransparency = false;
+						}
+						break;
+					case "ViewingDistance":
+						if (!int.TryParse(childNode.InnerText.Trim(), out currentPatch.ViewingDistance))
+						{
+							currentPatch.ViewingDistance = int.MaxValue;
+						}
+						break;
+					case "Incompatible":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.Incompatible = true;
+						}
+						else
+						{
+							currentPatch.Incompatible = false;
 						}
 						break;
 				}

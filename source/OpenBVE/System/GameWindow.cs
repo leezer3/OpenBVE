@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using LibRender2;
@@ -11,6 +13,7 @@ using LibRender2.Overlays;
 using LibRender2.Screens;
 using LibRender2.Trains;
 using LibRender2.Viewports;
+using OpenBve;
 using OpenBve.Graphics;
 using OpenBve.Input;
 using OpenBveApi.Colors;
@@ -22,6 +25,7 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
@@ -49,7 +53,7 @@ namespace OpenBve
 			try
 			{
 				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-				System.Drawing.Icon ico = new System.Drawing.Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
+				Icon ico = new Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
 				this.Icon = ico;
 			}
 			catch
@@ -325,8 +329,33 @@ namespace OpenBve
 			Screen.WindowResize(Width,Height);
 		}
 
+		[DllImport("user32.dll")]
+		private static extern int FindWindow(string className, string windowText);
+		[DllImport("user32.dll")]
+		public static extern int FindWindowEx(int parentHandle, int childAfter, string className, int windowTitle);
+
+		[DllImport("user32.dll")]
+		private static extern int ShowWindow(int hwnd, int command);
+		[DllImport("user32.dll")]
+		private static extern int GetDesktopWindow();
 		protected override void OnLoad(EventArgs e)
 		{
+			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows && WindowState != WindowState.Fullscreen)
+			{
+				int w = DisplayDevice.Default.Width;
+				int h = DisplayDevice.Default.Height;
+				if (w == Interface.CurrentOptions.WindowWidth && h == Interface.CurrentOptions.WindowHeight)
+				{
+					// If we are not in full-screen, but height and width are equal to resolution, hide taskbar
+					// e.g. Borderless windowed fulllscreen
+					int hwnd = FindWindow("Shell_TrayWnd","");
+					ShowWindow(hwnd,0);
+					int hstart = FindWindowEx(GetDesktopWindow(), 0, "button", 0);
+					ShowWindow(hstart,0);
+					WindowBorder = WindowBorder.Hidden;
+					Bounds = new Rectangle(0, 0, w, h);
+				}
+			}
 			Program.FileSystem.AppendToLogFile("Game window initialised successfully.");
 			//Initialise the loader thread queues
 			jobs = new Queue<ThreadStart>(10);
@@ -416,6 +445,15 @@ namespace OpenBve
 			{
 				//More forcefully close under Mono, stuff *still* hanging around....
 				Environment.Exit(0);
+			}
+
+			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				//Restore taskbar visibility if hidden
+				int hwnd = FindWindow("Shell_TrayWnd","");
+				ShowWindow(hwnd,1);
+				int hstart = FindWindowEx(GetDesktopWindow(), 0, "button", 0);
+				ShowWindow(hstart,1);
 			}
 			base.OnClosing(e);
 		}
@@ -754,7 +792,10 @@ namespace OpenBve
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 			{
 				int s = Program.TrainManager.Trains[i].CurrentSectionIndex;
-				Program.CurrentRoute.Sections[s].Enter(Program.TrainManager.Trains[i]);
+				if (Program.CurrentRoute.Sections.Length > Program.TrainManager.Trains[i].CurrentSectionIndex)
+				{
+					Program.CurrentRoute.Sections[s].Enter(Program.TrainManager.Trains[i]);
+				}
 			}
 			if (Program.CurrentRoute.Sections.Length > 0)
 			{
@@ -806,7 +847,7 @@ namespace OpenBve
 			if (Game.InitialAIDriver)
 			{
 				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
-				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
+				if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 				{
 					MessageManager.AddMessage(Translations.GetInterfaceString("notification_aiunable"),MessageDependency.None, GameMode.Expert,
 						MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);

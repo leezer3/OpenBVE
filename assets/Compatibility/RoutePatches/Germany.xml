@@ -5,5 +5,48 @@
 		<FileName>S75 daytime.csv</FileName>
 		<SignalSet>SV.xml</SignalSet>
 	</Patch>
+	<Patch>
+		<Hash>BB3EC7F141DB94660E96F52D654CD7163D8F69451376F09CBF956535729C0798</Hash>
+		<FileName>Tram_NeustadtL4_v2.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- Gotha tram routes -->
+	<Patch>
+		<Hash>51649CAC48C5A4858BFCE4D5350BF2ED7CAF53982555CDA2538408DB5A7FCE7C</Hash>
+		<FileName>Gotha-Linie 1 - GT6 (ex Mannheim).rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>11AF32EB117695B3B82C0FAA8C1B06E59605585423ACC64579C18124C1FBDF20</Hash>
+		<FileName>Gotha-Linie 1 - GT6 (ex Mannheim).rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>EC26F484327EE7CB930763772618BA1EC69D45C0F680AD33E41CC0BCBA869A53</Hash>
+		<FileName>Gotha-Linie 1 - GT6 (ex Mannheim).rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>41BB0234FA5DAFA5FFCB923E905062FFF5EC919B6B3B2A039F1F2A93CA8F16C4</Hash>
+		<FileName>GT6.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>FE8A1CED36C5B173510B13CCB61BA36F453CC947887ED5AE1C0040E86D2B9166</Hash>
+		<FileName>KCSV7.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>EE383B55CF43F47A9936587202C0585B232F0F328396CD30CF377326E6BA0434</Hash>
+		<FileName>TW6000.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

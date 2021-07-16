@@ -48,15 +48,6 @@ namespace Plugin
 {
 	class MsTsShapeParser
 	{
-		struct Matrix
-		{
-			internal string Name;
-			internal Vector3 A;
-			internal Vector3 B;
-			internal Vector3 C;
-			internal Vector3 D;
-		}
-
 		struct Texture
 		{
 			internal string fileName;
@@ -139,7 +130,7 @@ namespace Plugin
 				points = new List<Vector3>();
 				normals = new List<Vector3>();
 				uv_points = new List<Vector2>();
-				matrices = new List<Matrix>();
+				matrices = new List<Matrix4D>();
 				images = new List<string>();
 				textures = new List<Texture>();
 				prim_states = new List<PrimitiveState>();
@@ -156,7 +147,7 @@ namespace Plugin
 			/// <summary>The texture-coordinates used by this shape</summary>
 			internal readonly List<Vector2> uv_points;
 			/// <summary>The matrices used to transform components of this shape</summary>
-			internal readonly List<Matrix> matrices;
+			internal readonly List<Matrix4D> matrices;
 			/// <summary>The filenames of all textures used by this shape</summary>
 			internal readonly List<string> images;
 			/// <summary>The textures used, with associated parameters</summary>
@@ -204,7 +195,7 @@ namespace Plugin
 				this.materials = new List<Material>();
 			}
 
-			internal void TransformVerticies(List<Matrix> matrices)
+			internal void TransformVerticies(List<Matrix4D> matrices)
 			{
 				//TODO: This moves the verticies
 				//We should actually split them and the associated faces and use position within our animated object instead
@@ -240,7 +231,7 @@ namespace Plugin
 
 							for (int k = 0; k < matrixChain.Count; k++)
 							{
-								verticies[i].Coordinates += matrices[matrixChain[k]].D;
+								verticies[i].Coordinates.Transform(matrices[matrixChain[k]], false);
 							}
 
 							break;
@@ -332,7 +323,7 @@ namespace Plugin
 			};
 
 			currentFolder = Path.GetDirectoryName(fileName);
-			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
 			byte[] buffer = new byte[34];
 			fb.Read(buffer, 0, 2);
@@ -799,12 +790,11 @@ namespace Plugin
 					}
 					break;
 				case KujuTokenID.matrix:
-					Matrix currentMatrix = new Matrix();
-					currentMatrix.Name = block.Label;
-					currentMatrix.A = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					currentMatrix.B = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					currentMatrix.C = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					currentMatrix.D = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					Matrix4D currentMatrix = new Matrix4D();
+					currentMatrix.Row0 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
+					currentMatrix.Row1 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
+					currentMatrix.Row2 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
+					currentMatrix.Row3 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
 					shape.matrices.Add(currentMatrix);
 					break;
 				case KujuTokenID.normals:

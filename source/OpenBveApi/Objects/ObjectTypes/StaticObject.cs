@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.World;
 
@@ -410,6 +411,24 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		/// <summary>Applys a color to all materials in the mesh</summary>
+		/// <param name="newColor">The color</param>
+		/// <param name="emissive">Whether this is an emissive color</param>
+		public void ApplyColor(Color32 newColor, bool emissive)
+		{
+			for (int i = 0; i < Mesh.Materials.Length; i++)
+			{
+				if (emissive)
+				{
+					Mesh.Materials[i].EmissiveColor = (Color24) newColor;
+				}
+				else
+				{
+					Mesh.Materials[i].Color = newColor;
+				}
+			}
+		}
+
 		/// <summary>Performs shear mapping for all vertices within the StaticObject</summary>
 		/// <param name="Direction">A vector describing the direction of the plane to be sheared</param>
 		/// <param name="Shear">A vector describing the shear direction</param>
@@ -438,11 +457,11 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Callback function to create the object within the world</summary>
-		public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
+		public override void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation,
 			int SectionIndex, double StartingDistance, double EndingDistance,
 			double TrackPosition, double Brightness, bool DuplicateMaterials = false)
 		{
-			currentHost.CreateStaticObject(this, Position, BaseTransformation, AuxTransformation, 0.0, StartingDistance, EndingDistance, TrackPosition, Brightness);
+			currentHost.CreateStaticObject(this, Position, WorldTransformation, LocalTransformation, 0.0, StartingDistance, EndingDistance, TrackPosition, Brightness);
 		}
 
 		/// <inheritdoc />

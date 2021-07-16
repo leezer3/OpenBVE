@@ -31,8 +31,11 @@ namespace TrainManager.SafetySystems
 		/// <summary>The array of panel variables.</summary>
 		public int[] Panel;
 
+		/// <summary>The array of sound variables used by legacy plugins</summary>
+		internal int[] Sound;
+
 		/// <summary>Whether the plugin supports the AI.</summary>
-		public bool SupportsAI;
+		public AISupport SupportsAI;
 
 		/// <summary>The last in-game time reported to the plugin.</summary>
 		public double LastTime;
@@ -62,6 +65,8 @@ namespace TrainManager.SafetySystems
 		private List<Station> currentRouteStations;
 
 		private bool StationsLoaded;
+		/// <summary>Holds the plugin specific AI class</summary>
+		internal PluginAI AI;
 
 		// --- functions ---
 		/// <summary>Called to load and initialize the plugin.</summary>
@@ -562,6 +567,14 @@ namespace TrainManager.SafetySystems
 					{
 						this.LastAspects[i] = data[i].Aspect;
 					}
+					for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
+					{
+						if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+						{
+							ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+							trainInputDevice.SetSignal(data);
+						}
+					}
 				}
 			}
 		}
@@ -584,10 +597,10 @@ namespace TrainManager.SafetySystems
 				Train.Cars[Train.DriverCar].Windscreen.SetRainIntensity(optional);
 			}
 
+			SignalData signal;
 			if (sectionIndex == -1)
 			{
 				sectionIndex = this.Train.CurrentSectionIndex + 1;
-				SignalData signal = null;
 				while (sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length)
 				{
 					signal = TrainManagerBase.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
@@ -595,24 +608,28 @@ namespace TrainManager.SafetySystems
 					sectionIndex++;
 				}
 
-				if (sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length)
+				if (sectionIndex >= TrainManagerBase.CurrentRoute.Sections.Length)
 				{
-					SetBeacon(new BeaconData(type, optional, signal));
-				}
-				else
-				{
-					SetBeacon(new BeaconData(type, optional, new SignalData(-1, double.MaxValue)));
+					signal = new SignalData(-1, double.MaxValue);
 				}
 			}
 
 			if (sectionIndex >= 0)
 			{
-				SignalData signal = sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length ? TrainManagerBase.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train) : new SignalData(0, double.MaxValue);
-				SetBeacon(new BeaconData(type, optional, signal));
+				signal = sectionIndex < TrainManagerBase.CurrentRoute.Sections.Length ? TrainManagerBase.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train) : new SignalData(0, double.MaxValue);
 			}
 			else
 			{
-				SetBeacon(new BeaconData(type, optional, new SignalData(-1, double.MaxValue)));
+				signal = new SignalData(-1, double.MaxValue);
+			}
+			SetBeacon(new BeaconData(type, optional, signal));
+			for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
+			{
+				if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+				{
+					ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+					trainInputDevice.SetBeacon(new BeaconData(type, optional, signal));
+				}
 			}
 		}
 
@@ -625,7 +642,7 @@ namespace TrainManager.SafetySystems
 		/// <returns>The AI response.</returns>
 		public AIResponse UpdateAI()
 		{
-			if (this.SupportsAI)
+			if (this.SupportsAI != AISupport.None)
 			{
 				AIData data = new AIData(GetHandles());
 				this.PerformAI(data);

@@ -29,7 +29,7 @@ namespace OpenBveApi.Trains
 		/// <summary>The current route limit in effect</summary>
 		public double CurrentRouteLimit;
 		/// <summary>The current speed of the train (as an average of all cars)</summary>
-		/// <remarks>Default units are km/h</remarks>
+		/// <remarks>Default units are m/s</remarks>
 		public double CurrentSpeed;
 		/// <summary>The index to the next station at which the train calls</summary>
 		/// <remarks>If stationary at a timetabled station, this will return that station</remarks>

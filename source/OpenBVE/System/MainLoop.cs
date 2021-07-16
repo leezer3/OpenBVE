@@ -2,9 +2,10 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using LibRender2;
+using DavyKager;
 using LibRender2.Screens;
 using OpenBve.Input;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenTK;
@@ -30,7 +31,7 @@ namespace OpenBve
 		internal static bool BlockKeyRepeat;
 		/// <summary>The current simulation time-factor</summary>
 		internal static int TimeFactor = 1;
-
+		
 		internal static double timeSinceLastMouseEvent;
 
 		internal static formMain.MainDialogResult currentResult;
@@ -52,6 +53,21 @@ namespace OpenBve
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
+			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				Tolk.Load();
+				string name = Tolk.DetectScreenReader();
+				if (!string.IsNullOrEmpty(name))
+				{
+					Interface.CurrentOptions.ScreenReaderAvailable = true;
+					Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
+				}
+				else
+				{
+					Program.FileSystem.AppendToLogFile("No supported screen reader found.");
+				}
+			}
+			
 			//Process extra command line arguments supplied
 			if (result.InitialStation != null)
 			{
@@ -65,13 +81,13 @@ namespace OpenBve
 
 			Game.InitialAIDriver = result.AIDriver;
 			Game.InitialReversedConsist = result.ReverseConsist;
-			if (result.FullScreen == true)
+			if (result.FullScreen)
 			{
 				Interface.CurrentOptions.FullscreenMode = true;
 			}
 			if (result.Width != default(double) && result.Height != default(double))
 			{
-				if (Interface.CurrentOptions.FullscreenMode == true)
+				if (Interface.CurrentOptions.FullscreenMode)
 				{
 					Interface.CurrentOptions.FullscreenWidth = result.Width;
 					Interface.CurrentOptions.FullscreenHeight = result.Height;
@@ -390,7 +406,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Interface.CurrentControls[i].AnalogState = (double)Math.Sign(axisState);
+									Interface.CurrentControls[i].AnalogState = Math.Sign(axisState);
 								}
 							}
 							else

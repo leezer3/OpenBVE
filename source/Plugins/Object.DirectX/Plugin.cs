@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -10,7 +11,7 @@ namespace Plugin
     {
 	    internal static HostInterface currentHost;
 	    private static XParsers currentXParser = XParsers.Original;
-	    internal static bool BlackTransparency = true;
+	    internal static CompatabilityHacks EnabledHacks;
 
 	    public override string[] SupportedStaticObjectExtensions => new[] { ".x" };
 
@@ -19,9 +20,9 @@ namespace Plugin
 		    currentHost = host;
 	    }
 
-	    public override void SetCompatibilityHacks(CompatabilityHacks EnabledHacks)
+	    public override void SetCompatibilityHacks(CompatabilityHacks enabledHacks)
 	    {
-		    BlackTransparency = EnabledHacks.BlackTransparency;
+		    EnabledHacks = enabledHacks;
 	    }
 		
 	    public override void SetObjectParser(object parserType)
@@ -34,7 +35,11 @@ namespace Plugin
 
 	    public override bool CanLoadObject(string path)
 	    {
-		    byte[] Data = System.IO.File.ReadAllBytes(path);
+		    if (string.IsNullOrEmpty(path) || !File.Exists(path))
+		    {
+			    return false;
+		    }
+		    byte[] Data = File.ReadAllBytes(path);
 		    if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
 		    {
 			    // not an x object

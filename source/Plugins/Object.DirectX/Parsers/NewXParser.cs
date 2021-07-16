@@ -347,7 +347,7 @@ namespace Plugin
 					Color24 mSpecular = new Color24((byte)block.ReadSingle(), (byte)block.ReadSingle(), (byte)block.ReadSingle());
 					builder.Materials[m].EmissiveColor = new Color24((byte)(255 *block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()));
 					builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
-					if (Plugin.BlackTransparency)
+					if (Plugin.EnabledHacks.BlackTransparency)
 					{
 						builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
 						builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
@@ -360,15 +360,26 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.TextureFilename:
+					string texturePath = block.ReadString();
+
+					// If the specified file name is an absolute path, make it the file name only.
+					// Some object files specify absolute paths.
+					// And BVE4/5 doesn't allow textures to be placed in a different directory than the object file.
+					if (Plugin.EnabledHacks.BveTsHacks && OpenBveApi.Path.IsAbsolutePath(texturePath))
+					{
+						texturePath = texturePath.Split('/', '\\').Last();
+					}
+
 					try
 					{
-						material.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, block.ReadString());
+						material.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texturePath);
 					}
-					catch
+					catch (Exception e)
 					{
-						//Empty / malformed texture argument
+						Plugin.currentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
 						material.DaytimeTexture = null;
 					}
+
 					if (!System.IO.File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
 						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + material.DaytimeTexture + " was not found in file " + currentFile);

@@ -15,13 +15,18 @@ using Control = OpenBveApi.Interface.Control;
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
 	internal static partial class Program {
-
+#pragma warning disable IDE1006 // Suppress the VS2017 naming style rule, as this is an external syscall
 		/// <summary>Gets the UID of the current user if running on a Unix based system</summary>
 		/// <returns>The UID</returns>
 		/// <remarks>Used for checking if we are running as ROOT (don't!)</remarks>
 		[DllImport("libc")]
-#pragma warning disable IDE1006 // Suppress the VS2017 naming style rule, as this is an external syscall
 		private static extern uint getuid();
+
+		/// <summary>Gets the UID of the current user if running on a Unix based system</summary>
+		/// <returns>The UID</returns>
+		/// <remarks>Used for checking if we are running as SUDO</remarks>
+		[DllImport("libc")]
+		private static extern uint geteuid();
 #pragma warning restore IDE1006
 		
 		/// <summary>Stores the current CPU architecture</summary>
@@ -97,10 +102,10 @@ namespace OpenBve {
 			
 			//Platform specific startup checks
 			// --- Check if we're running as root, and prompt not to ---
-			if (CurrentHost.Platform == HostPlatform.GNULinux && getuid() == 0)
+			if (CurrentHost.Platform == HostPlatform.GNULinux && (getuid() == 0 || geteuid() == 0))
 			{
 				MessageBox.Show(
-					"You are currently running as the root user." + System.Environment.NewLine +
+					"You are currently running as the root user, or via the sudo command." + System.Environment.NewLine +
 					"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 

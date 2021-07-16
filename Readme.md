@@ -69,8 +69,9 @@ Please also see the following issue for further discussion on the topic: https:/
 - openBVE uses the [**NVorbis**](https://github.com/NVorbis/NVorbis) for decoding Vorbis file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NVorbis.txt).
 - openBVE uses the [**OpenTK**](https://github.com/opentk/opentk) library for windowing and input handling. This is licensed under the _Open Toolkit Library License_, which may be found in [here](licenses/OpenTK.txt).
 - openBVE uses the [**Prism**](https://github.com/PrismLibrary/Prism). This is licensed under the *MIT License*, which may be found in [here](licenses/Prism.txt).
-- openBVE uses the [**ReactiveProperty**](https://github.com/runceel/ReactiveProperty). This is licensed under the *MIT License*, which may be found in [here](licenses/ReactiveProperty.txt).
+- openBVE uses the [**ReactiveProperty**](https://github.com/runceel/ReactiveProperty) This is licensed under the *MIT License*, which may be found in [here](licenses/ReactiveProperty.txt).
 - openBVE uses the [**SharpCompress**](https://github.com/adamhathcock/sharpcompress) for archive handling. This is licensed under the _MIT License_, which may be found in [here](licenses/SharpCompress.txt).
-- openBVE uses the [**Reactive Extensions**](https://github.com/dotnet/reactive). This is licensed under the *Apache License, Version 2.0*, which may be found in [here](licenses/ReactiveExtensions.txt).
+- openBVE uses the [**Reactive Extensions**](https://github.com/dotnet/reactive) This is licensed under the *Apache License, Version 2.0*, which may be found in [here](licenses/ReactiveExtensions.txt).
 - openBVE uses the [**Ude**](https://github.com/yinyue200/ude) for character set detection. This is tri-licensed under the _Mozilla Public License v1.1_, _GPL 2.0_ and _LGPL 2.0_, which may be found in [here](licenses/Ude.txt).
-- openBVE uses the [**XamlBehaviors for WPF**](https://github.com/microsoft/XamlBehaviorsWpf). This is licensed under the *MIT License*, which may be found in [here](licenses/XamlBehaviorsForWPF.txt).
+- openBVE uses the [**XamlBehaviors for WPF**](https://github.com/microsoft/XamlBehaviorsWpf) This is licensed under the *MIT License*, which may be found in [here](licenses/XamlBehaviorsForWPF.txt).
+- openBVE uses the [**TOLK**] (https://github.com/dkager/tolk) library for screen reader API access. This is licenced under the *LGPL V3* which may be found in [here](licences/TOLK.txt)

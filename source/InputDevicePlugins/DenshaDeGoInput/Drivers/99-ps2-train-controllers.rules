@@ -1,0 +1,10 @@
+# This rule allows non-root access to Densha de GO! controllers for the Sony PlayStation 2
+
+# Type II controller
+SUBSYSTEM=="usb", ATTR{idVendor}=="0ae4", ATTR{idProduct}=="0004", MODE="0666"
+
+# Shinkansen controller
+SUBSYSTEM=="usb", ATTR{idVendor}=="0ae4", ATTR{idProduct}=="0005", MODE="0666"
+
+# Ryojouhen controller
+SUBSYSTEM=="usb", ATTR{idVendor}=="0ae4", ATTR{idProduct}=="0007", MODE="0666"

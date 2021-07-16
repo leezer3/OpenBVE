@@ -70,7 +70,7 @@ namespace Plugin
 		}
 
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
-		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
+		/// <param name="FileName">The text file to load the CSB or B3D object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The object loaded.</returns>
 		private static StaticObject ReadObject(string FileName, Encoding Encoding) {
@@ -78,10 +78,24 @@ namespace Plugin
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
 			StaticObject Object = new StaticObject(currentHost);
-
+			string fileHash = Path.GetChecksum(FileName);
+			bool multiColumn = !IsB3D;
+			switch (fileHash)
+			{
+				case "C605832CCDC73883AC4A557EB3AD0D3EAAB678D64B2659D6A342EAD5BEECD2B9":
+				case "5283E317C51CBAB6015C178D425C06724225605D0662530AE93B850A908FE55A":
+				case "3078438BCF679CB1DE2F2372A8791A2C10D29FAED6871C25348EE5C2F977C2E6":
+				case "0F928CE5BC277C056E7174545C8DA9326D99463DA59C541317FC831D3443E273":
+					/*
+					 * RailJet 2012 objects
+					 * Total mess....
+					 */
+					multiColumn = false;
+					break;
+			}
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			if (!IsB3D && enabledHacks.BveTsHacks)
+			if (enabledHacks.BveTsHacks && multiColumn)
 			{
 				/*
 				 * Handles multi-column CSV objects [Hide behind the hacks option in the main program]
@@ -121,6 +135,7 @@ namespace Plugin
 			MeshBuilder Builder = new MeshBuilder(currentHost);
 			List<Vector3> Normals = new List<Vector3>();
 			bool CommentStarted = false;
+			Color24? lastTransparentColor = null;
 			for (int i = 0; i < Lines.Count; i++) {
 				{
 					// Strip OpenBVE original standard comments
@@ -330,7 +345,9 @@ namespace Plugin
 								}
 								if (Arguments.Length < 3) {
 									currentHost.AddMessage(MessageType.Error, false, "At least 3 arguments are required in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								} else {
+								} else
+								{
+									bool isFace2 = cmd == "addface2" | cmd == "face2";
 									bool q = true;
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
@@ -369,6 +386,58 @@ namespace Plugin
 											break;
 										}
 									}
+
+									if (enabledHacks.BveTsHacks)
+									{
+										if ((FileName.ToLowerInvariant().Contains("hira2\\car") || FileName.ToLowerInvariant().Contains("hira2/car")) && a.SequenceEqual(new[] {0, 1, 4, 5}))
+										{
+											/*
+											* Fix glitchy Hirakami railway stock
+											*/
+											a = new[] {0, 1, 5, 4};
+										}
+
+										int[] vertexIndices = (int[])a.Clone();
+										Array.Sort(vertexIndices);
+										for (int k = 0; k < Builder.Faces.Count; k++)
+										{
+											/*
+											 * Some BVE2 content declares a Face2 twice with the vertices in a differing order, e.g.
+											 *
+											 * Face2 0, 1, 3, 2
+											 * Face2 1, 0, 2, 3
+											 *
+											 * Doing this in OpenBVE causes some very funky glitches with Z-fighting,
+											 * as it attempts to render both faces in the same space
+											 *
+											 * With this hack, the lighting may be off but the Z-fighting is gone
+											 * (BVE2 / BVE4 operate in a strict draw-order, so the most recent face is always on top,
+											 * wheras OpenBVE has no fixed draw order)
+											 */
+											MeshFace currentFace = Builder.Faces[k];
+											if (!isFace2 || (currentFace.Flags & FaceFlags.Face2Mask) == 0)
+											{
+												continue;
+											}
+
+											if (currentFace.Vertices.Length != a.Length)
+											{
+												continue;
+											}
+
+											int[] faceVertexIndices = new int[a.Length];
+											for (int v = 0; v < currentFace.Vertices.Length; v++)
+											{
+												faceVertexIndices[v] = currentFace.Vertices[v].Index;
+											}
+											Array.Sort(faceVertexIndices);
+											if (vertexIndices.SequenceEqual(faceVertexIndices))
+											{
+												q = false;
+											}
+											
+										}
+									}
 									if (q) {
 										MeshFace f = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
 										for (int j = 0; j < Arguments.Length; j++) {
@@ -386,7 +455,7 @@ namespace Plugin
 											f.Vertices[l - 1] = f.Vertices[l - 2];
 											f.Vertices[l - 2] = v;
 										}
-										if (cmd == "addface2" | cmd == "face2") {
+										if (isFace2) {
 											f.Flags = FaceFlags.Face2Mask;
 										}
 										Builder.Faces.Add(f);
@@ -644,7 +713,7 @@ namespace Plugin
 							break;
 						case "setcolor":
 						case "color":
-							{
+						{
 								if (cmd == "setcolor" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "SetColor is not a supported command - did you mean Color? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "color" & !IsB3D) {
@@ -713,6 +782,89 @@ namespace Plugin
 									Builder.Faces[j] = f;
 								}
 							} break;
+						case "colorall":
+						case "setcolorall":
+						{
+							{
+								if (cmd == "setcolorall" & IsB3D) {
+									currentHost.AddMessage(MessageType.Warning, false, "SetColorAll is not a supported command - did you mean ColorAll? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (cmd == "colorall" & !IsB3D) {
+									currentHost.AddMessage(MessageType.Warning, false, "ColorAll is not a supported command - did you mean SetColorAll? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length > 4) {
+									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								int r = 0, g = 0, b = 0, a = 255;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									r = 0;
+								} else if (r < 0 | r > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									r = r < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									g = 0;
+								} else if (g < 0 | g > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									g = g < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									b = 0;
+								} else if (b < 0 | b > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									b = b < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out a)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Alpha in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									a = 255;
+								} else if (a < 0 | a > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Alpha is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									a = a < 0 ? 0 : 255;
+								}
+								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
+								Object.ApplyColor(newColor, false);
+							}
+						} break;
+						case "emissivecolorall":
+						case "setemissivecolorall":
+						{
+							{
+								if (cmd == "setemissivecolorall" & IsB3D) {
+									currentHost.AddMessage(MessageType.Warning, false, "SetEmissiveColorAll is not a supported command - did you mean EmissiveColorAll? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (cmd == "emissivecolorall" & !IsB3D) {
+									currentHost.AddMessage(MessageType.Warning, false, "EmissiveColorAll is not a supported command - did you mean SetEmissiveColorAll? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length > 4) {
+									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								int r = 0, g = 0, b = 0;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Red in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									r = 0;
+								} else if (r < 0 | r > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Red is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									r = r < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Green in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									g = 0;
+								} else if (g < 0 | g > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Green is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									g = g < 0 ? 0 : 255;
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Blue in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									b = 0;
+								} else if (b < 0 | b > 255) {
+									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									b = b < 0 ? 0 : 255;
+								}
+								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)255);
+								Object.ApplyColor(newColor, true);
+							}
+						} break;
 						case "setemissivecolor":
 						case "emissivecolor":
 							{
@@ -769,6 +921,7 @@ namespace Plugin
 						case "setdecaltransparentcolor":
 						case "transparent":
 							{
+								
 								if (cmd == "setdecaltransparentcolor" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "SetDecalTransparentColor is not a supported command - did you mean Transparent? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "transparent" & !IsB3D) {
@@ -776,6 +929,17 @@ namespace Plugin
 								}
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (Arguments.Length == 0) {
+									currentHost.AddMessage(MessageType.Warning, false, "No color was specified in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName + "- This may produce unexpected results.");
+									if (enabledHacks.BveTsHacks && lastTransparentColor != null)
+									{
+										// The BVE2 / BVE4 parser uses the *last* transparent color if no transparent color is specified
+										for (int j = 0; j < Builder.Materials.Length; j++) { 
+											Builder.Materials[j].TransparentColor = lastTransparentColor.Value;
+											Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
+										}
+										break;
+									}
 								}
 								int r = 0, g = 0, b = 0;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r)) {
@@ -799,8 +963,9 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Blue is required to be within the range from 0 to 255 in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									b = b < 0 ? 0 : 255;
 								}
+								lastTransparentColor = new Color24((byte) r, (byte) g, (byte) b);
 								for (int j = 0; j < Builder.Materials.Length; j++) {
-									Builder.Materials[j].TransparentColor = new Color24((byte)r, (byte)g, (byte)b);
+									Builder.Materials[j].TransparentColor = lastTransparentColor.Value;
 									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
 								}
 							} break;

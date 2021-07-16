@@ -5,6 +5,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
 using RouteManager2.MessageManager.MessageTypes;
+using TrainManager;
 
 namespace OpenBve
 {
@@ -45,8 +46,16 @@ namespace OpenBve
 		{
 			if (TrainManager.PlayerTrain.StationState == TrainStopState.Jumping || message.Mode < Interface.CurrentOptions.GameMode)
 			{
-				//Ignore messages triggered during a jump
+				//Ignore messages triggered during a jump & dummy stations
 				return;
+			}
+			GameMessage gm = message as GameMessage;
+			if (gm != null && (gm.Depencency == MessageDependency.StationArrival || gm.Depencency == MessageDependency.StationDeparture))
+			{
+				if (Program.CurrentRoute.Stations[TrainManagerBase.PlayerTrain.Station].Dummy)
+				{
+					return;
+				}
 			}
 			if (message is MarkerImage || message is TextureMessage)
 			{
@@ -96,6 +105,7 @@ namespace OpenBve
 							case MessageDependency.PointOfInterest:
 							case MessageDependency.StationArrival:
 							case MessageDependency.CameraView:
+							case MessageDependency.AccessibilityHelper:
 								//Show only the latest message of these types
 								c.QueueForRemoval = true;
 								break;

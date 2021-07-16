@@ -98,7 +98,8 @@ namespace TrainManager
 		/// <summary>Performs the jump for all TFOs</summary>
 		public void JumpTFO()
 		{
-			foreach (TrackFollowingObject Train in TFOs)
+			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
+			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.Jump(-1);
 			}

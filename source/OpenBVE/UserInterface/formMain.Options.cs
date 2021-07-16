@@ -16,7 +16,10 @@ namespace OpenBve {
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
 			string Folder = Program.FileSystem.GetDataFolder("Flags");
-			if (Translations.SelectedLanguage(Folder, ref Interface.CurrentOptions.LanguageCode, comboboxLanguages, pictureboxLanguage)) {
+			string newImage;
+			if (Translations.SelectedLanguage(Folder, ref Interface.CurrentOptions.LanguageCode, comboboxLanguages, out newImage))
+			{
+				pictureboxLanguage.Image = ImageExtensions.FromFile(newImage);
 				ApplyLanguage();
 			}
 		}
@@ -56,7 +59,7 @@ namespace OpenBve {
 			for (int i = 0; i < Items.Length; i++) {
 				InputDevicePlugin.PluginInfo Info = InputDevicePlugin.AvailablePluginInfos[i];
 				if (Array.Exists(Interface.CurrentOptions.EnableInputDevicePlugins, element => element.Equals(Info.FileName))) {
-					InputDevicePlugin.CallPluginLoad(i);
+					InputDevicePlugin.CallPluginLoad(i, Program.CurrentHost);
 				}
 				Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
 				UpdateInputDeviceListViewItem(Items[i], i, false);
@@ -135,12 +138,20 @@ namespace OpenBve {
 			if (this.Tag ==  null && listviewInputDevice.SelectedIndices.Count == 1) {
 				int index = listviewInputDevice.SelectedIndices[0];
 				if (checkBoxInputDeviceEnable.Checked) {
-					InputDevicePlugin.CallPluginLoad(index);
+					InputDevicePlugin.CallPluginLoad(index, Program.CurrentHost);
 				} else {
 					InputDevicePlugin.CallPluginUnload(index);
 				}
 				UpdateInputDeviceComponent(InputDevicePlugin.AvailablePluginInfos[index].Status);
 				UpdateInputDeviceListViewItem(listviewInputDevice.Items[index], index, true);
+			}
+		}
+		
+		private void listviewInputDevice_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (listviewInputDevice.SelectedIndices.Count == 1)
+			{
+				checkBoxInputDeviceEnable.Checked = !checkBoxInputDeviceEnable.Checked;
 			}
 		}
 

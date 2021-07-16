@@ -38,9 +38,9 @@ namespace RouteManager2.Events
 			maxCars = MaxCars;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (TriggerType == EventTriggerType.FrontCarFrontAxle)
+			if (trackFollower.TriggerType == EventTriggerType.FrontCarFrontAxle)
 			{
 				RequestStop stop; //Temp probability value
 				if (early.Time != -1 && currentRoute.SecondsSinceMidnight < early.Time)
@@ -64,9 +64,9 @@ namespace RouteManager2.Events
 				stop.StationIndex = stationIndex;
 				stop.FullSpeed = fullSpeed;
 
-				if (Direction > 0)
+				if (direction > 0)
 				{
-					Train.RequestStop(stop);
+					trackFollower.Train.RequestStop(stop);
 				}
 			}
 		}

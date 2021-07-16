@@ -31,7 +31,7 @@ namespace Plugin {
 		public override bool CanLoadTexture(string path)
 		{
 			if (File.Exists(path)) {
-				using (Stream fileStream = new FileStream(path, FileMode.Open))
+				using (Stream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
 				{
 					using (BinaryReader reader = new BinaryReader(fileStream))
 					{

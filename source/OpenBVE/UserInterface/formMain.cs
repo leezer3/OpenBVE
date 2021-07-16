@@ -66,7 +66,7 @@ namespace OpenBve {
 				MainDialogResult result = Dialog.Result;
 				//Dispose of the worker thread when closing the form
 				//If it's still running, it attempts to update a non-existant form and crashes nastily
-				Dialog.routeWorkerThread.Dispose();
+				Dialog.DisposePreviewRouteThread();
 				if (!OpenTK.Configuration.RunningOnMacOS)
 				{
 					Dialog.trainWatcher.Dispose();
@@ -165,7 +165,9 @@ namespace OpenBve {
 			Image ParentIcon = LoadImage(MenuFolder, "icon_parent.png");
 			Image FolderIcon = LoadImage(MenuFolder, "icon_folder.png");
 			Image DiskIcon = LoadImage(MenuFolder, "icon_disk.png");
-			Image RouteIcon = LoadImage(MenuFolder, "icon_route.png");
+			Image CsvRouteIcon = LoadImage(MenuFolder, "icon_route.png");
+			Image RwRouteIcon = LoadImage(MenuFolder, "icon_route_outdatedversion.png");
+			Image MechanikRouteIcon = LoadImage(MenuFolder, "icon_mechanik.png");
 			Image TrainIcon = LoadImage(MenuFolder, "icon_train.png");
 			Image KeyboardIcon = LoadImage(MenuFolder, "icon_keyboard.png");
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
@@ -197,18 +199,36 @@ namespace OpenBve {
 			listviewRouteFiles.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
-			if (RouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("route", RouteIcon);
+			if (CsvRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
+			if (RwRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("rwroute", RwRouteIcon);
+			if (MechanikRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			if (DiskIcon != null) listviewRouteFiles.SmallImageList.Images.Add("disk", DiskIcon);
 			listviewRouteFiles.Columns.Clear();
 			listviewRouteFiles.Columns.Add("");
 			listviewRouteRecently.Items.Clear();
 			listviewRouteRecently.Columns.Add("");
 			listviewRouteRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
-			if (RouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("route", RouteIcon);
+			if (CsvRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
+			if (RwRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("rwroute", RwRouteIcon);
+			if (MechanikRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
-				Item.ImageKey = @"route";
+				string extension = System.IO.Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
+				switch (extension)
+				{
+					case ".dat":
+						Item.ImageKey = @"mechanik";
+						break;
+					case ".rw":
+						Item.ImageKey = @"rwroute";
+						break;
+					case ".csv":
+						Item.ImageKey = @"csvroute";
+						break;
+
+				}
+
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];
 				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (textboxRouteFolder.Items.Count == 0 || !textboxRouteFolder.Items.Contains(RoutePath))
@@ -454,6 +474,7 @@ namespace OpenBve {
 			comboBoxRailDriverUnits.SelectedIndex = Interface.CurrentOptions.RailDriverMPH ? 0 : 1;
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (decimal)Interface.CurrentOptions.KioskModeTimer;
+			checkBoxAccessibility.Checked = Interface.CurrentOptions.Accessibility;
 			ListInputDevicePlugins();
 			if (Program.CurrentHost.MonoRuntime)
 			{
@@ -466,9 +487,7 @@ namespace OpenBve {
 			// result
 			Result.Start = false;
 
-			routeWorkerThread = new BackgroundWorker();
-			routeWorkerThread.DoWork += routeWorkerThread_doWork;
-			routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
+			InitializePreviewRouteThread();
 			Manipulation.ProgressChanged += OnWorkerProgressChanged;
 			Manipulation.ProblemReport += OnWorkerReportsProblem;
 			updownTimeAccelerationFactor.ValueChanged += updownTimeAccelerationFactor_ValueChanged;
@@ -961,6 +980,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxXparser.SelectedIndex;
 			Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxObjparser.SelectedIndex;
 			Interface.CurrentOptions.Panel2ExtendedMode = checkBoxPanel2Extended.Checked;
+			Interface.CurrentOptions.Accessibility = checkBoxAccessibility.Checked;
 			switch (trackBarHUDSize.Value)
 			{
 				case 0:
@@ -1088,6 +1108,7 @@ namespace OpenBve {
 				Array.Resize(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
+			// Remember enabled input device plugins
 			{
 				int n = 0;
 				string[] a = new string[InputDevicePlugin.AvailablePluginInfos.Count];
@@ -1107,8 +1128,20 @@ namespace OpenBve {
 				Array.Resize(ref a, n);
 				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}
+			// Unload input device plugins if we're closing the program
+			if (!Result.Start)
+			{
+				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+				{
+					InputDevicePlugin.CallPluginUnload(i);
+				}
+			}
 			Program.Sounds.Deinitialize();
-			routeWorkerThread.Dispose();
+			DisposePreviewRouteThread();
+			{
+				string error;
+				Program.CurrentHost.UnloadPlugins(out error);
+			}
 			if (!OpenTK.Configuration.RunningOnMacOS)
 			{
 				routeWatcher.Dispose();
@@ -1733,8 +1766,8 @@ namespace OpenBve {
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
 					Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+					textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 				}
-				textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 			}
 		}
 
@@ -1745,8 +1778,8 @@ namespace OpenBve {
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
 					Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+					textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 				}
-				textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 			}
 		}
 
@@ -1757,8 +1790,8 @@ namespace OpenBve {
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
 					Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+					textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 				}
-				textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 			}
 		}
 

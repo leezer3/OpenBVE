@@ -107,6 +107,18 @@ namespace OpenBveApi
 			UTF8 = 65001
 		}
 
+		/// <summary>
+		/// Gets the character system encoding of the bytes array
+		/// </summary>
+		/// <param name="Data">The bytes array</param>
+		/// <param name="DefaultEncoding">The encoding to use if the encoding could not be determined. If not specified, the system default encoding is used.</param>
+		/// <returns>The character system encoding, or default encoding if unknown</returns>
+		public static System.Text.Encoding GetSystemEncodingFromBytes(byte[] Data, System.Text.Encoding DefaultEncoding = null)
+		{
+			Encoding encoding = GetEncodingFromBytes(Data);
+			return ConvertToSystemEncoding(encoding, DefaultEncoding);
+		}
+
 		/// <summary>Gets the character system encoding of a file</summary>
 		/// <param name="File">The absolute path to a file</param>
 		/// <param name="DefaultEncoding">The encoding to use if the encoding could not be determined. If not specified, the system default encoding is used.</param>
@@ -114,7 +126,27 @@ namespace OpenBveApi
 		public static System.Text.Encoding GetSystemEncodingFromFile(string File, System.Text.Encoding DefaultEncoding = null)
 		{
 			Encoding encoding = GetEncodingFromFile(File);
+			return ConvertToSystemEncoding(encoding, DefaultEncoding);
+		}
 
+		/// <summary>Gets the character system encoding of a file within a folder</summary>
+		/// <param name="Folder">The absolute path to the folder containing the file</param>
+		/// <param name="File">The filename</param>
+		/// <param name="DefaultEncoding">The encoding to use if the encoding could not be determined. If not specified, the system default encoding is used.</param>
+		/// <returns>The character system encoding, or default encoding if unknown</returns>
+		public static System.Text.Encoding GetSystemEncodingFromFile(string Folder, string File, System.Text.Encoding DefaultEncoding = null)
+		{
+			return GetSystemEncodingFromFile(Path.CombineFile(Folder, File), DefaultEncoding);
+		}
+
+		/// <summary>
+		/// Converts to the character system encoding
+		/// </summary>
+		/// <param name="encoding">The character encoding, or unknown</param>
+		/// <param name="DefaultEncoding">The encoding to use if the encoding could not be determined. If not specified, the system default encoding is used.</param>
+		/// <returns>The character system encoding, or default encoding if unknown</returns>
+		public static System.Text.Encoding ConvertToSystemEncoding(Encoding encoding, System.Text.Encoding DefaultEncoding = null)
+		{
 			if (encoding == Encoding.Unknown)
 			{
 				return DefaultEncoding ?? System.Text.Encoding.Default;
@@ -135,14 +167,121 @@ namespace OpenBveApi
 			return systemEncoding;
 		}
 
-		/// <summary>Gets the character system encoding of a file within a folder</summary>
-		/// <param name="Folder">The absolute path to the folder containing the file</param>
-		/// <param name="File">The filename</param>
-		/// <param name="DefaultEncoding">The encoding to use if the encoding could not be determined. If not specified, the system default encoding is used.</param>
-		/// <returns>The character system encoding, or default encoding if unknown</returns>
-		public static System.Text.Encoding GetSystemEncodingFromFile(string Folder, string File, System.Text.Encoding DefaultEncoding = null)
+		/// <summary>
+		/// Gets the character encoding of the bytes array
+		/// </summary>
+		/// <param name="Data">The bytes array</param>
+		/// <returns>The character encoding, or unknown</returns>
+		public static Encoding GetEncodingFromBytes(byte[] Data)
 		{
-			return GetSystemEncodingFromFile(Path.CombineFile(Folder, File), DefaultEncoding);
+			if (Data.Length >= 3)
+			{
+				if (Data[0] == 0xEF & Data[1] == 0xBB & Data[2] == 0xBF)
+				{
+					return Encoding.UTF8;
+				}
+
+				if (Data[0] == 0x2b & Data[1] == 0x2f & Data[2] == 0x76)
+				{
+					return Encoding.UTF7;
+				}
+			}
+
+			if (Data.Length >= 2)
+			{
+				if (Data[0] == 0xFE & Data[1] == 0xFF)
+				{
+					return Encoding.UTF16_BE;
+				}
+
+				if (Data[0] == 0xFF & Data[1] == 0xFE)
+				{
+					return Encoding.UTF16_LE;
+				}
+			}
+
+			if (Data.Length >= 4)
+			{
+				if (Data[0] == 0x00 & Data[1] == 0x00 & Data[2] == 0xFE & Data[3] == 0xFF)
+				{
+					return Encoding.UTF32_BE;
+				}
+
+				if (Data[0] == 0xFF & Data[1] == 0xFE & Data[2] == 0x00 & Data[3] == 0x00)
+				{
+					return Encoding.UTF32_LE;
+				}
+			}
+
+			CharsetDetector Det = new CharsetDetector();
+			Det.Feed(Data, 0, Data.Length);
+			Det.DataEnd();
+
+			if (Det.Charset == null)
+			{
+				return Encoding.Unknown;
+			}
+
+			switch (Det.Charset)
+			{
+				case Charsets.IBM855:
+					return Encoding.IBM855;
+				case Charsets.IBM866:
+					return Encoding.IBM866;
+				case Charsets.SHIFT_JIS:
+					return Encoding.SHIFT_JIS;
+				case Charsets.EUCKR:
+					return Encoding.EUC_KR;
+				case Charsets.BIG5:
+					return Encoding.BIG5;
+				case Charsets.UTF16_LE:
+					return Encoding.UTF16_LE;
+				case Charsets.UTF16_BE:
+					return Encoding.UTF16_BE;
+				case Charsets.WIN1251:
+					return Encoding.WIN1251;
+				case Charsets.WIN1252:
+					return Encoding.WIN1252;
+				case Charsets.WIN1253:
+					return Encoding.WIN1253;
+				case Charsets.WIN1255:
+					return Encoding.WIN1255;
+				case Charsets.MAC_CYRILLIC:
+					return Encoding.MAC_CYRILLIC;
+				case Charsets.UTF32_LE:
+					return Encoding.UTF32_LE;
+				case Charsets.UTF32_BE:
+					return Encoding.UTF32_BE;
+				case Charsets.ASCII:
+					return Encoding.ASCII;
+				case Charsets.KOI8R:
+					return Encoding.KOI8_R;
+				case Charsets.EUCJP:
+					return Encoding.EUC_JP;
+				case Charsets.ISO8859_2:
+					return Encoding.ISO8859_2;
+				case Charsets.ISO8859_5:
+					return Encoding.ISO8859_5;
+				case Charsets.ISO_8859_7:
+					return Encoding.ISO8859_7;
+				case Charsets.ISO8859_8:
+					return Encoding.ISO8859_8;
+				case Charsets.ISO2022_JP:
+					return Encoding.ISO2022_JP;
+				case Charsets.ISO2022_KR:
+					return Encoding.ISO2022_KR;
+				case Charsets.ISO2022_CN:
+					return Encoding.ISO2022_CN;
+				case Charsets.HZ_GB_2312:
+					return Encoding.HZ_GB_2312;
+				case Charsets.GB18030:
+					return Encoding.GB18030;
+				case Charsets.UTF8:
+					return Encoding.UTF8;
+			}
+
+			Det.Reset();
+			return Encoding.Unknown;
 		}
 
 		/// <summary>Gets the character encoding of a file</summary>
@@ -158,158 +297,62 @@ namespace OpenBveApi
 			try
 			{
 				System.IO.FileInfo fInfo = new System.IO.FileInfo(File);
-				byte[] Data = System.IO.File.ReadAllBytes(File);
+				Encoding encoding = GetEncodingFromBytes(System.IO.File.ReadAllBytes(File));
 
-				if (Data.Length >= 3)
+				switch (encoding)
 				{
-					if (Data[0] == 0xEF & Data[1] == 0xBB & Data[2] == 0xBF)
-					{
-						return Encoding.UTF8;
-					}
-
-					if (Data[0] == 0x2b & Data[1] == 0x2f & Data[2] == 0x76)
-					{
-						return Encoding.UTF7;
-					}
-				}
-
-				if (Data.Length >= 2)
-				{
-					if (Data[0] == 0xFE & Data[1] == 0xFF)
-					{
-						return Encoding.UTF16_BE;
-					}
-
-					if (Data[0] == 0xFF & Data[1] == 0xFE)
-					{
-						return Encoding.UTF16_LE;
-					}
-				}
-
-				if (Data.Length >= 4)
-				{
-					if (Data[0] == 0x00 & Data[1] == 0x00 & Data[2] == 0xFE & Data[3] == 0xFF)
-					{
-						return Encoding.UTF32_BE;
-					}
-
-					if (Data[0] == 0xFF & Data[1] == 0xFE & Data[2] == 0x00 & Data[3] == 0x00)
-					{
-						return Encoding.UTF32_LE;
-					}
-				}
-
-				CharsetDetector Det = new CharsetDetector();
-				Det.Feed(Data, 0, Data.Length);
-				Det.DataEnd();
-
-				if (Det.Charset == null)
-				{
-					return Encoding.Unknown;
-				}
-
-				switch (Det.Charset)
-				{
-					case Charsets.IBM855:
-						return Encoding.IBM855;
-					case Charsets.IBM866:
-						return Encoding.IBM866;
-					case Charsets.SHIFT_JIS:
-						return Encoding.SHIFT_JIS;
-					case Charsets.EUCKR:
-						return Encoding.EUC_KR;
-					case Charsets.BIG5:
+					case Encoding.BIG5:
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "stoklosy.b3d" && fInfo.Length == 18256)
 						{
 							//Polish Warsaw metro object file uses diacritics in filenames
 							return Encoding.WIN1252;
 						}
-
-						return Encoding.BIG5;
-					case Charsets.UTF16_LE:
-						return Encoding.UTF16_LE;
-					case Charsets.UTF16_BE:
-						return Encoding.UTF16_BE;
-					case Charsets.WIN1251:
+						break;
+					case Encoding.WIN1251:
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "585tc1.csv" && fInfo.Length == 37302)
 						{
 							return Encoding.SHIFT_JIS;
 						}
-
-						return Encoding.WIN1251;
-					case Charsets.WIN1252:
+						break;
+					case Encoding.WIN1252:
 						if (fInfo.Length == 62861)
 						{
 							//HK tram route. Comes in a non-unicode zip, so filename may be subject to mangling
 							return Encoding.BIG5;
 						}
-
-						return Encoding.WIN1252;
-					case Charsets.WIN1253:
-						return Encoding.WIN1253;
-					case Charsets.WIN1255:
+						break;
+					case Encoding.WIN1255:
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "xdbetulasmall.csv" && fInfo.Length == 406)
 						{
 							//Hungarian birch tree; Actually loads OK with 1255, but use the correct one
 							return Encoding.WIN1252;
 						}
-
-						return Encoding.WIN1255;
-					case Charsets.MAC_CYRILLIC:
+						break;
+					case Encoding.MAC_CYRILLIC:
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "exit01.csv" && fInfo.Length == 752)
 						{
 							//hira2
 							return Encoding.SHIFT_JIS;
 						}
-
-						return Encoding.MAC_CYRILLIC;
-					case Charsets.UTF32_LE:
-						return Encoding.UTF32_LE;
-					case Charsets.UTF32_BE:
-						return Encoding.UTF32_BE;
-					case Charsets.ASCII:
-						return Encoding.ASCII;
-					case Charsets.KOI8R:
-						return Encoding.KOI8_R;
-					case Charsets.EUCJP:
+						break;
+					case Encoding.EUC_JP:
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "xsara.b3d" && fInfo.Length == 3429)
 						{
 							//Uses an odd character in the comments, ASCII works just fine
 							return Encoding.ASCII;
 						}
-
-						return Encoding.EUC_JP;
-					case Charsets.ISO8859_2:
-						return Encoding.ISO8859_2;
-					case Charsets.ISO8859_5:
-						return Encoding.ISO8859_5;
-					case Charsets.ISO_8859_7:
-						return Encoding.ISO8859_7;
-					case Charsets.ISO8859_8:
-						return Encoding.ISO8859_8;
-					case Charsets.ISO2022_JP:
-						return Encoding.ISO2022_JP;
-					case Charsets.ISO2022_KR:
-						return Encoding.ISO2022_KR;
-					case Charsets.ISO2022_CN:
-						return Encoding.ISO2022_CN;
-					case Charsets.HZ_GB_2312:
-						return Encoding.HZ_GB_2312;
-					case Charsets.GB18030:
+						break;
+					case Encoding.GB18030:
 						//Extended new Chinese charset
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "people6.b3d" && fInfo.Length == 377)
 						{
 							//Polish Warsaw metro object file uses diacritics in filenames
-							return Encoding.GB18030;
+							return Encoding.WIN1252;
 						}
-
-						return Encoding.GB18030;
-					case Charsets.UTF8:
-						return Encoding.UTF8;
+						break;
 				}
 
-				Det.Reset();
-				return Encoding.Unknown;
+				return encoding;
 			}
 			catch
 			{

@@ -31,7 +31,7 @@ namespace CsvRwRouteParser
 				double d = StartingPosition - StartingDistance;
 				if (Message != null)
 				{
-					Element.Events[m] = new MarkerStartEvent(d, Message, Plugin.CurrentHost);
+					Element.Events[m] = new MarkerStartEvent(Plugin.CurrentHost, d, Message);
 				}
 			}
 			if (EndingPosition >= StartingDistance & EndingPosition < EndingDistance)
@@ -41,7 +41,7 @@ namespace CsvRwRouteParser
 				double d = EndingPosition - StartingDistance;
 				if (Message != null)
 				{
-					Element.Events[m] = new MarkerEndEvent(d, Message, Plugin.CurrentHost);
+					Element.Events[m] = new MarkerEndEvent(Plugin.CurrentHost, d, Message);
 				}
 			}
 		}

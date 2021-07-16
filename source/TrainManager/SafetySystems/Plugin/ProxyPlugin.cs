@@ -12,8 +12,6 @@ namespace TrainManager.SafetySystems {
 	/// <summary>Represents a proxied legacy Win32 plugin.</summary>
 	internal class ProxyPlugin : Plugin, IAtsPluginCallback 
 	{
-		/// <summary>The current sound instructions</summary>
-		private int[] Sound;
 		/// <summary>The sound instructions on the previous frame</summary>
 		private readonly int[] LastSound;
 		/// <summary>The plugin proxy interface</summary>
@@ -48,7 +46,26 @@ namespace TrainManager.SafetySystems {
 			PluginMessage = null;
 			Train = train;
 			Panel = new int[256];
-			SupportsAI = false;
+			SupportsAI = AISupport.None;
+			switch (PluginTitle.ToLowerInvariant())
+			{
+				case "ukdt.dll":
+					SupportsAI = AISupport.Program;
+					AI = new UKDtAI(this);
+					break;
+				case "ukspt.dll":
+					SupportsAI = AISupport.Program;
+					AI = new UKSptAI(this);
+					break;
+				case "ukmut.dll":
+					SupportsAI = AISupport.Program;
+					AI = new UKMUtAI(this);
+					break;
+				case "hei_ats.dll":
+					SupportsAI = AISupport.Program;
+					AI = new HeiAtsAI(this);
+					break;
+			}
 			LastTime = 0.0;
 			LastReverser = -2;
 			LastPowerNotch = -1;
@@ -88,11 +105,18 @@ namespace TrainManager.SafetySystems {
 		public override void BeginJump(InitializationModes mode)
 		{
 			pipeProxy.BeginJump(mode);
+			if (SupportsAI == AISupport.Program)
+			{
+				AI.BeginJump(mode);
+			}
 		}
 
 		public override void EndJump()
 		{
-			//EndJump is not relevant to legacy plugins, but we must implement it as an API member
+			if (SupportsAI == AISupport.Program)
+			{
+				AI.EndJump();
+			}
 		}
 
 		protected override void Elapse(ref ElapseData data)
@@ -236,12 +260,19 @@ namespace TrainManager.SafetySystems {
 
 		protected override void SetBeacon(BeaconData beacon)
 		{
+			if (AI != null)
+			{
+				AI.SetBeacon(beacon);
+			}
 			pipeProxy.SetBeacon(beacon);
 		}
 
 		protected override void PerformAI(AIData data)
 		{
-			//PerformAI is not relevant to legacy plugins, but we must implement it as an API member
+			if (SupportsAI == AISupport.Program)
+			{
+				AI.Perform(data);
+			}
 		}
 
 		public void ReportError(string Error, bool Critical = false)

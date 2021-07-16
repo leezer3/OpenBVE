@@ -1,6 +1,6 @@
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
-using TrainManager.Trains;
 using TrackFollowingObject = OpenBveApi.Objects.TrackFollowingObject;
 
 namespace OpenBve
@@ -21,18 +21,9 @@ namespace OpenBve
 			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
 				AbstractTrain train = null;
-				const double extraRadius = 10.0;
-				double z = 0.0;
-				if(AnimatedWorldObjects[i].Object != null)
-				{
-					//Standalone sound may not have an object file attached
-					z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
-				}
-				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
-				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
-				double ta = Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z - Program.CurrentRoute.CurrentBackground.BackgroundImageDistance - Program.Renderer.Camera.ExtraViewingDistance;
-				double tb = Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z + Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + Program.Renderer.Camera.ExtraViewingDistance;
-				bool visible = pb >= ta & pa <= tb;
+				Vector3 cameraPos = Program.Renderer.Camera.Alignment.Position;
+				cameraPos.Z += Program.Renderer.CameraTrackFollower.TrackPosition;
+				bool visible = AnimatedWorldObjects[i].IsVisible(cameraPos, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, Program.Renderer.Camera.ExtraViewingDistance);
 				if (visible | ForceUpdate)
 				{
 					//Find the closest train

@@ -1,4 +1,4 @@
-﻿namespace OpenBve {
+namespace OpenBve {
     partial class formMain {
         /// <summary>
         /// Required designer variable.
@@ -449,6 +449,7 @@
 			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
+			this.checkBoxAccessibility = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -1492,8 +1493,8 @@
 			// groupBoxInputDevice
 			// 
 			this.groupBoxInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-			| System.Windows.Forms.AnchorStyles.Left) 
-			| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxInputDevice.Controls.Add(this.labelInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
@@ -1540,6 +1541,7 @@
 			this.listviewInputDevice.UseCompatibleStateImageBehavior = false;
 			this.listviewInputDevice.View = System.Windows.Forms.View.Details;
 			this.listviewInputDevice.SelectedIndexChanged += new System.EventHandler(this.listviewInputDevice_SelectedIndexChanged);
+			this.listviewInputDevice.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listviewInputDevice_MouseDoubleClick);
 			// 
 			// columnheaderInputDeviceName
 			// 
@@ -1564,6 +1566,7 @@
 			// 
 			// checkBoxInputDeviceEnable
 			// 
+			this.checkBoxInputDeviceEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.checkBoxInputDeviceEnable.AutoSize = true;
 			this.checkBoxInputDeviceEnable.Enabled = false;
 			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 116);
@@ -2670,6 +2673,7 @@
 			// 
 			this.groupboxVerbosity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxVerbosity.Controls.Add(this.checkBoxAccessibility);
 			this.groupboxVerbosity.Controls.Add(this.checkboxErrorMessages);
 			this.groupboxVerbosity.Controls.Add(this.checkboxWarningMessages);
 			this.groupboxVerbosity.ForeColor = System.Drawing.Color.Black;
@@ -5649,6 +5653,16 @@
 			this.labelNewGUID.TabIndex = 24;
 			this.labelNewGUID.Text = "The new package has been assigned the following GUID:";
 			// 
+			// checkBoxAccessibility
+			// 
+			this.checkBoxAccessibility.AutoSize = true;
+			this.checkBoxAccessibility.Location = new System.Drawing.Point(176, 22);
+			this.checkBoxAccessibility.Name = "checkBoxAccessibility";
+			this.checkBoxAccessibility.Size = new System.Drawing.Size(106, 17);
+			this.checkBoxAccessibility.TabIndex = 2;
+			this.checkBoxAccessibility.Text = "Accessibility Aids";
+			this.checkBoxAccessibility.UseVisualStyleBackColor = true;
+			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -5663,8 +5677,8 @@
 			this.Controls.Add(this.labelFillerOne);
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
-			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelOptions);
+			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelReview);
@@ -6250,5 +6264,6 @@
 		private System.Windows.Forms.Label labelReverseConsist;
 		private System.Windows.Forms.Label labelCompatibilitySignalSet;
 		private System.Windows.Forms.ComboBox comboBoxCompatibilitySignals;
+		private System.Windows.Forms.CheckBox checkBoxAccessibility;
 	}
 }

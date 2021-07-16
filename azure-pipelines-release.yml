@@ -8,6 +8,8 @@ trigger:
     exclude:
       - '*'
 
+pr: none
+
 ### Test on latest Windows and .Net version
 
 jobs:

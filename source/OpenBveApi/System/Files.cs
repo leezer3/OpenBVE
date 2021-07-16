@@ -16,7 +16,7 @@ namespace OpenBveApi
 			 */
 			try
 			{
-				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
 				{
 					if (stream.Length < 32)
 					{

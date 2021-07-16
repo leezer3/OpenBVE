@@ -47,5 +47,33 @@
 		<FileName>3828M.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<Patch>
+		<Hash>94B3668DA703C844D66E9C819714E1F7491C1CF71E4804198EFCD4768B6279C5</Hash>
+		<FileName>moha5250-Train.csv</FileName>
+		<XParser>new</XParser>
+	</Patch>
+	<Patch>
+		<Hash>90C6412E4E4A51E8176E2C6C486A0E9DE91A9B1CF945A417557112ACCC7E92A5</Hash>
+		<FileName>2001.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Hakone- Tozan Railway -->
+	<!-- Viewing distance is required to stop terrain re-appearing on sharp curves -->
+	<Patch>
+		<Hash>3404C2FA1D32366C0B5FEEAFCEF9EA842AECE937F469CBCD82D6E2424418176D</Hash>
+		<FileName>1.csv</FileName>
+		<Expression Number="745">.Sta 出山信号場(着);;C;0;0;0;0;;;0;</Expression>
+		<Expression Number="1098">.Sta 大平台(着);;C;0;1;1;0;;25;50;</Expression>
+		<Expression Number="1288">.Sta 上大平台信号場(着);;C;0;0;0;0;;;0;</Expression>
+		<ViewingDistance>250</ViewingDistance>
+	</Patch>
+		<Patch>
+		<Hash>FFB7C95BF529BCAB0CB33D56151012267A9DA7519381F214E2F13C499A7584F6</Hash>
+		<FileName>2.csv</FileName>
+		<Expression Number="747">.Sta 出山信号場(着);;C;0;0;0;0;;;0; </Expression>
+		<Expression Number="1098">.Sta 大平台(着);;C;0;1;1;0;;25;50;</Expression>
+		<Expression Number="1292">.Sta 上大平台信号場(着);;C;0;0;0;0;;;0;</Expression>
+		<ViewingDistance>250</ViewingDistance>
+	</Patch>
   </RoutePatches>
 </openBVE>

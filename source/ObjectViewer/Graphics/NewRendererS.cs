@@ -6,6 +6,7 @@ using LibRender2;
 using LibRender2.Objects;
 using LibRender2.Primitives;
 using LibRender2.Viewports;
+using OpenBve;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -15,10 +16,13 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenBve
+namespace ObjectViewer.Graphics
 {
 	internal class NewRenderer : BaseRenderer
 	{
+		// stats
+		internal bool RenderStatsOverlay = true;
+
 		// options
 		internal bool OptionCoordinateSystem = false;
 		internal bool OptionInterface = true;
@@ -298,13 +302,18 @@ namespace OpenBve
 
 					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "L" }, new[] { "G" }, new[] { "B" }, new[] { "I" }, new[] { "R" } };
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
+					keys = new[] { new[] { "F11" } };
+					Keys.Render(Screen.Width - 36, 124, 32, Fonts.SmallFont, keys);
+					keys = new[] { new[] { "R" } };
+					Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
 					OpenGlString.Draw(Fonts.SmallFont, $"WireFrame: {(OptionWireFrame ? "on" : "off")}", new Point(Screen.Width - 28, 4), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Normals: {(OptionNormals ? "on" : "off")}", new Point(Screen.Width - 28, 24), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Lighting: {(Program.LightingTarget == 0 ? "night" : "day")}", new Point(Screen.Width - 28, 44), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Grid: {(OptionCoordinateSystem ? "on" : "off")}", new Point(Screen.Width - 28, 64), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Background: {GetBackgroundColorName()}", new Point(Screen.Width - 28, 84), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Hide interface:", new Point(Screen.Width - 28, 104), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Point(Screen.Width - 28, 124), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Point(Screen.Width - 28, 104), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Point(Screen.Width - 44, 124), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Switch renderer type:", new Point(Screen.Width - 28, 144), TextAlignment.TopRight, TextColor);
 
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
@@ -342,6 +351,16 @@ namespace OpenBve
 						{
 							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Point(32, 112), TextAlignment.TopLeft, TextColor);
 						}
+					}
+
+					if (RenderStatsOverlay)
+					{
+						Keys.Render(4, Screen.Height - 126, 116, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
+						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Point(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Point(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Point(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Point(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Point(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
 					}
 				}
 			}

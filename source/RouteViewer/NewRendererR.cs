@@ -16,7 +16,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
-using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
 using Vector2 = OpenBveApi.Math.Vector2;
@@ -538,30 +537,32 @@ namespace OpenBve
 					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Adhesion={(100.0 * CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}" + " , Rain intensity= " + CameraTrackFollower.RainIntensity +"%", new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Point((int)x, 40), TextAlignment.TopLeft, Color128.White, true);
 
-					if (Program.CurrentStation >= 0)
+					int stationIndex = Program.Renderer.CameraTrackFollower.StationIndex;
+
+					if (stationIndex >= 0)
 					{
 						StringBuilder t = new StringBuilder();
-						t.Append(Program.CurrentRoute.Stations[Program.CurrentStation].Name);
+						t.Append(Program.CurrentRoute.Stations[stationIndex].Name);
 
-						if (Program.CurrentRoute.Stations[Program.CurrentStation].ArrivalTime >= 0.0)
+						if (Program.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
 						{
-							t.Append($", Arrival: {GetTime(Program.CurrentRoute.Stations[Program.CurrentStation].ArrivalTime)}");
+							t.Append($", Arrival: {GetTime(Program.CurrentRoute.Stations[stationIndex].ArrivalTime)}");
 						}
 
-						if (Program.CurrentRoute.Stations[Program.CurrentStation].DepartureTime >= 0.0)
+						if (Program.CurrentRoute.Stations[stationIndex].DepartureTime >= 0.0)
 						{
-							t.Append($", Departure: {GetTime(Program.CurrentRoute.Stations[Program.CurrentStation].DepartureTime)}");
+							t.Append($", Departure: {GetTime(Program.CurrentRoute.Stations[stationIndex].DepartureTime)}");
 						}
 
-						if (Program.CurrentRoute.Stations[Program.CurrentStation].OpenLeftDoors & Program.CurrentRoute.Stations[Program.CurrentStation].OpenRightDoors)
+						if (Program.CurrentRoute.Stations[stationIndex].OpenLeftDoors & Program.CurrentRoute.Stations[stationIndex].OpenRightDoors)
 						{
 							t.Append(", [L][R]");
 						}
-						else if (Program.CurrentRoute.Stations[Program.CurrentStation].OpenLeftDoors)
+						else if (Program.CurrentRoute.Stations[stationIndex].OpenLeftDoors)
 						{
 							t.Append(", [L][-]");
 						}
-						else if (Program.CurrentRoute.Stations[Program.CurrentStation].OpenRightDoors)
+						else if (Program.CurrentRoute.Stations[stationIndex].OpenRightDoors)
 						{
 							t.Append(", [-][R]");
 						}
@@ -570,7 +571,7 @@ namespace OpenBve
 							t.Append(", [-][-]");
 						}
 
-						switch (Program.CurrentRoute.Stations[Program.CurrentStation].StopMode)
+						switch (Program.CurrentRoute.Stations[stationIndex].StopMode)
 						{
 							case StationStopMode.AllStop:
 								t.Append(", Stop");
@@ -586,17 +587,17 @@ namespace OpenBve
 								break;
 						}
 
-						switch (Program.CurrentRoute.Stations[Program.CurrentStation].Type)
+						switch (Program.CurrentRoute.Stations[stationIndex].Type)
 						{
 							case StationType.ChangeEnds:
 								t.Append(", Change ends");
 								break;
 							case StationType.Jump:
-								t.Append(", then Jumps to " + Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[Program.CurrentStation].JumpIndex].Name);
+								t.Append(", then Jumps to " + Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[stationIndex].JumpIndex].Name);
 								break;
 						}
 
-						t.Append(", Ratio=").Append((100.0 * Program.CurrentRoute.Stations[Program.CurrentStation].PassengerRatio).ToString("0", culture)).Append("%");
+						t.Append(", Ratio=").Append((100.0 * Program.CurrentRoute.Stations[stationIndex].PassengerRatio).ToString("0", culture)).Append("%");
 
 						OpenGlString.Draw(Fonts.SmallFont, t.ToString(), new Point((int)x, 60), TextAlignment.TopLeft, Color128.White, true);
 					}

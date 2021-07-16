@@ -6,6 +6,7 @@
 // ╚══════════════════════════════════════════════════════════════╝
 
 using System.Collections.Generic;
+using ObjectViewer.Graphics;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -46,6 +47,43 @@ namespace OpenBve {
 		/// <summary>Holds the program specific options</summary>
 		internal class Options : BaseOptions
 		{
+			private ObjectOptimizationMode objectOptimizationMode;
+
+			/// <summary>
+			/// The mode of optimization to be performed on an object
+			/// </summary>
+			internal ObjectOptimizationMode ObjectOptimizationMode
+			{
+				get
+				{
+					return objectOptimizationMode;
+				}
+				set
+				{
+					objectOptimizationMode = value;
+
+					switch (value)
+					{
+						case ObjectOptimizationMode.None:
+							ObjectOptimizationBasicThreshold = 0;
+							ObjectOptimizationFullThreshold = 0;
+							break;
+						case ObjectOptimizationMode.Low:
+							ObjectOptimizationBasicThreshold = 1000;
+							ObjectOptimizationFullThreshold = 250;
+							break;
+						case ObjectOptimizationMode.High:
+							ObjectOptimizationBasicThreshold = 10000;
+							ObjectOptimizationFullThreshold = 1000;
+							break;
+					}
+				}
+			}
+
+			internal Options()
+			{
+				ObjectOptimizationMode = ObjectOptimizationMode.Low;
+			}
 		}
 
 		/// <summary>The current options in use</summary>

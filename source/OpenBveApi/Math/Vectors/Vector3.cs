@@ -415,13 +415,13 @@ namespace OpenBveApi.Math {
 		}
 
 		/// <summary>Rotates the vector based upon three other vectors</summary>
-		/// <param name="firstVector">The first vector</param>
-		/// <param name="secondVector">The second vector</param>
-		/// <param name="thirdVector">The third vector</param>
-		public void Rotate(Vector3 firstVector, Vector3 secondVector, Vector3 thirdVector) {
-			var x = thirdVector.X * this.X + secondVector.X * this.Y + firstVector.X * this.Z;
-			var y = thirdVector.Y * this.X + secondVector.Y * this.Y + firstVector.Y * this.Z;
-			var z = thirdVector.Z * this.X + secondVector.Z * this.Y + firstVector.Z * this.Z;
+		/// <param name="direction">The vector in the Z axis direction</param>
+		/// <param name="up">The vector in the Y axis direction</param>
+		/// <param name="side">The vector in the X axis direction</param>
+		public void Rotate(Vector3 direction, Vector3 up, Vector3 side) {
+			var x = side.X * this.X + up.X * this.Y + direction.X * this.Z;
+			var y = side.Y * this.X + up.Y * this.Y + direction.Y * this.Z;
+			var z = side.Z * this.X + up.Z * this.Y + direction.Z * this.Z;
 			X = x;
 			Y = y;
 			Z = z;
@@ -683,6 +683,21 @@ namespace OpenBveApi.Math {
 			temp2 = Cross(xyz, temp);
 			temp2 *= 2f;
 			result = vec + temp2;
+		}
+
+		/// <summary>Projects a vector onto a second vector</summary>
+		/// <param name="firstVector">The first vector</param>
+		/// <param name="secondVector">The second vector</param>
+		/// <returns>The projected vector</returns>
+		public static Vector3 Project(Vector3 firstVector, Vector3 secondVector)
+		{
+			double squareMagnitude = Dot(secondVector, secondVector);
+			if (squareMagnitude < double.Epsilon)
+			{
+				return Zero;
+			}
+			double dot = Dot(firstVector, secondVector);
+			return new Vector3(secondVector.X * dot / squareMagnitude, secondVector.Y * dot / squareMagnitude, secondVector.Z * dot / squareMagnitude);
 		}
 
 		/// <summary>Determines whether this is a zero (0,0,0) vector</summary>

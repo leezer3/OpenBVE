@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace OpenBveApi {
 
@@ -229,6 +230,42 @@ namespace OpenBveApi {
 			return false;
 		}
 
+		/// <summary>
+		/// Checks whether the specified path is an absolute path.
+		/// </summary>
+		/// <param name="path">The path to test</param>
+		/// <returns>True if this path is an absolute path, false otherwise</returns>
+		public static bool IsAbsolutePath(string path)
+		{
+			if (path.Length < 1)
+			{
+				return false;
+			}
+
+			if (path[0] == PathSeparationChars[0] || path[0] == PathSeparationChars[1])
+			{
+				// e.g.
+				// \Test\Foo.txt (Windows)
+				// /Test/Foo.txt (Windows, Unix)
+				return true;
+			}
+
+			if (path.Length < 3)
+			{
+				return false;
+			}
+
+			if (path[1] == ':' && (path[2] == PathSeparationChars[0] || path[2] == PathSeparationChars[1]))
+			{
+				// e.g.
+				// C:\Test\Foo.txt (Windows)
+				// C:/Test/Foo.txt (Windows)
+				return true;
+			}
+
+			return false;
+		}
+
 
 		// --- private functions ---
 		
@@ -242,6 +279,25 @@ namespace OpenBveApi {
 				}
 			}
 			return true;
+		}
+
+		/// <summary>Gets the SHA-256 checksum for a file</summary>
+		/// <param name="file">The file to hash</param>
+		/// <returns>The SHA-256 hash, or an empty string if not valid</returns>
+		public static string GetChecksum(string file)
+		{
+			if (string.IsNullOrEmpty(file) || !File.Exists(file))
+			{
+				return string.Empty;
+			}
+			using (FileStream stream = File.OpenRead(file))
+			{
+				using (SHA256Managed sha = new SHA256Managed())
+				{
+					byte[] checksum = sha.ComputeHash(stream);
+					return BitConverter.ToString(checksum).Replace("-", string.Empty);
+				}
+			}
 		}
 	}
 }

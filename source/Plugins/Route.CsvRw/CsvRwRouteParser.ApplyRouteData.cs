@@ -24,6 +24,13 @@ namespace CsvRwRouteParser
 			{
 				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Warning: " + CompatibilityObjectsUsed + " compatibility objects were used.");
 			}
+
+			if (Data.FirstUsedBlock == -1)
+			{
+				//Not a routefile after all then....
+				throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_noobjects"));
+			}
+
 			if (PreviewOnly)
 			{
 				if (freeObjCount == 0 && railtypeCount == 0)
@@ -45,7 +52,7 @@ namespace CsvRwRouteParser
 			
 			// initialize
 			int LastBlock = (int)Math.Floor((Data.TrackPosition + 600.0) / Data.BlockInterval + 0.001) + 1;
-			if (Data.Blocks[Data.Blocks.Count - 1].CurrentTrackState.CurveRadius < 300)
+			if (Math.Abs(Data.Blocks[Data.Blocks.Count - 1].CurrentTrackState.CurveRadius) < 300)
 			{
 				/*
 				 * The track end event is placed 600m after the end of the final block
@@ -56,7 +63,7 @@ namespace CsvRwRouteParser
 			}
 
 			CurrentRoute.BlockLength = Data.BlockInterval;
-			CurrentRoute.AccurateObjectDisposal = Data.AccurateObjectDisposal;
+			CurrentRoute.AccurateObjectDisposal = Data.AccurateObjectDisposal ? ObjectDisposalMode.Accurate : ObjectDisposalMode.Legacy;
 			Data.CreateMissingBlocks(LastBlock, PreviewOnly);
 			// interpolate height
 			if (!PreviewOnly)
@@ -487,16 +494,16 @@ namespace CsvRwRouteParser
 							switch (Data.Blocks[i].SoundEvents[j].Type)
 							{
 								case SoundType.TrainStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero, Plugin.CurrentHost);
+									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero);
 									break;
 								case SoundType.TrainAllCarStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, true, false, Vector3.Zero, Plugin.CurrentHost);
+									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, true, false, Vector3.Zero);
 									break;
 								case SoundType.TrainDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed, Plugin.CurrentHost);
+									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
 									break;
 								case SoundType.TrainAllCarDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, true, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed, Plugin.CurrentHost);
+									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, true, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
 									break;
 							}
 						}
@@ -902,7 +909,7 @@ namespace CsvRwRouteParser
 						double d = p - (k + Data.FirstUsedBlock) * Data.BlockInterval;
 						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(d, i, CurrentRoute, Plugin.CurrentHost);
+						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(Plugin.CurrentHost, CurrentRoute, d, i);
 					}
 				}
 			}

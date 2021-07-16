@@ -16,7 +16,7 @@
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
-					<target>2020-04-10</target>
+					<target>2021-06-08</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -33,7 +33,7 @@
 					</trans-unit>
 					<trans-unit id="review">
 						<source>Review last game</source>
-						<target>回看游戏</target>
+						<target>回看分数</target>
 					</trans-unit>
 					<trans-unit id="getaddons">
 						<source>Get Add-ons</source>
@@ -173,6 +173,10 @@
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+						<target>选择的线路文件已损坏：\r\n 所有的物件模型均无法被找到。</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
 					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
@@ -206,17 +210,10 @@
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 						<target>如果您要将扩展包安装在 Program Files 或 ProgramData 文件夹内，您需要选择以管理员身份运行本程序。\r\n\r\n 此配置并不安全，建议您在设置中修改。</target>
 					</trans-unit>
-					<trans-unit id="database_newer_expected">
-						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-					</trans-unit>
-					<trans-unit id="database_invalid_xml">
-						<source>The package database XML was invalid, and has been re-created.</source>
-					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">
 						<source>Start new game</source>
-						<target>开始游戏</target>
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route</source>
@@ -332,7 +329,6 @@
 					</trans-unit>
 					<trans-unit id="start">
 						<source>Start</source>
-						<target>开始游戏</target>
 					</trans-unit>
 					<trans-unit id="start_mode">
 						<source>Mode of driving:</source>
@@ -346,7 +342,6 @@
 				<group id="review">
 					<trans-unit id="title">
 						<source>Review last game</source>
-						<target>回看游戏</target>
 					</trans-unit>
 					<trans-unit id="conditions">
 						<source>Conditions</source>
@@ -460,7 +455,6 @@
 				<group id="packages">
 					<trans-unit id="title">
 						<source>Package Management</source>
-						<target>扩展包管理</target>
 					</trans-unit>
 					<trans-unit id="proceed">
 						<source>Proceed...</source>
@@ -676,7 +670,6 @@
 					</trans-unit>
 					<trans-unit id="creation_header">
 						<source>Enter Package Details</source>
-						<target>创建一个扩展包</target>
 					</trans-unit>
 					<trans-unit id="creation_name">
 						<source>Please enter a package name.</source>
@@ -910,19 +903,25 @@
 						<source>Failed to create the following file: \r \n</source>
 						<target>创建文件失败:  \r \n</target>
 					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+						<target>您计算机上目前存储着的扩展包数据库是由更新版的OpenBVE创建的，本版本无法支持。</target>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+						<target>您计算机上目前存储着的扩展包数据库XML格式无效，已被重新创建。</target>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
 						<source>Customize controls</source>
-						<target>控制设置</target>
 					</trans-unit>
 					<trans-unit id="list_command">
 						<source>Command</source>
-						<target>命令</target>
+						<target>指令</target>
 					</trans-unit>
 					<trans-unit id="list_type">
 						<source>Type</source>
-						<target>种类</target>
 					</trans-unit>
 					<trans-unit id="list_type_digital">
 						<source>Digital</source>
@@ -978,15 +977,15 @@
 					</trans-unit>
 					<trans-unit id="selection">
 						<source>Currently selected command</source>
-						<target>已选择命令</target>
+						<target>已选择指令</target>
 					</trans-unit>
 					<trans-unit id="selection_command">
 						<source>Command:</source>
-						<target>命令: </target>
+						<target>指令: </target>
 					</trans-unit>
 					<trans-unit id="selection_command_option">
 						<source>Command Option:</source>
-						<target>命令选项:</target>
+						<target>指令选项:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard">
 						<source>Keyboard:</source>
@@ -1037,7 +1036,7 @@
 						<target>按下你选择使用的按钮或将游戏杆移向所选方向...</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
-						<source>Move an axis into the direction of "increase" or "power"...</source>
+						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
 						<target>移动游戏杆到选择用作「增加」或「加大牵引功率」的方向...</target>
 					</trans-unit>
 					<trans-unit id="attached">
@@ -1230,7 +1229,6 @@
 				<group id="options">
 					<trans-unit id="title">
 						<source>Options</source>
-						<target>设置</target>
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
@@ -1472,10 +1470,6 @@
 						<source>Enable the new renderer</source>
 						<target>启用新渲染器</target>
 					</trans-unit>
-					<trans-unit id="advanced_disable_displaylists">
-						<source>Disable OpenGL display lists</source>
-						<target>禁用OpenGL显示列表</target>
-					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
 						<target>加速时间倍数</target>
@@ -1622,15 +1616,19 @@
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
+						<target>尝试为Panel2面板自动添加触控功能</target>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
+						<target>X 模型解析器</target>
 					</trans-unit>
 					<trans-unit id="objobject_parser">
 						<source>OBJ Object Parser</source>
+						<target>OBJ 模型解析器</target>
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
+						<target>默认信号:</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">
@@ -1698,11 +1696,9 @@
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route:</source>
-						<target>路线: </target>
 					</trans-unit>
 					<trans-unit id="train">
 						<source>Train:</source>
-						<target>车辆: </target>
 					</trans-unit>
 					<trans-unit id="date">
 						<source>Date:</source>
@@ -1714,7 +1710,6 @@
 					</trans-unit>
 					<trans-unit id="score">
 						<source>Score:</source>
-						<target>评分: </target>
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Rating:</source>
@@ -1794,11 +1789,11 @@
 					</trans-unit>
 					<trans-unit id="arrivaltime">
 						<source>Arrival</source>
-						<target>到达</target>
+						<target>到点</target>
 					</trans-unit>
 					<trans-unit id="departuretime">
 						<source>Departure</source>
-						<target>出发</target>
+						<target>开点</target>
 					</trans-unit>
 				</group>
 				<group id="message">
@@ -1812,7 +1807,7 @@
 					</trans-unit>
 					<trans-unit id="signal_stop">
 						<source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
-						<target>列车已经冒进停止信号, 请使用紧急制动立刻停车。</target>
+						<target>已冒进停止信号, 请使用紧急制动立刻停车！</target>
 					</trans-unit>
 					<trans-unit id="signal_overspeed">
 						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
@@ -1821,6 +1816,22 @@
 					<trans-unit id="route_overspeed">
 						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
 						<target>当前速度 [speed] [unit] 超过路段限速 [limit] [unit], 请减速。</target>
+					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+						<target>下一限速 [limit][unit]。</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+						<target>下一信号距离[distance]。</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+						<target>下一信号现示 [aspect]，距离[distance]。</target>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+						<target>下一站 [name]，距离 [distance]。</target>
 					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
@@ -1872,11 +1883,14 @@
 					</trans-unit>
 					<trans-unit id="station_passed_boarding">
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
-						<target>乘客还在上下车, 请立刻停车。</target>
+						<target>乘客还在 [name] 上下车, 请立刻停车。</target>
+					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train's current speed is [speed]</source>
+						<target>列车当前速度[speed]。</target>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
-						<target>载入中, 请稍候...</target>
 					</trans-unit>
 				</group>
 				<group id="notification">
@@ -1922,7 +1936,7 @@
 					</trans-unit>
 					<trans-unit id="notavailableexpert">
 						<source>This feature is not available in Expert mode.</source>
-						<target>你不可以在专家模式中使用这个功能。</target>
+						<target>你不可以在专业模式中使用这个功能。</target>
 					</trans-unit>
 					<trans-unit id="aiunable">
 						<source>The AI might be unable to fully operate this train.</source>
@@ -1948,19 +1962,19 @@
 				<group id="score">
 					<trans-unit id="overspeed">
 						<source>Overspeed</source>
-						<target>超过限速</target>
+						<target>超速</target>
 					</trans-unit>
 					<trans-unit id="redsignal">
 						<source>Passed red signal</source>
-						<target>冒进信号</target>
+						<target>冒进红灯</target>
 					</trans-unit>
 					<trans-unit id="toppling">
 						<source>Toppling</source>
-						<target>过度晃动</target>
+						<target>晃动</target>
 					</trans-unit>
 					<trans-unit id="derailed">
 						<source>Derailed</source>
-						<target>列车出轨</target>
+						<target>列车脱轨</target>
 					</trans-unit>
 					<trans-unit id="discomfort">
 						<source>Passenger discomfort</source>
@@ -1972,27 +1986,27 @@
 					</trans-unit>
 					<trans-unit id="station_arrived">
 						<source>Arrived at station</source>
-						<target>正确停站</target>
+						<target>到站</target>
 					</trans-unit>
 					<trans-unit id="station_perfecttime">
 						<source>Perfect time bonus</source>
-						<target>时间奖分</target>
+						<target>准点停站奖分</target>
 					</trans-unit>
 					<trans-unit id="station_late">
 						<source>Late</source>
-						<target>列车晚点</target>
+						<target>晚点</target>
 					</trans-unit>
 					<trans-unit id="station_perfectstop">
 						<source>Perfect stop bonus</source>
-						<target>位置奖分</target>
+						<target>准确对标奖分</target>
 					</trans-unit>
 					<trans-unit id="station_stop">
 						<source>Stop</source>
-						<target>对标不准</target>
+						<target>对标</target>
 					</trans-unit>
 					<trans-unit id="station_departure">
 						<source>Premature departure</source>
-						<target>发车过早</target>
+						<target>早点发车</target>
 					</trans-unit>
 					<trans-unit id="station_total">
 						<source>Total</source>
@@ -2000,7 +2014,6 @@
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Your rating:</source>
-						<target>你的评级: </target>
 					</trans-unit>
 				</group>
 				<group id="rating">
@@ -2046,10 +2059,16 @@
 					</trans-unit>
 					<trans-unit id="unknown">
 						<source>Unknown</source>
-						<target>未知</target>
 					</trans-unit>
 				</group>
 				<group id="menu">
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+						<target>暂停</target>
+					</trans-unit>
 					<trans-unit id="resume">
 						<source>Resume simulation</source>
 						<target>恢复游戏</target>
@@ -2134,7 +2153,7 @@
 					</trans-unit>
 					<trans-unit id="atsoperation">
 						<source>ATS RUN</source>
-						<target>ATS 触发</target>
+						<target>ATS 动作</target>
 					</trans-unit>
 					<trans-unit id="atsppower">
 						<source>P POWER</source>
@@ -2142,15 +2161,15 @@
 					</trans-unit>
 					<trans-unit id="atsppattern">
 						<source>PTN APPROACH</source>
-						<target>限速接近</target>
+						<target>接近限速</target>
 					</trans-unit>
 					<trans-unit id="atspbrakeoverride">
 						<source>BRAKE RELEASE</source>
-						<target>制动解除</target>
+						<target>制动超控</target>
 					</trans-unit>
 					<trans-unit id="atspbrakeoperation">
 						<source>BRAKE APPLY</source>
-						<target>制动触发</target>
+						<target>制动动作</target>
 					</trans-unit>
 					<trans-unit id="atsp">
 						<source>ATS-P</source>
@@ -2178,7 +2197,7 @@
 					</trans-unit>
 					<trans-unit id="eb">
 						<source>EB</source>
-						<target>警惕</target>
+						<target>无人警惕</target>
 					</trans-unit>
 					<trans-unit id="constspeed">
 						<source>CONST SPEED</source>
@@ -2188,35 +2207,33 @@
 				<group id="handles">
 					<trans-unit id="forward">
 						<source>F</source>
-						<target>向前</target>
+						<target>前</target>
 					</trans-unit>
 					<trans-unit id="neutral">
 						<source>N</source>
-						<target>中位</target>
+						<target>0</target>
 					</trans-unit>
 					<trans-unit id="backward">
 						<source>B</source>
-						<target>向后</target>
+						<target>后</target>
 					</trans-unit>
 					<trans-unit id="power">
 						<source>P</source>
-						<target>牵引</target>
 					</trans-unit>
 					<trans-unit id="powernull">
 						<source>N</source>
-						<target>零位</target>
+						<target>N</target>
 					</trans-unit>
 					<trans-unit id="brake">
 						<source>B</source>
-						<target>制动</target>
 					</trans-unit>
 					<trans-unit id="locobrake">
 						<source>L</source>
-						<target>L</target>
+						<target>单阀</target>
 					</trans-unit>
 					<trans-unit id="brakenull">
 						<source>N</source>
-						<target>缓解</target>
+						<target>N</target>
 					</trans-unit>
 					<trans-unit id="release">
 						<source>REL</source>
@@ -2224,7 +2241,7 @@
 					</trans-unit>
 					<trans-unit id="lap">
 						<source>LAP</source>
-						<target>保持</target>
+						<target>保压</target>
 					</trans-unit>
 					<trans-unit id="service">
 						<source>SRV</source>
@@ -2242,17 +2259,16 @@
 				<group id="doors">
 					<trans-unit id="left">
 						<source>L</source>
-						<target>左侧</target>
+						<target>左门</target>
 					</trans-unit>
 					<trans-unit id="right">
 						<source>R</source>
-						<target>右侧</target>
+						<target>右门</target>
 					</trans-unit>
 				</group>
 				<group id="misc">
 					<trans-unit id="score">
 						<source>Score:\x20</source>
-						<target>得分: </target>
 					</trans-unit>
 				</group>
 				<group id="commands">
@@ -2740,43 +2756,33 @@
 				<group id="keys">
 					<trans-unit id="0">
 						<source>0</source>
-						<target>0</target>
 					</trans-unit>
 					<trans-unit id="1">
 						<source>1</source>
-						<target>1</target>
 					</trans-unit>
 					<trans-unit id="2">
 						<source>2</source>
-						<target>2</target>
 					</trans-unit>
 					<trans-unit id="3">
 						<source>3</source>
-						<target>3</target>
 					</trans-unit>
 					<trans-unit id="4">
 						<source>4</source>
-						<target>4</target>
 					</trans-unit>
 					<trans-unit id="5">
 						<source>5</source>
-						<target>5</target>
 					</trans-unit>
 					<trans-unit id="6">
 						<source>6</source>
-						<target>6</target>
 					</trans-unit>
 					<trans-unit id="7">
 						<source>7</source>
-						<target>7</target>
 					</trans-unit>
 					<trans-unit id="8">
 						<source>8</source>
-						<target>8</target>
 					</trans-unit>
 					<trans-unit id="9">
 						<source>9</source>
-						<target>9</target>
 					</trans-unit>
 					<trans-unit id="ampersand">
 						<source>Ampersand</source>
@@ -2836,7 +2842,6 @@
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
-						<target>↓</target>
 					</trans-unit>
 					<trans-unit id="end">
 						<source>End</source>
@@ -3020,7 +3025,6 @@
 					</trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
-						<target>←</target>
 					</trans-unit>
 					<trans-unit id="leftbracket">
 						<source>Left bracket</source>
@@ -3056,7 +3060,6 @@
 					</trans-unit>
 					<trans-unit id="mode">
 						<source>Alt Gr</source>
-						<target>Alt Gr</target>
 					</trans-unit>
 					<trans-unit id="numlock">
 						<source>Numlock</source>
@@ -3084,7 +3087,6 @@
 					</trans-unit>
 					<trans-unit id="power">
 						<source>Power</source>
-						<target>Power</target>
 					</trans-unit>
 					<trans-unit id="print">
 						<source>Print</source>
@@ -3100,7 +3102,7 @@
 					</trans-unit>
 					<trans-unit id="quotedbl">
 						<source>Quote double</source>
-						<target>"</target>
+						<target>&quot;</target>
 					</trans-unit>
 					<trans-unit id="ralt">
 						<source>Right Alt</source>
@@ -3116,7 +3118,6 @@
 					</trans-unit>
 					<trans-unit id="right">
 						<source>Right</source>
-						<target>→</target>
 					</trans-unit>
 					<trans-unit id="rightbracket">
 						<source>Right bracket</source>
@@ -3168,7 +3169,6 @@
 					</trans-unit>
 					<trans-unit id="up">
 						<source>Up</source>
-						<target>↑</target>
 					</trans-unit>
 					<trans-unit id="a">
 						<source>A</source>
@@ -3275,6 +3275,178 @@
 						<target>Z</target>
 					</trans-unit>
 				</group>
+				<group id="denshadego">
+					<trans-unit id="config_title">
+						<source>Densha de GO! controller configuration</source>
+						<target>电车GO！控制器配置</target>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+						<target>设备输入</target>
+					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+						<target>制动：[notch]</target>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+						<target>牵引：[notch]</target>
+					</trans-unit>
+					<trans-unit id="calibration_button">
+						<source>Start calibration</source>
+						<target>开始校准</target>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+						<target>设备：</target>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+						<target>按钮分配</target>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+						<target>无</target>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+						<target>手柄分配</target>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+						<target>转换级位</target>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+						<target>保持最小与最大</target>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+						<target>将抑速制动对应到B1</target>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+						<target>保存</target>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+						<target>取消</target>
+					</trans-unit>
+					<trans-unit id="calibrate_button">
+						<source>Hold the [button] button in the controller and press OK.</source>
+						<target>请按住控制器上的[button]按钮，然后按”确定“。</target>
+					</trans-unit>
+					<trans-unit id="calibrate_brake">
+						<source>Move the brake handle to [notch] and press OK.</source>
+						<target>请将制动手柄移至[notch]，然后按”确定“。</target>
+					</trans-unit>
+					<trans-unit id="calibrate_power">
+						<source>Move the power handle to [notch] and press OK.</source>
+						<target>请将牵引手柄移至[notch]，然后按”确定“。</target>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+						<target>上</target>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+						<target>下</target>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+						<target>左</target>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+						<target>右</target>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+						<target>踏板</target>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+						<target>左门</target>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
+						<target>右门</target>
+					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+						<target>我的控制器没有被检测到，或无法正常运作</target>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+						<target>帮助</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+						<target>我的控制器无法正常运作</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+						<target>我的PS2控制器无法正常运作</target>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+						<target>Windows</target>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+						<target>Linux</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:
+
+1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
+to separate buttons to avoid compatibility issues.
+2. Calibrate the controller from the configuration window, if necessary.</source>
+						<target>如果您的非USB控制器没有提供正确的输入：
+
+1. 确认您的USB适配器工作正常。一个理想的适配器应当能将标准控制器上的方向按钮
+映射到分离的按钮来避免兼容性问题。
+2. 如有必要，从配置窗口校准控制器。</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+						<target>如果您的PS2控制器没有出现在列表中，请按照以下步骤操作：</target>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.
+2. Download and run Zadig.
+3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
+4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<target>1. 解压Windows驱动程序。
+2. 下载并运行 Zadig。
+3. 加载适合您设备的CFG文件(&quot;Device &gt; Load Preset Device&quot;)。
+4. 按 &quot;Install Driver&quot; 并等待安装完成。</target>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.
+2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
+3. Reboot or reload udev rules manually.</source>
+						<target>1. 解压Linux udev文件。
+2. 将文件复制到 &quot;/etc/udev/rules.d&quot; (需要root权限)。
+3. 重启或人工重新加载udev规则。</target>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+						<target>下载 Zadig</target>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+						<target>解压文件 (Windows)</target>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+						<target>解压文件 (Linux)</target>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
+						<target>确定</target>
+					</trans-unit>
+				</group>
 			</group>
 			<group id="train_editor">
 				<group id="general">
@@ -3288,7 +3460,6 @@
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
-						<target>保存</target>
 					</trans-unit>
 					<trans-unit id="save_as">
 						<source>Save as...</source>
@@ -3296,7 +3467,6 @@
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-						<target>关闭</target>
 					</trans-unit>
 					<trans-unit id="new_message">
 						<source>Do you want to save data before creating a new train?</source>
@@ -3372,11 +3542,9 @@
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
-						<target>保存</target>
 					</trans-unit>
 					<trans-unit id="cancel">
 						<source>Cancel</source>
-						<target>取消</target>
 					</trans-unit>
 				</group>
 				<group id="move">
@@ -3412,7 +3580,6 @@
 				<group id="brake">
 					<trans-unit id="brake">
 						<source>Brake</source>
-						<target>制动</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>BrakeType:</source>
@@ -3428,11 +3595,11 @@
 					</trans-unit>
 					<trans-unit id="smee">
 						<source>Electromagnetic straight air brake</source>
-						<target>SMEE 直通式空气制动</target>
+						<target>SMEE 直通空气制动</target>
 					</trans-unit>
 					<trans-unit id="ecb">
 						<source>Electro-pneumatic air brake without brake pipe</source>
-						<target>ECB  电控空气制动</target>
+						<target>ECB  电控空气制动(无制动管)</target>
 					</trans-unit>
 					<trans-unit id="cl">
 						<source>Air brake with partial release feature</source>
@@ -3484,7 +3651,6 @@
 					</trans-unit>
 					<trans-unit id="type">
 						<source>HandleType:</source>
-						<target>手柄类型:</target>
 					</trans-unit>
 					<trans-unit id="power_notches">
 						<source>PowerNotches:</source>
@@ -3508,11 +3674,19 @@
 					</trans-unit>
 					<trans-unit id="separated">
 						<source>Separated</source>
-						<target>分立</target>
+						<target>分离</target>
 					</trans-unit>
 					<trans-unit id="combined">
 						<source>Combined</source>
 						<target>联控</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked">
+						<source>Separated (Interlocked)</source>
+						<target>分离 (联锁)</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked_reverser">
+						<source>Separated (Reverser Interlocked)</source>
+						<target>分离 (换向器联锁)</target>
 					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
 						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
@@ -3598,7 +3772,6 @@
 				<group id="device">
 					<trans-unit id="device">
 						<source>Device</source>
-						<target>车载设备</target>
 					</trans-unit>
 					<trans-unit id="const_speed">
 						<source>ConstSpeed:</source>
@@ -3606,7 +3779,6 @@
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>HoldBrake:</source>
-						<target>抑速制动:</target>
 					</trans-unit>
 					<trans-unit id="readhesion_device">
 						<source>ReAdhesionDevice:</source>
@@ -3684,11 +3856,9 @@
 				<group id="acceleration">
 					<trans-unit id="acceleration">
 						<source>Acceleration</source>
-						<target>加速</target>
 					</trans-unit>
 					<trans-unit id="notch">
 						<source>Notch:</source>
-						<target>级位:</target>
 					</trans-unit>
 					<trans-unit id="data">
 						<source>Data</source>
@@ -3738,7 +3908,6 @@
 					</trans-unit>
 					<trans-unit id="preview">
 						<source>Preview</source>
-						<target>预览</target>
 					</trans-unit>
 					<trans-unit id="y_pitch">
 						<source>Ypitch</source>
@@ -3754,15 +3923,12 @@
 					</trans-unit>
 					<trans-unit id="max_x">
 						<source>Xmax:</source>
-						<target>Xmax:</target>
 					</trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
-						<target>左</target>
 					</trans-unit>
 					<trans-unit id="right">
 						<source>Right</source>
-						<target>右</target>
 					</trans-unit>
 					<trans-unit id="in">
 						<source>In</source>
@@ -3852,7 +4018,6 @@
 					</trans-unit>
 					<trans-unit id="misc">
 						<source>Miscellaneous Features</source>
-						<target>杂项特性</target>
 					</trans-unit>
 					<trans-unit id="misc_eb">
 						<source>Handle behaviour on EB:</source>
@@ -3876,11 +4041,10 @@
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
-						<target>语言</target>
 					</trans-unit>
 				</group>
 			</group>
-            <group id="train_editor2">
+			<group id="train_editor2">
 				<group id="menu">
 					<group id="file">
 						<trans-unit id="name">
@@ -3987,6 +4151,12 @@
 							</trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked">
+								<source>Separated (Interlocked)</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked_reverser">
+								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
 						<trans-unit id="power_notches">

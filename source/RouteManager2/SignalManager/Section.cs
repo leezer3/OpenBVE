@@ -41,6 +41,14 @@ namespace RouteManager2.SignalManager
 		/// <summary>The number of free sections ahead of this section</summary>
 		public int FreeSections;
 
+		/// <summary>The last update time for this section</summary>
+		internal double LastUpdate;
+
+		internal double RedTimer;
+
+		/// <summary>Whether this section has been announced with accessibility in use</summary>
+		public bool AccessibilityAnnounced;
+
 		public Section(double trackPosition, SectionAspect[] aspects, SectionType type, Section previousSection = null)
 		{
 			TrackPosition = trackPosition;
@@ -50,6 +58,7 @@ namespace RouteManager2.SignalManager
 			PreviousSection = previousSection;
 			NextSection = null;
 			CurrentAspect = -1;
+			RedTimer = -1;
 		}
 
 		/// <summary>Called when a train enters the section</summary>

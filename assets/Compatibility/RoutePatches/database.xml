@@ -10,6 +10,7 @@
 	<PatchList>Italy.xml</PatchList>
 	<PatchList>Japan.xml</PatchList>
 	<PatchList>Misc.xml</PatchList>
+	<PatchList>Spain.xml</PatchList>
 	<PatchList>UnitedKingdom.xml</PatchList>
   </RoutePatches>
 </openBVE>

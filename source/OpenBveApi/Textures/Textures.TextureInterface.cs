@@ -14,6 +14,12 @@
 		{
 		}
 
+		/// <summary>Sets various hacks to workaround buggy textures</summary>
+		public virtual void SetCompatabilityHacks(CompatabilityHacks enabledHacks)
+		{
+
+		}
+
 		/// <summary>Checks whether the plugin can load the specified texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <returns>Whether the plugin can load the specified texture.</returns>
@@ -31,5 +37,12 @@
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public abstract bool LoadTexture(string path, out Texture texture);
+	}
+
+	/// <summary>Controls various hacks used with older content</summary>
+	public struct CompatabilityHacks
+	{
+		/// <summary>Transparency color depth should be reduced to 256 colors</summary>
+		public bool ReduceTransparencyColorDepth;
 	}
 }

@@ -3,6 +3,7 @@ using System.Reflection;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
+using TrainManager.BrakeSystems;
 using TrainManager.SafetySystems;
 
 namespace TrainManager.Trains
@@ -109,7 +110,20 @@ namespace TrainManager.Trains
 		/// <summary>Gets the vehicle specs for use in safety system plugins</summary>
 		public VehicleSpecs vehicleSpecs()
 		{
-			BrakeTypes brakeType = (BrakeTypes) Cars[DriverCar].CarBrake.brakeType;
+			BrakeTypes brakeType;
+			//Figure out the brake system type
+			if (Cars[DriverCar].CarBrake is AutomaticAirBrake)
+			{
+				brakeType = BrakeTypes.AutomaticAirBrake;
+			}
+			else if(Cars[DriverCar].CarBrake is ElectricCommandBrake)
+			{
+				brakeType = BrakeTypes.ElectricCommandBrake;
+			}
+			else
+			{
+				brakeType = BrakeTypes.ElectromagneticStraightAirBrake;
+			}
 			int brakeNotches;
 			int powerNotches;
 			bool hasHoldBrake;
@@ -168,6 +182,20 @@ namespace TrainManager.Trains
 			catch (BadImageFormatException)
 			{
 				assembly = null;
+				try
+				{
+					AssemblyName myAssembly = AssemblyName.GetAssemblyName(pluginFile);
+					if (IntPtr.Size != 4 && myAssembly.ProcessorArchitecture == ProcessorArchitecture.X86)
+					{
+						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " can only be used with the 32-bit version of OpenBVE");
+						return false;
+					}
+				}
+				catch
+				{
+					//ignored
+				}
+				
 			}
 			catch (Exception ex)
 			{

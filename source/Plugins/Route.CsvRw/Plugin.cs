@@ -9,6 +9,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
 using TrainManager;
+using Path = OpenBveApi.Path;
 
 namespace CsvRwRouteParser
 {
@@ -56,6 +57,10 @@ namespace CsvRwRouteParser
 	    /// <returns>Whether the plugin can load the specified route.</returns>
 	    public override bool CanLoadRoute(string path)
 	    {
+		    if (string.IsNullOrEmpty(path) || !File.Exists(path))
+		    {
+			    return false;
+		    }
 		    if (path.EndsWith(".rw", StringComparison.InvariantCultureIgnoreCase))
 		    {
 			    return true;
@@ -109,7 +114,7 @@ namespace CsvRwRouteParser
 		    CurrentProgress = 0.0;
 		    IsLoading = true;
 		    FileSystem.AppendToLogFile("Loading route file: " + path);
-		    FileSystem.AppendToLogFile("INFO: Route file hash " + Parser.GetChecksum(path));
+		    FileSystem.AppendToLogFile("INFO: Route file hash " + Path.GetChecksum(path));
 		    CurrentRoute = (CurrentRoute)route;
 		    //First, check the format of the route file
 		    //RW routes were written for BVE1 / 2, and have a different command syntax

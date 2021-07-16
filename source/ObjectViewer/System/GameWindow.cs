@@ -1,4 +1,5 @@
 ﻿using System;
+using ObjectViewer.Trains;
 using OpenTK;
 using OpenTK.Graphics;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -21,23 +22,38 @@ namespace OpenBve
 	            //Ignored
             }
         }
-        
+
+		private double RenderRealTimeElapsed;
+		private double TotalTimeElapsedForInfo;
+
         private static double RotateXSpeed = 0.0;
         private static double RotateYSpeed = 0.0;
         
         private static double MoveXSpeed = 0.0;
         private static double MoveYSpeed = 0.0;
         private static double MoveZSpeed = 0.0;
+
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+			double timeElapsed = RenderRealTimeElapsed;
+
+			// Use the OpenTK frame rate as this is much more accurate
+			// Also avoids running a calculation
+			if (TotalTimeElapsedForInfo >= 0.2)
+			{
+				Program.Renderer.FrameRate = RenderFrequency;
+				TotalTimeElapsedForInfo = 0.0;
+			}
+
             Program.MouseMovement();
-            double timeElapsed = CPreciseTimer.GetElapsedTime();
-            DateTime time = DateTime.Now;
-            Game.SecondsSinceMidnight = (double)(3600 * time.Hour + 60 * time.Minute + time.Second) + 0.001 * (double)time.Millisecond;
-            lock (Program.LockObj)
-            {
-                ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
-            }
+
+			ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
+
+			if (Program.TrainManager.Trains.Length != 0)
+			{
+				Program.TrainManager.Trains[0].UpdateObjects(timeElapsed, false);
+			}
+
             bool updatelight = false;
             // rotate x
             if (Program.RotateX == 0)
@@ -235,7 +251,27 @@ namespace OpenBve
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.RenderScene();
             SwapBuffers();
+
+			RenderRealTimeElapsed = 0.0;
         }
+
+		protected override void OnUpdateFrame(FrameEventArgs e)
+		{
+			double RealTimeElapsed = CPreciseTimer.GetElapsedTime();
+			DateTime time = DateTime.Now;
+			Game.SecondsSinceMidnight = 3600 * time.Hour + 60 * time.Minute + time.Second + 0.001 * time.Millisecond;
+
+			NearestTrain.Apply();
+
+			if (NearestTrain.IsExtensionsCfg)
+			{
+				double[] decelerationDueToBrake, decelerationDueToMotor;
+				Program.TrainManager.Trains[0].UpdateBrakeSystem(RealTimeElapsed, out decelerationDueToBrake, out decelerationDueToMotor);
+			}
+
+			TotalTimeElapsedForInfo += RealTimeElapsed;
+			RenderRealTimeElapsed += RealTimeElapsed;
+		}
 
         protected override void OnResize(EventArgs e)
         {
@@ -261,5 +297,10 @@ namespace OpenBve
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Program.RefreshObjects();
         }
+
+		protected override void OnUnload(EventArgs e)
+		{
+			formTrain.Instance?.CloseUI_Async();
+		}
     }
 }

@@ -4,54 +4,58 @@ using OpenBveApi.Trains;
 namespace RouteManager2.Events
 {
 	/// <summary>Called when the rail played for a train should be changed</summary>
-		public class RailSoundsChangeEvent : GeneralEvent
+	public class RailSoundsChangeEvent : GeneralEvent
+	{
+		private readonly int PreviousRunIndex;
+		private readonly int PreviousFlangeIndex;
+		private readonly int NextRunIndex;
+		private readonly int NextFlangeIndex;
+
+		public RailSoundsChangeEvent(double TrackPositionDelta, int PreviousRunIndex, int PreviousFlangeIndex, int NextRunIndex, int NextFlangeIndex) : base(TrackPositionDelta)
 		{
-			private readonly int PreviousRunIndex;
-			private readonly int PreviousFlangeIndex;
-			private readonly int NextRunIndex;
-			private readonly int NextFlangeIndex;
-			public RailSoundsChangeEvent(double TrackPositionDelta, int PreviousRunIndex, int PreviousFlangeIndex, int NextRunIndex, int NextFlangeIndex)
+			DontTriggerAnymore = false;
+			this.PreviousRunIndex = PreviousRunIndex;
+			this.PreviousFlangeIndex = PreviousFlangeIndex;
+			this.NextRunIndex = NextRunIndex;
+			this.NextFlangeIndex = NextFlangeIndex;
+		}
+
+		/// <summary>Triggers a change in run and flange sounds</summary>
+		/// <param name="direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
+		/// <param name="trackFollower">The TrackFollower</param>
+		public override void Trigger(int direction, TrackFollower trackFollower)
+		{
+			AbstractCar car = trackFollower.Car;
+
+			switch (trackFollower.TriggerType)
 			{
-				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
-				this.PreviousRunIndex = PreviousRunIndex;
-				this.PreviousFlangeIndex = PreviousFlangeIndex;
-				this.NextRunIndex = NextRunIndex;
-				this.NextFlangeIndex = NextFlangeIndex;
-			}
-			/// <summary>Triggers a change in run and flange sounds</summary>
-			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
-			/// <param name="TriggerType">They type of event which triggered this sound</param>
-			/// <param name="Train">The root train which triggered this sound</param>
-			/// <param name="Car">The car which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
-			{
-				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
-				{
-					if (Direction < 0)
+				case EventTriggerType.FrontCarFrontAxle:
+				case EventTriggerType.OtherCarFrontAxle:
+					if (direction < 0)
 					{
-						Car.FrontAxle.RunIndex = this.PreviousRunIndex;
-						Car.FrontAxle.FlangeIndex = this.PreviousFlangeIndex;
+						car.FrontAxle.RunIndex = PreviousRunIndex;
+						car.FrontAxle.FlangeIndex = PreviousFlangeIndex;
 					}
-					else if (Direction > 0)
+					else if (direction > 0)
 					{
-						Car.FrontAxle.RunIndex = this.NextRunIndex;
-						Car.FrontAxle.FlangeIndex = this.NextFlangeIndex;
+						car.FrontAxle.RunIndex = NextRunIndex;
+						car.FrontAxle.FlangeIndex = NextFlangeIndex;
 					}
-				}
-				else if (TriggerType == EventTriggerType.RearCarRearAxle | TriggerType == EventTriggerType.OtherCarRearAxle)
-				{
-					if (Direction < 0)
+					break;
+				case EventTriggerType.RearCarRearAxle:
+				case EventTriggerType.OtherCarRearAxle:
+					if (direction < 0)
 					{
-						Car.RearAxle.RunIndex = this.PreviousRunIndex;
-						Car.RearAxle.FlangeIndex = this.PreviousFlangeIndex;
+						car.RearAxle.RunIndex = PreviousRunIndex;
+						car.RearAxle.FlangeIndex = PreviousFlangeIndex;
 					}
-					else if (Direction > 0)
+					else if (direction > 0)
 					{
-						Car.RearAxle.RunIndex = this.NextRunIndex;
-						Car.RearAxle.FlangeIndex = this.NextFlangeIndex;
+						car.RearAxle.RunIndex = NextRunIndex;
+						car.RearAxle.FlangeIndex = NextFlangeIndex;
 					}
-				}
+					break;
 			}
 		}
+	}
 }

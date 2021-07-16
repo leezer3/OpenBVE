@@ -23,7 +23,7 @@ namespace OpenBveApi.Objects
 			}
 
 			/// <inheritdoc/>
-			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
+			public override void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation,
 				int SectionIndex, double StartingDistance, double EndingDistance,
 				double TrackPosition, double Brightness, bool DuplicateMaterials = false)
 			{
@@ -45,7 +45,7 @@ namespace OpenBveApi.Objects
 				if (anyfree && !allfree && Objects.Length > 1)
 				{
 					//Optimise a little: If *all* are free of functions, this can safely be converted into a static object without regard to below
-					if (AuxTransformation.X != Vector3.Right || AuxTransformation.Y != Vector3.Down || AuxTransformation.Z != Vector3.Forward)
+					if (LocalTransformation.X != Vector3.Right || LocalTransformation.Y != Vector3.Down || LocalTransformation.Z != Vector3.Forward)
 					{
 						//HACK:
 						//An animated object containing a mix of functions and non-functions and using yaw, pitch or roll must not be converted into a mix
@@ -61,17 +61,17 @@ namespace OpenBveApi.Objects
 						{
 							if (free[i])
 							{
-								Transformation FinalTransformation = new Transformation(BaseTransformation, AuxTransformation);
+								Matrix4D transformationMatrix = (Matrix4D)new Transformation(LocalTransformation, WorldTransformation);
 								Matrix4D mat = Matrix4D.Identity;
 								mat *= Objects[i].States[0].Translation;
-								mat *= (Matrix4D)new Transformation(FinalTransformation.Z, FinalTransformation.Y, FinalTransformation.X);
+								mat *= transformationMatrix;
 								double zOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
 								
-								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
 							}
 							else
 							{
-								Objects[i].CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+								Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
 							}
 						}
 					}
@@ -82,7 +82,7 @@ namespace OpenBveApi.Objects
 					{
 						if (Objects[i].States.Length != 0)
 						{
-							Objects[i].CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+							Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
 						}
 					}
 				}
@@ -96,8 +96,8 @@ namespace OpenBveApi.Objects
 					{
 						continue;
 					}
-					(Sounds[i] as WorldSound)?.CreateSound(Position + Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
-					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+					(Sounds[i] as WorldSound)?.CreateSound(Position + Sounds[i].Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
+					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
 				}
 			}
 
@@ -159,22 +159,7 @@ namespace OpenBveApi.Objects
 			{
 				foreach (AnimatedObject animatedObj in Objects)
 				{
-					foreach (ObjectState state in animatedObj.States)
-					{
-						state.Prototype = (StaticObject)state.Prototype.Clone();
-						state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
-						Matrix4D t = state.Translation;
-						t.Row3.X *= -1.0f;
-						t.Row3.Z *= -1.0f;
-						state.Translation = t;
-					}
-					animatedObj.TranslateXDirection.X *= -1.0;
-					animatedObj.TranslateXDirection.Z *= -1.0;
-					animatedObj.TranslateYDirection.X *= -1.0;
-					animatedObj.TranslateYDirection.Z *= -1.0;
-					animatedObj.TranslateZDirection.X *= -1.0;
-					animatedObj.TranslateZDirection.Z *= -1.0;
-					//As we are using a rotation matrix, we only need to reverse the translation and not the rotation
+					animatedObj.Reverse();
 				}
 			}
 			
