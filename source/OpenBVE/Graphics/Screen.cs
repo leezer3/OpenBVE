@@ -38,9 +38,12 @@ namespace OpenBve
 						try
 						{
 							DisplayDevice.Default.ChangeResolution(currentResolution);
-							if (Interface.CurrentOptions.IsUseNewRenderer && Program.CurrentHost.Platform == HostPlatform.AppleOSX)
+							if (Interface.CurrentOptions.IsUseNewRenderer && Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 							{
-								//forward compatible context on OS-X only
+								/*
+								 * OS-X is a fickle beast
+								 * In order to get a functioning GL3 context, we appear to need to be running as 64-bit & explicitly specify the forwards compatible flag
+								 */
 								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
 									GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 								{
@@ -86,9 +89,12 @@ namespace OpenBve
 			{
 				try
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer && Program.CurrentHost.Platform == HostPlatform.AppleOSX)
+					if (Interface.CurrentOptions.IsUseNewRenderer && Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{
-						//forward compatible context on OS-X only
+						/*
+						 * OS-X is a fickle beast
+						 * In order to get a functioning GL3 context, we appear to need to be running as 64-bit & explicitly specify the forwards compatible flag
+						 */
 						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
 							Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 						{
