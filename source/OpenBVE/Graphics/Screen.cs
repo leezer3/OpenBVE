@@ -38,7 +38,7 @@ namespace OpenBve
 						try
 						{
 							DisplayDevice.Default.ChangeResolution(currentResolution);
-							if (Interface.CurrentOptions.IsUseNewRenderer && Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+							if (Interface.CurrentOptions.IsUseNewRenderer && (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4 || Interface.CurrentOptions.ForceForwardsCompatibleContext))
 							{
 								/*
 								 * OS-X is a fickle beast
@@ -89,7 +89,7 @@ namespace OpenBve
 			{
 				try
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer && Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					if (Interface.CurrentOptions.IsUseNewRenderer && (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4 || Interface.CurrentOptions.ForceForwardsCompatibleContext))
 					{
 						/*
 						 * OS-X is a fickle beast

@@ -63,7 +63,8 @@ namespace OpenBveApi
 		public string TrainName = "";
 		/// <summary>The current compatibility signal set</summary>
 		public string CurrentCompatibilitySignalSet;
-
+		/// <summary>Allows a forwards compatible context to be forced</summary>
+		public bool ForceForwardsCompatibleContext;
 		/*
 		 * Note: Object optimisation takes time whilst loading, but may increase the render performance of an
 		 * object by checking for duplicate vertices etc.
