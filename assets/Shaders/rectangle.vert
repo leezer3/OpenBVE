@@ -1,4 +1,4 @@
-#version 150
+#version 150 core
 uniform mat4 uCurrentProjectionMatrix;
 uniform mat4 uCurrentModelViewMatrix;
 uniform vec2 uPoint;

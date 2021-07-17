@@ -1,4 +1,4 @@
-﻿#version 150
+﻿#version 150 core
 uniform int uObjectIndex;
 out vec4 fragColor;
 

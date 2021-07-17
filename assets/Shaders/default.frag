@@ -1,4 +1,4 @@
-#version 150
+#version 150 core
 in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
@@ -19,7 +19,7 @@ out vec4 fragColor;
 
 void main(void)
 {
-	vec4 finalColor = vec4(oColor.rgb, 1.0) * texture2D(uTexture, oUv);
+	vec4 finalColor = vec4(oColor.rgb, 1.0) * texture(uTexture, oUv);
 
 	if((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
 	{

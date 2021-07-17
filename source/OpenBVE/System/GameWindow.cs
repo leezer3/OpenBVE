@@ -50,6 +50,7 @@ namespace OpenBve
 		//We need to explicitly specify the default constructor
 		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default)
 		{
+			Program.FileSystem.AppendToLogFile("Creating game window with standard context.");
 			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 			{
 				return;
@@ -66,8 +67,9 @@ namespace OpenBve
 			}
 		}
 
-		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default, DisplayDevice.Default, 3,0, flags)
+		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default, DisplayDevice.Default, 3,3, flags)
 		{
+			Program.FileSystem.AppendToLogFile("Creating game window with forwards-compatible context.");
 			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 			{
 				return;

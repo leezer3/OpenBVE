@@ -1,4 +1,4 @@
-#version 150
+#version 150 core
 precision highp int;
 
 struct Light
