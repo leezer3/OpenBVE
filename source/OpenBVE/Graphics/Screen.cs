@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Viewports;
+using OpenBveApi.Hosts;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -37,8 +38,9 @@ namespace OpenBve
 						try
 						{
 							DisplayDevice.Default.ChangeResolution(currentResolution);
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (Interface.CurrentOptions.IsUseNewRenderer && Program.CurrentHost.Platform == HostPlatform.AppleOSX)
 							{
+								//forward compatible context on OS-X only
 								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
 									GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 								{
@@ -84,8 +86,9 @@ namespace OpenBve
 			{
 				try
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (Interface.CurrentOptions.IsUseNewRenderer && Program.CurrentHost.Platform == HostPlatform.AppleOSX)
 					{
+						//forward compatible context on OS-X only
 						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
 							Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 						{
