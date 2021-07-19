@@ -7,7 +7,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
-namespace LibRender2.Texts
+namespace LibRender2.Text
 {
 	public class OpenGlString
 	{

@@ -6,13 +6,11 @@ using System.ComponentModel;
 using System.Drawing;
 using DavyKager;
 using System.IO;
-using System.Net.Mime;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2.Primitives;
 using LibRender2.Screens;
 using LibRender2.Text;
-using LibRender2.Texts;
 using OpenBve.Input;
 using OpenBveApi;
 using OpenBveApi.Input;
@@ -1079,7 +1077,7 @@ namespace OpenBve
 			{
 				itemLeft = (Program.Renderer.Screen.Width - menu.ItemWidth) / 2; // item left edge
 				// if menu alignment is left, left-align items, otherwise centre them in the screen
-				itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Program.Renderer.Screen.Width / 2;
+				itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Program.Renderer.Screen.Width / 2.0;
 				Program.Renderer.Rectangle.Draw(null, new Vector2(menuXmin - MenuBorderX, menuYmin - MenuBorderY), new Vector2(menuXmax - menuXmin + 2.0f * MenuBorderX, menuYmax - menuYmin + 2.0f * MenuBorderY), backgroundColor);	
 			}
 			
@@ -1177,7 +1175,7 @@ namespace OpenBve
 			{
 				case MenuType.GameStart:
 					LogoPictureBox.Draw();
-					string currentVersion =  @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
+					string currentVersion =  @"v" + Application.ProductVersion + Program.VersionSuffix;
 					if (IntPtr.Size != 4)
 					{
 						currentVersion += @" 64-bit";

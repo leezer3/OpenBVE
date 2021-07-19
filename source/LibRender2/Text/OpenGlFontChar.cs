@@ -1,7 +1,6 @@
-﻿using System.Drawing;
-using OpenBveApi.Math;
+﻿using OpenBveApi.Math;
 
-namespace LibRender2.Texts
+namespace LibRender2.Text
 {
 	/// <summary>Represents a single character.</summary>
 	public struct OpenGlFontChar

@@ -1,5 +1,5 @@
 ﻿using System;
-using LibRender2.Texts;
+using LibRender2.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using TrainManager.SafetySystems;

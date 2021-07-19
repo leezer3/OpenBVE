@@ -1,6 +1,6 @@
 ﻿
 using System.Drawing;
-using LibRender2.Texts;
+using LibRender2.Text;
 
 namespace LibRender2.Text
 {

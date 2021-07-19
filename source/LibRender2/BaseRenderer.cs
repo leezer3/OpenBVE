@@ -13,7 +13,6 @@ using LibRender2.Primitives;
 using LibRender2.Screens;
 using LibRender2.Shaders;
 using LibRender2.Text;
-using LibRender2.Texts;
 using LibRender2.Textures;
 using LibRender2.Viewports;
 using OpenBveApi;

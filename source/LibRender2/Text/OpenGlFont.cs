@@ -3,7 +3,7 @@ using System.Drawing;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
-namespace LibRender2.Texts
+namespace LibRender2.Text
 {
 	/// <summary>Represents a font.</summary>
 	public sealed class OpenGlFont : IDisposable

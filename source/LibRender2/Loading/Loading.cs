@@ -1,5 +1,5 @@
 ﻿using System;
-using LibRender2.Texts;
+using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
