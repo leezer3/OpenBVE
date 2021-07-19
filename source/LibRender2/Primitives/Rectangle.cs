@@ -153,10 +153,10 @@ namespace LibRender2.Primitives
 		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates)
 		{
 			Shader.Activate();
-			renderer.CurrentShader = Shader;
 			if (texture != null && renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
 			{
 				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+				renderer.LastBoundTexture = texture.OpenGlTextures[(int) OpenGlTextureWrapMode.ClampClamp];
 			}
 			else
 			{
