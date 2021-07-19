@@ -16,7 +16,7 @@ using OpenBveApi;
 using OpenBveApi.Input;
 using OpenBveApi.Textures;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using TrainManager;
 using Control = OpenBveApi.Interface.Control;
 using Path = OpenBveApi.Path;
 using Vector2 = OpenBveApi.Math.Vector2;
@@ -148,12 +148,19 @@ namespace OpenBve
 						break;
 					case MenuType.RouteList:
 						string[] potentialFiles = { };
-						string[] directoryList;
+						string[] directoryList = { };
 						bool drives = false;
 						if (SearchDirectory != string.Empty)
 						{
-							potentialFiles = Directory.GetFiles(SearchDirectory);
-							directoryList = Directory.GetDirectories(SearchDirectory);
+							try
+							{
+								potentialFiles = Directory.GetFiles(SearchDirectory);
+								directoryList = Directory.GetDirectories(SearchDirectory);
+							}
+							catch
+							{
+								// Ignored
+							}
 						}
 						else
 						{
@@ -199,12 +206,20 @@ namespace OpenBve
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.TrainList:
-						potentialFiles = new string[]{ };
+						potentialFiles = new string[] { };
+						directoryList = new string[] { };
 						drives = false;
 						if (SearchDirectory != string.Empty)
 						{
-							potentialFiles = Directory.GetFiles(SearchDirectory);
-							directoryList = Directory.GetDirectories(SearchDirectory);
+							try
+							{
+								potentialFiles = Directory.GetFiles(SearchDirectory);
+								directoryList = Directory.GetDirectories(SearchDirectory);
+							}
+							catch
+							{
+								// Ignored
+							}
 						}
 						else
 						{
@@ -303,7 +318,7 @@ namespace OpenBve
 								Items[menuItem] = new MenuCommand(Program.CurrentRoute.Stations[i].Name, MenuTag.JumpToStation, i);
 								// if no preferred jump-to-station found yet and this station is
 								// after the last station the user stopped at, select this item
-								if (jump == 0 && i > TrainManager.PlayerTrain.LastStation)
+								if (jump == 0 && i > TrainManagerBase.PlayerTrain.LastStation)
 								{
 									jump = i;
 									Selection = menuItem;
@@ -880,6 +895,7 @@ namespace OpenBve
 					Loading.Complete = false;
 					Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
 					OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+					// ReSharper disable once PossibleNullReferenceException
 					g.LoadingScreenLoop();
 					Program.Renderer.CurrentInterface = InterfaceType.Normal;
 					return;
@@ -948,8 +964,18 @@ namespace OpenBve
 								{
 									return;
 								}
-								DirectoryInfo newDirectory = Directory.GetParent(SearchDirectory);
-								SearchDirectory = newDirectory == null ? string.Empty : Directory.GetParent(SearchDirectory).ToString();
+
+								string oldSearchDirectory = SearchDirectory;
+								try
+								{
+									DirectoryInfo newDirectory = Directory.GetParent(SearchDirectory);
+									SearchDirectory = newDirectory == null ? string.Empty : Directory.GetParent(SearchDirectory)?.ToString();
+								}
+								catch
+								{
+									SearchDirectory = oldSearchDirectory;
+									return;
+								}
 								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.RouteFile:
@@ -970,7 +996,7 @@ namespace OpenBve
 										if (Interface.CurrentOptions.TrainFolder == trainDir)
 										{
 											//enter folder
-											SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : OpenBveApi.Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
+											SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
 											Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 										}
 										else
@@ -994,7 +1020,7 @@ namespace OpenBve
 								// simulation commands
 							case MenuTag.JumpToStation:         // JUMP TO STATION
 								Reset();
-								TrainManager.PlayerTrain.Jump(menuItem.Data);
+								TrainManagerBase.PlayerTrain.Jump(menuItem.Data);
 								Program.TrainManager.JumpTFO();
 								break;
 							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU
@@ -1020,6 +1046,7 @@ namespace OpenBve
 									Loading.Complete = false;
 									Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
 									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+									// ReSharper disable once PossibleNullReferenceException
 									g.LoadingScreenLoop();
 									Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								}
