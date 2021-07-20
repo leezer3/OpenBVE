@@ -966,6 +966,13 @@ namespace LibRender2
 			}
 		}
 
+
+		// Cached object state and matricies for shader drawing
+		private ObjectState lastObjectState;
+		private Matrix4D lastModelMatrix;
+		private Matrix4D lastModelViewMatrix;
+		private bool sendToShader;
+
 		/// <summary>Draws a face using the current shader</summary>
 		/// <param name="State">The FaceState to draw</param>
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
@@ -974,19 +981,35 @@ namespace LibRender2
 			RenderFace(CurrentShader, State.Object, State.Face, IsDebugTouchMode);
 		}
 
+		/// <summary>Draws a face using the specified shader and matricies</summary>
+		/// <param name="Shader">The shader to use</param>
+		/// <param name="State">The ObjectState to draw</param>
+		/// <param name="Face">The Face within the ObjectState</param>
+		/// <param name="ModelMatrix">The model matrix to use</param>
+		/// <param name="ModelViewMatrix">The modelview matrix to use</param>
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D ModelMatrix, Matrix4D ModelViewMatrix)
+		{
+			lastModelMatrix = ModelMatrix;
+			lastModelViewMatrix = ModelViewMatrix;
+			sendToShader = true;
+			RenderFace(Shader, State, Face);
+		}
+
 		/// <summary>Draws a face using the specified shader</summary>
 		/// <param name="Shader">The shader to use</param>
-		/// <param name="State">The FaceState to draw</param>
+		/// <param name="State">The ObjectState to draw</param>
+		/// <param name="Face">The Face within the ObjectState</param>
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
-			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
-			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			RenderFace(Shader, State, Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
-		}
+			if (State != lastObjectState && !sendToShader)
+			{
+				lastObjectState = State;
+				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
+				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
+				sendToShader = true;
+			}
 
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
-		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
 				return;
@@ -1014,9 +1037,13 @@ namespace LibRender2
 			}
 
 			// matrix
-			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
-			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
-
+			if (sendToShader)
+			{
+				Shader.SetCurrentModelViewMatrix(lastModelViewMatrix);
+				Shader.SetCurrentTextureMatrix(State.TextureTranslation);
+				sendToShader = false;
+			}
+			
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
@@ -1074,7 +1101,7 @@ namespace LibRender2
 			float distanceFactor;
 			if (material.GlowAttenuationData != 0)
 			{
-				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
+				distanceFactor = (float)Glow.GetDistanceFactor(lastModelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
 			}
 			else
 			{
