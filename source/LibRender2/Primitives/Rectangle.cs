@@ -176,8 +176,6 @@ namespace LibRender2.Primitives
 			 */
 			renderer.dummyVao.Bind();
 			GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
-			renderer.dummyVao.UnBind();
-			Shader.Deactivate();
 		}
 	}
 }

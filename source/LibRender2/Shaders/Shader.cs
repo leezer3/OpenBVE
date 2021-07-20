@@ -133,6 +133,11 @@ namespace LibRender2.Shaders
 			{
 				return;
 			}
+
+			if (renderer.CurrentShader != null)
+			{
+				renderer.CurrentShader.isActive = false;
+			}
 			GL.UseProgram(handle);
 			isActive = true;
 			renderer.lastVAO = -1;

@@ -179,7 +179,6 @@ namespace LibRender2.Backgrounds
 				{
 					VAO.Draw(PrimitiveType.Triangles, i, 12);
 				}
-				renderer.DefaultShader.Deactivate();
 				renderer.RestoreBlendFunc();
 			}
 		}
@@ -365,11 +364,6 @@ namespace LibRender2.Backgrounds
 				{
 					renderer.RenderFaceImmediateMode(new ObjectState(data.Object), face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
 				}
-			}
-
-			if (renderer.AvailableNewRenderer)
-			{
-				renderer.DefaultShader.Deactivate();
 			}
 		}
 	}

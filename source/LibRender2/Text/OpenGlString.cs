@@ -236,12 +236,10 @@ namespace LibRender2.Text
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetColor(color);
 					GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
-					renderer.dummyVao.UnBind();
 				}
 				left += data.TypographicSize.X;
 			}
 			renderer.RestoreBlendFunc();
-			Shader.Deactivate();
 		}
 
 		/// <summary>Renders a string to the screen.</summary>

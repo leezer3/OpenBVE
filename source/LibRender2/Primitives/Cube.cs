@@ -265,10 +265,6 @@ namespace LibRender2.Primitives
 			// render polygon
 			VAO.Bind();
 			VAO.Draw(PrimitiveType.Quads);
-			renderer.lastVAO = -1;
-			VAO.UnBind();
-			renderer.DefaultShader.Deactivate();
-
 			GL.Disable(EnableCap.Texture2D);
 		}
 

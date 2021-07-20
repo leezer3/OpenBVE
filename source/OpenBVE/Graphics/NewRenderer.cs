@@ -446,14 +446,6 @@ namespace OpenBve.Graphics
 					face.Draw();
 				}
 			}
-			if (AvailableNewRenderer)
-			{
-				/*
-				 * Must remember to de-activate at the end of the render sequence if in GL3 mode.
-				 * The overlays currently use immediate mode and do not work correctly with the shader active
-				 */
-				DefaultShader.Deactivate();
-			}
 			// render touch
 			OptionLighting = false;
 			Touch.RenderScene();
