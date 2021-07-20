@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Viewports;
+using OpenBveApi.Hosts;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -37,12 +38,29 @@ namespace OpenBve
 						try
 						{
 							DisplayDevice.Default.ChangeResolution(currentResolution);
-							Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
-								GameWindowFlags.Default)
+							if (Interface.CurrentOptions.IsUseNewRenderer && (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4 || Interface.CurrentOptions.ForceForwardsCompatibleContext))
 							{
-								Visible = true,
-								WindowState = WindowState.Fullscreen,
-							};
+								/*
+								 * OS-X is a fickle beast
+								 * In order to get a functioning GL3 context, we appear to need to be running as 64-bit & explicitly specify the forwards compatible flag
+								 */
+								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
+									GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
+								{
+									Visible = true,
+									WindowState = WindowState.Fullscreen,
+								};
+							}
+							else
+							{
+								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
+									GameWindowFlags.Default)
+								{
+									Visible = true,
+									WindowState = WindowState.Fullscreen,
+								};	
+							}
+							
 							resolutionFound = true;
 							break;
 						}
@@ -71,11 +89,27 @@ namespace OpenBve
 			{
 				try
 				{
-					Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
-						Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+					if (Interface.CurrentOptions.IsUseNewRenderer && (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4 || Interface.CurrentOptions.ForceForwardsCompatibleContext))
 					{
-						Visible = true
-					};
+						/*
+						 * OS-X is a fickle beast
+						 * In order to get a functioning GL3 context, we appear to need to be running as 64-bit & explicitly specify the forwards compatible flag
+						 */
+						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
+							Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
+						{
+							Visible = true
+						};
+					}
+					else
+					{
+						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
+							Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+						{
+							Visible = true
+						};
+					}
+					
 				}
 				catch
 				{
@@ -165,7 +199,7 @@ namespace OpenBve
 			    System.Threading.Thread.Sleep(20);
 			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
 			    {
-                    MessageBox.Show(Translations.GetInterfaceString("errors_fullscreen_switch1") + System.Environment.NewLine +
+                    MessageBox.Show(Translations.GetInterfaceString("errors_fullscreen_switch1") + Environment.NewLine +
                         Translations.GetInterfaceString("errors_fullscreen_switch2"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
                     Program.Renderer.Screen.Fullscreen = false;
 			    }

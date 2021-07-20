@@ -136,6 +136,14 @@
     <Compile Include="Game\AI\AI.SimpleHuman.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game\Menu\Menu.MenuCaption.cs" />
+    <Compile Include="Game\Menu\Menu.MenuCommand.cs" />
+    <Compile Include="Game\Menu\Menu.MenuEntry.cs" />
+    <Compile Include="Game\Menu\Menu.Route.cs" />
+    <Compile Include="Game\Menu\Menu.RouteState.cs" />
+    <Compile Include="Game\Menu\Menu.SingleMenu.cs" />
+    <Compile Include="Game\Menu\MenuTag.cs" />
+    <Compile Include="Game\Menu\MenuType.cs" />
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="Game\MessageManager.TextualMessages.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
@@ -144,7 +152,7 @@
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
-    <Compile Include="Game\Menu.cs" />
+    <Compile Include="Game\Menu\Menu.cs" />
     <Compile Include="Game\Score\Score.cs" />
     <Compile Include="Game\Score\Score.Log.cs" />
     <Compile Include="Game\Score\Score.ScoreMessage.cs" />

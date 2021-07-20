@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using LibRender2.Texts;
+using LibRender2.Text;
 using OpenBveApi.Colors;
 
 namespace RouteManager2.MessageManager.MessageTypes

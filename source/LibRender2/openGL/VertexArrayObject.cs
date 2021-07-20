@@ -338,7 +338,8 @@ namespace LibRender2
 						Color = Color128.White
 					});
 
-					indexData.AddRange(new[] { 0, 1, 2, 3 }.Select(x => x + indexOffset).Select(x => (ushort)x));
+					indexData.AddRange(new[] { 0, 1, 2 }.Select(x => x + indexOffset).Select(x => (ushort)x));
+					indexData.AddRange(new[] { 0, 2, 3 }.Select(x => x + indexOffset).Select(x => (ushort)x));
 
 					// top cap
 					vertexData.Add(new LibRenderVertex

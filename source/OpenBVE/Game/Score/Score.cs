@@ -38,6 +38,10 @@ namespace OpenBve
 			/// <param name="TimeElapsed">The time elapsed since this function was last called</param>
 			internal void Update(double TimeElapsed)
 			{
+				if (TrainManager.PlayerTrain == null)
+				{
+					return;
+				}
 				// doors
 				{
 					bool leftopen = false;

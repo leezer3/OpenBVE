@@ -137,12 +137,7 @@
 		/// The handle of "uFogDensity" within the shader
 		/// </summary>
 		public short FogDensity = -1;
-
-		/// <summary>
-		/// The handle of "uIsTexture" within the shader
-		/// </summary>
-		public short IsTexture = -1;
-
+		
 		/// <summary>
 		/// The handle of "uTexture" within the shader
 		/// </summary>
@@ -162,5 +157,40 @@
 		/// The handle of "uObjectIndex" within the shader
 		/// </summary>
 		public short ObjectIndex = -1;
+
+		/// <summary>
+		/// The handle "uPoint" within the shader
+		/// </summary>
+		public short Point = -1;
+
+		/// <summary>
+		/// The handle of "uSize" within the shader
+		/// </summary>
+		public short Size;
+
+		/// <summary>
+		/// The handle of "uColor" within the shader
+		/// </summary>
+		public short Color;
+
+		/// <summary>
+		/// The handle of "uCoordinates" within the shader
+		/// </summary>
+		public short Coordinates;
+
+		/// <summary>
+		/// The handle of "uAtlasLocation" within the shader
+		/// </summary>
+		public short AtlasLocation;
+
+		/// <summary>
+		/// The handle of "uAlphaFunction" within the shader
+		/// </summary>
+		public short AlphaFunction;
+
+		/// <summary>
+		/// The handle of "uAlphaComparison" within the shader
+		/// </summary>
+		public short AlphaComparison;
 	}
 }

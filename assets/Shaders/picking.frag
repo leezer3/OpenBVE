@@ -1,8 +1,8 @@
-﻿#version 150
-
+﻿#version 150 core
 uniform int uObjectIndex;
+out vec4 fragColor;
 
 void main(void)
 {
-	gl_FragData[0].r = float(uObjectIndex);
+	fragColor.r = float(uObjectIndex);
 }

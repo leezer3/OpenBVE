@@ -16,15 +16,15 @@ namespace OpenBve.Graphics.Renderers
 		{
 			// score messages
 			int n = Game.ScoreMessages.Length;
-			float totalwidth = 16.0f;
-			float[] widths = new float[n];
-			float[] heights = new float[n];
+			double totalwidth = 16.0f;
+			double[] widths = new double[n];
+			double[] heights = new double[n];
 			for (int j = 0; j < n; j++)
 			{
-				Size size = Element.Font.MeasureString(Game.ScoreMessages[j].Text);
-				widths[j] = size.Width;
-				heights[j] = size.Height;
-				float a = widths[j] - j * Element.Value1;
+				Vector2 size = Element.Font.MeasureString(Game.ScoreMessages[j].Text);
+				widths[j] = size.X;
+				heights[j] = size.Y;
+				double a = widths[j] - j * Element.Value1;
 				if (a > totalwidth)
 				{
 					totalwidth = a;
@@ -187,7 +187,7 @@ namespace OpenBve.Graphics.Renderers
 					double q = Math.Round(Element.TextAlignment.Y < 0 ? py : Element.TextAlignment.Y > 0 ? py + lcrh - v : py + 0.5 * (lcrh - v));
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
-					renderer.OpenGlString.Draw(Element.Font, t, new Point((int)p, (int)q), TextAlignment.TopLeft, new Color128(tc.R, tc.G, tc.B, tc.A * alpha), Element.TextShadow);
+					renderer.OpenGlString.Draw(Element.Font, t, new Vector2(p, q), TextAlignment.TopLeft, new Color128(tc.R, tc.G, tc.B, tc.A * alpha), Element.TextShadow);
 				}
 				// left overlay
 				if (Left.OverlayTexture != null)

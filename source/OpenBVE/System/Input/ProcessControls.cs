@@ -171,10 +171,10 @@ namespace OpenBve
 										Program.Renderer.CurrentInterface = InterfaceType.Normal;
 										break;
 									case Translations.Command.MenuActivate:
-										Game.Menu.PushMenu(Menu.MenuType.Top);
+										Game.Menu.PushMenu(MenuType.Top);
 										break;
 									case Translations.Command.MiscQuit:
-										Game.Menu.PushMenu(Menu.MenuType.Quit);
+										Game.Menu.PushMenu(MenuType.Quit);
 										break;
 									case Translations.Command.MiscFullscreen:
 										Screen.ToggleFullscreen();
@@ -693,7 +693,7 @@ namespace OpenBve
 								{
 									case Translations.Command.MiscQuit:
 										// quit
-										Game.Menu.PushMenu(Menu.MenuType.Quit);
+										Game.Menu.PushMenu(MenuType.Quit);
 										break;
 									case Translations.Command.CameraInterior:
 										// camera: interior
@@ -1733,7 +1733,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.MenuActivate:
 										// menu
-										Game.Menu.PushMenu(Menu.MenuType.Top);
+										Game.Menu.PushMenu(MenuType.Top);
 										break;
 									case Translations.Command.MiscPause:
 										// pause

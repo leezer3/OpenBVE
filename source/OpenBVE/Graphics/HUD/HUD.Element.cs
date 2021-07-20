@@ -1,4 +1,4 @@
-﻿using LibRender2.Texts;
+﻿using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 

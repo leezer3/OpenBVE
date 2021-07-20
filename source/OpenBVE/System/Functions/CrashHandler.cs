@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 
 namespace OpenBve
 {
@@ -14,6 +15,13 @@ namespace OpenBve
         /// <summary>Catches all unhandled exceptions within the current appdomain</summary>
         internal static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
+	        if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size !=4)
+	        {
+				Console.WriteLine("UNHANDLED EXCEPTION:");
+				Console.WriteLine("--------------------");
+				Console.WriteLine(e.ExceptionObject);
+				Environment.Exit(0);
+	        }
             try
             {
                 Exception ex = (Exception)e.ExceptionObject;
@@ -51,6 +59,13 @@ namespace OpenBve
         /// <summary>Catches all unhandled exceptions within the current UI thread</summary>
         internal static void UIThreadException(object sender, ThreadExceptionEventArgs t)
         {
+	        if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size !=4)
+	        {
+		        Console.WriteLine("UNHANDLED EXCEPTION:");
+		        Console.WriteLine("--------------------");
+		        Console.WriteLine(t.Exception);
+		        Environment.Exit(0);
+	        }
             try
             {
                 MessageBox.Show("Unhandled Windows Forms Exception");

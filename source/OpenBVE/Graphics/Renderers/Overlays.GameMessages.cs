@@ -23,9 +23,9 @@ namespace OpenBve.Graphics.Renderers
 			for (int j = 0; j < n; j++)
 			{
 				//Update font size for the renderer
-				Size size = Element.Font.MeasureString((string)MessageManager.TextualMessages[j].MessageToDisplay);
-				MessageManager.TextualMessages[j].Width = size.Width;
-				MessageManager.TextualMessages[j].Height = size.Height;
+				Vector2 size = Element.Font.MeasureString((string)MessageManager.TextualMessages[j].MessageToDisplay);
+				MessageManager.TextualMessages[j].Width = size.X;
+				MessageManager.TextualMessages[j].Height = size.Y;
 				//Run through the list of current messages
 				double a = MessageManager.TextualMessages[j].Width - j * (double)Element.Value1;
 				//If our width is wider than the old, use this as the NEW viewing plane width
@@ -218,7 +218,7 @@ namespace OpenBve.Graphics.Renderers
 							: py + 0.5 * (lcrh - v));
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
-					renderer.OpenGlString.Draw(Element.Font, t, new Point((int)p, (int)q),
+					renderer.OpenGlString.Draw(Element.Font, t, new Vector2(p, q),
 						TextAlignment.TopLeft, new Color128(tc.R, tc.G, tc.B, tc.A * alpha), Element.TextShadow);
 				}
 				// left overlay
