@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -21,6 +22,7 @@ namespace OpenBve
 		private static RouteState RoutefileState;
 		private static readonly Picturebox routePictureBox = new Picturebox(Program.Renderer);
 		private static readonly Textbox routeDescriptionBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
+		private static Dictionary<string, Texture> iconCache = new Dictionary<string, Texture>();
 
 		private static void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{

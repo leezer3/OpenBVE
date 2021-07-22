@@ -56,7 +56,6 @@ namespace OpenBve
 
 		private double lastTimeElapsed;
 		
-		                   // end of private class SingleMenu
 
 		/********************
 			MENU SYSTEM FIELDS
@@ -197,7 +196,7 @@ namespace OpenBve
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
 			int MaxWidth = 0;
-			if (type == MenuType.RouteList || type == MenuType.TrainList)
+			if (type == MenuType.RouteList || type == MenuType.TrainList || type == MenuType.PackageInstall)
 			{
 				MaxWidth = Program.Renderer.Screen.Width / 2;
 			}
@@ -288,7 +287,7 @@ namespace OpenBve
 		{
 			// Load the current menu
 			SingleMenu menu = Menus[CurrMenu];
-			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall)
 			{
 				if (routeDescriptionBox.CurrentlySelected)
 				{
@@ -345,7 +344,7 @@ namespace OpenBve
 				menu.Selection = menu.TopItem - 1;
 				return true;
 			}
-			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall)
 			{
 				if (x > routeDescriptionBox.Location.X && x < routeDescriptionBox.Location.X + routeDescriptionBox.Size.X && y > routeDescriptionBox.Location.Y && y < routeDescriptionBox.Location.Y + routeDescriptionBox.Size.Y)
 				{
@@ -502,6 +501,11 @@ namespace OpenBve
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 							// route menu commands
+							case MenuTag.PackageInstall:
+								Menu.instance.PushMenu(MenuType.PackageInstall);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
+								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString("errors_route_please_select");
@@ -646,7 +650,7 @@ namespace OpenBve
 
 			
 			double itemLeft, itemX;
-			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall)
 			{
 				itemLeft = 0;
 				itemX = 16;
@@ -820,6 +824,10 @@ namespace OpenBve
 
 					break;
 				}
+				case MenuType.PackageInstall:
+					routePictureBox.Draw();
+					routeDescriptionBox.Draw();
+					break;
 			}
 			
 		}
@@ -845,7 +853,7 @@ namespace OpenBve
 				 */
 				menu.Items[i].DisplayLength = menu.Items[i].DisplayLength;
 			}
-			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall)
 			{
 				// Left aligned, used for route browser
 				menuXmin = 0;

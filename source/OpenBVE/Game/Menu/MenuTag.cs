@@ -42,6 +42,8 @@
 		/// <summary>Selects No for a menu choice</summary>
 		No,
 		/// <summary>A train directory</summary>
-		TrainDirectory
+		TrainDirectory,
+		/// <summary>Shows the package install menu</summary>
+		PackageInstall
 	}
 }
