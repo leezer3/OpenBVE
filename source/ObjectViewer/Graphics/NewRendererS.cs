@@ -92,6 +92,10 @@ namespace ObjectViewer.Graphics
 		// render scene
 		internal void RenderScene()
 		{
+			if (!AvailableNewRenderer)
+			{
+				CurrentShader.Deactivate();
+			}
 			ReleaseResources();
 			// initialize
 			ResetOpenGlState();

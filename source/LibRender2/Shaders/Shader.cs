@@ -199,6 +199,10 @@ namespace LibRender2.Shaders
 		/// <summary>Deactivates the shader</summary>
 		public void Deactivate()
 		{
+			if (!isActive)
+			{
+				return;
+			}
 			isActive = false;
 			GL.UseProgram(0);
 			renderer.lastVAO = -1;
