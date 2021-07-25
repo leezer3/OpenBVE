@@ -56,6 +56,8 @@ namespace OpenBve {
 			internal bool FullScreen;
 			internal int Width;
 			internal int Height;
+			/// <summary>Whether to show the experimental GL menu</summary>
+			internal bool ExperimentalGLMenu;
 		}
 		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
 		{

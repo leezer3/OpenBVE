@@ -1713,7 +1713,7 @@ namespace Train.OpenBve
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
-			Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 3 }) };
+			Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 0, 2, 3 }, FaceFlags.Triangles) }; //Must create as a single face like this to avoid Z-sort issues with overlapping bits
 			Object.Mesh.Materials = new MeshMaterial[1];
 			Object.Mesh.Materials[0].Flags = new MaterialFlags();
 			if (DaytimeTexture != null)

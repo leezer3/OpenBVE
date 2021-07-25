@@ -50,6 +50,30 @@ namespace OpenBve
 		//We need to explicitly specify the default constructor
 		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default)
 		{
+			Program.FileSystem.AppendToLogFile("Creating game window with standard context.");
+			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+			{
+				return;
+			}
+			try
+			{
+				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+				Icon ico = new Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
+				this.Icon = ico;
+			}
+			catch
+			{
+				//it's only an icon
+			}
+		}
+
+		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default, DisplayDevice.Default, 3,3, flags)
+		{
+			Program.FileSystem.AppendToLogFile("Creating game window with forwards-compatible context.");
+			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+			{
+				return;
+			}
 			try
 			{
 				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -85,7 +109,6 @@ namespace OpenBve
 				{
 					Thread.Sleep(10);
 				}
-				//Renderer.UpdateLighting();
 				Program.Renderer.RenderScene(TimeElapsed, RealTimeElapsed);
 				Program.currentGameWindow.SwapBuffers();
 				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
@@ -360,14 +383,25 @@ namespace OpenBve
 			//Initialise the loader thread queues
 			jobs = new Queue<ThreadStart>(10);
 			locks = new Queue<object>(10);
-			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
+			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions, Program.FileSystem);
 			Program.Renderer.DetermineMaxAFLevel();
 			HUD.LoadHUD();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
-			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
-			LoadingScreenLoop();
+			if (string.IsNullOrEmpty(MainLoop.currentResult.RouteFile))
+			{
+				Game.Menu.PushMenu(MenuType.GameStart);
+				Loading.Complete = true;
+				Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
+				loadComplete = true;
+			}
+			else
+			{
+				Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
+				LoadingScreenLoop();
+			}
+
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
 			KeyDown	+= MainLoop.keyDownEvent;
@@ -1004,7 +1038,7 @@ namespace OpenBve
 			}
 		}
 
-		private void LoadingScreenLoop()
+		public void LoadingScreenLoop()
 		{
 			Program.Renderer.PushMatrix(MatrixMode.Projection);
 			Matrix4D.CreateOrthographicOffCenter(0.0f, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Program.Renderer.CurrentProjectionMatrix);

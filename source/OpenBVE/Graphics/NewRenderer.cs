@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
@@ -9,6 +8,7 @@ using LibRender2.Viewports;
 using OpenBve.Graphics.Renderers;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -52,9 +52,9 @@ namespace OpenBve.Graphics
 		private Overlays overlays;
 		internal Touch Touch;
 
-		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
+		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
 		{
-			base.Initialize(CurrentHost, CurrentOptions);
+			base.Initialize(CurrentHost, CurrentOptions, FileSystem);
 
 			try
 			{
@@ -93,6 +93,7 @@ namespace OpenBve.Graphics
 
 		public override void UpdateViewport(int Width, int Height)
 		{
+			_programLogo = null;
 			Screen.Width = Width;
 			Screen.Height = Height;
 			GL.Viewport(0, 0, Screen.Width, Screen.Height);
@@ -198,7 +199,11 @@ namespace OpenBve.Graphics
 				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
 				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
 				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;
-				Fog.SetForImmediateMode();
+				if (!AvailableNewRenderer)
+				{
+					Fog.SetForImmediateMode();
+				}
+				
 			}
 			else
 			{
@@ -440,14 +445,6 @@ namespace OpenBve.Graphics
 				{
 					face.Draw();
 				}
-			}
-			if (AvailableNewRenderer)
-			{
-				/*
-				 * Must remember to de-activate at the end of the render sequence if in GL3 mode.
-				 * The overlays currently use immediate mode and do not work correctly with the shader active
-				 */
-				DefaultShader.Deactivate();
 			}
 			// render touch
 			OptionLighting = false;

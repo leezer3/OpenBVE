@@ -49,7 +49,7 @@ namespace TrainManager.Handles
 		public string[] NotchDescriptions;
 
 		/// <summary>The max width used in px for the description string</summary>
-		public int MaxWidth = 48;
+		public double MaxWidth = 48;
 
 		internal readonly TrainBase baseTrain;
 

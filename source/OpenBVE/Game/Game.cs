@@ -37,7 +37,11 @@ namespace OpenBve
 			// game
 			Interface.LogMessages.Clear();
 			Program.CurrentHost.MissingFiles.Clear();
-			Program.Renderer.CurrentInterface = InterfaceType.Normal;
+			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+			{
+				Program.Renderer.CurrentInterface = InterfaceType.Normal;
+			}
+			
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere = new Atmosphere();

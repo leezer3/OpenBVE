@@ -1222,11 +1222,42 @@ namespace OpenBve
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
 			bool canLoad = false;
+			Image trainImage = null;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
 				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))
 				{
 					canLoad = true;
+					trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(Result.TrainFolder);
+					if (!UserSelectedEncoding) {
+						Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
+						comboboxTrainEncoding.Tag = new object();
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = $"{Result.TrainEncoding.EncodingName} - {Result.TrainEncoding.CodePage}";
+
+						comboboxTrainEncoding.Tag = null;
+						for (int k = 0; k < Interface.CurrentOptions.TrainEncodings.Length; k++) {
+							if (Interface.CurrentOptions.TrainEncodings[k].Value == Result.TrainFolder) {
+								int j;
+								for (j = 1; j < EncodingCodepages.Length; j++) {
+									if (EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[k].Codepage) {
+										comboboxTrainEncoding.SelectedIndex = j;
+										Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
+										break;
+									}
+								}
+								if (j == EncodingCodepages.Length) {
+									comboboxTrainEncoding.SelectedIndex = 0;
+									Result.TrainEncoding = Encoding.UTF8;
+								}
+								break;
+							}
+						}
+						panelTrainEncoding.Enabled = true;
+						comboboxTrainEncoding.Tag = null;
+					}
+					textboxTrainDescription.Text = Program.CurrentHost.Plugins[i].Train.GetDescription(Result.TrainFolder, Result.TrainEncoding);
+					break;
 				}
 			}
 
@@ -1237,61 +1268,18 @@ namespace OpenBve
 				//No plugin capable of loading train found
 				return;
 			}
-			if (!UserSelectedEncoding) {
-				Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
-				comboboxTrainEncoding.Tag = new object();
-				comboboxTrainEncoding.SelectedIndex = 0;
-				comboboxTrainEncoding.Items[0] = $"{Result.TrainEncoding.EncodingName} - {Result.TrainEncoding.CodePage}";
 
-				comboboxTrainEncoding.Tag = null;
-				int i;
-				for (i = 0; i < Interface.CurrentOptions.TrainEncodings.Length; i++) {
-					if (Interface.CurrentOptions.TrainEncodings[i].Value == Result.TrainFolder) {
-						int j;
-						for (j = 1; j < EncodingCodepages.Length; j++) {
-							if (EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[i].Codepage) {
-								comboboxTrainEncoding.SelectedIndex = j;
-								Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
-								break;
-							}
-						}
-						if (j == EncodingCodepages.Length) {
-							comboboxTrainEncoding.SelectedIndex = 0;
-							Result.TrainEncoding = Encoding.UTF8;
-						}
-						break;
-					}
-				}
-				panelTrainEncoding.Enabled = true;
-				comboboxTrainEncoding.Tag = null;
-			}
+			if (trainImage != null)
 			{
-				// train image
-				string File = Path.CombineFile(Result.TrainFolder, "train.png");
-				if (!System.IO.File.Exists(File)) {
-					File = Path.CombineFile(Result.TrainFolder, "train.bmp");
-				}
+				pictureboxTrainImage.Image = trainImage;
+				pictureboxTrainImage.Enabled = true;
+			}
+			else
+			{
+				TryLoadImage(pictureboxTrainImage, "train_unknown.png");
+				pictureboxTrainImage.Enabled = false;
+			}
 
-				TryLoadImage(pictureboxTrainImage, System.IO.File.Exists(File) ? File : "train_unknown.png");
-			}
-			{
-				// train description
-				string File = Path.CombineFile(Result.TrainFolder, "train.txt");
-				if (System.IO.File.Exists(File)) {
-					try {
-						string trainText = System.IO.File.ReadAllText(File, Result.TrainEncoding);
-						trainText = trainText.ConvertNewlinesToCrLf();
-						textboxTrainDescription.Text = trainText;
-						textboxTrainEncodingPreview.Text = trainText;
-					} catch {
-						textboxTrainDescription.Text = System.IO.Path.GetFileName(Result.TrainFolder);
-						textboxTrainEncodingPreview.Text = "";
-					}
-				} else {
-					textboxTrainDescription.Text = System.IO.Path.GetFileName(Result.TrainFolder);
-					textboxTrainEncodingPreview.Text = "";
-				}
-			}
 			groupboxTrainDetails.Visible = true;
 			labelTrainEncoding.Enabled = true;
 			labelTrainEncodingPreview.Enabled = true;
@@ -1301,108 +1289,12 @@ namespace OpenBve
 
 		// show default train
 		private void ShowDefaultTrain() {
-			
-			if (string.IsNullOrEmpty(Result.RouteFile)) {
-				return;
-			}
-			if (string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
-				return;
-			}
-			
-			string Folder;
-			try {
-				Folder = System.IO.Path.GetDirectoryName(Result.RouteFile);
-				if (Interface.CurrentOptions.TrainName[0] == '$') {
-					Folder = Path.CombineDirectory(Folder, Interface.CurrentOptions.TrainName);
-					if (Directory.Exists(Folder)) {
-						string File = Path.CombineFile(Folder, "train.dat");
-						if (System.IO.File.Exists(File)) {
-							
-							Result.TrainFolder = Folder;
-							ShowTrain(false);
-							return;
-						}
-					}
-				}
-			} catch {
-				Folder = null;
-			}
-			bool recursionTest = false;
-			string lastFolder = null;
-			try
+			string trainFolder = Loading.GetDefaultTrainFolder(Result.RouteFile);
+			if (!string.IsNullOrEmpty(trainFolder))
 			{
-				while (true)
-				{
-					string TrainFolder = Path.CombineDirectory(Folder, "Train");
-					var OldFolder = Folder;
-					if (Directory.Exists(TrainFolder))
-					{
-						try
-						{
-							Folder = Path.CombineDirectory(TrainFolder, Interface.CurrentOptions.TrainName);
-						}
-						catch (Exception ex)
-						{
-							if (ex is ArgumentException)
-							{
-								break; // Invalid character in path causes infinite recursion
-							}
-
-							Folder = null;
-						}
-
-						if (Folder != null)
-						{
-							char c = System.IO.Path.DirectorySeparatorChar;
-							if (Directory.Exists(Folder))
-							{
-
-								string File = Path.CombineFile(Folder, "train.dat");
-								if (System.IO.File.Exists(File))
-								{
-									// train found
-									Result.TrainFolder = Folder;
-									ShowTrain(false);
-									return;
-								}
-
-								if (lastFolder == Folder || recursionTest)
-								{
-									break;
-								}
-
-								lastFolder = Folder;
-							}
-							else if (Folder.ToLowerInvariant().Contains(c + "railway" + c))
-							{
-								//If we have a misplaced Train folder in either our Railway\Route
-								//or Railway folders, this can cause the train search to fail
-								//Detect the presence of a railway folder and carry on traversing upwards if this is the case
-								recursionTest = true;
-								Folder = OldFolder;
-							}
-							else
-							{
-								break;
-							}
-						}
-					}
-
-					if (Folder == null) continue;
-					DirectoryInfo Info = Directory.GetParent(Folder);
-					if (Info != null)
-					{
-						Folder = Info.FullName;
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-			catch
-			{
-				//Something broke, but we don't care as it just shows an error below
+				Result.TrainFolder = trainFolder;
+				ShowTrain(false);
+				return;
 			}
 			// train not found
 			Result.TrainFolder = null;

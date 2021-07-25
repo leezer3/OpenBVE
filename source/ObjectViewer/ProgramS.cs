@@ -1,4 +1,4 @@
-﻿// ╔═════════════════════════════════════════════════════════════╗
+// ╔═════════════════════════════════════════════════════════════╗
 // ║ Program.cs for the Structure Viewer                         ║
 // ╠═════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.       ║
@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
+using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -266,7 +267,7 @@ namespace OpenBve {
 				    if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 				    {
 					    string currentTrainFolder = System.IO.Path.GetDirectoryName(Files[i]);
-
+					    bool canLoad = false;
 					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
@@ -276,24 +277,34 @@ namespace OpenBve {
 								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
+								canLoad = true;
 								break;
 						    }
 					    }
-						TrainManager.PlayerTrain.Initialize();
-					    foreach (var Car in TrainManager.PlayerTrain.Cars)
+
+					    if (canLoad)
 					    {
-						    double length = TrainManager.PlayerTrain.Cars[0].Length;
-						    Car.Move(-length);
-						    Car.Move(length);
+						    TrainManager.PlayerTrain.Initialize();
+						    foreach (var Car in TrainManager.PlayerTrain.Cars)
+						    {
+							    double length = TrainManager.PlayerTrain.Cars[0].Length;
+							    Car.Move(-length);
+							    Car.Move(length);
+						    }
+						    TrainManager.PlayerTrain.PlaceCars(0);
+						    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+						    {
+							    TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
+							    TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
+							    TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
+							    TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+							    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+						    }
 					    }
-					    TrainManager.PlayerTrain.PlaceCars(0);
-					    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					    else
 					    {
-							TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
-							TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
-							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+							//As we now attempt to load the train as a whole, the most likely outcome is that the train.dat file is MIA
+						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + Files[i] + ".");
 					    }
 				    }
 				    else

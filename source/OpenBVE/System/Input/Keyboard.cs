@@ -19,7 +19,7 @@ namespace OpenBve
 			if (Loading.Complete == true && e.Key == OpenTK.Input.Key.F4 && e.Alt == true)
 			{
 				// Catch standard ALT + F4 quit and push confirmation prompt
-				Game.Menu.PushMenu(Menu.MenuType.Quit);
+				Game.Menu.PushMenu(MenuType.Quit);
 				return;
 			}
 			BlockKeyRepeat = true;

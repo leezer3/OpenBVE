@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -105,7 +106,7 @@ namespace Train.OpenBve
 
 		public override bool CanLoadTrain(string path)
 		{
-			if (path == null)
+			if (string.IsNullOrEmpty(path))
 			{
 				return false;
 			}
@@ -182,7 +183,6 @@ namespace Train.OpenBve
 					 */
 				}
 			}
-
 			return false;
 		}
 
@@ -343,6 +343,55 @@ namespace Train.OpenBve
 			currentControls = CurrentControls;
 			IsLoading = false;
 			return true;
+	    }
+
+	    public override string GetDescription(string trainPath, Encoding encoding = null)
+	    {
+		    try
+		    {
+			    string descriptionFile = Path.CombineFile(trainPath, "train.txt");
+			    if (File.Exists(descriptionFile))
+			    {
+				    if (encoding == null)
+				    {
+					    return File.ReadAllText(descriptionFile);
+				    }
+				    return File.ReadAllText(descriptionFile, encoding);
+
+			    }
+		    }
+		    catch(Exception ex)
+		    {
+				currentHost.ReportProblem(ProblemType.UnexpectedException, "Unable to get the description for train " + trainPath + " due to the exeception: " + ex.Message);
+		    }
+		    return string.Empty;
+	    }
+
+	    public override Image GetImage(string trainPath)
+	    {
+		    try
+		    {
+			    string imageFile = Path.CombineFile(trainPath, "train.png");
+			    if (File.Exists(imageFile))
+			    {
+				    return Image.FromFile(imageFile);
+			    }
+			    imageFile  = Path.CombineFile(trainPath, "train.gif");
+			    if (File.Exists(imageFile))
+			    {
+				    return Image.FromFile(imageFile);
+			    }
+			    imageFile  = Path.CombineFile(trainPath, "train.bmp");
+			    if (File.Exists(imageFile))
+			    {
+				    return Image.FromFile(imageFile);
+			    }
+		    }
+		    catch (Exception ex)
+		    {
+			    currentHost.ReportProblem(ProblemType.UnexpectedException, "Unable to get the image for train " + trainPath + " due to the exeception: " + ex.Message);
+		    }
+		    return null;
 	    }
 
 

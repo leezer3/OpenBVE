@@ -896,15 +896,13 @@ namespace OpenBve.Graphics.Renderers
 					}
 				}
 				{ // text
-					System.Drawing.Size size = Element.Font.MeasureString(t);
-					float u = size.Width;
-					float v = size.Height;
-					double p = Math.Round(Element.TextAlignment.X < 0 ? x : Element.TextAlignment.X == 0 ? x + 0.5 * (w - u) : x + w - u);
-					double q = Math.Round(Element.TextAlignment.Y < 0 ? y : Element.TextAlignment.Y == 0 ? y + 0.5 * (h - v) : y + h - v);
+					Vector2 size = Element.Font.MeasureString(t);
+					double p = Math.Round(Element.TextAlignment.X < 0 ? x : Element.TextAlignment.X == 0 ? x + 0.5 * (w - size.X) : x + w - size.X);
+					double q = Math.Round(Element.TextAlignment.Y < 0 ? y : Element.TextAlignment.Y == 0 ? y + 0.5 * (h - size.Y) : y + h - size.Y);
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
 					Color128 c = Element.TextColor.CreateTextColor(sc, alpha);
-					Program.Renderer.OpenGlString.Draw(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, c, Element.TextShadow);
+					Program.Renderer.OpenGlString.Draw(Element.Font, t, new Vector2(p, q), TextAlignment.TopLeft, c, Element.TextShadow);
 				}
 				// overlay
 				if (Element.CenterMiddle.OverlayTexture != null)

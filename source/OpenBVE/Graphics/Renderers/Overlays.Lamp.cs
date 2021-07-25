@@ -1,6 +1,7 @@
 ﻿using System;
-using LibRender2.Texts;
+using LibRender2.Text;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
@@ -25,8 +26,8 @@ namespace OpenBve.Graphics.Renderers
         {
             internal readonly LampType Type;
             internal readonly string Text;
-            internal readonly float Width;
-            internal readonly float Height;
+            internal readonly double Width;
+            internal readonly double Height;
             internal Lamp(LampType Type)
             {
                 this.Type = Type;
@@ -90,16 +91,16 @@ namespace OpenBve.Graphics.Renderers
                         break;
                     }
                 }
-                System.Drawing.Size size = font.MeasureString(this.Text);
-                this.Width = size.Width;
-                this.Height = size.Height;
+                Vector2 size = font.MeasureString(this.Text);
+                this.Width = size.X;
+                this.Height = size.Y;
             }
         }
 
         private class LampCollection
         {
 	        internal readonly Lamp[] Lamps;
-	        internal readonly float Width;
+	        internal readonly double Width;
 
 	        /// <summary>Initialises the ATS lamps for the specified train using one of the default safety systems</summary>
 	        internal LampCollection(TrainBase Train)

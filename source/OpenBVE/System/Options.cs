@@ -179,6 +179,7 @@ namespace OpenBve
 				this.CursorHideDelay = 10;
 				this.Accessibility = false;
 				this.ScreenReaderAvailable = false;
+				this.ForceForwardsCompatibleContext = false;
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -356,6 +357,9 @@ namespace OpenBve
 											break;
 										case "isusenewrenderer":
 											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+										case "forwardscompatiblecontext":
+											Interface.CurrentOptions.ForceForwardsCompatibleContext = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 									} break;
 								case "quality":
@@ -805,6 +809,7 @@ namespace OpenBve
 			Builder.AppendLine("loadInAdvance = " + (CurrentOptions.LoadInAdvance ? "true" : "false"));
 			Builder.AppendLine("unloadtextures = " + (CurrentOptions.UnloadUnusedTextures ? "true" : "false"));
 			Builder.AppendLine("isUseNewRenderer = " + (CurrentOptions.IsUseNewRenderer ? "true" : "false"));
+			Builder.AppendLine("forwardsCompatibleContext = " + (CurrentOptions.ForceForwardsCompatibleContext ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[quality]");
 			{
