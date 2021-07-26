@@ -335,6 +335,10 @@ namespace Train.OpenBve
 										if (a < 0.0) {
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "CoefficientOfStaticFriction is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
+											if (Plugin.CurrentOptions.EnableBveTsHacks && (a > 0.1 || a < 1.0))
+											{
+												break;
+											}
 											CoefficientOfStaticFriction = a;
 										} break;
 									case 3:
