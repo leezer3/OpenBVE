@@ -92,6 +92,7 @@ namespace ObjectViewer.Graphics
 		// render scene
 		internal void RenderScene()
 		{
+			lastObjectState = null;
 			if (!AvailableNewRenderer)
 			{
 				CurrentShader.Deactivate();

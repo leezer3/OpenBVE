@@ -968,8 +968,7 @@ namespace LibRender2
 
 
 		// Cached object state and matricies for shader drawing
-		/// <summary>The last object state drawn</summary>
-		public ObjectState LastObjectState;
+		protected ObjectState lastObjectState;
 		private Matrix4D lastModelMatrix;
 		private Matrix4D lastModelViewMatrix;
 		private bool sendToShader;
@@ -1003,9 +1002,9 @@ namespace LibRender2
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
-			if (State != LastObjectState && !sendToShader)
+			if (State != lastObjectState && !sendToShader)
 			{
-				LastObjectState = State;
+				lastObjectState = State;
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
 				sendToShader = true;

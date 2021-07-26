@@ -46,12 +46,6 @@ namespace LibRender2.Cameras
 			{
 				absolutePosition = value;
 				TranslationMatrix = Matrix4D.CreateTranslation(-value.X, -value.Y, value.Z);
-				/*
-				 * Reset the last drawn object state in the renderer
-				 * Only really important for Object Viewer, as we may have a single state present, but move the camera
-				 * hence will get glitchy in this case https://github.com/leezer3/OpenBVE/issues/676
-				 */
-				Renderer.LastObjectState = null;
 			}
 		}
 		/// <summary>The absolute in-world camera Direction vector</summary>
