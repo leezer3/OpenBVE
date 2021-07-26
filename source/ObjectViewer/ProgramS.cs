@@ -297,7 +297,9 @@ namespace OpenBve {
 							    TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
 							    TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
 							    TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
+							    TrainManager.PlayerTrain.Cars[j].FrontBogie.UpdateTopplingCantAndSpring();
 							    TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+							    TrainManager.PlayerTrain.Cars[j].RearBogie.UpdateTopplingCantAndSpring();
 							    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 						    }
 					    }
