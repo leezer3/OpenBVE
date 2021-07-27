@@ -44,6 +44,8 @@
 		/// <summary>A train directory</summary>
 		TrainDirectory,
 		/// <summary>Shows the package install menu</summary>
-		PackageInstall
+		PackageInstall,
+		/// <summary>Selects a file</summary>
+		File,
 	}
 }

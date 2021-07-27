@@ -50,7 +50,7 @@ namespace LibRender2.Primitives
 
 		private List<string> WrappedLines(int width)
 		{
-			string[] firstSplit = Text.Split(new[] {"\r\n"}, StringSplitOptions.None);
+			string[] firstSplit = Text.Split(new[] {"\r\n", @"\r\n"}, StringSplitOptions.None);
 			List<string> wrappedLines = new List<string>();
 			string currentLine = string.Empty;
 			for(int j = 0; j < firstSplit.Length; j++)

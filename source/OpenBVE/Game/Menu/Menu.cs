@@ -12,6 +12,7 @@ using LibRender2.Text;
 using OpenBve.Input;
 using OpenBveApi;
 using OpenBveApi.Input;
+using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using OpenTK;
 using TrainManager;
@@ -437,21 +438,27 @@ namespace OpenBve
 				return;
 			if (menu.Selection == int.MaxValue)
 			{
-				if (RoutefileState == RouteState.Error)
-					return;
-				if (menu.Type == MenuType.TrainDefault || menu.Type == MenuType.TrainList)
+				switch (menu.Type)
 				{
-					Reset();
-					//Launch the game!
-					Loading.Complete = false;
-					Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
-					OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
-					// ReSharper disable once PossibleNullReferenceException
-					g.LoadingScreenLoop();
-					Program.Renderer.CurrentInterface = InterfaceType.Normal;
-					return;
+					case MenuType.RouteList:
+						if (RoutefileState == RouteState.Error)
+							return;
+						Instance.PushMenu(MenuType.TrainDefault);
+						return;
+					case MenuType.TrainDefault:
+					case MenuType.TrainList:
+						Reset();
+						//Launch the game!
+						Loading.Complete = false;
+						Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
+						OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+						// ReSharper disable once PossibleNullReferenceException
+						g.LoadingScreenLoop();
+						Program.Renderer.CurrentInterface = InterfaceType.Normal;
+						return;
+					case MenuType.PackageInstall:
+						break;
 				}
-				Instance.PushMenu(MenuType.TrainDefault);
 				return;
 
 			}
@@ -502,9 +509,18 @@ namespace OpenBve
 								break;
 							// route menu commands
 							case MenuTag.PackageInstall:
+								currentOperation = PackageOperation.Installing;
+								packagePreview = true;
 								Menu.instance.PushMenu(MenuType.PackageInstall);
 								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
+								break;
+							case MenuTag.File:
+								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
+								if (!packageWorkerThread.IsBusy)
+								{
+									packageWorkerThread.RunWorkerAsync();
+								}
 								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
@@ -536,12 +552,11 @@ namespace OpenBve
 								break;
 							case MenuTag.RouteFile:
 								RoutefileState = RouteState.Loading;
-								RouteFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
+								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
 								if (!routeWorkerThread.IsBusy)
 								{
 									routeWorkerThread.RunWorkerAsync();
 								}
-								
 								break;
 							case MenuTag.TrainDirectory:
 								for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -600,7 +615,7 @@ namespace OpenBve
 									Reset();
 									//Launch the game!
 									Loading.Complete = false;
-									Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
+									Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
 									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
 									// ReSharper disable once PossibleNullReferenceException
 									g.LoadingScreenLoop();

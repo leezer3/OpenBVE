@@ -78,10 +78,13 @@ namespace OpenBve
 					case MenuType.GameStart:          // top level menu
 						if (routeWorkerThread == null)
 						{
-							//Create the worker thread for route details processing on first launch of main menu
+							//Create the worker threads on first launch of main menu
 							routeWorkerThread = new BackgroundWorker();
 							routeWorkerThread.DoWork += routeWorkerThread_doWork;
 							routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
+							packageWorkerThread = new BackgroundWorker();
+							packageWorkerThread.DoWork += packageWorkerThread_doWork;
+							packageWorkerThread.RunWorkerCompleted += packageWorkerThread_completed;
 							//Load texture
 							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 						}
@@ -160,7 +163,7 @@ namespace OpenBve
 							{
 								continue;
 							}
-							Items[totalEntries] = new MenuCommand(fileName, MenuTag.RouteFile, 0);
+							Items[totalEntries] = new MenuCommand(fileName, MenuTag.File, 0);
 							string ext = System.IO.Path.GetExtension(fileName);
 							if (!iconCache.ContainsKey(ext))
 							{
@@ -493,7 +496,7 @@ namespace OpenBve
 						Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_assign"), MenuTag.None, 0);
 						break;
 					case MenuType.TrainDefault:
-						Interface.CurrentOptions.TrainFolder = Loading.GetDefaultTrainFolder(RouteFile);
+						Interface.CurrentOptions.TrainFolder = Loading.GetDefaultTrainFolder(currentFile);
 						bool canLoad = false;
 						for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 						{
