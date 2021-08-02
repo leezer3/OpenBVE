@@ -84,7 +84,7 @@ namespace OpenBve
 						MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(textBoxProblemDescription.Text));
 						zipWriter.Write("Problem Description.txt", ms);
 						//Finally add the package database to the archive- Again, this isn't necessarily helpful, but we may well want to see it
-						var packageDatabase = new DirectoryInfo(formMain.currentDatabaseFolder);
+						var packageDatabase = new DirectoryInfo(Program.FileSystem.PackageDatabaseFolder);
 						FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories);
 						foreach (var currentFile in databaseFiles)
 						{

@@ -7,6 +7,7 @@ using System.Text;
 using LibRender2.Primitives;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Packages;
 using OpenBveApi.Textures;
@@ -29,6 +30,7 @@ namespace OpenBve
 		private static Package currentPackage;
 		private static PackageOperation currentOperation;
 		private static bool packagePreview;
+		private static string installedFiles;
 
 		private static void packageWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{
@@ -51,21 +53,6 @@ namespace OpenBve
 							// Ignored
 						}
 						
-					}
-					else
-					{
-						if (currentPackage != null)
-						{
-							switch (currentPackage.PackageType)
-							{
-								case PackageType.Route:
-									break;
-								case PackageType.Train:
-									break;
-								case PackageType.Other:
-									break;
-							}
-						}
 					}
 					break;
 				case PackageOperation.Uninstalling:
@@ -211,5 +198,47 @@ namespace OpenBve
 				currentFile = null;
 			}
 		}
+
+		private static void OnWorkerProgressChanged(object sender, ProgressReport e)
+		{
+			routeDescriptionBox.Text = "Processing:" + Environment.NewLine + e.Progress + "%" + Environment.NewLine + Environment.NewLine + e.CurrentFile;
+		}
+
+		private static void OnWorkerReportsProblem(object sender, ProblemReport e)
+		{
+			routeDescriptionBox.Text = Translations.GetInterfaceString("packages_creation_failure_error") + Environment.NewLine;
+			if (e.Exception is UnauthorizedAccessException && currentOperation != PackageOperation.Creating)
+			{
+				//User attempted to install in a directory which requires UAC access
+				routeDescriptionBox.Text += e.Exception.Message + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_checkaccess");
+				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+				{
+					routeDescriptionBox.Text += Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_badlocation");
+				}
+			}
+			else
+			{
+				//Non-localised string as this is a specific error message
+				routeDescriptionBox.Text += e.Exception + @"\r\n \r\n encountered whilst processing the following file: \r\n\r\n" +
+				                             e.CurrentFile + @" at " + e.Progress + @"% completion.";
+				//Create crash dump file
+				CrashHandler.LogCrash(e.Exception + Environment.StackTrace);
+			}
+		}
+
+		private static void OnPackageOperationCompleted(object sender, CompletionReport e)
+		{
+			switch (e.Operation)
+			{
+				case PackageOperation.Installing:
+					routeDescriptionBox.Text = Translations.GetInterfaceString("packages_install_success") + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("packages_install_success_files") + Environment.NewLine + installedFiles;
+					currentPackage = null;
+					currentFile = string.Empty;
+					installedFiles = string.Empty;
+					break;
+			}
+		}
+
+		
 	}
 }

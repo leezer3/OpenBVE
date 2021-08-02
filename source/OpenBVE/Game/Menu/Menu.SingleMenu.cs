@@ -7,6 +7,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using TrainManager;
 using Path = OpenBveApi.Path;
@@ -85,6 +86,9 @@ namespace OpenBve
 							packageWorkerThread = new BackgroundWorker();
 							packageWorkerThread.DoWork += packageWorkerThread_doWork;
 							packageWorkerThread.RunWorkerCompleted += packageWorkerThread_completed;
+							Manipulation.ProgressChanged += OnWorkerProgressChanged;
+							Manipulation.ProblemReport += OnWorkerReportsProblem;
+							Manipulation.OperationCompleted += OnPackageOperationCompleted;
 							//Load texture
 							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 						}

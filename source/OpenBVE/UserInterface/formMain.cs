@@ -1392,7 +1392,7 @@ namespace OpenBve {
 			{
 				ResetInstallerPanels();
 				string errorMessage;
-				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile, out errorMessage))
+				if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
 				{
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				}

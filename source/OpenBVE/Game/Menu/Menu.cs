@@ -457,6 +457,24 @@ namespace OpenBve
 						Program.Renderer.CurrentInterface = InterfaceType.Normal;
 						return;
 					case MenuType.PackageInstall:
+						if (currentPackage != null)
+						{
+							switch (currentPackage.PackageType)
+							{
+								case PackageType.Route:
+									installedFiles = string.Empty;
+									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.RouteInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
+									break;
+								case PackageType.Train:
+									installedFiles = string.Empty;
+									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.TrainInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
+									break;
+								case PackageType.Other:
+									installedFiles = string.Empty;
+									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.OtherInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
+									break;
+							}
+						}
 						break;
 				}
 				return;
@@ -842,6 +860,20 @@ namespace OpenBve
 				case MenuType.PackageInstall:
 					routePictureBox.Draw();
 					routeDescriptionBox.Draw();
+					if (currentPackage != null)
+					{
+						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+						}
+						else
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+						}
+					}
 					break;
 			}
 			
