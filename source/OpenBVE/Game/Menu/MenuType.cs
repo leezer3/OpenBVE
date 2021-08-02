@@ -25,6 +25,8 @@
 		TrainDefault,
 		/// <summary>Displays a list of train folders</summary>
 		TrainList,
+		/// <summary>Displays the packages sub-menu</summary>
+		Packages,
 		/// <summary>Displays the package installation dialog</summary>
 		PackageInstall
 	}

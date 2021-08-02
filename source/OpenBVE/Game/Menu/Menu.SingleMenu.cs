@@ -99,7 +99,7 @@ namespace OpenBve
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
 							Items[1] = new MenuCommand(Translations.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
-							Items[2] = new MenuCommand(Translations.GetInterfaceString("packages_title"), MenuTag.PackageInstall, 0);
+							Items[2] = new MenuCommand(Translations.GetInterfaceString("packages_title"), MenuTag.Packages, 0);
 							Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
 						}
 						else
@@ -107,6 +107,14 @@ namespace OpenBve
 							Array.Resize(ref Items, Items.Length - 3);
 						}
 						SearchDirectory = Program.FileSystem.InitialRouteFolder;
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.Packages:
+						Items = new MenuEntry[4];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_title"));
+						Items[1] = new MenuCommand(Translations.GetInterfaceString("packages_install_header"), MenuTag.PackageInstall, 0);
+						Items[2] = new MenuCommand(Translations.GetInterfaceString("packages_uninstall_button"), MenuTag.PackageUninstall, 0);
+						Items[3] = new MenuCommand(Translations.GetInterfaceString("packages_button_cancel"), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.PackageInstall:
@@ -563,7 +571,7 @@ namespace OpenBve
 						}
 						Width = MaxWidth;
 					}
-					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart) && size.X > ItemWidth)
+					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart && menuType != MenuType.Packages) && size.X > ItemWidth)
 						ItemWidth = size.X;
 				}
 				Height = Items.Length * Game.Menu.LineHeight;

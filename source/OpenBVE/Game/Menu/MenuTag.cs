@@ -43,8 +43,12 @@
 		No,
 		/// <summary>A train directory</summary>
 		TrainDirectory,
+		/// <summary>Shows the packages sub-menu</summary>
+		Packages,
 		/// <summary>Shows the package install menu</summary>
 		PackageInstall,
+		/// <summary>Shows the package uninstall menu</summary>
+		PackageUninstall,
 		/// <summary>Selects a file</summary>
 		File,
 	}
