@@ -262,7 +262,12 @@ namespace DenshaDeGoInput
 			}
 			else
 			{
+				// The active controller is not connected, release all buttons
 				IsControllerConnected = false;
+				for (int i = 0; i < ControllerButtons.Length; i++)
+				{
+					ControllerButtons[i] = ButtonState.Released;
+				}
 			}
 		}
 
