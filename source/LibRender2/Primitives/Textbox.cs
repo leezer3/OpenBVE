@@ -47,6 +47,8 @@ namespace LibRender2.Primitives
 		public Vector2 Size;
 		/// <summary>Whether the textbox is currently selected by the mouse</summary>
 		public bool CurrentlySelected;
+		/// <summary>Whether the textbox can scroll</summary>
+		public bool CanScroll;
 
 		private List<string> WrappedLines(int width)
 		{
@@ -126,6 +128,7 @@ namespace LibRender2.Primitives
 			{
 				//DRAW SINGLE LINE
 				renderer.OpenGlString.Draw(myFont, Text, new Vector2(Location.X + Border, Location.Y + Border), TextAlignment.TopLeft, myFontColor);
+				CanScroll = false;
 			}
 			else
 			{
@@ -134,6 +137,7 @@ namespace LibRender2.Primitives
 				{
 					topLine = Math.Max(0, splitString.Count - maxFittingLines);
 				}
+				CanScroll = maxFittingLines < splitString.Count;
 				//DRAW SPLIT LINES
 				int currentLine = topLine;
 				for (int i = 0; i < Math.Min(maxFittingLines, splitString.Count); i++)

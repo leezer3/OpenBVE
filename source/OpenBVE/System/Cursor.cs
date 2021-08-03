@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -98,6 +99,7 @@ namespace OpenBve
 		internal static MouseCursor CurrentCursor;
 		internal static MouseCursor CurrentCursorPlus;
 		internal static MouseCursor CurrentCursorMinus;
+		internal static MouseCursor ScrollCursor;
 
 		internal static void LoadCursorImages(string CursorFolder)
 		{
@@ -116,8 +118,19 @@ namespace OpenBve
 				{
 					using (var Fs= new FileStream(File, FileMode.Open, FileAccess.Read))
 					{
-						Bitmap Image = new Bitmap(Fs);
-						CursorList.Add(new Cursor(Path.GetFileName(File), Image));
+						if (File.EndsWith("scroll.png", StringComparison.InvariantCultureIgnoreCase))
+						{
+							Bitmap Image = new Bitmap(Fs);
+							Cursor c = new Cursor(Path.GetFileName(File), Image);
+							ScrollCursor = c.MyCursor;
+						}
+						else
+						{
+							Bitmap Image = new Bitmap(Fs);
+							CursorList.Add(new Cursor(Path.GetFileName(File), Image));	
+						}
+						
+						
 					}
 				}
 				catch

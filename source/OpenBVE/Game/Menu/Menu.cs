@@ -350,10 +350,12 @@ namespace OpenBve
 				if (x > routeDescriptionBox.Location.X && x < routeDescriptionBox.Location.X + routeDescriptionBox.Size.X && y > routeDescriptionBox.Location.Y && y < routeDescriptionBox.Location.Y + routeDescriptionBox.Size.Y)
 				{
 					routeDescriptionBox.CurrentlySelected = true;
+					Program.currentGameWindow.Cursor = routeDescriptionBox.CanScroll ? Cursors.ScrollCursor : MouseCursor.Default;
 				}
 				else
 				{
 					routeDescriptionBox.CurrentlySelected = false;
+					Program.currentGameWindow.Cursor = MouseCursor.Default;
 				}
 				//HACK: Use this to trigger our menu start button!
 				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
@@ -686,7 +688,7 @@ namespace OpenBve
 
 			
 			double itemLeft, itemX;
-			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages)
+			if (menu.Align == TextAlignment.TopLeft)
 			{
 				itemLeft = 0;
 				itemX = 16;
@@ -904,18 +906,20 @@ namespace OpenBve
 				 */
 				menu.Items[i].DisplayLength = menu.Items[i].DisplayLength;
 			}
-			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages)
+
+			// HORIZONTAL PLACEMENT
+			switch (menu.Align)
 			{
-				// Left aligned, used for route browser
-				menuXmin = 0;
+				case TextAlignment.TopLeft:
+					// Left aligned
+					menuXmin = 0;
+					break;
+				default:
+					// Centered in window
+					menuXmin = (Program.Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
+					break;
 			}
 
-			else
-			{
-				// HORIZONTAL PLACEMENT: centre the menu in the main window
-				menuXmin = (Program.Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
-			}
-			
 			menuXmax = menuXmin + menu.Width;               // menu right edge (border excluded)
 															// VERTICAL PLACEMENT: centre the menu in the main window
 			menuYmin = (Program.Renderer.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
