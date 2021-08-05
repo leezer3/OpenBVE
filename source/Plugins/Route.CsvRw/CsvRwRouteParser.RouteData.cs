@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using RouteManager2.SignalManager;
 
@@ -57,6 +58,8 @@ namespace CsvRwRouteParser
 							Blocks[i].SnowIntensity = Blocks[i - 1].SnowIntensity;
 							Blocks[i].RainIntensity = Blocks[i - 1].RainIntensity;
 							Blocks[i].WeatherObject = Blocks[i - 1].WeatherObject;
+							Blocks[i].LightDefinition = Blocks[i - 1].LightDefinition;
+							Blocks[i].DynamicLightDefinition = Blocks[i -1].DynamicLightDefinition;
 						}
 						Blocks[i].RailType = new int[Blocks[i - 1].RailType.Length];
 						if (!PreviewOnly)

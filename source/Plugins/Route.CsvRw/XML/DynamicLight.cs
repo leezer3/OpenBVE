@@ -11,10 +11,10 @@ namespace CsvRwRouteParser
 	class DynamicLightParser
 	{
 		//Parses an XML dynamic lighting definition
-		public static bool ReadLightingXML(string fileName)
+		public static bool ReadLightingXML(string fileName, out LightDefinition[] LightDefinitions)
 		{
 			//Prep
-			Plugin.CurrentRoute.LightDefinitions = new LightDefinition[0];
+			LightDefinitions = new LightDefinition[0];
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -159,10 +159,10 @@ namespace CsvRwRouteParser
 							{
 								//HACK: No way to break out of the first loop and continue with the second, so we've got to use a variable
 								bool Break = false;
-								int l = Plugin.CurrentRoute.LightDefinitions.Length;
+								int l = LightDefinitions.Length;
 								for (int i = 0; i < l; i++)
 								{
-									if (Plugin.CurrentRoute.LightDefinitions[i].Time == currentLight.Time)
+									if (LightDefinitions[i].Time == currentLight.Time)
 									{
 										Break = true;
 										if (ts == null)
@@ -184,14 +184,14 @@ namespace CsvRwRouteParser
 								int t = 0;
 								if (l == 1)
 								{
-									t = currentLight.Time > Plugin.CurrentRoute.LightDefinitions[0].Time ? 1 : 0;
+									t = currentLight.Time > LightDefinitions[0].Time ? 1 : 0;
 								}
 								else if (l > 1)
 								{
 									for (int i = 1; i < l; i++)
 									{
 										t = i + 1;
-										if (currentLight.Time > Plugin.CurrentRoute.LightDefinitions[i - 1].Time && currentLight.Time < Plugin.CurrentRoute.LightDefinitions[i].Time)
+										if (currentLight.Time > LightDefinitions[i - 1].Time && currentLight.Time < LightDefinitions[i].Time)
 										{
 											break;
 										}
@@ -199,20 +199,20 @@ namespace CsvRwRouteParser
 								}
 								//Resize array
 								defined = true;
-								Array.Resize(ref Plugin.CurrentRoute.LightDefinitions, l + 1);
+								Array.Resize(ref LightDefinitions, l + 1);
 								if (t == l)
 								{
 									//Straight insert at the end of the array
-									Plugin.CurrentRoute.LightDefinitions[l] = currentLight;
+									LightDefinitions[l] = currentLight;
 								}
 								else
 								{
 									for (int u = t; u < l; u++)
 									{
 										//Otherwise, shift all elements to compensate
-										Plugin.CurrentRoute.LightDefinitions[u + 1] = Plugin.CurrentRoute.LightDefinitions[u];
+										LightDefinitions[u + 1] = LightDefinitions[u];
 									}
-									Plugin.CurrentRoute.LightDefinitions[t] = currentLight;
+									LightDefinitions[t] = currentLight;
 								}
 								
 							}

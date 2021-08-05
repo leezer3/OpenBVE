@@ -2,7 +2,7 @@
 
 namespace RouteManager2.Events
 {
-	/// <summary>Called when the displayed backgrond image or object should be changed</summary>
+	/// <summary>Called when the displayed background image or object should be changed</summary>
 	public class BackgroundChangeEvent : GeneralEvent
 	{
 		private readonly CurrentRoute currentRoute;

@@ -89,6 +89,7 @@
     <Compile Include="Structures\Trains\Brightness.cs" />
     <Compile Include="Structures\Trains\DestinationEvent.cs" />
     <Compile Include="Structures\Trains\HornBlow.cs" />
+    <Compile Include="Structures\Trains\LightingChange.cs" />
     <Compile Include="Structures\Trains\Limit.cs" />
     <Compile Include="Structures\Trains\Marker.cs" />
     <Compile Include="Structures\Trains\StopRequest.cs" />

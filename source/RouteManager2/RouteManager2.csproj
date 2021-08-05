@@ -50,6 +50,7 @@
     <Compile Include="Events\DestinationChange.cs" />
     <Compile Include="Events\FogChange.cs" />
     <Compile Include="Events\HornBlow.cs" />
+    <Compile Include="Events\LightingChange.cs" />
     <Compile Include="Events\MarkerEnd.cs" />
     <Compile Include="Events\MarkerStart.cs" />
     <Compile Include="Events\PassAlarm.cs" />
