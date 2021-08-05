@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using LibRender2.Text;
 using OpenBveApi.Colors;
@@ -16,6 +16,8 @@ namespace LibRender2.Primitives
 		private readonly OpenGlFont myFont;
 		/// <summary>The font color</summary>
 		private readonly Color128 myFontColor;
+		/// <summary>The color of the scrollbar handle</summary>
+		private readonly Color128 myScrollbarColor;
 		/// <summary>The string contents of the textbox</summary>
 		public string Text
 		{
@@ -49,6 +51,18 @@ namespace LibRender2.Primitives
 		public bool CurrentlySelected;
 		/// <summary>Whether the textbox can scroll</summary>
 		public bool CanScroll;
+		/// <summary>Used for internal size calculations</summary>
+		private Vector2 internalSize
+		{
+			get
+			{
+				if (CanScroll)
+				{
+					return new Vector2(Size.X, Size.Y - 12);
+				}
+				return Size;
+			}
+		}
 
 		private List<string> WrappedLines(int width)
 		{
@@ -104,6 +118,7 @@ namespace LibRender2.Primitives
 			topLine = 0;
 			BackgroundTexture = null;
 			BackgroundColor = backgroundColor;
+			myScrollbarColor = new Color128(1.0f, 0.69f, 0.0f, 1.0f);
 		}
 
 		public void VerticalScroll(int numberOfLines)
@@ -123,7 +138,7 @@ namespace LibRender2.Primitives
 				return;
 			}
 
-			List<string> splitString = WrappedLines((int)Size.Y - Border * 2);
+			List<string> splitString = WrappedLines((int)internalSize.Y - Border * 2);
 			if (splitString.Count == 1)
 			{
 				//DRAW SINGLE LINE
@@ -132,20 +147,31 @@ namespace LibRender2.Primitives
 			}
 			else
 			{
-				int maxFittingLines = (int)(Size.Y / myFont.MeasureString(Text).Y);
+				int maxFittingLines = (int)(internalSize.Y / myFont.MeasureString(Text).Y);
 				if (topLine + maxFittingLines > splitString.Count)
 				{
 					topLine = Math.Max(0, splitString.Count - maxFittingLines);
 				}
 				CanScroll = maxFittingLines < splitString.Count;
+				if (CanScroll)
+				{
+					renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 12, Location.Y + 2), new Vector2(8, Size.Y - 4), Color128.Grey); //Backing rectangle
+				}
 				//DRAW SPLIT LINES
 				int currentLine = topLine;
-				for (int i = 0; i < Math.Min(maxFittingLines, splitString.Count); i++)
+				int bottomLine = Math.Min(maxFittingLines, splitString.Count);
+				for (int i = 0; i < bottomLine; i++)
 				{
 					renderer.OpenGlString.Draw(myFont, splitString[currentLine], new Vector2(Location.X + Border, Location.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, myFontColor);
 					currentLine++;
 				}
-				
+
+				if (CanScroll)
+				{
+					double percentageScroll = topLine / (double)(splitString.Count - maxFittingLines);
+					renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 13, Location.Y + (Size.Y - 14) * percentageScroll), new Vector2(10, 10), myScrollbarColor);
+				}
+
 			}
 		}
 
