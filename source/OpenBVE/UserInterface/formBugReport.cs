@@ -20,7 +20,10 @@ namespace OpenBve
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
 				this.Icon = new Icon(File);
 			}
-			catch { }
+			catch
+			{
+				// Ignored- Just an icon
+			}
 		}
 
 		private void buttonViewLog_Click(object sender, System.EventArgs e)

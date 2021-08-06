@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Runtime;
 
@@ -37,7 +37,7 @@ namespace Plugin {
 		private class Pattern {
 			// --- members ---
 			/// <summary>The underlying ATS-P device.</summary>
-			internal AtsP Device;
+			private readonly AtsP Device;
 			/// <summary>The position of the point of danger, or System.Double.MinValue, or System.Double.MaxValue.</summary>
 			internal double Position;
 			/// <summary>The warning pattern, or System.Double.MaxValue.</summary>
@@ -142,9 +142,9 @@ namespace Plugin {
 		private struct CompatibilityLimit {
 			// --- members ---
 			/// <summary>The speed limit.</summary>
-			internal double Limit;
+			internal readonly double Limit;
 			/// <summary>The track position.</summary>
-			internal double Location;
+			internal readonly double Location;
 			// --- constructors ---
 			/// <summary>Creates a new compatibility limit.</summary>
 			/// <param name="limit">The speed limit.</param>
@@ -159,7 +159,7 @@ namespace Plugin {
 		// --- members ---
 		
 		/// <summary>The underlying train.</summary>
-		private Train Train;
+		private readonly Train Train;
 		
 		/// <summary>The current state of the system.</summary>
 		internal States State;
@@ -561,7 +561,7 @@ namespace Plugin {
 					if (beacon.Optional == 0) {
 						this.CompatibilityPermanentPattern.Clear();
 					} else {
-						double limit = (double)beacon.Optional / 3.6;
+						double limit = beacon.Optional / 3.6;
 						this.CompatibilityPermanentPattern.SetLimit(limit, double.MinValue);
 					}
 					break;

@@ -11,7 +11,7 @@ using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
-    class RouteViewer : OpenTK.GameWindow
+    class RouteViewer : GameWindow
     {
         //Deliberately specify the default constructor with various overrides
         public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string openbve, GameWindowFlags @default): base (width,height,currentGraphicsMode,openbve,@default)
@@ -23,6 +23,7 @@ namespace OpenBve
             }
             catch
             {
+				// Ignored- Just an icon
             }
         }
 
@@ -55,11 +56,11 @@ namespace OpenBve
             double TimeElapsed = CPreciseTimer.GetElapsedTime();
             if (Program.CpuReducedMode)
             {
-                System.Threading.Thread.Sleep(250);
+                Thread.Sleep(250);
             }
             else
             {
-                System.Threading.Thread.Sleep(1);
+                Thread.Sleep(1);
                 if (ReducedModeEnteringTime == 0)
                 {
                     ReducedModeEnteringTime = 2500;
@@ -133,7 +134,7 @@ namespace OpenBve
 			// Minor hack:
 			// If we are currently loading, catch the first close event, and terminate the loader threads
 			// before actually closing the game-window.
-			if (Loading.Cancel == true)
+			if (Loading.Cancel)
 			{
 				return;
 			}

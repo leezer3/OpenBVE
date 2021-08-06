@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -104,7 +103,7 @@ namespace OpenBve {
 				this.Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				this.CenterToScreen();
 			}
-			labelVersion.Text = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
+			labelVersion.Text = @"v" + Application.ProductVersion + Program.VersionSuffix;
 			if (IntPtr.Size != 4)
 			{
 				labelVersion.Text += @" 64-bit";
@@ -113,7 +112,7 @@ namespace OpenBve {
 			// form icon
 			try
 			{
-				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
+				string File = Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
 				this.Icon = new Icon(File);
 			}
 			catch { }
@@ -141,7 +140,7 @@ namespace OpenBve {
 			Interface.LoadLogs();
 			{
 				int Tab = 0;
-				string[] Args = System.Environment.GetCommandLineArgs();
+				string[] Args = Environment.GetCommandLineArgs();
 				for (int i = 1; i < Args.Length; i++)
 				{
 					switch (Args[i].ToLowerInvariant())
@@ -188,7 +187,7 @@ namespace OpenBve {
 			 * TODO: Integrate into packages
 			 */
 	#pragma warning disable 0219
-			string[] flags = new string[] { };
+			string[] flags = { };
 			try
 			{
 				flags = System.IO.Directory.GetFiles(flagsFolder);
@@ -215,6 +214,10 @@ namespace OpenBve {
 			if (MechanikRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
+				if (Interface.CurrentOptions.RecentlyUsedRoutes[i] == null)
+				{
+					continue;
+				}
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
 				string extension = System.IO.Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
 				switch (extension)
@@ -298,7 +301,7 @@ namespace OpenBve {
 						EncodingDescriptions[i + 1] = Info[i].Name;
 					}
 				}
-				Array.Sort<string, int>(EncodingDescriptions, EncodingCodepages, 1, Info.Length);
+				Array.Sort(EncodingDescriptions, EncodingCodepages, 1, Info.Length);
 				comboboxRouteEncoding.Items.Clear();
 				comboboxTrainEncoding.Items.Clear();
 				for (int i = 0; i < Info.Length + 1; i++)
@@ -321,7 +324,7 @@ namespace OpenBve {
 					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
-					int index = (int)Math.Floor(ratio * (double)Translations.RatingsCount);
+					int index = (int)Math.Floor(ratio * Translations.RatingsCount);
 					if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
 					labelReviewRouteValue.Text = Game.LogRouteName;
 					labelReviewTrainValue.Text = Game.LogTrainName;
@@ -715,7 +718,7 @@ namespace OpenBve {
 				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 				if (ratio < 0.0) ratio = 0.0;
 				if (ratio > 1.0) ratio = 1.0;
-				int index = (int)Math.Floor(ratio * (double)Translations.RatingsCount);
+				int index = (int)Math.Floor(ratio * Translations.RatingsCount);
 				if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
 				if (Game.CurrentScore.Maximum == 0)
 				{
@@ -1120,7 +1123,7 @@ namespace OpenBve {
 					if (Info.Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
 						continue;
 					}
-					string PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
+					string PluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
 					if (System.IO.File.Exists(PluginPath))
 					{
 						a[n] = Info.FileName;
@@ -1141,6 +1144,7 @@ namespace OpenBve {
 			Program.Sounds.Deinitialize();
 			DisposePreviewRouteThread();
 			{
+				// ReSharper disable once NotAccessedVariable
 				string error;
 				Program.CurrentHost.UnloadPlugins(out error);
 			}
@@ -1256,7 +1260,7 @@ namespace OpenBve {
 			if (this.WindowState != FormWindowState.Maximized)
 			{
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
-				if ((double)this.Width >= 0.95 * (double)s.WorkingArea.Width | (double)this.Height >= 0.95 * (double)s.WorkingArea.Height)
+				if (Width >= 0.95 * s.WorkingArea.Width | Height >= 0.95 * s.WorkingArea.Height)
 				{
 					this.WindowState = FormWindowState.Maximized;
 				}

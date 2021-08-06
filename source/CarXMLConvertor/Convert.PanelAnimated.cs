@@ -11,7 +11,7 @@ namespace CarXmlConvertor
 
 		internal static void Process(MainForm form)
 		{
-			if (!System.IO.File.Exists(FileName))
+			if (!File.Exists(FileName))
 			{
 				return;
 			}
@@ -24,7 +24,8 @@ namespace CarXmlConvertor
 			newLines.Add("</Include>");
 			newLines.Add("</PanelAnimated>");
 			newLines.Add("</openBVE>");
-			string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "panel.xml");
+			// ReSharper disable once AssignNullToNotNullAttribute
+			string fileOut = Path.Combine(Path.GetDirectoryName(FileName), "panel.xml");
 			try
 			{
                 

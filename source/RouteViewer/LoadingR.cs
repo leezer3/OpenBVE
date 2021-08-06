@@ -126,6 +126,7 @@ namespace OpenBve {
 						candidate = Folder;
 					}
 
+					// ReSharper disable once AssignNullToNotNullAttribute
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
 					if (Info == null)
 					{

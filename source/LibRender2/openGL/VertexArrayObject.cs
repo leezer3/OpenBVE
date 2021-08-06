@@ -163,7 +163,10 @@ namespace LibRender2
 	public static class VAOExtensions
 	{
 		/// <summary>Create an OpenGL/OpenTK VAO for a mesh</summary>
-		/// <param name="isDynamic"></param>
+		/// <param name="mesh">The mesh</param>
+		/// <param name="isDynamic">Whether the mesh is dynamic (e.g. part of an animated object / train)</param>
+		/// <param name="vertexLayout">The vertex layout to use</param>
+		/// <param name="renderer">A reference to the base renderer</param>
 		public static void CreateVAO(ref Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
 		{
 			try
@@ -257,6 +260,10 @@ namespace LibRender2
 			}
 		}
 
+		/// <summary>Create an OpenGL/OpenTK VAO for a static background</summary>
+		/// <param name="background">The background</param>
+		/// <param name="vertexLayout">The vertex layout to use</param>
+		/// <param name="renderer">A reference to the base renderer</param>
 		public static void CreateVAO(this StaticBackground background, VertexLayout vertexLayout, BaseRenderer renderer)
 		{
 			try

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -32,11 +32,11 @@ namespace OpenBve {
 
         // paint
         private void formImage_Paint(object sender, PaintEventArgs e) {
-            float aw = (float)this.ClientRectangle.Width;
-            float ah = (float)this.ClientRectangle.Height;
+            float aw = this.ClientRectangle.Width;
+            float ah = this.ClientRectangle.Height;
             float ar = aw / ah;
-            float bw = (float)CurrentImage.Width;
-            float bh = (float)CurrentImage.Height;
+            float bw = CurrentImage.Width;
+            float bh = CurrentImage.Height;
             float br = bw / bh;
             try {
                 e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;

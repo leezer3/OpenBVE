@@ -469,6 +469,7 @@ namespace OpenBveApi.Hosts {
 			{
 				return 0;
 			}
+			// ReSharper disable once ValueParameterNotUsed
 			set
 			{
 
@@ -482,6 +483,7 @@ namespace OpenBveApi.Hosts {
 			{
 				return null;
 			}
+			// ReSharper disable once ValueParameterNotUsed
 			set
 			{
 
@@ -495,6 +497,7 @@ namespace OpenBveApi.Hosts {
 			{
 				return null;
 			}
+			// ReSharper disable once ValueParameterNotUsed
 			set
 			{
 
