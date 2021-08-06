@@ -53,6 +53,7 @@ namespace RouteManager2.Events
 						currentRoute.Atmosphere.AmbientLightColor = previousLightDefinition.AmbientColor;
 						currentRoute.Atmosphere.DiffuseLightColor = previousLightDefinition.DiffuseColor;
 						currentRoute.Atmosphere.LightPosition = previousLightDefinition.LightPosition;
+						currentRoute.UpdateLighting();
 						currentRoute.DynamicLighting = false;
 					}
 				}
@@ -68,6 +69,7 @@ namespace RouteManager2.Events
 						currentRoute.Atmosphere.AmbientLightColor = nextLightDefinition.AmbientColor;
 						currentRoute.Atmosphere.DiffuseLightColor = nextLightDefinition.DiffuseColor;
 						currentRoute.Atmosphere.LightPosition = nextLightDefinition.LightPosition;
+						currentRoute.UpdateLighting();
 						currentRoute.DynamicLighting = false;
 					}
 					
