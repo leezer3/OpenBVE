@@ -97,6 +97,10 @@ namespace TrainManager.BrakeSystems
 		/// <returns>The deceleration in m/s</returns>
 		public double DecelerationAtServiceMaximumPressure(int Notch, double currentSpeed)
 		{
+			if (decelerationCurves == null || decelerationCurves.Length == 0)
+			{
+				return 0;
+			}
 			if (Notch == 0)
 			{
 				return this.decelerationCurves[0].GetAccelerationOutput(currentSpeed, 1.0);
