@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SharpCompress.Compressors;
@@ -27,6 +28,7 @@ namespace Train.MsTs
 
 		internal void ReadConsist(string fileName, ref AbstractTrain Train)
 		{
+			currentCarIndex = -1;
 			TrainBase train = Train as TrainBase;
 			train.Handles.Reverser = new ReverserHandle(train);
 			train.Handles.EmergencyBrake = new EmergencyHandle(train);
@@ -248,8 +250,48 @@ namespace Train.MsTs
 					currentCar.CarBrake.JerkUp = 10;
 					currentCar.CarBrake.JerkDown = 10;
 					currentCar.HoldBrake = new CarHoldBrake(currentCar);
-					Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), block.ReadString(), block.Token == KujuTokenID.EngineData, ref currentCar);
 					//FIXME END
+
+					/*
+					 * Pull out the wagon path bits from the block next
+					 * From the available documentation and experience this *appears* to be as follows:
+					 * [0] - Name of the wagon to search for
+					 * [1] - Search path relative to the TRAINS\trainset directory, if not found in DB
+					 *
+					 * If WagonName that is already in the database, but with a different folder is supplied
+					 * then the original will be returned
+					 * https://digital-rails.com/wordpress/2018/11/18/duplicate-wagons/
+					 * 
+					 * HOWEVER:
+					 * http://www.elvastower.com/forums/index.php?/topic/34187-or-consist-format/
+					 * OpenRails seems to treat these as:
+					 * [0] - WagonFileName => Must add approprite eng / wag extension
+					 * [1] - Search path relative to the TRAINS\trainset directory
+					 *
+					 * Going to match MSTS for the minute, but possibly needs an OpenRails detection mechanism(?)
+					 * Note that in all / most cases, both should be the same anyways.
+					 */
+
+					string[] wagonFiles = block.ReadStringArray();
+					switch (wagonFiles.Length)
+					{
+						case 0:
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Unable to determine WagonFile to load.");
+							break;
+						case 1:
+							//Just a WagonName- This is likely invalid, but let's ignore
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar);
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: No WagonFolder supplied, searching entire trainset folder.");
+							break;
+						case 2:
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset\\" + wagonFiles[1]), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar);
+							break;
+						default:
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar);
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Two parameters were expected- Check for correct escaping of strings.");
+							break;
+					}
+					
 					break;
 			}
 
