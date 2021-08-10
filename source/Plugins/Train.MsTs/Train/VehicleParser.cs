@@ -273,9 +273,9 @@ namespace Train.MsTs
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vechicle Parser: Expected a Carriage or Wagon, however " + wagonType + " was found.");
 						}
 					}
-					
 					break;
 				case KujuTokenID.WagonShape:
+					// Loads exterior object
 					string objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
 					if (!File.Exists(objectFile))
 					{
@@ -296,12 +296,22 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Size:
+					// Physical size of the car
 					car.Width = block.ReadSingle(UnitOfLength.Meter);
 					car.Height = block.ReadSingle(UnitOfLength.Meter);
 					car.Length = block.ReadSingle(UnitOfLength.Meter);
 					break;
 				case KujuTokenID.Mass:
+					// Sets the empty mass of the car
 					car.EmptyMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					break;
+				case KujuTokenID.BrakeEquipmentType:
+					// Determines the brake equipment types available
+					BrakeEquipmentType[] brakeEquipmentTypes = block.ReadEnumArray(default(BrakeEquipmentType));
+					break;
+				case KujuTokenID.BrakeSystemType:
+					// Determines the brake system types available
+					BrakeSystemType[] brakeSystemTypes = block.ReadEnumArray(default(BrakeSystemType));
 					break;
 			}
 			return true;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using OpenBve.Formats.MsTs;
@@ -144,6 +144,7 @@ namespace Train.MsTs
 
 		private int currentCarIndex = -1;
 		private CarBase currentCar;
+		private bool reverseCurentCar;
 		private void ParseBlock(Block block, ref TrainBase Train)
 		{
 			Block newBlock;
@@ -208,6 +209,11 @@ namespace Train.MsTs
 						new Door(-1, 1000.0, 0),
 						new Door(1, 1000.0, 0)
 					};
+					if (reverseCurentCar)
+					{
+						currentCar.Reverse();
+						reverseCurentCar = false;
+					}
 					Train.Cars[currentCarIndex] = currentCar;
 					/*
 					 * FIXME: Needs removing or sorting when the car is created
@@ -291,7 +297,10 @@ namespace Train.MsTs
 							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Two parameters were expected- Check for correct escaping of strings.");
 							break;
 					}
-					
+					break;
+				case KujuTokenID.Flip:
+					// Allows a car to be reversed within a consist
+					reverseCurentCar = true;
 					break;
 			}
 
