@@ -30,12 +30,7 @@ namespace Train.MsTs
 
 		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase Car)
 		{
-			if (wagonFiles == null)
-			{
-				//populate search list
-				wagonFiles = Directory.GetFiles(trainSetDirectory,"*.wag", SearchOption.AllDirectories).Union(Directory.GetFiles(trainSetDirectory, "*.eng", SearchOption.AllDirectories)).ToArray();
-
-			}
+			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
 			Car.Specs.IsMotorCar = false;
 			/*
 			 * MSTS maintains an internal database, as opposed to using full paths
