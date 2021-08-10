@@ -56,7 +56,9 @@
     <Compile Include="Train\ConsistParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Train\VechicleParser.cs" />
+    <Compile Include="Train\Enums\BrakeEquipmentType.cs" />
+    <Compile Include="Train\Enums\BrakeSystemType.cs" />
+    <Compile Include="Train\VehicleParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">
