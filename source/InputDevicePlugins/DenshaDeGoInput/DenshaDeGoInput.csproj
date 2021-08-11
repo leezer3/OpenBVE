@@ -70,6 +70,7 @@
     <Compile Include="Controller.Classic.cs" />
     <Compile Include="Controller.Unbalance.cs" />
     <Compile Include="Controller.Ps2.cs" />
+    <Compile Include="Controller.Zuiki.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config.resx">
