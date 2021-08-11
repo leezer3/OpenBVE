@@ -662,6 +662,11 @@ namespace TrainManager.SafetySystems
 		/// <remarks>This function should not be called directly. Call UpdateAI instead.</remarks>
 		protected abstract void PerformAI(AIData data);
 
+		/// <summary>Dummy method used to keep alive Win32 Proxy Plugins</summary>
+		public virtual void KeepAlive()
+		{
+
+		}
 	}
 
 }

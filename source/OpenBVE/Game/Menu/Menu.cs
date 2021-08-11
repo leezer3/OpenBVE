@@ -627,12 +627,20 @@ namespace OpenBve
 			}
 		}
 
+		private double pluginKeepAliveTimer;
+
 		//
 		// DRAW MENU
 		//
 		/// <summary>Draws the current menu as a screen overlay</summary>
 		internal void Draw(double RealTimeElapsed)
 		{
+			pluginKeepAliveTimer += RealTimeElapsed;
+			if (pluginKeepAliveTimer > 100000 && TrainManager.PlayerTrain.Plugin != null)
+			{
+				TrainManager.PlayerTrain.Plugin.KeepAlive();
+				pluginKeepAliveTimer = 0;
+			}
 			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;
 			lastTimeElapsed = RealTimeElapsed;
 			int i;
