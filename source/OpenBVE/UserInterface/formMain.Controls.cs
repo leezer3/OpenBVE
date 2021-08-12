@@ -631,6 +631,10 @@ namespace OpenBve {
 				{
 					image = XboxImage;
 				}
+				else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1 && ZukiImage != null)
+				{
+					image = ZukiImage;
+				}
 				if (image != null) {
 					e.Graphics.DrawImage(image, x, y);
 					w = image.Width;
