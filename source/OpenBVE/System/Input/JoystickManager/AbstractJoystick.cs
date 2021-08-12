@@ -32,5 +32,7 @@ namespace OpenBve.Input
 		internal bool Disconnected = false;
 
 		internal abstract Guid GetGuid();
+
+		internal ConfigurationLink ConfigurationLink;
 	}
 }
