@@ -365,7 +365,7 @@ namespace CsvRwRouteParser {
 									StructureCommand parsedStructureCommand;
 									if (Enum.TryParse(Command, true, out parsedStructureCommand))
 									{
-										ParseStructureCommand(parsedStructureCommand, Arguments, commandIndices, Encoding, Expressions[j], ref Data, PreviewOnly);
+										ParseStructureCommand(parsedStructureCommand, Arguments, commandIndices, FileName, Encoding, Expressions[j], ref Data, PreviewOnly);
 									}
 									else
 									{

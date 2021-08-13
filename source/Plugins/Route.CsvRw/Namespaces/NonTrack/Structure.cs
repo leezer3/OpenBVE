@@ -1,17 +1,18 @@
 ﻿using System;
+using System.IO;
 using System.Text;
-using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
+using Path = OpenBveApi.Path;
 
 namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void ParseStructureCommand(StructureCommand Command, string[] Arguments, int[] commandIndices, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseStructureCommand(StructureCommand Command, string[] Arguments, int[] commandIndices, string FileName, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{
@@ -1044,8 +1045,16 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						//Read the lighting XML file
-						string path = Path.CombineFile(System.IO.Path.GetDirectoryName(ObjectPath), Arguments[0]);
+						/*
+						 * Read the dynamic lighting file
+						 * We'll try first relative to the routefile (as per Route.DynamicLight)
+						 * and if not found there relative to the object path
+						 */
+						string path = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						if (!File.Exists(path))
+						{
+							path = Path.CombineFile(System.IO.Path.GetDirectoryName(ObjectPath), Arguments[0]);
+						}
 						if (System.IO.File.Exists(path))
 						{
 							LightDefinition[] newLightDefinition;
