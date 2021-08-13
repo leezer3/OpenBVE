@@ -45,6 +45,8 @@ namespace OpenBve
 		private Texture StopTexture;
 		private Texture PointSoundTexture;
 		private Texture RunSoundTexture;
+		private Texture LightingEventTexture;
+		private Texture WeatherEventTexture;
 		
 		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
 		{
@@ -63,6 +65,8 @@ namespace OpenBve
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "sound.png"), out SoundTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(Folder, "lighting.png"), out LightingEventTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(Folder, "weather.png"), out WeatherEventTexture);
 		}
 
 		// render scene
@@ -342,7 +346,17 @@ namespace OpenBve
 						{
 							s = 0.15;
 							dy = 0.4;
-							t = TransponderTexture;
+							TransponderEvent ev = e as TransponderEvent;
+							if (ev.Type == 21)
+							{
+								// beacon type 21 is reserved for legacy weather events
+								t = WeatherEventTexture;
+							}
+							else
+							{
+								t = TransponderTexture;
+							}
+
 						}
 						else if (e is SoundEvent)
 						{
@@ -358,6 +372,12 @@ namespace OpenBve
 							s = 0.2;
 							dy = 0.8;
 							t = RunSoundTexture;
+						}
+						else if (e is LightingChangeEvent)
+						{
+							s = 0.2;
+							dy = 1.5;
+							t = LightingEventTexture;
 						}
 						else
 						{

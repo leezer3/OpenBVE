@@ -128,6 +128,7 @@ namespace CsvRwRouteParser {
 				Data.TimetableDaytime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.Structure.WeatherObjects = new ObjectDictionary();
+				Data.Structure.LightDefinitions = new Dictionary<int, LightDefinition[]>();
 				// signals
 				Data.Signals = new SignalDictionary();
 				if (Plugin.CurrentOptions.CurrentCompatibilitySignalSet == null) //not selected via main form
@@ -364,7 +365,7 @@ namespace CsvRwRouteParser {
 									StructureCommand parsedStructureCommand;
 									if (Enum.TryParse(Command, true, out parsedStructureCommand))
 									{
-										ParseStructureCommand(parsedStructureCommand, Arguments, commandIndices, Encoding, Expressions[j], ref Data, PreviewOnly);
+										ParseStructureCommand(parsedStructureCommand, Arguments, commandIndices, FileName, Encoding, Expressions[j], ref Data, PreviewOnly);
 									}
 									else
 									{
@@ -398,7 +399,9 @@ namespace CsvRwRouteParser {
 					}
 				}
 			}
-			
+
+			Data.Blocks[0].LightDefinition = new LightDefinition(Plugin.CurrentRoute.Atmosphere.AmbientLightColor, Plugin.CurrentRoute.Atmosphere.DiffuseLightColor, Plugin.CurrentRoute.Atmosphere.LightPosition, -1, -1);
+			Data.Blocks[0].DynamicLightDefinition = int.MaxValue;
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
 				Plugin.CurrentProgress = 0.3333 + j * progressFactor;

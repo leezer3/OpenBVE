@@ -1,4 +1,7 @@
-﻿namespace CsvRwRouteParser
+﻿using System.Collections.Generic;
+using OpenBveApi.Routes;
+
+namespace CsvRwRouteParser
 {
 	/// <summary>Holds the base structures for a route: These are cloned and transformed for final world placement</summary>
 	internal class StructureData
@@ -51,5 +54,7 @@
 		internal int[] Run;
 		/// <summary>The flange sound index to be played for each railtype idx</summary>
 		internal int[] Flange;
+		/// <summary>Contains the available dynamic lighting sets</summary>
+		internal Dictionary<int, LightDefinition[]> LightDefinitions;
 	}
 }

@@ -287,23 +287,23 @@ namespace CsvRwRouteParser
 					break;
 				case TrackCommand.Accuracy:
 				{
-					double r = 2.0;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out r))
+					double acc = 2.0;
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out acc))
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						r = 2.0;
+						acc = 2.0;
 					}
 
-					if (r < 0.0)
+					if (acc < 0.0)
 					{
-						r = 0.0;
+						acc = 0.0;
 					}
-					else if (r > 4.0)
+					else if (acc > 4.0)
 					{
-						r = 4.0;
+						acc = 4.0;
 					}
 
-					Data.Blocks[BlockIndex].Accuracy = r;
+					Data.Blocks[BlockIndex].Accuracy = acc;
 				}
 					break;
 				case TrackCommand.Pitch:
@@ -2635,8 +2635,8 @@ namespace CsvRwRouteParser
 						}
 						else if (Data.Backgrounds[typ] is StaticBackground)
 						{
-							StaticBackground b = Data.Backgrounds[typ] as StaticBackground;
-							if (b.Texture == null)
+							StaticBackground bg = Data.Backgrounds[typ] as StaticBackground;
+							if (bg.Texture == null)
 							{
 								//There's a possibility that this was loaded via a default BVE command rather than XML
 								//Thus check for the existance of the file and chuck out error if appropriate
@@ -2652,8 +2652,8 @@ namespace CsvRwRouteParser
 									BackgroundHandle backgroundZero;
 									if (Data.Backgrounds.TryGetValue(0, out backgroundZero))
 									{
-										b = backgroundZero as StaticBackground;
-										if (b.Texture == null)
+										bg = backgroundZero as StaticBackground;
+										if (bg.Texture == null)
 										{
 											Data.Blocks[0].Background = typ;
 										}
@@ -3079,6 +3079,157 @@ namespace CsvRwRouteParser
 							}
 						}
 					}
+					break;
+				case TrackCommand.DynamicLight:
+					if (!PreviewOnly)
+					{
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0)
+						{
+							int currentLightSet;
+							if (!NumberFormats.TryParseIntVb6(Arguments[0], out currentLightSet))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DynamicLightIndex is invalid in Track.DynamicLight at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								
+								int l = Data.Blocks[BlockIndex].LightingChanges.Length;
+								Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
+								Data.Blocks[BlockIndex].LightingChanges[l] = new LightingChange(Data.Blocks[BlockIndex].DynamicLightDefinition, currentLightSet);
+								Data.Blocks[BlockIndex].DynamicLightDefinition = currentLightSet;
+							}
+						}
+					}
+					break;
+				case TrackCommand.DirectionalLight:
+					if (!PreviewOnly)
+					{
+						if (Plugin.CurrentRoute.DynamicLighting)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Track.DirectionalLight will be ignored");
+							break;
+						}
+
+						int r = 255, g = 255, b = 255;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (r < 0 | r > 255)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							r = r < 0 ? 0 : 255;
+						}
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (g < 0 | g > 255)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							g = g < 0 ? 0 : 255;
+						}
+
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (b < 0 | b > 255)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							b = b < 0 ? 0 : 255;
+						}
+						int l = Data.Blocks[BlockIndex].LightingChanges.Length;
+						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
+						LightDefinition ld = Data.Blocks[BlockIndex].LightDefinition;
+						ld.DiffuseColor = new Color24((byte) r, (byte) g, (byte) b);
+						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
+						Data.Blocks[BlockIndex].LightingChanges[l] = new LightingChange(Data.Blocks[BlockIndex].LightDefinition, ld);
+						Data.Blocks[BlockIndex].LightDefinition = ld;
+					}
+					break;
+				case TrackCommand.AmbientLight:
+					if (!PreviewOnly)
+					{
+						if (Plugin.CurrentRoute.DynamicLighting)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Track.AmbientLight will be ignored");
+							break;
+						}
+
+						int r = 255, g = 255, b = 255;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (r < 0 | r > 255)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							r = r < 0 ? 0 : 255;
+						}
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (g < 0 | g > 255)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							g = g < 0 ? 0 : 255;
+						}
+
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (b < 0 | b > 255)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							b = b < 0 ? 0 : 255;
+						}
+						int l = Data.Blocks[BlockIndex].LightingChanges.Length;
+						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
+						LightDefinition ld = Data.Blocks[BlockIndex].LightDefinition;
+						ld.AmbientColor = new Color24((byte) r, (byte) g, (byte) b);
+						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
+						Data.Blocks[BlockIndex].LightingChanges[l] = new LightingChange(Data.Blocks[BlockIndex].LightDefinition, ld);
+						Data.Blocks[BlockIndex].LightDefinition = ld;
+					}
+					break;
+				case TrackCommand.LightDirection:
+					if (!PreviewOnly)
+					{
+						if (Plugin.CurrentRoute.DynamicLighting)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.LightDirection will be ignored");
+							break;
+						}
+
+						double theta = 60.0, phi = -26.565051177078;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out theta))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Theta is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out phi))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Phi is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						theta = theta.ToRadians();
+						phi = phi.ToRadians();
+						double dx = Math.Cos(theta) * Math.Sin(phi);
+						double dy = -Math.Sin(theta);
+						double dz = Math.Cos(theta) * Math.Cos(phi);
+						int l = Data.Blocks[BlockIndex].LightingChanges.Length;
+						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
+						LightDefinition ld = Data.Blocks[BlockIndex].LightDefinition;
+						ld.LightPosition = new Vector3((float) -dx, (float) -dy, (float) -dz);
+						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
+						Data.Blocks[BlockIndex].LightingChanges[l] = new LightingChange(Data.Blocks[BlockIndex].LightDefinition, ld);
+						Data.Blocks[BlockIndex].LightDefinition = ld;
+					}
+					
 					break;
 			}
 		}

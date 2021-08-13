@@ -43,6 +43,9 @@ namespace CsvRwRouteParser
 		internal int SnowIntensity;
 		internal int RainIntensity;
 		internal int WeatherObject;
+		internal LightDefinition LightDefinition;
+		internal int DynamicLightDefinition;
+		internal LightingChange[] LightingChanges;
 
 		internal Block(bool PreviewOnly)
 		{
@@ -65,6 +68,9 @@ namespace CsvRwRouteParser
 				RailFreeObj = new Dictionary<int, List<FreeObj>>();
 				GroundFreeObj = new List<FreeObj>();
 				PointsOfInterest = new PointOfInterest[] { };
+				DynamicLightDefinition = -1;
+				LightDefinition = new LightDefinition();
+				LightingChanges = new LightingChange[] { };
 			}
 		}
 	}
