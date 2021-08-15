@@ -51,5 +51,11 @@
 		PackageUninstall,
 		/// <summary>Selects a file</summary>
 		File,
+		/// <summary>Uninstalls a route</summary>
+		UninstallRoute,
+		/// <summary>Uninstalls a train</summary>
+		UninstallTrain,
+		/// <summary>Uninstalls anything else</summary>
+		UninstallOther
 	}
 }

@@ -56,7 +56,7 @@ namespace OpenBve
 		private const int SelectionNone = -1;
 
 		private double lastTimeElapsed;
-		
+		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
 
 		/********************
 			MENU SYSTEM FIELDS
@@ -197,7 +197,7 @@ namespace OpenBve
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
 			int MaxWidth = 0;
-			if (type == MenuType.RouteList || type == MenuType.TrainList || type == MenuType.PackageInstall || type == MenuType.Packages)
+			if ((int)type >= 100)
 			{
 				MaxWidth = Program.Renderer.Screen.Width / 2;
 			}
@@ -528,15 +528,33 @@ namespace OpenBve
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 							case MenuTag.Packages:
-								Menu.instance.PushMenu(MenuType.Packages);
+								string errorMessage;
+								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+								{
+									Menu.instance.PushMenu(MenuType.Packages);
+								}
+								
 								break;
 							// route menu commands
 							case MenuTag.PackageInstall:
 								currentOperation = PackageOperation.Installing;
 								packagePreview = true;
-								Menu.instance.PushMenu(MenuType.PackageInstall);
+								instance.PushMenu(MenuType.PackageInstall);
 								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
+								break;
+							case MenuTag.PackageUninstall:
+								currentOperation = PackageOperation.Uninstalling;
+								instance.PushMenu(MenuType.PackageUninstall);
+								break;
+							case MenuTag.UninstallRoute:
+								instance.PushMenu(MenuType.UninstallRoute);
+								break;
+							case MenuTag.UninstallTrain:
+								instance.PushMenu(MenuType.UninstallTrain);
+								break;
+							case MenuTag.UninstallOther:
+								instance.PushMenu(MenuType.UninstallOther);
 								break;
 							case MenuTag.File:
 								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);

@@ -117,6 +117,39 @@ namespace OpenBve
 						Items[3] = new MenuCommand(Translations.GetInterfaceString("packages_button_cancel"), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
+					case MenuType.PackageUninstall:
+						Items = new MenuEntry[5];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list_type"));
+						Items[1] = new MenuCommand(Translations.GetInterfaceString("packages_type_route"), MenuTag.UninstallRoute, 0);
+						Items[2] = new MenuCommand(Translations.GetInterfaceString("packages_type_train"), MenuTag.UninstallTrain, 0);
+						Items[3] = new MenuCommand(Translations.GetInterfaceString("packages_type_other"), MenuTag.UninstallOther, 0);
+						Items[4] = new MenuCommand(Translations.GetInterfaceString("packages_button_cancel"), MenuTag.MenuBack, 0);
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.UninstallRoute:
+						Items = new MenuEntry[Database.currentDatabase.InstalledRoutes.Count];
+						for (int j = 0; j < Database.currentDatabase.InstalledRoutes.Count; j++)
+						{
+							Items[j] = new MenuCommand(Database.currentDatabase.InstalledRoutes[j].Name, MenuTag.UninstallRoute, j);
+						}
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.UninstallTrain:
+						Items = new MenuEntry[Database.currentDatabase.InstalledTrains.Count];
+						for (int j = 0; j < Database.currentDatabase.InstalledTrains.Count; j++)
+						{
+							Items[j] = new MenuCommand(Database.currentDatabase.InstalledTrains[j].Name, MenuTag.UninstallTrain, j);
+						}
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.UninstallOther:
+						Items = new MenuEntry[Database.currentDatabase.InstalledOther.Count];
+						for (int j = 0; j < Database.currentDatabase.InstalledOther.Count; j++)
+						{
+							Items[j] = new MenuCommand(Database.currentDatabase.InstalledOther[j].Name, MenuTag.UninstallOther, j);
+						}
+						Align = TextAlignment.TopLeft;
+						break;
 					case MenuType.PackageInstall:
 						string[] potentialFiles = { };
 						string[] directoryList = { };
