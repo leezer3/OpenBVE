@@ -11,12 +11,14 @@ using OpenBve.Input;
 using OpenBve.UserInterface;
 using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Packages;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
+using Control = System.Windows.Forms.Control;
 
 namespace OpenBve {
 	internal partial class formMain : Form
@@ -501,9 +503,28 @@ namespace OpenBve {
 			Cursors.ListCursors(comboboxCursor);
 			checkBoxPanel2Extended.Checked = Interface.CurrentOptions.Panel2ExtendedMode;
 			LoadCompatibilitySignalSets();
+			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX)
+			{
+				// This gets us a much better Unicode glyph set
+				SetFont(this.Controls, "Arial Unicode MS");
+			}
 		}
 
-		
+		public static void SetFont(Control.ControlCollection ctrls, string fontName)
+		{
+			foreach (Control ctrl in ctrls)
+			{
+				// recursive
+				if (ctrl.Controls != null)
+				{
+					SetFont(ctrl.Controls, fontName);
+				}
+				if (ctrl != null)
+				{
+					ctrl.Font = new Font(fontName, ctrl.Font.Size);
+				};
+			};
+		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
 		private void ApplyLanguage()

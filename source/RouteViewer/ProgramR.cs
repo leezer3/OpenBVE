@@ -71,10 +71,10 @@ namespace OpenBve
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 			FileSystem.CreateFileSystem();
-			Renderer = new NewRenderer();
-			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			Sounds = new Sounds();
 			Options.LoadOptions();
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			string error;
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))

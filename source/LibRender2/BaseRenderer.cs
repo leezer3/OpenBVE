@@ -247,8 +247,11 @@ namespace LibRender2
 
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
 
-		protected BaseRenderer()
+		protected BaseRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
 		{
+			currentHost = CurrentHost;
+			currentOptions = CurrentOptions;
+			fileSystem = FileSystem;
 			Screen = new Screen();
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
@@ -256,18 +259,15 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
-			Fonts = new Fonts();
+			Fonts = new Fonts(currentHost, fileSystem);
 		}
 
 		/// <summary>
 		/// Call this once to initialise the renderer
 		/// </summary>
-		public virtual void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
+		public virtual void Initialize()
 		{
-			currentHost = CurrentHost;
-			currentOptions = CurrentOptions;
-			fileSystem = FileSystem;
-
+			
 			try
 			{
 				if (DefaultShader == null)
@@ -284,8 +284,8 @@ namespace LibRender2
 			}
 			catch
 			{
-				CurrentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
-				CurrentOptions.IsUseNewRenderer = false;
+				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
+				currentOptions.IsUseNewRenderer = false;
 				ForceLegacyOpenGL = true;
 			}
 
@@ -416,7 +416,7 @@ namespace LibRender2
 			currentHost.StaticObjectCache.Clear();
 			TextureManager.UnloadAllTextures();
 
-			Initialize(currentHost, currentOptions, fileSystem);
+			Initialize();
 		}
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)

@@ -289,7 +289,7 @@ namespace OpenBve
 			MouseWheel += Program.MouseWheelEvent;
 	        FileDrop += Program.DragFile;
 	        Program.Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
-            Program.Renderer.Initialize(Program.CurrentHost,Interface.CurrentOptions, Program.FileSystem);
+            Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.UpdateViewport();
 			Program.Renderer.InitializeVisibility();

@@ -729,7 +729,7 @@ namespace TrainEditor2.Views
 		private void GlControlMotor_Load(object sender, EventArgs e)
 		{
 			glControlMotor.MakeCurrent();
-			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions, Program.FileSystem);
+			Program.Renderer.Initialize();
 		}
 
 		private void GlControlMotor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)

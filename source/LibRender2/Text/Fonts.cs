@@ -1,6 +1,8 @@
 ﻿
 using System.Drawing;
-using LibRender2.Text;
+using System.Drawing.Text;
+using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 
 namespace LibRender2.Text
 {
@@ -24,6 +26,8 @@ namespace LibRender2.Text
 
 		public readonly OpenGlFont EvenLargerFont;
 
+		private readonly PrivateFontCollection fontCollection;
+
 		/// <summary>Gets the next smallest font</summary>
 		/// <param name="currentFont">The font we require the smaller version for</param>
 		/// <returns>The next smallest font</returns>
@@ -46,15 +50,24 @@ namespace LibRender2.Text
 					return EvenLargerFont;
 			}
 		}
-
-		internal Fonts()
+		
+		internal Fonts(HostInterface currentHost, FileSystem fileSystem)
 		{
-			VerySmallFont = new OpenGlFont(FontFamily.GenericSansSerif, 9.0f);
-			SmallFont = new OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
-			NormalFont = new OpenGlFont(FontFamily.GenericSansSerif, 16.0f);
-			LargeFont = new OpenGlFont(FontFamily.GenericSansSerif, 21.0f);
-			VeryLargeFont = new OpenGlFont(FontFamily.GenericSansSerif, 27.0f);
-			EvenLargerFont = new OpenGlFont(FontFamily.GenericSansSerif, 34.0f);
+			fontCollection = new PrivateFontCollection();
+			FontFamily uiFont = FontFamily.GenericSansSerif;
+			switch (currentHost.Platform)
+			{
+				case HostPlatform.AppleOSX:
+					// This gets us a much better Unicode glyph set
+					uiFont = new FontFamily("Arial Unicode MS");
+					break;
+			}
+			VerySmallFont = new OpenGlFont(uiFont, 9.0f);
+			SmallFont = new OpenGlFont(uiFont, 12.0f);
+			NormalFont = new OpenGlFont(uiFont, 16.0f);
+			LargeFont = new OpenGlFont(uiFont, 21.0f);
+			VeryLargeFont = new OpenGlFont(uiFont, 27.0f);
+			EvenLargerFont = new OpenGlFont(uiFont, 34.0f);
 		}
 	}
 }

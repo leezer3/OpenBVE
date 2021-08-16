@@ -52,9 +52,9 @@ namespace OpenBve.Graphics
 		private Overlays overlays;
 		internal Touch Touch;
 
-		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
+		public override void Initialize()
 		{
-			base.Initialize(CurrentHost, CurrentOptions, FileSystem);
+			base.Initialize();
 
 			try
 			{
@@ -457,6 +457,10 @@ namespace OpenBve.Graphics
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(RealTimeElapsed);
 			OptionLighting = true;
+		}
+
+		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		{
 		}
 	}
 }

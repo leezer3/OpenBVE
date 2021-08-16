@@ -37,9 +37,9 @@ namespace ObjectViewer.Graphics
 		private Cube greenAxisVAO;
 		private Cube blueAxisVAO;
 
-		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem system)
+		public override void Initialize()
 		{
-			base.Initialize(CurrentHost, CurrentOptions, system);
+			base.Initialize();
 
 			if (!ForceLegacyOpenGL)
 			{
@@ -369,6 +369,10 @@ namespace ObjectViewer.Graphics
 			// finalize
 			PopMatrix(MatrixMode.Projection);
 			PopMatrix(MatrixMode.Modelview);
+		}
+
+		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		{
 		}
 	}
 }
