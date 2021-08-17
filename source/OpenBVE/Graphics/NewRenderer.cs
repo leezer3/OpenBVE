@@ -144,8 +144,13 @@ namespace OpenBve.Graphics
 
 			UpdateViewport(ViewportChangeMode.ChangeToScenery);
 
-			// set up camera
+			// set up camera and lighting
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
+			if (Lighting.ShouldInitialize)
+			{
+				Lighting.Initialize();
+				Lighting.ShouldInitialize = false;
+			}
 			TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
 			TransformedLightPosition.Transform(CurrentViewMatrix);
 			if (!AvailableNewRenderer)

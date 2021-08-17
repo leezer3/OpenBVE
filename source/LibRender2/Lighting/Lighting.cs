@@ -11,8 +11,8 @@ namespace LibRender2.Lightings
 	{
 		private readonly BaseRenderer renderer;
 
-		/// <summary>Whether dynamic lighting is currently enabled</summary>
-		public bool DynamicLighting = false;
+		/// <summary>Whether the lighting model should re-initialize this frame</summary>
+		public bool ShouldInitialize = false;
 
 		/// <summary>The current dynamic cab brightness</summary>
 		public double DynamicCabBrightness = 255;

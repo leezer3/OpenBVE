@@ -313,6 +313,7 @@ namespace OpenBve {
 					{
 						Program.CurrentRoute = (CurrentRoute) Route;
 						Program.CurrentRoute.UpdateLighting();
+						
 						loaded = true;
 						break;
 					}

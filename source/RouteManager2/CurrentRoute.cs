@@ -503,14 +503,14 @@ namespace RouteManager2
 				TargetBackground = null;
 			}
 		}
-
+		
 		/// <summary>Updates the lighting model, if changed via an event</summary>
 		public void UpdateLighting()
 		{
 			renderer.Lighting.OptionAmbientColor = Atmosphere.AmbientLightColor;
 			renderer.Lighting.OptionDiffuseColor = Atmosphere.DiffuseLightColor;
 			renderer.Lighting.OptionLightPosition = Atmosphere.LightPosition;
-			renderer.Lighting.Initialize();
+			renderer.Lighting.ShouldInitialize = true;
 		}
 	}
 }
