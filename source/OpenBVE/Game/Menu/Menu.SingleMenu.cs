@@ -118,6 +118,7 @@ namespace OpenBve
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.PackageUninstall:
+						routeDescriptionBox.Text = string.Empty;
 						Items = new MenuEntry[5];
 						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list_type"));
 						Items[1] = new MenuCommand(Translations.GetInterfaceString("packages_type_route"), MenuTag.UninstallRoute, 0);
@@ -127,26 +128,29 @@ namespace OpenBve
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.UninstallRoute:
-						Items = new MenuEntry[Database.currentDatabase.InstalledRoutes.Count];
+						Items = new MenuEntry[Database.currentDatabase.InstalledRoutes.Count + 1];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list"));
 						for (int j = 0; j < Database.currentDatabase.InstalledRoutes.Count; j++)
 						{
-							Items[j] = new MenuCommand(Database.currentDatabase.InstalledRoutes[j].Name, MenuTag.UninstallRoute, j);
+							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledRoutes[j].Name, MenuTag.Package, Database.currentDatabase.InstalledRoutes[j]);
 						}
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.UninstallTrain:
-						Items = new MenuEntry[Database.currentDatabase.InstalledTrains.Count];
+						Items = new MenuEntry[Database.currentDatabase.InstalledTrains.Count + 1];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list"));
 						for (int j = 0; j < Database.currentDatabase.InstalledTrains.Count; j++)
 						{
-							Items[j] = new MenuCommand(Database.currentDatabase.InstalledTrains[j].Name, MenuTag.UninstallTrain, j);
+							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledTrains[j].Name, MenuTag.Package, Database.currentDatabase.InstalledTrains[j]);
 						}
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.UninstallOther:
-						Items = new MenuEntry[Database.currentDatabase.InstalledOther.Count];
+						Items = new MenuEntry[Database.currentDatabase.InstalledOther.Count + 1];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list"));
 						for (int j = 0; j < Database.currentDatabase.InstalledOther.Count; j++)
 						{
-							Items[j] = new MenuCommand(Database.currentDatabase.InstalledOther[j].Name, MenuTag.UninstallOther, j);
+							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledOther[j].Name, MenuTag.Package, Database.currentDatabase.InstalledOther[j]);
 						}
 						Align = TextAlignment.TopLeft;
 						break;

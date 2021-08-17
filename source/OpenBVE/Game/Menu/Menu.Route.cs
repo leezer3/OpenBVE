@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -55,8 +55,6 @@ namespace OpenBve
 						
 					}
 					break;
-				case PackageOperation.Uninstalling:
-					break;
 			}
 		}
 
@@ -68,6 +66,7 @@ namespace OpenBve
 				routeDescriptionBox.Text = currentPackage.Description;
 				packagePreview = false;
 			}
+			Database.SaveDatabase();
 		}
 
 		private static void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
@@ -232,9 +231,25 @@ namespace OpenBve
 			{
 				case PackageOperation.Installing:
 					routeDescriptionBox.Text = Translations.GetInterfaceString("packages_install_success") + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("packages_install_success_files") + Environment.NewLine + installedFiles;
-					currentPackage = null;
 					currentFile = string.Empty;
 					installedFiles = string.Empty;
+					switch (currentPackage.PackageType)
+					{
+						case PackageType.Route:
+							Database.currentDatabase.InstalledRoutes.Remove(currentPackage);
+							Database.currentDatabase.InstalledRoutes.Add(currentPackage);
+							break;
+						case PackageType.Train:
+							Database.currentDatabase.InstalledTrains.Remove(currentPackage);
+							Database.currentDatabase.InstalledTrains.Add(currentPackage);
+							break;
+						default:
+							Database.currentDatabase.InstalledOther.Remove(currentPackage);
+							Database.currentDatabase.InstalledOther.Add(currentPackage);
+							break;
+					}
+					currentPackage = null;
+					Database.SaveDatabase();
 					break;
 			}
 		}

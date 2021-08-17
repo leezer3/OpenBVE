@@ -288,7 +288,7 @@ namespace OpenBve
 		{
 			// Load the current menu
 			SingleMenu menu = Menus[CurrMenu];
-			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages)
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
 			{
 				if (routeDescriptionBox.CurrentlySelected)
 				{
@@ -345,7 +345,7 @@ namespace OpenBve
 				menu.Selection = menu.TopItem - 1;
 				return true;
 			}
-			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall  || menu.Type == MenuType.Packages)
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall  || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
 			{
 				if (x > routeDescriptionBox.Location.X && x < routeDescriptionBox.Location.X + routeDescriptionBox.Size.X && y > routeDescriptionBox.Location.Y && y < routeDescriptionBox.Location.Y + routeDescriptionBox.Size.Y)
 				{
@@ -478,6 +478,33 @@ namespace OpenBve
 							}
 						}
 						break;
+					case MenuType.UninstallRoute:
+					case MenuType.UninstallTrain:
+					case MenuType.UninstallOther:
+						string s = string.Empty;
+						if (Manipulation.UninstallPackage(currentPackage, Program.FileSystem.PackageDatabaseFolder, ref s))
+						{
+							switch (currentPackage.PackageType)
+							{
+								case PackageType.Route:
+									DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref s);
+									Database.currentDatabase.InstalledRoutes.Remove(currentPackage);
+									break;
+								case PackageType.Train:
+									DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref s);
+									Database.currentDatabase.InstalledTrains.Remove(currentPackage);
+									break;
+								case PackageType.Other:
+									DatabaseFunctions.cleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref s);
+									Database.currentDatabase.InstalledOther.Remove(currentPackage);
+									break;
+							}
+							routeDescriptionBox.Text = s;
+							Database.SaveDatabase();
+						}
+						
+						PopMenu();
+						break;
 				}
 				return;
 
@@ -541,26 +568,71 @@ namespace OpenBve
 								packagePreview = true;
 								instance.PushMenu(MenuType.PackageInstall);
 								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.PackageUninstall:
 								currentOperation = PackageOperation.Uninstalling;
 								instance.PushMenu(MenuType.PackageUninstall);
 								break;
 							case MenuTag.UninstallRoute:
+								if (Database.currentDatabase.InstalledRoutes.Count == 0)
+								{
+									return;
+								}
 								instance.PushMenu(MenuType.UninstallRoute);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.UninstallTrain:
+								if (Database.currentDatabase.InstalledTrains.Count == 0)
+								{
+									return;
+								}
 								instance.PushMenu(MenuType.UninstallTrain);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.UninstallOther:
+								if (Database.currentDatabase.InstalledOther.Count == 0)
+								{
+									return;
+								}
 								instance.PushMenu(MenuType.UninstallOther);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.File:
-								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
+								if (currentOperation == PackageOperation.Installing)
+								{
+									currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
+								}
+								else
+								{
+									return;
+								}
+								
 								if (!packageWorkerThread.IsBusy)
 								{
 									packageWorkerThread.RunWorkerAsync();
+								}
+								break;
+							case MenuTag.Package:
+								if (currentOperation == PackageOperation.Uninstalling)
+								{
+									currentPackage = (Package)((MenuCommand)menu.Items[menu.Selection]).Data;
+								}
+								else
+								{
+									return;
+								}
+								routeDescriptionBox.Text = currentPackage.Description;
+								if (currentPackage.PackageImage != null)
+								{
+									routePictureBox.Texture = new Texture(currentPackage.PackageImage as Bitmap);
+								}
+								else
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);		
 								}
 								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
@@ -632,7 +704,7 @@ namespace OpenBve
 								// simulation commands
 							case MenuTag.JumpToStation:         // JUMP TO STATION
 								Reset();
-								TrainManagerBase.PlayerTrain.Jump(menuItem.Data);
+								TrainManagerBase.PlayerTrain.Jump((int)menuItem.Data);
 								Program.TrainManager.JumpTFO();
 								break;
 							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU
@@ -642,9 +714,9 @@ namespace OpenBve
 								MainLoop.Quit = MainLoop.QuitMode.ExitToMenu;
 								break;
 							case MenuTag.Control:               // CONTROL CUSTOMIZATION
-								PushMenu(MenuType.Control, ((MenuCommand)menu.Items[menu.Selection]).Data);
+								PushMenu(MenuType.Control, (int)((MenuCommand)menu.Items[menu.Selection]).Data);
 								isCustomisingControl = true;
-								CustomControlIdx = ((MenuCommand)menu.Items[menu.Selection]).Data;
+								CustomControlIdx = (int)((MenuCommand)menu.Items[menu.Selection]).Data;
 								break;
 							case MenuTag.Quit:                  // QUIT PROGRAMME
 								Reset();
@@ -896,6 +968,36 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+						}
+					}
+					break;
+				case MenuType.PackageUninstall:
+					if (routeDescriptionBox.Text != string.Empty)
+					{
+						routeDescriptionBox.Draw();
+					}
+					else
+					{
+						LogoPictureBox.Draw();
+					}
+					break;
+				case MenuType.UninstallRoute:
+				case MenuType.UninstallTrain:
+				case MenuType.UninstallOther:
+					routePictureBox.Draw();
+					routeDescriptionBox.Draw();
+					if (currentPackage != null)
+					{
+						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+						}
+						else
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
 						}
 					}
 					break;

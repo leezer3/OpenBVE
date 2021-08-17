@@ -51,6 +51,8 @@
 		PackageUninstall,
 		/// <summary>Selects a file</summary>
 		File,
+		/// <summary>Selects a package</summary>
+		Package,
 		/// <summary>Uninstalls a route</summary>
 		UninstallRoute,
 		/// <summary>Uninstalls a train</summary>
