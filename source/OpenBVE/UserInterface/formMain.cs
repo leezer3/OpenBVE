@@ -1704,6 +1704,12 @@ namespace OpenBve {
 				}
 
 			}
+			catch (WebException)
+			{
+				//The internet connection is broken.....
+				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"));
+				return;
+			}
 			finally
 			{
 				if (reader != null) reader.Close();
@@ -1711,12 +1717,6 @@ namespace OpenBve {
 			}
 			Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 			bool newerVersion = curVersion.CompareTo(newVersion) < 0;
-			if (url == null)
-			{
-				//The internet connection is broken.....
-				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"));
-				return;
-			}
 			if (newerVersion)
 			{
 				string question = Translations.GetInterfaceString("panel_updates_new");
