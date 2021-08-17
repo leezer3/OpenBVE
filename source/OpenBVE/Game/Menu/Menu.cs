@@ -12,6 +12,7 @@ using LibRender2.Text;
 using OpenBve.Input;
 using OpenBveApi;
 using OpenBveApi.Input;
+using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using OpenTK;
 using TrainManager;
@@ -55,8 +56,7 @@ namespace OpenBve
 		private const int SelectionNone = -1;
 
 		private double lastTimeElapsed;
-		
-		                   // end of private class SingleMenu
+		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
 
 		/********************
 			MENU SYSTEM FIELDS
@@ -197,7 +197,7 @@ namespace OpenBve
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
 			int MaxWidth = 0;
-			if (type == MenuType.RouteList || type == MenuType.TrainList)
+			if ((int)type >= 100)
 			{
 				MaxWidth = Program.Renderer.Screen.Width / 2;
 			}
@@ -288,7 +288,7 @@ namespace OpenBve
 		{
 			// Load the current menu
 			SingleMenu menu = Menus[CurrMenu];
-			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
 			{
 				if (routeDescriptionBox.CurrentlySelected)
 				{
@@ -345,15 +345,17 @@ namespace OpenBve
 				menu.Selection = menu.TopItem - 1;
 				return true;
 			}
-			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall  || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
 			{
 				if (x > routeDescriptionBox.Location.X && x < routeDescriptionBox.Location.X + routeDescriptionBox.Size.X && y > routeDescriptionBox.Location.Y && y < routeDescriptionBox.Location.Y + routeDescriptionBox.Size.Y)
 				{
 					routeDescriptionBox.CurrentlySelected = true;
+					Program.currentGameWindow.Cursor = routeDescriptionBox.CanScroll ? Cursors.ScrollCursor : MouseCursor.Default;
 				}
 				else
 				{
 					routeDescriptionBox.CurrentlySelected = false;
+					Program.currentGameWindow.Cursor = MouseCursor.Default;
 				}
 				//HACK: Use this to trigger our menu start button!
 				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
@@ -438,21 +440,72 @@ namespace OpenBve
 				return;
 			if (menu.Selection == int.MaxValue)
 			{
-				if (RoutefileState == RouteState.Error)
-					return;
-				if (menu.Type == MenuType.TrainDefault || menu.Type == MenuType.TrainList)
+				switch (menu.Type)
 				{
-					Reset();
-					//Launch the game!
-					Loading.Complete = false;
-					Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
-					OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
-					// ReSharper disable once PossibleNullReferenceException
-					g.LoadingScreenLoop();
-					Program.Renderer.CurrentInterface = InterfaceType.Normal;
-					return;
+					case MenuType.RouteList:
+						if (RoutefileState == RouteState.Error)
+							return;
+						Instance.PushMenu(MenuType.TrainDefault);
+						return;
+					case MenuType.TrainDefault:
+					case MenuType.TrainList:
+						Reset();
+						//Launch the game!
+						Loading.Complete = false;
+						Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
+						OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+						// ReSharper disable once PossibleNullReferenceException
+						g.LoadingScreenLoop();
+						Program.Renderer.CurrentInterface = InterfaceType.Normal;
+						return;
+					case MenuType.PackageInstall:
+						if (currentPackage != null)
+						{
+							switch (currentPackage.PackageType)
+							{
+								case PackageType.Route:
+									installedFiles = string.Empty;
+									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.RouteInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
+									break;
+								case PackageType.Train:
+									installedFiles = string.Empty;
+									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.TrainInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
+									break;
+								case PackageType.Other:
+									installedFiles = string.Empty;
+									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.OtherInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
+									break;
+							}
+						}
+						break;
+					case MenuType.UninstallRoute:
+					case MenuType.UninstallTrain:
+					case MenuType.UninstallOther:
+						string s = string.Empty;
+						if (Manipulation.UninstallPackage(currentPackage, Program.FileSystem.PackageDatabaseFolder, ref s))
+						{
+							switch (currentPackage.PackageType)
+							{
+								case PackageType.Route:
+									DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref s);
+									Database.currentDatabase.InstalledRoutes.Remove(currentPackage);
+									break;
+								case PackageType.Train:
+									DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref s);
+									Database.currentDatabase.InstalledTrains.Remove(currentPackage);
+									break;
+								case PackageType.Other:
+									DatabaseFunctions.cleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref s);
+									Database.currentDatabase.InstalledOther.Remove(currentPackage);
+									break;
+							}
+							routeDescriptionBox.Text = s;
+							Database.SaveDatabase();
+						}
+						
+						PopMenu();
+						break;
 				}
-				Instance.PushMenu(MenuType.TrainDefault);
 				return;
 
 			}
@@ -501,7 +554,87 @@ namespace OpenBve
 								Reset();
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
+							case MenuTag.Packages:
+								string errorMessage;
+								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+								{
+									Menu.instance.PushMenu(MenuType.Packages);
+								}
+								
+								break;
 							// route menu commands
+							case MenuTag.PackageInstall:
+								currentOperation = PackageOperation.Installing;
+								packagePreview = true;
+								instance.PushMenu(MenuType.PackageInstall);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+								break;
+							case MenuTag.PackageUninstall:
+								currentOperation = PackageOperation.Uninstalling;
+								instance.PushMenu(MenuType.PackageUninstall);
+								break;
+							case MenuTag.UninstallRoute:
+								if (Database.currentDatabase.InstalledRoutes.Count == 0)
+								{
+									return;
+								}
+								instance.PushMenu(MenuType.UninstallRoute);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+								break;
+							case MenuTag.UninstallTrain:
+								if (Database.currentDatabase.InstalledTrains.Count == 0)
+								{
+									return;
+								}
+								instance.PushMenu(MenuType.UninstallTrain);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+								break;
+							case MenuTag.UninstallOther:
+								if (Database.currentDatabase.InstalledOther.Count == 0)
+								{
+									return;
+								}
+								instance.PushMenu(MenuType.UninstallOther);
+								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+								break;
+							case MenuTag.File:
+								if (currentOperation == PackageOperation.Installing)
+								{
+									currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
+								}
+								else
+								{
+									return;
+								}
+								
+								if (!packageWorkerThread.IsBusy)
+								{
+									packageWorkerThread.RunWorkerAsync();
+								}
+								break;
+							case MenuTag.Package:
+								if (currentOperation == PackageOperation.Uninstalling)
+								{
+									currentPackage = (Package)((MenuCommand)menu.Items[menu.Selection]).Data;
+								}
+								else
+								{
+									return;
+								}
+								routeDescriptionBox.Text = currentPackage.Description;
+								if (currentPackage.PackageImage != null)
+								{
+									routePictureBox.Texture = new Texture(currentPackage.PackageImage as Bitmap);
+								}
+								else
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);		
+								}
+								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString("errors_route_please_select");
@@ -532,12 +665,11 @@ namespace OpenBve
 								break;
 							case MenuTag.RouteFile:
 								RoutefileState = RouteState.Loading;
-								RouteFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
+								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
 								if (!routeWorkerThread.IsBusy)
 								{
 									routeWorkerThread.RunWorkerAsync();
 								}
-								
 								break;
 							case MenuTag.TrainDirectory:
 								for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -572,7 +704,7 @@ namespace OpenBve
 								// simulation commands
 							case MenuTag.JumpToStation:         // JUMP TO STATION
 								Reset();
-								TrainManagerBase.PlayerTrain.Jump(menuItem.Data);
+								TrainManagerBase.PlayerTrain.Jump((int)menuItem.Data);
 								Program.TrainManager.JumpTFO();
 								break;
 							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU
@@ -582,9 +714,9 @@ namespace OpenBve
 								MainLoop.Quit = MainLoop.QuitMode.ExitToMenu;
 								break;
 							case MenuTag.Control:               // CONTROL CUSTOMIZATION
-								PushMenu(MenuType.Control, ((MenuCommand)menu.Items[menu.Selection]).Data);
+								PushMenu(MenuType.Control, (int)((MenuCommand)menu.Items[menu.Selection]).Data);
 								isCustomisingControl = true;
-								CustomControlIdx = ((MenuCommand)menu.Items[menu.Selection]).Data;
+								CustomControlIdx = (int)((MenuCommand)menu.Items[menu.Selection]).Data;
 								break;
 							case MenuTag.Quit:                  // QUIT PROGRAMME
 								Reset();
@@ -596,7 +728,7 @@ namespace OpenBve
 									Reset();
 									//Launch the game!
 									Loading.Complete = false;
-									Loading.LoadAsynchronously(RouteFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
+									Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
 									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
 									// ReSharper disable once PossibleNullReferenceException
 									g.LoadingScreenLoop();
@@ -654,7 +786,7 @@ namespace OpenBve
 
 			
 			double itemLeft, itemX;
-			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+			if (menu.Align == TextAlignment.TopLeft)
 			{
 				itemLeft = 0;
 				itemX = 16;
@@ -761,6 +893,7 @@ namespace OpenBve
 			switch (menu.Type)
 			{
 				case MenuType.GameStart:
+				case MenuType.Packages:
 					LogoPictureBox.Draw();
 					string currentVersion =  @"v" + Application.ProductVersion + Program.VersionSuffix;
 					if (IntPtr.Size != 4)
@@ -828,6 +961,54 @@ namespace OpenBve
 
 					break;
 				}
+				case MenuType.PackageInstall:
+					routePictureBox.Draw();
+					routeDescriptionBox.Draw();
+					if (currentPackage != null)
+					{
+						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+						}
+						else
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+						}
+					}
+					break;
+				case MenuType.PackageUninstall:
+					if (routeDescriptionBox.Text != string.Empty)
+					{
+						routeDescriptionBox.Draw();
+					}
+					else
+					{
+						LogoPictureBox.Draw();
+					}
+					break;
+				case MenuType.UninstallRoute:
+				case MenuType.UninstallTrain:
+				case MenuType.UninstallOther:
+					routePictureBox.Draw();
+					routeDescriptionBox.Draw();
+					if (currentPackage != null)
+					{
+						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+						}
+						else
+						{
+							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+						}
+					}
+					break;
 			}
 			
 		}
@@ -853,18 +1034,20 @@ namespace OpenBve
 				 */
 				menu.Items[i].DisplayLength = menu.Items[i].DisplayLength;
 			}
-			if (menu.Type == MenuType.GameStart || menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList)
+
+			// HORIZONTAL PLACEMENT
+			switch (menu.Align)
 			{
-				// Left aligned, used for route browser
-				menuXmin = 0;
+				case TextAlignment.TopLeft:
+					// Left aligned
+					menuXmin = 0;
+					break;
+				default:
+					// Centered in window
+					menuXmin = (Program.Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
+					break;
 			}
 
-			else
-			{
-				// HORIZONTAL PLACEMENT: centre the menu in the main window
-				menuXmin = (Program.Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
-			}
-			
 			menuXmax = menuXmin + menu.Width;               // menu right edge (border excluded)
 															// VERTICAL PLACEMENT: centre the menu in the main window
 			menuYmin = (Program.Renderer.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)

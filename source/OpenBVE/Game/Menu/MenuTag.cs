@@ -42,6 +42,22 @@
 		/// <summary>Selects No for a menu choice</summary>
 		No,
 		/// <summary>A train directory</summary>
-		TrainDirectory
+		TrainDirectory,
+		/// <summary>Shows the packages sub-menu</summary>
+		Packages,
+		/// <summary>Shows the package install menu</summary>
+		PackageInstall,
+		/// <summary>Shows the package uninstall menu</summary>
+		PackageUninstall,
+		/// <summary>Selects a file</summary>
+		File,
+		/// <summary>Selects a package</summary>
+		Package,
+		/// <summary>Uninstalls a route</summary>
+		UninstallRoute,
+		/// <summary>Uninstalls a train</summary>
+		UninstallTrain,
+		/// <summary>Uninstalls anything else</summary>
+		UninstallOther
 	}
 }

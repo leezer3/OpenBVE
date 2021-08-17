@@ -1,5 +1,3 @@
-using System;
-using System.Drawing;
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;

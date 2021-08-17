@@ -10,9 +10,9 @@ namespace OpenBve
 			/// <summary>The command tag describing the function of the menu entry</summary>
 			internal readonly MenuTag Tag;
 			/// <summary>The optional data to be passed with the command</summary>
-			internal readonly int Data;
+			internal readonly object Data;
 
-			internal MenuCommand(string Text, MenuTag Tag, int Data)
+			internal MenuCommand(string Text, MenuTag Tag, object Data)
 			{
 				this.Text = Text;
 				this.Tag = Tag;
@@ -20,7 +20,7 @@ namespace OpenBve
 				this.Icon = null;
 			}
 
-			internal MenuCommand(string Text, MenuTag Tag, int Data, Texture Icon)
+			internal MenuCommand(string Text, MenuTag Tag, object Data, Texture Icon)
 			{
 				this.Text = Text;
 				this.Tag = Tag;

@@ -205,7 +205,11 @@ namespace OpenBveApi.Packages
 		/// <summary>Installing a package</summary>
 		Installing,
 		/// <summary>Uninstalling a package</summary>
-		Uninstalling
+		Uninstalling,
+		/// <summary>
+		/// Reading the information from a package
+		/// </summary>
+		Reading
 	}
 	
 
@@ -280,6 +284,7 @@ namespace OpenBveApi.Packages
 			{
 				OnProblemReport(null, new ProblemReport((int)((double)i / j * 100), fp, ex));
 			}
+			OnCompletion(null, new CompletionReport(PackageOperation.Installing));
 		}
 
 		/// <summary>Creates a new packaged archive</summary>
@@ -373,6 +378,7 @@ namespace OpenBveApi.Packages
 			{
 				OnProblemReport(null, new ProblemReport((int)((double)cf / packageFiles.Count * 100), fp, ex));
 			}
+			OnCompletion(null, new CompletionReport(PackageOperation.Creating));
 		}
 
 		/// <summary>Uninstalls a package</summary>
@@ -420,6 +426,7 @@ namespace OpenBveApi.Packages
 			}
 			//Set the final results string to display
 			PackageFiles = deletionCount + " files deleted successfully. \r\n" + errorCount + " errors were encountered. \r\n \r\n \r\n" + Result;
+			OnCompletion(null, new CompletionReport(PackageOperation.Uninstalling));
 			return noErrors;
 		}
 
@@ -525,6 +532,7 @@ namespace OpenBveApi.Packages
 				return null;
 			}
 			currentPackage.PackageFile = packageFile;
+			OnCompletion(null, new CompletionReport(PackageOperation.Reading));
 			return currentPackage;
 		}
 
@@ -553,6 +561,18 @@ namespace OpenBveApi.Packages
 			if (ProblemReport != null)
 			{
 				ProblemReport(null, problemReport);
+			}
+		}
+
+		/// <summary>Reports the current progress of a package installation or uninstallation</summary>
+		public static event EventHandler<CompletionReport> OperationCompleted;
+
+		/// <summary>This is called whenever the progress changes</summary>
+		public static void OnCompletion(object sender, CompletionReport completionReport)
+		{
+			if (OperationCompleted != null)
+			{
+				OperationCompleted(null, completionReport);
 			}
 		}
 
@@ -589,6 +609,18 @@ namespace OpenBveApi.Packages
 			Progress = progress;
 			CurrentFile = file;
 			Exception = ex;
+		}
+	}
+
+	/// <summary>Defines a completion report</summary>
+	public class CompletionReport : EventArgs
+	{
+		/// <summary>The operation which has completed</summary>
+		public PackageOperation Operation { get; set; }
+		/// <summary>The completion report</summary>
+		public CompletionReport(PackageOperation operation)
+		{
+			Operation = operation;
 		}
 	}
 

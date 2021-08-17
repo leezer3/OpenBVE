@@ -115,7 +115,7 @@ namespace OpenBve {
 				return;
 			}
 
-			Renderer = new NewRenderer();
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			Sounds = new Sounds();
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			

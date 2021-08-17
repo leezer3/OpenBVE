@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using DavyKager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using TrainManager;
 using Path = OpenBveApi.Path;
@@ -77,30 +79,82 @@ namespace OpenBve
 					case MenuType.GameStart:          // top level menu
 						if (routeWorkerThread == null)
 						{
-							//Create the worker thread for route details processing on first launch of main menu
+							//Create the worker threads on first launch of main menu
 							routeWorkerThread = new BackgroundWorker();
 							routeWorkerThread.DoWork += routeWorkerThread_doWork;
 							routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
+							packageWorkerThread = new BackgroundWorker();
+							packageWorkerThread.DoWork += packageWorkerThread_doWork;
+							packageWorkerThread.RunWorkerCompleted += packageWorkerThread_completed;
+							Manipulation.ProgressChanged += OnWorkerProgressChanged;
+							Manipulation.ProblemReport += OnWorkerReportsProblem;
+							Manipulation.OperationCompleted += OnPackageOperationCompleted;
 							//Load texture
 							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 						}
-						Items = new MenuEntry[3];
+						Items = new MenuEntry[4];
 						Items[0] = new MenuCommand("Open Route File", MenuTag.RouteList, 0);
 						
 						if (!Interface.CurrentOptions.KioskMode)
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
 							Items[1] = new MenuCommand(Translations.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
-							Items[2] = new MenuCommand(Translations.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
+							Items[2] = new MenuCommand(Translations.GetInterfaceString("packages_title"), MenuTag.Packages, 0);
+							Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
 						}
 						else
 						{
-							Array.Resize(ref Items, Items.Length - 2);
+							Array.Resize(ref Items, Items.Length - 3);
 						}
 						SearchDirectory = Program.FileSystem.InitialRouteFolder;
 						Align = TextAlignment.TopLeft;
 						break;
-					case MenuType.RouteList:
+					case MenuType.Packages:
+						Items = new MenuEntry[4];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_title"));
+						Items[1] = new MenuCommand(Translations.GetInterfaceString("packages_install_header"), MenuTag.PackageInstall, 0);
+						Items[2] = new MenuCommand(Translations.GetInterfaceString("packages_uninstall_button"), MenuTag.PackageUninstall, 0);
+						Items[3] = new MenuCommand(Translations.GetInterfaceString("packages_button_cancel"), MenuTag.MenuBack, 0);
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.PackageUninstall:
+						routeDescriptionBox.Text = string.Empty;
+						Items = new MenuEntry[5];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list_type"));
+						Items[1] = new MenuCommand(Translations.GetInterfaceString("packages_type_route"), MenuTag.UninstallRoute, 0);
+						Items[2] = new MenuCommand(Translations.GetInterfaceString("packages_type_train"), MenuTag.UninstallTrain, 0);
+						Items[3] = new MenuCommand(Translations.GetInterfaceString("packages_type_other"), MenuTag.UninstallOther, 0);
+						Items[4] = new MenuCommand(Translations.GetInterfaceString("packages_button_cancel"), MenuTag.MenuBack, 0);
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.UninstallRoute:
+						Items = new MenuEntry[Database.currentDatabase.InstalledRoutes.Count + 1];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list"));
+						for (int j = 0; j < Database.currentDatabase.InstalledRoutes.Count; j++)
+						{
+							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledRoutes[j].Name, MenuTag.Package, Database.currentDatabase.InstalledRoutes[j]);
+						}
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.UninstallTrain:
+						Items = new MenuEntry[Database.currentDatabase.InstalledTrains.Count + 1];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list"));
+						for (int j = 0; j < Database.currentDatabase.InstalledTrains.Count; j++)
+						{
+							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledTrains[j].Name, MenuTag.Package, Database.currentDatabase.InstalledTrains[j]);
+						}
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.UninstallOther:
+						Items = new MenuEntry[Database.currentDatabase.InstalledOther.Count + 1];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("packages_list"));
+						for (int j = 0; j < Database.currentDatabase.InstalledOther.Count; j++)
+						{
+							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledOther[j].Name, MenuTag.Package, Database.currentDatabase.InstalledOther[j]);
+						}
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.PackageInstall:
 						string[] potentialFiles = { };
 						string[] directoryList = { };
 						bool drives = false;
@@ -131,6 +185,96 @@ namespace OpenBve
 						Items[0] = new MenuCaption(SearchDirectory);
 						Items[1] = new MenuCommand("...", MenuTag.ParentDirectory, 0);
 						int totalEntries = 2;
+						for (int j = 0; j < directoryList.Length; j++)
+						{
+							DirectoryInfo directoryInfo = new DirectoryInfo(directoryList[j]);
+							if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows && directoryInfo.Name[0] == '.')
+							{
+								continue;
+							}
+							Items[totalEntries] = new MenuCommand(directoryInfo.Name, MenuTag.Directory, 0);
+							if (drives)
+							{
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+							}
+							else
+							{
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);	
+							}
+							
+							totalEntries++;
+						}
+
+						for (int j = 0; j < potentialFiles.Length; j++)
+						{
+							string fileName = System.IO.Path.GetFileName(potentialFiles[j]);
+							if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows && fileName[0] == '.')
+							{
+								continue;
+							}
+							Items[totalEntries] = new MenuCommand(fileName, MenuTag.File, 0);
+							string ext = System.IO.Path.GetExtension(fileName);
+							if (!iconCache.ContainsKey(ext))
+							{
+								// As some people have used arbritary extensions for packages, let's show all files
+								// Try and pull out the default icon from the cache for something a little nicer looking
+								try
+								{
+									Icon icon = Icon.ExtractAssociatedIcon(potentialFiles[j]);
+									if (icon != null)
+									{
+										Texture t;
+										Program.CurrentHost.RegisterTexture(icon.ToBitmap(), new TextureParameters(null, null), out t);
+										iconCache.Add(ext, t);
+										Items[totalEntries].Icon = t;
+									}
+								}
+								catch
+								{
+									// Ignored
+								}
+								
+							}
+							else
+							{
+								Items[totalEntries].Icon = iconCache[ext];
+							}
+							totalEntries++;
+						}
+						Array.Resize(ref Items, totalEntries);
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.RouteList:
+						potentialFiles = new string[] { };
+						directoryList = new string[] { };
+						drives = false;
+						if (SearchDirectory != string.Empty)
+						{
+							try
+							{
+								potentialFiles = Directory.GetFiles(SearchDirectory);
+								directoryList = Directory.GetDirectories(SearchDirectory);
+							}
+							catch
+							{
+								// Ignored
+							}
+						}
+						else
+						{
+							DriveInfo[] systemDrives = DriveInfo.GetDrives();
+							directoryList = new string[systemDrives.Length];
+							for (int k = 0; k < systemDrives.Length; k++)
+							{
+								directoryList[k] = systemDrives[k].Name;
+							}
+							drives = true;
+						}
+						
+						Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
+						Items[0] = new MenuCaption(SearchDirectory);
+						Items[1] = new MenuCommand("...", MenuTag.ParentDirectory, 0);
+						totalEntries = 2;
 						for (int j = 0; j < directoryList.Length; j++)
 						{
 							DirectoryInfo directoryInfo = new DirectoryInfo(directoryList[j]);
@@ -401,7 +545,7 @@ namespace OpenBve
 						Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_assign"), MenuTag.None, 0);
 						break;
 					case MenuType.TrainDefault:
-						Interface.CurrentOptions.TrainFolder = Loading.GetDefaultTrainFolder(RouteFile);
+						Interface.CurrentOptions.TrainFolder = Loading.GetDefaultTrainFolder(currentFile);
 						bool canLoad = false;
 						for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 						{
@@ -464,7 +608,7 @@ namespace OpenBve
 						}
 						Width = MaxWidth;
 					}
-					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart) && size.X > ItemWidth)
+					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart && menuType != MenuType.Packages) && size.X > ItemWidth)
 						ItemWidth = size.X;
 				}
 				Height = Items.Length * Game.Menu.LineHeight;

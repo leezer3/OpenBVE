@@ -48,9 +48,9 @@ namespace OpenBve
 		private Texture LightingEventTexture;
 		private Texture WeatherEventTexture;
 		
-		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
+		public override void Initialize()
 		{
-			base.Initialize(CurrentHost, CurrentOptions, FileSystem);
+			base.Initialize();
 
 			string Folder = Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);
@@ -710,6 +710,10 @@ namespace OpenBve
 
 			builder.Append(values[values.Length - 1].ToString("0.00", culture));
 			return builder.ToString();
+		}
+
+		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		{
 		}
 	}
 }

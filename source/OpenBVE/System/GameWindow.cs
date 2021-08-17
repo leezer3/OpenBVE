@@ -383,7 +383,7 @@ namespace OpenBve
 			//Initialise the loader thread queues
 			jobs = new Queue<ThreadStart>(10);
 			locks = new Queue<object>(10);
-			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions, Program.FileSystem);
+			Program.Renderer.Initialize();
 			Program.Renderer.DetermineMaxAFLevel();
 			HUD.LoadHUD();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());

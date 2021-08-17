@@ -8,11 +8,15 @@ namespace TrainEditor2.Graphics
 {
 	internal class NewRenderer : BaseRenderer
 	{
-		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
+		public override void Initialize()
 		{
-			base.Initialize(CurrentHost, CurrentOptions, FileSystem);
+			base.Initialize();
 
 			GL.Disable(EnableCap.CullFace);
+		}
+
+		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		{
 		}
 	}
 }

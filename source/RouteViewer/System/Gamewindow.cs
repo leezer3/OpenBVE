@@ -117,7 +117,7 @@ namespace OpenBve
             Program.Renderer.Camera.BackwardViewingDistance = 0.0;
             Program.Renderer.Camera.ExtraViewingDistance = 50.0;
 
-            Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions, Program.FileSystem);
+            Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
 			Program.Sounds.Initialize(Program.CurrentHost, SoundRange.Low);
 			Program.Renderer.UpdateViewport();
