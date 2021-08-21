@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBve.Input;
+using OpenBve.UserInterface;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenTK.Input;
 using Key = OpenBveApi.Input.Key;
 using Control = OpenBveApi.Interface.Control;
+using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
+
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 namespace OpenBve {
@@ -586,7 +592,9 @@ namespace OpenBve {
 			KeyGrab = false;
 		}
 
-		
+		/// <summary>Array containing the configure link locations within the painted picturebox</summary>
+		private Vector2[][] configureLinkLocations;
+
 		// attached joysticks
 		private void pictureboxJoysticks_Paint(object sender, PaintEventArgs e)
 		{
@@ -613,6 +621,7 @@ namespace OpenBve {
 			Font f = new Font(this.Font.Name, 0.875f * this.Font.Size);
 			float x = 2.0f, y = 2.0f;
 			float threshold = ((float)trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (float)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
+			configureLinkLocations = new Vector2[Program.Joysticks.AttachedJoysticks.Count][];
 			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
 				Guid guid = Program.Joysticks.AttachedJoysticks.ElementAt(i).Key;
@@ -631,6 +640,10 @@ namespace OpenBve {
 				{
 					image = XboxImage;
 				}
+				else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1 && ZukiImage != null)
+				{
+					image = ZukiImage;
+				}
 				if (image != null) {
 					e.Graphics.DrawImage(image, x, y);
 					w = image.Width;
@@ -640,16 +653,25 @@ namespace OpenBve {
 					w = 64.0f; h = 64.0f;
 					e.Graphics.DrawRectangle(new Pen(labelControlsTitle.BackColor), x, y, w, h);
 				}
-				{ // joystick number
-					e.Graphics.FillEllipse(Brushes.Gold, x + w - 16.0f, y, 16.0f, 16.0f);
-					e.Graphics.DrawEllipse(Pens.Black, x + w - 16.0f, y, 16.0f, 16.0f);
-					string t = (i + 1).ToString(Culture);
-					SizeF s = e.Graphics.MeasureString(t, f);
-					e.Graphics.DrawString(t, f, Brushes.Black, x + w - 8.0f - 0.5f * s.Width, y + 8.0f - 0.5f * s.Height);
+
+				// joystick number
+				e.Graphics.FillEllipse(Brushes.Gold, x + w - 16.0f, y, 16.0f, 16.0f);
+				e.Graphics.DrawEllipse(Pens.Black, x + w - 16.0f, y, 16.0f, 16.0f);
+				string joystickNumber = (i + 1).ToString(Culture);
+				SizeF numberSize = e.Graphics.MeasureString(joystickNumber, f);
+				e.Graphics.DrawString(joystickNumber, f, Brushes.Black, x + w - 8.0f - 0.5f * numberSize.Width, y + 8.0f - 0.5f * numberSize.Height);
+				// joystick name
+				e.Graphics.DrawString(Program.Joysticks.AttachedJoysticks[guid].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
+				// Configure Link
+				if(Program.Joysticks.AttachedJoysticks[guid].ConfigurationLink != ConfigurationLink.None)
+				{
+					Font underlinedFont = new Font(this.Font, FontStyle.Underline);
+					SizeF joystickSize = e.Graphics.MeasureString(Program.Joysticks.AttachedJoysticks[guid].Name, this.Font);
+					SizeF configureSize = e.Graphics.MeasureString("Configure", underlinedFont);
+					e.Graphics.DrawString("Configure", underlinedFont, Brushes.Blue, x + w + 8.0f + joystickSize.Width - configureSize.Width, y + numberSize.Height);
+					configureLinkLocations[i] = new[] {new Vector2(x + w + 8.0f + joystickSize.Width - configureSize.Width, y + numberSize.Height), new Vector2(x + w + 8.0f + joystickSize.Width + configureSize.Width, y + numberSize.Height + configureSize.Height)};
 				}
-				{ // joystick name
-					e.Graphics.DrawString(Program.Joysticks.AttachedJoysticks[guid].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
-				}
+				
 				if (OpenTK.Configuration.RunningOnSdl2)
 				{
 					//HACK: Control configuration doesn't work in-form on SDL2
@@ -811,6 +833,57 @@ namespace OpenBve {
 				}
 				x = m + 8.0f;               
 			}
+		}
+
+		private void pictureboxJoysticks_Click(object sender, EventArgs e)
+		{
+			MouseEventArgs mouseEvent = (MouseEventArgs)e;
+			for (int i = 0; i < configureLinkLocations.Length; i++)
+			{
+				if (configureLinkLocations[i] != null)
+				{
+					if (mouseEvent.Location.X > configureLinkLocations[i][0].X && mouseEvent.Location.X < configureLinkLocations[i][1].X)
+					{
+						if (mouseEvent.Location.Y > configureLinkLocations[i][0].Y && mouseEvent.Location.Y < configureLinkLocations[i][1].Y)
+						{
+							AbstractJoystick j = Program.Joysticks.AttachedJoysticks.ElementAt(i).Value;
+							switch (j.ConfigurationLink)
+							{
+								case ConfigurationLink.DenshaDeGo:
+									for (int p = 0; p < InputDevicePlugin.AvailablePluginInfos.Count; p++)
+									{
+										if (string.Equals(InputDevicePlugin.AvailablePluginInfos[p].FileName, "DenshaDeGoInput.dll", StringComparison.InvariantCultureIgnoreCase))
+										{
+											if (InputDevicePlugin.AvailablePluginInfos[p].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
+											{
+												InputDevicePlugin.AvailablePlugins[p].Config(this);
+											}
+											else if (InputDevicePlugin.AvailablePluginInfos[p].Status == InputDevicePlugin.PluginInfo.PluginStatus.Disable)
+											{
+												InputDevicePlugin.CallPluginLoad(p, Program.CurrentHost);
+												UpdateInputDeviceListViewItem(listviewInputDevice.Items[p], p, true);
+												if (listviewInputDevice.SelectedIndices.Contains(p))
+												{
+													UpdateInputDeviceComponent(InputDevicePlugin.AvailablePluginInfos[p].Status);
+												}
+												InputDevicePlugin.AvailablePlugins[p].Config(this);
+											}
+										}
+									}
+									break;
+								case ConfigurationLink.RailDriver:
+									using (formRaildriverCalibration f = new formRaildriverCalibration())
+									{
+										f.ShowDialog();
+									}
+									break;
+							}
+							return;
+						}
+					}
+				}
+			}
+			
 		}
 	}
 }

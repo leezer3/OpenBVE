@@ -11,6 +11,7 @@ namespace OpenBve.Input
 
 		internal RailDriver32(PIEDevice device)
 		{
+			ConfigurationLink = ConfigurationLink.RailDriver;
 			myDevice = device;
 			for (int i = 0; i < Calibration.Length; i++)
 			{
