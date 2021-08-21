@@ -852,7 +852,7 @@ namespace OpenBve {
 								case ConfigurationLink.DenshaDeGo:
 									for (int p = 0; p < InputDevicePlugin.AvailablePluginInfos.Count; p++)
 									{
-										if (InputDevicePlugin.AvailablePluginInfos[p].FileName == "DenshaDeGoInput.dll")
+										if (string.Equals(InputDevicePlugin.AvailablePluginInfos[p].FileName, "DenshaDeGoInput.dll", StringComparison.InvariantCultureIgnoreCase))
 										{
 											if (InputDevicePlugin.AvailablePluginInfos[p].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
 											{
