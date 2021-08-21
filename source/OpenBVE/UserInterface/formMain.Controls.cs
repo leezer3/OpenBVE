@@ -852,10 +852,20 @@ namespace OpenBve {
 								case ConfigurationLink.DenshaDeGo:
 									for (int p = 0; p < InputDevicePlugin.AvailablePluginInfos.Count; p++)
 									{
-										if (InputDevicePlugin.AvailablePluginInfos[p].Name.Title == "Densha de GO! controller plugin")
+										if (InputDevicePlugin.AvailablePluginInfos[p].FileName == "DenshaDeGoInput.dll")
 										{
 											if (InputDevicePlugin.AvailablePluginInfos[p].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
 											{
+												InputDevicePlugin.AvailablePlugins[p].Config(this);
+											}
+											else if (InputDevicePlugin.AvailablePluginInfos[p].Status == InputDevicePlugin.PluginInfo.PluginStatus.Disable)
+											{
+												InputDevicePlugin.CallPluginLoad(p, Program.CurrentHost);
+												UpdateInputDeviceListViewItem(listviewInputDevice.Items[p], p, true);
+												if (listviewInputDevice.SelectedIndices.Contains(p))
+												{
+													UpdateInputDeviceComponent(InputDevicePlugin.AvailablePluginInfos[p].Status);
+												}
 												InputDevicePlugin.AvailablePlugins[p].Config(this);
 											}
 										}
