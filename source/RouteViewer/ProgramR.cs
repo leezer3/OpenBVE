@@ -72,8 +72,8 @@ namespace OpenBve
 			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 			FileSystem.CreateFileSystem();
 			Sounds = new Sounds();
-			Options.LoadOptions();
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			Options.LoadOptions();
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			string error;

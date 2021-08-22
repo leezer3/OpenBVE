@@ -71,9 +71,10 @@ namespace ObjectViewer {
 	        FileSystem.CreateFileSystem();
 	        
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
+	        Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        Options.LoadOptions();
-	        Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {
