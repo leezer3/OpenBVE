@@ -203,6 +203,7 @@
     <Compile Include="System\Interop.cs" />
     <Compile Include="System\SimulationState.cs" />
     <Compile Include="System\TextEncoding.cs" />
+    <Compile Include="System\Timers.cs" />
     <Compile Include="Textures\Textures.ImageSizeMode.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />

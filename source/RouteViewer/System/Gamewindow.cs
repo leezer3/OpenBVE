@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
