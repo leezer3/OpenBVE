@@ -7,7 +7,7 @@
 
 using OpenBveApi.Math;
 
-namespace OpenBve {
+namespace RouteViewer {
 	public static class World
 	{
 		// update absolute camera

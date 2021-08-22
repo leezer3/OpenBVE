@@ -9,7 +9,7 @@ using OpenTK.Graphics.OpenGL;
 using SoundManager;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve
+namespace RouteViewer
 {
     class RouteViewer : GameWindow
     {

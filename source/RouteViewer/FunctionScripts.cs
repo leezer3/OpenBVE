@@ -6,7 +6,7 @@ using LibRender2.Overlays;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 
-namespace OpenBve {
+namespace RouteViewer {
 	internal static class FunctionScripts {
 
 		// execute function script

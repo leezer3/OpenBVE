@@ -14,7 +14,7 @@ using TrainManager;
 using TrainManager.Handles;
 using TrainManager.Trains;
 
-namespace OpenBve {
+namespace RouteViewer {
 
 	internal class TrainManager : TrainManagerBase {
 

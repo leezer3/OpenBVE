@@ -2,7 +2,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 
-namespace OpenBve {
+namespace RouteViewer {
 	internal static class ObjectManager {
 
 		internal static WorldObject[] AnimatedWorldObjects = new WorldObject[4];

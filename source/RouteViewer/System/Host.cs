@@ -14,7 +14,7 @@ using OpenBveApi.World;
 using RouteManager2.MessageManager;
 using TrainManager.Trains;
 
-namespace OpenBve
+namespace RouteViewer
 {
 	/// <summary>Represents the host application.</summary>
 	internal class Host : OpenBveApi.Hosts.HostInterface

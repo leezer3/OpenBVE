@@ -9,7 +9,7 @@ using SoundManager;
 using TrainManager.Car;
 
 
-namespace OpenBve
+namespace RouteViewer
 {
 	internal class Sounds : SoundsBase
 	{

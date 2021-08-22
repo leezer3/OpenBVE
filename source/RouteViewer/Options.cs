@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
 
-namespace OpenBve
+namespace RouteViewer
 {
     internal class Options
     {

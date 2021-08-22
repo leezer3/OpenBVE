@@ -25,7 +25,7 @@ using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve
+namespace RouteViewer
 {
 	internal static class Program {
 

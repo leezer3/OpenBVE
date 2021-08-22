@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace OpenBve {
+namespace RouteViewer {
     /// <summary>This class implements a high-precision, multi-platform timer</summary>
     public static class CPreciseTimer
     {
