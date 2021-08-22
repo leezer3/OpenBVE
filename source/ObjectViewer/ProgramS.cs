@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
-using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -27,7 +26,7 @@ using ButtonState = OpenTK.Input.ButtonState;
 using Control = OpenBveApi.Interface.Control;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve {
+namespace ObjectViewer {
 	internal static class Program {
 		internal static FileSystem FileSystem = null;
 

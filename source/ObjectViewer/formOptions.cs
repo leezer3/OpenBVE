@@ -5,7 +5,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenTK.Graphics;
 
-namespace OpenBve
+namespace ObjectViewer
 {
 	public partial class formOptions : Form
 	{

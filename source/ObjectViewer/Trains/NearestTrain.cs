@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve;
 using OpenBveApi.Trains;
 using TrainManager;
 using TrainManager.BrakeSystems;

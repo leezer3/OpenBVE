@@ -6,7 +6,7 @@ using ObjectViewer.Graphics;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 
-namespace OpenBve
+namespace ObjectViewer
 {
     internal class Options
     {

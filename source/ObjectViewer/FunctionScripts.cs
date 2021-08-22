@@ -8,7 +8,7 @@ using OpenBveApi.Runtime;
 using TrainManager.Handles;
 using TrainManager.Trains;
 
-namespace OpenBve {
+namespace ObjectViewer {
 	internal static class FunctionScripts {
 
 		// execute function script

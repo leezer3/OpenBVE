@@ -14,7 +14,7 @@ using OpenBveApi.World;
 using TrainManager;
 using TrainManager.Trains;
 
-namespace OpenBve {
+namespace ObjectViewer {
 	/// <summary>Represents the host application.</summary>
 	internal class Host : HostInterface {
 		
