@@ -82,7 +82,7 @@ namespace ObjectViewer.Trains
 				train.Cars[i].CarBrake.brakeCylinder = new BrakeCylinder(Status.BrakeCylinderPressure * 1000.0);
 				train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(Status.StraightAirPipePressure * 1000.0);
 
-				train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, train.Cars[i / 2], train.Cars.Length > 1 ? train.Cars[i / 2 + 1] : null, train);
+				train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, train.Cars[i], i < train.Cars.Length - 1 ? train.Cars[i + 1] : null, train);
 
 				train.Cars[i].Doors[0] = new Door(-1, 1000.0, 0.0);
 				train.Cars[i].Doors[1] = new Door(1, 1000.0, 0.0);

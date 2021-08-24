@@ -74,7 +74,7 @@ namespace RouteViewer
 												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
 													a = 960;
 												}
-												Program.Renderer.Screen.Width = a;
+												Interface.CurrentOptions.WindowWidth = a;
 											} break;
 										case "windowheight":
 											{
@@ -82,7 +82,7 @@ namespace RouteViewer
 												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
 													a = 600;
 												}
-												Program.Renderer.Screen.Height = a;
+												Interface.CurrentOptions.WindowHeight = a;
 											} break;
 										case "isusenewrenderer":
 											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;

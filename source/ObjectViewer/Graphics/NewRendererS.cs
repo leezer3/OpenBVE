@@ -376,6 +376,8 @@ namespace ObjectViewer.Graphics
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
 		{
+			Screen.Width = CurrentOptions.WindowWidth;
+			Screen.Height = CurrentOptions.WindowHeight;
 		}
 	}
 }

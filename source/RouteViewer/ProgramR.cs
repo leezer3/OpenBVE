@@ -72,8 +72,8 @@ namespace RouteViewer
 			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 			FileSystem.CreateFileSystem();
 			Sounds = new Sounds();
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			Options.LoadOptions();
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			string error;

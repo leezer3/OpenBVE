@@ -719,6 +719,8 @@ namespace RouteViewer
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
 		{
+			Screen.Width = Interface.CurrentOptions.WindowWidth;
+			Screen.Height = Interface.CurrentOptions.WindowHeight;
 		}
 	}
 }
