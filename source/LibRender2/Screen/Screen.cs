@@ -1,4 +1,7 @@
-﻿namespace LibRender2.Screens
+﻿using System.Collections.Generic;
+using OpenTK;
+
+namespace LibRender2.Screens
 {
 	public class Screen
 	{
@@ -12,9 +15,22 @@
 		public bool Fullscreen = false;
 		/// <summary>Whether the window is currently minimized</summary>
 		public bool Minimized = false;
+		/// <summary>Holds the available screen resolutions</summary>
+		public readonly List<ScreenResolution> AvailableResolutions;
 
 		internal Screen()
 		{
+			//Find all resolutions our screen is capable of displaying, but don't store HZ info etc.
+			AvailableResolutions = new List<ScreenResolution>();
+			ScreenResolution lastResolution = new ScreenResolution(0,0);
+			for (int i = 0; i < DisplayDevice.Default.AvailableResolutions.Count; i++)
+			{
+				if (DisplayDevice.Default.AvailableResolutions[i].Width != lastResolution.Width || DisplayDevice.Default.AvailableResolutions[i].Height != lastResolution.Height)
+				{
+					lastResolution = new ScreenResolution(DisplayDevice.Default.AvailableResolutions[i].Width, DisplayDevice.Default.AvailableResolutions[i].Height);
+					AvailableResolutions.Add(lastResolution);
+				}
+			}
 		}
 	}
 }

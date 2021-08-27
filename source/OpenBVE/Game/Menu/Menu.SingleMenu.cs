@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -92,15 +92,16 @@ namespace OpenBve
 							//Load texture
 							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 						}
-						Items = new MenuEntry[4];
+						Items = new MenuEntry[5];
 						Items[0] = new MenuCommand("Open Route File", MenuTag.RouteList, 0);
 						
 						if (!Interface.CurrentOptions.KioskMode)
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
-							Items[1] = new MenuCommand(Translations.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
-							Items[2] = new MenuCommand(Translations.GetInterfaceString("packages_title"), MenuTag.Packages, 0);
-							Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
+							Items[1] = new MenuCommand(Translations.GetInterfaceString("options"), MenuTag.Options, 0);
+							Items[2] = new MenuCommand(Translations.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
+							Items[3] = new MenuCommand(Translations.GetInterfaceString("packages_title"), MenuTag.Packages, 0);
+							Items[4] = new MenuCommand(Translations.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
 						}
 						else
 						{
@@ -242,6 +243,26 @@ namespace OpenBve
 							totalEntries++;
 						}
 						Array.Resize(ref Items, totalEntries);
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.Options:
+						Items = new MenuEntry[8];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("panel_options"));
+						Items[1] = new MenuOption(MenuOptionType.ScreenResolution, Translations.GetInterfaceString("options_resolution"), Program.Renderer.Screen.AvailableResolutions.ToArray());
+						Items[2] = new MenuOption(MenuOptionType.FullScreen, Translations.GetInterfaceString("options_display_mode_fullscreen"), new[] { "true", "false" });
+						Items[3] = new MenuOption(MenuOptionType.Interpolation, Translations.GetInterfaceString("options_quality_interpolation"), new[]
+						{
+							Translations.GetInterfaceString("options_quality_interpolation_mode_nearest"),
+							Translations.GetInterfaceString("options_quality_interpolation_mode_bilinear"),
+							Translations.GetInterfaceString("options_quality_interpolation_mode_nearestmipmap"),
+							Translations.GetInterfaceString("options_quality_interpolation_mode_bilinearmipmap"),
+							Translations.GetInterfaceString("options_quality_interpolation_mode_trilinearmipmap"),
+							Translations.GetInterfaceString("options_quality_interpolation_mode_anisotropic")
+						});
+						Items[4] = new MenuOption(MenuOptionType.AnisotropicLevel, Translations.GetInterfaceString("options_quality_interpolation_anisotropic_level"), new[] { "0", "2", "4", "8", "16" });
+						Items[5] = new MenuOption(MenuOptionType.AntialiasingLevel, Translations.GetInterfaceString("options_quality_interpolation_antialiasing_level"), new[] { "0", "2", "4", "8", "16" });
+						Items[6] = new MenuOption(MenuOptionType.ViewingDistance, Translations.GetInterfaceString("options_quality_distance_viewingdistance"), new[] { "400", "600", "800", "1000", "1500", "2000" });
+						Items[7] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.RouteList:

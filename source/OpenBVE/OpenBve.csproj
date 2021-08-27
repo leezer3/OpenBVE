@@ -140,6 +140,7 @@
     <Compile Include="Game\Menu\Menu.MenuCommand.cs" />
     <Compile Include="Game\Menu\Menu.MenuEntry.cs" />
     <Compile Include="Game\Menu\Menu.MenuOption.cs" />
+    <Compile Include="Game\Menu\Menu.OptionType.cs" />
     <Compile Include="Game\Menu\Menu.Route.cs" />
     <Compile Include="Game\Menu\Menu.RouteState.cs" />
     <Compile Include="Game\Menu\Menu.SingleMenu.cs" />
