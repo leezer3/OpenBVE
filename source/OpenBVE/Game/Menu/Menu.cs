@@ -371,7 +371,7 @@ namespace OpenBve
 
 			int item = (int) ((y - topItemY) / lineHeight + menu.TopItem);
 			// if the mouse is above a command item, select it
-			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand)
+			if (item >= 0 && item < menu.Items.Length && (menu.Items[item] is MenuCommand || menu.Items[item] is MenuOption))
 			{
 				if (item < visibleItems + menu.TopItem + 1)
 				{
@@ -635,6 +635,9 @@ namespace OpenBve
 									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);		
 								}
 								break;
+							case MenuTag.Options:
+								Menu.instance.PushMenu(MenuType.Options);
+								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString("errors_route_please_select");
@@ -746,6 +749,11 @@ namespace OpenBve
 								break;
 						}
 					}
+					else if (menu.Items[menu.Selection] is MenuOption)
+					{
+						MenuOption opt = menu.Items[menu.Selection] as MenuOption;
+						opt.Flip();
+					}
 					break;
 				case Translations.Command.MiscFullscreen:
 					// fullscreen
@@ -768,7 +776,7 @@ namespace OpenBve
 		internal void Draw(double RealTimeElapsed)
 		{
 			pluginKeepAliveTimer += RealTimeElapsed;
-			if (pluginKeepAliveTimer > 100000 && TrainManager.PlayerTrain.Plugin != null)
+			if (pluginKeepAliveTimer > 100000 && TrainManager.PlayerTrain != null && TrainManager.PlayerTrain.Plugin != null)
 			{
 				TrainManager.PlayerTrain.Plugin.KeepAlive();
 				pluginKeepAliveTimer = 0;
@@ -873,12 +881,18 @@ namespace OpenBve
 				else
 					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
+				if (menu.Items[i] is MenuOption)
+				{
+					Program.Renderer.OpenGlString.Draw(MenuFont, (menu.Items[i] as MenuOption).CurrentOption.ToString(), new Vector2((menuXmax - menuXmin + 2.0f * MenuBorderX) + 4.0f, itemY),
+						menu.Align, backgroundColor, false);
+				}
 				itemY += lineHeight;
 				if (menu.Items[i].Icon != null)
 				{
 					Program.Renderer.Rectangle.DrawAlpha(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
 					itemX = iconX;
 				}
+				
 			}
 
 

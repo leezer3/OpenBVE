@@ -948,6 +948,9 @@
 					</trans-unit>
 				</group>
 				<group id="options">
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
+					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
 					</trans-unit>

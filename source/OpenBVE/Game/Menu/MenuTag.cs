@@ -58,6 +58,8 @@
 		/// <summary>Uninstalls a train</summary>
 		UninstallTrain,
 		/// <summary>Uninstalls anything else</summary>
-		UninstallOther
+		UninstallOther,
+		/// <summary>Shows the options menu</summary>
+		Options
 	}
 }
