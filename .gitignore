@@ -7,6 +7,9 @@
 *.suo
 .vs/
 
+#macOS things
+.DS_Store
+
 # Build results
 [Bb]in/
 [Oo]bj/

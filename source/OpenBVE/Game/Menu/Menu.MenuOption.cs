@@ -108,11 +108,16 @@ namespace OpenBve
 				switch (Type)
 				{
 					case MenuOptionType.ScreenResolution:
+					//HACK: macOS ends up rendering the windows at half of givenm size, so I have to multiply by 2 to compensate for this
 						ScreenResolution res = CurrentOption as ScreenResolution;
-						Program.Renderer.Screen.Width = res.Width * 2;
-						Program.Renderer.Screen.Height = res.Height * 2;
-						Program.currentGameWindow.Width = res.Width * 2;
-						Program.currentGameWindow.Height = res.Height * 2;
+						if (Program.currentGameWindow.WindowState == WindowState.Fullscreen){
+							//HACK: due to OpenTK not handling retina scaling properly fullscreen, you can't change resolution when in fullscreen
+						}else{
+							Program.Renderer.Screen.Width = res.Width * 2;
+							Program.Renderer.Screen.Height = res.Height * 2;
+							Program.currentGameWindow.Width = res.Width * 2;
+							Program.currentGameWindow.Height = res.Height * 2;
+						}
 						break;
 					case MenuOptionType.FullScreen:
 						Interface.CurrentOptions.FullscreenMode = !Interface.CurrentOptions.FullscreenMode;
