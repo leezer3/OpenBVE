@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -9,7 +10,7 @@ using OpenTK.Graphics.OpenGL;
 using SoundManager;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve
+namespace RouteViewer
 {
     class RouteViewer : GameWindow
     {

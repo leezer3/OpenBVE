@@ -12,7 +12,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using TrainManager.Trains;
 
-namespace OpenBve {
+namespace ObjectViewer {
 	// --- PluginManager.cs ---
 	internal static class PluginManager {
 		internal static class CurrentPlugin {

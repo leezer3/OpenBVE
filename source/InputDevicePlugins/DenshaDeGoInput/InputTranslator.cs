@@ -231,6 +231,18 @@ namespace DenshaDeGoInput
 					Controllers[controller.Key] = controller.Value;
 				}
 			}
+			// Zuiki controllers
+			foreach (KeyValuePair<Guid, Controller> controller in ZuikiController.GetControllers())
+			{
+				if (!Controllers.ContainsKey(controller.Key))
+				{
+					Controllers.Add(controller.Key, controller.Value);
+				}
+				else
+				{
+					Controllers[controller.Key] = controller.Value;
+				}
+			}
 			// Classic controllers, they need to be added last because we do not use VID/PID
 			foreach (KeyValuePair<Guid, Controller> controller in ClassicController.GetControllers())
 			{

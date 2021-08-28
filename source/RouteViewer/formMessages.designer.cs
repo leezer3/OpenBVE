@@ -1,4 +1,4 @@
-﻿namespace OpenBve
+namespace RouteViewer
 {
     partial class formMessages
     {

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using OpenBveApi.Graphics;
 using OpenTK.Graphics;
 
-namespace OpenBve
+namespace RouteViewer
 {
     public partial class formOptions : Form
     {

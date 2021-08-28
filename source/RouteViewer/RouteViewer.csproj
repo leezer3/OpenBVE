@@ -126,7 +126,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerR.cs" />
     <Compile Include="WorldR.cs" />
   </ItemGroup>

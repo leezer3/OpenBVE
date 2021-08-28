@@ -87,6 +87,7 @@ namespace OpenBve {
 		private Image RailDriverImage = null;
 		private Image GamepadImage = null;
 		private Image XboxImage = null;
+		private Image ZukiImage = null;
 
 		// ====
 		// form
@@ -180,6 +181,7 @@ namespace OpenBve {
 			RailDriverImage = LoadImage(MenuFolder, "raildriver2.png");
 			GamepadImage = LoadImage(MenuFolder, "gamepad.png");
 			XboxImage = LoadImage(MenuFolder, "xbox.png");
+			ZukiImage = LoadImage(MenuFolder, "zuki.png");
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");

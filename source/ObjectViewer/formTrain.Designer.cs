@@ -1,4 +1,4 @@
-namespace OpenBve {
+namespace ObjectViewer {
     partial class formTrain {
         /// <summary>
         /// Required designer variable.

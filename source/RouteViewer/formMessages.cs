@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
 
-namespace OpenBve
+namespace RouteViewer
 {
     public partial class formMessages : Form
     {

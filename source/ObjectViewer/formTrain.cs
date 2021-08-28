@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ObjectViewer.Trains;
 
-namespace OpenBve
+namespace ObjectViewer
 {
 	public partial class formTrain : Form
 	{

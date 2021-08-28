@@ -139,6 +139,8 @@
     <Compile Include="Game\Menu\Menu.MenuCaption.cs" />
     <Compile Include="Game\Menu\Menu.MenuCommand.cs" />
     <Compile Include="Game\Menu\Menu.MenuEntry.cs" />
+    <Compile Include="Game\Menu\Menu.MenuOption.cs" />
+    <Compile Include="Game\Menu\Menu.OptionType.cs" />
     <Compile Include="Game\Menu\Menu.Route.cs" />
     <Compile Include="Game\Menu\Menu.RouteState.cs" />
     <Compile Include="Game\Menu\Menu.SingleMenu.cs" />
@@ -212,6 +214,7 @@
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Input\InputDevicePlugin.cs" />
+    <Compile Include="System\Input\JoystickManager\ConfigurationLink.cs" />
     <Compile Include="System\Input\JoystickManager\JoystickManager32.cs" />
     <Compile Include="System\Input\JoystickManager\JoystickManager64.cs" />
     <Compile Include="System\Input\JoystickManager\RailDriver\AbstractRailDriver.cs" />
@@ -298,7 +301,6 @@
     <Compile Include="System\Loading.cs" />
     <Compile Include="System\MainLoop.cs" />
     <Compile Include="System\GameWindow.cs" />
-    <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="Game\Timetable.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />

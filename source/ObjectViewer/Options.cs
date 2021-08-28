@@ -6,7 +6,7 @@ using ObjectViewer.Graphics;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 
-namespace OpenBve
+namespace ObjectViewer
 {
     internal class Options
     {
@@ -75,7 +75,7 @@ namespace OpenBve
                                                 {
                                                     a = 960;
                                                 }
-                                                Program.Renderer.Screen.Width = a;
+                                                Interface.CurrentOptions.WindowWidth = a;
                                             } break;
                                         case "windowheight":
                                             {
@@ -84,7 +84,7 @@ namespace OpenBve
                                                 {
                                                     a = 600;
                                                 }
-                                                Program.Renderer.Screen.Height = a;
+                                                Interface.CurrentOptions.WindowHeight = a;
                                             } break;
                                         case "isusenewrenderer":
 	                                        Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;

@@ -5,12 +5,11 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using System;
 using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Interface;
 
-namespace OpenBve {
+namespace RouteViewer {
 	// --- Interface.cs ---
 	internal static class Interface {
 

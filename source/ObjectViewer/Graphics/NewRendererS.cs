@@ -1,12 +1,10 @@
-﻿using System.Drawing;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
 using LibRender2.Primitives;
 using LibRender2.Viewports;
-using OpenBve;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
@@ -378,6 +376,8 @@ namespace ObjectViewer.Graphics
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
 		{
+			Screen.Width = CurrentOptions.WindowWidth;
+			Screen.Height = CurrentOptions.WindowHeight;
 		}
 	}
 }

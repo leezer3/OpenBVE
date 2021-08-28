@@ -1,10 +1,11 @@
 ﻿using System;
 using ObjectViewer.Trains;
+using OpenBveApi;
 using OpenTK;
 using OpenTK.Graphics;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve
+namespace ObjectViewer
 {
     class ObjectViewer : GameWindow
     {

@@ -21,7 +21,7 @@ using RouteManager2.Events;
 using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve
+namespace RouteViewer
 {
 	internal class NewRenderer : BaseRenderer
 	{
@@ -719,6 +719,8 @@ namespace OpenBve
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
 		{
+			Screen.Width = Interface.CurrentOptions.WindowWidth;
+			Screen.Height = Interface.CurrentOptions.WindowHeight;
 		}
 	}
 }

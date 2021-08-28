@@ -100,7 +100,6 @@
     <Compile Include="InterfaceS.cs" />
     <Compile Include="ProgramS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
     <Compile Include="Trains\NearestTrain.cs" />
     <Compile Include="Trains\NearestTrainSpecs.cs" />

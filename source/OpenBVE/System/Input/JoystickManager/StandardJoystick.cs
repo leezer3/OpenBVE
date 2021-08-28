@@ -13,6 +13,10 @@ namespace OpenBve.Input
 		{
 			Handle = joystickHandle;
 			Name = Joystick.GetName(Handle);
+			if (Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1)
+			{
+				ConfigurationLink = ConfigurationLink.DenshaDeGo;
+			}
 			Guid = Joystick.GetGuid(Handle);
 		}
 

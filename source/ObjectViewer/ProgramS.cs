@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
-using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -27,7 +26,7 @@ using ButtonState = OpenTK.Input.ButtonState;
 using Control = OpenBveApi.Interface.Control;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve {
+namespace ObjectViewer {
 	internal static class Program {
 		internal static FileSystem FileSystem = null;
 
@@ -72,9 +71,11 @@ namespace OpenBve {
 	        FileSystem.CreateFileSystem();
 	        
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
-	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        Options.LoadOptions();
 	        Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
+	        
+	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {
@@ -302,6 +303,7 @@ namespace OpenBve {
 							    TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 							    TrainManager.PlayerTrain.Cars[j].RearBogie.UpdateTopplingCantAndSpring();
 							    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+							    TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 						    }
 					    }
 					    else

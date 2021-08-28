@@ -18,7 +18,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using RouteManager2;
 
-namespace OpenBve {
+namespace RouteViewer {
 	internal static class Loading {
 
 		internal static bool Cancel

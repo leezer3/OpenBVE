@@ -36,7 +36,9 @@
 		/// <summary>Uninstalls a train</summary>
 		UninstallTrain,
 		/// <summary>Uninstalls anything else</summary>
-		UninstallOther
+		UninstallOther,
+		/// <summary>The options menu</summary>
+		Options
 		
 	}
 }
