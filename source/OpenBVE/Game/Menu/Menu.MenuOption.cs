@@ -109,10 +109,10 @@ namespace OpenBve
 				{
 					case MenuOptionType.ScreenResolution:
 						ScreenResolution res = CurrentOption as ScreenResolution;
-						Program.Renderer.Screen.Width = res.Width;
-						Program.Renderer.Screen.Height = res.Height;
-						Program.currentGameWindow.Width = res.Width;
-						Program.currentGameWindow.Height = res.Height;
+						Program.Renderer.Screen.Width = res.Width * 2;
+						Program.Renderer.Screen.Height = res.Height * 2;
+						Program.currentGameWindow.Width = res.Width * 2;
+						Program.currentGameWindow.Height = res.Height * 2;
 						break;
 					case MenuOptionType.FullScreen:
 						Interface.CurrentOptions.FullscreenMode = !Interface.CurrentOptions.FullscreenMode;
