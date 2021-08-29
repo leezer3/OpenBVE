@@ -42,7 +42,7 @@ void main(void)
 	 */
 	if(uAlphaFunction == 513) // Less
 	{
-		if(finalColor.a >= uAlphaComparison)
+		if(finalColor.a > uAlphaComparison)
 		{
 			discard;
 		}
