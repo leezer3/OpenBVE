@@ -507,7 +507,7 @@ namespace ObjectViewer {
 	                }
 	                break;
 				case Key.R:
-					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+					Renderer.SwitchOpenGLVersion();
 					break;
 				case Key.F11:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
