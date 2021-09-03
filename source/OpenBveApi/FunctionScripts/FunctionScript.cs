@@ -372,6 +372,18 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TimeSecondsSinceMidnight;
 							n++; s++; if (s >= m) m = s; break;
+						case "hour":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.TimeHourDigit;
+							n++; s++; if (s >= m) m = s; break;
+						case "minute":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.TimeMinuteDigit;
+							n++; s++; if (s >= m) m = s; break;
+						case "second":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.TimeSecondDigit;
+							n++; s++; if (s >= m) m = s; break;
 						case "cameradistance":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CameraDistance;
