@@ -72,6 +72,7 @@ namespace RouteViewer
 		// render scene
 		internal void RenderScene(double TimeElapsed)
 		{
+			lastObjectState = null;
 			ReleaseResources();
 			// initialize
 			ResetOpenGlState();

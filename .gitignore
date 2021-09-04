@@ -7,7 +7,8 @@
 *.suo
 .vs/
 
-#macOS things
+
+#macOS directory metadata
 .DS_Store
 
 # Build results

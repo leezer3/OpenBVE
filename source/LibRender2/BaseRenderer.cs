@@ -326,6 +326,19 @@ namespace LibRender2
 			}
 		}
 
+		/// <summary>Should be called when the OpenGL version is switched mid-game</summary>
+		/// <remarks>We need to purge the current shader state and update lighting to avoid glitches</remarks>
+		public void SwitchOpenGLVersion()
+		{
+			if (currentOptions.IsUseNewRenderer && AvailableNewRenderer)
+			{
+				DefaultShader.Activate();
+				DefaultShader.Deactivate();
+			}
+			currentOptions.IsUseNewRenderer = !currentOptions.IsUseNewRenderer;
+			Lighting.Initialize();
+		}
+
 		/// <summary>Performs cleanup of disposed resources</summary>
 		public void ReleaseResources()
 		{

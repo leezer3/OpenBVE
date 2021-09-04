@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using LibRender2.Screens;
 using OpenBveApi.Graphics;
 using OpenTK;
@@ -117,6 +119,31 @@ namespace OpenBve
 							Program.Renderer.Screen.Height = res.Height * 2;
 							Program.currentGameWindow.Width = res.Width * 2;
 							Program.currentGameWindow.Height = res.Height * 2;
+						Program.Renderer.Screen.Width = res.Width;
+						Program.Renderer.Screen.Height = res.Height;
+						Program.currentGameWindow.Width = res.Width;
+						Program.currentGameWindow.Height = res.Height;
+						if (Interface.CurrentOptions.FullscreenMode)
+						{
+							IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
+							foreach (DisplayResolution currentResolution in resolutions)
+							{
+								//Test resolution
+								if (currentResolution.Width == Program.Renderer.Screen.Width &&
+								    currentResolution.Height == Program.Renderer.Screen.Height)
+								{
+									try
+									{
+										DisplayDevice.Default.ChangeResolution(currentResolution);
+										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+										return;
+									}
+									catch
+									{
+										//refresh rate wrong? - Keep trying in case a different refresh rate works OK
+									}
+								}
+							}
 						}
 						break;
 					case MenuOptionType.FullScreen:
@@ -124,10 +151,29 @@ namespace OpenBve
 						if (Program.currentGameWindow.WindowState == WindowState.Fullscreen)
 						{
 							Program.currentGameWindow.WindowState = WindowState.Normal;
+							DisplayDevice.Default.RestoreResolution();
 						}
 						else
 						{
-							Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+							IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
+							foreach (DisplayResolution currentResolution in resolutions)
+							{
+								//Test resolution
+								if (currentResolution.Width == Program.Renderer.Screen.Width &&
+								    currentResolution.Height == Program.Renderer.Screen.Height)
+								{
+									try
+									{
+										DisplayDevice.Default.ChangeResolution(currentResolution);
+										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+										return;
+									}
+									catch
+									{
+										//refresh rate wrong? - Keep trying in case a different refresh rate works OK
+									}
+								}
+							}
 						}
 						break;
 					case MenuOptionType.Interpolation:
