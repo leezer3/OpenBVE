@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using LibRender2.Screens;
@@ -20,6 +20,9 @@ namespace OpenBve
 			internal object CurrentOption => Entries[CurrentlySelectedOption];
 
 			private int CurrentlySelectedOption;
+
+			// private float scaling = Program.currentGameWindow.Width / (float)Program.currentGameWindow.Width;
+			private float scaling = 1;
 
 			internal MenuOption(MenuOptionType type, string text, object[] entries)
 			{
@@ -100,6 +103,7 @@ namespace OpenBve
 				if (CurrentlySelectedOption < Entries.Length - 1)
 				{
 					CurrentlySelectedOption++;
+					// CurrentlySelectedOption = 11;
 				}
 				else
 				{
@@ -110,19 +114,11 @@ namespace OpenBve
 				switch (Type)
 				{
 					case MenuOptionType.ScreenResolution:
-					//HACK: macOS ends up rendering the windows at half of givenm size, so I have to multiply by 2 to compensate for this
 						ScreenResolution res = CurrentOption as ScreenResolution;
-						if (Program.currentGameWindow.WindowState == WindowState.Fullscreen){
-							//HACK: due to OpenTK not handling retina scaling properly fullscreen, you can't change resolution when in fullscreen
-						}else{
-							Program.Renderer.Screen.Width = res.Width * 2;
-							Program.Renderer.Screen.Height = res.Height * 2;
-							Program.currentGameWindow.Width = res.Width * 2;
-							Program.currentGameWindow.Height = res.Height * 2;
-						Program.Renderer.Screen.Width = res.Width;
-						Program.Renderer.Screen.Height = res.Height;
-						Program.currentGameWindow.Width = res.Width;
-						Program.currentGameWindow.Height = res.Height;
+						Program.Renderer.Screen.Width = (int)(res.Width * scaling);
+						Program.Renderer.Screen.Height = (int)(res.Height * scaling);
+						Program.currentGameWindow.Width = (int)(res.Width * scaling);
+						Program.currentGameWindow.Height = (int)(res.Height * scaling);
 						if (Interface.CurrentOptions.FullscreenMode)
 						{
 							IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
@@ -134,8 +130,17 @@ namespace OpenBve
 								{
 									try
 									{
+										if (currentResolution.Height == 480){
+											DisplayDevice.Default.RestoreResolution();
+										}
 										DisplayDevice.Default.ChangeResolution(currentResolution);
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+										Program.currentGameWindow.X = 0;
+										Program.currentGameWindow.Y = 0;
+										Program.currentGameWindow.Width = DisplayDevice.Default.Width;
+										Program.currentGameWindow.Height = DisplayDevice.Default.Height;
+										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
+										Program.Renderer.Screen.Height = Program.currentGameWindow.Height;
 										return;
 									}
 									catch
@@ -164,8 +169,17 @@ namespace OpenBve
 								{
 									try
 									{
+										if (currentResolution.Height == 480){
+											DisplayDevice.Default.RestoreResolution();
+										}
 										DisplayDevice.Default.ChangeResolution(currentResolution);
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+										Program.currentGameWindow.X = 0;
+										Program.currentGameWindow.Y = 0;
+										Program.currentGameWindow.Width = DisplayDevice.Default.Width;
+										Program.currentGameWindow.Height = DisplayDevice.Default.Height;
+										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
+										Program.Renderer.Screen.Height = Program.currentGameWindow.Height;
 										return;
 									}
 									catch
