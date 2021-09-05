@@ -130,9 +130,8 @@ namespace OpenBve
 								{
 									try
 									{
-										if (currentResolution.Height == 480){
-											DisplayDevice.Default.RestoreResolution();
-										}
+										//HACK: some resolutions will result in openBVE not appearing on screen in full screen, so restore resolution then change resolution
+										DisplayDevice.Default.RestoreResolution();
 										DisplayDevice.Default.ChangeResolution(currentResolution);
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
 										Program.currentGameWindow.X = 0;
@@ -169,9 +168,8 @@ namespace OpenBve
 								{
 									try
 									{
-										if (currentResolution.Height == 480){
-											DisplayDevice.Default.RestoreResolution();
-										}
+										//HACK: some resolutions will result in openBVE not appearing on screen in full screen, so restore resolution then change resolution
+										DisplayDevice.Default.RestoreResolution();
 										DisplayDevice.Default.ChangeResolution(currentResolution);
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
 										Program.currentGameWindow.X = 0;
