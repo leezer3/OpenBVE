@@ -124,7 +124,7 @@
       <HintPath>..\..\dependencies\TolkDotNet.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
-      <HintPath>..\..\packages\opentk scaling fix dll\OpenTK.dll</HintPath>
+      <HintPath>..\..\opentk scaling fix dll\OpenTK.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
