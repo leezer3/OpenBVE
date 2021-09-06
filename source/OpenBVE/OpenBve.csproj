@@ -17,7 +17,6 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <SignAssembly>False</SignAssembly>
-    <DelaySign>False</DelaySign>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <RunSourceAnalysis>False</RunSourceAnalysis>
@@ -91,9 +90,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.3.2.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK.3.3.2\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
     </Reference>
@@ -126,6 +122,10 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="TolkDotNet">
       <HintPath>..\..\dependencies\TolkDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\packages\opentk scaling fix dll\OpenTK.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -320,9 +320,6 @@
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\assets\Controls\Default.controls" />
-    <None Include="OpenTK.dll.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -421,7 +418,7 @@
     <ItemGroup>
       <AssetFiles Include="$(SolutionDir)assets\**\*.*" />
     </ItemGroup>
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles-&gt;'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Target Name="AfterClean">
     <Delete Files="Properties\AssemblyInfo.cs" />
