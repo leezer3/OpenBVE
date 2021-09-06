@@ -21,9 +21,6 @@ namespace OpenBve
 
 			private int CurrentlySelectedOption;
 
-			// private float scaling = Program.currentGameWindow.Width / (float)Program.currentGameWindow.Width;
-			private float scaling = 1;
-
 			internal MenuOption(MenuOptionType type, string text, object[] entries)
 			{
 				Type = type;
@@ -115,10 +112,10 @@ namespace OpenBve
 				{
 					case MenuOptionType.ScreenResolution:
 						ScreenResolution res = CurrentOption as ScreenResolution;
-						Program.Renderer.Screen.Width = (int)(res.Width * scaling);
-						Program.Renderer.Screen.Height = (int)(res.Height * scaling);
-						Program.currentGameWindow.Width = (int)(res.Width * scaling);
-						Program.currentGameWindow.Height = (int)(res.Height * scaling);
+						Program.Renderer.Screen.Width = (int)(res.Width * res.ScaleFactor.X);
+						Program.Renderer.Screen.Height = (int)(res.Height * res.ScaleFactor.Y);
+						Program.currentGameWindow.Width = (int)(res.Width * res.ScaleFactor.X);
+						Program.currentGameWindow.Height = (int)(res.Height * res.ScaleFactor.Y);
 						if (Interface.CurrentOptions.FullscreenMode)
 						{
 							IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
@@ -136,8 +133,8 @@ namespace OpenBve
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
 										Program.currentGameWindow.X = 0;
 										Program.currentGameWindow.Y = 0;
-										Program.currentGameWindow.Width = DisplayDevice.Default.Width;
-										Program.currentGameWindow.Height = DisplayDevice.Default.Height;
+										Program.currentGameWindow.Width *= currentResolution.ScaleFactor.X;
+										Program.currentGameWindow.Height *= currentResolution.ScaleFactor.Y;
 										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
 										Program.Renderer.Screen.Height = Program.currentGameWindow.Height;
 										return;
@@ -174,8 +171,8 @@ namespace OpenBve
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
 										Program.currentGameWindow.X = 0;
 										Program.currentGameWindow.Y = 0;
-										Program.currentGameWindow.Width = DisplayDevice.Default.Width;
-										Program.currentGameWindow.Height = DisplayDevice.Default.Height;
+										Program.currentGameWindow.Width *= currentResolution.ScaleFactor.X;
+										Program.currentGameWindow.Height *= currentResolution.ScaleFactor.Y;
 										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
 										Program.Renderer.Screen.Height = Program.currentGameWindow.Height;
 										return;
