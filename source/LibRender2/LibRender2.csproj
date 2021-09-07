@@ -44,7 +44,7 @@
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
-      <HintPath>..\..\packages\OpenTK.3.3.2\lib\net20\OpenTK.dll</HintPath>
+      <HintPath>..\..\opentk scaling fix dll\OpenTK.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -113,7 +113,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="OpenTK.dll.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
