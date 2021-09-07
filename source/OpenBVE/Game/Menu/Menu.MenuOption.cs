@@ -112,8 +112,6 @@ namespace OpenBve
 				{
 					case MenuOptionType.ScreenResolution:
 						ScreenResolution res = CurrentOption as ScreenResolution;
-						Console.WriteLine(DisplayDevice.Default.ScaleFactor.X);
-						Console.WriteLine(DisplayDevice.Default.ScaleFactor.Y);
 						Program.Renderer.Screen.Width = (int)(res.Width * DisplayDevice.Default.ScaleFactor.X);
 						Program.Renderer.Screen.Height = (int)(res.Height * DisplayDevice.Default.ScaleFactor.Y);
 						Program.currentGameWindow.Width = (int)(res.Width * DisplayDevice.Default.ScaleFactor.X);
@@ -124,8 +122,8 @@ namespace OpenBve
 							foreach (DisplayResolution currentResolution in resolutions)
 							{
 								//Test resolution
-								if (currentResolution.Width == Program.Renderer.Screen.Width &&
-								    currentResolution.Height == Program.Renderer.Screen.Height)
+								if (currentResolution.Width == Program.Renderer.Screen.Width / DisplayDevice.Default.ScaleFactor.X &&
+								    currentResolution.Height == Program.Renderer.Screen.Height / DisplayDevice.Default.ScaleFactor.Y)
 								{
 									try
 									{
@@ -135,10 +133,8 @@ namespace OpenBve
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
 										Program.currentGameWindow.X = 0;
 										Program.currentGameWindow.Y = 0;
-										Console.WriteLine(DisplayDevice.Default.ScaleFactor.X);
-										Console.WriteLine(DisplayDevice.Default.ScaleFactor.Y);
-										Program.currentGameWindow.Width = (int)(DisplayDevice.Default.ScaleFactor.X * currentResolution.Width);
-										Program.currentGameWindow.Height = (int)(DisplayDevice.Default.ScaleFactor.Y * currentResolution.Height);
+										Program.currentGameWindow.Width = (int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X);
+										Program.currentGameWindow.Height = (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y);
 										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
 										Program.Renderer.Screen.Height = Program.currentGameWindow.Height;
 										return;
@@ -164,8 +160,8 @@ namespace OpenBve
 							foreach (DisplayResolution currentResolution in resolutions)
 							{
 								//Test resolution
-								if (currentResolution.Width == Program.Renderer.Screen.Width &&
-								    currentResolution.Height == Program.Renderer.Screen.Height)
+								if (currentResolution.Width == Program.Renderer.Screen.Width / DisplayDevice.Default.ScaleFactor.X &&
+									currentResolution.Height == Program.Renderer.Screen.Height / DisplayDevice.Default.ScaleFactor.Y)
 								{
 									try
 									{
@@ -175,8 +171,8 @@ namespace OpenBve
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
 										Program.currentGameWindow.X = 0;
 										Program.currentGameWindow.Y = 0;
-										Program.currentGameWindow.Width = (int)(DisplayDevice.Default.ScaleFactor.X * currentResolution.Width);
-										Program.currentGameWindow.Height = (int)(DisplayDevice.Default.ScaleFactor.Y * currentResolution.Height);
+										Program.currentGameWindow.Width = (int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X);
+										Program.currentGameWindow.Height = (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y);
 										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
 										Program.Renderer.Screen.Height = Program.currentGameWindow.Height;
 										return;
