@@ -125,7 +125,6 @@
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\..\opentk scaling fix dll\OpenTK.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
