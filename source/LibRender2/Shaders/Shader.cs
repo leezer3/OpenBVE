@@ -191,8 +191,7 @@ namespace LibRender2.Shaders
 				Color = (short)GL.GetUniformLocation(handle, "uColor"),
 				Coordinates = (short)GL.GetUniformLocation(handle, "uCoordinates"),
 				AtlasLocation = (short)GL.GetUniformLocation(handle, "uAtlasLocation"),
-				AlphaFunction = (short)GL.GetUniformLocation(handle, "uAlphaFunction"),
-				AlphaComparison = (short)GL.GetUniformLocation(handle, "uAlphaComparison"),
+				AlphaFunction = (short)GL.GetUniformLocation(handle, "uAlphaTest"),
 			};
 		}
 
@@ -377,8 +376,15 @@ namespace LibRender2.Shaders
 			GL.ProgramUniform1(handle, UniformLayout.Texture, TextureUnit);
 		}
 
+		private float lastBrightness;
+
 		public void SetBrightness(float Brightness)
 		{
+			if(Brightness == lastBrightness)
+			{
+				return;
+			}
+			lastBrightness = Brightness;
 			GL.ProgramUniform1(handle, UniformLayout.Brightness, Brightness);
 		}
 
@@ -399,7 +405,7 @@ namespace LibRender2.Shaders
 
 		public void SetSize(Vector2 size)
 		{
-			GL.ProgramUniform2(handle, UniformLayout.Size, (float) size.X, (float) size.Y);
+			GL.ProgramUniform2(handle, UniformLayout.Size, (float)size.X, (float) size.Y);
 		}
 
 		public void SetColor(Color128 color)
@@ -419,15 +425,15 @@ namespace LibRender2.Shaders
 
 		public void SetAlphaFunction(AlphaFunction alphaFunction, float alphaComparison)
 		{
-			GL.ProgramUniform1(handle, UniformLayout.AlphaFunction, (int)alphaFunction);
-			GL.ProgramUniform1(handle, UniformLayout.AlphaComparison, alphaComparison);
+			GL.ProgramUniform2(handle, UniformLayout.AlphaFunction, (int)alphaFunction, alphaComparison);
+			
 		}
 
 		public void SetAlphaTest(bool enabled)
 		{
 			if (!enabled)
 			{
-				GL.ProgramUniform1(handle, UniformLayout.AlphaFunction, (int)AlphaFunction.Never);
+				GL.ProgramUniform2(handle, UniformLayout.AlphaFunction, (int)AlphaFunction.Never, 1.0f);
 			}
 		}
 

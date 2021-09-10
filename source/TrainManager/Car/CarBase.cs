@@ -570,6 +570,10 @@ namespace TrainManager.Car
 		/// <param name="trainVisible">Whether the train is visible</param>
 		public void ChangeCarSection(CarSectionType newCarSection, bool trainVisible = false)
 		{
+			if(CurrentCarSection == (int)newCarSection)
+			{
+				return;
+			}
 			if (trainVisible)
 			{
 				if (CurrentCarSection != -1 && CarSections[CurrentCarSection].VisibleFromInterior)

@@ -1,7 +1,6 @@
 #version 150 core
 in vec2 textureCoord;
-uniform int uAlphaFunction;
-uniform float uAlphaComparison;
+uniform vec2 uAlphaTest;
 uniform bool uRectangleHasColour;
 uniform vec4 uColor;
 uniform sampler2D uTexture;
@@ -23,23 +22,23 @@ void main(void)
 	 * Numbers used are those from the GL.AlphaFunction enum to allow
 	 * for direct casts
 	 */
-	if(uAlphaFunction == 513) // Less
+	if(uAlphaTest.x == 513) // Less
 	{
-		if(finalColor.a > uAlphaComparison)
+		if(finalColor.a >= uAlphaTest.y)
 		{
 			discard;
 		}
 	}
-	else if(uAlphaFunction == 514) // Equal
+	else if(uAlphaTest.x == 514) // Equal
 	{
 		if(!(abs(finalColor.a - 1.0) < 0.00001))
 		{
 			discard;
 		}
 	}
-	else if(uAlphaFunction == 516) // Greater
+	else if(uAlphaTest.x == 516) // Greater
 	{
-		if(finalColor.a <= uAlphaComparison)
+		if(finalColor.a <= uAlphaTest.y)
 		{
 			discard;
 		}
