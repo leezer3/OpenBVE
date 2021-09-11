@@ -9,7 +9,10 @@ using OpenBveApi.Objects;
 using OpenBveApi.World;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
+using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Power;
+using TrainManager.Trains;
 
 namespace Train.MsTs
 {
@@ -28,7 +31,7 @@ namespace Train.MsTs
 			engineCache = new Dictionary<string, string>();
 		}
 
-		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase Car)
+		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase Car, ref TrainBase train)
 		{
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
 			Car.Specs.IsMotorCar = false;
@@ -48,13 +51,13 @@ namespace Train.MsTs
 			{
 				if (engineCache.ContainsKey(wagonName))
 				{
-					ReadWagonData(engineCache[wagonName], ref wagonName, true, ref Car);
+					ReadWagonData(engineCache[wagonName], ref wagonName, true, ref Car, ref train);
 				}
 				else
 				{
 					for (int i = 0; i < wagonFiles.Length; i++)
 					{
-						if (ReadWagonData(wagonFiles[i], ref wagonName, true, ref Car))
+						if (ReadWagonData(wagonFiles[i], ref wagonName, true, ref Car, ref train))
 						{
 							break;
 						}
@@ -68,13 +71,13 @@ namespace Train.MsTs
 			 */
 			if (wagonCache.ContainsKey(wagonName))
 			{
-				ReadWagonData(wagonCache[wagonName], ref wagonName, false, ref Car);
+				ReadWagonData(wagonCache[wagonName], ref wagonName, false, ref Car, ref train);
 			}
 			else
 			{
 				for (int i = 0; i < wagonFiles.Length; i++)
 				{
-					if (ReadWagonData(wagonFiles[i], ref wagonName, false, ref Car))
+					if (ReadWagonData(wagonFiles[i], ref wagonName, false, ref Car, ref train))
 					{
 						break;
 					}
@@ -82,7 +85,7 @@ namespace Train.MsTs
 			}
 		}
 
-		internal bool ReadWagonData(string fileName, ref string wagonName, bool isEngine, ref CarBase car)
+		internal bool ReadWagonData(string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
@@ -158,11 +161,11 @@ namespace Train.MsTs
 					}
 					if (isEngine && blocks.ContainsKey(KujuTokenID.Engine))
 					{
-						return ParseBlock(blocks[KujuTokenID.Engine], fileName, ref wagonName, true, ref car);
+						return ParseBlock(blocks[KujuTokenID.Engine], fileName, ref wagonName, true, ref car, ref train);
 					}
 					if (!isEngine && blocks.ContainsKey(KujuTokenID.Wagon))
 					{
-						return ParseBlock(blocks[KujuTokenID.Wagon], fileName, ref wagonName, false, ref car);
+						return ParseBlock(blocks[KujuTokenID.Wagon], fileName, ref wagonName, false, ref car, ref train);
 					}
 					return false;
 				}
@@ -187,7 +190,7 @@ namespace Train.MsTs
 					BinaryBlock block = new BinaryBlock(newBytes, KujuTokenID.Wagon);
 					try
 					{
-						ParseBlock(block, fileName, ref wagonName, isEngine, ref car);
+						ParseBlock(block, fileName, ref wagonName, isEngine, ref car, ref train);
 					}
 					catch (InvalidDataException)
 					{
@@ -199,7 +202,7 @@ namespace Train.MsTs
 			return true;
 		}
 
-		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car)
+		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
 			Block newBlock;
 			switch (block.Token)
@@ -227,7 +230,7 @@ namespace Train.MsTs
 							try
 							{
 								newBlock = block.ReadSubBlock();
-								ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car);
+								ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 							}
 							catch
 							{
@@ -252,7 +255,7 @@ namespace Train.MsTs
 						try
 						{
 							newBlock = block.ReadSubBlock();
-							ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car);
+							ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 						}
 						catch
 						{
@@ -312,6 +315,51 @@ namespace Train.MsTs
 				case KujuTokenID.BrakeSystemType:
 					// Determines the brake system types available
 					BrakeSystemType[] brakeSystemTypes = block.ReadEnumArray(default(BrakeSystemType));
+					if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_piped))
+					{
+						/*
+						 * FIXME: Need to implement vac braked / air piped and vice-versa, but for the minute, we'll assume that if one or the other is present
+						 * then the vehicle has no brakes
+						 */ 
+						car.CarBrake = new ThroughPiped();
+					}
+					else
+					{
+						if (brakeSystemTypes.Contains(BrakeSystemType.EP))
+						{
+							// Combined air brakes and control signals
+							// Assume equivilant to ElectromagneticStraightAirBrake
+							car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { });
+						}
+						else if (brakeSystemTypes.Contains(BrakeSystemType.ECP))
+						{
+							// Complex computer control
+							// Assume equivialant to ElectricCommandBrake at the minute
+							car.CarBrake = new ElectricCommandBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { });
+						}
+						else if (brakeSystemTypes.Contains(BrakeSystemType.Air_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Air_twin_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
+						{
+							// The car contains no control gear, but is air / vac braked
+							// Assume equivilant to AutomaticAirBrake
+							// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
+							car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { });
+						}
+						
+						car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
+						car.CarBrake.airCompressor = new Compressor(5000.0, car.CarBrake.mainReservoir, car);
+						car.CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
+						car.CarBrake.equalizingReservoir.NormalPressure = 1.005 * 490000.0;
+						double r = 200000.0 / 440000.0 - 1.0;
+						if (r < 0.1) r = 0.1;
+						if (r > 1.0) r = 1.0;
+						car.CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * 490000.0, 200000.0, 0.5, r);
+						car.CarBrake.brakeCylinder = new BrakeCylinder(440000.0, 440000.0, 0.3 * 300000.0, 300000.0, 200000.0);
+						car.CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
+						
+					}
+					car.CarBrake.brakePipe = new BrakePipe(490000.0, 10000000.0, 1500000.0, 5000000.0, true);
+					car.CarBrake.JerkUp = 10;
+					car.CarBrake.JerkDown = 10;
 					break;
 			}
 			return true;
