@@ -241,20 +241,6 @@ namespace Train.MsTs
 					 */
 					currentCar = new CarBase(Train, currentCarIndex, 0.35, 0.0025, 1.1);
 					currentCar.Specs = new CarPhysics();
-					currentCar.CarBrake = new ElectricCommandBrake(EletropneumaticBrakeType.None, Train.Handles.EmergencyBrake, Train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { });
-					currentCar.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / Train.Cars.Length);
-					currentCar.CarBrake.airCompressor = new Compressor(5000.0, currentCar.CarBrake.mainReservoir, currentCar);
-					currentCar.CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
-					currentCar.CarBrake.equalizingReservoir.NormalPressure = 1.005 * 490000.0;
-					currentCar.CarBrake.brakePipe = new BrakePipe(490000.0, 10000000.0, 1500000.0, 5000000.0, true);
-					double r = 200000.0 / 440000.0 - 1.0;
-					if (r < 0.1) r = 0.1;
-					if (r > 1.0) r = 1.0;
-					currentCar.CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * 490000.0, 200000.0, 0.5, r);
-					currentCar.CarBrake.brakeCylinder = new BrakeCylinder(440000.0, 440000.0, 0.3 * 300000.0, 300000.0, 200000.0);
-					currentCar.CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
-					currentCar.CarBrake.JerkUp = 10;
-					currentCar.CarBrake.JerkDown = 10;
 					currentCar.HoldBrake = new CarHoldBrake(currentCar);
 					//FIXME END
 
@@ -286,14 +272,14 @@ namespace Train.MsTs
 							break;
 						case 1:
 							//Just a WagonName- This is likely invalid, but let's ignore
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar);
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
 							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: No WagonFolder supplied, searching entire trainset folder.");
 							break;
 						case 2:
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset\\" + wagonFiles[1]), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar);
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset\\" + wagonFiles[1]), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
 							break;
 						default:
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar);
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
 							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Two parameters were expected- Check for correct escaping of strings.");
 							break;
 					}
