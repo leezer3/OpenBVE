@@ -18,7 +18,7 @@ using TrainManager.Trains;
 
 namespace Train.MsTs
 {
-	class MsTsCabviewFileParser
+	class CabviewFileParser
 	{
 		// constants
 		private const double StackDistance = 0.000001;
