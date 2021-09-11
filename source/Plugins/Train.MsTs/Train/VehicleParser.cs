@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LibRender2.Trains;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -360,6 +361,27 @@ namespace Train.MsTs
 					car.CarBrake.brakePipe = new BrakePipe(490000.0, 10000000.0, 1500000.0, 5000000.0, true);
 					car.CarBrake.JerkUp = 10;
 					car.CarBrake.JerkDown = 10;
+					break;
+				case KujuTokenID.CabView:
+					// Loads cab view file
+					string cabViewFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "CABVIEW"), block.ReadString());
+					if (!File.Exists(cabViewFile))
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Cab view file " + cabViewFile + " was not found");
+						return true;
+					}
+
+					if (car.CarSections.Length > 0)
+					{
+						// Cab View must always be at CarSection zero, but the order is not guaranteed within an eng / wag
+						CarSection[] move = new CarSection[car.CarSections.Length + 1];
+						for (int i = 0; i < car.CarSections.Length; i++)
+						{
+							move[i + 1] = car.CarSections[i];
+						}
+						car.CarSections = move;
+					}
+					CabviewFileParser.ParseCabViewFile(cabViewFile, Encoding.ASCII, ref car);
 					break;
 			}
 			return true;
