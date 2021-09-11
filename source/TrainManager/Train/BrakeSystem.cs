@@ -200,8 +200,9 @@ namespace TrainManager.Trains
 
 			// hold brake
 			Cars[CarIndex].HoldBrake.Update(ref DecelerationDueToMotor, Handles.HoldBrake.Actual);
+			if(Cars[CarIndex].CarBrake.brakeType != BrakeType.None)
 			{
-				// rub sound
+				// brake shoe rub sound
 				double spd = Math.Abs(Cars[CarIndex].CurrentSpeed);
 				double pitch = 1.0 / (spd + 1.0) + 1.0;
 				double gain = Cars[CarIndex].Derailed ? 0.0 : Cars[CarIndex].CarBrake.brakeCylinder.CurrentPressure / Cars[CarIndex].CarBrake.brakeCylinder.ServiceMaximumPressure;
