@@ -561,6 +561,7 @@ namespace Train.OpenBve
 						}
 						break;
 				}
+				Horn.SoundPosition = Position;
 			}
 		}
 
