@@ -325,7 +325,7 @@ namespace OpenBve.Formats.MsTs
 			{
 				if (i > 0 && myText[i] == ')' && !char.IsWhiteSpace(myText[i - 1]))
 				{
-					myText = myText.Insert(i - 1, " ");
+					myText = myText.Insert(i, " ");
 					i++;
 				}
 				if (i > 0 && myText[i] == '(' && !char.IsWhiteSpace(myText[i + 1]))

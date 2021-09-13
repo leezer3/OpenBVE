@@ -41,7 +41,7 @@ void main(void)
 	 */
 	if(uAlphaTest.x == 513) // Less
 	{
-		if(finalColor.a >= uAlphaTest.y)
+		if(finalColor.a > uAlphaTest.y)
 		{
 			discard;
 		}
