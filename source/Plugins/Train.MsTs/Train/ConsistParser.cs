@@ -7,6 +7,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
+using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -214,6 +215,8 @@ namespace Train.MsTs
 						currentCar.Reverse();
 						reverseCurentCar = false;
 					}
+					currentCar.Breaker = new Breaker(currentCar);
+					currentCar.Sounds.Plugin = new CarSound[] { };
 					Train.Cars[currentCarIndex] = currentCar;
 					/*
 					 * FIXME: Needs removing or sorting when the car is created
