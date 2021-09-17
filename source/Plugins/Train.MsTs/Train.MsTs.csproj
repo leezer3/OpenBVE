@@ -69,6 +69,10 @@
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\SoundManager\SoundManager.csproj">
+      <Project>{90ABFA0C-ABCA-444E-ADEF-9A299AED6524}</Project>
+      <Name>SoundManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\TrainManager\TrainManager.csproj">
       <Project>{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}</Project>
       <Name>TrainManager</Name>
