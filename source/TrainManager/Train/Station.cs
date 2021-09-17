@@ -175,9 +175,15 @@ namespace TrainManager.Trains
 							{
 								// arrival
 								StationState = TrainStopState.Boarding;
-								SafetySystems.StationAdjust.Lit = false;
+								if (SafetySystems.StationAdjust != null)
+								{
+									SafetySystems.StationAdjust.Lit = false;
+								}
 								Specs.DoorClosureAttempted = false;
-								SafetySystems.PassAlarm.Halt();
+								if (SafetySystems.PassAlarm != null)
+								{
+									SafetySystems.PassAlarm.Halt();
+								}
 								SoundBuffer buffer = (SoundBuffer) TrainManagerBase.CurrentRoute.Stations[i].ArrivalSoundBuffer;
 								if (buffer != null)
 								{
