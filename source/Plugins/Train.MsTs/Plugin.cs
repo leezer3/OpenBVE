@@ -60,7 +60,7 @@ namespace Train.MsTs
 
 		public override Image GetImage(string trainPath)
 		{
-			return new Bitmap(0, 0);
+			return new Bitmap(1, 1);
 		}
 	}
 }
