@@ -50,6 +50,7 @@ namespace Train.MsTs
 			 */
 			if (isEngine)
 			{
+				Car.Specs.IsMotorCar = true;
 				if (engineCache.ContainsKey(wagonName))
 				{
 					ReadWagonData(engineCache[wagonName], ref wagonName, true, ref Car, ref train);
@@ -382,6 +383,7 @@ namespace Train.MsTs
 						car.CarSections = move;
 					}
 					CabviewFileParser.ParseCabViewFile(cabViewFile, Encoding.ASCII, ref car);
+					car.HasInteriorView = true;
 					break;
 			}
 			return true;
