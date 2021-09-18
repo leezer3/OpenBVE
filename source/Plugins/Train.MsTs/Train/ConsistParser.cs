@@ -36,6 +36,9 @@ namespace Train.MsTs
 			train.Handles.EmergencyBrake = new EmergencyHandle(train);
 			train.Handles.Power = new PowerHandle(8, 8, new double[] { }, new double[] { }, train);
 			train.Handles.Brake = new BrakeHandle(8, 8, train.Handles.EmergencyBrake, new double[] { }, new double[] { }, train);
+			train.Handles.LocoBrake = new LocoBrakeHandle(0, train.Handles.EmergencyBrake, new double[] {}, new double[] {}, train);
+			train.Handles.LocoBrakeType = LocoBrakeType.Independant;
+			train.Handles.HasLocoBrake = false;
 			train.Handles.HoldBrake = new HoldBrakeHandle(train);
 			currentFolder = Path.GetDirectoryName(fileName);
 			DirectoryInfo d = Directory.GetParent(currentFolder);
@@ -149,8 +152,7 @@ namespace Train.MsTs
 				train.Cars[i].Specs.CenterOfGravityHeight = 1.6;
 				train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * train.Cars[i].Specs.CenterOfGravityHeight / train.Cars[i].Width);
 			}
-
-			
+			train.PlaceCars(0.0);
 		}
 
 		private int currentCarIndex = -1;
