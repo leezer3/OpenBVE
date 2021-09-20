@@ -397,6 +397,19 @@ namespace Train.OpenBve
 										}
 									}
 									break;
+								case "switch":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									CarSound[] pointSounds;
+									ParseArrayNode(c, out pointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									// ReSharper disable once CoVariantArrayConversion
+									car.FrontAxle.PointSounds = pointSounds;
+									// ReSharper disable once CoVariantArrayConversion
+									car.RearAxle.PointSounds = pointSounds;
+									break;
 								case "pointfrontaxle":
 								case "switchfrontaxle":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
