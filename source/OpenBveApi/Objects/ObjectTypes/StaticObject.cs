@@ -422,6 +422,7 @@ namespace OpenBveApi.Objects
 				if (emissive)
 				{
 					Mesh.Materials[i].EmissiveColor = (Color24) newColor;
+					Mesh.Materials[i].Flags |= MaterialFlags.Emissive;
 				}
 				else
 				{
