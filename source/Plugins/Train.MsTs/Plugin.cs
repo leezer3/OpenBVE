@@ -6,6 +6,7 @@ using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using TrainManager.Trains;
 
 namespace Train.MsTs
 {
@@ -18,6 +19,8 @@ namespace Train.MsTs
 		internal static HostInterface currentHost;
 
 		internal static BaseRenderer Renderer;
+
+		internal static bool PreviewOnly;
 		public Plugin()
 		{
 			ConsistParser = new ConsistParser(this);
@@ -41,6 +44,7 @@ namespace Train.MsTs
 
 		public override bool LoadTrain(Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
 		{
+			PreviewOnly = false;
 			try
 			{
 				ConsistParser.ReadConsist(trainPath, ref train);
@@ -55,11 +59,20 @@ namespace Train.MsTs
 
 		public override string GetDescription(string trainPath, Encoding userSelectedEncoding = null)
 		{
+			PreviewOnly = true;
+			AbstractTrain train = new TrainBase(TrainState.Pending);
+			ConsistParser.ReadConsist(trainPath, ref train);
+			TrainBase trainBase = train as TrainBase;
+			if(trainBase != null && trainBase.Cars.Length != 0)
+			{
+				return trainBase.Cars[train.DriverCar].Description;
+			}
 			return string.Empty;
 		}
 
 		public override Image GetImage(string trainPath)
 		{
+			PreviewOnly = true;
 			return new Bitmap(1, 1);
 		}
 	}

@@ -280,6 +280,10 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.WagonShape:
+					if(Plugin.PreviewOnly)
+					{
+						break;
+					}
 					// Loads exterior object
 					string objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
 					if (!File.Exists(objectFile))
@@ -384,6 +388,23 @@ namespace Train.MsTs
 					}
 					CabviewFileParser.ParseCabViewFile(cabViewFile, Encoding.ASCII, ref car);
 					car.HasInteriorView = true;
+					break;
+				case KujuTokenID.Description:
+					/*
+					 * Only I believe valid in ENG files
+					 * NOTE: For some reason, the array appears to be as lines, however it also contains the newline character
+					 * Binary format??
+					 */
+					string[] strings = block.ReadStringArray();
+					car.Description = string.Join("", strings).Replace(@"\n", Environment.NewLine);
+					break;
+				case KujuTokenID.Comment:
+					if(car.Description == string.Empty)
+					{
+						// WAG files often have a comment block with a basic description
+						strings = block.ReadStringArray();
+						car.Description = string.Join("", strings);
+					}
 					break;
 			}
 			return true;
