@@ -53,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Panel\CvfParser.cs" />
+    <Compile Include="Panel\Enums\CabComponentType.cs" />
+    <Compile Include="Panel\Enums\PanelSubject.cs" />
+    <Compile Include="Sound\SmsParser.cs" />
     <Compile Include="Train\ConsistParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
