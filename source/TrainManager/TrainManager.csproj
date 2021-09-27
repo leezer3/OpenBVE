@@ -82,6 +82,7 @@
     <Compile Include="Handles\Handles.Power.cs" />
     <Compile Include="Handles\Handles.Reverser.cs" />
     <Compile Include="Handles\Handles.Reverser.Positions.cs" />
+    <Compile Include="Motor\AbstractMotorSound.cs" />
     <Compile Include="Motor\BVE4\MotorSound.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />

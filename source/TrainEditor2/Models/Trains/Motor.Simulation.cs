@@ -4,6 +4,7 @@ using System.Linq;
 using OpenBveApi.Interface;
 using SoundManager;
 using TrainEditor2.Systems;
+using TrainManager.Motor;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -59,7 +60,7 @@ namespace TrainEditor2.Models.Trains
 			DisposeCar();
 
 			Simulation.TrainManager.TrainManager.PlayerTrain = new Simulation.TrainManager.TrainManager.Train();
-			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor.SpeedConversionFactor = 18.0;
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor = new BVEMotorSound(18.0);
 			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor.Tables = Tracks.Select(t => Track.EntriesToMotorSoundTable(Track.TrackToEntries(t))).ToArray();
 			Simulation.TrainManager.TrainManager.PlayerTrain.Car.ApplySounds();
 		}
