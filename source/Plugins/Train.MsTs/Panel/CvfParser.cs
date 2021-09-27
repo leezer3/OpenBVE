@@ -31,7 +31,7 @@ namespace Train.MsTs
 		private static List<Component> cabComponents = new List<Component>();
 
 		// parse panel config
-		internal static bool ParseCabViewFile(string fileName, System.Text.Encoding Encoding, ref CarBase Car)
+		internal static bool ParseCabViewFile(string fileName, Encoding Encoding, ref CarBase Car)
 		{
 			currentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
@@ -150,9 +150,9 @@ namespace Train.MsTs
 			{
 				Texture tday;
 				Plugin.currentHost.RegisterTexture(CabViews[0].fileName, new TextureParameters(null, null), out tday, true);
-				PanelBitmapWidth = (double) tday.Width;
-				PanelBitmapHeight = (double) tday.Height;
-				CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, PanelBitmapWidth, PanelBitmapHeight, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
+				PanelBitmapWidth = tday.Width;
+				PanelBitmapHeight = tday.Height;
+				CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, PanelBitmapWidth, PanelBitmapHeight, new Vector2(0.5, 0.5), 0.0, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
 			}
 			else
 			{
@@ -198,7 +198,7 @@ namespace Train.MsTs
 					int controlCount = block.ReadInt16();
 					while (controlCount > 0)
 					{
-						newBlock = block.ReadSubBlock(new KujuTokenID[] {KujuTokenID.CabSignalDisplay, KujuTokenID.Dial, KujuTokenID.Lever, KujuTokenID.MultiStateDisplay, KujuTokenID.TriState, KujuTokenID.TwoState});
+						newBlock = block.ReadSubBlock(new[] {KujuTokenID.CabSignalDisplay, KujuTokenID.Dial, KujuTokenID.Lever, KujuTokenID.MultiStateDisplay, KujuTokenID.TriState, KujuTokenID.TwoState});
 						Component currentComponent = new Component(newBlock);
 						currentComponent.Parse();
 						cabComponents.Add(currentComponent);
@@ -294,9 +294,9 @@ namespace Train.MsTs
 
 		private class Component
 		{
-			private ComponentType Type = ComponentType.None;
+			private CabComponentType Type = CabComponentType.None;
 			private string TexturePath;
-			private Subject Subject;
+			private PanelSubject _panelSubject;
 			private string Units;
 			private Vector2 Position = new Vector2(0, 0);
 			private Vector2 Size = new Vector2(0, 0);
@@ -341,18 +341,16 @@ namespace Train.MsTs
 					CultureInfo Culture = CultureInfo.InvariantCulture;
 					switch (Type)
 					{
-						case ComponentType.Dial:
+						case CabComponentType.Dial:
 							Texture tday;
-							Plugin.currentHost.RegisterTexture(TexturePath, new OpenBveApi.Textures.TextureParameters(null, null), out tday, true);
+							Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(null, null), out tday, true);
 							//Get final position from the 640px panel (Yuck...)
 							Position.X *= rW;
 							Position.Y *= rH;
 							Size.X *= rW;
 							Size.Y *= rH;
 							PivotPoint *= rH;
-							double w = (double) tday.Width;
-							double h = (double) tday.Height;
-							j = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X, Size.Y, new Vector2((0.5 * Size.X) / (w * rW), PivotPoint / (h * rH)), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
+							j = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X, Size.Y, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), Layer * StackDistance, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
 							Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
 							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
 							Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -368,7 +366,7 @@ namespace Train.MsTs
 							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction.Minimum = InitialAngle;
 							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction.Maximum = LastAngle;
 							break;
-						case ComponentType.Lever:
+						case CabComponentType.Lever:
 							Position.X *= rW;
 							Position.Y *= rH;
 
@@ -397,7 +395,7 @@ namespace Train.MsTs
 								j = -1;
 								for (int k = 0; k < textures.Length; k++)
 								{
-									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * StackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
 
@@ -406,8 +404,8 @@ namespace Train.MsTs
 							}
 
 							break;
-						case ComponentType.TriState:
-						case ComponentType.TwoState:
+						case CabComponentType.TriState:
+						case CabComponentType.TwoState:
 							Position.X *= rW;
 							Position.Y *= rH;
 							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
@@ -420,7 +418,7 @@ namespace Train.MsTs
 								int frameHeight = hday / VerticalFrames;
 								for (int k = 0; k < TotalFrames; k++)
 								{
-									Plugin.currentHost.RegisterTexture(TexturePath, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
+									Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
 									if (column < HorizontalFrames - 1)
 									{
 										column++;
@@ -435,11 +433,11 @@ namespace Train.MsTs
 								j = -1;
 								for (int k = 0; k < textures.Length; k++)
 								{
-									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * StackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
 
-								f = Type == ComponentType.TwoState ? GetStackLanguageFromSubject(Car.baseTrain, Units, "TwoState " + " in " + fileName) : GetStackLanguageFromSubject(Car.baseTrain, Units, "TriState " + " in " + fileName);
+								f = Type == CabComponentType.TwoState ? GetStackLanguageFromSubject(Car.baseTrain, Units, "TwoState " + " in " + fileName) : GetStackLanguageFromSubject(Car.baseTrain, Units, "TriState " + " in " + fileName);
 
 								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
 							}
@@ -469,12 +467,12 @@ namespace Train.MsTs
 							case "inches_of_mercury":
 							case "psi":
 								//We don't simulate vaccum brakes, so just hook to PSI if vaccum is declared
-								switch (Subject)
+								switch (_panelSubject)
 								{
-									case Subject.BrakeCylinder:
+									case PanelSubject.BrakeCylinder:
 										Units = "bc_psi";
 										break;
-									case Subject.BrakePipe:
+									case PanelSubject.BrakePipe:
 										Units = "bp_psi";
 										break;
 								}
@@ -488,7 +486,7 @@ namespace Train.MsTs
 						LastAngle = block.ReadSingle();
 						break;
 					case KujuTokenID.ScaleRange:
-						if (Subject == Subject.Ammeter)
+						if (_panelSubject == PanelSubject.Ammeter)
 						{
 							//As we're currently using the BVE ammeter hack, ignore the values
 							Minimum = 0;
@@ -553,38 +551,38 @@ namespace Train.MsTs
 						switch (t.ToLowerInvariant())
 						{
 							case "speedometer dial":
-								Subject = Subject.Speedometer;
+								_panelSubject = PanelSubject.Speedometer;
 								break;
 							case "brake_pipe dial":
-								Subject = Subject.BrakePipe;
+								_panelSubject = PanelSubject.BrakePipe;
 								break;
 							case "brake_cyl dial":
-								Subject = Subject.BrakeCylinder;
+								_panelSubject = PanelSubject.BrakeCylinder;
 								break;
 							case "ammeter dial":
-								Subject = Subject.Ammeter;
+								_panelSubject = PanelSubject.Ammeter;
 								break;
 							case "aspect_display cab_signal_display":
-								Subject = Subject.AWS;
+								_panelSubject = PanelSubject.AWS;
 								break;
 							case "horn two_state":
-								Subject = Subject.Horn;
+								_panelSubject = PanelSubject.Horn;
 								Units = "klaxon";
 								break;
 							case "direction tri_state":
-								Subject = Subject.Direction;
+								_panelSubject = PanelSubject.Direction;
 								Units = "rev";
 								break;
 							case "throttle lever":
-								Subject = Subject.PowerHandle;
+								_panelSubject = PanelSubject.PowerHandle;
 								Units = "power";
 								break;
 							case "engine_brake lever":
-								Subject = Subject.EngineBrakeHandle;
+								_panelSubject = PanelSubject.EngineBrakeHandle;
 								Units = "brake";
 								break;
 							case "train_brake lever":
-								Subject = Subject.TrainBrakeHandle;
+								_panelSubject = PanelSubject.TrainBrakeHandle;
 								Units = "brake";
 								break;
 						}
@@ -600,52 +598,13 @@ namespace Train.MsTs
 
 			private readonly Block myBlock;
 		}
-
-		private enum ComponentType
-		{
-			/// <summary>None</summary>
-			None = 0,
-
-			/// <summary>Dial based control</summary>
-			Dial = 1,
-
-			/// <summary>Lever based control</summary>
-			Lever = 2,
-
-			/// <summary>Two-state based control</summary>
-			TwoState = 3,
-
-			/// <summary>Tri-state based control</summary>
-			TriState = 4,
-
-			/// <summary>A display capable of displaying N states</summary>
-			MultiStateDisplay = 5,
-
-			/// <summary>In cab signalling / safety system (e.g. AWS)</summary>
-			CabSignalDisplay = 6
-
-
-		}
-
-		private enum Subject
-		{
-			Speedometer = 0,
-			BrakePipe = 1,
-			BrakeCylinder = 2,
-			Ammeter = 3,
-			Direction = 4,
-			PowerHandle = 5,
-			EngineBrakeHandle = 6,
-			TrainBrakeHandle = 7,
-			Horn = 8,
-			AWS = 9
-		}
+		
 
 
 		// get stack language from subject
 		private static string GetStackLanguageFromSubject(TrainBase Train, string Subject, string ErrorLocation)
 		{
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string Suffix = "";
 			{
 				// detect d# suffix
@@ -661,7 +620,7 @@ namespace Train.MsTs
 					if (Subject[i] == 'd' | Subject[i] == 'D')
 					{
 						int n;
-						if (int.TryParse(Subject.Substring(i + 1), System.Globalization.NumberStyles.Integer, Culture, out n))
+						if (int.TryParse(Subject.Substring(i + 1), NumberStyles.Integer, Culture, out n))
 						{
 							if (n == 0)
 							{
@@ -669,8 +628,8 @@ namespace Train.MsTs
 							}
 							else
 							{
-								string t0 = Math.Pow(10.0, (double) n).ToString(Culture);
-								string t1 = Math.Pow(10.0, (double) -n).ToString(Culture);
+								string t0 = Math.Pow(10.0, n).ToString(Culture);
+								string t1 = Math.Pow(10.0, -n).ToString(Culture);
 								Suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
 							}
 
@@ -761,7 +720,7 @@ namespace Train.MsTs
 					{
 						string a = Subject.Substring(3);
 						int n;
-						if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n))
+						if (int.TryParse(a, NumberStyles.Integer, CultureInfo.InvariantCulture, out n))
 						{
 							if (n >= 0 & n <= 255)
 							{
@@ -774,7 +733,7 @@ namespace Train.MsTs
 					{
 						string a = Subject.Substring(5);
 						int n;
-						if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n))
+						if (int.TryParse(a, NumberStyles.Integer, CultureInfo.InvariantCulture, out n))
 						{
 							if (n >= 0 & n < Train.Cars.Length)
 							{
@@ -792,7 +751,7 @@ namespace Train.MsTs
 					{
 						string a = Subject.Substring(5);
 						int n;
-						if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n))
+						if (int.TryParse(a, NumberStyles.Integer, CultureInfo.InvariantCulture, out n))
 						{
 							if (n >= 0 & n < Train.Cars.Length)
 							{
@@ -818,7 +777,7 @@ namespace Train.MsTs
 			return Code + Suffix;
 		}
 
-		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
+		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
 		{
 			if (Width == 0 || Height == 0)
 			{
