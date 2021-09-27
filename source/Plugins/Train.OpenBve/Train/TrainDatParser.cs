@@ -1368,23 +1368,14 @@ namespace Train.OpenBve
 					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
 					
 					// motor sound
-					Train.Cars[i].Sounds.Motor = new BVEMotorSound(18.0);
-					for (int j = 0; j < 4; j++) {
-						Train.Cars[i].Sounds.Motor.Tables[j].Entries = new BVEMotorSoundTableEntry[Tables[j].Entries.Length];
-						for (int k = 0; k < Tables[j].Entries.Length; k++) {
-							Train.Cars[i].Sounds.Motor.Tables[j].Entries[k] = Tables[j].Entries[k];
-						}
-					}
+					Train.Cars[i].Sounds.Motor = new BVEMotorSound(Train.Cars[i], 18.0);
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;
 					Train.Cars[i].CargoMass = 0;
 					Train.Cars[i].Specs.AccelerationCurves = new AccelerationCurve[] { };
 					Train.Cars[i].Specs.AccelerationCurveMaximum = 0.0;
-					Train.Cars[i].Sounds.Motor = new BVEMotorSound(18.0);
-					for (int j = 0; j < 4; j++) {
-						Train.Cars[i].Sounds.Motor.Tables[j].Entries = new BVEMotorSoundTableEntry[] { };
-					}
+					Train.Cars[i].Sounds.Motor = new BVEMotorSound(Train.Cars[i], 18.0);
 				}
 			}
 			// driver

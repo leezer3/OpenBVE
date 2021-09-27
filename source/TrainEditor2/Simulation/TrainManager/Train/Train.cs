@@ -11,7 +11,7 @@ namespace TrainEditor2.Simulation.TrainManager
 
 			internal Train()
 			{
-				Car = new Car(this);
+				Car = new Car();
 			}
 
 			public override void Dispose()

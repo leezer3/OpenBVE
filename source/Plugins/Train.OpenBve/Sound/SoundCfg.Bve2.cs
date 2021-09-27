@@ -2,6 +2,7 @@
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
+using TrainManager.Motor;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -99,19 +100,19 @@ namespace Train.OpenBve
 				train.Cars[i].Sounds.SpringL = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
 				train.Cars[i].Sounds.SpringR = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
 				// motor sound
-				if (train.Cars[i].Specs.IsMotorCar)
+				if (train.Cars[i].Specs.IsMotorCar && train.Cars[i].Sounds.Motor is BVEMotorSound motorSound)
 				{
 					System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 					train.Cars[i].Sounds.Motor.Position = center;
-					for (int j = 0; j < train.Cars[i].Sounds.Motor.Tables.Length; j++)
+					for (int j = 0; j < motorSound.Tables.Length; j++)
 					{
-						for (int k = 0; k < train.Cars[i].Sounds.Motor.Tables[j].Entries.Length; k++)
+						for (int k = 0; k < motorSound.Tables[j].Entries.Length; k++)
 						{
-							int idx = train.Cars[i].Sounds.Motor.Tables[j].Entries[k].SoundIndex;
+							int idx = motorSound.Tables[j].Entries[k].SoundIndex;
 							if (idx >= 0)
 							{
 								CarSound snd = new CarSound(Plugin.currentHost, train.TrainFolder, "Motor" + idx.ToString(Culture) + ".wav", SoundCfgParser.mediumRadius, center);
-								train.Cars[i].Sounds.Motor.Tables[j].Entries[k].Buffer = snd.Buffer;
+								motorSound.Tables[j].Entries[k].Buffer = snd.Buffer;
 							}
 						}
 					}

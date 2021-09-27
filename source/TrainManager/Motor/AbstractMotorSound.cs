@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using TrainManager.Car;
 
 namespace TrainManager.Motor
 {
@@ -7,5 +8,18 @@ namespace TrainManager.Motor
 	{
 		/// <summary>The position of the sound</summary>
 		public Vector3 Position;
+		/// <summary>Holds a reference to the car</summary>
+		public readonly CarBase Car;
+
+		protected AbstractMotorSound(CarBase car)
+		{
+			Car = car;
+		}
+
+		/// <summary>Updates the motor sounds</summary>
+		public virtual void Update(double TimeElapsed)
+		{
+
+		}
 	}
 }

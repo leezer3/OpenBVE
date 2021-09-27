@@ -60,8 +60,7 @@ namespace TrainEditor2.Models.Trains
 			DisposeCar();
 
 			Simulation.TrainManager.TrainManager.PlayerTrain = new Simulation.TrainManager.TrainManager.Train();
-			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor = new BVEMotorSound(18.0);
-			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor.Tables = Tracks.Select(t => Track.EntriesToMotorSoundTable(Track.TrackToEntries(t))).ToArray();
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor = new BVEMotorSound(Simulation.TrainManager.TrainManager.PlayerTrain.Car, 18.0, Tracks.Select(t => Track.EntriesToMotorSoundTable(Track.TrackToEntries(t))).ToArray());
 			Simulation.TrainManager.TrainManager.PlayerTrain.Car.ApplySounds();
 		}
 
@@ -121,7 +120,12 @@ namespace TrainEditor2.Models.Trains
 
 			Simulation.TrainManager.TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
 
-			Simulation.TrainManager.TrainManager.PlayerTrain.Car.UpdateMotorSounds(IsPlayTrack1, IsPlayTrack2);
+			if (Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor is BVEMotorSound motorSound)
+			{
+				motorSound.PlayFirstTrack = IsPlayTrack1;
+				motorSound.PlaySecondTrack = IsPlayTrack2;
+			}
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor.Update(0.0);
 
 			Program.SoundApi.Update(deltaTime, SoundModels.Inverse);
 

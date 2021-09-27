@@ -369,7 +369,11 @@ namespace Train.OpenBve
 									{
 										break;
 									}
-									ParseMotorSoundTableNode(c, ref car.Sounds.Motor.Tables, center, SoundCfgParser.mediumRadius);
+
+									if (car.Sounds.Motor is BVEMotorSound motorSound)
+									{
+										ParseMotorSoundTableNode(c, ref motorSound.Tables, center, SoundCfgParser.mediumRadius);
+									}
 									break;
 								case "pilotlamp":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
