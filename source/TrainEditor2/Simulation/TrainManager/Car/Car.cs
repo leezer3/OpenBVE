@@ -11,7 +11,7 @@ using TrainManager.Trains;
 
 namespace TrainEditor2.Simulation.TrainManager
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
 		internal class Car : CarBase

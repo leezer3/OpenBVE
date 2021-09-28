@@ -3,7 +3,7 @@ using OpenBveApi.Trains;
 
 namespace TrainEditor2.Simulation.TrainManager
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		internal class Train : AbstractTrain
 		{
