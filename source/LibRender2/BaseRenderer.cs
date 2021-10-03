@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using LibRender2.Backgrounds;
 using LibRender2.Cameras;
 using LibRender2.Fogs;
@@ -265,6 +266,7 @@ namespace LibRender2
 		/// <summary>
 		/// Call this once to initialise the renderer
 		/// </summary>
+		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
 			
