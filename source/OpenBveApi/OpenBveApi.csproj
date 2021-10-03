@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FunctionScripts\AnimationScripts.cs" />
+    <Compile Include="FunctionScripts\CSAnimationScript.cs" />
     <Compile Include="FunctionScripts\FunctionScript.cs" />
     <Compile Include="FunctionScripts\FunctionScript.Notation.cs" />
     <Compile Include="FunctionScripts\Instructions.cs" />

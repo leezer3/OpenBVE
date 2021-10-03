@@ -1,4 +1,4 @@
-﻿using OpenBveApi.FunctionScripting;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
@@ -23,11 +23,11 @@ namespace OpenBveApi.Objects
 		/// <summary>The track follower used to hold/ move the sound</summary>
 		public TrackFollower Follower;
 		/// <summary>The function script controlling the sound's movement along the track, or a null reference</summary>
-		public FunctionScript TrackFollowerFunction;
+		public AnimationScript TrackFollowerFunction;
 		/// <summary>The function script controlling the sound's volume, or a null reference</summary>
-		public FunctionScript VolumeFunction;
+		public AnimationScript VolumeFunction;
 		/// <summary>The function script controlling the sound's pitch, or a null reference</summary>
-		public FunctionScript PitchFunction;
+		public AnimationScript PitchFunction;
 
 		/// <inheritdoc/>
 		/// <remarks>In this case, the position of the track follower is returned.</remarks>
@@ -85,19 +85,19 @@ namespace OpenBveApi.Objects
 				if (this.TrackFollowerFunction != null)
 				{
 
-					double delta = this.TrackFollowerFunction.Perform(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+					double delta = this.TrackFollowerFunction.ExecuteScript(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 					this.Follower.UpdateRelative(this.currentTrackPosition + delta, true, true);
 					this.Follower.UpdateWorldCoordinates(false);
 				}
 
 				if (this.VolumeFunction != null)
 				{
-					this.currentVolume = this.VolumeFunction.Perform(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+					this.currentVolume = this.VolumeFunction.ExecuteScript(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 				}
 
 				if (this.PitchFunction != null)
 				{
-					this.currentPitch = this.PitchFunction.Perform(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+					this.currentPitch = this.PitchFunction.ExecuteScript(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 				}
 
 				if (this.Source != null)
