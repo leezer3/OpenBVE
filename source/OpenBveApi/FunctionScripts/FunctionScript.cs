@@ -7,7 +7,7 @@ using OpenBveApi.Trains;
 namespace OpenBveApi.FunctionScripting
 {
 	/// <summary>The base abstract function script which consumers must implement</summary>
-	public class FunctionScript
+	public class FunctionScript : AnimationScript
 	{
 		private readonly HostInterface currentHost;
 		/// <summary>The instructions to perform</summary>
@@ -17,16 +17,16 @@ namespace OpenBveApi.FunctionScripting
 		/// <summary>All constants used for the script</summary>
 		public readonly double[] Constants;
 		/// <summary>The last result returned</summary>
-		public double LastResult;
+		public double LastResult { get; set; }
 		/// <summary>The minimum pinned result or NaN to set no minimum</summary>
-		public double Maximum = Double.NaN;
+		public double Maximum { get; set; } = Double.NaN;
 		/// <summary>The maximum pinned result or NaN to set no maximum</summary>
-		public double Minimum = Double.NaN;
+		public double Minimum { get; set; } = Double.NaN;
 		/// <summary>We caught an exception on the last execution of the script, so further execution has been stopped</summary> 
 		private bool exceptionCaught;
 
 		/// <summary>Performs the function script, and returns the current result</summary>
-		public double Perform(AbstractTrain Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		public double ExecuteScript(AbstractTrain Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
 			if (exceptionCaught)
 			{
@@ -819,7 +819,7 @@ namespace OpenBveApi.FunctionScripting
 		
 
 		/// <summary>Clones the function script</summary>
-		public FunctionScript Clone()
+		public AnimationScript Clone()
 		{
 			return (FunctionScript) this.MemberwiseClone();
 		}

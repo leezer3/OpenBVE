@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -149,7 +149,7 @@ namespace OpenBveApi.Objects
 			double x = 0.0;
 			if (Object.TrackFollowerFunction != null)
 			{
-				x = UpdateFunctions ? Object.TrackFollowerFunction.Perform(Train, CarIndex, WorldPosition, currentTrackPosition, currentSectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState) : Object.TrackFollowerFunction.LastResult;
+				x = UpdateFunctions ? Object.TrackFollowerFunction.ExecuteScript(Train, CarIndex, WorldPosition, currentTrackPosition, currentSectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState) : Object.TrackFollowerFunction.LastResult;
 			}
 
 			return x;

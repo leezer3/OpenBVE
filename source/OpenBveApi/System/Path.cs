@@ -1,4 +1,4 @@
-﻿#pragma warning disable 0659, 0661
+#pragma warning disable 0659, 0661
 
 using System;
 using System.IO;
@@ -25,9 +25,10 @@ namespace OpenBveApi {
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a directory.</summary>
 		/// <param name="absolute">The platform-specific absolute path.</param>
 		/// <param name="relative">The platform-independent relative path.</param>
+		/// <param name="allowQueryStr">If a part similar to a URL query string at the end of the path should be preserved.</param>
 		/// <returns>A platform-specific absolute path to the specified directory.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
-		public static string CombineDirectory(string absolute, string relative) {
+		public static string CombineDirectory(string absolute, string relative, bool allowQueryStr = false) {
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string directory = CombineDirectory(absolute, relative.Substring(0, index).TrimEnd());
@@ -35,6 +36,12 @@ namespace OpenBveApi {
 					return directory;
 				}
 				return CombineDirectory(absolute, relative.Substring(index + 2).TrimStart());
+			}
+			string queryString = "";
+			int questionMarkIndex = relative.IndexOf("?", StringComparison.Ordinal);
+			if (allowQueryStr && questionMarkIndex >= 0) {
+				queryString = relative.Substring(questionMarkIndex);
+				relative = relative.Substring(0, questionMarkIndex);
 			}
 			if (relative.IndexOfAny(InvalidPathChars) >= 0) {
 				throw new ArgumentException("The relative path contains invalid characters.");
@@ -101,7 +108,7 @@ namespace OpenBveApi {
 					}
 				}
 			}
-			return absolute;
+			return absolute + queryString;
 		}
 		
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a file.</summary>

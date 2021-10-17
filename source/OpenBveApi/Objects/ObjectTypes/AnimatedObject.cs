@@ -17,7 +17,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The array of states</summary>
 		public ObjectState[] States;
 		/// <summary>The function script controlling state changes</summary>
-		public FunctionScript StateFunction;
+		public AnimationScript StateFunction;
 		/// <summary>The index of the current state</summary>
 		public int CurrentState;
 		/// <summary>A 3D vector describing the direction taken when TranslateXFunction is called</summary>
@@ -28,13 +28,13 @@ namespace OpenBveApi.Objects
 		public Vector3 TranslateZDirection;
 		/// <summary>The function script controlling translation in the X direction</summary>
 		/// <remarks>X is an arbitrary 3D direction, nominally 1,0,0</remarks>
-		public FunctionScript TranslateXFunction;
+		public AnimationScript TranslateXFunction;
 		/// <summary>The function script controlling translation in the Y direction</summary>
 		/// <remarks>Y is an arbitrary 3D direction, nominally 0,1,0</remarks>
-		public FunctionScript TranslateYFunction;
+		public AnimationScript TranslateYFunction;
 		/// <summary>The function script controlling translation in the Z direction</summary>
 		/// <remarks>Z is an arbitrary 3D direction, nominally 0,0,1</remarks>
-		public FunctionScript TranslateZFunction;
+		public AnimationScript TranslateZFunction;
 		/// <summary>A 3D vector describing the rotation performed when RotateXFunction is called</summary>
 		public Vector3 RotateXDirection;
 		/// <summary>A 3D vector describing the rotation performed when RotateYFunction is called</summary>
@@ -43,13 +43,13 @@ namespace OpenBveApi.Objects
 		public Vector3 RotateZDirection;
 		/// <summary>The function script controlling translation in the X direction</summary>
 		/// <remarks>X is an arbitrary 3D direction, nominally 1,0,0</remarks>
-		public FunctionScript RotateXFunction;
+		public AnimationScript RotateXFunction;
 		/// <summary>The function script controlling translation in the Y direction</summary>
 		/// <remarks>Y is an arbitrary 3D direction, nominally 0,1,0</remarks>
-		public FunctionScript RotateYFunction;
+		public AnimationScript RotateYFunction;
 		/// <summary>The function script controlling translation in the Z direction</summary>
 		/// <remarks>Z is an arbitrary 3D direction, nominally 0,0,1</remarks>
-		public FunctionScript RotateZFunction;
+		public AnimationScript RotateZFunction;
 		/// <summary>The damping (if any) to perform when RotateXFunction is called</summary>
 		public Damping RotateXDamping;
 		/// <summary>The damping (if any) to perform when RotateYFunction is called</summary>
@@ -62,10 +62,10 @@ namespace OpenBveApi.Objects
 		public Vector2 TextureShiftYDirection;
 		/// <summary>The function script controlling texture shifting in the X direction</summary>
 		/// <remarks>X is an arbitrary 2D direction, nominally 1,0</remarks>
-		public FunctionScript TextureShiftXFunction;
+		public AnimationScript TextureShiftXFunction;
 		/// <summary>The function script controlling texture shifting in the Y direction</summary>
 		/// <remarks>X is an arbitrary 2D direction, nominally 0,1</remarks>
-		public FunctionScript TextureShiftYFunction;
+		public AnimationScript TextureShiftYFunction;
 		/// <summary>If the LED function is used, this controls whether the winding is clockwise or anti-clockwise</summary>
 		public bool LEDClockwiseWinding;
 		/// <summary>The initial angle of the LED function</summary>
@@ -75,27 +75,14 @@ namespace OpenBveApi.Objects
 		/// <summary>If LEDFunction is used, an array of five vectors representing the bottom-left, up-left, up-right, bottom-right and center coordinates of the LED square, or a null reference otherwise.</summary>
 		public Vector3[] LEDVectors;
 		/// <summary>The function script controlling the LED square</summary>
-		public FunctionScript LEDFunction;
+		public AnimationScript LEDFunction;
 		/// <summary>The refresh rate in seconds</summary>
 		public double RefreshRate;
 		/// <summary>The time since the last update of this object</summary>
 		public double SecondsSinceLastUpdate;
-
-		//This section holds script files executed by CS-Script
-		/// <summary>The absolute path to the script file to be evaluated when TranslateXScript is called</summary>
-		public string TranslateXScriptFile;
-		/// <summary>The actual script interface</summary>
-		public AnimationScript TranslateXAnimationScript;
-		/// <summary>The absolute path to the script file to be evaluated when TranslateYScript is called</summary>
-		public AnimationScript TranslateYAnimationScript;
-		/// <summary>The actual script interface</summary>
-		public string TranslateYScriptFile;
-		/// <summary>The absolute path to the script file to be evaluated when TranslateZScript is called</summary>
-		public AnimationScript TranslateZAnimationScript;
-		/// <summary>The actual script interface</summary>
-		public string TranslateZScriptFile;
+		
 		/// <summary>The function script controlling movement along the track</summary>
-		public FunctionScript TrackFollowerFunction;
+		public AnimationScript TrackFollowerFunction;
 		/// <summary>The front axle position if TrackFollowerFunction is used</summary>
 		public double FrontAxlePosition = 1;
 		/// <summary>The rear axle position if TrackFollowerFunction is used</summary>
@@ -126,7 +113,6 @@ namespace OpenBveApi.Objects
 			Result.TrackFollowerFunction = TrackFollowerFunction?.Clone();
 			Result.FrontAxlePosition = this.FrontAxlePosition;
 			Result.RearAxlePosition = this.RearAxlePosition;
-			Result.TranslateXScriptFile = this.TranslateXScriptFile;
 			Result.StateFunction = StateFunction?.Clone();
 			Result.CurrentState = this.CurrentState;
 			Result.TranslateZDirection = this.TranslateZDirection;
@@ -185,7 +171,6 @@ namespace OpenBveApi.Objects
 			if (this.RotateXFunction != null | this.RotateYFunction != null | this.RotateZFunction != null) return false;
 			if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
 			if (this.LEDFunction != null) return false;
-			if (this.TranslateXScriptFile != null | this.TranslateYScriptFile != null | this.TranslateZScriptFile != null) return false;
 			if (this.TrackFollowerFunction != null) return false;
 			return true;
 		}
@@ -239,7 +224,7 @@ namespace OpenBveApi.Objects
 			// state change
 			if (StateFunction != null & UpdateFunctions)
 			{
-				double sd = StateFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+				double sd = StateFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				int si = (int) System.Math.Round(sd);
 				if (si < 0 | si >= States.Length) si = -1;
 				if (CurrentState != si)
@@ -261,38 +246,9 @@ namespace OpenBveApi.Objects
 				double x = TranslateXFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					x = TranslateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					x = TranslateXFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
 
-				Vector3 translationVector = new Vector3(TranslateXDirection); //Must clone
-				translationVector.Rotate(Direction, Up, Side);
-				translationVector *= x;
-				Position += translationVector;
-			}
-			else if (TranslateXScriptFile != null)
-			{
-				//Translate X Script
-				if (TranslateXAnimationScript == null)
-				{
-					//Load the script if required
-					try
-					{
-						CSScript.GlobalSettings.TargetFramework = "v4.0";
-						TranslateXAnimationScript = CSScript.LoadCode(File.ReadAllText(TranslateXScriptFile))
-							.CreateObject("OpenBVEScript")
-							.AlignToInterface<AnimationScript>(true);
-					}
-					catch
-					{
-						currentHost.AddMessage(MessageType.Error, false,
-							"An error occcured whilst parsing script " + TranslateXScriptFile);
-						TranslateXScriptFile = null;
-						return;
-					}
-				}
-
-				double x = TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-					IsPartOfTrain, TimeElapsed);
 				Vector3 translationVector = new Vector3(TranslateXDirection); //Must clone
 				translationVector.Rotate(Direction, Up, Side);
 				translationVector *= x;
@@ -305,38 +261,9 @@ namespace OpenBveApi.Objects
 				double y = TranslateYFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					y = TranslateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					y = TranslateYFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
 
-				Vector3 translationVector = new Vector3(TranslateYDirection); //Must clone
-				translationVector.Rotate(Direction, Up, Side);
-				translationVector *= y;
-				Position += translationVector;
-			}
-			else if (TranslateYScriptFile != null)
-			{
-				//Translate X Script
-				if (TranslateYAnimationScript == null)
-				{
-					//Load the script if required
-					try
-					{
-						CSScript.GlobalSettings.TargetFramework = "v4.0";
-						TranslateYAnimationScript = CSScript.LoadCode(File.ReadAllText(TranslateYScriptFile))
-							.CreateObject("OpenBVEScript")
-							.AlignToInterface<AnimationScript>(true);
-					}
-					catch
-					{
-						currentHost.AddMessage(MessageType.Error, false,
-							"An error occcured whilst parsing script " + TranslateYScriptFile);
-						TranslateYScriptFile = null;
-						return;
-					}
-				}
-
-				double y = TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-					IsPartOfTrain, TimeElapsed);
 				Vector3 translationVector = new Vector3(TranslateYDirection); //Must clone
 				translationVector.Rotate(Direction, Up, Side);
 				translationVector *= y;
@@ -348,38 +275,9 @@ namespace OpenBveApi.Objects
 				double z = TranslateZFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					z = TranslateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					z = TranslateZFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
 				
-				Vector3 translationVector = new Vector3(TranslateZDirection); //Must clone
-				translationVector.Rotate(Direction, Up, Side);
-				translationVector *= z;
-				Position += translationVector;
-			}
-			else if (TranslateZScriptFile != null)
-			{
-				//Translate X Script
-				if (TranslateZAnimationScript == null)
-				{
-					//Load the script if required
-					try
-					{
-						CSScript.GlobalSettings.TargetFramework = "v4.0";
-						TranslateZAnimationScript = CSScript.LoadCode(File.ReadAllText(TranslateZScriptFile))
-							.CreateObject("OpenBVEScript")
-							.AlignToInterface<AnimationScript>(true);
-					}
-					catch
-					{
-						currentHost.AddMessage(MessageType.Error, false,
-							"An error occcured whilst parsing script " + TranslateZScriptFile);
-						TranslateZScriptFile = null;
-						return;
-					}
-				}
-
-				double z = TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-					IsPartOfTrain, TimeElapsed);
 				Vector3 translationVector = new Vector3(TranslateZDirection); //Must clone
 				translationVector.Rotate(Direction, Up, Side);
 				translationVector *= z;
@@ -396,7 +294,7 @@ namespace OpenBveApi.Objects
 				radianX = RotateXFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					radianX = RotateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					radianX = RotateXFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
 				
 				if (RotateXDamping != null)
@@ -411,7 +309,7 @@ namespace OpenBveApi.Objects
 				radianY = RotateYFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					radianY = RotateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					radianY = RotateYFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
 				
 				if (RotateYDamping != null)
@@ -426,7 +324,7 @@ namespace OpenBveApi.Objects
 				radianZ = RotateZFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					radianZ = RotateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					radianZ = RotateZFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
 				
 				if (RotateZDamping != null)
@@ -447,7 +345,7 @@ namespace OpenBveApi.Objects
 					double x = TextureShiftXFunction.LastResult;
 					if (UpdateFunctions)
 					{
-						x = TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+						x = TextureShiftXFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					}
 					
 					x -= System.Math.Floor(x);
@@ -459,7 +357,7 @@ namespace OpenBveApi.Objects
 					double y = TextureShiftYFunction.LastResult;
 					if (UpdateFunctions)
 					{
-						y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+						y = TextureShiftYFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					}
 					
 					y -= System.Math.Floor(y);
@@ -475,7 +373,7 @@ namespace OpenBveApi.Objects
 				ledangle = LEDFunction.LastResult;
 				if (UpdateFunctions)
 				{
-					ledangle = LEDFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					ledangle = LEDFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
 			}
 
