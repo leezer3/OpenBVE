@@ -361,7 +361,12 @@ namespace Plugin
 					break;
 				case TemplateID.TextureFilename:
 					string texturePath = block.ReadString();
-
+					if (string.IsNullOrEmpty(texturePath))
+					{
+						Plugin.currentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material " + material.Key);
+						material.DaytimeTexture = null;
+						break;
+					}
 					// If the specified file name is an absolute path, make it the file name only.
 					// Some object files specify absolute paths.
 					// And BVE4/5 doesn't allow textures to be placed in a different directory than the object file.

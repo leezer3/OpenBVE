@@ -1812,30 +1812,33 @@ namespace Plugin {
 																				FileName);
 																			return false;
 																		}
-																		string filename = (string)e.Data[0];
-																		if (OpenBveApi.Path.ContainsInvalidChars(filename))
+																		string textureFileName = (string)e.Data[0];
+																		if (Path.ContainsInvalidChars(textureFileName))
 																		{
 																			Plugin.currentHost.AddMessage(MessageType.Error, false, "filename contains illegal characters in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
 																				FileName);
 																		}
 																		else
 																		{
-																			string File;
-																			if (Path.IsAbsolutePath(filename))
+																			string File = string.Empty;
+																			if (Path.IsAbsolutePath(textureFileName))
 																			{
 																				if (Plugin.EnabledHacks.BveTsHacks)
 																				{
-																					filename = filename.Split('/', '\\').Last();
-																					File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);
+																					textureFileName = textureFileName.Split('/', '\\').Last();
+																					File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), textureFileName);
 																				}
 																				else
 																				{
-																					File = filename;
+																					File = textureFileName;
 																				}
 																			}
 																			else
 																			{
-																				File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);	
+																				if (!string.IsNullOrEmpty(textureFileName))
+																				{
+																					File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), textureFileName);	
+																				}
 																			}
 																			if (System.IO.File.Exists(File))
 																			{
@@ -1843,8 +1846,15 @@ namespace Plugin {
 																			}
 																			else
 																			{
-																				Plugin.currentHost.AddMessage(MessageType.Error, true, "The texture file " + File + " could not be found in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
-																					FileName);
+																				if (!string.IsNullOrEmpty(textureFileName))
+																				{
+																					Plugin.currentHost.AddMessage(MessageType.Error, true, "The texture file " + File + " could not be found in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
+																					                                                       FileName);
+																				}
+																				else
+																				{
+																					Plugin.currentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified in Material in MeshMaterialList in Mesh in x object file " + FileName);
+																				}
 																			}
 																		}
 																	}
