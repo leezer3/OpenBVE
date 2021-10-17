@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
+using OpenBveApi.Objects;
 using OpenTK.Graphics;
 
 namespace RouteViewer
@@ -20,6 +21,8 @@ namespace RouteViewer
 			checkBoxLogo.Checked = Interface.CurrentOptions.LoadingLogo;
 			checkBoxBackgrounds.Checked = Interface.CurrentOptions.LoadingBackground;
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
+			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
+			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
         }
 
         internal static DialogResult ShowOptions()
@@ -103,6 +106,8 @@ namespace RouteViewer
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
+			Interface.CurrentOptions.CurrentXParser = (XParsers) comboBoxNewXParser.SelectedIndex;
+			Interface.CurrentOptions.CurrentObjParser = (ObjParsers) comboBoxNewObjParser.SelectedIndex;
 			Options.SaveOptions();
 			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
 			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged)

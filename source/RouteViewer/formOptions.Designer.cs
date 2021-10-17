@@ -50,6 +50,11 @@ namespace RouteViewer
 			this.checkBoxLogo = new System.Windows.Forms.CheckBox();
 			this.checkBoxBackgrounds = new System.Windows.Forms.CheckBox();
 			this.checkBoxProgressBar = new System.Windows.Forms.CheckBox();
+			this.label13 = new System.Windows.Forms.Label();
+			this.label14 = new System.Windows.Forms.Label();
+			this.comboBoxNewObjParser = new System.Windows.Forms.ComboBox();
+			this.label12 = new System.Windows.Forms.Label();
+			this.comboBoxNewXParser = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
@@ -131,7 +136,7 @@ namespace RouteViewer
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(212, 333);
+			this.button1.Location = new System.Drawing.Point(212, 420);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
 			this.button1.TabIndex = 9;
@@ -299,11 +304,67 @@ namespace RouteViewer
 			this.checkBoxProgressBar.TabIndex = 23;
 			this.checkBoxProgressBar.UseVisualStyleBackColor = true;
 			// 
+			// label13
+			// 
+			this.label13.AutoSize = true;
+			this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label13.Location = new System.Drawing.Point(99, 333);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(42, 15);
+			this.label13.TabIndex = 26;
+			this.label13.Text = "Other";
+			// 
+			// label14
+			// 
+			this.label14.AutoSize = true;
+			this.label14.Location = new System.Drawing.Point(16, 377);
+			this.label14.Name = "label14";
+			this.label14.Size = new System.Drawing.Size(106, 13);
+			this.label14.TabIndex = 28;
+			this.label14.Text = "Use New Obj Parser:";
+			// 
+			// comboBoxNewObjParser
+			// 
+			this.comboBoxNewObjParser.FormattingEnabled = true;
+			this.comboBoxNewObjParser.Items.AddRange(new object[] {
+            "OriginalObjParser",
+            "AssimpObjParser"});
+			this.comboBoxNewObjParser.Location = new System.Drawing.Point(166, 377);
+			this.comboBoxNewObjParser.Name = "comboBoxNewObjParser";
+			this.comboBoxNewObjParser.Size = new System.Drawing.Size(121, 21);
+			this.comboBoxNewObjParser.TabIndex = 27;
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(16, 348);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(97, 13);
+			this.label12.TabIndex = 32;
+			this.label12.Text = "Use New X Parser:";
+			// 
+			// comboBoxNewXParser
+			// 
+			this.comboBoxNewXParser.FormattingEnabled = true;
+			this.comboBoxNewXParser.Items.AddRange(new object[] {
+            "OriginalXParser",
+            "NewXParser",
+            "AssimpXParser"});
+			this.comboBoxNewXParser.Location = new System.Drawing.Point(166, 348);
+			this.comboBoxNewXParser.Name = "comboBoxNewXParser";
+			this.comboBoxNewXParser.Size = new System.Drawing.Size(121, 21);
+			this.comboBoxNewXParser.TabIndex = 31;
+			// 
 			// formOptions
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(311, 368);
+			this.ClientSize = new System.Drawing.Size(311, 458);
+			this.Controls.Add(this.label12);
+			this.Controls.Add(this.comboBoxNewXParser);
+			this.Controls.Add(this.label14);
+			this.Controls.Add(this.comboBoxNewObjParser);
+			this.Controls.Add(this.label13);
 			this.Controls.Add(this.checkBoxProgressBar);
 			this.Controls.Add(this.checkBoxBackgrounds);
 			this.Controls.Add(this.checkBoxLogo);
@@ -364,5 +425,10 @@ namespace RouteViewer
 		private System.Windows.Forms.CheckBox checkBoxLogo;
 		private System.Windows.Forms.CheckBox checkBoxBackgrounds;
 		private System.Windows.Forms.CheckBox checkBoxProgressBar;
+		private System.Windows.Forms.Label label13;
+		private System.Windows.Forms.Label label14;
+		private System.Windows.Forms.ComboBox comboBoxNewObjParser;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.ComboBox comboBoxNewXParser;
 	}
 }
