@@ -126,7 +126,7 @@ namespace Plugin
 		{
 			if (builder.Vertices.Count != 0)
 			{
-				builder.Apply(ref obj);
+				builder.Apply(ref obj, false, false);
 				builder = new MeshBuilder(Plugin.currentHost);
 			}
 

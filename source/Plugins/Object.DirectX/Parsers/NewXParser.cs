@@ -135,9 +135,9 @@ namespace Plugin
 			obj.Mesh.CreateNormals();
 			if (rootMatrix != Matrix4D.NoTransformation)
 			{
-				for (int i = 0; i < obj.Mesh.Vertices.Length; i++)
+				for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)
 				{
-					obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix);
+					obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix, false);
 				}
 			}
 			return obj;
@@ -148,6 +148,7 @@ namespace Plugin
 
 		private static Matrix4D rootMatrix;
 		private static int currentLevel = 0;
+		private static int transformStart = 0;
 
 		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
@@ -205,6 +206,15 @@ namespace Plugin
 					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj);
+						if (rootMatrix != Matrix4D.NoTransformation)
+						{
+							for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)
+							{
+								obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix, false);
+							}
+						}
+						transformStart = obj.Mesh.Vertices.Length;
+						rootMatrix = Matrix4D.NoTransformation;
 						builder = new MeshBuilder(Plugin.currentHost);
 					}
 					while (block.Position() < block.Length() - 5)
@@ -234,6 +244,7 @@ namespace Plugin
 					}
 					else
 					{
+						transformStart = obj.Mesh.Vertices.Length;
 						rootMatrix = new Matrix4D(matrixValues);
 					}
 					break;
