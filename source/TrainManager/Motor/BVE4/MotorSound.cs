@@ -11,7 +11,7 @@ namespace TrainManager.Motor
 		/// <summary>The speed conversion factor</summary>
 		public readonly double SpeedConversionFactor;
 		/// <summary>The current direction of acceleration of the train</summary>
-		public int CurrentAccelerationDirection;
+		private int CurrentAccelerationDirection;
 		/*
 		 * BVE2 / BVE4 magic numbers
 		 */
