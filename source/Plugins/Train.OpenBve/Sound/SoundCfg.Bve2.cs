@@ -1,4 +1,5 @@
-﻿using OpenBveApi;
+using OpenBveApi;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
@@ -100,21 +101,28 @@ namespace Train.OpenBve
 				train.Cars[i].Sounds.SpringL = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
 				train.Cars[i].Sounds.SpringR = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
 				// motor sound
-				if (train.Cars[i].Specs.IsMotorCar && train.Cars[i].Sounds.Motor is BVEMotorSound motorSound)
+				if (train.Cars[i].Specs.IsMotorCar)
 				{
-					System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-					train.Cars[i].Sounds.Motor.Position = center;
-					for (int j = 0; j < motorSound.Tables.Length; j++)
+					if (train.Cars[i].Sounds.Motor is BVEMotorSound motorSound)
 					{
-						for (int k = 0; k < motorSound.Tables[j].Entries.Length; k++)
+						System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+						train.Cars[i].Sounds.Motor.Position = center;
+						for (int j = 0; j < motorSound.Tables.Length; j++)
 						{
-							int idx = motorSound.Tables[j].Entries[k].SoundIndex;
-							if (idx >= 0)
+							for (int k = 0; k < motorSound.Tables[j].Entries.Length; k++)
 							{
-								CarSound snd = new CarSound(Plugin.currentHost, train.TrainFolder, "Motor" + idx.ToString(Culture) + ".wav", SoundCfgParser.mediumRadius, center);
-								motorSound.Tables[j].Entries[k].Buffer = snd.Buffer;
+								int idx = motorSound.Tables[j].Entries[k].SoundIndex;
+								if (idx >= 0)
+								{
+									CarSound snd = new CarSound(Plugin.currentHost, train.TrainFolder, "Motor" + idx.ToString(Culture) + ".wav", SoundCfgParser.mediumRadius, center);
+									motorSound.Tables[j].Entries[k].Buffer = snd.Buffer;
+								}
 							}
 						}
+					}
+					else
+					{
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected motor sound model found in car " + i);
 					}
 				}
 			}
