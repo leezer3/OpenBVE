@@ -5,6 +5,6 @@
 		/// <summary>The pitch for the sound to be played at</summary>
 		public double Pitch;
 		/// <summary>The volume for the sound to be played at</summary>
-		public double Volume;
+		public double Gain;
 	}
 }

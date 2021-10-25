@@ -53,9 +53,10 @@
     <Compile Include="Sound\SoundCfg.Bve2.cs" />
     <Compile Include="Sound\SoundCfg.Bve4.cs" />
     <Compile Include="Sound\SoundCfg.Xml.cs" />
-    <Compile Include="Train\ExtensionsCfgParser.cs" />
-    <Compile Include="Train\TrainDatParser.cs" />
-    <Compile Include="Train\TrainDatparser.Formats.cs" />
+    <Compile Include="Train\BVE5\MotorSoundTable.cs" />
+    <Compile Include="Train\BVE\ExtensionsCfgParser.cs" />
+    <Compile Include="Train\BVE\TrainDatParser.cs" />
+    <Compile Include="Train\BVE\TrainDatparser.Formats.cs" />
     <Compile Include="Train\XML\TrainXmlParser.BrakeNode.cs" />
     <Compile Include="Train\XML\TrainXmlParser.CarNode.cs" />
     <Compile Include="Train\XML\TrainXmlParser.cs" />

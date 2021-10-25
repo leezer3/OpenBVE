@@ -52,7 +52,10 @@ namespace TrainManager.Motor
 					}
 					else
 					{
-						MotorSoundSources[i] = TrainManagerBase.currentHost.PlaySound(MotorSoundBuffers[i], entry.Sounds[i].Pitch, entry.Sounds[i].Gain, Position, Car, true) as SoundSource;
+						if (MotorSoundBuffers[i] != null)
+						{
+							MotorSoundSources[i] = TrainManagerBase.currentHost.PlaySound(MotorSoundBuffers[i], entry.Sounds[i].Pitch, entry.Sounds[i].Gain, Position, Car, true) as SoundSource;
+						}
 					}
 				}
 			}
@@ -74,7 +77,10 @@ namespace TrainManager.Motor
 					}
 					else
 					{
-						BrakeSoundSources[i] = TrainManagerBase.currentHost.PlaySound(BrakeSoundBuffers[i], entry.Sounds[i].Pitch, entry.Sounds[i].Gain, Position, Car, true) as SoundSource;
+						if (BrakeSoundBuffers[i] != null)
+						{
+							BrakeSoundSources[i] = TrainManagerBase.currentHost.PlaySound(BrakeSoundBuffers[i], entry.Sounds[i].Pitch, entry.Sounds[i].Gain, Position, Car, true) as SoundSource;
+						}
 					}
 				}
 			}
