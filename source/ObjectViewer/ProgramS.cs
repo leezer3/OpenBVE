@@ -266,7 +266,7 @@ namespace ObjectViewer {
 		    {
 			    try
 			    {
-				    if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
+				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
 				    {
 					    string currentTrainFolder = System.IO.Path.GetDirectoryName(Files[i]);
 					    bool canLoad = false;
@@ -370,8 +370,13 @@ namespace ObjectViewer {
 							string[] f = Dialog.FileNames;
 							for (int i = 0; i < f.Length; i++)
 				            {
-
-					            for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+								string currentTrainFolder = string.Empty;
+								if(f[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
+								{
+									// only check to see if it's a train if this is a specified filetype, else we'll start loading the full train from an object in it's folder
+									currentTrainFolder = System.IO.Path.GetDirectoryName(f[i]);
+								}
+								for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					            {
 									if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(f[i]))
 						            {
@@ -387,7 +392,10 @@ namespace ObjectViewer {
 						            {
 							            Files.Add(f[i]);
 						            }
-									
+						            if (!string.IsNullOrEmpty(currentTrainFolder) && Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
+						            {
+							            Files.Add(f[i]);
+						            }
 					            }
 					            
 				            }
