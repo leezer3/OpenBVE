@@ -111,23 +111,31 @@ namespace OpenBve
 				{
 					case MenuOptionType.ScreenResolution:
 						ScreenResolution res = CurrentOption as ScreenResolution;
-						Program.Renderer.Screen.Width = res.Width;
-						Program.Renderer.Screen.Height = res.Height;
-						Program.currentGameWindow.Width = res.Width;
-						Program.currentGameWindow.Height = res.Height;
+						Program.Renderer.Screen.Width = (int)(res.Width * DisplayDevice.Default.ScaleFactor.X);
+						Program.Renderer.Screen.Height = (int)(res.Height * DisplayDevice.Default.ScaleFactor.Y);
+						Program.currentGameWindow.Width = (int)(res.Width * DisplayDevice.Default.ScaleFactor.X);
+						Program.currentGameWindow.Height = (int)(res.Height * DisplayDevice.Default.ScaleFactor.Y);
 						if (Interface.CurrentOptions.FullscreenMode)
 						{
 							IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
 							foreach (DisplayResolution currentResolution in resolutions)
 							{
 								//Test resolution
-								if (currentResolution.Width == Program.Renderer.Screen.Width &&
-								    currentResolution.Height == Program.Renderer.Screen.Height)
+								if (currentResolution.Width == Program.Renderer.Screen.Width / DisplayDevice.Default.ScaleFactor.X &&
+								    currentResolution.Height == Program.Renderer.Screen.Height / DisplayDevice.Default.ScaleFactor.Y)
 								{
 									try
 									{
+										//HACK: some resolutions will result in openBVE not appearing on screen in full screen, so restore resolution then change resolution
+										DisplayDevice.Default.RestoreResolution();
 										DisplayDevice.Default.ChangeResolution(currentResolution);
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+										Program.currentGameWindow.X = 0;
+										Program.currentGameWindow.Y = 0;
+										Program.currentGameWindow.Width = (int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X);
+										Program.currentGameWindow.Height = (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y);
+										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
+										Program.Renderer.Screen.Height = Program.currentGameWindow.Height;
 										return;
 									}
 									catch
@@ -151,13 +159,21 @@ namespace OpenBve
 							foreach (DisplayResolution currentResolution in resolutions)
 							{
 								//Test resolution
-								if (currentResolution.Width == Program.Renderer.Screen.Width &&
-								    currentResolution.Height == Program.Renderer.Screen.Height)
+								if (currentResolution.Width == Program.Renderer.Screen.Width / DisplayDevice.Default.ScaleFactor.X &&
+									currentResolution.Height == Program.Renderer.Screen.Height / DisplayDevice.Default.ScaleFactor.Y)
 								{
 									try
 									{
+										//HACK: some resolutions will result in openBVE not appearing on screen in full screen, so restore resolution then change resolution
+										DisplayDevice.Default.RestoreResolution();
 										DisplayDevice.Default.ChangeResolution(currentResolution);
 										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+										Program.currentGameWindow.X = 0;
+										Program.currentGameWindow.Y = 0;
+										Program.currentGameWindow.Width = (int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X);
+										Program.currentGameWindow.Height = (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y);
+										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
+										Program.Renderer.Screen.Height = Program.currentGameWindow.Height;
 										return;
 									}
 									catch
