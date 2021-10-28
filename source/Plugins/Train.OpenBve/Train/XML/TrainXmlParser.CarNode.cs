@@ -351,6 +351,40 @@ namespace Train.OpenBve
 							visibleFromInterior = true;
 						}
 						break;
+					case "soundtable":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "bve5":
+										string powerFreq = string.Empty, powerVol = string.Empty;
+										string brakeFreq = string.Empty, brakeVol = string.Empty;
+										foreach (XmlNode sc in cc.ChildNodes)
+										{
+											switch (sc.Name.ToLowerInvariant())
+											{
+												case "powerfreq":
+													powerFreq = OpenBveApi.Path.CombineFile(currentPath, sc.InnerText);
+													break;
+												case "powervol":
+													powerVol = OpenBveApi.Path.CombineFile(currentPath, sc.InnerText);
+													break;
+												case "brakefreq":
+													brakeFreq = OpenBveApi.Path.CombineFile(currentPath, sc.InnerText);
+													break;
+												case "brakevol":
+													brakeVol = OpenBveApi.Path.CombineFile(currentPath, sc.InnerText);
+													break;
+											}
+										}
+										Train.Cars[Car].Sounds.Motor = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
+										break;
+								}
+							}
+						}
+						break;
 				}
 			}
 			/*

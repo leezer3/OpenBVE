@@ -29,10 +29,8 @@ namespace TrainManager.Motor
 			{
 				return;
 			}
-			double speed = Math.Abs(Car.Specs.PerceivedSpeed);
-			int idx = (int) Math.Round(speed * 18.0);
+			double speed = Math.Round(Math.Abs(Car.Specs.PerceivedSpeed) * 3.6); // km/h
 			int ndir = Math.Sign(Car.Specs.MotorAcceleration);
-
 
 			if (ndir == 1)
 			{
@@ -43,7 +41,15 @@ namespace TrainManager.Motor
 					TrainManagerBase.currentHost.StopSound(BrakeSoundSources[i]);
 				}
 
-				BVE5MotorSoundTableEntry entry = MotorSoundTable[idx];
+				BVE5MotorSoundTableEntry entry = MotorSoundTable[0];
+				for (int i = 0; i < MotorSoundTable.Length; i++)
+				{
+					if (MotorSoundTable[i].Speed < speed)
+					{
+						break;
+					}
+					entry = MotorSoundTable[i];
+				}
 				for (int i = 0; i < entry.Sounds.Length; i++)
 				{
 					if (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0)
@@ -62,13 +68,21 @@ namespace TrainManager.Motor
 			else if (ndir == -1)
 			{
 				//Brake
-				for (int i = 0; i < MotorSoundSources.Length; i++)
+				for (int i = 0; i < BrakeSoundSources.Length; i++)
 				{
-					//Stop any playing power sounds
-					TrainManagerBase.currentHost.StopSound(MotorSoundSources[i]);
+					//Stop any playing brake sounds
+					TrainManagerBase.currentHost.StopSound(BrakeSoundSources[i]);
 				}
 
-				BVE5MotorSoundTableEntry entry = BrakeSoundTable[idx];
+				BVE5MotorSoundTableEntry entry = BrakeSoundTable[0];
+				for (int i = 0; i < BrakeSoundTable.Length; i++)
+				{
+					if (BrakeSoundTable[i].Speed < speed)
+					{
+						break;
+					}
+					entry = BrakeSoundTable[i];
+				}
 				for (int i = 0; i < entry.Sounds.Length; i++)
 				{
 					if (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0)

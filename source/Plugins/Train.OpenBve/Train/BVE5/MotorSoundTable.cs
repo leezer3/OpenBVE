@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -20,14 +21,20 @@ namespace Train.OpenBve
 		internal static BVE5MotorSound Parse(CarBase car, string motorSoundPitch, string motorSoundGain, string brakeSoundPitch, string brakeSoundGain)
 		{
 			BVE5MotorSound motorSound = new BVE5MotorSound(car);
-			ParsePitchTable(motorSoundPitch, ref motorSound.MotorSoundTable);
-			ParseVolumeTable(motorSoundPitch, ref motorSound.MotorSoundTable);
-			ParsePitchTable(motorSoundPitch, ref motorSound.BrakeSoundTable);
-			ParseVolumeTable(motorSoundPitch, ref motorSound.BrakeSoundTable);
+			// temp working lists
+			List<BVE5MotorSoundTableEntry> motorSoundTable = new List<BVE5MotorSoundTableEntry>();
+			List<BVE5MotorSoundTableEntry> brakeSoundTable = new List<BVE5MotorSoundTableEntry>();
+			ParsePitchTable(motorSoundPitch, ref motorSoundTable);
+			ParseVolumeTable(motorSoundPitch, ref motorSoundTable);
+			ParsePitchTable(motorSoundPitch, ref brakeSoundTable);
+			ParseVolumeTable(motorSoundPitch, ref brakeSoundTable);
+			// convert to array once finished as this is faster in use
+			motorSound.MotorSoundTable = motorSoundTable.ToArray();
+			motorSound.BrakeSoundTable = brakeSoundTable.ToArray();
 			return motorSound;
 		}
 
-		private static void ParsePitchTable(string pitchFile, ref BVE5MotorSoundTableEntry[] soundTable)
+		private static void ParsePitchTable(string pitchFile, ref List<BVE5MotorSoundTableEntry> soundTable)
 		{
 			Encoding encoding = Text.DetermineBVE5FileEncoding(pitchFile);
 			string[] Lines = File.ReadAllLines(pitchFile, encoding).TrimBVE5Comments();
@@ -37,7 +44,7 @@ namespace Train.OpenBve
 				throw new Exception("Expected a BveTs Motor Noise Table, got: " + format[0]);
 			}
 
-			Dictionary<double, double[]> setPoints = new Dictionary<double, double[]>();
+			SortedDictionary<double, double[]> setPoints = new SortedDictionary<double, double[]>();
 			int maxPitchValues = 0;
 			for (int i = 1; i < Lines.Length; i++)
 			{
@@ -72,9 +79,47 @@ namespace Train.OpenBve
 					setPoints.Add(speed, pitchValues);
 				}
 			}
+
+			for (int i = 0; i < setPoints.Count; i++)
+			{
+				double speed = setPoints.ElementAt(i).Key;
+				BVE5MotorSoundTableEntry previousEntry = new BVE5MotorSoundTableEntry();
+				for (int j = 0; j < soundTable.Count; j++)
+				{
+					if (soundTable[j].Speed == speed)
+					{
+						BVE5MotorSoundTableEntry currentEntry = soundTable[j];
+						double[] pitchValues = setPoints.ElementAt(i).Value;
+						if (soundTable[j].Sounds.Length < pitchValues.Length)
+						{
+							Array.Resize(ref currentEntry.Sounds, pitchValues.Length);
+						}
+
+						for (int k = 0; k < pitchValues.Length; k++)
+						{
+							currentEntry.Sounds[k].Pitch = pitchValues[k];
+						}
+						soundTable[j] = currentEntry;
+						break;
+					}
+					if (soundTable[j].Speed > speed)
+					{
+						BVE5MotorSoundTableEntry newEntry = previousEntry;
+						double[] pitchValues = setPoints.ElementAt(i).Value;
+						Array.Resize(ref newEntry.Sounds, pitchValues.Length);
+						for (int k = 0; k < pitchValues.Length; k++)
+						{
+							newEntry.Sounds[k].Pitch = pitchValues[k];
+						}
+						soundTable.Insert(j -1, newEntry);
+						break;
+					}
+					previousEntry = soundTable[j];
+				}
+			}
 		}
 
-		private static void ParseVolumeTable(string volumeFile, ref BVE5MotorSoundTableEntry[] soundTable)
+		private static void ParseVolumeTable(string volumeFile, ref List<BVE5MotorSoundTableEntry> soundTable)
 		{
 			Encoding encoding = Text.DetermineBVE5FileEncoding(volumeFile);
 			string[] Lines = File.ReadAllLines(volumeFile, encoding).TrimBVE5Comments();
@@ -84,7 +129,7 @@ namespace Train.OpenBve
 				throw new Exception("Expected a BveTs Motor Noise Table, got: " + format[0]);
 			}
 
-			Dictionary<double, double[]> setPoints = new Dictionary<double, double[]>();
+			SortedDictionary<double, double[]> setPoints = new SortedDictionary<double, double[]>();
 
 			int maxGainValues = 0;
 			for (int i = 1; i < Lines.Length; i++)
@@ -119,6 +164,44 @@ namespace Train.OpenBve
 						}
 					}
 					setPoints.Add(speed, gainValues);
+				}
+			}
+
+			for (int i = 0; i < setPoints.Count; i++)
+			{
+				double speed = setPoints.ElementAt(i).Key;
+				BVE5MotorSoundTableEntry previousEntry = new BVE5MotorSoundTableEntry();
+				for (int j = 0; j < soundTable.Count; j++)
+				{
+					if (soundTable[j].Speed == speed)
+					{
+						BVE5MotorSoundTableEntry currentEntry = soundTable[j];
+						double[] gainValues = setPoints.ElementAt(i).Value;
+						if (soundTable[j].Sounds.Length < gainValues.Length)
+						{
+							Array.Resize(ref currentEntry.Sounds, gainValues.Length);
+						}
+
+						for (int k = 0; k < gainValues.Length; k++)
+						{
+							currentEntry.Sounds[k].Pitch = gainValues[k];
+						}
+						soundTable[j] = currentEntry;
+						break;
+					}
+					if (soundTable[j].Speed > speed)
+					{
+						BVE5MotorSoundTableEntry newEntry = previousEntry;
+						double[] gainValues = setPoints.ElementAt(i).Value;
+						Array.Resize(ref newEntry.Sounds, gainValues.Length);
+						for (int k = 0; k < gainValues.Length; k++)
+						{
+							newEntry.Sounds[k].Pitch = gainValues[k];
+						}
+						soundTable.Insert(j -1, newEntry);
+						break;
+					}
+					previousEntry = soundTable[j];
 				}
 			}
 		}
