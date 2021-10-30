@@ -89,5 +89,7 @@ namespace OpenBveApi
 		public int Panel2ExtendedMinSize;
 		/// <summary>Whether various accessibility helpers are enabled</summary>
 		public bool Accessibility;
+
+		public bool EnableBve5TFO;
 	}
 }

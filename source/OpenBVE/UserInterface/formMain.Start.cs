@@ -15,6 +15,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
+using TrainManager.SafetySystems;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
@@ -283,6 +284,21 @@ namespace OpenBve
 										{
 											Item = listviewRouteFiles.Items.Add(fileName);
 											Item.ImageKey = @"mechanik";
+											Item.Tag = Files[i];
+										}
+									}
+									break;
+								case ".txt":
+									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+									{
+										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+									}
+									for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+									{
+										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
+										{
+											Item = listviewRouteFiles.Items.Add(System.IO.Path.GetFileName(Files[i]));
+											Item.ImageKey = @"csvroute";
 											Item.Tag = Files[i];
 										}
 									}
