@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Graphics;
+using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -103,5 +103,7 @@ namespace OpenBveApi
 		public string CursorFileName;
 		/// <summary>The download location for the train required by the current route</summary>
 		public string TrainDownloadLocation = "";
+
+		public bool EnableBve5TFO;
 	}
 }
