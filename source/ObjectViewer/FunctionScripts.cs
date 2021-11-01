@@ -268,7 +268,7 @@ namespace ObjectViewer {
 						s++; break;
 						// train
 					case Instructions.PlayerTrain:
-						if (Train != null)
+						if (IsPartOfTrain && Train != null)
 						{
 							Function.Stack[s] = Train.IsPlayerTrain ? 1.0 : 0.0;
 						} else {
