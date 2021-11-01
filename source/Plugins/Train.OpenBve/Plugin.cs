@@ -238,10 +238,6 @@ namespace Train.OpenBve
 				TrainDatParser.Parse(TrainData, Encoding, currentTrain);
 			    LastProgress = 0.1;
 			    Thread.Sleep(1);
-			    if (Cancel) return false;
-			    SoundCfgParser.ParseSoundConfig(currentTrain);
-			    LastProgress = 0.2;
-			    Thread.Sleep(1);
 			    if (Cancel)
 			    {
 				    IsLoading = false;
@@ -337,6 +333,12 @@ namespace Train.OpenBve
 
 					currentBogieObject++;
 				}
+			}
+
+			if (currentTrain.State != TrainState.Bogus)
+			{
+				if (Cancel) return false;
+				SoundCfgParser.ParseSoundConfig(currentTrain);
 			}
 			// place cars
 			currentTrain.PlaceCars(0.0);
