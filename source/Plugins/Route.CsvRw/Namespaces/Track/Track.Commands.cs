@@ -127,6 +127,17 @@
 		/// <remarks>Ignored when directional lighting is active</remarks>
 		LightDirection,
 		/// <summary>Changes the dynamic lighting set in use</summary>
-		DynamicLight
+		DynamicLight,
+
+		/*
+		 * HMMSIM
+		 */
+		/// <summary>Adds a station stop point</summary>
+		/// <remarks>Eqivilant of .Stop</remarks>
+		StopPos,
+		/// <summary>Starts a repeating object cycle</summary>
+		PatternObj,
+		/// <summary>Ends a repeating object cycle</summary>
+		PatternEnd
 	}
 }

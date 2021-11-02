@@ -801,6 +801,7 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
+				case StructureCommand.Object:
 				case StructureCommand.FreeObj:
 				{
 					if (commandIndices[0] < 0)

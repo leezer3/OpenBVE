@@ -22,6 +22,7 @@ namespace CsvRwRouteParser {
 		internal bool SplitLineHack = true;
 		internal bool AllowTrackPositionArguments = false;
 		internal bool IsRW;
+		internal bool IsHmmsim;
 
 		internal Plugin Plugin;
 
@@ -252,12 +253,19 @@ namespace CsvRwRouteParser {
 							}
 							Command = null;
 						} else {
+							if (Command.StartsWith(".Hmm.", StringComparison.OrdinalIgnoreCase))
+							{
+								IsHmmsim = true;
+								Data.AccurateObjectDisposal = true;
+								Command = Command.Substring(4);
+							}
 							if (Command.StartsWith(".")) {
 								Command = Section + Command;
 							} else if (SectionAlwaysPrefix) {
 								Command = Section + "." + Command;
 							}
 							Command = Command.Replace(".Void", "");
+							
 							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 5).TrimEnd();
@@ -478,6 +486,12 @@ namespace CsvRwRouteParser {
 							Command = null;
 						} else {
 							if (Command.StartsWith(".")) {
+								if (Command.StartsWith(".Hmm.", StringComparison.OrdinalIgnoreCase))
+								{
+									IsHmmsim = true;
+									Data.AccurateObjectDisposal = true;
+									Command = Command.Substring(4);
+								}
 								Command = Section + Command;
 							} else if (SectionAlwaysPrefix) {
 								Command = Section + "." + Command;

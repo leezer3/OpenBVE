@@ -55,7 +55,14 @@
 		/// <summary>The object used for RainType N</summary>
 		Weather,
 		/// <summary>Loads a dynamic lighting set</summary>
-		DynamicLight
+		DynamicLight,
+
+		/*
+		 * HMMSIM
+		 */
+		/// <summary>The object used for Object N</summary>
+		/// <remarks>Equivilant to .FreeObj</remarks>
+		Object
 
 	}
 }
