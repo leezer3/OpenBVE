@@ -385,6 +385,59 @@ namespace Train.OpenBve
 							}
 						}
 						break;
+					case "accelerationcurves":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							List<AccelerationCurve> accelerationCurves = new List<AccelerationCurve>();
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "openbve": // don't support legacy BVE2 curves in XML, but at the same time specify that this is deliberately BVE4 / OpenBVE format
+										BveAccelerationCurve curve = new BveAccelerationCurve();
+										foreach (XmlNode sc in cc.ChildNodes)
+										{
+											switch (sc.Name.ToLowerInvariant())
+											{
+												case "stagezeroacceleration":
+													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageZeroAcceleration))
+													{
+														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage zero acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+													}
+													break;
+												case "stageoneacceleration":
+													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneAcceleration))
+													{
+														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage one acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+													}
+													break;
+												case "stageonespeed":
+													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneSpeed))
+													{
+														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage one speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+													}
+													break;
+												case "stagetwospeed":
+													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoSpeed))
+													{
+														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage two speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+													}
+													break;
+												case "stagetwoexponent":
+													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoExponent))
+													{
+														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage two exponent was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+													}
+													break;
+											}
+										}
+										accelerationCurves.Add(curve);
+										break;
+								}
+							}
+							Train.Cars[Car].Specs.AccelerationCurves = accelerationCurves.ToArray();
+						}
+						break;
 				}
 			}
 			/*
