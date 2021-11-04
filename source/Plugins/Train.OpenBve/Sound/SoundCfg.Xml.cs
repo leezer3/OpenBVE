@@ -627,11 +627,11 @@ namespace Train.OpenBve
 						}
 						else if (motorSound is BVE5MotorSound bve5MotorSound)
 						{
-							if (idx >= bve5MotorSound.MotorSoundBuffers.Length)
+							if (idx >= bve5MotorSound.SoundBuffers.Length)
 							{
-								Array.Resize(ref bve5MotorSound.MotorSoundBuffers, idx + 1);
+								Array.Resize(ref bve5MotorSound.SoundBuffers, idx + 1);
 							}
-							ParseNode(c, out bve5MotorSound.MotorSoundBuffers[idx], ref Position, Radius);
+							ParseNode(c, out bve5MotorSound.SoundBuffers[idx], ref Position, Radius);
 						}
 						else
 						{
