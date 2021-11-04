@@ -105,6 +105,10 @@ namespace OpenBveApi.Objects
 				{
 					Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex) Mesh.Vertices[j]);
 				}
+				else if (Mesh.Vertices[j] is LightMappedVertex)
+				{
+					Result.Mesh.Vertices[j] = new LightMappedVertex((LightMappedVertex) Mesh.Vertices[j]);
+				}
 				else
 				{
 					Result.Mesh.Vertices[j] = new Vertex((Vertex) Mesh.Vertices[j]);

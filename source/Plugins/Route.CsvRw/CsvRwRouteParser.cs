@@ -253,12 +253,6 @@ namespace CsvRwRouteParser {
 							}
 							Command = null;
 						} else {
-							if (Command.StartsWith(".Hmm.", StringComparison.OrdinalIgnoreCase))
-							{
-								IsHmmsim = true;
-								Data.AccurateObjectDisposal = true;
-								Command = Command.Substring(4);
-							}
 							if (Command.StartsWith(".")) {
 								Command = Section + Command;
 							} else if (SectionAlwaysPrefix) {
@@ -486,12 +480,6 @@ namespace CsvRwRouteParser {
 							Command = null;
 						} else {
 							if (Command.StartsWith(".")) {
-								if (Command.StartsWith(".Hmm.", StringComparison.OrdinalIgnoreCase))
-								{
-									IsHmmsim = true;
-									Data.AccurateObjectDisposal = true;
-									Command = Command.Substring(4);
-								}
 								Command = Section + Command;
 							} else if (SectionAlwaysPrefix) {
 								Command = Section + "." + Command;
@@ -524,7 +512,34 @@ namespace CsvRwRouteParser {
 									}
 									else
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised command " + Command + " encountered in the Route namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										if (IsHmmsim)
+										{
+											period = Command.IndexOf('.');
+											string railKey = Command.Substring(0, period);
+											int railIndex = Data.RailKeys.Count;
+											if (Data.RailKeys.ContainsKey(railKey))
+											{
+												railIndex = Data.RailKeys[railKey];
+											}
+											else
+											{
+												Data.RailKeys.Add(railKey, railIndex);
+											}
+											Command = Command.Substring(period + 1);
+											if (Enum.TryParse(Command, true, out parsedCommand))
+											{
+												ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly);
+											}
+											else
+											{
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Hmmsim: Unrecognised command " + Command + " encountered in the Route namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);	
+											}
+										}
+										else
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "OpenBVE: Unrecognised command " + Command + " encountered in the Route namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);	
+										}
+										
 									}
 									break;
 								case "options":

@@ -143,6 +143,13 @@ namespace OpenBveApi.Objects
 						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
 					}
 
+					if (Materials[i].LightMap != null)
+					{
+						Textures.Texture lightMap;
+						currentHost.RegisterTexture(Materials[i].LightMap, new TextureParameters(null, Color24.White), out lightMap);
+						Object.Mesh.Materials[mm + i].LightMapTexture = lightMap;
+					}
+
 					Object.Mesh.Materials[mm + i].BlendMode = Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Materials[i].GlowAttenuationData;
 					Object.Mesh.Materials[mm + i].WrapMode = Materials[i].WrapMode;

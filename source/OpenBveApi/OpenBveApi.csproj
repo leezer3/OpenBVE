@@ -252,7 +252,7 @@
     <Compile Include="World\UnitConversions\Length.cs" />
     <Compile Include="World\UnitConversions\UnitConvertor.cs" />
     <Compile Include="World\UnitConversions\Weight.cs" />
-    <Compile Include="World\Vertex.cs" />
+    <Compile Include="World\LightMappedVertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">

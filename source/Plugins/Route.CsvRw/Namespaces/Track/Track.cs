@@ -20,7 +20,7 @@ namespace CsvRwRouteParser
 		private int CurrentStop = -1;
 		private int CurrentSection = 0;
 		private bool DepartureSignalUsed = false;
-		private void ParseTrackCommand(TrackCommand Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly)
+		private void ParseTrackCommand(TrackCommand Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly, int RailIndex = 0)
 		{
 			switch (Command)
 			{
@@ -1145,6 +1145,7 @@ namespace CsvRwRouteParser
 				}
 					break;
 				case TrackCommand.Stop:
+				case TrackCommand.StopPos:
 					if (CurrentStation == -1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A stop without a station is invalid in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -3229,7 +3230,101 @@ namespace CsvRwRouteParser
 						Data.Blocks[BlockIndex].LightingChanges[l] = new LightingChange(Data.Blocks[BlockIndex].LightDefinition, ld);
 						Data.Blocks[BlockIndex].LightDefinition = ld;
 					}
-					
+					break;
+				case TrackCommand.PatternObj:
+					/*
+					 * PatternIndex
+					 * PlacementInterval
+					 * BlockInterval
+					 * X
+					 * Y
+					 * Types array
+					 */
+					if (!PreviewOnly)
+					{
+						if (!IsHmmsim)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "PatternObj command detected, but this does not appear to be a Hmmsim route");
+						}
+						
+						int idx = -1;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							break;
+						}
+
+						PatternObj patternObj = new PatternObj();
+						patternObj.Rail = RailIndex;
+						if (Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx))
+						{
+							patternObj = Data.Blocks[BlockIndex].PatternObjs[idx];
+						}
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out patternObj.Interval))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							patternObj.Interval = 25; // try the default BVE block-length
+						}
+
+						if (patternObj.Interval <= 0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval must be non-zero in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out patternObj.Interval))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								patternObj.Interval = 25; // try the default BVE block-length
+							}
+						}
+						
+						
+						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out patternObj.Position.X))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+
+						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out patternObj.Position.Y))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+
+						Array.Resize(ref patternObj.Types, Arguments.Length - 6);
+						for (int i = 6; i < Arguments.Length; i++)
+						{
+							if (!NumberFormats.TryParseIntVb6(Arguments[i], out patternObj.Types[i - 6]))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ObjectIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								break;
+							}
+						}
+						patternObj.LastPlacement = Data.TrackPosition;
+						Data.Blocks[BlockIndex].PatternObjs[idx] = patternObj;
+					}
+					break;
+				case TrackCommand.PatternEnd:
+					if (!PreviewOnly)
+					{
+						if (!IsHmmsim)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "PatternEnd command detected, but this does not appear to be a Hmmsim route");
+						}
+
+						int idx = -1;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							break;
+						}
+
+						if (!Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to stop the non-existant pattern with index " + idx + " in command " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else
+						{
+							Data.Blocks[BlockIndex].PatternObjs[idx].Ends = true;
+						}
+					}
 					break;
 			}
 		}

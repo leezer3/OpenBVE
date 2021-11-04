@@ -76,6 +76,7 @@
     <Compile Include="Structures\Route\Crack.cs" />
     <Compile Include="Structures\Route\Form.cs" />
     <Compile Include="Structures\Route\FreeObject.cs" />
+    <Compile Include="Structures\Route\PatternObj.cs" />
     <Compile Include="Structures\Route\Pole.cs" />
     <Compile Include="Structures\Route\Rail.cs" />
     <Compile Include="Structures\Route\RailCycle.cs" />

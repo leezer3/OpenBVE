@@ -19,9 +19,10 @@ namespace OpenBveApi.Objects
 		public string DaytimeTexture;
 		/// <summary>The absolute on-disk path to the nighttime texture</summary>
 		public string NighttimeTexture;
-		/// <summary>
-		/// The absolute on-disk path to the transparency texture (Used for both daytime and nighttime textures)</summary>
+		/// <summary>The absolute on-disk path to the transparency texture (Used for both daytime and nighttime textures)</summary>
 		public string TransparencyTexture;
+		/// <summary>The absolute on-disk path to the light map texture</summary>
+		public string LightMap;
 		/// <summary>The blend mode to be used</summary>
 		public MeshMaterialBlendMode BlendMode;
 		/// <summary>The wrap mode, or a null reference if not in use</summary>

@@ -793,6 +793,34 @@ namespace CsvRwRouteParser
 								Data.Blocks[i].RailFreeObj[j][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
 							}
 						}
+
+						// pattern objects
+						if (jj == 0)
+						{
+							for (int k = 0; k < Data.Blocks[i].PatternObjs.Count; k++)
+							{
+								int key = Data.Blocks[i].PatternObjs.ElementAt(k).Key;
+								if (Data.Blocks[i].PatternObjs[key].Interval <= 0)
+								{
+									continue;
+								}
+								// patterns key off rail 0
+								while (Data.Blocks[i].PatternObjs[key].LastPlacement + Data.Blocks[i].PatternObjs[key].Interval < (i + 1) * Data.BlockInterval)
+								{
+									if (!Data.Blocks[i].PatternObjs[key].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance))
+									{
+										break;
+									}
+								}
+
+								if (i < Data.Blocks.Count -1 && Data.Blocks[i + 1].PatternObjs.ContainsKey(key))
+								{
+									Data.Blocks[i + 1].PatternObjs[key].LastPlacement = Data.Blocks[i].PatternObjs[key].LastPlacement;
+									Data.Blocks[i + 1].PatternObjs[key].LastType = Data.Blocks[i].PatternObjs[key].LastType;
+								}
+							}
+						}
+						
 						// transponder objects
 						if (j == 0)
 						{

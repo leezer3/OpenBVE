@@ -46,6 +46,7 @@ namespace CsvRwRouteParser
 		internal LightDefinition LightDefinition;
 		internal int DynamicLightDefinition;
 		internal LightingChange[] LightingChanges;
+		internal Dictionary<int, PatternObj> PatternObjs;
 
 		internal Block(bool PreviewOnly)
 		{
@@ -71,6 +72,7 @@ namespace CsvRwRouteParser
 				DynamicLightDefinition = -1;
 				LightDefinition = new LightDefinition();
 				LightingChanges = new LightingChange[] { };
+				PatternObjs = new Dictionary<int, PatternObj>();
 			}
 		}
 	}

@@ -10,7 +10,7 @@ namespace OpenBveApi.Objects
 		public Vector3 Coordinates;
 		/// <summary>The texture co-ordinates for the vertex</summary>
 		public Vector2 TextureCoordinates;
-
+		
 		/// <summary>Tests if this vertex template is equal to the supplied object</summary>
 		/// <param name="obj">The supplied object</param>
 		/// <returns>Trye if they are equal, false otherwise</returns>
@@ -164,6 +164,105 @@ namespace OpenBveApi.Objects
 				hashCode = (hashCode * 397) ^ Coordinates.Z.GetHashCode();
 				hashCode = (hashCode * 397) ^ TextureCoordinates.X.GetHashCode();
 				hashCode = (hashCode * 397) ^ TextureCoordinates.Y.GetHashCode();
+				return hashCode;
+			}
+		}
+	}
+
+	/// <summary>A plain vertex</summary>
+	public class LightMappedVertex : VertexTemplate
+	{
+		/// <summary>The texture co-ordinates for the light map</summary>
+		public Vector2 LightMapCoordinates;
+
+		/// <summary>Creates a new vertex</summary>
+		public LightMappedVertex()
+		{
+			this.Coordinates = new Vector3();
+			this.TextureCoordinates = new Vector2();
+		}
+
+		/// <summary>Creates a new vertex</summary>
+		/// <param name="X">The x-coordinate</param>
+		/// <param name="Y">The y-coordinate</param>
+		/// <param name="Z">The z-coordinate</param>
+		public LightMappedVertex(double X, double Y, double Z) {
+			this.Coordinates = new Vector3(X, Y, Z);
+			this.TextureCoordinates = new Vector2(0.0f, 0.0f);
+		}
+
+		/// <summary>Creates a new vertex</summary>
+		/// <param name="v">A Vector3 containing the coordinates</param>
+		public LightMappedVertex(Vector3 v)
+		{
+			this.Coordinates = v;
+			this.TextureCoordinates = new Vector2(0.0f, 0.0f);
+		}
+
+		/// <summary>Creates a new vertex</summary>
+		/// <param name="Coordinates">A Vector3 containing the coordinates</param>
+		/// <param name="TextureCoordinates">A Vector2 containing the texture coordinates</param>
+		public LightMappedVertex(Vector3 Coordinates, Vector2 TextureCoordinates) {
+			this.Coordinates = Coordinates;
+			this.TextureCoordinates = TextureCoordinates;
+		}
+
+		/// <summary>Clones a vertex</summary>
+		public LightMappedVertex(Vertex v)
+		{
+			this.Coordinates = v.Coordinates;
+			this.TextureCoordinates = v.TextureCoordinates;
+		}
+
+		/// <summary>Clones a vertex</summary>
+		public LightMappedVertex(LightMappedVertex v)
+		{
+			this.Coordinates = v.Coordinates;
+			this.TextureCoordinates = v.TextureCoordinates;
+			this.LightMapCoordinates = v.LightMapCoordinates;
+		}
+
+		/// <summary>Tests if two verticies are equal</summary>
+		/// <param name="A">The first vertex</param>
+		/// <param name="B">The second vertex</param>
+		/// <returns>True if they are equal, false otherwise</returns>
+		public static bool Equals(Vertex A, Vertex B)
+		{
+			return A.Equals(B);
+		}
+
+		/// <summary>Tests if this vertex is equal to the supplied object</summary>
+		/// <param name="obj">The supplied object</param>
+		/// <returns>Trye if they are equal, false otherwise</returns>
+		public override bool Equals(object obj) {
+			if (obj == null)
+			{
+				return false;
+			}
+
+			Vertex v = obj as Vertex;
+			if (v == null) return false;
+			if (v.Coordinates.X != Coordinates.X | v.Coordinates.Y != Coordinates.Y | v.Coordinates.Z != Coordinates.Z) return false;
+			if (v.TextureCoordinates.X != TextureCoordinates.X | v.TextureCoordinates.Y != TextureCoordinates.Y) return false;
+			return true;
+		}
+
+		/// <summary>
+		/// Returns the hashcode for this instance.
+		/// </summary>
+		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				// ReSharper disable NonReadonlyMemberInGetHashCode
+				var hashCode = Coordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Z.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ LightMapCoordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ LightMapCoordinates.Y.GetHashCode();
 				return hashCode;
 			}
 		}
