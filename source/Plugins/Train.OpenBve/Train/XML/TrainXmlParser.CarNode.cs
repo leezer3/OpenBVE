@@ -22,6 +22,7 @@ namespace Train.OpenBve
 		{
 			string interiorFile = string.Empty;
 			ReadhesionDeviceType readhesionDevice = Train.Cars[0].ReAdhesionDevice.DeviceType;
+			bool CopyAccelerationCurves = true;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
@@ -129,6 +130,11 @@ namespace Train.OpenBve
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].Specs.IsMotorCar = true;
+							if (!CopyAccelerationCurves)
+							{
+								//We've already set the acceleration curves elsewhere in the XML, so don't copy the default ones
+								break;
+							}
 							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[AccelerationCurves.Length];
 							for (int i = 0; i < AccelerationCurves.Length; i++)
 							{
@@ -386,6 +392,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "accelerationcurves":
+						CopyAccelerationCurves = false;
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							List<AccelerationCurve> accelerationCurves = new List<AccelerationCurve>();
@@ -404,24 +411,28 @@ namespace Train.OpenBve
 													{
 														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage zero acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 													}
+													curve.StageZeroAcceleration *= 0.277777777777778;
 													break;
 												case "stageoneacceleration":
 													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneAcceleration))
 													{
 														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage one acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 													}
+													curve.StageOneAcceleration *= 0.277777777777778;
 													break;
 												case "stageonespeed":
 													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneSpeed))
 													{
 														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage one speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 													}
+													curve.StageOneSpeed *= 0.277777777777778;
 													break;
 												case "stagetwospeed":
 													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoSpeed))
 													{
 														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage two speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 													}
+													curve.StageTwoSpeed *= 0.277777777777778;
 													break;
 												case "stagetwoexponent":
 													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoExponent))
