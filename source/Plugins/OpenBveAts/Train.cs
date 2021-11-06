@@ -15,15 +15,18 @@ namespace Plugin {
 		internal class ReadOnlyHandles {
 			// --- properties ---
 			/// <summary>Gets or sets the reverser position.</summary>
-			internal int Reverser { get; private set; }
+			internal readonly int Reverser;
+
 			/// <summary>Gets or sets the power notch.</summary>
-			internal int PowerNotch { get; private set; }
+			internal readonly int PowerNotch;
+
 			/// <summary>Gets or sets the brake notch.</summary>
-			internal int BrakeNotch { get; private set; }
+			internal readonly int BrakeNotch;
+
 			/// <summary>Gets or sets the brake notch.</summary>
-			internal int LocoBrakeNotch { get; private set; }
+			internal readonly int LocoBrakeNotch;
 			/// <summary>Gets or sets whether the const speed system is enabled.</summary>
-			internal bool ConstSpeed { get; private set; }
+			internal bool ConstSpeed { get; }
 			// --- constructors ---
 			/// <summary>Creates a new instance of this class.</summary>
 			/// <param name="handles">The handles</param>

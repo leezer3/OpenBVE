@@ -283,5 +283,10 @@ namespace TrainManager.SafetySystems {
 				externalCrashed = true;
 			}
 		}
+
+		public override void KeepAlive()
+		{
+			pipeProxy.KeepAlive();
+		}
 	}
 }

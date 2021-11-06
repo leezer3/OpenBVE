@@ -37,8 +37,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.3.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK.3.3.1\lib\net20\OpenTK.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.3.2.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -70,11 +70,14 @@
     <Compile Include="Overlays\Marker.cs" />
     <Compile Include="Overlays\TimeTableMode.cs" />
     <Compile Include="Primitives\Cube.cs" />
+    <Compile Include="Primitives\Picturebox.cs" />
     <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="openGL\Vertex.cs" />
+    <Compile Include="Primitives\Textbox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screen\InterfaceType.cs" />
     <Compile Include="Screen\OutputModes.cs" />
+    <Compile Include="Screen\Resolution.cs" />
     <Compile Include="Screen\Screen.cs" />
     <Compile Include="Shaders\Shader.cs" />
     <Compile Include="Textures\TextureManager.cs" />
@@ -94,6 +97,9 @@
     <EmbeddedResource Include="..\..\assets\Shaders\default.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\default.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\picking.frag" />
+    <EmbeddedResource Include="..\..\assets\Shaders\rectangle.frag" />
+    <EmbeddedResource Include="..\..\assets\Shaders\rectangle.vert" />
+    <EmbeddedResource Include="..\..\assets\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">

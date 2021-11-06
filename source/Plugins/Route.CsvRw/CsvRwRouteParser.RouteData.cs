@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using RouteManager2.SignalManager;
 
@@ -35,6 +36,10 @@ namespace CsvRwRouteParser
 			internal bool LineEndingFix;
 			internal bool ValueBasedSections = false;
 			internal bool TurnUsed = false;
+			/*
+			 * HMMSIM
+			 */
+			internal Dictionary<string, int> RailKeys = new Dictionary<string, int>();
 
 			/// <summary>Creates any missing blocks</summary>
 			/// <param name="ToIndex">The block index to process until</param>
@@ -57,6 +62,8 @@ namespace CsvRwRouteParser
 							Blocks[i].SnowIntensity = Blocks[i - 1].SnowIntensity;
 							Blocks[i].RainIntensity = Blocks[i - 1].RainIntensity;
 							Blocks[i].WeatherObject = Blocks[i - 1].WeatherObject;
+							Blocks[i].LightDefinition = Blocks[i - 1].LightDefinition;
+							Blocks[i].DynamicLightDefinition = Blocks[i -1].DynamicLightDefinition;
 						}
 						Blocks[i].RailType = new int[Blocks[i - 1].RailType.Length];
 						if (!PreviewOnly)
@@ -129,6 +136,16 @@ namespace CsvRwRouteParser
 							for (int j = 0; j < Blocks[i].RailPole.Length; j++)
 							{
 								Blocks[i].RailPole[j] = Blocks[i - 1].RailPole[j];
+							}
+
+							for (int j = 0; j < Blocks[i - 1].PatternObjs.Count; j++)
+							{
+								int key = Blocks[i - 1].PatternObjs.ElementAt(j).Key;
+								if (Blocks[i - 1].PatternObjs[key] == null || Blocks[i - 1].PatternObjs[key].Ends)
+								{
+									continue;
+								}
+								Blocks[i].PatternObjs.Add(key, Blocks[i - 1].PatternObjs[key].Clone());
 							}
 						}
 						Blocks[i].Pitch = Blocks[i - 1].Pitch;

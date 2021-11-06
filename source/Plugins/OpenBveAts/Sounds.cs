@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Runtime;
+using OpenBveApi.Runtime;
 
 namespace Plugin {
 	internal class Sounds {
@@ -59,13 +59,13 @@ namespace Plugin {
 			this.AtsBell = new Sound(0);
 			this.AtsChime = new Sound(1);
 			this.Eb = new Sounds.Sound(5);
-			this.LoopingSounds = new Sound[] { this.AtsBell, this.AtsChime, this.Eb };
+			this.LoopingSounds = new[] { this.AtsBell, this.AtsChime, this.Eb };
 			// --- play once ---
 			this.AtsPBell = new Sound(2);
 			this.AtcBell = new Sound(2);
 			this.ToAts = new Sound(3);
 			this.ToAtc = new Sound(4);
-			this.PlayOnceSounds = new Sound[] { this.AtsPBell, this.AtcBell, this.ToAts, this.ToAtc };
+			this.PlayOnceSounds = new[] { this.AtsPBell, this.AtcBell, this.ToAts, this.ToAtc };
 		}
 
 		

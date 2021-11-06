@@ -1,17 +1,18 @@
 ﻿using System;
+using System.IO;
 using System.Text;
-using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
+using Path = OpenBveApi.Path;
 
 namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void ParseStructureCommand(StructureCommand Command, string[] Arguments, int[] commandIndices, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseStructureCommand(StructureCommand Command, string[] Arguments, int[] commandIndices, string FileName, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{
@@ -800,8 +801,14 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
+				case StructureCommand.Object:
 				case StructureCommand.FreeObj:
 				{
+					if (Command == StructureCommand.Object)
+					{
+						IsHmmsim = true;
+						Data.AccurateObjectDisposal = true;
+					}
 					if (commandIndices[0] < 0)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -1036,6 +1043,48 @@ namespace CsvRwRouteParser
 						}
 					}
 				}
+					break;
+				case StructureCommand.DynamicLight:
+					if (commandIndices[0] < 0)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DynamicLightIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					}
+					else
+					{
+						/*
+						 * Read the dynamic lighting file
+						 * We'll try first relative to the routefile (as per Route.DynamicLight)
+						 * and if not found there relative to the object path
+						 */
+						string path = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						if (!File.Exists(path))
+						{
+							path = Path.CombineFile(System.IO.Path.GetDirectoryName(ObjectPath), Arguments[0]);
+						}
+						if (System.IO.File.Exists(path))
+						{
+							LightDefinition[] newLightDefinition;
+							if (DynamicLightParser.ReadLightingXML(path, out newLightDefinition))
+							{
+								if (Data.Structure.LightDefinitions.ContainsKey(commandIndices[0]))
+								{
+									Data.Structure.LightDefinitions[commandIndices[0]] = newLightDefinition;
+								}
+								else
+								{
+									Data.Structure.LightDefinitions.Add(commandIndices[0], newLightDefinition);
+								}
+							}
+							else
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The file " + path + " is not a valid dynamic lighting XML file, at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+						}
+						else
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Dynamic lighting XML file not found at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+					}
 					break;
 			}
 		}

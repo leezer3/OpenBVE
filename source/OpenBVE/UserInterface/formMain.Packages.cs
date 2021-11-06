@@ -40,7 +40,7 @@ namespace OpenBve
 			}
 
 			string errorMessage;
-			if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile, out errorMessage))
+			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
 			{
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				comboBoxPackageType.SelectedIndex = 0;
@@ -241,10 +241,7 @@ namespace OpenBve
 			ResetInstallerPanels();
 		}
 
-		internal static readonly string currentDatabaseFolder =
-			OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
-
-		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(currentDatabaseFolder, "packages.xml");
+		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
 
 		private void buttonProceedAnyway_Click(object sender, EventArgs e)
 		{
@@ -284,7 +281,7 @@ namespace OpenBve
 						break;
 				}
 				string PackageFiles = "";
-				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, currentDatabaseFolder, ref PackageFiles);
+				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, Program.FileSystem.PackageDatabaseFolder, ref PackageFiles);
 				if (ProblemEncountered == false && PackageFiles != string.Empty)
 				{
 					textBoxFilesInstalled.Invoke((MethodInvoker) delegate
@@ -526,7 +523,7 @@ namespace OpenBve
 				panelDependancyError.Show();
 				return;
 			}
-			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder, ref uninstallResults))
+			if (Manipulation.UninstallPackage(packageToUninstall, Program.FileSystem.PackageDatabaseFolder, ref uninstallResults))
 			{
 				Packages.Remove(packageToUninstall);
 				switch (packageToUninstall.PackageType)
@@ -1531,7 +1528,7 @@ namespace OpenBve
 			{
 				//Reinstall
 				string result = String.Empty;
-				Manipulation.UninstallPackage(currentPackage, currentDatabaseFolder, ref result);
+				Manipulation.UninstallPackage(currentPackage, Program.FileSystem.PackageDatabaseFolder, ref result);
 				switch (currentPackage.PackageType)
 				{
 					case PackageType.Route:

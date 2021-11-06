@@ -74,6 +74,9 @@ namespace OpenBveApi.Interop
 		/// <param name="beacon">The beacon data.</param>
 		[OperationContract]
 		void SetBeacon(BeaconData beacon);
+
+		/// <summary>Dummy method used to keep the WCF connection alive.</summary>
+		[OperationContract] void KeepAlive();
 	};
 
 	/// <summary>Provides the WCF interface for recieving data from the 32-bit plugin proxy</summary>

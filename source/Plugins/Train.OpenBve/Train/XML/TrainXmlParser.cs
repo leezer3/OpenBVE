@@ -165,10 +165,10 @@ namespace Train.OpenBve
 										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.Handles.Power.NotchDescriptions.Length; j++)
 										{
-											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Power.NotchDescriptions[j]);
-											if (s.Width > Train.Handles.Power.MaxWidth)
+											Vector2 s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Power.NotchDescriptions[j]);
+											if (s.X > Train.Handles.Power.MaxWidth)
 											{
-												Train.Handles.Power.MaxWidth = s.Width;
+												Train.Handles.Power.MaxWidth = s.X;
 											}
 										}
 										break;
@@ -176,10 +176,10 @@ namespace Train.OpenBve
 										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.Handles.Brake.NotchDescriptions.Length; j++)
 										{
-											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Brake.NotchDescriptions[j]);
-											if (s.Width > Train.Handles.Brake.MaxWidth)
+											Vector2 s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Brake.NotchDescriptions[j]);
+											if (s.X > Train.Handles.Brake.MaxWidth)
 											{
-												Train.Handles.Brake.MaxWidth = s.Width;
+												Train.Handles.Brake.MaxWidth = s.X;
 											}
 										}
 										break;
@@ -191,10 +191,10 @@ namespace Train.OpenBve
 										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.Handles.LocoBrake.NotchDescriptions.Length; j++)
 										{
-											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.LocoBrake.NotchDescriptions[j]);
-											if (s.Width > Train.Handles.LocoBrake.MaxWidth)
+											Vector2 s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.LocoBrake.NotchDescriptions[j]);
+											if (s.X > Train.Handles.LocoBrake.MaxWidth)
 											{
-												Train.Handles.LocoBrake.MaxWidth = s.Width;
+												Train.Handles.LocoBrake.MaxWidth = s.X;
 											}
 										}
 										break;
@@ -202,10 +202,10 @@ namespace Train.OpenBve
 										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.Handles.Reverser.NotchDescriptions.Length; j++)
 										{
-											Size s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Reverser.NotchDescriptions[j]);
-											if (s.Width > Train.Handles.Reverser.MaxWidth)
+											Vector2 s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Reverser.NotchDescriptions[j]);
+											if (s.X > Train.Handles.Reverser.MaxWidth)
 											{
-												Train.Handles.Reverser.MaxWidth = s.Width;
+												Train.Handles.Reverser.MaxWidth = s.X;
 											}
 										}
 										break;

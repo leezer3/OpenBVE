@@ -27,6 +27,9 @@ namespace OpenBveApi.Trains
 		/// <remarks>Default units are km/h</remarks>
 		public double CurrentSpeed;
 
+		/// <summary>The textual description for this car</summary>
+		public string Description;
+
 		/// <summary>The empty mass of the car</summary>
 		public double EmptyMass;
 

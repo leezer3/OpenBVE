@@ -1,7 +1,7 @@
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 
-namespace OpenBve
+namespace ObjectViewer
 {
     internal static class ObjectManager
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using OpenBveApi.Math;
 
 namespace CarXmlConvertor
 {
@@ -11,12 +10,12 @@ namespace CarXmlConvertor
 		internal static string FileName;
         internal static void Process(MainForm form)
         {
-	        if (!System.IO.File.Exists(FileName))
+	        if (!File.Exists(FileName))
 	        {
 		        return;
 	        }
 	        mainForm = form;
-			string[] Lines = System.IO.File.ReadAllLines(FileName);
+			string[] Lines = File.ReadAllLines(FileName);
 	        TabbedList newLines = new TabbedList();
             for (int i = 0; i < Lines.Length; i++)
             {
@@ -64,7 +63,8 @@ namespace CarXmlConvertor
             newLines.Add("</"+currentSection + ">");
             newLines.Add("</Panel>");
             newLines.Add("</openBVE>");
-	        string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "panel.xml");
+            // ReSharper disable once AssignNullToNotNullAttribute
+            string fileOut = Path.Combine(Path.GetDirectoryName(FileName), "panel.xml");
 			try
             {
                 

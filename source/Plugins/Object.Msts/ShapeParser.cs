@@ -876,7 +876,7 @@ namespace Plugin
 					int capacity = block.ReadInt32(); //Count of the number of entries in the block, not the number of primitives
 					while (capacity > 0)
 					{
-						newBlock = block.ReadSubBlock(new KujuTokenID[] {KujuTokenID.prim_state_idx, KujuTokenID.indexed_trilist});
+						newBlock = block.ReadSubBlock(new[] {KujuTokenID.prim_state_idx, KujuTokenID.indexed_trilist});
 						switch (newBlock.Token)
 						{
 							case KujuTokenID.prim_state_idx:
@@ -1023,7 +1023,7 @@ namespace Plugin
 						int v2 = block.ReadInt32();
 						int v3 = block.ReadInt32();
 
-						currentLOD.subObjects[currentLOD.subObjects.Count - 1].faces.Add(new Face(new int[] {v1, v2, v3}, currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Count -1));
+						currentLOD.subObjects[currentLOD.subObjects.Count - 1].faces.Add(new Face(new[] {v1, v2, v3}, currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Count -1));
 						remainingVertex--;
 					}
 

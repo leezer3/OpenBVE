@@ -454,7 +454,10 @@ namespace RouteManager2
 				renderer.Fog.Color = CurrentFog.Color;
 				renderer.Fog.Density = CurrentFog.Density;
 				renderer.Fog.IsLinear = CurrentFog.IsLinear;
-				renderer.Fog.SetForImmediateMode();
+				if (!renderer.AvailableNewRenderer)
+				{
+					renderer.Fog.SetForImmediateMode();
+				}
 			}
 			else
 			{
@@ -499,6 +502,15 @@ namespace RouteManager2
 				CurrentBackground = TargetBackground;
 				TargetBackground = null;
 			}
+		}
+		
+		/// <summary>Updates the lighting model, if changed via an event</summary>
+		public void UpdateLighting()
+		{
+			renderer.Lighting.OptionAmbientColor = Atmosphere.AmbientLightColor;
+			renderer.Lighting.OptionDiffuseColor = Atmosphere.DiffuseLightColor;
+			renderer.Lighting.OptionLightPosition = Atmosphere.LightPosition;
+			renderer.Lighting.ShouldInitialize = true;
 		}
 	}
 }

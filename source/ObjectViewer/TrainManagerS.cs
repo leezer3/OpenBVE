@@ -11,7 +11,7 @@ using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using TrainManager;
 
-namespace OpenBve
+namespace ObjectViewer
 {
 	internal class TrainManager : TrainManagerBase
 	{

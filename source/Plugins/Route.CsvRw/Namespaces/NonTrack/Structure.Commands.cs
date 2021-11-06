@@ -53,7 +53,16 @@
 		/// <summary>If Background N is an image, sets the aspect ratio used in wrapping</summary>
 		BackAspect,
 		/// <summary>The object used for RainType N</summary>
-		Weather
+		Weather,
+		/// <summary>Loads a dynamic lighting set</summary>
+		DynamicLight,
+
+		/*
+		 * HMMSIM
+		 */
+		/// <summary>The object used for Object N</summary>
+		/// <remarks>Equivilant to .FreeObj</remarks>
+		Object
 
 	}
 }

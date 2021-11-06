@@ -92,7 +92,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// The specs of the driver's train.
 		/// </summary>
-		internal VehicleSpecs TrainSpecs = new VehicleSpecs(5, BrakeTypes.AutomaticAirBrake, 8, false, 1);
+		internal VehicleSpecs TrainSpecs = new VehicleSpecs(5, BrakeTypes.ElectricCommandBrake, 8, false, 1);
 
 		/// <summary>
 		/// The current train speed in kilometers per hour.
@@ -135,19 +135,9 @@ namespace DenshaDeGoInput
 		private static int[] powerCommands = new int[14];
 
 		/// <summary>
-		/// Class for the properties of the buttons.
+		/// An array with the command for each button.
 		/// </summary>
-		internal class ButtonProp
-		{
-			internal int Command;
-			internal double Timer;
-			internal bool Repeats;
-		}
-
-		/// <summary>
-		/// An array with the properties for each button.
-		/// </summary>
-		internal static ButtonProp[] ButtonProperties = new ButtonProp[13];
+		internal static int[] ButtonCommands = new int[13];
 
 
 		/// <summary>
@@ -164,16 +154,6 @@ namespace DenshaDeGoInput
 		/// Whether to map the hold brake to B1.
 		/// </summary>
 		internal static bool MapHoldBrake;
-
-		/// <summary>
-		/// Initial delay when repeating a button press.
-		/// </summary>
-		private static int repeatDelay = 500;
-
-		/// <summary>
-		/// Internval for repeating a button press.
-		/// </summary>
-		private static int repeatInterval = 100;
 
 		/// <summary>
 		/// A function call when the Config button is pressed.
@@ -203,12 +183,6 @@ namespace DenshaDeGoInput
 			// Start thread for LibUsb-based controllers
 			LibUsb.LibUsbThread = new Thread(LibUsb.LibUsbLoop);
 			LibUsb.LibUsbThread.Start();
-
-			// Initialize the array of button properties
-			for (int i = 0; i < ButtonProperties.Length; i++)
-			{
-				ButtonProperties[i] = new ButtonProp();
-			}
 
 			// Load settings from the config file
 			LoadConfig();
@@ -258,60 +232,60 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public void OnUpdateFrame()
 		{
-			// Brake handle
+			// Store previous state of the buttons
+			OpenTK.Input.ButtonState[] previousButtonState = (OpenTK.Input.ButtonState[])InputTranslator.ControllerButtons.Clone();
+
+			// Brake handle (release)
 			if (brakeHandleMoved)
 			{
 				KeyUp(this, new InputEventArgs(Controls[brakeCommands[(int)InputTranslator.BrakeNotch]]));
 				brakeHandleMoved = false;
 			}
-			// Power handle
+			// Power handle (release)
 			if (powerHandleMoved)
 			{
 				KeyUp(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 				powerHandleMoved = false;
 			}
-			// Buttons
-			for (int i = 0; i < ButtonProperties.Length; i++)
-			{
-				KeyUp(this, new InputEventArgs(Controls[100 + ButtonProperties[i].Command]));
-			}
 
+			// Update input from controller
 			InputTranslator.Update();
+
+			// Configure the mappings on the first frame to fit the controller's features
 			if (loading)
 			{
-				// Configure the mappings on the first frame to fit the controller's features
 				ConfigureMappings();
+			}
+
+			// Buttons (release)
+			for (int i = 0; i < ButtonCommands.Length; i++)
+			{
+				if (InputTranslator.ControllerButtons[i] == OpenTK.Input.ButtonState.Released && previousButtonState[i] == OpenTK.Input.ButtonState.Pressed)
+				{
+					KeyUp(this, new InputEventArgs(Controls[100 + ButtonCommands[i]]));
+				}
 			}
 
 			if (InputTranslator.IsControllerConnected)
 			{
-				// Brake handle
+				// Brake handle (apply)
 				if (InputTranslator.BrakeNotch != InputTranslator.PreviousBrakeNotch || loading)
 				{
 					KeyDown(this, new InputEventArgs(Controls[brakeCommands[(int)InputTranslator.BrakeNotch]]));
 					brakeHandleMoved = true;
 				}
-				// Power handle
+				// Power handle (apply)
 				if (InputTranslator.PowerNotch != InputTranslator.PreviousPowerNotch || loading)
 				{
 					KeyDown(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 					powerHandleMoved = true;
 				}
-				// Buttons
-				for (int i = 0; i < ButtonProperties.Length; i++)
+				// Buttons (apply)
+				for (int i = 0; i < ButtonCommands.Length; i++)
 				{
-					if (InputTranslator.ControllerButtons[i] == OpenTK.Input.ButtonState.Pressed && ButtonProperties[i].Timer <= 0)
+					if (InputTranslator.ControllerButtons[i] == OpenTK.Input.ButtonState.Pressed && previousButtonState[i] == OpenTK.Input.ButtonState.Released)
 					{
-						KeyDown(this, new InputEventArgs(Controls[100 + ButtonProperties[i].Command]));
-						if (ButtonProperties[i].Repeats)
-						{
-							ButtonProperties[i].Timer = repeatInterval;
-						}
-						else
-						{
-							ButtonProperties[i].Timer = repeatDelay;
-							ButtonProperties[i].Repeats = true;
-						}
+						KeyDown(this, new InputEventArgs(Controls[100 + ButtonCommands[i]]));
 					}
 				}
 			}
@@ -338,20 +312,6 @@ namespace DenshaDeGoInput
 
 			// Set the current speed limit
 			CurrentSpeedLimit = GetCurrentSpeedLimit(data.Vehicle.Location);
-
-			// Button timers
-			for (int i = 0; i < ButtonProperties.Length; i++)
-			{
-				if (InputTranslator.ControllerButtons[i] == OpenTK.Input.ButtonState.Pressed)
-				{
-					ButtonProperties[i].Timer -= data.ElapsedTime.Milliseconds;
-				}
-				else
-				{
-					ButtonProperties[i].Timer = 0;
-					ButtonProperties[i].Repeats = false;
-				}
-			}
 		}
 
 		public void SetMaxNotch(int powerNotch, int brakeNotch)
@@ -511,6 +471,19 @@ namespace DenshaDeGoInput
 					}
 				}
 			}
+
+			Console.WriteLine(TrainSpecs.BrakeType);
+
+			if (TrainSpecs.BrakeType == BrakeTypes.AutomaticAirBrake)
+			{
+				// Trains with an air brake are mapped differently
+				double brakeStep = 3 / (double)(controllerBrakeNotches);
+				for (int i = 1; i < controllerBrakeNotches + 1; i++)
+				{
+					int notch = ((int)Math.Round(brakeStep * i, MidpointRounding.AwayFromZero) - 1);
+					brakeCommands[i] = notch >= 0 ? notch : 0;
+				}
+			}
 		}
 
 		/// <summary>
@@ -628,7 +601,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.Select].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.Select] = a;
 												}
 											}
 											break;
@@ -637,7 +610,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.Start].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.Start] = a;
 												}
 											}
 											break;
@@ -646,7 +619,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.A].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.A] = a;
 												}
 											}
 											break;
@@ -655,7 +628,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.B].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.B] = a;
 												}
 											}
 											break;
@@ -664,7 +637,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.C].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.C] = a;
 												}
 											}
 											break;
@@ -673,7 +646,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.D].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.D] = a;
 												}
 											}
 											break;
@@ -682,7 +655,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.Up].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.Up] = a;
 												}
 											}
 											break;
@@ -691,7 +664,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.Down].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.Down] = a;
 												}
 											}
 											break;
@@ -700,7 +673,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.Left].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.Left] = a;
 												}
 											}
 											break;
@@ -709,7 +682,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.Right].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.Right] = a;
 												}
 											}
 											break;
@@ -718,7 +691,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.Pedal].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.Pedal] = a;
 												}
 											}
 											break;
@@ -727,7 +700,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.LDoor].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.LDoor] = a;
 												}
 											}
 											break;
@@ -736,7 +709,7 @@ namespace DenshaDeGoInput
 												int a;
 												if (int.TryParse(Value, out a))
 												{
-													ButtonProperties[(int)InputTranslator.ControllerButton.RDoor].Command = a;
+													ButtonCommands[(int)InputTranslator.ControllerButton.RDoor] = a;
 												}
 											}
 											break;
@@ -884,68 +857,6 @@ namespace DenshaDeGoInput
 					}
 				}
 			}
-
-			// General OpenBVE options
-			string openbveConfigFile = OpenBveApi.Path.CombineFile(optionsFolder, "options.cfg");
-			if (System.IO.File.Exists(openbveConfigFile))
-			{
-				// load options
-				string[] Lines = System.IO.File.ReadAllLines(openbveConfigFile, new System.Text.UTF8Encoding());
-				string Section = "";
-				for (int i = 0; i < Lines.Length; i++)
-				{
-					Lines[i] = Lines[i].Trim(new char[] { });
-					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
-					{
-						if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
-							Lines[i].EndsWith("]", StringComparison.Ordinal))
-						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
-						}
-						else
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.OrdinalIgnoreCase);
-							string Key, Value;
-							if (j >= 0)
-							{
-								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-							}
-							else
-							{
-								Key = "";
-								Value = Lines[i];
-							}
-							switch (Section)
-							{
-								case "controls":
-									switch (Key)
-									{
-										case "keyrepeatdelay":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													repeatDelay = a;
-												}
-											}
-											break;
-										case "keyrepeatinterval":
-											{
-												int a;
-												if (int.TryParse(Value, out a))
-												{
-													repeatInterval = a;
-												}
-											}
-											break;
-									}
-									break;
-							}
-						}
-					}
-				}
-			}
 		}
 
 		/// <summary>
@@ -971,19 +882,19 @@ namespace DenshaDeGoInput
 				Builder.AppendLine("map_hold_brake = " + MapHoldBrake.ToString(Culture).ToLower());
 				Builder.AppendLine();
 				Builder.AppendLine("[buttons]");
-				Builder.AppendLine("select = " + ButtonProperties[(int)InputTranslator.ControllerButton.Select].Command.ToString(Culture));
-				Builder.AppendLine("start = " + ButtonProperties[(int)InputTranslator.ControllerButton.Start].Command.ToString(Culture));
-				Builder.AppendLine("a = " + ButtonProperties[(int)InputTranslator.ControllerButton.A].Command.ToString(Culture));
-				Builder.AppendLine("b = " + ButtonProperties[(int)InputTranslator.ControllerButton.B].Command.ToString(Culture));
-				Builder.AppendLine("c = " + ButtonProperties[(int)InputTranslator.ControllerButton.C].Command.ToString(Culture));
-				Builder.AppendLine("d = " + ButtonProperties[(int)InputTranslator.ControllerButton.D].Command.ToString(Culture));
-				Builder.AppendLine("up = " + ButtonProperties[(int)InputTranslator.ControllerButton.Up].Command.ToString(Culture));
-				Builder.AppendLine("down = " + ButtonProperties[(int)InputTranslator.ControllerButton.Down].Command.ToString(Culture));
-				Builder.AppendLine("left = " + ButtonProperties[(int)InputTranslator.ControllerButton.Left].Command.ToString(Culture));
-				Builder.AppendLine("right = " + ButtonProperties[(int)InputTranslator.ControllerButton.Right].Command.ToString(Culture));
-				Builder.AppendLine("pedal = " + ButtonProperties[(int)InputTranslator.ControllerButton.Pedal].Command.ToString(Culture));
-				Builder.AppendLine("ldoor = " + ButtonProperties[(int)InputTranslator.ControllerButton.LDoor].Command.ToString(Culture));
-				Builder.AppendLine("rdoor = " + ButtonProperties[(int)InputTranslator.ControllerButton.RDoor].Command.ToString(Culture));
+				Builder.AppendLine("select = " + ButtonCommands[(int)InputTranslator.ControllerButton.Select].ToString(Culture));
+				Builder.AppendLine("start = " + ButtonCommands[(int)InputTranslator.ControllerButton.Start].ToString(Culture));
+				Builder.AppendLine("a = " + ButtonCommands[(int)InputTranslator.ControllerButton.A].ToString(Culture));
+				Builder.AppendLine("b = " + ButtonCommands[(int)InputTranslator.ControllerButton.B].ToString(Culture));
+				Builder.AppendLine("c = " + ButtonCommands[(int)InputTranslator.ControllerButton.C].ToString(Culture));
+				Builder.AppendLine("d = " + ButtonCommands[(int)InputTranslator.ControllerButton.D].ToString(Culture));
+				Builder.AppendLine("up = " + ButtonCommands[(int)InputTranslator.ControllerButton.Up].ToString(Culture));
+				Builder.AppendLine("down = " + ButtonCommands[(int)InputTranslator.ControllerButton.Down].ToString(Culture));
+				Builder.AppendLine("left = " + ButtonCommands[(int)InputTranslator.ControllerButton.Left].ToString(Culture));
+				Builder.AppendLine("right = " + ButtonCommands[(int)InputTranslator.ControllerButton.Right].ToString(Culture));
+				Builder.AppendLine("pedal = " + ButtonCommands[(int)InputTranslator.ControllerButton.Pedal].ToString(Culture));
+				Builder.AppendLine("ldoor = " + ButtonCommands[(int)InputTranslator.ControllerButton.LDoor].ToString(Culture));
+				Builder.AppendLine("rdoor = " + ButtonCommands[(int)InputTranslator.ControllerButton.RDoor].ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[classic]");
 				Builder.AppendLine("hat = " + ClassicController.UsesHat.ToString(Culture).ToLower());

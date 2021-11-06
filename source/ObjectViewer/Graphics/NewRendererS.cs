@@ -1,14 +1,13 @@
-using System.Drawing;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
 using LibRender2.Primitives;
 using LibRender2.Viewports;
-using OpenBve;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -36,9 +35,9 @@ namespace ObjectViewer.Graphics
 		private Cube greenAxisVAO;
 		private Cube blueAxisVAO;
 
-		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
+		public override void Initialize()
 		{
-			base.Initialize(CurrentHost, CurrentOptions);
+			base.Initialize();
 
 			if (!ForceLegacyOpenGL)
 			{
@@ -91,6 +90,11 @@ namespace ObjectViewer.Graphics
 		// render scene
 		internal void RenderScene()
 		{
+			lastObjectState = null;
+			if (!AvailableNewRenderer)
+			{
+				CurrentShader.Deactivate();
+			}
 			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
@@ -255,22 +259,22 @@ namespace ObjectViewer.Graphics
 				{
 					keys = new[] { new[] { "F7" }, new[] { "F8" }, new[] { "F10" } };
 					Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "Open one or more objects", new Point(32, 4), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Point(32, 24), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Point(32, 44), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Point(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Open one or more objects", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 24), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Vector2(32, 44), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
 					if (Interface.LogMessages.Count == 1)
 					{
 						Keys.Render(4, 64, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 
 						if (Interface.LogMessages[0].Type != MessageType.Information)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
 							//If all of our messages are information, then print the message text in grey
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 64), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32, 64), TextAlignment.TopLeft, TextColor);
 						}
 					}
 					else if (Interface.LogMessages.Count > 1)
@@ -280,25 +284,25 @@ namespace ObjectViewer.Graphics
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Point(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Vector2(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Point(32, 64), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Vector2(32, 64), TextAlignment.TopLeft, TextColor);
 						}
 					}
 				}
 				else
 				{
-					OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Point((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Point((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, TextColor);
 					keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "del" }, new[] { "F8" }, new[] { "F10" } };
 					Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Point(32, 4), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Open additional objects", new Point(32, 24), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Clear currently open objects", new Point(32, 44), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Point(32, 64), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Point(32, 84), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Open additional objects", new Vector2(32, 24), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Clear currently open objects", new Vector2(32, 44), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 64), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Vector2(32, 84), TextAlignment.TopLeft, TextColor);
 
 					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "L" }, new[] { "G" }, new[] { "B" }, new[] { "I" }, new[] { "R" } };
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
@@ -306,14 +310,14 @@ namespace ObjectViewer.Graphics
 					Keys.Render(Screen.Width - 36, 124, 32, Fonts.SmallFont, keys);
 					keys = new[] { new[] { "R" } };
 					Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, $"WireFrame: {(OptionWireFrame ? "on" : "off")}", new Point(Screen.Width - 28, 4), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Normals: {(OptionNormals ? "on" : "off")}", new Point(Screen.Width - 28, 24), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Lighting: {(Program.LightingTarget == 0 ? "night" : "day")}", new Point(Screen.Width - 28, 44), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Grid: {(OptionCoordinateSystem ? "on" : "off")}", new Point(Screen.Width - 28, 64), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Background: {GetBackgroundColorName()}", new Point(Screen.Width - 28, 84), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Point(Screen.Width - 28, 104), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Point(Screen.Width - 44, 124), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Switch renderer type:", new Point(Screen.Width - 28, 144), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"WireFrame: {(OptionWireFrame ? "on" : "off")}", new Vector2(Screen.Width - 28, 4), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"Normals: {(OptionNormals ? "on" : "off")}", new Vector2(Screen.Width - 28, 24), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"Lighting: {(Program.LightingTarget == 0 ? "night" : "day")}", new Vector2(Screen.Width - 28, 44), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"Grid: {(OptionCoordinateSystem ? "on" : "off")}", new Vector2(Screen.Width - 28, 64), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"Background: {GetBackgroundColorName()}", new Vector2(Screen.Width - 28, 84), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - 28, 104), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 44, 124), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Switch renderer type:", new Vector2(Screen.Width - 28, 144), TextAlignment.TopRight, TextColor);
 
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
@@ -330,12 +334,12 @@ namespace ObjectViewer.Graphics
 
 						if (Interface.LogMessages[0].Type != MessageType.Information)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
 							//If all of our messages are information, then print the message text in grey
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 112), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32, 112), TextAlignment.TopLeft, TextColor);
 						}
 					}
 					else if (Interface.LogMessages.Count > 1)
@@ -345,22 +349,22 @@ namespace ObjectViewer.Graphics
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Point(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Vector2(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Point(32, 112), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Vector2(32, 112), TextAlignment.TopLeft, TextColor);
 						}
 					}
 
 					if (RenderStatsOverlay)
 					{
 						Keys.Render(4, Screen.Height - 126, 116, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
-						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Point(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Point(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Point(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Point(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Point(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
 					}
 				}
 			}
@@ -368,6 +372,12 @@ namespace ObjectViewer.Graphics
 			// finalize
 			PopMatrix(MatrixMode.Projection);
 			PopMatrix(MatrixMode.Modelview);
+		}
+
+		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		{
+			Screen.Width = CurrentOptions.WindowWidth;
+			Screen.Height = CurrentOptions.WindowHeight;
 		}
 	}
 }

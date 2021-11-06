@@ -305,6 +305,7 @@ namespace CarXmlConvertor
 					}
 				}
 			}
+			ConvertSoundCfg.DriverPosition.Z = 0.5 * CarLength + ConvertSoundCfg.DriverPosition.Z;
 		}
 	}
 }

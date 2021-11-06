@@ -14,18 +14,18 @@ namespace LBAHeader
 			{
 				f = args[0];
 			}
-			if (!System.IO.File.Exists(f))
+			if (!File.Exists(f))
 			{
 				//If we can't find our initial argument, try and locate the openBVE executable in our directory
-				string ff = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				string ff = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 				if (ff == null)
 				{
 					Console.WriteLine("Unable to find the executing assembly path....");
 					return;
 				}
-				f = System.IO.Path.Combine(ff, "OpenBve.exe");
+				f = Path.Combine(ff, "OpenBve.exe");
 			}
-			if (!System.IO.File.Exists(f))
+			if (!File.Exists(f))
 			{
 				//Not found, log this rather than crashing
 				Console.WriteLine("No suitable executables found....");
@@ -34,8 +34,8 @@ namespace LBAHeader
 			AddLbaFlag(f);
 			Add32BitFlag(f);
 			// ReSharper disable once AssignNullToNotNullAttribute
-			f = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(f), "RouteViewer.exe");
-			if (!System.IO.File.Exists(f))
+			f = Path.Combine(Path.GetDirectoryName(f), "RouteViewer.exe");
+			if (!File.Exists(f))
 			{
 				//Not found, log this rather than crashing
 				Console.WriteLine("RouteViewer executable not found....");
@@ -66,6 +66,7 @@ namespace LBAHeader
 		/// <summary>Marks an ANYCPU executable as 32-bit preferred</summary>
 		public static void Add32BitFlag(string fileToProcess)
 		{
+			string configFile = fileToProcess + ".config";
 			string finalFileName = fileToProcess.Replace(".exe", "-32.exe");
 			Console.WriteLine("Creating 32-bit preferred copy of executable " + fileToProcess);
 			var output = Console.Out;
@@ -101,6 +102,21 @@ namespace LBAHeader
 				Console.WriteLine("An unexpected error occured whilst attempting to apply Corflags to executable " + fileToProcess);
 			}
 
+			if (File.Exists(configFile))
+			{
+				//Also copy the application config file, so that LoadFromRemoteSources etc. are preserved
+				//No clue why a File.Copy command fails on CI
+				try
+				{
+					byte[] bytes = File.ReadAllBytes(configFile);
+					File.WriteAllBytes(configFile.Replace(".exe", "-32.exe"), bytes);
+				}
+				catch
+				{
+					Console.WriteLine("An unexpected error occured whilst attempting to create the 32-bit .exe.config file.");
+				}
+				
+			}
 		}
 	}
 }

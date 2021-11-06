@@ -96,7 +96,7 @@ namespace OpenBveApi.Textures {
 		public Texture(string path, TextureParameters parameters, Hosts.HostInterface currentHost)
 		{
 			this.Origin = new PathOrigin(path, parameters, currentHost);
-			this.OpenGlTextures = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.OpenGlTextures = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -104,7 +104,7 @@ namespace OpenBveApi.Textures {
 		public Texture(Bitmap bitmap)
 		{
 			this.Origin = new BitmapOrigin(bitmap);
-			this.OpenGlTextures = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.OpenGlTextures = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -113,7 +113,7 @@ namespace OpenBveApi.Textures {
 		public Texture(Bitmap bitmap, TextureParameters parameters)
 		{
 			this.Origin = new BitmapOrigin(bitmap, parameters);
-			this.OpenGlTextures = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.OpenGlTextures = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -121,7 +121,7 @@ namespace OpenBveApi.Textures {
 		public Texture(OpenBveApi.Textures.Texture texture)
 		{
 			this.Origin = new RawOrigin(texture);
-			this.OpenGlTextures = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.OpenGlTextures = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		// --- properties ---

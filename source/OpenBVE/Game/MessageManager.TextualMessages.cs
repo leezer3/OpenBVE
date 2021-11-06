@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Eventing.Reader;
 using DavyKager;
-using LibRender2.Texts;
+using LibRender2.Text;
 using OpenBveApi;
 using OpenBveApi.Trains;
 using RouteManager2;

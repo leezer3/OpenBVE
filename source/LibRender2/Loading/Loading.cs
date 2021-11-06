@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Drawing;
-using LibRender2.Texts;
+using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
@@ -30,9 +29,7 @@ namespace LibRender2.Loadings
 		private bool showLogo;
 		private bool showProgress;
 		private Texture TextureLoadingBkg;
-		private Texture TextureLogo;
 		private string ProgramVersion = "1.0";
-		private readonly string[] LogoFileName = { "logo_256.png", "logo_512.png", "logo_1024.png" };
 
 		internal Loading(BaseRenderer renderer)
 		{
@@ -63,40 +60,6 @@ namespace LibRender2.Loadings
 				if (System.IO.File.Exists(backgroundFile))
 				{
 					renderer.TextureManager.RegisterTexture(backgroundFile, out TextureLoadingBkg);
-				}
-			}
-
-			if (TextureLogo == null)
-			{
-				// choose logo size according to screen width
-				string fName;
-
-				if (renderer.Screen.Width > 2048)
-				{
-					fName = LogoFileName[2];
-				}
-				else if (renderer.Screen.Width > 1024)
-				{
-					fName = LogoFileName[1];
-				}
-				else
-				{
-					fName = LogoFileName[0];
-				}
-
-				string logoFile = string.Empty;
-				try
-				{
-					logoFile = OpenBveApi.Path.CombineFile(Path, fName);
-				}
-				catch
-				{
-					//ignored
-				}
-
-				if (System.IO.File.Exists(logoFile))
-				{
-					renderer.TextureManager.RegisterTexture(logoFile, out TextureLogo);
 				}
 			}
 		}
@@ -158,19 +121,11 @@ namespace LibRender2.Loadings
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
 			if (!customLoadScreen)
 			{
-				if (showLogo && TextureLogo != null && renderer.currentHost.LoadTexture(TextureLogo, OpenGlTextureWrapMode.ClampClamp))
+				if (showLogo && renderer.ProgramLogo != null)
 				{
 					// place the centre of the logo at from the screen top
-					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - TextureLogo.Height / 2.0);
-					renderer.UnsetBlendFunc();
-					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-					GL.DepthMask(true);
-					renderer.Rectangle.Draw(TextureLogo, new Vector2((renderer.Screen.Width - TextureLogo.Width) / 2.0, logoTop), new Vector2(TextureLogo.Width, TextureLogo.Height), Color128.White);
-					renderer.SetBlendFunc();
-					renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					GL.DepthMask(false);
-					renderer.Rectangle.Draw(TextureLogo, new Vector2((renderer.Screen.Width - TextureLogo.Width) / 2.0, logoTop), new Vector2(TextureLogo.Width, TextureLogo.Height), Color128.White);
-					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - renderer.ProgramLogo.Height / 2.0);
+					renderer.Rectangle.DrawAlpha(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), new Vector2(renderer.ProgramLogo.Width, renderer.ProgramLogo.Height), Color128.White);
 				}
 			}
 			// ReSharper disable once RedundantIfElseBlock
@@ -189,7 +144,7 @@ namespace LibRender2.Loadings
 				// VERSION NUMBER
 				// place the version above the first division
 				int versionTop = logoBottom + blankHeight - fontHeight;
-				renderer.OpenGlString.Draw(Font, "Version " + ProgramVersion, new Point(halfWidth, versionTop), TextAlignment.TopMiddle, Color128.White);
+				renderer.OpenGlString.Draw(Font, "Version " + ProgramVersion, new Vector2(halfWidth, versionTop), TextAlignment.TopMiddle, Color128.White);
 				// for the moment, do not show any URL; would go right below the first division
 				//			DrawString(Fonts.SmallFont, "https://openbve-project.net",
 				//				new Point(halfWidth, versionTop + fontHeight+2),
@@ -203,7 +158,7 @@ namespace LibRender2.Loadings
 
 				// draw progress message right above the second division
 				string text = Translations.GetInterfaceString(routeProgress < 1.0 ? "loading_loading_route" : trainProgress < 1.0 ? "loading_loading_train" : "message_loading");
-				renderer.OpenGlString.Draw(Font, text, new Point(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
+				renderer.OpenGlString.Draw(Font, text, new Vector2(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
 
 				// sum of route progress and train progress arrives up to 2.0:
 				// => times 50.0 to convert to %
@@ -225,7 +180,7 @@ namespace LibRender2.Loadings
 				renderer.Rectangle.Draw(null, new Vector2(progrMargin, progressTop), new Vector2(progressWidth * (int)percent / 100.0, fontHeight + 4), ColourProgressBar);
 
 				// progress percent
-				renderer.OpenGlString.Draw(Font, percStr, new Point(halfWidth, progressTop), TextAlignment.TopMiddle, Color128.Black);
+				renderer.OpenGlString.Draw(Font, percStr, new Vector2(halfWidth, progressTop), TextAlignment.TopMiddle, Color128.Black);
 			}
 		}
 	}

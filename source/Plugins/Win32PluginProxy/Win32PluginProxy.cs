@@ -411,6 +411,11 @@ namespace WCFServer
 			}
 		}
 
+		public void KeepAlive()
+		{
+			//Dummy method to keep the connection alive
+		}
+
 		IAtsPluginCallback Callback => OperationContext.Current.GetCallbackChannel<IAtsPluginCallback>();
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "LoadDLL", ExactSpelling = true, CallingConvention = CallingConvention.StdCall, SetLastError = true)]

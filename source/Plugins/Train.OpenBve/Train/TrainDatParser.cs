@@ -335,6 +335,10 @@ namespace Train.OpenBve
 										if (a < 0.0) {
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "CoefficientOfStaticFriction is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
+											if (Plugin.CurrentOptions.EnableBveTsHacks && (a > 0.1 || a < 1.0))
+											{
+												break;
+											}
 											CoefficientOfStaticFriction = a;
 										} break;
 									case 3:
@@ -1309,11 +1313,11 @@ namespace Train.OpenBve
 			for (int i = 0; i < Cars; i++) {
 				if (Train.Cars.Length > 1)
 				{
-					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
+					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i], i < Cars - 1 ? Train.Cars[i + 1] : null, Train);
 				}
 				else
 				{
-					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
+					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i], null, Train);
 				}
 				if (i == DriverCar)
 				{

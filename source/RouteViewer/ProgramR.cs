@@ -25,7 +25,7 @@ using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve
+namespace RouteViewer
 {
 	internal static class Program {
 
@@ -71,10 +71,10 @@ namespace OpenBve
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 			FileSystem.CreateFileSystem();
-			Renderer = new NewRenderer();
-			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			Sounds = new Sounds();
 			Options.LoadOptions();
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			string error;
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
@@ -709,8 +709,7 @@ namespace OpenBve
 					CpuReducedMode = false;
 					break;
 				case Key.R:
-					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
-					Renderer.Lighting.Initialize();
+					Renderer.SwitchOpenGLVersion();
 					break;
 			}
 		}

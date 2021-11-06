@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using LibRender2.Backgrounds;
 using LibRender2.Cameras;
 using LibRender2.Fogs;
@@ -13,11 +14,11 @@ using LibRender2.Primitives;
 using LibRender2.Screens;
 using LibRender2.Shaders;
 using LibRender2.Text;
-using LibRender2.Texts;
 using LibRender2.Textures;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -41,6 +42,8 @@ namespace LibRender2
 
 		/// <summary>The callback to the host application</summary>
 		internal HostInterface currentHost;
+		/// <summary>The host filesystem</summary>
+		internal FileSystem fileSystem;
 
 		/// <summary>Holds a reference to the current options</summary>
 		internal BaseOptions currentOptions;
@@ -54,6 +57,8 @@ namespace LibRender2
 		protected int ObjectsSortedByStartPointer;
 		protected int ObjectsSortedByEndPointer;
 		protected double LastUpdatedTrackPosition;
+		/// <summary>A dummy VAO used when working with procedural data within the shader</summary>
+		public VertexArrayObject dummyVao;
 
 		public Screen Screen;
 
@@ -115,7 +120,7 @@ namespace LibRender2
 #pragma warning restore 0219
 
 		/// <summary>The current shader in use</summary>
-		internal Shader CurrentShader;
+		protected internal Shader CurrentShader;
 
 		public Shader DefaultShader;
 
@@ -194,6 +199,45 @@ namespace LibRender2
 			set;
 		}
 
+		protected internal Texture _programLogo;
+
+		protected internal Texture whitePixel;
+
+		private bool logoError;
+
+		/// <summary>Gets the current program logo</summary>
+		public Texture ProgramLogo
+		{
+			get
+			{
+				if (_programLogo != null || logoError)
+				{
+					return _programLogo;
+				}
+				try
+				{
+					if (Screen.Width > 1024)
+					{
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_1024.png"), new TextureParameters(null, null), out _programLogo, true);
+					}
+					else if (Screen.Width > 512)
+					{
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_512.png"), new TextureParameters(null, null), out _programLogo, true);
+					}
+					else
+					{
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_256.png"), new TextureParameters(null, null), out _programLogo, true);
+					}
+				}
+				catch
+				{
+					_programLogo = null;
+					logoError = true;
+				}
+				return _programLogo;
+			}
+		}
+
 		/*
 		 * List of VBO and IBO to delete on the next frame pass
 		 * This needs to be done here as opposed to in the finalizer
@@ -204,8 +248,11 @@ namespace LibRender2
 
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
 
-		protected BaseRenderer()
+		protected BaseRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
 		{
+			currentHost = CurrentHost;
+			currentOptions = CurrentOptions;
+			fileSystem = FileSystem;
 			Screen = new Screen();
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
@@ -213,17 +260,16 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
-			Fonts = new Fonts();
+			Fonts = new Fonts(currentHost, fileSystem);
 		}
 
 		/// <summary>
 		/// Call this once to initialise the renderer
 		/// </summary>
-		public virtual void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
+		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
+		public virtual void Initialize()
 		{
-			currentHost = CurrentHost;
-			currentOptions = CurrentOptions;
-
+			
 			try
 			{
 				if (DefaultShader == null)
@@ -236,17 +282,18 @@ namespace LibRender2
 				DefaultShader.SetMaterialSpecular(Color32.White);
 				lastColor = Color32.White;
 				DefaultShader.Deactivate();
+				dummyVao = new VertexArrayObject();
 			}
 			catch
 			{
-				CurrentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
-				CurrentOptions.IsUseNewRenderer = false;
+				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
+				currentOptions.IsUseNewRenderer = false;
 				ForceLegacyOpenGL = true;
 			}
 
 			Background = new Background(this);
 			Fog = new Fog();
-			OpenGlString = new OpenGlString(this);
+			OpenGlString = new OpenGlString(this); //text shader shares the rectangle fragment shader
 			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
 			Rectangle = new Rectangle(this);
@@ -257,7 +304,7 @@ namespace LibRender2
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
-
+			whitePixel = new Texture(new Texture(1, 1, 32, new byte[] {255, 255, 255, 255}, null));
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
@@ -271,11 +318,27 @@ namespace LibRender2
 			GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
 			GL.Enable(EnableCap.CullFace);
 			GL.CullFace(CullFaceMode.Front);
-			GL.Disable(EnableCap.Texture2D);
 			GL.Disable(EnableCap.Dither);
 			GL.Disable(EnableCap.Lighting);
 			GL.Disable(EnableCap.Fog);
-			GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
+			if (!AvailableNewRenderer)
+			{
+				GL.Disable(EnableCap.Texture2D);
+				GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
+			}
+		}
+
+		/// <summary>Should be called when the OpenGL version is switched mid-game</summary>
+		/// <remarks>We need to purge the current shader state and update lighting to avoid glitches</remarks>
+		public void SwitchOpenGLVersion()
+		{
+			if (currentOptions.IsUseNewRenderer && AvailableNewRenderer)
+			{
+				DefaultShader.Activate();
+				DefaultShader.Deactivate();
+			}
+			currentOptions.IsUseNewRenderer = !currentOptions.IsUseNewRenderer;
+			Lighting.Initialize();
 		}
 
 		/// <summary>Performs cleanup of disposed resources</summary>
@@ -316,9 +379,13 @@ namespace LibRender2
 		public virtual void ResetOpenGlState()
 		{
 			GL.Enable(EnableCap.CullFace);
-			GL.Disable(EnableCap.Lighting);
-			GL.Disable(EnableCap.Fog);
-			GL.Disable(EnableCap.Texture2D);
+			if (!AvailableNewRenderer)
+			{
+				GL.Disable(EnableCap.Lighting);
+				GL.Disable(EnableCap.Fog);
+				GL.Disable(EnableCap.Texture2D);
+			}
+			
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
@@ -364,7 +431,7 @@ namespace LibRender2
 			currentHost.StaticObjectCache.Clear();
 			TextureManager.UnloadAllTextures();
 
-			Initialize(currentHost, currentOptions);
+			Initialize();
 		}
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
@@ -690,10 +757,18 @@ namespace LibRender2
 				currentOptions.AnisotropicFilteringMaximum = 16;
 				return;
 			}
+			
 			string[] Extensions;
 			try
 			{
 				Extensions = GL.GetString(StringName.Extensions).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+				ErrorCode error = GL.GetError();
+				if (error == ErrorCode.InvalidEnum)
+				{
+					// Doing this on a forward compatible GL context fails with invalid enum
+					currentOptions.AnisotropicFilteringMaximum = 16;
+					return;
+				}
 			}
 			catch
 			{
@@ -793,11 +868,12 @@ namespace LibRender2
 			lastColor = Color32.White;
 			Shader.SetMaterialShininess(1.0f);
 			Shader.SetIsFog(false);
-			Shader.SetIsTexture(false);
+			Shader.DisableTexturing();
 			Shader.SetTexture(0);
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
+			Shader.SetAlphaTest(false);
 		}
 
 		public void SetBlendFunc()
@@ -847,15 +923,32 @@ namespace LibRender2
 			alphaTestEnabled = true;
 			alphaFuncComparison = Comparison;
 			alphaFuncValue = Value;
-			GL.Enable(EnableCap.AlphaTest);
-			GL.AlphaFunc(Comparison, Value);
+			if (AvailableNewRenderer)
+			{
+				CurrentShader.SetAlphaTest(true);
+				CurrentShader.SetAlphaFunction(Comparison, Value);
+			}
+			else
+			{
+				GL.Enable(EnableCap.AlphaTest);
+				GL.AlphaFunc(Comparison, Value);	
+			}
+			
 		}
 
 		/// <summary>Disables OpenGL alpha testing</summary>
 		public void UnsetAlphaFunc()
 		{
 			alphaTestEnabled = false;
-			GL.Disable(EnableCap.AlphaTest);
+			if (AvailableNewRenderer)
+			{
+				CurrentShader.SetAlphaTest(false);
+			}
+			else
+			{
+				GL.Disable(EnableCap.AlphaTest);	
+			}
+			
 		}
 
 		/// <summary>Restores the OpenGL alpha function to it's previous state</summary>
@@ -863,14 +956,37 @@ namespace LibRender2
 		{
 			if (alphaTestEnabled)
 			{
-				GL.Enable(EnableCap.AlphaTest);
-				GL.AlphaFunc(alphaFuncComparison, alphaFuncValue);
+				if (AvailableNewRenderer)
+				{
+					CurrentShader.SetAlphaTest(true);
+					CurrentShader.SetAlphaFunction(alphaFuncComparison, alphaFuncValue);
+				}
+				else
+				{
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(alphaFuncComparison, alphaFuncValue);
+				}
+				
 			}
 			else
 			{
-				GL.Disable(EnableCap.AlphaTest);
+				if (AvailableNewRenderer)
+				{
+					CurrentShader.SetAlphaTest(false);
+				}
+				else
+				{
+					GL.Disable(EnableCap.AlphaTest);
+				}
 			}
 		}
+
+
+		// Cached object state and matricies for shader drawing
+		protected ObjectState lastObjectState;
+		private Matrix4D lastModelMatrix;
+		private Matrix4D lastModelViewMatrix;
+		private bool sendToShader;
 
 		/// <summary>Draws a face using the current shader</summary>
 		/// <param name="State">The FaceState to draw</param>
@@ -880,20 +996,35 @@ namespace LibRender2
 			RenderFace(CurrentShader, State.Object, State.Face, IsDebugTouchMode);
 		}
 
+		/// <summary>Draws a face using the specified shader and matricies</summary>
+		/// <param name="Shader">The shader to use</param>
+		/// <param name="State">The ObjectState to draw</param>
+		/// <param name="Face">The Face within the ObjectState</param>
+		/// <param name="ModelMatrix">The model matrix to use</param>
+		/// <param name="ModelViewMatrix">The modelview matrix to use</param>
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D ModelMatrix, Matrix4D ModelViewMatrix)
+		{
+			lastModelMatrix = ModelMatrix;
+			lastModelViewMatrix = ModelViewMatrix;
+			sendToShader = true;
+			RenderFace(Shader, State, Face);
+		}
+
 		/// <summary>Draws a face using the specified shader</summary>
 		/// <param name="Shader">The shader to use</param>
-		/// <param name="State">The FaceState to draw</param>
+		/// <param name="State">The ObjectState to draw</param>
+		/// <param name="Face">The Face within the ObjectState</param>
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
-			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
-			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			RenderFace(Shader, State, Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
-		}
+			if (State != lastObjectState && !sendToShader)
+			{
+				lastObjectState = State;
+				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
+				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
+				sendToShader = true;
+			}
 
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
-		{
-			GL.Disable(EnableCap.Lighting);
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
 				return;
@@ -921,9 +1052,13 @@ namespace LibRender2
 			}
 
 			// matrix
-			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
-			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
-
+			if (sendToShader)
+			{
+				Shader.SetCurrentModelViewMatrix(lastModelViewMatrix);
+				Shader.SetCurrentTextureMatrix(State.TextureTranslation);
+				sendToShader = false;
+			}
+			
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
@@ -981,7 +1116,7 @@ namespace LibRender2
 			float distanceFactor;
 			if (material.GlowAttenuationData != 0)
 			{
-				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
+				distanceFactor = (float)Glow.GetDistanceFactor(lastModelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
 			}
 			else
 			{
@@ -999,7 +1134,6 @@ namespace LibRender2
 				// texture
 				if (material.DaytimeTexture != null && currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 				{
-					Shader.SetIsTexture(true);
 					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
 					{
 						GL.BindTexture(TextureTarget.Texture2D,
@@ -1009,7 +1143,7 @@ namespace LibRender2
 				}
 				else
 				{
-					Shader.SetIsTexture(false);
+					Shader.DisableTexturing();
 				}
 				// Calculate the brightness of the poly to render
 				float factor;
@@ -1049,7 +1183,6 @@ namespace LibRender2
 			if (material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
-				Shader.SetIsTexture(true);
 				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
 				{
 					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
@@ -1060,9 +1193,9 @@ namespace LibRender2
 				GL.Enable(EnableCap.Blend);
 
 				// alpha test
-				GL.Enable(EnableCap.AlphaTest);
-				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
-
+				Shader.SetAlphaTest(true);
+				Shader.SetAlphaFunction(AlphaFunction.Greater, 0.0f);
+				
 				// blend mode
 				float alphaFactor = distanceFactor * blendFactor;
 
@@ -1078,7 +1211,7 @@ namespace LibRender2
 			// normals
 			if (OptionNormals)
 			{
-				Shader.SetIsTexture(false);
+				Shader.DisableTexturing();
 				Shader.SetBrightness(1.0f);
 				Shader.SetOpacity(1.0f);
 				VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;

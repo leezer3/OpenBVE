@@ -37,13 +37,13 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Applies the MeshBuilder's data to a StaticObject</summary>
-		public void Apply(ref StaticObject Object, bool EnableHacks = false)
+		public void Apply(ref StaticObject Object, bool EnableHacks = false, bool IgnoreW = true)
 		{
 			if (TransformMatrix != Matrix4D.NoTransformation)
 			{
 				for (int i = 0; i < Vertices.Count; i++)
 				{
-					Vertices[i].Coordinates.Transform(TransformMatrix);
+					Vertices[i].Coordinates.Transform(TransformMatrix, IgnoreW);
 				}
 			}
 			if (Faces.Count != 0)
@@ -141,6 +141,13 @@ namespace OpenBveApi.Objects
 					else
 					{
 						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
+					}
+
+					if (Materials[i].LightMap != null)
+					{
+						Textures.Texture lightMap;
+						currentHost.RegisterTexture(Materials[i].LightMap, new TextureParameters(null, Color24.White), out lightMap);
+						Object.Mesh.Materials[mm + i].LightMapTexture = lightMap;
 					}
 
 					Object.Mesh.Materials[mm + i].BlendMode = Materials[i].BlendMode;

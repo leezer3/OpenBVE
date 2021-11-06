@@ -18,9 +18,11 @@ namespace OpenBveApi.Objects
 		/// <summary>The material emissive color</summary>
 		public Color24 EmissiveColor;
 		/// <summary>The daytime texture</summary>
-		public Textures.Texture DaytimeTexture;         //BUG: Makefile requires this to be fully qualified
+		public Texture DaytimeTexture;
 		/// <summary>The night-time texture</summary>
-		public Textures.Texture NighttimeTexture;
+		public Texture NighttimeTexture;
+		/// <summary>The night-time texture</summary>
+		public Texture LightMapTexture;
 		/// <summary>The blend mode for this material</summary>
 		public MeshMaterialBlendMode BlendMode;
 		/// <summary>A bit mask specifying the glow properties. Use GetGlowAttenuationData to create valid data for this field.</summary>
@@ -38,6 +40,7 @@ namespace OpenBveApi.Objects
 			if (A.EmissiveColor.R != B.EmissiveColor.R | A.EmissiveColor.G != B.EmissiveColor.G | A.EmissiveColor.B != B.EmissiveColor.B) return false;
 			if (A.DaytimeTexture != B.DaytimeTexture) return false;
 			if (A.NighttimeTexture != B.NighttimeTexture) return false;
+			if (A.LightMapTexture != B.LightMapTexture) return false;
 			if (A.BlendMode != B.BlendMode) return false;
 			if (A.GlowAttenuationData != B.GlowAttenuationData) return false;
 			if (A.WrapMode != B.WrapMode) return false;
@@ -53,6 +56,7 @@ namespace OpenBveApi.Objects
 			if (A.EmissiveColor.R != B.EmissiveColor.R | A.EmissiveColor.G != B.EmissiveColor.G | A.EmissiveColor.B != B.EmissiveColor.B) return true;
 			if (A.DaytimeTexture != B.DaytimeTexture) return true;
 			if (A.NighttimeTexture != B.NighttimeTexture) return true;
+			if (A.LightMapTexture != B.LightMapTexture) return true;
 			if (A.BlendMode != B.BlendMode) return true;
 			if (A.GlowAttenuationData != B.GlowAttenuationData) return true;
 			if (A.WrapMode != B.WrapMode) return true;

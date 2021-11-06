@@ -62,6 +62,25 @@ namespace OpenBve {
 		/// <param name="args">The command-line arguments.</param>
 		[STAThread]
 		private static void Main(string[] args) {
+			// --- load options and controls ---
+			try
+			{
+				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
+				FileSystem.CreateFileSystem();
+				Interface.LoadOptions();
+			}
+			catch
+			{
+				// ignored
+			}
+			//Switch between SDL2 and native backends; use native backend by default
+			var options = new ToolkitOptions();
+			if (Interface.CurrentOptions.PreferNativeBackend)
+			{
+				options.Backend = PlatformBackend.PreferNative;
+			}
+			Toolkit.Init(options);
+			
 			// Add handler for UI thread exceptions
 			Application.ThreadException += (CrashHandler.UIThreadException);
 
@@ -96,7 +115,7 @@ namespace OpenBve {
 				return;
 			}
 
-			Renderer = new NewRenderer();
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			Sounds = new Sounds();
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			
@@ -110,24 +129,9 @@ namespace OpenBve {
 			}
 
 
-			// --- load options and controls ---
-			try
-			{
-				Interface.LoadOptions();
-			}
-			catch
-			{
-				// ignored
-			}
+			
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			
-			//Switch between SDL2 and native backends; use native backend by default
-			var options = new ToolkitOptions();
-			if (Interface.CurrentOptions.PreferNativeBackend)
-			{
-				options.Backend = PlatformBackend.PreferNative;
-			}
-			Toolkit.Init(options);
 			// --- load language ---
 			string folder = Program.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
@@ -234,17 +238,36 @@ namespace OpenBve {
 				}
 				Game.Reset(false);
 			}
+			
 			// --- show the main menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {
 				Joysticks.RefreshJoysticks();
-				
-				// end HACK //
-				result = formMain.ShowMainDialog(result);
+
+				if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+				{
+					//WinForms are not supported on 64-bit Apple, so show the experimental GL menu
+					result.ExperimentalGLMenu = true;
+				}
+				else
+				{
+					if (!result.ExperimentalGLMenu)
+					{
+						result = formMain.ShowMainDialog(result);
+					}
+				}
 			} else {
 				result.Start = true;
 				//Apply translations
 				Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			}
+
+			if (result.ExperimentalGLMenu)
+			{
+				result.Start = true;
+				result.RouteFile = null;
+				result.TrainFolder = null;
+			}
+			
 			// --- start the actual program ---
 			if (result.Start) {
 				if (Initialize()) {

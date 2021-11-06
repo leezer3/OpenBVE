@@ -194,6 +194,7 @@ namespace OpenBve {
 			this.checkboxJoysticksUsed = new System.Windows.Forms.CheckBox();
 			this.labelJoystickAxisThreshold = new System.Windows.Forms.Label();
 			this.groupboxVerbosity = new System.Windows.Forms.GroupBox();
+			this.checkBoxAccessibility = new System.Windows.Forms.CheckBox();
 			this.checkboxErrorMessages = new System.Windows.Forms.CheckBox();
 			this.checkboxWarningMessages = new System.Windows.Forms.CheckBox();
 			this.groupboxSimulation = new System.Windows.Forms.GroupBox();
@@ -449,7 +450,6 @@ namespace OpenBve {
 			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
-			this.checkBoxAccessibility = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -2684,6 +2684,16 @@ namespace OpenBve {
 			this.groupboxVerbosity.TabStop = false;
 			this.groupboxVerbosity.Text = "Verbosity";
 			// 
+			// checkBoxAccessibility
+			// 
+			this.checkBoxAccessibility.AutoSize = true;
+			this.checkBoxAccessibility.Location = new System.Drawing.Point(176, 22);
+			this.checkBoxAccessibility.Name = "checkBoxAccessibility";
+			this.checkBoxAccessibility.Size = new System.Drawing.Size(106, 17);
+			this.checkBoxAccessibility.TabIndex = 2;
+			this.checkBoxAccessibility.Text = "Accessibility Aids";
+			this.checkBoxAccessibility.UseVisualStyleBackColor = true;
+			// 
 			// checkboxErrorMessages
 			// 
 			this.checkboxErrorMessages.AutoSize = true;
@@ -3588,6 +3598,7 @@ namespace OpenBve {
 			this.pictureboxJoysticks.Size = new System.Drawing.Size(627, 144);
 			this.pictureboxJoysticks.TabIndex = 27;
 			this.pictureboxJoysticks.TabStop = false;
+			this.pictureboxJoysticks.Click += new System.EventHandler(this.pictureboxJoysticks_Click);
 			this.pictureboxJoysticks.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureboxJoysticks_Paint);
 			// 
 			// listviewControls
@@ -5652,16 +5663,6 @@ namespace OpenBve {
 			this.labelNewGUID.Size = new System.Drawing.Size(281, 13);
 			this.labelNewGUID.TabIndex = 24;
 			this.labelNewGUID.Text = "The new package has been assigned the following GUID:";
-			// 
-			// checkBoxAccessibility
-			// 
-			this.checkBoxAccessibility.AutoSize = true;
-			this.checkBoxAccessibility.Location = new System.Drawing.Point(176, 22);
-			this.checkBoxAccessibility.Name = "checkBoxAccessibility";
-			this.checkBoxAccessibility.Size = new System.Drawing.Size(106, 17);
-			this.checkBoxAccessibility.TabIndex = 2;
-			this.checkBoxAccessibility.Text = "Accessibility Aids";
-			this.checkBoxAccessibility.UseVisualStyleBackColor = true;
 			// 
 			// formMain
 			// 

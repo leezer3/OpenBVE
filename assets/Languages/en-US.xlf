@@ -123,6 +123,9 @@
 					<trans-unit id="fullscreen_switch2">
 						<source>Please check your fullscreen resolution settings.</source>
 					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
 						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
 					</trans-unit>
@@ -208,6 +211,18 @@
 					</trans-unit>
 					<trans-unit id="train">
 						<source>Train</source>
+					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
 					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
@@ -933,6 +948,9 @@
 					</trans-unit>
 				</group>
 				<group id="options">
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
+					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
 					</trans-unit>

@@ -22,6 +22,7 @@ namespace CsvRwRouteParser {
 		internal bool SplitLineHack = true;
 		internal bool AllowTrackPositionArguments = false;
 		internal bool IsRW;
+		internal bool IsHmmsim;
 
 		internal Plugin Plugin;
 
@@ -128,6 +129,7 @@ namespace CsvRwRouteParser {
 				Data.TimetableDaytime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.Structure.WeatherObjects = new ObjectDictionary();
+				Data.Structure.LightDefinitions = new Dictionary<int, LightDefinition[]>();
 				// signals
 				Data.Signals = new SignalDictionary();
 				if (Plugin.CurrentOptions.CurrentCompatibilitySignalSet == null) //not selected via main form
@@ -257,6 +259,7 @@ namespace CsvRwRouteParser {
 								Command = Section + "." + Command;
 							}
 							Command = Command.Replace(".Void", "");
+							
 							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 5).TrimEnd();
@@ -364,7 +367,7 @@ namespace CsvRwRouteParser {
 									StructureCommand parsedStructureCommand;
 									if (Enum.TryParse(Command, true, out parsedStructureCommand))
 									{
-										ParseStructureCommand(parsedStructureCommand, Arguments, commandIndices, Encoding, Expressions[j], ref Data, PreviewOnly);
+										ParseStructureCommand(parsedStructureCommand, Arguments, commandIndices, FileName, Encoding, Expressions[j], ref Data, PreviewOnly);
 									}
 									else
 									{
@@ -398,7 +401,9 @@ namespace CsvRwRouteParser {
 					}
 				}
 			}
-			
+
+			Data.Blocks[0].LightDefinition = new LightDefinition(Plugin.CurrentRoute.Atmosphere.AmbientLightColor, Plugin.CurrentRoute.Atmosphere.DiffuseLightColor, Plugin.CurrentRoute.Atmosphere.LightPosition, -1, -1);
+			Data.Blocks[0].DynamicLightDefinition = int.MaxValue;
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
 				Plugin.CurrentProgress = 0.3333 + j * progressFactor;
@@ -507,7 +512,34 @@ namespace CsvRwRouteParser {
 									}
 									else
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised command " + Command + " encountered in the Route namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										if (IsHmmsim)
+										{
+											period = Command.IndexOf('.');
+											string railKey = Command.Substring(0, period);
+											int railIndex = Data.RailKeys.Count;
+											if (Data.RailKeys.ContainsKey(railKey))
+											{
+												railIndex = Data.RailKeys[railKey];
+											}
+											else
+											{
+												Data.RailKeys.Add(railKey, railIndex);
+											}
+											Command = Command.Substring(period + 1);
+											if (Enum.TryParse(Command, true, out parsedCommand))
+											{
+												ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly);
+											}
+											else
+											{
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Hmmsim: Unrecognised command " + Command + " encountered in the Route namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);	
+											}
+										}
+										else
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "OpenBVE: Unrecognised command " + Command + " encountered in the Route namespace at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);	
+										}
+										
 									}
 									break;
 								case "options":

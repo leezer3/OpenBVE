@@ -3,7 +3,7 @@ using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
 using RouteManager2.MessageManager.MessageTypes;
 
-namespace OpenBve
+namespace RouteViewer
 {
 	/*
 	 * NOTE: Cut-down version of the message manager for Route Viewer

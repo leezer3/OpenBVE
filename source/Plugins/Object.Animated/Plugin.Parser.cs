@@ -356,7 +356,8 @@ namespace Plugin
 												case "translatexscript":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateXScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+														Result.Objects[ObjectCount].TranslateXFunction = new CSAnimationScript(currentHost, 
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -382,7 +383,8 @@ namespace Plugin
 												case "translateyscript":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateYScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+														Result.Objects[ObjectCount].TranslateYFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -408,7 +410,8 @@ namespace Plugin
 												case "translatezscript":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateZScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+														Result.Objects[ObjectCount].TranslateZFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -549,6 +552,14 @@ namespace Plugin
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
+												case "rotatexscript":
+													try {
+														Result.Objects[ObjectCount].RotateXFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													} catch (Exception ex) {
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
 												case "rotateyfunction":
 													try
 													{
@@ -562,6 +573,14 @@ namespace Plugin
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
+												case "rotateyscript":
+													try {
+														Result.Objects[ObjectCount].RotateYFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													} catch (Exception ex) {
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
 												case "rotatezfunction":
 													try
 													{
@@ -575,6 +594,14 @@ namespace Plugin
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
+												case "rotatezscript":
+													try {
+														Result.Objects[ObjectCount].RotateZFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													} catch (Exception ex) {
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
 												case "rotatexfunctionrpn":
 													try
 													{
@@ -689,6 +716,14 @@ namespace Plugin
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
+												case "textureshiftxscript":
+													try {
+														Result.Objects[ObjectCount].TextureShiftXFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													} catch (Exception ex) {
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
 												case "textureshiftyfunction":
 													try
 													{
@@ -698,6 +733,14 @@ namespace Plugin
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
+												case "textureshiftyscript":
+													try {
+														Result.Objects[ObjectCount].TextureShiftYFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													} catch (Exception ex) {
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
 												case "textureshiftxfunctionrpn":
 													try
 													{
@@ -1082,7 +1125,8 @@ namespace Plugin
 												case "translatexscript":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateXScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+														Result.Objects[ObjectCount].TranslateXFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -1110,7 +1154,8 @@ namespace Plugin
 												case "translateyscript":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateYScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+														Result.Objects[ObjectCount].TranslateYFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -1138,7 +1183,8 @@ namespace Plugin
 												case "translatezscript":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateZScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+														Result.Objects[ObjectCount].TranslateZFunction = new CSAnimationScript(currentHost,
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{

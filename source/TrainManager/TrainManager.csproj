@@ -45,6 +45,7 @@
     <Compile Include="Brake\AirBrake\Components\StraightAirPipe.cs" />
     <Compile Include="Brake\AirBrake\ElectricCommandBrake.cs" />
     <Compile Include="Brake\AirBrake\ElectromagneticStraightAirBrake.cs" />
+    <Compile Include="Brake\AirBrake\ThroughPiped.cs" />
     <Compile Include="Brake\BrakeSystemType.cs" />
     <Compile Include="Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Brake\CarBrake.cs" />

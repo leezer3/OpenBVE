@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using OpenBveApi;
@@ -449,9 +449,10 @@ namespace CsvRwRouteParser
 					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 					if (System.IO.File.Exists(path))
 					{
-						if (DynamicLightParser.ReadLightingXML(path))
+						if (DynamicLightParser.ReadLightingXML(path, out Plugin.CurrentRoute.LightDefinitions))
 						{
 							Plugin.CurrentRoute.DynamicLighting = true;
+							Data.Structure.LightDefinitions.Add(int.MaxValue, Plugin.CurrentRoute.LightDefinitions);
 						}
 						else
 						{

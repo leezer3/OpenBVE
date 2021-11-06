@@ -239,19 +239,19 @@ namespace DenshaDeGoInput
 			}
 
 			// Set command boxes
-			buttonselectBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Select].Command;
-			buttonstartBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Start].Command;
-			buttonaBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.A].Command;
-			buttonbBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.B].Command;
-			buttoncBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.C].Command;
-			buttondBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.D].Command;
-			buttonupBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Up].Command;
-			buttondownBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Down].Command;
-			buttonleftBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Left].Command;
-			buttonrightBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Right].Command;
-			buttonpedalBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Pedal].Command;
-			buttonldoorBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.LDoor].Command;
-			buttonrdoorBox.SelectedIndex = DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.RDoor].Command;
+			buttonselectBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Select];
+			buttonstartBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Start];
+			buttonaBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.A];
+			buttonbBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.B];
+			buttoncBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.C];
+			buttondBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.D];
+			buttonupBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Up];
+			buttondownBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Down];
+			buttonleftBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Left];
+			buttonrightBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Right];
+			buttonpedalBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal];
+			buttonldoorBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.LDoor];
+			buttonrdoorBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.RDoor];
 
 
 			// Set checkboxes
@@ -281,65 +281,65 @@ namespace DenshaDeGoInput
 
 		private void buttonselectBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Select].Command = buttonselectBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Select] = buttonselectBox.SelectedIndex;
 		}
 
 		private void buttonstartBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Start].Command = buttonstartBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Start] = buttonstartBox.SelectedIndex;
 		}
 
 		private void buttonaBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.A].Command = buttonaBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.A] = buttonaBox.SelectedIndex;
 		}
 
 		private void buttonbBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.B].Command = buttonbBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.B] = buttonbBox.SelectedIndex;
 		}
 
 		private void buttoncBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.C].Command = buttoncBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.C] = buttoncBox.SelectedIndex;
 		}
 
 		private void buttondBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.D].Command = buttondBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.D] = buttondBox.SelectedIndex;
 		}
 
 		private void buttonupBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Up].Command = buttonupBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Up] = buttonupBox.SelectedIndex;
 		}
 
 		private void buttondownBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Down].Command = buttondownBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Down] = buttondownBox.SelectedIndex;
 		}
 
 		private void buttonleftBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Left].Command = buttonleftBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Left] = buttonleftBox.SelectedIndex;
 		}
 
 		private void buttonrightBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Right].Command = buttonrightBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Right] = buttonrightBox.SelectedIndex;
 		}
 
 		private void buttonpedalBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.Pedal].Command = buttonpedalBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal] = buttonpedalBox.SelectedIndex;
 		}
 		private void buttonldoorBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.LDoor].Command = buttonldoorBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.LDoor] = buttonldoorBox.SelectedIndex;
 		}
 		private void buttonrdoorBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonProperties[(int)InputTranslator.ControllerButton.RDoor].Command = buttonrdoorBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.RDoor] = buttonrdoorBox.SelectedIndex;
 		}
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)

@@ -19,7 +19,7 @@ using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
 using TrainManager.Trains;
 
-namespace OpenBve {
+namespace RouteViewer {
 	internal static class Game {
 
 		// date and time

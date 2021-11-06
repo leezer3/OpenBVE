@@ -1,4 +1,4 @@
-﻿// ╔═════════════════════════════════════════════════════════════╗
+// ╔═════════════════════════════════════════════════════════════╗
 // ║ Program.cs for the Structure Viewer                         ║
 // ╠═════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.       ║
@@ -26,7 +26,7 @@ using ButtonState = OpenTK.Input.ButtonState;
 using Control = OpenBveApi.Interface.Control;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve {
+namespace ObjectViewer {
 	internal static class Program {
 		internal static FileSystem FileSystem = null;
 
@@ -69,10 +69,13 @@ namespace OpenBve {
 			// file system
 	        FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 	        FileSystem.CreateFileSystem();
-	        Renderer = new NewRenderer();
+	        
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
-	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        Options.LoadOptions();
+	        Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
+	        
+	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {
@@ -263,10 +266,10 @@ namespace OpenBve {
 		    {
 			    try
 			    {
-				    if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
+				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
 				    {
 					    string currentTrainFolder = System.IO.Path.GetDirectoryName(Files[i]);
-
+					    bool canLoad = false;
 					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
@@ -276,24 +279,37 @@ namespace OpenBve {
 								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
+								canLoad = true;
 								break;
 						    }
 					    }
-						TrainManager.PlayerTrain.Initialize();
-					    foreach (var Car in TrainManager.PlayerTrain.Cars)
+
+					    if (canLoad)
 					    {
-						    double length = TrainManager.PlayerTrain.Cars[0].Length;
-						    Car.Move(-length);
-						    Car.Move(length);
+						    TrainManager.PlayerTrain.Initialize();
+						    foreach (var Car in TrainManager.PlayerTrain.Cars)
+						    {
+							    double length = TrainManager.PlayerTrain.Cars[0].Length;
+							    Car.Move(-length);
+							    Car.Move(length);
+						    }
+						    TrainManager.PlayerTrain.PlaceCars(0);
+						    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+						    {
+							    TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
+							    TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
+							    TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
+							    TrainManager.PlayerTrain.Cars[j].FrontBogie.UpdateTopplingCantAndSpring();
+							    TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+							    TrainManager.PlayerTrain.Cars[j].RearBogie.UpdateTopplingCantAndSpring();
+							    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+							    TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
+						    }
 					    }
-					    TrainManager.PlayerTrain.PlaceCars(0);
-					    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					    else
 					    {
-							TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
-							TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
-							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+							//As we now attempt to load the train as a whole, the most likely outcome is that the train.dat file is MIA
+						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + Files[i] + ".");
 					    }
 				    }
 				    else
@@ -354,8 +370,13 @@ namespace OpenBve {
 							string[] f = Dialog.FileNames;
 							for (int i = 0; i < f.Length; i++)
 				            {
-
-					            for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+								string currentTrainFolder = string.Empty;
+								if(f[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
+								{
+									// only check to see if it's a train if this is a specified filetype, else we'll start loading the full train from an object in it's folder
+									currentTrainFolder = System.IO.Path.GetDirectoryName(f[i]);
+								}
+								for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					            {
 									if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(f[i]))
 						            {
@@ -371,7 +392,10 @@ namespace OpenBve {
 						            {
 							            Files.Add(f[i]);
 						            }
-									
+						            if (!string.IsNullOrEmpty(currentTrainFolder) && Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
+						            {
+							            Files.Add(f[i]);
+						            }
 					            }
 					            
 				            }
@@ -491,7 +515,7 @@ namespace OpenBve {
 	                }
 	                break;
 				case Key.R:
-					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+					Renderer.SwitchOpenGLVersion();
 					break;
 				case Key.F11:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;

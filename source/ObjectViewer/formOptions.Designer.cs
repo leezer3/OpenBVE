@@ -1,4 +1,4 @@
-﻿namespace OpenBve
+﻿namespace ObjectViewer
 {
     partial class formOptions
     {

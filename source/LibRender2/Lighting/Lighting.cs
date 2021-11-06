@@ -11,8 +11,8 @@ namespace LibRender2.Lightings
 	{
 		private readonly BaseRenderer renderer;
 
-		/// <summary>Whether dynamic lighting is currently enabled</summary>
-		public bool DynamicLighting = false;
+		/// <summary>Whether the lighting model should re-initialize this frame</summary>
+		public bool ShouldInitialize = false;
 
 		/// <summary>The current dynamic cab brightness</summary>
 		public double DynamicCabBrightness = 255;
@@ -50,9 +50,9 @@ namespace LibRender2.Lightings
 				GL.Light(LightName.Light0, LightParameter.Diffuse, new Color4(OptionDiffuseColor.R, OptionDiffuseColor.G, OptionDiffuseColor.B, 255));
 				GL.LightModel(LightModelParameter.LightModelAmbient, new[] { (float)LightModel.X, (float)LightModel.Y, (float)LightModel.Z, (float)LightModel.W });
 				GL.Enable(EnableCap.Light0);
+				GL.Enable(EnableCap.ColorMaterial);
 			}
-			GL.Enable(EnableCap.ColorMaterial);
-
+			
 			float x = OptionAmbientColor.R + (float)OptionAmbientColor.G + OptionAmbientColor.B;
 			float y = OptionDiffuseColor.R + (float)OptionDiffuseColor.G + OptionDiffuseColor.B;
 

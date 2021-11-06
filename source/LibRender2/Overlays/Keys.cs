@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using LibRender2.Texts;
+using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -36,7 +36,7 @@ namespace LibRender2.Overlays
 						renderer.Rectangle.Draw(null, new Vector2(px - 1, py - 1), new Vector2(Width + 1, 17), new Color128(0.25f, 0.25f, 0.25f, 0.5f));
 						renderer.Rectangle.Draw(null, new Vector2(px - 1, py - 1), new Vector2(Width - 1, 15), new Color128(0.75f, 0.75f, 0.75f, 0.5f));
 						renderer.Rectangle.Draw(null, new Vector2(px, py), new Vector2(Width, 16), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
-						renderer.OpenGlString.Draw(Font, text, new Point(px - 1 + Width / 2, py + 7), TextAlignment.CenterMiddle, Color128.White);
+						renderer.OpenGlString.Draw(Font, text, new Vector2(px - 1 + Width / 2, py + 7), TextAlignment.CenterMiddle, Color128.White);
 					}
 
 					px += Width + 4;

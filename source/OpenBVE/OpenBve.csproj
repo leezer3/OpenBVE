@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -91,8 +91,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.3.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK.3.3.1\lib\net20\OpenTK.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.3.2.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
@@ -136,6 +136,16 @@
     <Compile Include="Game\AI\AI.SimpleHuman.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game\Menu\Menu.MenuCaption.cs" />
+    <Compile Include="Game\Menu\Menu.MenuCommand.cs" />
+    <Compile Include="Game\Menu\Menu.MenuEntry.cs" />
+    <Compile Include="Game\Menu\Menu.MenuOption.cs" />
+    <Compile Include="Game\Menu\Menu.OptionType.cs" />
+    <Compile Include="Game\Menu\Menu.Route.cs" />
+    <Compile Include="Game\Menu\Menu.RouteState.cs" />
+    <Compile Include="Game\Menu\Menu.SingleMenu.cs" />
+    <Compile Include="Game\Menu\MenuTag.cs" />
+    <Compile Include="Game\Menu\MenuType.cs" />
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="Game\MessageManager.TextualMessages.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
@@ -144,7 +154,7 @@
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
-    <Compile Include="Game\Menu.cs" />
+    <Compile Include="Game\Menu\Menu.cs" />
     <Compile Include="Game\Score\Score.cs" />
     <Compile Include="Game\Score\Score.Log.cs" />
     <Compile Include="Game\Score\Score.ScoreMessage.cs" />
@@ -204,6 +214,7 @@
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Input\InputDevicePlugin.cs" />
+    <Compile Include="System\Input\JoystickManager\ConfigurationLink.cs" />
     <Compile Include="System\Input\JoystickManager\JoystickManager32.cs" />
     <Compile Include="System\Input\JoystickManager\JoystickManager64.cs" />
     <Compile Include="System\Input\JoystickManager\RailDriver\AbstractRailDriver.cs" />
@@ -290,8 +301,6 @@
     <Compile Include="System\Loading.cs" />
     <Compile Include="System\MainLoop.cs" />
     <Compile Include="System\GameWindow.cs" />
-    <Compile Include="System\Plugins\PluginManager.cs" />
-    <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="Game\Timetable.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />

@@ -17,7 +17,7 @@ namespace TrainManager.Handles
 		/// <summary>Contains the notch descriptions to be displayed on the in-game UI</summary>
 		public string[] NotchDescriptions;
 		/// <summary>The max width used in px for the reverser HUD string</summary>
-		public int MaxWidth = 48;
+		public double MaxWidth = 48;
 
 		private readonly TrainBase baseTrain;
 

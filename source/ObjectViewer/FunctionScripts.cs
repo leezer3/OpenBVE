@@ -8,7 +8,7 @@ using OpenBveApi.Runtime;
 using TrainManager.Handles;
 using TrainManager.Trains;
 
-namespace OpenBve {
+namespace ObjectViewer {
 	internal static class FunctionScripts {
 
 		// execute function script
@@ -223,6 +223,15 @@ namespace OpenBve {
 					case Instructions.TimeSecondsSinceMidnight:
 						Function.Stack[s] = Game.SecondsSinceMidnight;
 						s++; break;
+					case Instructions.TimeHourDigit:
+						Function.Stack[s] = Math.Floor(Game.SecondsSinceMidnight / 3600.0);
+						s++; break;
+					case Instructions.TimeMinuteDigit:
+						Function.Stack[s] = Math.Floor(Game.SecondsSinceMidnight / 60 % 60);
+						s++; break;
+					case Instructions.TimeSecondDigit:
+						Function.Stack[s] = Math.Floor(Game.SecondsSinceMidnight % 60);
+						s++; break;
 					case Instructions.CameraDistance:
 						{
 							double dx = Program.Renderer.Camera.AbsolutePosition.X - Position.X;
@@ -259,7 +268,7 @@ namespace OpenBve {
 						s++; break;
 						// train
 					case Instructions.PlayerTrain:
-						if (Train != null)
+						if (IsPartOfTrain && Train != null)
 						{
 							Function.Stack[s] = Train.IsPlayerTrain ? 1.0 : 0.0;
 						} else {

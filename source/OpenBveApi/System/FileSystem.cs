@@ -24,7 +24,10 @@ namespace OpenBveApi.FileSystem {
 		
 		/// <summary>The locations of managed content.</summary>
 		internal string[] ManagedContentFolders;
-		
+
+		/// <summary>Gets the package database folder</summary>
+		public string PackageDatabaseFolder => OpenBveApi.Path.CombineDirectory(SettingsFolder, "PackageDatabase");
+
 		/// <summary>The location where to save user settings, including settings.cfg and controls.cfg.</summary>
 		public string SettingsFolder;
 		

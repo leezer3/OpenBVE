@@ -57,6 +57,12 @@ namespace OpenBve
 						case "/height":
 							NumberFormats.TryParseIntVb6(value, out Result.Height);
 							break;
+						case "/glmenu":
+							if (value.ToLowerInvariant() == "true" || value.ToLowerInvariant() == "1")
+							{
+								Result.ExperimentalGLMenu = true;
+							}
+							break;
 					}
 				}
 			}

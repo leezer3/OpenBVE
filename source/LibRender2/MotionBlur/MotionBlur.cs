@@ -28,7 +28,7 @@ namespace LibRender2.MotionBlurs
 			renderer.LastBoundTexture = null;
 			if (PixelBufferOpenGlTextureIndex != 0)
 			{
-				GL.DeleteTextures(1, new int[] { PixelBufferOpenGlTextureIndex });
+				GL.DeleteTextures(1, new[] { PixelBufferOpenGlTextureIndex });
 				PixelBufferOpenGlTextureIndex = 0;
 			}
 

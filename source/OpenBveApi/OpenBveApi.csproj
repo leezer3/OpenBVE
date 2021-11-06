@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FunctionScripts\AnimationScripts.cs" />
+    <Compile Include="FunctionScripts\CSAnimationScript.cs" />
     <Compile Include="FunctionScripts\FunctionScript.cs" />
     <Compile Include="FunctionScripts\FunctionScript.Notation.cs" />
     <Compile Include="FunctionScripts\Instructions.cs" />
@@ -203,6 +204,8 @@
     <Compile Include="System\Interop.cs" />
     <Compile Include="System\SimulationState.cs" />
     <Compile Include="System\TextEncoding.cs" />
+    <Compile Include="System\Timers.cs" />
+    <Compile Include="Textures\Textures.ImageSizeMode.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
     <Compile Include="Train\Axle.cs" />
@@ -246,7 +249,10 @@
     <Compile Include="World\Transformations.cs" />
     <Compile Include="Math\Vectors\Vector2.cs" />
     <Compile Include="Math\Vectors\Vector3.cs" />
-    <Compile Include="World\Vertex.cs" />
+    <Compile Include="World\UnitConversions\Length.cs" />
+    <Compile Include="World\UnitConversions\UnitConvertor.cs" />
+    <Compile Include="World\UnitConversions\Weight.cs" />
+    <Compile Include="World\LightMappedVertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">

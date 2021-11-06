@@ -116,6 +116,28 @@
 		/// <summary>Sets the rain intensity</summary>
 		Rain,
 		/// <summary>Sets the snow intensity</summary>
-		Snow
+		Snow,
+		/// <summary>Changes the ambient lighting</summary>
+		/// <remarks>Ignored when dynamic lighting is active</remarks>
+		AmbientLight,
+		/// <summary>Changes the directional light</summary>
+		/// <remarks>Ignored when directional lighting is active</remarks>
+		DirectionalLight,
+		/// <summary>Changes the light direction</summary>
+		/// <remarks>Ignored when directional lighting is active</remarks>
+		LightDirection,
+		/// <summary>Changes the dynamic lighting set in use</summary>
+		DynamicLight,
+
+		/*
+		 * HMMSIM
+		 */
+		/// <summary>Adds a station stop point</summary>
+		/// <remarks>Eqivilant of .Stop</remarks>
+		StopPos,
+		/// <summary>Starts a repeating object cycle</summary>
+		PatternObj,
+		/// <summary>Ends a repeating object cycle</summary>
+		PatternEnd
 	}
 }

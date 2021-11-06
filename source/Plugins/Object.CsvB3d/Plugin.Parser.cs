@@ -43,7 +43,8 @@ namespace Plugin
 			"settexturecoordinates",
 			"setemissivecolor",
 			"setdecaltransparentcolor",
-			"enablecrossfading"
+			"enablecrossfading",
+			"loadlightmap"
 		};
 
 		private static int SecondIndexOfAny(string testString, string[] values)
@@ -1161,6 +1162,30 @@ namespace Plugin
 									Builder.Materials[j].NighttimeTexture = tnight;
 								}
 							} break;
+						case "loadlightmap":
+							string lightmap = null;
+							if (Arguments.Length >= 1 && Arguments[0].Length != 0)
+							{
+								if (Path.ContainsInvalidChars(Arguments[0]))
+								{
+									currentHost.AddMessage(MessageType.Error, false, "LightMap contains illegal characters in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else
+								{
+									try
+									{
+										lightmap = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+									}
+									catch
+									{
+										lightmap = null;
+									}
+								}
+								for (int j = 0; j < Builder.Materials.Length; j++) {
+									Builder.Materials[j].LightMap = lightmap;
+								}
+							}
+							break;
 						case "settext":
 						case "text":
 							{
@@ -1337,10 +1362,10 @@ namespace Plugin
 								} else if (cmd == "coordinates" & !IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "Coordinates is not a supported command - did you mean SetTextureCoordinates? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								if (Arguments.Length > 3) {
+								if ((Arguments.Length > 6 && !string.IsNullOrEmpty(Builder.Materials[Builder.Materials.Length - 1].LightMap)) || (Arguments.Length > 3 && string.IsNullOrEmpty(Builder.Materials[Builder.Materials.Length - 1].LightMap))) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int j = 0; float x = 0.0f, y = 0.0f;
+								int j = 0; float x = 0.0f, y = 0.0f, lx = 0.0f, ly = 0.0f;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out j)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument VertexIndex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									j = 0;
@@ -1353,8 +1378,27 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									y = 0.0f;
 								}
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseFloatVb6(Arguments[3], out lx)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument LX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									lx = 0.0f;
+								}
+								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseFloatVb6(Arguments[4], out ly)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument LX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									ly = 0.0f;
+								}
 								if (j >= 0 & j < Builder.Vertices.Count) {
-									Builder.Vertices[j].TextureCoordinates = new Vector2(x, y);
+									if (!string.IsNullOrEmpty(Builder.Materials[Builder.Materials.Length - 1].LightMap))
+									{
+										LightMappedVertex vertex = new LightMappedVertex(Builder.Vertices[j] as Vertex);
+										vertex.TextureCoordinates = new Vector2(x, y);
+										vertex.LightMapCoordinates = new Vector2(lx, ly);
+										Builder.Vertices[j] = vertex;
+									}
+									else
+									{
+										Builder.Vertices[j].TextureCoordinates = new Vector2(x, y);
+									}
+									
 								} else {
 									currentHost.AddMessage(MessageType.Error, false, "VertexIndex references a non-existing vertex in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}

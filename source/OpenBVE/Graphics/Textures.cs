@@ -1,5 +1,6 @@
 using LibRender2.Screens;
 using LibRender2.Textures;
+using OpenBveApi;
 using OpenBveApi.Textures;
 
 namespace OpenBve.Graphics

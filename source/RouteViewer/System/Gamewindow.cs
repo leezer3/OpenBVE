@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -9,9 +10,9 @@ using OpenTK.Graphics.OpenGL;
 using SoundManager;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve
+namespace RouteViewer
 {
-    class RouteViewer : OpenTK.GameWindow
+    class RouteViewer : GameWindow
     {
         //Deliberately specify the default constructor with various overrides
         public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string openbve, GameWindowFlags @default): base (width,height,currentGraphicsMode,openbve,@default)
@@ -23,6 +24,7 @@ namespace OpenBve
             }
             catch
             {
+				// Ignored- Just an icon
             }
         }
 
@@ -55,11 +57,11 @@ namespace OpenBve
             double TimeElapsed = CPreciseTimer.GetElapsedTime();
             if (Program.CpuReducedMode)
             {
-                System.Threading.Thread.Sleep(250);
+                Thread.Sleep(250);
             }
             else
             {
-                System.Threading.Thread.Sleep(1);
+                Thread.Sleep(1);
                 if (ReducedModeEnteringTime == 0)
                 {
                     ReducedModeEnteringTime = 2500;
@@ -116,7 +118,7 @@ namespace OpenBve
             Program.Renderer.Camera.BackwardViewingDistance = 0.0;
             Program.Renderer.Camera.ExtraViewingDistance = 50.0;
 
-            Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
+            Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
 			Program.Sounds.Initialize(Program.CurrentHost, SoundRange.Low);
 			Program.Renderer.UpdateViewport();
@@ -133,7 +135,7 @@ namespace OpenBve
 			// Minor hack:
 			// If we are currently loading, catch the first close event, and terminate the loader threads
 			// before actually closing the game-window.
-			if (Loading.Cancel == true)
+			if (Loading.Cancel)
 			{
 				return;
 			}

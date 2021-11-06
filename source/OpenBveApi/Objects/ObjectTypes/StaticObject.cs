@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.World;
 
@@ -12,9 +13,9 @@ namespace OpenBveApi.Objects
 		/// <summary>The mesh of the object</summary>
 		public Mesh Mesh;
 		/// <summary>The starting track position, for static objects only.</summary>
-		public float StartingDistance;
+		public float StartingTrackDistance;
 		/// <summary>The ending track position, for static objects only.</summary>
-		public float EndingDistance;
+		public float EndingTrackDistance;
 		/// <summary>Whether the object is dynamic, i.e. not static.</summary>
 		public bool Dynamic;
 		/// <summary> Stores the author for this object.</summary>
@@ -22,10 +23,10 @@ namespace OpenBveApi.Objects
 		/// <summary> Stores the copyright information for this object.</summary>
 		public string Copyright;
 
-		private readonly Hosts.HostInterface currentHost;
+		private readonly HostInterface currentHost;
 
 		/// <summary>Creates a new empty object</summary>
-		public StaticObject(Hosts.HostInterface Host)
+		public StaticObject(HostInterface Host)
 		{
 			currentHost = Host;
 			Mesh = new Mesh
@@ -44,8 +45,8 @@ namespace OpenBveApi.Objects
 		{
 			StaticObject Result = new StaticObject(currentHost)
 			{
-				StartingDistance = StartingDistance,
-				EndingDistance = EndingDistance,
+				StartingTrackDistance = StartingTrackDistance,
+				EndingTrackDistance = EndingTrackDistance,
 				Dynamic = Dynamic,
 				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]}
 			};
@@ -92,8 +93,8 @@ namespace OpenBveApi.Objects
 		{
 			StaticObject Result = new StaticObject(currentHost)
 			{
-				StartingDistance = StartingDistance,
-				EndingDistance = EndingDistance,
+				StartingTrackDistance = StartingTrackDistance,
+				EndingTrackDistance = EndingTrackDistance,
 				Dynamic = Dynamic,
 				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]}
 			};
@@ -103,6 +104,10 @@ namespace OpenBveApi.Objects
 				if (Mesh.Vertices[j] is ColoredVertex)
 				{
 					Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex) Mesh.Vertices[j]);
+				}
+				else if (Mesh.Vertices[j] is LightMappedVertex)
+				{
+					Result.Mesh.Vertices[j] = new LightMappedVertex((LightMappedVertex) Mesh.Vertices[j]);
 				}
 				else
 				{
@@ -290,7 +295,7 @@ namespace OpenBveApi.Objects
 					double u = nx2 * rx2 + ny2 * ry2 + nz2 * rz2;
 					if (u != 0.0)
 					{
-						u = (float) System.Math.Sqrt((double) ((nx2 + ny2 + nz2) / u));
+						u = (float) System.Math.Sqrt((nx2 + ny2 + nz2) / u);
 						Mesh.Faces[j].Vertices[k].Normal.X *= rx * u;
 						Mesh.Faces[j].Vertices[k].Normal.Y *= ry * u;
 						Mesh.Faces[j].Vertices[k].Normal.Z *= rz * u;
@@ -421,6 +426,7 @@ namespace OpenBveApi.Objects
 				if (emissive)
 				{
 					Mesh.Materials[i].EmissiveColor = (Color24) newColor;
+					Mesh.Materials[i].Flags |= MaterialFlags.Emissive;
 				}
 				else
 				{
@@ -470,15 +476,21 @@ namespace OpenBveApi.Objects
 			int v = Mesh.Vertices.Length;
 			int m = Mesh.Materials.Length;
 			int f = Mesh.Faces.Length;
-			if (f >= Threshold)
+			if (f >= Threshold && currentHost.Platform != HostPlatform.AppleOSX)
 			{
+				/*
+				 * HACK:
+				 * A forwards compatible GL3 context (required on OS-X) only supports tris
+				 * No access to the renderer type here, so let's cheat and assume that OS-X
+				 * requires an optimized object (therefore decomposed into tris) in all circumstances
+				 */
 				return;
 			}
 
 			// eliminate invalid faces and reduce incomplete faces
 			for (int i = 0; i < f; i++)
 			{
-				FaceFlags type = (FaceFlags)Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
+				FaceFlags type = Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
 				bool keep;
 				switch (type)
 				{
@@ -695,7 +707,7 @@ namespace OpenBveApi.Objects
 			// Trangularize all polygons and quads into triangles
 			for (int i = 0; i < f; ++i)
 			{
-				FaceFlags type = (FaceFlags)Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
+				FaceFlags type = Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
 				// Only transform quads and polygons
 				if (type == FaceFlags.Quads || type == FaceFlags.Polygon)
 				{
@@ -733,18 +745,15 @@ namespace OpenBveApi.Objects
 					}
 
 					// Mark as triangle
-					unchecked
-					{
-						Mesh.Faces[i].Flags &=  ~FaceFlags.FaceTypeMask;
-						Mesh.Faces[i].Flags |= FaceFlags.Triangles;
-					}
+					Mesh.Faces[i].Flags &=  ~FaceFlags.FaceTypeMask;
+					Mesh.Faces[i].Flags |= FaceFlags.Triangles;
 				}
 			}
 
 			// decomposit TRIANGLES and QUADS
 			for (int i = 0; i < f; i++)
 			{
-				FaceFlags type = (FaceFlags)Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
+				FaceFlags type = Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
 				int face_count = 0;
 				FaceFlags face_bit = 0;
 				if (type == FaceFlags.Triangles)
@@ -778,11 +787,8 @@ namespace OpenBveApi.Objects
 
 							Mesh.Faces[f + j].Material = Mesh.Faces[i].Material;
 							Mesh.Faces[f + j].Flags = Mesh.Faces[i].Flags;
-							unchecked
-							{
-								Mesh.Faces[i].Flags &= ~FaceFlags.FaceTypeMask;
-								Mesh.Faces[i].Flags |= face_bit;
-							}
+							Mesh.Faces[i].Flags &= ~FaceFlags.FaceTypeMask;
+							Mesh.Faces[i].Flags |= face_bit;
 						}
 
 						Array.Resize(ref Mesh.Faces[i].Vertices, face_count);
