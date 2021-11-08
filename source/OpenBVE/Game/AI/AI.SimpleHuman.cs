@@ -822,11 +822,23 @@ namespace OpenBve
 					}
 					else if (dec > decelerationCruise)
 					{
-						// cut power/brake
 						BrakeMode = false;
-						Train.Handles.Brake.ApplyState(-1, true);
+						if (Train.Handles.Power.Driver == 0 && Train.CurrentSpeed > powerend && Train.Specs.CurrentAverageAcceleration > 0)
+						{
+							// We are above the power end threshold, but still accelerating e.g. on a gradient
+							// Blip the brakes to slow us down
+							Train.Handles.Brake.ApplyState(1, true);
+							Train.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
+						}
+						else if (Train.Specs.CurrentAverageAcceleration < 0)
+						{ 
+							// No longer accelerating, so cut the brakes for cruise
+							Train.Handles.Brake.ApplyState(-1, true);
+							Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+						}
+
 						Train.Handles.Power.ApplyState(-1, true);
-						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+						
 						if (Train.Handles.Power.Driver == 0 & Train.Handles.Brake.Driver == 0)
 						{
 							Train.Handles.HoldBrake.ApplyState(Train.Handles.HasHoldBrake);
