@@ -831,10 +831,13 @@ namespace OpenBve
 							Train.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 						}
 						else if (Train.Specs.CurrentAverageAcceleration < 0)
-						{ 
-							// No longer accelerating, so cut the brakes for cruise
-							Train.Handles.Brake.ApplyState(-1, true);
-							Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+						{
+							if (Train.CurrentSpeed < powerend)
+							{
+								// No longer accelerating, so cut the brakes for cruise
+								Train.Handles.Brake.ApplyState(-1, true);
+								Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+							}
 						}
 
 						Train.Handles.Power.ApplyState(-1, true);
@@ -896,9 +899,15 @@ namespace OpenBve
 						else if (spd > powerend)
 						{
 							// power end (over-speed)
-							Train.Handles.Brake.ApplyState(-1, true);
+							if (Train.Handles.Power.Driver > 0)
+							{
+								// Only release brakes if we're coming off the power
+								// Otherwise some trains on a steep gradient may overspeed
+								Train.Handles.Brake.ApplyState(-1, true);
+								Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+							}
 							Train.Handles.Power.ApplyState(-1, true);
-							Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+							
 							CurrentInterval *= 0.3;
 							if (CurrentInterval < 0.2) CurrentInterval = 0.2;
 						}
