@@ -238,6 +238,11 @@ namespace LibRender2
 			}
 		}
 
+		public bool LoadLogo()
+		{
+			return currentHost.LoadTexture(ref _programLogo, OpenGlTextureWrapMode.ClampClamp);
+		}
+
 		/*
 		 * List of VBO and IBO to delete on the next frame pass
 		 * This needs to be done here as opposed to in the finalizer

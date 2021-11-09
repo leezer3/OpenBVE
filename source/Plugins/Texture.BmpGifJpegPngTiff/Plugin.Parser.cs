@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
@@ -59,7 +61,7 @@ namespace Plugin {
 		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height, out Color24[] p)
 		{
 			p = null;
-			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
+			if (EnabledHacks.ReduceTransparencyColorDepth && (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb))
 			{
 				/*
 				 * Our source bitmap is *not* a 256 color bitmap but has been made for BVE2 / BVE4.
@@ -181,20 +183,6 @@ namespace Plugin {
 				}
 
 				return raw;
-			} else {
-				/*
-				 * The stride is invalid. This indicates that the
-				 * CLI either does not implement the conversion to
-				 * 32-bit BGRA correctly, or that the CLI has
-				 * applied additional padding that we do not
-				 * support.
-				 * */
-				bitmap.UnlockBits(data);
-				bitmap.Dispose();
-				CurrentHost.ReportProblem(ProblemType.InvalidOperation, "Invalid stride encountered.");
-				width = 0;
-				height = 0;
-				return null;
 			}
 
 			/*
@@ -207,8 +195,9 @@ namespace Plugin {
 			bitmap.UnlockBits(data);
 			bitmap.Dispose();
 			CurrentHost.ReportProblem(ProblemType.InvalidOperation, "Invalid stride encountered.");
-			texture = null;
-			return false;
+			width = 0;
+			height = 0;
+			return null;
 		}
 		
 	}
