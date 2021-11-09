@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 
 namespace CarXmlConvertor
@@ -48,8 +46,7 @@ namespace CarXmlConvertor
 			string[] Lines = System.IO.File.ReadAllLines(FileName);
 
 			int currentVersion = ParseFormat(Lines);
-			string versionString = Lines.FirstOrDefault(x => x.Length > 0) ?? Lines[0];
-			
+
 			for (int i = 0; i < Lines.Length; i++)
 
 			{
@@ -64,10 +61,18 @@ namespace CarXmlConvertor
 							{
 								switch (n)
 								{
-									case 0: ConvertSoundCfg.DriverPosition.X = 0.001 * a; break;
-									case 1: ConvertSoundCfg.DriverPosition.Y = 0.001 * a; break;
-									case 2: ConvertSoundCfg.DriverPosition.Z = 0.001 * a; break;
-									case 3: DriverCar = (int)Math.Round(a); break;
+									case 0:
+										ConvertSoundCfg.DriverPosition.X = 0.001 * a;
+										break;
+									case 1:
+										ConvertSoundCfg.DriverPosition.Y = 0.001 * a;
+										break;
+									case 2:
+										ConvertSoundCfg.DriverPosition.Z = 0.001 * a;
+										break;
+									case 3:
+										DriverCar = (int)Math.Round(a);
+										break;
 								}
 							}
 							i++; n++;
@@ -337,8 +342,8 @@ namespace CarXmlConvertor
 				}
 				else
 				{
-					int i = (int)Math.Ceiling(0.25 * (double)(NumberOfCars - 1));
-					int j = (int)Math.Floor(0.75 * (double)(NumberOfCars - 1));
+					int i = (int)Math.Ceiling(0.25 * (NumberOfCars - 1));
+					int j = (int)Math.Floor(0.75 * (NumberOfCars - 1));
 					MotorCars[i] = true;
 					MotorCars[j] = true;
 				}
@@ -408,12 +413,13 @@ namespace CarXmlConvertor
 			return 2000000;
 		}
 
-	internal struct AccelerationCurve
-	{
-		internal double StageZeroAcceleration;
-		internal double StageOneAcceleration;
-		internal double StageOneSpeed;
-		internal double StageTwoSpeed;
-		internal double StageTwoExponent;
+		internal struct AccelerationCurve
+		{
+			internal double StageZeroAcceleration;
+			internal double StageOneAcceleration;
+			internal double StageOneSpeed;
+			internal double StageTwoSpeed;
+			internal double StageTwoExponent;
+		}
 	}
 }
