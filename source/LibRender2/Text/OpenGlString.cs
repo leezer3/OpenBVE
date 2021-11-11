@@ -146,7 +146,7 @@ namespace LibRender2.Text
 				OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
 
-				if (renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
+				if (renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 
@@ -210,7 +210,7 @@ namespace LibRender2.Text
 				Texture texture;
 				OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
-				if (renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
+				if (renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 					Shader.SetAtlasLocation(data.TextureCoordinates);

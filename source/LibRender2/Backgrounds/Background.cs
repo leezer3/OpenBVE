@@ -130,7 +130,7 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackgroundRetained(StaticBackground data, float alpha, float scale)
 		{
-			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
+			if (data.Texture != null && renderer.currentHost.LoadTexture(ref data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
 				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
 				if (alpha == 1.0f)
@@ -189,7 +189,8 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackgroundImmediate(StaticBackground data, float alpha, float scale)
 		{
-			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
+			//return;
+			if (data.Texture != null && renderer.currentHost.LoadTexture(ref data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
 				GL.MatrixMode(MatrixMode.Projection);
 				GL.PushMatrix();

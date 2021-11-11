@@ -95,7 +95,7 @@ namespace LibRender2.Loadings
 			//int versionTop;
 			int halfWidth = renderer.Screen.Width / 2;
 
-			if (TextureLoadingBkg != null && renderer.currentHost.LoadTexture(TextureLoadingBkg, OpenGlTextureWrapMode.ClampClamp))
+			if (TextureLoadingBkg != null && renderer.currentHost.LoadTexture(ref TextureLoadingBkg, OpenGlTextureWrapMode.ClampClamp))
 			{
 				int bkgHeight, bkgWidth;
 
@@ -121,7 +121,7 @@ namespace LibRender2.Loadings
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
 			if (!customLoadScreen)
 			{
-				if (showLogo && renderer.ProgramLogo != null)
+				if (renderer.ProgramLogo != null && renderer.LoadLogo())
 				{
 					// place the centre of the logo at from the screen top
 					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - renderer.ProgramLogo.Height / 2.0);
