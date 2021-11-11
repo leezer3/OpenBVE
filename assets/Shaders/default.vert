@@ -1,5 +1,6 @@
 #version 150 core
 precision highp int;
+precision highp float;
 
 struct Light
 {

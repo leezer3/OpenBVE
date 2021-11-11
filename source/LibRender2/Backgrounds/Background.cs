@@ -216,7 +216,6 @@ namespace LibRender2.Backgrounds
 				else
 				{
 					GL.Enable(EnableCap.Blend);
-					GL.Enable(EnableCap.AlphaTest);
 					renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				}
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);

@@ -1,4 +1,5 @@
 #version 150 core
+precision highp float;
 in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
@@ -25,9 +26,9 @@ void main(void)
 		//Material is not emissive and lighting is enabled, so multiply by brightness
 		finalColor.rgb *= uBrightness;
 	}
+	
+	// Multiply material alpha by it's opacity
 	finalColor.a *= uOpacity;
-	//Apply the lighting results *after* the final color has been calculated
-	finalColor *= oLightResult;
 
 	/*
 	 * NOTES:
@@ -41,14 +42,14 @@ void main(void)
 	 */
 	if(uAlphaTest.x == 513) // Less
 	{
-		if(finalColor.a > uAlphaTest.y)
+		if(finalColor.a >= uAlphaTest.y)
 		{
 			discard;
 		}
 	}
 	else if(uAlphaTest.x == 514) // Equal
 	{
-		if(!(abs(finalColor.a - 1.0) < 0.00001))
+		if(!(abs(finalColor.a - uAlphaTest.y) < 0.00001))
 		{
 			discard;
 		}
@@ -60,6 +61,14 @@ void main(void)
 			discard;
 		}
 	}
+		
+	/*
+	 * Apply the lighting results *after* the final color has been calculated
+	 * This *must* also be done after the discard check to get correct results,
+	 * as otherwise light coming through a semi-transparent material will 
+	 * affect it's final opacity, and hence whether its discarded or not
+	 */
+	finalColor *= oLightResult;
 	
 	// Fog
 	float fogFactor = 1.0;
