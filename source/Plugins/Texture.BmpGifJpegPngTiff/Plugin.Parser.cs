@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
@@ -15,44 +16,66 @@ namespace Plugin {
 		/// <param name="file">The file that holds the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		private bool Parse(string file, out Texture texture) {
+		private bool Parse(string file, out Texture texture) 
+		{
 			/*
-			 * Read the bitmap. This will be a bitmap of just
-			 * any format, not necessarily the one that allows
-			 * us to extract the bitmap data easily.
-			 * */
-			using (var image = Image.FromFile(file))
+			 * First, check if our file is a GIF by
+			 * reading the header bytes to check the signature
+			 *
+			 * If true, pass to the dedicated GIF decoder to handle
+			 * animations etc.
+			 */
+			try
 			{
-				int width, height;
-				Color24[] palette;
-				if (image.RawFormat.Equals(ImageFormat.Gif))
+				using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
 				{
-					GifDecoder decoder = new GifDecoder();
-					decoder.Read(file);
-					int frameCount = decoder.GetFrameCount();
-					int duration = 0;
-					if (frameCount != 1)
+					byte[] buffer = new byte[6];
+					if (fs.Length > buffer.Length)
 					{
-						Vector2 frameSize = decoder.GetFrameSize();
-						byte[][] frameBytes = new byte[frameCount][];
-						for (int i = 0; i < frameCount; i++)
+						fs.Read(buffer, 0, buffer.Length);
+					}
+					fs.Close();
+					if (buffer.SequenceEqual(GifDecoder.GIF87Header) || buffer.SequenceEqual(GifDecoder.GIF89Header))
+					{
+						GifDecoder decoder = new GifDecoder();
+						decoder.Read(file);
+						int frameCount = decoder.GetFrameCount();
+						int duration = 0;
+						if (frameCount != 1)
 						{
-							int[] framePixels = decoder.GetFrame(i);
-							frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
-							Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
-							duration += decoder.GetDuration(i);
+							Vector2 frameSize = decoder.GetFrameSize();
+							byte[][] frameBytes = new byte[frameCount][];
+							for (int i = 0; i < frameCount; i++)
+							{
+								int[] framePixels = decoder.GetFrame(i);
+								frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
+								Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
+								duration += decoder.GetDuration(i);
+							}
+							texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
+							return true;
 						}
-						texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
-						return true;
 					}
 				}
-				Bitmap bitmap = new Bitmap(file);
-				byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
-				if (raw != null)
-				{
-					texture = new Texture(width, height, 32, raw, palette);
-					return true;
-				}
+			}
+			catch
+			{
+				texture = null;
+				return false;
+			}
+			/*
+			 * Otherwise, read the bitmap. This will be a bitmap of just
+			 * any format, not necessarily the one that allows
+			 * us to extract the bitmap data easily.
+			 */
+			int width, height;
+			Color24[] palette;
+			Bitmap bitmap = new Bitmap(file);
+			byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
+			if (raw != null)
+			{
+				texture = new Texture(width, height, 32, raw, palette);
+				return true;
 			}
 			texture = null;
 			return false;

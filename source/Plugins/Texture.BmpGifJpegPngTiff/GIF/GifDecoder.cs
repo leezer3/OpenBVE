@@ -18,6 +18,9 @@ namespace Plugin
 	*/
 	internal partial class GifDecoder 
 	{
+		internal static byte[] GIF87Header = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };     // "GIF87a"
+		internal static byte[] GIF89Header = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };     // "GIF89a"
+
 		protected Stream inStream;
 		protected DecoderStatus status;
 		/// <summary>The width of the image canvas</summary>
