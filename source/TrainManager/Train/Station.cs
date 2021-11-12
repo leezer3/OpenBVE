@@ -188,8 +188,10 @@ namespace TrainManager.Trains
 									StationDepartureTime = TrainManagerBase.CurrentRoute.SecondsSinceMidnight + TrainManagerBase.CurrentRoute.Stations[i].StopTime;
 								}
 
-								Passengers.PassengerRatio = TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio;
-								TrainManagerBase.UpdateTrainMassFromPassengerRatio(this);
+								for (int j = 0; j < Cars.Length; j++)
+								{
+									Cars[j].Cargo.UpdateLoading(TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio);
+								}
 								if (IsPlayerTrain)
 								{
 									double early = 0.0;
