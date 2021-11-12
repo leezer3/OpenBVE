@@ -454,6 +454,8 @@ namespace CarXmlConvertor
 				newLines.Add("<MotorCar>False</MotorCar>");
 				newLines.Add("<Mass>" + ConvertTrainDat.TrailerCarMass + "</Mass>");
 			}
+			// BVE has all cars as passenger carrying by default
+			newLines.Add("<Cargo>Passengers</Cargo>");
 			if (CarInfos[i].AxlesDefined)
 			{
 				newLines.Add("<FrontAxle>" + CarInfos[i].FrontAxle + "</FrontAxle>");
