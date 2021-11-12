@@ -251,12 +251,11 @@ namespace Plugin
 		/// <summary>Reads a GIF file from the specified source</summary>
 		/// <param name="name">The source file / URL</param>
 		/// <returns>The status code</returns>
-		public DecoderStatus Read(String name) 
+		public DecoderStatus Read(string name) 
 		{
 			status = DecoderStatus.OK;
 			try 
 			{
-				name = name.Trim().ToLower();
 				status = Read(new FileInfo(name).OpenRead());
 			} 
 			catch (IOException) 
