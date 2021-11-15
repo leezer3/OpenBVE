@@ -363,16 +363,8 @@ namespace RouteViewer
 						}
 						else
 						{
-							Renderer.Camera.Alignment.Yaw = 0.0;
-							Renderer.Camera.Alignment.Pitch = 0.0;
-							Renderer.Camera.Alignment.Roll = 0.0;
-							Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
-							Renderer.Camera.Alignment.Zoom = 0.0;
-							Renderer.Camera.AlignmentDirection = new CameraAlignment();
-							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+							Renderer.Camera.Reset();
 							Renderer.UpdateViewport();
-							World.UpdateAbsoluteCamera(0.0);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						CurrentlyLoading = false;
@@ -410,6 +402,10 @@ namespace RouteViewer
 						if (canLoad && LoadRoute())
 						{
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+							
+							Renderer.UpdateViewport();
+							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						else
 						{
@@ -437,14 +433,7 @@ namespace RouteViewer
 								MessageBox.Show("No plugins found capable of loading routefile: " +Environment.NewLine + CurrentRouteFile);
 							}
 							
-							Renderer.Camera.Alignment.Yaw = 0.0;
-							Renderer.Camera.Alignment.Pitch = 0.0;
-							Renderer.Camera.Alignment.Roll = 0.0;
-							Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
-							Renderer.Camera.Alignment.Zoom = 0.0;
-							Renderer.Camera.AlignmentDirection = new CameraAlignment();
-							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+							Renderer.Camera.Reset();
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							CurrentRouteFile = null;
@@ -551,14 +540,7 @@ namespace RouteViewer
 					JumpToStation(-1);
 					break;
 				case Key.Keypad5:
-					Renderer.Camera.Alignment.Yaw = 0.0;
-					Renderer.Camera.Alignment.Pitch = 0.0;
-					Renderer.Camera.Alignment.Roll = 0.0;
-					Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
-					Renderer.Camera.Alignment.Zoom = 0.0;
-					Renderer.Camera.AlignmentDirection = new CameraAlignment();
-					Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-					Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+					Renderer.Camera.Reset();
 					Renderer.UpdateViewport();
 					World.UpdateAbsoluteCamera(0.0);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
