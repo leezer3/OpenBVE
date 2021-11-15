@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using OpenBveApi;
 using OpenBveApi.Hosts;
@@ -592,6 +591,9 @@ namespace LibRender2.Textures
 			{
 				UnloadTexture(ref RegisteredTextures[i]);
 			}
+
+			RegisteredTextures = new Texture[16];
+			animatedTextures = new Dictionary<TextureOrigin, Texture>();
 			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
 		}
 
