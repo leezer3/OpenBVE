@@ -148,6 +148,7 @@ namespace Train.MsTs
 
 			if (File.Exists(CabViews[0].fileName))
 			{
+				Car.Driver = CabViews[0].position;
 				Texture tday;
 				Plugin.currentHost.RegisterTexture(CabViews[0].fileName, new TextureParameters(null, null), out tday, true);
 				PanelBitmapWidth = tday.Width;
@@ -198,7 +199,7 @@ namespace Train.MsTs
 					int controlCount = block.ReadInt16();
 					while (controlCount > 0)
 					{
-						newBlock = block.ReadSubBlock(new[] {KujuTokenID.CabSignalDisplay, KujuTokenID.Dial, KujuTokenID.Lever, KujuTokenID.MultiStateDisplay, KujuTokenID.TriState, KujuTokenID.TwoState});
+						newBlock = block.ReadSubBlock();
 						Component currentComponent = new Component(newBlock);
 						currentComponent.Parse();
 						cabComponents.Add(currentComponent);
@@ -316,13 +317,22 @@ namespace Train.MsTs
 				if (!Enum.TryParse(myBlock.Token.ToString(), true, out Type))
 				{
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognised CabViewComponent type.");
+					return;
 				}
 
 				while (myBlock.Position() < myBlock.Length() - 2)
 				{
 					//Components in CVF files are considerably less structured, so read *any* valid block
-					newBlock = myBlock.ReadSubBlock();
-					ReadSubBlock(newBlock);
+					try
+					{
+						newBlock = myBlock.ReadSubBlock();
+						ReadSubBlock(newBlock);
+					}
+					catch
+					{
+						break;
+					}
+					
 				}
 			}
 
