@@ -415,6 +415,21 @@ namespace Train.MsTs
 						car.Description = string.Join("", strings);
 					}
 					break;
+				case KujuTokenID.MaxForce:
+					if (!isEngine)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
+						break;
+					}
+					double maxForce = block.ReadSingle(UnitOfForce.Newton);
+					car.Specs.AccelerationCurves = new AccelerationCurve[]
+					{
+						new MSTSAccelerationCurve(train, maxForce)
+					};
+					// FIXME: Default BVE values
+					car.Specs.JerkPowerUp = 10.0;
+					car.Specs.JerkPowerDown = 10.0;
+					break;
 			}
 			return true;
 		}
