@@ -137,6 +137,7 @@ namespace Train.MsTs
 				}
 			}
 
+			bool hasCabview = false;
 			//create couplers & other necessary properties for the thing to load
 			//TODO: Pull out MSTS properties
 			for (int i = 0; i < train.Cars.Length; i++)
@@ -151,6 +152,12 @@ namespace Train.MsTs
 				train.Cars[i].Specs.UnexposedFrontalArea = 0.2 * train.Cars[i].Width * train.Cars[i].Height;
 				train.Cars[i].Specs.CenterOfGravityHeight = 1.6;
 				train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * train.Cars[i].Specs.CenterOfGravityHeight / train.Cars[i].Width);
+				if (train.Cars[i].HasInteriorView && hasCabview == false)
+				{
+					// For the minute at least, let's set our driver car to be the first car which has an interior view
+					hasCabview = true;
+					train.DriverCar = i;
+				}
 			}
 			train.PlaceCars(0.0);
 		}
