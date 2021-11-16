@@ -356,8 +356,7 @@ namespace RouteViewer
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
-							Renderer.Camera.AlignmentDirection = new CameraAlignment();
-							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
+							Renderer.Camera.Reset();
 							Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
@@ -365,6 +364,7 @@ namespace RouteViewer
 						{
 							Renderer.Camera.Reset();
 							Renderer.UpdateViewport();
+							World.UpdateAbsoluteCamera(0.0);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						CurrentlyLoading = false;
@@ -402,7 +402,7 @@ namespace RouteViewer
 						if (canLoad && LoadRoute())
 						{
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-							
+							Renderer.Camera.Reset();
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
