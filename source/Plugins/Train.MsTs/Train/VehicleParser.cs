@@ -369,6 +369,10 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.CabView:
 					// Loads cab view file
+					if (Plugin.PreviewOnly)
+					{
+						break;
+					}
 					string cabViewFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "CABVIEW"), block.ReadString());
 					if (!File.Exists(cabViewFile))
 					{
@@ -376,7 +380,11 @@ namespace Train.MsTs
 						return true;
 					}
 
-					if (car.CarSections.Length > 0)
+					if (car.CarSections.Length == 0)
+					{
+						car.CarSections = new CarSection[1];
+					}
+					else if (car.CarSections.Length > 0)
 					{
 						// Cab View must always be at CarSection zero, but the order is not guaranteed within an eng / wag
 						CarSection[] move = new CarSection[car.CarSections.Length + 1];
@@ -386,6 +394,7 @@ namespace Train.MsTs
 						}
 						car.CarSections = move;
 					}
+					car.CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true);
 					CabviewFileParser.ParseCabViewFile(cabViewFile, Encoding.ASCII, ref car);
 					car.HasInteriorView = true;
 					break;
