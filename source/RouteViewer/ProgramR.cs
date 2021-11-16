@@ -211,6 +211,7 @@ namespace RouteViewer
 						if (p < Program.Renderer.CameraTrackFollower.TrackPosition - 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
+							Renderer.Camera.Reset();
 							break;
 						}
 					}
@@ -222,6 +223,7 @@ namespace RouteViewer
 						if (p > Program.Renderer.CameraTrackFollower.TrackPosition + 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
+							Renderer.Camera.Reset();
 							break;
 						}
 					}
@@ -642,6 +644,7 @@ namespace RouteViewer
 
 									Program.Renderer.CameraTrackFollower.UpdateAbsolute(value, true, false);
 									Renderer.Camera.Alignment.TrackPosition = value;
+									Renderer.Camera.Reset();
 									World.UpdateAbsoluteCamera(0.0);
 									Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 								}
