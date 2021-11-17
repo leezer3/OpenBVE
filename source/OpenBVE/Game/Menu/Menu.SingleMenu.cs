@@ -457,7 +457,6 @@ namespace OpenBve
 								}
 								menuItem++;
 							}
-						Align = TextAlignment.TopLeft;
 						break;
 
 					case MenuType.ExitToMainMenu:
@@ -483,7 +482,11 @@ namespace OpenBve
 						Items[0] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						for (i = 0; i < Interface.CurrentControls.Length; i++)
 							Items[i + 1] = new MenuCommand(Interface.CurrentControls[i].Command.ToString(), MenuTag.Control, i);
-						Align = TextAlignment.TopLeft;
+						if (Instance.Menus[0].Type == MenuType.GameStart)
+						{
+							// If the first menu in the current stack is the GL game menu, use left-align
+							Align = TextAlignment.TopLeft;
+						}
 						break;
 
 					case MenuType.Control:

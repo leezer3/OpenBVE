@@ -591,7 +591,7 @@ namespace LibRender2.Textures
 			{
 				UnloadTexture(ref RegisteredTextures[i]);
 			}
-
+			RegisteredTexturesCount = 0;
 			RegisteredTextures = new Texture[16];
 			animatedTextures = new Dictionary<TextureOrigin, Texture>();
 			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
