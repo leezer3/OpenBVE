@@ -7,6 +7,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
+using TrainManager.Motor;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -791,20 +792,27 @@ namespace Train.OpenBve
 			{
 				if (train.Cars[c].Specs.IsMotorCar)
 				{
-					train.Cars[c].Sounds.Motor.Position = center;
-					for (int i = 0; i < train.Cars[c].Sounds.Motor.Tables.Length; i++)
+					if (train.Cars[c].Sounds.Motor is BVEMotorSound motorSound)
 					{
-						train.Cars[c].Sounds.Motor.Tables[i].Buffer = null;
-						train.Cars[c].Sounds.Motor.Tables[i].Source = null;
-						for (int j = 0; j < train.Cars[c].Sounds.Motor.Tables[i].Entries.Length; j++)
+						train.Cars[c].Sounds.Motor.Position = center;
+						for (int i = 0; i < motorSound.Tables.Length; i++)
 						{
-							int index = train.Cars[c].Sounds.Motor.Tables[i].Entries[j].SoundIndex;
-							if (index >= 0 && index < MotorFiles.Length && MotorFiles[index] != null)
+							motorSound.Tables[i].Buffer = null;
+							motorSound.Tables[i].Source = null;
+							for (int j = 0; j < motorSound.Tables[i].Entries.Length; j++)
 							{
-								Plugin.currentHost.RegisterSound(MotorFiles[index], SoundCfgParser.mediumRadius, out var motorSound);
-								train.Cars[c].Sounds.Motor.Tables[i].Entries[j].Buffer = motorSound as SoundBuffer;
+								int index = motorSound.Tables[i].Entries[j].SoundIndex;
+								if (index >= 0 && index < MotorFiles.Length && MotorFiles[index] != null)
+								{
+									Plugin.currentHost.RegisterSound(MotorFiles[index], SoundCfgParser.mediumRadius, out var mS);
+									motorSound.Tables[i].Entries[j].Buffer = mS as SoundBuffer;
+								}
 							}
 						}
+					}
+					else
+					{
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected motor sound model found in car " + c);
 					}
 				}
 			}

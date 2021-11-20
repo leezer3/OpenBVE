@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -85,7 +85,7 @@ namespace TrainEditor2.IO.Sounds.Bve2
 						{
 							if (n >= 0)
 							{
-								elements.Add(new T { Key = n, FilePath = a });
+								elements.Add(new T { Key = n, FilePath = file });
 							}
 						}
 					}

@@ -82,9 +82,13 @@
     <Compile Include="Handles\Handles.Power.cs" />
     <Compile Include="Handles\Handles.Reverser.cs" />
     <Compile Include="Handles\Handles.Reverser.Positions.cs" />
+    <Compile Include="Motor\AbstractMotorSound.cs" />
     <Compile Include="Motor\BVE4\MotorSound.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />
+    <Compile Include="Motor\BVE5\MotorSound.cs" />
+    <Compile Include="Motor\BVE5\MotorSoundTableEntry.cs" />
+    <Compile Include="Motor\BVE5\SoundState.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Power\Breaker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
