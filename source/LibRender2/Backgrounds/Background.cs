@@ -130,9 +130,10 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackgroundRetained(StaticBackground data, float alpha, float scale)
 		{
-			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
+			Texture t = data.Texture;
+			if (data.Texture != null && renderer.currentHost.LoadTexture(ref t, OpenGlTextureWrapMode.RepeatClamp))
 			{
-				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
+				renderer.LastBoundTexture = t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
 				if (alpha == 1.0f)
 				{
 					GL.Disable(EnableCap.Blend);
@@ -162,7 +163,7 @@ namespace LibRender2.Backgrounds
 				}
 
 				// texture
-				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
+				GL.BindTexture(TextureTarget.Texture2D, t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				renderer.LastBoundTexture = null;
 
 				// alpha test
@@ -189,7 +190,8 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackgroundImmediate(StaticBackground data, float alpha, float scale)
 		{
-			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
+			Texture t = data.Texture;
+			if (data.Texture != null && renderer.currentHost.LoadTexture(ref t, OpenGlTextureWrapMode.RepeatClamp))
 			{
 				GL.MatrixMode(MatrixMode.Projection);
 				GL.PushMatrix();
@@ -215,11 +217,10 @@ namespace LibRender2.Backgrounds
 				else
 				{
 					GL.Enable(EnableCap.Blend);
-					GL.Enable(EnableCap.AlphaTest);
 					renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				}
-				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
-				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
+				GL.BindTexture(TextureTarget.Texture2D, t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
+				renderer.LastBoundTexture = t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
 				GL.Color4(1.0f, 1.0f, 1.0f, alpha);
 				if (renderer.OptionFog)
 				{

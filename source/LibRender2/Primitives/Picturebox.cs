@@ -29,7 +29,7 @@ namespace LibRender2.Primitives
 
 		public void Draw()
 		{
-			if (!Renderer.currentHost.LoadTexture(Texture, OpenGlTextureWrapMode.ClampClamp))
+			if (!Renderer.currentHost.LoadTexture(ref Texture, OpenGlTextureWrapMode.ClampClamp))
 			{
 				return;
 			}

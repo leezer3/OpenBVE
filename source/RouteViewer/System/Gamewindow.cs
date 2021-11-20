@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenTK;
@@ -30,7 +31,6 @@ namespace RouteViewer
 
         //Default Properties
         private static bool currentlyLoading;
-        private double ReducedModeEnteringTime;
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
@@ -55,32 +55,6 @@ namespace RouteViewer
             }
             ProcessEvents();
             double TimeElapsed = CPreciseTimer.GetElapsedTime();
-            if (Program.CpuReducedMode)
-            {
-                Thread.Sleep(250);
-            }
-            else
-            {
-                Thread.Sleep(1);
-                if (ReducedModeEnteringTime == 0)
-                {
-                    ReducedModeEnteringTime = 2500;
-                }
-                if (Program.Renderer.Camera.AlignmentDirection.Position.X != 0.0 | Program.Renderer.Camera.AlignmentDirection.Position.Y != 0.0 | Program.Renderer.Camera.AlignmentDirection.Position.Z != 0.0 | Program.Renderer.Camera.AlignmentDirection.Pitch != 0.0 | Program.Renderer.Camera.AlignmentDirection.Yaw != 0.0 | Program.Renderer.Camera.AlignmentDirection.Roll != 0.0 | Program.Renderer.Camera.AlignmentDirection.TrackPosition != 0.0 | Program.Renderer.Camera.AlignmentDirection.Zoom != 0.0)
-                {
-                    ReducedModeEnteringTime = 2500;
-                }
-                //Automatically enter reduced CPU mode if appropriate
-                if (Program.CpuAutomaticMode && Program.CpuReducedMode == false)
-                {
-                    ReducedModeEnteringTime -= TimeElapsed;
-                    if (ReducedModeEnteringTime <= 0)
-                    {
-                        Program.CpuReducedMode = true;
-                        ReducedModeEnteringTime = 0;
-                    }
-                }
-            }
 
             if (Program.CurrentRouteFile != null)
             {

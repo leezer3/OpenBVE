@@ -59,6 +59,10 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GIF\ControlCode.cs" />
+    <Compile Include="GIF\GifDecoder.cs" />
+    <Compile Include="GIF\DisposeMode.cs" />
+    <Compile Include="GIF\Status.cs" />
     <Compile Include="Plugin.Parser.cs">
       <DependentUpon>Plugin.cs</DependentUpon>
     </Compile>

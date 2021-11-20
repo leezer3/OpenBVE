@@ -203,8 +203,8 @@ namespace ObjectViewer
 				NearestTrainStatus status = NearestTrain.Status;
 
 				// Physics
-				status.Speed = (int)numericUpDownSpeed.Value;
-				status.Acceleration = (int)numericUpDownAccel.Value;
+				status.Speed = (double)numericUpDownSpeed.Value;
+				status.Acceleration = (double)numericUpDownAccel.Value;
 
 				// Brake system
 				if (!NearestTrain.IsExtensionsCfg)

@@ -365,7 +365,7 @@ namespace LibRender2.Shaders
 				 * If we do not want to use a texture, set a single white pixel instead
 				 * This eliminates some shader branching, and is marginally faster in some cases
 				 */
-				renderer.currentHost.LoadTexture(renderer.whitePixel, OpenGlTextureWrapMode.ClampClamp);
+				renderer.currentHost.LoadTexture(ref renderer.whitePixel, OpenGlTextureWrapMode.ClampClamp);
 				GL.BindTexture(TextureTarget.Texture2D, renderer.whitePixel.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 				renderer.LastBoundTexture = renderer.whitePixel.OpenGlTextures[(int) OpenGlTextureWrapMode.ClampClamp];
 			}

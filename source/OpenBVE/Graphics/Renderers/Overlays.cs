@@ -78,16 +78,19 @@ namespace OpenBve.Graphics.Renderers
 					if (Interface.CurrentOptions.GameMode != GameMode.Expert)
 					{
 						double y = 8.0;
-
-						foreach (Texture t in renderer.Marker.MarkerTextures)
+						for (int i = 0; i < renderer.Marker.MarkerTextures.Length; i++)
 						{
-							if (Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp))
+							if (Program.CurrentHost.LoadTexture(ref renderer.Marker.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
 							{
-								double w = t.Width;
-								double h = t.Height;
-								renderer.Rectangle.Draw(t, new OpenBveApi.Math.Vector2(renderer.Screen.Width - w - 8.0,y), new Vector2(w, h), Color128.White);
+								double w = renderer.Marker.MarkerTextures[i].Width;
+								double h = renderer.Marker.MarkerTextures[i].Height;
+								renderer.Rectangle.Draw(renderer.Marker.MarkerTextures[i], new OpenBveApi.Math.Vector2(renderer.Screen.Width - w - 8.0,y), new Vector2(w, h), Color128.White);
 								y += h + 8.0;
 							}
+						}
+						foreach (Texture t in renderer.Marker.MarkerTextures)
+						{
+							
 						}
 					}
 
@@ -96,7 +99,7 @@ namespace OpenBve.Graphics.Renderers
 					if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
 					{
 						// default
-						if (Program.CurrentHost.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(ref Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.DefaultTimetableTexture.Width;
 							int h = Timetable.DefaultTimetableTexture.Height;
@@ -106,14 +109,14 @@ namespace OpenBve.Graphics.Renderers
 					else if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom & Timetable.CustomObjectsUsed == 0)
 					{
 						// custom
-						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(ref Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;
 							renderer.Rectangle.Draw(Timetable.CurrentCustomTimetableDaytimeTexture, new OpenBveApi.Math.Vector2(renderer.Screen.Width - w, Timetable.CustomTimetablePosition), new Vector2(w, h), Color128.White);
 						}
 
-						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(ref Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;

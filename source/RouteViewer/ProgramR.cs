@@ -31,9 +31,6 @@ namespace RouteViewer
 
 		// system
 		internal static FileSystem FileSystem = null;
-
-		internal static bool CpuReducedMode = false;
-		internal static bool CpuAutomaticMode = true;
 		internal static string CurrentRouteFile = null;
 		internal static bool CurrentlyLoading = false;
 		internal static bool JumpToPositionEnabled = false;
@@ -214,6 +211,7 @@ namespace RouteViewer
 						if (p < Program.Renderer.CameraTrackFollower.TrackPosition - 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
+							Renderer.Camera.Reset();
 							break;
 						}
 					}
@@ -225,6 +223,7 @@ namespace RouteViewer
 						if (p > Program.Renderer.CameraTrackFollower.TrackPosition + 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
+							Renderer.Camera.Reset();
 							break;
 						}
 					}
@@ -359,21 +358,13 @@ namespace RouteViewer
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
-							Renderer.Camera.AlignmentDirection = new CameraAlignment();
-							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
+							Renderer.Camera.Reset();
 							Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
 						else
 						{
-							Renderer.Camera.Alignment.Yaw = 0.0;
-							Renderer.Camera.Alignment.Pitch = 0.0;
-							Renderer.Camera.Alignment.Roll = 0.0;
-							Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
-							Renderer.Camera.Alignment.Zoom = 0.0;
-							Renderer.Camera.AlignmentDirection = new CameraAlignment();
-							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+							Renderer.Camera.Reset();
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
@@ -413,6 +404,10 @@ namespace RouteViewer
 						if (canLoad && LoadRoute())
 						{
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+							Renderer.Camera.Reset();
+							Renderer.UpdateViewport();
+							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						else
 						{
@@ -440,14 +435,7 @@ namespace RouteViewer
 								MessageBox.Show("No plugins found capable of loading routefile: " +Environment.NewLine + CurrentRouteFile);
 							}
 							
-							Renderer.Camera.Alignment.Yaw = 0.0;
-							Renderer.Camera.Alignment.Pitch = 0.0;
-							Renderer.Camera.Alignment.Roll = 0.0;
-							Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
-							Renderer.Camera.Alignment.Zoom = 0.0;
-							Renderer.Camera.AlignmentDirection = new CameraAlignment();
-							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-							Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+							Renderer.Camera.Reset();
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							CurrentRouteFile = null;
@@ -498,112 +486,78 @@ namespace RouteViewer
 				case Key.A:
 				case Key.Keypad4:
 					Renderer.Camera.AlignmentDirection.Position.X = -CameraProperties.ExteriorTopSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.D:
 				case Key.Keypad6:
 					Renderer.Camera.AlignmentDirection.Position.X = CameraProperties.ExteriorTopSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.Keypad2:
 					Renderer.Camera.AlignmentDirection.Position.Y = -CameraProperties.ExteriorTopSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.Keypad8:
 					Renderer.Camera.AlignmentDirection.Position.Y = CameraProperties.ExteriorTopSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.W:
 				case Key.Keypad9:
 					Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.S:
 				case Key.Keypad3:
 					Renderer.Camera.AlignmentDirection.TrackPosition = -CameraProperties.ExteriorTopSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.Left:
 					Renderer.Camera.AlignmentDirection.Yaw = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.Right:
 					Renderer.Camera.AlignmentDirection.Yaw = CameraProperties.ExteriorTopAngularSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.Up:
 					Renderer.Camera.AlignmentDirection.Pitch = CameraProperties.ExteriorTopAngularSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.Down:
 					Renderer.Camera.AlignmentDirection.Pitch = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.KeypadDivide:
 					Renderer.Camera.AlignmentDirection.Roll = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.KeypadMultiply:
 					Renderer.Camera.AlignmentDirection.Roll = CameraProperties.ExteriorTopAngularSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.Keypad0:
 					Renderer.Camera.AlignmentDirection.Zoom = CameraProperties.ZoomTopSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.KeypadPeriod:
 					Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * speedModified;
-					CpuReducedMode = false;
 					break;
 				case Key.Keypad1:
 					Game.ApplyPointOfInterest(-1, true);
-					CpuReducedMode = false;
 					break;
 				case Key.Keypad7:
 					Game.ApplyPointOfInterest(1, true);
-					CpuReducedMode = false;
 					break;
 				case Key.PageUp:
 					JumpToStation(1);
-					CpuReducedMode = false;
 					break;
 				case Key.PageDown:
 					JumpToStation(-1);
-					CpuReducedMode = false;
 					break;
 				case Key.Keypad5:
-					Renderer.Camera.Alignment.Yaw = 0.0;
-					Renderer.Camera.Alignment.Pitch = 0.0;
-					Renderer.Camera.Alignment.Roll = 0.0;
-					Renderer.Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
-					Renderer.Camera.Alignment.Zoom = 0.0;
-					Renderer.Camera.AlignmentDirection = new CameraAlignment();
-					Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-					Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
+					Renderer.Camera.Reset();
 					Renderer.UpdateViewport();
 					World.UpdateAbsoluteCamera(0.0);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
-					CpuReducedMode = false;
 					break;
 				case Key.F:
 					Renderer.OptionWireFrame = !Renderer.OptionWireFrame;
-					CpuReducedMode = false;
 					break;
 				case Key.N:
 					Renderer.OptionNormals = !Renderer.OptionNormals;
-					CpuReducedMode = false;
 					break;
 				case Key.E:
 					Renderer.OptionEvents = !Renderer.OptionEvents;
-					CpuReducedMode = false;
-					break;
-				case Key.C:
-					CpuAutomaticMode = !CpuAutomaticMode;
-					CpuReducedMode = false;
 					break;
 				case Key.I:
 					Renderer.OptionInterface = !Renderer.OptionInterface;
-					CpuReducedMode = false;
 					break;
 				case Key.M:
 					//SoundManager.Mute = !SoundManager.Mute;
@@ -614,7 +568,6 @@ namespace RouteViewer
 					{
 						JumpToPositionEnabled = true;
 						JumpToPositionValue = "+";
-						CpuReducedMode = false;
 					}
 					break;
 				case Key.Minus:
@@ -623,7 +576,6 @@ namespace RouteViewer
 					{
 						JumpToPositionEnabled = true;
 						JumpToPositionValue = "-";
-						CpuReducedMode = false;
 					}
 					break;
 				case Key.Number0:
@@ -642,7 +594,6 @@ namespace RouteViewer
 						JumpToPositionValue = string.Empty;
 					}
 					JumpToPositionValue += char.ConvertFromUtf32(48 + e.Key - Key.Number0);
-					CpuReducedMode = false;
 					break;
 				case Key.Period:
 					if (!JumpToPositionEnabled)
@@ -654,13 +605,11 @@ namespace RouteViewer
 					{
 						JumpToPositionValue += ".";
 					}
-					CpuReducedMode = false;
 					break;
 				case Key.BackSpace:
 					if (JumpToPositionEnabled && JumpToPositionValue.Length != 0)
 					{
 						JumpToPositionValue = JumpToPositionValue.Substring(0, JumpToPositionValue.Length - 1);
-						CpuReducedMode = false;
 					}
 					break;
 				case Key.Enter:
@@ -695,6 +644,7 @@ namespace RouteViewer
 
 									Program.Renderer.CameraTrackFollower.UpdateAbsolute(value, true, false);
 									Renderer.Camera.Alignment.TrackPosition = value;
+									Renderer.Camera.Reset();
 									World.UpdateAbsoluteCamera(0.0);
 									Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 								}
@@ -702,11 +652,9 @@ namespace RouteViewer
 						}
 					}
 					JumpToPositionEnabled = false;
-					CpuReducedMode = false;
 					break;
 				case Key.Escape:
 					JumpToPositionEnabled = false;
-					CpuReducedMode = false;
 					break;
 				case Key.R:
 					Renderer.SwitchOpenGLVersion();

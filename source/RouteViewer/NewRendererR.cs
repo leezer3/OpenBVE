@@ -477,14 +477,15 @@ namespace RouteViewer
 			{
 				int y = 150;
 
-				foreach (Texture t in Marker.MarkerTextures)
+
+				for(int i = 0; i < Marker.MarkerTextures.Length; i++)
 				{
-					if (Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(ref Marker.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
 					{
-						int w = t.Width;
-						int h = t.Height;
+						int w = Marker.MarkerTextures[i].Width;
+						int h = Marker.MarkerTextures[i].Height;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						Rectangle.Draw(t, new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
+						Rectangle.Draw(Marker.MarkerTextures[i], new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
 						y += h + 8;
 					}
 				}
@@ -511,22 +512,21 @@ namespace RouteViewer
 					OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 44), TextAlignment.TopLeft, Color128.White, true);
 
-					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "E" }, new[] { "C" }, new[] { "M" }, new[] { "I" } };
+					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "E" }, new[] { "M" }, new[] { "I" } };
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
 					OpenGlString.Draw(Fonts.SmallFont, "WireFrame:", new Vector2(Screen.Width - 32, 4), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Normals:", new Vector2(Screen.Width - 32, 24), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Events:", new Vector2(Screen.Width - 32, 44), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "CPU:", new Vector2(Screen.Width - 32, 64), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Mute:", new Vector2(Screen.Width - 32, 84), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - 32, 144), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, "Mute:", new Vector2(Screen.Width - 32, 64), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - 32, 84), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
 
 					keys = new[] { new[] { "F10" } };
-					Keys.Render(Screen.Width - 32, 124, 30, Fonts.SmallFont, keys);
+					Keys.Render(Screen.Width - 32, 104, 30, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { "R" } };
-					Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+					Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);

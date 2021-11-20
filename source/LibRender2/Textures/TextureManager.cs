@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
+using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
@@ -18,7 +20,9 @@ namespace LibRender2.Textures
 		private readonly BaseRenderer renderer;
 
 		/// <summary>Holds all currently registered textures.</summary>
-		public Texture[] RegisteredTextures;
+		public static Texture[] RegisteredTextures;
+
+		private static Dictionary<TextureOrigin, Texture> animatedTextures;
 
 		/// <summary>The number of currently registered textures.</summary>
 		public int RegisteredTexturesCount;
@@ -29,6 +33,7 @@ namespace LibRender2.Textures
 			RegisteredTextures = new Texture[16];
 			RegisteredTexturesCount = 0;
 			renderer = Renderer;
+			animatedTextures = new Dictionary<TextureOrigin, Texture>();
 		}
 
 
@@ -196,41 +201,83 @@ namespace LibRender2.Textures
 		/// <param name="Interpolation">The interpolation mode to use when loading the texture</param>
 		/// <param name="AnisotropicFilteringLevel">The anisotropic filtering level to use when loading the texture</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public bool LoadTexture(Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
+		public bool LoadTexture(ref Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
 		{
+
+			Texture texture = null;
 			//Don't try to load a texture to a null handle, this is a seriously bad idea....
 			if (handle == null || handle.OpenGlTextures == null)
 			{
 				return false;
 			}
-
+			
+			if (handle.MultipleFrames)
+			{
+				if (!animatedTextures.ContainsKey(handle.Origin))
+				{
+					if (!handle.Origin.GetTexture(out texture))
+					{
+						//Loading animated texture barfed
+						return false;
+					}
+					animatedTextures.Add(handle.Origin, texture);
+				}
+				else
+				{
+					texture = animatedTextures[handle.Origin];
+				}
+				double elapsedTime = CPreciseTimer.GetElapsedTime(handle.LastAccess, currentTicks);
+				int elapsedFrames = (int)(elapsedTime / texture.FrameInterval);
+				if (elapsedFrames > 0)
+				{
+					texture.CurrentFrame += elapsedFrames;
+					texture.CurrentFrame %= texture.TotalFrames;
+					handle.LastAccess = currentTicks;
+				}
+			}
+			else
+			{
+				handle.LastAccess = currentTicks;
+			}
 			//Set last access time
-			handle.LastAccess = currentTicks;
+
+			if (texture != null)
+			{
+				handle = texture;
+			}
 
 			if (handle.OpenGlTextures[(int)wrap].Valid)
 			{
 				return true;
 			}
 
+			
+			
 			if (handle.Ignore)
 			{
 				return false;
 			}
 
-			Texture texture;
-
-			if (handle.Origin.GetTexture(out texture))
+			if (texture == null && handle.Origin.GetTexture(out texture) || texture != null)
 			{
+				if (texture.MultipleFrames)
+				{
+					handle.MultipleFrames = true;
+				}
 				if (texture.BitsPerPixel == 32)
 				{
 					int[] names = new int[1];
 					GL.GenTextures(1, names);
 					GL.BindTexture(TextureTarget.Texture2D, names[0]);
 					handle.OpenGlTextures[(int)wrap].Name = names[0];
+					if (texture.MultipleFrames)
+					{
+						texture.OpenGlTextures[(int)wrap].Name = names[0];
+					}
+					
 					handle.Width = texture.Width;
 					handle.Height = texture.Height;
 					handle.Transparency = texture.GetTransparencyType();
-					//texture = ResizeToPowerOfTwo(texture);
 
 					switch (Interpolation)
 					{
@@ -349,6 +396,10 @@ namespace LibRender2.Textures
 						GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 					}
 					handle.OpenGlTextures[(int)wrap].Valid = true;
+					if (texture.MultipleFrames)
+					{
+						texture.OpenGlTextures[(int)wrap].Valid = true;
+					}
 					return true;
 				}
 			}
@@ -498,7 +549,7 @@ namespace LibRender2.Textures
 
 		/// <summary>Unloads the specified texture from OpenGL if loaded.</summary>
 		/// <param name="handle">The handle to the registered texture.</param>
-		public static void UnloadTexture(Texture handle)
+		public static void UnloadTexture(ref Texture handle)
 		{
 			//Null check the texture handle, as otherwise this can cause OpenGL to throw a fit
 			if (handle == null)
@@ -506,14 +557,29 @@ namespace LibRender2.Textures
 				return;
 			}
 
-			foreach (OpenGlTexture t in handle.OpenGlTextures)
+			if (handle.MultipleFrames)
 			{
-				if (t.Valid)
+				for (int i = 0; i < handle.TotalFrames; i++)
 				{
-					GL.DeleteTextures(1, new[] { t.Name });
-					t.Valid = false;
+					handle.CurrentFrame = i;
+					foreach (OpenGlTexture t in handle.OpenGlTextures)
+					{
+						if (t.Valid)
+						{
+							GL.DeleteTextures(1, new[] { t.Name });
+							t.Valid = false;
+						}
+					}
 				}
+				/*
+				 * Clone the ref for the search and then re-create the original in the texturemanager array
+				 * This allows it to be re-loaded from disk
+				 */
+				var texture = handle;
+				TextureOrigin key = animatedTextures.FirstOrDefault(x => x.Value == texture).Key;
+				handle = new Texture(key);
 			}
+			
 
 			handle.Ignore = false;
 		}
@@ -523,8 +589,11 @@ namespace LibRender2.Textures
 		{
 			for (int i = 0; i < RegisteredTexturesCount; i++)
 			{
-				UnloadTexture(RegisteredTextures[i]);
+				UnloadTexture(ref RegisteredTextures[i]);
 			}
+			RegisteredTexturesCount = 0;
+			RegisteredTextures = new Texture[16];
+			animatedTextures = new Dictionary<TextureOrigin, Texture>();
 			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
 		}
 

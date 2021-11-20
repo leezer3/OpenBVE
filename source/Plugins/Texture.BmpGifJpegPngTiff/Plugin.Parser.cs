@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
+using OpenBveApi.Math;
 
 namespace Plugin {
 	public partial class Plugin {
@@ -13,15 +16,75 @@ namespace Plugin {
 		/// <param name="file">The file that holds the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		private bool Parse(string file, out Texture texture) {
+		private bool Parse(string file, out Texture texture) 
+		{
 			/*
-			 * Read the bitmap. This will be a bitmap of just
+			 * First, check if our file is a GIF by
+			 * reading the header bytes to check the signature
+			 *
+			 * If true, pass to the dedicated GIF decoder to handle
+			 * animations etc.
+			 */
+			try
+			{
+				using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+				{
+					byte[] buffer = new byte[6];
+					if (fs.Length > buffer.Length)
+					{
+						fs.Read(buffer, 0, buffer.Length);
+					}
+					fs.Close();
+					if (buffer.SequenceEqual(GifDecoder.GIF87Header) || buffer.SequenceEqual(GifDecoder.GIF89Header))
+					{
+						GifDecoder decoder = new GifDecoder();
+						decoder.Read(file);
+						int frameCount = decoder.GetFrameCount();
+						int duration = 0;
+						if (frameCount != 1)
+						{
+							Vector2 frameSize = decoder.GetFrameSize();
+							byte[][] frameBytes = new byte[frameCount][];
+							for (int i = 0; i < frameCount; i++)
+							{
+								int[] framePixels = decoder.GetFrame(i);
+								frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
+								Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
+								duration += decoder.GetDuration(i);
+							}
+							texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
+							return true;
+						}
+					}
+				}
+			}
+			catch
+			{
+				texture = null;
+				return false;
+			}
+			/*
+			 * Otherwise, read the bitmap. This will be a bitmap of just
 			 * any format, not necessarily the one that allows
 			 * us to extract the bitmap data easily.
 			 */
+			int width, height;
+			Color24[] palette;
 			Bitmap bitmap = new Bitmap(file);
-			Color24[] p = null;
-			if (file.ToLowerInvariant().EndsWith(".bmp") && EnabledHacks.ReduceTransparencyColorDepth && (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format24bppRgb))
+			byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
+			if (raw != null)
+			{
+				texture = new Texture(width, height, 32, raw, palette);
+				return true;
+			}
+			texture = null;
+			return false;
+		}
+
+		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height, out Color24[] p)
+		{
+			p = null;
+			if (EnabledHacks.ReduceTransparencyColorDepth && (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb))
 			{
 				/*
 				 * Our source bitmap is *not* a 256 color bitmap but has been made for BVE2 / BVE4.
@@ -130,8 +193,8 @@ namespace Plugin {
 				byte[] raw = new byte[data.Stride * data.Height];
 				System.Runtime.InteropServices.Marshal.Copy(data.Scan0, raw, 0, data.Stride * data.Height);
 				bitmap.UnlockBits(data);
-				int width = bitmap.Width;
-				int height = bitmap.Height;
+				width = bitmap.Width;
+				height = bitmap.Height;
 				
 				/*
 				 * Change the byte order from BGRA to RGBA.
@@ -141,9 +204,8 @@ namespace Plugin {
 					raw[i] = raw[i + 2];
 					raw[i + 2] = temp;
 				}
-				texture = new Texture(width, height, 32, raw, p);
-				bitmap.Dispose();
-				return true;
+
+				return raw;
 			}
 
 			/*
@@ -156,8 +218,9 @@ namespace Plugin {
 			bitmap.UnlockBits(data);
 			bitmap.Dispose();
 			CurrentHost.ReportProblem(ProblemType.InvalidOperation, "Invalid stride encountered.");
-			texture = null;
-			return false;
+			width = 0;
+			height = 0;
+			return null;
 		}
 		
 	}

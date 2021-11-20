@@ -51,7 +51,7 @@ namespace OpenBve
 						//Get the speed and limit in km/h
 						spd = Math.Round(spd * 3.6);
 						lim = Math.Round(lim * 3.6);
-						remove = spd <= lim;
+						remove = spd < lim;
 						string s = InternalText, t;
 						if (lim == double.PositiveInfinity)
 						{

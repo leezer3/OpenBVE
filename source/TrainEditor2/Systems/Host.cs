@@ -16,9 +16,9 @@ namespace TrainEditor2.Systems
 
 		// --- texture ---
 
-		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
+		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, Environment.TickCount, InterpolationMode.BilinearMipmapped, 16);
+			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, Environment.TickCount, InterpolationMode.BilinearMipmapped, 16);
 		}
 
 		// --- sound ---

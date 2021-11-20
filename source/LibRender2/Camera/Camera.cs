@@ -297,5 +297,18 @@ namespace LibRender2.Cameras
 			HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * VerticalViewingAngle) * Renderer.Screen.AspectRatio);
 			OriginalVerticalViewingAngle = VerticalViewingAngle;
 		}
+
+		/// <summary>Unconditionally resets the camera</summary>
+		public void Reset()
+		{
+			Alignment.Yaw = 0.0;
+			Alignment.Pitch = 0.0;
+			Alignment.Roll = 0.0;
+			Alignment.Position = new Vector3(0.0, 2.5, 0.0);
+			Alignment.Zoom = 0.0;
+			AlignmentDirection = new CameraAlignment();
+			AlignmentSpeed = new CameraAlignment();
+			VerticalViewingAngle = OriginalVerticalViewingAngle;
+		}
 	}
 }

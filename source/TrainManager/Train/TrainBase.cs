@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using LibRender2.Trains;
@@ -59,6 +59,8 @@ namespace TrainManager.Trains
 		private double InternalTimerTimeElapsed;
 		/// <inheritdoc/>
 		public override bool IsPlayerTrain => this == TrainManagerBase.PlayerTrain;
+
+		private bool currentlyOverspeed;
 
 		/// <inheritdoc/>
 		public override int NumberOfCars => this.Cars.Length;
@@ -291,7 +293,7 @@ namespace TrainManager.Trains
 				UpdatePhysicsAndControls(TimeElapsed);
 				if (CurrentSpeed > CurrentRouteLimit)
 				{
-					if (previousRouteLimit != CurrentRouteLimit || TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
+					if (!currentlyOverspeed || previousRouteLimit != CurrentRouteLimit || TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
 					{
 						/*
 						 * HACK: If the limit has changed, or we are in arcade mode, notify the player
@@ -299,6 +301,11 @@ namespace TrainManager.Trains
 						 */
 						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 					}
+					currentlyOverspeed = true;
+				}
+				else
+				{
+					currentlyOverspeed = false;
 				}
 
 				if (TrainManagerBase.CurrentOptions.Accessibility)

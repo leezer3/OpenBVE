@@ -13,7 +13,7 @@ namespace OpenBve.Graphics
 		{
 			for (int i = 0; i < Program.Renderer.TextureManager.RegisteredTexturesCount; i++)
 			{
-				Program.Renderer.TextureManager.LoadTexture(Program.Renderer.TextureManager.RegisteredTextures[i], OpenGlTextureWrapMode.ClampClamp, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+				Program.Renderer.TextureManager.LoadTexture(ref TextureManager.RegisteredTextures[i], OpenGlTextureWrapMode.ClampClamp, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 			}
 		}
 
@@ -24,7 +24,7 @@ namespace OpenBve.Graphics
 			//Don't unload textures in this case, as it just causes texture bugs
 			if (TimeElapsed > 1000)
 			{
-				foreach (var Texture in Program.Renderer.TextureManager.RegisteredTextures)
+				foreach (var Texture in TextureManager.RegisteredTextures)
 				{
 					if (Texture != null)
 					{
@@ -35,18 +35,18 @@ namespace OpenBve.Graphics
 #endif
 			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
-				foreach (var Texture in Program.Renderer.TextureManager.RegisteredTextures)
+				for(int i= 0; i < TextureManager.RegisteredTextures.Length; i++)
 				{
-					if (Texture != null && (CPreciseTimer.GetClockTicks() - Texture.LastAccess) > 20000)
+					if (TextureManager.RegisteredTextures[i] != null && (CPreciseTimer.GetClockTicks() - TextureManager.RegisteredTextures[i].LastAccess) > 20000)
 					{
-						TextureManager.UnloadTexture(Texture);
+						TextureManager.UnloadTexture(ref TextureManager.RegisteredTextures[i]);
 					}
 				}
 			}
 			else
 			{
 				//Don't unload textures if we are in a menu/ paused, as they may be required immediately after unpause
-				foreach (var Texture in Program.Renderer.TextureManager.RegisteredTextures)
+				foreach (var Texture in TextureManager.RegisteredTextures)
 				{
 					//Texture can be null in certain cases....
 					if (Texture != null)
