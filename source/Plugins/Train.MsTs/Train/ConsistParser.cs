@@ -12,6 +12,7 @@ using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -236,6 +237,7 @@ namespace Train.MsTs
 					}
 					currentCar.Breaker = new Breaker(currentCar);
 					currentCar.Sounds.Plugin = new CarSound[] { };
+					currentCar.Sounds.Motor = new MSTSMotorSound(currentCar);
 					Train.Cars[currentCarIndex] = currentCar;
 					/*
 					 * FIXME: Needs removing or sorting when the car is created
