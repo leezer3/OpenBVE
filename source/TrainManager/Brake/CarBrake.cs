@@ -103,13 +103,13 @@ namespace TrainManager.BrakeSystems
 			}
 			if (Notch == 0)
 			{
-				return this.decelerationCurves[0].GetAccelerationOutput(currentSpeed, 1.0);
+				return this.decelerationCurves[0].GetAccelerationOutput(currentSpeed);
 			}
 			if (this.decelerationCurves.Length >= Notch)
 			{
-				return this.decelerationCurves[Notch - 1].GetAccelerationOutput(currentSpeed, 1.0);
+				return this.decelerationCurves[Notch - 1].GetAccelerationOutput(currentSpeed);
 			}
-			return this.decelerationCurves[this.decelerationCurves.Length - 1].GetAccelerationOutput(currentSpeed, 1.0);
+			return this.decelerationCurves[this.decelerationCurves.Length - 1].GetAccelerationOutput(currentSpeed);
 		}
 
 		/// <summary>Gets the current motor deceleration figure</summary>
