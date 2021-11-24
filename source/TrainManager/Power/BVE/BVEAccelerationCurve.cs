@@ -12,7 +12,7 @@ namespace TrainManager.Power
 		public double StageTwoExponent;
 		public double Multiplier;
 
-		public override double GetAccelerationOutput(double Speed, double Loading)
+		public override double GetAccelerationOutput(double Speed)
 		{
 			if (Speed <= 0.0)
 			{
@@ -53,7 +53,7 @@ namespace TrainManager.Power
 	{
 		private readonly double MaxDecelerationOutput;
 
-		public override double GetAccelerationOutput(double Speed, double Loading)
+		public override double GetAccelerationOutput(double Speed)
 		{
 			return this.MaxDecelerationOutput;
 		}
