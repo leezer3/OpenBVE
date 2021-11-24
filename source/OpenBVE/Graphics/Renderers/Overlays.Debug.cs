@@ -109,8 +109,7 @@ namespace OpenBve.Graphics.Renderers
 				renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, t, new Vector2(2, renderer.Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// debug information
-			int texturesLoaded = renderer.TextureManager.GetNumberOfLoadedTextures();
-			int texturesRegistered = renderer.TextureManager.GetNumberOfRegisteredTextures();
+			int texturesRegistered = Program.Renderer.TextureManager.GetNumberOfRegisteredTextures();
 			int soundBuffersRegistered = Program.Sounds.GetNumberOfRegisteredBuffers();
 			int soundBuffersLoaded = Program.Sounds.GetNumberOfLoadedBuffers();
 			int soundSourcesRegistered = Program.Sounds.GetNumberOfRegisteredSources();
@@ -176,7 +175,7 @@ namespace OpenBve.Graphics.Renderers
 				"alpha faces: " + Program.Renderer.VisibleObjects.AlphaFaces.Count.ToString(Culture),
 				"overlay opaque faces: " + Program.Renderer.VisibleObjects.OverlayOpaqueFaces.Count.ToString(Culture),
 				"overlay alpha faces: " + Program.Renderer.VisibleObjects.OverlayAlphaFaces.Count.ToString(Culture),
-				"textures loaded: " + texturesLoaded.ToString(Culture) + " / " + texturesRegistered.ToString(Culture),
+				"textures loaded: " + renderer.TextureManager.GetNumberOfLoadedTextures().ToString(Culture) + " static, " + renderer.TextureManager.GetNumberOfLoadedAnimatedTextures() + " animated / " + texturesRegistered.ToString(Culture) + " total",
 				"",
 				"=camera",
 				"position: " + Program.Renderer.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m",

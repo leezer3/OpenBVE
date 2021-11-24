@@ -579,8 +579,17 @@ namespace LibRender2.Textures
 				TextureOrigin key = animatedTextures.FirstOrDefault(x => x.Value == texture).Key;
 				handle = new Texture(key);
 			}
-			
-
+			else
+			{
+				foreach (OpenGlTexture t in handle.OpenGlTextures)
+				{
+					if (t.Valid)
+					{
+						GL.DeleteTextures(1, new[] { t.Name });
+						t.Valid = false;
+					}
+				}
+			}
 			handle.Ignore = false;
 		}
 
@@ -591,9 +600,6 @@ namespace LibRender2.Textures
 			{
 				UnloadTexture(ref RegisteredTextures[i]);
 			}
-			RegisteredTexturesCount = 0;
-			RegisteredTextures = new Texture[16];
-			animatedTextures = new Dictionary<TextureOrigin, Texture>();
 			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
 		}
 
@@ -615,7 +621,7 @@ namespace LibRender2.Textures
 
 			for (int i = 0; i < RegisteredTexturesCount; i++)
 			{
-				if (RegisteredTextures[i] == null)
+				if (RegisteredTextures[i] == null || RegisteredTextures[i].MultipleFrames)
 				{
 					continue;
 				}
@@ -625,7 +631,24 @@ namespace LibRender2.Textures
 					count++;
 				}
 			}
+			return count;
+		}
 
+		public int GetNumberOfLoadedAnimatedTextures()
+		{
+			int count = 0;
+			for (int i = 0; i < RegisteredTexturesCount; i++)
+			{
+				if (RegisteredTextures[i] == null || RegisteredTextures[i].MultipleFrames == false)
+				{
+					continue;
+				}
+
+				if (RegisteredTextures[i].OpenGlTextures.Any(t => t.Valid))
+				{
+					count++;
+				}
+			}
 			return count;
 		}
 
