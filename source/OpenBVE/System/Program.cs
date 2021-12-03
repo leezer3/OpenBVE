@@ -107,6 +107,14 @@ namespace OpenBve {
 			{
 				Joysticks = new JoystickManager64();	
 			}
+
+			if (CurrentHost.Platform == HostPlatform.FreeBSD)
+			{
+				// BSD seems to need this called at this point to avoid crashing
+				// https://github.com/leezer3/OpenBVE/issues/712
+				Joysticks.RefreshJoysticks();
+			}
+			
 			try {
 				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 				FileSystem.CreateFileSystem();

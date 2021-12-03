@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -56,7 +58,9 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Linux</summary>
 		GNULinux = 1,
 		/// <summary>Mac OS-X</summary>
-		AppleOSX = 2
+		AppleOSX = 2,
+		/// <summary>FreeBSD</summary>
+		FreeBSD = 3
 
 	}
 	
@@ -86,10 +90,54 @@ namespace OpenBveApi.Hosts {
 					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
 					return HostPlatform.AppleOSX;
 				}
+				string kernelName = DetectUnixKernel();
 
+				switch (kernelName)
+				{
+					case "Darwin":
+						return HostPlatform.AppleOSX;
+					case "FreeBSD":
+						return HostPlatform.FreeBSD;
+				}
+				
 				return HostPlatform.GNULinux;
 			}
 		}
+
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+		private struct UName
+		{
+			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+			public string sysname;
+
+			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+			public string nodename;
+
+			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+			public string release;
+
+			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+			public string version;
+
+			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+			public string machine;
+
+			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1024)]
+			public string extraJustInCase;
+
+		}
+
+		/// <summary>Detects the current kernel name by p/invoking uname (libc)</summary>
+		private static string DetectUnixKernel()
+		{
+			Debug.Flush();
+			UName uts;
+			uname(out uts);
+			return uts.sysname;
+		}
+
+		[DllImport("libc")]
+		private static extern void uname(out UName uname_struct);
 
 		/// <summary>The base host interface constructor</summary>
 		protected HostInterface(HostApplication host)
