@@ -472,8 +472,6 @@ namespace DenshaDeGoInput
 				}
 			}
 
-			Console.WriteLine(TrainSpecs.BrakeType);
-
 			if (TrainSpecs.BrakeType == BrakeTypes.AutomaticAirBrake)
 			{
 				// Trains with an air brake are mapped differently
