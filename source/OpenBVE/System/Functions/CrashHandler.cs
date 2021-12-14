@@ -68,8 +68,8 @@ namespace OpenBve
 	        }
             try
             {
-                MessageBox.Show("Unhandled Windows Forms Exception.");
-                LogCrash(t.Exception.ToString() + Environment.NewLine + Environment.StackTrace);
+                MessageBox.Show("An unhandled Windows Forms Exception occured." + Environment.NewLine + Environment.NewLine + "Please consider reporting this using the CrashLog found under the \"Report Problem\" button in the main menu.");
+                LogCrash(t.Exception + Environment.NewLine + Environment.StackTrace);
             }
             catch (Exception exc)
             {
