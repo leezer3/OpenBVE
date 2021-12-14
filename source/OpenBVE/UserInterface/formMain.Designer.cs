@@ -423,6 +423,7 @@ namespace OpenBve {
 			this.labelDependanciesNextStep = new System.Windows.Forms.Label();
 			this.buttonCreateProceed = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.radioButtonQ2Plugin = new System.Windows.Forms.RadioButton();
 			this.radioButtonQ2Other = new System.Windows.Forms.RadioButton();
 			this.radioButtonQ2Train = new System.Windows.Forms.RadioButton();
 			this.radioButtonQ2Route = new System.Windows.Forms.RadioButton();
@@ -4015,6 +4016,7 @@ namespace OpenBve {
 			this.panelPackages.Controls.Add(this.labelPackagesTitleSeparator);
 			this.panelPackages.Controls.Add(this.labelPackagesTitle);
 			this.panelPackages.Controls.Add(this.labelPackagesTitleBackground);
+			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Controls.Add(this.panelUninstallResult);
 			this.panelPackages.Controls.Add(this.panelSuccess);
 			this.panelPackages.Controls.Add(this.panelDependancyError);
@@ -4023,7 +4025,6 @@ namespace OpenBve {
 			this.panelPackages.Controls.Add(this.panelPackageList);
 			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelVersionError);
-			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Location = new System.Drawing.Point(160, 0);
 			this.panelPackages.Name = "panelPackages";
 			this.panelPackages.Size = new System.Drawing.Size(659, 606);
@@ -5375,6 +5376,7 @@ namespace OpenBve {
 			// groupBox1
 			// 
 			this.groupBox1.Controls.Add(this.radioButtonQ2Other);
+			this.groupBox1.Controls.Add(this.radioButtonQ2Plugin);
 			this.groupBox1.Controls.Add(this.radioButtonQ2Train);
 			this.groupBox1.Controls.Add(this.radioButtonQ2Route);
 			this.groupBox1.Location = new System.Drawing.Point(8, 69);
@@ -5383,17 +5385,17 @@ namespace OpenBve {
 			this.groupBox1.TabIndex = 19;
 			this.groupBox1.TabStop = false;
 			// 
-			// radioButtonQ2Other
+			// radioButtonQ2Plugin
 			// 
-			this.radioButtonQ2Other.AutoSize = true;
-			this.radioButtonQ2Other.Location = new System.Drawing.Point(119, 1);
-			this.radioButtonQ2Other.Name = "radioButtonQ2Other";
-			this.radioButtonQ2Other.Size = new System.Drawing.Size(51, 17);
-			this.radioButtonQ2Other.TabIndex = 19;
-			this.radioButtonQ2Other.TabStop = true;
-			this.radioButtonQ2Other.Text = "Other";
-			this.radioButtonQ2Other.UseVisualStyleBackColor = true;
-			this.radioButtonQ2Other.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
+			this.radioButtonQ2Plugin.AutoSize = true;
+			this.radioButtonQ2Plugin.Location = new System.Drawing.Point(119, 1);
+			this.radioButtonQ2Plugin.Name = "radioButtonQ2Plugin";
+			this.radioButtonQ2Plugin.Size = new System.Drawing.Size(54, 17);
+			this.radioButtonQ2Plugin.TabIndex = 19;
+			this.radioButtonQ2Plugin.TabStop = true;
+			this.radioButtonQ2Plugin.Text = "Plugin";
+			this.radioButtonQ2Plugin.UseVisualStyleBackColor = true;
+			this.radioButtonQ2Plugin.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
 			// 
 			// radioButtonQ2Train
 			// 
@@ -5664,6 +5666,18 @@ namespace OpenBve {
 			this.labelNewGUID.TabIndex = 24;
 			this.labelNewGUID.Text = "The new package has been assigned the following GUID:";
 			// 
+			// radioButtonQ2Other
+			// 
+			this.radioButtonQ2Other.AutoSize = true;
+			this.radioButtonQ2Other.Location = new System.Drawing.Point(176, 1);
+			this.radioButtonQ2Other.Name = "radioButtonQ2Other";
+			this.radioButtonQ2Other.Size = new System.Drawing.Size(51, 17);
+			this.radioButtonQ2Other.TabIndex = 20;
+			this.radioButtonQ2Other.TabStop = true;
+			this.radioButtonQ2Other.Text = "Other";
+			this.radioButtonQ2Other.UseVisualStyleBackColor = true;
+			this.radioButtonQ2Other.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
+			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -5678,10 +5692,10 @@ namespace OpenBve {
 			this.Controls.Add(this.labelFillerOne);
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
+			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelControls);
-			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelReview);
 			this.KeyPreview = true;
 			this.Name = "formMain";
@@ -6130,7 +6144,7 @@ namespace OpenBve {
 		private System.Windows.Forms.RadioButton radioButtonQ2Train;
 		private System.Windows.Forms.RadioButton radioButtonQ2Route;
 		private System.Windows.Forms.Label labelPackageType;
-		private System.Windows.Forms.RadioButton radioButtonQ2Other;
+		private System.Windows.Forms.RadioButton radioButtonQ2Plugin;
 		private System.Windows.Forms.Panel panelReplacePackage;
 		private System.Windows.Forms.Label packageToReplaceLabel;
 		private System.Windows.Forms.DataGridView dataGridViewReplacePackage;
@@ -6266,5 +6280,6 @@ namespace OpenBve {
 		private System.Windows.Forms.Label labelCompatibilitySignalSet;
 		private System.Windows.Forms.ComboBox comboBoxCompatibilitySignals;
 		private System.Windows.Forms.CheckBox checkBoxAccessibility;
+		private System.Windows.Forms.RadioButton radioButtonQ2Other;
 	}
 }

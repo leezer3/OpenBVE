@@ -606,6 +606,9 @@
 					<trans-unit id="type_other">
 						<source>Other</source>
 					</trans-unit>
+					<trans-unit id="type_plugin">
+						<source>Plugin</source>
+					</trans-unit>
 					<trans-unit id="type_select">
 						<source>Please select the package type:</source>
 					</trans-unit>

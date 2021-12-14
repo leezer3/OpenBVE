@@ -51,6 +51,9 @@ namespace OpenBveApi.FileSystem {
 
 		/// <summary>The location to which packaged other items will be installed</summary>
 		public string OtherInstallationDirectory;
+
+		/// <summary>The location to which user plugins will be installed</summary>
+		public string PluginInstallationDirectory;
 		
 		/// <summary>The location to which Loksim3D packages will be installed</summary>
 		public string LoksimPackageInstallationDirectory;
@@ -99,6 +102,7 @@ namespace OpenBveApi.FileSystem {
 			this.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
 			this.ManagedContentFolders = new string[] { OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent") };
 			this.SettingsFolder = OpenBveApi.Path.CombineDirectory(userDataFolder, "Settings");
+			this.PluginInstallationDirectory = OpenBveApi.Path.CombineDirectory(userDataFolder, "Plugins");
 			this.InitialRouteFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway"), "Route");
 			this.RouteInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
 			this.InitialTrainFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
