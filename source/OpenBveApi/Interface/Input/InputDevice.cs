@@ -227,6 +227,14 @@ namespace OpenBveApi.Interface
 				return;
 			}
 			string[] PluginFiles = System.IO.Directory.GetFiles(PluginsFolder, "*.dll");
+			string[] UserPluginFiles =  System.IO.Directory.GetFiles(FileSystem.PluginInstallationDirectory, "*.dll");
+			if (UserPluginFiles.Length != 0)
+			{
+				int startIdx = PluginFiles.Length;
+				Array.Resize(ref PluginFiles, startIdx + UserPluginFiles.Length);
+				Array.Copy(UserPluginFiles, 0, PluginFiles, startIdx, UserPluginFiles.Length);
+			}
+			
 			foreach (var File in PluginFiles)
 			{
 				Assembly Plugin;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using OpenBveApi.Interface;
 
 namespace OpenBveApi.Hosts
 {
@@ -18,6 +19,13 @@ namespace OpenBveApi.Hosts
 			try
 			{
 				files = Directory.GetFiles(folder);
+				string[] UserPluginFiles =  Directory.GetFiles(fileSystem.PluginInstallationDirectory, "*.dll");
+				if (UserPluginFiles.Length != 0)
+				{
+					int startIdx = files.Length;
+					Array.Resize(ref files, startIdx + UserPluginFiles.Length);
+					Array.Copy(UserPluginFiles, 0, files, startIdx, UserPluginFiles.Length);
+				}
 			}
 			catch
 			{
@@ -59,7 +67,7 @@ namespace OpenBveApi.Hosts
 
 							continue;
 						}
-						bool iruntime = false;
+						bool knownType = false;
 						foreach (Type type in types)
 						{
 							if (type.FullName == null)
@@ -90,9 +98,9 @@ namespace OpenBveApi.Hosts
 								plugin.Train = (Trains.TrainInterface) assembly.CreateInstance(type.FullName);
 							}
 
-							if (typeof(Runtime.IRuntime).IsAssignableFrom(type))
+							if (typeof(Runtime.IRuntime).IsAssignableFrom(type) || typeof(IInputDevice).IsAssignableFrom(type))
 							{
-								iruntime = true;
+								knownType = true;
 							}
 						}
 
@@ -101,7 +109,7 @@ namespace OpenBveApi.Hosts
 							plugin.Load(this, fileSystem, currentOptions, TrainManagerReference, RendererReference);
 							list.Add(plugin);
 						}
-						else if (!iruntime)
+						else if (!knownType)
 						{
 							builder.Append("Plugin ").Append(System.IO.Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
 							builder.AppendLine();
