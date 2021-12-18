@@ -30,6 +30,8 @@ namespace CarXmlConvertor
 		internal static int DriverCar = 0;
 		internal static int BrakeType = 0;
 		internal static int ReadhesionDeviceType = 0;
+		internal static double DoorWidth = 1000.0;
+		internal static double DoorTolerance = 0.0;
 		private static MainForm mainForm;
 		internal static List<AccelerationCurve> AccelerationCurves;
 
@@ -209,6 +211,8 @@ namespace CarXmlConvertor
 								switch (n)
 								{
 									case 5: ReadhesionDeviceType = (int) a; break;
+									case 10: DoorWidth = a; break;
+									case 11: DoorTolerance = a; break;
 								}
 							}
 							i++; n++;

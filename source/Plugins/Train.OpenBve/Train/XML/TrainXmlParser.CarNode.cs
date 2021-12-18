@@ -449,6 +449,48 @@ namespace Train.OpenBve
 							Train.Cars[Car].Specs.AccelerationCurves = accelerationCurves.ToArray();
 						}
 						break;
+					case "doors":
+						double doorWidth = 1.0;
+						double doorTolerance = 0.0;
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "openspeed":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].Specs.DoorOpenFrequency))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
+										}
+										break;
+									case "closespeed":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].Specs.DoorCloseFrequency))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
+										}
+										break;
+									case "width":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out doorWidth))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door width defined for Car " + Car + " in XML file " + fileName);
+										}
+										break;
+									case "tolerance":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out doorWidth))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door closing tolerance defined for Car " + Car + " in XML file " + fileName);
+										}
+										break;
+								}
+							}
+						}
+						// XML uses meters for all units to be consistant, so convert to mm for door usage
+						doorWidth *= 1000.0;
+						doorTolerance *= 1000.0;
+						Train.Cars[Car].Doors[0] = new Door(-1, doorWidth, doorTolerance);
+						Train.Cars[Car].Doors[0] = new Door(1, doorWidth, doorTolerance);
+						break;
 				}
 			}
 			/*

@@ -530,6 +530,10 @@ namespace CarXmlConvertor
 			newLines.Add("<ReleaseRate>" + ConvertTrainDat.BrakeCylinderReleaseRate + "</ReleaseRate>");
 			newLines.Add("</BrakeCylinder>");
 			newLines.Add("</Brake>");
+			newLines.Add("<Doors>");
+			newLines.Add("<Width>" + ConvertTrainDat.DoorWidth / 1000.0 + "</Width>");
+			newLines.Add("<Tolerance>" + ConvertTrainDat.DoorTolerance / 1000.0 + "</Tolerance>");
+			newLines.Add("</Doors>");
 			newLines.Add("</Car>");
 			if (i < Couplers.Length)
 			{

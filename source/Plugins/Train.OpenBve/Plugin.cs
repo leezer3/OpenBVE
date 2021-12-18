@@ -243,11 +243,6 @@ namespace Train.OpenBve
 				    IsLoading = false;
 				    return false;
 			    }
-			    // door open/close speed
-			    for (int i = 0; i < currentTrain.Cars.Length; i++)
-			    {
-				    currentTrain.Cars[i].DetermineDoorClosingSpeed();
-			    }
 		    }
 		    // add panel section
 		    if (currentTrain.IsPlayerTrain) {	
@@ -339,6 +334,20 @@ namespace Train.OpenBve
 			{
 				if (Cancel) return false;
 				SoundCfgParser.ParseSoundConfig(currentTrain);
+				/*
+				 * Determine door opening / closing speed
+				 * This *must* be done after the sound configuration has loaded
+				 * (As the original BVE / OpenBVE implimentation calculates this from
+				 * the length of the sound buffer)
+				 *
+				 * However, as motor performance / sound tables may also be loaded via car XML files,
+				 * this also needs to be done dead last
+				 */
+
+				for (int i = 0; i < currentTrain.Cars.Length; i++)
+				{
+					currentTrain.Cars[i].DetermineDoorClosingSpeed();
+				}
 			}
 			// place cars
 			currentTrain.PlaceCars(0.0);
