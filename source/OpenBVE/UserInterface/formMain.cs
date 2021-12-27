@@ -1878,5 +1878,11 @@ namespace OpenBve {
 		{
 			Interface.CurrentOptions.CurrentCompatibilitySignalSet = compatibilitySignals[comboBoxCompatibilitySignals.GetItemText(comboBoxCompatibilitySignals.SelectedItem)]; //Cheat by using the name as the dictionary key!
 		}
+
+		private void tabcontrolRouteDetails_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// MONO issue on some systems means that the map may not draw initially, so force redraw
+			pictureboxRouteMap.Invalidate();
+		}
 	}
 }
