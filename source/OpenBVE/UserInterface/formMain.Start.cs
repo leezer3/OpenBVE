@@ -1041,95 +1041,104 @@ namespace OpenBve
 			throw new Exception($"An unknown error was encountered whilst attempting to parser the route file {result.RouteFile}");
 		}
 
+		/// <summary>Lock to be held when the route / train details are being updated</summary>
+		private readonly object previewLock = new object();
+
 		private void ShowRouteInformation(Exception e)
 		{
-			try
+			lock (previewLock)
 			{
-				if (e != null)
+				try
 				{
-					throw e;
-				}
-				lock (BaseRenderer.GdiPlusLock)
-				{
-					pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
-					pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
-						pictureboxRouteGradient.Height, false);
-				}
-
-				// image
-				if (!string.IsNullOrEmpty(Program.CurrentRoute.Image))
-				{
-					TryLoadImage(pictureboxRouteImage, Program.CurrentRoute.Image);
-				}
-				else
-				{
-					string[] f = { ".png", ".bmp", ".gif", ".tiff", ".tif", ".jpeg", ".jpg" };
-					int i;
-					for (i = 0; i < f.Length; i++)
+					if (e != null)
 					{
-						string g = Path.CombineFile(System.IO.Path.GetDirectoryName(Result.RouteFile),
-							System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile) + f[i]);
-						if (File.Exists(g))
+						throw e;
+					}
+
+					lock (BaseRenderer.GdiPlusLock)
+					{
+						pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
+						pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
+							pictureboxRouteGradient.Height, false);
+					}
+
+					// image
+					if (!string.IsNullOrEmpty(Program.CurrentRoute.Image))
+					{
+						TryLoadImage(pictureboxRouteImage, Program.CurrentRoute.Image);
+					}
+					else
+					{
+						string[] f = { ".png", ".bmp", ".gif", ".tiff", ".tif", ".jpeg", ".jpg" };
+						int i;
+						for (i = 0; i < f.Length; i++)
 						{
-							try
+							string g = Path.CombineFile(System.IO.Path.GetDirectoryName(Result.RouteFile),
+								System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile) + f[i]);
+							if (File.Exists(g))
 							{
-								using (var fs = new FileStream(g, FileMode.Open, FileAccess.Read))
+								try
 								{
-									pictureboxRouteImage.Image = new Bitmap(fs);
+									using (var fs = new FileStream(g, FileMode.Open, FileAccess.Read))
+									{
+										pictureboxRouteImage.Image = new Bitmap(fs);
+									}
 								}
+								catch
+								{
+									pictureboxRouteImage.Image = null;
+								}
+
+								break;
 							}
-							catch
-							{
-								pictureboxRouteImage.Image = null;
-							}
-							break;
+						}
+
+						if (i == f.Length)
+						{
+							TryLoadImage(pictureboxRouteImage, "route_unknown.png");
 						}
 					}
-					if (i == f.Length)
-					{
-						TryLoadImage(pictureboxRouteImage, "route_unknown.png");
-					}
-				}
 
-				// description
-				string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
-				textboxRouteDescription.Text = Description.Length != 0 ? Description : System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
-				textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
-				if (Interface.CurrentOptions.TrainName != null)
-				{
-					checkboxTrainDefault.Text = $@"{Translations.GetInterfaceString("start_train_usedefault")} ({Interface.CurrentOptions.TrainName})";
+					// description
+					string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
+					textboxRouteDescription.Text = Description.Length != 0 ? Description : System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
+					textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
+					if (Interface.CurrentOptions.TrainName != null)
+					{
+						checkboxTrainDefault.Text = $@"{Translations.GetInterfaceString("start_train_usedefault")} ({Interface.CurrentOptions.TrainName})";
+					}
+					else
+					{
+						checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
+					}
+
+					Result.ErrorFile = null;
 				}
-				else
+				catch (Exception ex)
 				{
+					TryLoadImage(pictureboxRouteImage, "route_error.png");
+					textboxRouteDescription.Text = ex.Message;
+					textboxRouteEncodingPreview.Text = "";
+					pictureboxRouteMap.Image = null;
+					pictureboxRouteGradient.Image = null;
+					Result.ErrorFile = Result.RouteFile;
+					Result.RouteFile = null;
 					checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 				}
 
-				Result.ErrorFile = null;
+				if (checkboxTrainDefault.Checked)
+				{
+					ShowDefaultTrain();
+				}
+
+				Cursor = System.Windows.Forms.Cursors.Default;
+				//Deliberately select the tab when the process is complete
+				//This hopefully fixes another instance of the 'grey tabs' bug
+
+				tabcontrolRouteDetails.SelectedTab = tabpageRouteDescription;
+
+				buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
 			}
-			catch (Exception ex)
-			{
-				TryLoadImage(pictureboxRouteImage, "route_error.png");
-				textboxRouteDescription.Text = ex.Message;
-				textboxRouteEncodingPreview.Text = "";
-				pictureboxRouteMap.Image = null;
-				pictureboxRouteGradient.Image = null;
-				Result.ErrorFile = Result.RouteFile;
-				Result.RouteFile = null;
-				checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
-			}
-
-			if (checkboxTrainDefault.Checked)
-			{
-				ShowDefaultTrain();
-			}
-
-			Cursor = System.Windows.Forms.Cursors.Default;
-			//Deliberately select the tab when the process is complete
-			//This hopefully fixes another instance of the 'grey tabs' bug
-
-			tabcontrolRouteDetails.SelectedTab = tabpageRouteDescription;
-
-			buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
 		}
 
 		internal void DisposePreviewRouteThread()
@@ -1216,75 +1225,89 @@ namespace OpenBve
 		// show train
 		private void ShowTrain(bool UserSelectedEncoding)
 		{
-			string error; //ignored in this case, background thread
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			lock (previewLock)
 			{
-				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
-			}
-			bool canLoad = false;
-			Image trainImage = null;
-			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
-			{
-				if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))
+				string error; //ignored in this case, background thread
+				if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
 				{
-					canLoad = true;
-					trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(Result.TrainFolder);
-					if (!UserSelectedEncoding) {
-						Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
-						comboboxTrainEncoding.Tag = new object();
-						comboboxTrainEncoding.SelectedIndex = 0;
-						comboboxTrainEncoding.Items[0] = $"{Result.TrainEncoding.EncodingName} - {Result.TrainEncoding.CodePage}";
-
-						comboboxTrainEncoding.Tag = null;
-						for (int k = 0; k < Interface.CurrentOptions.TrainEncodings.Length; k++) {
-							if (Interface.CurrentOptions.TrainEncodings[k].Value == Result.TrainFolder) {
-								int j;
-								for (j = 1; j < EncodingCodepages.Length; j++) {
-									if (EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[k].Codepage) {
-										comboboxTrainEncoding.SelectedIndex = j;
-										Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
-										break;
-									}
-								}
-								if (j == EncodingCodepages.Length) {
-									comboboxTrainEncoding.SelectedIndex = 0;
-									Result.TrainEncoding = Encoding.UTF8;
-								}
-								break;
-							}
-						}
-						panelTrainEncoding.Enabled = true;
-						comboboxTrainEncoding.Tag = null;
-					}
-					textboxTrainDescription.Text = Program.CurrentHost.Plugins[i].Train.GetDescription(Result.TrainFolder, Result.TrainEncoding);
-					break;
+					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
-			}
 
-			if (!canLoad)
-			{
-				groupboxTrainDetails.Visible = false;
-				buttonStart.Enabled = false;
-				//No plugin capable of loading train found
-				return;
-			}
+				bool canLoad = false;
+				Image trainImage = null;
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))
+					{
+						canLoad = true;
+						trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(Result.TrainFolder);
+						if (!UserSelectedEncoding)
+						{
+							Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
+							comboboxTrainEncoding.Tag = new object();
+							comboboxTrainEncoding.SelectedIndex = 0;
+							comboboxTrainEncoding.Items[0] = $"{Result.TrainEncoding.EncodingName} - {Result.TrainEncoding.CodePage}";
 
-			if (trainImage != null)
-			{
-				pictureboxTrainImage.Image = trainImage;
-				pictureboxTrainImage.Enabled = true;
-			}
-			else
-			{
-				TryLoadImage(pictureboxTrainImage, "train_unknown.png");
-				pictureboxTrainImage.Enabled = false;
-			}
+							comboboxTrainEncoding.Tag = null;
+							for (int k = 0; k < Interface.CurrentOptions.TrainEncodings.Length; k++)
+							{
+								if (Interface.CurrentOptions.TrainEncodings[k].Value == Result.TrainFolder)
+								{
+									int j;
+									for (j = 1; j < EncodingCodepages.Length; j++)
+									{
+										if (EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[k].Codepage)
+										{
+											comboboxTrainEncoding.SelectedIndex = j;
+											Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
+											break;
+										}
+									}
 
-			groupboxTrainDetails.Visible = true;
-			labelTrainEncoding.Enabled = true;
-			labelTrainEncodingPreview.Enabled = true;
-			textboxTrainEncodingPreview.Enabled = true;
-			buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
+									if (j == EncodingCodepages.Length)
+									{
+										comboboxTrainEncoding.SelectedIndex = 0;
+										Result.TrainEncoding = Encoding.UTF8;
+									}
+
+									break;
+								}
+							}
+
+							panelTrainEncoding.Enabled = true;
+							comboboxTrainEncoding.Tag = null;
+						}
+
+						textboxTrainDescription.Text = Program.CurrentHost.Plugins[i].Train.GetDescription(Result.TrainFolder, Result.TrainEncoding);
+						break;
+					}
+				}
+
+				if (!canLoad)
+				{
+					groupboxTrainDetails.Visible = false;
+					buttonStart.Enabled = false;
+					//No plugin capable of loading train found
+					return;
+				}
+
+				if (trainImage != null)
+				{
+					pictureboxTrainImage.Image = trainImage;
+					pictureboxTrainImage.Enabled = true;
+				}
+				else
+				{
+					TryLoadImage(pictureboxTrainImage, "train_unknown.png");
+					pictureboxTrainImage.Enabled = false;
+				}
+
+				groupboxTrainDetails.Visible = true;
+				labelTrainEncoding.Enabled = true;
+				labelTrainEncodingPreview.Enabled = true;
+				textboxTrainEncodingPreview.Enabled = true;
+				buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
+			}
 		}
 
 		// show default train
