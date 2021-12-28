@@ -60,7 +60,9 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Mac OS-X</summary>
 		AppleOSX = 2,
 		/// <summary>FreeBSD</summary>
-		FreeBSD = 3
+		FreeBSD = 3,
+		/// <summary>Emulated Windows</summary>
+		WINE = 4
 
 	}
 	
@@ -83,6 +85,15 @@ namespace OpenBveApi.Hosts {
 			{
 				if (Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT)
 				{
+					try
+					{
+						var version = GetWineVersion();
+						return HostPlatform.WINE;
+					}
+					catch
+					{
+						//ignored
+					}
 					return HostPlatform.MicrosoftWindows;
 				}
 				if (System.IO.File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
@@ -138,6 +149,9 @@ namespace OpenBveApi.Hosts {
 
 		[DllImport("libc")]
 		private static extern void uname(out UName uname_struct);
+
+		[DllImport("ntdll.dll", EntryPoint="wine_get_version", CallingConvention=CallingConvention.Cdecl, CharSet=CharSet.Ansi)]
+		private static extern string GetWineVersion ();
 
 		/// <summary>The base host interface constructor</summary>
 		protected HostInterface(HostApplication host)
