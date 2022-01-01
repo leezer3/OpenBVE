@@ -33,7 +33,7 @@ namespace CarXmlConvertor
 		internal static double DoorWidth = 1000.0;
 		internal static double DoorTolerance = 0.0;
 		private static MainForm mainForm;
-		internal static List<AccelerationCurve> AccelerationCurves;
+		internal static List<AccelerationCurve> AccelerationCurves = new List<AccelerationCurve>();
 
 		internal static void Process(MainForm form)
 		{

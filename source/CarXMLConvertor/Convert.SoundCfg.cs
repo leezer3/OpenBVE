@@ -776,6 +776,41 @@ namespace CarXmlConvertor
                         i--;
                         newLines.Add("</Breaker>");
                         break;
+                    case "[flange]":
+	                    newLines.Add("<Flange>");
+	                    i++;
+	                    while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+	                    {
+		                    int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+		                    if (j >= 0)
+		                    {
+			                    string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+			                    string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+			                    int k;
+			                    if (!int.TryParse(a, System.Globalization.NumberStyles.Integer,
+				                        CultureInfo.InvariantCulture, out k))
+			                    {
+				                    continue;
+			                    }
+			                    if (b.Length == 0 || Path.ContainsInvalidChars(b))
+			                    {
+				                    continue;
+			                    }
+			                    if (k >= 0)
+			                    {
+				                    newLines.Add("<Sound>");
+				                    newLines.Add("<Index>" + k + "</Index>");
+				                    newLines.Add("<FileName>" + b + "</FileName>");
+				                    newLines.Add("<Position>0,0,0</Position>");
+				                    newLines.Add("<Radius>10.0</Radius>");
+				                    newLines.Add("</Sound>");
+			                    }
+		                    }
+		                    i++;
+	                    }
+	                    i--;
+	                    newLines.Add("</Flange>");
+	                    break;
                     case "[others]":
                         i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
                         {
