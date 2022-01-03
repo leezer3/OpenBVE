@@ -59,6 +59,11 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BMP\BitsPerPixel.cs" />
+    <Compile Include="BMP\BmpDecoder.cs" />
+    <Compile Include="BMP\BmpFormat.cs" />
+    <Compile Include="BMP\ColorPalletes.cs" />
+    <Compile Include="BMP\CompressionFormat.cs" />
     <Compile Include="GIF\ControlCode.cs" />
     <Compile Include="GIF\GifDecoder.cs" />
     <Compile Include="GIF\DisposeMode.cs" />
@@ -79,6 +84,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Target Name="AfterBuild">
     <ItemGroup>
       <OutputFiles Include="$(TargetDir)$(TargetName).*" />

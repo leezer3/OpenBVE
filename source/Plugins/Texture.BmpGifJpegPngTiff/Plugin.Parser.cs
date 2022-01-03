@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
@@ -53,6 +54,16 @@ namespace Plugin {
 								duration += decoder.GetDuration(i);
 							}
 							texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
+							return true;
+						}
+					}
+					
+					if (Encoding.ASCII.GetString(buffer, 0, 2) == "BM")
+					{
+						BmpDecoder decoder = new BmpDecoder();
+						if (decoder.Read(file))
+						{
+							texture = new Texture(decoder.Width, decoder.Height, 32, decoder.ImageData, decoder.ColorTable);
 							return true;
 						}
 					}
