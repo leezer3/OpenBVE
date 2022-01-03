@@ -1368,7 +1368,7 @@ namespace Train.OpenBve
 					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
 					
 					// motor sound
-					Train.Cars[i].Sounds.Motor = new BVEMotorSound(Train.Cars[i], 18.0);
+					Train.Cars[i].Sounds.Motor = new BVEMotorSound(Train.Cars[i], 18.0, Tables);
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Hosts;
 using SoundManager;
 using TrainManager.Car;
 
@@ -93,7 +94,7 @@ namespace TrainManager.Motor
 							idx2 = Tables[j].Entries.Length - 1;
 						}
 
-						if ((!PlayFirstTrack && h == 0) || (!PlaySecondTrack && h == 1))
+						if (TrainManagerBase.currentHost.Application != HostApplication.OpenBve && ((!PlayFirstTrack && h == 0) || (!PlaySecondTrack && h == 1)))
 						{
 							// Used in TrainEditor2 to play a single track whilst editing
 							idx2 = -1;
@@ -133,7 +134,7 @@ namespace TrainManager.Motor
 								TrainManagerBase.currentHost.StopSound(Tables[j].Source);
 								if (nbuf != null)
 								{
-									Tables[j].Source = (SoundSource) TrainManagerBase.currentHost.PlaySound(nbuf, pitch, gain, Position, this, true);
+									Tables[j].Source = (SoundSource) TrainManagerBase.currentHost.PlaySound(nbuf, pitch, gain, Position, Car, true);
 									Tables[j].Buffer = nbuf;
 								}
 								else
