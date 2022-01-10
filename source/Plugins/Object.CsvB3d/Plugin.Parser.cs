@@ -864,6 +864,11 @@ namespace Plugin
 								}
 								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)255);
 								Object.ApplyColor(newColor, true);
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].EmissiveColor = (Color24)newColor;
+									Builder.Materials[j].Flags |= MaterialFlags.Emissive;
+								}
 							}
 						} break;
 						case "setemissivecolor":
