@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2022, Christopher Lees, The OpenBVE Project
 //
@@ -52,6 +52,9 @@ namespace Plugin
 		private int ImportantColors;
 		/// <summary>Whether the image is stored in top-down format</summary>
 		private bool TopDown;
+		/// <summary>The number of planes in the bitmap</summary>
+		/// <remarks>Must be set to 1 https://devblogs.microsoft.com/oldnewthing/20041201-00/?p=37163 </remarks>
+		private int numPlanes;
 
 		// INTERNAL MEMBERS
 
@@ -99,6 +102,12 @@ namespace Plugin
 				int headerSize = ToInt32(buffer, 0);
 				switch (headerSize)
 				{
+					case 12:
+						Format = BmpFormat.OS2v1;
+						break;
+					case 16:
+						Format = BmpFormat.OS2v2;
+						break;
 					case 40:
 					case 64:
 						Format = BmpFormat.BmpVersion2;
@@ -114,25 +123,81 @@ namespace Plugin
 				buffer = new byte[headerSize - 4];
 				fileReader.Read(buffer, 0, headerSize - 4);
 				
-				Width = ToInt32(buffer, 0);
-				Height = ToInt32(buffer, 4);
 
+				switch (Format)
+				{
+					case BmpFormat.OS2v1:
+						Width = ToInt16(buffer, 0);
+						Height = ToInt16(buffer, 2);
+						numPlanes = ToInt16(buffer, 4);
+						BitsPerPixel = (BitsPerPixel)ToInt16(buffer, 6);
+						CompressionFormat = CompressionFormat.BI_RGB;
+						switch (BitsPerPixel)
+						{
+							case BitsPerPixel.Monochrome:
+								ColorsUsed = 2;
+								break;
+							case BitsPerPixel.TwoBitPalletized:
+								ColorsUsed = 4;
+								break;
+							case BitsPerPixel.FourBitPalletized:
+								ColorsUsed = 16;
+								break;
+							case BitsPerPixel.EightBitPalletized:
+								// Documentation is a little sparse, but this seems to be right (not 256!)
+								ColorsUsed = 252;
+								break;
+						}
+						break;
+					case BmpFormat.OS2v2:
+						Width = ToInt32(buffer, 0);
+						Height = ToInt32(buffer, 4);
+						numPlanes = ToInt16(buffer, 8);
+						BitsPerPixel = (BitsPerPixel)ToInt16(buffer, 10);
+						CompressionFormat = CompressionFormat.BI_RGB;
+						switch (BitsPerPixel)
+						{
+							case BitsPerPixel.Monochrome:
+								ColorsUsed = 2;
+								break;
+							case BitsPerPixel.TwoBitPalletized:
+								ColorsUsed = 4;
+								break;
+							case BitsPerPixel.FourBitPalletized:
+								ColorsUsed = 16;
+								break;
+							case BitsPerPixel.EightBitPalletized:
+								// Documentation is a little sparse, but this seems to be right (not 256!)
+								ColorsUsed = 252;
+								break;
+						}
+						break;
+					default:
+						Width = ToInt32(buffer, 0);
+						Height = ToInt32(buffer, 4);
+						numPlanes = ToInt16(buffer, 8);
+						BitsPerPixel = (BitsPerPixel)ToInt16(buffer, 10);
+						CompressionFormat = (CompressionFormat)ToInt32(buffer, 12);
+						ImageResolution.X = ToInt32(buffer, 20);
+						ImageResolution.Y = ToInt32(buffer, 24);
+						ColorsUsed = ToInt32(buffer, 28);
+						ImportantColors = ToInt32(buffer, 32);
+						ImageSize = ToInt32(buffer, 16);
+						break;
+				}
+				
 				if (Math.Abs(Height) != Height)
 				{
 					// Image is stored in the uncommon top-down format
 					TopDown = true;
 					Height = Math.Abs(Height);
 				}
-
-				int numPlanes = ToInt16(buffer, 8);
+				
 				if (numPlanes != 1)
 				{
-					// must be set to 1 https://devblogs.microsoft.com/oldnewthing/20041201-00/?p=37163
 					return false;
 				}
-
-				BitsPerPixel = (BitsPerPixel)ToInt16(buffer, 10);
-				CompressionFormat = (CompressionFormat)ToInt32(buffer, 12);
+				
 				if (CompressionFormat == CompressionFormat.BITFIELDS)
 				{
 					/* A BMP V3 file is identical to a V2 unless bitmask is used
@@ -144,26 +209,25 @@ namespace Plugin
 					Format = BmpFormat.BmpVersion3;
 					return false;
 				}
-				ImageSize = ToInt32(buffer, 16);
-				if (ImageSize == 0 && CompressionFormat != CompressionFormat.BI_RGB)
+				
+				if (ImageSize == 0 && Format > BmpFormat.OS2v2)
 				{
-					// Compressed image size of zero should only be valid with uncompressed data
+					// Compressed image size of zero should only be valid with uncompressed data, unless OS/2 bitmaps
 					return false;
 				}
-				ImageResolution.X = ToInt32(buffer, 20);
-				ImageResolution.Y = ToInt32(buffer, 24);
-				ColorsUsed = ToInt32(buffer, 28);
+				
 				ColorTable = new Color24[ColorsUsed];
-				ImportantColors = ToInt32(buffer, 32);
+				
 
 				// COLOR TABLE
 				if (ColorsUsed != 0)
 				{
-					buffer = new byte[ColorsUsed * 4];
-					fileReader.Read(buffer, 0, ColorsUsed * 4);
+					int colorSize = Format == BmpFormat.OS2v1 ? 3 : 4;
+					buffer = new byte[ColorsUsed * colorSize];
+					fileReader.Read(buffer, 0, ColorsUsed * colorSize);
 					for (int currentColor = 0; currentColor < ColorsUsed; currentColor++)
 					{
-						int idx = currentColor * 4;
+						int idx = currentColor * colorSize;
 						ColorTable[currentColor] = new Color24(buffer[idx + 2], buffer[idx + 1], buffer[idx]); // stored as BGR in bitmap, we want RGB
 					}
 				}
