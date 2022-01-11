@@ -5,6 +5,9 @@
 	{
 		/// <summary>Single color black / white</summary>
 		Monochrome = 1,
+		/// <summary>Two bits per pixel</summary>
+		/// <remarks>Highly uncommon, legal on WinCE</remarks>
+		TwoBitPalletized = 2,
 		/// <summary>16 colors</summary>
 		FourBitPalletized = 4,
 		/// <summary>256 colors</summary>

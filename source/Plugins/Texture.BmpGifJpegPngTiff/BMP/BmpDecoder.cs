@@ -251,6 +251,60 @@ namespace Plugin
 									sourceIdx = sourceIdx % 4 == 0 ? sourceIdx : sourceIdx + 4 - sourceIdx % 4;
 								}
 								break;
+							case BitsPerPixel.TwoBitPalletized:
+								for (int currentRow = 0; currentRow < Height; currentRow++)
+								{
+									if (!TopDown)
+									{
+										destIdx = (Height - currentRow - 1) * Width * 4;
+									}
+									int currentPixel = 0;
+									while(currentPixel < Width)
+									{
+										byte firstNibblet = (byte)((buffer[sourceIdx] >> 6) & 0x03);
+										byte secondNibblet = (byte)((buffer[sourceIdx] >> 4) & 0x03);
+										byte thirdNibblet = (byte)((buffer[sourceIdx] >> 2) & 0x03);
+										byte fourthNibblet = (byte)(buffer[sourceIdx] & 0x03);
+										ImageData[destIdx] = ColorTable[firstNibblet].R;
+										ImageData[destIdx + 1] = ColorTable[firstNibblet].G;
+										ImageData[destIdx + 2] = ColorTable[firstNibblet].B;
+										ImageData[destIdx + 3] = byte.MaxValue;
+										currentPixel++;
+										destIdx+= 4;
+										if (currentPixel < Width)
+										{
+											ImageData[destIdx] = ColorTable[secondNibblet].R;
+											ImageData[destIdx + 1] = ColorTable[secondNibblet].G;
+											ImageData[destIdx + 2] = ColorTable[secondNibblet].B;
+											ImageData[destIdx + 3] = byte.MaxValue;
+											currentPixel++;
+											destIdx+= 4;
+										}
+										if (currentPixel < Width)
+										{
+											ImageData[destIdx] = ColorTable[thirdNibblet].R;
+											ImageData[destIdx + 1] = ColorTable[thirdNibblet].G;
+											ImageData[destIdx + 2] = ColorTable[thirdNibblet].B;
+											ImageData[destIdx + 3] = byte.MaxValue;
+											currentPixel++;
+											destIdx+= 4;
+										}
+										if (currentPixel < Width)
+										{
+											ImageData[destIdx] = ColorTable[fourthNibblet].R;
+											ImageData[destIdx + 1] = ColorTable[fourthNibblet].G;
+											ImageData[destIdx + 2] = ColorTable[fourthNibblet].B;
+											ImageData[destIdx + 3] = byte.MaxValue;
+											currentPixel++;
+											destIdx+= 4;
+										}
+										sourceIdx++;
+									}
+									// BMP scan lines are zero-padded to the nearest 4-byte boundary
+									sourceIdx = sourceIdx % 4 == 0 ? sourceIdx : sourceIdx + 4 - sourceIdx % 4;
+								}
+								break;
+								//break;
 							case BitsPerPixel.FourBitPalletized:
 								for (int currentRow = 0; currentRow < Height; currentRow++)
 								{
