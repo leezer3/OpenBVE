@@ -100,6 +100,7 @@ namespace Plugin
 				switch (headerSize)
 				{
 					case 40:
+					case 64:
 						Format = BmpFormat.BmpVersion2;
 						break;
 					case 108:
