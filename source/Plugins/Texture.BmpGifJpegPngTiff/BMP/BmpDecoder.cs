@@ -32,7 +32,7 @@ using System.Text;
 
 namespace Plugin
 {
-	internal class BmpDecoder
+	internal class BmpDecoder : IDisposable
 	{
 		// PRIVATE MEMBERS
 
@@ -85,18 +85,18 @@ namespace Plugin
 					// not a bitmap file
 					return false;
 				}
-				fileSize = BitConverter.ToInt32(buffer, 2);
+				fileSize = ToInt32(buffer, 2);
 				/*
 				 * Next 4 bytes are unused
 				 * Actually specified as application specific data, but in practice always set to zero
 				 * unless using some ridiculously obscure DOS stuff, which we can safely ignore
 				 */
-				dataOffset = BitConverter.ToInt32(buffer, 10);
+				dataOffset = ToInt32(buffer, 10);
 
 				// INFO HEADER
 				buffer = new byte[4];
 				fileReader.Read(buffer,0 , 4);
-				int headerSize = BitConverter.ToInt32(buffer, 0);
+				int headerSize = ToInt32(buffer, 0);
 				switch (headerSize)
 				{
 					case 40:
@@ -113,8 +113,8 @@ namespace Plugin
 				buffer = new byte[headerSize - 4];
 				fileReader.Read(buffer, 0, headerSize - 4);
 				
-				Width = BitConverter.ToInt32(buffer, 0);
-				Height = BitConverter.ToInt32(buffer, 4);
+				Width = ToInt32(buffer, 0);
+				Height = ToInt32(buffer, 4);
 
 				if (Math.Abs(Height) != Height)
 				{
@@ -123,15 +123,15 @@ namespace Plugin
 					Height = Math.Abs(Height);
 				}
 
-				int numPlanes = BitConverter.ToInt16(buffer, 8);
+				int numPlanes = ToInt16(buffer, 8);
 				if (numPlanes != 1)
 				{
 					// must be set to 1 https://devblogs.microsoft.com/oldnewthing/20041201-00/?p=37163
 					return false;
 				}
 
-				BitsPerPixel = (BitsPerPixel)BitConverter.ToInt16(buffer, 10);
-				CompressionFormat = (CompressionFormat)BitConverter.ToInt32(buffer, 12);
+				BitsPerPixel = (BitsPerPixel)ToInt16(buffer, 10);
+				CompressionFormat = (CompressionFormat)ToInt32(buffer, 12);
 				if (CompressionFormat == CompressionFormat.BITFIELDS)
 				{
 					/* A BMP V3 file is identical to a V2 unless bitmask is used
@@ -143,17 +143,17 @@ namespace Plugin
 					Format = BmpFormat.BmpVersion3;
 					return false;
 				}
-				ImageSize = BitConverter.ToInt32(buffer, 16);
+				ImageSize = ToInt32(buffer, 16);
 				if (ImageSize == 0 && CompressionFormat != CompressionFormat.BI_RGB)
 				{
 					// Compressed image size of zero should only be valid with uncompressed data
 					return false;
 				}
-				ImageResolution.X = BitConverter.ToInt32(buffer, 20);
-				ImageResolution.Y = BitConverter.ToInt32(buffer, 24);
-				ColorsUsed = BitConverter.ToInt32(buffer, 28);
+				ImageResolution.X = ToInt32(buffer, 20);
+				ImageResolution.Y = ToInt32(buffer, 24);
+				ColorsUsed = ToInt32(buffer, 28);
 				ColorTable = new Color24[ColorsUsed];
-				ImportantColors = BitConverter.ToInt32(buffer, 32);
+				ImportantColors = ToInt32(buffer, 32);
 
 				// COLOR TABLE
 				if (ColorsUsed != 0)
@@ -479,6 +479,26 @@ namespace Plugin
 			}
 
 			return true;
+		}
+
+		/*
+		 * Couple of little helper methods
+		 * This is faster than using the BitConvertor as we don't have to init a new class every time we call it
+		 */
+
+		internal int ToInt16(byte[] buffer, int offset)
+		{
+			return buffer[offset] | (buffer[offset + 1] << 8);
+		}
+
+		internal int ToInt32(byte[] buffer, int offset)
+		{
+			return (buffer[offset] & 0xFF) | ((buffer[offset + 1] & 0xFF) << 8) | ((buffer[offset + 2] & 0xFF) << 16) | ((buffer[offset + 3] & 0xFF) << 24);
+		}
+
+		public void Dispose()
+		{
+			
 		}
 	}
 }

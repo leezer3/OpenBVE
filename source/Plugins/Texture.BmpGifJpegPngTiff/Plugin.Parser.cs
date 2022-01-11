@@ -60,12 +60,15 @@ namespace Plugin {
 					
 					if (Encoding.ASCII.GetString(buffer, 0, 2) == "BM")
 					{
-						BmpDecoder decoder = new BmpDecoder();
-						if (decoder.Read(file))
+						using (BmpDecoder decoder = new BmpDecoder())
 						{
-							texture = new Texture(decoder.Width, decoder.Height, 32, decoder.ImageData, decoder.ColorTable);
-							return true;
+							if (decoder.Read(file))
+							{
+								texture = new Texture(decoder.Width, decoder.Height, 32, decoder.ImageData, decoder.ColorTable);
+								return true;
+							}
 						}
+						
 					}
 				}
 			}
