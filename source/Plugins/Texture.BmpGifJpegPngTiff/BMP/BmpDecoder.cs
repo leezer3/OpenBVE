@@ -314,21 +314,21 @@ namespace Plugin
 									}
 									for (int currentPixel = 0; currentPixel < Width; currentPixel+= 2)
 									{
-										byte leftNibble = (byte) (buffer[sourceIdx] & 0x0F); // color of left pixel
-										byte rightNibble = (byte)((buffer[sourceIdx] & 0xF0) >> 4); // color of right pixel
+										byte leftNibble = (byte)((buffer[sourceIdx] & 0xF0) >> 4); // color of left pixel
+										byte rightNibble = (byte) (buffer[sourceIdx] & 0x0F); // color of right pixel
 										ImageData[destIdx] = ColorTable[leftNibble].R;
 										ImageData[destIdx + 1] = ColorTable[leftNibble].G;
 										ImageData[destIdx + 2] = ColorTable[leftNibble].B;
 										ImageData[destIdx + 3] = byte.MaxValue;
 										destIdx+= 4;
-										if (Width % 2 == 0 || currentPixel > Width - 1)
+										if (currentPixel < Width - 1)
 										{
 											// Final nibble should be discarded if not divisible by 2
 											ImageData[destIdx] = ColorTable[rightNibble].R;
 											ImageData[destIdx + 1] = ColorTable[rightNibble].G;
 											ImageData[destIdx + 2] = ColorTable[rightNibble].B;
 											ImageData[destIdx + 3] = byte.MaxValue;
-											destIdx+= 4;
+											destIdx += 4;
 										}
 										sourceIdx++;
 									}
