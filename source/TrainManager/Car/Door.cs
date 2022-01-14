@@ -31,7 +31,7 @@ namespace TrainManager.Car
 		public double NextReopenTime;
 		/// <summary>Ratio that width of the obstacle to the overall width of the door</summary>
 		public double InterferingObjectRate;
-		/// <summary>The width of the door opening</summary>
+		/// <summary>The width of the door opening in mm</summary>
 		public readonly double Width;
 		/// <summary>The maximum tolerance for an interfering object in the door opening before closure will not succeed</summary>
 		public readonly double MaxTolerance;

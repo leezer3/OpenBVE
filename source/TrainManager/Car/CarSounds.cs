@@ -8,7 +8,7 @@ namespace TrainManager.Car
 	public class CarSounds
 	{
 		/// <summary>The motor sounds</summary>
-		public BVEMotorSound Motor;
+		public AbstractMotorSound Motor;
 		/// <summary>The flange squeal sounds</summary>
 		public Dictionary<int, CarSound> Flange = new Dictionary<int, CarSound>();
 		/// <summary>The loop sound</summary>

@@ -369,7 +369,8 @@ namespace Train.OpenBve
 									{
 										break;
 									}
-									ParseMotorSoundTableNode(c, ref car.Sounds.Motor.Tables, center, SoundCfgParser.mediumRadius);
+
+									ParseMotorSoundTableNode(c, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
 									break;
 								case "pilotlamp":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -578,12 +579,12 @@ namespace Train.OpenBve
 			}
 		}
 
-		/// <summary>Parses an XML motor table node</summary>
+		/// <summary>Parses an XML motor table node into a BVE motor sound table</summary>
 		/// <param name="node">The node</param>
-		/// <param name="Tables">The motor sound tables to assign this node's contents to</param>
+		/// <param name="motorSound">The motor sound tables to assign this node's contents to</param>
 		/// <param name="Position">The default sound position</param>
 		/// <param name="Radius">The default sound radius</param>
-		private void ParseMotorSoundTableNode(XmlNode node, ref BVEMotorSoundTable[] Tables, Vector3 Position, double Radius)
+		private void ParseMotorSoundTableNode(XmlNode node, ref AbstractMotorSound motorSound, Vector3 Position, double Radius)
 		{
 			foreach (XmlNode c in node.ChildNodes)
 			{
@@ -606,19 +607,35 @@ namespace Train.OpenBve
 							break;
 						}
 					}
+
 					if (idx >= 0)
 					{
-						for (int i = 0; i < Tables.Length; i++)
+						if (motorSound is BVEMotorSound bveMotorSound)
 						{
-							Tables[i].Buffer = null;
-							Tables[i].Source = null;
-							for (int j = 0; j < Tables[i].Entries.Length; j++)
+							for (int i = 0; i < bveMotorSound.Tables.Length; i++)
 							{
-								if (idx == Tables[i].Entries[j].SoundIndex)
+								bveMotorSound.Tables[i].Buffer = null;
+								bveMotorSound.Tables[i].Source = null;
+								for (int j = 0; j < bveMotorSound.Tables[i].Entries.Length; j++)
 								{
-									ParseNode(c, out Tables[i].Entries[j].Buffer, ref Position, Radius);
+									if (idx == bveMotorSound.Tables[i].Entries[j].SoundIndex)
+									{
+										ParseNode(c, out bveMotorSound.Tables[i].Entries[j].Buffer, ref Position, Radius);
+									}
 								}
 							}
+						}
+						else if (motorSound is BVE5MotorSound bve5MotorSound)
+						{
+							if (idx >= bve5MotorSound.SoundBuffers.Length)
+							{
+								Array.Resize(ref bve5MotorSound.SoundBuffers, idx + 1);
+							}
+							ParseNode(c, out bve5MotorSound.SoundBuffers[idx], ref Position, Radius);
+						}
+						else
+						{
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported motor sound type in XML node " + node.Name);	
 						}
 					}
 					else

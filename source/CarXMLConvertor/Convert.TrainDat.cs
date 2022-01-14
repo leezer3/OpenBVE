@@ -1,5 +1,7 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.Math;
 
@@ -28,7 +30,11 @@ namespace CarXmlConvertor
 		internal static int DriverCar = 0;
 		internal static int BrakeType = 0;
 		internal static int ReadhesionDeviceType = 0;
+		internal static double DoorWidth = 1000.0;
+		internal static double DoorTolerance = 0.0;
 		private static MainForm mainForm;
+		internal static List<AccelerationCurve> AccelerationCurves = new List<AccelerationCurve>();
+
 		internal static void Process(MainForm form)
 		{
 			mainForm = form;
@@ -40,6 +46,9 @@ namespace CarXmlConvertor
 				return;
 			}
 			string[] Lines = System.IO.File.ReadAllLines(FileName);
+
+			int currentVersion = ParseFormat(Lines);
+
 			for (int i = 0; i < Lines.Length; i++)
 
 			{
@@ -54,10 +63,18 @@ namespace CarXmlConvertor
 							{
 								switch (n)
 								{
-									case 0: ConvertSoundCfg.DriverPosition.X = 0.001 * a; break;
-									case 1: ConvertSoundCfg.DriverPosition.Y = 0.001 * a; break;
-									case 2: ConvertSoundCfg.DriverPosition.Z = 0.001 * a; break;
-									case 3: DriverCar = (int)Math.Round(a); break;
+									case 0:
+										ConvertSoundCfg.DriverPosition.X = 0.001 * a;
+										break;
+									case 1:
+										ConvertSoundCfg.DriverPosition.Y = 0.001 * a;
+										break;
+									case 2:
+										ConvertSoundCfg.DriverPosition.Z = 0.001 * a;
+										break;
+									case 3:
+										DriverCar = (int)Math.Round(a);
+										break;
 								}
 							}
 							i++; n++;
@@ -194,12 +211,77 @@ namespace CarXmlConvertor
 								switch (n)
 								{
 									case 5: ReadhesionDeviceType = (int) a; break;
+									case 10: DoorWidth = a; break;
+									case 11: DoorTolerance = a; break;
 								}
 							}
 							i++; n++;
 						}
 						i--; 
 						break;
+					case "#acceleration":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							AccelerationCurve curve = new AccelerationCurve();
+							string t = Lines[i] + ",";
+							int m = 0;
+							while (true) {
+								int j = t.IndexOf(',');
+								if (j == -1) break;
+								string s = t.Substring(0, j).Trim();
+								t = t.Substring(j + 1);
+								if (NumberFormats.TryParseDoubleVb6(s, out var a)) {
+									switch (m) {
+										case 0:
+											if (a <= 0.0) {
+												
+											} else {
+												curve.StageZeroAcceleration = a;
+											} break;
+										case 1:
+											if (a <= 0.0) {
+											} else {
+												curve.StageOneAcceleration = a;
+											} break;
+										case 2:
+											if (a <= 0.0) {
+											} else {
+												curve.StageOneSpeed = a;
+											} break;
+										case 3:
+											if (a <= 0.0) {
+											} else {
+												curve.StageTwoSpeed = a;
+												if (curve.StageTwoSpeed < curve.StageOneSpeed) {
+													curve.StageTwoSpeed = curve.StageOneSpeed;
+												}
+											} break;
+										case 4:
+											{
+												if (currentVersion < 2000000) {
+													if (a <= 0.0) {
+														curve.StageTwoExponent = 1.0;
+													} else {
+														const double c = 4.439346232277577;
+														curve.StageTwoExponent = 1.0 - Math.Log(a) * curve.StageTwoSpeed * c;
+														if (curve.StageTwoExponent <= 0.0) {
+															curve.StageTwoExponent = 1.0;
+														} else if (curve.StageTwoExponent > 4.0) {
+															curve.StageTwoExponent = 4.0;
+														}
+													}
+												} else {
+													curve.StageTwoExponent = a;
+													if (curve.StageTwoExponent <= 0.0) {
+														curve.StageTwoExponent = 1.0;
+													}
+												}
+											} break;
+									}
+								} m++;
+							} i++; n++;
+							AccelerationCurves.Add(curve);
+						} i--; break;
 					default:
 					{
 						i++;
@@ -264,8 +346,8 @@ namespace CarXmlConvertor
 				}
 				else
 				{
-					int i = (int)Math.Ceiling(0.25 * (double)(NumberOfCars - 1));
-					int j = (int)Math.Floor(0.75 * (double)(NumberOfCars - 1));
+					int i = (int)Math.Ceiling(0.25 * (NumberOfCars - 1));
+					int j = (int)Math.Floor(0.75 * (NumberOfCars - 1));
 					MotorCars[i] = true;
 					MotorCars[j] = true;
 				}
@@ -306,6 +388,42 @@ namespace CarXmlConvertor
 				}
 			}
 			ConvertSoundCfg.DriverPosition.Z = 0.5 * CarLength + ConvertSoundCfg.DriverPosition.Z;
+		}
+
+		private static int ParseFormat(string[] lines)
+		{
+			for (int i = 0; i < lines.Length; i++)
+			{
+				if (lines[i].Length <= 0)
+				{
+					continue;
+				}
+
+				string t = lines[i].ToLowerInvariant();
+				switch (t)
+				{
+					case "bve1200000":
+						return 1200000;
+					case "bve1210000":
+						return 1210000;
+					case "bve1220000":
+						return 1220000;
+					case "bve2000000":
+						return 2000000;
+					case "bve2060000":
+						return 2060000;
+				}
+			}
+			return 2000000;
+		}
+
+		internal struct AccelerationCurve
+		{
+			internal double StageZeroAcceleration;
+			internal double StageOneAcceleration;
+			internal double StageOneSpeed;
+			internal double StageTwoSpeed;
+			internal double StageTwoExponent;
 		}
 	}
 }

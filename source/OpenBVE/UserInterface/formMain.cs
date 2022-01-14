@@ -218,11 +218,11 @@ namespace OpenBve {
 			if (MechanikRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
-				if (Interface.CurrentOptions.RecentlyUsedRoutes[i] == null)
-				{
-					continue;
-				}
-				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
+				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedRoutes[i])) continue;
+				string RouteFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				if (string.IsNullOrEmpty(RouteFileName) || string.IsNullOrEmpty(RoutePath)) continue;
+				ListViewItem Item = listviewRouteRecently.Items.Add(RouteFileName);
 				string extension = System.IO.Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
 				switch (extension)
 				{
@@ -239,7 +239,6 @@ namespace OpenBve {
 				}
 
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];
-				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (textboxRouteFolder.Items.Count == 0 || !textboxRouteFolder.Items.Contains(RoutePath))
 				{
 					textboxRouteFolder.Items.Add(RoutePath);
@@ -261,10 +260,13 @@ namespace OpenBve {
 			if (TrainIcon != null) listviewTrainRecently.SmallImageList.Images.Add("train", TrainIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 			{
-				ListViewItem Item = listviewTrainRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]));
+				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
+				string TrainFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				string TrainPath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				if (string.IsNullOrEmpty(TrainFileName) || string.IsNullOrEmpty(TrainPath)) continue;
+				ListViewItem Item = listviewTrainRecently.Items.Add(TrainFileName);
 				Item.ImageKey = @"train";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedTrains[i];
-				string TrainPath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				if (textboxTrainFolder.Items.Count == 0 || !textboxTrainFolder.Items.Contains(TrainPath))
 				{
 					textboxTrainFolder.Items.Add(TrainPath);
@@ -1875,6 +1877,12 @@ namespace OpenBve {
 		private void comboBoxCompatibilitySignals_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Interface.CurrentOptions.CurrentCompatibilitySignalSet = compatibilitySignals[comboBoxCompatibilitySignals.GetItemText(comboBoxCompatibilitySignals.SelectedItem)]; //Cheat by using the name as the dictionary key!
+		}
+
+		private void tabcontrolRouteDetails_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// MONO issue on some systems means that the map may not draw initially, so force redraw
+			pictureboxRouteMap.Invalidate();
 		}
 	}
 }

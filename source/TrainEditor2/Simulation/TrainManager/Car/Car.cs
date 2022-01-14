@@ -7,24 +7,31 @@ using SoundManager;
 using TrainEditor2.Models.Sounds;
 using TrainManager.Car;
 using TrainManager.Motor;
+using TrainManager.Trains;
 
 namespace TrainEditor2.Simulation.TrainManager
 {
-	public static partial class TrainManager
+	public partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal class Car : AbstractCar
+		internal class Car : CarBase
 		{
-			private readonly Train baseTrain;
-			internal CarPhysics Specs;
-			internal CarSounds Sounds;
 
-			internal Car(Train baseTrain)
+			public Car() : base(null, 0)
 			{
-				this.baseTrain = baseTrain;
-				this.Specs = new CarPhysics();
-				this.Sounds = new CarSounds();
-				InitializeCarSounds();
+				Sounds = new CarSounds();
+				Specs = new CarPhysics();
+				Specs.IsMotorCar = true;
+			}
+
+			public Car(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient) : base(train, index, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient)
+			{
+				throw new NotSupportedException("Should not be called in TrainEditor2");
+			}
+
+			public Car(TrainBase train, int index) : base(train, index)
+			{
+				throw new NotSupportedException("Should not be called in TrainEditor2");
 			}
 
 			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
@@ -89,108 +96,7 @@ namespace TrainEditor2.Simulation.TrainManager
 				}
 			}
 
-			internal void UpdateMotorSounds(bool isPlayTrack1, bool isPlayTrack2)
-			{
-				Vector3 pos = Sounds.Motor.Position;
-				double speed = Math.Abs(Specs.PerceivedSpeed);
-				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
-				int odir = Sounds.Motor.CurrentAccelerationDirection;
-				int ndir = Math.Sign(Specs.Acceleration);
 
-				for (int h = 0; h < 2; h++)
-				{
-					int j = h == 0 ? BVEMotorSound.MotorP1 : BVEMotorSound.MotorP2;
-					int k = h == 0 ? BVEMotorSound.MotorB1 : BVEMotorSound.MotorB2;
-
-					if (odir > 0 & ndir <= 0)
-					{
-						if (j < Sounds.Motor.Tables.Length)
-						{
-							Program.SoundApi.StopSound(Sounds.Motor.Tables[j].Source);
-							Sounds.Motor.Tables[j].Source = null;
-							Sounds.Motor.Tables[j].Buffer = null;
-						}
-					}
-					else if (odir < 0 & ndir >= 0)
-					{
-						if (k < Sounds.Motor.Tables.Length)
-						{
-							Program.SoundApi.StopSound(Sounds.Motor.Tables[k].Source);
-							Sounds.Motor.Tables[k].Source = null;
-							Sounds.Motor.Tables[k].Buffer = null;
-						}
-					}
-
-					if (ndir != 0)
-					{
-						if (ndir < 0)
-						{
-							j = k;
-						}
-
-						if (j < Sounds.Motor.Tables.Length)
-						{
-							int idx2 = idx;
-
-							if (idx2 >= Sounds.Motor.Tables[j].Entries.Length)
-							{
-								idx2 = Sounds.Motor.Tables[j].Entries.Length - 1;
-							}
-
-							if ((!isPlayTrack1 && h == 0) || (!isPlayTrack2 && h == 1))
-							{
-								idx2 = -1;
-							}
-
-							if (idx2 >= 0)
-							{
-								SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
-								SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
-								double pitch = Sounds.Motor.Tables[j].Entries[idx2].Pitch;
-								double gain = Sounds.Motor.Tables[j].Entries[idx2].Gain;
-
-								if (obuf != nbuf)
-								{
-									Program.SoundApi.StopSound(Sounds.Motor.Tables[j].Source);
-
-									if (nbuf != null)
-									{
-										Sounds.Motor.Tables[j].Source = Program.SoundApi.PlaySound(nbuf, pitch, gain, pos, baseTrain, true);
-										Sounds.Motor.Tables[j].Buffer = nbuf;
-									}
-									else
-									{
-										Sounds.Motor.Tables[j].Source = null;
-										Sounds.Motor.Tables[j].Buffer = null;
-									}
-								}
-								else if (nbuf != null)
-								{
-									if (Sounds.Motor.Tables[j].Source != null)
-									{
-										Sounds.Motor.Tables[j].Source.Pitch = pitch;
-										Sounds.Motor.Tables[j].Source.Volume = gain;
-									}
-								}
-								else
-								{
-									Program.SoundApi.StopSound(Sounds.Motor.Tables[j].Source);
-									Sounds.Motor.Tables[j].Source = null;
-									Sounds.Motor.Tables[j].Buffer = null;
-								}
-							}
-							else
-							{
-								Program.SoundApi.StopSound(Sounds.Motor.Tables[j].Source);
-								Sounds.Motor.Tables[j].Source = null;
-								Sounds.Motor.Tables[j].Buffer = null;
-							}
-						}
-					}
-				}
-
-				Sounds.Motor.CurrentAccelerationDirection = ndir;
-			}
 
 			internal void ApplySounds()
 			{
@@ -208,22 +114,25 @@ namespace TrainEditor2.Simulation.TrainManager
 				
 				// motor sound
 				Sounds.Motor.Position = center;
-
-				for (int i = 0; i < Sounds.Motor.Tables.Length; i++)
+				if (Sounds.Motor is BVEMotorSound motorSound)
 				{
-					Sounds.Motor.Tables[i].Buffer = null;
-					Sounds.Motor.Tables[i].Source = null;
-
-					for (int j = 0; j < Sounds.Motor.Tables[i].Entries.Length; j++)
+					for (int i = 0; i < motorSound.Tables.Length; i++)
 					{
-						MotorElement element = MotorSounds.FirstOrDefault(x => x.Key == Sounds.Motor.Tables[i].Entries[j].SoundIndex);
+						motorSound.Tables[i].Buffer = null;
+						motorSound.Tables[i].Source = null;
 
-						if (element != null)
+						for (int j = 0; j < motorSound.Tables[i].Entries.Length; j++)
 						{
-							Sounds.Motor.Tables[i].Entries[j].Buffer = Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius);
+							MotorElement element = MotorSounds.FirstOrDefault(x => x.Key == motorSound.Tables[i].Entries[j].SoundIndex);
+
+							if (element != null)
+							{
+								motorSound.Tables[i].Entries[j].Buffer = Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius);
+							}
 						}
 					}
 				}
+				
 			}
 		}
 	}

@@ -32,43 +32,51 @@ namespace OpenBve.Input
 		{
 			for (int i = 0; i < 100; i++)
 			{
-				//Load the list of attached openTK joysticks
-				var state = OpenTK.Input.Joystick.GetState(i);
-				var description = OpenTK.Input.Joystick.GetCapabilities(i);
-				if (description.ToString() == "{Axes: 0; Buttons: 0; Hats: 0; IsConnected: True}")
+				try
 				{
-					break;
-				}
-				//A joystick with 56 buttons and zero axis is likely the RailDriver, which is bugged in openTK
-				if (description.ToString() != "{Axes: 0; Buttons: 56; Hats: 0; IsConnected: True}")
-				{
-					if (Program.CurrentHost.MonoRuntime)
+					//Load the list of attached openTK joysticks
+					var state = OpenTK.Input.Joystick.GetState(i);
+					var description = OpenTK.Input.Joystick.GetCapabilities(i);
+					if (description.ToString() == "{Axes: 0; Buttons: 0; Hats: 0; IsConnected: True}")
 					{
-						if (description.AxisCount == 0 && description.ButtonCount == 0 && description.HatCount == 0)
+						break;
+					}
+					//A joystick with 56 buttons and zero axis is likely the RailDriver, which is bugged in openTK
+					if (description.ToString() != "{Axes: 0; Buttons: 56; Hats: 0; IsConnected: True}")
+					{
+						if (Program.CurrentHost.MonoRuntime)
 						{
-							continue;
+							if (description.AxisCount == 0 && description.ButtonCount == 0 && description.HatCount == 0)
+							{
+								continue;
+							}
+						}
+						else
+						{
+							if (!state.IsConnected)
+							{
+								continue;
+							}
+						}
+
+						StandardJoystick newJoystick = new StandardJoystick(i);
+
+						if (AttachedJoysticks.ContainsKey(newJoystick.GetGuid()))
+						{
+							AttachedJoysticks[newJoystick.GetGuid()].Handle = i;
+							AttachedJoysticks[newJoystick.GetGuid()].Disconnected = false;
+						}
+						else
+						{
+							AttachedJoysticks.Add(newJoystick.GetGuid(), newJoystick);
 						}
 					}
-					else
-					{
-						if (!state.IsConnected)
-						{
-							continue;
-						}
-					}
-
-					StandardJoystick newJoystick = new StandardJoystick(i);
-
-					if (AttachedJoysticks.ContainsKey(newJoystick.GetGuid()))
-					{
-						AttachedJoysticks[newJoystick.GetGuid()].Handle = i;
-						AttachedJoysticks[newJoystick.GetGuid()].Disconnected = false;
-					}
-					else
-					{
-						AttachedJoysticks.Add(newJoystick.GetGuid(), newJoystick);
-					}
 				}
+				catch
+				{
+					//Ignored
+				}
+				
 			}
 			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows || devices == null || RailDriverInit == true)
 			{

@@ -3145,7 +3145,6 @@ namespace CsvRwRouteParser
 						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
 						LightDefinition ld = Data.Blocks[BlockIndex].LightDefinition;
 						ld.DiffuseColor = new Color24((byte) r, (byte) g, (byte) b);
-						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
 						Data.Blocks[BlockIndex].LightingChanges[l] = new LightingChange(Data.Blocks[BlockIndex].LightDefinition, ld);
 						Data.Blocks[BlockIndex].LightDefinition = ld;
 					}
@@ -3193,7 +3192,6 @@ namespace CsvRwRouteParser
 						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
 						LightDefinition ld = Data.Blocks[BlockIndex].LightDefinition;
 						ld.AmbientColor = new Color24((byte) r, (byte) g, (byte) b);
-						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
 						Data.Blocks[BlockIndex].LightingChanges[l] = new LightingChange(Data.Blocks[BlockIndex].LightDefinition, ld);
 						Data.Blocks[BlockIndex].LightDefinition = ld;
 					}
@@ -3226,7 +3224,6 @@ namespace CsvRwRouteParser
 						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
 						LightDefinition ld = Data.Blocks[BlockIndex].LightDefinition;
 						ld.LightPosition = new Vector3((float) -dx, (float) -dy, (float) -dz);
-						Array.Resize(ref Data.Blocks[BlockIndex].LightingChanges, l + 1);
 						Data.Blocks[BlockIndex].LightingChanges[l] = new LightingChange(Data.Blocks[BlockIndex].LightDefinition, ld);
 						Data.Blocks[BlockIndex].LightDefinition = ld;
 					}

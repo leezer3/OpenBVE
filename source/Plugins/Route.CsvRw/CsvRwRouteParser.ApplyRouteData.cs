@@ -857,7 +857,7 @@ namespace CsvRwRouteParser
 								Data.Blocks[i].Transponders[l].CreateEvent(ref CurrentRoute.Tracks[0].Elements[n], StartingDistance);
 							}
 
-							for (int l = 0; l < Data.Blocks[i].LightingChanges.Length; i++)
+							for (int l = 0; l < Data.Blocks[i].LightingChanges.Length; l++)
 							{
 								Data.Blocks[i].LightingChanges[l].Create(ref CurrentRoute.Tracks[0].Elements[n], Data.Structure.LightDefinitions);
 							}

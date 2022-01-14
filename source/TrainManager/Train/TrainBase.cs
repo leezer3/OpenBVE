@@ -455,7 +455,7 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].UpdateRunSounds(TimeElapsed);
-				Cars[i].UpdateMotorSounds(TimeElapsed);
+				Cars[i].Sounds.Motor.Update(TimeElapsed);
 			}
 
 			// safety system

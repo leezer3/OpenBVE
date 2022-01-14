@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace OpenBveApi
 {
@@ -10,7 +12,7 @@ namespace OpenBveApi
 		/// <param name="Text">The raw string on which unescaping should be performed</param>
 		/// <returns>The unescaped string</returns>
 		public static string Unescape(this string Text) {
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Text.Length);
+			StringBuilder Builder = new StringBuilder(Text.Length);
 			int Start = 0;
 			for (int i = 0; i < Text.Length; i++) {
 				if (Text[i] == '\\') {
@@ -100,7 +102,7 @@ namespace OpenBveApi
 		/// <param name="Text">The string for which all line-endings should be converted to CR-LF</param>
 		/// <returns>The converted StringBuilder</returns>
 		public static string ConvertNewlinesToCrLf(this string Text) {
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+			StringBuilder Builder = new StringBuilder();
 			for (int i = 0; i < Text.Length; i++) {
 				int a = char.ConvertToUtf32(Text, i);
 				if (a == 0xD & i < Text.Length - 1) {
@@ -128,7 +130,7 @@ namespace OpenBveApi
 		/// <param name="Expression">The string to trim</param>
 		/// <returns>The trimmed string</returns>
 		public static string TrimInside(this string Expression) {
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Expression.Length);
+			StringBuilder Builder = new StringBuilder(Expression.Length);
 			foreach (char c in Expression.Where(c => !char.IsWhiteSpace(c)))
 			{
 				Builder.Append(c);
@@ -149,7 +151,43 @@ namespace OpenBveApi
 			{
 				String = String.Substring(0, k);
 			}
+			//remove any excess commas from the end, commonly found in motor noise tables edited with excel
+			String = String.TrimEnd(',');
 			return String;
+		}
+
+		/// <summary>Trims BVE5 comments from a string array</summary>
+		/// <param name="Strings">The strings to trim</param>
+		public static string[] TrimBVE5Comments(this string[] Strings)
+		{
+			for (int i = 0; i < Strings.Length; i++)
+			{
+				Strings[i].TrimBVE5Comments();
+			}
+			return Strings;
+		}
+
+		/// <summary>Attempts to determine the System.Text.Encoding value for a given BVE5 file</summary>
+		/// <param name="FileName">The filename</param>
+		/// <returns>The detected encoding, or UTF-8 if this is not found</returns>
+		public static Encoding DetermineBVE5FileEncoding(string FileName)
+		{
+			using (StreamReader reader = new StreamReader(FileName))
+			{
+				var firstLine = reader.ReadLine();
+				if (firstLine == null)
+				{
+					return Encoding.UTF8;
+				}
+				string[] Header = firstLine.Split(':');
+				if (Header.Length == 1)
+				{
+					return Encoding.UTF8;
+				}
+				string[] Arguments = Header[1].Split(',');
+				try { return Encoding.GetEncoding(Arguments[0].ToLowerInvariant().Trim()); }
+				catch { return Encoding.UTF8; }
+			}
 		}
 
 		/// <summary>Removes single or double quotes enclosing a string.</summary>

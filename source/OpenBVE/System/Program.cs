@@ -75,7 +75,13 @@ namespace OpenBve {
 			}
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
-			if (Interface.CurrentOptions.PreferNativeBackend)
+			CurrentHost = new Host();
+			if (CurrentHost.Platform == HostPlatform.FreeBSD)
+			{
+				// The OpenTK X11 backend is broken on FreeBSD, so force SDL2
+				options.Backend = PlatformBackend.Default;
+			}
+			else if (Interface.CurrentOptions.PreferNativeBackend)
 			{
 				options.Backend = PlatformBackend.PreferNative;
 			}
@@ -98,7 +104,7 @@ namespace OpenBve {
 			
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			CurrentHost = new Host();
+			
 			if (IntPtr.Size == 4)
 			{
 				Joysticks = new JoystickManager32();
@@ -107,6 +113,14 @@ namespace OpenBve {
 			{
 				Joysticks = new JoystickManager64();	
 			}
+
+			if (CurrentHost.Platform == HostPlatform.FreeBSD)
+			{
+				// BSD seems to need this called at this point to avoid crashing
+				// https://github.com/leezer3/OpenBVE/issues/712
+				Joysticks.RefreshJoysticks();
+			}
+			
 			try {
 				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 				FileSystem.CreateFileSystem();

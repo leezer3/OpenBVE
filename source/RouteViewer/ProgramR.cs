@@ -316,6 +316,7 @@ namespace RouteViewer
 			LoadRoute();
 			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 			CurrentlyLoading = false;
+			Renderer.Camera.Reset();
 			UpdateCaption();
 		}
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Concurrency;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
@@ -9,6 +9,8 @@ using TrainEditor2.Audio;
 using TrainEditor2.Graphics;
 using TrainEditor2.Systems;
 using TrainEditor2.Views;
+using TrainManager;
+using TrainManager = TrainEditor2.Simulation.TrainManager.TrainManager;
 
 namespace TrainEditor2
 {
@@ -23,6 +25,8 @@ namespace TrainEditor2
 		internal static NewRenderer Renderer;
 
 		internal static SoundApi SoundApi;
+
+		internal static Simulation.TrainManager.TrainManager TrainManager;
 
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
@@ -60,6 +64,7 @@ namespace TrainEditor2
 				return;
 			}
 			
+			TrainManager = new Simulation.TrainManager.TrainManager(CurrentHost, null, null, FileSystem);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new FormEditor());
