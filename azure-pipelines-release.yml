@@ -48,14 +48,10 @@ jobs:
      overwrite: true
      readyTimeout: 90000
 
-### Build and upload via makefile on OS-X
-### This uses Mono 6.8.0 as the default version isn't high enough on this image
-### As we're 32-bit only at present 10.15+ is no good to us
-
 - job: AppleMakeBuild
   displayName: 'Build on Apple OS-X (makefile)'
   pool:
-    vmImage: 'macos-10.14'
+    vmImage: 'macos-10.15'
 
   variables:
     solution: 'OpenBVE.sln'
