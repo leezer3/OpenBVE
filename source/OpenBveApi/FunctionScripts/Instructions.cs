@@ -33,7 +33,8 @@
 		TimetableVisible, Panel2Timetable, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit,
 		SectionAspectNumber, CurrentObjectState,
-		RainDrop, SnowFlake, WiperPosition
+		RainDrop, SnowFlake, WiperPosition,
+		WheelRadius, WheelRadiusOfCar
 #pragma warning restore CS1591
 			
 		}
