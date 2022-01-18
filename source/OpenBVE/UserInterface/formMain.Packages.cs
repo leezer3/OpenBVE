@@ -276,6 +276,9 @@ namespace OpenBve
 					case PackageType.Loksim3D:
 						ExtractionDirectory = Program.FileSystem.LoksimPackageInstallationDirectory;
 						break;
+					case PackageType.ContentPlugin:
+						ExtractionDirectory = Program.FileSystem.PluginInstallationDirectory;
+						break;
 					default:
 						ExtractionDirectory = Program.FileSystem.OtherInstallationDirectory;
 						break;
@@ -507,6 +510,7 @@ namespace OpenBve
 				case PackageType.Train:
 					Packages = Database.currentDatabase.InstalledTrains;
 					break;
+				case PackageType.ContentPlugin:
 				case PackageType.Other:
 					Packages = Database.currentDatabase.InstalledOther;
 					break;
@@ -642,6 +646,7 @@ namespace OpenBve
 					case PackageType.Train:
 						UninstallPackage(currentPackage);
 						break;
+					case PackageType.ContentPlugin:
 					case PackageType.Other:
 					case PackageType.Loksim3D:
 						UninstallPackage(currentPackage);
@@ -671,6 +676,7 @@ namespace OpenBve
 				{
 					switch (currentPackage.PackageType)
 					{
+						case PackageType.ContentPlugin:
 						case PackageType.Other:
 							Database.currentDatabase.InstalledOther.Remove(currentPackage);
 							break;
@@ -1092,9 +1098,14 @@ namespace OpenBve
 			{
 				newPackageType = PackageType.Train;
 			}
+			else if (radioButtonQ2Plugin.Checked)
+			{
+				newPackageType = PackageType.ContentPlugin;
+			}
 			else
 			{
 				newPackageType = PackageType.Other;
+				groupBoxQ1.Enabled = true;
 			}
 			if (radioButtonQ1Yes.Checked)
 			{
@@ -1585,7 +1596,7 @@ namespace OpenBve
 			radioButtonQ1No.Checked = false;
 			radioButtonQ2Route.Checked = false;
 			radioButtonQ2Train.Checked = false;
-			radioButtonQ2Other.Checked = false;
+			radioButtonQ2Plugin.Checked = false;
 			//Reset picturebox
 			TryLoadImage(pictureBoxPackageImage, "route_unknown.png");
 			TryLoadImage(pictureBoxProcessing, "logo.png");

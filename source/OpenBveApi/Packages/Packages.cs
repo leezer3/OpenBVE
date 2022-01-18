@@ -173,6 +173,8 @@ namespace OpenBveApi.Packages
 		Other = 3,
 		/// <summary>The package contains imported Loksim3D content.</summary>
 		Loksim3D = 4,
+		/// <summary>The package contains a content loading plugin</summary>
+		ContentPlugin = 5
 	}
 
 	/// <summary>Holds the properties of a file, used during creation of a package.</summary>

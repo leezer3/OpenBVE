@@ -475,6 +475,10 @@ namespace OpenBve
 									installedFiles = string.Empty;
 									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.OtherInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
 									break;
+								case PackageType.ContentPlugin:
+									installedFiles = string.Empty;
+									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.PluginInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
+									break;
 							}
 						}
 						break;

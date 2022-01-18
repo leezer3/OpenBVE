@@ -878,6 +878,7 @@ namespace OpenBve {
 			replacePackageButton.Text = Translations.GetInterfaceString("packages_replace_select");
 			packageToReplaceLabel.Text = Translations.GetInterfaceString("packages_replace_choose");
 			//New package panel
+			radioButtonQ2Plugin.Text = Translations.GetInterfaceString("packages_type_plugin");
 			radioButtonQ2Other.Text = Translations.GetInterfaceString("packages_type_other");
 			radioButtonQ2Route.Text = Translations.GetInterfaceString("packages_type_route");
 			radioButtonQ2Train.Text = Translations.GetInterfaceString("packages_type_train");
