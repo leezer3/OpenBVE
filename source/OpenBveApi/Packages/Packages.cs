@@ -225,9 +225,13 @@ namespace OpenBveApi.Packages
 		{
 			int i = 0;
 			int j = 0;
-			string fp = String.Empty;
+			string fp = string.Empty;
 			try
 			{
+				if (!Directory.Exists(extractionDirectory))
+				{
+					Directory.CreateDirectory(extractionDirectory);
+				}
 				using (Stream stream = File.OpenRead(currentPackage.PackageFile))
 				{
 
