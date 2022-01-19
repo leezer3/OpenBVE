@@ -376,6 +376,34 @@ namespace OpenBveApi.Math
 			return result;
 		}
 
+		/// <summary>Adds two matricies</summary>
+		/// <param name="left">The left matrix</param>
+		/// <param name="right">The right matrix</param>
+		/// <returns>The final matrix</returns>
+		public static Matrix4D operator +(Matrix4D left, Matrix4D right)
+		{
+			Matrix4D result = new Matrix4D();
+			result.Row0 = left.Row0 + right.Row0;
+			result.Row1 = left.Row1 + right.Row1;
+			result.Row2 = left.Row2 + right.Row2;
+			result.Row3 = left.Row3 + right.Row3;
+			return result;
+		}
+
+		/// <summary>Subtracts the left matrix from the right matrix</summary>
+		/// <param name="left">The left matrix</param>
+		/// <param name="right">The right matrix</param>
+		/// <returns>The final matrix</returns>
+		public static Matrix4D operator -(Matrix4D left, Matrix4D right)
+		{
+			Matrix4D result = new Matrix4D();
+			result.Row0 = left.Row0 - right.Row0;
+			result.Row1 = left.Row1 - right.Row1;
+			result.Row2 = left.Row2 - right.Row2;
+			result.Row3 = left.Row3 - right.Row3;
+			return result;
+		}
+
 		/// <summary>Creates a translation matrix.</summary>
 		/// <param name="x">X translation.</param>
 		/// <param name="y">Y translation.</param>
