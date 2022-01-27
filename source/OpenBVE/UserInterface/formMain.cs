@@ -1884,5 +1884,13 @@ namespace OpenBve {
 			// MONO issue on some systems means that the map may not draw initially, so force redraw
 			pictureboxRouteMap.Invalidate();
 		}
+		
+		private void toolStripExport_Click(object sender, EventArgs e)
+		{
+			System.Windows.Forms.Control sourceControl = ((ContextMenuStrip)((ToolStripItem)sender).Owner).SourceControl;
+			formImageExport exporter = sourceControl == pictureboxRouteMap ? new formImageExport(true, Result.RouteFile) : new formImageExport(false, Result.RouteFile);
+			
+			exporter.ShowDialog();
+		}
 	}
 }

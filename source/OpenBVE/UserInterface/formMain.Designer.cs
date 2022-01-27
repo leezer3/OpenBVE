@@ -73,6 +73,8 @@ namespace OpenBve {
 			this.pictureboxRouteImage = new System.Windows.Forms.PictureBox();
 			this.tabpageRouteMap = new System.Windows.Forms.TabPage();
 			this.pictureboxRouteMap = new System.Windows.Forms.PictureBox();
+			this.pictureBoxContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.toolStripExport = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabpageRouteGradient = new System.Windows.Forms.TabPage();
 			this.pictureboxRouteGradient = new System.Windows.Forms.PictureBox();
 			this.tabpageRouteSettings = new System.Windows.Forms.TabPage();
@@ -473,6 +475,7 @@ namespace OpenBve {
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxRouteImage)).BeginInit();
 			this.tabpageRouteMap.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxRouteMap)).BeginInit();
+			this.pictureBoxContextMenu.SuspendLayout();
 			this.tabpageRouteGradient.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxRouteGradient)).BeginInit();
 			this.tabpageRouteSettings.SuspendLayout();
@@ -1193,12 +1196,27 @@ namespace OpenBve {
 			this.pictureboxRouteMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureboxRouteMap.ContextMenuStrip = this.pictureBoxContextMenu;
 			this.pictureboxRouteMap.Location = new System.Drawing.Point(8, 8);
 			this.pictureboxRouteMap.Name = "pictureboxRouteMap";
 			this.pictureboxRouteMap.Size = new System.Drawing.Size(276, 136);
 			this.pictureboxRouteMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureboxRouteMap.TabIndex = 0;
 			this.pictureboxRouteMap.TabStop = false;
+			// 
+			// pictureBoxContextMenu
+			// 
+			this.pictureBoxContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripExport});
+			this.pictureBoxContextMenu.Name = "pictureBoxRouteMapContextMenu";
+			this.pictureBoxContextMenu.Size = new System.Drawing.Size(109, 26);
+			// 
+			// toolStripExport
+			// 
+			this.toolStripExport.Name = "toolStripExport";
+			this.toolStripExport.Size = new System.Drawing.Size(108, 22);
+			this.toolStripExport.Text = "Export";
+			this.toolStripExport.Click += new System.EventHandler(this.toolStripExport_Click);
 			// 
 			// tabpageRouteGradient
 			// 
@@ -1216,6 +1234,7 @@ namespace OpenBve {
 			this.pictureboxRouteGradient.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureboxRouteGradient.ContextMenuStrip = this.pictureBoxContextMenu;
 			this.pictureboxRouteGradient.Location = new System.Drawing.Point(8, 7);
 			this.pictureboxRouteGradient.Name = "pictureboxRouteGradient";
 			this.pictureboxRouteGradient.Size = new System.Drawing.Size(276, 136);
@@ -5672,6 +5691,7 @@ namespace OpenBve {
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(819, 606);
 			this.Controls.Add(this.labelVerticalSeparator);
+			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelInfo);
 			this.Controls.Add(this.panelPanels);
 			this.Controls.Add(this.buttonClose);
@@ -5680,7 +5700,6 @@ namespace OpenBve {
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
 			this.Controls.Add(this.panelOptions);
-			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelReview);
@@ -5719,6 +5738,7 @@ namespace OpenBve {
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxRouteImage)).EndInit();
 			this.tabpageRouteMap.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxRouteMap)).EndInit();
+			this.pictureBoxContextMenu.ResumeLayout(false);
 			this.tabpageRouteGradient.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxRouteGradient)).EndInit();
 			this.tabpageRouteSettings.ResumeLayout(false);
@@ -6267,5 +6287,7 @@ namespace OpenBve {
 		private System.Windows.Forms.Label labelCompatibilitySignalSet;
 		private System.Windows.Forms.ComboBox comboBoxCompatibilitySignals;
 		private System.Windows.Forms.CheckBox checkBoxAccessibility;
+		private System.Windows.Forms.ContextMenuStrip pictureBoxContextMenu;
+		private System.Windows.Forms.ToolStripMenuItem toolStripExport;
 	}
 }
