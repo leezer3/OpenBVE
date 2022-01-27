@@ -445,6 +445,10 @@ namespace CsvRwRouteParser
 				}
 					break;
 				case RouteCommand.DynamicLight:
+					if (PreviewOnly)
+					{
+						break;
+					}
 					//Read the lighting XML file
 					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 					if (System.IO.File.Exists(path))
