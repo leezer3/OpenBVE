@@ -148,7 +148,7 @@ namespace OpenBve {
 		/// <returns>The absolute on-disk path of the train folder</returns>
 		internal static string GetDefaultTrainFolder(string RouteFile)
 		{
-			if (string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
+			if (string.IsNullOrEmpty(RouteFile) || string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 				return string.Empty;
 			}
 			
