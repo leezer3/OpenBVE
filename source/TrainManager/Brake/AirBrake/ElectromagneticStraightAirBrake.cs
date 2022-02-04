@@ -6,7 +6,7 @@ namespace TrainManager.BrakeSystems
 {
 	public class ElectromagneticStraightAirBrake : CarBrake
 	{
-		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, ReverserHandle ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves)
+		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, ReverserHandle ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves)
 		{
 			electropneumaticBrakeType = type;
 			emergencyHandle = EmergencyHandle;
@@ -14,6 +14,8 @@ namespace TrainManager.BrakeSystems
 			isMotorCar = IsMotorCar;
 			brakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
+			motorDecelerationDelayUp = MotorDecelerationDelayUp;
+			motorDecelerationDelayDown = MotorDecelerationDelayDown;
 			decelerationCurves = DecelerationCurves;
 		}
 
@@ -273,6 +275,28 @@ namespace TrainManager.BrakeSystems
 
 			double pressureratio = brakeCylinder.CurrentPressure / brakeCylinder.ServiceMaximumPressure;
 			deceleration = pressureratio * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
+		}
+
+		private double motorDecelerationDelayTimer;
+		private int lastHandlePosition;
+
+		public override double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
+		{
+			if (BrakeHandle.Actual == lastHandlePosition || (lastHandlePosition > 0 && BrakeHandle.Actual > 0))
+			{
+				motorDecelerationDelayTimer -= TimeElapsed;
+				if (motorDecelerationDelayTimer < 0)
+				{
+					return motorDeceleration;
+				}
+			}
+			else
+			{
+				lastHandlePosition = BrakeHandle.Actual;
+				motorDecelerationDelayTimer = BrakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
+				return 0;
+			}
+			return motorDeceleration;
 		}
 	}
 }

@@ -194,7 +194,7 @@ namespace TrainManager.Trains
 					f = Handles.Brake.Actual / (double)Handles.Brake.MaximumNotch;
 				}
 
-				double a = Cars[CarIndex].CarBrake.motorDeceleration;
+				double a = Cars[CarIndex].CarBrake.CurrentMotorDeceleration(TimeElapsed, Handles.Brake);
 				DecelerationDueToMotor = f * a;
 			}
 

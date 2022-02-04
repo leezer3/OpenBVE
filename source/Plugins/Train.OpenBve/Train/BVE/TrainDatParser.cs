@@ -233,6 +233,7 @@ namespace Train.OpenBve
 			Train.Handles.EmergencyBrake = new EmergencyHandle(Train);
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
+			double electricBrakeDelayUp = 0, electricBrakeDelayDown = 0;
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
 			BVEMotorSoundTable[] Tables = new BVEMotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
@@ -417,32 +418,57 @@ namespace Train.OpenBve
 											brakeDelayDown = new[] {a};
 										}
 										break;
+									/*
+									 * https://github.com/leezer3/OpenBVE/issues/737
+									 * OpenBVE appears to have overlooked these originally
+									 * We can (hopefully) assume that any trains using the LocoBrake feature
+									 * will have set the OPENBVE header, hence it's reasonable to assume that
+									 * others will actually be genuine users
+									 *
+									 * Don't split per-notch, as this wll just cause more confusion
+									 */
 									case 4:
-										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+										switch (currentFormat)
 										{
-											locoBrakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
-										}
-										else
-										{
-											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
-											{
+											case TrainDatFormats.openBVE:
+												if (myVersion >= 1534)
+												{
+													locoBrakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+												}
+												else
+												{
+													if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+													{
+														break;
+													}
+													locoBrakeDelayUp = new[] {a};
+												}
 												break;
-											}
-											locoBrakeDelayUp = new[] {a};
+											default:
+												electricBrakeDelayUp = a;
+												break;
 										}
 										break;
 									case 5:
-										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+										switch (currentFormat)
 										{
-											locoBrakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
-										}
-										else
-										{
-											if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
-											{
+											case TrainDatFormats.openBVE:
+												if(myVersion >= 1534)
+												{
+													locoBrakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+												}
+												else
+												{
+													if (Plugin.CurrentOptions.EnableBveTsHacks && a > 60)
+													{
+														break;
+													}
+													locoBrakeDelayDown = new[] {a};
+												}
 												break;
-											}
-											locoBrakeDelayDown = new[] {a};
+											default:
+												electricBrakeDelayDown = a;
+												break;
 										}
 										break;
 								}
@@ -1160,10 +1186,10 @@ namespace Train.OpenBve
 							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectricCommandBrake:
-							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectromagneticStraightAirBrake:
-							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
 							break;
 					}
 				}
@@ -1175,10 +1201,10 @@ namespace Train.OpenBve
 							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectricCommandBrake:
-							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectromagneticStraightAirBrake:
-							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
 							break;
 					}
 				}

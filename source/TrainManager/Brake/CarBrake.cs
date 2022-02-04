@@ -41,6 +41,14 @@ namespace TrainManager.BrakeSystems
 
 		/// <summary>The current deceleration provided by the electric motor</summary>
 		public double motorDeceleration;
+		
+		/// <summary>The delay between motor deceleration being requested and it activating</summary>
+		internal double motorDecelerationDelayUp;
+
+		/// <summary>The delay between motor deceleration stopping and this being reflected</summary>
+		internal double motorDecelerationDelayDown;
+
+		private double electricBrakeDelayTimer;
 
 		/// <summary>The air sound currently playing</summary>
 		public CarSound airSound = new CarSound();
@@ -90,6 +98,11 @@ namespace TrainManager.BrakeSystems
 				return this.decelerationCurves[Notch - 1].GetAccelerationOutput(currentSpeed, 1.0);
 			}
 			return this.decelerationCurves[this.decelerationCurves.Length - 1].GetAccelerationOutput(currentSpeed, 1.0);
+		}
+
+		public virtual double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
+		{
+			return motorDeceleration;
 		}
 	}
 }
