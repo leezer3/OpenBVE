@@ -282,21 +282,21 @@ namespace TrainManager.BrakeSystems
 
 		public override double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
 		{
-			if (BrakeHandle.Actual == lastHandlePosition || (lastHandlePosition > 0 && BrakeHandle.Actual > 0))
+			double actualDeceleration = 0;
+			if (lastHandlePosition != BrakeHandle.Actual)
+			{
+				motorDecelerationDelayTimer = BrakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
+				lastHandlePosition = BrakeHandle.Actual;
+			}
+			if (BrakeHandle.Actual != 0)
 			{
 				motorDecelerationDelayTimer -= TimeElapsed;
 				if (motorDecelerationDelayTimer < 0)
 				{
-					return motorDeceleration;
+					actualDeceleration = motorDeceleration;
 				}
 			}
-			else
-			{
-				lastHandlePosition = BrakeHandle.Actual;
-				motorDecelerationDelayTimer = BrakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
-				return 0;
-			}
-			return motorDeceleration;
+			return actualDeceleration;
 		}
 	}
 }
