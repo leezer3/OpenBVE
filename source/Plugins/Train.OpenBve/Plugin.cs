@@ -361,6 +361,11 @@ namespace Train.OpenBve
 		    try
 		    {
 			    string descriptionFile = Path.CombineFile(trainPath, "train.txt");
+			    if (!File.Exists(descriptionFile))
+			    {
+					// No description, but a readme- Let's try that instead to at least give something
+					descriptionFile = Path.CombineFile(trainPath, "readme.txt");
+			    }
 			    if (File.Exists(descriptionFile))
 			    {
 				    if (encoding == null)
