@@ -48,7 +48,14 @@ namespace TrainManager.BrakeSystems
 		/// <summary>The delay between motor deceleration stopping and this being reflected</summary>
 		internal double motorDecelerationDelayDown;
 
-		private double electricBrakeDelayTimer;
+		/// <summary>Timer used for motor deceleration delay</summary>
+		internal double motorDecelerationDelayTimer;
+
+		/// <summary>The last motor deceleration figure returned</summary>
+		internal double lastMotorDeceleration;
+
+		/// <summary>The last brake handle position</summary>
+		internal int lastHandlePosition;
 
 		/// <summary>The air sound currently playing</summary>
 		public CarSound airSound = new CarSound();
@@ -100,6 +107,9 @@ namespace TrainManager.BrakeSystems
 			return this.decelerationCurves[this.decelerationCurves.Length - 1].GetAccelerationOutput(currentSpeed, 1.0);
 		}
 
+		/// <summary>Gets the current motor deceleration figure</summary>
+		/// <param name="TimeElapsed">The time elapsed since the last time this was updated</param>
+		/// <param name="BrakeHandle">The controlling brake handle</param>
 		public virtual double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
 		{
 			return motorDeceleration;

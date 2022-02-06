@@ -184,18 +184,14 @@ namespace TrainManager.Trains
 			// deceleration provided by motor
 			if (!(Cars[CarIndex].CarBrake is AutomaticAirBrake) && Math.Abs(Cars[CarIndex].CurrentSpeed) >= Cars[CarIndex].CarBrake.brakeControlSpeed & Handles.Reverser.Actual != 0 & !Handles.EmergencyBrake.Actual)
 			{
-				double f;
 				if (Handles.LocoBrake.Actual != 0 && CarIndex == DriverCar)
 				{
-					f = Handles.LocoBrake.Actual / (double)Handles.LocoBrake.MaximumNotch;
+					DecelerationDueToMotor = Cars[CarIndex].CarBrake.CurrentMotorDeceleration(TimeElapsed, Handles.LocoBrake);
 				}
 				else
 				{
-					f = Handles.Brake.Actual / (double)Handles.Brake.MaximumNotch;
+					DecelerationDueToMotor = Cars[CarIndex].CarBrake.CurrentMotorDeceleration(TimeElapsed, Handles.Brake);
 				}
-
-				double a = Cars[CarIndex].CarBrake.CurrentMotorDeceleration(TimeElapsed, Handles.Brake);
-				DecelerationDueToMotor = f * a;
 			}
 
 			// hold brake
