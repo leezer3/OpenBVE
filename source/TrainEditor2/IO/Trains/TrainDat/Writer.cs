@@ -49,6 +49,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayPower.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayPowerDown");
 			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayBrake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayBrakeUp");
 			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayBrake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayBrakeDown");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayElectricBrake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayElectricBrakeUp");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayElectricBrake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayElectricBrakeDown");
 			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayLocoBrake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeUp (1.5.3.4+)");
 			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayLocoBrake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeDown (1.5.3.4+)");
 

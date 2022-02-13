@@ -170,7 +170,7 @@ namespace Train.OpenBve
 			string[] Lines = ReadFile(FileName, Encoding);
 
 			// Check version
-			const int currentVersion = 17250;
+			const int currentVersion = 18230;
 			TrainDatFormats currentFormat = ParseFormat(Lines, out int myVersion);
 			string versionString = Lines.FirstOrDefault(x => x.Length > 0) ?? Lines[0];
 			switch (currentFormat)
@@ -428,10 +428,15 @@ namespace Train.OpenBve
 									 * Don't split per-notch, as this wll just cause more confusion
 									 */
 									case 4:
+									case 6:
 										switch (currentFormat)
 										{
 											case TrainDatFormats.openBVE:
-												if (myVersion >= 1534)
+												if (myVersion >= 1830 && n == 4)
+												{
+													electricBrakeDelayUp = a;
+												}
+												else if (myVersion >= 1534)
 												{
 													locoBrakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 												}
@@ -450,10 +455,15 @@ namespace Train.OpenBve
 										}
 										break;
 									case 5:
+									case 7:
 										switch (currentFormat)
 										{
 											case TrainDatFormats.openBVE:
-												if(myVersion >= 1534)
+												if (myVersion >= 1830 && n == 5)
+												{
+													electricBrakeDelayDown = a;
+												}
+												else if(myVersion >= 1534)
 												{
 													locoBrakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 												}

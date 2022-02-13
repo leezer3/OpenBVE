@@ -666,6 +666,14 @@ namespace TrainEditor2.Views
 			}
 		}
 
+		private void buttonDelayElectricBrake_Click(object sender, EventArgs e)
+		{
+			using (FormDelay form = new FormDelay(app.Train.Value.SelectedCar.Value.Delay.Value.DelayElectricBrake))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
 		private void ButtonFrontBogieSet_Click(object sender, EventArgs e)
 		{
 			using (FormBogie form = new FormBogie(app.Train.Value.SelectedCar.Value.FrontBogie.Value))

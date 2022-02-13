@@ -170,7 +170,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			{
 				DelayPower = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayPower/Entry").Select(ParseDelayEntryNode)),
 				DelayBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayBrake/Entry").Select(ParseDelayEntryNode)),
-				DelayLocoBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayLocoBrake/Entry").Select(ParseDelayEntryNode))
+				DelayLocoBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayLocoBrake/Entry").Select(ParseDelayEntryNode)),
+				DelayElectricBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayElectricBrake/Entry").Select(ParseDelayEntryNode))
 			};
 		}
 
