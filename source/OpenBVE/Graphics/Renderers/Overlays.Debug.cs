@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using TrainManager.BrakeSystems;
 using OpenBveApi.Colors;
@@ -190,6 +190,7 @@ namespace OpenBve.Graphics.Renderers
 				"",
 				"=debug",
 				"bvets hacks: " + (Interface.CurrentOptions.EnableBveTsHacks ? "enabled" : "disabled"),
+				"time acceleration: " + MainLoop.TimeFactor + "x",
 				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
 				"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
 				Game.InfoDebugString ?? ""
