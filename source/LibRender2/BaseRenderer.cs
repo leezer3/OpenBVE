@@ -1022,7 +1022,7 @@ namespace LibRender2
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
-			if (State != lastObjectState && !sendToShader)
+			if (State != lastObjectState && !sendToShader || State.Prototype.Dynamic)
 			{
 				lastObjectState = State;
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
