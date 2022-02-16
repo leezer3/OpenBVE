@@ -775,6 +775,17 @@ namespace TrainManager.Trains
 		{
 			this.Cars[CarIndex].Derailed = true;
 			this.Derailed = true;
+			if (Cars[CarIndex].Sounds.Loop != null)
+			{
+				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Loop.Source);
+			}
+			
+			for (int j = 0; j < Cars[CarIndex].Sounds.Run.Count; j++)
+			{
+				int key =  Cars[CarIndex].Sounds.Run.ElementAt(j).Key;
+				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Run[key].Source);
+			}
+
 			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 			{
 				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + CarIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
@@ -788,6 +799,15 @@ namespace TrainManager.Trains
 			{
 				var c = Car as CarBase;
 				// ReSharper disable once PossibleNullReferenceException
+				if (c.Sounds.Loop != null)
+				{
+					TrainManagerBase.currentHost.StopSound(c.Sounds.Loop.Source);
+				}
+				for (int j = 0; j < c.Sounds.Run.Count; j++)
+				{
+					int key =  c.Sounds.Run.ElementAt(j).Key;
+					TrainManagerBase.currentHost.StopSound(c.Sounds.Run[key].Source);
+				}
 				c.Derailed = true;
 				this.Derailed = true;
 				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
