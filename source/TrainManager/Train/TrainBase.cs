@@ -941,6 +941,7 @@ namespace TrainManager.Trains
 				{
 					Cars[i].Doors[0].AnticipatedOpen = TrainManagerBase.CurrentRoute.Stations[stationIndex].OpenLeftDoors;
 					Cars[i].Doors[1].AnticipatedOpen = TrainManagerBase.CurrentRoute.Stations[stationIndex].OpenRightDoors;
+					Cars[i].ReAdhesionDevice.Jump();
 				}
 				if (IsPlayerTrain)
 				{
