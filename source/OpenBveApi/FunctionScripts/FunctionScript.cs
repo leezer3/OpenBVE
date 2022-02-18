@@ -290,6 +290,10 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.MathArcTan;
 							n++; break;
+						case "pi":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathPi;
+							n++; s++; if (s >= m) m = s; break;
 						case "==":
 							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
