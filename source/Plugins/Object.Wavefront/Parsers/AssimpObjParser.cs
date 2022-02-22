@@ -62,9 +62,15 @@ namespace Plugin
 				foreach (var texCoord in model.TextureCoord)
 				{
 					Vector2 textureCoordinate = new Vector2(texCoord.X, texCoord.Y);
-					if (model.TopLeftTextureCoordinates)
+					switch (model.Exporter)
 					{
-						textureCoordinate.Y *= -1.0;
+						case ModelExporter.SketchUp:
+							textureCoordinate.X *= -1.0;
+							textureCoordinate.Y *= -1.0;
+							break;
+						case ModelExporter.BlockBench:
+							textureCoordinate.Y *= -1.0;
+							break;
 					}
 					allTexCoords.Add(textureCoordinate);
 					
@@ -90,7 +96,7 @@ namespace Plugin
 							builder.Vertices.Add(allVertices[(int) face.Vertices[i]]);
 						}
 
-						MeshFace f = new MeshFace()
+						MeshFace f = new MeshFace
 						{
 							Vertices = new MeshFaceVertex[nVerts]
 						};
@@ -151,6 +157,10 @@ namespace Plugin
 							builder.Faces[0].Vertices[i].Normal = normals[i];
 						}
 
+						if (model.Exporter >= ModelExporter.UnknownLeftHanded)
+						{
+							Array.Reverse(builder.Faces[builder.Faces.Count -1].Vertices);
+						}
 						builder.Apply(ref obj);
 						builder = new MeshBuilder(Plugin.currentHost);
 					}

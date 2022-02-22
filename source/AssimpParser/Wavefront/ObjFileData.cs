@@ -81,6 +81,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using IndexArray = System.Collections.Generic.List<uint>;
 using GroupMap = System.Collections.Generic.SortedDictionary<string, System.Collections.Generic.List<uint>>;
 
@@ -284,7 +285,7 @@ namespace AssimpNET.Obj
 		//! Material map
 		public SortedDictionary<string, Material> MaterialMap = new SortedDictionary<string, Material>();
 		/// <summary>Whether the file uses the top-left texture co-ordinate system</summary>
-		public bool TopLeftTextureCoordinates;
+		public ModelExporter Exporter;
 		/// <summary>The scaling factor to be applied</summary>
 		public double ScaleFactor = 1.0;
 		public Model(string modelName)
