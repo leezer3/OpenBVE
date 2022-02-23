@@ -187,7 +187,7 @@ namespace AssimpNET.Obj
 		//! Ambient color
 		public Color128 Ambient;
 		//! Diffuse color
-		public Color128 Diffuse = new Color128(0.6f, 0.6f, 0.6f, 1.0f);
+		public Color128 Diffuse = new Color128(1.0f, 1.0f, 1.0f, 1.0f);
 		//! Specular color
 		public Color128 Specular;
 		//! Emissive color

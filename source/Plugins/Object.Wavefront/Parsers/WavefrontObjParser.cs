@@ -338,10 +338,11 @@ namespace Plugin
 						if (Exporter >= ModelExporter.UnknownLeftHanded)
 						{
 							Array.Reverse(Vertices, 0, Vertices.Length);
-							
 						}
 						Builder.Faces.Add(currentMaterial == string.Empty ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)materialIndex));
 						break;
+					case "o":
+						//Starts a new internal object
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
 						Builder.Apply(ref Object);

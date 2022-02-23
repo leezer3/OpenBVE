@@ -93,7 +93,13 @@ namespace Plugin
 						}
 						for (int i = 0; i < nVerts; i++)
 						{
-							builder.Vertices.Add(allVertices[(int) face.Vertices[i]]);
+							Vertex v = new Vertex(allVertices[(int)face.Vertices[i]]);
+							if (i <= allTexCoords.Count)
+							{
+								v.TextureCoordinates = allTexCoords[(int)face.TexturCoords[i]];
+							}
+							builder.Vertices.Add(v);
+							
 						}
 
 						MeshFace f = new MeshFace
@@ -103,6 +109,7 @@ namespace Plugin
 						for (int i = 0; i < nVerts; i++)
 						{
 							f.Vertices[i].Index = (ushort)i;
+							f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
 						}
 						f.Material = 1;
 						builder.Faces.Add(f);
@@ -139,27 +146,9 @@ namespace Plugin
 							}
 						}
 
-						int nCoords = face.TexturCoords.Count;
-						for (int i = 0; i < nCoords; i++)
-						{
-							builder.Vertices[i].TextureCoordinates = allTexCoords[(int)face.TexturCoords[i]];
-						}
-
-						int nNormals = face.Normals.Count;
-						Vector3[] normals = new Vector3[nNormals];
-						for (int i = 0; i < nNormals; i++)
-						{
-							normals[i] = allNormals[(int)face.Normals[i]];
-							normals[i].Normalize();
-						}
-						for (int i = 0; i < nNormals; i++)
-						{
-							builder.Faces[0].Vertices[i].Normal = normals[i];
-						}
-
 						if (model.Exporter >= ModelExporter.UnknownLeftHanded)
 						{
-							Array.Reverse(builder.Faces[builder.Faces.Count -1].Vertices);
+							Array.Reverse(builder.Faces[builder.Faces.Count -1].Vertices, 0, builder.Faces[builder.Faces.Count -1].Vertices.Length);
 						}
 						builder.Apply(ref obj);
 						builder = new MeshBuilder(Plugin.currentHost);
