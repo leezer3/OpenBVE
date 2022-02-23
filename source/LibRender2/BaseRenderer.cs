@@ -258,7 +258,15 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 			fileSystem = FileSystem;
-			Screen = new Screen();
+			if (CurrentHost.Application != HostApplication.TrainEditor)
+			{
+				/*
+				 * TrainEditor2 uses a GLControl
+				 * On the Linux SLD2 backend, this crashes when attempting to get the list of supported screen resolutions
+				 * As we don't care about fullscreen here, just don't bother with this constructor
+				 */
+				Screen = new Screen();
+			}
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
 			Marker = new Marker();
