@@ -845,6 +845,54 @@ namespace CarXmlConvertor
                         }
                         i--;
                         break;
+					case "[windscreen]":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						{
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							if (j >= 0)
+							{
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								if (b.Length == 0 || Path.ContainsInvalidChars(b))
+								{
+									continue;
+								}
+								switch (a.ToLowerInvariant())
+								{
+									case "raindrop":
+										newLines.Add("<RainDrop>");
+										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<Position>" + panel + "</Position>");
+										newLines.Add("<Radius>2.0</Radius>");
+										newLines.Add("</RainDrop>");
+										break;
+									case "wetwipe":
+										newLines.Add("<WetWipe>");
+										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<Position>" + panel + "</Position>");
+										newLines.Add("<Radius>2.0</Radius>");
+										newLines.Add("</WetWipe>");
+										break;
+									case "drywipe":
+										newLines.Add("<DryWipe>");
+										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<Position>" + panel + "</Position>");
+										newLines.Add("<Radius>2.0</Radius>");
+										newLines.Add("</DryWipe>");
+										break;
+									case "switch":
+										newLines.Add("<Switch>");
+										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<Position>" + panel + "</Position>");
+										newLines.Add("<Radius>2.0</Radius>");
+										newLines.Add("</Switch>");
+										break;
+								}
+							}
+							i++;
+						}
+						i--;
+						break;
                 }
             }
             newLines.Add("</CarSounds>");

@@ -60,6 +60,7 @@ namespace CarXmlConvertor
 		{
 			internal double Min = 0.27;
 			internal double Max = 0.33;
+			internal string Object;
 		}
 
 
@@ -232,7 +233,17 @@ namespace CarXmlConvertor
 																	Couplers[n] = new Coupler { Min = min, Max = max };
 																}
 															}
-														}
+														} 
+															break;
+														case "object":
+															if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
+															{
+																string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+																if (System.IO.File.Exists(File))
+																{
+																	Couplers[n].Object = b;
+																}
+															}
 															break;
 													}
 												}
@@ -542,6 +553,10 @@ namespace CarXmlConvertor
 					newLines.Add("<Coupler>");
 					newLines.Add("<Minimum>" + Couplers[i].Min + "</Minimum>");
 					newLines.Add("<Maximum>" + Couplers[i].Max + "</Maximum>");
+					if (!string.IsNullOrEmpty(Couplers[i].Object))
+					{
+						newLines.Add("<Object>" + Couplers[i].Object + "</Object>");
+					}
 					newLines.Add("</Coupler>");
 				}
 			}
