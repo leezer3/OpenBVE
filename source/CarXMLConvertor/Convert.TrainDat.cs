@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.Math;
 
@@ -41,7 +40,7 @@ namespace CarXmlConvertor
 
 			if (!System.IO.File.Exists(FileName))
 			{
-				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", @"CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				mainForm.terminateEarly = true;
 				return;
 			}

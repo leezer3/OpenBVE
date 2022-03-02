@@ -17,7 +17,7 @@ namespace CarXmlConvertor
 		internal static void Process(MainForm form)
 		{
 			mainForm = form;
-			if (!System.IO.File.Exists(FileName))
+			if (!File.Exists(FileName))
 			{
 				mainForm.updateLogBoxText += "INFO: No extensions.cfg file was detected- Generating default XML." + Environment.NewLine;
 				//No extensions.cfg file exists, so just spin up a default XML file
@@ -25,7 +25,7 @@ namespace CarXmlConvertor
 			}
 			else
 			{
-				mainForm.updateLogBoxText += "Loading existing extensions.cfg file " + ConvertExtensionsCfg.FileName + Environment.NewLine;
+				mainForm.updateLogBoxText += "Loading existing extensions.cfg file " + FileName + Environment.NewLine;
 				CarInfos = new Car[ConvertTrainDat.NumberOfCars];
 				Couplers = new Coupler[ConvertTrainDat.NumberOfCars - 1];
 				ReadExtensionsCfg();
@@ -70,7 +70,7 @@ namespace CarXmlConvertor
 
 		internal static void ReadExtensionsCfg()
 		{
-			string[] Lines = System.IO.File.ReadAllLines(FileName, System.Text.Encoding.Default);
+			string[] Lines = File.ReadAllLines(FileName, System.Text.Encoding.Default);
 			for (int i = 0; i < Lines.Length; i++)
 			{
 				int j = Lines[i].IndexOf(';');
@@ -102,13 +102,13 @@ namespace CarXmlConvertor
 										string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 										string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 										int n;
-										if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out n))
+										if (int.TryParse(a, NumberStyles.Integer, Culture, out n))
 										{
 											if (n >= 0 & n < ConvertTrainDat.NumberOfCars)
 											{
 												if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
 												{
-													string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+													string File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
 													if (System.IO.File.Exists(File))
 													{
 														CarInfos[n].Object = b;
@@ -127,7 +127,7 @@ namespace CarXmlConvertor
 							{
 								// car
 								string t = Lines[i].Substring(4, Lines[i].Length - 5);
-								int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
+								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
 								{
 									if (n >= 0 & n < ConvertTrainDat.NumberOfCars)
 									{
@@ -146,7 +146,7 @@ namespace CarXmlConvertor
 														case "object":
 															if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
 															{
-																string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+																string File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
 																if (System.IO.File.Exists(File))
 																{
 																	CarInfos[n].Object = b;
@@ -156,7 +156,7 @@ namespace CarXmlConvertor
 														case "length":
 														{
 															double m;
-															if (double.TryParse(b, System.Globalization.NumberStyles.Float, Culture, out m))
+															if (double.TryParse(b, NumberStyles.Float, Culture, out m))
 															{
 																if (m > 0.0)
 																{
@@ -172,7 +172,7 @@ namespace CarXmlConvertor
 																string c = b.Substring(0, k).TrimEnd(new char[] { });
 																string d = b.Substring(k + 1).TrimStart(new char[] { });
 																double rear, front;
-																if (double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear) && double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front))
+																if (double.TryParse(c, NumberStyles.Float, Culture, out rear) && double.TryParse(d, NumberStyles.Float, Culture, out front))
 																{
 																	CarInfos[n].RearAxle = rear;
 																	CarInfos[n].FrontAxle = front;
@@ -199,7 +199,7 @@ namespace CarXmlConvertor
 							{
 								// coupler
 								string t = Lines[i].Substring(8, Lines[i].Length - 9);
-								int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
+								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
 								{
 									if (n >= 0 & n < Couplers.Length)
 									{
@@ -222,10 +222,10 @@ namespace CarXmlConvertor
 																string c = b.Substring(0, k).TrimEnd(new char[] { });
 																string d = b.Substring(k + 1).TrimStart(new char[] { });
 																double min, max;
-																if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min))
+																if (!double.TryParse(c, NumberStyles.Float, Culture, out min))
 																{
 																}
-																else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out max))
+																else if (!double.TryParse(d, NumberStyles.Float, Culture, out max))
 																{
 																}
 																else
@@ -238,7 +238,7 @@ namespace CarXmlConvertor
 														case "object":
 															if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
 															{
-																string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+																string File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
 																if (System.IO.File.Exists(File))
 																{
 																	Couplers[n].Object = b;
@@ -258,7 +258,7 @@ namespace CarXmlConvertor
 							{
 								// car
 								string t = Lines[i].Substring(6, Lines[i].Length - 7);
-								int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
+								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
 								{
 									//Assuming that there are two bogies per car
 									bool IsOdd = (n % 2 != 0);
@@ -280,7 +280,7 @@ namespace CarXmlConvertor
 														case "object":
 															if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
 															{
-																string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+																string File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
 																if (System.IO.File.Exists(File))
 																{
 																	if (IsOdd)
@@ -301,7 +301,7 @@ namespace CarXmlConvertor
 																string c = b.Substring(0, k).TrimEnd(new char[] { });
 																string d = b.Substring(k + 1).TrimStart(new char[] { });
 																double rear, front;
-																if (double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear) && double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front))
+																if (double.TryParse(c, NumberStyles.Float, Culture, out rear) && double.TryParse(d, NumberStyles.Float, Culture, out front))
 																{
 																	if (IsOdd)
 																	{
@@ -352,7 +352,7 @@ namespace CarXmlConvertor
 			newLines.Add("<Train>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
 			{
-				if (SingleFile == true)
+				if (SingleFile)
 				{
 					GenerateCarXML(ref newLines, i);
 				}
@@ -375,7 +375,7 @@ namespace CarXmlConvertor
 					catch
 					{
 						mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
-						MessageBox.Show("An error occured whilst writing the new XML file for car " + i + ". \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						MessageBox.Show("An error occured whilst writing the new XML file for car " + i + ". \r\n Please check for write permissions.", @"CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						return;
 					}
 				}
@@ -394,10 +394,10 @@ namespace CarXmlConvertor
 			}
 			catch
 			{
-				MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", @"CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
-			MessageBox.Show("Conversion succeeded.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			MessageBox.Show("Conversion succeeded.", @"CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
 		internal static void GenerateCarXML(ref TabbedList newLines, int i)
@@ -414,7 +414,7 @@ namespace CarXmlConvertor
 			}
 			newLines.Add("<Width>" + ConvertTrainDat.CarWidth + "</Width>");
 			newLines.Add("<Height>" + ConvertTrainDat.CarHeight + "</Height>");
-			if (ConvertTrainDat.MotorCars[i] == true)
+			if (ConvertTrainDat.MotorCars[i])
 			{
 				newLines.Add("<MotorCar>True</MotorCar>");
 				newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
@@ -454,7 +454,7 @@ namespace CarXmlConvertor
 				newLines.Add("<MotorCar>False</MotorCar>");
 				newLines.Add("<Mass>" + ConvertTrainDat.TrailerCarMass + "</Mass>");
 			}
-			if (CarInfos[i].AxlesDefined == true)
+			if (CarInfos[i].AxlesDefined)
 			{
 				newLines.Add("<FrontAxle>" + CarInfos[i].FrontAxle + "</FrontAxle>");
 				newLines.Add("<RearAxle>" + CarInfos[i].RearAxle + "</RearAxle>");
@@ -470,7 +470,7 @@ namespace CarXmlConvertor
 			}
 			newLines.Add("<Reversed>" + CarInfos[i].Reversed + "</Reversed>");
 			newLines.Add("<LoadingSway>" + CarInfos[i].Reversed + "</LoadingSway>");
-			if (CarInfos[i].FrontBogie.AxlesDefined == true || !string.IsNullOrEmpty(CarInfos[i].FrontBogie.Object))
+			if (CarInfos[i].FrontBogie.AxlesDefined || !string.IsNullOrEmpty(CarInfos[i].FrontBogie.Object))
 			{
 				newLines.Add("<FrontBogie>");
 				newLines.Add("<FrontAxle>" + CarInfos[i].FrontBogie.FrontAxle + "</FrontAxle>");
@@ -480,7 +480,7 @@ namespace CarXmlConvertor
 				newLines.Add("</FrontBogie>");
 			}
 
-			if (CarInfos[i].RearBogie.AxlesDefined == true || !string.IsNullOrEmpty(CarInfos[i].RearBogie.Object))
+			if (CarInfos[i].RearBogie.AxlesDefined || !string.IsNullOrEmpty(CarInfos[i].RearBogie.Object))
 			{
 				newLines.Add("<RearBogie>");
 				newLines.Add("<FrontAxle>" + CarInfos[i].RearBogie.FrontAxle + "</FrontAxle>");
@@ -491,19 +491,19 @@ namespace CarXmlConvertor
 			}
 			if (i == ConvertTrainDat.DriverCar)
 			{
-				if(System.IO.File.Exists(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel.animated")))
+				if(File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel.animated")))
 				{
 					newLines.Add("<InteriorView>panel.animated</InteriorView>" );
 					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
 				}
-				else if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel2.cfg")))
+				else if (File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel2.cfg")))
 				{
 					newLines.Add("<InteriorView>panel.xml</InteriorView>");
 					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
 				}
 			}
 			newLines.Add("<Brake>");
-			if (ConvertTrainDat.MotorCars[i] == true)
+			if (ConvertTrainDat.MotorCars[i])
 			{
 
 				newLines.Add("<Compressor>");
@@ -545,6 +545,7 @@ namespace CarXmlConvertor
 			newLines.Add("<Width>" + ConvertTrainDat.DoorWidth / 1000.0 + "</Width>");
 			newLines.Add("<Tolerance>" + ConvertTrainDat.DoorTolerance / 1000.0 + "</Tolerance>");
 			newLines.Add("</Doors>");
+			newLines.Add("<LoadingSway>" + CarInfos[i].LoadingSway + "</LoadingSway>");
 			newLines.Add("</Car>");
 			if (i < Couplers.Length)
 			{
@@ -574,7 +575,7 @@ namespace CarXmlConvertor
 				newLines.Add("<Length>" + ConvertTrainDat.CarLength + "</Length>");
 				newLines.Add("<Width>" + ConvertTrainDat.CarWidth + "</Width>");
 				newLines.Add("<Height>" + ConvertTrainDat.CarHeight + "</Height>");
-				if (ConvertTrainDat.MotorCars[i] == true)
+				if (ConvertTrainDat.MotorCars[i])
 				{
 					newLines.Add("<MotorCar>True</MotorCar>");
 					newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
@@ -590,6 +591,7 @@ namespace CarXmlConvertor
 			}
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");
+			// ReSharper disable once AssignNullToNotNullAttribute
 			string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
 			try
 			{
@@ -602,7 +604,7 @@ namespace CarXmlConvertor
 			catch
 			{
 				mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
-				MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", @"CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 		}
