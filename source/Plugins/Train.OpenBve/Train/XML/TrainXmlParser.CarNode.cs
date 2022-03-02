@@ -499,7 +499,7 @@ namespace Train.OpenBve
 								Train.Cars[Car].Cargo = new Passengers(Train.Cars[Car]);
 								break;
 							case "none":
-								Train.Cars[Car].Cargo = new CargoBase();
+								Train.Cars[Car].Cargo = new EmptyLoad();
 								break;
 						}
 						break;

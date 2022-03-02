@@ -1,7 +1,7 @@
 ﻿namespace TrainManager.Cargo
 {
 	/// <summary>Represents the base cargo type to be carried by a car</summary>
-	public class CargoBase
+	public abstract class CargoBase
 	{
 		/// <summary>The current cargo ratio</summary>
 		/// <remarks>Must be a number between 0 and 250, where 100 represents a nominal loading</remarks>

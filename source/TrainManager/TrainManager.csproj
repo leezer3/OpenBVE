@@ -51,6 +51,7 @@
     <Compile Include="Brake\CarBrake.cs" />
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
     <Compile Include="Cargo\CargoBase.cs" />
+    <Compile Include="Cargo\NoLoad.cs" />
     <Compile Include="Cargo\Passengers.cs" />
     <Compile Include="Car\Bogie\Bogie.cs" />
     <Compile Include="Car\CarBase.cs" />
