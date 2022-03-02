@@ -113,11 +113,11 @@ namespace LibRender2
 		protected List<Matrix4D> projectionMatrixList;
 		protected List<Matrix4D> viewMatrixList;
 
-#pragma warning disable 0219
+#pragma warning disable 0219, CS0169
 		/// <summary>Holds the last openGL error</summary>
 		/// <remarks>Is only used in debug builds, hence the pragma</remarks>
 		private ErrorCode lastError;
-#pragma warning restore 0219
+#pragma warning restore 0219, CS0169
 
 		/// <summary>The current shader in use</summary>
 		protected internal Shader CurrentShader;

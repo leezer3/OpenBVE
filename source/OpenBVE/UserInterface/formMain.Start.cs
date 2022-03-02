@@ -142,6 +142,8 @@ namespace OpenBve
 
 		/// <summary>Populates the route display list from the selected folder</summary>
 		/// <param name="Folder">The folder containing route files</param>
+		/// <param name="listView">The list view to populate</param>
+		/// <param name="packages">Whether this is a packaged content folder</param>
 		private void populateRouteList(string Folder, ListView listView, bool packages)
 		{
 			try
@@ -664,6 +666,8 @@ namespace OpenBve
 
 		/// <summary>Populates the train display list from the selected folder</summary>
 		/// <param name="Folder">The folder containing train folders</param>
+		/// <param name="listView">The list view to populate</param>
+		/// <param name="packages">Whether this is a packaged content folder</param>
 		private void populateTrainList(string Folder, ListView listView, bool packages)
 		{
 			try

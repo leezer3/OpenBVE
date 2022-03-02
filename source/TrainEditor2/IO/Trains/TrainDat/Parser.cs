@@ -40,7 +40,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			}
 
 			bool ver1220000 = false;
-
+			int version = 0;
 			foreach (string line in lines)
 			{
 				if (line.Length != 0)
@@ -62,11 +62,10 @@ namespace TrainEditor2.IO.Trains.TrainDat
 							if (s.ToLowerInvariant().StartsWith("openbve"))
 							{
 								string tt = s.Substring(7, s.Length - 7);
-								int v;
 
-								if (int.TryParse(tt, NumberStyles.Float, culture, out v))
+								if (int.TryParse(tt, NumberStyles.Float, culture, out version))
 								{
-									if (v > currentVersion)
+									if (version > currentVersion)
 									{
 										Interface.AddMessage(MessageType.Warning, false, $"The train.dat {fileName} was created with a newer version of openBVE. Please check for an update.");
 									}
@@ -297,7 +296,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										}
 										break;
 									case 4:
-										if (currentVersion >= 18320)
+										if (version >= 18320)
 										{
 											delayElectricBrakeUp = new[] { a };
 										}
@@ -307,7 +306,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										}
 										break;
 									case 5:
-										if (currentVersion >= 18320)
+										if (version >= 18320)
 										{
 											delayElectricBrakeDown = new[] { a };
 										}
@@ -317,13 +316,13 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										}
 										break;
 									case 6:
-										if (currentVersion >= 18320)
+										if (version >= 18320)
 										{
 											delayLocoBrakeUp = new[] { a };
 										}
 										break;
 									case 7:
-										if (currentVersion >= 18320)
+										if (version >= 18320)
 										{
 											delayLocoBrakeDown = new[] { a };
 										}
@@ -347,7 +346,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										delayBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
 										break;
 									case 4:
-										if (currentVersion >= 18320)
+										if (version >= 18320)
 										{
 											delayElectricBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
 										}
@@ -357,7 +356,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										}
 										break;
 									case 5:
-										if (currentVersion >= 18320)
+										if (version >= 18320)
 										{
 											delayElectricBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
 										}
