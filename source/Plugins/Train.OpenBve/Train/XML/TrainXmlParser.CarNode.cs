@@ -498,6 +498,9 @@ namespace Train.OpenBve
 							case "passengers":
 								Train.Cars[Car].Cargo = new Passengers(Train.Cars[Car]);
 								break;
+							case "freight":
+								Train.Cars[Car].Cargo = new RobustFreight(Train.Cars[Car]);
+								break;
 							case "none":
 								Train.Cars[Car].Cargo = new EmptyLoad();
 								break;

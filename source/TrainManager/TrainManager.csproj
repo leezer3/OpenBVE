@@ -53,6 +53,7 @@
     <Compile Include="Cargo\CargoBase.cs" />
     <Compile Include="Cargo\NoLoad.cs" />
     <Compile Include="Cargo\Passengers.cs" />
+    <Compile Include="Cargo\RobustFreight.cs" />
     <Compile Include="Car\Bogie\Bogie.cs" />
     <Compile Include="Car\CarBase.cs" />
     <Compile Include="Car\CarSounds.cs" />
