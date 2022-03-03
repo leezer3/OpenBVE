@@ -50,6 +50,10 @@
     <Compile Include="Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Brake\CarBrake.cs" />
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
+    <Compile Include="Cargo\CargoBase.cs" />
+    <Compile Include="Cargo\NoLoad.cs" />
+    <Compile Include="Cargo\Passengers.cs" />
+    <Compile Include="Cargo\RobustFreight.cs" />
     <Compile Include="Car\Bogie\Bogie.cs" />
     <Compile Include="Car\CarBase.cs" />
     <Compile Include="Car\CarSounds.cs" />
@@ -121,7 +125,6 @@
     <Compile Include="Train\Doors.cs" />
     <Compile Include="Train\DriverBody.cs" />
     <Compile Include="Train\Horn.cs" />
-    <Compile Include="Train\Passengers.cs" />
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\Station.cs" />
     <Compile Include="Train\TrainBase.cs" />

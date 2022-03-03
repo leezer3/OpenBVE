@@ -13,6 +13,7 @@ using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
 using TrainManager.BrakeSystems;
+using TrainManager.Cargo;
 using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
@@ -82,6 +83,8 @@ namespace TrainManager.Car
 		public bool HasInteriorView = false;
 		/// <summary>Contains the generic sounds attached to the car</summary>
 		public CarSounds Sounds;
+		/// <summary>The cargo carried by the car</summary>
+		public CargoBase Cargo;
 
 		public CarBase(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 		{
@@ -109,6 +112,7 @@ namespace TrainManager.Car
 			ChangeCarSection(CarSectionType.NotVisible);
 			FrontBogie.ChangeSection(-1);
 			RearBogie.ChangeSection(-1);
+			Cargo = new Passengers(this);
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -129,6 +133,7 @@ namespace TrainManager.Car
 				new Horn(this)
 			};
 			Brightness = new Brightness(this);
+			Cargo = new Passengers(this);
 		}
 
 		/// <summary>Moves the car</summary>

@@ -11,6 +11,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Cargo;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -490,6 +491,20 @@ namespace Train.OpenBve
 						doorTolerance *= 1000.0;
 						Train.Cars[Car].Doors[0] = new Door(-1, doorWidth, doorTolerance);
 						Train.Cars[Car].Doors[0] = new Door(1, doorWidth, doorTolerance);
+						break;
+					case "cargo":
+						switch (c.InnerText.ToLowerInvariant())
+						{
+							case "passengers":
+								Train.Cars[Car].Cargo = new Passengers(Train.Cars[Car]);
+								break;
+							case "freight":
+								Train.Cars[Car].Cargo = new RobustFreight(Train.Cars[Car]);
+								break;
+							case "none":
+								Train.Cars[Car].Cargo = new EmptyLoad();
+								break;
+						}
 						break;
 				}
 			}

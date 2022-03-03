@@ -1,13 +1,12 @@
 ﻿using System;
+using TrainManager.Car;
 
-namespace TrainManager.Trains
+namespace TrainManager.Cargo
 {
-	/// <summary>The passenger loading of a train at any given point in time</summary>
-	public struct TrainPassengers
+	/// <summary>Represents the loading in a passenger coach of a train at any given point in time</summary>
+	public class Passengers : CargoBase
 	{
-		/// <summary>The current passenger ratio: 
-		/// Must be a number between 0 and 250, where 100 represents a nominally loaded train</summary>
-		public double PassengerRatio;
+		private readonly CarBase baseCar;
 
 		/// <summary>The current acceleration as being felt by the passengers</summary>
 		private double CurrentAcceleration;
@@ -15,13 +14,36 @@ namespace TrainManager.Trains
 		/// <summary>The speed difference from that of the last frame</summary>
 		private double CurrentSpeedDifference;
 
-		/// <summary>Whether the passengers have fallen over (Used for scoring purposes)</summary>
-		public bool FallenOver;
+		private double passengerMass;
+
+		public override double Mass
+		{
+			get
+			{
+				return passengerMass;
+			}
+		}
+
+		public Passengers(CarBase car)
+		{
+			baseCar = car;
+		}
+
+		public override void UpdateLoading(double ratio)
+		{
+			Ratio = ratio;
+			double area = baseCar.Width * baseCar.Length;
+			const double passengersPerArea = 1.0; //Nominal 1 passenger per meter of interior space
+			double randomFactor = 0.9 + 0.2 * TrainManagerBase.RandomNumberGenerator.NextDouble();
+			double passengers = Math.Round(randomFactor * Ratio * passengersPerArea * area);
+			const double massPerPassenger = 70.0; //70kg mass per passenger
+			passengerMass = passengers * massPerPassenger;
+		}
 
 		/// <summary>Called once a frame to update the status of the passengers</summary>
 		/// <param name="Acceleration">The current average acceleration of the train</param>
 		/// <param name="TimeElapsed">The frame time elapsed</param>
-		public void Update(double Acceleration, double TimeElapsed)
+		public override void Update(double Acceleration, double TimeElapsed)
 		{
 			double accelerationDifference = Acceleration - CurrentAcceleration;
 			double jerk = 0.25 + 0.10 * Math.Abs(accelerationDifference);
@@ -49,14 +71,21 @@ namespace TrainManager.Trains
 				CurrentSpeedDifference -= Math.Sign(CurrentSpeedDifference) * speedQuanta;
 			}
 
-			if (PassengerRatio > 0.0)
+			if (Ratio > 0.0)
 			{
-				double threshold = 1.0 / PassengerRatio;
-				FallenOver = Math.Abs(CurrentSpeedDifference) > threshold;
+				double threshold = 1.0 / Ratio;
+				if (Math.Abs(CurrentSpeedDifference) > threshold)
+				{
+					Damaged = true;
+				}
+				else
+				{
+					Damaged = false;
+				}
 			}
 			else
 			{
-				FallenOver = false;
+				Damaged = false;
 			}
 		}
 	}
