@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Xml;
 using System.Xml.Linq;
 using LibRender2;
 using LibRender2.Trains;
@@ -360,7 +361,25 @@ namespace Train.OpenBve
 	    {
 		    try
 		    {
-			    string descriptionFile = Path.CombineFile(trainPath, "train.txt");
+			    string xmlFile = Path.CombineFile(trainPath, "train.xml");
+			    if (File.Exists(xmlFile))
+			    {
+				    XmlDocument currentXML = new XmlDocument();
+				    //Load the marker's XML file 
+				    currentXML.Load(xmlFile);
+				    XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Description");
+				    if (DocumentNodes != null && DocumentNodes.Count > 0)
+				    {
+					    for (int i = 0; i < DocumentNodes.Count; i++)
+					    {
+						    if (!string.IsNullOrEmpty(DocumentNodes[i].InnerText))
+						    {
+							    return DocumentNodes[i].InnerText;
+						    }
+					    }
+				    }
+			    }
+				string descriptionFile = Path.CombineFile(trainPath, "train.txt");
 			    if (!File.Exists(descriptionFile))
 			    {
 					// No description, but a readme- Let's try that instead to at least give something

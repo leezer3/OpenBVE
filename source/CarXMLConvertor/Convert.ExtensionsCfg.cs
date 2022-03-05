@@ -381,6 +381,19 @@ namespace CarXmlConvertor
 				}
 				
 			}
+
+			string pluginFile = ConvertAts.DllPath(System.IO.Path.GetDirectoryName(FileName));
+			if (!string.IsNullOrEmpty(pluginFile))
+			{
+				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
+			}
+
+			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
+			if (File.Exists(trainTxt))
+			{
+				string desc = File.ReadAllText(trainTxt);
+				newLines.Add("<Description>" + desc + "</Description>");
+			}
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");
 			try
@@ -590,6 +603,18 @@ namespace CarXmlConvertor
 				newLines.Add("<FrontAxle>" + 0.4 * ConvertTrainDat.CarLength + "</FrontAxle>");
 				newLines.Add("<RearAxle>" + -(0.4 * ConvertTrainDat.CarLength) + "</RearAxle>");
 				newLines.Add("</Car>");
+			}
+			string pluginFile = ConvertAts.DllPath(System.IO.Path.GetDirectoryName(FileName));
+			if (!string.IsNullOrEmpty(pluginFile))
+			{
+				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
+			}
+
+			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
+			if (File.Exists(trainTxt))
+			{
+				string desc = File.ReadAllText(trainTxt);
+				newLines.Add("<Description>" + desc + "</Description>");
 			}
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");

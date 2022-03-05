@@ -122,6 +122,7 @@ namespace CarXmlConvertor
 		        ConvertExtensionsCfg.SingleFile = false;
 			}
 			ConvertExtensionsCfg.Process(this);
+
 	        updateLogBoxText += "Processing complete.";
 		}
         

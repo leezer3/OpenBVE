@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -9,6 +10,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.Power;
 using TrainManager.Trains;
+using Path = OpenBveApi.Path;
 
 namespace Train.OpenBve
 {
@@ -215,6 +217,30 @@ namespace Train.OpenBve
 
 					}
 				}
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Plugin");
+				if (DocumentNodes != null && DocumentNodes.Count > 0)
+				{
+					// More optional
+					for (int i = 0; i < DocumentNodes.Count; i++)
+					{
+						switch (DocumentNodes[i].Name)
+						{
+							case "Plugin":
+								currentPath = System.IO.Path.GetDirectoryName(fileName); // reset to base path
+								string pluginFile = DocumentNodes[i].InnerText;
+								pluginFile = Path.CombineFile(currentPath, pluginFile);
+								if (File.Exists(pluginFile))
+								{
+									if (!Train.LoadPlugin(pluginFile, currentPath))
+									{
+										Train.Plugin = null;
+									}
+								}
+								break;
+						}
+					}
+				}
+
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
 					if (CarObjects[i] != null)
