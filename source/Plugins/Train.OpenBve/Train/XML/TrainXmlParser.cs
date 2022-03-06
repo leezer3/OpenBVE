@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -66,7 +66,7 @@ namespace Train.OpenBve
 				//Use the index here for easy access to the car count
 				for (int i = 0; i < DocumentNodes.Count; i++)
 				{
-					if (carIndex > Train.Cars.Length)
+					if (carIndex > Train.Cars.Length - 1)
 					{
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
 						break;
