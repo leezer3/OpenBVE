@@ -131,9 +131,10 @@ namespace Train.OpenBve
 							ParseCarNode(childNodes[0], fileName, i, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 							currentPath = savedPath;
 						}
-						catch
+						catch(Exception ex)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
 						}
 					}
 					if (i == DocumentNodes.Count && carIndex < Train.Cars.Length)

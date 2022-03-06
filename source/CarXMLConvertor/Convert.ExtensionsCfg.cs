@@ -450,16 +450,16 @@ namespace CarXmlConvertor
 						break;
 				}
 				newLines.Add("<AccelerationCurves>");
-				newLines.Add("<OpenBVE>");
 				foreach (ConvertTrainDat.AccelerationCurve curve in ConvertTrainDat.AccelerationCurves)
 				{
+					newLines.Add("<OpenBVE>");
 					newLines.Add("<StageZeroAcceleration>" + curve.StageZeroAcceleration + "</StageZeroAcceleration>");
 					newLines.Add("<StageOneAcceleration>" + curve.StageOneAcceleration + "</StageOneAcceleration>");
 					newLines.Add("<StageOneSpeed>" + curve.StageOneSpeed + "</StageOneSpeed>");
 					newLines.Add("<StageTwoSpeed>" + curve.StageTwoSpeed + "</StageTwoSpeed>");
 					newLines.Add("<StageTwoExponent>" + curve.StageTwoExponent + "</StageTwoExponent>");
+					newLines.Add("</OpenBVE>");
 				}
-				newLines.Add("</OpenBVE>");
 				newLines.Add("</AccelerationCurves>");
 			}
 			else

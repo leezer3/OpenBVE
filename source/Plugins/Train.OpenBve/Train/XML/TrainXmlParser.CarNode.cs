@@ -94,9 +94,10 @@ namespace Train.OpenBve
 								ParseBrakeNode(childNodes[0], fileName, Car, ref Train);
 								currentPath = savedPath;
 							}
-							catch
+							catch(Exception ex)
 							{
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Failed to load the child Brake XML file specified in " +c.InnerText);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
 							}
 						}
 						break;

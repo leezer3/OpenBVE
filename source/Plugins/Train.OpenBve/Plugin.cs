@@ -466,6 +466,7 @@ namespace Train.OpenBve
 						    if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
 						    {
 							    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+							    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 						    }
 							return;
 					    }
