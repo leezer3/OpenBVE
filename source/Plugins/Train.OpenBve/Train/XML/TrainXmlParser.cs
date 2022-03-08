@@ -128,7 +128,7 @@ namespace Train.OpenBve
 							//We need to save and restore the current path to make relative paths within the child file work correctly
 							string savedPath = currentPath;
 							currentPath = System.IO.Path.GetDirectoryName(childFile);
-							ParseCarNode(childNodes[0], fileName, i, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
+							ParseCarNode(childNodes[0], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 							currentPath = savedPath;
 						}
 						catch(Exception ex)
