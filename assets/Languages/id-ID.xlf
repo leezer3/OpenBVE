@@ -1,10 +1,10 @@
-<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="id-ID">
 		<body>
 			<group id="language">
 				<trans-unit id="name">
 					<source>English (United States)</source>
-					<target>Indonesian (Indonesia)</target>
+					<target>Indonesian (Bahasa Indonesia)</target>
 				</trans-unit>
 				<trans-unit id="flag">
 					<source>US.png</source>
@@ -159,6 +159,10 @@
 						<source>Please check your fullscreen resolution settings.</source>
 						<target>Cek pengaturan layar penuh anda.</target>
 					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+						<target>Pilih file rute untuk mulai.</target>
+					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
 						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
 						<target>Rute error: \r\n WithTrack tidak ditemukan.</target>
@@ -170,6 +174,10 @@
 					<trans-unit id="route_corrupt_noobjects">
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
 						<target>Rute error: \r\n Tidak ada objek.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+						<target>Rute yang dipilih tidak dapat dibuka: \r\n Objek rute tidak dapat ditemukan.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
@@ -205,12 +213,6 @@
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 						<target>Saat menginstal add-on di folder Program Files atau ProgramData, sistem mungkin meminta izin administrator. \r\n\r\n Tidak direkomendasikan untuk melakukannya.</target>
-					</trans-unit>
-					<trans-unit id="database_newer_expected">
-						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-					</trans-unit>
-					<trans-unit id="database_invalid_xml">
-						<source>The package database XML was invalid, and has been re-created.</source>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -273,6 +275,22 @@
 						<source>Train</source>
 						<target>Kereta</target>
 					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+						<target>Pilih rangkaian kereta...</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>Gunakan rangkaian yang dianjurkan?</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+						<target>Tidak</target>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
+						<target>Ya</target>
+					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
 						<target>Pilihan:</target>
@@ -291,7 +309,6 @@
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Route default</source>
-						<target>Disarankan</target>
 					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
@@ -905,6 +922,14 @@
 						<source>Failed to create the following file: \r \n</source>
 						<target>Gagal membuat file: \r \n</target>
 					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+						<target>Versi konten ini merupakan versi terbaru daripada yang tersedia.</target>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+						<target>Data XML invalid, sistem akan membuat ulang otomatis.</target>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
@@ -1221,6 +1246,10 @@
 					</trans-unit>
 				</group>
 				<group id="options">
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
+						<target>Resolusi Layar:</target>
+					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
 					</trans-unit>
@@ -1622,6 +1651,7 @@
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
+						<target>Sinyal standar:</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">
@@ -1810,6 +1840,22 @@
 						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
 						<target>Kurangi kecepatan dari [speed] [unit] sampai batas kec. jalan [limit] [unit] !</target>
 					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+						<target>Batas kecepatan baru: [limit] [unit].</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+						<target>Sinyal berikutnya [distance]</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+						<target>Sinyal berikutnya [distance], tampak aspek [aspect]</target>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+						<target>Stasiun berikutnya: [name] dalam [distance]</target>
+					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
 						<target>Tiba di [name]</target>
@@ -1861,6 +1907,10 @@
 					<trans-unit id="station_passed_boarding">
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
 						<target>Berangkat dari [name] saat masih naik-turun penumpang. Hentikan kereta sekarang!</target>
+					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train's current speed is [speed]</source>
+						<target>Kecepatan kereta [speed]</target>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
@@ -2035,6 +2085,13 @@
 					</trans-unit>
 				</group>
 				<group id="menu">
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+						<target>PAUSE</target>
+					</trans-unit>
 					<trans-unit id="resume">
 						<source>Resume simulation</source>
 						<target>Lanjutkan</target>
@@ -3241,6 +3298,196 @@
 						<target>Z</target>
 					</trans-unit>
 				</group>
+				<group id="denshadego">
+					<trans-unit id="config_title">
+						<source>Densha de GO! controller configuration</source>
+						<target>Pengaturan kontroller Densha de GO!</target>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+						<target>Input perangkat keras</target>
+					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+						<target>Rem: [notch]</target>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+						<target>Throttle: [notch]</target>
+					</trans-unit>
+					<trans-unit id="calibration_button">
+						<source>Start calibration</source>
+						<target>Mulai kalibrasi</target>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+						<target>Device:</target>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+						<target>Pengaturan tombol</target>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+						<target>Tidak ada</target>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+						<target>Pengaturan tuas</target>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+						<target>Konversi tuas</target>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+						<target>Nilai maksimal dan minimal tetap</target>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+						<target>Tahan rem sampai B1</target>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+						<target>Simpan</target>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+						<target>Batal</target>
+					</trans-unit>
+					<trans-unit id="calibrate_button">
+						<source>Hold the [button] button in the controller and press OK.</source>
+						<target>Tekan tombol [button] pada controller dan tekan OK.</target>
+					</trans-unit>
+					<trans-unit id="calibrate_brake">
+						<source>Move the brake handle to [notch] and press OK.</source>
+						<target>Geser tuas rem sampai [notch] dan tekan OK.</target>
+					</trans-unit>
+					<trans-unit id="calibrate_power">
+						<source>Move the power handle to [notch] and press OK.</source>
+						<target>Geser tuas power sampai [notch] dan tekan OK.</target>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+						<target>NAIK</target>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+						<target>TURUN</target>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+						<target>KIRI</target>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+						<target>KANAN</target>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+						<target>PEDAL</target>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+						<target>PINTU KIRI</target>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
+						<target>PINTU KANAN</target>
+					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+						<target>Perangkat saya tidak terbaca atau tidak bekerja dengan baik.</target>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+						<target>Bantuan</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+						<target>Perangkat saya tidak bekerja dengan baik</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+						<target>Joystick PS2 tidak ditemukan</target>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+						<target>Windows</target>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+						<target>Linux</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:
+
+1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
+to separate buttons to avoid compatibility issues.
+2. Calibrate the controller from the configuration window, if necessary.</source>
+						<target>Jika controller selain input USB tidak bekerja dengan baik:
+
+1. Pastikan adapter USB berfungsi. Adapter seharusnya dapat menyesuaikan tombol dengan kontroller standar
+untuk mengatur tombol dan menghindari masalah perangkat..
+2. Kalibrasi ulang perangkat dari pengaturan kontrol jika diperlukan.</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+						<target>Jika joypad PS2 tidak muncul, ikuti langkah berikut:</target>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.
+2. Download and run Zadig.
+3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
+4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<target>1. Extract driver untuk Windows.
+2. Download dan install Zadig.
+3. Pilih file CFG yang tersedia untuk perangkat anda (&quot;Device &gt; Load Preset Device&quot;).
+4. Tekan &quot;Install Driver&quot; dan tunggu sampai selesai.</target>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.
+2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
+3. Reboot or reload udev rules manually.</source>
+						<target>1. Extract file Linux udev.
+2. Salin ke &quot;/etc/udev/rules.d/&quot; (wajib root).
+3. Nyalakan ulang udev rules.</target>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+						<target>Dapatkan Zadig</target>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+						<target>Extract files (Windows)</target>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+						<target>Extract files (Linux)</target>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
+						<target>OK</target>
+					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
+Please follow the following instructions:
+
+1. Check that the &quot;libusb-1.0&quot; package is installed.
+2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;
+3. Open the directory in the terminal.
+4. Check this location to see if &quot;libusb-1.0.so&quot; exists.
+5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+						<target>LibUsb mungkin hilang, atau tidak dapat digunakan dengan baik.
+Ikuti langkah berikut untuk mengatasinya:
+
+1. Pastikan &quot;libusb-1.0&quot; telah terinstall.
+2. Cari lokasi &quot;libusb-1.0.so.0&quot; - Di versi terkini Ubuntu dan Debian, mungkin tertulis seperti &quot;/lib/x86_64-linux-gnu/&quot;
+3. Buka direktori pada terminal.
+4. Cek pada folder tersebut apakah ada file &quot;libusb-1.0.so&quot;.
+5. Jika tidak ada, buat symlink dengan meng-input perintah berikut dari terminal : &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
+					</trans-unit>
+				</group>
 			</group>
 			<group id="train_editor">
 				<group id="general">
@@ -3474,6 +3721,14 @@
 						<source>Combined</source>
 						<target>Digabung</target>
 					</trans-unit>
+					<trans-unit id="separated_interlocked">
+						<source>Separated (Interlocked)</source>
+						<target>Terpisah (Interlocked)</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked_reverser">
+						<source>Separated (Reverser Interlocked)</source>
+						<target>Terpisah (Reverser Interlocked)</target>
+					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
 						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
 						<target>TuasRem minimal 1 jika RemTahan terpasang.</target>
@@ -3558,7 +3813,6 @@
 				<group id="device">
 					<trans-unit id="device">
 						<source>Device</source>
-						<target>Perangkat</target>
 					</trans-unit>
 					<trans-unit id="const_speed">
 						<source>ConstSpeed:</source>
@@ -3936,6 +4190,12 @@
 							</trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked">
+								<source>Separated (Interlocked)</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked_reverser">
+								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
 						<trans-unit id="power_notches">
@@ -4697,7 +4957,6 @@
 						</trans-unit>
 						<trans-unit id="resolution">
 							<source>Resolution</source>
-							<target>Resolusi</target>
 						</trans-unit>
 						<trans-unit id="left">
 							<source>Left</source>
