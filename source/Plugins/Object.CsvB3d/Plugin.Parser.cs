@@ -1119,6 +1119,26 @@ namespace Plugin
 														hackFound = true;
 													}
 												}
+
+												if (Arguments[0].StartsWith("/U5/", StringComparison.InvariantCultureIgnoreCase))
+												{
+													Arguments[0] = Arguments[0].Substring(4);
+													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													if (System.IO.File.Exists(tday))
+													{
+														hackFound = true;
+													}
+												}
+
+												if (Arguments[0].StartsWith("U5/", StringComparison.InvariantCultureIgnoreCase))
+												{
+													Arguments[0] = Arguments[0].Substring(3);
+													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													if (System.IO.File.Exists(tday))
+													{
+														hackFound = true;
+													}
+												}
 											}
 											if (!hackFound)
 											{
