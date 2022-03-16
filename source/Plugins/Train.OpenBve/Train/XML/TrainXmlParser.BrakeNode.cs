@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Xml;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -227,8 +227,43 @@ namespace Train.OpenBve
 							}
 						}
 						break;
+					case "handlenotches":
+						if (Car != Train.DriverCar)
+						{
+							// only valid on driver car
+							break;
+						}
+						if (Train.Handles.Brake is AirBrakeHandle)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unable to define a number of notches for an AirBrake handle for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+
+						int numberOfNotches;
+						if (!NumberFormats.TryParseIntVb6(c.InnerText, out numberOfNotches) | numberOfNotches < 0)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid number of brake notches defined for Car " + Car + " in XML file " + fileName);
+						}
+						// remember to increase the max driver notch too
+						Train.Handles.Brake.MaximumDriverNotch += numberOfNotches - Train.Handles.Brake.MaximumNotch;
+						Train.Handles.Brake.MaximumNotch = numberOfNotches;
+						break;
+					case "handlespringtime":
+						if (Car != Train.DriverCar)
+						{
+							// only valid on driver car
+							break;
+						}
+						double springTime;
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out springTime))
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid handle spring time defined for Car " + Car + " in XML file " + fileName);
+						}
+						Train.Handles.Brake.SpringTime = springTime;
+						break;
 				}
 			}
+			
 			Train.Cars[Car].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
 			Train.Cars[Car].CarBrake.airCompressor = new Compressor(compressorRate, Train.Cars[Car].CarBrake.mainReservoir, Train.Cars[Car]);
 			Train.Cars[Car].CarBrake.equalizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);

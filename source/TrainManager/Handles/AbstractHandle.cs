@@ -51,6 +51,11 @@ namespace TrainManager.Handles
 		/// <summary>The max width used in px for the description string</summary>
 		public double MaxWidth = 48;
 
+		/// <summary>The time with no action in seconds before the sprung step increases or decreases</summary>
+		public double SpringTime = -1;
+
+		internal double SpringTimer;
+
 		internal readonly TrainBase baseTrain;
 
 		public abstract void Update();
