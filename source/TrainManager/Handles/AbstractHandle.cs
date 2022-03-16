@@ -54,6 +54,9 @@ namespace TrainManager.Handles
 		/// <summary>The time with no action in seconds before the sprung step increases or decreases</summary>
 		public double SpringTime = -1;
 
+		/// <summary>The maximum notch a handle may spring to</summary>
+		public int MaxSpring;
+
 		internal double SpringTimer;
 
 		internal readonly TrainBase baseTrain;

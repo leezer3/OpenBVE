@@ -518,6 +518,12 @@ namespace CarXmlConvertor
 				}
 			}
 			newLines.Add("<Brake>");
+			if (i == ConvertTrainDat.DriverCar)
+			{
+				newLines.Add("<Handle>");
+				newLines.Add("<Notches>" + ConvertTrainDat.BrakeNotches + "</Notches>");
+				newLines.Add("</Handle>");
+			}
 			if (ConvertTrainDat.MotorCars[i])
 			{
 

@@ -227,40 +227,64 @@ namespace Train.OpenBve
 							}
 						}
 						break;
-					case "handlenotches":
-						if (Car != Train.DriverCar)
+					case "handle":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
-							// only valid on driver car
-							break;
-						}
-						if (Train.Handles.Brake is AirBrakeHandle)
-						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unable to define a number of notches for an AirBrake handle for Car " + Car + " in XML file " + fileName);
-							break;
-						}
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "notches":
+										if (Car != Train.DriverCar)
+										{
+											// only valid on driver car
+											break;
+										}
+										if (Train.Handles.Brake is AirBrakeHandle)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unable to define a number of notches for an AirBrake handle for Car " + Car + " in XML file " + fileName);
+											break;
+										}
 
-						int numberOfNotches;
-						if (!NumberFormats.TryParseIntVb6(c.InnerText, out numberOfNotches) | numberOfNotches < 0)
-						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid number of brake notches defined for Car " + Car + " in XML file " + fileName);
+										int numberOfNotches;
+										if (!NumberFormats.TryParseIntVb6(cc.InnerText, out numberOfNotches) | numberOfNotches < 0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid number of brake notches defined for Car " + Car + " in XML file " + fileName);
+										}
+										// remember to increase the max driver notch too
+										Train.Handles.Brake.MaximumDriverNotch += numberOfNotches - Train.Handles.Brake.MaximumNotch;
+										Train.Handles.Brake.MaximumNotch = numberOfNotches;
+										break;
+									case "springtime":
+										if (Car != Train.DriverCar)
+										{
+											// only valid on driver car
+											break;
+										}
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Handles.Brake.SpringTime))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid handle spring time defined for Car " + Car + " in XML file " + fileName);
+											Train.Handles.Brake.SpringTime = -1;
+										}
+										break;
+									case "maxsprungnotch":
+										if (Car != Train.DriverCar)
+										{
+											// only valid on driver car
+											break;
+										}
+										int maxSpring;
+										if (!NumberFormats.TryParseIntVb6(cc.InnerText, out maxSpring) | maxSpring > Train.Handles.Brake.MaximumNotch)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid maximum handle spring value defined for Car " + Car + " in XML file " + fileName);
+										}
+										Train.Handles.Brake.MaxSpring = maxSpring;
+										break;
+								}
+							}
 						}
-						// remember to increase the max driver notch too
-						Train.Handles.Brake.MaximumDriverNotch += numberOfNotches - Train.Handles.Brake.MaximumNotch;
-						Train.Handles.Brake.MaximumNotch = numberOfNotches;
 						break;
-					case "handlespringtime":
-						if (Car != Train.DriverCar)
-						{
-							// only valid on driver car
-							break;
-						}
-						double springTime;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out springTime))
-						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid handle spring time defined for Car " + Car + " in XML file " + fileName);
-						}
-						Train.Handles.Brake.SpringTime = springTime;
-						break;
+					
 				}
 			}
 			
