@@ -604,6 +604,7 @@ namespace CarXmlConvertor
 				newLines.Add("<RearAxle>" + -(0.4 * ConvertTrainDat.CarLength) + "</RearAxle>");
 				newLines.Add("</Car>");
 			}
+			newLines.Add("<DriverCar>" + ConvertTrainDat.DriverCar + "</DriverCar>");
 			string pluginFile = ConvertAts.DllPath(System.IO.Path.GetDirectoryName(FileName));
 			if (!string.IsNullOrEmpty(pluginFile))
 			{
