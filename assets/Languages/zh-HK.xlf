@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="zh-HK">
 		<body>
 			<group id="language">
@@ -41,7 +41,7 @@
 					</trans-unit>
 					<trans-unit id="controls">
 						<source>Customize controls</source>
-						<target>個人化設定</target>
+						<target>控制設定</target>
 					</trans-unit>
 					<trans-unit id="options">
 						<source>Options</source>
@@ -49,7 +49,7 @@
 					</trans-unit>
 					<trans-unit id="homepage">
 						<source>Visit official homepage</source>
-						<target>到訪官方網站</target>
+						<target>官方網站</target>
 					</trans-unit>
 					<trans-unit id="updates">
 						<source>Check for updates</source>
@@ -69,7 +69,7 @@
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-						<target>結束</target>
+						<target>關閉</target>
 					</trans-unit>
 					<trans-unit id="packages">
 						<source>Package Management</source>
@@ -159,6 +159,10 @@
 						<source>Please check your fullscreen resolution settings.</source>
 						<target>請檢查全螢幕模式解像度設定</target>
 					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+						<target>首先請選擇路線檔案</target>
+					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
 						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
 						<target>所選路線已損壞: \r\n 沒有WithTrack部分。</target>
@@ -192,11 +196,11 @@
 					</trans-unit>
 					<trans-unit id="package_directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>您嘗試保存擴展包文件的目錄不存在: \r \n</target>
+						<target>您嘗試保存擴展包文件的資料夾不存在: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
-						<target>嘗試保存擴展包文件的目錄中沒有寫訪問權限: \r \n</target>
+						<target>嘗試保存擴展包文件的資料夾中沒有寫訪問權限: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
@@ -271,6 +275,22 @@
 						<source>Train</source>
 						<target>列車</target>
 					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+						<target>選擇列車</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>你希望使用默認的列車嗎?</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+						<target>否</target>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
+						<target>是</target>
+					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
 						<target>選擇</target>
@@ -289,7 +309,6 @@
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Route default</source>
-						<target>預設列車</target>
 					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
@@ -893,7 +912,7 @@
 					</trans-unit>
 					<trans-unit id="directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>您嘗試保存擴展包文件的目錄不存在: \r \n</target>
+						<target>您嘗試保存擴展包文件的資料夾不存在: \r \n</target>
 					</trans-unit>
 					<trans-unit id="directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
@@ -1147,7 +1166,7 @@
 					</trans-unit>
 					<trans-unit id="setcalibration">
 						<source>Set Calibration:</source>
-						<target>設置校準：</target>
+						<target>校準：</target>
 					</trans-unit>
 					<trans-unit id="launch">
 						<source>Launch</source>
@@ -1227,6 +1246,10 @@
 					</trans-unit>
 				</group>
 				<group id="options">
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
+						<target>解像度</target>
+					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
 					</trans-unit>
@@ -1252,7 +1275,7 @@
 					</trans-unit>
 					<trans-unit id="display_vsync">
 						<source>Vertical synchronization:</source>
-						<target>垂直同步：</target>
+						<target>垂直同步(VSync)：</target>
 					</trans-unit>
 					<trans-unit id="display_vsync_off">
 						<source>Disabled</source>
@@ -1384,7 +1407,7 @@
 					</trans-unit>
 					<trans-unit id="misc_simulation">
 						<source>Detail of simulation</source>
-						<target>模擬效果詳情</target>
+						<target>模擬效果</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_toppling">
 						<source>Toppling</source>
@@ -1400,11 +1423,11 @@
 					</trans-unit>
 					<trans-unit id="misc_simulation_blackbox">
 						<source>Enable black box</source>
-						<target>啟用黑盒</target>
+						<target>黑盒</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_loadingsway">
 						<source>Enable loading sway</source>
-						<target>啟用裝載搖擺</target>
+						<target>因乘客流量而搖擺列車</target>
 					</trans-unit>
 					<trans-unit id="misc_controls">
 						<source>Controls</source>
@@ -1496,11 +1519,11 @@
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_autogenerated">
 						<source>Auto-generated timetable</source>
-						<target>自動生成的時間表</target>
+						<target>自動生成</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_prefercustom">
 						<source>Prefer custom timetable</source>
-						<target>首選自定義時間表</target>
+						<target>優先使用自訂時間表</target>
 					</trans-unit>
 					<trans-unit id="package_choose">
 						<source>Choose...</source>
@@ -1508,15 +1531,15 @@
 					</trans-unit>
 					<trans-unit id="package_route_directory">
 						<source>Route installation directory:</source>
-						<target>路線安裝目錄:</target>
+						<target>路線安裝資料夾:</target>
 					</trans-unit>
 					<trans-unit id="package_train_directory">
 						<source>Train installation directory:</source>
-						<target>列車安裝目錄:</target>
+						<target>列車安裝資料夾:</target>
 					</trans-unit>
 					<trans-unit id="package_other_directory">
 						<source>Other items installation directory:</source>
-						<target>其他項目安裝目錄：</target>
+						<target>其他項目安裝資料夾：</target>
 					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
@@ -1612,7 +1635,7 @@
 					</trans-unit>
 					<trans-unit id="input_device_plugin_config">
 						<source>Config</source>
-						<target>設定檔</target>
+						<target>設定</target>
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
@@ -1817,6 +1840,22 @@
 						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
 						<target>請減速！車速指示牌所標註的車速限制為 [limit] [unit]，但列車的車速為 [speed] [unit]。</target>
 					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+						<target>新速度限制: [limit][unit]</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+						<target>下一個信號的距離還有 [distance]</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+						<target>下一個信號的距離還有 [distance], 號誌為 [aspect]</target>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+						<target>下一站 [name]，距離還有 [distance]。</target>
+					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
 						<target>你已經到達了 [name]。</target>
@@ -1868,6 +1907,10 @@
 					<trans-unit id="station_passed_boarding">
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
 						<target>你未有於 [name] 讓乘客上落車，請立刻駛回車站。</target>
+					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train's current speed is [speed]</source>
+						<target>現時列車速度為 [speed]</target>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
@@ -2042,6 +2085,13 @@
 					</trans-unit>
 				</group>
 				<group id="menu">
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+						<target>暫停</target>
+					</trans-unit>
 					<trans-unit id="resume">
 						<source>Resume simulation</source>
 						<target>繼續遊戲</target>
@@ -2339,11 +2389,11 @@
 					</trans-unit>
 					<trans-unit id="doors_left">
 						<source>Opens or closes the left doors</source>
-						<target>開啟或關閉左邊車門</target>
+						<target>開啟/關閉左邊車門</target>
 					</trans-unit>
 					<trans-unit id="doors_right">
 						<source>Opens or closes the right doors</source>
-						<target>開啟或關閉右邊車門</target>
+						<target>開啟/關閉右邊車門</target>
 					</trans-unit>
 					<trans-unit id="horn_primary">
 						<source>Plays the primary horn</source>
@@ -3417,6 +3467,24 @@ to separate buttons to avoid compatibility issues.
 					<trans-unit id="help_ok_button">
 						<source>OK</source>
 						<target>確定</target>
+					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
+Please follow the following instructions:
+
+1. Check that the &quot;libusb-1.0&quot; package is installed.
+2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;
+3. Open the directory in the terminal.
+4. Check this location to see if &quot;libusb-1.0.so&quot; exists.
+5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+						<target>未能找到LibUsb，或者運行時沒有加載正確符號鏈接。
+請跟隨以下說明：
+
+1. 檢查是否安裝了 &quot;libusb-1.0&quot; package。
+2.找出 &quot;libusb-1.0.so.0&quot; 的位置 - 在最近的Ubuntu和Debian版本上，這很可能是&quot;/lib/x86_64-linux-gnu/&quot;
+3. 在Terminal打開目錄。
+4. 檢查 &quot;libusb-1.0.so&quot; 是否存在該目錄。
+5. 如果文件不存在，我們必須通過從該Terminal執行以下命令來創建適當的符號鏈接: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
 					</trans-unit>
 				</group>
 			</group>
@@ -4888,7 +4956,6 @@ to separate buttons to avoid compatibility issues.
 						</trans-unit>
 						<trans-unit id="resolution">
 							<source>Resolution</source>
-							<target>解像度</target>
 						</trans-unit>
 						<trans-unit id="left">
 							<source>Left</source>
