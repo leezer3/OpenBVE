@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Xml;
 using OpenBveApi.Interface;
@@ -261,10 +262,19 @@ namespace Train.OpenBve
 											// only valid on driver car
 											break;
 										}
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Handles.Brake.SpringTime))
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Handles.Brake.SpringTime) | Train.Handles.Brake.SpringTime <= 0)
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid handle spring time defined for Car " + Car + " in XML file " + fileName);
-											Train.Handles.Brake.SpringTime = -1;
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid brake handle spring time defined for Car " + Car + " in XML file " + fileName);
+											Train.Handles.Brake.SpringTime = 0;
+											Train.Handles.Brake.SpringType = SpringType.Unsprung;
+										}
+										break;
+									case "springtype":
+										if (!Enum.TryParse(cc.InnerText, true, out Train.Handles.Brake.SpringType))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid brake handle spring type defined for Car " + Car + " in XML file " + fileName);
+											Train.Handles.Brake.SpringTime = 0;
+											Train.Handles.Brake.SpringType = SpringType.Unsprung;
 										}
 										break;
 									case "maxsprungnotch":
@@ -276,7 +286,7 @@ namespace Train.OpenBve
 										int maxSpring;
 										if (!NumberFormats.TryParseIntVb6(cc.InnerText, out maxSpring) | maxSpring > Train.Handles.Brake.MaximumNotch)
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid maximum handle spring value defined for Car " + Car + " in XML file " + fileName);
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid maximum brake handle spring value defined for Car " + Car + " in XML file " + fileName);
 										}
 										Train.Handles.Brake.MaxSpring = maxSpring;
 										break;

@@ -66,6 +66,10 @@ namespace TrainManager.Handles
 
 		public override void ApplyState(int newState, bool relativeChange, bool isOverMaxDriverNotch = false)
 		{
+			if (baseTrain.Handles.Brake.SpringType > SpringType.Single)
+			{
+				baseTrain.Handles.Brake.SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
+			}
 			SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
 			// determine notch
 			int p = relativeChange ? newState + Driver : newState;

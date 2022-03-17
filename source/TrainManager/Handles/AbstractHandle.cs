@@ -51,8 +51,11 @@ namespace TrainManager.Handles
 		/// <summary>The max width used in px for the description string</summary>
 		public double MaxWidth = 48;
 
+		/// <summary>The type of spring for this handle</summary>
+		public SpringType SpringType = SpringType.Unsprung;
+		
 		/// <summary>The time with no action in seconds before the sprung step increases or decreases</summary>
-		public double SpringTime = -1;
+		public double SpringTime = 0;
 
 		/// <summary>The maximum notch a handle may spring to</summary>
 		public int MaxSpring;

@@ -54,7 +54,7 @@ namespace TrainManager.Handles
 			}
 
 			// Spring increase
-			if (SpringTime != -1)
+			if (SpringType != SpringType.Unsprung)
 			{
 				if (TrainManagerBase.currentHost.InGameTime > SpringTimer)
 				{
@@ -65,6 +65,10 @@ namespace TrainManager.Handles
 
 		public override void ApplyState(int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
 		{
+			if (baseTrain.Handles.Power.SpringType > SpringType.Single)
+			{
+				baseTrain.Handles.Power.SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
+			}
 			SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
 			int b = BrakeRelative ? BrakeValue + Driver : BrakeValue;
 			if (b < 0)
