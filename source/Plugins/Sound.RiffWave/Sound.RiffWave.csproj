@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Plugin</RootNamespace>
     <AssemblyName>Sound.RiffWave</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>

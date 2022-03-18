@@ -28,8 +28,8 @@ jobs:
         Set-Location "C:\Program Files (x86)\Microsoft Visual Studio\Installer\"
         $InstallPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
         $componentsToAdd = @(
-          "Microsoft.Net.Component.4.6.1.SDK",
-          "Microsoft .NET Framework 4.6.1 Targeting Pack"
+          "Microsoft.Net.Component.4.6.2.SDK",
+          "Microsoft .NET Framework 4.6.2 Targeting Pack"
         )
         [string]$workloadArgs = $componentsToAdd | ForEach-Object {" --add " +  $_}
         $Arguments = ('/c', "vs_installer.exe", 'modify', '--installPath', "`"$InstallPath`"",$workloadArgs, '--quiet', '--norestart', '--nocache')
