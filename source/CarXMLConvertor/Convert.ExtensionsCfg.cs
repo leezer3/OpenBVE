@@ -449,6 +449,8 @@ namespace CarXmlConvertor
 						newLines.Add("<ReadhesionDevice>NotFitted</ReadhesionDevice>");
 						break;
 				}
+				newLines.Add("<Power>");
+				newLines.Add("<Notches>" + ConvertTrainDat.PowerNotches + "</Notches>");
 				newLines.Add("<AccelerationCurves>");
 				foreach (ConvertTrainDat.AccelerationCurve curve in ConvertTrainDat.AccelerationCurves)
 				{
@@ -461,6 +463,7 @@ namespace CarXmlConvertor
 					newLines.Add("</OpenBVE>");
 				}
 				newLines.Add("</AccelerationCurves>");
+				newLines.Add("</Power>");
 			}
 			else
 			{
