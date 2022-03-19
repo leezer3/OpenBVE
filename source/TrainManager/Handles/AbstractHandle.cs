@@ -76,6 +76,14 @@ namespace TrainManager.Handles
 
 		}
 
+		public virtual void ResetSpring()
+		{
+			if (SpringType > SpringType.AnyHandle)
+			{
+				SpringTime = TrainManagerBase.currentHost.InGameTime;
+			}
+		}
+
 		protected AbstractHandle(TrainBase Train)
 		{
 			baseTrain = Train;
