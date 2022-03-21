@@ -61,6 +61,7 @@
     <Compile Include="Events\Sound.cs" />
     <Compile Include="Events\SpeedLimit.cs" />
     <Compile Include="Events\Station.cs" />
+    <Compile Include="Events\Switch.cs" />
     <Compile Include="Events\TrackEnd.cs" />
     <Compile Include="Events\Transponder.cs" />
     <Compile Include="Events\Transponder.Types.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="SignalManager\SignalObject.cs" />
     <Compile Include="Stations\RouteStation.cs" />
     <Compile Include="Stations\Station.Stop.cs" />
+    <Compile Include="Tracks\Switch.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">

@@ -1501,5 +1501,10 @@ namespace TrainManager.Car
 			Specs.DoorOpenPitch = 1.0;
 			Specs.DoorClosePitch = 1.0;
 		}
+
+		public override void Derail()
+		{
+			baseTrain.Derail(this, 0.0);
+		}
 	}
 }

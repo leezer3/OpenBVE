@@ -13,6 +13,7 @@ using OpenBveApi.Sounds;
 using RouteManager2.Climate;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
+using RouteManager2.Tracks;
 
 namespace CsvRwRouteParser
 {
@@ -151,6 +152,7 @@ namespace CsvRwRouteParser
 				}
 			}
 			// create objects and track
+			CurrentRoute.Switches = new Switch[] { };
 			Vector3 Position = Vector3.Zero;
 			Vector2 Direction = new Vector2(0.0, 1.0);
 			double CurrentSpeedLimit = double.PositiveInfinity;
@@ -564,7 +566,45 @@ namespace CsvRwRouteParser
 					GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
 					TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
 				}
-				
+				// switches
+				if (!PreviewOnly)
+				{
+					for (int j = 0; j < Data.Blocks[i].Switches.Length; j++)
+					{
+						if (Data.Blocks[i].Switches[j] != null)
+						{
+
+							int sl = CurrentRoute.Switches.Length;
+							Array.Resize(ref CurrentRoute.Switches, sl + 1);
+
+							if (Data.Blocks[i].Switches[j].Trailing == false)
+							{
+								CurrentRoute.Switches[sl] = new Switch(new int[] { j, Data.Blocks[i].Switches[j].SecondTrack }, Data.Blocks[i].Switches[j].InitialSetting);
+								//Assign facing switch event
+								int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
+								Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);
+								CurrentRoute.Tracks[j].Elements[n].Events[l] = new SwitchEvent(sl, 1, CurrentRoute);
+								//Assign trailing switch event
+								l = CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events.Length;
+								Array.Resize(ref CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events, l + 1);
+								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events[l] = new TrailingSwitchEvent(sl, j, -1, CurrentRoute, Plugin.CurrentOptions.Derailments);
+							}
+							else
+							{
+								CurrentRoute.Switches[sl] = new Switch(new int[] { Data.Blocks[i].Switches[j].SecondTrack, j }, Data.Blocks[i].Switches[j].InitialSetting);
+								//Assign trailing switch event
+								int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
+								Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);
+								CurrentRoute.Tracks[j].Elements[n].Events[l] = new TrailingSwitchEvent(sl, Data.Blocks[i].Switches[j].SecondTrack, 1, CurrentRoute, Plugin.CurrentOptions.Derailments);
+								//Assign facing switch event
+								l = CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events.Length;
+								Array.Resize(ref CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events, l + 1);
+								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events[l] = new SwitchEvent(sl, -1, CurrentRoute);
+							}
+						}
+					}
+				}
+
 				// ground
 				if (!PreviewOnly)
 				{
@@ -598,7 +638,6 @@ namespace CsvRwRouteParser
 						if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted)
 						{
 							Plugin.CurrentRoute.Tracks[j].Elements[n].InvalidElement = true;
-							continue;
 						}
 						// rail
 						Vector3 pos;
@@ -705,6 +744,17 @@ namespace CsvRwRouteParser
 							CurrentRoute.Tracks[j].Elements[n].WorldUp = RailTransformation.Y;
 							CurrentRoute.Tracks[j].Elements[n].CurveCant = Data.Blocks[i].Rails[j].CurveCant;
 							CurrentRoute.Tracks[j].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
+						}
+						if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted)
+						{
+							if (!Data.Blocks[i].Rails[j].RailStartRefreshed && Data.Blocks[i].Rails[j].RailEnded)
+							{
+								int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
+								Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);
+								CurrentRoute.Tracks[j].Elements[n].Events[l] = new TrackEndEvent(Plugin.CurrentHost, Data.BlockInterval);
+							}
+							//In order to run on other tracks, we need to calculate the positions and stuff, so continue after here instead
+							continue;
 						}
 						if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[j]))
 						{
