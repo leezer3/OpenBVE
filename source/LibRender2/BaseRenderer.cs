@@ -113,11 +113,11 @@ namespace LibRender2
 		protected List<Matrix4D> projectionMatrixList;
 		protected List<Matrix4D> viewMatrixList;
 
-#pragma warning disable 0219
+#pragma warning disable 0219, CS0169
 		/// <summary>Holds the last openGL error</summary>
 		/// <remarks>Is only used in debug builds, hence the pragma</remarks>
 		private ErrorCode lastError;
-#pragma warning restore 0219
+#pragma warning restore 0219, CS0169
 
 		/// <summary>The current shader in use</summary>
 		protected internal Shader CurrentShader;
@@ -258,7 +258,15 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 			fileSystem = FileSystem;
-			Screen = new Screen();
+			if (CurrentHost.Application != HostApplication.TrainEditor)
+			{
+				/*
+				 * TrainEditor2 uses a GLControl
+				 * On the Linux SLD2 backend, this crashes when attempting to get the list of supported screen resolutions
+				 * As we don't care about fullscreen here, just don't bother with this constructor
+				 */
+				Screen = new Screen();
+			}
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
 			Marker = new Marker();
@@ -1022,7 +1030,7 @@ namespace LibRender2
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
-			if (State != lastObjectState && !sendToShader)
+			if (State != lastObjectState && !sendToShader || State.Prototype.Dynamic)
 			{
 				lastObjectState = State;
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;

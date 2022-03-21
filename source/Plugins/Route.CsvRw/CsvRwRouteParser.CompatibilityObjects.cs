@@ -73,6 +73,26 @@ namespace CsvRwRouteParser
 						return true;
 					}
 				}
+				//Some Chashinai downloads are badly formatted and don't specifiy that the objects and sounds should be placed within a Chashinai folder
+				if (fileName.StartsWith(@"Chashinai", StringComparison.InvariantCultureIgnoreCase))
+				{
+					fn = fileName.Substring(10);
+					try
+					{
+						//Catch completely malformed path references
+						n = OpenBveApi.Path.CombineFile(objectPath, fn);
+					}
+					catch
+					{
+						return false;
+					}
+					if (System.IO.File.Exists(n))
+					{
+						fileName = n;
+						//The object exists, and does not require a compatibility object
+						return true;
+					}
+				}
 
 				
 			}
@@ -139,6 +159,26 @@ namespace CsvRwRouteParser
 			catch
 			{
 				return false;
+			}
+			//Some Chashinai downloads are badly formatted and don't specifiy that the objects and sounds should be placed within a Chashinai folder
+			if (fileName.StartsWith(@"Chashinai", StringComparison.InvariantCultureIgnoreCase))
+			{
+				string fn = fileName.Substring(10);
+				try
+				{
+					//Catch completely malformed path references
+					n = OpenBveApi.Path.CombineFile(objectPath, fn);
+				}
+				catch
+				{
+					return false;
+				}
+				if (System.IO.File.Exists(n))
+				{
+					fileName = n;
+					//The object exists, and does not require a compatibility object
+					return true;
+				}
 			}
 			if (System.IO.File.Exists(n))
 			{

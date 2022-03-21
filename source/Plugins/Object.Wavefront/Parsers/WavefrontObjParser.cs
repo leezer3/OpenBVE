@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -42,6 +42,7 @@ namespace Plugin
 		/// <returns>The object loaded.</returns>
 		internal static StaticObject ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
+			ModelExporter Exporter = ModelExporter.Unknown;
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 
 			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
@@ -60,7 +61,6 @@ namespace Plugin
 			string[] Lines = File.ReadAllLines(FileName, Encoding);
 
 			double currentScale = 1.0;
-			bool TopLeftTextureCoordinates = false;
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
 			{
@@ -70,8 +70,16 @@ namespace Plugin
 				{
 					int hash = Lines[i].IndexOf('#');
 					int eq = Lines[i].IndexOf('=');
-					int skp = Lines[i].IndexOf("SketchUp", StringComparison.InvariantCultureIgnoreCase);
-					if(hash != -1 && (eq != -1 || skp != -1))
+					if(Lines[i].IndexOf("SketchUp", StringComparison.InvariantCultureIgnoreCase) != -1)
+					{
+						Exporter = ModelExporter.SketchUp;
+					}
+
+					if (Lines[i].IndexOf("BlockBench", StringComparison.InvariantCultureIgnoreCase) != -1)
+					{
+						Exporter = ModelExporter.BlockBench;
+					}
+					if(hash != -1 && eq != -1)
 					{
 						string afterHash = Lines[i].Substring(hash + 1).Trim();
 						if (afterHash.StartsWith("File units", StringComparison.InvariantCultureIgnoreCase))
@@ -96,10 +104,6 @@ namespace Plugin
 									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised units value " + units + " at line "+ i);
 									break;
 							}
-						}
-						else if (afterHash.StartsWith("Exported from SketchUp", StringComparison.InvariantCultureIgnoreCase))
-						{
-							TopLeftTextureCoordinates = true;
 						}
 					}
 					Lines[i] = Lines[i].Substring(0, c);
@@ -205,6 +209,10 @@ namespace Plugin
 								continue;
 							}
 							newVertex.Coordinates = tempVertices[currentVertex - 1];
+							if (Exporter >= ModelExporter.UnknownLeftHanded)
+							{
+								newVertex.Coordinates.X *= -1.0;
+							}
 							if (faceArguments.Length <= 1)
 							{
 								normals.Add(new Vector3());
@@ -239,12 +247,18 @@ namespace Plugin
 									else
 									{
 										newVertex.TextureCoordinates = tempCoords[currentCoord - 1];
-										if (TopLeftTextureCoordinates)
-										{
-											newVertex.TextureCoordinates.Y *= -1.0;
-										}
 									}
-									
+
+									switch (Exporter)
+									{
+										case ModelExporter.SketchUp:
+											newVertex.TextureCoordinates.X *= -1.0;
+											newVertex.TextureCoordinates.Y *= -1.0;
+											break;
+										case ModelExporter.BlockBench:
+											newVertex.TextureCoordinates.Y *= -1.0;
+											break;
+									}
 								}
 							}
 							if (faceArguments.Length <= 2)
@@ -294,7 +308,6 @@ namespace Plugin
 							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
-
 						int materialIndex = -1;
 						if (currentMaterial != string.Empty)
 						{
@@ -322,8 +335,14 @@ namespace Plugin
 							}
 							
 						}
+						if (Exporter >= ModelExporter.UnknownLeftHanded)
+						{
+							Array.Reverse(Vertices, 0, Vertices.Length);
+						}
 						Builder.Faces.Add(currentMaterial == string.Empty ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)materialIndex));
 						break;
+					case "o":
+						//Starts a new internal object
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
 						Builder.Apply(ref Object);

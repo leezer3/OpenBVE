@@ -1,18 +1,18 @@
 <?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
-	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="zh-HK">
+	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="ms-MY">
 		<body>
 			<group id="language">
 				<trans-unit id="name">
 					<source>English (United States)</source>
-					<target>中文 (港澳繁體)</target>
+					<target>Bahasa Melayu (Malaysia)</target>
 				</trans-unit>
 				<trans-unit id="flag">
 					<source>US.png</source>
-					<target>HK.png</target>
+					<target>MY.png</target>
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>Alvin Wong, I-Circle BVE, Kenny Hui@HKTSS</target>
+					<target>Sam Alif Tech</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
@@ -23,196 +23,196 @@
 				<group id="program">
 					<trans-unit id="title">
 						<source>openBVE</source>
-						<target>OpenBVE</target>
+						<target>openBVE</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
 					<trans-unit id="start">
 						<source>Start new game</source>
-						<target>開始新遊戲</target>
+						<target>Mulakan game baharu</target>
 					</trans-unit>
 					<trans-unit id="review">
 						<source>Review last game</source>
-						<target>回顧上次遊戲</target>
+						<target>Semak game lepas</target>
 					</trans-unit>
 					<trans-unit id="getaddons">
 						<source>Get Add-ons</source>
-						<target>取得外掛</target>
+						<target>Dapatkan Add-ons</target>
 					</trans-unit>
 					<trans-unit id="controls">
 						<source>Customize controls</source>
-						<target>控制設定</target>
+						<target>Sesuaikan kawalan</target>
 					</trans-unit>
 					<trans-unit id="options">
 						<source>Options</source>
-						<target>選項</target>
+						<target>Tetapan</target>
 					</trans-unit>
 					<trans-unit id="homepage">
 						<source>Visit official homepage</source>
-						<target>官方網站</target>
+						<target>Lawat laman utama rasmi</target>
 					</trans-unit>
 					<trans-unit id="updates">
 						<source>Check for updates</source>
-						<target>檢查更新</target>
+						<target>Semak untuk kemas kini</target>
 					</trans-unit>
 					<trans-unit id="updates_invalid">
 						<source>A connection to the server could be established. Unfortunately, the version information could not be retrieved.</source>
-						<target>可以與伺服器建立連接，但版本資訊不能被存取。</target>
+						<target>Sambungan ke pelayan dapat disambungkan. Malangnya, maklumat versi tidak dapat diambil semula.</target>
 					</trans-unit>
 					<trans-unit id="updates_old">
 						<source>You already have the latest version.</source>
-						<target>你目前所使用的版本已經是最新。</target>
+						<target>Anda sudah mempunyai versi yang terkini.</target>
 					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
-						<target>最新版本 [version] ([date]) 已經於官方網站提供下載。</target>
+						<target>Versi baharu [version] ([date]) sudah tersedia untuk dimuat turun dari Laman utama Rasmi OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-						<target>關閉</target>
+						<target>Tutup</target>
 					</trans-unit>
 					<trans-unit id="packages">
 						<source>Package Management</source>
-						<target>擴展包管理</target>
+						<target>Pengurusan pakej</target>
 					</trans-unit>
 					<trans-unit id="reportbug">
 						<source>Report Problem</source>
-						<target>報告問題</target>
+						<target>Laporkan masalah</target>
 					</trans-unit>
 					<trans-unit id="about">
 						<source>About</source>
-						<target>關於</target>
+						<target>Tentang</target>
 					</trans-unit>
 				</group>
 				<group id="mode">
 					<trans-unit id="arcade">
 						<source>Arcade</source>
-						<target>遊戲</target>
+						<target>Arked</target>
 					</trans-unit>
 					<trans-unit id="normal">
 						<source>Normal</source>
-						<target>正常</target>
+						<target>Normal</target>
 					</trans-unit>
 					<trans-unit id="expert">
 						<source>Expert</source>
-						<target>專家</target>
+						<target>Pakar</target>
 					</trans-unit>
 					<trans-unit id="unknown">
 						<source>Unknown</source>
-						<target>未知</target>
+						<target>Tidak diketahui</target>
 					</trans-unit>
 				</group>
 				<group id="errors">
 					<trans-unit id="critical_file">
 						<source>A critical error occured whilst parsing the [file] file</source>
-						<target>處理文件:[file] 時發生錯誤。</target>
+						<target>Ralat kritikal berlaku semasa menghuraikan fail [file]</target>
 					</trans-unit>
 					<trans-unit id="filesystem_invalid">
 						<source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
-						<target>無法訪問文件系統或系統無效，原因:</target>
+						<target>Konfigurasi sistem fail tidak dapat diakses atau tidak sah kerana sebab berikut:</target>
 					</trans-unit>
 					<trans-unit id="warning">
 						<source>Warning:</source>
-						<target>警告:</target>
+						<target>Amaran:</target>
 					</trans-unit>
 					<trans-unit id="controls_missing">
 						<source>No control configuration files found.</source>
-						<target>找不到控制配置文件。</target>
+						<target>Tidak fail konfigurasi kawalan dijumpai.</target>
 					</trans-unit>
 					<trans-unit id="controls_oldversion">
 						<source>An older key-configuration file was found.</source>
-						<target>找到了較舊的控制配置文件。</target>
+						<target>Konfigurasi kunci yang lama telah ditemui.</target>
 					</trans-unit>
 					<trans-unit id="controls_reset">
 						<source>The current key-configuration has been reset to defaults.</source>
-						<target>當前的控制配置已重置為默認</target>
+						<target>Konfigurasi kunci terkini telah disetkan semula kepada lalai.</target>
 					</trans-unit>
 					<trans-unit id="controls_default_oldversion">
 						<source>The default key assingment file is an older version or corrupt.</source>
-						<target>默認鍵盤配置文件是舊版本或已損壞。</target>
+						<target>Fail penetapan kunci lalai ialah versi lama atau telah rosak.</target>
 					</trans-unit>
 					<trans-unit id="controls_default_missing">
 						<source>The default key assignment file does not exist.</source>
-						<target>默認控制配置文件不存在。</target>
+						<target>Fail penetapan kunci lalai tidak wujud.</target>
 					</trans-unit>
 					<trans-unit id="controls_ingame">
 						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
-						<target>您目前正在使用 [platform] 後端。請使用遊戲菜單中的設置來配置搖桿。</target>
+						<target>Anda sedang berjalan pada backend [platform]. Sila gunakan menu dalam permainan untuk mengkonfigurasi sebarang kawalan berasaskan joystick.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_version">
 						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
-						<target>需要OpenAL 1.1。您似乎擁有1.0。</target>
+						<target>OpenAL 1.1 diperlukan. Anda kelihatan mempunyai versi 1.0.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_context">
 						<source>The OpenAL context could not be created.</source>
-						<target>無法創建OpenAL context</target>
+						<target>Konteks OpenAL tidak dapat dibuat.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_device">
 						<source>The OpenAL sound device could not be opened.</source>
-						<target>無法創建OpenAL聲音設備。</target>
+						<target>Peranti bunyi OpenAL tidak dapat dibuka.</target>
 					</trans-unit>
 					<trans-unit id="fullscreen_switch1">
 						<source>An error occured whilst attempting to switch to fullscreen mode.</source>
-						<target>嘗試切換到全屏模式時發生錯誤。</target>
+						<target>Ralat telah berlaku apabila anda bertukar ke mod skrin penuh.</target>
 					</trans-unit>
 					<trans-unit id="fullscreen_switch2">
 						<source>Please check your fullscreen resolution settings.</source>
-						<target>請檢查全螢幕模式解像度設定</target>
+						<target>Sila semak tetapan resolusi mod skrin penuh.</target>
 					</trans-unit>
 					<trans-unit id="route_please_select">
 						<source>Please first select a route file to begin.</source>
-						<target>首先請選擇路線檔案</target>
+						<target>Sila pilih fail laluan untuk mula.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
 						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
-						<target>所選路線已損壞: \r\n 沒有WithTrack部分。</target>
+						<target>Laluan yang dipilih adalah rosak: \r\n dengan WithTrack hilang.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_nostations">
 						<source>The selected route is corrupt: \r\n No stations defined.</source>
-						<target>所選路線已損壞: \r\n 沒有定義車站。</target>
+						<target>Laluan yang dipilih adalah rosak: \n\r Tiada stesen yang ditarifkan.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_noobjects">
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
-						<target>所選路線已損壞: \r\n 沒有定義物件。</target>
+						<target>Laluan yang dipilih adalah rosak: \r\n Tiada objek yang ditakrifkan.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
-						<target>所選路線已損壞: \r\n 未能找到所有已定意義的物件。</target>
+						<target>Laluan yang dipilih adalah rosak: \r\n Tidak dapat mencari kesemua objek yang ditakrifkan.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
 					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
-						<target>未能加載列車插件: [plugin]</target>
+						<target>Plugin kereta api [plugin] gagal dimuatkan.</target>
 					</trans-unit>
 					<trans-unit id="plugin_failure2">
 						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
-						<target>將會使用內置ATS/ATC系統, 但可能會有問題</target>
+						<target>Sistem ATS/ATC yang terbina dalam akan digunakan. Sebaliknya, ia mungkin akan menimbulkan masalah</target>
 					</trans-unit>
 					<trans-unit id="package_filename_empty">
 						<source>Attempted to create a package with an empty filename.</source>
-						<target>試圖創建一個帶有空文件名的包。</target>
+						<target>Telah mencuba untuk membuat pakej dengan tiada nama fail.</target>
 					</trans-unit>
 					<trans-unit id="package_directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>您嘗試保存擴展包文件的資料夾不存在: \r \n</target>
+						<target>Direktori tempat anda cuba menyimpan fail pakej tidak wujud: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
-						<target>嘗試保存擴展包文件的資料夾中沒有寫訪問權限: \r \n</target>
+						<target>Tiada akses menulis tersedia dalam direktori  di mana anda mencuba untuk menyimpan fail pakej: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
-						<target>無法創建以下文件: \r \n</target>
+						<target>Gagal untuk mencipta faol berikut: \r \n</target>
 					</trans-unit>
 					<trans-unit id="security_checkaccess">
 						<source>Please check that this path is accessible.</source>
-						<target>請檢查此路徑是否可訪問</target>
+						<target>Sila semak bahawa laluan ini boleh diakses.</target>
 					</trans-unit>
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
-						<target>如果您嘗試在&quot;Program Files&quot;或&quot;ProgramData&quot;文件夾中安裝插件，則可能需要管理員權限. \r\n\r\n 安全考慮，不建議這樣做</target>
+						<target>Jika anda cuba memasang add-on dalam folder Program Files atau ProgramData, ini mungkin memerlukan kebenaran pentadbir. \r\n\r\n Ini tidak disyorkan atas sebab keselamatan.</target>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -221,141 +221,141 @@
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route</source>
-						<target>路線</target>
+						<target>Laluan</target>
 					</trans-unit>
 					<trans-unit id="route_selection">
 						<source>Selection</source>
-						<target>選擇</target>
+						<target>Pemilhan</target>
 					</trans-unit>
 					<trans-unit id="route_addons">
 						<source>Add-ons</source>
-						<target>外掛</target>
+						<target>Add-ons</target>
 					</trans-unit>
 					<trans-unit id="route_browse">
 						<source>Browse manually</source>
-						<target>瀏覽</target>
+						<target>Cari secara manual</target>
 					</trans-unit>
 					<trans-unit id="route_recently">
 						<source>Recently used</source>
-						<target>最近選用</target>
+						<target>Digunakan baru-baru ini</target>
 					</trans-unit>
 					<trans-unit id="route_details">
 						<source>Details</source>
-						<target>詳情</target>
+						<target>Butiran</target>
 					</trans-unit>
 					<trans-unit id="route_description">
 						<source>Description</source>
-						<target>描述</target>
+						<target>Penerangan</target>
 					</trans-unit>
 					<trans-unit id="route_map">
 						<source>Map</source>
-						<target>地圖</target>
+						<target>Peta</target>
 					</trans-unit>
 					<trans-unit id="route_gradient">
 						<source>Gradient profile</source>
-						<target>坡度側面圖</target>
+						<target>Profil Kecerunan</target>
 					</trans-unit>
 					<trans-unit id="route_settings">
 						<source>Settings</source>
-						<target>設定</target>
+						<target>Tetapan</target>
 					</trans-unit>
 					<trans-unit id="route_settings_encoding">
 						<source>Encoding:</source>
-						<target>編碼：</target>
+						<target>Pengekodan:</target>
 					</trans-unit>
 					<trans-unit id="route_settings_encoding_preview">
 						<source>Preview:</source>
-						<target>預覽：</target>
+						<target>Pratonton:</target>
 					</trans-unit>
 					<trans-unit id="route_processing">
 						<source>Processing route, please wait.....</source>
-						<target>處理路線中，請稍候.....</target>
+						<target>Sedang memproses laluan, sila tunggu:</target>
 					</trans-unit>
 					<trans-unit id="train">
 						<source>Train</source>
-						<target>列車</target>
+						<target>Kereta api</target>
 					</trans-unit>
 					<trans-unit id="train_choose">
 						<source>Choose Train...</source>
-						<target>選擇列車</target>
+						<target>Pilih kereta api...</target>
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Do you wish to use the default train?</source>
-						<target>你希望使用默認的列車嗎?</target>
+						<target>Adakah anda ingin menggunakan kereta api asal?</target>
 					</trans-unit>
 					<trans-unit id="train_default_no">
 						<source>No</source>
-						<target>否</target>
+						<target>Tidak</target>
 					</trans-unit>
 					<trans-unit id="train_default_yes">
 						<source>Yes</source>
-						<target>是</target>
+						<target>Ya</target>
 					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
-						<target>選擇</target>
+						<target>Pemilihan</target>
 					</trans-unit>
 					<trans-unit id="train_addons">
 						<source>Add-ons</source>
-						<target>外掛</target>
+						<target>Add-ons</target>
 					</trans-unit>
 					<trans-unit id="train_browse">
 						<source>Browse manually</source>
-						<target>瀏覽</target>
+						<target>Cari secara manual</target>
 					</trans-unit>
 					<trans-unit id="train_recently">
 						<source>Recently used</source>
-						<target>最近選用</target>
+						<target>Digunakan baru-baru ini</target>
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Route default</source>
 					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
-						<target>使用路線所建議的預設列車</target>
+						<target>Guna kereta api yang disyorkan oleh laluan</target>
 					</trans-unit>
 					<trans-unit id="train_details">
 						<source>Details</source>
-						<target>詳情</target>
+						<target>Butiran</target>
 					</trans-unit>
 					<trans-unit id="train_description">
 						<source>Description</source>
-						<target>描述</target>
+						<target>Penerangan</target>
 					</trans-unit>
 					<trans-unit id="train_settings">
 						<source>Settings</source>
-						<target>設定</target>
+						<target>Tetapan</target>
 					</trans-unit>
 					<trans-unit id="train_settings_encoding">
 						<source>Encoding:</source>
-						<target>編碼：</target>
+						<target>Pengekodan:</target>
 					</trans-unit>
 					<trans-unit id="train_settings_reverseconsist">
 						<source>Reverse Consist:</source>
-						<target>反轉編組:</target>
+						<target>Terbalik terdiri:</target>
 					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
-						<target>預覽：</target>
+						<target>Pratonton:</target>
 					</trans-unit>
 					<trans-unit id="train_notfound">
 						<source>The default train could not be found:\r\n\r\n</source>
-						<target>未能找到默認列車: \r\n\r\n</target>
+						<target>Kereta api asal tidak dapat dijumpai:\r\n\r\n</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
 						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
-						<target>--- 這列車所使用的保安系統插件並不能於你的作業系統中使用。遊戲內建的 ATS / ATC 保安系統將會被使用，這有可能引致列車操作上問題。 ---</target>
+						<target>--- Kereta api ini menggunakan pemalam sistem keselamatan yang tidak boleh digunakan pada sistem pengendalian anda. Sebaliknya, sistem keselamatan terbina dalam ATS/ATC akan digunakan, yang mungkin menyebabkan masalah operasi. ---</target>
 					</trans-unit>
 					<trans-unit id="start">
 						<source>Start</source>
 					</trans-unit>
 					<trans-unit id="start_mode">
 						<source>Mode of driving:</source>
-						<target>駕駛模式：</target>
+						<target>Mode pemanduan:</target>
 					</trans-unit>
 					<trans-unit id="start_start">
 						<source>Start</source>
-						<target>開始</target>
+						<target>Mula:</target>
 					</trans-unit>
 				</group>
 				<group id="review">
@@ -364,111 +364,111 @@
 					</trans-unit>
 					<trans-unit id="conditions">
 						<source>Conditions</source>
-						<target>狀態</target>
+						<target>Kondisi</target>
 					</trans-unit>
 					<trans-unit id="conditions_route">
 						<source>Route</source>
-						<target>路線</target>
+						<target>Laluan</target>
 					</trans-unit>
 					<trans-unit id="conditions_route_file">
 						<source>Route file:</source>
-						<target>路線檔：</target>
+						<target>Fail laluan:</target>
 					</trans-unit>
 					<trans-unit id="conditions_train">
 						<source>Train</source>
-						<target>列車</target>
+						<target>Kereta api</target>
 					</trans-unit>
 					<trans-unit id="conditions_train_folder">
 						<source>Train folder:</source>
-						<target>列車資料夾：</target>
+						<target>Folder kereta api:</target>
 					</trans-unit>
 					<trans-unit id="conditions_datetime">
 						<source>Date and time</source>
-						<target>日期及時間</target>
+						<target>Tarikh dan masa</target>
 					</trans-unit>
 					<trans-unit id="conditions_datetime_date">
 						<source>Date:</source>
-						<target>日期：</target>
+						<target>Tarikh:</target>
 					</trans-unit>
 					<trans-unit id="conditions_datetime_time">
 						<source>Time:</source>
-						<target>時間：</target>
+						<target>Masa:</target>
 					</trans-unit>
 					<trans-unit id="score">
 						<source>Score</source>
-						<target>得分</target>
+						<target>Skor:</target>
 					</trans-unit>
 					<trans-unit id="score_rating">
 						<source>Rating</source>
-						<target>等級</target>
+						<target>Penilaian</target>
 					</trans-unit>
 					<trans-unit id="score_rating_mode">
 						<source>Mode:</source>
-						<target>模式：</target>
+						<target>Mod:</target>
 					</trans-unit>
 					<trans-unit id="score_rating_achieved">
 						<source>Achieved:</source>
-						<target>得分：</target>
+						<target>Dicapai:</target>
 					</trans-unit>
 					<trans-unit id="score_rating_maximum">
 						<source>Maximum:</source>
-						<target>最高：</target>
+						<target>Maksimum:</target>
 					</trans-unit>
 					<trans-unit id="score_rating_ratio">
 						<source>Ratio:</source>
-						<target>百分比：</target>
+						<target>Nisbah:</target>
 					</trans-unit>
 					<trans-unit id="score_log">
 						<source>Log</source>
-						<target>記錄</target>
+						<target>Log</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_time">
 						<source>Time</source>
-						<target>時間</target>
+						<target>Masa</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_position">
 						<source>Position (m)</source>
-						<target>位置 (m)</target>
+						<target>Posisi (m)</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_value">
 						<source>Value</source>
-						<target>得分</target>
+						<target>Nilai</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_cumulative">
 						<source>Cumulative</source>
-						<target>積分</target>
+						<target>Kumulatif</target>
 					</trans-unit>
 					<trans-unit id="score_log_list_reason">
 						<source>Reason</source>
-						<target>原因</target>
+						<target>Sebab</target>
 					</trans-unit>
 					<trans-unit id="score_log_penalties">
 						<source>Show penalties only</source>
-						<target>只顯示扣分</target>
+						<target>Tunjuk denda sahaja</target>
 					</trans-unit>
 					<trans-unit id="score_log_export">
 						<source>Export...</source>
-						<target>匯出……</target>
+						<target>Eksport...</target>
 					</trans-unit>
 					<trans-unit id="blackbox">
 						<source>Black box</source>
-						<target>黑盒</target>
+						<target>Kotak hitam</target>
 					</trans-unit>
 					<trans-unit id="blackbox_format">
 						<source>Format:</source>
-						<target>格式：</target>
+						<target>Format:</target>
 					</trans-unit>
 					<trans-unit id="blackbox_format_csv">
 						<source>Comma-separated value</source>
-						<target>CSV</target>
+						<target>Koma-diasingkan nilai</target>
 					</trans-unit>
 					<trans-unit id="blackbox_format_text">
 						<source>Formatted text</source>
-						<target>已格式化文本</target>
+						<target>Teks diformat</target>
 					</trans-unit>
 					<trans-unit id="blackbox_export">
 						<source>Export...</source>
-						<target>匯出……</target>
+						<target>Eksport...</target>
 					</trans-unit>
 				</group>
 				<group id="packages">
@@ -477,458 +477,458 @@
 					</trans-unit>
 					<trans-unit id="proceed">
 						<source>Proceed...</source>
-						<target>繼續</target>
+						<target>Teruskan...</target>
 					</trans-unit>
 					<trans-unit id="proceed_anyway">
 						<source>Proceed Anyway</source>
-						<target>仍然繼續</target>
+						<target>Teruskan juga</target>
 					</trans-unit>
 					<trans-unit id="processing">
 						<source>Processing, please wait...</source>
-						<target>處理中, 請稍後...</target>
+						<target>Sedang memproses, sila tunggu...</target>
 					</trans-unit>
 					<trans-unit id="unknown_file">
 						<source>Unknown File...</source>
-						<target>不明檔案</target>
+						<target>Fail tidak diketahui...</target>
 					</trans-unit>
 					<trans-unit id="shownlist">
 						<source>These are shown in the list below:</source>
-						<target>這些內容將會在下方列表中列出:</target>
+						<target>Ini ditunjukkan dalam senarai di bawah:</target>
 					</trans-unit>
 					<trans-unit id="selection_none">
 						<source>No package selected.</source>
-						<target>沒有選擇任何擴展包</target>
+						<target>Tiada pakej yang terpilih.</target>
 					</trans-unit>
 					<trans-unit id="selection_none_website">
 						<source>No website provided.</source>
-						<target>沒有提供網站</target>
+						<target>Tiada laman web disediakan.</target>
 					</trans-unit>
 					<trans-unit id="list">
 						<source>Installed Packages</source>
-						<target>已安裝的擴展包</target>
+						<target>Pakej Dipasang</target>
 					</trans-unit>
 					<trans-unit id="list_type">
 						<source>Select the type of packages you wish to view:</source>
-						<target>請選擇你需要查看的擴展包類型:</target>
+						<target>Pilih jenis pakej yang anda ingin lihat:</target>
 					</trans-unit>
 					<trans-unit id="list_name">
 						<source>Name</source>
-						<target>名稱</target>
+						<target>Nama</target>
 					</trans-unit>
 					<trans-unit id="list_version">
 						<source>Version</source>
-						<target>版本</target>
+						<target>Versi</target>
 					</trans-unit>
 					<trans-unit id="list_minimum">
 						<source>Minimum Version</source>
-						<target>最低版本</target>
+						<target>Minimum Versi</target>
 					</trans-unit>
 					<trans-unit id="list_maximum">
 						<source>Maximum Version</source>
-						<target>最高版本</target>
+						<target>Maksimum Versi</target>
 					</trans-unit>
 					<trans-unit id="list_author">
 						<source>Author</source>
-						<target>作者</target>
+						<target>Pencipta:</target>
 					</trans-unit>
 					<trans-unit id="list_website">
 						<source>Website</source>
-						<target>網站</target>
+						<target>Laman web</target>
 					</trans-unit>
 					<trans-unit id="list_packagetype">
 						<source>Type</source>
-						<target>類型</target>
+						<target>Jenis</target>
 					</trans-unit>
 					<trans-unit id="install">
 						<source>Install</source>
-						<target>安裝</target>
+						<target>Pasang</target>
 					</trans-unit>
 					<trans-unit id="install_button">
 						<source>Install Package</source>
-						<target>安裝擴展包</target>
+						<target>Pasang Pakej</target>
 					</trans-unit>
 					<trans-unit id="install_header">
 						<source>Install a Package</source>
-						<target>安裝擴展包</target>
+						<target>Pasang Pakej</target>
 					</trans-unit>
 					<trans-unit id="install_invalid">
 						<source>This file does not appear to be a valid openBVE package.</source>
-						<target>該文件似乎不是有效的OpenBVE擴展包。</target>
+						<target>Fail tidak kelihatan seperti pakej openBVE yang sah.</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
 						<source>Package Version Error</source>
-						<target>擴展包套件版本錯誤。</target>
+						<target>Versi Pakej Ralat</target>
 					</trans-unit>
 					<trans-unit id="install_version_new">
 						<source>The selected package is already installed, and is a newer version.</source>
-						<target>所選擴展包已安裝，並且是較新的版本。</target>
+						<target>Pakej yang dipilih telah dipasang, dan ianya versi yang baharu.</target>
 					</trans-unit>
 					<trans-unit id="install_version_old">
 						<source>The selected package is already installed, and is an older version.</source>
-						<target>所選擴展包已經安裝，並且是較舊的版本。</target>
+						<target>Pakej yang dipilih telah dipasang, san ianya versi yang lama.</target>
 					</trans-unit>
 					<trans-unit id="install_version_same">
 						<source>The selected package is already installed, and is an identical version.</source>
-						<target>所選擴展包已安裝，並且是相同版本。</target>
+						<target>Pakej yang dipilih telah dipasang dan merupakan versi yang sama.</target>
 					</trans-unit>
 					<trans-unit id="install_success">
 						<source>Package installation was successful.</source>
-						<target>擴展包安裝成功。</target>
+						<target>Pemasangan pakej telah berjaya.</target>
 					</trans-unit>
 					<trans-unit id="install_success_header">
 						<source>Installation Successful</source>
-						<target>安裝成功</target>
+						<target>Pemasangan Berjaya</target>
 					</trans-unit>
 					<trans-unit id="install_success_files">
 						<source>A list of files installed is shown below:</source>
-						<target>安裝的文件列表如下所示：</target>
+						<target>Senarai fail yang telah dipasang ditunjukkan di bawah:</target>
 					</trans-unit>
 					<trans-unit id="install_failure">
 						<source>Unfortunately, package installation failed.</source>
-						<target>擴展包安裝失敗</target>
+						<target>Malangnya, pemasangan pakej gagal.</target>
 					</trans-unit>
 					<trans-unit id="install_failure_header">
 						<source>Package Installation Failed</source>
-						<target>擴展包安裝失敗</target>
+						<target>Pemasangan Pakej Gagal</target>
 					</trans-unit>
 					<trans-unit id="install_select">
 						<source>Select Package......</source>
-						<target>選擇擴展包......</target>
+						<target>Pilih Pakej......</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_unmet">
 						<source>The current package has unmet dependancies.</source>
-						<target>這個擴展包所依賴的擴展包還沒有被安裝。</target>
+						<target>Pakej terkini mempunyai tanggungan yang tidak terpenuhi.</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_unmet_header">
 						<source>Dependancy Error</source>
-						<target>相依擴展包錯誤</target>
+						<target>Ralat Tanggungan</target>
 					</trans-unit>
 					<trans-unit id="install_dependancies_broken">
 						<source>The following dependancies may be broken by this action:</source>
-						<target>有些依賴可能被這個動作破壞。</target>
+						<target>Tanggungan berikut mungkin rosak disebabkan oleh tindakan ini:</target>
 					</trans-unit>
 					<trans-unit id="install_reccomends_unmet">
 						<source>The following packages are recommended, but not installed:</source>
-						<target>該擴展包的作者建議同時安裝以下擴展包:</target>
+						<target>Pakej berikut adalah disyorkan, tetapi tidak dipasangkan:</target>
 					</trans-unit>
 					<trans-unit id="install_reccomends_unmet_header">
 						<source>Recommended Packages</source>
-						<target>建議擴展包</target>
+						<target>Pakej yang disyorkan</target>
 					</trans-unit>
 					<trans-unit id="install_name">
 						<source>Package Name:</source>
-						<target>擴展包名稱:</target>
+						<target>Nama Pakej:</target>
 					</trans-unit>
 					<trans-unit id="install_author">
 						<source>Package Author:</source>
-						<target>擴展包作者:</target>
+						<target>Nama Pencipta:</target>
 					</trans-unit>
 					<trans-unit id="install_version">
 						<source>Package Version:</source>
-						<target>擴展包版本:</target>
+						<target>Versi Pakej:</target>
 					</trans-unit>
 					<trans-unit id="install_website">
 						<source>Package Website:</source>
-						<target>擴展包網頁:</target>
+						<target>Laman Web Pakej:</target>
 					</trans-unit>
 					<trans-unit id="install_description">
 						<source>Package Description:</source>
-						<target>擴展包描述:</target>
+						<target>Penerangan Pakej:</target>
 					</trans-unit>
 					<trans-unit id="creation_button">
 						<source>Create Package</source>
-						<target>創建擴展包</target>
+						<target>Cipta Pakej</target>
 					</trans-unit>
 					<trans-unit id="creation_header">
 						<source>Create a Package</source>
-						<target>創建擴展包</target>
+						<target>Cipta Sebuah Pakej</target>
 					</trans-unit>
 					<trans-unit id="creation_saveas_button">
 						<source>Save As...</source>
-						<target>儲存為</target>
+						<target>Simpan sebagai...</target>
 					</trans-unit>
 					<trans-unit id="creation_saveas_label">
 						<source>Save package as:</source>
-						<target>儲存擴展包為</target>
+						<target>Simpam pakej sebagai:</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies">
 						<source>Select Dependancies</source>
-						<target>選擇依賴擴展包</target>
+						<target>Pilih Tanggungan</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_add">
 						<source>Add Dependancy</source>
-						<target>添加依賴</target>
+						<target>Tambah Tanggungan</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_remove">
 						<source>Remove</source>
-						<target>移除</target>
+						<target>Keluarkan</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
-						<target>你可以在下一步添加擴展包的細節和依賴。</target>
+						<target>Butiran pakej dan tanggungan mungkin ditetapkan dalam langkah berikut.</target>
 					</trans-unit>
 					<trans-unit id="creation_reccommends_add">
 						<source>Add Recommendation</source>
-						<target>增加建議</target>
+						<target>Tambah Cadangan</target>
 					</trans-unit>
 					<trans-unit id="creation_clearselection">
 						<source>Clear Selection</source>
-						<target>清除選擇</target>
+						<target>Kosongkan Pilihan</target>
 					</trans-unit>
 					<trans-unit id="creation_additems">
 						<source>Add Item(s)</source>
-						<target>增加項目</target>
+						<target>Tambah item(s)</target>
 					</trans-unit>
 					<trans-unit id="creation_selecteditems">
 						<source>The following files and folders will be packaged:</source>
-						<target>將會打包以下的檔案:</target>
+						<target>Fail dan folder berikut akan dibungkuskan:</target>
 					</trans-unit>
 					<trans-unit id="creation_new_guid">
 						<source>The new package has been assigned the following GUID:</source>
-						<target>新擴展包已分配了以下GUID：</target>
+						<target>Pakej baharu telah diberikan GUID berikut:</target>
 					</trans-unit>
 					<trans-unit id="creation_header">
 						<source>Enter Package Details</source>
 					</trans-unit>
 					<trans-unit id="creation_name">
 						<source>Please enter a package name.</source>
-						<target>請輸入擴展包名稱。</target>
+						<target>Sila masukkan nama pakej.</target>
 					</trans-unit>
 					<trans-unit id="creation_author">
 						<source>Please enter a package author.</source>
-						<target>請輸入擴展包作者。</target>
+						<target>Sila masukkan nama pencipta pakej.</target>
 					</trans-unit>
 					<trans-unit id="creation_description">
 						<source>Please enter a package description.</source>
-						<target>請輸入擴展包說明。</target>
+						<target>Sila masukkan butiran pakej.</target>
 					</trans-unit>
 					<trans-unit id="creation_version">
 						<source>Please enter a valid package version number in the following format: \r\n 1.0.0</source>
-						<target>請使用以下格式輸入有效的擴展包版本: \r\n 1.0.0</target>
+						<target>Sila masukkan nombor versi pakej yang sah dalam format berikut: \r\n 1.0.0</target>
 					</trans-unit>
 					<trans-unit id="creation_version_invalid">
 						<source>You have entered an invalid version number. \r\n Please try again.</source>
-						<target>您輸入了無效的版本. \r\n 請重試。</target>
+						<target>Anda telah memasukkan nombor versi yang tidak sah. \r\n Sila cuba lagi.</target>
 					</trans-unit>
 					<trans-unit id="creation_success">
 						<source>Package creation was successful.</source>
-						<target>擴展包安裝成功。</target>
+						<target>Penciptaan pakej telah berjaya.</target>
 					</trans-unit>
 					<trans-unit id="creation_success_header">
 						<source>Package Creation Successful</source>
-						<target>擴展包安裝成功</target>
+						<target>Penciptaan pakej berjaya.</target>
 					</trans-unit>
 					<trans-unit id="creation_success_files">
 						<source>The following files were added to your package:</source>
-						<target>已添加以下檔案到擴展包:</target>
+						<target>Fail berikut akan ditambahkan ke pakej anda:</target>
 					</trans-unit>
 					<trans-unit id="creation_failure">
 						<source>Unfortunately, creation of your package failed.</source>
-						<target>創建擴展包失敗</target>
+						<target>Malangnya, penciptaan pakej anda telah gagal.</target>
 					</trans-unit>
 					<trans-unit id="creation_failure_header">
 						<source>Package Creation Failed</source>
-						<target>創建擴展包失敗</target>
+						<target>Penciptaan Pakej Gagal</target>
 					</trans-unit>
 					<trans-unit id="creation_failure_error">
 						<source>The following error was encountered:</source>
-						<target>遇到以下錯誤:</target>
+						<target>Ralat berikut telah ditemui:</target>
 					</trans-unit>
 					<trans-unit id="creation_proceed">
 						<source>Proceed......</source>
-						<target>繼續...</target>
+						<target>Teruskan......</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_nofiles">
 						<source>No files were selected to package- Please retry.</source>
-						<target>未選擇要打包的文件-請重試。</target>
+						<target>Tiada fail dipilih untuk dibungkus- Sila cuba semula.</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>
-						<target>所選文件名無效-請重試。</target>
+						<target>Nama fail yang dipilih tidak sah- Sila cuba semula.</target>
 					</trans-unit>
 					<trans-unit id="creation_new_id">
 						<source>The new package has been assigned the following GUID:</source>
-						<target>新擴展包已分配了以下GUID：</target>
+						<target>Pakej baharu telah diberikan GUID berikut:</target>
 					</trans-unit>
 					<trans-unit id="creation_replace_id">
 						<source>Replacing the package with the following GUID:</source>
-						<target>用以下GUID替換擴展包：</target>
+						<target>Menggantikan pakej dengan GUID berikut:</target>
 					</trans-unit>
 					<trans-unit id="creation_save">
 						<source>Save Package</source>
-						<target>儲存擴展包</target>
+						<target>Simpan Pakej</target>
 					</trans-unit>
 					<trans-unit id="creation_replace">
 						<source>Is this to replace an existing package?</source>
-						<target>這是替代前一個的擴展包的嗎？</target>
+						<target>Adakah ini untuk menggantikan pakej sedia ada?</target>
 					</trans-unit>
 					<trans-unit id="creation_yes">
 						<source>Yes</source>
-						<target>是</target>
+						<target>Ya</target>
 					</trans-unit>
 					<trans-unit id="creation_no">
 						<source>No</source>
-						<target>否</target>
+						<target>Tidak</target>
 					</trans-unit>
 					<trans-unit id="replace_select">
 						<source>Replace this Package</source>
-						<target>替代這個擴展包</target>
+						<target>Ganti pakej ini</target>
 					</trans-unit>
 					<trans-unit id="replace_choose">
 						<source>Please select the package you wish to replace:</source>
-						<target>請選擇你想要讓它替代的擴展包:</target>
+						<target>Sili pilih pakej yang anda ingin ganti:</target>
 					</trans-unit>
 					<trans-unit id="replace_noneavailable">
 						<source>No packages are currently installed.</source>
-						<target>沒有安裝任何擴展包</target>
+						<target>Tiada pakej yang telah dipasang sekarang ini.</target>
 					</trans-unit>
 					<trans-unit id="type_route">
 						<source>Route</source>
-						<target>路線</target>
+						<target>Laluan</target>
 					</trans-unit>
 					<trans-unit id="type_train">
 						<source>Train</source>
-						<target>列車</target>
+						<target>Kereta api</target>
 					</trans-unit>
 					<trans-unit id="type_other">
 						<source>Other</source>
-						<target>其他</target>
+						<target>Lain-lain</target>
 					</trans-unit>
 					<trans-unit id="type_select">
 						<source>Please select the package type:</source>
-						<target>請選擇擴展包類型：</target>
+						<target>Sila pilih jenis pakej:</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure">
 						<source>Unfortunately, uninstallation of this package failed.</source>
-						<target>該擴展包的卸載失敗。</target>
+						<target>Malangnya, penyahpasangan pakej ini telah gagal.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure_header">
 						<source>Uninstallation Failed</source>
-						<target>卸載失敗</target>
+						<target>Penyahpasangan Gagal.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_success">
 						<source>Uninstallation of this package was successful.</source>
-						<target>卸載成功</target>
+						<target>Penyahpasangan pakej ini telah berjaya.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_success_header">
 						<source>Uninstallation Successful</source>
-						<target>卸載成功</target>
+						<target>Penyahpasangan Berjaya</target>
 					</trans-unit>
 					<trans-unit id="uninstall_log">
 						<source>A log is shown below:</source>
-						<target>在卸載過程中執行了下列操作:</target>
+						<target>Log ditunjukkan di bawah:</target>
 					</trans-unit>
 					<trans-unit id="uninstall_button">
 						<source>Uninstall Package</source>
-						<target>卸載擴展包</target>
+						<target>Nyahpasang Pakej</target>
 					</trans-unit>
 					<trans-unit id="uninstall_broken">
 						<source>Some existing packages may be broken by this action.</source>
-						<target>有些擴展包可能被這個動作破壞。</target>
+						<target>Sesetengah pakej sedia ada mungkin rosak oleh tindakan ini.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_missing_xml">
 						<source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
-						<target>無法卸載這個擴展包。 \r\n XML文件缺失。</target>
+						<target>Tidak dapat menyahpasang pakej yang dipilih. \r\n Senarai fail XML tiada.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_database_remove">
 						<source>Do you wish to remove this package from the database?</source>
-						<target>你想要從數據庫中移除這個擴展包嗎?</target>
+						<target>Adakah anda ingin mengalih keluar pakej ini daripada pangkalan data?</target>
 					</trans-unit>
 					<trans-unit id="database_save_error">
 						<source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
-						<target>保存擴展包數據時出現問題。 \r\n 請檢查寫入權限。</target>
+						<target>Ralat berlaku semasa menyimpan pangkalan data pakej. \r\n Sila semak kebenaran menulis.</target>
 					</trans-unit>
 					<trans-unit id="version_new">
 						<source>New version:</source>
-						<target>新版本:</target>
+						<target>Versi baharu:</target>
 					</trans-unit>
 					<trans-unit id="version_current">
 						<source>Current version:</source>
-						<target>當前版本:</target>
+						<target>Versi terkini:</target>
 					</trans-unit>
 					<trans-unit id="success">
 						<source>Finished!</source>
-						<target>已完成!</target>
+						<target>Selesai!</target>
 					</trans-unit>
 					<trans-unit id="selected">
 						<source>Selected Packages</source>
-						<target>選擇擴展包</target>
+						<target>Pakej Dipilih</target>
 					</trans-unit>
 					<trans-unit id="dependancy">
 						<source>Dependancy</source>
-						<target>相依擴展包</target>
+						<target>Tanggungan</target>
 					</trans-unit>
 					<trans-unit id="recommendation">
 						<source>Recommendation</source>
-						<target>建議</target>
+						<target>Cadangan</target>
 					</trans-unit>
 					<trans-unit id="error_action">
 						<source>Please select the action you wish to take:</source>
-						<target>請選擇你想採取的操作:</target>
+						<target>Sila pilih tindakan yang ingin ambil:</target>
 					</trans-unit>
 					<trans-unit id="error_overwrite">
 						<source>Overwrite</source>
-						<target>覆蓋</target>
+						<target>Tulis ganti</target>
 					</trans-unit>
 					<trans-unit id="error_replace">
 						<source>Replace</source>
-						<target>取代</target>
+						<target>Ganti</target>
 					</trans-unit>
 					<trans-unit id="button_next">
 						<source>Next &gt;</source>
-						<target>下一頁...</target>
+						<target>Seterusnya &gt;</target>
 					</trans-unit>
 					<trans-unit id="button_back">
 						<source>&lt; Back</source>
-						<target>上一頁...</target>
+						<target>&lt;Kembali</target>
 					</trans-unit>
 					<trans-unit id="button_cancel">
 						<source>Cancel</source>
-						<target>取消</target>
+						<target>Batal</target>
 					</trans-unit>
 					<trans-unit id="button_ok">
 						<source>OK</source>
-						<target>確定</target>
+						<target>OK</target>
 					</trans-unit>
 					<trans-unit id="button_install">
 						<source>Install</source>
-						<target>安裝</target>
+						<target>Pasang</target>
 					</trans-unit>
 					<trans-unit id="button_create">
 						<source>Create</source>
-						<target>創造</target>
+						<target>Cipta</target>
 					</trans-unit>
 					<trans-unit id="button_ignore">
 						<source>Ignore</source>
-						<target>略過</target>
+						<target>Abaikan</target>
 					</trans-unit>
 					<trans-unit id="button_abort">
 						<source>Abort</source>
-						<target>停止</target>
+						<target>Batalkan</target>
 					</trans-unit>
 					<trans-unit id="filename_empty">
 						<source>Attempted to create a package with an empty filename.</source>
-						<target>試圖創建一個帶有空文件名的擴展包。</target>
+						<target>Telah mencuba untuk membuat pakej dengan tiada nama fail.</target>
 					</trans-unit>
 					<trans-unit id="directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>您嘗試保存擴展包文件的資料夾不存在: \r \n</target>
+						<target>Direktori tempat anda cuba menyimpan fail pakej tidak wujud: \r \n</target>
 					</trans-unit>
 					<trans-unit id="directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
-						<target>嘗試保存擴展包文件的目錄中沒有寫訪問權限: \r \n</target>
+						<target>Tiada akses menulis tersedia dalam direktori  di mana anda mencuba untuk menyimpan fail pakej: \r \n</target>
 					</trans-unit>
 					<trans-unit id="file_generic">
 						<source>Failed to create the following file: \r \n</source>
-						<target>無法創建以下文件: \r \n</target>
+						<target>Gagal untuk mencipta faol berikut: \r \n</target>
 					</trans-unit>
 					<trans-unit id="database_newer_expected">
 						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-						<target>擴展包資料庫xml無效, 並已重新制造</target>
+						<target>Versi pangkalan data pakej nampaknya merupakan versi yang lebih baharu daripada yang disokong oleh salinan OpenBVE ini.</target>
 					</trans-unit>
 					<trans-unit id="database_invalid_xml">
 						<source>The package database XML was invalid, and has been re-created.</source>
-						<target>擴展包資料庫xml無效, 並已重新制造</target>
+						<target>Pangkalan data pakej XML  tidak sah dan telah dibuat semula.</target>
 					</trans-unit>
 				</group>
 				<group id="controls">
@@ -937,94 +937,94 @@
 					</trans-unit>
 					<trans-unit id="list_command">
 						<source>Command</source>
-						<target>控制</target>
+						<target>Perintah</target>
 					</trans-unit>
 					<trans-unit id="list_type">
 						<source>Type</source>
 					</trans-unit>
 					<trans-unit id="list_type_digital">
 						<source>Digital</source>
-						<target>數碼</target>
+						<target>Digital</target>
 					</trans-unit>
 					<trans-unit id="list_type_analoghalf">
 						<source>Analog (half axis)</source>
-						<target>模擬 (半軸)</target>
+						<target>Analog (Setengah paksi)</target>
 					</trans-unit>
 					<trans-unit id="list_type_analogfull">
 						<source>Analog (full axis)</source>
-						<target>模擬 (全軸)</target>
+						<target>Analog (Paksi Penuh)</target>
 					</trans-unit>
 					<trans-unit id="list_description">
 						<source>Description</source>
-						<target>描述</target>
+						<target>Penerangan</target>
 					</trans-unit>
 					<trans-unit id="list_assignment">
 						<source>Assignment</source>
-						<target>賦值</target>
+						<target>Tugasan</target>
 					</trans-unit>
 					<trans-unit id="list_option">
 						<source>Command Option</source>
-						<target>命令選項</target>
+						<target>Pilihan Perintah</target>
 					</trans-unit>
 					<trans-unit id="add">
 						<source>Add control</source>
-						<target>新增控制</target>
+						<target>Tambah kawalan</target>
 					</trans-unit>
 					<trans-unit id="remove">
 						<source>Remove control</source>
-						<target>移除控制</target>
+						<target>Buang kawalan</target>
 					</trans-unit>
 					<trans-unit id="import">
 						<source>Import...</source>
-						<target>匯入……</target>
+						<target>Import...</target>
 					</trans-unit>
 					<trans-unit id="export">
 						<source>Export...</source>
-						<target>匯出……</target>
+						<target>Eksport...</target>
 					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
-						<target>重置為默認值</target>
+						<target>Set semula ke lalai</target>
 					</trans-unit>
 					<trans-unit id="up">
 						<source>Move up</source>
-						<target>上移</target>
+						<target>Bergerak ke atas</target>
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Move down</source>
-						<target>下移</target>
+						<target>Bergerak ke bawah</target>
 					</trans-unit>
 					<trans-unit id="selection">
 						<source>Currently selected command</source>
-						<target>現時控制模式</target>
+						<target>Perintah yang dipilih pada masa ini</target>
 					</trans-unit>
 					<trans-unit id="selection_command">
 						<source>Command:</source>
-						<target>指令：</target>
+						<target>Perintah:</target>
 					</trans-unit>
 					<trans-unit id="selection_command_option">
 						<source>Command Option:</source>
-						<target>命令選項:</target>
+						<target>Pilihan Perintah:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard">
 						<source>Keyboard:</source>
-						<target>鍵盤：</target>
+						<target>Papan Kekunci:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_assignment_grab">
 						<source>Click here to enable keyboard grab to automatically select the desired key.</source>
-						<target>接此啟動偵察鍵盤以自動地選擇適當的鍵。</target>
+						<target>Klik di sini untuk membolehkan cengkaman papan kekunci memilih kekunci yang dikehendaki secara automatik.</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_assignment_grabbing">
 						<source>Please press any key...</source>
-						<target> 請按下你想分配的按鍵...</target>
+						<target>Sila tekan sebarang kekunci...</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_key">
 						<source>Key:</source>
-						<target>鍵：</target>
+						<target>Kekunci:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_modifiers">
 						<source>Modifiers:</source>
-						<target>功能鍵：</target>
+						<target>Pengubah suai:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_modifiers_shift">
 						<source>Shift</source>
@@ -1040,31 +1040,31 @@
 					</trans-unit>
 					<trans-unit id="selection_joystick">
 						<source>Joystick:</source>
-						<target>操縱桿：</target>
+						<target>Joystick:</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment">
 						<source>Assignment:</source>
-						<target>設定：</target>
+						<target>Tugasan:</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab">
 						<source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
-						<target>接此啟動偵察操縱桿以自動地選擇操縱桿設定。\r\n\r\n但是，請先把搖桿移到預設位置和鬆開按鈕才可按此。</target>
+						<target>Klik di sini untuk membolehkan joystick memilih paksi, butang atau topi yang dikehendaki secara automatik.</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_normal">
 						<source>Press a button or move an axis or hat into the desired direction...</source>
-						<target>按下你選擇使用的按鈕或將搖桿移向所選的方向……</target>
+						<target>Tekan butang atau gerakkan paksi atau topi ke arah yang dikehendaki...</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
 						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
-						<target>移到搖桿到選擇用作「增加」或「動力」的方向……</target>
+						<target>Gerakkan paksi ke arah &quot;kenaikan&quot; atau &quot;kuasa&quot;...</target>
 					</trans-unit>
 					<trans-unit id="attached">
 						<source>Attached joysticks</source>
-						<target>已連接的操縱桿</target>
+						<target>Joystick yang dilampirkan</target>
 					</trans-unit>
 					<trans-unit id="assignment_keyboard">
 						<source>Keyboard</source>
-						<target>鍵盤</target>
+						<target>Papan Kekunci</target>
 					</trans-unit>
 					<trans-unit id="assignment_keyboard_shift">
 						<source>Shift +\x20</source>
@@ -1080,642 +1080,642 @@
 					</trans-unit>
 					<trans-unit id="assignment_joystick">
 						<source>Joystick [index]</source>
-						<target>操縱桿 [index]</target>
+						<target>Joystick [index]</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_axis">
 						<source>axis [index]</source>
-						<target>搖桿 [index]</target>
+						<target>paksi [index]</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_negative">
 						<source>negative direction</source>
-						<target>負方向</target>
+						<target>Arah negatif</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_positive">
 						<source>positive direction</source>
-						<target>正方向</target>
+						<target>Arah positif</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_invalid">
 						<source>invalid direction</source>
-						<target>無效方向</target>
+						<target>Arah tidak sah</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_button">
 						<source>button [index]</source>
-						<target>按鈕 [index]</target>
+						<target>butang [index]</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat">
 						<source>hat [index]</source>
-						<target>方向 [index]</target>
+						<target>topi [index]</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_left">
 						<source>left</source>
-						<target>左</target>
+						<target>kiri</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_upleft">
 						<source>up-left</source>
-						<target>左上</target>
+						<target>atas-kiri</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_up">
 						<source>up</source>
-						<target>上</target>
+						<target>atas</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_upright">
 						<source>up-right</source>
-						<target>右上</target>
+						<target>atas-kanan</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_right">
 						<source>right</source>
-						<target>右</target>
+						<target>kanan</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_downright">
 						<source>down-right</source>
-						<target>右下</target>
+						<target>bawah-kanan</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_down">
 						<source>down</source>
-						<target>下</target>
+						<target>bawah</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_downleft">
 						<source>down-left</source>
-						<target>左下</target>
+						<target>bawah-kiri</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_hat_invalid">
 						<source>invalid</source>
-						<target>無效</target>
+						<target>tidak sah</target>
 					</trans-unit>
 					<trans-unit id="assignment_invalid">
 						<source>Not assigned</source>
-						<target>未指定</target>
+						<target>Tidak ditugaskan</target>
 					</trans-unit>
 					<trans-unit id="assignment_separator">
 						<source>,\x20</source>
-						<target>，\x20</target>
+						<target>,+\x20</target>
 					</trans-unit>
 				</group>
 				<group id="raildriver">
 					<trans-unit id="speedunits">
 						<source>LED Display speed units</source>
-						<target>LED速度顯示單位</target>
+						<target>Unit Paparan laju LED</target>
 					</trans-unit>
 					<trans-unit id="milesperhour">
 						<source>Miles per Hour (MPH)</source>
-						<target>英里每小時 (MPH)</target>
+						<target>Batu sejam (MPH)</target>
 					</trans-unit>
 					<trans-unit id="kilometersperhour">
 						<source>Kilometers per Hour (KPH)</source>
-						<target>公里每小時 (KPH)</target>
+						<target>Kilometer sejam (KPH)</target>
 					</trans-unit>
 					<trans-unit id="setcalibration">
 						<source>Set Calibration:</source>
-						<target>校準：</target>
+						<target>Tetapkan Penentukuran:</target>
 					</trans-unit>
 					<trans-unit id="launch">
 						<source>Launch</source>
-						<target>開放</target>
+						<target>Lancar</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
 						<source>No RailDriver conrollers detected.</source>
-						<target>未檢測到RailDriver控制器。</target>
+						<target>Tiada RailDriver Controller ditemukan.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
-						<target>加載RailDriver校准文件時出錯</target>
+						<target>Ralat memuatkan fail penentukuran RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
 						<source>Please press 'Next' to start calibration.</source>
-						<target>請按“下一步”開始校準</target>
+						<target>Sila tekan 'Seterusnya' untuk memulakan penentukuran.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
 						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
-						<target>將倒檔桿移至完全倒檔位置，然後按“下一步”</target>
+						<target>Gerakkan tuil pengundur ke kedudukan terbalik penuh dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
 						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
-						<target>將倒檔桿移至最大前進位置，然後按“下一步”。</target>
+						<target>Gerakkan tuil pengundur ke kedudukan penuh ke hadapan dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
 						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
-						<target>將組合的製動/油門桿移至最大功率位置，然後按“下一步”。</target>
+						<target>Gerakkan tuil brek / pendikit gabungan ke kedudukan kuasa penuh dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_d">
 						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
-						<target>將組合的製動/油門桿移至全制動位置，然後按“下一步”</target>
+						<target>Gerakkan tuil brek / pendikit gabungan ke kedudukan brek penuh dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_e">
 						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
-						<target>將動態制動桿移至釋放位置，然後按“下一步”。</target>
+						<target>Gerakkan tuil brek dinamik ke kedudukan pelepas dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
 						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
-						<target>將動態制動桿移至緊急位置，然後按“下一步”。</target>
+						<target>Gerakkan tuil brek dinamik ke kedudukan kecemasan dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
 						<source>Move the independant brake lever to the release position and press 'Next'.</source>
-						<target>將獨立制動桿移至釋放位置，然後按“下一步”。</target>
+						<target>Gerakkan tuil brek bebas ke kedudukan pelepas dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_h">
 						<source>Move the independant brake lever to the full position and press 'Next'.</source>
-						<target>將獨立制動桿移至最大位置，然後按“下一步”。</target>
+						<target>Gerakkan tuil brek bebas ke kedudukan penuh dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_i">
 						<source>Move the bail-off lever to the release position and press 'Next'.</source>
-						<target>將釋放桿移至釋放位置，然後按“下一步”。</target>
+						<target>Gerakkan tuil bail-off ke kedudukan pelepasan dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_j">
 						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
-						<target>移動並保持釋放桿到最大位置，然後按“下一步”。</target>
+						<target>Gerakkan dan tahan tuil bail-off ke dalam kedudukan penuh dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_k">
 						<source>Move the wiper switch to OFF and press 'Next'.</source>
-						<target>將雨刮器開關移至“關閉”，然後按“下一步”。</target>
+						<target>Alihkan suis pengelap ke OFF dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
 						<source>Move the wiper switch to FULL and press 'Next'.</source>
-						<target>將雨刮器開關移至FULL（滿），然後按下一步。</target>
+						<target>Alihkan suis pengelap ke PENUH dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
 						<source>Move the lights switch to OFF and press 'Next'.</source>
-						<target>將燈光開關移至“關閉”，然後按“下一步”。</target>
+						<target>Alihkan suis lampu ke OFF dan tekan 'Next'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
 						<source>Move the lights switch to FULL and press 'Next'.</source>
-						<target>將燈光開關移至FULL，然後按“下一步”。</target>
+						<target>Alihkan suis lampu kepada PENUH dan tekan 'Seterusnya'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
 						<source>Calibration complete.</source>
-						<target>校準完成。</target>
+						<target>Penentukuran selesai.</target>
 					</trans-unit>
 				</group>
 				<group id="options">
 					<trans-unit id="resolution">
 						<source>Resolution:</source>
-						<target>解像度</target>
+						<target>Resolusi:</target>
 					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
-						<target>語言</target>
+						<target>Bahasa</target>
 					</trans-unit>
 					<trans-unit id="display">
 						<source>Display</source>
-						<target>顯示</target>
+						<target>Paparan</target>
 					</trans-unit>
 					<trans-unit id="display_mode">
 						<source>Display mode</source>
-						<target>顯示模式</target>
+						<target>Mode paparan</target>
 					</trans-unit>
 					<trans-unit id="display_mode_window">
 						<source>Window mode</source>
-						<target>視窗模式</target>
+						<target>Mod tetingkap</target>
 					</trans-unit>
 					<trans-unit id="display_mode_fullscreen">
 						<source>Fullscreen mode</source>
-						<target>全螢幕模式</target>
+						<target>Mod skrin penuh</target>
 					</trans-unit>
 					<trans-unit id="display_vsync">
 						<source>Vertical synchronization:</source>
-						<target>垂直同步(VSync)：</target>
+						<target>Penyegerakan menegak:</target>
 					</trans-unit>
 					<trans-unit id="display_vsync_off">
 						<source>Disabled</source>
-						<target>關閉</target>
+						<target>Dinyahdayakan</target>
 					</trans-unit>
 					<trans-unit id="display_vsync_on">
 						<source>Enabled</source>
-						<target>開啟</target>
+						<target>Didayakan</target>
 					</trans-unit>
 					<trans-unit id="display_window">
 						<source>Window mode</source>
-						<target>視窗模式</target>
+						<target>Mod tetingkap</target>
 					</trans-unit>
 					<trans-unit id="display_window_width">
 						<source>Width:</source>
-						<target>寬：</target>
+						<target>Lebar:</target>
 					</trans-unit>
 					<trans-unit id="display_window_height">
 						<source>Height:</source>
-						<target>高：</target>
+						<target>Tinggi:</target>
 					</trans-unit>
 					<trans-unit id="display_fullscreen">
 						<source>Fullscreen</source>
-						<target>全螢幕</target>
+						<target>Skrin Penuh</target>
 					</trans-unit>
 					<trans-unit id="display_fullscreen_width">
 						<source>Width:</source>
-						<target>寬：</target>
+						<target>Lebar:</target>
 					</trans-unit>
 					<trans-unit id="display_fullscreen_height">
 						<source>Height:</source>
-						<target>高：</target>
+						<target>Tinggi:</target>
 					</trans-unit>
 					<trans-unit id="display_fullscreen_bits">
 						<source>Bits per pixel:</source>
-						<target>色深：</target>
+						<target>Bits per pixel:</target>
 					</trans-unit>
 					<trans-unit id="quality">
 						<source>Quality</source>
-						<target>質素</target>
+						<target>Kualiti</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation">
 						<source>Interpolation</source>
-						<target>插值</target>
+						<target>Interpolasi</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode">
 						<source>Mode:</source>
-						<target>模式：</target>
+						<target>Mod:</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode_nearest">
 						<source>Nearest neighbor</source>
-						<target>最近相鄰</target>
+						<target>Jiran terdekat</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode_bilinear">
 						<source>Bilinear</source>
-						<target>雙線性</target>
+						<target>Dwilinear</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode_nearestmipmap">
 						<source>Nearest neighbor (mipmapping)</source>
-						<target>最近相鄰 (Mipmap)</target>
+						<target>Jiran terdekat (mipmapping)</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode_bilinearmipmap">
 						<source>Bilinear (mipmapping)</source>
-						<target>雙線性 (Mipmap)</target>
+						<target>Dwilinear (mipmapping)</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode_trilinearmipmap">
 						<source>Trilinear (mipmapping)</source>
-						<target>三線性 (Mipmap)</target>
+						<target>Trilinear (mipmapping)</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_mode_anisotropic">
 						<source>Anisotropic filtering</source>
-						<target>各向異性過濾</target>
+						<target>Penapisan anisotropic</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_anisotropic_level">
 						<source>Level of anisotropic filtering:</source>
-						<target>各向異性過濾水平：</target>
+						<target>Tahap penapisan anisotropik:</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_antialiasing_level">
 						<source>Level of anti-aliasing:</source>
-						<target>反鋸齒水平：</target>
+						<target>Tahap anti-aliasing:</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_transparency">
 						<source>Transparency:</source>
-						<target>退地邊緣：</target>
+						<target>Ketelusan:</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_transparency_sharp">
 						<source>Sharp</source>
-						<target>銳利</target>
+						<target>Tajam</target>
 					</trans-unit>
 					<trans-unit id="quality_interpolation_transparency_smooth">
 						<source>Smooth</source>
-						<target>平滑</target>
+						<target>Licin</target>
 					</trans-unit>
 					<trans-unit id="quality_distance">
 						<source>Distance effects</source>
-						<target>視覺效果</target>
+						<target>Kesan jarak</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_viewingdistance">
 						<source>Viewing distance:</source>
-						<target>可視距離：</target>
+						<target>Jarak tontonan:</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_viewingdistance_meters">
 						<source>m</source>
-						<target>米</target>
+						<target>m</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur">
 						<source>Motion blur:</source>
-						<target>運動模糊：</target>
+						<target>Gerakan kabur:</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur_none">
 						<source>Disabled</source>
-						<target>無</target>
+						<target>Dinyahdayakan</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur_low">
 						<source>Low</source>
-						<target>低</target>
+						<target>Rendah</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur_medium">
 						<source>Medium</source>
-						<target>中</target>
+						<target>Sederhana</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur_high">
 						<source>High</source>
-						<target>高</target>
+						<target>Tinggi</target>
 					</trans-unit>
 					<trans-unit id="misc">
 						<source>Miscellaneous</source>
-						<target>雜項</target>
+						<target>Macam-macam</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation">
 						<source>Detail of simulation</source>
-						<target>模擬效果</target>
+						<target>Butiran simulasi</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_toppling">
 						<source>Toppling</source>
-						<target>震盪</target>
+						<target>Menggulingkan</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_collisions">
 						<source>Collisions</source>
-						<target>碰撞</target>
+						<target>Perlanggaran</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_derailments">
 						<source>Derailments</source>
-						<target>出軌</target>
+						<target>Tergelincir</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_blackbox">
 						<source>Enable black box</source>
-						<target>黑盒</target>
+						<target>Dayakan kotak hitam</target>
 					</trans-unit>
 					<trans-unit id="misc_simulation_loadingsway">
 						<source>Enable loading sway</source>
-						<target>因乘客流量而搖擺列車</target>
+						<target>Dayakan goyangan pemuatan</target>
 					</trans-unit>
 					<trans-unit id="misc_controls">
 						<source>Controls</source>
-						<target>控制</target>
+						<target>Kawalan</target>
 					</trans-unit>
 					<trans-unit id="misc_controls_joysticks">
 						<source>Joysticks enabled</source>
-						<target>啟用操縱桿</target>
+						<target>Joystick didayakan</target>
 					</trans-unit>
 					<trans-unit id="misc_controls_threshold">
 						<source>Joystick threshold:</source>
-						<target>操縱桿靈敏度：</target>
+						<target>Ambang joystick:</target>
 					</trans-unit>
 					<trans-unit id="misc_controls_ebaxis">
 						<source>Allow EB on brake axis</source>
-						<target>允許EB​​在製動軸上</target>
+						<target>Benarkan EB pada paksi brek</target>
 					</trans-unit>
 					<trans-unit id="misc_sound">
 						<source>Sound</source>
-						<target>音效</target>
+						<target>Bunyi</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_range">
 						<source>Effective range:</source>
-						<target>有效範圍：</target>
+						<target>Julat berkesan:</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_range_low">
 						<source>Low</source>
-						<target>近</target>
+						<target>Rendah</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_range_medium">
 						<source>Medium</source>
-						<target>中</target>
+						<target>Sederhana</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_range_high">
 						<source>High</source>
-						<target>遠</target>
+						<target>Tinggi</target>
 					</trans-unit>
 					<trans-unit id="misc_sound_number">
 						<source>Number of allowed sounds:</source>
-						<target>允許聲音數量：</target>
+						<target>Bilangan bunyi yang dibenarkan:</target>
 					</trans-unit>
 					<trans-unit id="verbosity">
 						<source>Verbosity</source>
-						<target>文字訊息</target>
+						<target>Keterlaluan</target>
 					</trans-unit>
 					<trans-unit id="verbosity_warningmessages">
 						<source>Show warning messages</source>
-						<target>顯示警告訊息</target>
+						<target>Tunjukkan mesej amaran</target>
 					</trans-unit>
 					<trans-unit id="verbosity_errormessages">
 						<source>Show error messages</source>
-						<target>顯示錯誤訊息</target>
+						<target>Tunjuk mesej ralat</target>
 					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
-						<target>進階選項</target>
+						<target>Pilihan Lanjutan</target>
 					</trans-unit>
 					<trans-unit id="advanced_load_advance">
 						<source>Load in advance</source>
-						<target>預先加載路線</target>
+						<target>Muatkan terlebih dahulu</target>
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
 						<source>Enable the new renderer</source>
-						<target>啟用新渲染器</target>
+						<target>Dayakan pemapar baharu</target>
 					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
-						<target>加速倍數</target>
+						<target>Faktor Masa Dipercepatkan</target>
 					</trans-unit>
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
-						<target>卸載未使用的材質</target>
+						<target>Putuskan tekstur yang tidak digunakan</target>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
-						<target>其他</target>
+						<target>Lain-lain</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode">
 						<source>Timetable mode:</source>
-						<target>時間表模式:</target>
+						<target>Mod jadual:</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_none">
 						<source>None</source>
-						<target>沒有</target>
+						<target>Tiada</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_default">
 						<source>Default</source>
-						<target>默認</target>
+						<target>Lalai</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_autogenerated">
 						<source>Auto-generated timetable</source>
-						<target>自動生成</target>
+						<target>Jadual waktu yang dijana secara automatik</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_prefercustom">
 						<source>Prefer custom timetable</source>
-						<target>優先使用自訂時間表</target>
+						<target>Lebih suka jadual waktu tersuai</target>
 					</trans-unit>
 					<trans-unit id="package_choose">
 						<source>Choose...</source>
-						<target>選擇...</target>
+						<target>Pilih...</target>
 					</trans-unit>
 					<trans-unit id="package_route_directory">
 						<source>Route installation directory:</source>
-						<target>路線安裝資料夾:</target>
+						<target>Direktori pemasangan laluan:</target>
 					</trans-unit>
 					<trans-unit id="package_train_directory">
 						<source>Train installation directory:</source>
-						<target>列車安裝資料夾:</target>
+						<target>Direktori pemasangan kereta api:</target>
 					</trans-unit>
 					<trans-unit id="package_other_directory">
 						<source>Other items installation directory:</source>
-						<target>其他項目安裝資料夾：</target>
+						<target>Direktori pemasangan iitem lain-lain:</target>
 					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
-						<target>包壓縮格式:</target>
+						<target>Format mampatan pakej:</target>
 					</trans-unit>
 					<trans-unit id="page_previous">
 						<source>Previous Page...</source>
-						<target>上一頁...</target>
+						<target>Halaman sebelumnya...</target>
 					</trans-unit>
 					<trans-unit id="page_next">
 						<source>Next Page...</source>
-						<target>下一頁...</target>
+						<target>Halaman seterusnya...</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode">
 						<source>Kiosk Mode</source>
-						<target>鎖定模式</target>
+						<target>Mod Kiosk</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode_enable">
 						<source>Enable Kiosk Mode</source>
-						<target>啟用鎖定模式</target>
+						<target>Hidupkan mod kiosk</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode_timer">
 						<source>Control Timeout (s)</source>
-						<target>控制超時（秒)</target>
+						<target>Masa Kawalan (s)</target>
 					</trans-unit>
 					<trans-unit id="hud_size">
 						<source>HUD Size</source>
-						<target>界面大小</target>
+						<target>Saiz HUD</target>
 					</trans-unit>
 					<trans-unit id="hud_size_small">
 						<source>Small</source>
-						<target>小</target>
+						<target>Kecil</target>
 					</trans-unit>
 					<trans-unit id="hud_size_normal">
 						<source>Normal</source>
-						<target>中</target>
+						<target>Sederhana</target>
 					</trans-unit>
 					<trans-unit id="hud_size_large">
 						<source>Large</source>
-						<target>大</target>
+						<target>Besar</target>
 					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
-						<target>嘗試解決舊內容中的透明度問題。</target>
+						<target>Cuba untuk membetulkan isu ketelusan dalam kandungan lama.</target>
 					</trans-unit>
 					<trans-unit id="hacks_enable">
 						<source>Enable hacks for buggy older content.</source>
-						<target>啟用針對較舊內容的補丁。(香港作品請開啟)</target>
+						<target>Dayakan pembetulan untuk kandungan lama yang bermasalah.</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin">
 						<source>Input Device Plugin</source>
-						<target>輸入設備插件</target>
+						<target>Plugin Peranti Input</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_warning">
 						<source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
-						<target>警告：如果啟用輸入設備插件，則它們可能與一個或多個控件衝突。</target>
+						<target>AMARAN: Jika anda mendayakan Plugin(s) Peranti Input, ini mungkin bercanggah dengan satu atau lebih kawalan.</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_name">
 						<source>Name</source>
-						<target>名稱</target>
+						<target>Nama</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status">
 						<source>Status</source>
-						<target>狀態</target>
+						<target>Status</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_failure">
 						<source>Failure</source>
-						<target>失敗</target>
+						<target>Kegagalan</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_disable">
 						<source>Disable</source>
-						<target>禁用</target>
+						<target>Nyahdaya</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_enable">
 						<source>Enable</source>
-						<target>啟用</target>
+						<target>Dayakan</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_version">
 						<source>Version</source>
-						<target>版本</target>
+						<target>Versi</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_provider">
 						<source>Provider</source>
-						<target>提供者</target>
+						<target>Pembekal</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_file_name">
 						<source>File Name</source>
-						<target>文件名</target>
+						<target>Nama fail</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_switch">
 						<source>Enable this Input Device Plugin</source>
-						<target>啟用此輸入設備插件</target>
+						<target>Dayakan Plugin Peranti Input ini</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_config">
 						<source>Config</source>
-						<target>設定</target>
+						<target>Konfig</target>
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
-						<target> 啟用 Panel2 擴展模式</target>
+						<target>Dayakan Mod Lanjutan Panel2</target>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
-						<target>X Object Parser</target>
+						<target>Penghurai Objek X</target>
 					</trans-unit>
 					<trans-unit id="objobject_parser">
 						<source>OBJ Object Parser</source>
-						<target>OBJ Object Parser</target>
+						<target>Penghurai Objek OBJ</target>
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
-						<target>默認信號:</target>
+						<target>Signal Lalai:</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">
 					<trans-unit id="csvfiles">
 						<source>CSV files</source>
-						<target>CSV 檔案</target>
+						<target>Fail CSV</target>
 					</trans-unit>
 					<trans-unit id="textfiles">
 						<source>Text files</source>
-						<target>純文字檔案</target>
+						<target>Fail teks</target>
 					</trans-unit>
 					<trans-unit id="controlsfiles">
 						<source>Controls</source>
-						<target>控制檔案</target>
+						<target>Kawalan</target>
 					</trans-unit>
 					<trans-unit id="allfiles">
 						<source>All files</source>
-						<target>所有檔案</target>
+						<target>Semua fail</target>
 					</trans-unit>
 				</group>
 				<group id="log">
 					<trans-unit id="time">
 						<source>Time</source>
-						<target>時間</target>
+						<target>Masa</target>
 					</trans-unit>
 					<trans-unit id="position">
 						<source>Position (m)</source>
-						<target>位置 (m)</target>
+						<target>Posisi (m)</target>
 					</trans-unit>
 					<trans-unit id="value">
 						<source>Value</source>
-						<target>得分</target>
+						<target>Nilai</target>
 					</trans-unit>
 					<trans-unit id="cumulative">
 						<source>Cumulative</source>
-						<target>積分</target>
+						<target>Kumulatif</target>
 					</trans-unit>
 					<trans-unit id="reason">
 						<source>Reason</source>
-						<target>原因</target>
+						<target>Sebab</target>
 					</trans-unit>
 					<trans-unit id="speed">
 						<source>Speed (m/s)</source>
-						<target>速率 (m/s)</target>
+						<target>Laju (m/s)</target>
 					</trans-unit>
 					<trans-unit id="acceleration">
 						<source>Acceleration (m/s²)</source>
-						<target>加速度 (m/s²)</target>
+						<target>Pecutan (m/s²)</target>
 					</trans-unit>
 					<trans-unit id="reverser">
 						<source>Reverser</source>
-						<target>方向</target>
+						<target>Pengundur</target>
 					</trans-unit>
 					<trans-unit id="power">
 						<source>Power</source>
-						<target>動力</target>
+						<target>Kuasa</target>
 					</trans-unit>
 					<trans-unit id="brake">
 						<source>Brake</source>
-						<target>制動</target>
+						<target>Brek</target>
 					</trans-unit>
 					<trans-unit id="event">
 						<source>Event</source>
-						<target>事件</target>
+						<target>Peristiwa</target>
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route:</source>
@@ -1725,98 +1725,98 @@
 					</trans-unit>
 					<trans-unit id="date">
 						<source>Date:</source>
-						<target>日期：</target>
+						<target>Tarikh:</target>
 					</trans-unit>
 					<trans-unit id="mode">
 						<source>Mode:</source>
-						<target>模式：</target>
+						<target>Mod:</target>
 					</trans-unit>
 					<trans-unit id="score">
 						<source>Score:</source>
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Rating:</source>
-						<target>評價：</target>
+						<target>Penilaian:</target>
 					</trans-unit>
 				</group>
 				<group id="loading">
 					<trans-unit id="loading">
 						<source>Loading</source>
-						<target>載入中</target>
+						<target>Memuatkan</target>
 					</trans-unit>
 					<trans-unit id="loading_route">
 						<source>Loading route...</source>
-						<target>載入路線中……</target>
+						<target>Memuatkan laluan...</target>
 					</trans-unit>
 					<trans-unit id="loading_train">
 						<source>Loading train...</source>
-						<target>載入列車中……</target>
+						<target>Memuatkan kereta api...</target>
 					</trans-unit>
 					<trans-unit id="almost">
 						<source>Almost ready to start</source>
-						<target>差不多可以開始</target>
+						<target>Sudah bersedia untuk mula</target>
 					</trans-unit>
 					<trans-unit id="almost_filesnotfound">
 						<source>Files not found:</source>
-						<target>找不到檔案：</target>
+						<target>Faail tidak dijumpai:</target>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
 						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
-						<target>在載入路線和列車時遇到一些問題。\r\n\r\n因為找不到部分檔案，路線或列車可能未能按預期顯示。你可以嘗試重新下載該路線及列車以確保你取得完整的檔案。 \r\n\r\n以下的問題清單可能提供額外的資料。你仍可以選擇「略過」來開始遊戲。</target>
+						<target>Beberapa isu telah dihadapi semasa memuatkan laluan dan kereta api.\r\n\r\nMemandangkan sesetengah fail tidak ditemui, laluan atau kereta api mungkin tidak muncul seperti yang dimaksudkan. Cuba muat turun semula laluan dan pakej kereta api untuk memastikan anda mempunyai pengedaran yang lengkap.\r\n\r\nSenarai isu berikut mungkin memberikan maklumat tambahan. Anda masih boleh memulakan laluan dengan memilih &quot;Abaikan&quot; dari bawah.</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
 						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
-						<target>在載入路線和列車時遇到一些問題。如果你是路線或列車製作者，以下的問題清單可能值得一看。\r\n\r\n作為一個普通的玩家，你目前可以選擇「略過」來開始遊戲。</target>
+						<target>Beberapa isu telah dihadapi semasa memuatkan laluan dan kereta api. Jika anda adalah pembangun laluan atau kereta api, anda mungkin perlu melihat senarai isu berikut.\r\n\r\nSebagai pengguna biasa, anda boleh memilih &quot;Abaikan&quot; pada ketika ini untuk memulakan permainan.</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
-						<target>顯示問題</target>
+						<target>Tunjukkan isu</target>
 					</trans-unit>
 					<trans-unit id="problems">
 						<source>Problems</source>
-						<target>問題</target>
+						<target>Masalah</target>
 					</trans-unit>
 					<trans-unit id="problems_type">
 						<source>Type</source>
-						<target>類型</target>
+						<target>Jenis</target>
 					</trans-unit>
 					<trans-unit id="problems_description">
 						<source>Description</source>
-						<target>描述</target>
+						<target>Penerangan</target>
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save report...</source>
-						<target>儲存報告……</target>
+						<target>Simpan laporan...</target>
 					</trans-unit>
 					<trans-unit id="ignore">
 						<source>Ignore</source>
-						<target>略過</target>
+						<target>Abaikan</target>
 					</trans-unit>
 					<trans-unit id="cancel">
 						<source>Cancel</source>
-						<target>取消</target>
+						<target>Batal</target>
 					</trans-unit>
 				</group>
 				<group id="timetable">
 					<trans-unit id="highestspeed">
 						<source>Max.\r\nspd.</source>
-						<target>最高\r\n車速</target>
+						<target>Laju\r\nMax.</target>
 					</trans-unit>
 					<trans-unit id="drivingtime">
 						<source>Drv.\r\ntime</source>
-						<target>行車\r\n時間</target>
+						<target>Drv.\r\ntime</target>
 					</trans-unit>
 					<trans-unit id="stationname">
 						<source>Station name</source>
-						<target>車站名稱</target>
+						<target>Nama stesen</target>
 					</trans-unit>
 					<trans-unit id="arrivaltime">
 						<source>Arrival</source>
-						<target>抵站</target>
+						<target>Ketibaan</target>
 					</trans-unit>
 					<trans-unit id="departuretime">
 						<source>Departure</source>
-						<target>離站</target>
+						<target>Berlepas</target>
 					</trans-unit>
 				</group>
 				<group id="message">
@@ -1826,91 +1826,91 @@
 					</trans-unit>
 					<trans-unit id="signal_proceed">
 						<source>You may proceed at [speed] [unit] with extreme caution.</source>
-						<target>你可以謹慎地以 [speed] [unit] 行駛。</target>
+						<target>Anda boleh meneruskan  [speed][unit] dengan sangat berhati-hati.</target>
 					</trans-unit>
 					<trans-unit id="signal_stop">
 						<source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
-						<target>你已越過紅燈。請立即使用緊急制動把列車停定。</target>
+						<target>Anda telah melepasi isyarat berhenti. Sila gunakan brek kecemasan dengan segera dan berhenti sepenuhnya.</target>
 					</trans-unit>
 					<trans-unit id="signal_overspeed">
 						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
-						<target>請減速！信號指示的車速限制為 [limit] [unit]，但列車的車速為 [speed] [unit]。</target>
+						<target>Isyarat menunjukkan had laju sebanyak [limit] [unit] . Anda sedang melancong di [speed] [unit]. Tolong perlahankan kereta api.</target>
 					</trans-unit>
 					<trans-unit id="route_overspeed">
 						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
-						<target>請減速！車速指示牌所標註的車速限制為 [limit] [unit]，但列車的車速為 [speed] [unit]。</target>
+						<target>Post laju menunjukkan had laju sebanyak [limit] [unit]. Anda sedang melancong di [speed][unit]. Tolong perlahankan kereta api.</target>
 					</trans-unit>
 					<trans-unit id="route_newlimit">
 						<source>New speed limit: [limit] [unit].</source>
-						<target>新速度限制: [limit][unit]</target>
+						<target>Had laju baharu: [limit][unit].</target>
 					</trans-unit>
 					<trans-unit id="route_nextsection">
 						<source>Next signal in [distance]</source>
-						<target>下一個信號的距離還有 [distance]</target>
+						<target>Signal seterusnya dalam [distance]</target>
 					</trans-unit>
 					<trans-unit id="route_nextsection_aspect">
 						<source>Next signal in [distance], with aspect [aspect]</source>
-						<target>下一個信號的距離還有 [distance], 號誌為 [aspect]</target>
+						<target>Signal seterusnya dalam [distance], dengan aspek [aspect]</target>
 					</trans-unit>
 					<trans-unit id="route_nextstation">
 						<source>Next station is [name] in [distance]</source>
-						<target>下一站 [name]，距離還有 [distance]。</target>
+						<target>Stesen berikutnya [name] dalam [distance]</target>
 					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
-						<target>你已經到達了 [name]。</target>
+						<target>Anda telah tiba di [name]</target>
 					</trans-unit>
 					<trans-unit id="station_arrival_late">
 						<source>You have arrived at [name] and are [time] late.</source>
-						<target>你遲了 [time] 到達 [name] 。</target>
+						<target>Anda telah tiba di [name] dan [time] lewat.</target>
 					</trans-unit>
 					<trans-unit id="station_arrival_early">
 						<source>You have arrived at [name] and are [time] early.</source>
-						<target>你早了 [time] 到達 [name] 。</target>
+						<target>Anda telah tiba di [name] dan [time] awal.</target>
 					</trans-unit>
 					<trans-unit id="station_overrun">
 						<source>Overrun: [difference] m.</source>
-						<target>超越停站點：[difference] m。</target>
+						<target>Terlebih: [difference] m.</target>
 					</trans-unit>
 					<trans-unit id="station_underrun">
 						<source>Underrun: [difference] m.</source>
-						<target>離停站點差︰[difference] m。</target>
+						<target>Terkurang: [difference] m.</target>
 					</trans-unit>
 					<trans-unit id="station_terminal">
 						<source>This is the terminal station.</source>
-						<target>這是終點站。</target>
+						<target>Ini ialah stesen terminal.</target>
 					</trans-unit>
 					<trans-unit id="station_deadline">
 						<source>Departure is expected in [time].</source>
-						<target>預計於 [time] 後離站。</target>
+						<target>Dijangka berlepas dalam [time].</target>
 					</trans-unit>
 					<trans-unit id="station_security">
 						<source>Please activate [system].</source>
-						<target>請啟動 [system]。</target>
+						<target>Sila aktifkan [system].</target>
 					</trans-unit>
 					<trans-unit id="station_correct">
 						<source>Please correct your stop position.</source>
-						<target>請修正你的停站位置。</target>
+						<target>Sila betulkan kedudukan berhenti anda</target>
 					</trans-unit>
 					<trans-unit id="station_depart_closedoors">
 						<source>Boarding complete. You may close the doors now.</source>
-						<target>你現在可以關閉車門和離站。</target>
+						<target>Pengambilan penumpang selesai. Anda boleh menutup pintu sekarang.</target>
 					</trans-unit>
 					<trans-unit id="station_depart">
 						<source>Boarding complete.</source>
-						<target>你現在可以離站。</target>
+						<target>Pengambilan penumpang selesai.</target>
 					</trans-unit>
 					<trans-unit id="station_passed">
 						<source>You have passed [name] where you should have stopped.</source>
-						<target>你未有於 [name] 停站。</target>
+						<target>Anda telah melepasi [name] di mana sepatutnya anda berhenti.</target>
 					</trans-unit>
 					<trans-unit id="station_passed_boarding">
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
-						<target>你未有於 [name] 讓乘客上落車，請立刻駛回車站。</target>
+						<target>Anda telah melepasi [name] semasa masih mengambil penumpang. Sila datang ke kedudukan berhenti yang betul dengan segera.</target>
 					</trans-unit>
 					<trans-unit id="train_currentspeed">
 						<source>The train's current speed is [speed]</source>
-						<target>現時列車速度為 [speed]</target>
+						<target>Laju keretapi terkini ialah [speed]</target>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
@@ -1919,121 +1919,121 @@
 				<group id="notification">
 					<trans-unit id="interior">
 						<source>Interior camera</source>
-						<target>車內視點</target>
+						<target>Kamera dalaman</target>
 					</trans-unit>
 					<trans-unit id="interior_lookahead">
 						<source>Interior camera (look ahead)</source>
-						<target>車內視點 (向前展望)</target>
+						<target>Kamera dalaman (pandang ke hadapan)</target>
 					</trans-unit>
 					<trans-unit id="exterior">
 						<source>Exterior camera</source>
-						<target>車外視點</target>
+						<target>Kamera luaran</target>
 					</trans-unit>
 					<trans-unit id="track">
 						<source>Track camera</source>
-						<target>軌道視點</target>
+						<target>Kamera trek</target>
 					</trans-unit>
 					<trans-unit id="flybynormal">
 						<source>Fly-by camera (normal)</source>
-						<target>定點觀察 (正常)</target>
+						<target>Kamera terbang (biasa)</target>
 					</trans-unit>
 					<trans-unit id="flybyzooming">
 						<source>Fly-by camera (zooming)</source>
-						<target>定點觀察 (緊隨列車)</target>
+						<target>Kamera terbang (zum)</target>
 					</trans-unit>
 					<trans-unit id="cpu_normal">
 						<source>CPU: normal</source>
-						<target>CPU：正常</target>
+						<target>CPU: sederhana</target>
 					</trans-unit>
 					<trans-unit id="cpu_low">
 						<source>CPU: low</source>
-						<target>CPU：低</target>
+						<target>CPU: rendah</target>
 					</trans-unit>
 					<trans-unit id="backfaceculling_on">
 						<source>Backface culling: on</source>
-						<target>背向面去除：啟動</target>
+						<target>Pemusnahan muka belakang: hidup</target>
 					</trans-unit>
 					<trans-unit id="backfaceculling_off">
 						<source>Backface culling: off</source>
-						<target>背向面去除：關閉</target>
+						<target>Pemusnahan muka belakang: mati</target>
 					</trans-unit>
 					<trans-unit id="notavailableexpert">
 						<source>This feature is not available in Expert mode.</source>
-						<target>這功能於專家模式中並不提供。</target>
+						<target>Ciri ini tidak tersedia dalam mod Pakar.</target>
 					</trans-unit>
 					<trans-unit id="aiunable">
 						<source>The AI might be unable to fully operate this train.</source>
-						<target>人工智能司機可能無法完全控制這列車。</target>
+						<target>AI mungkin tidak dapat mengendalikan kereta api ini sepenuhnya.</target>
 					</trans-unit>
 					<trans-unit id="camerarestriction_on">
 						<source>Camera restriction: on</source>
-						<target>鏡頭限制：啟動</target>
+						<target>Sekatan kamera: hidup</target>
 					</trans-unit>
 					<trans-unit id="camerarestriction_off">
 						<source>Camera restriction: off</source>
-						<target>鏡頭限制：關閉</target>
+						<target>Sekatan kamera: mati</target>
 					</trans-unit>
 					<trans-unit id="mousegrab_on">
 						<source>Mouse grab: on</source>
-						<target>滑鼠抓動：啟動</target>
+						<target>Rebut tetikus: hidup</target>
 					</trans-unit>
 					<trans-unit id="mousegrab_off">
 						<source>Mouse grab: off</source>
-						<target>滑鼠抓動：關閉</target>
+						<target>Rebut tetikus: mati</target>
 					</trans-unit>
 				</group>
 				<group id="score">
 					<trans-unit id="overspeed">
 						<source>Overspeed</source>
-						<target>超速</target>
+						<target>Terlalu laju</target>
 					</trans-unit>
 					<trans-unit id="redsignal">
 						<source>Passed red signal</source>
-						<target>衝紅燈</target>
+						<target>Melepasi isyarat merah</target>
 					</trans-unit>
 					<trans-unit id="toppling">
 						<source>Toppling</source>
-						<target>震盪</target>
+						<target>Menggulingkan</target>
 					</trans-unit>
 					<trans-unit id="derailed">
 						<source>Derailed</source>
-						<target>出軌</target>
+						<target>Telah tergelincir</target>
 					</trans-unit>
 					<trans-unit id="discomfort">
 						<source>Passenger discomfort</source>
-						<target>乘客感到不適</target>
+						<target>Ketidakselesaan penumpang</target>
 					</trans-unit>
 					<trans-unit id="doors">
 						<source>Doors opened</source>
-						<target>車門開啟</target>
+						<target>Pintu dibuka</target>
 					</trans-unit>
 					<trans-unit id="station_arrived">
 						<source>Arrived at station</source>
-						<target>抵達車站</target>
+						<target>Tiba di stesen</target>
 					</trans-unit>
 					<trans-unit id="station_perfecttime">
 						<source>Perfect time bonus</source>
-						<target>準時到達獎賞</target>
+						<target>Bonus masa yang sempurna</target>
 					</trans-unit>
 					<trans-unit id="station_late">
 						<source>Late</source>
-						<target>遲到</target>
+						<target>Lewat</target>
 					</trans-unit>
 					<trans-unit id="station_perfectstop">
 						<source>Perfect stop bonus</source>
-						<target>準確停站獎賞</target>
+						<target>Bonus berhenti sempurna</target>
 					</trans-unit>
 					<trans-unit id="station_stop">
 						<source>Stop</source>
-						<target>停站位置不準確</target>
+						<target>Berhenti</target>
 					</trans-unit>
 					<trans-unit id="station_departure">
 						<source>Premature departure</source>
-						<target>過早離站</target>
+						<target>Berlepas pramatang</target>
 					</trans-unit>
 					<trans-unit id="station_total">
 						<source>Total</source>
-						<target>合計</target>
+						<target>Jumlah</target>
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Your rating:</source>
@@ -2042,43 +2042,43 @@
 				<group id="rating">
 					<trans-unit id="0">
 						<source>Abysmal</source>
-						<target>慘不忍睹</target>
+						<target>Abysmal</target>
 					</trans-unit>
 					<trans-unit id="1">
 						<source>Terrible</source>
-						<target>惡劣</target>
+						<target>Dahsyat</target>
 					</trans-unit>
 					<trans-unit id="2">
 						<source>Bad</source>
-						<target>差勁</target>
+						<target>Teruk</target>
 					</trans-unit>
 					<trans-unit id="3">
 						<source>Poor</source>
-						<target>未如理想</target>
+						<target>Tidak teruk sangat</target>
 					</trans-unit>
 					<trans-unit id="4">
 						<source>Fair</source>
-						<target>尚可</target>
+						<target>Adil</target>
 					</trans-unit>
 					<trans-unit id="5">
 						<source>Mediocre</source>
-						<target>一般</target>
+						<target>Biasa-biasa je</target>
 					</trans-unit>
 					<trans-unit id="6">
 						<source>Good</source>
-						<target>不錯</target>
+						<target>Bagus</target>
 					</trans-unit>
 					<trans-unit id="7">
 						<source>Great</source>
-						<target>頗佳</target>
+						<target>Lebih baik</target>
 					</trans-unit>
 					<trans-unit id="8">
 						<source>Superb</source>
-						<target>良好</target>
+						<target>Hebat</target>
 					</trans-unit>
 					<trans-unit id="9">
 						<source>Excellent</source>
-						<target>優秀</target>
+						<target>Cemerlang</target>
 					</trans-unit>
 					<trans-unit id="unknown">
 						<source>Unknown</source>
@@ -2090,67 +2090,67 @@
 					</trans-unit>
 					<trans-unit id="pause_title">
 						<source>PAUSE</source>
-						<target>暫停</target>
+						<target>JEDA</target>
 					</trans-unit>
 					<trans-unit id="resume">
 						<source>Resume simulation</source>
-						<target>繼續遊戲</target>
+						<target>Sambung simulasi</target>
 					</trans-unit>
 					<trans-unit id="jump">
 						<source>Jump to station</source>
-						<target>跳至車站</target>
+						<target>Lompat ke stesen</target>
 					</trans-unit>
 					<trans-unit id="exit">
 						<source>Exit to main menu</source>
-						<target>返回主選單</target>
+						<target>Keluar ke menu</target>
 					</trans-unit>
 					<trans-unit id="exit_question">
 						<source>Do you really want to exit to the main menu?</source>
-						<target>是否要返回主選單？</target>
+						<target>Adakah anda benar-benar mahu keluar ke menu utama?</target>
 					</trans-unit>
 					<trans-unit id="exit_no">
 						<source>No</source>
-						<target>否</target>
+						<target>Tidak</target>
 					</trans-unit>
 					<trans-unit id="exit_yes">
 						<source>Yes</source>
-						<target>是</target>
+						<target>Ya</target>
 					</trans-unit>
 					<trans-unit id="quit">
 						<source>Quit</source>
-						<target>離開</target>
+						<target>Keluar</target>
 					</trans-unit>
 					<trans-unit id="quit_question">
 						<source>Do you really want to quit?</source>
-						<target>是否要離開遊戲？</target>
+						<target>Adakah anda benar-benar mahu keluar?</target>
 					</trans-unit>
 					<trans-unit id="quit_no">
 						<source>No</source>
-						<target>否</target>
+						<target>Tidak</target>
 					</trans-unit>
 					<trans-unit id="quit_yes">
 						<source>Yes</source>
-						<target>是</target>
+						<target>Ya</target>
 					</trans-unit>
 					<trans-unit id="back">
 						<source>← Back</source>
-						<target>← 返回</target>
+						<target>← kembali</target>
 					</trans-unit>
 					<trans-unit id="customize_controls">
 						<source>Customise controls</source>
-						<target>定義控制按鍵</target>
+						<target>Sesuaikan kawalan</target>
 					</trans-unit>
 					<trans-unit id="assign">
 						<source>Please press any key or move a joystick axis to set this control...</source>
-						<target>請按任意鍵或移動操縱桿軸以設置此控件...</target>
+						<target>Sila tekan sebarang kekunci atau gerakkan paksi joystick untuk menetapkan kawalan ini...</target>
 					</trans-unit>
 					<trans-unit id="keyboard">
 						<source>Keyboard</source>
-						<target>鍵盤</target>
+						<target>Papan Kekunci</target>
 					</trans-unit>
 					<trans-unit id="joystick">
 						<source>Joystick</source>
-						<target>遊戲桿</target>
+						<target>Joystick</target>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
 						<source>N/A</source>
@@ -2158,15 +2158,15 @@
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
 						<source>Positive</source>
-						<target>正</target>
+						<target>Positif</target>
 					</trans-unit>
 					<trans-unit id="joystickdirection_negative">
 						<source>Negative</source>
-						<target>負</target>
+						<target>Negatif</target>
 					</trans-unit>
 					<trans-unit id="assignment_current">
 						<source>Current assignment:</source>
-						<target>目前分配:</target>
+						<target>Tugasan terkini:</target>
 					</trans-unit>
 				</group>
 				<group id="lamps">
@@ -2176,23 +2176,23 @@
 					</trans-unit>
 					<trans-unit id="atsoperation">
 						<source>ATS RUN</source>
-						<target>ATS 啟動</target>
+						<target>ATS RUN</target>
 					</trans-unit>
 					<trans-unit id="atsppower">
 						<source>P POWER</source>
-						<target>P 電源</target>
+						<target>P POWER</target>
 					</trans-unit>
 					<trans-unit id="atsppattern">
 						<source>PTN APPROACH</source>
-						<target>PTN 接近</target>
+						<target>PTN PENDEKATAN</target>
 					</trans-unit>
 					<trans-unit id="atspbrakeoverride">
 						<source>BRAKE RELEASE</source>
-						<target>制動解除</target>
+						<target>BREK LEPAS</target>
 					</trans-unit>
 					<trans-unit id="atspbrakeoperation">
 						<source>BRAKE APPLY</source>
-						<target>制動</target>
+						<target>BREK DIKENAKAN</target>
 					</trans-unit>
 					<trans-unit id="atsp">
 						<source>ATS-P</source>
@@ -2200,7 +2200,7 @@
 					</trans-unit>
 					<trans-unit id="atspfailure">
 						<source>FAILURE</source>
-						<target>故障</target>
+						<target>KEGAGALAN</target>
 					</trans-unit>
 					<trans-unit id="atc">
 						<source>ATC</source>
@@ -2208,23 +2208,23 @@
 					</trans-unit>
 					<trans-unit id="atcpower">
 						<source>ATC POWER</source>
-						<target>ATC 電源</target>
+						<target>KUASA ATC</target>
 					</trans-unit>
 					<trans-unit id="atcuse">
 						<source>ATC SRV</source>
-						<target>ATC 使用</target>
+						<target>ATC SRV</target>
 					</trans-unit>
 					<trans-unit id="atcemergency">
 						<source>ATC EMG</source>
-						<target>ATC 緊急</target>
+						<target>ATC EMG</target>
 					</trans-unit>
 					<trans-unit id="eb">
 						<source>EB</source>
-						<target>緊急制動</target>
+						<target>EB</target>
 					</trans-unit>
 					<trans-unit id="constspeed">
 						<source>CONST SPEED</source>
-						<target>定速</target>
+						<target>LAJU CONST</target>
 					</trans-unit>
 				</group>
 				<group id="handles">
@@ -2260,33 +2260,33 @@
 					</trans-unit>
 					<trans-unit id="release">
 						<source>REL</source>
-						<target>RL</target>
+						<target>REL</target>
 					</trans-unit>
 					<trans-unit id="lap">
 						<source>LAP</source>
-						<target>LP</target>
+						<target>LAP</target>
 					</trans-unit>
 					<trans-unit id="service">
 						<source>SRV</source>
-						<target>SV</target>
+						<target>V</target>
 					</trans-unit>
 					<trans-unit id="emergency">
 						<source>EMG</source>
-						<target>EM</target>
+						<target>EMG</target>
 					</trans-unit>
 					<trans-unit id="holdbrake">
 						<source>HLD</source>
-						<target>HL</target>
+						<target>HLD</target>
 					</trans-unit>
 				</group>
 				<group id="doors">
 					<trans-unit id="left">
 						<source>L</source>
-						<target>左</target>
+						<target>L</target>
 					</trans-unit>
 					<trans-unit id="right">
 						<source>R</source>
-						<target>右</target>
+						<target>R</target>
 					</trans-unit>
 				</group>
 				<group id="misc">
@@ -2297,27 +2297,27 @@
 				<group id="commands">
 					<trans-unit id="power_increase">
 						<source>Increases power by one notch for trains with two handles</source>
-						<target>在雙桿式列車把列車的動力增加一級</target>
+						<target>Meningkatkan kuasa dengan satu notch untuk kereta api dengan dua pemegang</target>
 					</trans-unit>
 					<trans-unit id="power_decrease">
 						<source>Decreases power by one notch for trains with two handles</source>
-						<target>在雙桿式列車把列車的動力減少一級</target>
+						<target>Mengurangkan kuasa dengan satu notch untuk kereta api dengan dua pemegang</target>
 					</trans-unit>
 					<trans-unit id="power_halfaxis">
 						<source>Controls power for trains with two handles on half of a joystick axis</source>
-						<target>使用半軸操縱桿控制雙桿式列車的動力</target>
+						<target>Mengawal kuasa untuk kereta api dengan dua pemegang pada separuh paksi joystick</target>
 					</trans-unit>
 					<trans-unit id="power_fullaxis">
 						<source>Controls power for trains with two handles on a full joystick axis</source>
-						<target>使用全軸操縱桿控制雙桿式列車的動力</target>
+						<target>Mengawal kuasa untuk kereta api dengan dua pemegang pada paksi joystick penuh</target>
 					</trans-unit>
 					<trans-unit id="brake_decrease">
 						<source>Decreases brake by one notch for trains with two handles</source>
-						<target>在雙桿式列車把列車的制動減少一級</target>
+						<target>Mengurangkan brek sebanyak satu notch untuk kereta api dengan dua pemegang</target>
 					</trans-unit>
 					<trans-unit id="brake_increase">
 						<source>Increases brake by one notch for trains with two handles</source>
-						<target>在雙桿式列車把列車的制動增加一級</target>
+						<target>Meningkatkan brek sebanyak satu notch untuk kereta api dengan dua pemegang</target>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
 						<source>N/A</source>
@@ -2329,155 +2329,155 @@
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
-						<target>使用半軸操縱桿控制雙桿式列車的制動</target>
+						<target>Mengawal brek untuk kereta api dengan dua pemegang pada separuh paksi joystick</target>
 					</trans-unit>
 					<trans-unit id="brake_fullaxis">
 						<source>Controls brake for trains with two handles on a full joystick axis</source>
-						<target>使用全軸操縱桿控制雙桿式列車的制動</target>
+						<target>Mengawal brek untuk kereta api dengan dua pemegang pada paksi joystick penuh</target>
 					</trans-unit>
 					<trans-unit id="brake_emergency">
 						<source>Activates emergency brakes for trains with two handles</source>
-						<target>在雙桿式列車啟動緊急制動</target>
+						<target>Aktifkan brek kecemasan untuk kereta api dua dengan pemegang</target>
 					</trans-unit>
 					<trans-unit id="single_power">
 						<source>Moves handle toward power by one notch for trains with one handle</source>
-						<target>在單桿式列車的控制桿向動力方向增加一級</target>
+						<target>Menggerakkan pemegang ke arah kuasa dengan satu notch untuk kereta api dengan satu pemegang</target>
 					</trans-unit>
 					<trans-unit id="single_neutral">
 						<source>Moves handle toward neutral by one notch for trains with one handle</source>
-						<target>在單桿式列車的控制桿向中性方向增加一級</target>
+						<target>Menggerakkan pemegang ke arah neutral dengan satu notch untuk kereta api dengan satu pemegang</target>
 					</trans-unit>
 					<trans-unit id="single_brake">
 						<source>Moves handle toward brake by one notch for trains with one handle</source>
-						<target>在單桿式列車的控制桿向制動方向增加一級</target>
+						<target>Menggerakkan pemegang ke arah brek dengan satu notch untuk kereta api dengan satu pemegang</target>
 					</trans-unit>
 					<trans-unit id="single_emergency">
 						<source>Activates emergency brake for trains with one handle</source>
-						<target>在單桿式列車啟動緊急制動</target>
+						<target>Aktifkan brek kecemasan untuk kereta api dengan dua pemegang</target>
 					</trans-unit>
 					<trans-unit id="single_fullaxis">
 						<source>Controls power and brake for trains with one handle on a full joystick axis</source>
-						<target>在單桿式列車使用全軸操縱桿控制列車的動力和制動</target>
+						<target>Mengawal kuasa dan brek untuk kereta api dengan satu pemegang pada paksi joystick penuh</target>
 					</trans-unit>
 					<trans-unit id="power_any_notch">
 						<source>Adjusts the power notch directly from a command option value.</source>
-						<target>直接從命令選項值調整電源槽口</target>
+						<target>Laraskan notch kuasa terus daripada nilai pilihan arahan.</target>
 					</trans-unit>
 					<trans-unit id="brake_any_notch">
 						<source>Adjusts the brake notch directly from a command option value.</source>
-						<target>直接從命令選項值調整制動槽口。</target>
+						<target>Laraskan notch brek terus daripada nilai pilihan arahan.</target>
 					</trans-unit>
 					<trans-unit id="reverser_any_position">
 						<source>Adjusts the reverser directly from a command option value.</source>
-						<target>直接從命令選項值調整反向器。</target>
+						<target>Laraskan notch pengundur terus daripada nilai pilihan arahan.</target>
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>Hold Brake</source>
-						<target>Hold Brake</target>
+						<target>Tahan Brek</target>
 					</trans-unit>
 					<trans-unit id="reverser_forward">
 						<source>Moves reverser forward by one notch</source>
-						<target>把方向控制桿向前一級</target>
+						<target>Menggerakkan pengundur ke hadapan dengan satu notch</target>
 					</trans-unit>
 					<trans-unit id="reverser_backward">
 						<source>Moves reverser backward by one notch</source>
-						<target>把方向控制桿向後一級</target>
+						<target>Menggerakkan pengundur ke belakang sebanyak satu notch</target>
 					</trans-unit>
 					<trans-unit id="reverser_fullaxis">
 						<source>Controls reverser on a full joystick axis</source>
-						<target>使用全軸操縱桿控制方向控制桿</target>
+						<target>Mengawal pengundur pada paksi joystick penuh</target>
 					</trans-unit>
 					<trans-unit id="doors_left">
 						<source>Opens or closes the left doors</source>
-						<target>開啟/關閉左邊車門</target>
+						<target>Membuka atau menutup pintu kiri</target>
 					</trans-unit>
 					<trans-unit id="doors_right">
 						<source>Opens or closes the right doors</source>
-						<target>開啟/關閉右邊車門</target>
+						<target>Membuka atau menutup pintu kanan </target>
 					</trans-unit>
 					<trans-unit id="horn_primary">
 						<source>Plays the primary horn</source>
-						<target>播放主警笛</target>
+						<target>Memainkan hon utama</target>
 					</trans-unit>
 					<trans-unit id="horn_secondary">
 						<source>Plays the secondary horn</source>
-						<target>播放次警笛</target>
+						<target>Memainkan hon kedua</target>
 					</trans-unit>
 					<trans-unit id="horn_music">
 						<source>Plays or stops the music horn</source>
-						<target>播放或停止音樂警笛</target>
+						<target>Memainkan atau menghentikan muzik hon</target>
 					</trans-unit>
 					<trans-unit id="device_constspeed">
 						<source>Activates or deactivates the constant speed device</source>
-						<target>啟動或關閉定速設備</target>
+						<target>Mengaktifkan atau menyahaktifkan peranti kelajuan malar</target>
 					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
-						<target>於部分列車啟動或關閉保安系統</target>
+						<target>Mengaktifkan atau menyahaktifkan sistem keselamatan pada beberapa kereta api</target>
 					</trans-unit>
 					<trans-unit id="security_s">
 						<source>The S function of the security system</source>
-						<target>保安系統的 S 功能鍵</target>
+						<target>Fungsi S sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_a1">
 						<source>The A1 function of the security system</source>
-						<target>保安系統的 A1 功能鍵</target>
+						<target>Fungsi A1 sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_a2">
 						<source>The A2 function of the security system</source>
-						<target>保安系統的 A2 功能鍵</target>
+						<target>Fungsi A2 sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_b1">
 						<source>The B1 function of the security system</source>
-						<target>保安系統的 B1 功能鍵</target>
+						<target>Fungsi B1 sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_b2">
 						<source>The B2 function of the security system</source>
-						<target>保安系統的 B2 功能鍵</target>
+						<target>Fungsi B2 sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_c1">
 						<source>The C1 function of the security system</source>
-						<target>保安系統的 C1 功能鍵</target>
+						<target>Fungsi C1 sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_c2">
 						<source>The C2 function of the security system</source>
-						<target>保安系統的 C2 功能鍵</target>
+						<target>Fungsi C2 sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_d">
 						<source>The D function of the security system</source>
-						<target>保安系統的 D 功能鍵</target>
+						<target>Fungsi D sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_e">
 						<source>The E function of the security system</source>
-						<target>保安系統的 E 功能鍵</target>
+						<target>Fungsi E sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_f">
 						<source>The F function of the security system</source>
-						<target>保安系統的 F 功能鍵</target>
+						<target>Fungsi F sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_g">
 						<source>The G function of the security system</source>
-						<target>保安系統的 G 功能鍵</target>
+						<target>Fungsi G sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_h">
 						<source>The H function of the security system</source>
-						<target>保安系統的 H 功能鍵</target>
+						<target>Fungsi H sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_i">
 						<source>The I function of the security system</source>
-						<target>保安系統的 I 功能鍵</target>
+						<target>Fungsi I sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_j">
 						<source>The J function of the security system</source>
-						<target>保安系統的 J 功能鍵</target>
+						<target>Fungsi J sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_k">
 						<source>The K function of the security system</source>
-						<target>保安系統的 K 功能鍵</target>
+						<target>Fungsi K sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_l">
 						<source>The L function of the security system</source>
-						<target>保安系統的 L 功能鍵</target>
+						<target>Fungsi L sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_m">
 						<source>N/A</source>
@@ -2497,283 +2497,283 @@
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>
-						<target>切換至車內視點</target>
+						<target>Beralih ke pandangan dalaman kereta api</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
 						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
-						<target>進入車內視點, 但沒有面板</target>
+						<target>Beralih ke pandangan dalaman kereta api. Walau bagaimanapun, panel tidak dipaparkan.</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
 						<source>Switches to the train's exterior view</source>
-						<target>切換至車外視點</target>
+						<target>Beralih ke pandangan luar kereta api</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
 						<source>Switches to the track view</source>
-						<target>切換至軌道視點</target>
+						<target>Beralih kepada paparan trek</target>
 					</trans-unit>
 					<trans-unit id="camera_flyby">
 						<source>Switches between different fly-by views</source>
-						<target>切換到不同的定點觀察視野</target>
+						<target>Bertukar antara paparan fly-by yang berbeza</target>
 					</trans-unit>
 					<trans-unit id="camera_move_forward">
 						<source>Moves the camera forward</source>
-						<target>向前移動鏡頭</target>
+						<target>Menggerakkan kamera ke hadapan</target>
 					</trans-unit>
 					<trans-unit id="camera_move_backward">
 						<source>Moves the camera backward</source>
-						<target>向後移動鏡頭</target>
+						<target>Menggerakkan kamera ke belakang</target>
 					</trans-unit>
 					<trans-unit id="camera_move_left">
 						<source>Moves the camera left</source>
-						<target>向左移動鏡頭</target>
+						<target>Menggerakkan kamera ke kiri</target>
 					</trans-unit>
 					<trans-unit id="camera_move_right">
 						<source>Moves the camera right</source>
-						<target>向右移動鏡頭</target>
+						<target>Menggerakkan kamera ke kanan</target>
 					</trans-unit>
 					<trans-unit id="camera_move_up">
 						<source>Moves the camera up</source>
-						<target>向上移動鏡頭</target>
+						<target>Menggerakkan kamera ke atas</target>
 					</trans-unit>
 					<trans-unit id="camera_move_down">
 						<source>Moves the camera down</source>
-						<target>向下移動鏡頭</target>
+						<target>Menggerakkan kamera ke bawah</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_left">
 						<source>Rotates the camera left</source>
-						<target>向左旋轉鏡頭</target>
+						<target>Memutar kamera ke kiri</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_right">
 						<source>Rotates the camera right</source>
-						<target>向右旋轉鏡頭</target>
+						<target>Memutar kamera ke kanan</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_up">
 						<source>Rotates the camera up</source>
-						<target>向上旋轉鏡頭</target>
+						<target>Memutar kamera ke atas</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_down">
 						<source>Rotates the camera down</source>
-						<target>向下旋轉鏡頭</target>
+						<target>Memutar kamera ke bawah</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_ccw">
 						<source>Rotates the camera counter-clockwise</source>
-						<target>逆時針旋轉鏡頭</target>
+						<target>Memutar kamera ke arah lawan jam</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_cw">
 						<source>Rotates the camera clockwise</source>
-						<target>順時針旋轉鏡頭</target>
+						<target>Memutar kamera ke arah jam</target>
 					</trans-unit>
 					<trans-unit id="camera_zoom_in">
 						<source>Zooms the camera in</source>
-						<target>拉近鏡頭</target>
+						<target>Mengezum kamera masuk</target>
 					</trans-unit>
 					<trans-unit id="camera_zoom_out">
 						<source>Zooms the camera out</source>
-						<target>拉遠鏡頭</target>
+						<target>Mengezum kamera luar</target>
 					</trans-unit>
 					<trans-unit id="camera_poi_previous">
 						<source>Jumps to the previous point of interest in the route.</source>
-						<target>跳至路線中的上一個特色景點</target>
+						<target>Melompat ke tempat menarik sebelum ini dalam laluan.</target>
 					</trans-unit>
 					<trans-unit id="camera_poi_next">
 						<source>Jumps to the next point of interest in the route.</source>
-						<target>跳至路線中的下一個特色景點</target>
+						<target>Melompat ke tempat menarik seterusnya ini dalam laluan.</target>
 					</trans-unit>
 					<trans-unit id="camera_reset">
 						<source>Resets the camera view to default values</source>
-						<target>重設鏡頭到預設位置</target>
+						<target>Menetapkan semula paparan kamera kepada nilai lalai</target>
 					</trans-unit>
 					<trans-unit id="camera_restriction">
 						<source>Activates or deactivates interior view camera restriction</source>
-						<target>啟動或關閉車內鏡頭限制</target>
+						<target>Mengaktifkan atau menyahaktifkan sekatan kamera paparan dalaman</target>
 					</trans-unit>
 					<trans-unit id="timetable_toggle">
 						<source>Toggles through different timetable modes</source>
-						<target>切換到不同的時刻表模式</target>
+						<target>Togel melalui mod jadual waktu yang berbeza</target>
 					</trans-unit>
 					<trans-unit id="timetable_up">
 						<source>Scrolls the timetable up</source>
-						<target>向上捲動時刻表</target>
+						<target>Skrol jadual waktu ke atas</target>
 					</trans-unit>
 					<trans-unit id="timetable_down">
 						<source>Scrolls the timetable down</source>
-						<target>向下捲動時刻表</target>
+						<target>Skrol jadual waktu ke bawah</target>
 					</trans-unit>
 					<trans-unit id="menu_activate">
 						<source>Displays the in-game menu</source>
-						<target>顯示遊戲選單</target>
+						<target>Memaparkan menu dalam permainan</target>
 					</trans-unit>
 					<trans-unit id="menu_up">
 						<source>Moves the cursor up within the in-game menu</source>
-						<target>在遊戲選單中向上移動浮標</target>
+						<target>Mengalihkan kursor ke atas dalam menu dalam permainan</target>
 					</trans-unit>
 					<trans-unit id="menu_down">
 						<source>Moves the cursor down within the in-game menu</source>
-						<target>在遊戲選單中向下移動浮標</target>
+						<target>Menggerakkan kursor ke bawah dalam menu dalam permainan</target>
 					</trans-unit>
 					<trans-unit id="menu_enter">
 						<source>Performs the selected command within the in-game menu</source>
-						<target>在遊戲選單中作出選擇指令</target>
+						<target>Melaksanakan arahan yang dipilih dalam menu dalam permainan</target>
 					</trans-unit>
 					<trans-unit id="menu_back">
 						<source>Goes back within the in-game menu</source>
-						<target>在遊戲選單中返回</target>
+						<target>Kembali ke dalam menu dalam permainan</target>
 					</trans-unit>
 					<trans-unit id="misc_clock">
 						<source>Shows or hides the clock</source>
-						<target>顯示或隱藏時鐘</target>
+						<target>Menunjukkan atau menyembunyikan jam</target>
 					</trans-unit>
 					<trans-unit id="misc_speed">
 						<source>Toggles through different speed display modes</source>
-						<target>切換到不同的車速顯示模式</target>
+						<target>Togel melalui mod paparan kelajuan yang berbeza</target>
 					</trans-unit>
 					<trans-unit id="misc_gradient">
 						<source>Toggles through different gradient display modes</source>
-						<target>切換到不同的坡度顯示模式</target>
+						<target>Togel melalui mod paparan kecerunan yang berbeza</target>
 					</trans-unit>
 					<trans-unit id="misc_dist_next_station">
 						<source>Toggles through different next station remain distance display modes</source>
-						<target>切換到不同的下一站距離顯示模式</target>
+						<target>Togel melalui stesen seterusnya yang berbeza kekal mod paparan jarak</target>
 					</trans-unit>
 					<trans-unit id="misc_timefactor">
 						<source>Toggles through different time acceleration factors</source>
-						<target>切換到不同的時間速度</target>
+						<target>Togel melalui faktor pecutan masa yang berbeza</target>
 					</trans-unit>
 					<trans-unit id="misc_fps">
 						<source>Shows or hides the frame rate display</source>
-						<target>顯示或隱藏幀率</target>
+						<target>Menunjukkan atau menyembunyikan paparan kadar bingkai</target>
 					</trans-unit>
 					<trans-unit id="misc_ai">
 						<source>Activates or deactivates the virtual driver (AI)</source>
-						<target>啟動或關閉人工智能司機</target>
+						<target>Mengaktifkan atau menyahaktifkan pemandu maya (AI)</target>
 					</trans-unit>
 					<trans-unit id="misc_pause">
 						<source>Pauses or resumes the simulation</source>
-						<target>暫停或繼續遊戲</target>
+						<target>Menjeda atau menyambung semula simulasi</target>
 					</trans-unit>
 					<trans-unit id="misc_fullscreen">
 						<source>Toggles to or from fullscreen mode</source>
-						<target>切換全螢幕模式</target>
+						<target>Togel ke atau daripada mod skrin penuh</target>
 					</trans-unit>
 					<trans-unit id="misc_mute">
 						<source>Mutes sound or resumes playing sounds</source>
-						<target>遊戲靜音 / 回復播放音效</target>
+						<target>Membisukan bunyi atau menyambung semula memainkan bunyi</target>
 					</trans-unit>
 					<trans-unit id="misc_quit">
 						<source>Quits the simulation</source>
-						<target>結束遊戲</target>
+						<target>Berhenti daripada simulasi</target>
 					</trans-unit>
 					<trans-unit id="misc_interface">
 						<source>Toggles through different interface modes</source>
-						<target>切換介面模式</target>
+						<target>Togel melalui mod antara muka yang berbeza</target>
 					</trans-unit>
 					<trans-unit id="misc_backface">
 						<source>Activates or deactivates backface culling</source>
-						<target>啟動或關閉背向面去除</target>
+						<target>Mengaktifkan atau menyahaktifkan pemusnahan muka belakang</target>
 					</trans-unit>
 					<trans-unit id="misc_cpumode">
 						<source>Switches to or from reduced CPU mode</source>
-						<target>啟動或關閉降低 CPU 資源模式</target>
+						<target>Beralih kepada atau daripada mod CPU yang dikurangkan</target>
 					</trans-unit>
 					<trans-unit id="debug_wireframe">
 						<source>Activates or deactivates wireframe mode</source>
-						<target>啟動或關閉線框描繪</target>
+						<target>Mengaktifkan atau menyahaktifkan mod rangka wayar</target>
 					</trans-unit>
 					<trans-unit id="debug_normals">
 						<source>Shows or hides vertex normals</source>
-						<target>顯示或隱藏頂點法線</target>
+						<target>Menunjukkan atau menyembunyikan norma puncak</target>
 					</trans-unit>
 					<trans-unit id="debug_brake">
 						<source>Shows or hides brake system debug output</source>
-						<target>顯示或隱藏制動系統除錯輸出</target>
+						<target>Menunjukkan atau menyembunyikan output nyahpepijat sistem brek</target>
 					</trans-unit>
 					<trans-unit id="debug_ats">
 						<source>Shows or hides plugin debug output</source>
-						<target>顯示或隱藏插件調試輸出</target>
+						<target>Menunjukkan atau menyembunyikan output plugin</target>
 					</trans-unit>
 					<trans-unit id="debug_touch_mode">
 						<source>Shows or hides the touch range</source>
-						<target>顯示或隱藏觸摸範圍</target>
+						<target>Menunjukkan atau menyembunyikan julat sentuhan</target>
 					</trans-unit>
 					<trans-unit id="route_information">
 						<source>Shows or hides the route information window</source>
-						<target>顯示或隱藏路線信息窗口</target>
+						<target>Menunjukkan atau menyembunyikan tetingkap maklumat laluan</target>
 					</trans-unit>
 					<trans-unit id="show_events">
 						<source>Shows or hides event markers (For developers)</source>
-						<target>顯示或隱藏事件標記（開發人員)</target>
+						<target>Menunjukkan atau menyembunyikan penanda acara (Untuk pembangun)</target>
 					</trans-unit>
 					<trans-unit id="debug_renderer_mode">
 						<source>Toggles the renderer</source>
-						<target>切換渲染器</target>
+						<target>Menogol pemapar</target>
 					</trans-unit>
 					<trans-unit id="wiper_speed_up">
 						<source>Increases the speed of the windscreen wipers</source>
-						<target>提高擋風玻璃刮水器的速度</target>
+						<target>Meningkatkan kelajuan pengelap cermin depan</target>
 					</trans-unit>
 					<trans-unit id="wiper_speed_down">
 						<source>Decreases the speed of the windscreen wipers</source>
-						<target>降低擋風玻璃刮水器的速度</target>
+						<target>Mengurangkan kelajuan pengelap cermin depan</target>
 					</trans-unit>
 					<trans-unit id="fill_fuel">
 						<source>Fills fuel</source>
-						<target>加油</target>
+						<target>Mengisi bahan api</target>
 					</trans-unit>
 					<trans-unit id="headlights">
 						<source>Toggles the train headlights</source>
-						<target>切換火車頭燈</target>
+						<target>Togel lampu kereta api</target>
 					</trans-unit>
 					<trans-unit id="live_steam_injector">
 						<source>Activates or deactivates the live steam injector</source>
-						<target>啟動或關閉蒸汽噴射器</target>
+						<target>Mengaktifkan atau menyahaktifkan penyuntik stim hidup</target>
 					</trans-unit>
 					<trans-unit id="exhaust_steam_injector">
 						<source>Activates or deactivates the exhaust steam injector</source>
-						<target>啟動或關閉廢氣噴射器</target>
+						<target>Mengaktifkan atau menyahaktifkan penyuntik stim ekzos</target>
 					</trans-unit>
 					<trans-unit id="increase_cutoff">
 						<source>Increases the cutoff</source>
-						<target>增加截止</target>
+						<target>Meningkatkan potongan</target>
 					</trans-unit>
 					<trans-unit id="decrease_cutoff">
 						<source>Decreases the cutoff</source>
-						<target>減少截止</target>
+						<target>Mengurangkan potongan</target>
 					</trans-unit>
 					<trans-unit id="blowers">
 						<source>Activates or deactivates the blowers</source>
-						<target>啟動或關閉鼓風機</target>
+						<target>Mengaktifkan atau menyahaktifkan peniup</target>
 					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
-						<target>啟動引擎</target>
+						<target>Menghidupkan enjin</target>
 					</trans-unit>
 					<trans-unit id="engine_stop">
 						<source>Stops the engine</source>
-						<target>停止引擎</target>
+						<target>Mematikan enjin</target>
 					</trans-unit>
 					<trans-unit id="gear_up">
 						<source>Shifts up a gear in a train fitted with a gearbox</source>
-						<target>在裝有變速箱的火車上換高檔</target>
+						<target>Menukar gear dalam kereta api yang dipasang dengan kotak gear</target>
 					</trans-unit>
 					<trans-unit id="gear_down">
 						<source>Shifts down a gear in a train fitted with a gearbox</source>
-						<target>在裝有變速箱的火車中調低檔位</target>
+						<target>Menukar gear ke bawah dalam kereta api yang dipasang dengan kotak gear</target>
 					</trans-unit>
 					<trans-unit id="raise_pantograph">
 						<source>Raises the pantograph</source>
-						<target>提出受電弓</target>
+						<target>Menaikkan pantograf</target>
 					</trans-unit>
 					<trans-unit id="lower_pantograph">
 						<source>Lowers the pantograph</source>
-						<target>降低受電弓</target>
+						<target>Menurunkan pantograf</target>
 					</trans-unit>
 					<trans-unit id="main_breaker">
 						<source>Toggles the main breaker</source>
-						<target>切換主斷路器</target>
+						<target>Togel breaker utama</target>
 					</trans-unit>
 					<trans-unit id="raildriver_speed_units">
 						<source>Toggles the RailDriver speed display units.</source>
-						<target>切換 RailDriver 速度單位</target>
+						<target>Menogel unit paparan kelajuan RailDriver.</target>
 					</trans-unit>
 				</group>
 				<group id="keys">
@@ -2809,23 +2809,23 @@
 					</trans-unit>
 					<trans-unit id="ampersand">
 						<source>Ampersand</source>
-						<target>&amp;</target>
+						<target>Ampersand</target>
 					</trans-unit>
 					<trans-unit id="asterisk">
 						<source>Asterisk</source>
-						<target>*</target>
+						<target>Asterisk</target>
 					</trans-unit>
 					<trans-unit id="at">
 						<source>At</source>
-						<target>@</target>
+						<target>At</target>
 					</trans-unit>
 					<trans-unit id="backquote">
 						<source>Backquote</source>
-						<target>Backquote (`)</target>
+						<target>Backquote</target>
 					</trans-unit>
 					<trans-unit id="backslash">
 						<source>Backslash</source>
-						<target>Backslash (\\)</target>
+						<target>Backslash</target>
 					</trans-unit>
 					<trans-unit id="backspace">
 						<source>Backspace</source>
@@ -2841,27 +2841,27 @@
 					</trans-unit>
 					<trans-unit id="caret">
 						<source>Caret</source>
-						<target>^</target>
+						<target>Caret</target>
 					</trans-unit>
 					<trans-unit id="clear">
 						<source>Clear</source>
-						<target>Clear</target>
+						<target>Kosongkan</target>
 					</trans-unit>
 					<trans-unit id="colon">
 						<source>Colon</source>
-						<target>:</target>
+						<target>Kolon</target>
 					</trans-unit>
 					<trans-unit id="comma">
 						<source>Comma</source>
-						<target>,</target>
+						<target>Komma</target>
 					</trans-unit>
 					<trans-unit id="delete">
 						<source>Delete</source>
-						<target>Del</target>
+						<target>Delete</target>
 					</trans-unit>
 					<trans-unit id="dollar">
 						<source>Dollar</source>
-						<target>$</target>
+						<target>Dollar</target>
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
@@ -2876,19 +2876,19 @@
 					</trans-unit>
 					<trans-unit id="equals">
 						<source>Equals</source>
-						<target>=</target>
+						<target>quals</target>
 					</trans-unit>
 					<trans-unit id="escape">
 						<source>Escape</source>
-						<target>Esc</target>
+						<target>ape</target>
 					</trans-unit>
 					<trans-unit id="euro">
 						<source>Euro</source>
-						<target>€</target>
+						<target>Euro</target>
 					</trans-unit>
 					<trans-unit id="exclaim">
 						<source>Exclamation</source>
-						<target>!</target>
+						<target>Exclamation</target>
 					</trans-unit>
 					<trans-unit id="f1">
 						<source>F1</source>
@@ -2952,15 +2952,15 @@
 					</trans-unit>
 					<trans-unit id="greater">
 						<source>Greater</source>
-						<target>Greater (&gt;)</target>
+						<target>Greater</target>
 					</trans-unit>
 					<trans-unit id="hash">
 						<source>Hash</source>
-						<target>#</target>
+						<target>Hash</target>
 					</trans-unit>
 					<trans-unit id="help">
 						<source>Help</source>
-						<target>Help</target>
+						<target>Tolong</target>
 					</trans-unit>
 					<trans-unit id="home">
 						<source>Home</source>
@@ -2972,106 +2972,106 @@
 					</trans-unit>
 					<trans-unit id="kp0">
 						<source>Keypad 0</source>
-						<target>Keypad 0</target>
+						<target>Pad kekunci 0</target>
 					</trans-unit>
 					<trans-unit id="kp1">
 						<source>Keypad 1</source>
-						<target>Keypad 1</target>
+						<target>Pad kekunci 1</target>
 					</trans-unit>
 					<trans-unit id="kp2">
 						<source>Keypad 2</source>
-						<target>Keypad 2</target>
+						<target>Pad kekunci 2</target>
 					</trans-unit>
 					<trans-unit id="kp3">
 						<source>Keypad 3</source>
-						<target>Keypad 3</target>
+						<target>Pad kekunci 3</target>
 					</trans-unit>
 					<trans-unit id="kp4">
 						<source>Keypad 4</source>
-						<target>Keypad 4</target>
+						<target>Pad kekunci 4</target>
 					</trans-unit>
 					<trans-unit id="kp5">
 						<source>Keypad 5</source>
-						<target>Keypad 5</target>
+						<target>Pad kekunci 5</target>
 					</trans-unit>
 					<trans-unit id="kp6">
 						<source>Keypad 6</source>
-						<target>Keypad 6</target>
+						<target>Pad kekunci 6</target>
 					</trans-unit>
 					<trans-unit id="kp7">
 						<source>Keypad 7</source>
-						<target>Keypad 7</target>
+						<target>Pad kekunci 7</target>
 					</trans-unit>
 					<trans-unit id="kp8">
 						<source>Keypad 8</source>
-						<target>Keypad 8</target>
+						<target>Pad kekunci 8</target>
 					</trans-unit>
 					<trans-unit id="kp9">
 						<source>Keypad 9</source>
-						<target>Keypad 9</target>
+						<target>Pad kekunci 9</target>
 					</trans-unit>
 					<trans-unit id="kp_divide">
 						<source>Keypad Divide</source>
-						<target>Keypad Divide (/)</target>
+						<target>Pad kekunci Bahagi</target>
 					</trans-unit>
 					<trans-unit id="kp_enter">
 						<source>Keypad Enter</source>
-						<target>Keypad Enter</target>
+						<target>Pad kekunci Enter</target>
 					</trans-unit>
 					<trans-unit id="kp_equals">
 						<source>Keypad Equals</source>
-						<target>Keypad Equals (=)</target>
+						<target>Pad kekunci Sama dengan </target>
 					</trans-unit>
 					<trans-unit id="kp_minus">
 						<source>Keypad Minus</source>
-						<target>Keypad Minus (-)</target>
+						<target>Pad kekunci Tolak</target>
 					</trans-unit>
 					<trans-unit id="kp_multiply">
 						<source>Keypad Multiply</source>
-						<target>Keypad Multiply (*)</target>
+						<target>Pad kekunci Darab</target>
 					</trans-unit>
 					<trans-unit id="kp_period">
 						<source>Keypad Period</source>
-						<target>Keypad Period (.)</target>
+						<target>Pad kekunci noktah</target>
 					</trans-unit>
 					<trans-unit id="kp_plus">
 						<source>Keypad Plus</source>
-						<target>Keypad Plus (+)</target>
+						<target>Pad kekunci Tambah</target>
 					</trans-unit>
 					<trans-unit id="lalt">
 						<source>Left Alt</source>
-						<target>Left Alt</target>
+						<target>ALT Kiri</target>
 					</trans-unit>
 					<trans-unit id="lctrl">
 						<source>Left Ctrl</source>
-						<target>Left Ctrl</target>
+						<target>Ctrl Kiri</target>
 					</trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
 					</trans-unit>
 					<trans-unit id="leftbracket">
 						<source>Left bracket</source>
-						<target>Left bracket ([)</target>
+						<target>Kurungan Kiri</target>
 					</trans-unit>
 					<trans-unit id="leftparen">
 						<source>Left parenthesis</source>
-						<target>Left parantheses (()</target>
+						<target>Kurungan kiri</target>
 					</trans-unit>
 					<trans-unit id="less">
 						<source>Less</source>
-						<target>Less (&lt;)</target>
+						<target>Kurang</target>
 					</trans-unit>
 					<trans-unit id="lmeta">
 						<source>Left Meta</source>
-						<target>Left Meta (◇)</target>
+						<target>Meta Kiri</target>
 					</trans-unit>
 					<trans-unit id="lshift">
 						<source>Left Shift</source>
-						<target>Left Shift</target>
+						<target>Shift Kiri</target>
 					</trans-unit>
 					<trans-unit id="lsuper">
 						<source>Left Application</source>
-						<target>Left Application</target>
+						<target>Aplikasi Kiri</target>
 					</trans-unit>
 					<trans-unit id="menu">
 						<source>Menu</source>
@@ -3079,7 +3079,7 @@
 					</trans-unit>
 					<trans-unit id="minus">
 						<source>Minus</source>
-						<target>Minus (-)</target>
+						<target>olak</target>
 					</trans-unit>
 					<trans-unit id="mode">
 						<source>Alt Gr</source>
@@ -3090,11 +3090,11 @@
 					</trans-unit>
 					<trans-unit id="pagedown">
 						<source>Page down</source>
-						<target>下頁</target>
+						<target>Page down</target>
 					</trans-unit>
 					<trans-unit id="pageup">
 						<source>Page up</source>
-						<target>上頁</target>
+						<target>Page up</target>
 					</trans-unit>
 					<trans-unit id="pause">
 						<source>Pause</source>
@@ -3102,11 +3102,11 @@
 					</trans-unit>
 					<trans-unit id="period">
 						<source>Period</source>
-						<target>Period (.)</target>
+						<target>Noktah</target>
 					</trans-unit>
 					<trans-unit id="plus">
 						<source>Plus</source>
-						<target>Plus (+)</target>
+						<target>Tambah</target>
 					</trans-unit>
 					<trans-unit id="power">
 						<source>Power</source>
@@ -3117,23 +3117,23 @@
 					</trans-unit>
 					<trans-unit id="question">
 						<source>Question</source>
-						<target>Question (?)</target>
+						<target>Tanda soal</target>
 					</trans-unit>
 					<trans-unit id="quote">
 						<source>Quote</source>
-						<target>Quote (')</target>
+						<target>Pengikat kata</target>
 					</trans-unit>
 					<trans-unit id="quotedbl">
 						<source>Quote double</source>
-						<target>Quote double ('')</target>
+						<target>Pengikat kata berganda</target>
 					</trans-unit>
 					<trans-unit id="ralt">
 						<source>Right Alt</source>
-						<target>Right Alt</target>
+						<target>Alt Kanan</target>
 					</trans-unit>
 					<trans-unit id="rctrl">
 						<source>Right Ctrl</source>
-						<target>Right Ctrl</target>
+						<target>Ctrl Kanan</target>
 					</trans-unit>
 					<trans-unit id="return">
 						<source>Return</source>
@@ -3144,23 +3144,23 @@
 					</trans-unit>
 					<trans-unit id="rightbracket">
 						<source>Right bracket</source>
-						<target>Right bracket (])</target>
+						<target>Kurungan Kanan</target>
 					</trans-unit>
 					<trans-unit id="rightparen">
 						<source>Right parenthesis</source>
-						<target>Right parentheses ())</target>
+						<target>Kurungan Kanan</target>
 					</trans-unit>
 					<trans-unit id="rmeta">
 						<source>Right Meta</source>
-						<target>Right Meta (◇)</target>
+						<target>Meta Kanan</target>
 					</trans-unit>
 					<trans-unit id="rshift">
 						<source>Right Shift</source>
-						<target>Right Shift</target>
+						<target>Shift Kanan</target>
 					</trans-unit>
 					<trans-unit id="rsuper">
 						<source>Right Application</source>
-						<target>Right Application</target>
+						<target>Aplikasiv</target>
 					</trans-unit>
 					<trans-unit id="scrolllock">
 						<source>Scrolllock</source>
@@ -3168,15 +3168,15 @@
 					</trans-unit>
 					<trans-unit id="semicolon">
 						<source>Semicolon</source>
-						<target>Semicolon</target>
+						<target>Semikolon</target>
 					</trans-unit>
 					<trans-unit id="slash">
 						<source>Slash</source>
-						<target>Slash (/)</target>
+						<target>Slash</target>
 					</trans-unit>
 					<trans-unit id="space">
 						<source>Space</source>
-						<target>Space</target>
+						<target>Jarak</target>
 					</trans-unit>
 					<trans-unit id="sysreq">
 						<source>SysRq</source>
@@ -3188,7 +3188,7 @@
 					</trans-unit>
 					<trans-unit id="underscore">
 						<source>Underscore</source>
-						<target>Underscore (_)</target>
+						<target>Underscore</target>
 					</trans-unit>
 					<trans-unit id="up">
 						<source>Up</source>
@@ -3301,115 +3301,115 @@
 				<group id="denshadego">
 					<trans-unit id="config_title">
 						<source>Densha de GO! controller configuration</source>
-						<target>電車 GO! 控制器設定</target>
+						<target>konfigurasi kawalan Densha de GO!</target>
 					</trans-unit>
 					<trans-unit id="input_section">
 						<source>Device input</source>
-						<target>裝置輸入</target>
+						<target>Peranti Input</target>
 					</trans-unit>
 					<trans-unit id="label_brake">
 						<source>Brake: [notch]</source>
-						<target>制動: [notch]</target>
+						<target>Brake [notch]</target>
 					</trans-unit>
 					<trans-unit id="label_power">
 						<source>Power: [notch]</source>
-						<target>動力: [notch]</target>
+						<target>Kuasa [notch]</target>
 					</trans-unit>
 					<trans-unit id="calibration_button">
 						<source>Start calibration</source>
-						<target>開始校準：</target>
+						<target>Mulakan penentukuran</target>
 					</trans-unit>
 					<trans-unit id="device">
 						<source>Device:</source>
-						<target>裝置:</target>
+						<target>Peranti:</target>
 					</trans-unit>
 					<trans-unit id="button_section">
 						<source>Button mapping</source>
-						<target>按鈕映射</target>
+						<target>Pemetaan butang</target>
 					</trans-unit>
 					<trans-unit id="command_none">
 						<source>None</source>
-						<target>沒有</target>
+						<target>Tiada</target>
 					</trans-unit>
 					<trans-unit id="handle_section">
 						<source>Handle mapping</source>
-						<target>手柄映射</target>
+						<target>Mengendalikan pemetaan</target>
 					</trans-unit>
 					<trans-unit id="option_convert">
 						<source>Convert notches</source>
-						<target>變換切口</target>
+						<target>tukar notch</target>
 					</trans-unit>
 					<trans-unit id="option_keep_minmax">
 						<source>Keep minimum and maximum</source>
-						<target>保持最少和最大</target>
+						<target>Pastikan minimum dan maksimum</target>
 					</trans-unit>
 					<trans-unit id="option_holdbrake">
 						<source>Map hold brake to B1</source>
-						<target>映射制動閘到 B1</target>
+						<target>Peta tahan brek ke B1</target>
 					</trans-unit>
 					<trans-unit id="save_button">
 						<source>Save</source>
-						<target>儲存</target>
+						<target>Simpan</target>
 					</trans-unit>
 					<trans-unit id="cancel_button">
 						<source>Cancel</source>
-						<target>取消</target>
+						<target>Batal</target>
 					</trans-unit>
 					<trans-unit id="calibrate_button">
 						<source>Hold the [button] button in the controller and press OK.</source>
-						<target>請在控制器上按住[button], 然後按確定。</target>
+						<target>Tahan butang [button] pada pengawal dan tekan OK.</target>
 					</trans-unit>
 					<trans-unit id="calibrate_brake">
 						<source>Move the brake handle to [notch] and press OK.</source>
-						<target>移動減速手柄到[notch], 然後按確定.</target>
+						<target>Gerakkan pemegang brek ke [notch] dan tekan OK.</target>
 					</trans-unit>
 					<trans-unit id="calibrate_power">
 						<source>Move the power handle to [notch] and press OK.</source>
-						<target>移動加速手柄到[notch], 然後按確定.</target>
+						<target>Gerakkan pengang kuasa ke [notch] dan tekan OK.</target>
 					</trans-unit>
 					<trans-unit id="label_up">
 						<source>UP</source>
-						<target>上</target>
+						<target>ATAS</target>
 					</trans-unit>
 					<trans-unit id="label_down">
 						<source>DOWN</source>
-						<target>下</target>
+						<target>BAWAH</target>
 					</trans-unit>
 					<trans-unit id="label_left">
 						<source>LEFT</source>
-						<target>左</target>
+						<target>KIRI</target>
 					</trans-unit>
 					<trans-unit id="label_right">
 						<source>RIGHT</source>
-						<target>右</target>
+						<target>KANAN</target>
 					</trans-unit>
 					<trans-unit id="label_pedal">
 						<source>PEDAL</source>
-						<target>踏板</target>
+						<target>PEDAL</target>
 					</trans-unit>
 					<trans-unit id="label_ldoor">
 						<source>L DOOR</source>
-						<target>L DOOR</target>
+						<target>PINTU L</target>
 					</trans-unit>
 					<trans-unit id="label_rdoor">
 						<source>R DOOR</source>
-						<target>R DOOR</target>
+						<target>PINTU R</target>
 					</trans-unit>
 					<trans-unit id="linkLabel_driver">
 						<source>My controller is not detected or does not work properly</source>
-						<target>未檢測到我的控制器 或 控制器無法正常工作</target>
+						<target>Pengawal saya tidak dikesan atau tidak berfungsi dengan betul</target>
 					</trans-unit>
 					<trans-unit id="help_title">
 						<source>Help</source>
-						<target>幫助</target>
+						<target>Tolong</target>
 					</trans-unit>
 					<trans-unit id="help_controller1_label">
 						<source>My controller is not working correctly</source>
-						<target>我的控制器無法正常工作</target>
+						<target>Pengawal saya tidak berfungsi dengan betul</target>
 					</trans-unit>
 					<trans-unit id="help_controller2_label">
 						<source>My PS2 controller is not detected</source>
-						<target>未檢測到我的PS2控制器</target>
+						<target>Pengawal PS2 saya tidak dikesan</target>
 					</trans-unit>
 					<trans-unit id="help_windows_label">
 						<source>Windows</source>
@@ -3425,48 +3425,49 @@
 1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
 to separate buttons to avoid compatibility issues.
 2. Calibrate the controller from the configuration window, if necessary.</source>
-						<target>如果您的非USB控制器未提供正確的輸入，請執行以下操作：
+						<target>Jika pengawal bukan USB anda tidak memberikan input yang betul:
 
-1.確保USB適配器正常工作。 正常情況下，適配器應將標準控制器的方向按鈕映射到單獨的按鈕，以避免兼容性問題。 
-2.如有必要，請從配置窗口中校準控制器。</target>
+1. Pastikan penyesuai USB berfungsi. Sebaik-baiknya, penyesuai harus memetakan butang arah daripada pengawal standard
+untuk memisahkan butang untuk mengelakkan masalah keserasian.
+2. Tentukur pengawal dari tetingkap konfigurasi, jika perlu.</target>
 					</trans-unit>
 					<trans-unit id="help_controller2_textbox">
 						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
-						<target>如果您的PS2控制器未出現在列表中，請按照下列步驟操作:</target>
+						<target>Jika pengawal PS2 anda tidak muncul dalam senarai, ikuti langkah berikut:</target>
 					</trans-unit>
 					<trans-unit id="help_windows_textbox">
 						<source>1. Extract the Windows drivers.
 2. Download and run Zadig.
 3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
 4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
-						<target>1.解壓縮Windows驅動程序。
-2.下載並運行Zadig。
-3.加載適合您設備的cfg文件(&quot;設備 &gt; 加載預設設備&quot;)。
-4.按“安裝驅動程序”，然後等待安裝完成。</target>
+						<target>1. Ekstrak driver Windows.
+2. Muat turun dan jalankan Zadig.
+3. Muatkan fail CFG yang sesuai untuk peranti anda (&quot;Peranti &gt; Muatkan Peranti Pratetap&quot;).
+4. Tekan &quot;Install Driver&quot; dan tunggu pemasangan selesai.</target>
 					</trans-unit>
 					<trans-unit id="help_linux_textbox">
 						<source>1. Extract the Linux udev file.
 2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
 3. Reboot or reload udev rules manually.</source>
-						<target>1.解壓縮Linux udev文件。
-2.將文件複製到 &quot;/etc/udev/rules.d/&quot; (需root權限)。
-3.重啟電腦或重新加載udev規則。</target>
+						<target>1. Ekstrak fail udev Linux.
+2. Salin fail ke &quot;/etc/udev/rules.d/&quot; (kebenaran root diperlukan).
+3. But semula atau muat semula peraturan udev secara manual.</target>
 					</trans-unit>
 					<trans-unit id="help_zadig_button">
 						<source>Get Zadig</source>
-						<target>獲取Zadig</target>
+						<target>Dapatkan Zadig</target>
 					</trans-unit>
 					<trans-unit id="help_windows_button">
 						<source>Extract files (Windows)</source>
-						<target>解壓縮檔案 (Windows)</target>
+						<target>Ekstrak fail (Windows)</target>
 					</trans-unit>
 					<trans-unit id="help_linux_button">
 						<source>Extract files (Linux)</source>
-						<target>解壓縮檔案 (Linux)</target>
+						<target>Ekstrak fail (Linux)</target>
 					</trans-unit>
 					<trans-unit id="help_ok_button">
 						<source>OK</source>
-						<target>確定</target>
+						<target>OK</target>
 					</trans-unit>
 					<trans-unit id="help_libusb_symlink">
 						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
@@ -3477,14 +3478,14 @@ Please follow the following instructions:
 3. Open the directory in the terminal.
 4. Check this location to see if &quot;libusb-1.0.so&quot; exists.
 5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
-						<target>未能找到LibUsb，或者運行時沒有加載正確符號鏈接。
-請跟隨以下說明：
+						<target>LibUsb nampaknya hilang atau tidak dipautkan dengan betul untuk pemuatan masa jalan.
+Sila ikut arahan berikut:
 
-1. 檢查是否安裝了 &quot;libusb-1.0&quot; package。
-2.找出 &quot;libusb-1.0.so.0&quot; 的位置 - 在最近的Ubuntu和Debian版本上，這很可能是&quot;/lib/x86_64-linux-gnu/&quot;
-3. 在Terminal打開目錄。
-4. 檢查 &quot;libusb-1.0.so&quot; 是否存在該目錄。
-5. 如果文件不存在，我們必須通過從該Terminal執行以下命令來創建適當的符號鏈接: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
+1. Semak bahawa pakej &quot;libusb-1.0&quot; telah dipasang.
+2. Cari lokasi &quot;libusb-1.0.so.0&quot; - Pada versi Ubuntu dan Debian terkini, ini mungkin &quot;/lib/x86_64-linux-gnu/&quot;
+3. Buka direktori dalam terminal.
+4. Semak lokasi ini untuk melihat sama ada &quot;libusb-1.0.so&quot; wujud.
+5. Jika fail tidak wujud, kita mesti mencipta symlink yang sesuai dengan melaksanakan arahan berikut dari terminal ini: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
 					</trans-unit>
 				</group>
 			</group>
@@ -3492,85 +3493,85 @@ Please follow the following instructions:
 				<group id="general">
 					<trans-unit id="new">
 						<source>New</source>
-						<target>新</target>
+						<target>Baru</target>
 					</trans-unit>
 					<trans-unit id="open">
 						<source>Open...</source>
-						<target>打開...</target>
+						<target>Buka...</target>
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
 					</trans-unit>
 					<trans-unit id="save_as">
 						<source>Save as...</source>
-						<target>另存為...</target>
+						<target>Simpan sebagai...</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
 					</trans-unit>
 					<trans-unit id="new_message">
 						<source>Do you want to save data before creating a new train?</source>
-						<target>您要在創建新火車之前保存數據嗎？</target>
+						<target>Adakah anda ingin menyimpan data sebelum membuat kereta api baharu?</target>
 					</trans-unit>
 					<trans-unit id="open_message">
 						<source>Do you want to save data before opening another train?</source>
-						<target>您要在打開另一列火車之前保存數據嗎？</target>
+						<target>Adakah anda ingin menyimpan data sebelum membuka kereta api lain?</target>
 					</trans-unit>
 					<trans-unit id="close_message">
 						<source>Do you want to save data before closing?</source>
-						<target>您要在關閉之前保存數據嗎？</target>
+						<target>Adakah anda ingin menyimpan data sebelum ditutup?</target>
 					</trans-unit>
 					<trans-unit id="properties_one">
 						<source>Properties (1)</source>
-						<target>特性 (1)</target>
+						<target>Butiran (1)</target>
 					</trans-unit>
 					<trans-unit id="properties_two">
 						<source>Properties (2)</source>
-						<target>特性 (2)</target>
+						<target>Butiran (2)</target>
 					</trans-unit>
 				</group>
 				<group id="performance">
 					<trans-unit id="performance">
 						<source>Performance</source>
-						<target>性能</target>
+						<target>Prestasi</target>
 					</trans-unit>
 					<trans-unit id="deceleration">
 						<source>Deceleration:</source>
-						<target>減速：</target>
+						<target>Nyahpecutan:</target>
 					</trans-unit>
 					<trans-unit id="static_friction">
 						<source>CoefficientOfStaticFriction:</source>
-						<target>CoefficientOfStaticFriction:</target>
+						<target>PekaliGeseranStatik:</target>
 					</trans-unit>
 					<trans-unit id="rolling_resistance">
 						<source>CoefficientOfRollingResistance:</source>
-						<target>CoefficientOfRollingResistance:</target>
+						<target>PekaliRintanganGelek</target>
 					</trans-unit>
 					<trans-unit id="aerodynamic_drag">
 						<source>AerodynamicDragCoefficient:</source>
-						<target>AerodynamicDragCoefficient:</target>
+						<target>PekaliSeretAerodinamik:</target>
 					</trans-unit>
 				</group>
 				<group id="delay">
 					<trans-unit id="delay">
 						<source>Delay</source>
-						<target>Delay</target>
+						<target>Kelewatan</target>
 					</trans-unit>
 					<trans-unit id="power_up">
 						<source>DelayPowerUp</source>
-						<target>DelayPowerUp</target>
+						<target>KelewatanPowerUp</target>
 					</trans-unit>
 					<trans-unit id="power_down">
 						<source>DelayPowerDown</source>
-						<target>DelayPowerDown</target>
+						<target>KelewatanPowerDown</target>
 					</trans-unit>
 					<trans-unit id="brake_up">
 						<source>DelayBrakeUp</source>
-						<target>DelayBrakeUp</target>
+						<target>KelewatanBrakeUp</target>
 					</trans-unit>
 					<trans-unit id="brake_down">
 						<source>DelayBrakeDown</source>
-						<target>DelayBrakeDown</target>
+						<target>KelewatanBrakeDown</target>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set</source>
@@ -3590,7 +3591,7 @@ Please follow the following instructions:
 				<group id="move">
 					<trans-unit id="move">
 						<source>Move</source>
-						<target>Move</target>
+						<target>Gerak</target>
 					</trans-unit>
 					<trans-unit id="jerk_power_up">
 						<source>JerkPowerUp:</source>
@@ -3623,71 +3624,71 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="type">
 						<source>BrakeType:</source>
-						<target>BrakeType:</target>
+						<target>JenisBrek:</target>
 					</trans-unit>
 					<trans-unit id="control_system">
 						<source>BrakeControlSystem:</source>
-						<target>BrakeControlSystem:</target>
+						<target>SistemKawalanBrek:</target>
 					</trans-unit>
 					<trans-unit id="control_speed">
 						<source>BrakeControlSpeed:</source>
-						<target>BrakeControlSpeed:</target>
+						<target>KelajuanKawalanBrek:</target>
 					</trans-unit>
 					<trans-unit id="smee">
 						<source>Electromagnetic straight air brake</source>
-						<target>直通式空氣製動</target>
+						<target>Brek udara lurus elektromagnet</target>
 					</trans-unit>
 					<trans-unit id="ecb">
 						<source>Electro-pneumatic air brake without brake pipe</source>
-						<target>電控空氣製動</target>
+						<target>Brek udara elektro-pneumatik tanpa paip brek</target>
 					</trans-unit>
 					<trans-unit id="cl">
 						<source>Air brake with partial release feature</source>
-						<target>三壓力機構自動空氣製動</target>
+						<target>Brek udara dengan ciri pelepasan separa</target>
 					</trans-unit>
 					<trans-unit id="control_system_none">
 						<source>None</source>
-						<target>無控制</target>
+						<target>Tiada</target>
 					</trans-unit>
 					<trans-unit id="lock_out_valve">
 						<source>Closing electromagnetic valve</source>
-						<target>電磁關斷閥</target>
+						<target>Menutup injap elektromagnet</target>
 					</trans-unit>
 					<trans-unit id="delay_including_control">
 						<source>Delay-including control</source>
-						<target>延遲補償控制</target>
+						<target>Kelewatan-termasuk kawalan</target>
 					</trans-unit>
 				</group>
 				<group id="pressure">
 					<trans-unit id="pressure">
 						<source>Pressure</source>
-						<target>壓力</target>
+						<target>Tekanan</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_service_max">
 						<source>BrakeCylinderServiceMaximumPressure:</source>
-						<target>BrakeCylinderServiceMaximumPressure:</target>
+						<target>BrekSilinderServisTekananMaksimum:</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_emergency_max">
 						<source>BrakeCylinderEmergencyMaximumPressure:</source>
-						<target>BrakeCylinderEmergencyMaximumPressure:</target>
+						<target>BrekSilinderKecemasanTekananMaksimum:</target>
 					</trans-unit>
 					<trans-unit id="main_reservoir_min">
 						<source>MainReservoirMinimumPressure:</source>
-						<target>MainReservoirMinimumPressure:</target>
+						<target>TekananMinimumTakunganUtama:</target>
 					</trans-unit>
 					<trans-unit id="main_reservoir_max">
 						<source>MainReservoirMaximumPressure:</source>
-						<target>MainReservoirMaximumPressure:</target>
+						<target>TekananMaksimumTakunganUtama:</target>
 					</trans-unit>
 					<trans-unit id="brake_pipe_normal">
 						<source>BrakePipeNormalPressure:</source>
-						<target>BrakePipeNormalPressure:</target>
+						<target>BrakePipeTekananNormal:</target>
 					</trans-unit>
 				</group>
 				<group id="handle">
 					<trans-unit id="handle">
 						<source>Handle</source>
-						<target>手柄</target>
+						<target>Pemegang</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>HandleType:</source>
@@ -3714,37 +3715,37 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="separated">
 						<source>Separated</source>
-						<target>分開</target>
+						<target>Dipisahkan</target>
 					</trans-unit>
 					<trans-unit id="combined">
 						<source>Combined</source>
-						<target>聯控</target>
+						<target>Digabungkan</target>
 					</trans-unit>
 					<trans-unit id="separated_interlocked">
 						<source>Separated (Interlocked)</source>
-						<target>分隔 (連鎖)</target>
+						<target>Berpisah (Saling berkunci)</target>
 					</trans-unit>
 					<trans-unit id="separated_interlocked_reverser">
 						<source>Separated (Reverser Interlocked)</source>
-						<target>分隔 (反向器連鎖)</target>
+						<target>Berpisah (Pengundur Saling Berkunci)</target>
 					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
 						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
-						<target>如果HoldBrake沒有設置, BrakeNotches 一定至少為1 </target>
+						<target>BrakeNotches mestilah sekurang-kurangnya 1 jika HoldBrake ditetapkan.</target>
 					</trans-unit>
 					<trans-unit id="driver_power_notches_error_message">
 						<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
-						<target>DriverPowerNotches 一定要少過或等於 PowerNotches。</target>
+						<target>DriverPowerNotches mestilah kurang daripada atau sama dengan PowerNotches.</target>
 					</trans-unit>
 					<trans-unit id="driver_brake_notches_error_message">
 						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
-						<target>DriverBrakeNotches 一定要少過或等於 BrakeNotches。</target>
+						<target>DriverBrakeNotches mestilah kurang daripada atau sama dengan BrakeNotches.</target>
 					</trans-unit>
 				</group>
 				<group id="cab">
 					<trans-unit id="cab">
 						<source>Cab</source>
-						<target>Cab</target>
+						<target>Kab</target>
 					</trans-unit>
 					<trans-unit id="driver_car">
 						<source>DriverCar:</source>
@@ -3752,61 +3753,61 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="driver_car_error_message">
 						<source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
-						<target>DriverCar 一定要少過 NumberOfMotorCars + NumberOfTrailerCars.</target>
+						<target>DriverCar must be less than JumlahMotorCars + JumlahTrailerCars.</target>
 					</trans-unit>
 				</group>
 				<group id="car">
 					<trans-unit id="car">
 						<source>Car</source>
-						<target>Car</target>
+						<target>Gerabak</target>
 					</trans-unit>
 					<trans-unit id="motor_car_mass">
 						<source>MotorCarMass:</source>
-						<target>MotorCarMass:</target>
+						<target>BeratMotorCar:</target>
 					</trans-unit>
 					<trans-unit id="number_of_motor_cars">
 						<source>NumberOfMotorCars:</source>
-						<target>NumberOfMotorCars:</target>
+						<target>JumlahMotorCars:</target>
 					</trans-unit>
 					<trans-unit id="trailer_car_mass">
 						<source>TrailerCarMass:</source>
-						<target>TrailerCarMass:</target>
+						<target>BeratTrailerCar:</target>
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars">
 						<source>NumberOfTrailerCars:</source>
-						<target>NumberOfTrailerCars:</target>
+						<target>JumlahTrailerCars:</target>
 					</trans-unit>
 					<trans-unit id="length_of_a_car">
 						<source>LengthOfACar:</source>
-						<target>LengthOfACar:</target>
+						<target>PanjangKereta:</target>
 					</trans-unit>
 					<trans-unit id="front_car_is_motor_car">
 						<source>FrontCarIsMotorCar:</source>
-						<target>FrontCarIsMotorCar:</target>
+						<target>KeretaDepanIalahMotorCar:</target>
 					</trans-unit>
 					<trans-unit id="width_of_a_car">
 						<source>WidthOfACar:</source>
-						<target>WidthOfACar:</target>
+						<target>LebarKereta:</target>
 					</trans-unit>
 					<trans-unit id="height_of_a_car">
 						<source>HeightOfACar:</source>
-						<target>HeightOfACar:</target>
+						<target>TinggiKereta:</target>
 					</trans-unit>
 					<trans-unit id="center_of_gravity_height">
 						<source>CenterOfGravityHeight:</source>
-						<target>CenterOfGravityHeight:</target>
+						<target>KetinggianPusatGraviti:</target>
 					</trans-unit>
 					<trans-unit id="exposed_frontal_area">
 						<source>ExposedFrontalArea:</source>
-						<target>ExposedFrontalArea:</target>
+						<target>KawasanDepanTerdedah:</target>
 					</trans-unit>
 					<trans-unit id="unexposed_frontal_area">
 						<source>UnexposedFrontalArea:</source>
-						<target>UnexposedFrontalArea:</target>
+						<target>KawasanDepanTidakTerdedah:</target>
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars_error_message">
 						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
-						<target>如果FrontCarIsAMotorCar沒有設置, NumberOfTrailerCars 一定至少為1 </target>
+						<target>JumlahTrailesCars hendaklah sekurang kurangnya 1 jika KeretaDepanIalahMotorCar tidak disetkan.</target>
 					</trans-unit>
 				</group>
 				<group id="device">
@@ -3815,82 +3816,82 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="const_speed">
 						<source>ConstSpeed:</source>
-						<target>ConstSpeed:</target>
+						<target>KelajuanConst:</target>
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>HoldBrake:</source>
 					</trans-unit>
 					<trans-unit id="readhesion_device">
 						<source>ReAdhesionDevice:</source>
-						<target>ReAdhesionDevice:</target>
+						<target>Peranti Lekatan Semula:</target>
 					</trans-unit>
 					<trans-unit id="pass_alarm">
 						<source>PassAlarm:</source>
-						<target>PassAlarm:</target>
+						<target>Pas Penggera:</target>
 					</trans-unit>
 					<trans-unit id="door_open_mode">
 						<source>DoorOpenMode:</source>
-						<target>DoorOpenMode:</target>
+						<target>ModPintuBuka:</target>
 					</trans-unit>
 					<trans-unit id="door_close_mode">
 						<source>DoorCloseMode:</source>
-						<target>DoorCloseMode:</target>
+						<target>ModPintuTutup:</target>
 					</trans-unit>
 					<trans-unit id="door_width">
 						<source>DoorWidth:</source>
-						<target>DoorWidth:</target>
+						<target>LebarPintu;</target>
 					</trans-unit>
 					<trans-unit id="door_max_tolerance">
 						<source>DoorMaxTolerance:</source>
-						<target>DoorMaxTolerance:</target>
+						<target>ToleransiMaksPintu:</target>
 					</trans-unit>
 					<trans-unit id="none">
 						<source>None</source>
-						<target>None</target>
+						<target>Tiada</target>
 					</trans-unit>
 					<trans-unit id="manual_switching">
 						<source>Manual switching</source>
-						<target>手動切換</target>
+						<target>Pensuisan manual</target>
 					</trans-unit>
 					<trans-unit id="automatic_switching">
 						<source>Automatic switching</source>
-						<target>自動切換</target>
+						<target>Pensuisan automatik</target>
 					</trans-unit>
 					<trans-unit id="type_a">
 						<source>Type A (instant)</source>
-						<target>Type A (即時)</target>
+						<target>Jenis (segera)</target>
 					</trans-unit>
 					<trans-unit id="type_b">
 						<source>Type B (slow)</source>
-						<target>Type B (緩慢)</target>
+						<target>Jenis B (perlahan)</target>
 					</trans-unit>
 					<trans-unit id="type_c">
 						<source>Type C (medium)</source>
-						<target>Type C (適中)</target>
+						<target>Jenis C (sederhana)</target>
 					</trans-unit>
 					<trans-unit id="type_d">
 						<source>Type D (fast)</source>
-						<target>Type D (快速)</target>
+						<target>Jenis D (laju)</target>
 					</trans-unit>
 					<trans-unit id="single">
 						<source>Single</source>
-						<target>單一</target>
+						<target>Tunggal</target>
 					</trans-unit>
 					<trans-unit id="looping">
 						<source>Looping</source>
-						<target>重複</target>
+						<target>Gelung</target>
 					</trans-unit>
 					<trans-unit id="semi_automatic">
 						<source>Semi-automatic</source>
-						<target>半自動</target>
+						<target>Semi-automatik</target>
 					</trans-unit>
 					<trans-unit id="automatic">
 						<source>Automatic</source>
-						<target>自動</target>
+						<target>Automatik</target>
 					</trans-unit>
 					<trans-unit id="manual">
 						<source>Manual</source>
-						<target>手動</target>
+						<target>Manual</target>
 					</trans-unit>
 				</group>
 				<group id="acceleration">
@@ -3902,15 +3903,15 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="data">
 						<source>Data</source>
-						<target>數據</target>
+						<target>Data</target>
 					</trans-unit>
 					<trans-unit id="preview">
 						<source>Preview</source>
-						<target>預覽</target>
+						<target>Pratonton</target>
 					</trans-unit>
 					<trans-unit id="subtract_deceleration">
 						<source>Subtract deceleration due to air and rolling resistance</source>
-						<target>減去由於空氣與滾動摩擦產生的阻力</target>
+						<target>Kurangkan nyahpecutan kerana rintangan udara dan gelek</target>
 					</trans-unit>
 					<trans-unit id="max_x">
 						<source>Xmax:</source>
@@ -3924,15 +3925,15 @@ Please follow the following instructions:
 				<group id="motor">
 					<trans-unit id="sound">
 						<source>Motor Sound</source>
-						<target>電機音</target>
+						<target>Bunyi Motor</target>
 					</trans-unit>
 					<trans-unit id="edit">
 						<source>Edit mode</source>
-						<target>編輯模式</target>
+						<target>Mod sunting:</target>
 					</trans-unit>
 					<trans-unit id="sound_index">
 						<source>SoundIndex:</source>
-						<target>SoundIndex:</target>
+						<target>IndexBunyi</target>
 					</trans-unit>
 					<trans-unit id="pitch">
 						<source>Pitch</source>
@@ -3940,26 +3941,26 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="volume">
 						<source>Volume</source>
-						<target>Volume</target>
+						<target>Kelantangan</target>
 					</trans-unit>
 					<trans-unit id="sound_none">
 						<source>None</source>
-						<target>None</target>
+						<target>Tiada</target>
 					</trans-unit>
 					<trans-unit id="preview">
 						<source>Preview</source>
 					</trans-unit>
 					<trans-unit id="y_pitch">
 						<source>Ypitch</source>
-						<target>Ypitch</target>
+						<target>Yptich</target>
 					</trans-unit>
 					<trans-unit id="y_volume">
 						<source>Yvolume</source>
-						<target>Yvolume</target>
+						<target>Ykelantangan</target>
 					</trans-unit>
 					<trans-unit id="min_x">
 						<source>Xmin:</source>
-						<target>Xmin:</target>
+						<target>Xmin</target>
 					</trans-unit>
 					<trans-unit id="max_x">
 						<source>Xmax:</source>
@@ -3972,11 +3973,11 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="in">
 						<source>In</source>
-						<target>In</target>
+						<target>Dalam</target>
 					</trans-unit>
 					<trans-unit id="out">
 						<source>Out</source>
-						<target>Out</target>
+						<target>Luar</target>
 					</trans-unit>
 					<trans-unit id="max_y_pitch">
 						<source>YmaxPitch:</source>
@@ -3984,29 +3985,29 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="max_y_volume">
 						<source>YmaxVolume:</source>
-						<target>YmaxVolume:</target>
+						<target>YmaxKelantangan:</target>
 					</trans-unit>
 				</group>
 				<group id="extended">
 					<trans-unit id="features">
 						<source>Extended Features</source>
-						<target>擴展功能</target>
+						<target>Ciri Lanjutan</target>
 					</trans-unit>
 					<trans-unit id="note">
 						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
-						<target> 請注意: 本頁看到的特性至少需要以下的OpenBVE版本:</target>
+						<target>Sila ambil perhatian: Ciri yang terdapat pada halaman ini mungkin memerlukan versi minimum openBVE berikut:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
-						<target>Locomotive Brake</target>
+						<target>Brek Lokomotif</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_system_type">
 						<source>BrakeType:</source>
-						<target>BrakeType:</target>
+						<target>JenisBrek:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_notches">
 						<source>Notches:</source>
-						<target>Notches:</target>
+						<target>Notch:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_delay_up">
 						<source>DelayUp:</source>
@@ -4018,7 +4019,7 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="loco_brake_type">
 						<source>Type:</source>
-						<target>Type:</target>
+						<target>Jenis:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_set">
 						<source>Set</source>
@@ -4026,27 +4027,27 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="loco_brake_none">
 						<source>Not fitted</source>
-						<target>Not fitted</target>
+						<target>Tidak dipasang</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_notched_air_brake">
 						<source>Notched air brake</source>
-						<target>Notched air brake</target>
+						<target>Brek udara bernotch</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_cl">
 						<source>Air brake with partial release</source>
-						<target>Air brake with partial release</target>
+						<target>Brek udara dengan ciri pelepasan separa</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_combined">
 						<source>Combined</source>
-						<target>Combined</target>
+						<target>Digabungkan</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_independant">
 						<source>Independent</source>
-						<target>Independent</target>
+						<target>Bebas</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_blocking">
 						<source>Blocking</source>
-						<target>Blocking</target>
+						<target>Menyekat</target>
 					</trans-unit>
 					<trans-unit id="delay_loco_brake_up">
 						<source>DelayLocoBrakeUp</source>
@@ -4061,23 +4062,23 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="misc_eb">
 						<source>Handle behaviour on EB:</source>
-						<target>Handle behaviour on EB:</target>
+						<target>Mengendalikan tingkah laku pada EB:</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_no">
 						<source>No Action</source>
-						<target>No Action</target>
+						<target>Tiada Tindakan</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_power">
 						<source>Return Power to neutral</source>
-						<target>Return Power to neutral</target>
+						<target>Kembalikan Kuasa kepada neutral</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_reverser">
 						<source>Return Reverser to neutral</source>
-						<target>Return Reverser to neutral</target>
+						<target>Kembalikan Pengundur kepada neutral</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_power_reverser">
 						<source>Return Power and Reverser to neutral</source>
-						<target>Return Power and Reverser to neutral</target>
+						<target>Kembalikan Kuasa dan Pengundur kepada neutral</target>
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
@@ -4113,7 +4114,7 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="wrongtype">
 							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
-							<target>您嘗試打開列車數據。 \n\n  但TrainEditor2不能直接讀取列車數據。 \n\n  請使用導入(Import)功能將列車數據導入到TrainEditor2格式。</target>
+							<target>Anda telah cuba membuka kereta api. \n\n Ini tidak boleh dibuka terus- \n\n Sila gunakan fungsi import untuk mengimport kereta api ini ke dalam TrainEditor2.</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
@@ -4146,7 +4147,7 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="copy">
 						<source>Copy</source>
-						<target>複製</target>
+						<target>Salin</target>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set...</source>
@@ -4161,15 +4162,15 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="general">
 						<source>General</source>
-						<target>常規</target>
+						<target>Umum</target>
 					</trans-unit>
 					<trans-unit id="cars">
 						<source>Cars</source>
-						<target>車輛</target>
+						<target>Kereta</target>
 					</trans-unit>
 					<trans-unit id="couplers">
 						<source>Couplers</source>
-						<target>車鉤</target>
+						<target>Pengganding</target>
 					</trans-unit>
 				</group>
 				<group id="general_settings">
@@ -4218,7 +4219,7 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="no">
 								<source>No action</source>
-								<target>無動作</target>
+								<target>Tiada Tindakan</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Return power to neutral</source>
@@ -4228,7 +4229,7 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="power_reverser">
 								<source>Return power and reverser to neutral</source>
-								<target>將電源和反向器恢復至中性</target>
+								<target>Kembalikan kuasa dan pengundur kepada neutral</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_handle_type">
@@ -4240,11 +4241,11 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="independent">
 								<source>Independent</source>
-								<target>獨立</target>
+								<target>Bebas</target>
 							</trans-unit>
 							<trans-unit id="blocking">
 								<source>Blocking</source>
-								<target>阻塞</target>
+								<target>Menyekat</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="loco_brake_notches">
@@ -4380,23 +4381,23 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="is_motor_car">
 							<source>IsMotorCar</source>
-							<target>IsMotorCar</target>
+							<target>IalahMotorCar</target>
 						</trans-unit>
 						<trans-unit id="mass">
 							<source>Mass</source>
-							<target>質量</target>
+							<target>Jisim</target>
 						</trans-unit>
 						<trans-unit id="length">
 							<source>Length</source>
-							<target>長度</target>
+							<target>Panjang</target>
 						</trans-unit>
 						<trans-unit id="width">
 							<source>Width</source>
-							<target>寬度</target>
+							<target>Lebar</target>
 						</trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
-							<target>高度</target>
+							<target>Tinggi</target>
 						</trans-unit>
 						<trans-unit id="center_of_gravity_height">
 							<source>CenterOfGravityHeight</source>
@@ -4409,7 +4410,7 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="defined_axles">
 							<source>DefinedAxles</source>
-							<target>DefinedAxles</target>
+							<target>GandarTertakrif</target>
 						</trans-unit>
 						<group id="axles">
 							<trans-unit id="name">
@@ -4417,32 +4418,32 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="front">
 								<source>FrontAxle</source>
-								<target>FrontAxle</target>
+								<target>GandarDepan</target>
 							</trans-unit>
 							<trans-unit id="rear">
 								<source>RearAxle</source>
-								<target>RearAxle</target>
+								<target>GandarBelakang</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
-							<target>FrontBogie</target>
+							<target>BogieDepan</target>
 						</trans-unit>
 						<trans-unit id="rear_bogie">
 							<source>RearBogie</source>
-							<target>RearBogie</target>
+							<target>BogieBelakang</target>
 						</trans-unit>
 						<trans-unit id="loading_sway">
 							<source>LoadingSway</source>
-							<target>LoadingSway</target>
+							<target>MemuatkanSway</target>
 						</trans-unit>
 						<trans-unit id="reversed">
 							<source>Reversed</source>
-							<target>倒轉</target>
+							<target>Terbalik</target>
 						</trans-unit>
 						<trans-unit id="object">
 							<source>Object</source>
-							<target>物件</target>
+							<target>Objek</target>
 						</trans-unit>
 					</group>
 					<group id="performance">
@@ -4512,7 +4513,7 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="notched_air_brake">
 								<source>Notched air brake</source>
-								<target>等级空氣製動器</target>
+								<target>Brek udara bernotch</target>
 							</trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release</source>
@@ -4534,7 +4535,7 @@ Please follow the following instructions:
 						</group>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
-							<target>BrakeControlSpeed</target>
+							<target>KelajuanKawalanBrek</target>
 						</trans-unit>
 					</group>
 					<group id="pressure">
@@ -4624,27 +4625,27 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="x_min">
 							<source>x-min</source>
-							<target>x-最低</target>
+							<target>x-min</target>
 						</trans-unit>
 						<trans-unit id="x_max">
 							<source>x-max</source>
-							<target>x-最高</target>
+							<target>x-max</target>
 						</trans-unit>
 						<trans-unit id="y_min">
 							<source>y-min</source>
-							<target>y-最低</target>
+							<target>y-min</target>
 						</trans-unit>
 						<trans-unit id="y_max">
 							<source>y-max</source>
-							<target>y-最高</target>
+							<target>y-max</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
-							<target>放大</target>
+							<target>Mengezum masuk</target>
 						</trans-unit>
 						<trans-unit id="zoom_out">
 							<source>Zoom Out</source>
-							<target>縮小</target>
+							<target>Mengezum luar</target>
 						</trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
@@ -4662,26 +4663,26 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="undo">
 								<source>Undo</source>
-								<target>復原</target>
+								<target>Buat asal</target>
 							</trans-unit>
 							<trans-unit id="redo">
 								<source>Redo</source>
-								<target>重做</target>
+								<target>Buat Semula</target>
 							</trans-unit>
 							<trans-unit id="cut">
 								<source>Cut</source>
-								<target>切</target>
+								<target>Potong</target>
 							</trans-unit>
 							<trans-unit id="copy">
 								<source>Copy</source>
 							</trans-unit>
 							<trans-unit id="paste">
 								<source>Paste</source>
-								<target>貼上</target>
+								<target>Tampal</target>
 							</trans-unit>
 							<trans-unit id="cleanup">
 								<source>Cleanup</source>
-								<target>清理</target>
+								<target>Bersihkan</target>
 							</trans-unit>
 							<trans-unit id="delete">
 								<source>Delete</source>
@@ -4716,7 +4717,7 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="sound_index_none">
 								<source>None</source>
-								<target>沒有</target>
+								<target>Tiada</target>
 							</trans-unit>
 						</group>
 						<group id="tool">
@@ -4725,18 +4726,18 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
-								<target>選擇</target>
+								<target>Pilih</target>
 							</trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
 							</trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
-								<target>點</target>
+								<target>Titik</target>
 							</trans-unit>
 							<trans-unit id="line">
 								<source>Line</source>
-								<target>線</target>
+								<target>Garisan</target>
 							</trans-unit>
 						</group>
 					</group>
@@ -4746,27 +4747,27 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="min_velocity">
 							<source>x-min(Velocity)</source>
-							<target>x-min(速度)</target>
+							<target>x-min(Halaju)</target>
 						</trans-unit>
 						<trans-unit id="max_velocity">
 							<source>x-max(Velocity)</source>
-							<target>x-max(速度)</target>
+							<target>x-max(halaju)</target>
 						</trans-unit>
 						<trans-unit id="min_pitch">
 							<source>y-min(Pitch)</source>
-							<target>y-min(俯仰)</target>
+							<target>y-min(Pitch)</target>
 						</trans-unit>
 						<trans-unit id="max_pitch">
 							<source>y-max(Pitch)</source>
-							<target>y-max(俯仰)</target>
+							<target>y-max(Pitch)</target>
 						</trans-unit>
 						<trans-unit id="min_volume">
 							<source>y-min(Volume)</source>
-							<target>y-min(音量)</target>
+							<target>y-min(Kelantangan)</target>
 						</trans-unit>
 						<trans-unit id="max_volume">
 							<source>y-max(Volume)</source>
-							<target>y-max(音量)</target>
+							<target>y-max(Kelantangan)</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
@@ -4805,7 +4806,7 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="run">
 								<source>Running sound</source>
-								<target>走行音</target>
+								<target>Bunyi berlari</target>
 							</trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
@@ -4817,30 +4818,30 @@ Please follow the following instructions:
 							</trans-unit>
 							<trans-unit id="loop">
 								<source>Loop playback</source>
-								<target>循環播放</target>
+								<target>Main semula gelung</target>
 							</trans-unit>
 							<trans-unit id="constant">
 								<source>Constant speed</source>
-								<target>恆定速度</target>
+								<target>Kelajuan berterusan</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
 								<source>Acceleration:</source>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
-								<target>交換</target>
+								<target>Tukar</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="play">
 							<source>Playback</source>
-							<target>播放</target>
+							<target>Mainbalik</target>
 						</trans-unit>
 						<trans-unit id="pause">
 							<source>Pause</source>
 						</trans-unit>
 						<trans-unit id="stop">
 							<source>Stop</source>
-							<target>停</target>
+							<target>Berhenti</target>
 						</trans-unit>
 					</group>
 					<group id="vertex_info">
@@ -4849,7 +4850,7 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="velocity">
 							<source>Velocity</source>
-							<target>速度</target>
+							<target>Halaju</target>
 						</trans-unit>
 						<trans-unit id="pitch">
 							<source>Pitch</source>
@@ -4924,7 +4925,7 @@ Please follow the following instructions:
 					<group id="message">
 						<trans-unit id="vertex_exist">
 							<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
-							<target>在相同的x坐標處已經存在一個點，是否要覆蓋?</target>
+							<target>Titik sudah wujud pada koordinat x yang sama, adakah anda mahu menulis gantinya?</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -4938,11 +4939,11 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="min">
 							<source>Min</source>
-							<target>最低</target>
+							<target>Min</target>
 						</trans-unit>
 						<trans-unit id="max">
 							<source>Max</source>
-							<target>最高</target>
+							<target>Max</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -4965,23 +4966,23 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="top">
 							<source>Top</source>
-							<target>頂部</target>
+							<target>Atas</target>
 						</trans-unit>
 						<trans-unit id="bottom">
 							<source>Bottom</source>
-							<target>底部</target>
+							<target>Bawah</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-							<target>DaytimeImage</target>
+							<target>ImejSiang</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-							<target>NighttimeImage</target>
+							<target>ImejMalam</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-							<target>TransparentColor</target>
+							<target>WarnaLutSinar</target>
 						</trans-unit>
 						<group id="center">
 							<trans-unit id="name">
@@ -5012,11 +5013,11 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="number">
 							<source>Number</source>
-							<target>數字</target>
+							<target>Nombor</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-							<target>層</target>
+							<target>Lapisan</target>
 						</trans-unit>
 					</group>
 					<group id="pilot_lamp">
@@ -5025,7 +5026,7 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
-							<target>Subject</target>
+							<target>Subjek</target>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
@@ -5071,11 +5072,11 @@ Please follow the following instructions:
 						</group>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
-							<target>DefinedRadius</target>
+							<target>JejariDitakrifkan</target>
 						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
-							<target>半徑</target>
+							<target>Jejari</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
@@ -5085,14 +5086,14 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="color">
 							<source>Color</source>
-							<target>顏色</target>
+							<target>Warna</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
 						</trans-unit>
 						<trans-unit id="defined_origin">
 							<source>DefinedOrigin</source>
-							<target>DefinedOrigin</target>
+							<target>AsalDitakrifkan</target>
 						</trans-unit>
 						<group id="origin">
 							<trans-unit id="name">
@@ -5107,19 +5108,19 @@ Please follow the following instructions:
 						</group>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
-							<target>InitialAngle</target>
+							<target>SuduAwal</target>
 						</trans-unit>
 						<trans-unit id="last_angle">
 							<source>LastAngle</source>
-							<target>LastAngle</target>
+							<target>SudutAkhir</target>
 						</trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
-							<target>最低</target>
+							<target>Minimum</target>
 						</trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
-							<target>最高</target>
+							<target>Maksimum</target>
 						</trans-unit>
 						<trans-unit id="defined_natural_freq">
 							<source>DefinedNaturalFreq</source>
@@ -5131,19 +5132,19 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="defined_damping_ratio">
 							<source>DefiedDampingRatio</source>
-							<target>DefiedDampingRatio</target>
+							<target>NisbahRedamanDitakrifkan</target>
 						</trans-unit>
 						<trans-unit id="damping_ratio">
 							<source>DampingRatio</source>
-							<target>DampingRatio</target>
+							<target>NisbahRedaman</target>
 						</trans-unit>
 						<trans-unit id="backstop">
 							<source>Backstop</source>
-							<target>限位</target>
+							<target>Backstop</target>
 						</trans-unit>
 						<trans-unit id="smoothed">
 							<source>smoothed</source>
-							<target>平滑</target>
+							<target>terlicin</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
@@ -5181,7 +5182,7 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="interval">
 							<source>Interval</source>
-							<target>間隔</target>
+							<target>Selang waktu</target>
 						</trans-unit>
 					</group>
 					<group id="digital_gauge">
@@ -5222,7 +5223,7 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="step">
 							<source>Step</source>
-							<target>步進</target>
+							<target>Langkah</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
@@ -5335,18 +5336,18 @@ Please follow the following instructions:
 						</group>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
-							<target>JumpScreen</target>
+							<target>LompatSkrin</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
 							<source>SoundIndex</source>
 						</trans-unit>
 						<trans-unit id="command">
 							<source>Command</source>
-							<target>控制</target>
+							<target>Perintah</target>
 						</trans-unit>
 						<trans-unit id="command_option">
 							<source>CommandOption</source>
-							<target>CommandOption</target>
+							<target>PilihanPerintah</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -5356,11 +5357,11 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="key">
 						<source>Key</source>
-						<target>鍵</target>
+						<target>Kekunci</target>
 					</trans-unit>
 					<trans-unit id="filename">
 						<source>Filename</source>
-						<target>文件名</target>
+						<target>NamaFail</target>
 					</trans-unit>
 					<trans-unit id="position">
 						<source>Position</source>
@@ -5414,11 +5415,11 @@ Please follow the following instructions:
 					<group id="message">
 						<trans-unit id="empty_filename">
 							<source>File name has not been entered.</source>
-							<target>尚未輸入文件名。</target>
+							<target>Nama fail tidak dimasukkan.</target>
 						</trans-unit>
 						<trans-unit id="key_exist">
 							<source>The specified key is already set.</source>
-							<target>指定的鍵已設置。</target>
+							<target>Kekunci yang ditentukan sudah ditetapkan.</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -5429,14 +5430,14 @@ Please follow the following instructions:
 					<group id="menu">
 						<trans-unit id="error">
 							<source>Error</source>
-							<target>錯誤</target>
+							<target>Ralat</target>
 						</trans-unit>
 						<trans-unit id="warning">
 							<source>Warning</source>
 						</trans-unit>
 						<trans-unit id="info">
 							<source>Information</source>
-							<target>資訊</target>
+							<target>Informasi</target>
 						</trans-unit>
 						<trans-unit id="clear">
 							<source>Clear</source>
@@ -5444,11 +5445,11 @@ Please follow the following instructions:
 					</group>
 					<trans-unit id="level">
 						<source>Level</source>
-						<target>水平</target>
+						<target>Tahap</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>Description</source>
-						<target>描述</target>
+						<target>Penerangan</target>
 					</trans-unit>
 				</group>
 				<group id="message">
@@ -5463,23 +5464,23 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="positive">
 						<source>positive</source>
-						<target>正</target>
+						<target>Positif</target>
 					</trans-unit>
 					<trans-unit id="non_negative">
 						<source>non-negative</source>
-						<target>非負</target>
+						<target>bukan-negatif</target>
 					</trans-unit>
 					<trans-unit id="non_zero">
 						<source>non-zero</source>
-						<target>非零</target>
+						<target>bukan-sifar</target>
 					</trans-unit>
 					<trans-unit id="invalid_float">
 						<source>This value must be a {0}floating-point number.</source>
-						<target>數值一定要是 {0}浮點數</target>
+						<target>Nilai ini mestilah {0}nombor titik-terapung.</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
 						<source>invalid_color</source>
-						<target>invalid_color</target>
+						<target>warna_tidaksah</target>
 					</trans-unit>
 				</group>
 			</group>

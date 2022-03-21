@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -9,6 +10,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.Power;
 using TrainManager.Trains;
+using Path = OpenBveApi.Path;
 
 namespace Train.OpenBve
 {
@@ -64,7 +66,7 @@ namespace Train.OpenBve
 				//Use the index here for easy access to the car count
 				for (int i = 0; i < DocumentNodes.Count; i++)
 				{
-					if (carIndex > Train.Cars.Length)
+					if (carIndex > Train.Cars.Length - 1)
 					{
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
 						break;
@@ -126,12 +128,13 @@ namespace Train.OpenBve
 							//We need to save and restore the current path to make relative paths within the child file work correctly
 							string savedPath = currentPath;
 							currentPath = System.IO.Path.GetDirectoryName(childFile);
-							ParseCarNode(childNodes[0], fileName, i, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
+							ParseCarNode(childNodes[0], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 							currentPath = savedPath;
 						}
-						catch
+						catch(Exception ex)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
 						}
 					}
 					if (i == DocumentNodes.Count && carIndex < Train.Cars.Length)
@@ -215,6 +218,30 @@ namespace Train.OpenBve
 
 					}
 				}
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Plugin");
+				if (DocumentNodes != null && DocumentNodes.Count > 0)
+				{
+					// More optional
+					for (int i = 0; i < DocumentNodes.Count; i++)
+					{
+						switch (DocumentNodes[i].Name)
+						{
+							case "Plugin":
+								currentPath = System.IO.Path.GetDirectoryName(fileName); // reset to base path
+								string pluginFile = DocumentNodes[i].InnerText;
+								pluginFile = Path.CombineFile(currentPath, pluginFile);
+								if (File.Exists(pluginFile))
+								{
+									if (!Train.LoadPlugin(pluginFile, currentPath))
+									{
+										Train.Plugin = null;
+									}
+								}
+								break;
+						}
+					}
+				}
+
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
 					if (CarObjects[i] != null)

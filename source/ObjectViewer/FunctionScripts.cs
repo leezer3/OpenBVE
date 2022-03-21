@@ -174,6 +174,9 @@ namespace ObjectViewer {
 					case Instructions.MathArcTan:
 						Function.Stack[s - 1] = Math.Atan(Function.Stack[s - 1]);
 						break;
+					case Instructions.MathPi:
+						Function.Stack[s] = Math.PI;
+						s++; break;
 						// comparisons
 					case Instructions.CompareEqual:
 						Function.Stack[s - 2] = Function.Stack[s - 2] == Function.Stack[s - 1] ? 1.0 : 0.0;

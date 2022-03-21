@@ -202,14 +202,22 @@ namespace OpenBve {
 	#pragma warning restore 0219
 			// route selection
 			listviewRouteFiles.SmallImageList = new ImageList { TransparentColor = Color.White };
+			listViewRoutePackages.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
 			if (CsvRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
 			if (RwRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("rwroute", RwRouteIcon);
 			if (MechanikRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
+			if (ParentIcon != null) listViewRoutePackages.SmallImageList.Images.Add("parent", ParentIcon);
+			if (FolderIcon != null) listViewRoutePackages.SmallImageList.Images.Add("folder", FolderIcon);
+			if (CsvRouteIcon != null) listViewRoutePackages.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
+			if (RwRouteIcon != null) listViewRoutePackages.SmallImageList.Images.Add("rwroute", RwRouteIcon);
+			if (MechanikRouteIcon != null) listViewRoutePackages.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			if (DiskIcon != null) listviewRouteFiles.SmallImageList.Images.Add("disk", DiskIcon);
 			listviewRouteFiles.Columns.Clear();
 			listviewRouteFiles.Columns.Add("");
+			listViewRoutePackages.Columns.Clear();
+			listViewRoutePackages.Columns.Add("");
 			listviewRouteRecently.Items.Clear();
 			listviewRouteRecently.Columns.Add("");
 			listviewRouteRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
@@ -246,14 +254,22 @@ namespace OpenBve {
 
 			}
 			listviewRouteRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+			currentRoutePackageFolder = Program.FileSystem.RouteInstallationDirectory;
+			currentTrainPackageFolder = Program.FileSystem.TrainInstallationDirectory;
 			// train selection
 			listviewTrainFolders.SmallImageList = new ImageList { TransparentColor = Color.White };
+			listViewTrainPackages.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewTrainFolders.SmallImageList.Images.Add("folder", FolderIcon);
 			if (TrainIcon != null) listviewTrainFolders.SmallImageList.Images.Add("train", TrainIcon);
 			if (DiskIcon != null) listviewTrainFolders.SmallImageList.Images.Add("disk", DiskIcon);
+			if (ParentIcon != null) listViewTrainPackages.SmallImageList.Images.Add("parent", ParentIcon);
+			if (FolderIcon != null) listViewTrainPackages.SmallImageList.Images.Add("folder", FolderIcon);
+			if (TrainIcon != null) listViewTrainPackages.SmallImageList.Images.Add("train", TrainIcon);
 			listviewTrainFolders.Columns.Clear();
 			listviewTrainFolders.Columns.Add("");
+			listViewTrainPackages.Columns.Clear();
+			listViewTrainPackages.Columns.Add("");
 			listviewTrainRecently.Columns.Clear();
 			listviewTrainRecently.Columns.Add("");
 			listviewTrainRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
@@ -689,6 +705,7 @@ namespace OpenBve {
 			groupboxRouteSelection.Text = Translations.GetInterfaceString("start_route_selection");
 			tabpageRouteBrowse.Text = Translations.GetInterfaceString("start_route_browse");
 			tabpageRouteRecently.Text = Translations.GetInterfaceString("start_route_recently");
+			tabPageRoutePackages.Text = Translations.GetInterfaceString("packages_list");
 			groupboxRouteDetails.Text = Translations.GetInterfaceString("start_route_details");
 			tabpageRouteDescription.Text = Translations.GetInterfaceString("start_route_description");
 			tabpageRouteMap.Text = Translations.GetInterfaceString("start_route_map");
@@ -702,6 +719,7 @@ namespace OpenBve {
 			tabpageTrainBrowse.Text = Translations.GetInterfaceString("start_train_browse");
 			tabpageTrainRecently.Text = Translations.GetInterfaceString("start_train_recently");
 			tabpageTrainDefault.Text = Translations.GetInterfaceString("start_train_default");
+			tabPageTrainPackages.Text = Translations.GetInterfaceString("packages_list");
 			checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 			groupboxTrainDetails.Text = Translations.GetInterfaceString("start_train_details");
 			tabpageTrainDescription.Text = Translations.GetInterfaceString("start_train_description");
@@ -1883,6 +1901,14 @@ namespace OpenBve {
 		{
 			// MONO issue on some systems means that the map may not draw initially, so force redraw
 			pictureboxRouteMap.Invalidate();
+		}
+		
+		private void toolStripExport_Click(object sender, EventArgs e)
+		{
+			System.Windows.Forms.Control sourceControl = ((ContextMenuStrip)((ToolStripItem)sender).Owner).SourceControl;
+			formImageExport exporter = sourceControl == pictureboxRouteMap ? new formImageExport(true, Result.RouteFile) : new formImageExport(false, Result.RouteFile);
+			
+			exporter.ShowDialog();
 		}
 	}
 }

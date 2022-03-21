@@ -340,6 +340,11 @@ namespace OpenBve {
 				}
 				try {
 					System.Diagnostics.Process.Start(System.IO.File.Exists(FileSystem.RestartProcess) ? FileSystem.RestartProcess : Application.ExecutablePath, arguments);
+					if (CurrentHost.MonoRuntime)
+					{
+						// Forcefully terminate the original process once the new one has triggered, otherwise we hang around...
+						Environment.Exit(0);
+					}
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message + "\n\nProcess = " + FileSystem.RestartProcess + "\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}

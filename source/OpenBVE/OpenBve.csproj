@@ -108,6 +108,7 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
@@ -226,6 +227,12 @@
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
+    <Compile Include="UserInterface\formImageExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formImageExport.Designer.cs">
+      <DependentUpon>formImageExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\formRaildriverCalibration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -256,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formAbout.resx">
       <DependentUpon>formAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserInterface\formImageExport.resx">
+      <DependentUpon>formImageExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formRaildriverCalibration.resx">
       <DependentUpon>formRaildriverCalibration.cs</DependentUpon>

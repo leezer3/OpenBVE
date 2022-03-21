@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using TrainManager.BrakeSystems;
 using OpenBveApi.Colors;
@@ -155,7 +155,7 @@ namespace OpenBve.Graphics.Renderers
 				"air pressure: " + (0.001 * airPressure).ToString("0.00", Culture) + " kPa",
 				"air density: " + airDensity.ToString("0.0000", Culture) + " kg/m³",
 				"speed of sound: " + (Program.CurrentRoute.Atmosphere.GetSpeedOfSound(airDensity) * 3.6).ToString("0.00", Culture) + " km/h",
-				"passenger ratio: " + TrainManager.PlayerTrain.Passengers.PassengerRatio.ToString("0.00"),
+				"passenger ratio: " + TrainManager.PlayerTrain.CargoRatio.ToString("0.00"),
 				"total mass: " + mass.ToString("0.00", Culture) + " kg",
 				"",
 				"=route",
@@ -182,6 +182,7 @@ namespace OpenBve.Graphics.Renderers
 				"curve radius: " + Program.Renderer.CameraTrackFollower.CurveRadius.ToString("0.00", Culture) + " m",
 				"curve cant: " + (1000.0 * Math.Abs(Program.Renderer.CameraTrackFollower.CurveCant)).ToString("0.00", Culture) + " mm" + (Program.Renderer.CameraTrackFollower.CurveCant < 0.0 ? " (left)" : Program.Renderer.CameraTrackFollower.CurveCant > 0.0 ? " (right)" : ""),
 				"pitch: " + Program.Renderer.CameraTrackFollower.Pitch.ToString("0.00", Culture),
+				"current anchor car: " + TrainManager.PlayerTrain.CameraCar,
 				"",
 				"=sound",
 				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " loaded / " + soundBuffersRegistered.ToString(Culture) + " total",
@@ -190,6 +191,8 @@ namespace OpenBve.Graphics.Renderers
 				"",
 				"=debug",
 				"bvets hacks: " + (Interface.CurrentOptions.EnableBveTsHacks ? "enabled" : "disabled"),
+				"time acceleration: " + MainLoop.TimeFactor + "x",
+				"viewing distance: " + Interface.CurrentOptions.ViewingDistance + "m",
 				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
 				"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
 				Game.InfoDebugString ?? ""

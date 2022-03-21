@@ -27,13 +27,13 @@ namespace CarXmlConvertor
         internal static void Process(MainForm form)
         {
 	        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-	        if (!System.IO.File.Exists(FileName))
+	        if (string.IsNullOrEmpty(FileName) || !File.Exists(FileName))
 	        {
 		        return;
 	        }
 	        mainForm = form;
             panel = new Vector3(DriverPosition.X, DriverPosition.Y, DriverPosition.Z + 1.0);
-			string[] Lines = System.IO.File.ReadAllLines(FileName);
+			string[] Lines = File.ReadAllLines(FileName);
 	        TabbedList newLines = new TabbedList();
             for (int i = 0; i < Lines.Length; i++)
             {
@@ -69,7 +69,7 @@ namespace CarXmlConvertor
 	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
                                 int k;
-                                if (!int.TryParse(a, System.Globalization.NumberStyles.Integer,
+                                if (!int.TryParse(a, NumberStyles.Integer,
                                     CultureInfo.InvariantCulture, out k))
                                 {
                                     continue;
@@ -104,7 +104,7 @@ namespace CarXmlConvertor
 				                string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 				                string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 				                int k;
-				                if (!int.TryParse(a, System.Globalization.NumberStyles.Integer,
+				                if (!int.TryParse(a, NumberStyles.Integer,
 					                CultureInfo.InvariantCulture, out k))
 				                {
 					                continue;
@@ -139,7 +139,7 @@ namespace CarXmlConvertor
 	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
                                 int k;
-                                if (!int.TryParse(a, System.Globalization.NumberStyles.Integer,
+                                if (!int.TryParse(a, NumberStyles.Integer,
                                     CultureInfo.InvariantCulture, out k))
                                 {
                                     continue;
@@ -174,7 +174,7 @@ namespace CarXmlConvertor
 	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
                                 int k;
-                                if (!int.TryParse(a, System.Globalization.NumberStyles.Integer,
+                                if (!int.TryParse(a, NumberStyles.Integer,
                                     CultureInfo.InvariantCulture, out k))
                                 {
                                     continue;
@@ -787,7 +787,7 @@ namespace CarXmlConvertor
 			                    string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 			                    string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 			                    int k;
-			                    if (!int.TryParse(a, System.Globalization.NumberStyles.Integer,
+			                    if (!int.TryParse(a, NumberStyles.Integer,
 				                        CultureInfo.InvariantCulture, out k))
 			                    {
 				                    continue;
@@ -845,11 +845,60 @@ namespace CarXmlConvertor
                         }
                         i--;
                         break;
+					case "[windscreen]":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						{
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							if (j >= 0)
+							{
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								if (b.Length == 0 || Path.ContainsInvalidChars(b))
+								{
+									continue;
+								}
+								switch (a.ToLowerInvariant())
+								{
+									case "raindrop":
+										newLines.Add("<RainDrop>");
+										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<Position>" + panel + "</Position>");
+										newLines.Add("<Radius>2.0</Radius>");
+										newLines.Add("</RainDrop>");
+										break;
+									case "wetwipe":
+										newLines.Add("<WetWipe>");
+										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<Position>" + panel + "</Position>");
+										newLines.Add("<Radius>2.0</Radius>");
+										newLines.Add("</WetWipe>");
+										break;
+									case "drywipe":
+										newLines.Add("<DryWipe>");
+										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<Position>" + panel + "</Position>");
+										newLines.Add("<Radius>2.0</Radius>");
+										newLines.Add("</DryWipe>");
+										break;
+									case "switch":
+										newLines.Add("<Switch>");
+										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<Position>" + panel + "</Position>");
+										newLines.Add("<Radius>2.0</Radius>");
+										newLines.Add("</Switch>");
+										break;
+								}
+							}
+							i++;
+						}
+						i--;
+						break;
                 }
             }
             newLines.Add("</CarSounds>");
             newLines.Add("</openBVE>");
-	        string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "sound.xml");
+            // ReSharper disable once AssignNullToNotNullAttribute
+            string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "sound.xml");
 			try
             {
                 
@@ -862,7 +911,7 @@ namespace CarXmlConvertor
             catch
             {
 	            mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
-                MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", @"CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 return;
             }
         }

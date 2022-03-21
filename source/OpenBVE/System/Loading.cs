@@ -148,7 +148,7 @@ namespace OpenBve {
 		/// <returns>The absolute on-disk path of the train folder</returns>
 		internal static string GetDefaultTrainFolder(string RouteFile)
 		{
-			if (string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
+			if (string.IsNullOrEmpty(RouteFile) || string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 				return string.Empty;
 			}
 			
@@ -429,7 +429,7 @@ namespace OpenBve {
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++) {
 				if ( Program.TrainManager.Trains[i].State != TrainState.Bogus) {
 					if ( Program.TrainManager.Trains[i].IsPlayerTrain) {
-						if (! Program.TrainManager.Trains[i].LoadCustomPlugin(Program.TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
+						if (Program.TrainManager.Trains[i].Plugin == null && !Program.TrainManager.Trains[i].LoadCustomPlugin(Program.TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
 							Program.TrainManager.Trains[i].LoadDefaultPlugin(Program.TrainManager.Trains[i].TrainFolder);
 						}
 					} else {
