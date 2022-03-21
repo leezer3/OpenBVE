@@ -141,7 +141,7 @@
 					</trans-unit>
 					<trans-unit id="sound_openal_version">
 						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
-						<target>OpenAL 1.1 diperlukan. Anda kehilatan mempunyai versi 1.0.</target>
+						<target>OpenAL 1.1 diperlukan. Anda kelihatan mempunyai versi 1.0.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_context">
 						<source>The OpenAL context could not be created.</source>
@@ -169,7 +169,7 @@
 					</trans-unit>
 					<trans-unit id="route_corrupt_nostations">
 						<source>The selected route is corrupt: \r\n No stations defined.</source>
-						<target>Laluan yang dipilih adalah rosak: \n/r Tiada stesen yang ditarifkan.</target>
+						<target>Laluan yang dipilih adalah rosak: \n\r Tiada stesen yang ditarifkan.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_noobjects">
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
@@ -281,7 +281,7 @@
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Do you wish to use the default train?</source>
-						<target>Adakah anda berhajat untuk menggunakan kereta api asal?</target>
+						<target>Adakah anda ingin menggunakan kereta api asal?</target>
 					</trans-unit>
 					<trans-unit id="train_default_no">
 						<source>No</source>
@@ -665,7 +665,7 @@
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
-						<target>Butiran pakej dan tanggungan mungkin ditetapkam dalam langkah berikut.</target>
+						<target>Butiran pakej dan tanggungan mungkin ditetapkan dalam langkah berikut.</target>
 					</trans-unit>
 					<trans-unit id="creation_reccommends_add">
 						<source>Add Recommendation</source>
@@ -1800,7 +1800,7 @@
 				<group id="timetable">
 					<trans-unit id="highestspeed">
 						<source>Max.\r\nspd.</source>
-						<target>Max.\r\nspd.</target>
+						<target>Laju\r\nMax.</target>
 					</trans-unit>
 					<trans-unit id="drivingtime">
 						<source>Drv.\r\ntime</source>
@@ -1882,7 +1882,7 @@
 					</trans-unit>
 					<trans-unit id="station_deadline">
 						<source>Departure is expected in [time].</source>
-						<target>Berlepas dijangka dalam [time].</target>
+						<target>Dijangka berlepas dalam [time].</target>
 					</trans-unit>
 					<trans-unit id="station_security">
 						<source>Please activate [system].</source>
@@ -1955,7 +1955,7 @@
 					</trans-unit>
 					<trans-unit id="backfaceculling_off">
 						<source>Backface culling: off</source>
-						<target>Pemusnahan muka belakang: hmati</target>
+						<target>Pemusnahan muka belakang: mati</target>
 					</trans-unit>
 					<trans-unit id="notavailableexpert">
 						<source>This feature is not available in Expert mode.</source>
@@ -2872,7 +2872,7 @@
 					</trans-unit>
 					<trans-unit id="enter">
 						<source>Enter</source>
-						<target>nter</target>
+						<target>Enter</target>
 					</trans-unit>
 					<trans-unit id="equals">
 						<source>Equals</source>
