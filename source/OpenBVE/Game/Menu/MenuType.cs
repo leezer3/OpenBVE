@@ -38,7 +38,9 @@
 		/// <summary>Uninstalls anything else</summary>
 		UninstallOther,
 		/// <summary>The options menu</summary>
-		Options
+		Options,
+		/// <summary>A menu allowing switch settings to be changed</summary>
+		ChangeSwitch
 		
 	}
 }

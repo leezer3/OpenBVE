@@ -75,6 +75,7 @@ namespace CsvRwRouteParser
 				LightDefinition = new LightDefinition();
 				LightingChanges = new LightingChange[] { };
 				PatternObjs = new Dictionary<int, PatternObj>();
+				Switches = new Switch[] { };
 			}
 		}
 	}

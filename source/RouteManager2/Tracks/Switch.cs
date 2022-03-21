@@ -14,9 +14,13 @@
 		/// <summary>The list of available track indicies</summary>
 		public readonly int[] availableTracks;
 
-		public Switch(int[] tracks, int initialTrack)
+		/// <summary>The track position</summary>
+		public readonly double TrackPosition;
+
+		public Switch(int[] tracks, int initialTrack, double trackPosition)
 		{
 			availableTracks = tracks;
+			TrackPosition = trackPosition;
 			for (int i = 0; i < availableTracks.Length; i++)
 			{
 				if (availableTracks[i] == initialTrack)

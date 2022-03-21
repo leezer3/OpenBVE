@@ -34,6 +34,8 @@ namespace OpenBveApi.Trains
 		/// <summary>The index to the next station at which the train calls</summary>
 		/// <remarks>If stationary at a timetabled station, this will return that station</remarks>
 		public int Station;
+		/// <summary>The last switch the front of the train passed over</summary>
+		public int Switch;
 		/// <summary>The timetable delta from the player train</summary>
 		/// <remarks>Is negative for earlier trains, or negative for later trains</remarks>
 		public double TimetableDelta;

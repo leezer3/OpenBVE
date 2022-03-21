@@ -261,6 +261,7 @@
 			new CommandInfo(Command.AccessibilityCurrentSpeed, CommandType.Digital, "ACCESSIBILITY_CURRENT_SPEED"),
 			new CommandInfo(Command.AccessibilityNextSignal, CommandType.Digital, "ACCESSIBILITY_NEXT_SIGNAL"),
 			new CommandInfo(Command.AccessibilityNextStation, CommandType.Digital, "ACCESSIBILITY_NEXT_STATION"),
+			new CommandInfo(Command.SwitchMenu, CommandType.Digital, "CHANGE_SWITCH"),
 		};
 	}
 }

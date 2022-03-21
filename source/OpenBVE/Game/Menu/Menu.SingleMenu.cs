@@ -595,6 +595,47 @@ namespace OpenBve
 							Instance.PushMenu(MenuType.TrainList);
 						}
 						break;
+					case MenuType.ChangeSwitch:
+						if (Program.CurrentRoute.Switches == null || Program.CurrentRoute.Switches.Length == 0)
+						{
+							Items = new MenuEntry[2];
+							Items[0] = new MenuCaption(Translations.GetInterfaceString("No Switches!"));
+							Items[2] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+						}
+						else if (Program.CurrentRoute.Switches.Length == 1)
+						{
+							Items = new MenuEntry[4];
+							Items[0] = new MenuCaption(Translations.GetInterfaceString("Change Switch"));
+							Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[0].TrackPosition) + "m"));
+							Items[2] = new MenuCommand(Translations.GetInterfaceString("Toggle!"), MenuTag.Yes, 0);
+							Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+						}
+						else
+						{
+							Items = new MenuEntry[6];
+							Items[0] = new MenuCaption(Translations.GetInterfaceString("Change Switch"));
+							int previousSwitch = TrainManagerBase.PlayerTrain.Switch;
+							if (previousSwitch < Program.CurrentRoute.Switches.Length - 1)
+							{
+								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[0].TrackPosition) + "m"));
+								Items[1] = new MenuCommand(Translations.GetInterfaceString("Next Switch"), MenuTag.Yes, 0);
+								Items[2] = new MenuCommand(Translations.GetInterfaceString("Toggle!"), MenuTag.Yes, 0);
+								Items[3] = new MenuCommand(Translations.GetInterfaceString("Previous Switch"), MenuTag.Yes, 0);
+								Items[4] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+							}
+							else
+							{
+								Items = new MenuEntry[5];
+								Items[0] = new MenuCaption(Translations.GetInterfaceString("Change Switch"));
+								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[0].TrackPosition) + "m"));
+								Items[2] = new MenuCommand(Translations.GetInterfaceString("Toggle!"), MenuTag.Yes, 0);
+								Items[2] = new MenuCommand(Translations.GetInterfaceString("Previous Switch..."), MenuTag.Yes, 0);
+								Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+							}
+
+							
+						}
+						break;
 				}
 				// compute menu extent
 				for (i = 0; i < Items.Length; i++)

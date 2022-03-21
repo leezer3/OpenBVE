@@ -3390,7 +3390,7 @@ namespace CsvRwRouteParser
 
 						if (Data.Blocks[BlockIndex].Switches.Length <= idx)
 						{
-							Array.Resize<Switch>(ref Data.Blocks[BlockIndex].Switches, idx + 1);
+							Array.Resize(ref Data.Blocks[BlockIndex].Switches, idx + 1);
 						}
 
 						Data.Blocks[BlockIndex].Switches[idx] = new Switch

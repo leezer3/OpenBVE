@@ -39,6 +39,9 @@ namespace RouteManager2.Events
 					trackFollower.Car.RearAxle.Follower.TrackIndex = currentRoute.Switches[myIndex].currentlySetTrack();
 					trackFollower.Car.RearAxle.Follower.UpdateWorldCoordinates(false);
 					break;
+				case EventTriggerType.TrainFront:
+					trackFollower.Train.Switch = myIndex;
+					break;
 			}
 		}
 	}
@@ -100,7 +103,9 @@ namespace RouteManager2.Events
 					{
 						trackFollower.Car.Derail();
 					}
-
+					break;
+				case EventTriggerType.TrainFront:
+					trackFollower.Train.Switch = myIndex;
 					break;
 			}
 		}

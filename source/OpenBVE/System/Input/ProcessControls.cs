@@ -183,6 +183,9 @@ namespace OpenBve
 										Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
 										Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 										break;
+									case Translations.Command.SwitchMenu:
+										Game.Menu.PushMenu(MenuType.ChangeSwitch);
+										break;
 								}
 							}
 						}
@@ -1734,6 +1737,9 @@ namespace OpenBve
 									case Translations.Command.MenuActivate:
 										// menu
 										Game.Menu.PushMenu(MenuType.Top);
+										break;
+									case Translations.Command.SwitchMenu:
+										Game.Menu.PushMenu(MenuType.ChangeSwitch);
 										break;
 									case Translations.Command.MiscPause:
 										// pause
