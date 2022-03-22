@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Routes;
+﻿using System;
+using OpenBveApi.Routes;
 
 namespace RouteManager2.Events
 {
@@ -6,15 +7,15 @@ namespace RouteManager2.Events
 	public class SwitchEvent : GeneralEvent
 	{
 
-		private readonly int myIndex;
+		public readonly Guid Index;
 
 		private readonly int triggerDirection;
 
 		private readonly CurrentRoute currentRoute;
 
-		public SwitchEvent(int idx, int direction, CurrentRoute route)
+		public SwitchEvent(Guid idx, int direction, CurrentRoute route)
 		{
-			myIndex = idx;
+			Index = idx;
 			triggerDirection = direction;
 			currentRoute = route;
 		}
@@ -31,16 +32,16 @@ namespace RouteManager2.Events
 			{
 				case EventTriggerType.FrontCarFrontAxle:
 				case EventTriggerType.OtherCarFrontAxle:
-					trackFollower.Car.FrontAxle.Follower.TrackIndex = currentRoute.Switches[myIndex].currentlySetTrack();
+					trackFollower.Car.FrontAxle.Follower.TrackIndex = currentRoute.Switches[Index].currentlySetTrack();
 					trackFollower.Car.FrontAxle.Follower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.RearCarRearAxle:
 				case EventTriggerType.OtherCarRearAxle:
-					trackFollower.Car.RearAxle.Follower.TrackIndex = currentRoute.Switches[myIndex].currentlySetTrack();
+					trackFollower.Car.RearAxle.Follower.TrackIndex = currentRoute.Switches[Index].currentlySetTrack();
 					trackFollower.Car.RearAxle.Follower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.TrainFront:
-					trackFollower.Train.Switch = myIndex;
+					trackFollower.Train.Switch = Index;
 					break;
 			}
 		}
@@ -50,7 +51,7 @@ namespace RouteManager2.Events
 	public class TrailingSwitchEvent : GeneralEvent
 	{
 
-		private readonly int myIndex;
+		public readonly Guid Index;
 
 		private readonly int toeRail;
 
@@ -60,9 +61,9 @@ namespace RouteManager2.Events
 
 		private readonly bool derailments;
 
-		public TrailingSwitchEvent(int idx, int trackIndex, int direction, CurrentRoute route, bool derail)
+		public TrailingSwitchEvent(Guid idx, int trackIndex, int direction, CurrentRoute route, bool derail)
 		{
-			myIndex = idx;
+			Index = idx;
 			toeRail = trackIndex;
 			triggerDirection = direction;
 			currentRoute = route;
@@ -81,7 +82,7 @@ namespace RouteManager2.Events
 			{
 				case EventTriggerType.FrontCarFrontAxle:
 				case EventTriggerType.OtherCarFrontAxle:
-					if (derailments == false || currentRoute.Switches[myIndex].currentlySetTrack() == trackFollower.Car.FrontAxle.Follower.TrackIndex)
+					if (derailments == false || currentRoute.Switches[Index].currentlySetTrack() == trackFollower.Car.FrontAxle.Follower.TrackIndex)
 					{
 						trackFollower.Car.FrontAxle.Follower.TrackIndex = toeRail;
 						trackFollower.Car.FrontAxle.Follower.UpdateWorldCoordinates(false);
@@ -94,7 +95,7 @@ namespace RouteManager2.Events
 					break;
 				case EventTriggerType.RearCarRearAxle:
 				case EventTriggerType.OtherCarRearAxle:
-					if (derailments == false || currentRoute.Switches[myIndex].currentlySetTrack() == trackFollower.Car.RearAxle.Follower.TrackIndex)
+					if (derailments == false || currentRoute.Switches[Index].currentlySetTrack() == trackFollower.Car.RearAxle.Follower.TrackIndex)
 					{
 						trackFollower.Car.RearAxle.Follower.TrackIndex = toeRail;
 						trackFollower.Car.RearAxle.Follower.UpdateWorldCoordinates(false);
@@ -105,7 +106,7 @@ namespace RouteManager2.Events
 					}
 					break;
 				case EventTriggerType.TrainFront:
-					trackFollower.Train.Switch = myIndex;
+					trackFollower.Train.Switch = Index;
 					break;
 			}
 		}

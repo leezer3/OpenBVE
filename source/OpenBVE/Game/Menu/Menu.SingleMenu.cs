@@ -2,13 +2,16 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using DavyKager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Packages;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
+using RouteManager2.Events;
 using TrainManager;
 using Path = OpenBveApi.Path;
 
@@ -596,43 +599,97 @@ namespace OpenBve
 						}
 						break;
 					case MenuType.ChangeSwitch:
-						if (Program.CurrentRoute.Switches == null || Program.CurrentRoute.Switches.Length == 0)
+						if (Program.CurrentRoute.Switches == null || Program.CurrentRoute.Switches.Count == 0)
 						{
 							Items = new MenuEntry[2];
 							Items[0] = new MenuCaption(Translations.GetInterfaceString("No Switches!"));
 							Items[2] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
 						}
-						else if (Program.CurrentRoute.Switches.Length == 1)
+						else if (Program.CurrentRoute.Switches.Count == 1)
 						{
 							Items = new MenuEntry[4];
 							Items[0] = new MenuCaption(Translations.GetInterfaceString("Change Switch"));
-							Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[0].TrackPosition) + "m"));
+							Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[Program.CurrentRoute.Switches.ElementAt(0).Key].TrackPosition) + "m"));
 							Items[2] = new MenuCommand(Translations.GetInterfaceString("Toggle!"), MenuTag.Yes, 0);
 							Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
 						}
 						else
 						{
-							Items = new MenuEntry[6];
-							Items[0] = new MenuCaption(Translations.GetInterfaceString("Change Switch"));
-							int previousSwitch = TrainManagerBase.PlayerTrain.Switch;
-							if (previousSwitch < Program.CurrentRoute.Switches.Length - 1)
+							/*
+							 * Find next and previous switches
+							 *
+							 * NOTE: 'Next' in this context should be taken to mean in the forwards (positive) direction due to the current linear routefile format
+							 */
+								Guid nextSwitch = Guid.Empty;
+							double distanceToNextSwitch = 0;
+							Track currentTrack = Program.CurrentHost.Tracks[TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackIndex];
+							for (int currentElement = TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.LastTrackElement; currentElement < currentTrack.Elements.Length; currentElement++)
 							{
-								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[0].TrackPosition) + "m"));
-								Items[1] = new MenuCommand(Translations.GetInterfaceString("Next Switch"), MenuTag.Yes, 0);
+								foreach (GeneralEvent currentEvent in Program.CurrentHost.Tracks[TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackIndex].Elements[currentElement].Events)
+								{
+									distanceToNextSwitch = Program.CurrentHost.Tracks[TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackIndex].Elements[currentElement].StartingTrackPosition - TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition;
+									if (currentEvent is SwitchEvent ev)
+									{
+										nextSwitch = ev.Index;
+										break;
+									}
+
+									if (currentEvent is TrailingSwitchEvent tev)
+									{
+										nextSwitch = tev.Index;
+										break;
+									}
+								}
+							}
+							Guid previousSwitch = Guid.Empty;
+							double distanceToPreviousSwitch = 0;
+							for (int currentElement = TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.LastTrackElement; currentElement > 0; currentElement--)
+							{
+								foreach (GeneralEvent currentEvent in Program.CurrentHost.Tracks[TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackIndex].Elements[currentElement].Events)
+								{
+									distanceToPreviousSwitch = Program.CurrentHost.Tracks[TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackIndex].Elements[currentElement].StartingTrackPosition - TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition;
+									if (currentEvent is SwitchEvent ev)
+									{
+										previousSwitch = ev.Index;
+										break;
+									}
+
+									if (currentEvent is TrailingSwitchEvent tev)
+									{
+										previousSwitch = tev.Index;
+										break;
+									}
+								}
+							}
+
+							if (nextSwitch != Guid.Empty && previousSwitch != Guid.Empty)
+							{
+								// In between two valid switches
+								Items = new MenuEntry[5];
+								Items[0] = new MenuCaption(Translations.GetInterfaceString("Next Switch"));
+								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + distanceToNextSwitch + "m"));
 								Items[2] = new MenuCommand(Translations.GetInterfaceString("Toggle!"), MenuTag.Yes, 0);
-								Items[3] = new MenuCommand(Translations.GetInterfaceString("Previous Switch"), MenuTag.Yes, 0);
+								Items[4] = new MenuCommand(Translations.GetInterfaceString("Previous Switch..."), MenuTag.BackToSim, 0);
 								Items[4] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+							}
+							else if (nextSwitch != Guid.Empty)
+							{
+								// Next switch is valid, previous is not
+								Items = new MenuEntry[4];
+								Items[0] = new MenuCaption(Translations.GetInterfaceString("Change Next Switch"));
+								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + distanceToNextSwitch + "m"));
+								Items[2] = new MenuCommand(Translations.GetInterfaceString("Toggle!"), MenuTag.Yes, 0);
+								Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
 							}
 							else
 							{
-								Items = new MenuEntry[5];
+								// Previous switch is valid, next is not
+								Items = new MenuEntry[4];
 								Items[0] = new MenuCaption(Translations.GetInterfaceString("Change Switch"));
-								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[0].TrackPosition) + "m"));
+								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + distanceToPreviousSwitch + "m"));
 								Items[2] = new MenuCommand(Translations.GetInterfaceString("Toggle!"), MenuTag.Yes, 0);
-								Items[2] = new MenuCommand(Translations.GetInterfaceString("Previous Switch..."), MenuTag.Yes, 0);
 								Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
 							}
-
 							
 						}
 						break;

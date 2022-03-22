@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Routes;
+﻿using System;
+using OpenBveApi.Routes;
 
 namespace OpenBveApi.Trains
 {
@@ -35,7 +36,7 @@ namespace OpenBveApi.Trains
 		/// <remarks>If stationary at a timetabled station, this will return that station</remarks>
 		public int Station;
 		/// <summary>The last switch the front of the train passed over</summary>
-		public int Switch;
+		public Guid Switch;
 		/// <summary>The timetable delta from the player train</summary>
 		/// <remarks>Is negative for earlier trains, or negative for later trains</remarks>
 		public double TimetableDelta;

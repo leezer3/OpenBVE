@@ -97,7 +97,7 @@ namespace RouteManager2
 		public ObjectDisposalMode AccurateObjectDisposal;
 
 		/// <summary>All switches on the route</summary>
-		public Switch[] Switches;
+		public Dictionary<Guid, Switch> Switches;
 
 		public CurrentRoute(HostInterface host, BaseRenderer renderer)
 		{
