@@ -54,7 +54,25 @@ namespace Train.OpenBve
 			interiorVisible = new bool[Train.Cars.Length];
 			if (currentXML.DocumentElement != null)
 			{
-				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Car or self::Coupler]");
+				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/DriverCar");
+				if (DocumentNodes != null && DocumentNodes.Count > 0)
+				{
+					// Optional stuff, needs to be loaded before the car list
+					for (int i = 0; i < DocumentNodes.Count; i++)
+					{
+						switch (DocumentNodes[i].Name)
+						{
+							case "DriverCar":
+								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out Train.DriverCar))
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "DriverCar is invalid in XML file " + fileName);
+								}
+								break;
+						}
+					}
+				}
+
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Car or self::Coupler]");
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "No car nodes defined in XML file " + fileName);
@@ -221,7 +239,7 @@ namespace Train.OpenBve
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Plugin");
 				if (DocumentNodes != null && DocumentNodes.Count > 0)
 				{
-					// More optional
+					// More optional, but needs to be loaded after the car list
 					for (int i = 0; i < DocumentNodes.Count; i++)
 					{
 						switch (DocumentNodes[i].Name)

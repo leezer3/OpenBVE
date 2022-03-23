@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using System.Xml;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -227,8 +228,13 @@ namespace Train.OpenBve
 							}
 						}
 						break;
+					case "handle":
+						ParseHandleNode(c, ref Train.Handles.Brake, Car, Train, fileName);
+						break;
+					
 				}
 			}
+			
 			Train.Cars[Car].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
 			Train.Cars[Car].CarBrake.airCompressor = new Compressor(compressorRate, Train.Cars[Car].CarBrake.mainReservoir, Train.Cars[Car]);
 			Train.Cars[Car].CarBrake.equalizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);

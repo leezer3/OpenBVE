@@ -51,6 +51,17 @@ namespace TrainManager.Handles
 		/// <summary>The max width used in px for the description string</summary>
 		public double MaxWidth = 48;
 
+		/// <summary>The type of spring for this handle</summary>
+		public SpringType SpringType = SpringType.Unsprung;
+		
+		/// <summary>The time with no action in seconds before the sprung step increases or decreases</summary>
+		public double SpringTime = 0;
+
+		/// <summary>The maximum notch a handle may spring to</summary>
+		public int MaxSpring;
+
+		internal double SpringTimer;
+
 		internal readonly TrainBase baseTrain;
 
 		public abstract void Update();
@@ -63,6 +74,14 @@ namespace TrainManager.Handles
 		public virtual void ApplyState(AirBrakeHandleState newState)
 		{
 
+		}
+
+		public virtual void ResetSpring()
+		{
+			if (SpringType > SpringType.AnyHandle)
+			{
+				SpringTime = TrainManagerBase.currentHost.InGameTime;
+			}
 		}
 
 		protected AbstractHandle(TrainBase Train)
