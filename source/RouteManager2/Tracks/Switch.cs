@@ -1,4 +1,7 @@
-﻿namespace RouteManager2.Tracks
+﻿using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
+
+namespace RouteManager2.Tracks
 {
 	/// <summary>Holds the data for a single switch</summary>
 	public class Switch
@@ -27,6 +30,17 @@
 				{
 					setTrack = i;
 				}
+			}
+		}
+
+		/// <summary>Toggles the switch to the next track</summary>
+		public void Toggle()
+		{
+			int oldTrack = currentlySetTrack();
+			setTrack++;
+			if (setTrack > availableTracks.Length - 1)
+			{
+				setTrack = 0;
 			}
 		}
 	}

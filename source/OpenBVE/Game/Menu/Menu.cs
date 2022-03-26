@@ -747,6 +747,16 @@ namespace OpenBve
 									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								}
 								break;
+							case MenuTag.ToggleSwitch:
+								Guid switchToToggle = (Guid)menuItem.Data;
+								if (switchToToggle == null || !Program.CurrentRoute.Switches.ContainsKey(switchToToggle))
+								{
+									break;
+								}
+								int oldTrack = Program.CurrentRoute.Switches[switchToToggle].currentlySetTrack();
+								Program.CurrentRoute.Switches[switchToToggle].Toggle();
+								Program.CurrentHost.AddMessage(MessageType.Information, false, "Switch " + switchToToggle + " changed from Track " + oldTrack + " to " + Program.CurrentRoute.Switches[switchToToggle].currentlySetTrack());
+								break;
 						}
 					}
 					else if (menu.Items[menu.Selection] is MenuOption)
