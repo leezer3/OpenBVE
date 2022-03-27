@@ -55,7 +55,7 @@ namespace TrainManager.Handles
 			}
 
 			// Spring return
-			if (SpringTime != -1)
+			if (SpringType != SpringType.Unsprung && SpringTime > 0)
 			{
 				if (TrainManagerBase.currentHost.InGameTime > SpringTimer)
 				{
