@@ -9,6 +9,8 @@ using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
+using Plugin.BMP;
+using Plugin.GIF;
 
 namespace Plugin {
 	public partial class Plugin {

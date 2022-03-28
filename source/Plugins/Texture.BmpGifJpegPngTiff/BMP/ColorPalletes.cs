@@ -1,6 +1,6 @@
 ﻿using OpenBveApi.Colors;
 
-namespace Plugin
+namespace Plugin.BMP
 {
 	internal static class ColorPalettes
 	{

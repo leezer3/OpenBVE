@@ -11,7 +11,7 @@ namespace Plugin {
 		// --- members ---
 		
 		/// <summary>The host that loaded the plugin.</summary>
-		private HostInterface CurrentHost = null;
+		internal static HostInterface CurrentHost = null;
 		/// <summary>The list of enabled hacks</summary>
 		internal static CompatabilityHacks EnabledHacks;
 		

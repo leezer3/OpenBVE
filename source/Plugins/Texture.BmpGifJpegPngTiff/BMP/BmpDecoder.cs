@@ -29,8 +29,9 @@ using OpenBveApi.Math;
 using System;
 using System.IO;
 using System.Text;
+using OpenBveApi.Hosts;
 
-namespace Plugin
+namespace Plugin.BMP
 {
 	internal class BmpDecoder : IDisposable
 	{
@@ -70,6 +71,8 @@ namespace Plugin
 		internal Color24[] ColorTable;
 		/// <summary>The bitmap format</summary>
 		internal BmpFormat Format;
+		/// <summary>Buffer containing data read from the file</summary>
+		internal byte[] buffer;
 
 		/// <summary>Reads a BMP file using this decoder</summary>
 		/// <param name="fileName">The file to read</param>
@@ -80,8 +83,12 @@ namespace Plugin
 			using (Stream fileReader = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
 				// HEADER
-				byte[] buffer = new byte[14];
-				fileReader.Read(buffer, 0, 14); // header
+				buffer = new byte[14];
+				if (fileReader.Read(buffer, 0, 14) != 4)
+				{
+					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Insufficient Header data in Bitmap file " + fileName);
+					return false;
+				}
 				string signature = Encoding.ASCII.GetString(buffer, 0, 2);
 				if (signature != "BM")
 				{
@@ -98,7 +105,11 @@ namespace Plugin
 
 				// INFO HEADER
 				buffer = new byte[4];
-				fileReader.Read(buffer,0 , 4);
+				if (fileReader.Read(buffer, 0, 4) != 4)
+				{
+					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Insufficient InfoHeader data in Bitmap file " + fileName);
+					return false;
+				}
 				int headerSize = ToInt32(buffer, 0);
 				switch (headerSize)
 				{
@@ -117,11 +128,15 @@ namespace Plugin
 						break;
 					default:
 						// Unknown header size
+						Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Unrecognised Header size of " + headerSize + " in Bitmap file " + fileName);
 						return false;
 
 				}
 				buffer = new byte[headerSize - 4];
-				fileReader.Read(buffer, 0, headerSize - 4);
+				if (fileReader.Read(buffer, 0, headerSize - 4) != headerSize - 4)
+				{
+					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Insufficient Header data in Bitmap file " + fileName);
+				}
 				
 
 				switch (Format)
@@ -195,6 +210,7 @@ namespace Plugin
 				
 				if (numPlanes != 1)
 				{
+					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid NumPlanes in Bitmap file " + fileName);
 					return false;
 				}
 				
@@ -207,15 +223,24 @@ namespace Plugin
 					 */
 
 					Format = BmpFormat.BmpVersion3;
+					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Bitmap V3 is not supported by this decoder in " + fileName);
 					return false;
 				}
 				
 				if (ImageSize == 0 && Format > BmpFormat.OS2v2)
 				{
 					// Compressed image size of zero should only be valid with uncompressed data, unless OS/2 bitmaps
+					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid compressed image size in Bitmap file " + fileName);
 					return false;
 				}
-				
+
+				if (TopDown && CompressionFormat != CompressionFormat.BI_RGB && CompressionFormat != CompressionFormat.BITFIELDS)
+				{
+					// Top down bitmap cannot be in compressed format
+					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "A TopDown bitmap cannot be compressed in Bitmap file " + fileName);
+					return false;
+				}
+
 				ColorTable = new Color24[ColorsUsed];
 				
 
@@ -224,7 +249,10 @@ namespace Plugin
 				{
 					int colorSize = Format == BmpFormat.OS2v1 ? 3 : 4;
 					buffer = new byte[ColorsUsed * colorSize];
-					fileReader.Read(buffer, 0, ColorsUsed * colorSize);
+					if (fileReader.Read(buffer, 0, ColorsUsed * colorSize) != ColorsUsed * colorSize)
+					{
+						Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Insufficient ColorTable data in Bitmap file " + fileName);
+					}
 					for (int currentColor = 0; currentColor < ColorsUsed; currentColor++)
 					{
 						int idx = currentColor * colorSize;
@@ -264,12 +292,12 @@ namespace Plugin
 				}
 				// PIXEL DATA
 				buffer = new byte[(int)fileReader.Length - (int)fileReader.Position];
+				// ReSharper disable once MustUseReturnValue
 				fileReader.Read(buffer, 0, (int)fileReader.Length - (int)fileReader.Position);
 
 				ImageData = new byte[Width * Height * 4];
 				int sourceIdx = 0;
 				int destIdx = 0;
-				bool availableData = true;
 				int currentLine = 0;
 				switch (CompressionFormat)
 				{
@@ -446,15 +474,13 @@ namespace Plugin
 						break;
 					case CompressionFormat.BI_RLE8:
 					case CompressionFormat.BI_RLE4:
-						/*
-						 * FIXME: This will currently be in scanline reversed order once working....
-						 */
-						while (availableData)
+						while (true)
 						{
 							int numPix = buffer[sourceIdx];
 							if (numPix > 128)
 							{
 								// Invalid run length
+								Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid pixel run length in Bitmap file " + fileName);
 								return false;
 							}
 
@@ -481,13 +507,7 @@ namespace Plugin
 										break;
 									case 1:
 										//EOF
-										while (destIdx < ImageData.Length)
-										{
-											ImageData[destIdx] = 0;
-											destIdx++;
-											availableData = false;
-										}
-										break;
+										return true;
 									case 2:
 										/*
 										 * Delta
@@ -506,38 +526,175 @@ namespace Plugin
 										sourceIdx++;
 										break;
 									default:
-										for (int i = 0; i < currentOp; i++)
+										int runLength = currentOp;
+										for (int i = 0; i < runLength; i++)
 										{
-											ImageData[destIdx] = currentOp;
-											destIdx++;
+											ImageData[destIdx] = buffer[sourceIdx];
+											ImageData[destIdx +1] = buffer[sourceIdx +1];
+											ImageData[destIdx + 2] = buffer[sourceIdx + 2];
+											ImageData[destIdx + 3] = byte.MaxValue;
+											sourceIdx += 3;
+											destIdx += 4;
 										}
+										sourceIdx = sourceIdx % 3 == 0 ? sourceIdx : sourceIdx + 3 - sourceIdx % 3;
 										break;
 								}
 							}
 							else
 							{
 								// Defines a repeating 2 pixel block for nPix
-								int leftNibble = buffer[sourceIdx] & 0x0F; // color of left pixel
-								int rightNibble = (buffer[sourceIdx] & 0xF0) >> 4; // color of right pixel
-								for (int i = 0; i < numPix; i++)
+								int leftPixel;
+								int rightPixel;
+								switch (CompressionFormat)
 								{
-									if (i % 2 == 0)
-									{
-										ImageData[destIdx] = ColorTable[leftNibble].R;
-										ImageData[destIdx + 1] = ColorTable[leftNibble].G;
-										ImageData[destIdx + 2] = ColorTable[leftNibble].B;
-										ImageData[destIdx + 3] = byte.MaxValue;
-									}
-									else
-									{
-										ImageData[destIdx] = ColorTable[rightNibble].R;
-										ImageData[destIdx + 1] = ColorTable[rightNibble].G;
-										ImageData[destIdx + 2] = ColorTable[rightNibble].B;
-									}
-									destIdx+= 4;
+									case CompressionFormat.BI_RLE4:
+										leftPixel = buffer[sourceIdx] & 0x0F; // color of left pixel
+										rightPixel = (buffer[sourceIdx] & 0xF0) >> 4; // color of right pixel
+										for (int i = 0; i < numPix; i++)
+										{
+											if (i % 2 == 0)
+											{
+												ImageData[destIdx] = ColorTable[leftPixel].R;
+												ImageData[destIdx + 1] = ColorTable[leftPixel].G;
+												ImageData[destIdx + 2] = ColorTable[leftPixel].B;
+												ImageData[destIdx + 3] = byte.MaxValue;
+											}
+											else
+											{
+												ImageData[destIdx] = ColorTable[rightPixel].R;
+												ImageData[destIdx + 1] = ColorTable[rightPixel].G;
+												ImageData[destIdx + 2] = ColorTable[rightPixel].B;
+											}
+
+											destIdx += 4;
+										}
+										break;
+									case CompressionFormat.BI_RLE8:
+										leftPixel = buffer[sourceIdx]; // color of left pixel
+										rightPixel = buffer[sourceIdx]; // color of right pixel
+										for (int i = 0; i < numPix; i++)
+										{
+											if (i % 2 == 0)
+											{
+												ImageData[destIdx] = ColorTable[leftPixel].R;
+												ImageData[destIdx + 1] = ColorTable[leftPixel].G;
+												ImageData[destIdx + 2] = ColorTable[leftPixel].B;
+												ImageData[destIdx + 3] = byte.MaxValue;
+											}
+											else
+											{
+												ImageData[destIdx] = ColorTable[rightPixel].R;
+												ImageData[destIdx + 1] = ColorTable[rightPixel].G;
+												ImageData[destIdx + 2] = ColorTable[rightPixel].B;
+												ImageData[destIdx + 3] = byte.MaxValue;
+											}
+											destIdx += 4;
+										}
+										break;
 								}
+								destIdx+= 4;
 							}
 							sourceIdx += 2;
+							if (sourceIdx >= buffer.Length)
+							{
+								break;
+							}
+						}
+						break;
+					case CompressionFormat.BI_RLE24:
+						while (true)
+						{
+							int numPix = buffer[sourceIdx];
+							sourceIdx++;
+							byte currentOp = buffer[sourceIdx];
+							if (numPix == 0)
+							{
+								int newPos;
+								switch (currentOp)
+								{
+									case 0:
+										//EOL
+										newPos = (currentLine + 1) * Width * 4;
+										/*
+										 * This may not actually be necessary
+										 * However, assume that an EOL may be issued with pixels still remaining in the line
+										 */
+										while (destIdx < newPos)
+										{
+											if (newPos > ImageData.Length)
+											{
+												return true;
+											}
+											ImageData[destIdx] = 0;
+											destIdx++;
+										}
+
+										sourceIdx++;
+										currentLine++;
+										break;
+									case 1:
+										//EOF
+										return true;
+									case 2:
+										/*
+										 * Delta
+										 * NOTE: Implementation specific 'quirk'
+										 * pixels between the current position and the delta are undefined
+										 * Let's set them to transparent for the moment
+										 */
+										int xPos = buffer[sourceIdx + 1];
+										int yPos = buffer[sourceIdx + 2];
+										newPos = (yPos * Width + xPos) * 4;
+										while (destIdx < newPos)
+										{
+											ImageData[destIdx] = 0;
+											destIdx++;
+										}
+										sourceIdx+= 3;
+										break;
+									default:
+										int runLength = currentOp;
+										sourceIdx++;
+										for (int i = 0; i < runLength; i++)
+										{
+											ImageData[destIdx] = buffer[sourceIdx + 2];
+											ImageData[destIdx + 1] = buffer[sourceIdx + 1];
+											ImageData[destIdx + 2] = buffer[sourceIdx];
+											ImageData[destIdx + 3] = byte.MaxValue;
+											sourceIdx += 3;
+											destIdx += 4;
+										}
+										// padding byte
+										if (runLength % 2 != 0)
+										{
+											sourceIdx++;
+										}
+										break;
+								}
+							}
+							else
+							{
+								int newPos = (currentLine + 1) * Width * 4;
+
+								byte red = buffer[sourceIdx + 2];
+								byte green = buffer[sourceIdx + 1];
+								byte blue = buffer[sourceIdx];
+								
+								for (int i = 0; i < numPix; i++)
+								{
+									ImageData[destIdx] = red;
+									ImageData[destIdx + 1] = green;
+									ImageData[destIdx + 2] = blue;
+									ImageData[destIdx + 3] = byte.MaxValue;
+									destIdx += 4;
+									if (destIdx > newPos)
+									{
+										break;
+									}
+								}
+
+								sourceIdx += 3;
+							}
 						}
 						break;
 				}
@@ -551,14 +708,21 @@ namespace Plugin
 		 * This is faster than using the BitConvertor as we don't have to init a new class every time we call it
 		 */
 
-		internal int ToInt16(byte[] buffer, int offset)
+		/// <summary>Gets an Int16 from the specified offset in a byte array</summary>
+		/// <param name="byteArray">The byte array</param>
+		/// <param name="offset">The starting offset of the Int16</param>
+		/// <returns></returns>
+		internal int ToInt16(byte[] byteArray, int offset)
 		{
-			return buffer[offset] | (buffer[offset + 1] << 8);
+			return byteArray[offset] | (byteArray[offset + 1] << 8);
 		}
 
-		internal int ToInt32(byte[] buffer, int offset)
+		/// <summary>Gets an Int32 from the specified offset in a byte array</summary>
+		/// <param name="byteArray">The byte array</param>
+		/// <param name="offset">The starting offset of the Int32</param>
+		internal int ToInt32(byte[] byteArray, int offset)
 		{
-			return (buffer[offset] & 0xFF) | ((buffer[offset + 1] & 0xFF) << 8) | ((buffer[offset + 2] & 0xFF) << 16) | ((buffer[offset + 3] & 0xFF) << 24);
+			return (byteArray[offset] & 0xFF) | ((byteArray[offset + 1] & 0xFF) << 8) | ((byteArray[offset + 2] & 0xFF) << 16) | ((byteArray[offset + 3] & 0xFF) << 24);
 		}
 
 		public void Dispose()

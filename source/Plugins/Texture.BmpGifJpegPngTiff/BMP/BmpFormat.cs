@@ -1,4 +1,4 @@
-﻿namespace Plugin
+﻿namespace Plugin.BMP
 {
 	internal enum BmpFormat
 	{

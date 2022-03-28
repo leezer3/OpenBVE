@@ -1,4 +1,4 @@
-﻿namespace Plugin
+﻿namespace Plugin.BMP
 {
 	/// <summary>Bits per pixel for the bitmap format</summary>
 	internal enum BitsPerPixel

@@ -1,4 +1,4 @@
-﻿namespace Plugin
+﻿namespace Plugin.BMP
 {
 	/// <summary>Compression format for the bitmap format</summary>
 	enum CompressionFormat
@@ -10,6 +10,8 @@
 		/// <summary>4bit RLE</summary>
 		BI_RLE4 = 2,
 		/// <summary>Bitfield encoded color data</summary>
-		BITFIELDS = 3
+		BITFIELDS = 3,
+		/// <summary>24bit RLE</summary>
+		BI_RLE24 = 4
 	}
 }
