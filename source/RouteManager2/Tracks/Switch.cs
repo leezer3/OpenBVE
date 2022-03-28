@@ -1,13 +1,13 @@
-﻿using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
-
-namespace RouteManager2.Tracks
+﻿namespace RouteManager2.Tracks
 {
 	/// <summary>Holds the data for a single switch</summary>
 	public class Switch
 	{
+		/// <summary>The type of switch</summary>
+		public SwitchType Type;
+
 		/// <summary>The currently set track</summary>
-		public int currentlySetTrack()
+		public int CurrentlySetTrack()
 		{
 			return availableTracks[setTrack];
 		}
@@ -20,8 +20,9 @@ namespace RouteManager2.Tracks
 		/// <summary>The track position</summary>
 		public readonly double TrackPosition;
 
-		public Switch(int[] tracks, int initialTrack, double trackPosition)
+		public Switch(int[] tracks, int initialTrack, double trackPosition, SwitchType type)
 		{
+			Type = type;
 			availableTracks = tracks;
 			TrackPosition = trackPosition;
 			for (int i = 0; i < availableTracks.Length; i++)
@@ -36,7 +37,6 @@ namespace RouteManager2.Tracks
 		/// <summary>Toggles the switch to the next track</summary>
 		public void Toggle()
 		{
-			int oldTrack = currentlySetTrack();
 			setTrack++;
 			if (setTrack > availableTracks.Length - 1)
 			{

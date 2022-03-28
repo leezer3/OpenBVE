@@ -31,6 +31,8 @@ namespace OpenBve
 		private static PackageOperation currentOperation;
 		private static bool packagePreview;
 		private static string installedFiles;
+		private static readonly Picturebox switchMainPictureBox = new Picturebox(Program.Renderer);
+		private static readonly Picturebox switchSettingPictureBox = new Picturebox(Program.Renderer);
 
 		private static void packageWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{

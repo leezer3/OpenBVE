@@ -577,8 +577,12 @@ namespace CsvRwRouteParser
 							Guid newSwitch = Guid.NewGuid();
 							if (Data.Blocks[i].Switches[j].Trailing == false)
 							{
-								
-								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new int[] { j, Data.Blocks[i].Switches[j].SecondTrack }, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition));
+								SwitchType type = SwitchType.LeftHanded;
+								if (Data.Blocks[i + 1].Rails[j].RailStart.X < Data.Blocks[i + 1].Rails[Data.Blocks[i].Switches[j].SecondTrack].RailStart.X)
+								{
+									type = SwitchType.RightHanded;
+								}
+								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new int[] { j, Data.Blocks[i].Switches[j].SecondTrack }, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type));
 								//Assign facing switch event
 								int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
 								Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);
@@ -590,7 +594,12 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new int[] { Data.Blocks[i].Switches[j].SecondTrack, j }, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition));
+								SwitchType type = SwitchType.LeftHanded;
+								if (Data.Blocks[i - 1].Rails[j].RailStart.X > Data.Blocks[i - 1].Rails[Data.Blocks[i].Switches[j].SecondTrack].RailStart.X)
+								{
+									type = SwitchType.RightHanded;
+								}
+								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new int[] { Data.Blocks[i].Switches[j].SecondTrack, j }, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type));
 								//Assign trailing switch event
 								int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
 								Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);

@@ -87,6 +87,7 @@
     <Compile Include="Stations\RouteStation.cs" />
     <Compile Include="Stations\Station.Stop.cs" />
     <Compile Include="Tracks\Switch.cs" />
+    <Compile Include="Tracks\SwitchType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">

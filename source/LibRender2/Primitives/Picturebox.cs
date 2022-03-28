@@ -20,6 +20,8 @@ namespace LibRender2.Primitives
 		/// <summary>The stored size for the textbox</summary>
 		public Vector2 Size;
 
+		private bool flipX;
+		private bool flipY;
 
 		public Picturebox(BaseRenderer renderer)
 		{
@@ -84,10 +86,25 @@ namespace LibRender2.Primitives
 					double ratioH = Size.Y / Texture.Height;
 					double newRatio = ratioW < ratioH ? ratioW : ratioH;
 					newSize = new Vector2(Texture.Width, Texture.Height) * newRatio;
-					Renderer.Rectangle.DrawAlpha(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White);
+					OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp;
+					if (flipX)
+					{
+						wrapMode = OpenGlTextureWrapMode.RepeatClamp;
+					}
+
+					if (flipY)
+					{
+						wrapMode = wrapMode == OpenGlTextureWrapMode.RepeatClamp ? OpenGlTextureWrapMode.RepeatRepeat : OpenGlTextureWrapMode.ClampRepeat;
+					}
+					Renderer.Rectangle.DrawAlpha(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White, new Vector2(flipX ? -1 : 1,flipY ? -1 : 1), wrapMode);
 					break;
 			}
-			
+		}
+
+		public void Flip(bool FlipX, bool FlipY)
+		{
+			flipX = FlipX;
+			flipY = FlipY;
 		}
 
 	}

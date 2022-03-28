@@ -32,12 +32,12 @@ namespace RouteManager2.Events
 			{
 				case EventTriggerType.FrontCarFrontAxle:
 				case EventTriggerType.OtherCarFrontAxle:
-					trackFollower.Car.FrontAxle.Follower.TrackIndex = currentRoute.Switches[Index].currentlySetTrack();
+					trackFollower.Car.FrontAxle.Follower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack();
 					trackFollower.Car.FrontAxle.Follower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.RearCarRearAxle:
 				case EventTriggerType.OtherCarRearAxle:
-					trackFollower.Car.RearAxle.Follower.TrackIndex = currentRoute.Switches[Index].currentlySetTrack();
+					trackFollower.Car.RearAxle.Follower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack();
 					trackFollower.Car.RearAxle.Follower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.TrainFront:
@@ -82,7 +82,7 @@ namespace RouteManager2.Events
 			{
 				case EventTriggerType.FrontCarFrontAxle:
 				case EventTriggerType.OtherCarFrontAxle:
-					if (derailments == false || currentRoute.Switches[Index].currentlySetTrack() == trackFollower.Car.FrontAxle.Follower.TrackIndex)
+					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack() == trackFollower.Car.FrontAxle.Follower.TrackIndex)
 					{
 						trackFollower.Car.FrontAxle.Follower.TrackIndex = toeRail;
 						trackFollower.Car.FrontAxle.Follower.UpdateWorldCoordinates(false);
@@ -95,7 +95,7 @@ namespace RouteManager2.Events
 					break;
 				case EventTriggerType.RearCarRearAxle:
 				case EventTriggerType.OtherCarRearAxle:
-					if (derailments == false || currentRoute.Switches[Index].currentlySetTrack() == trackFollower.Car.RearAxle.Follower.TrackIndex)
+					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack() == trackFollower.Car.RearAxle.Follower.TrackIndex)
 					{
 						trackFollower.Car.RearAxle.Follower.TrackIndex = toeRail;
 						trackFollower.Car.RearAxle.Follower.UpdateWorldCoordinates(false);

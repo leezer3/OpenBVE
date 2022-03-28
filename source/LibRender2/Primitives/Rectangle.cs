@@ -32,16 +32,17 @@ namespace LibRender2.Primitives
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
 		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
-		public void DrawAlpha(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null)
+		/// <param name="wrapMode">The OpenGL texture wrapping mode to use</param>
+		public void DrawAlpha(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp)
 		{
 			renderer.UnsetBlendFunc();
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 			GL.DepthMask(true);
-			Draw(texture, point, size, color, textureCoordinates);
+			Draw(texture, point, size, color, textureCoordinates, wrapMode);
 			renderer.SetBlendFunc();
 			renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 			GL.DepthMask(false);
-			Draw(texture, point, size, color, textureCoordinates);
+			Draw(texture, point, size, color, textureCoordinates, wrapMode);
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 		}
 
@@ -51,26 +52,27 @@ namespace LibRender2.Primitives
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
 		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
-		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null)
+		/// <param name="wrapMode">The OpenGL texture wrapping mode to use</param>
+		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp)
 		{
 			if (renderer.AvailableNewRenderer && Shader != null)
 			{
 				if (textureCoordinates == null)
 				{
-					DrawWithShader(texture, point, size, color, Vector2.One);
+					DrawWithShader(texture, point, size, color, Vector2.One, wrapMode);
 				}
 				else
 				{
-					DrawWithShader(texture, point, size, color, (Vector2)textureCoordinates);
+					DrawWithShader(texture, point, size, color, (Vector2)textureCoordinates, wrapMode);
 				}
 			}
 			else
 			{
-				DrawImmediate(texture, point, size, color, textureCoordinates);	
+				DrawImmediate(texture, point, size, color, textureCoordinates, wrapMode);	
 			}
 		}
 
-		private void DrawImmediate(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2? textureCoordinates = null)
+		private void DrawImmediate(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2? textureCoordinates = null, OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp)
 		{
 			renderer.LastBoundTexture = null;
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
@@ -90,7 +92,7 @@ namespace LibRender2.Primitives
 				}
 
 			}
-			if (texture == null || !renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
+			if (texture == null || !renderer.currentHost.LoadTexture(ref texture, wrapMode))
 			{
 				GL.Disable(EnableCap.Texture2D);
 
@@ -109,7 +111,7 @@ namespace LibRender2.Primitives
 			else
 			{
 				GL.Enable(EnableCap.Texture2D);
-				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)wrapMode].Name);
 
 				if (color.HasValue)
 				{
@@ -150,13 +152,13 @@ namespace LibRender2.Primitives
 			GL.PopMatrix();
 		}
 
-		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates)
+		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp)
 		{
 			Shader.Activate();
-			if (texture != null && renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
+			if (texture != null && renderer.currentHost.LoadTexture(ref texture, wrapMode))
 			{
-				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
-				renderer.LastBoundTexture = texture.OpenGlTextures[(int) OpenGlTextureWrapMode.ClampClamp];
+				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)wrapMode].Name);
+				renderer.LastBoundTexture = texture.OpenGlTextures[(int) wrapMode];
 			}
 			else
 			{

@@ -142,6 +142,7 @@ namespace OpenBve
 				}
 			}
 			int quarterWidth = (int) (Program.Renderer.Screen.Width / 4.0);
+			int quarterHeight = (int)(Program.Renderer.Screen.Height / 4.0);
 			int descriptionLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
 			int descriptionWidth = quarterWidth + quarterWidth / 2;
 			int descriptionHeight = descriptionWidth;
@@ -155,6 +156,13 @@ namespace OpenBve
 			routePictureBox.Location = new Vector2(imageLoc, 0);
 			routePictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			routePictureBox.BackgroundColor = Color128.White;
+			switchMainPictureBox.Location = new Vector2(imageLoc, quarterHeight);
+			switchMainPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
+			switchMainPictureBox.BackgroundColor = Color128.White;
+			switchSettingPictureBox.Location = new Vector2(imageLoc, quarterHeight * 2);
+			switchSettingPictureBox.Size = new Vector2(quarterWidth / 4.0, quarterWidth / 4.0);
+			switchSettingPictureBox.BackgroundColor = Color128.Transparent;
+
 			LogoPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			LogoPictureBox.Size = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Width / 2.0);
 			LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
@@ -753,9 +761,9 @@ namespace OpenBve
 								{
 									break;
 								}
-								int oldTrack = Program.CurrentRoute.Switches[switchToToggle].currentlySetTrack();
+								int oldTrack = Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack();
 								Program.CurrentRoute.Switches[switchToToggle].Toggle();
-								Program.CurrentHost.AddMessage(MessageType.Information, false, "Switch " + switchToToggle + " changed from Track " + oldTrack + " to " + Program.CurrentRoute.Switches[switchToToggle].currentlySetTrack());
+								Program.CurrentHost.AddMessage(MessageType.Information, false, "Switch " + switchToToggle + " changed from Track " + oldTrack + " to " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack());
 								break;
 						}
 					}
@@ -1032,6 +1040,10 @@ namespace OpenBve
 							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
 						}
 					}
+					break;
+				case MenuType.ChangeSwitch:
+					switchMainPictureBox.Draw();
+					switchSettingPictureBox.Draw();
 					break;
 			}
 			
