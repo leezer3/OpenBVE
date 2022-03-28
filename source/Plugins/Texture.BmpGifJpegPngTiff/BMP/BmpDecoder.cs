@@ -84,7 +84,7 @@ namespace Plugin.BMP
 			{
 				// HEADER
 				buffer = new byte[14];
-				if (fileReader.Read(buffer, 0, 14) != 4)
+				if (fileReader.Read(buffer, 0, 14) != 14)
 				{
 					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Insufficient Header data in Bitmap file " + fileName);
 					return false;
@@ -530,7 +530,7 @@ namespace Plugin.BMP
 										for (int i = 0; i < runLength; i++)
 										{
 											ImageData[destIdx] = buffer[sourceIdx];
-											ImageData[destIdx +1] = buffer[sourceIdx +1];
+											ImageData[destIdx + 1] = buffer[sourceIdx +1];
 											ImageData[destIdx + 2] = buffer[sourceIdx + 2];
 											ImageData[destIdx + 3] = byte.MaxValue;
 											sourceIdx += 3;
