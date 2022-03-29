@@ -73,6 +73,12 @@ namespace Plugin.BMP
 		internal BmpFormat Format;
 		/// <summary>Buffer containing data read from the file</summary>
 		internal byte[] buffer;
+		/// <summary>Holds the bytes for the current row when decoding RLE data</summary>
+		private byte[] rowBytes;
+		/// <summary>The index of the current row</summary>
+		private int currentRow;
+		/// <summary>The index of the pixel in the current row</summary>
+		private int rowPixel;
 
 		/// <summary>Reads a BMP file using this decoder</summary>
 		/// <param name="fileName">The file to read</param>
@@ -602,33 +608,27 @@ namespace Plugin.BMP
 						}
 						break;
 					case CompressionFormat.BI_RLE24:
+						rowBytes = new byte[Width * 4];
+						currentRow = TopDown ? 0 : Height - 1;
+						
+						rowPixel = 0;
 						while (true)
 						{
 							int numPix = buffer[sourceIdx];
 							sourceIdx++;
 							byte currentOp = buffer[sourceIdx];
+							if (rowPixel > Width)
+							{
+								// Run off the end of the row with pixel data. Shouldn't happen, but let's handle anyway
+								StartNextRow();
+							}
 							if (numPix == 0)
 							{
-								int newPos;
 								switch (currentOp)
 								{
 									case 0:
 										//EOL
-										newPos = (currentLine + 1) * Width * 4;
-										/*
-										 * This may not actually be necessary
-										 * However, assume that an EOL may be issued with pixels still remaining in the line
-										 */
-										while (destIdx < newPos)
-										{
-											if (newPos > ImageData.Length)
-											{
-												return true;
-											}
-											ImageData[destIdx] = 0;
-											destIdx++;
-										}
-
+										StartNextRow();
 										sourceIdx++;
 										currentLine++;
 										break;
@@ -643,13 +643,20 @@ namespace Plugin.BMP
 										 * Let's set them to transparent for the moment
 										 */
 										int xPos = buffer[sourceIdx + 1];
-										int yPos = buffer[sourceIdx + 2];
-										newPos = (yPos * Width + xPos) * 4;
-										while (destIdx < newPos)
+										int yPos = buffer[sourceIdx + 2] - 1;
+
+										if (!TopDown)
 										{
-											ImageData[destIdx] = 0;
-											destIdx++;
+											yPos = Height - yPos;
 										}
+
+										if (yPos != currentRow)
+										{
+											StartNextRow();
+											rowPixel = xPos;
+											currentRow = yPos;
+										}
+
 										sourceIdx+= 3;
 										break;
 									default:
@@ -657,12 +664,18 @@ namespace Plugin.BMP
 										sourceIdx++;
 										for (int i = 0; i < runLength; i++)
 										{
-											ImageData[destIdx] = buffer[sourceIdx + 2];
-											ImageData[destIdx + 1] = buffer[sourceIdx + 1];
-											ImageData[destIdx + 2] = buffer[sourceIdx];
-											ImageData[destIdx + 3] = byte.MaxValue;
+											if (rowPixel > Width)
+											{
+												StartNextRow();
+											}
+											int startByte = rowPixel * 4;
+											rowBytes[startByte] = buffer[sourceIdx + 2];
+											rowBytes[startByte + 1] = buffer[sourceIdx + 1];
+											rowBytes[startByte + 2] = buffer[sourceIdx];
+											rowBytes[startByte + 3] = byte.MaxValue;
+											
+											rowPixel++;
 											sourceIdx += 3;
-											destIdx += 4;
 										}
 										// padding byte
 										if (runLength % 2 != 0)
@@ -674,23 +687,18 @@ namespace Plugin.BMP
 							}
 							else
 							{
-								int newPos = (currentLine + 1) * Width * 4;
-
-								byte red = buffer[sourceIdx + 2];
-								byte green = buffer[sourceIdx + 1];
-								byte blue = buffer[sourceIdx];
-								
 								for (int i = 0; i < numPix; i++)
 								{
-									ImageData[destIdx] = red;
-									ImageData[destIdx + 1] = green;
-									ImageData[destIdx + 2] = blue;
-									ImageData[destIdx + 3] = byte.MaxValue;
-									destIdx += 4;
-									if (destIdx > newPos)
+									if (rowPixel > Width)
 									{
-										break;
+										StartNextRow();
 									}
+									int startByte = rowPixel * 4;
+									rowBytes[startByte] = buffer[sourceIdx + 2];
+									rowBytes[startByte + 1] = buffer[sourceIdx + 1];
+									rowBytes[startByte + 2] = buffer[sourceIdx];
+									rowBytes[startByte + 3] = byte.MaxValue;
+									rowPixel++;
 								}
 
 								sourceIdx += 3;
@@ -701,6 +709,22 @@ namespace Plugin.BMP
 			}
 
 			return true;
+		}
+
+		/// <summary>Places the current row onto the pixel stack and starts a new row</summary>
+		private void StartNextRow()
+		{
+			Array.Copy(rowBytes, 0, ImageData, currentRow * Width * 4, rowBytes.Length);
+			Array.Clear(rowBytes,0, rowBytes.Length);
+			if (TopDown)
+			{
+				currentRow++;
+			}
+			else
+			{
+				currentRow--;
+			}
+			rowPixel = 0;
 		}
 
 		/*
