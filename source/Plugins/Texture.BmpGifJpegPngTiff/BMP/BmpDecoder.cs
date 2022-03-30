@@ -304,7 +304,6 @@ namespace Plugin.BMP
 				ImageData = new byte[Width * Height * 4];
 				int sourceIdx = 0;
 				int destIdx = 0;
-				int currentLine = 0;
 				switch (CompressionFormat)
 				{
 					case CompressionFormat.BI_RGB:
@@ -478,135 +477,8 @@ namespace Plugin.BMP
 								break;
 						}
 						break;
-					case CompressionFormat.BI_RLE8:
 					case CompressionFormat.BI_RLE4:
-						while (true)
-						{
-							int numPix = buffer[sourceIdx];
-							if (numPix > 128)
-							{
-								// Invalid run length
-								Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid pixel run length in Bitmap file " + fileName);
-								return false;
-							}
-
-							if (numPix == 0)
-							{
-								// Escape
-								int newPos;
-								byte currentOp = buffer[sourceIdx + 1];
-								switch (currentOp)
-								{
-									case 0:
-										//EOL
-										newPos = (currentLine + 1) * Width;
-										/*
-										 * This may not actually be necessary
-										 * However, assume that an EOL may be issued with pixels still remaining in the line
-										 */
-										while (destIdx < newPos)
-										{
-											ImageData[destIdx] = 0;
-											destIdx++;
-										}
-										currentLine++;
-										break;
-									case 1:
-										//EOF
-										return true;
-									case 2:
-										/*
-										 * Delta
-										 * NOTE: Implementation specific 'quirk'
-										 * pixels between the current position and the delta are undefined
-										 * Let's set them to transparent for the moment
-										 */
-										int xPos = buffer[sourceIdx + 2] & 0x0F;
-										int yPos = (buffer[sourceIdx + 2] & 0xF0) >> 4;
-										newPos = yPos * Width + xPos;
-										while (destIdx < newPos)
-										{
-											ImageData[destIdx] = 0;
-											destIdx++;
-										}
-										sourceIdx++;
-										break;
-									default:
-										int runLength = currentOp;
-										for (int i = 0; i < runLength; i++)
-										{
-											ImageData[destIdx] = buffer[sourceIdx];
-											ImageData[destIdx + 1] = buffer[sourceIdx +1];
-											ImageData[destIdx + 2] = buffer[sourceIdx + 2];
-											ImageData[destIdx + 3] = byte.MaxValue;
-											sourceIdx += 3;
-											destIdx += 4;
-										}
-										sourceIdx = sourceIdx % 3 == 0 ? sourceIdx : sourceIdx + 3 - sourceIdx % 3;
-										break;
-								}
-							}
-							else
-							{
-								// Defines a repeating 2 pixel block for nPix
-								int leftPixel;
-								int rightPixel;
-								switch (CompressionFormat)
-								{
-									case CompressionFormat.BI_RLE4:
-										leftPixel = buffer[sourceIdx] & 0x0F; // color of left pixel
-										rightPixel = (buffer[sourceIdx] & 0xF0) >> 4; // color of right pixel
-										for (int i = 0; i < numPix; i++)
-										{
-											if (i % 2 == 0)
-											{
-												ImageData[destIdx] = ColorTable[leftPixel].R;
-												ImageData[destIdx + 1] = ColorTable[leftPixel].G;
-												ImageData[destIdx + 2] = ColorTable[leftPixel].B;
-												ImageData[destIdx + 3] = byte.MaxValue;
-											}
-											else
-											{
-												ImageData[destIdx] = ColorTable[rightPixel].R;
-												ImageData[destIdx + 1] = ColorTable[rightPixel].G;
-												ImageData[destIdx + 2] = ColorTable[rightPixel].B;
-											}
-
-											destIdx += 4;
-										}
-										break;
-									case CompressionFormat.BI_RLE8:
-										leftPixel = buffer[sourceIdx]; // color of left pixel
-										rightPixel = buffer[sourceIdx]; // color of right pixel
-										for (int i = 0; i < numPix; i++)
-										{
-											if (i % 2 == 0)
-											{
-												ImageData[destIdx] = ColorTable[leftPixel].R;
-												ImageData[destIdx + 1] = ColorTable[leftPixel].G;
-												ImageData[destIdx + 2] = ColorTable[leftPixel].B;
-												ImageData[destIdx + 3] = byte.MaxValue;
-											}
-											else
-											{
-												ImageData[destIdx] = ColorTable[rightPixel].R;
-												ImageData[destIdx + 1] = ColorTable[rightPixel].G;
-												ImageData[destIdx + 2] = ColorTable[rightPixel].B;
-												ImageData[destIdx + 3] = byte.MaxValue;
-											}
-											destIdx += 4;
-										}
-										break;
-								}
-								destIdx+= 4;
-							}
-							sourceIdx += 2;
-							if (sourceIdx >= buffer.Length)
-							{
-								break;
-							}
-						}
-						break;
+					case CompressionFormat.BI_RLE8:
 					case CompressionFormat.BI_RLE24:
 						rowBytes = new byte[Width * 4];
 						currentRow = TopDown ? 0 : Height - 1;
@@ -616,6 +488,10 @@ namespace Plugin.BMP
 						{
 							int numPix = buffer[sourceIdx];
 							sourceIdx++;
+							if (sourceIdx > buffer.Length - 1)
+							{
+								break;
+							}
 							byte currentOp = buffer[sourceIdx];
 							if (rowPixel > Width)
 							{
@@ -630,7 +506,6 @@ namespace Plugin.BMP
 										//EOL
 										StartNextRow();
 										sourceIdx++;
-										currentLine++;
 										break;
 									case 1:
 										//EOF
@@ -662,46 +537,133 @@ namespace Plugin.BMP
 									default:
 										int runLength = currentOp;
 										sourceIdx++;
-										for (int i = 0; i < runLength; i++)
+										switch (CompressionFormat)
 										{
-											if (rowPixel > Width)
-											{
-												StartNextRow();
-											}
-											int startByte = rowPixel * 4;
-											rowBytes[startByte] = buffer[sourceIdx + 2];
-											rowBytes[startByte + 1] = buffer[sourceIdx + 1];
-											rowBytes[startByte + 2] = buffer[sourceIdx];
-											rowBytes[startByte + 3] = byte.MaxValue;
+											case CompressionFormat.BI_RLE4:
+												for (int i = 0; i < runLength; i++)
+												{
+													int pix = (byte)((buffer[sourceIdx] >> 4) & 0xF);
+													if (i % 2 != 0)
+													{
+														pix = (byte)(buffer[sourceIdx] & 0xF);
+														sourceIdx++;
+													}
+													if (rowPixel > Width - 1)
+													{
+														StartNextRow();
+													}
+
+													
+													int startByte = rowPixel * 4;
+													if (pix > ColorTable.Length - 1)
+													{
+														rowBytes[startByte] = byte.MinValue;
+														rowBytes[startByte + 1] = byte.MinValue;
+														rowBytes[startByte + 2] = byte.MinValue;
+														rowBytes[startByte + 3] = byte.MaxValue;
+													}
+													else
+													{
+														rowBytes[startByte] = ColorTable[pix].R;
+														rowBytes[startByte + 1] = ColorTable[pix].G;
+														rowBytes[startByte + 2] = ColorTable[pix].B;
+														rowBytes[startByte + 3] = byte.MaxValue;
+													}
+													rowPixel++;
+												}
+
+												sourceIdx++;
+												sourceIdx = sourceIdx % 2 == 0 ? sourceIdx : sourceIdx + 2 - sourceIdx % 2;
+												break;
+											case CompressionFormat.BI_RLE24:
+												for (int i = 0; i < runLength; i++)
+												{
+													if (rowPixel > Width - 1)
+													{
+														StartNextRow();
+														sourceIdx++;
+														break;
+													}
+													int startByte = rowPixel * 4;
+													rowBytes[startByte] = buffer[sourceIdx + 2];
+													rowBytes[startByte + 1] = buffer[sourceIdx + 1];
+													rowBytes[startByte + 2] = buffer[sourceIdx];
+													rowBytes[startByte + 3] = byte.MaxValue;
 											
-											rowPixel++;
-											sourceIdx += 3;
+													rowPixel++;
+													sourceIdx += 3;
+												}
+												// padding byte
+												if (runLength % 2 != 0)
+												{
+													sourceIdx++;
+												}
+												break;
 										}
-										// padding byte
-										if (runLength % 2 != 0)
-										{
-											sourceIdx++;
-										}
+										
 										break;
 								}
 							}
 							else
 							{
-								for (int i = 0; i < numPix; i++)
+								switch (CompressionFormat)
 								{
-									if (rowPixel > Width)
-									{
-										StartNextRow();
-									}
-									int startByte = rowPixel * 4;
-									rowBytes[startByte] = buffer[sourceIdx + 2];
-									rowBytes[startByte + 1] = buffer[sourceIdx + 1];
-									rowBytes[startByte + 2] = buffer[sourceIdx];
-									rowBytes[startByte + 3] = byte.MaxValue;
-									rowPixel++;
-								}
+									case CompressionFormat.BI_RLE4:
+									case CompressionFormat.BI_RLE8:
+										int leftPixel = buffer[sourceIdx];
+										int rightPixel = buffer[sourceIdx];
+										if (CompressionFormat == CompressionFormat.BI_RLE4)
+										{
+											leftPixel &= 0x0F; // upper 4 bytes
+											rightPixel = (rightPixel & 0xF0) >> 4; // lower 4 bytes
+										}
+										
+										for (int i = 0; i < numPix; i++)
+										{
+											if (rowPixel > Width - 1)
+											{
+												StartNextRow();
+											}
 
-								sourceIdx += 3;
+											int startByte = rowPixel * 4;
+											int pix = i % 2 == 0 ? rightPixel : leftPixel;
+											if (pix > ColorTable.Length - 1)
+											{
+												rowBytes[startByte] = byte.MinValue;
+												rowBytes[startByte + 1] = byte.MinValue;
+												rowBytes[startByte + 2] = byte.MinValue;
+												rowBytes[startByte + 3] = byte.MaxValue;
+											}
+											else
+											{
+												rowBytes[startByte] = ColorTable[pix].R;
+												rowBytes[startByte + 1] = ColorTable[pix].G;
+												rowBytes[startByte + 2] = ColorTable[pix].B;
+												rowBytes[startByte + 3] = byte.MaxValue;
+											}
+											rowPixel++;
+										}
+										sourceIdx++;
+										//sourceIdx = sourceIdx % 2 == 0 ? sourceIdx : sourceIdx + 2 - sourceIdx % 2;
+										break;
+									case CompressionFormat.BI_RLE24:
+										for (int i = 0; i < numPix; i++)
+										{
+											if (rowPixel > Width - 1)
+											{
+												StartNextRow();
+											}
+
+											int startByte = rowPixel * 4;
+											rowBytes[startByte] = buffer[sourceIdx + 2];
+											rowBytes[startByte + 1] = buffer[sourceIdx + 1];
+											rowBytes[startByte + 2] = buffer[sourceIdx];
+											rowBytes[startByte + 3] = byte.MaxValue;
+											rowPixel++;
+										}
+										sourceIdx += 3;
+										break;
+								}
 							}
 						}
 						break;
@@ -714,6 +676,11 @@ namespace Plugin.BMP
 		/// <summary>Places the current row onto the pixel stack and starts a new row</summary>
 		private void StartNextRow()
 		{
+			if (currentRow < 0 || currentRow > Height -1)
+			{
+				rowPixel = 0;
+				return;
+			}
 			Array.Copy(rowBytes, 0, ImageData, currentRow * Width * 4, rowBytes.Length);
 			Array.Clear(rowBytes,0, rowBytes.Length);
 			if (TopDown)
