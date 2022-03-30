@@ -85,7 +85,7 @@ namespace CsvRwRouteParser
 				case TrainCommand.Folder:
 				case TrainCommand.File:
 				{
-					if (Plugin.CurrentOptions.EnableBveTsHacks)
+					if (Plugin.CurrentOptions.EnableBveTsHacks && Arguments.Length > 0)
 					{
 						// BVE seems to allow a relative path to the train from the routefile...
 						if (Arguments[0].StartsWith(@"..\..\..\BVE\Train\", StringComparison.InvariantCultureIgnoreCase))
