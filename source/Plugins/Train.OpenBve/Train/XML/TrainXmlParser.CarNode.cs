@@ -463,7 +463,7 @@ namespace Train.OpenBve
 						doorWidth *= 1000.0;
 						doorTolerance *= 1000.0;
 						Train.Cars[Car].Doors[0] = new Door(-1, doorWidth, doorTolerance);
-						Train.Cars[Car].Doors[0] = new Door(1, doorWidth, doorTolerance);
+						Train.Cars[Car].Doors[1] = new Door(1, doorWidth, doorTolerance);
 						break;
 					case "cargo":
 						switch (c.InnerText.ToLowerInvariant())
