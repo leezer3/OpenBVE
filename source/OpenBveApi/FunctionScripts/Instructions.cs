@@ -24,7 +24,7 @@
 		Doors, DoorsIndex,
 		LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 		LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
-		LeftDoorButton, RightDoorButton, PilotLamp,
+		LeftDoorButton, RightDoorButton, PilotLamp, Headlights,
 		ReverserNotch, PowerNotch, PowerNotches, LocoBrakeNotch, LocoBrakeNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon, PrimaryKlaxon, SecondaryKlaxon, MusicKlaxon,
 		HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 		BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,

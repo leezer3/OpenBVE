@@ -595,6 +595,10 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.StationAdjustAlarm;
 							n++; s++; if (s >= m) m = s; break;
+						case "headlights":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.Headlights;
+							n++; s++; if (s >= m) m = s; break;
 						// train: handles
 						case "reversernotch":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);

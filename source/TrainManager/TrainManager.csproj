@@ -125,6 +125,7 @@
     <Compile Include="Train\CommandEntry.cs" />
     <Compile Include="Train\Doors.cs" />
     <Compile Include="Train\DriverBody.cs" />
+    <Compile Include="Train\LightSource.cs" />
     <Compile Include="Train\Horn.cs" />
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\Station.cs" />
