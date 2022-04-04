@@ -141,7 +141,7 @@ namespace Train.OpenBve
 							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[AccelerationCurves.Length];
 							for (int i = 0; i < AccelerationCurves.Length; i++)
 							{
-								Train.Cars[Car].Specs.AccelerationCurves[i] = AccelerationCurves[i].Clone(AccelerationCurves[i].Multiplier);
+								Train.Cars[Car].Specs.AccelerationCurves[i] = AccelerationCurves[i].Clone();
 							}
 						}
 						else
@@ -416,7 +416,7 @@ namespace Train.OpenBve
 										break;
 									case "accelerationcurves":
 										CopyAccelerationCurves = false;
-										Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(c, fileName);
+										Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(cc, fileName);
 										break;
 								}
 							}

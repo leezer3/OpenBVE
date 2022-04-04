@@ -44,7 +44,7 @@ namespace Train.OpenBve
 						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)
 						{
 							BveAccelerationCurve c = (BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
-							AccelerationCurves[j] = c.Clone(c.Multiplier);
+							AccelerationCurves[j] = c.Clone();
 						}
 					}
 				}
