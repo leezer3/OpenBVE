@@ -531,6 +531,7 @@ namespace OpenBve {
 				// This gets us a much better Unicode glyph set
 				SetFont(this.Controls, "Arial Unicode MS");
 			}
+			radiobuttonStart_CheckedChanged(this, EventArgs.Empty); // Mono mucks up the button colors and selections if non-default color and we don't reset them
 		}
 
 		public static void SetFont(Control.ControlCollection ctrls, string fontName)

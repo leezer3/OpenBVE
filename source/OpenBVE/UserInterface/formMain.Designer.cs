@@ -2987,7 +2987,7 @@ namespace OpenBve {
 			// 
 			// panelPanels
 			// 
-			this.panelPanels.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
+			this.panelPanels.BackColor = System.Drawing.Color.Gray;
 			this.panelPanels.Controls.Add(this.radioButtonPackages);
 			this.panelPanels.Controls.Add(this.labelPanelsBottom);
 			this.panelPanels.Controls.Add(this.radiobuttonOptions);
