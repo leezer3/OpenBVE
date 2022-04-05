@@ -3363,7 +3363,7 @@ namespace CsvRwRouteParser
 						}
 
 						int idx1 = 0;
-						if (Arguments.Length >= 1 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out idx1))
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out idx1))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							break;
@@ -3376,7 +3376,7 @@ namespace CsvRwRouteParser
 						}
 
 						int initialSetting = idx;
-						if (Arguments.Length >= 1 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out initialSetting))
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out initialSetting))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Initial setting for Switch is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							break;
@@ -3388,6 +3388,19 @@ namespace CsvRwRouteParser
 							initialSetting = idx;
 						}
 
+						bool springReturn = Plugin.CurrentOptions.Derailments;
+						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !bool.TryParse(Arguments[3], out springReturn))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Spring return setting for Switch is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+
+						string switchName = string.Empty;
+
+						if (Arguments.Length >= 5 && Arguments[4].Length > 0)
+						{
+							switchName = Arguments[4];
+						}
+
 						if (Data.Blocks[BlockIndex].Switches.Length <= idx)
 						{
 							Array.Resize(ref Data.Blocks[BlockIndex].Switches, idx + 1);
@@ -3397,7 +3410,9 @@ namespace CsvRwRouteParser
 						{
 							SecondTrack = idx1,
 							InitialSetting = initialSetting,
-							Trailing = trailing
+							Trailing = trailing,
+							SpringReturn = springReturn,
+							Name = switchName
 						};
 					}
 

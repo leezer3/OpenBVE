@@ -20,7 +20,9 @@
 		/// <summary>The track position</summary>
 		public readonly double TrackPosition;
 
-		public Switch(int[] tracks, int initialTrack, double trackPosition, SwitchType type)
+		public readonly string Name;
+
+		public Switch(int[] tracks, int initialTrack, double trackPosition, SwitchType type, string name)
 		{
 			Type = type;
 			LeftTrack = type != SwitchType.LeftHanded ? tracks[0] : tracks[1];
@@ -33,6 +35,8 @@
 					setTrack = i;
 				}
 			}
+
+			Name = name;
 		}
 
 		/// <summary>Toggles the switch to the next track</summary>

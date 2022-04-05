@@ -8,5 +8,9 @@
 		internal int InitialSetting;
 		/// <summary>Whether this is a trailing switch</summary>
 		internal bool Trailing = false;
+		/// <summary>Whether this is a spring return switch</summary>
+		internal bool SpringReturn = false;
+		/// <summary>The textual name for the switch</summary>
+		internal string Name;
 	}
 }

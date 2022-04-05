@@ -6,7 +6,7 @@ namespace RouteManager2.Events
 	/// <summary>Event controlling a facing switch</summary>
 	public class SwitchEvent : GeneralEvent
 	{
-
+		/// <summary>The GUID of the switch</summary>
 		public readonly Guid Index;
 
 		private readonly int triggerDirection;
@@ -50,7 +50,7 @@ namespace RouteManager2.Events
 	/// <summary>Event controlling a trailing switch</summary>
 	public class TrailingSwitchEvent : GeneralEvent
 	{
-
+		/// <summary>The GUID of the switch</summary>
 		public readonly Guid Index;
 
 		private readonly int toeRail;

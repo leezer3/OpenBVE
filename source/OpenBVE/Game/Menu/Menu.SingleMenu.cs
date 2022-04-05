@@ -675,7 +675,7 @@ namespace OpenBve
 								// In between two valid switches- Always display the switch in the positive (forwards) direction first, regardless of direction of travel
 								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, false);
 								Items = new MenuEntry[6];
-								Items[0] = new MenuCaption(Translations.GetInterfaceString("Next Switch"));
+								Items[0] = new MenuCaption(Translations.GetInterfaceString(Program.CurrentRoute.Switches[nextSwitch].Name));
 								Items[1] = new MenuCaption("Distance: " + distanceToNextSwitch + "m");
 								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[nextSwitch].CurrentlySetTrack);
 								Items[3] = new MenuCommand("Toggle!", MenuTag.ToggleSwitch, nextSwitch);
@@ -695,7 +695,7 @@ namespace OpenBve
 								// Next switch is valid, previous is not
 								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, false);
 								Items = new MenuEntry[5];
-								Items[0] = new MenuCaption("Change Next Switch");
+								Items[0] = new MenuCaption(Translations.GetInterfaceString(Program.CurrentRoute.Switches[nextSwitch].Name));
 								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + distanceToNextSwitch + "m"));
 								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[nextSwitch].CurrentlySetTrack);
 								Items[3] = new MenuCommand("Toggle!", MenuTag.ToggleSwitch, nextSwitch);
@@ -714,7 +714,7 @@ namespace OpenBve
 								// Previous switch is valid, next is not
 								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[previousSwitch].Type == SwitchType.LeftHanded, true);
 								Items = new MenuEntry[5];
-								Items[0] = new MenuCaption("Change Switch");
+								Items[0] = new MenuCaption(Translations.GetInterfaceString(Program.CurrentRoute.Switches[nextSwitch].Name));
 								Items[1] = new MenuCaption("Distance: " + distanceToPreviousSwitch + "m");
 								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[previousSwitch].CurrentlySetTrack);
 								Items[3] = new MenuCommand("Toggle!", MenuTag.Yes, 0);
