@@ -582,7 +582,7 @@ namespace CsvRwRouteParser
 								{
 									type = SwitchType.RightHanded;
 								}
-								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new int[] { j, Data.Blocks[i].Switches[j].SecondTrack }, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type));
+								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new[] { j, Data.Blocks[i].Switches[j].SecondTrack }, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type));
 								//Assign facing switch event
 								int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
 								Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);
@@ -599,7 +599,7 @@ namespace CsvRwRouteParser
 								{
 									type = SwitchType.RightHanded;
 								}
-								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new int[] { Data.Blocks[i].Switches[j].SecondTrack, j }, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type));
+								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new[] { Data.Blocks[i].Switches[j].SecondTrack, j }, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type));
 								//Assign trailing switch event
 								int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
 								Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);

@@ -7,10 +7,10 @@
 		public SwitchType Type;
 
 		/// <summary>The currently set track</summary>
-		public int CurrentlySetTrack()
-		{
-			return availableTracks[setTrack];
-		}
+		public int CurrentlySetTrack => availableTracks[setTrack];
+
+		/// <summary>The left-hand track index</summary>
+		public readonly int LeftTrack;
 
 		private int setTrack;
 
@@ -23,6 +23,7 @@
 		public Switch(int[] tracks, int initialTrack, double trackPosition, SwitchType type)
 		{
 			Type = type;
+			LeftTrack = type != SwitchType.LeftHanded ? tracks[0] : tracks[1];
 			availableTracks = tracks;
 			TrackPosition = trackPosition;
 			for (int i = 0; i < availableTracks.Length; i++)

@@ -761,9 +761,19 @@ namespace OpenBve
 								{
 									break;
 								}
-								int oldTrack = Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack();
+								int oldTrack = Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
 								Program.CurrentRoute.Switches[switchToToggle].Toggle();
-								Program.CurrentHost.AddMessage(MessageType.Information, false, "Switch " + switchToToggle + " changed from Track " + oldTrack + " to " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack());
+								Program.CurrentHost.AddMessage(MessageType.Information, false, "Switch " + switchToToggle + " changed from Track " + oldTrack + " to " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack);
+								if (Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack == Program.CurrentRoute.Switches[switchToToggle].LeftTrack)
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-L.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
+								else
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
+
+								menu.Items[2].Text = "Current Setting: " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
 								break;
 						}
 					}
@@ -1042,6 +1052,11 @@ namespace OpenBve
 					}
 					break;
 				case MenuType.ChangeSwitch:
+					/*
+					 * Set final image locs, which we don't know till the menu extent has been measured in the render sequence
+					 */
+					switchMainPictureBox.Location = new Vector2(menu.Width + (MenuItemBorderX * 4), switchMainPictureBox.Location.Y);
+					switchSettingPictureBox.Location = new Vector2(menu.Width + (MenuItemBorderX * 4) + 80, switchSettingPictureBox.Location.Y);
 					switchMainPictureBox.Draw();
 					switchSettingPictureBox.Draw();
 					break;

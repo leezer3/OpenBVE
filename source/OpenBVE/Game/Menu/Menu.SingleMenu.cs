@@ -600,8 +600,6 @@ namespace OpenBve
 						}
 						break;
 					case MenuType.ChangeSwitch:
-						Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-Overlay.png"), new TextureParameters(null, null), out switchMainPictureBox.Texture);
-						Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-L.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
 						Align = TextAlignment.TopLeft;
 						if (Program.CurrentRoute.Switches == null || Program.CurrentRoute.Switches.Count == 0)
 						{
@@ -627,7 +625,6 @@ namespace OpenBve
 							 */
 							Guid nextSwitch = Guid.Empty;
 							double distanceToNextSwitch = 0;
-							int currentTrackIdx = TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackIndex;
 							Track currentTrack = Program.CurrentHost.Tracks[TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackIndex];
 							for (int currentElement = TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.LastTrackElement; currentElement < currentTrack.Elements.Length; currentElement++)
 							{
@@ -671,17 +668,27 @@ namespace OpenBve
 								}
 							}
 							previousFound:
+
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-Overlay.png"), new TextureParameters(null, null), out switchMainPictureBox.Texture);
 							if (nextSwitch != Guid.Empty && previousSwitch != Guid.Empty)
 							{
-								// In between two valid switches
+								// In between two valid switches- Always display the switch in the positive (forwards) direction first, regardless of direction of travel
 								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, false);
 								Items = new MenuEntry[6];
 								Items[0] = new MenuCaption(Translations.GetInterfaceString("Next Switch"));
 								Items[1] = new MenuCaption("Distance: " + distanceToNextSwitch + "m");
-								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[nextSwitch].CurrentlySetTrack());
+								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[nextSwitch].CurrentlySetTrack);
 								Items[3] = new MenuCommand("Toggle!", MenuTag.ToggleSwitch, nextSwitch);
 								Items[4] = new MenuCommand("Previous Switch...", MenuTag.BackToSim, 0);
 								Items[5] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+								if (Program.CurrentRoute.Switches[nextSwitch].CurrentlySetTrack == Program.CurrentRoute.Switches[nextSwitch].LeftTrack)
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-L.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
+								else
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
 							}
 							else if (nextSwitch != Guid.Empty)
 							{
@@ -690,9 +697,17 @@ namespace OpenBve
 								Items = new MenuEntry[5];
 								Items[0] = new MenuCaption("Change Next Switch");
 								Items[1] = new MenuCaption(Translations.GetInterfaceString("Distance: " + distanceToNextSwitch + "m"));
-								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[nextSwitch].CurrentlySetTrack());
+								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[nextSwitch].CurrentlySetTrack);
 								Items[3] = new MenuCommand("Toggle!", MenuTag.ToggleSwitch, nextSwitch);
 								Items[4] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+								if (Program.CurrentRoute.Switches[nextSwitch].CurrentlySetTrack == Program.CurrentRoute.Switches[nextSwitch].LeftTrack)
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-L.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
+								else
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
 							}
 							else
 							{
@@ -701,9 +716,17 @@ namespace OpenBve
 								Items = new MenuEntry[5];
 								Items[0] = new MenuCaption("Change Switch");
 								Items[1] = new MenuCaption("Distance: " + distanceToPreviousSwitch + "m");
-								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[previousSwitch].CurrentlySetTrack());
+								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[previousSwitch].CurrentlySetTrack);
 								Items[3] = new MenuCommand("Toggle!", MenuTag.Yes, 0);
 								Items[4] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+								if (Program.CurrentRoute.Switches[previousSwitch].CurrentlySetTrack == Program.CurrentRoute.Switches[previousSwitch].LeftTrack)
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-L.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
+								else
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
 							}
 							
 						}
