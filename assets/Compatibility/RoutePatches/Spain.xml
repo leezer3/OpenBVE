@@ -21,5 +21,10 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 	</Patch>
+	<Patch>
+		<Hash>FD4D778CBDDC517DF013BC0C0185AE7F2EC313AC92D6E4F318B7CB92C4897C6C</Hash>
+		<FileName>S1_V3.csv</FileName>
+		<ColonFix>true</ColonFix>
+	</Patch>
   </RoutePatches>
 </openBVE>
