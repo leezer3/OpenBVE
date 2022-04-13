@@ -303,6 +303,7 @@ namespace Train.OpenBve
 											case "music":
 												//Music horn
 												ParseHornNode(cc, car, out car.Horns[2], front, SoundCfgParser.largeRadius);
+												car.Horns[2].Loop = true;
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -559,6 +560,7 @@ namespace Train.OpenBve
 				{
 					case "start":
 						ParseNode(c, out Horn.StartSound, ref Position, Radius);
+						Horn.StartEndSounds = true;
 						break;
 					case "loop":
 						ParseNode(c, out Horn.LoopSound, ref Position, Radius);
@@ -567,6 +569,7 @@ namespace Train.OpenBve
 					case "release":
 					case "stop":
 						ParseNode(c, out Horn.EndSound, ref Position, Radius);
+						Horn.StartEndSounds = true;
 						break;
 					case "toggle":
 						if (c.InnerText.ToLowerInvariant() == "true" || c.InnerText.ToLowerInvariant() == "1")
