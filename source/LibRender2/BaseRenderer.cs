@@ -304,6 +304,14 @@ namespace LibRender2
 					currentOptions.IsUseNewRenderer = false;
 					ForceLegacyOpenGL = true;
 				}
+
+				if (DefaultShader == null)
+				{
+					// Shader failed to load, but no exception
+					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
+					currentOptions.IsUseNewRenderer = false;
+					ForceLegacyOpenGL = true;
+				}
 			}
 			
 
