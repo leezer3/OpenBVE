@@ -282,27 +282,30 @@ namespace LibRender2
 		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
-			
-			try
+			if (!ForceLegacyOpenGL && currentOptions.IsUseNewRenderer) // GL3 has already failed. Don't trigger unneccessary exceptions
 			{
-				if (DefaultShader == null)
+				try
 				{
-					DefaultShader = new Shader(this, "default", "default", true);
+					if (DefaultShader == null)
+					{
+						DefaultShader = new Shader(this, "default", "default", true);
+					}
+					DefaultShader.Activate();
+					DefaultShader.SetMaterialAmbient(Color32.White);
+					DefaultShader.SetMaterialDiffuse(Color32.White);
+					DefaultShader.SetMaterialSpecular(Color32.White);
+					lastColor = Color32.White;
+					DefaultShader.Deactivate();
+					dummyVao = new VertexArrayObject();
 				}
-				DefaultShader.Activate();
-				DefaultShader.SetMaterialAmbient(Color32.White);
-				DefaultShader.SetMaterialDiffuse(Color32.White);
-				DefaultShader.SetMaterialSpecular(Color32.White);
-				lastColor = Color32.White;
-				DefaultShader.Deactivate();
-				dummyVao = new VertexArrayObject();
+				catch
+				{
+					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
+					currentOptions.IsUseNewRenderer = false;
+					ForceLegacyOpenGL = true;
+				}
 			}
-			catch
-			{
-				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
-				currentOptions.IsUseNewRenderer = false;
-				ForceLegacyOpenGL = true;
-			}
+			
 
 			Background = new Background(this);
 			Fog = new Fog();
