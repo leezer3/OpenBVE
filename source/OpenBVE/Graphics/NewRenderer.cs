@@ -318,7 +318,10 @@ namespace OpenBve.Graphics
 
 			if (Interface.CurrentOptions.MotionBlur != MotionBlurMode.None)
 			{
-				DefaultShader.Deactivate();
+				if (AvailableNewRenderer)
+				{
+					DefaultShader.Deactivate();
+				}
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 			// overlay layer
