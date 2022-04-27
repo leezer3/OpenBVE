@@ -340,6 +340,7 @@ namespace RouteViewer
 				case Key.F5:
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
+						Renderer.Initialize();
 						Bitmap bitmap = null;
 						CurrentlyLoading = true;
 						Renderer.OptionInterface = false;

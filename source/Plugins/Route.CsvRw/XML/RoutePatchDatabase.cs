@@ -90,6 +90,17 @@ namespace CsvRwRouteParser
 							currentPatch.LineEndingFix = false;
 						}
 						break;
+					case "ColonFix":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.ColonFix = true;
+						}
+						else
+						{
+							currentPatch.ColonFix = false;
+						}
+						break;
 					case "IgnorePitchRoll":
 						t = childNode.InnerText.Trim().ToLowerInvariant();
 						if (t == "1" || t == "true")

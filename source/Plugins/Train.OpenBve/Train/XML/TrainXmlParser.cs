@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,6 +26,7 @@ namespace Train.OpenBve
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
 		private static BveAccelerationCurve[] AccelerationCurves;
+		private static readonly char[] separatorChars = { ';', ',' };
 		internal void Parse(string fileName, TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, out bool[] interiorVisible)
 		{
 			//The current XML file to load
@@ -34,7 +34,7 @@ namespace Train.OpenBve
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
 			currentPath = System.IO.Path.GetDirectoryName(fileName);
-			if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(currentPath, "train.dat")))
+			if (File.Exists(Path.CombineFile(currentPath, "train.dat")))
 			{
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
@@ -44,7 +44,7 @@ namespace Train.OpenBve
 						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)
 						{
 							BveAccelerationCurve c = (BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
-							AccelerationCurves[j] = c.Clone(c.Multiplier);
+							AccelerationCurves[j] = c.Clone();
 						}
 					}
 				}
@@ -54,7 +54,25 @@ namespace Train.OpenBve
 			interiorVisible = new bool[Train.Cars.Length];
 			if (currentXML.DocumentElement != null)
 			{
-				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Car or self::Coupler]");
+				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/DriverCar");
+				if (DocumentNodes != null && DocumentNodes.Count > 0)
+				{
+					// Optional stuff, needs to be loaded before the car list
+					for (int i = 0; i < DocumentNodes.Count; i++)
+					{
+						switch (DocumentNodes[i].Name)
+						{
+							case "DriverCar":
+								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out Train.DriverCar))
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "DriverCar is invalid in XML file " + fileName);
+								}
+								break;
+						}
+					}
+				}
+
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Car or self::Coupler]");
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "No car nodes defined in XML file " + fileName);
@@ -106,8 +124,8 @@ namespace Train.OpenBve
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Coupler " + (carIndex - 1) + " in XML file " + fileName);
 											break;
 										}
-										string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
-										if (System.IO.File.Exists(f))
+										string f = Path.CombineFile(currentPath, c.InnerText);
+										if (File.Exists(f))
 										{
 											Plugin.currentHost.LoadObject(f, Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
@@ -121,7 +139,7 @@ namespace Train.OpenBve
 					{
 						try
 						{
-							string childFile = OpenBveApi.Path.CombineFile(currentPath, DocumentNodes[i].InnerText);
+							string childFile = Path.CombineFile(currentPath, DocumentNodes[i].InnerText);
 							XmlDocument childXML = new XmlDocument();
 							childXML.Load(childFile);
 							XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Car");
@@ -153,6 +171,7 @@ namespace Train.OpenBve
 					Plugin.Renderer.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
 				}
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/NotchDescriptions");
+				
 				if (DocumentNodes != null && DocumentNodes.Count > 0)
 				{
 					//Optional section
@@ -165,7 +184,7 @@ namespace Train.OpenBve
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "power":
-										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(';');
+										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(separatorChars);
 										for (int j = 0; j < Train.Handles.Power.NotchDescriptions.Length; j++)
 										{
 											Vector2 s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Power.NotchDescriptions[j]);
@@ -176,7 +195,7 @@ namespace Train.OpenBve
 										}
 										break;
 									case "brake":
-										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(';');
+										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(separatorChars);
 										for (int j = 0; j < Train.Handles.Brake.NotchDescriptions.Length; j++)
 										{
 											Vector2 s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Brake.NotchDescriptions[j]);
@@ -191,7 +210,7 @@ namespace Train.OpenBve
 										{
 											continue;
 										}
-										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(';');
+										Train.Handles.LocoBrake.NotchDescriptions = c.InnerText.Split(separatorChars);
 										for (int j = 0; j < Train.Handles.LocoBrake.NotchDescriptions.Length; j++)
 										{
 											Vector2 s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.LocoBrake.NotchDescriptions[j]);
@@ -202,7 +221,7 @@ namespace Train.OpenBve
 										}
 										break;
 									case "reverser":
-										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(';');
+										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(separatorChars);
 										for (int j = 0; j < Train.Handles.Reverser.NotchDescriptions.Length; j++)
 										{
 											Vector2 s = Plugin.Renderer.Fonts.NormalFont.MeasureString(Train.Handles.Reverser.NotchDescriptions[j]);
@@ -221,7 +240,7 @@ namespace Train.OpenBve
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Plugin");
 				if (DocumentNodes != null && DocumentNodes.Count > 0)
 				{
-					// More optional
+					// More optional, but needs to be loaded after the car list
 					for (int i = 0; i < DocumentNodes.Count; i++)
 					{
 						switch (DocumentNodes[i].Name)

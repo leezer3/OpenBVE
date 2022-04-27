@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.ExceptionServices;
 using LibRender2.Backgrounds;
 using LibRender2.Cameras;
@@ -28,6 +31,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.World;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using Path = OpenBveApi.Path;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace LibRender2
@@ -57,6 +61,9 @@ namespace LibRender2
 		protected int ObjectsSortedByStartPointer;
 		protected int ObjectsSortedByEndPointer;
 		protected double LastUpdatedTrackPosition;
+		/// <summary>Whether ReShade is in use</summary>
+		/// <remarks>Don't use OpenGL error checking with ReShade, as this breaks</remarks>
+		public bool ReShadeInUse;
 		/// <summary>A dummy VAO used when working with procedural data within the shader</summary>
 		public VertexArrayObject dummyVao;
 
@@ -282,27 +289,38 @@ namespace LibRender2
 		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
-			
-			try
+			if (!ForceLegacyOpenGL && currentOptions.IsUseNewRenderer) // GL3 has already failed. Don't trigger unneccessary exceptions
 			{
+				try
+				{
+					if (DefaultShader == null)
+					{
+						DefaultShader = new Shader(this, "default", "default", true);
+					}
+					DefaultShader.Activate();
+					DefaultShader.SetMaterialAmbient(Color32.White);
+					DefaultShader.SetMaterialDiffuse(Color32.White);
+					DefaultShader.SetMaterialSpecular(Color32.White);
+					lastColor = Color32.White;
+					DefaultShader.Deactivate();
+					dummyVao = new VertexArrayObject();
+				}
+				catch
+				{
+					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
+					currentOptions.IsUseNewRenderer = false;
+					ForceLegacyOpenGL = true;
+				}
+
 				if (DefaultShader == null)
 				{
-					DefaultShader = new Shader(this, "default", "default", true);
+					// Shader failed to load, but no exception
+					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
+					currentOptions.IsUseNewRenderer = false;
+					ForceLegacyOpenGL = true;
 				}
-				DefaultShader.Activate();
-				DefaultShader.SetMaterialAmbient(Color32.White);
-				DefaultShader.SetMaterialDiffuse(Color32.White);
-				DefaultShader.SetMaterialSpecular(Color32.White);
-				lastColor = Color32.White;
-				DefaultShader.Deactivate();
-				dummyVao = new VertexArrayObject();
 			}
-			catch
-			{
-				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
-				currentOptions.IsUseNewRenderer = false;
-				ForceLegacyOpenGL = true;
-			}
+			
 
 			Background = new Background(this);
 			Fog = new Fog();
@@ -338,6 +356,18 @@ namespace LibRender2
 			{
 				GL.Disable(EnableCap.Texture2D);
 				GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
+			}
+
+			// ReSharper disable once PossibleNullReferenceException
+			string openGLdll = Path.CombineFile(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
+
+			if (File.Exists(openGLdll))
+			{
+				FileVersionInfo glVersionInfo = FileVersionInfo.GetVersionInfo(openGLdll);
+				if (glVersionInfo.ProductName == @"ReShade")
+				{
+					ReShadeInUse = true;
+				}
 			}
 		}
 
@@ -857,11 +887,14 @@ namespace LibRender2
 		public void ResetShader(Shader Shader)
 		{
 #if DEBUG
-			lastError = GL.GetError();
-
-			if (lastError != ErrorCode.NoError)
+			if (!ReShadeInUse)
 			{
-				throw new InvalidOperationException($"OpenGL Error: {lastError}");
+				lastError = GL.GetError();
+
+				if (lastError != ErrorCode.NoError)
+				{
+					throw new InvalidOperationException($"OpenGL Error: {lastError}");
+				}
 			}
 #endif
 

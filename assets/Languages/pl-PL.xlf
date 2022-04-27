@@ -1,11 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="pl-PL">
 		<body>
 			<group id="language">
 				<trans-unit id="name">
 					<source>English (United States)</source>
-					<target>Polski</target>
+					<target>Polski (Polska)</target>
 				</trans-unit>
 				<trans-unit id="flag">
 					<source>US.png</source>
@@ -13,12 +12,11 @@
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>piotrulos (Kosmo14)</target>
-					<note from="translator">Jeśli widzisz błędy to napisz piotr.wwww@gmail.com</note>
+					<target>Piotrulos</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
-					<source>2016-02-21</source>
-					<target>2016-02-22</target>
+					<source>2019-06-29</source>
+					<target>2019-06-29</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -161,6 +159,10 @@
 						<source>Please check your fullscreen resolution settings.</source>
 						<target>Proszę sprawdzić ustawienia rozdzielczości trybu pełnoekranowego.</target>
 					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+						<target>Proszę wybrać najpierw plik trasy aby rozpocząć.</target>
+					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
 						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
 						<target>Wybrana trasa jest uszkodzona: \r\n Brakuje sekcji WithTrack.</target>
@@ -172,6 +174,10 @@
 					<trans-unit id="route_corrupt_noobjects">
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
 						<target>Wybrana trasa jest uszkodzona: \r\n Brak zdefiniowanych obiektów.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+						<target>Wybrana trasa jest uszkodzona: \r\n Nie można zlokalizować wszystkich zdefiniowanych obiektów.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
@@ -202,23 +208,16 @@
 					</trans-unit>
 					<trans-unit id="security_checkaccess">
 						<source>Please check that this path is accessible.</source>
-						<target>Please check that this path is accessible.</target>
+						<target>Upewnij się, że ta ścieżka jest dostępna.</target>
 					</trans-unit>
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
-						<target>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</target>
-					</trans-unit>
-					<trans-unit id="database_newer_expected">
-						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-					</trans-unit>
-					<trans-unit id="database_invalid_xml">
-						<source>The package database XML was invalid, and has been re-created.</source>
+						<target>Jeśli próbujesz zainstalować dodatki w folderach Program Files lub ProgramData, może wymagać to uprawnień administratora. \r\n\r\n Nie jest to zalecane ze względów bezpieczeństwa.</target>
 					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">
 						<source>Start new game</source>
-						<target>Nowa gra</target>
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route</source>
@@ -276,6 +275,22 @@
 						<source>Train</source>
 						<target>Pociąg</target>
 					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+						<target>Wybierz Skład...</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>Czy chcesz użyć domyślnego składu?</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+						<target>Nie</target>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
+						<target>Tak</target>
+					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
 						<target>Wybór pociągu</target>
@@ -294,7 +309,6 @@
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Route default</source>
-						<target>Domyślny dla tarsy</target>
 					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
@@ -318,14 +332,15 @@
 					</trans-unit>
 					<trans-unit id="train_settings_reverseconsist">
 						<source>Reverse Consist:</source>
+						<target>Odwróć skład:</target>
 					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
 						<target>Podgląd:</target>
 					</trans-unit>
 					<trans-unit id="train_notfound">
-						<source>The default train could not be found:\n\n</source>
-						<target>Pociąg dla tej trasy nie został znaleziony:\x20</target>
+						<source>The default train could not be found:\r\n\r\n</source>
+						<target>Nie można znaleźć domyślnego składu:\r\n\r\n</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
 						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
@@ -333,7 +348,6 @@
 					</trans-unit>
 					<trans-unit id="start">
 						<source>Start</source>
-						<target>Start</target>
 					</trans-unit>
 					<trans-unit id="start_mode">
 						<source>Mode of driving:</source>
@@ -347,7 +361,6 @@
 				<group id="review">
 					<trans-unit id="title">
 						<source>Review last game</source>
-						<target>Przegląd ostatniej gry</target>
 					</trans-unit>
 					<trans-unit id="conditions">
 						<source>Conditions</source>
@@ -461,7 +474,6 @@
 				<group id="packages">
 					<trans-unit id="title">
 						<source>Package Management</source>
-						<target>Zarządzaj pakietami</target>
 					</trans-unit>
 					<trans-unit id="proceed">
 						<source>Proceed...</source>
@@ -677,7 +689,6 @@
 					</trans-unit>
 					<trans-unit id="creation_header">
 						<source>Enter Package Details</source>
-						<target>Stwórz pakiet</target>
 					</trans-unit>
 					<trans-unit id="creation_name">
 						<source>Please enter a package name.</source>
@@ -911,11 +922,18 @@
 						<source>Failed to create the following file: \r \n</source>
 						<target>Nie można utworzyć następującego pliku: \r \n</target>
 					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+						<target>Wersja bazy danych wydaje się być nowszą wersją niż obsługiwana przez tą wersję OpenBVE.</target>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+						<target>Kod XML bazy danych był nieprawidłowy i został odtworzony.</target>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
 						<source>Customize controls</source>
-						<target>Ustawienia sterowania</target>
 					</trans-unit>
 					<trans-unit id="list_command">
 						<source>Command</source>
@@ -923,7 +941,6 @@
 					</trans-unit>
 					<trans-unit id="list_type">
 						<source>Type</source>
-						<target>Typ</target>
 					</trans-unit>
 					<trans-unit id="list_type_digital">
 						<source>Digital</source>
@@ -1038,8 +1055,8 @@
 						<target>Przyciśnij wybrany przycisk lub przesuń analog w wybranym kierunku...</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
-						<source>Move an axis into the direction of "increase" or "power"...</source>
-						<target>Przesuń gałkę w kierunku "zwiększania"...</target>
+						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
+						<target>Przesuń gałkę w kierunku &quot;zwiększania&quot;...</target>
 					</trans-unit>
 					<trans-unit id="attached">
 						<source>Attached joysticks</source>
@@ -1229,9 +1246,12 @@
 					</trans-unit>
 				</group>
 				<group id="options">
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
+						<target>Rozdzielczość:</target>
+					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
-						<target>Opcje</target>
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
@@ -1471,10 +1491,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
 						<source>Enable the new renderer</source>
-					</trans-unit>
-					<trans-unit id="advanced_disable_displaylists">
-						<source>Disable OpenGL display lists</source>
-						<target>Wyłącz listy wyświetlania OpenGL</target>
+						<target>Włącz nowy Renderer</target>
 					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
@@ -1622,15 +1639,19 @@
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
+						<target>Włącz Panel2 Extended Mode</target>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
+						<target>X Object Parser</target>
 					</trans-unit>
 					<trans-unit id="objobject_parser">
 						<source>OBJ Object Parser</source>
+						<target>OBJ Object Parser</target>
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
+						<target>Domyślne sygnały:</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">
@@ -1698,11 +1719,9 @@
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route:</source>
-						<target>Trasa:</target>
 					</trans-unit>
 					<trans-unit id="train">
 						<source>Train:</source>
-						<target>Pociąg:</target>
 					</trans-unit>
 					<trans-unit id="date">
 						<source>Date:</source>
@@ -1714,7 +1733,6 @@
 					</trans-unit>
 					<trans-unit id="score">
 						<source>Score:</source>
-						<target>Wynik:</target>
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Rating:</source>
@@ -1743,12 +1761,12 @@
 						<target>Pliki nie znalezione:</target>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
-						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
-						<target>Podczas wczytywania napotkano jakieś błędy.\r\n\r\nKilka Plików nie zostało znalezionych, trasa albo pociąg może nie działac prawodłowo. Sprobój ponownie pobrać plik z trasą.\r\n\r\nLista pokazuje dodatkowe informacje. Kliknij "Ignoruj" aby kontynuować.</target>
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
+						<target>Podczas wczytywania napotkano jakieś błędy.\r\n\r\nKilka Plików nie zostało znalezionych, trasa albo pociąg może nie działac prawodłowo. Sprobój ponownie pobrać plik z trasą.\r\n\r\nLista pokazuje dodatkowe informacje. Kliknij &quot;Ignoruj&quot; aby kontynuować.</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
-						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
-						<target>Napotkano problemy podczas ładowania trasy. Jeśli jesteś developerem tej trasy, możesz zobaczyć listę problemów.\r\n\r\nJeśli jesteś graczem kliknij "Ignoruj" aby kontynuować.</target>
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
+						<target>Napotkano problemy podczas ładowania trasy. Jeśli jesteś developerem tej trasy, możesz zobaczyć listę problemów.\r\n\r\nJeśli jesteś graczem kliknij &quot;Ignoruj&quot; aby kontynuować.</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
@@ -1822,6 +1840,22 @@
 						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
 						<target>Limit prędkości wynosi [limit] [unit]. Jedziesz [speed] [unit]. Zwolnij!</target>
 					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+						<target>Nowy limit prędkości: [limit] [unit].</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+						<target>Następny sygnał za [distance]</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+						<target>Następny sygnał za [distance], z aspektem [aspect]</target>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+						<target>Następna stacja [name] za [distance]</target>
+					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
 						<target>Przyjechałeś na stację [name].</target>
@@ -1874,9 +1908,12 @@
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
 						<target>Ruszyłeś ze stacji [name] gdy ludzie wsiadali. Proszę zatrzymać pociąg.</target>
 					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train's current speed is [speed]</source>
+						<target>Aktualna prędkość składu to [speed]</target>
+					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
-						<target>Wczytywanie. Proszę czekać...</target>
 					</trans-unit>
 				</group>
 				<group id="notification">
@@ -2000,7 +2037,6 @@
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Your rating:</source>
-						<target>Twoja ocena:</target>
 					</trans-unit>
 				</group>
 				<group id="rating">
@@ -2046,10 +2082,16 @@
 					</trans-unit>
 					<trans-unit id="unknown">
 						<source>Unknown</source>
-						<target>Nieznana</target>
 					</trans-unit>
 				</group>
 				<group id="menu">
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+						<target>PAUZA</target>
+					</trans-unit>
 					<trans-unit id="resume">
 						<source>Resume simulation</source>
 						<target>Kontynuuj symulacje</target>
@@ -2200,7 +2242,6 @@
 					</trans-unit>
 					<trans-unit id="power">
 						<source>P</source>
-						<target>P</target>
 					</trans-unit>
 					<trans-unit id="powernull">
 						<source>N</source>
@@ -2208,7 +2249,6 @@
 					</trans-unit>
 					<trans-unit id="brake">
 						<source>B</source>
-						<target>B</target>
 					</trans-unit>
 					<trans-unit id="locobrake">
 						<source>L</source>
@@ -2252,7 +2292,6 @@
 				<group id="misc">
 					<trans-unit id="score">
 						<source>Score:\x20</source>
-						<target>Wynik:\x20</target>
 					</trans-unit>
 				</group>
 				<group id="commands">
@@ -2462,6 +2501,7 @@
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
 						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+						<target>Przełącza na widok wnętrza pociągu. Jednak panel nie jest wyświetlany.</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
 						<source>Switches to the train's exterior view</source>
@@ -2653,6 +2693,7 @@
 					</trans-unit>
 					<trans-unit id="debug_touch_mode">
 						<source>Shows or hides the touch range</source>
+						<target>Pokazuje lub ukrywa zakres dotyku</target>
 					</trans-unit>
 					<trans-unit id="route_information">
 						<source>Shows or hides the route information window</source>
@@ -2661,6 +2702,10 @@
 					<trans-unit id="show_events">
 						<source>Shows or hides event markers (For developers)</source>
 						<target>Wyświetla lub ukrywa znaczniki zdarzeń (dla programistów)</target>
+					</trans-unit>
+					<trans-unit id="debug_renderer_mode">
+						<source>Toggles the renderer</source>
+						<target>Przełącza Renderer</target>
 					</trans-unit>
 					<trans-unit id="wiper_speed_up">
 						<source>Increases the speed of the windscreen wipers</source>
@@ -2726,47 +2771,41 @@
 						<source>Toggles the main breaker</source>
 						<target>Przełącza głowny bezpiecznik</target>
 					</trans-unit>
+					<trans-unit id="raildriver_speed_units">
+						<source>Toggles the RailDriver speed display units.</source>
+						<target>Przełącza jednostki wyświetlania prędkości RailDriver.</target>
+					</trans-unit>
 				</group>
 				<group id="keys">
 					<trans-unit id="0">
 						<source>0</source>
-						<target>0</target>
 					</trans-unit>
 					<trans-unit id="1">
 						<source>1</source>
-						<target>1</target>
 					</trans-unit>
 					<trans-unit id="2">
 						<source>2</source>
-						<target>2</target>
 					</trans-unit>
 					<trans-unit id="3">
 						<source>3</source>
-						<target>3</target>
 					</trans-unit>
 					<trans-unit id="4">
 						<source>4</source>
-						<target>4</target>
 					</trans-unit>
 					<trans-unit id="5">
 						<source>5</source>
-						<target>5</target>
 					</trans-unit>
 					<trans-unit id="6">
 						<source>6</source>
-						<target>6</target>
 					</trans-unit>
 					<trans-unit id="7">
 						<source>7</source>
-						<target>7</target>
 					</trans-unit>
 					<trans-unit id="8">
 						<source>8</source>
-						<target>8</target>
 					</trans-unit>
 					<trans-unit id="9">
 						<source>9</source>
-						<target>9</target>
 					</trans-unit>
 					<trans-unit id="ampersand">
 						<source>Ampersand</source>
@@ -2826,7 +2865,6 @@
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
-						<target>Dół</target>
 					</trans-unit>
 					<trans-unit id="end">
 						<source>End</source>
@@ -3010,7 +3048,6 @@
 					</trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
-						<target>Lewo</target>
 					</trans-unit>
 					<trans-unit id="leftbracket">
 						<source>Left bracket</source>
@@ -3046,7 +3083,6 @@
 					</trans-unit>
 					<trans-unit id="mode">
 						<source>Alt Gr</source>
-						<target>Alt Gr</target>
 					</trans-unit>
 					<trans-unit id="numlock">
 						<source>Numlock</source>
@@ -3074,7 +3110,6 @@
 					</trans-unit>
 					<trans-unit id="power">
 						<source>Power</source>
-						<target>Power</target>
 					</trans-unit>
 					<trans-unit id="print">
 						<source>Print</source>
@@ -3106,7 +3141,6 @@
 					</trans-unit>
 					<trans-unit id="right">
 						<source>Right</source>
-						<target>Prawo</target>
 					</trans-unit>
 					<trans-unit id="rightbracket">
 						<source>Right bracket</source>
@@ -3158,7 +3192,6 @@
 					</trans-unit>
 					<trans-unit id="up">
 						<source>Up</source>
-						<target>góra</target>
 					</trans-unit>
 					<trans-unit id="a">
 						<source>A</source>
@@ -3265,6 +3298,195 @@
 						<target>Z</target>
 					</trans-unit>
 				</group>
+				<group id="denshadego">
+					<trans-unit id="config_title">
+						<source>Densha de GO! controller configuration</source>
+						<target>Konfiguracja kontrolera Densha de GO! </target>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+						<target>Urządzenie wejściowe</target>
+					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+						<target>Hamulec: [notch]</target>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+						<target>Przepustnica: [notch]</target>
+					</trans-unit>
+					<trans-unit id="calibration_button">
+						<source>Start calibration</source>
+						<target>Rozpocznij kalibrację</target>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+						<target>Urządzenie:</target>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+						<target>Mapowanie przycisków</target>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+						<target>Żaden</target>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+						<target>Mapowanie drążków</target>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+						<target>Konwertuj wycięcia</target>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+						<target>Zachowaj minimum i maksimum</target>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+						<target>Przypisz trzymaj hamulec do B1</target>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+						<target>Zapisz</target>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+						<target>Anuluj</target>
+					</trans-unit>
+					<trans-unit id="calibrate_button">
+						<source>Hold the [button] button in the controller and press OK.</source>
+						<target>Przytrzymaj przycisk [button] na kontrolerze a następnie wciśnij OK.</target>
+					</trans-unit>
+					<trans-unit id="calibrate_brake">
+						<source>Move the brake handle to [notch] and press OK.</source>
+						<target>Przesuń drążek hamulca w pozycję [notch] a następnie wciśnij OK.</target>
+					</trans-unit>
+					<trans-unit id="calibrate_power">
+						<source>Move the power handle to [notch] and press OK.</source>
+						<target>Przesuń drążek przepustnicy w pozycję [notch] a następnie wciśnij OK.</target>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+						<target>W GÓRĘ</target>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+						<target>W DÓŁ</target>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+						<target>W LEWO</target>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+						<target>W PRAWO</target>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+						<target>PEDAŁ</target>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+						<target>L DRZWI</target>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
+						<target>P DRZWI</target>
+					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+						<target>Mój kontroler nie jest wykrywany lub nie działa poprawnie</target>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+						<target>Pomoc</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+						<target>Mój kontroler nie działa poprawnie</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+						<target>Mój kontroler PS2 nie został wykryty</target>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+						<target>Windows</target>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+						<target>Linux</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:
+
+1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
+to separate buttons to avoid compatibility issues.
+2. Calibrate the controller from the configuration window, if necessary.</source>
+						<target>Jeśli kontroler inny niż USB nie działa prawidłowo:
+
+1. Upewnij się, że adapter USB działa. Adapter powinien mapować przyciski kierunkowe ze standardowego kontrolera
+na oddzielne przyciski, aby uniknąć problemów ze zgodnością.
+2. W razie potrzeby skalibruj kontroler w oknie konfiguracji.</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+						<target>Jeśli kontrolera PS2 nie ma na liście, wykonaj następujące kroki:</target>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.
+2. Download and run Zadig.
+3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
+4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<target>1. Rozpakuj sterowniki dla Windowsa.
+2. Pobierz i uruchom Zadig.
+3. Wczytaj odpowiedni plik CFG dla twojego urządzenia (&quot;Device &gt; Load Preset Device&quot;&quot;)
+4. Naciśnij &quot;Install Driver&quot; i poczekaj na zakończenie instalacji.</target>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.
+2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
+3. Reboot or reload udev rules manually.</source>
+						<target>1. Wypakuj Linuxowy plik udev.
+2. Skopiuj ten plik do &quot;/etc/udev/rules.d/&quot; (wymagane uprawnienia roota).
+3. Uruchom ponownie lub przeładuj udev.</target>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+						<target>Pobierz Zadig</target>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+						<target>Rozpakuj pliki (Windows)</target>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+						<target>Rozpakuj pliki (Linux)</target>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
+						<target>OK</target>
+					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
+Please follow the following instructions:
+
+1. Check that the &quot;libusb-1.0&quot; package is installed.
+2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;
+3. Open the directory in the terminal.
+4. Check this location to see if &quot;libusb-1.0.so&quot; exists.
+5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+						<target>Wygląda na to, że brakuje LibUsb, albo nie zostało poprawnie połączone. Postępuj zgodnie z poniższymi instrukcjami:
+
+1. Sprawdź, czy zainstalowano pakiet „libusb-1.0”.
+2. Znajdź lokalizację „libusb-1.0.so.0” — w najnowszych wersjach Ubuntu i Debian prawdopodobnie będzie to &quot;/lib/x86_64-linux-gnu/&quot;
+3. Otwórz katalog w konsoli.
+4. Sprawdź tę lokalizację, aby zobaczyć, czy istnieje &quot;libusb-1.0.so&quot;.
+5. Jeśli plik nie istnieje, musimy utworzyć odpowiedni symlink, wykonując następujące polecenie z konsoli: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
+					</trans-unit>
+				</group>
 			</group>
 			<group id="train_editor">
 				<group id="general">
@@ -3278,7 +3500,6 @@
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
-						<target>Save</target>
 					</trans-unit>
 					<trans-unit id="save_as">
 						<source>Save as...</source>
@@ -3286,7 +3507,6 @@
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-						<target>Close</target>
 					</trans-unit>
 					<trans-unit id="new_message">
 						<source>Do you want to save data before creating a new train?</source>
@@ -3362,11 +3582,9 @@
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
-						<target>Save</target>
 					</trans-unit>
 					<trans-unit id="cancel">
 						<source>Cancel</source>
-						<target>Cancel</target>
 					</trans-unit>
 				</group>
 				<group id="move">
@@ -3402,7 +3620,6 @@
 				<group id="brake">
 					<trans-unit id="brake">
 						<source>Brake</source>
-						<target>Brake</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>BrakeType:</source>
@@ -3474,7 +3691,6 @@
 					</trans-unit>
 					<trans-unit id="type">
 						<source>HandleType:</source>
-						<target>HandleType:</target>
 					</trans-unit>
 					<trans-unit id="power_notches">
 						<source>PowerNotches:</source>
@@ -3503,6 +3719,14 @@
 					<trans-unit id="combined">
 						<source>Combined</source>
 						<target>Combined</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked">
+						<source>Separated (Interlocked)</source>
+						<target>Oddzielone (zblokowane)</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked_reverser">
+						<source>Separated (Reverser Interlocked)</source>
+						<target>Oddzielone (z blokadą nawrotną)</target>
 					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
 						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
@@ -3588,7 +3812,6 @@
 				<group id="device">
 					<trans-unit id="device">
 						<source>Device</source>
-						<target>Device</target>
 					</trans-unit>
 					<trans-unit id="const_speed">
 						<source>ConstSpeed:</source>
@@ -3596,7 +3819,6 @@
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>HoldBrake:</source>
-						<target>HoldBrake:</target>
 					</trans-unit>
 					<trans-unit id="readhesion_device">
 						<source>ReAdhesionDevice:</source>
@@ -3674,11 +3896,9 @@
 				<group id="acceleration">
 					<trans-unit id="acceleration">
 						<source>Acceleration</source>
-						<target>Acceleration</target>
 					</trans-unit>
 					<trans-unit id="notch">
 						<source>Notch:</source>
-						<target>Notch:</target>
 					</trans-unit>
 					<trans-unit id="data">
 						<source>Data</source>
@@ -3728,7 +3948,6 @@
 					</trans-unit>
 					<trans-unit id="preview">
 						<source>Preview</source>
-						<target>Preview</target>
 					</trans-unit>
 					<trans-unit id="y_pitch">
 						<source>Ypitch</source>
@@ -3744,15 +3963,12 @@
 					</trans-unit>
 					<trans-unit id="max_x">
 						<source>Xmax:</source>
-						<target>Xmax:</target>
 					</trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
-						<target>Left</target>
 					</trans-unit>
 					<trans-unit id="right">
 						<source>Right</source>
-						<target>Right</target>
 					</trans-unit>
 					<trans-unit id="in">
 						<source>In</source>
@@ -3842,7 +4058,6 @@
 					</trans-unit>
 					<trans-unit id="misc">
 						<source>Miscellaneous Features</source>
-						<target>Miscellaneous Features</target>
 					</trans-unit>
 					<trans-unit id="misc_eb">
 						<source>Handle behaviour on EB:</source>
@@ -3866,7 +4081,6 @@
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
-						<target>Language</target>
 					</trans-unit>
 				</group>
 			</group>
@@ -3899,6 +4113,7 @@
 						</trans-unit>
 						<trans-unit id="wrongtype">
 							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+							<target>Próbowałeś otworzyć skład. \n\n Nie można ich otworzyć bezpośrednio- \n\n Użyj funkcji importu, aby zaimportować ten skład do TrainEditor2.</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
@@ -3931,6 +4146,7 @@
 					</trans-unit>
 					<trans-unit id="copy">
 						<source>Copy</source>
+						<target>Kopiuj</target>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set...</source>
@@ -3945,12 +4161,15 @@
 					</trans-unit>
 					<trans-unit id="general">
 						<source>General</source>
+						<target>Ogólne</target>
 					</trans-unit>
 					<trans-unit id="cars">
 						<source>Cars</source>
+						<target>Wagony</target>
 					</trans-unit>
 					<trans-unit id="couplers">
 						<source>Couplers</source>
+						<target>Sprzęgi</target>
 					</trans-unit>
 				</group>
 				<group id="general_settings">
@@ -3970,6 +4189,12 @@
 							</trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked">
+								<source>Separated (Interlocked)</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked_reverser">
+								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
 						<trans-unit id="power_notches">
@@ -3993,6 +4218,7 @@
 							</trans-unit>
 							<trans-unit id="no">
 								<source>No action</source>
+								<target>Brak akcji</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Return power to neutral</source>
@@ -4002,6 +4228,7 @@
 							</trans-unit>
 							<trans-unit id="power_reverser">
 								<source>Return power and reverser to neutral</source>
+								<target>Przepustnica i nawrotnik do pozycji neutralnej</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_handle_type">
@@ -4013,9 +4240,11 @@
 							</trans-unit>
 							<trans-unit id="independent">
 								<source>Independent</source>
+								<target>Niezależny</target>
 							</trans-unit>
 							<trans-unit id="blocking">
 								<source>Blocking</source>
+								<target>Blocking</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="loco_brake_notches">
@@ -4052,9 +4281,11 @@
 							</trans-unit>
 							<trans-unit id="ats_sn">
 								<source>ATS-SN</source>
+								<target>ATS-SN</target>
 							</trans-unit>
 							<trans-unit id="ats_sn_ats_p">
 								<source>ATS-SN / ATS-P</source>
+								<target>ATS-SN / ATS-P</target>
 							</trans-unit>
 						</group>
 						<group id="atc">
@@ -4149,18 +4380,23 @@
 						</trans-unit>
 						<trans-unit id="is_motor_car">
 							<source>IsMotorCar</source>
+							<target>IsMotorCar</target>
 						</trans-unit>
 						<trans-unit id="mass">
 							<source>Mass</source>
+							<target>Masa</target>
 						</trans-unit>
 						<trans-unit id="length">
 							<source>Length</source>
+							<target>Długość</target>
 						</trans-unit>
 						<trans-unit id="width">
 							<source>Width</source>
+							<target>Szerokość</target>
 						</trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
+							<target>Wysokość</target>
 						</trans-unit>
 						<trans-unit id="center_of_gravity_height">
 							<source>CenterOfGravityHeight</source>
@@ -4173,6 +4409,7 @@
 						</trans-unit>
 						<trans-unit id="defined_axles">
 							<source>DefinedAxles</source>
+							<target>DefinedAxles</target>
 						</trans-unit>
 						<group id="axles">
 							<trans-unit id="name">
@@ -4180,25 +4417,32 @@
 							</trans-unit>
 							<trans-unit id="front">
 								<source>FrontAxle</source>
+								<target>FrontAxle</target>
 							</trans-unit>
 							<trans-unit id="rear">
 								<source>RearAxle</source>
+								<target>RearAxle</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
+							<target>FrontBogie</target>
 						</trans-unit>
 						<trans-unit id="rear_bogie">
 							<source>RearBogie</source>
+							<target>RearBogie</target>
 						</trans-unit>
 						<trans-unit id="loading_sway">
 							<source>LoadingSway</source>
+							<target>LoadingSway</target>
 						</trans-unit>
 						<trans-unit id="reversed">
 							<source>Reversed</source>
+							<target>Zarezerwowany</target>
 						</trans-unit>
 						<trans-unit id="object">
 							<source>Object</source>
+							<target>Objekt</target>
 						</trans-unit>
 					</group>
 					<group id="performance">
@@ -4268,6 +4512,7 @@
 							</trans-unit>
 							<trans-unit id="notched_air_brake">
 								<source>Notched air brake</source>
+								<target>Ząbkowany hamulec pneumatyczny</target>
 							</trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release</source>
@@ -4289,6 +4534,7 @@
 						</group>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
+							<target>BrakeControlSpeed</target>
 						</trans-unit>
 					</group>
 					<group id="pressure">
@@ -4345,15 +4591,19 @@
 						</trans-unit>
 						<trans-unit id="a0">
 							<source>a0</source>
+							<target>a0</target>
 						</trans-unit>
 						<trans-unit id="a1">
 							<source>a1</source>
+							<target>a1</target>
 						</trans-unit>
 						<trans-unit id="v1">
 							<source>v1</source>
+							<target>v1</target>
 						</trans-unit>
 						<trans-unit id="v2">
 							<source>v2</source>
+							<target>v2</target>
 						</trans-unit>
 						<trans-unit id="e">
 							<source>e (2.0)</source>
@@ -4374,21 +4624,27 @@
 						</trans-unit>
 						<trans-unit id="x_min">
 							<source>x-min</source>
+							<target>x-min</target>
 						</trans-unit>
 						<trans-unit id="x_max">
 							<source>x-max</source>
+							<target>x-max</target>
 						</trans-unit>
 						<trans-unit id="y_min">
 							<source>y-min</source>
+							<target>y-min</target>
 						</trans-unit>
 						<trans-unit id="y_max">
 							<source>y-max</source>
+							<target>y-max</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
+							<target>Zbliżenie</target>
 						</trans-unit>
 						<trans-unit id="zoom_out">
 							<source>Zoom Out</source>
+							<target>Oddalenie</target>
 						</trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
@@ -4406,21 +4662,26 @@
 							</trans-unit>
 							<trans-unit id="undo">
 								<source>Undo</source>
+								<target>Cofnij</target>
 							</trans-unit>
 							<trans-unit id="redo">
 								<source>Redo</source>
+								<target>Powtórz</target>
 							</trans-unit>
 							<trans-unit id="cut">
 								<source>Cut</source>
+								<target>Wytnij</target>
 							</trans-unit>
 							<trans-unit id="copy">
 								<source>Copy</source>
 							</trans-unit>
 							<trans-unit id="paste">
 								<source>Paste</source>
+								<target>Wklej</target>
 							</trans-unit>
 							<trans-unit id="cleanup">
 								<source>Cleanup</source>
+								<target>Wyczyść</target>
 							</trans-unit>
 							<trans-unit id="delete">
 								<source>Delete</source>
@@ -4455,6 +4716,7 @@
 							</trans-unit>
 							<trans-unit id="sound_index_none">
 								<source>None</source>
+								<target>Brak</target>
 							</trans-unit>
 						</group>
 						<group id="tool">
@@ -4463,15 +4725,18 @@
 							</trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
+								<target>Wybierz</target>
 							</trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
 							</trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
+								<target>Dot</target>
 							</trans-unit>
 							<trans-unit id="line">
 								<source>Line</source>
+								<target>Line</target>
 							</trans-unit>
 						</group>
 					</group>
@@ -4481,21 +4746,27 @@
 						</trans-unit>
 						<trans-unit id="min_velocity">
 							<source>x-min(Velocity)</source>
+							<target>x-min(Velocity)</target>
 						</trans-unit>
 						<trans-unit id="max_velocity">
 							<source>x-max(Velocity)</source>
+							<target>x-max(Velocity)</target>
 						</trans-unit>
 						<trans-unit id="min_pitch">
 							<source>y-min(Pitch)</source>
+							<target>y-min(Pitch)</target>
 						</trans-unit>
 						<trans-unit id="max_pitch">
 							<source>y-max(Pitch)</source>
+							<target>y-max(Pitch)</target>
 						</trans-unit>
 						<trans-unit id="min_volume">
 							<source>y-min(Volume)</source>
+							<target>y-min(Volume)</target>
 						</trans-unit>
 						<trans-unit id="max_volume">
 							<source>y-max(Volume)</source>
+							<target>y-max(Volume)</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
@@ -4534,6 +4805,7 @@
 							</trans-unit>
 							<trans-unit id="run">
 								<source>Running sound</source>
+								<target>Running sound</target>
 							</trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
@@ -4545,25 +4817,30 @@
 							</trans-unit>
 							<trans-unit id="loop">
 								<source>Loop playback</source>
+								<target>Odtwarzanie w pętli</target>
 							</trans-unit>
 							<trans-unit id="constant">
 								<source>Constant speed</source>
+								<target>Stała prędkość</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
 								<source>Acceleration:</source>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
+								<target>Swap</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="play">
 							<source>Playback</source>
+							<target>Playback</target>
 						</trans-unit>
 						<trans-unit id="pause">
 							<source>Pause</source>
 						</trans-unit>
 						<trans-unit id="stop">
 							<source>Stop</source>
+							<target>Stop</target>
 						</trans-unit>
 					</group>
 					<group id="vertex_info">
@@ -4572,6 +4849,7 @@
 						</trans-unit>
 						<trans-unit id="velocity">
 							<source>Velocity</source>
+							<target>Prędkość</target>
 						</trans-unit>
 						<trans-unit id="pitch">
 							<source>Pitch</source>
@@ -4646,6 +4924,7 @@
 					<group id="message">
 						<trans-unit id="vertex_exist">
 							<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
+							<target>Punkt już istnieje na tej samej współrzędnej x, czy chcesz go zastąpić?</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -4659,9 +4938,11 @@
 						</trans-unit>
 						<trans-unit id="min">
 							<source>Min</source>
+							<target>Min</target>
 						</trans-unit>
 						<trans-unit id="max">
 							<source>Max</source>
+							<target>Max</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -4684,18 +4965,23 @@
 						</trans-unit>
 						<trans-unit id="top">
 							<source>Top</source>
+							<target>Góra</target>
 						</trans-unit>
 						<trans-unit id="bottom">
 							<source>Bottom</source>
+							<target>Dół</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
+							<target>DaytimeImage</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
+							<target>NighttimeImage</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
+							<target>TransparentColor</target>
 						</trans-unit>
 						<group id="center">
 							<trans-unit id="name">
@@ -4726,9 +5012,11 @@
 						</trans-unit>
 						<trans-unit id="number">
 							<source>Number</source>
+							<target>Number</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>Warstwa</target>
 						</trans-unit>
 					</group>
 					<group id="pilot_lamp">
@@ -4737,6 +5025,7 @@
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
+							<target>Temat</target>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
@@ -4782,9 +5071,11 @@
 						</group>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
+							<target>DefinedRadius</target>
 						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
+							<target>Promień</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
@@ -4794,12 +5085,14 @@
 						</trans-unit>
 						<trans-unit id="color">
 							<source>Color</source>
+							<target>Kolor</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
 						</trans-unit>
 						<trans-unit id="defined_origin">
 							<source>DefinedOrigin</source>
+							<target>DefinedOrigin</target>
 						</trans-unit>
 						<group id="origin">
 							<trans-unit id="name">
@@ -4814,33 +5107,43 @@
 						</group>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
+							<target>InitialAngle</target>
 						</trans-unit>
 						<trans-unit id="last_angle">
 							<source>LastAngle</source>
+							<target>LastAngle</target>
 						</trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
+							<target>Minimum</target>
 						</trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
+							<target>Maximum</target>
 						</trans-unit>
 						<trans-unit id="defined_natural_freq">
 							<source>DefinedNaturalFreq</source>
+							<target>DefinedNaturalFreq</target>
 						</trans-unit>
 						<trans-unit id="natural_freq">
 							<source>NaturalFreq</source>
+							<target>NaturalFreq</target>
 						</trans-unit>
 						<trans-unit id="defined_damping_ratio">
 							<source>DefiedDampingRatio</source>
+							<target>DefiedDampingRatio</target>
 						</trans-unit>
 						<trans-unit id="damping_ratio">
 							<source>DampingRatio</source>
+							<target>DampingRatio</target>
 						</trans-unit>
 						<trans-unit id="backstop">
 							<source>Backstop</source>
+							<target>Backstop</target>
 						</trans-unit>
 						<trans-unit id="smoothed">
 							<source>smoothed</source>
+							<target>smoothed</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
@@ -4878,6 +5181,7 @@
 						</trans-unit>
 						<trans-unit id="interval">
 							<source>Interval</source>
+							<target>Interval</target>
 						</trans-unit>
 					</group>
 					<group id="digital_gauge">
@@ -4918,6 +5222,7 @@
 						</trans-unit>
 						<trans-unit id="step">
 							<source>Step</source>
+							<target>Step</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
@@ -5030,15 +5335,18 @@
 						</group>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
+							<target>JumpScreen</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
 							<source>SoundIndex</source>
 						</trans-unit>
 						<trans-unit id="command">
 							<source>Command</source>
+							<target>Command</target>
 						</trans-unit>
 						<trans-unit id="command_option">
 							<source>CommandOption</source>
+							<target>CommandOption</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -5048,9 +5356,11 @@
 					</trans-unit>
 					<trans-unit id="key">
 						<source>Key</source>
+						<target>Przycisk</target>
 					</trans-unit>
 					<trans-unit id="filename">
 						<source>Filename</source>
+						<target>Nazwa pliku</target>
 					</trans-unit>
 					<trans-unit id="position">
 						<source>Position</source>
@@ -5104,9 +5414,11 @@
 					<group id="message">
 						<trans-unit id="empty_filename">
 							<source>File name has not been entered.</source>
+							<target>Nie podano nazwy pliku.</target>
 						</trans-unit>
 						<trans-unit id="key_exist">
 							<source>The specified key is already set.</source>
+							<target>Wybrany przycisk jest już przypisany.</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -5117,12 +5429,14 @@
 					<group id="menu">
 						<trans-unit id="error">
 							<source>Error</source>
+							<target>Błąd</target>
 						</trans-unit>
 						<trans-unit id="warning">
 							<source>Warning</source>
 						</trans-unit>
 						<trans-unit id="info">
 							<source>Information</source>
+							<target>Informacja</target>
 						</trans-unit>
 						<trans-unit id="clear">
 							<source>Clear</source>
@@ -5130,9 +5444,11 @@
 					</group>
 					<trans-unit id="level">
 						<source>Level</source>
+						<target>Poziom</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>Description</source>
+						<target>Opis</target>
 					</trans-unit>
 				</group>
 				<group id="message">
@@ -5147,18 +5463,23 @@
 					</trans-unit>
 					<trans-unit id="positive">
 						<source>positive</source>
+						<target>positive</target>
 					</trans-unit>
 					<trans-unit id="non_negative">
 						<source>non-negative</source>
+						<target>non-negative</target>
 					</trans-unit>
 					<trans-unit id="non_zero">
 						<source>non-zero</source>
+						<target>non-zero</target>
 					</trans-unit>
 					<trans-unit id="invalid_float">
 						<source>This value must be a {0}floating-point number.</source>
+						<target>This value must be a {0}floating-point number.</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
 						<source>invalid_color</source>
+						<target>invalid_color</target>
 					</trans-unit>
 				</group>
 			</group>

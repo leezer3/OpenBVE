@@ -90,6 +90,14 @@ namespace CsvRwRouteParser
 				{
 					Plugin.CurrentOptions.ViewingDistance = patch.ViewingDistance;
 				}
+
+				if (patch.ColonFix)
+				{
+					for (int i = 0; i < Expressions.Length; i++)
+					{
+						Expressions[i].Text = Expressions[i].Text.Replace(':', ';');
+					}
+				}
 			}
 		}
 	}
@@ -101,6 +109,8 @@ namespace CsvRwRouteParser
 		internal string FileName;
 		/// <summary>Whether line endings are to be fixed</summary>
 		internal bool LineEndingFix = false;
+		/// <summary>Whether colons should be aggressively replaced</summary>
+		internal bool ColonFix = false;
 		/// <summary>Whether the pitch / roll parameters are to be ignored</summary>
 		/// <remarks>These were added by later versions of BVE2 / BVE4, and some files may have comments in this space</remarks>
 		internal bool IgnorePitchRoll = false;

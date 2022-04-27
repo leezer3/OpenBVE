@@ -2,6 +2,7 @@
 using LibRender2.Screens;
 using OpenTK.Input;
 using OpenBveApi.Interface;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -62,6 +63,10 @@ namespace OpenBve
 					}
 				}
 			}
+			// Attempt to reset handle spring
+			TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+			TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			
 			BlockKeyRepeat = false;
 			//Remember to reset the keyboard modifier after we're done, else it repeats.....
 			CurrentKeyboardModifier = KeyboardModifier.None;
@@ -102,6 +107,10 @@ namespace OpenBve
 					}
 				}
 			}
+
+			// Attempt to reset handle spring
+			TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+			TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
 			BlockKeyRepeat = false;
 		}
 	}
