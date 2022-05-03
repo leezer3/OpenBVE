@@ -260,6 +260,17 @@ namespace CsvRwRouteParser
 							currentPatch.ViewingDistance = int.MaxValue;
 						}
 						break;
+					case "AggressiveRwBrackets":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.AggressiveRwBrackets = true;
+						}
+						else
+						{
+							currentPatch.AggressiveRwBrackets = false;
+						}
+						break;
 					case "Incompatible":
 						t = childNode.InnerText.Trim().ToLowerInvariant();
 						if (t == "1" || t == "true")

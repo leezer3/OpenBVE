@@ -18,7 +18,7 @@ namespace CsvRwRouteParser {
 		internal string SoundPath;
 		internal string TrainPath;
 		internal string CompatibilityFolder;
-		internal CompatabilityHacks EnabledHacks;
+		internal static CompatabilityHacks EnabledHacks;
 		internal bool SplitLineHack = true;
 		internal bool AllowTrackPositionArguments = false;
 		internal bool IsRW;

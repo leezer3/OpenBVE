@@ -98,6 +98,8 @@ namespace CsvRwRouteParser
 						Expressions[i].Text = Expressions[i].Text.Replace(':', ';');
 					}
 				}
+
+				EnabledHacks.AggressiveRwBrackets = patch.AggressiveRwBrackets;
 			}
 		}
 	}
@@ -149,5 +151,7 @@ namespace CsvRwRouteParser
 		internal int ViewingDistance = int.MaxValue;
 		/// <summary>Whether the route is incompatible with OpenBVE</summary>
 		internal bool Incompatible = false;
+		/// <summary>Whether aggressive RW bracket fixing is applied</summary>
+		internal bool AggressiveRwBrackets = false;
 	}
 }
