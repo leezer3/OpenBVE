@@ -236,8 +236,8 @@ namespace Plugin.BMP
 				if (ImageSize == 0 && Format > BmpFormat.OS2v2)
 				{
 					// Compressed image size of zero should only be valid with uncompressed data, unless OS/2 bitmaps
+					// However, continue to load and see what happens
 					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid compressed image size in Bitmap file " + fileName);
-					return false;
 				}
 
 				if (TopDown && CompressionFormat != CompressionFormat.BI_RGB && CompressionFormat != CompressionFormat.BITFIELDS)
@@ -443,7 +443,7 @@ namespace Plugin.BMP
 									}
 									for (int currentPixel = 0; currentPixel < Width; currentPixel++)
 									{
-										int colorIndex = buffer[sourceIdx];
+										int colorIndex = Math.Min(buffer[sourceIdx], ColorTable.Length -1);
 										ImageData[destIdx] = ColorTable[colorIndex].R;
 										ImageData[destIdx + 1] = ColorTable[colorIndex].G;
 										ImageData[destIdx + 2] = ColorTable[colorIndex].B;
@@ -540,6 +540,7 @@ namespace Plugin.BMP
 										switch (CompressionFormat)
 										{
 											case CompressionFormat.BI_RLE4:
+											case CompressionFormat.BI_RLE8:
 												for (int i = 0; i < runLength; i++)
 												{
 													int pix = (byte)((buffer[sourceIdx] >> 4) & 0xF);
@@ -571,8 +572,12 @@ namespace Plugin.BMP
 													}
 													rowPixel++;
 												}
-
-												sourceIdx++;
+												if (runLength % 2 != 0)
+												{
+													// Run length is odd, so we need to skip next byte to get back to data
+													sourceIdx++;
+												}
+												// Padding
 												sourceIdx = sourceIdx % 2 == 0 ? sourceIdx : sourceIdx + 2 - sourceIdx % 2;
 												break;
 											case CompressionFormat.BI_RLE24:
@@ -644,7 +649,6 @@ namespace Plugin.BMP
 											rowPixel++;
 										}
 										sourceIdx++;
-										//sourceIdx = sourceIdx % 2 == 0 ? sourceIdx : sourceIdx + 2 - sourceIdx % 2;
 										break;
 									case CompressionFormat.BI_RLE24:
 										for (int i = 0; i < numPix; i++)
