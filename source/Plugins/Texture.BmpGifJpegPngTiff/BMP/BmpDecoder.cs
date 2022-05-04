@@ -249,11 +249,10 @@ namespace Plugin.BMP
 
 				ColorTable = new Color24[ColorsUsed];
 				
-
+				int colorSize = Format == BmpFormat.OS2v1 ? 3 : 4;
 				// COLOR TABLE
 				if (ColorsUsed != 0)
 				{
-					int colorSize = Format == BmpFormat.OS2v1 ? 3 : 4;
 					buffer = new byte[ColorsUsed * colorSize];
 					if (fileReader.Read(buffer, 0, ColorsUsed * colorSize) != ColorsUsed * colorSize)
 					{
@@ -269,8 +268,12 @@ namespace Plugin.BMP
 				{
 					/*
 					 * NOTE:
-					 * If the number of colors used is set to zero,
+					 * Documentation states that if the number of colors used is set to zero,
 					 * the color table is set to the one of the standard Windows color pallettes
+					 *
+					 * However, in practice there seem to be some bitmaps in the wild
+					 * which contain a color table regardless. Only observed with 256 color bitmaps
+					 * at the minute [CHECK!!]
 					 */
 					switch (BitsPerPixel)
 					{
@@ -285,6 +288,35 @@ namespace Plugin.BMP
 						case BitsPerPixel.EightBitPalletized:
 							ColorsUsed = 256;
 							ColorTable = ColorPalettes.Windows256ColorPalette;
+
+							int possibleColorTableSize = dataOffset - (int)fileReader.Position;
+							int possibleColors = possibleColorTableSize / colorSize;
+							if (possibleColors > 3) // color table appears to be present, even though length was declared as zero
+							{
+								buffer = new byte[possibleColorTableSize];
+								fileReader.Read(buffer, 0, possibleColorTableSize);
+								bool colorTableFound = false;
+								for (int i = 0; i < buffer.Length; i++)
+								{
+									// sense check- there should be some colors here, not just pure black / white!
+									if (buffer[i] != byte.MinValue && buffer[i] != byte.MaxValue)
+									{
+										colorTableFound = true;
+										break;
+									}
+								}
+
+								if (colorTableFound)
+								{
+									ColorsUsed = possibleColors;
+									ColorTable = new Color24[ColorsUsed];
+									for (int currentColor = 0; currentColor < ColorsUsed; currentColor++)
+									{
+										int idx = currentColor * colorSize;
+										ColorTable[currentColor] = new Color24(buffer[idx + 2], buffer[idx + 1], buffer[idx]); // stored as BGR in bitmap, we want RGB
+									}
+								}
+							}
 							break;
 					}
 
