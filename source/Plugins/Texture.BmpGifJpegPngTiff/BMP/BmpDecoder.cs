@@ -543,17 +543,26 @@ namespace Plugin.BMP
 											case CompressionFormat.BI_RLE8:
 												for (int i = 0; i < runLength; i++)
 												{
-													int pix = (byte)((buffer[sourceIdx] >> 4) & 0xF);
-													if (i % 2 != 0)
+													int pix = buffer[sourceIdx];
+													if (CompressionFormat == CompressionFormat.BI_RLE4)
 													{
-														pix = (byte)(buffer[sourceIdx] & 0xF);
+														// Two color indicies
+														pix = (byte)((pix >> 4) & 0xF); // upper 4 bytes
+														if (i % 2 != 0)
+														{
+															pix = (byte)(buffer[sourceIdx] & 0xF); // lower 4 bytes
+															sourceIdx++;
+														}
+														if (rowPixel > Width - 1)
+														{
+															StartNextRow();
+														}
+													}
+													else
+													{
+														// Single color index
 														sourceIdx++;
 													}
-													if (rowPixel > Width - 1)
-													{
-														StartNextRow();
-													}
-
 													
 													int startByte = rowPixel * 4;
 													if (pix > ColorTable.Length - 1)
