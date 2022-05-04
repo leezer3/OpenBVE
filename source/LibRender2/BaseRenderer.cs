@@ -289,7 +289,7 @@ namespace LibRender2
 		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
-			if (!ForceLegacyOpenGL && currentOptions.IsUseNewRenderer) // GL3 has already failed. Don't trigger unneccessary exceptions
+			if (!ForceLegacyOpenGL && (currentOptions.IsUseNewRenderer || currentHost.Application != HostApplication.OpenBve)) // GL3 has already failed. Don't trigger unneccessary exceptions
 			{
 				try
 				{
