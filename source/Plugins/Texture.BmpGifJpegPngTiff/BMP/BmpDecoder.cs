@@ -58,6 +58,8 @@ namespace Plugin.BMP
 		/// <summary>The number of planes in the bitmap</summary>
 		/// <remarks>Must be set to 1 https://devblogs.microsoft.com/oldnewthing/20041201-00/?p=37163 </remarks>
 		private int numPlanes;
+		/// <summary>Used for building the reduced color table when hacks are enabled</summary>
+		private HashSet<Color24> reducedColorTable;
 
 		// INTERNAL MEMBERS
 
@@ -81,8 +83,6 @@ namespace Plugin.BMP
 		private int currentRow;
 		/// <summary>The index of the pixel in the current row</summary>
 		private int rowPixel;
-
-		private HashSet<Color24> reducedColorTable;
 
 		/// <summary>Reads a BMP file using this decoder</summary>
 		/// <param name="fileName">The file to read</param>
@@ -302,6 +302,7 @@ namespace Plugin.BMP
 							if (possibleColors > 3) // color table appears to be present, even though length was declared as zero
 							{
 								buffer = new byte[possibleColorTableSize];
+								// ReSharper disable once MustUseReturnValue
 								fileReader.Read(buffer, 0, possibleColorTableSize);
 								bool colorTableFound = false;
 								for (int i = 0; i < buffer.Length; i++)
@@ -351,7 +352,7 @@ namespace Plugin.BMP
 						{
 							case BitsPerPixel.Monochrome:
 								// WARNING: Monochrome may actually be any two colors
-								for (int currentRow = 0; currentRow < Height; currentRow++)
+								for (currentRow = 0; currentRow < Height; currentRow++)
 								{
 									if (!TopDown)
 									{
@@ -390,7 +391,7 @@ namespace Plugin.BMP
 								}
 								break;
 							case BitsPerPixel.TwoBitPalletized:
-								for (int currentRow = 0; currentRow < Height; currentRow++)
+								for (currentRow = 0; currentRow < Height; currentRow++)
 								{
 									if (!TopDown)
 									{
@@ -444,7 +445,7 @@ namespace Plugin.BMP
 								break;
 								//break;
 							case BitsPerPixel.FourBitPalletized:
-								for (int currentRow = 0; currentRow < Height; currentRow++)
+								for (currentRow = 0; currentRow < Height; currentRow++)
 								{
 									if (!TopDown)
 									{
@@ -475,7 +476,7 @@ namespace Plugin.BMP
 								}
 								break;
 							case BitsPerPixel.EightBitPalletized:
-								for (int currentRow = 0; currentRow < Height; currentRow++)
+								for (currentRow = 0; currentRow < Height; currentRow++)
 								{
 									if (!TopDown)
 									{
@@ -495,8 +496,41 @@ namespace Plugin.BMP
 									sourceIdx = sourceIdx % 4 == 0 ? sourceIdx : sourceIdx + 4 - sourceIdx % 4;
 								}
 								break;
+							case BitsPerPixel.SixteenBitRGB:
+								for (currentRow = 0; currentRow < Height; currentRow++)
+								{
+									if (!TopDown)
+									{
+										destIdx = (Height - currentRow - 1) * Width * 4;
+									}
+									for (int currentPixel = 0; currentPixel < Width; currentPixel++)
+									{
+										short px = ToShort(buffer, sourceIdx);
+										byte r = (byte)((px & 0xF800) >> 11);
+										byte g = (byte)((px & 0x07E0) >> 5);
+										byte b = (byte)(px & 0x1F);
+										ImageData[destIdx] = r;
+										ImageData[destIdx + 1] =  g;
+										ImageData[destIdx + 2] =  b;
+										ImageData[destIdx + 3] = byte.MaxValue;
+										if (Plugin.EnabledHacks.ReduceTransparencyColorDepth)
+										{
+											Color24 c = new Color24(r, g, b);
+											if (!reducedColorTable.Contains(c))
+											{
+												reducedColorTable.Add(c);
+											}
+										}
+										sourceIdx++;
+										destIdx+= 4;
+										
+									}
+									// BMP scan lines are zero-padded to the nearest 4-byte boundary
+									sourceIdx = sourceIdx % 4 == 0 ? sourceIdx : sourceIdx + 4 - sourceIdx % 4;
+								}
+								break;
 							default:
-								for (int currentRow = 0; currentRow < Height; currentRow++)
+								for (currentRow = 0; currentRow < Height; currentRow++)
 								{
 									if (!TopDown)
 									{
@@ -508,7 +542,7 @@ namespace Plugin.BMP
 										ImageData[destIdx + 1] =  buffer[sourceIdx + 1];
 										ImageData[destIdx + 2] =  buffer[sourceIdx];
 										ImageData[destIdx + 3] = byte.MaxValue;
-										if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
+										if (Plugin.EnabledHacks.ReduceTransparencyColorDepth)
 										{
 											Color24 c = new Color24(buffer[sourceIdx + 2], buffer[sourceIdx + 1], buffer[sourceIdx]);
 											if (!reducedColorTable.Contains(c))
@@ -517,6 +551,11 @@ namespace Plugin.BMP
 											}
 										}
 										sourceIdx+= 3;
+										if (BitsPerPixel == BitsPerPixel.ThirtyTwoBitRGB)
+										{
+											// Alpha in bitmaps is not currently supported by this decoder
+											sourceIdx++;
+										}
 										destIdx+= 4;
 										
 									}
@@ -783,10 +822,20 @@ namespace Plugin.BMP
 		 * This is faster than using the BitConvertor as we don't have to init a new class every time we call it
 		 */
 
+		/// <summary>Gets a short from the specified offset in a byte array</summary>
+		/// <param name="byteArray">The byte array</param>
+		/// <param name="offset">The starting offset of the short</param>
+		internal short ToShort(byte[] byteArray, int offset)
+		{
+			short number = byteArray[offset + 1];
+			number <<= 4;
+			number += byteArray[offset];
+			return number;
+		}
+
 		/// <summary>Gets an Int16 from the specified offset in a byte array</summary>
 		/// <param name="byteArray">The byte array</param>
 		/// <param name="offset">The starting offset of the Int16</param>
-		/// <returns></returns>
 		internal int ToInt16(byte[] byteArray, int offset)
 		{
 			return byteArray[offset] | (byteArray[offset + 1] << 8);

@@ -1,4 +1,5 @@
-﻿namespace Plugin.BMP
+﻿// ReSharper disable UnusedMember.Global
+namespace Plugin.BMP
 {
 	/// <summary>Bits per pixel for the bitmap format</summary>
 	internal enum BitsPerPixel
@@ -15,6 +16,8 @@
 		/// <summary>65536 colors</summary>
 		SixteenBitRGB = 16,
 		/// <summary>16 million colors</summary>
-		TwentyFourBitRGB = 24
+		TwentyFourBitRGB = 24,
+		/// <summary>16 million colors with alpha</summary>
+		ThirtyTwoBitRGB = 32
 	}
 }

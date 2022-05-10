@@ -35,6 +35,7 @@ namespace Plugin {
 					byte[] buffer = new byte[6];
 					if (fs.Length > buffer.Length)
 					{
+						// ReSharper disable once MustUseReturnValue
 						fs.Read(buffer, 0, buffer.Length);
 					}
 					fs.Close();

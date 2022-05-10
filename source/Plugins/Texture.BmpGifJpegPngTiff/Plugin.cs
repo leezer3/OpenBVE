@@ -11,7 +11,7 @@ namespace Plugin {
 		// --- members ---
 		
 		/// <summary>The host that loaded the plugin.</summary>
-		internal static HostInterface CurrentHost = null;
+		internal static HostInterface CurrentHost;
 		/// <summary>The list of enabled hacks</summary>
 		internal static CompatabilityHacks EnabledHacks;
 		
@@ -48,8 +48,8 @@ namespace Plugin {
 				    if (identifier1 == 0x38464947 & ((identifier2 & 0xFFFF) == 0x6137 | (identifier2 & 0xFFFF) == 0x6139)) {
 				        /* GIF */
 				        stream.Position = 6;
-				        width = (int)reader.ReadUInt16();
-				        height = (int)reader.ReadUInt16();
+				        width = reader.ReadUInt16();
+				        height = reader.ReadUInt16();
 				        return true;
 				    }
 				    if (identifier1 == 0x474E5089 & identifier2 == 0x0A1A0A0D) {
