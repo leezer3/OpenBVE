@@ -355,11 +355,12 @@ namespace Plugin
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
 											if (enabledHacks.BveTsHacks)
 											{
-												if (IsB3D && j == 0 && Arguments[j] == string.Empty)
+												if (j == 0 && string.IsNullOrEmpty(Arguments[j]))
 												{
 													/*
 													* Face ,1,2,3
 													* is interpreted by BVE as Face 0,1,2,3
+													* Applies to both CSV and B3D files
 													*/
 													a[j] = 0;
 												}
