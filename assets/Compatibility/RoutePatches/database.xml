@@ -1,5 +1,6 @@
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <RoutePatches>
+	<PatchList>Africa.xml</PatchList>
 	<PatchList>America.xml</PatchList>
 	<PatchList>Australia.xml</PatchList>
 	<PatchList>Brazil.xml</PatchList>
