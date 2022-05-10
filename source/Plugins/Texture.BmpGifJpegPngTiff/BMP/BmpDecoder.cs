@@ -27,7 +27,9 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using OpenBveApi.Hosts;
 
@@ -80,10 +82,11 @@ namespace Plugin.BMP
 		/// <summary>The index of the pixel in the current row</summary>
 		private int rowPixel;
 
+		private HashSet<Color24> reducedColorTable;
+
 		/// <summary>Reads a BMP file using this decoder</summary>
 		/// <param name="fileName">The file to read</param>
 		/// <returns>Whether reading succeeded</returns>
-
 		internal bool Read(string fileName)
 		{
 			using (Stream fileReader = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -245,6 +248,11 @@ namespace Plugin.BMP
 					// Top down bitmap cannot be in compressed format
 					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "A TopDown bitmap cannot be compressed in Bitmap file " + fileName);
 					return false;
+				}
+
+				if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
+				{
+					reducedColorTable = new HashSet<Color24>();
 				}
 
 				ColorTable = new Color24[ColorsUsed];
@@ -500,8 +508,17 @@ namespace Plugin.BMP
 										ImageData[destIdx + 1] =  buffer[sourceIdx + 1];
 										ImageData[destIdx + 2] =  buffer[sourceIdx];
 										ImageData[destIdx + 3] = byte.MaxValue;
+										if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
+										{
+											Color24 c = new Color24(buffer[sourceIdx + 2], buffer[sourceIdx + 1], buffer[sourceIdx]);
+											if (!reducedColorTable.Contains(c))
+											{
+												reducedColorTable.Add(c);
+											}
+										}
 										sourceIdx+= 3;
 										destIdx+= 4;
+										
 									}
 									// BMP scan lines are zero-padded to the nearest 4-byte boundary
 									sourceIdx = sourceIdx % 4 == 0 ? sourceIdx : sourceIdx + 4 - sourceIdx % 4;
@@ -541,6 +558,10 @@ namespace Plugin.BMP
 										break;
 									case 1:
 										//EOF
+										if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
+										{
+											ColorTable = reducedColorTable.ToArray();
+										}
 										return true;
 									case 2:
 										/*
@@ -635,7 +656,14 @@ namespace Plugin.BMP
 													rowBytes[startByte + 1] = buffer[sourceIdx + 1];
 													rowBytes[startByte + 2] = buffer[sourceIdx];
 													rowBytes[startByte + 3] = byte.MaxValue;
-											
+													if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
+													{
+														Color24 c = new Color24(buffer[sourceIdx + 2], buffer[sourceIdx + 1], buffer[sourceIdx]);
+														if (!reducedColorTable.Contains(c))
+														{
+															reducedColorTable.Add(c);
+														}
+													}
 													rowPixel++;
 													sourceIdx += 3;
 												}
@@ -704,6 +732,14 @@ namespace Plugin.BMP
 											rowBytes[startByte + 1] = buffer[sourceIdx + 1];
 											rowBytes[startByte + 2] = buffer[sourceIdx];
 											rowBytes[startByte + 3] = byte.MaxValue;
+											if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
+											{
+												Color24 c = new Color24(buffer[sourceIdx + 2], buffer[sourceIdx + 1], buffer[sourceIdx]);
+												if (!reducedColorTable.Contains(c))
+												{
+													reducedColorTable.Add(c);
+												}
+											}
 											rowPixel++;
 										}
 										sourceIdx += 3;
@@ -714,7 +750,10 @@ namespace Plugin.BMP
 						break;
 				}
 			}
-
+			if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
+			{
+				ColorTable = reducedColorTable.ToArray();
+			}
 			return true;
 		}
 
