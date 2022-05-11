@@ -971,6 +971,12 @@ namespace Plugin
 									b = b < 0 ? 0 : 255;
 								}
 								lastTransparentColor = new Color24((byte) r, (byte) g, (byte) b);
+								int ml = Builder.Materials.Length;
+								if (enabledHacks.BveTsHacks && !string.IsNullOrEmpty(Builder.Materials[ml -1].DaytimeTexture) && Builder.Materials[ml - 1].DaytimeTexture.StartsWith(CompatibilityFolder) && Builder.Materials[ml - 1].DaytimeTexture.IndexOf("Signals\\Static", StringComparison.InvariantCultureIgnoreCase) != -1)
+								{
+									// If using a replaced static signal texture ensure the transparent color is correct
+									lastTransparentColor = new Color24(0, 0, 255);
+								}
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].TransparentColor = lastTransparentColor.Value;
 									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;
