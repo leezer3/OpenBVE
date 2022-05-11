@@ -40,7 +40,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			}
 
 			bool ver1220000 = false;
-
+			int version = 0;
 			foreach (string line in lines)
 			{
 				if (line.Length != 0)
@@ -62,11 +62,10 @@ namespace TrainEditor2.IO.Trains.TrainDat
 							if (s.ToLowerInvariant().StartsWith("openbve"))
 							{
 								string tt = s.Substring(7, s.Length - 7);
-								int v;
 
-								if (int.TryParse(tt, NumberStyles.Float, culture, out v))
+								if (int.TryParse(tt, NumberStyles.Float, culture, out version))
 								{
-									if (v > currentVersion)
+									if (version > currentVersion)
 									{
 										Interface.AddMessage(MessageType.Warning, false, $"The train.dat {fileName} was created with a newer version of openBVE. Please check for an update.");
 									}
@@ -254,10 +253,12 @@ namespace TrainEditor2.IO.Trains.TrainDat
 						double[] delayBrakeDown = delay.DelayBrake.Select(x => x.Down).ToArray();
 						double[] delayLocoBrakeUp = delay.DelayLocoBrake.Select(x => x.Up).ToArray();
 						double[] delayLocoBrakeDown = delay.DelayLocoBrake.Select(x => x.Down).ToArray();
-
+						double[] delayElectricBrakeUp = delay.DelayElectricBrake.Select(x => x.Down).ToArray();
+						double[] delayElectricBrakeDown = delay.DelayElectricBrake.Select(x => x.Down).ToArray();
 						delay.DelayPower.Clear();
 						delay.DelayBrake.Clear();
 						delay.DelayLocoBrake.Clear();
+						delay.DelayElectricBrake.Clear();
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
@@ -293,7 +294,38 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											delayBrakeDown = new[] { a };
 										}
-
+										break;
+									case 4:
+										if (version >= 18320)
+										{
+											delayElectricBrakeUp = new[] { a };
+										}
+										else
+										{
+											delayLocoBrakeUp = new[] { a };
+										}
+										break;
+									case 5:
+										if (version >= 18320)
+										{
+											delayElectricBrakeDown = new[] { a };
+										}
+										else
+										{
+											delayLocoBrakeDown = new[] { a };
+										}
+										break;
+									case 6:
+										if (version >= 18320)
+										{
+											delayLocoBrakeUp = new[] { a };
+										}
+										break;
+									case 7:
+										if (version >= 18320)
+										{
+											delayLocoBrakeDown = new[] { a };
+										}
 										break;
 								}
 							}
@@ -314,10 +346,24 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										delayBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
 										break;
 									case 4:
-										delayLocoBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										if (version >= 18320)
+										{
+											delayElectricBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										}
+										else
+										{
+											delayLocoBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										}
 										break;
 									case 5:
-										delayLocoBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										if (version >= 18320)
+										{
+											delayElectricBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										}
+										else
+										{
+											delayLocoBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();	
+										}
 										break;
 								}
 							}
@@ -376,7 +422,17 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 							delay.DelayLocoBrake.Add(entry);
 						}
+						Delay.Entry e = new Delay.Entry();
+						if (delayElectricBrakeUp.Length > 0)
+						{
+							e.Up = delayElectricBrakeUp[0];
+						}
 
+						if (delayElectricBrakeDown.Length > 0)
+						{
+							e.Down = delayElectricBrakeDown[0];
+						}
+						delay.DelayElectricBrake.Add(e);
 						i--;
 						break;
 					case "#move":

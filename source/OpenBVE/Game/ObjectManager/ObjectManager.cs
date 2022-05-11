@@ -33,6 +33,8 @@ namespace OpenBve
 			}
 		}
 
+		/// <summary>Updates any TFOs within the world after a jump</summary>
+		/// <param name="Train">The train which has jumped</param>
 		public static void ProcessJump(AbstractTrain Train)
 		{
 			if (Train.IsPlayerTrain)

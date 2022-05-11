@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -156,6 +156,10 @@ namespace OpenBve.Formats.MsTs
 
 		public override Block ReadSubBlock(KujuTokenID newToken)
 		{
+			if (myStream.Position == myStream.Length)
+			{
+				throw new EndOfStreamException("Expected " + newToken + " however, no further data available");
+			}
 			KujuTokenID currentToken = (KujuTokenID) myReader.ReadUInt16();
 			if (currentToken != newToken)
 			{

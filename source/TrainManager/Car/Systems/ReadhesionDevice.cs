@@ -106,5 +106,12 @@ namespace TrainManager.Car
 				}
 			}
 		}
+
+		/// <summary>Called to reset the readhesion device after a jump</summary>
+		public void Jump()
+		{
+			NextUpdateTime = 0;
+			MaximumAccelerationOutput = double.PositiveInfinity;
+		}
 	}
 }

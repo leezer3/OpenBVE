@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 
 namespace TrainEditor2.Views
 {
@@ -636,6 +636,8 @@ namespace TrainEditor2.Views
 			this.comboBoxHandleType = new System.Windows.Forms.ComboBox();
 			this.labelHandleType = new System.Windows.Forms.Label();
 			this.tabControlEditor = new System.Windows.Forms.TabControl();
+			this.buttonDelayElectricBrake = new System.Windows.Forms.Button();
+			this.labelDelayElectricBrake = new System.Windows.Forms.Label();
 			this.panelCars.SuspendLayout();
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
@@ -5343,9 +5345,11 @@ namespace TrainEditor2.Views
 			this.groupBoxDelay.Controls.Add(this.labelDelayLocoBrake);
 			this.groupBoxDelay.Controls.Add(this.labelDelayBrake);
 			this.groupBoxDelay.Controls.Add(this.labelDelayPower);
+			this.groupBoxDelay.Controls.Add(this.buttonDelayElectricBrake);
+			this.groupBoxDelay.Controls.Add(this.labelDelayElectricBrake);
 			this.groupBoxDelay.Location = new System.Drawing.Point(8, 480);
 			this.groupBoxDelay.Name = "groupBoxDelay";
-			this.groupBoxDelay.Size = new System.Drawing.Size(272, 96);
+			this.groupBoxDelay.Size = new System.Drawing.Size(272, 120);
 			this.groupBoxDelay.TabIndex = 2;
 			this.groupBoxDelay.TabStop = false;
 			this.groupBoxDelay.Text = "Delay";
@@ -6519,9 +6523,28 @@ namespace TrainEditor2.Views
 			this.tabControlEditor.Size = new System.Drawing.Size(800, 696);
 			this.tabControlEditor.TabIndex = 9;
 			// 
+			// buttonDelayElectricBrake
+			// 
+			this.buttonDelayElectricBrake.Location = new System.Drawing.Point(160, 90);
+			this.buttonDelayElectricBrake.Name = "buttonDelayElectricBrake";
+			this.buttonDelayElectricBrake.Size = new System.Drawing.Size(48, 21);
+			this.buttonDelayElectricBrake.TabIndex = 39;
+			this.buttonDelayElectricBrake.Text = "Set...";
+			this.buttonDelayElectricBrake.UseVisualStyleBackColor = true;
+			this.buttonDelayElectricBrake.Click += new System.EventHandler(this.buttonDelayElectricBrake_Click);
+			// 
+			// labelDelayElectricBrake
+			// 
+			this.labelDelayElectricBrake.Location = new System.Drawing.Point(8, 90);
+			this.labelDelayElectricBrake.Name = "labelDelayElectricBrake";
+			this.labelDelayElectricBrake.Size = new System.Drawing.Size(144, 17);
+			this.labelDelayElectricBrake.TabIndex = 38;
+			this.labelDelayElectricBrake.Text = "Electric Brake:";
+			this.labelDelayElectricBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
 			// FormEditor
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1000, 720);
 			this.Controls.Add(this.tabControlEditor);
@@ -7292,5 +7315,7 @@ namespace TrainEditor2.Views
 		private ToolStripMenuItem toolStripMenuItemClear;
 		private NumericUpDown numericUpDownTouchLayer;
 		private Label labelTouchLayer;
+		private Button buttonDelayElectricBrake;
+		private Label labelDelayElectricBrake;
 	}
 }

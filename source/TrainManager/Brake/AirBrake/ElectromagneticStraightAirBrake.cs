@@ -6,7 +6,7 @@ namespace TrainManager.BrakeSystems
 {
 	public class ElectromagneticStraightAirBrake : CarBrake
 	{
-		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, ReverserHandle ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves)
+		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, ReverserHandle ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves)
 		{
 			electropneumaticBrakeType = type;
 			emergencyHandle = EmergencyHandle;
@@ -14,6 +14,8 @@ namespace TrainManager.BrakeSystems
 			isMotorCar = IsMotorCar;
 			brakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
+			motorDecelerationDelayUp = MotorDecelerationDelayUp;
+			motorDecelerationDelayDown = MotorDecelerationDelayDown;
 			decelerationCurves = DecelerationCurves;
 		}
 
@@ -273,6 +275,32 @@ namespace TrainManager.BrakeSystems
 
 			double pressureratio = brakeCylinder.CurrentPressure / brakeCylinder.ServiceMaximumPressure;
 			deceleration = pressureratio * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
+		}
+
+		
+
+		public override double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
+		{
+			double actualDeceleration = 0;
+			if (lastHandlePosition != BrakeHandle.Actual)
+			{
+				motorDecelerationDelayTimer = BrakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
+				lastHandlePosition = BrakeHandle.Actual;
+			}
+			if (BrakeHandle.Actual != 0)
+			{
+				motorDecelerationDelayTimer -= TimeElapsed;
+				if (motorDecelerationDelayTimer < 0)
+				{
+					actualDeceleration = (BrakeHandle.Actual / (double)BrakeHandle.MaximumNotch) * motorDeceleration;
+					lastMotorDeceleration = actualDeceleration;
+				}
+				else if (lastHandlePosition != 0)
+				{
+					actualDeceleration = lastMotorDeceleration;
+				}
+			}
+			return actualDeceleration;
 		}
 	}
 }

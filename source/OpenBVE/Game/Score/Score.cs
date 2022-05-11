@@ -336,7 +336,21 @@ namespace OpenBve
 					}
 				}
 				// passengers
-				if (TrainManager.PlayerTrain.Passengers.FallenOver & PassengerTimer == 0.0)
+				bool fallenOver = false;
+				for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+				{
+					/*
+					 * NOTE: This should currently break on the first car.
+					 * When other cargo types are implemented, it may not
+					 */
+
+					if (TrainManager.PlayerTrain.Cars[i].Cargo.Damaged)
+					{
+						fallenOver = true;
+						break;
+					}
+				}
+				if (fallenOver & PassengerTimer == 0.0)
 				{
 					int x = ScoreValuePassengerDiscomfort;
 					this.CurrentValue += x;
@@ -348,7 +362,7 @@ namespace OpenBve
 					PassengerTimer -= TimeElapsed;
 					if (PassengerTimer <= 0.0)
 					{
-						if (TrainManager.PlayerTrain.Passengers.FallenOver)
+						if (fallenOver)
 						{
 							PassengerTimer = 5.0;
 						}

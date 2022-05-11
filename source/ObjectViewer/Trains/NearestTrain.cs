@@ -73,7 +73,7 @@ namespace ObjectViewer.Trains
 				}
 				else
 				{
-					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0.0, 0.0, 0.0, 0.0, new AccelerationCurve[] { });
 				}
 				//At the minute, Object Viewer uses dummy brake systems
 				train.Cars[i].CarBrake.mainReservoir = new MainReservoir(Status.MainReservoirPressure * 1000.0);

@@ -8,6 +8,7 @@ using OpenBveApi.Interface;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Power;
 using TrainManager.SafetySystems;
 
 namespace TrainEditor {
@@ -517,12 +518,9 @@ namespace TrainEditor {
 				int n = Train.Acceleration.Entries.Length;
 				if (Train.Handle.PowerNotches > n) {
 					Array.Resize(ref Train.Acceleration.Entries, Train.Handle.PowerNotches);
-					for (int i = n; i < Train.Handle.PowerNotches; i++) {
-						Train.Acceleration.Entries[i].StageZeroAcceleration = 1.0;
-						Train.Acceleration.Entries[i].StageOneAcceleration = 1.0;
-						Train.Acceleration.Entries[i].StageOneSpeed = 25.0;
-						Train.Acceleration.Entries[i].StageTwoSpeed = 25.0;
-						Train.Acceleration.Entries[i].StageTwoExponent = 1.0;
+					for (int i = n; i < Train.Handle.PowerNotches; i++)
+					{
+						Train.Acceleration.Entries[i] = new BveAccelerationCurve(1.0, 1.0, 25, 25, 1.0);
 					}
 				}
 				comboboxAccelerationNotch.Items.Clear();

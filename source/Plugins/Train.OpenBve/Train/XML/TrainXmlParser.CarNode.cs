@@ -11,6 +11,8 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Cargo;
+using TrainManager.Handles;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -93,9 +95,10 @@ namespace Train.OpenBve
 								ParseBrakeNode(childNodes[0], fileName, Car, ref Train);
 								currentPath = savedPath;
 							}
-							catch
+							catch(Exception ex)
 							{
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Failed to load the child Brake XML file specified in " +c.InnerText);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
 							}
 						}
 						break;
@@ -138,7 +141,7 @@ namespace Train.OpenBve
 							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[AccelerationCurves.Length];
 							for (int i = 0; i < AccelerationCurves.Length; i++)
 							{
-								Train.Cars[Car].Specs.AccelerationCurves[i] = AccelerationCurves[i].Clone(AccelerationCurves[i].Multiplier);
+								Train.Cars[Car].Specs.AccelerationCurves[i] = AccelerationCurves[i].Clone();
 							}
 						}
 						else
@@ -392,61 +395,32 @@ namespace Train.OpenBve
 						}
 						break;
 					case "accelerationcurves":
+						/*
+						 * NOTE: This was initially implemented here.
+						 * It has moved to being a child-node of the power node
+						 * Retain this for the minute in case someone has actually used the thing (although the format is an ongoing WIP)....
+						 */
 						CopyAccelerationCurves = false;
+						Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(c, fileName);
+						break;
+					case "power":
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
-							List<AccelerationCurve> accelerationCurves = new List<AccelerationCurve>();
 							foreach (XmlNode cc in c.ChildNodes)
 							{
 								switch (cc.Name.ToLowerInvariant())
 								{
-									case "openbve": // don't support legacy BVE2 curves in XML, but at the same time specify that this is deliberately BVE4 / OpenBVE format
-										BveAccelerationCurve curve = new BveAccelerationCurve();
-										foreach (XmlNode sc in cc.ChildNodes)
-										{
-											switch (sc.Name.ToLowerInvariant())
-											{
-												case "stagezeroacceleration":
-													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageZeroAcceleration))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage zero acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-													}
-													curve.StageZeroAcceleration *= 0.277777777777778;
-													break;
-												case "stageoneacceleration":
-													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneAcceleration))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage one acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-													}
-													curve.StageOneAcceleration *= 0.277777777777778;
-													break;
-												case "stageonespeed":
-													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneSpeed))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage one speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-													}
-													curve.StageOneSpeed *= 0.277777777777778;
-													break;
-												case "stagetwospeed":
-													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoSpeed))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage two speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-													}
-													curve.StageTwoSpeed *= 0.277777777777778;
-													break;
-												case "stagetwoexponent":
-													if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoExponent))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage two exponent was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-													}
-													break;
-											}
-										}
-										accelerationCurves.Add(curve);
+									case "handle":
+										AbstractHandle p = Train.Handles.Power; // yuck, but we can't store this as the base type due to constraints elsewhere
+										ParseHandleNode(cc, ref p, Car, Train, fileName);
+										break;
+									case "accelerationcurves":
+										CopyAccelerationCurves = false;
+										Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(cc, fileName);
 										break;
 								}
 							}
-							Train.Cars[Car].Specs.AccelerationCurves = accelerationCurves.ToArray();
+
 						}
 						break;
 					case "doors":
@@ -489,7 +463,21 @@ namespace Train.OpenBve
 						doorWidth *= 1000.0;
 						doorTolerance *= 1000.0;
 						Train.Cars[Car].Doors[0] = new Door(-1, doorWidth, doorTolerance);
-						Train.Cars[Car].Doors[0] = new Door(1, doorWidth, doorTolerance);
+						Train.Cars[Car].Doors[1] = new Door(1, doorWidth, doorTolerance);
+						break;
+					case "cargo":
+						switch (c.InnerText.ToLowerInvariant())
+						{
+							case "passengers":
+								Train.Cars[Car].Cargo = new Passengers(Train.Cars[Car]);
+								break;
+							case "freight":
+								Train.Cars[Car].Cargo = new RobustFreight(Train.Cars[Car]);
+								break;
+							case "none":
+								Train.Cars[Car].Cargo = new EmptyLoad();
+								break;
+						}
 						break;
 				}
 			}

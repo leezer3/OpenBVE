@@ -355,11 +355,12 @@ namespace Plugin
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
 											if (enabledHacks.BveTsHacks)
 											{
-												if (IsB3D && j == 0 && Arguments[j] == string.Empty)
+												if (j == 0 && string.IsNullOrEmpty(Arguments[j]))
 												{
 													/*
 													* Face ,1,2,3
 													* is interpreted by BVE as Face 0,1,2,3
+													* Applies to both CSV and B3D files
 													*/
 													a[j] = 0;
 												}
@@ -864,6 +865,11 @@ namespace Plugin
 								}
 								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)255);
 								Object.ApplyColor(newColor, true);
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].EmissiveColor = (Color24)newColor;
+									Builder.Materials[j].Flags |= MaterialFlags.Emissive;
+								}
 							}
 						} break;
 						case "setemissivecolor":
@@ -1108,6 +1114,26 @@ namespace Plugin
 												if (Arguments[0].StartsWith("swiss1/", StringComparison.InvariantCultureIgnoreCase))
 												{
 													Arguments[0] = Arguments[0].Substring(7);
+													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													if (System.IO.File.Exists(tday))
+													{
+														hackFound = true;
+													}
+												}
+
+												if (Arguments[0].StartsWith("/U5/", StringComparison.InvariantCultureIgnoreCase))
+												{
+													Arguments[0] = Arguments[0].Substring(4);
+													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													if (System.IO.File.Exists(tday))
+													{
+														hackFound = true;
+													}
+												}
+
+												if (Arguments[0].StartsWith("U5/", StringComparison.InvariantCultureIgnoreCase))
+												{
+													Arguments[0] = Arguments[0].Substring(3);
 													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 													if (System.IO.File.Exists(tday))
 													{

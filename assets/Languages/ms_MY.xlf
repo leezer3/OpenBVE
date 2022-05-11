@@ -1,0 +1,5489 @@
+<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="ms-MY">
+		<body>
+			<group id="language">
+				<trans-unit id="name">
+					<source>English (United States)</source>
+					<target>Bahasa Melayu (Malaysia)</target>
+				</trans-unit>
+				<trans-unit id="flag">
+					<source>US.png</source>
+					<target>MY.png</target>
+				</trans-unit>
+				<trans-unit id="contributors">
+					<source>Unknown</source>
+					<target>Sam Alif Tech</target>
+				</trans-unit>
+				<trans-unit id="last_updated">
+					<source>2019-06-29</source>
+					<target>2019-06-29</target>
+				</trans-unit>
+			</group>
+			<group id="openbve">
+				<group id="program">
+					<trans-unit id="title">
+						<source>openBVE</source>
+						<target>openBVE</target>
+					</trans-unit>
+				</group>
+				<group id="panel">
+					<trans-unit id="start">
+						<source>Start new game</source>
+						<target>Mulakan game baharu</target>
+					</trans-unit>
+					<trans-unit id="review">
+						<source>Review last game</source>
+						<target>Semak game lepas</target>
+					</trans-unit>
+					<trans-unit id="getaddons">
+						<source>Get Add-ons</source>
+						<target>Dapatkan Add-ons</target>
+					</trans-unit>
+					<trans-unit id="controls">
+						<source>Customize controls</source>
+						<target>Sesuaikan kawalan</target>
+					</trans-unit>
+					<trans-unit id="options">
+						<source>Options</source>
+						<target>Tetapan</target>
+					</trans-unit>
+					<trans-unit id="homepage">
+						<source>Visit official homepage</source>
+						<target>Lawat laman utama rasmi</target>
+					</trans-unit>
+					<trans-unit id="updates">
+						<source>Check for updates</source>
+						<target>Semak untuk kemas kini</target>
+					</trans-unit>
+					<trans-unit id="updates_invalid">
+						<source>A connection to the server could be established. Unfortunately, the version information could not be retrieved.</source>
+						<target>Sambungan ke pelayan dapat disambungkan. Malangnya, maklumat versi tidak dapat diambil semula.</target>
+					</trans-unit>
+					<trans-unit id="updates_old">
+						<source>You already have the latest version.</source>
+						<target>Anda sudah mempunyai versi yang terkini.</target>
+					</trans-unit>
+					<trans-unit id="updates_new">
+						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
+						<target>Versi baharu [version] ([date]) sudah tersedia untuk dimuat turun dari Laman utama Rasmi OpenBVE.</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>Tutup</target>
+					</trans-unit>
+					<trans-unit id="packages">
+						<source>Package Management</source>
+						<target>Pengurusan pakej</target>
+					</trans-unit>
+					<trans-unit id="reportbug">
+						<source>Report Problem</source>
+						<target>Laporkan masalah</target>
+					</trans-unit>
+					<trans-unit id="about">
+						<source>About</source>
+						<target>Tentang</target>
+					</trans-unit>
+				</group>
+				<group id="mode">
+					<trans-unit id="arcade">
+						<source>Arcade</source>
+						<target>Arked</target>
+					</trans-unit>
+					<trans-unit id="normal">
+						<source>Normal</source>
+						<target>Normal</target>
+					</trans-unit>
+					<trans-unit id="expert">
+						<source>Expert</source>
+						<target>Pakar</target>
+					</trans-unit>
+					<trans-unit id="unknown">
+						<source>Unknown</source>
+						<target>Tidak diketahui</target>
+					</trans-unit>
+				</group>
+				<group id="errors">
+					<trans-unit id="critical_file">
+						<source>A critical error occured whilst parsing the [file] file</source>
+						<target>Ralat kritikal berlaku semasa menghuraikan fail [file]</target>
+					</trans-unit>
+					<trans-unit id="filesystem_invalid">
+						<source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
+						<target>Konfigurasi sistem fail tidak dapat diakses atau tidak sah kerana sebab berikut:</target>
+					</trans-unit>
+					<trans-unit id="warning">
+						<source>Warning:</source>
+						<target>Amaran:</target>
+					</trans-unit>
+					<trans-unit id="controls_missing">
+						<source>No control configuration files found.</source>
+						<target>Tidak fail konfigurasi kawalan dijumpai.</target>
+					</trans-unit>
+					<trans-unit id="controls_oldversion">
+						<source>An older key-configuration file was found.</source>
+						<target>Konfigurasi kunci yang lama telah ditemui.</target>
+					</trans-unit>
+					<trans-unit id="controls_reset">
+						<source>The current key-configuration has been reset to defaults.</source>
+						<target>Konfigurasi kunci terkini telah disetkan semula kepada lalai.</target>
+					</trans-unit>
+					<trans-unit id="controls_default_oldversion">
+						<source>The default key assingment file is an older version or corrupt.</source>
+						<target>Fail penetapan kunci lalai ialah versi lama atau telah rosak.</target>
+					</trans-unit>
+					<trans-unit id="controls_default_missing">
+						<source>The default key assignment file does not exist.</source>
+						<target>Fail penetapan kunci lalai tidak wujud.</target>
+					</trans-unit>
+					<trans-unit id="controls_ingame">
+						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
+						<target>Anda sedang berjalan pada backend [platform]. Sila gunakan menu dalam permainan untuk mengkonfigurasi sebarang kawalan berasaskan joystick.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_version">
+						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
+						<target>OpenAL 1.1 diperlukan. Anda kelihatan mempunyai versi 1.0.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_context">
+						<source>The OpenAL context could not be created.</source>
+						<target>Konteks OpenAL tidak dapat dibuat.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_device">
+						<source>The OpenAL sound device could not be opened.</source>
+						<target>Peranti bunyi OpenAL tidak dapat dibuka.</target>
+					</trans-unit>
+					<trans-unit id="fullscreen_switch1">
+						<source>An error occured whilst attempting to switch to fullscreen mode.</source>
+						<target>Ralat telah berlaku apabila anda bertukar ke mod skrin penuh.</target>
+					</trans-unit>
+					<trans-unit id="fullscreen_switch2">
+						<source>Please check your fullscreen resolution settings.</source>
+						<target>Sila semak tetapan resolusi mod skrin penuh.</target>
+					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+						<target>Sila pilih fail laluan untuk mula.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_withtrack">
+						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
+						<target>Laluan yang dipilih adalah rosak: \r\n dengan WithTrack hilang.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_nostations">
+						<source>The selected route is corrupt: \r\n No stations defined.</source>
+						<target>Laluan yang dipilih adalah rosak: \n\r Tiada stesen yang ditarifkan.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_noobjects">
+						<source>The selected route is corrupt: \r\n No objects defined.</source>
+						<target>Laluan yang dipilih adalah rosak: \r\n Tiada objek yang ditakrifkan.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+						<target>Laluan yang dipilih adalah rosak: \r\n Tidak dapat mencari kesemua objek yang ditakrifkan.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_missingobjects">
+						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+					</trans-unit>
+					<trans-unit id="plugin_failure1">
+						<source>The train plugin [plugin] failed to load.</source>
+						<target>Plugin kereta api [plugin] gagal dimuatkan.</target>
+					</trans-unit>
+					<trans-unit id="plugin_failure2">
+						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
+						<target>Sistem ATS/ATC yang terbina dalam akan digunakan. Sebaliknya, ia mungkin akan menimbulkan masalah</target>
+					</trans-unit>
+					<trans-unit id="package_filename_empty">
+						<source>Attempted to create a package with an empty filename.</source>
+						<target>Telah mencuba untuk membuat pakej dengan tiada nama fail.</target>
+					</trans-unit>
+					<trans-unit id="package_directory_missing">
+						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+						<target>Direktori tempat anda cuba menyimpan fail pakej tidak wujud: \r \n</target>
+					</trans-unit>
+					<trans-unit id="package_directory_nowrite">
+						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+						<target>Tiada akses menulis tersedia dalam direktori  di mana anda mencuba untuk menyimpan fail pakej: \r \n</target>
+					</trans-unit>
+					<trans-unit id="package_file_generic">
+						<source>Failed to create the following file: \r \n</source>
+						<target>Gagal untuk mencipta faol berikut: \r \n</target>
+					</trans-unit>
+					<trans-unit id="security_checkaccess">
+						<source>Please check that this path is accessible.</source>
+						<target>Sila semak bahawa laluan ini boleh diakses.</target>
+					</trans-unit>
+					<trans-unit id="security_badlocation">
+						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+						<target>Jika anda cuba memasang add-on dalam folder Program Files atau ProgramData, ini mungkin memerlukan kebenaran pentadbir. \r\n\r\n Ini tidak disyorkan atas sebab keselamatan.</target>
+					</trans-unit>
+				</group>
+				<group id="start">
+					<trans-unit id="title">
+						<source>Start new game</source>
+					</trans-unit>
+					<trans-unit id="route">
+						<source>Route</source>
+						<target>Laluan</target>
+					</trans-unit>
+					<trans-unit id="route_selection">
+						<source>Selection</source>
+						<target>Pemilhan</target>
+					</trans-unit>
+					<trans-unit id="route_addons">
+						<source>Add-ons</source>
+						<target>Add-ons</target>
+					</trans-unit>
+					<trans-unit id="route_browse">
+						<source>Browse manually</source>
+						<target>Cari secara manual</target>
+					</trans-unit>
+					<trans-unit id="route_recently">
+						<source>Recently used</source>
+						<target>Digunakan baru-baru ini</target>
+					</trans-unit>
+					<trans-unit id="route_details">
+						<source>Details</source>
+						<target>Butiran</target>
+					</trans-unit>
+					<trans-unit id="route_description">
+						<source>Description</source>
+						<target>Penerangan</target>
+					</trans-unit>
+					<trans-unit id="route_map">
+						<source>Map</source>
+						<target>Peta</target>
+					</trans-unit>
+					<trans-unit id="route_gradient">
+						<source>Gradient profile</source>
+						<target>Profil Kecerunan</target>
+					</trans-unit>
+					<trans-unit id="route_settings">
+						<source>Settings</source>
+						<target>Tetapan</target>
+					</trans-unit>
+					<trans-unit id="route_settings_encoding">
+						<source>Encoding:</source>
+						<target>Pengekodan:</target>
+					</trans-unit>
+					<trans-unit id="route_settings_encoding_preview">
+						<source>Preview:</source>
+						<target>Pratonton:</target>
+					</trans-unit>
+					<trans-unit id="route_processing">
+						<source>Processing route, please wait.....</source>
+						<target>Sedang memproses laluan, sila tunggu:</target>
+					</trans-unit>
+					<trans-unit id="train">
+						<source>Train</source>
+						<target>Kereta api</target>
+					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+						<target>Pilih kereta api...</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>Adakah anda ingin menggunakan kereta api asal?</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+						<target>Tidak</target>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
+						<target>Ya</target>
+					</trans-unit>
+					<trans-unit id="train_selection">
+						<source>Selection</source>
+						<target>Pemilihan</target>
+					</trans-unit>
+					<trans-unit id="train_addons">
+						<source>Add-ons</source>
+						<target>Add-ons</target>
+					</trans-unit>
+					<trans-unit id="train_browse">
+						<source>Browse manually</source>
+						<target>Cari secara manual</target>
+					</trans-unit>
+					<trans-unit id="train_recently">
+						<source>Recently used</source>
+						<target>Digunakan baru-baru ini</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Route default</source>
+					</trans-unit>
+					<trans-unit id="train_usedefault">
+						<source>Use the train suggested by the route</source>
+						<target>Guna kereta api yang disyorkan oleh laluan</target>
+					</trans-unit>
+					<trans-unit id="train_details">
+						<source>Details</source>
+						<target>Butiran</target>
+					</trans-unit>
+					<trans-unit id="train_description">
+						<source>Description</source>
+						<target>Penerangan</target>
+					</trans-unit>
+					<trans-unit id="train_settings">
+						<source>Settings</source>
+						<target>Tetapan</target>
+					</trans-unit>
+					<trans-unit id="train_settings_encoding">
+						<source>Encoding:</source>
+						<target>Pengekodan:</target>
+					</trans-unit>
+					<trans-unit id="train_settings_reverseconsist">
+						<source>Reverse Consist:</source>
+						<target>Terbalik terdiri:</target>
+					</trans-unit>
+					<trans-unit id="train_settings_encoding_preview">
+						<source>Preview:</source>
+						<target>Pratonton:</target>
+					</trans-unit>
+					<trans-unit id="train_notfound">
+						<source>The default train could not be found:\r\n\r\n</source>
+						<target>Kereta api asal tidak dapat dijumpai:\r\n\r\n</target>
+					</trans-unit>
+					<trans-unit id="train_pluginnotsupported">
+						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
+						<target>--- Kereta api ini menggunakan pemalam sistem keselamatan yang tidak boleh digunakan pada sistem pengendalian anda. Sebaliknya, sistem keselamatan terbina dalam ATS/ATC akan digunakan, yang mungkin menyebabkan masalah operasi. ---</target>
+					</trans-unit>
+					<trans-unit id="start">
+						<source>Start</source>
+					</trans-unit>
+					<trans-unit id="start_mode">
+						<source>Mode of driving:</source>
+						<target>Mode pemanduan:</target>
+					</trans-unit>
+					<trans-unit id="start_start">
+						<source>Start</source>
+						<target>Mula:</target>
+					</trans-unit>
+				</group>
+				<group id="review">
+					<trans-unit id="title">
+						<source>Review last game</source>
+					</trans-unit>
+					<trans-unit id="conditions">
+						<source>Conditions</source>
+						<target>Kondisi</target>
+					</trans-unit>
+					<trans-unit id="conditions_route">
+						<source>Route</source>
+						<target>Laluan</target>
+					</trans-unit>
+					<trans-unit id="conditions_route_file">
+						<source>Route file:</source>
+						<target>Fail laluan:</target>
+					</trans-unit>
+					<trans-unit id="conditions_train">
+						<source>Train</source>
+						<target>Kereta api</target>
+					</trans-unit>
+					<trans-unit id="conditions_train_folder">
+						<source>Train folder:</source>
+						<target>Folder kereta api:</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime">
+						<source>Date and time</source>
+						<target>Tarikh dan masa</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime_date">
+						<source>Date:</source>
+						<target>Tarikh:</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime_time">
+						<source>Time:</source>
+						<target>Masa:</target>
+					</trans-unit>
+					<trans-unit id="score">
+						<source>Score</source>
+						<target>Skor:</target>
+					</trans-unit>
+					<trans-unit id="score_rating">
+						<source>Rating</source>
+						<target>Penilaian</target>
+					</trans-unit>
+					<trans-unit id="score_rating_mode">
+						<source>Mode:</source>
+						<target>Mod:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_achieved">
+						<source>Achieved:</source>
+						<target>Dicapai:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_maximum">
+						<source>Maximum:</source>
+						<target>Maksimum:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_ratio">
+						<source>Ratio:</source>
+						<target>Nisbah:</target>
+					</trans-unit>
+					<trans-unit id="score_log">
+						<source>Log</source>
+						<target>Log</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_time">
+						<source>Time</source>
+						<target>Masa</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_position">
+						<source>Position (m)</source>
+						<target>Posisi (m)</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_value">
+						<source>Value</source>
+						<target>Nilai</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_cumulative">
+						<source>Cumulative</source>
+						<target>Kumulatif</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_reason">
+						<source>Reason</source>
+						<target>Sebab</target>
+					</trans-unit>
+					<trans-unit id="score_log_penalties">
+						<source>Show penalties only</source>
+						<target>Tunjuk denda sahaja</target>
+					</trans-unit>
+					<trans-unit id="score_log_export">
+						<source>Export...</source>
+						<target>Eksport...</target>
+					</trans-unit>
+					<trans-unit id="blackbox">
+						<source>Black box</source>
+						<target>Kotak hitam</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format">
+						<source>Format:</source>
+						<target>Format:</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format_csv">
+						<source>Comma-separated value</source>
+						<target>Koma-diasingkan nilai</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format_text">
+						<source>Formatted text</source>
+						<target>Teks diformat</target>
+					</trans-unit>
+					<trans-unit id="blackbox_export">
+						<source>Export...</source>
+						<target>Eksport...</target>
+					</trans-unit>
+				</group>
+				<group id="packages">
+					<trans-unit id="title">
+						<source>Package Management</source>
+					</trans-unit>
+					<trans-unit id="proceed">
+						<source>Proceed...</source>
+						<target>Teruskan...</target>
+					</trans-unit>
+					<trans-unit id="proceed_anyway">
+						<source>Proceed Anyway</source>
+						<target>Teruskan juga</target>
+					</trans-unit>
+					<trans-unit id="processing">
+						<source>Processing, please wait...</source>
+						<target>Sedang memproses, sila tunggu...</target>
+					</trans-unit>
+					<trans-unit id="unknown_file">
+						<source>Unknown File...</source>
+						<target>Fail tidak diketahui...</target>
+					</trans-unit>
+					<trans-unit id="shownlist">
+						<source>These are shown in the list below:</source>
+						<target>Ini ditunjukkan dalam senarai di bawah:</target>
+					</trans-unit>
+					<trans-unit id="selection_none">
+						<source>No package selected.</source>
+						<target>Tiada pakej yang terpilih.</target>
+					</trans-unit>
+					<trans-unit id="selection_none_website">
+						<source>No website provided.</source>
+						<target>Tiada laman web disediakan.</target>
+					</trans-unit>
+					<trans-unit id="list">
+						<source>Installed Packages</source>
+						<target>Pakej Dipasang</target>
+					</trans-unit>
+					<trans-unit id="list_type">
+						<source>Select the type of packages you wish to view:</source>
+						<target>Pilih jenis pakej yang anda ingin lihat:</target>
+					</trans-unit>
+					<trans-unit id="list_name">
+						<source>Name</source>
+						<target>Nama</target>
+					</trans-unit>
+					<trans-unit id="list_version">
+						<source>Version</source>
+						<target>Versi</target>
+					</trans-unit>
+					<trans-unit id="list_minimum">
+						<source>Minimum Version</source>
+						<target>Minimum Versi</target>
+					</trans-unit>
+					<trans-unit id="list_maximum">
+						<source>Maximum Version</source>
+						<target>Maksimum Versi</target>
+					</trans-unit>
+					<trans-unit id="list_author">
+						<source>Author</source>
+						<target>Pencipta:</target>
+					</trans-unit>
+					<trans-unit id="list_website">
+						<source>Website</source>
+						<target>Laman web</target>
+					</trans-unit>
+					<trans-unit id="list_packagetype">
+						<source>Type</source>
+						<target>Jenis</target>
+					</trans-unit>
+					<trans-unit id="install">
+						<source>Install</source>
+						<target>Pasang</target>
+					</trans-unit>
+					<trans-unit id="install_button">
+						<source>Install Package</source>
+						<target>Pasang Pakej</target>
+					</trans-unit>
+					<trans-unit id="install_header">
+						<source>Install a Package</source>
+						<target>Pasang Pakej</target>
+					</trans-unit>
+					<trans-unit id="install_invalid">
+						<source>This file does not appear to be a valid openBVE package.</source>
+						<target>Fail tidak kelihatan seperti pakej openBVE yang sah.</target>
+					</trans-unit>
+					<trans-unit id="install_version_error">
+						<source>Package Version Error</source>
+						<target>Versi Pakej Ralat</target>
+					</trans-unit>
+					<trans-unit id="install_version_new">
+						<source>The selected package is already installed, and is a newer version.</source>
+						<target>Pakej yang dipilih telah dipasang, dan ianya versi yang baharu.</target>
+					</trans-unit>
+					<trans-unit id="install_version_old">
+						<source>The selected package is already installed, and is an older version.</source>
+						<target>Pakej yang dipilih telah dipasang, san ianya versi yang lama.</target>
+					</trans-unit>
+					<trans-unit id="install_version_same">
+						<source>The selected package is already installed, and is an identical version.</source>
+						<target>Pakej yang dipilih telah dipasang dan merupakan versi yang sama.</target>
+					</trans-unit>
+					<trans-unit id="install_success">
+						<source>Package installation was successful.</source>
+						<target>Pemasangan pakej telah berjaya.</target>
+					</trans-unit>
+					<trans-unit id="install_success_header">
+						<source>Installation Successful</source>
+						<target>Pemasangan Berjaya</target>
+					</trans-unit>
+					<trans-unit id="install_success_files">
+						<source>A list of files installed is shown below:</source>
+						<target>Senarai fail yang telah dipasang ditunjukkan di bawah:</target>
+					</trans-unit>
+					<trans-unit id="install_failure">
+						<source>Unfortunately, package installation failed.</source>
+						<target>Malangnya, pemasangan pakej gagal.</target>
+					</trans-unit>
+					<trans-unit id="install_failure_header">
+						<source>Package Installation Failed</source>
+						<target>Pemasangan Pakej Gagal</target>
+					</trans-unit>
+					<trans-unit id="install_select">
+						<source>Select Package......</source>
+						<target>Pilih Pakej......</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_unmet">
+						<source>The current package has unmet dependancies.</source>
+						<target>Pakej terkini mempunyai tanggungan yang tidak terpenuhi.</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_unmet_header">
+						<source>Dependancy Error</source>
+						<target>Ralat Tanggungan</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_broken">
+						<source>The following dependancies may be broken by this action:</source>
+						<target>Tanggungan berikut mungkin rosak disebabkan oleh tindakan ini:</target>
+					</trans-unit>
+					<trans-unit id="install_reccomends_unmet">
+						<source>The following packages are recommended, but not installed:</source>
+						<target>Pakej berikut adalah disyorkan, tetapi tidak dipasangkan:</target>
+					</trans-unit>
+					<trans-unit id="install_reccomends_unmet_header">
+						<source>Recommended Packages</source>
+						<target>Pakej yang disyorkan</target>
+					</trans-unit>
+					<trans-unit id="install_name">
+						<source>Package Name:</source>
+						<target>Nama Pakej:</target>
+					</trans-unit>
+					<trans-unit id="install_author">
+						<source>Package Author:</source>
+						<target>Nama Pencipta:</target>
+					</trans-unit>
+					<trans-unit id="install_version">
+						<source>Package Version:</source>
+						<target>Versi Pakej:</target>
+					</trans-unit>
+					<trans-unit id="install_website">
+						<source>Package Website:</source>
+						<target>Laman Web Pakej:</target>
+					</trans-unit>
+					<trans-unit id="install_description">
+						<source>Package Description:</source>
+						<target>Penerangan Pakej:</target>
+					</trans-unit>
+					<trans-unit id="creation_button">
+						<source>Create Package</source>
+						<target>Cipta Pakej</target>
+					</trans-unit>
+					<trans-unit id="creation_header">
+						<source>Create a Package</source>
+						<target>Cipta Sebuah Pakej</target>
+					</trans-unit>
+					<trans-unit id="creation_saveas_button">
+						<source>Save As...</source>
+						<target>Simpan sebagai...</target>
+					</trans-unit>
+					<trans-unit id="creation_saveas_label">
+						<source>Save package as:</source>
+						<target>Simpam pakej sebagai:</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies">
+						<source>Select Dependancies</source>
+						<target>Pilih Tanggungan</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_add">
+						<source>Add Dependancy</source>
+						<target>Tambah Tanggungan</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_remove">
+						<source>Remove</source>
+						<target>Keluarkan</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_nextstep">
+						<source>Package details and dependancies may be assigned in the following steps.</source>
+						<target>Butiran pakej dan tanggungan mungkin ditetapkan dalam langkah berikut.</target>
+					</trans-unit>
+					<trans-unit id="creation_reccommends_add">
+						<source>Add Recommendation</source>
+						<target>Tambah Cadangan</target>
+					</trans-unit>
+					<trans-unit id="creation_clearselection">
+						<source>Clear Selection</source>
+						<target>Kosongkan Pilihan</target>
+					</trans-unit>
+					<trans-unit id="creation_additems">
+						<source>Add Item(s)</source>
+						<target>Tambah item(s)</target>
+					</trans-unit>
+					<trans-unit id="creation_selecteditems">
+						<source>The following files and folders will be packaged:</source>
+						<target>Fail dan folder berikut akan dibungkuskan:</target>
+					</trans-unit>
+					<trans-unit id="creation_new_guid">
+						<source>The new package has been assigned the following GUID:</source>
+						<target>Pakej baharu telah diberikan GUID berikut:</target>
+					</trans-unit>
+					<trans-unit id="creation_header">
+						<source>Enter Package Details</source>
+					</trans-unit>
+					<trans-unit id="creation_name">
+						<source>Please enter a package name.</source>
+						<target>Sila masukkan nama pakej.</target>
+					</trans-unit>
+					<trans-unit id="creation_author">
+						<source>Please enter a package author.</source>
+						<target>Sila masukkan nama pencipta pakej.</target>
+					</trans-unit>
+					<trans-unit id="creation_description">
+						<source>Please enter a package description.</source>
+						<target>Sila masukkan butiran pakej.</target>
+					</trans-unit>
+					<trans-unit id="creation_version">
+						<source>Please enter a valid package version number in the following format: \r\n 1.0.0</source>
+						<target>Sila masukkan nombor versi pakej yang sah dalam format berikut: \r\n 1.0.0</target>
+					</trans-unit>
+					<trans-unit id="creation_version_invalid">
+						<source>You have entered an invalid version number. \r\n Please try again.</source>
+						<target>Anda telah memasukkan nombor versi yang tidak sah. \r\n Sila cuba lagi.</target>
+					</trans-unit>
+					<trans-unit id="creation_success">
+						<source>Package creation was successful.</source>
+						<target>Penciptaan pakej telah berjaya.</target>
+					</trans-unit>
+					<trans-unit id="creation_success_header">
+						<source>Package Creation Successful</source>
+						<target>Penciptaan pakej berjaya.</target>
+					</trans-unit>
+					<trans-unit id="creation_success_files">
+						<source>The following files were added to your package:</source>
+						<target>Fail berikut akan ditambahkan ke pakej anda:</target>
+					</trans-unit>
+					<trans-unit id="creation_failure">
+						<source>Unfortunately, creation of your package failed.</source>
+						<target>Malangnya, penciptaan pakej anda telah gagal.</target>
+					</trans-unit>
+					<trans-unit id="creation_failure_header">
+						<source>Package Creation Failed</source>
+						<target>Penciptaan Pakej Gagal</target>
+					</trans-unit>
+					<trans-unit id="creation_failure_error">
+						<source>The following error was encountered:</source>
+						<target>Ralat berikut telah ditemui:</target>
+					</trans-unit>
+					<trans-unit id="creation_proceed">
+						<source>Proceed......</source>
+						<target>Teruskan......</target>
+					</trans-unit>
+					<trans-unit id="creation_invalid_nofiles">
+						<source>No files were selected to package- Please retry.</source>
+						<target>Tiada fail dipilih untuk dibungkus- Sila cuba semula.</target>
+					</trans-unit>
+					<trans-unit id="creation_invalid_filename">
+						<source>The selected filename is invalid- Please retry.</source>
+						<target>Nama fail yang dipilih tidak sah- Sila cuba semula.</target>
+					</trans-unit>
+					<trans-unit id="creation_new_id">
+						<source>The new package has been assigned the following GUID:</source>
+						<target>Pakej baharu telah diberikan GUID berikut:</target>
+					</trans-unit>
+					<trans-unit id="creation_replace_id">
+						<source>Replacing the package with the following GUID:</source>
+						<target>Menggantikan pakej dengan GUID berikut:</target>
+					</trans-unit>
+					<trans-unit id="creation_save">
+						<source>Save Package</source>
+						<target>Simpan Pakej</target>
+					</trans-unit>
+					<trans-unit id="creation_replace">
+						<source>Is this to replace an existing package?</source>
+						<target>Adakah ini untuk menggantikan pakej sedia ada?</target>
+					</trans-unit>
+					<trans-unit id="creation_yes">
+						<source>Yes</source>
+						<target>Ya</target>
+					</trans-unit>
+					<trans-unit id="creation_no">
+						<source>No</source>
+						<target>Tidak</target>
+					</trans-unit>
+					<trans-unit id="replace_select">
+						<source>Replace this Package</source>
+						<target>Ganti pakej ini</target>
+					</trans-unit>
+					<trans-unit id="replace_choose">
+						<source>Please select the package you wish to replace:</source>
+						<target>Sili pilih pakej yang anda ingin ganti:</target>
+					</trans-unit>
+					<trans-unit id="replace_noneavailable">
+						<source>No packages are currently installed.</source>
+						<target>Tiada pakej yang telah dipasang sekarang ini.</target>
+					</trans-unit>
+					<trans-unit id="type_route">
+						<source>Route</source>
+						<target>Laluan</target>
+					</trans-unit>
+					<trans-unit id="type_train">
+						<source>Train</source>
+						<target>Kereta api</target>
+					</trans-unit>
+					<trans-unit id="type_other">
+						<source>Other</source>
+						<target>Lain-lain</target>
+					</trans-unit>
+					<trans-unit id="type_select">
+						<source>Please select the package type:</source>
+						<target>Sila pilih jenis pakej:</target>
+					</trans-unit>
+					<trans-unit id="uninstall_failure">
+						<source>Unfortunately, uninstallation of this package failed.</source>
+						<target>Malangnya, penyahpasangan pakej ini telah gagal.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_failure_header">
+						<source>Uninstallation Failed</source>
+						<target>Penyahpasangan Gagal.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_success">
+						<source>Uninstallation of this package was successful.</source>
+						<target>Penyahpasangan pakej ini telah berjaya.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_success_header">
+						<source>Uninstallation Successful</source>
+						<target>Penyahpasangan Berjaya</target>
+					</trans-unit>
+					<trans-unit id="uninstall_log">
+						<source>A log is shown below:</source>
+						<target>Log ditunjukkan di bawah:</target>
+					</trans-unit>
+					<trans-unit id="uninstall_button">
+						<source>Uninstall Package</source>
+						<target>Nyahpasang Pakej</target>
+					</trans-unit>
+					<trans-unit id="uninstall_broken">
+						<source>Some existing packages may be broken by this action.</source>
+						<target>Sesetengah pakej sedia ada mungkin rosak oleh tindakan ini.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_missing_xml">
+						<source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
+						<target>Tidak dapat menyahpasang pakej yang dipilih. \r\n Senarai fail XML tiada.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_database_remove">
+						<source>Do you wish to remove this package from the database?</source>
+						<target>Adakah anda ingin mengalih keluar pakej ini daripada pangkalan data?</target>
+					</trans-unit>
+					<trans-unit id="database_save_error">
+						<source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
+						<target>Ralat berlaku semasa menyimpan pangkalan data pakej. \r\n Sila semak kebenaran menulis.</target>
+					</trans-unit>
+					<trans-unit id="version_new">
+						<source>New version:</source>
+						<target>Versi baharu:</target>
+					</trans-unit>
+					<trans-unit id="version_current">
+						<source>Current version:</source>
+						<target>Versi terkini:</target>
+					</trans-unit>
+					<trans-unit id="success">
+						<source>Finished!</source>
+						<target>Selesai!</target>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Packages</source>
+						<target>Pakej Dipilih</target>
+					</trans-unit>
+					<trans-unit id="dependancy">
+						<source>Dependancy</source>
+						<target>Tanggungan</target>
+					</trans-unit>
+					<trans-unit id="recommendation">
+						<source>Recommendation</source>
+						<target>Cadangan</target>
+					</trans-unit>
+					<trans-unit id="error_action">
+						<source>Please select the action you wish to take:</source>
+						<target>Sila pilih tindakan yang ingin ambil:</target>
+					</trans-unit>
+					<trans-unit id="error_overwrite">
+						<source>Overwrite</source>
+						<target>Tulis ganti</target>
+					</trans-unit>
+					<trans-unit id="error_replace">
+						<source>Replace</source>
+						<target>Ganti</target>
+					</trans-unit>
+					<trans-unit id="button_next">
+						<source>Next &gt;</source>
+						<target>Seterusnya &gt;</target>
+					</trans-unit>
+					<trans-unit id="button_back">
+						<source>&lt; Back</source>
+						<target>&lt;Kembali</target>
+					</trans-unit>
+					<trans-unit id="button_cancel">
+						<source>Cancel</source>
+						<target>Batal</target>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+						<target>OK</target>
+					</trans-unit>
+					<trans-unit id="button_install">
+						<source>Install</source>
+						<target>Pasang</target>
+					</trans-unit>
+					<trans-unit id="button_create">
+						<source>Create</source>
+						<target>Cipta</target>
+					</trans-unit>
+					<trans-unit id="button_ignore">
+						<source>Ignore</source>
+						<target>Abaikan</target>
+					</trans-unit>
+					<trans-unit id="button_abort">
+						<source>Abort</source>
+						<target>Batalkan</target>
+					</trans-unit>
+					<trans-unit id="filename_empty">
+						<source>Attempted to create a package with an empty filename.</source>
+						<target>Telah mencuba untuk membuat pakej dengan tiada nama fail.</target>
+					</trans-unit>
+					<trans-unit id="directory_missing">
+						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+						<target>Direktori tempat anda cuba menyimpan fail pakej tidak wujud: \r \n</target>
+					</trans-unit>
+					<trans-unit id="directory_nowrite">
+						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+						<target>Tiada akses menulis tersedia dalam direktori  di mana anda mencuba untuk menyimpan fail pakej: \r \n</target>
+					</trans-unit>
+					<trans-unit id="file_generic">
+						<source>Failed to create the following file: \r \n</source>
+						<target>Gagal untuk mencipta faol berikut: \r \n</target>
+					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+						<target>Versi pangkalan data pakej nampaknya merupakan versi yang lebih baharu daripada yang disokong oleh salinan OpenBVE ini.</target>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+						<target>Pangkalan data pakej XML  tidak sah dan telah dibuat semula.</target>
+					</trans-unit>
+				</group>
+				<group id="controls">
+					<trans-unit id="title">
+						<source>Customize controls</source>
+					</trans-unit>
+					<trans-unit id="list_command">
+						<source>Command</source>
+						<target>Perintah</target>
+					</trans-unit>
+					<trans-unit id="list_type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="list_type_digital">
+						<source>Digital</source>
+						<target>Digital</target>
+					</trans-unit>
+					<trans-unit id="list_type_analoghalf">
+						<source>Analog (half axis)</source>
+						<target>Analog (Setengah paksi)</target>
+					</trans-unit>
+					<trans-unit id="list_type_analogfull">
+						<source>Analog (full axis)</source>
+						<target>Analog (Paksi Penuh)</target>
+					</trans-unit>
+					<trans-unit id="list_description">
+						<source>Description</source>
+						<target>Penerangan</target>
+					</trans-unit>
+					<trans-unit id="list_assignment">
+						<source>Assignment</source>
+						<target>Tugasan</target>
+					</trans-unit>
+					<trans-unit id="list_option">
+						<source>Command Option</source>
+						<target>Pilihan Perintah</target>
+					</trans-unit>
+					<trans-unit id="add">
+						<source>Add control</source>
+						<target>Tambah kawalan</target>
+					</trans-unit>
+					<trans-unit id="remove">
+						<source>Remove control</source>
+						<target>Buang kawalan</target>
+					</trans-unit>
+					<trans-unit id="import">
+						<source>Import...</source>
+						<target>Import...</target>
+					</trans-unit>
+					<trans-unit id="export">
+						<source>Export...</source>
+						<target>Eksport...</target>
+					</trans-unit>
+					<trans-unit id="reset">
+						<source>Reset to defaults</source>
+						<target>Set semula ke lalai</target>
+					</trans-unit>
+					<trans-unit id="up">
+						<source>Move up</source>
+						<target>Bergerak ke atas</target>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Move down</source>
+						<target>Bergerak ke bawah</target>
+					</trans-unit>
+					<trans-unit id="selection">
+						<source>Currently selected command</source>
+						<target>Perintah yang dipilih pada masa ini</target>
+					</trans-unit>
+					<trans-unit id="selection_command">
+						<source>Command:</source>
+						<target>Perintah:</target>
+					</trans-unit>
+					<trans-unit id="selection_command_option">
+						<source>Command Option:</source>
+						<target>Pilihan Perintah:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard">
+						<source>Keyboard:</source>
+						<target>Papan Kekunci:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_assignment_grab">
+						<source>Click here to enable keyboard grab to automatically select the desired key.</source>
+						<target>Klik di sini untuk membolehkan cengkaman papan kekunci memilih kekunci yang dikehendaki secara automatik.</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_assignment_grabbing">
+						<source>Please press any key...</source>
+						<target>Sila tekan sebarang kekunci...</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_key">
+						<source>Key:</source>
+						<target>Kekunci:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers">
+						<source>Modifiers:</source>
+						<target>Pengubah suai:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_shift">
+						<source>Shift</source>
+						<target>Shift</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_ctrl">
+						<source>Ctrl</source>
+						<target>Ctrl</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_alt">
+						<source>Alt</source>
+						<target>Alt</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick">
+						<source>Joystick:</source>
+						<target>Joystick:</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment">
+						<source>Assignment:</source>
+						<target>Tugasan:</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab">
+						<source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
+						<target>Klik di sini untuk membolehkan joystick memilih paksi, butang atau topi yang dikehendaki secara automatik.</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab_normal">
+						<source>Press a button or move an axis or hat into the desired direction...</source>
+						<target>Tekan butang atau gerakkan paksi atau topi ke arah yang dikehendaki...</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
+						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
+						<target>Gerakkan paksi ke arah &quot;kenaikan&quot; atau &quot;kuasa&quot;...</target>
+					</trans-unit>
+					<trans-unit id="attached">
+						<source>Attached joysticks</source>
+						<target>Joystick yang dilampirkan</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard">
+						<source>Keyboard</source>
+						<target>Papan Kekunci</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_shift">
+						<source>Shift +\x20</source>
+						<target>Shift +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_ctrl">
+						<source>Ctrl +\x20</source>
+						<target>Ctrl +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_alt">
+						<source>Alt +\x20</source>
+						<target>Alt +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick">
+						<source>Joystick [index]</source>
+						<target>Joystick [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis">
+						<source>axis [index]</source>
+						<target>paksi [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_negative">
+						<source>negative direction</source>
+						<target>Arah negatif</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_positive">
+						<source>positive direction</source>
+						<target>Arah positif</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_invalid">
+						<source>invalid direction</source>
+						<target>Arah tidak sah</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_button">
+						<source>button [index]</source>
+						<target>butang [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat">
+						<source>hat [index]</source>
+						<target>topi [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_left">
+						<source>left</source>
+						<target>kiri</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_upleft">
+						<source>up-left</source>
+						<target>atas-kiri</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_up">
+						<source>up</source>
+						<target>atas</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_upright">
+						<source>up-right</source>
+						<target>atas-kanan</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_right">
+						<source>right</source>
+						<target>kanan</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_downright">
+						<source>down-right</source>
+						<target>bawah-kanan</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_down">
+						<source>down</source>
+						<target>bawah</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_downleft">
+						<source>down-left</source>
+						<target>bawah-kiri</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_invalid">
+						<source>invalid</source>
+						<target>tidak sah</target>
+					</trans-unit>
+					<trans-unit id="assignment_invalid">
+						<source>Not assigned</source>
+						<target>Tidak ditugaskan</target>
+					</trans-unit>
+					<trans-unit id="assignment_separator">
+						<source>,\x20</source>
+						<target>,+\x20</target>
+					</trans-unit>
+				</group>
+				<group id="raildriver">
+					<trans-unit id="speedunits">
+						<source>LED Display speed units</source>
+						<target>Unit Paparan laju LED</target>
+					</trans-unit>
+					<trans-unit id="milesperhour">
+						<source>Miles per Hour (MPH)</source>
+						<target>Batu sejam (MPH)</target>
+					</trans-unit>
+					<trans-unit id="kilometersperhour">
+						<source>Kilometers per Hour (KPH)</source>
+						<target>Kilometer sejam (KPH)</target>
+					</trans-unit>
+					<trans-unit id="setcalibration">
+						<source>Set Calibration:</source>
+						<target>Tetapkan Penentukuran:</target>
+					</trans-unit>
+					<trans-unit id="launch">
+						<source>Launch</source>
+						<target>Lancar</target>
+					</trans-unit>
+					<trans-unit id="notdetected">
+						<source>No RailDriver conrollers detected.</source>
+						<target>Tiada RailDriver Controller ditemukan.</target>
+					</trans-unit>
+					<trans-unit id="config_error">
+						<source>Error loading RailDriver calibration file.</source>
+						<target>Ralat memuatkan fail penentukuran RailDriver.</target>
+					</trans-unit>
+					<trans-unit id="calibration_start">
+						<source>Please press 'Next' to start calibration.</source>
+						<target>Sila tekan 'Seterusnya' untuk memulakan penentukuran.</target>
+					</trans-unit>
+					<trans-unit id="calibration_a">
+						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+						<target>Gerakkan tuil pengundur ke kedudukan terbalik penuh dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_b">
+						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
+						<target>Gerakkan tuil pengundur ke kedudukan penuh ke hadapan dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_c">
+						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+						<target>Gerakkan tuil brek / pendikit gabungan ke kedudukan kuasa penuh dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_d">
+						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+						<target>Gerakkan tuil brek / pendikit gabungan ke kedudukan brek penuh dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_e">
+						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+						<target>Gerakkan tuil brek dinamik ke kedudukan pelepas dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_f">
+						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+						<target>Gerakkan tuil brek dinamik ke kedudukan kecemasan dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_g">
+						<source>Move the independant brake lever to the release position and press 'Next'.</source>
+						<target>Gerakkan tuil brek bebas ke kedudukan pelepas dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_h">
+						<source>Move the independant brake lever to the full position and press 'Next'.</source>
+						<target>Gerakkan tuil brek bebas ke kedudukan penuh dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_i">
+						<source>Move the bail-off lever to the release position and press 'Next'.</source>
+						<target>Gerakkan tuil bail-off ke kedudukan pelepasan dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_j">
+						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
+						<target>Gerakkan dan tahan tuil bail-off ke dalam kedudukan penuh dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_k">
+						<source>Move the wiper switch to OFF and press 'Next'.</source>
+						<target>Alihkan suis pengelap ke OFF dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_l">
+						<source>Move the wiper switch to FULL and press 'Next'.</source>
+						<target>Alihkan suis pengelap ke PENUH dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_m">
+						<source>Move the lights switch to OFF and press 'Next'.</source>
+						<target>Alihkan suis lampu ke OFF dan tekan 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_n">
+						<source>Move the lights switch to FULL and press 'Next'.</source>
+						<target>Alihkan suis lampu kepada PENUH dan tekan 'Seterusnya'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_o">
+						<source>Calibration complete.</source>
+						<target>Penentukuran selesai.</target>
+					</trans-unit>
+				</group>
+				<group id="options">
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
+						<target>Resolusi:</target>
+					</trans-unit>
+					<trans-unit id="title">
+						<source>Options</source>
+					</trans-unit>
+					<trans-unit id="language">
+						<source>Language</source>
+						<target>Bahasa</target>
+					</trans-unit>
+					<trans-unit id="display">
+						<source>Display</source>
+						<target>Paparan</target>
+					</trans-unit>
+					<trans-unit id="display_mode">
+						<source>Display mode</source>
+						<target>Mode paparan</target>
+					</trans-unit>
+					<trans-unit id="display_mode_window">
+						<source>Window mode</source>
+						<target>Mod tetingkap</target>
+					</trans-unit>
+					<trans-unit id="display_mode_fullscreen">
+						<source>Fullscreen mode</source>
+						<target>Mod skrin penuh</target>
+					</trans-unit>
+					<trans-unit id="display_vsync">
+						<source>Vertical synchronization:</source>
+						<target>Penyegerakan menegak:</target>
+					</trans-unit>
+					<trans-unit id="display_vsync_off">
+						<source>Disabled</source>
+						<target>Dinyahdayakan</target>
+					</trans-unit>
+					<trans-unit id="display_vsync_on">
+						<source>Enabled</source>
+						<target>Didayakan</target>
+					</trans-unit>
+					<trans-unit id="display_window">
+						<source>Window mode</source>
+						<target>Mod tetingkap</target>
+					</trans-unit>
+					<trans-unit id="display_window_width">
+						<source>Width:</source>
+						<target>Lebar:</target>
+					</trans-unit>
+					<trans-unit id="display_window_height">
+						<source>Height:</source>
+						<target>Tinggi:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen">
+						<source>Fullscreen</source>
+						<target>Skrin Penuh</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_width">
+						<source>Width:</source>
+						<target>Lebar:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_height">
+						<source>Height:</source>
+						<target>Tinggi:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_bits">
+						<source>Bits per pixel:</source>
+						<target>Bits per pixel:</target>
+					</trans-unit>
+					<trans-unit id="quality">
+						<source>Quality</source>
+						<target>Kualiti</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation">
+						<source>Interpolation</source>
+						<target>Interpolasi</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode">
+						<source>Mode:</source>
+						<target>Mod:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_nearest">
+						<source>Nearest neighbor</source>
+						<target>Jiran terdekat</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_bilinear">
+						<source>Bilinear</source>
+						<target>Dwilinear</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_nearestmipmap">
+						<source>Nearest neighbor (mipmapping)</source>
+						<target>Jiran terdekat (mipmapping)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_bilinearmipmap">
+						<source>Bilinear (mipmapping)</source>
+						<target>Dwilinear (mipmapping)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_trilinearmipmap">
+						<source>Trilinear (mipmapping)</source>
+						<target>Trilinear (mipmapping)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_anisotropic">
+						<source>Anisotropic filtering</source>
+						<target>Penapisan anisotropic</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_anisotropic_level">
+						<source>Level of anisotropic filtering:</source>
+						<target>Tahap penapisan anisotropik:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_antialiasing_level">
+						<source>Level of anti-aliasing:</source>
+						<target>Tahap anti-aliasing:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency">
+						<source>Transparency:</source>
+						<target>Ketelusan:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency_sharp">
+						<source>Sharp</source>
+						<target>Tajam</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency_smooth">
+						<source>Smooth</source>
+						<target>Licin</target>
+					</trans-unit>
+					<trans-unit id="quality_distance">
+						<source>Distance effects</source>
+						<target>Kesan jarak</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_viewingdistance">
+						<source>Viewing distance:</source>
+						<target>Jarak tontonan:</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_viewingdistance_meters">
+						<source>m</source>
+						<target>m</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur">
+						<source>Motion blur:</source>
+						<target>Gerakan kabur:</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_none">
+						<source>Disabled</source>
+						<target>Dinyahdayakan</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_low">
+						<source>Low</source>
+						<target>Rendah</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_medium">
+						<source>Medium</source>
+						<target>Sederhana</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_high">
+						<source>High</source>
+						<target>Tinggi</target>
+					</trans-unit>
+					<trans-unit id="misc">
+						<source>Miscellaneous</source>
+						<target>Macam-macam</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation">
+						<source>Detail of simulation</source>
+						<target>Butiran simulasi</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_toppling">
+						<source>Toppling</source>
+						<target>Menggulingkan</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_collisions">
+						<source>Collisions</source>
+						<target>Perlanggaran</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_derailments">
+						<source>Derailments</source>
+						<target>Tergelincir</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_blackbox">
+						<source>Enable black box</source>
+						<target>Dayakan kotak hitam</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_loadingsway">
+						<source>Enable loading sway</source>
+						<target>Dayakan goyangan pemuatan</target>
+					</trans-unit>
+					<trans-unit id="misc_controls">
+						<source>Controls</source>
+						<target>Kawalan</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_joysticks">
+						<source>Joysticks enabled</source>
+						<target>Joystick didayakan</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_threshold">
+						<source>Joystick threshold:</source>
+						<target>Ambang joystick:</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_ebaxis">
+						<source>Allow EB on brake axis</source>
+						<target>Benarkan EB pada paksi brek</target>
+					</trans-unit>
+					<trans-unit id="misc_sound">
+						<source>Sound</source>
+						<target>Bunyi</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range">
+						<source>Effective range:</source>
+						<target>Julat berkesan:</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_low">
+						<source>Low</source>
+						<target>Rendah</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_medium">
+						<source>Medium</source>
+						<target>Sederhana</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_high">
+						<source>High</source>
+						<target>Tinggi</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_number">
+						<source>Number of allowed sounds:</source>
+						<target>Bilangan bunyi yang dibenarkan:</target>
+					</trans-unit>
+					<trans-unit id="verbosity">
+						<source>Verbosity</source>
+						<target>Keterlaluan</target>
+					</trans-unit>
+					<trans-unit id="verbosity_warningmessages">
+						<source>Show warning messages</source>
+						<target>Tunjukkan mesej amaran</target>
+					</trans-unit>
+					<trans-unit id="verbosity_errormessages">
+						<source>Show error messages</source>
+						<target>Tunjuk mesej ralat</target>
+					</trans-unit>
+					<trans-unit id="advanced">
+						<source>Advanced Options</source>
+						<target>Pilihan Lanjutan</target>
+					</trans-unit>
+					<trans-unit id="advanced_load_advance">
+						<source>Load in advance</source>
+						<target>Muatkan terlebih dahulu</target>
+					</trans-unit>
+					<trans-unit id="advanced_is_use_new_renderer">
+						<source>Enable the new renderer</source>
+						<target>Dayakan pemapar baharu</target>
+					</trans-unit>
+					<trans-unit id="advanced_timefactor">
+						<source>Accelerated Time Factor</source>
+						<target>Faktor Masa Dipercepatkan</target>
+					</trans-unit>
+					<trans-unit id="advanced_unload_textures">
+						<source>Unload unused textures</source>
+						<target>Putuskan tekstur yang tidak digunakan</target>
+					</trans-unit>
+					<trans-unit id="other">
+						<source>Other</source>
+						<target>Lain-lain</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode">
+						<source>Timetable mode:</source>
+						<target>Mod jadual:</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_none">
+						<source>None</source>
+						<target>Tiada</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_default">
+						<source>Default</source>
+						<target>Lalai</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_autogenerated">
+						<source>Auto-generated timetable</source>
+						<target>Jadual waktu yang dijana secara automatik</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_prefercustom">
+						<source>Prefer custom timetable</source>
+						<target>Lebih suka jadual waktu tersuai</target>
+					</trans-unit>
+					<trans-unit id="package_choose">
+						<source>Choose...</source>
+						<target>Pilih...</target>
+					</trans-unit>
+					<trans-unit id="package_route_directory">
+						<source>Route installation directory:</source>
+						<target>Direktori pemasangan laluan:</target>
+					</trans-unit>
+					<trans-unit id="package_train_directory">
+						<source>Train installation directory:</source>
+						<target>Direktori pemasangan kereta api:</target>
+					</trans-unit>
+					<trans-unit id="package_other_directory">
+						<source>Other items installation directory:</source>
+						<target>Direktori pemasangan iitem lain-lain:</target>
+					</trans-unit>
+					<trans-unit id="package_compression">
+						<source>Package compression format:</source>
+						<target>Format mampatan pakej:</target>
+					</trans-unit>
+					<trans-unit id="page_previous">
+						<source>Previous Page...</source>
+						<target>Halaman sebelumnya...</target>
+					</trans-unit>
+					<trans-unit id="page_next">
+						<source>Next Page...</source>
+						<target>Halaman seterusnya...</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode">
+						<source>Kiosk Mode</source>
+						<target>Mod Kiosk</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode_enable">
+						<source>Enable Kiosk Mode</source>
+						<target>Hidupkan mod kiosk</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode_timer">
+						<source>Control Timeout (s)</source>
+						<target>Masa Kawalan (s)</target>
+					</trans-unit>
+					<trans-unit id="hud_size">
+						<source>HUD Size</source>
+						<target>Saiz HUD</target>
+					</trans-unit>
+					<trans-unit id="hud_size_small">
+						<source>Small</source>
+						<target>Kecil</target>
+					</trans-unit>
+					<trans-unit id="hud_size_normal">
+						<source>Normal</source>
+						<target>Sederhana</target>
+					</trans-unit>
+					<trans-unit id="hud_size_large">
+						<source>Large</source>
+						<target>Besar</target>
+					</trans-unit>
+					<trans-unit id="transparencyfix">
+						<source>Attempt to fix transparency issues in older content.</source>
+						<target>Cuba untuk membetulkan isu ketelusan dalam kandungan lama.</target>
+					</trans-unit>
+					<trans-unit id="hacks_enable">
+						<source>Enable hacks for buggy older content.</source>
+						<target>Dayakan pembetulan untuk kandungan lama yang bermasalah.</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin">
+						<source>Input Device Plugin</source>
+						<target>Plugin Peranti Input</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_warning">
+						<source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
+						<target>AMARAN: Jika anda mendayakan Plugin(s) Peranti Input, ini mungkin bercanggah dengan satu atau lebih kawalan.</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_name">
+						<source>Name</source>
+						<target>Nama</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status">
+						<source>Status</source>
+						<target>Status</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_failure">
+						<source>Failure</source>
+						<target>Kegagalan</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_disable">
+						<source>Disable</source>
+						<target>Nyahdaya</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_enable">
+						<source>Enable</source>
+						<target>Dayakan</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_version">
+						<source>Version</source>
+						<target>Versi</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_provider">
+						<source>Provider</source>
+						<target>Pembekal</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_file_name">
+						<source>File Name</source>
+						<target>Nama fail</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_switch">
+						<source>Enable this Input Device Plugin</source>
+						<target>Dayakan Plugin Peranti Input ini</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_config">
+						<source>Config</source>
+						<target>Konfig</target>
+					</trans-unit>
+					<trans-unit id="panel2_extended">
+						<source>Enable Panel2 Extended Mode</source>
+						<target>Dayakan Mod Lanjutan Panel2</target>
+					</trans-unit>
+					<trans-unit id="xobject_parser">
+						<source>X Object Parser</source>
+						<target>Penghurai Objek X</target>
+					</trans-unit>
+					<trans-unit id="objobject_parser">
+						<source>OBJ Object Parser</source>
+						<target>Penghurai Objek OBJ</target>
+					</trans-unit>
+					<trans-unit id="compatibility_signals">
+						<source>Default Signals:</source>
+						<target>Signal Lalai:</target>
+					</trans-unit>
+				</group>
+				<group id="dialog">
+					<trans-unit id="csvfiles">
+						<source>CSV files</source>
+						<target>Fail CSV</target>
+					</trans-unit>
+					<trans-unit id="textfiles">
+						<source>Text files</source>
+						<target>Fail teks</target>
+					</trans-unit>
+					<trans-unit id="controlsfiles">
+						<source>Controls</source>
+						<target>Kawalan</target>
+					</trans-unit>
+					<trans-unit id="allfiles">
+						<source>All files</source>
+						<target>Semua fail</target>
+					</trans-unit>
+				</group>
+				<group id="log">
+					<trans-unit id="time">
+						<source>Time</source>
+						<target>Masa</target>
+					</trans-unit>
+					<trans-unit id="position">
+						<source>Position (m)</source>
+						<target>Posisi (m)</target>
+					</trans-unit>
+					<trans-unit id="value">
+						<source>Value</source>
+						<target>Nilai</target>
+					</trans-unit>
+					<trans-unit id="cumulative">
+						<source>Cumulative</source>
+						<target>Kumulatif</target>
+					</trans-unit>
+					<trans-unit id="reason">
+						<source>Reason</source>
+						<target>Sebab</target>
+					</trans-unit>
+					<trans-unit id="speed">
+						<source>Speed (m/s)</source>
+						<target>Laju (m/s)</target>
+					</trans-unit>
+					<trans-unit id="acceleration">
+						<source>Acceleration (m/s²)</source>
+						<target>Pecutan (m/s²)</target>
+					</trans-unit>
+					<trans-unit id="reverser">
+						<source>Reverser</source>
+						<target>Pengundur</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>Power</source>
+						<target>Kuasa</target>
+					</trans-unit>
+					<trans-unit id="brake">
+						<source>Brake</source>
+						<target>Brek</target>
+					</trans-unit>
+					<trans-unit id="event">
+						<source>Event</source>
+						<target>Peristiwa</target>
+					</trans-unit>
+					<trans-unit id="route">
+						<source>Route:</source>
+					</trans-unit>
+					<trans-unit id="train">
+						<source>Train:</source>
+					</trans-unit>
+					<trans-unit id="date">
+						<source>Date:</source>
+						<target>Tarikh:</target>
+					</trans-unit>
+					<trans-unit id="mode">
+						<source>Mode:</source>
+						<target>Mod:</target>
+					</trans-unit>
+					<trans-unit id="score">
+						<source>Score:</source>
+					</trans-unit>
+					<trans-unit id="rating">
+						<source>Rating:</source>
+						<target>Penilaian:</target>
+					</trans-unit>
+				</group>
+				<group id="loading">
+					<trans-unit id="loading">
+						<source>Loading</source>
+						<target>Memuatkan</target>
+					</trans-unit>
+					<trans-unit id="loading_route">
+						<source>Loading route...</source>
+						<target>Memuatkan laluan...</target>
+					</trans-unit>
+					<trans-unit id="loading_train">
+						<source>Loading train...</source>
+						<target>Memuatkan kereta api...</target>
+					</trans-unit>
+					<trans-unit id="almost">
+						<source>Almost ready to start</source>
+						<target>Sudah bersedia untuk mula</target>
+					</trans-unit>
+					<trans-unit id="almost_filesnotfound">
+						<source>Files not found:</source>
+						<target>Faail tidak dijumpai:</target>
+					</trans-unit>
+					<trans-unit id="almost_help_filesnotfound">
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
+						<target>Beberapa isu telah dihadapi semasa memuatkan laluan dan kereta api.\r\n\r\nMemandangkan sesetengah fail tidak ditemui, laluan atau kereta api mungkin tidak muncul seperti yang dimaksudkan. Cuba muat turun semula laluan dan pakej kereta api untuk memastikan anda mempunyai pengedaran yang lengkap.\r\n\r\nSenarai isu berikut mungkin memberikan maklumat tambahan. Anda masih boleh memulakan laluan dengan memilih &quot;Abaikan&quot; dari bawah.</target>
+					</trans-unit>
+					<trans-unit id="almost_help_general">
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
+						<target>Beberapa isu telah dihadapi semasa memuatkan laluan dan kereta api. Jika anda adalah pembangun laluan atau kereta api, anda mungkin perlu melihat senarai isu berikut.\r\n\r\nSebagai pengguna biasa, anda boleh memilih &quot;Abaikan&quot; pada ketika ini untuk memulakan permainan.</target>
+					</trans-unit>
+					<trans-unit id="almost_show">
+						<source>Show issues</source>
+						<target>Tunjukkan isu</target>
+					</trans-unit>
+					<trans-unit id="problems">
+						<source>Problems</source>
+						<target>Masalah</target>
+					</trans-unit>
+					<trans-unit id="problems_type">
+						<source>Type</source>
+						<target>Jenis</target>
+					</trans-unit>
+					<trans-unit id="problems_description">
+						<source>Description</source>
+						<target>Penerangan</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save report...</source>
+						<target>Simpan laporan...</target>
+					</trans-unit>
+					<trans-unit id="ignore">
+						<source>Ignore</source>
+						<target>Abaikan</target>
+					</trans-unit>
+					<trans-unit id="cancel">
+						<source>Cancel</source>
+						<target>Batal</target>
+					</trans-unit>
+				</group>
+				<group id="timetable">
+					<trans-unit id="highestspeed">
+						<source>Max.\r\nspd.</source>
+						<target>Laju\r\nMax.</target>
+					</trans-unit>
+					<trans-unit id="drivingtime">
+						<source>Drv.\r\ntime</source>
+						<target>Drv.\r\ntime</target>
+					</trans-unit>
+					<trans-unit id="stationname">
+						<source>Station name</source>
+						<target>Nama stesen</target>
+					</trans-unit>
+					<trans-unit id="arrivaltime">
+						<source>Arrival</source>
+						<target>Ketibaan</target>
+					</trans-unit>
+					<trans-unit id="departuretime">
+						<source>Departure</source>
+						<target>Berlepas</target>
+					</trans-unit>
+				</group>
+				<group id="message">
+					<trans-unit id="delimiter">
+						<source>\x20</source>
+						<target>\x20</target>
+					</trans-unit>
+					<trans-unit id="signal_proceed">
+						<source>You may proceed at [speed] [unit] with extreme caution.</source>
+						<target>Anda boleh meneruskan  [speed][unit] dengan sangat berhati-hati.</target>
+					</trans-unit>
+					<trans-unit id="signal_stop">
+						<source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
+						<target>Anda telah melepasi isyarat berhenti. Sila gunakan brek kecemasan dengan segera dan berhenti sepenuhnya.</target>
+					</trans-unit>
+					<trans-unit id="signal_overspeed">
+						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+						<target>Isyarat menunjukkan had laju sebanyak [limit] [unit] . Anda sedang melancong di [speed] [unit]. Tolong perlahankan kereta api.</target>
+					</trans-unit>
+					<trans-unit id="route_overspeed">
+						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+						<target>Post laju menunjukkan had laju sebanyak [limit] [unit]. Anda sedang melancong di [speed][unit]. Tolong perlahankan kereta api.</target>
+					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+						<target>Had laju baharu: [limit][unit].</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+						<target>Signal seterusnya dalam [distance]</target>
+					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+						<target>Signal seterusnya dalam [distance], dengan aspek [aspect]</target>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+						<target>Stesen berikutnya [name] dalam [distance]</target>
+					</trans-unit>
+					<trans-unit id="station_arrival">
+						<source>You have arrived at [name].</source>
+						<target>Anda telah tiba di [name]</target>
+					</trans-unit>
+					<trans-unit id="station_arrival_late">
+						<source>You have arrived at [name] and are [time] late.</source>
+						<target>Anda telah tiba di [name] dan [time] lewat.</target>
+					</trans-unit>
+					<trans-unit id="station_arrival_early">
+						<source>You have arrived at [name] and are [time] early.</source>
+						<target>Anda telah tiba di [name] dan [time] awal.</target>
+					</trans-unit>
+					<trans-unit id="station_overrun">
+						<source>Overrun: [difference] m.</source>
+						<target>Terlebih: [difference] m.</target>
+					</trans-unit>
+					<trans-unit id="station_underrun">
+						<source>Underrun: [difference] m.</source>
+						<target>Terkurang: [difference] m.</target>
+					</trans-unit>
+					<trans-unit id="station_terminal">
+						<source>This is the terminal station.</source>
+						<target>Ini ialah stesen terminal.</target>
+					</trans-unit>
+					<trans-unit id="station_deadline">
+						<source>Departure is expected in [time].</source>
+						<target>Dijangka berlepas dalam [time].</target>
+					</trans-unit>
+					<trans-unit id="station_security">
+						<source>Please activate [system].</source>
+						<target>Sila aktifkan [system].</target>
+					</trans-unit>
+					<trans-unit id="station_correct">
+						<source>Please correct your stop position.</source>
+						<target>Sila betulkan kedudukan berhenti anda</target>
+					</trans-unit>
+					<trans-unit id="station_depart_closedoors">
+						<source>Boarding complete. You may close the doors now.</source>
+						<target>Pengambilan penumpang selesai. Anda boleh menutup pintu sekarang.</target>
+					</trans-unit>
+					<trans-unit id="station_depart">
+						<source>Boarding complete.</source>
+						<target>Pengambilan penumpang selesai.</target>
+					</trans-unit>
+					<trans-unit id="station_passed">
+						<source>You have passed [name] where you should have stopped.</source>
+						<target>Anda telah melepasi [name] di mana sepatutnya anda berhenti.</target>
+					</trans-unit>
+					<trans-unit id="station_passed_boarding">
+						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
+						<target>Anda telah melepasi [name] semasa masih mengambil penumpang. Sila datang ke kedudukan berhenti yang betul dengan segera.</target>
+					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train's current speed is [speed]</source>
+						<target>Laju keretapi terkini ialah [speed]</target>
+					</trans-unit>
+					<trans-unit id="loading">
+						<source>Loading. Please wait...</source>
+					</trans-unit>
+				</group>
+				<group id="notification">
+					<trans-unit id="interior">
+						<source>Interior camera</source>
+						<target>Kamera dalaman</target>
+					</trans-unit>
+					<trans-unit id="interior_lookahead">
+						<source>Interior camera (look ahead)</source>
+						<target>Kamera dalaman (pandang ke hadapan)</target>
+					</trans-unit>
+					<trans-unit id="exterior">
+						<source>Exterior camera</source>
+						<target>Kamera luaran</target>
+					</trans-unit>
+					<trans-unit id="track">
+						<source>Track camera</source>
+						<target>Kamera trek</target>
+					</trans-unit>
+					<trans-unit id="flybynormal">
+						<source>Fly-by camera (normal)</source>
+						<target>Kamera terbang (biasa)</target>
+					</trans-unit>
+					<trans-unit id="flybyzooming">
+						<source>Fly-by camera (zooming)</source>
+						<target>Kamera terbang (zum)</target>
+					</trans-unit>
+					<trans-unit id="cpu_normal">
+						<source>CPU: normal</source>
+						<target>CPU: sederhana</target>
+					</trans-unit>
+					<trans-unit id="cpu_low">
+						<source>CPU: low</source>
+						<target>CPU: rendah</target>
+					</trans-unit>
+					<trans-unit id="backfaceculling_on">
+						<source>Backface culling: on</source>
+						<target>Pemusnahan muka belakang: hidup</target>
+					</trans-unit>
+					<trans-unit id="backfaceculling_off">
+						<source>Backface culling: off</source>
+						<target>Pemusnahan muka belakang: mati</target>
+					</trans-unit>
+					<trans-unit id="notavailableexpert">
+						<source>This feature is not available in Expert mode.</source>
+						<target>Ciri ini tidak tersedia dalam mod Pakar.</target>
+					</trans-unit>
+					<trans-unit id="aiunable">
+						<source>The AI might be unable to fully operate this train.</source>
+						<target>AI mungkin tidak dapat mengendalikan kereta api ini sepenuhnya.</target>
+					</trans-unit>
+					<trans-unit id="camerarestriction_on">
+						<source>Camera restriction: on</source>
+						<target>Sekatan kamera: hidup</target>
+					</trans-unit>
+					<trans-unit id="camerarestriction_off">
+						<source>Camera restriction: off</source>
+						<target>Sekatan kamera: mati</target>
+					</trans-unit>
+					<trans-unit id="mousegrab_on">
+						<source>Mouse grab: on</source>
+						<target>Rebut tetikus: hidup</target>
+					</trans-unit>
+					<trans-unit id="mousegrab_off">
+						<source>Mouse grab: off</source>
+						<target>Rebut tetikus: mati</target>
+					</trans-unit>
+				</group>
+				<group id="score">
+					<trans-unit id="overspeed">
+						<source>Overspeed</source>
+						<target>Terlalu laju</target>
+					</trans-unit>
+					<trans-unit id="redsignal">
+						<source>Passed red signal</source>
+						<target>Melepasi isyarat merah</target>
+					</trans-unit>
+					<trans-unit id="toppling">
+						<source>Toppling</source>
+						<target>Menggulingkan</target>
+					</trans-unit>
+					<trans-unit id="derailed">
+						<source>Derailed</source>
+						<target>Telah tergelincir</target>
+					</trans-unit>
+					<trans-unit id="discomfort">
+						<source>Passenger discomfort</source>
+						<target>Ketidakselesaan penumpang</target>
+					</trans-unit>
+					<trans-unit id="doors">
+						<source>Doors opened</source>
+						<target>Pintu dibuka</target>
+					</trans-unit>
+					<trans-unit id="station_arrived">
+						<source>Arrived at station</source>
+						<target>Tiba di stesen</target>
+					</trans-unit>
+					<trans-unit id="station_perfecttime">
+						<source>Perfect time bonus</source>
+						<target>Bonus masa yang sempurna</target>
+					</trans-unit>
+					<trans-unit id="station_late">
+						<source>Late</source>
+						<target>Lewat</target>
+					</trans-unit>
+					<trans-unit id="station_perfectstop">
+						<source>Perfect stop bonus</source>
+						<target>Bonus berhenti sempurna</target>
+					</trans-unit>
+					<trans-unit id="station_stop">
+						<source>Stop</source>
+						<target>Berhenti</target>
+					</trans-unit>
+					<trans-unit id="station_departure">
+						<source>Premature departure</source>
+						<target>Berlepas pramatang</target>
+					</trans-unit>
+					<trans-unit id="station_total">
+						<source>Total</source>
+						<target>Jumlah</target>
+					</trans-unit>
+					<trans-unit id="rating">
+						<source>Your rating:</source>
+					</trans-unit>
+				</group>
+				<group id="rating">
+					<trans-unit id="0">
+						<source>Abysmal</source>
+						<target>Abysmal</target>
+					</trans-unit>
+					<trans-unit id="1">
+						<source>Terrible</source>
+						<target>Dahsyat</target>
+					</trans-unit>
+					<trans-unit id="2">
+						<source>Bad</source>
+						<target>Teruk</target>
+					</trans-unit>
+					<trans-unit id="3">
+						<source>Poor</source>
+						<target>Tidak teruk sangat</target>
+					</trans-unit>
+					<trans-unit id="4">
+						<source>Fair</source>
+						<target>Adil</target>
+					</trans-unit>
+					<trans-unit id="5">
+						<source>Mediocre</source>
+						<target>Biasa-biasa je</target>
+					</trans-unit>
+					<trans-unit id="6">
+						<source>Good</source>
+						<target>Bagus</target>
+					</trans-unit>
+					<trans-unit id="7">
+						<source>Great</source>
+						<target>Lebih baik</target>
+					</trans-unit>
+					<trans-unit id="8">
+						<source>Superb</source>
+						<target>Hebat</target>
+					</trans-unit>
+					<trans-unit id="9">
+						<source>Excellent</source>
+						<target>Cemerlang</target>
+					</trans-unit>
+					<trans-unit id="unknown">
+						<source>Unknown</source>
+					</trans-unit>
+				</group>
+				<group id="menu">
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+						<target>JEDA</target>
+					</trans-unit>
+					<trans-unit id="resume">
+						<source>Resume simulation</source>
+						<target>Sambung simulasi</target>
+					</trans-unit>
+					<trans-unit id="jump">
+						<source>Jump to station</source>
+						<target>Lompat ke stesen</target>
+					</trans-unit>
+					<trans-unit id="exit">
+						<source>Exit to main menu</source>
+						<target>Keluar ke menu</target>
+					</trans-unit>
+					<trans-unit id="exit_question">
+						<source>Do you really want to exit to the main menu?</source>
+						<target>Adakah anda benar-benar mahu keluar ke menu utama?</target>
+					</trans-unit>
+					<trans-unit id="exit_no">
+						<source>No</source>
+						<target>Tidak</target>
+					</trans-unit>
+					<trans-unit id="exit_yes">
+						<source>Yes</source>
+						<target>Ya</target>
+					</trans-unit>
+					<trans-unit id="quit">
+						<source>Quit</source>
+						<target>Keluar</target>
+					</trans-unit>
+					<trans-unit id="quit_question">
+						<source>Do you really want to quit?</source>
+						<target>Adakah anda benar-benar mahu keluar?</target>
+					</trans-unit>
+					<trans-unit id="quit_no">
+						<source>No</source>
+						<target>Tidak</target>
+					</trans-unit>
+					<trans-unit id="quit_yes">
+						<source>Yes</source>
+						<target>Ya</target>
+					</trans-unit>
+					<trans-unit id="back">
+						<source>← Back</source>
+						<target>← kembali</target>
+					</trans-unit>
+					<trans-unit id="customize_controls">
+						<source>Customise controls</source>
+						<target>Sesuaikan kawalan</target>
+					</trans-unit>
+					<trans-unit id="assign">
+						<source>Please press any key or move a joystick axis to set this control...</source>
+						<target>Sila tekan sebarang kekunci atau gerakkan paksi joystick untuk menetapkan kawalan ini...</target>
+					</trans-unit>
+					<trans-unit id="keyboard">
+						<source>Keyboard</source>
+						<target>Papan Kekunci</target>
+					</trans-unit>
+					<trans-unit id="joystick">
+						<source>Joystick</source>
+						<target>Joystick</target>
+					</trans-unit>
+					<trans-unit id="joystick_notavailable">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="joystickdirection_positive">
+						<source>Positive</source>
+						<target>Positif</target>
+					</trans-unit>
+					<trans-unit id="joystickdirection_negative">
+						<source>Negative</source>
+						<target>Negatif</target>
+					</trans-unit>
+					<trans-unit id="assignment_current">
+						<source>Current assignment:</source>
+						<target>Tugasan terkini:</target>
+					</trans-unit>
+				</group>
+				<group id="lamps">
+					<trans-unit id="ats">
+						<source>ATS</source>
+						<target>ATS</target>
+					</trans-unit>
+					<trans-unit id="atsoperation">
+						<source>ATS RUN</source>
+						<target>ATS RUN</target>
+					</trans-unit>
+					<trans-unit id="atsppower">
+						<source>P POWER</source>
+						<target>P POWER</target>
+					</trans-unit>
+					<trans-unit id="atsppattern">
+						<source>PTN APPROACH</source>
+						<target>PTN PENDEKATAN</target>
+					</trans-unit>
+					<trans-unit id="atspbrakeoverride">
+						<source>BRAKE RELEASE</source>
+						<target>BREK LEPAS</target>
+					</trans-unit>
+					<trans-unit id="atspbrakeoperation">
+						<source>BRAKE APPLY</source>
+						<target>BREK DIKENAKAN</target>
+					</trans-unit>
+					<trans-unit id="atsp">
+						<source>ATS-P</source>
+						<target>ATS-P</target>
+					</trans-unit>
+					<trans-unit id="atspfailure">
+						<source>FAILURE</source>
+						<target>KEGAGALAN</target>
+					</trans-unit>
+					<trans-unit id="atc">
+						<source>ATC</source>
+						<target>ATC</target>
+					</trans-unit>
+					<trans-unit id="atcpower">
+						<source>ATC POWER</source>
+						<target>KUASA ATC</target>
+					</trans-unit>
+					<trans-unit id="atcuse">
+						<source>ATC SRV</source>
+						<target>ATC SRV</target>
+					</trans-unit>
+					<trans-unit id="atcemergency">
+						<source>ATC EMG</source>
+						<target>ATC EMG</target>
+					</trans-unit>
+					<trans-unit id="eb">
+						<source>EB</source>
+						<target>EB</target>
+					</trans-unit>
+					<trans-unit id="constspeed">
+						<source>CONST SPEED</source>
+						<target>LAJU CONST</target>
+					</trans-unit>
+				</group>
+				<group id="handles">
+					<trans-unit id="forward">
+						<source>F</source>
+						<target>F</target>
+					</trans-unit>
+					<trans-unit id="neutral">
+						<source>N</source>
+						<target>N</target>
+					</trans-unit>
+					<trans-unit id="backward">
+						<source>B</source>
+						<target>B</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>P</source>
+					</trans-unit>
+					<trans-unit id="powernull">
+						<source>N</source>
+						<target>N</target>
+					</trans-unit>
+					<trans-unit id="brake">
+						<source>B</source>
+					</trans-unit>
+					<trans-unit id="locobrake">
+						<source>L</source>
+						<target>L</target>
+					</trans-unit>
+					<trans-unit id="brakenull">
+						<source>N</source>
+						<target>N</target>
+					</trans-unit>
+					<trans-unit id="release">
+						<source>REL</source>
+						<target>REL</target>
+					</trans-unit>
+					<trans-unit id="lap">
+						<source>LAP</source>
+						<target>LAP</target>
+					</trans-unit>
+					<trans-unit id="service">
+						<source>SRV</source>
+						<target>V</target>
+					</trans-unit>
+					<trans-unit id="emergency">
+						<source>EMG</source>
+						<target>EMG</target>
+					</trans-unit>
+					<trans-unit id="holdbrake">
+						<source>HLD</source>
+						<target>HLD</target>
+					</trans-unit>
+				</group>
+				<group id="doors">
+					<trans-unit id="left">
+						<source>L</source>
+						<target>L</target>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>R</source>
+						<target>R</target>
+					</trans-unit>
+				</group>
+				<group id="misc">
+					<trans-unit id="score">
+						<source>Score:\x20</source>
+					</trans-unit>
+				</group>
+				<group id="commands">
+					<trans-unit id="power_increase">
+						<source>Increases power by one notch for trains with two handles</source>
+						<target>Meningkatkan kuasa dengan satu notch untuk kereta api dengan dua pemegang</target>
+					</trans-unit>
+					<trans-unit id="power_decrease">
+						<source>Decreases power by one notch for trains with two handles</source>
+						<target>Mengurangkan kuasa dengan satu notch untuk kereta api dengan dua pemegang</target>
+					</trans-unit>
+					<trans-unit id="power_halfaxis">
+						<source>Controls power for trains with two handles on half of a joystick axis</source>
+						<target>Mengawal kuasa untuk kereta api dengan dua pemegang pada separuh paksi joystick</target>
+					</trans-unit>
+					<trans-unit id="power_fullaxis">
+						<source>Controls power for trains with two handles on a full joystick axis</source>
+						<target>Mengawal kuasa untuk kereta api dengan dua pemegang pada paksi joystick penuh</target>
+					</trans-unit>
+					<trans-unit id="brake_decrease">
+						<source>Decreases brake by one notch for trains with two handles</source>
+						<target>Mengurangkan brek sebanyak satu notch untuk kereta api dengan dua pemegang</target>
+					</trans-unit>
+					<trans-unit id="brake_increase">
+						<source>Increases brake by one notch for trains with two handles</source>
+						<target>Meningkatkan brek sebanyak satu notch untuk kereta api dengan dua pemegang</target>
+					</trans-unit>
+					<trans-unit id="locobrake_decrease">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="locobrake_increase">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="brake_halfaxis">
+						<source>Controls brake for trains with two handles on half of a joystick axis</source>
+						<target>Mengawal brek untuk kereta api dengan dua pemegang pada separuh paksi joystick</target>
+					</trans-unit>
+					<trans-unit id="brake_fullaxis">
+						<source>Controls brake for trains with two handles on a full joystick axis</source>
+						<target>Mengawal brek untuk kereta api dengan dua pemegang pada paksi joystick penuh</target>
+					</trans-unit>
+					<trans-unit id="brake_emergency">
+						<source>Activates emergency brakes for trains with two handles</source>
+						<target>Aktifkan brek kecemasan untuk kereta api dua dengan pemegang</target>
+					</trans-unit>
+					<trans-unit id="single_power">
+						<source>Moves handle toward power by one notch for trains with one handle</source>
+						<target>Menggerakkan pemegang ke arah kuasa dengan satu notch untuk kereta api dengan satu pemegang</target>
+					</trans-unit>
+					<trans-unit id="single_neutral">
+						<source>Moves handle toward neutral by one notch for trains with one handle</source>
+						<target>Menggerakkan pemegang ke arah neutral dengan satu notch untuk kereta api dengan satu pemegang</target>
+					</trans-unit>
+					<trans-unit id="single_brake">
+						<source>Moves handle toward brake by one notch for trains with one handle</source>
+						<target>Menggerakkan pemegang ke arah brek dengan satu notch untuk kereta api dengan satu pemegang</target>
+					</trans-unit>
+					<trans-unit id="single_emergency">
+						<source>Activates emergency brake for trains with one handle</source>
+						<target>Aktifkan brek kecemasan untuk kereta api dengan dua pemegang</target>
+					</trans-unit>
+					<trans-unit id="single_fullaxis">
+						<source>Controls power and brake for trains with one handle on a full joystick axis</source>
+						<target>Mengawal kuasa dan brek untuk kereta api dengan satu pemegang pada paksi joystick penuh</target>
+					</trans-unit>
+					<trans-unit id="power_any_notch">
+						<source>Adjusts the power notch directly from a command option value.</source>
+						<target>Laraskan notch kuasa terus daripada nilai pilihan arahan.</target>
+					</trans-unit>
+					<trans-unit id="brake_any_notch">
+						<source>Adjusts the brake notch directly from a command option value.</source>
+						<target>Laraskan notch brek terus daripada nilai pilihan arahan.</target>
+					</trans-unit>
+					<trans-unit id="reverser_any_position">
+						<source>Adjusts the reverser directly from a command option value.</source>
+						<target>Laraskan notch pengundur terus daripada nilai pilihan arahan.</target>
+					</trans-unit>
+					<trans-unit id="hold_brake">
+						<source>Hold Brake</source>
+						<target>Tahan Brek</target>
+					</trans-unit>
+					<trans-unit id="reverser_forward">
+						<source>Moves reverser forward by one notch</source>
+						<target>Menggerakkan pengundur ke hadapan dengan satu notch</target>
+					</trans-unit>
+					<trans-unit id="reverser_backward">
+						<source>Moves reverser backward by one notch</source>
+						<target>Menggerakkan pengundur ke belakang sebanyak satu notch</target>
+					</trans-unit>
+					<trans-unit id="reverser_fullaxis">
+						<source>Controls reverser on a full joystick axis</source>
+						<target>Mengawal pengundur pada paksi joystick penuh</target>
+					</trans-unit>
+					<trans-unit id="doors_left">
+						<source>Opens or closes the left doors</source>
+						<target>Membuka atau menutup pintu kiri</target>
+					</trans-unit>
+					<trans-unit id="doors_right">
+						<source>Opens or closes the right doors</source>
+						<target>Membuka atau menutup pintu kanan </target>
+					</trans-unit>
+					<trans-unit id="horn_primary">
+						<source>Plays the primary horn</source>
+						<target>Memainkan hon utama</target>
+					</trans-unit>
+					<trans-unit id="horn_secondary">
+						<source>Plays the secondary horn</source>
+						<target>Memainkan hon kedua</target>
+					</trans-unit>
+					<trans-unit id="horn_music">
+						<source>Plays or stops the music horn</source>
+						<target>Memainkan atau menghentikan muzik hon</target>
+					</trans-unit>
+					<trans-unit id="device_constspeed">
+						<source>Activates or deactivates the constant speed device</source>
+						<target>Mengaktifkan atau menyahaktifkan peranti kelajuan malar</target>
+					</trans-unit>
+					<trans-unit id="security_power">
+						<source>Activates or deactivates the security system on some trains</source>
+						<target>Mengaktifkan atau menyahaktifkan sistem keselamatan pada beberapa kereta api</target>
+					</trans-unit>
+					<trans-unit id="security_s">
+						<source>The S function of the security system</source>
+						<target>Fungsi S sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_a1">
+						<source>The A1 function of the security system</source>
+						<target>Fungsi A1 sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_a2">
+						<source>The A2 function of the security system</source>
+						<target>Fungsi A2 sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_b1">
+						<source>The B1 function of the security system</source>
+						<target>Fungsi B1 sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_b2">
+						<source>The B2 function of the security system</source>
+						<target>Fungsi B2 sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_c1">
+						<source>The C1 function of the security system</source>
+						<target>Fungsi C1 sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_c2">
+						<source>The C2 function of the security system</source>
+						<target>Fungsi C2 sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_d">
+						<source>The D function of the security system</source>
+						<target>Fungsi D sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_e">
+						<source>The E function of the security system</source>
+						<target>Fungsi E sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_f">
+						<source>The F function of the security system</source>
+						<target>Fungsi F sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_g">
+						<source>The G function of the security system</source>
+						<target>Fungsi G sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_h">
+						<source>The H function of the security system</source>
+						<target>Fungsi H sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_i">
+						<source>The I function of the security system</source>
+						<target>Fungsi I sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_j">
+						<source>The J function of the security system</source>
+						<target>Fungsi J sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_k">
+						<source>The K function of the security system</source>
+						<target>Fungsi K sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_l">
+						<source>The L function of the security system</source>
+						<target>Fungsi L sistem keselamatan</target>
+					</trans-unit>
+					<trans-unit id="security_m">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_n">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_o">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_p">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="camera_interior">
+						<source>Switches to the train's interior view</source>
+						<target>Beralih ke pandangan dalaman kereta api</target>
+					</trans-unit>
+					<trans-unit id="camera_interior_nopanel">
+						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+						<target>Beralih ke pandangan dalaman kereta api. Walau bagaimanapun, panel tidak dipaparkan.</target>
+					</trans-unit>
+					<trans-unit id="camera_exterior">
+						<source>Switches to the train's exterior view</source>
+						<target>Beralih ke pandangan luar kereta api</target>
+					</trans-unit>
+					<trans-unit id="camera_track">
+						<source>Switches to the track view</source>
+						<target>Beralih kepada paparan trek</target>
+					</trans-unit>
+					<trans-unit id="camera_flyby">
+						<source>Switches between different fly-by views</source>
+						<target>Bertukar antara paparan fly-by yang berbeza</target>
+					</trans-unit>
+					<trans-unit id="camera_move_forward">
+						<source>Moves the camera forward</source>
+						<target>Menggerakkan kamera ke hadapan</target>
+					</trans-unit>
+					<trans-unit id="camera_move_backward">
+						<source>Moves the camera backward</source>
+						<target>Menggerakkan kamera ke belakang</target>
+					</trans-unit>
+					<trans-unit id="camera_move_left">
+						<source>Moves the camera left</source>
+						<target>Menggerakkan kamera ke kiri</target>
+					</trans-unit>
+					<trans-unit id="camera_move_right">
+						<source>Moves the camera right</source>
+						<target>Menggerakkan kamera ke kanan</target>
+					</trans-unit>
+					<trans-unit id="camera_move_up">
+						<source>Moves the camera up</source>
+						<target>Menggerakkan kamera ke atas</target>
+					</trans-unit>
+					<trans-unit id="camera_move_down">
+						<source>Moves the camera down</source>
+						<target>Menggerakkan kamera ke bawah</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_left">
+						<source>Rotates the camera left</source>
+						<target>Memutar kamera ke kiri</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_right">
+						<source>Rotates the camera right</source>
+						<target>Memutar kamera ke kanan</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_up">
+						<source>Rotates the camera up</source>
+						<target>Memutar kamera ke atas</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_down">
+						<source>Rotates the camera down</source>
+						<target>Memutar kamera ke bawah</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_ccw">
+						<source>Rotates the camera counter-clockwise</source>
+						<target>Memutar kamera ke arah lawan jam</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_cw">
+						<source>Rotates the camera clockwise</source>
+						<target>Memutar kamera ke arah jam</target>
+					</trans-unit>
+					<trans-unit id="camera_zoom_in">
+						<source>Zooms the camera in</source>
+						<target>Mengezum kamera masuk</target>
+					</trans-unit>
+					<trans-unit id="camera_zoom_out">
+						<source>Zooms the camera out</source>
+						<target>Mengezum kamera luar</target>
+					</trans-unit>
+					<trans-unit id="camera_poi_previous">
+						<source>Jumps to the previous point of interest in the route.</source>
+						<target>Melompat ke tempat menarik sebelum ini dalam laluan.</target>
+					</trans-unit>
+					<trans-unit id="camera_poi_next">
+						<source>Jumps to the next point of interest in the route.</source>
+						<target>Melompat ke tempat menarik seterusnya ini dalam laluan.</target>
+					</trans-unit>
+					<trans-unit id="camera_reset">
+						<source>Resets the camera view to default values</source>
+						<target>Menetapkan semula paparan kamera kepada nilai lalai</target>
+					</trans-unit>
+					<trans-unit id="camera_restriction">
+						<source>Activates or deactivates interior view camera restriction</source>
+						<target>Mengaktifkan atau menyahaktifkan sekatan kamera paparan dalaman</target>
+					</trans-unit>
+					<trans-unit id="timetable_toggle">
+						<source>Toggles through different timetable modes</source>
+						<target>Togel melalui mod jadual waktu yang berbeza</target>
+					</trans-unit>
+					<trans-unit id="timetable_up">
+						<source>Scrolls the timetable up</source>
+						<target>Skrol jadual waktu ke atas</target>
+					</trans-unit>
+					<trans-unit id="timetable_down">
+						<source>Scrolls the timetable down</source>
+						<target>Skrol jadual waktu ke bawah</target>
+					</trans-unit>
+					<trans-unit id="menu_activate">
+						<source>Displays the in-game menu</source>
+						<target>Memaparkan menu dalam permainan</target>
+					</trans-unit>
+					<trans-unit id="menu_up">
+						<source>Moves the cursor up within the in-game menu</source>
+						<target>Mengalihkan kursor ke atas dalam menu dalam permainan</target>
+					</trans-unit>
+					<trans-unit id="menu_down">
+						<source>Moves the cursor down within the in-game menu</source>
+						<target>Menggerakkan kursor ke bawah dalam menu dalam permainan</target>
+					</trans-unit>
+					<trans-unit id="menu_enter">
+						<source>Performs the selected command within the in-game menu</source>
+						<target>Melaksanakan arahan yang dipilih dalam menu dalam permainan</target>
+					</trans-unit>
+					<trans-unit id="menu_back">
+						<source>Goes back within the in-game menu</source>
+						<target>Kembali ke dalam menu dalam permainan</target>
+					</trans-unit>
+					<trans-unit id="misc_clock">
+						<source>Shows or hides the clock</source>
+						<target>Menunjukkan atau menyembunyikan jam</target>
+					</trans-unit>
+					<trans-unit id="misc_speed">
+						<source>Toggles through different speed display modes</source>
+						<target>Togel melalui mod paparan kelajuan yang berbeza</target>
+					</trans-unit>
+					<trans-unit id="misc_gradient">
+						<source>Toggles through different gradient display modes</source>
+						<target>Togel melalui mod paparan kecerunan yang berbeza</target>
+					</trans-unit>
+					<trans-unit id="misc_dist_next_station">
+						<source>Toggles through different next station remain distance display modes</source>
+						<target>Togel melalui stesen seterusnya yang berbeza kekal mod paparan jarak</target>
+					</trans-unit>
+					<trans-unit id="misc_timefactor">
+						<source>Toggles through different time acceleration factors</source>
+						<target>Togel melalui faktor pecutan masa yang berbeza</target>
+					</trans-unit>
+					<trans-unit id="misc_fps">
+						<source>Shows or hides the frame rate display</source>
+						<target>Menunjukkan atau menyembunyikan paparan kadar bingkai</target>
+					</trans-unit>
+					<trans-unit id="misc_ai">
+						<source>Activates or deactivates the virtual driver (AI)</source>
+						<target>Mengaktifkan atau menyahaktifkan pemandu maya (AI)</target>
+					</trans-unit>
+					<trans-unit id="misc_pause">
+						<source>Pauses or resumes the simulation</source>
+						<target>Menjeda atau menyambung semula simulasi</target>
+					</trans-unit>
+					<trans-unit id="misc_fullscreen">
+						<source>Toggles to or from fullscreen mode</source>
+						<target>Togel ke atau daripada mod skrin penuh</target>
+					</trans-unit>
+					<trans-unit id="misc_mute">
+						<source>Mutes sound or resumes playing sounds</source>
+						<target>Membisukan bunyi atau menyambung semula memainkan bunyi</target>
+					</trans-unit>
+					<trans-unit id="misc_quit">
+						<source>Quits the simulation</source>
+						<target>Berhenti daripada simulasi</target>
+					</trans-unit>
+					<trans-unit id="misc_interface">
+						<source>Toggles through different interface modes</source>
+						<target>Togel melalui mod antara muka yang berbeza</target>
+					</trans-unit>
+					<trans-unit id="misc_backface">
+						<source>Activates or deactivates backface culling</source>
+						<target>Mengaktifkan atau menyahaktifkan pemusnahan muka belakang</target>
+					</trans-unit>
+					<trans-unit id="misc_cpumode">
+						<source>Switches to or from reduced CPU mode</source>
+						<target>Beralih kepada atau daripada mod CPU yang dikurangkan</target>
+					</trans-unit>
+					<trans-unit id="debug_wireframe">
+						<source>Activates or deactivates wireframe mode</source>
+						<target>Mengaktifkan atau menyahaktifkan mod rangka wayar</target>
+					</trans-unit>
+					<trans-unit id="debug_normals">
+						<source>Shows or hides vertex normals</source>
+						<target>Menunjukkan atau menyembunyikan norma puncak</target>
+					</trans-unit>
+					<trans-unit id="debug_brake">
+						<source>Shows or hides brake system debug output</source>
+						<target>Menunjukkan atau menyembunyikan output nyahpepijat sistem brek</target>
+					</trans-unit>
+					<trans-unit id="debug_ats">
+						<source>Shows or hides plugin debug output</source>
+						<target>Menunjukkan atau menyembunyikan output plugin</target>
+					</trans-unit>
+					<trans-unit id="debug_touch_mode">
+						<source>Shows or hides the touch range</source>
+						<target>Menunjukkan atau menyembunyikan julat sentuhan</target>
+					</trans-unit>
+					<trans-unit id="route_information">
+						<source>Shows or hides the route information window</source>
+						<target>Menunjukkan atau menyembunyikan tetingkap maklumat laluan</target>
+					</trans-unit>
+					<trans-unit id="show_events">
+						<source>Shows or hides event markers (For developers)</source>
+						<target>Menunjukkan atau menyembunyikan penanda acara (Untuk pembangun)</target>
+					</trans-unit>
+					<trans-unit id="debug_renderer_mode">
+						<source>Toggles the renderer</source>
+						<target>Menogol pemapar</target>
+					</trans-unit>
+					<trans-unit id="wiper_speed_up">
+						<source>Increases the speed of the windscreen wipers</source>
+						<target>Meningkatkan kelajuan pengelap cermin depan</target>
+					</trans-unit>
+					<trans-unit id="wiper_speed_down">
+						<source>Decreases the speed of the windscreen wipers</source>
+						<target>Mengurangkan kelajuan pengelap cermin depan</target>
+					</trans-unit>
+					<trans-unit id="fill_fuel">
+						<source>Fills fuel</source>
+						<target>Mengisi bahan api</target>
+					</trans-unit>
+					<trans-unit id="headlights">
+						<source>Toggles the train headlights</source>
+						<target>Togel lampu kereta api</target>
+					</trans-unit>
+					<trans-unit id="live_steam_injector">
+						<source>Activates or deactivates the live steam injector</source>
+						<target>Mengaktifkan atau menyahaktifkan penyuntik stim hidup</target>
+					</trans-unit>
+					<trans-unit id="exhaust_steam_injector">
+						<source>Activates or deactivates the exhaust steam injector</source>
+						<target>Mengaktifkan atau menyahaktifkan penyuntik stim ekzos</target>
+					</trans-unit>
+					<trans-unit id="increase_cutoff">
+						<source>Increases the cutoff</source>
+						<target>Meningkatkan potongan</target>
+					</trans-unit>
+					<trans-unit id="decrease_cutoff">
+						<source>Decreases the cutoff</source>
+						<target>Mengurangkan potongan</target>
+					</trans-unit>
+					<trans-unit id="blowers">
+						<source>Activates or deactivates the blowers</source>
+						<target>Mengaktifkan atau menyahaktifkan peniup</target>
+					</trans-unit>
+					<trans-unit id="engine_start">
+						<source>Starts the engine</source>
+						<target>Menghidupkan enjin</target>
+					</trans-unit>
+					<trans-unit id="engine_stop">
+						<source>Stops the engine</source>
+						<target>Mematikan enjin</target>
+					</trans-unit>
+					<trans-unit id="gear_up">
+						<source>Shifts up a gear in a train fitted with a gearbox</source>
+						<target>Menukar gear dalam kereta api yang dipasang dengan kotak gear</target>
+					</trans-unit>
+					<trans-unit id="gear_down">
+						<source>Shifts down a gear in a train fitted with a gearbox</source>
+						<target>Menukar gear ke bawah dalam kereta api yang dipasang dengan kotak gear</target>
+					</trans-unit>
+					<trans-unit id="raise_pantograph">
+						<source>Raises the pantograph</source>
+						<target>Menaikkan pantograf</target>
+					</trans-unit>
+					<trans-unit id="lower_pantograph">
+						<source>Lowers the pantograph</source>
+						<target>Menurunkan pantograf</target>
+					</trans-unit>
+					<trans-unit id="main_breaker">
+						<source>Toggles the main breaker</source>
+						<target>Togel breaker utama</target>
+					</trans-unit>
+					<trans-unit id="raildriver_speed_units">
+						<source>Toggles the RailDriver speed display units.</source>
+						<target>Menogel unit paparan kelajuan RailDriver.</target>
+					</trans-unit>
+				</group>
+				<group id="keys">
+					<trans-unit id="0">
+						<source>0</source>
+					</trans-unit>
+					<trans-unit id="1">
+						<source>1</source>
+					</trans-unit>
+					<trans-unit id="2">
+						<source>2</source>
+					</trans-unit>
+					<trans-unit id="3">
+						<source>3</source>
+					</trans-unit>
+					<trans-unit id="4">
+						<source>4</source>
+					</trans-unit>
+					<trans-unit id="5">
+						<source>5</source>
+					</trans-unit>
+					<trans-unit id="6">
+						<source>6</source>
+					</trans-unit>
+					<trans-unit id="7">
+						<source>7</source>
+					</trans-unit>
+					<trans-unit id="8">
+						<source>8</source>
+					</trans-unit>
+					<trans-unit id="9">
+						<source>9</source>
+					</trans-unit>
+					<trans-unit id="ampersand">
+						<source>Ampersand</source>
+						<target>Ampersand</target>
+					</trans-unit>
+					<trans-unit id="asterisk">
+						<source>Asterisk</source>
+						<target>Asterisk</target>
+					</trans-unit>
+					<trans-unit id="at">
+						<source>At</source>
+						<target>At</target>
+					</trans-unit>
+					<trans-unit id="backquote">
+						<source>Backquote</source>
+						<target>Backquote</target>
+					</trans-unit>
+					<trans-unit id="backslash">
+						<source>Backslash</source>
+						<target>Backslash</target>
+					</trans-unit>
+					<trans-unit id="backspace">
+						<source>Backspace</source>
+						<target>Backspace</target>
+					</trans-unit>
+					<trans-unit id="break">
+						<source>Break</source>
+						<target>Break</target>
+					</trans-unit>
+					<trans-unit id="capslock">
+						<source>Capslock</source>
+						<target>Capslock</target>
+					</trans-unit>
+					<trans-unit id="caret">
+						<source>Caret</source>
+						<target>Caret</target>
+					</trans-unit>
+					<trans-unit id="clear">
+						<source>Clear</source>
+						<target>Kosongkan</target>
+					</trans-unit>
+					<trans-unit id="colon">
+						<source>Colon</source>
+						<target>Kolon</target>
+					</trans-unit>
+					<trans-unit id="comma">
+						<source>Comma</source>
+						<target>Komma</target>
+					</trans-unit>
+					<trans-unit id="delete">
+						<source>Delete</source>
+						<target>Delete</target>
+					</trans-unit>
+					<trans-unit id="dollar">
+						<source>Dollar</source>
+						<target>Dollar</target>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Down</source>
+					</trans-unit>
+					<trans-unit id="end">
+						<source>End</source>
+						<target>End</target>
+					</trans-unit>
+					<trans-unit id="enter">
+						<source>Enter</source>
+						<target>Enter</target>
+					</trans-unit>
+					<trans-unit id="equals">
+						<source>Equals</source>
+						<target>quals</target>
+					</trans-unit>
+					<trans-unit id="escape">
+						<source>Escape</source>
+						<target>ape</target>
+					</trans-unit>
+					<trans-unit id="euro">
+						<source>Euro</source>
+						<target>Euro</target>
+					</trans-unit>
+					<trans-unit id="exclaim">
+						<source>Exclamation</source>
+						<target>Exclamation</target>
+					</trans-unit>
+					<trans-unit id="f1">
+						<source>F1</source>
+						<target>F1</target>
+					</trans-unit>
+					<trans-unit id="f2">
+						<source>F2</source>
+						<target>F2</target>
+					</trans-unit>
+					<trans-unit id="f3">
+						<source>F3</source>
+						<target>F3</target>
+					</trans-unit>
+					<trans-unit id="f4">
+						<source>F4</source>
+						<target>F4</target>
+					</trans-unit>
+					<trans-unit id="f5">
+						<source>F5</source>
+						<target>F5</target>
+					</trans-unit>
+					<trans-unit id="f6">
+						<source>F6</source>
+						<target>F6</target>
+					</trans-unit>
+					<trans-unit id="f7">
+						<source>F7</source>
+						<target>F7</target>
+					</trans-unit>
+					<trans-unit id="f8">
+						<source>F8</source>
+						<target>F8</target>
+					</trans-unit>
+					<trans-unit id="f9">
+						<source>F9</source>
+						<target>F9</target>
+					</trans-unit>
+					<trans-unit id="f10">
+						<source>F10</source>
+						<target>F10</target>
+					</trans-unit>
+					<trans-unit id="f11">
+						<source>F11</source>
+						<target>F11</target>
+					</trans-unit>
+					<trans-unit id="f12">
+						<source>F12</source>
+						<target>F12</target>
+					</trans-unit>
+					<trans-unit id="f13">
+						<source>F13</source>
+						<target>F13</target>
+					</trans-unit>
+					<trans-unit id="f14">
+						<source>F14</source>
+						<target>F14</target>
+					</trans-unit>
+					<trans-unit id="f15">
+						<source>F15</source>
+						<target>F15</target>
+					</trans-unit>
+					<trans-unit id="greater">
+						<source>Greater</source>
+						<target>Greater</target>
+					</trans-unit>
+					<trans-unit id="hash">
+						<source>Hash</source>
+						<target>Hash</target>
+					</trans-unit>
+					<trans-unit id="help">
+						<source>Help</source>
+						<target>Tolong</target>
+					</trans-unit>
+					<trans-unit id="home">
+						<source>Home</source>
+						<target>Home</target>
+					</trans-unit>
+					<trans-unit id="insert">
+						<source>Insert</source>
+						<target>Insert</target>
+					</trans-unit>
+					<trans-unit id="kp0">
+						<source>Keypad 0</source>
+						<target>Pad kekunci 0</target>
+					</trans-unit>
+					<trans-unit id="kp1">
+						<source>Keypad 1</source>
+						<target>Pad kekunci 1</target>
+					</trans-unit>
+					<trans-unit id="kp2">
+						<source>Keypad 2</source>
+						<target>Pad kekunci 2</target>
+					</trans-unit>
+					<trans-unit id="kp3">
+						<source>Keypad 3</source>
+						<target>Pad kekunci 3</target>
+					</trans-unit>
+					<trans-unit id="kp4">
+						<source>Keypad 4</source>
+						<target>Pad kekunci 4</target>
+					</trans-unit>
+					<trans-unit id="kp5">
+						<source>Keypad 5</source>
+						<target>Pad kekunci 5</target>
+					</trans-unit>
+					<trans-unit id="kp6">
+						<source>Keypad 6</source>
+						<target>Pad kekunci 6</target>
+					</trans-unit>
+					<trans-unit id="kp7">
+						<source>Keypad 7</source>
+						<target>Pad kekunci 7</target>
+					</trans-unit>
+					<trans-unit id="kp8">
+						<source>Keypad 8</source>
+						<target>Pad kekunci 8</target>
+					</trans-unit>
+					<trans-unit id="kp9">
+						<source>Keypad 9</source>
+						<target>Pad kekunci 9</target>
+					</trans-unit>
+					<trans-unit id="kp_divide">
+						<source>Keypad Divide</source>
+						<target>Pad kekunci Bahagi</target>
+					</trans-unit>
+					<trans-unit id="kp_enter">
+						<source>Keypad Enter</source>
+						<target>Pad kekunci Enter</target>
+					</trans-unit>
+					<trans-unit id="kp_equals">
+						<source>Keypad Equals</source>
+						<target>Pad kekunci Sama dengan </target>
+					</trans-unit>
+					<trans-unit id="kp_minus">
+						<source>Keypad Minus</source>
+						<target>Pad kekunci Tolak</target>
+					</trans-unit>
+					<trans-unit id="kp_multiply">
+						<source>Keypad Multiply</source>
+						<target>Pad kekunci Darab</target>
+					</trans-unit>
+					<trans-unit id="kp_period">
+						<source>Keypad Period</source>
+						<target>Pad kekunci noktah</target>
+					</trans-unit>
+					<trans-unit id="kp_plus">
+						<source>Keypad Plus</source>
+						<target>Pad kekunci Tambah</target>
+					</trans-unit>
+					<trans-unit id="lalt">
+						<source>Left Alt</source>
+						<target>ALT Kiri</target>
+					</trans-unit>
+					<trans-unit id="lctrl">
+						<source>Left Ctrl</source>
+						<target>Ctrl Kiri</target>
+					</trans-unit>
+					<trans-unit id="left">
+						<source>Left</source>
+					</trans-unit>
+					<trans-unit id="leftbracket">
+						<source>Left bracket</source>
+						<target>Kurungan Kiri</target>
+					</trans-unit>
+					<trans-unit id="leftparen">
+						<source>Left parenthesis</source>
+						<target>Kurungan kiri</target>
+					</trans-unit>
+					<trans-unit id="less">
+						<source>Less</source>
+						<target>Kurang</target>
+					</trans-unit>
+					<trans-unit id="lmeta">
+						<source>Left Meta</source>
+						<target>Meta Kiri</target>
+					</trans-unit>
+					<trans-unit id="lshift">
+						<source>Left Shift</source>
+						<target>Shift Kiri</target>
+					</trans-unit>
+					<trans-unit id="lsuper">
+						<source>Left Application</source>
+						<target>Aplikasi Kiri</target>
+					</trans-unit>
+					<trans-unit id="menu">
+						<source>Menu</source>
+						<target>Menu</target>
+					</trans-unit>
+					<trans-unit id="minus">
+						<source>Minus</source>
+						<target>olak</target>
+					</trans-unit>
+					<trans-unit id="mode">
+						<source>Alt Gr</source>
+					</trans-unit>
+					<trans-unit id="numlock">
+						<source>Numlock</source>
+						<target>Numlock</target>
+					</trans-unit>
+					<trans-unit id="pagedown">
+						<source>Page down</source>
+						<target>Page down</target>
+					</trans-unit>
+					<trans-unit id="pageup">
+						<source>Page up</source>
+						<target>Page up</target>
+					</trans-unit>
+					<trans-unit id="pause">
+						<source>Pause</source>
+						<target>Pause</target>
+					</trans-unit>
+					<trans-unit id="period">
+						<source>Period</source>
+						<target>Noktah</target>
+					</trans-unit>
+					<trans-unit id="plus">
+						<source>Plus</source>
+						<target>Tambah</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>Power</source>
+					</trans-unit>
+					<trans-unit id="print">
+						<source>Print</source>
+						<target>Print</target>
+					</trans-unit>
+					<trans-unit id="question">
+						<source>Question</source>
+						<target>Tanda soal</target>
+					</trans-unit>
+					<trans-unit id="quote">
+						<source>Quote</source>
+						<target>Pengikat kata</target>
+					</trans-unit>
+					<trans-unit id="quotedbl">
+						<source>Quote double</source>
+						<target>Pengikat kata berganda</target>
+					</trans-unit>
+					<trans-unit id="ralt">
+						<source>Right Alt</source>
+						<target>Alt Kanan</target>
+					</trans-unit>
+					<trans-unit id="rctrl">
+						<source>Right Ctrl</source>
+						<target>Ctrl Kanan</target>
+					</trans-unit>
+					<trans-unit id="return">
+						<source>Return</source>
+						<target>Return</target>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>Right</source>
+					</trans-unit>
+					<trans-unit id="rightbracket">
+						<source>Right bracket</source>
+						<target>Kurungan Kanan</target>
+					</trans-unit>
+					<trans-unit id="rightparen">
+						<source>Right parenthesis</source>
+						<target>Kurungan Kanan</target>
+					</trans-unit>
+					<trans-unit id="rmeta">
+						<source>Right Meta</source>
+						<target>Meta Kanan</target>
+					</trans-unit>
+					<trans-unit id="rshift">
+						<source>Right Shift</source>
+						<target>Shift Kanan</target>
+					</trans-unit>
+					<trans-unit id="rsuper">
+						<source>Right Application</source>
+						<target>Aplikasiv</target>
+					</trans-unit>
+					<trans-unit id="scrolllock">
+						<source>Scrolllock</source>
+						<target>Scrolllock</target>
+					</trans-unit>
+					<trans-unit id="semicolon">
+						<source>Semicolon</source>
+						<target>Semikolon</target>
+					</trans-unit>
+					<trans-unit id="slash">
+						<source>Slash</source>
+						<target>Slash</target>
+					</trans-unit>
+					<trans-unit id="space">
+						<source>Space</source>
+						<target>Jarak</target>
+					</trans-unit>
+					<trans-unit id="sysreq">
+						<source>SysRq</source>
+						<target>SysRq</target>
+					</trans-unit>
+					<trans-unit id="tab">
+						<source>Tab</source>
+						<target>Tab</target>
+					</trans-unit>
+					<trans-unit id="underscore">
+						<source>Underscore</source>
+						<target>Underscore</target>
+					</trans-unit>
+					<trans-unit id="up">
+						<source>Up</source>
+					</trans-unit>
+					<trans-unit id="a">
+						<source>A</source>
+						<target>A</target>
+					</trans-unit>
+					<trans-unit id="b">
+						<source>B</source>
+						<target>B</target>
+					</trans-unit>
+					<trans-unit id="c">
+						<source>C</source>
+						<target>C</target>
+					</trans-unit>
+					<trans-unit id="d">
+						<source>D</source>
+						<target>D</target>
+					</trans-unit>
+					<trans-unit id="e">
+						<source>E</source>
+						<target>E</target>
+					</trans-unit>
+					<trans-unit id="f">
+						<source>F</source>
+						<target>F</target>
+					</trans-unit>
+					<trans-unit id="g">
+						<source>G</source>
+						<target>G</target>
+					</trans-unit>
+					<trans-unit id="h">
+						<source>H</source>
+						<target>H</target>
+					</trans-unit>
+					<trans-unit id="i">
+						<source>I</source>
+						<target>I</target>
+					</trans-unit>
+					<trans-unit id="j">
+						<source>J</source>
+						<target>J</target>
+					</trans-unit>
+					<trans-unit id="k">
+						<source>K</source>
+						<target>K</target>
+					</trans-unit>
+					<trans-unit id="l">
+						<source>L</source>
+						<target>L</target>
+					</trans-unit>
+					<trans-unit id="m">
+						<source>M</source>
+						<target>M</target>
+					</trans-unit>
+					<trans-unit id="n">
+						<source>N</source>
+						<target>N</target>
+					</trans-unit>
+					<trans-unit id="o">
+						<source>O</source>
+						<target>O</target>
+					</trans-unit>
+					<trans-unit id="p">
+						<source>P</source>
+						<target>P</target>
+					</trans-unit>
+					<trans-unit id="q">
+						<source>Q</source>
+						<target>Q</target>
+					</trans-unit>
+					<trans-unit id="r">
+						<source>R</source>
+						<target>R</target>
+					</trans-unit>
+					<trans-unit id="s">
+						<source>S</source>
+						<target>S</target>
+					</trans-unit>
+					<trans-unit id="t">
+						<source>T</source>
+						<target>T</target>
+					</trans-unit>
+					<trans-unit id="u">
+						<source>U</source>
+						<target>U</target>
+					</trans-unit>
+					<trans-unit id="v">
+						<source>V</source>
+						<target>V</target>
+					</trans-unit>
+					<trans-unit id="w">
+						<source>W</source>
+						<target>W</target>
+					</trans-unit>
+					<trans-unit id="x">
+						<source>X</source>
+						<target>X</target>
+					</trans-unit>
+					<trans-unit id="y">
+						<source>Y</source>
+						<target>Y</target>
+					</trans-unit>
+					<trans-unit id="z">
+						<source>Z</source>
+						<target>Z</target>
+					</trans-unit>
+				</group>
+				<group id="denshadego">
+					<trans-unit id="config_title">
+						<source>Densha de GO! controller configuration</source>
+						<target>konfigurasi kawalan Densha de GO!</target>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+						<target>Peranti Input</target>
+					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+						<target>Brake [notch]</target>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+						<target>Kuasa [notch]</target>
+					</trans-unit>
+					<trans-unit id="calibration_button">
+						<source>Start calibration</source>
+						<target>Mulakan penentukuran</target>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+						<target>Peranti:</target>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+						<target>Pemetaan butang</target>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+						<target>Tiada</target>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+						<target>Mengendalikan pemetaan</target>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+						<target>tukar notch</target>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+						<target>Pastikan minimum dan maksimum</target>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+						<target>Peta tahan brek ke B1</target>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+						<target>Simpan</target>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+						<target>Batal</target>
+					</trans-unit>
+					<trans-unit id="calibrate_button">
+						<source>Hold the [button] button in the controller and press OK.</source>
+						<target>Tahan butang [button] pada pengawal dan tekan OK.</target>
+					</trans-unit>
+					<trans-unit id="calibrate_brake">
+						<source>Move the brake handle to [notch] and press OK.</source>
+						<target>Gerakkan pemegang brek ke [notch] dan tekan OK.</target>
+					</trans-unit>
+					<trans-unit id="calibrate_power">
+						<source>Move the power handle to [notch] and press OK.</source>
+						<target>Gerakkan pengang kuasa ke [notch] dan tekan OK.</target>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+						<target>ATAS</target>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+						<target>BAWAH</target>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+						<target>KIRI</target>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+						<target>KANAN</target>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+						<target>PEDAL</target>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+						<target>PINTU L</target>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
+						<target>PINTU R</target>
+					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+						<target>Pengawal saya tidak dikesan atau tidak berfungsi dengan betul</target>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+						<target>Tolong</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+						<target>Pengawal saya tidak berfungsi dengan betul</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+						<target>Pengawal PS2 saya tidak dikesan</target>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+						<target>Windows</target>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+						<target>Linux</target>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:
+
+1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
+to separate buttons to avoid compatibility issues.
+2. Calibrate the controller from the configuration window, if necessary.</source>
+						<target>Jika pengawal bukan USB anda tidak memberikan input yang betul:
+
+1. Pastikan penyesuai USB berfungsi. Sebaik-baiknya, penyesuai harus memetakan butang arah daripada pengawal standard
+untuk memisahkan butang untuk mengelakkan masalah keserasian.
+2. Tentukur pengawal dari tetingkap konfigurasi, jika perlu.</target>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+						<target>Jika pengawal PS2 anda tidak muncul dalam senarai, ikuti langkah berikut:</target>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.
+2. Download and run Zadig.
+3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
+4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<target>1. Ekstrak driver Windows.
+2. Muat turun dan jalankan Zadig.
+3. Muatkan fail CFG yang sesuai untuk peranti anda (&quot;Peranti &gt; Muatkan Peranti Pratetap&quot;).
+4. Tekan &quot;Install Driver&quot; dan tunggu pemasangan selesai.</target>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.
+2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
+3. Reboot or reload udev rules manually.</source>
+						<target>1. Ekstrak fail udev Linux.
+2. Salin fail ke &quot;/etc/udev/rules.d/&quot; (kebenaran root diperlukan).
+3. But semula atau muat semula peraturan udev secara manual.</target>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+						<target>Dapatkan Zadig</target>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+						<target>Ekstrak fail (Windows)</target>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+						<target>Ekstrak fail (Linux)</target>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
+						<target>OK</target>
+					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
+Please follow the following instructions:
+
+1. Check that the &quot;libusb-1.0&quot; package is installed.
+2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;
+3. Open the directory in the terminal.
+4. Check this location to see if &quot;libusb-1.0.so&quot; exists.
+5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+						<target>LibUsb nampaknya hilang atau tidak dipautkan dengan betul untuk pemuatan masa jalan.
+Sila ikut arahan berikut:
+
+1. Semak bahawa pakej &quot;libusb-1.0&quot; telah dipasang.
+2. Cari lokasi &quot;libusb-1.0.so.0&quot; - Pada versi Ubuntu dan Debian terkini, ini mungkin &quot;/lib/x86_64-linux-gnu/&quot;
+3. Buka direktori dalam terminal.
+4. Semak lokasi ini untuk melihat sama ada &quot;libusb-1.0.so&quot; wujud.
+5. Jika fail tidak wujud, kita mesti mencipta symlink yang sesuai dengan melaksanakan arahan berikut dari terminal ini: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
+					</trans-unit>
+				</group>
+			</group>
+			<group id="train_editor">
+				<group id="general">
+					<trans-unit id="new">
+						<source>New</source>
+						<target>Baru</target>
+					</trans-unit>
+					<trans-unit id="open">
+						<source>Open...</source>
+						<target>Buka...</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save</source>
+					</trans-unit>
+					<trans-unit id="save_as">
+						<source>Save as...</source>
+						<target>Simpan sebagai...</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+					</trans-unit>
+					<trans-unit id="new_message">
+						<source>Do you want to save data before creating a new train?</source>
+						<target>Adakah anda ingin menyimpan data sebelum membuat kereta api baharu?</target>
+					</trans-unit>
+					<trans-unit id="open_message">
+						<source>Do you want to save data before opening another train?</source>
+						<target>Adakah anda ingin menyimpan data sebelum membuka kereta api lain?</target>
+					</trans-unit>
+					<trans-unit id="close_message">
+						<source>Do you want to save data before closing?</source>
+						<target>Adakah anda ingin menyimpan data sebelum ditutup?</target>
+					</trans-unit>
+					<trans-unit id="properties_one">
+						<source>Properties (1)</source>
+						<target>Butiran (1)</target>
+					</trans-unit>
+					<trans-unit id="properties_two">
+						<source>Properties (2)</source>
+						<target>Butiran (2)</target>
+					</trans-unit>
+				</group>
+				<group id="performance">
+					<trans-unit id="performance">
+						<source>Performance</source>
+						<target>Prestasi</target>
+					</trans-unit>
+					<trans-unit id="deceleration">
+						<source>Deceleration:</source>
+						<target>Nyahpecutan:</target>
+					</trans-unit>
+					<trans-unit id="static_friction">
+						<source>CoefficientOfStaticFriction:</source>
+						<target>PekaliGeseranStatik:</target>
+					</trans-unit>
+					<trans-unit id="rolling_resistance">
+						<source>CoefficientOfRollingResistance:</source>
+						<target>PekaliRintanganGelek</target>
+					</trans-unit>
+					<trans-unit id="aerodynamic_drag">
+						<source>AerodynamicDragCoefficient:</source>
+						<target>PekaliSeretAerodinamik:</target>
+					</trans-unit>
+				</group>
+				<group id="delay">
+					<trans-unit id="delay">
+						<source>Delay</source>
+						<target>Kelewatan</target>
+					</trans-unit>
+					<trans-unit id="power_up">
+						<source>DelayPowerUp</source>
+						<target>KelewatanPowerUp</target>
+					</trans-unit>
+					<trans-unit id="power_down">
+						<source>DelayPowerDown</source>
+						<target>KelewatanPowerDown</target>
+					</trans-unit>
+					<trans-unit id="brake_up">
+						<source>DelayBrakeUp</source>
+						<target>KelewatanBrakeUp</target>
+					</trans-unit>
+					<trans-unit id="brake_down">
+						<source>DelayBrakeDown</source>
+						<target>KelewatanBrakeDown</target>
+					</trans-unit>
+					<trans-unit id="set">
+						<source>Set</source>
+						<target>Set</target>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+						<target>Notch</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save</source>
+					</trans-unit>
+					<trans-unit id="cancel">
+						<source>Cancel</source>
+					</trans-unit>
+				</group>
+				<group id="move">
+					<trans-unit id="move">
+						<source>Move</source>
+						<target>Gerak</target>
+					</trans-unit>
+					<trans-unit id="jerk_power_up">
+						<source>JerkPowerUp:</source>
+						<target>JerkPowerUp:</target>
+					</trans-unit>
+					<trans-unit id="jerk_power_down">
+						<source>JerkPowerDown:</source>
+						<target>JerkPowerDown:</target>
+					</trans-unit>
+					<trans-unit id="jerk_brake_up">
+						<source>JerkBrakeUp:</source>
+						<target>JerkBrakeUp:</target>
+					</trans-unit>
+					<trans-unit id="jerk_brake_down">
+						<source>JerkBrakeDown:</source>
+						<target>JerkBrakeDown:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_up">
+						<source>BrakeCylinderUp:</source>
+						<target>BrakeCylinderUp:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_down">
+						<source>BrakeCylinderDown:</source>
+						<target>BrakeCylinderDown:</target>
+					</trans-unit>
+				</group>
+				<group id="brake">
+					<trans-unit id="brake">
+						<source>Brake</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>BrakeType:</source>
+						<target>JenisBrek:</target>
+					</trans-unit>
+					<trans-unit id="control_system">
+						<source>BrakeControlSystem:</source>
+						<target>SistemKawalanBrek:</target>
+					</trans-unit>
+					<trans-unit id="control_speed">
+						<source>BrakeControlSpeed:</source>
+						<target>KelajuanKawalanBrek:</target>
+					</trans-unit>
+					<trans-unit id="smee">
+						<source>Electromagnetic straight air brake</source>
+						<target>Brek udara lurus elektromagnet</target>
+					</trans-unit>
+					<trans-unit id="ecb">
+						<source>Electro-pneumatic air brake without brake pipe</source>
+						<target>Brek udara elektro-pneumatik tanpa paip brek</target>
+					</trans-unit>
+					<trans-unit id="cl">
+						<source>Air brake with partial release feature</source>
+						<target>Brek udara dengan ciri pelepasan separa</target>
+					</trans-unit>
+					<trans-unit id="control_system_none">
+						<source>None</source>
+						<target>Tiada</target>
+					</trans-unit>
+					<trans-unit id="lock_out_valve">
+						<source>Closing electromagnetic valve</source>
+						<target>Menutup injap elektromagnet</target>
+					</trans-unit>
+					<trans-unit id="delay_including_control">
+						<source>Delay-including control</source>
+						<target>Kelewatan-termasuk kawalan</target>
+					</trans-unit>
+				</group>
+				<group id="pressure">
+					<trans-unit id="pressure">
+						<source>Pressure</source>
+						<target>Tekanan</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_service_max">
+						<source>BrakeCylinderServiceMaximumPressure:</source>
+						<target>BrekSilinderServisTekananMaksimum:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_emergency_max">
+						<source>BrakeCylinderEmergencyMaximumPressure:</source>
+						<target>BrekSilinderKecemasanTekananMaksimum:</target>
+					</trans-unit>
+					<trans-unit id="main_reservoir_min">
+						<source>MainReservoirMinimumPressure:</source>
+						<target>TekananMinimumTakunganUtama:</target>
+					</trans-unit>
+					<trans-unit id="main_reservoir_max">
+						<source>MainReservoirMaximumPressure:</source>
+						<target>TekananMaksimumTakunganUtama:</target>
+					</trans-unit>
+					<trans-unit id="brake_pipe_normal">
+						<source>BrakePipeNormalPressure:</source>
+						<target>BrakePipeTekananNormal:</target>
+					</trans-unit>
+				</group>
+				<group id="handle">
+					<trans-unit id="handle">
+						<source>Handle</source>
+						<target>Pemegang</target>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>HandleType:</source>
+					</trans-unit>
+					<trans-unit id="power_notches">
+						<source>PowerNotches:</source>
+						<target>PowerNotches:</target>
+					</trans-unit>
+					<trans-unit id="brake_notches">
+						<source>BrakeNotches:</source>
+						<target>BrakeNotches:</target>
+					</trans-unit>
+					<trans-unit id="driver_power_notches">
+						<source>DriverPowerNotches:</source>
+						<target>DriverPowerNotches:</target>
+					</trans-unit>
+					<trans-unit id="driver_brake_notches">
+						<source>DriverBrakeNotches:</source>
+						<target>DriverBrakeNotches:</target>
+					</trans-unit>
+					<trans-unit id="power_notch_reduce_steps">
+						<source>PowerNotchReduceSteps:</source>
+						<target>PowerNotchReduceSteps:</target>
+					</trans-unit>
+					<trans-unit id="separated">
+						<source>Separated</source>
+						<target>Dipisahkan</target>
+					</trans-unit>
+					<trans-unit id="combined">
+						<source>Combined</source>
+						<target>Digabungkan</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked">
+						<source>Separated (Interlocked)</source>
+						<target>Berpisah (Saling berkunci)</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked_reverser">
+						<source>Separated (Reverser Interlocked)</source>
+						<target>Berpisah (Pengundur Saling Berkunci)</target>
+					</trans-unit>
+					<trans-unit id="brake_notches_error_message">
+						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						<target>BrakeNotches mestilah sekurang-kurangnya 1 jika HoldBrake ditetapkan.</target>
+					</trans-unit>
+					<trans-unit id="driver_power_notches_error_message">
+						<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						<target>DriverPowerNotches mestilah kurang daripada atau sama dengan PowerNotches.</target>
+					</trans-unit>
+					<trans-unit id="driver_brake_notches_error_message">
+						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
+						<target>DriverBrakeNotches mestilah kurang daripada atau sama dengan BrakeNotches.</target>
+					</trans-unit>
+				</group>
+				<group id="cab">
+					<trans-unit id="cab">
+						<source>Cab</source>
+						<target>Kab</target>
+					</trans-unit>
+					<trans-unit id="driver_car">
+						<source>DriverCar:</source>
+						<target>DriverCar:</target>
+					</trans-unit>
+					<trans-unit id="driver_car_error_message">
+						<source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
+						<target>DriverCar must be less than JumlahMotorCars + JumlahTrailerCars.</target>
+					</trans-unit>
+				</group>
+				<group id="car">
+					<trans-unit id="car">
+						<source>Car</source>
+						<target>Gerabak</target>
+					</trans-unit>
+					<trans-unit id="motor_car_mass">
+						<source>MotorCarMass:</source>
+						<target>BeratMotorCar:</target>
+					</trans-unit>
+					<trans-unit id="number_of_motor_cars">
+						<source>NumberOfMotorCars:</source>
+						<target>JumlahMotorCars:</target>
+					</trans-unit>
+					<trans-unit id="trailer_car_mass">
+						<source>TrailerCarMass:</source>
+						<target>BeratTrailerCar:</target>
+					</trans-unit>
+					<trans-unit id="number_of_trailer_cars">
+						<source>NumberOfTrailerCars:</source>
+						<target>JumlahTrailerCars:</target>
+					</trans-unit>
+					<trans-unit id="length_of_a_car">
+						<source>LengthOfACar:</source>
+						<target>PanjangKereta:</target>
+					</trans-unit>
+					<trans-unit id="front_car_is_motor_car">
+						<source>FrontCarIsMotorCar:</source>
+						<target>KeretaDepanIalahMotorCar:</target>
+					</trans-unit>
+					<trans-unit id="width_of_a_car">
+						<source>WidthOfACar:</source>
+						<target>LebarKereta:</target>
+					</trans-unit>
+					<trans-unit id="height_of_a_car">
+						<source>HeightOfACar:</source>
+						<target>TinggiKereta:</target>
+					</trans-unit>
+					<trans-unit id="center_of_gravity_height">
+						<source>CenterOfGravityHeight:</source>
+						<target>KetinggianPusatGraviti:</target>
+					</trans-unit>
+					<trans-unit id="exposed_frontal_area">
+						<source>ExposedFrontalArea:</source>
+						<target>KawasanDepanTerdedah:</target>
+					</trans-unit>
+					<trans-unit id="unexposed_frontal_area">
+						<source>UnexposedFrontalArea:</source>
+						<target>KawasanDepanTidakTerdedah:</target>
+					</trans-unit>
+					<trans-unit id="number_of_trailer_cars_error_message">
+						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
+						<target>JumlahTrailesCars hendaklah sekurang kurangnya 1 jika KeretaDepanIalahMotorCar tidak disetkan.</target>
+					</trans-unit>
+				</group>
+				<group id="device">
+					<trans-unit id="device">
+						<source>Device</source>
+					</trans-unit>
+					<trans-unit id="const_speed">
+						<source>ConstSpeed:</source>
+						<target>KelajuanConst:</target>
+					</trans-unit>
+					<trans-unit id="hold_brake">
+						<source>HoldBrake:</source>
+					</trans-unit>
+					<trans-unit id="readhesion_device">
+						<source>ReAdhesionDevice:</source>
+						<target>Peranti Lekatan Semula:</target>
+					</trans-unit>
+					<trans-unit id="pass_alarm">
+						<source>PassAlarm:</source>
+						<target>Pas Penggera:</target>
+					</trans-unit>
+					<trans-unit id="door_open_mode">
+						<source>DoorOpenMode:</source>
+						<target>ModPintuBuka:</target>
+					</trans-unit>
+					<trans-unit id="door_close_mode">
+						<source>DoorCloseMode:</source>
+						<target>ModPintuTutup:</target>
+					</trans-unit>
+					<trans-unit id="door_width">
+						<source>DoorWidth:</source>
+						<target>LebarPintu;</target>
+					</trans-unit>
+					<trans-unit id="door_max_tolerance">
+						<source>DoorMaxTolerance:</source>
+						<target>ToleransiMaksPintu:</target>
+					</trans-unit>
+					<trans-unit id="none">
+						<source>None</source>
+						<target>Tiada</target>
+					</trans-unit>
+					<trans-unit id="manual_switching">
+						<source>Manual switching</source>
+						<target>Pensuisan manual</target>
+					</trans-unit>
+					<trans-unit id="automatic_switching">
+						<source>Automatic switching</source>
+						<target>Pensuisan automatik</target>
+					</trans-unit>
+					<trans-unit id="type_a">
+						<source>Type A (instant)</source>
+						<target>Jenis (segera)</target>
+					</trans-unit>
+					<trans-unit id="type_b">
+						<source>Type B (slow)</source>
+						<target>Jenis B (perlahan)</target>
+					</trans-unit>
+					<trans-unit id="type_c">
+						<source>Type C (medium)</source>
+						<target>Jenis C (sederhana)</target>
+					</trans-unit>
+					<trans-unit id="type_d">
+						<source>Type D (fast)</source>
+						<target>Jenis D (laju)</target>
+					</trans-unit>
+					<trans-unit id="single">
+						<source>Single</source>
+						<target>Tunggal</target>
+					</trans-unit>
+					<trans-unit id="looping">
+						<source>Looping</source>
+						<target>Gelung</target>
+					</trans-unit>
+					<trans-unit id="semi_automatic">
+						<source>Semi-automatic</source>
+						<target>Semi-automatik</target>
+					</trans-unit>
+					<trans-unit id="automatic">
+						<source>Automatic</source>
+						<target>Automatik</target>
+					</trans-unit>
+					<trans-unit id="manual">
+						<source>Manual</source>
+						<target>Manual</target>
+					</trans-unit>
+				</group>
+				<group id="acceleration">
+					<trans-unit id="acceleration">
+						<source>Acceleration</source>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch:</source>
+					</trans-unit>
+					<trans-unit id="data">
+						<source>Data</source>
+						<target>Data</target>
+					</trans-unit>
+					<trans-unit id="preview">
+						<source>Preview</source>
+						<target>Pratonton</target>
+					</trans-unit>
+					<trans-unit id="subtract_deceleration">
+						<source>Subtract deceleration due to air and rolling resistance</source>
+						<target>Kurangkan nyahpecutan kerana rintangan udara dan gelek</target>
+					</trans-unit>
+					<trans-unit id="max_x">
+						<source>Xmax:</source>
+						<target>Xmax:</target>
+					</trans-unit>
+					<trans-unit id="max_y">
+						<source>Ymax:</source>
+						<target>Ymax:</target>
+					</trans-unit>
+				</group>
+				<group id="motor">
+					<trans-unit id="sound">
+						<source>Motor Sound</source>
+						<target>Bunyi Motor</target>
+					</trans-unit>
+					<trans-unit id="edit">
+						<source>Edit mode</source>
+						<target>Mod sunting:</target>
+					</trans-unit>
+					<trans-unit id="sound_index">
+						<source>SoundIndex:</source>
+						<target>IndexBunyi</target>
+					</trans-unit>
+					<trans-unit id="pitch">
+						<source>Pitch</source>
+						<target>Pitch</target>
+					</trans-unit>
+					<trans-unit id="volume">
+						<source>Volume</source>
+						<target>Kelantangan</target>
+					</trans-unit>
+					<trans-unit id="sound_none">
+						<source>None</source>
+						<target>Tiada</target>
+					</trans-unit>
+					<trans-unit id="preview">
+						<source>Preview</source>
+					</trans-unit>
+					<trans-unit id="y_pitch">
+						<source>Ypitch</source>
+						<target>Yptich</target>
+					</trans-unit>
+					<trans-unit id="y_volume">
+						<source>Yvolume</source>
+						<target>Ykelantangan</target>
+					</trans-unit>
+					<trans-unit id="min_x">
+						<source>Xmin:</source>
+						<target>Xmin</target>
+					</trans-unit>
+					<trans-unit id="max_x">
+						<source>Xmax:</source>
+					</trans-unit>
+					<trans-unit id="left">
+						<source>Left</source>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>Right</source>
+					</trans-unit>
+					<trans-unit id="in">
+						<source>In</source>
+						<target>Dalam</target>
+					</trans-unit>
+					<trans-unit id="out">
+						<source>Out</source>
+						<target>Luar</target>
+					</trans-unit>
+					<trans-unit id="max_y_pitch">
+						<source>YmaxPitch:</source>
+						<target>YmaxPitch:</target>
+					</trans-unit>
+					<trans-unit id="max_y_volume">
+						<source>YmaxVolume:</source>
+						<target>YmaxKelantangan:</target>
+					</trans-unit>
+				</group>
+				<group id="extended">
+					<trans-unit id="features">
+						<source>Extended Features</source>
+						<target>Ciri Lanjutan</target>
+					</trans-unit>
+					<trans-unit id="note">
+						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
+						<target>Sila ambil perhatian: Ciri yang terdapat pada halaman ini mungkin memerlukan versi minimum openBVE berikut:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake">
+						<source>Locomotive Brake</source>
+						<target>Brek Lokomotif</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_system_type">
+						<source>BrakeType:</source>
+						<target>JenisBrek:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_notches">
+						<source>Notches:</source>
+						<target>Notch:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_delay_up">
+						<source>DelayUp:</source>
+						<target>DelayUp:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_delay_down">
+						<source>DelayDown:</source>
+						<target>DelayDown:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_type">
+						<source>Type:</source>
+						<target>Jenis:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_set">
+						<source>Set</source>
+						<target>Set</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_none">
+						<source>Not fitted</source>
+						<target>Tidak dipasang</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_notched_air_brake">
+						<source>Notched air brake</source>
+						<target>Brek udara bernotch</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_cl">
+						<source>Air brake with partial release</source>
+						<target>Brek udara dengan ciri pelepasan separa</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_combined">
+						<source>Combined</source>
+						<target>Digabungkan</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_independant">
+						<source>Independent</source>
+						<target>Bebas</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_blocking">
+						<source>Blocking</source>
+						<target>Menyekat</target>
+					</trans-unit>
+					<trans-unit id="delay_loco_brake_up">
+						<source>DelayLocoBrakeUp</source>
+						<target>DelayLocoBrakeUp</target>
+					</trans-unit>
+					<trans-unit id="delay_loco_brake_down">
+						<source>DelayLocoBrakeDown</source>
+						<target>DelayLocoBrakeDown</target>
+					</trans-unit>
+					<trans-unit id="misc">
+						<source>Miscellaneous Features</source>
+					</trans-unit>
+					<trans-unit id="misc_eb">
+						<source>Handle behaviour on EB:</source>
+						<target>Mengendalikan tingkah laku pada EB:</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_no">
+						<source>No Action</source>
+						<target>Tiada Tindakan</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_power">
+						<source>Return Power to neutral</source>
+						<target>Kembalikan Kuasa kepada neutral</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_reverser">
+						<source>Return Reverser to neutral</source>
+						<target>Kembalikan Pengundur kepada neutral</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_power_reverser">
+						<source>Return Power and Reverser to neutral</source>
+						<target>Kembalikan Kuasa dan Pengundur kepada neutral</target>
+					</trans-unit>
+					<trans-unit id="language">
+						<source>Language</source>
+					</trans-unit>
+				</group>
+			</group>
+			<group id="train_editor2">
+				<group id="menu">
+					<group id="file">
+						<trans-unit id="name">
+							<source>File</source>
+						</trans-unit>
+						<trans-unit id="new">
+							<source>New</source>
+						</trans-unit>
+						<trans-unit id="open">
+							<source>Open...</source>
+						</trans-unit>
+						<trans-unit id="save">
+							<source>Save</source>
+						</trans-unit>
+						<trans-unit id="save_as">
+							<source>Save as...</source>
+						</trans-unit>
+						<trans-unit id="import">
+							<source>Import...</source>
+						</trans-unit>
+						<trans-unit id="export">
+							<source>Export...</source>
+						</trans-unit>
+						<trans-unit id="exit">
+							<source>Exit</source>
+						</trans-unit>
+						<trans-unit id="wrongtype">
+							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+							<target>Anda telah cuba membuka kereta api. \n\n Ini tidak boleh dibuka terus- \n\n Sila gunakan fungsi import untuk mengimport kereta api ini ke dalam TrainEditor2.</target>
+						</trans-unit>
+					</group>
+					<trans-unit id="language">
+						<source>Language</source>
+					</trans-unit>
+					<group id="message">
+						<trans-unit id="new">
+							<source>Do you want to save the current file before creating a new one?</source>
+						</trans-unit>
+						<trans-unit id="open">
+							<source>Do you want to save the current file before opening another file?</source>
+						</trans-unit>
+						<trans-unit id="exit">
+							<source>Do you want to save the current file before closing?</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="navigation">
+					<trans-unit id="up">
+						<source>Up</source>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Down</source>
+					</trans-unit>
+					<trans-unit id="add">
+						<source>Add</source>
+					</trans-unit>
+					<trans-unit id="remove">
+						<source>Remove</source>
+					</trans-unit>
+					<trans-unit id="copy">
+						<source>Copy</source>
+						<target>Salin</target>
+					</trans-unit>
+					<trans-unit id="set">
+						<source>Set...</source>
+					</trans-unit>
+					<trans-unit id="open">
+						<source>Open...</source>
+					</trans-unit>
+				</group>
+				<group id="tree_cars">
+					<trans-unit id="train">
+						<source>Train</source>
+					</trans-unit>
+					<trans-unit id="general">
+						<source>General</source>
+						<target>Umum</target>
+					</trans-unit>
+					<trans-unit id="cars">
+						<source>Cars</source>
+						<target>Kereta</target>
+					</trans-unit>
+					<trans-unit id="couplers">
+						<source>Couplers</source>
+						<target>Pengganding</target>
+					</trans-unit>
+				</group>
+				<group id="general_settings">
+					<trans-unit id="name">
+						<source>General settings</source>
+					</trans-unit>
+					<group id="handle">
+						<trans-unit id="name">
+							<source>Handle</source>
+						</trans-unit>
+						<group id="handle_type">
+							<trans-unit id="name">
+								<source>HandleType</source>
+							</trans-unit>
+							<trans-unit id="separated">
+								<source>Separated</source>
+							</trans-unit>
+							<trans-unit id="combined">
+								<source>Combined</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked">
+								<source>Separated (Interlocked)</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked_reverser">
+								<source>Separated (Reverser Interlocked)</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="power_notches">
+							<source>PowerNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+							<source>BrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+							<source>PowerNotchReduceSteps</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+							<source>DriverPowerNotches</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+							<source>DriverBrakeNotches</source>
+						</trans-unit>
+						<group id="eb_handle_behaviour">
+							<trans-unit id="name">
+								<source>EbHandleBehaviour</source>
+							</trans-unit>
+							<trans-unit id="no">
+								<source>No action</source>
+								<target>Tiada Tindakan</target>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Return power to neutral</source>
+							</trans-unit>
+							<trans-unit id="reverser">
+								<source>Return reverser to neutral</source>
+							</trans-unit>
+							<trans-unit id="power_reverser">
+								<source>Return power and reverser to neutral</source>
+								<target>Kembalikan kuasa dan pengundur kepada neutral</target>
+							</trans-unit>
+						</group>
+						<group id="loco_brake_handle_type">
+							<trans-unit id="name">
+								<source>LocoBrakeHandleType</source>
+							</trans-unit>
+							<trans-unit id="combined">
+								<source>Combined</source>
+							</trans-unit>
+							<trans-unit id="independent">
+								<source>Independent</source>
+								<target>Bebas</target>
+							</trans-unit>
+							<trans-unit id="blocking">
+								<source>Blocking</source>
+								<target>Menyekat</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="loco_brake_notches">
+							<source>LocoBrakeNotches</source>
+						</trans-unit>
+					</group>
+					<group id="cab">
+						<trans-unit id="name">
+							<source>Cab</source>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>X</source>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>Y</source>
+						</trans-unit>
+						<trans-unit id="z">
+							<source>Z</source>
+						</trans-unit>
+						<trans-unit id="driver_car">
+							<source>DriverCar</source>
+						</trans-unit>
+					</group>
+					<group id="device">
+						<trans-unit id="name">
+							<source>Device</source>
+						</trans-unit>
+						<group id="ats">
+							<trans-unit id="name">
+								<source>Ats</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="ats_sn">
+								<source>ATS-SN</source>
+								<target>ATS-SN</target>
+							</trans-unit>
+							<trans-unit id="ats_sn_ats_p">
+								<source>ATS-SN / ATS-P</source>
+								<target>ATS-SN / ATS-P</target>
+							</trans-unit>
+						</group>
+						<group id="atc">
+							<trans-unit id="name">
+								<source>Atc</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="manual">
+								<source>Manual switching</source>
+							</trans-unit>
+							<trans-unit id="automatic">
+								<source>Automatic switching</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="eb">
+							<source>Eb</source>
+						</trans-unit>
+						<trans-unit id="const_speed">
+							<source>ConstSpeed</source>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+							<source>HoldBrake</source>
+						</trans-unit>
+						<group id="re_adhesion_device">
+							<trans-unit id="name">
+								<source>ReAdhesionDevice</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="type_a">
+								<source>Type A (instant)</source>
+							</trans-unit>
+							<trans-unit id="type_b">
+								<source>Type B (slow)</source>
+							</trans-unit>
+							<trans-unit id="type_c">
+								<source>Type C (medium)</source>
+							</trans-unit>
+							<trans-unit id="type_d">
+								<source>Type D (fast)</source>
+							</trans-unit>
+						</group>
+						<group id="pass_alarm">
+							<trans-unit id="name">
+								<source>PassAlarm</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="single">
+								<source>Single</source>
+							</trans-unit>
+							<trans-unit id="looping">
+								<source>Looping</source>
+							</trans-unit>
+						</group>
+						<group id="door_mode">
+							<trans-unit id="open">
+								<source>DoorOpenMode</source>
+							</trans-unit>
+							<trans-unit id="close">
+								<source>DoorCloseMode</source>
+							</trans-unit>
+							<trans-unit id="semi_automatic">
+								<source>Semi-automatic</source>
+							</trans-unit>
+							<trans-unit id="automatic">
+								<source>Automatic</source>
+							</trans-unit>
+							<trans-unit id="manual">
+								<source>Manual</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="door_width">
+							<source>DoorWidth</source>
+						</trans-unit>
+						<trans-unit id="door_max_tolerance">
+							<source>DoorMaxTolerance</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="car_settings">
+					<trans-unit id="name">
+						<source>Car settings</source>
+					</trans-unit>
+					<group id="general">
+						<trans-unit id="name">
+							<source>General</source>
+						</trans-unit>
+						<trans-unit id="is_motor_car">
+							<source>IsMotorCar</source>
+							<target>IalahMotorCar</target>
+						</trans-unit>
+						<trans-unit id="mass">
+							<source>Mass</source>
+							<target>Jisim</target>
+						</trans-unit>
+						<trans-unit id="length">
+							<source>Length</source>
+							<target>Panjang</target>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+							<target>Lebar</target>
+						</trans-unit>
+						<trans-unit id="height">
+							<source>Height</source>
+							<target>Tinggi</target>
+						</trans-unit>
+						<trans-unit id="center_of_gravity_height">
+							<source>CenterOfGravityHeight</source>
+						</trans-unit>
+						<trans-unit id="exposed_frontal_area">
+							<source>ExposedFrontalArea</source>
+						</trans-unit>
+						<trans-unit id="unexposed_frontal_area">
+							<source>UnexposedFrontalArea</source>
+						</trans-unit>
+						<trans-unit id="defined_axles">
+							<source>DefinedAxles</source>
+							<target>GandarTertakrif</target>
+						</trans-unit>
+						<group id="axles">
+							<trans-unit id="name">
+								<source>Axles</source>
+							</trans-unit>
+							<trans-unit id="front">
+								<source>FrontAxle</source>
+								<target>GandarDepan</target>
+							</trans-unit>
+							<trans-unit id="rear">
+								<source>RearAxle</source>
+								<target>GandarBelakang</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="front_bogie">
+							<source>FrontBogie</source>
+							<target>BogieDepan</target>
+						</trans-unit>
+						<trans-unit id="rear_bogie">
+							<source>RearBogie</source>
+							<target>BogieBelakang</target>
+						</trans-unit>
+						<trans-unit id="loading_sway">
+							<source>LoadingSway</source>
+							<target>MemuatkanSway</target>
+						</trans-unit>
+						<trans-unit id="reversed">
+							<source>Reversed</source>
+							<target>Terbalik</target>
+						</trans-unit>
+						<trans-unit id="object">
+							<source>Object</source>
+							<target>Objek</target>
+						</trans-unit>
+					</group>
+					<group id="performance">
+						<trans-unit id="name">
+							<source>Performance</source>
+						</trans-unit>
+						<trans-unit id="deceleration">
+							<source>Deceleration</source>
+						</trans-unit>
+						<trans-unit id="static_friction">
+							<source>CoefficientOfStaticFriction</source>
+						</trans-unit>
+						<trans-unit id="rolling_resistance">
+							<source>CoefficientOfRollingResistance</source>
+						</trans-unit>
+						<trans-unit id="aerodynamic_drag">
+							<source>AerodynamicDragCoefficient</source>
+						</trans-unit>
+					</group>
+					<group id="move">
+						<trans-unit id="name">
+							<source>Move</source>
+						</trans-unit>
+						<trans-unit id="jerk_power_up">
+							<source>JerkPowerUp</source>
+						</trans-unit>
+						<trans-unit id="jerk_power_down">
+							<source>JerkPowerDown</source>
+						</trans-unit>
+						<trans-unit id="jerk_brake_up">
+							<source>JerkBrakeUp</source>
+						</trans-unit>
+						<trans-unit id="jerk_brake_down">
+							<source>JerkBrakeDown</source>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_up">
+							<source>BrakeCylinderUp</source>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_down">
+							<source>BrakeCylinderDown</source>
+						</trans-unit>
+					</group>
+					<group id="brake">
+						<trans-unit id="name">
+							<source>Brake</source>
+						</trans-unit>
+						<group id="brake_type">
+							<trans-unit id="name">
+								<source>BrakeType</source>
+							</trans-unit>
+							<trans-unit id="smee">
+								<source>Electromagnetic straight air brake</source>
+							</trans-unit>
+							<trans-unit id="ecb">
+								<source>Electro-pneumatic air brake without brake pipe</source>
+							</trans-unit>
+							<trans-unit id="cl">
+								<source>Air brake with partial release feature</source>
+							</trans-unit>
+						</group>
+						<group id="loco_brake_type">
+							<trans-unit id="name">
+								<source>LocoBrakeType</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>Not fitted</source>
+							</trans-unit>
+							<trans-unit id="notched_air_brake">
+								<source>Notched air brake</source>
+								<target>Brek udara bernotch</target>
+							</trans-unit>
+							<trans-unit id="cl">
+								<source>Air brake with partial release</source>
+							</trans-unit>
+						</group>
+						<group id="brake_control_system">
+							<trans-unit id="name">
+								<source>BrakeControlSystem</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="lock_out_valve">
+								<source>Closing electromagnetic valve</source>
+							</trans-unit>
+							<trans-unit id="delay_including_control">
+								<source>Delay-including control</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="brake_control_speed">
+							<source>BrakeControlSpeed</source>
+							<target>KelajuanKawalanBrek</target>
+						</trans-unit>
+					</group>
+					<group id="pressure">
+						<trans-unit id="name">
+							<source>Pressure</source>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_service_max">
+							<source>BrakeCylinderServiceMaximumPressure</source>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_emergency_max">
+							<source>BrakeCylinderEmergencyMaximumPressure</source>
+						</trans-unit>
+						<trans-unit id="main_reservoir_min">
+							<source>MainReservoirMinimumPressure</source>
+						</trans-unit>
+						<trans-unit id="main_reservoir_max">
+							<source>MainReservoirMaximumPressure</source>
+						</trans-unit>
+						<trans-unit id="brake_pipe_normal">
+							<source>BrakePipeNormalPressure</source>
+						</trans-unit>
+					</group>
+					<group id="delay">
+						<trans-unit id="name">
+							<source>Delay</source>
+						</trans-unit>
+						<trans-unit id="power">
+							<source>Power</source>
+						</trans-unit>
+						<trans-unit id="brake">
+							<source>Brake</source>
+						</trans-unit>
+						<trans-unit id="loco_brake">
+							<source>LocoBrake</source>
+						</trans-unit>
+						<trans-unit id="notch">
+							<source>Notch</source>
+						</trans-unit>
+						<trans-unit id="value">
+							<source>Value</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="acceleration_settings">
+					<trans-unit id="name">
+						<source>Acceleration settings</source>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+					</trans-unit>
+					<group id="parameter">
+						<trans-unit id="name">
+							<source>Parameter</source>
+						</trans-unit>
+						<trans-unit id="a0">
+							<source>a0</source>
+							<target>a0</target>
+						</trans-unit>
+						<trans-unit id="a1">
+							<source>a1</source>
+							<target>a1</target>
+						</trans-unit>
+						<trans-unit id="v1">
+							<source>v1</source>
+							<target>v1</target>
+						</trans-unit>
+						<trans-unit id="v2">
+							<source>v2</source>
+							<target>v2</target>
+						</trans-unit>
+						<trans-unit id="e">
+							<source>e (2.0)</source>
+						</trans-unit>
+					</group>
+					<group id="preview">
+						<trans-unit id="name">
+							<source>Preview</source>
+						</trans-unit>
+						<trans-unit id="subtract_deceleration">
+							<source>Subtract deceleration due to air and rolling resistance</source>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>X</source>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>Y</source>
+						</trans-unit>
+						<trans-unit id="x_min">
+							<source>x-min</source>
+							<target>x-min</target>
+						</trans-unit>
+						<trans-unit id="x_max">
+							<source>x-max</source>
+							<target>x-max</target>
+						</trans-unit>
+						<trans-unit id="y_min">
+							<source>y-min</source>
+							<target>y-min</target>
+						</trans-unit>
+						<trans-unit id="y_max">
+							<source>y-max</source>
+							<target>y-max</target>
+						</trans-unit>
+						<trans-unit id="zoom_in">
+							<source>Zoom In</source>
+							<target>Mengezum masuk</target>
+						</trans-unit>
+						<trans-unit id="zoom_out">
+							<source>Zoom Out</source>
+							<target>Mengezum luar</target>
+						</trans-unit>
+						<trans-unit id="reset">
+							<source>Reset</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="motor_sound_settings">
+					<trans-unit id="name">
+						<source>Motor sound settings</source>
+					</trans-unit>
+					<group id="menu">
+						<group id="edit">
+							<trans-unit id="name">
+								<source>Edit</source>
+							</trans-unit>
+							<trans-unit id="undo">
+								<source>Undo</source>
+								<target>Buat asal</target>
+							</trans-unit>
+							<trans-unit id="redo">
+								<source>Redo</source>
+								<target>Buat Semula</target>
+							</trans-unit>
+							<trans-unit id="cut">
+								<source>Cut</source>
+								<target>Potong</target>
+							</trans-unit>
+							<trans-unit id="copy">
+								<source>Copy</source>
+							</trans-unit>
+							<trans-unit id="paste">
+								<source>Paste</source>
+								<target>Tampal</target>
+							</trans-unit>
+							<trans-unit id="cleanup">
+								<source>Cleanup</source>
+								<target>Bersihkan</target>
+							</trans-unit>
+							<trans-unit id="delete">
+								<source>Delete</source>
+							</trans-unit>
+						</group>
+						<group id="view">
+							<trans-unit id="name">
+								<source>View</source>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Power</source>
+							</trans-unit>
+							<trans-unit id="brake">
+								<source>Brake</source>
+							</trans-unit>
+							<trans-unit id="track">
+								<source>Track</source>
+							</trans-unit>
+						</group>
+						<group id="input">
+							<trans-unit id="name">
+								<source>Input</source>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+							</trans-unit>
+							<trans-unit id="sound_index">
+								<source>Sound source index</source>
+							</trans-unit>
+							<trans-unit id="sound_index_none">
+								<source>None</source>
+								<target>Tiada</target>
+							</trans-unit>
+						</group>
+						<group id="tool">
+							<trans-unit id="name">
+								<source>Tool</source>
+							</trans-unit>
+							<trans-unit id="select">
+								<source>Select</source>
+								<target>Pilih</target>
+							</trans-unit>
+							<trans-unit id="move">
+								<source>Move</source>
+							</trans-unit>
+							<trans-unit id="dot">
+								<source>Dot</source>
+								<target>Titik</target>
+							</trans-unit>
+							<trans-unit id="line">
+								<source>Line</source>
+								<target>Garisan</target>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="view_setting">
+						<trans-unit id="name">
+							<source>View setting</source>
+						</trans-unit>
+						<trans-unit id="min_velocity">
+							<source>x-min(Velocity)</source>
+							<target>x-min(Halaju)</target>
+						</trans-unit>
+						<trans-unit id="max_velocity">
+							<source>x-max(Velocity)</source>
+							<target>x-max(halaju)</target>
+						</trans-unit>
+						<trans-unit id="min_pitch">
+							<source>y-min(Pitch)</source>
+							<target>y-min(Pitch)</target>
+						</trans-unit>
+						<trans-unit id="max_pitch">
+							<source>y-max(Pitch)</source>
+							<target>y-max(Pitch)</target>
+						</trans-unit>
+						<trans-unit id="min_volume">
+							<source>y-min(Volume)</source>
+							<target>y-min(Kelantangan)</target>
+						</trans-unit>
+						<trans-unit id="max_volume">
+							<source>y-max(Volume)</source>
+							<target>y-max(Kelantangan)</target>
+						</trans-unit>
+						<trans-unit id="zoom_in">
+							<source>Zoom In</source>
+						</trans-unit>
+						<trans-unit id="zoom_out">
+							<source>Zoom Out</source>
+						</trans-unit>
+						<trans-unit id="reset">
+							<source>Reset</source>
+						</trans-unit>
+					</group>
+					<group id="direct_input">
+						<trans-unit id="name">
+							<source>Direct input</source>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>x coordinate</source>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>y coordinate</source>
+						</trans-unit>
+						<trans-unit id="dot">
+							<source>Dot</source>
+						</trans-unit>
+						<trans-unit id="move">
+							<source>Move</source>
+						</trans-unit>
+					</group>
+					<group id="play_setting">
+						<trans-unit id="name">
+							<source>Playback setting</source>
+						</trans-unit>
+						<group id="source">
+							<trans-unit id="name">
+								<source>Sound source setting</source>
+							</trans-unit>
+							<trans-unit id="run">
+								<source>Running sound</source>
+								<target>Bunyi berlari</target>
+							</trans-unit>
+							<trans-unit id="track">
+								<source>Track</source>
+							</trans-unit>
+						</group>
+						<group id="area">
+							<trans-unit id="name">
+								<source>Area setting</source>
+							</trans-unit>
+							<trans-unit id="loop">
+								<source>Loop playback</source>
+								<target>Main semula gelung</target>
+							</trans-unit>
+							<trans-unit id="constant">
+								<source>Constant speed</source>
+								<target>Kelajuan berterusan</target>
+							</trans-unit>
+							<trans-unit id="acceleration">
+								<source>Acceleration:</source>
+							</trans-unit>
+							<trans-unit id="swap">
+								<source>Swap</source>
+								<target>Tukar</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="play">
+							<source>Playback</source>
+							<target>Mainbalik</target>
+						</trans-unit>
+						<trans-unit id="pause">
+							<source>Pause</source>
+						</trans-unit>
+						<trans-unit id="stop">
+							<source>Stop</source>
+							<target>Berhenti</target>
+						</trans-unit>
+					</group>
+					<group id="vertex_info">
+						<trans-unit id="name">
+							<source>Vertex information</source>
+						</trans-unit>
+						<trans-unit id="velocity">
+							<source>Velocity</source>
+							<target>Halaju</target>
+						</trans-unit>
+						<trans-unit id="pitch">
+							<source>Pitch</source>
+						</trans-unit>
+						<trans-unit id="volume">
+							<source>Volume</source>
+						</trans-unit>
+						<trans-unit id="sound_index">
+							<source>Sound source index</source>
+						</trans-unit>
+					</group>
+					<group id="status">
+						<group id="type">
+							<trans-unit id="name">
+								<source>Type</source>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Power</source>
+							</trans-unit>
+							<trans-unit id="brake">
+								<source>Brake</source>
+							</trans-unit>
+						</group>
+						<group id="track">
+							<trans-unit id="name">
+								<source>Track</source>
+							</trans-unit>
+						</group>
+						<group id="mode">
+							<trans-unit id="name">
+								<source>Mode</source>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+							</trans-unit>
+							<trans-unit id="sound_index">
+								<source>Sound source index</source>
+							</trans-unit>
+						</group>
+						<group id="tool">
+							<trans-unit id="name">
+								<source>Tool</source>
+							</trans-unit>
+							<trans-unit id="select">
+								<source>Select</source>
+							</trans-unit>
+							<trans-unit id="move">
+								<source>Move</source>
+							</trans-unit>
+							<trans-unit id="dot">
+								<source>Dot</source>
+							</trans-unit>
+							<trans-unit id="line">
+								<source>Line</source>
+							</trans-unit>
+						</group>
+						<group id="xy">
+							<trans-unit id="velocity">
+								<source>Velocity</source>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="message">
+						<trans-unit id="vertex_exist">
+							<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
+							<target>Titik sudah wujud pada koordinat x yang sama, adakah anda mahu menulis gantinya?</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="coupler_settings">
+					<trans-unit id="name">
+						<source>Coupler settings</source>
+					</trans-unit>
+					<group id="general">
+						<trans-unit id="name">
+							<source>General</source>
+						</trans-unit>
+						<trans-unit id="min">
+							<source>Min</source>
+							<target>Min</target>
+						</trans-unit>
+						<trans-unit id="max">
+							<source>Max</source>
+							<target>Max</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="panel_settings">
+					<trans-unit id="name">
+						<source>Panel settings</source>
+					</trans-unit>
+					<group id="this">
+						<trans-unit id="name">
+							<source>This</source>
+						</trans-unit>
+						<trans-unit id="resolution">
+							<source>Resolution</source>
+						</trans-unit>
+						<trans-unit id="left">
+							<source>Left</source>
+						</trans-unit>
+						<trans-unit id="right">
+							<source>Right</source>
+						</trans-unit>
+						<trans-unit id="top">
+							<source>Top</source>
+							<target>Atas</target>
+						</trans-unit>
+						<trans-unit id="bottom">
+							<source>Bottom</source>
+							<target>Bawah</target>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+							<target>ImejSiang</target>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+							<target>ImejMalam</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+							<target>WarnaLutSinar</target>
+						</trans-unit>
+						<group id="center">
+							<trans-unit id="name">
+								<source>Center</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="screen">
+						<trans-unit id="name">
+							<source>Screen</source>
+						</trans-unit>
+						<trans-unit id="number">
+							<source>Number</source>
+							<target>Nombor</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+							<target>Lapisan</target>
+						</trans-unit>
+					</group>
+					<group id="pilot_lamp">
+						<trans-unit id="name">
+							<source>PilotLamp</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+							<target>Subjek</target>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="needle">
+						<trans-unit id="name">
+							<source>Needle</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="defined_radius">
+							<source>DefinedRadius</source>
+							<target>JejariDitakrifkan</target>
+						</trans-unit>
+						<trans-unit id="radius">
+							<source>Radius</source>
+							<target>Jejari</target>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="color">
+							<source>Color</source>
+							<target>Warna</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="defined_origin">
+							<source>DefinedOrigin</source>
+							<target>AsalDitakrifkan</target>
+						</trans-unit>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="initial_angle">
+							<source>InitialAngle</source>
+							<target>SuduAwal</target>
+						</trans-unit>
+						<trans-unit id="last_angle">
+							<source>LastAngle</source>
+							<target>SudutAkhir</target>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+							<target>Minimum</target>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+							<target>Maksimum</target>
+						</trans-unit>
+						<trans-unit id="defined_natural_freq">
+							<source>DefinedNaturalFreq</source>
+							<target>DefinedNaturalFreq</target>
+						</trans-unit>
+						<trans-unit id="natural_freq">
+							<source>NaturalFreq</source>
+							<target>NaturalFreq</target>
+						</trans-unit>
+						<trans-unit id="defined_damping_ratio">
+							<source>DefiedDampingRatio</source>
+							<target>NisbahRedamanDitakrifkan</target>
+						</trans-unit>
+						<trans-unit id="damping_ratio">
+							<source>DampingRatio</source>
+							<target>NisbahRedaman</target>
+						</trans-unit>
+						<trans-unit id="backstop">
+							<source>Backstop</source>
+							<target>Backstop</target>
+						</trans-unit>
+						<trans-unit id="smoothed">
+							<source>smoothed</source>
+							<target>terlicin</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="digital_number">
+						<trans-unit id="name">
+							<source>DigitalNumber</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+						<trans-unit id="interval">
+							<source>Interval</source>
+							<target>Selang waktu</target>
+						</trans-unit>
+					</group>
+					<group id="digital_gauge">
+						<trans-unit id="name">
+							<source>DigitalGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="radius">
+							<source>Radius</source>
+						</trans-unit>
+						<trans-unit id="color">
+							<source>Color</source>
+						</trans-unit>
+						<trans-unit id="initial_angle">
+							<source>InitialAngle</source>
+						</trans-unit>
+						<trans-unit id="last_angle">
+							<source>LastAngle</source>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+						</trans-unit>
+						<trans-unit id="step">
+							<source>Step</source>
+							<target>Langkah</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="linear_gauge">
+						<trans-unit id="name">
+							<source>LinearGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+						</trans-unit>
+						<group id="direction">
+							<trans-unit id="name">
+								<source>Direction</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="width">
+							<source>Width</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="timetable">
+						<trans-unit id="name">
+							<source>Timetable</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="height">
+							<source>Height</source>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="touch">
+						<trans-unit id="name">
+							<source>Touch</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="size">
+							<trans-unit id="name">
+								<source>Size</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="jump_screen">
+							<source>JumpScreen</source>
+							<target>LompatSkrin</target>
+						</trans-unit>
+						<trans-unit id="sound_index">
+							<source>SoundIndex</source>
+						</trans-unit>
+						<trans-unit id="command">
+							<source>Command</source>
+							<target>Perintah</target>
+						</trans-unit>
+						<trans-unit id="command_option">
+							<source>CommandOption</source>
+							<target>PilihanPerintah</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="sound_settings">
+					<trans-unit id="name">
+						<source>Sound settings</source>
+					</trans-unit>
+					<trans-unit id="key">
+						<source>Key</source>
+						<target>Kekunci</target>
+					</trans-unit>
+					<trans-unit id="filename">
+						<source>Filename</source>
+						<target>NamaFail</target>
+					</trans-unit>
+					<trans-unit id="position">
+						<source>Position</source>
+					</trans-unit>
+					<trans-unit id="radius">
+						<source>Radius</source>
+					</trans-unit>
+					<group id="edit_entry">
+						<trans-unit id="name">
+							<source>Edit entry</source>
+						</trans-unit>
+						<group id="section">
+							<trans-unit id="name">
+								<source>Section select</source>
+							</trans-unit>
+						</group>
+						<group id="key">
+							<trans-unit id="name">
+								<source>Key type select</source>
+							</trans-unit>
+						</group>
+						<group id="value">
+							<trans-unit id="name">
+								<source>Input value</source>
+							</trans-unit>
+							<trans-unit id="filename">
+								<source>Filename</source>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+							</trans-unit>
+							<trans-unit id="position">
+								<source>Position setting</source>
+							</trans-unit>
+							<group id="position">
+								<trans-unit id="name">
+									<source>Position</source>
+								</trans-unit>
+								<trans-unit id="x">
+									<source>x coordinate</source>
+								</trans-unit>
+								<trans-unit id="y">
+									<source>y coordinate</source>
+								</trans-unit>
+								<trans-unit id="z">
+									<source>z coordinate</source>
+								</trans-unit>
+							</group>
+						</group>
+					</group>
+					<group id="message">
+						<trans-unit id="empty_filename">
+							<source>File name has not been entered.</source>
+							<target>Nama fail tidak dimasukkan.</target>
+						</trans-unit>
+						<trans-unit id="key_exist">
+							<source>The specified key is already set.</source>
+							<target>Kekunci yang ditentukan sudah ditetapkan.</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="status">
+					<trans-unit id="name">
+						<source>Status</source>
+					</trans-unit>
+					<group id="menu">
+						<trans-unit id="error">
+							<source>Error</source>
+							<target>Ralat</target>
+						</trans-unit>
+						<trans-unit id="warning">
+							<source>Warning</source>
+						</trans-unit>
+						<trans-unit id="info">
+							<source>Information</source>
+							<target>Informasi</target>
+						</trans-unit>
+						<trans-unit id="clear">
+							<source>Clear</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="level">
+						<source>Level</source>
+						<target>Tahap</target>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>Description</source>
+						<target>Penerangan</target>
+					</trans-unit>
+				</group>
+				<group id="message">
+					<trans-unit id="error">
+						<source>Error</source>
+					</trans-unit>
+					<trans-unit id="warning">
+						<source>Warning</source>
+					</trans-unit>
+					<trans-unit id="info">
+						<source>Information</source>
+					</trans-unit>
+					<trans-unit id="positive">
+						<source>positive</source>
+						<target>Positif</target>
+					</trans-unit>
+					<trans-unit id="non_negative">
+						<source>non-negative</source>
+						<target>bukan-negatif</target>
+					</trans-unit>
+					<trans-unit id="non_zero">
+						<source>non-zero</source>
+						<target>bukan-sifar</target>
+					</trans-unit>
+					<trans-unit id="invalid_float">
+						<source>This value must be a {0}floating-point number.</source>
+						<target>Nilai ini mestilah {0}nombor titik-terapung.</target>
+					</trans-unit>
+					<trans-unit id="invalid_color">
+						<source>invalid_color</source>
+						<target>warna_tidaksah</target>
+					</trans-unit>
+				</group>
+			</group>
+		</body>
+	</file>
+</xliff>

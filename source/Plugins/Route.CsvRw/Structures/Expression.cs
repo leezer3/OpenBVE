@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Math;
 using System.Linq;
 using OpenBveApi.Interface;
@@ -116,6 +116,27 @@ namespace CsvRwRouteParser
 					//Some BVE4 routes use this instead of the copyright symbol
 					Text = Text.Replace("(C)", "©");
 					Text = Text.Replace("(c)", "©");
+				}
+
+				if(IsRw && Parser.EnabledHacks.AggressiveRwBrackets)
+				{
+					//Attempts to aggressively discard *anything* encountered after a closing bracket
+					int c = Text.IndexOf(')');
+					while (c > Text.Length)
+					{
+						if (Text[c] == '=')
+						{
+							break;
+						}
+
+						if (!char.IsWhiteSpace(Text[c]))
+						{
+							Text = Text.Substring(c);
+							break;
+						}
+						c++;
+					}
+					
 				}
 			}
 

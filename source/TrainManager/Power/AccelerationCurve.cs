@@ -27,7 +27,7 @@ namespace TrainManager.Power
 		public double StageOneAcceleration;
 		public double StageTwoSpeed;
 		public double StageTwoExponent;
-		public double Multiplier;
+		private readonly double Multiplier;
 
 		public override double GetAccelerationOutput(double Speed, double Loading)
 		{
@@ -52,17 +52,24 @@ namespace TrainManager.Power
 
 		public override double MaximumAcceleration => Math.Max(StageZeroAcceleration, StageOneAcceleration);
 
-		public BveAccelerationCurve Clone(double multiplier)
+		public BveAccelerationCurve Clone(double multiplier = 1.0)
 		{
-			return new BveAccelerationCurve
-			{
-				StageZeroAcceleration = this.StageZeroAcceleration,
-				StageOneSpeed = this.StageOneSpeed,
-				StageOneAcceleration = this.StageOneAcceleration,
-				StageTwoSpeed = this.StageTwoSpeed,
-				StageTwoExponent = this.StageTwoExponent,
-				Multiplier = multiplier
-			};
+			return new BveAccelerationCurve(StageZeroAcceleration, StageOneAcceleration, StageOneSpeed, StageTwoSpeed, StageTwoExponent, multiplier);
+		}
+
+		public BveAccelerationCurve(double stageZeroAcceleration, double stageOneAcceleration, double stageOneSpeed, double stageTwoSpeed, double exponent, double multiplier = 1.0)
+		{
+			StageZeroAcceleration = stageZeroAcceleration;
+			StageOneAcceleration = stageOneAcceleration;
+			StageOneSpeed = stageOneSpeed;
+			StageTwoSpeed = stageTwoSpeed;
+			StageTwoExponent = exponent;
+			Multiplier = multiplier;
+		}
+
+		public BveAccelerationCurve()
+		{
+			Multiplier = 1.0;
 		}
 	}
 

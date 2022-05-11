@@ -64,5 +64,7 @@
 		/// <summary>Semi-transparent faces are disabled</summary>
 		/// <remarks>BVE2 did not support semi-transparent faces</remarks>
 		public bool DisableSemiTransparentFaces;
+		/// <summary>Whether aggressive RW bracket fixing is performed</summary>
+		public bool AggressiveRwBrackets;
 	}
 }

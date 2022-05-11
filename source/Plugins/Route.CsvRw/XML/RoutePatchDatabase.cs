@@ -90,6 +90,17 @@ namespace CsvRwRouteParser
 							currentPatch.LineEndingFix = false;
 						}
 						break;
+					case "ColonFix":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.ColonFix = true;
+						}
+						else
+						{
+							currentPatch.ColonFix = false;
+						}
+						break;
 					case "IgnorePitchRoll":
 						t = childNode.InnerText.Trim().ToLowerInvariant();
 						if (t == "1" || t == "true")
@@ -247,6 +258,17 @@ namespace CsvRwRouteParser
 						if (!int.TryParse(childNode.InnerText.Trim(), out currentPatch.ViewingDistance))
 						{
 							currentPatch.ViewingDistance = int.MaxValue;
+						}
+						break;
+					case "AggressiveRwBrackets":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.AggressiveRwBrackets = true;
+						}
+						else
+						{
+							currentPatch.AggressiveRwBrackets = false;
 						}
 						break;
 					case "Incompatible":

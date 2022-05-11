@@ -6,5 +6,10 @@
 		<Toppling>false</Toppling>
 		<Derailments>false</Derailments>
 	</Patch>
+	<Patch>
+		<Hash>984EDE99A0F1ABDBB347560624D3EACF4CF2DDB5E21239349384BE4F63D252EB</Hash>
+		<FileName>Rocky Mountains Express.rw</FileName>
+		<AggressiveRwBrackets>true</AggressiveRwBrackets>
+	</Patch>
   </RoutePatches>
 </openBVE>

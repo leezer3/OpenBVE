@@ -225,9 +225,13 @@ namespace OpenBveApi.Packages
 		{
 			int i = 0;
 			int j = 0;
-			string fp = String.Empty;
+			string fp = string.Empty;
 			try
 			{
+				if (!Directory.Exists(extractionDirectory))
+				{
+					Directory.CreateDirectory(extractionDirectory);
+				}
 				using (Stream stream = File.OpenRead(currentPackage.PackageFile))
 				{
 
@@ -441,6 +445,7 @@ namespace OpenBveApi.Packages
 			Package currentPackage = new Package();
 			Directory.CreateDirectory(TempDirectory);
 			//Load the selected package file into a stream
+			Image packageImage = null;
 			reset:
 			using (Stream stream = File.OpenRead(packageFile))
 			{
@@ -484,18 +489,18 @@ namespace OpenBveApi.Packages
 								return null;
 							}
 						}
-						if (reader.Entry.Key.ToLowerInvariant() == ImageFile)
+						if (reader.Entry.Key.ToLowerInvariant() == ImageFile && currentPackage.PackageImage == null)
 						{
 							//Extract the package.png to the uniquely assigned temp directory
 							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
 							try
 							{
-								currentPackage.PackageImage = Image.FromFile(Path.CombineFile(TempDirectory, ImageFile));
+								packageImage = Image.FromFile(Path.CombineFile(TempDirectory, ImageFile));
 							}
 							catch
 							{
 								//Image loading failed
-								currentPackage.PackageImage = null;
+								packageImage = null;
 							}
 						}
 						/*
@@ -525,7 +530,7 @@ namespace OpenBveApi.Packages
 				return null;
 			}
 			//Read the info
-
+			currentPackage.PackageImage = packageImage;
 			if (currentPackage.Equals(new Package()))
 			{
 				//Somewhat hacky way to quickly check if all elements are null....

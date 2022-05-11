@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.Math;
 
@@ -32,6 +31,8 @@ namespace CarXmlConvertor
 		internal static int ReadhesionDeviceType = 0;
 		internal static double DoorWidth = 1000.0;
 		internal static double DoorTolerance = 0.0;
+		internal static int PowerNotches = 0;
+		internal static int BrakeNotches = 0;
 		private static MainForm mainForm;
 		internal static List<AccelerationCurve> AccelerationCurves = new List<AccelerationCurve>();
 
@@ -41,7 +42,7 @@ namespace CarXmlConvertor
 
 			if (!System.IO.File.Exists(FileName))
 			{
-				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", @"CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				mainForm.terminateEarly = true;
 				return;
 			}
@@ -282,6 +283,32 @@ namespace CarXmlConvertor
 							} i++; n++;
 							AccelerationCurves.Add(curve);
 						} i--; break;
+					case "#handle":
+						i++;
+						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							{
+								switch (n)
+								{
+									case 1:
+										if (a > 0)
+										{
+											PowerNotches = (int)a;
+										}
+										break;
+									case 2:
+										if (a > 0)
+										{
+											BrakeNotches = (int)a;
+										}
+										break;
+								}
+							}
+							i++; n++;
+						}
+						i--; 
+						break;
 					default:
 					{
 						i++;

@@ -30,6 +30,9 @@ namespace OpenBve
 		private bool populateRouteOnce;
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
+		//Separate strings for package browser, so we can go back to the previous location!
+		private string currentRoutePackageFolder;
+		private string currentTrainPackageFolder;
 
 		private readonly Dictionary<string, string> compatibilitySignals = new Dictionary<string, string>();
 
@@ -82,7 +85,7 @@ namespace OpenBve
 
 			if (currentRouteFolder != Folder)
 			{
-				populateRouteList(Folder);
+				populateRouteList(Folder, listviewRouteFiles, false);
 			}
 			currentRouteFolder = Folder;
 			try
@@ -110,7 +113,7 @@ namespace OpenBve
 				listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 			}
 		}
-
+		
 		private void onRouteFolderChanged(object sender, EventArgs e)
 		{
 			//We need to invoke the control so we don't get a cross thread exception
@@ -133,34 +136,31 @@ namespace OpenBve
 					return;
 				}
 			}
-			populateRouteList(currentRouteFolder);
+			populateRouteList(currentRouteFolder, listviewRouteFiles, false);
 			populateRouteOnce = currentRouteFolder == System.IO.Path.GetTempPath();
-			//If this method is triggered whilst the form is disposing, bad things happen...
-			if (listviewRouteFiles.Columns.Count > 0)
-			{
-				listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-			}
 		}
 
 		/// <summary>Populates the route display list from the selected folder</summary>
 		/// <param name="Folder">The folder containing route files</param>
-		private void populateRouteList(string Folder)
+		/// <param name="listView">The list view to populate</param>
+		/// <param name="packages">Whether this is a packaged content folder</param>
+		private void populateRouteList(string Folder, ListView listView, bool packages)
 		{
 			try
 			{
 				if (Folder.Length == 0)
 				{
 					// drives
-					listviewRouteFiles.Items.Clear();
+					listView.Items.Clear();
 					try
 					{
 						DriveInfo[] driveInfos = DriveInfo.GetDrives();
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
-							ListViewItem Item = listviewRouteFiles.Items.Add(driveInfos[i].Name);
+							ListViewItem Item = listView.Items.Add(driveInfos[i].Name);
 							Item.ImageKey = Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows ? @"disk" : @"folder";
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
-							listviewRouteFiles.Tag = null;
+							listView.Tag = null;
 						}
 					}
 					catch
@@ -170,30 +170,35 @@ namespace OpenBve
 				}
 				else if (Directory.Exists(Folder))
 				{
-					listviewRouteFiles.Items.Clear();
-					// parent
-					try
+					listView.Items.Clear();
+					
+					if (!packages || Folder != Program.FileSystem.RouteInstallationDirectory)
 					{
-						DirectoryInfo Info = Directory.GetParent(Folder);
-						if (Info != null)
+						// Show parent if applicable
+						try
 						{
-							ListViewItem Item = listviewRouteFiles.Items.Add("..");
-							Item.ImageKey = @"parent";
-							Item.Tag = Info.FullName;
-							listviewRouteFiles.Tag = Info.FullName;
+							DirectoryInfo Info = Directory.GetParent(Folder);
+							if (Info != null)
+							{
+								ListViewItem Item = listView.Items.Add("..");
+								Item.ImageKey = @"parent";
+								Item.Tag = Info.FullName;
+								listView.Tag = Info.FullName;
+							}
+							else
+							{
+								ListViewItem Item = listView.Items.Add("..");
+								Item.ImageKey = @"parent";
+								Item.Tag = "";
+								listView.Tag = "";
+							}
 						}
-						else
+						catch
 						{
-							ListViewItem Item = listviewRouteFiles.Items.Add("..");
-							Item.ImageKey = @"parent";
-							Item.Tag = "";
-							listviewRouteFiles.Tag = "";
+							//Another permissions issue??
 						}
 					}
-					catch
-					{
-						//Another permissions issue??
-					}
+					
 					// folders
 					try
 					{
@@ -207,7 +212,7 @@ namespace OpenBve
 								string folderName = System.IO.Path.GetFileName(Folders[i]);
 								if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
 								{
-									ListViewItem Item = listviewRouteFiles.Items.Add(folderName);
+									ListViewItem Item = listView.Items.Add(folderName);
 									Item.ImageKey = @"folder";
 									Item.Tag = Folders[i];
 								}
@@ -236,7 +241,7 @@ namespace OpenBve
 									fileName = System.IO.Path.GetFileName(Files[i]);
 									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
 									{
-										Item = listviewRouteFiles.Items.Add(fileName);
+										Item = listView.Items.Add(fileName);
 										if (Extension == ".csv")
 										{
 											try
@@ -281,7 +286,7 @@ namespace OpenBve
 									{
 										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
 										{
-											Item = listviewRouteFiles.Items.Add(fileName);
+											Item = listView.Items.Add(fileName);
 											Item.ImageKey = @"mechanik";
 											Item.Tag = Files[i];
 										}
@@ -299,6 +304,11 @@ namespace OpenBve
 			catch
 			{
 				//Ignore all errors
+			}
+			//If this method is triggered whilst the form is disposing, bad things happen...
+			if (listView.Columns.Count > 0)
+			{
+				listView.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 			}
 		}
 
@@ -390,6 +400,69 @@ namespace OpenBve
 						}
 					}
 					break;
+			}
+		}
+
+		private void listViewRoutePackages_DoubleClick(object sender, EventArgs e)
+		{
+			if (listViewRoutePackages.SelectedItems.Count == 1)
+			{
+				string t = listViewRoutePackages.SelectedItems[0].Tag as string;
+				if (t != null)
+				{
+					if (t.Length == 0 || Directory.Exists(t))
+					{
+						currentRoutePackageFolder = t;
+						populateRouteList(currentRoutePackageFolder, listViewRoutePackages, true);
+					}
+				}
+			}
+		}
+
+		private void listViewRoutePackages_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (listViewRoutePackages.SelectedItems.Count == 1)
+			{
+				string t;
+				try
+				{
+					t = listViewRoutePackages.SelectedItems[0].Tag as string;
+				}
+				catch
+				{
+
+					return;
+				}
+				if (t != null)
+				{
+
+					if (File.Exists(t))
+					{
+						Result.RouteFile = t;
+						ShowRoute(false);
+					}
+					else
+					{
+						groupboxRouteDetails.Visible = false;
+						buttonStart.Enabled = false;
+					}
+				}
+			}
+		}
+
+		private void tabcontrolRouteSelection_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (tabcontrolRouteSelection.SelectedIndex == 2)
+			{
+				populateRouteList(currentRoutePackageFolder, listViewRoutePackages, true);
+			}
+		}
+
+		private void tabcontrolTrainSelection_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (tabcontrolTrainSelection.SelectedIndex == 3)
+			{
+				populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
 			}
 		}
 
@@ -542,7 +615,7 @@ namespace OpenBve
 			}
 			if (currentTrainFolder != Folder)
 			{
-				populateTrainList(Folder);
+				populateTrainList(Folder, listviewTrainFolders, false);
 			}
 			currentTrainFolder = Folder;
 			try
@@ -563,7 +636,6 @@ namespace OpenBve
 			{
 				//Most likely some sort of permissions issue, only means we can't monitor for new files
 			}
-			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
 
 		private void onTrainFolderChanged(object sender, EventArgs e)
@@ -588,34 +660,32 @@ namespace OpenBve
 					return;
 				}
 			}
-			populateTrainList(currentTrainFolder);
+			populateTrainList(currentTrainFolder, listviewTrainFolders, false);
 			populateTrainOnce = currentTrainFolder == System.IO.Path.GetTempPath();
-			if (listviewTrainFolders.Columns.Count > 0)
-			{
-				listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-			}
 		}
 
 		/// <summary>Populates the train display list from the selected folder</summary>
 		/// <param name="Folder">The folder containing train folders</param>
-		private void populateTrainList(string Folder)
+		/// <param name="listView">The list view to populate</param>
+		/// <param name="packages">Whether this is a packaged content folder</param>
+		private void populateTrainList(string Folder, ListView listView, bool packages)
 		{
 			try
 			{
 				if (Folder.Length == 0)
 				{
 					// drives
-					listviewTrainFolders.Items.Clear();
+					listView.Items.Clear();
 					try
 					{
 						DriveInfo[] driveInfos = DriveInfo.GetDrives();
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
-							ListViewItem Item = listviewTrainFolders.Items.Add(driveInfos[i].Name);
+							ListViewItem Item = listView.Items.Add(driveInfos[i].Name);
 							Item.ImageKey = Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows ? @"disk" : @"folder";
 							
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
-							listviewTrainFolders.Tag = null;
+							listView.Tag = null;
 						}
 					}
 					catch
@@ -625,30 +695,34 @@ namespace OpenBve
 				}
 				else if (Directory.Exists(Folder))
 				{
-					listviewTrainFolders.Items.Clear();
-					// parent
-					try
+					listView.Items.Clear();
+					if (!packages || Folder != Program.FileSystem.TrainInstallationDirectory)
 					{
-						DirectoryInfo Info = Directory.GetParent(Folder);
-						if (Info != null)
+						// parent
+						try
 						{
-							ListViewItem Item = listviewTrainFolders.Items.Add("..");
-							Item.ImageKey = @"parent";
-							Item.Tag = Info.FullName;
-							listviewTrainFolders.Tag = Info.FullName;
+							DirectoryInfo Info = Directory.GetParent(Folder);
+							if (Info != null)
+							{
+								ListViewItem Item = listView.Items.Add("..");
+								Item.ImageKey = @"parent";
+								Item.Tag = Info.FullName;
+								listView.Tag = Info.FullName;
+							}
+							else
+							{
+								ListViewItem Item = listView.Items.Add("..");
+								Item.ImageKey = @"parent";
+								Item.Tag = "";
+								listView.Tag = "";
+							}
 						}
-						else
+						catch
 						{
-							ListViewItem Item = listviewTrainFolders.Items.Add("..");
-							Item.ImageKey = @"parent";
-							Item.Tag = "";
-							listviewTrainFolders.Tag = "";
+							//Another permisions issue?
 						}
 					}
-					catch
-					{
-						//Another permisions issue?
-					}
+					
 					// folders
 					try
 					{
@@ -665,7 +739,7 @@ namespace OpenBve
 									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
 									{
 										string File = Path.CombineFile(Folders[i], "train.dat");
-										ListViewItem Item = listviewTrainFolders.Items.Add(folderName);
+										ListViewItem Item = listView.Items.Add(folderName);
 										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
 										Item.Tag = Folders[i];
 									}
@@ -686,6 +760,10 @@ namespace OpenBve
 			catch
 			{
 				//Ignore all errors
+			}
+			if (listView.Columns.Count > 0)
+			{
+				listView.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 			}
 		}
 
@@ -787,6 +865,110 @@ namespace OpenBve
 				}
 			}
 		}
+
+		private void listViewTrainPackages_DoubleClick(object sender, EventArgs e)
+		{
+			string error;
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			{
+				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+			}
+			if (listViewTrainPackages.SelectedItems.Count == 1) {
+				string t = listViewTrainPackages.SelectedItems[0].Tag as string;
+				if (t != null) {
+					if (t.Length == 0)
+					{
+						//Pop up to parent directory
+						currentTrainPackageFolder = t;
+						populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+						return;
+					}
+					if (Directory.Exists(t))
+					{
+						string[] newDirectories = Directory.EnumerateDirectories(t).ToArray();
+						bool shouldEnter = true;
+						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+						{
+							if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(t))
+							{
+								shouldEnter = false;
+								break;
+							}
+						}
+						if (shouldEnter || newDirectories.Length > 5)
+						{
+							/*
+							 * Either a train folder with more than 5 subdirs (false positive?)
+							 * Or a plain folder
+							 */
+							currentTrainPackageFolder = t;
+							populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+							return;
+						}
+
+						foreach (string dir in newDirectories)
+						{
+							for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+							{
+								if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(dir))
+								{
+									currentTrainPackageFolder = t;
+									populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+									return;
+								}
+							}
+						}
+						string[] splitPath = t.Split('\\', '/');
+						if (splitPath.Length < 3)
+						{
+							//If we're on less than the 3rd level subdir assume it may be a false positive
+							currentTrainPackageFolder = t;
+							populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+						}
+					}
+				}
+			}
+		}
+
+		private void listViewTrainPackages_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (listViewTrainPackages.SelectedItems.Count == 1)
+			{
+				string t;
+				try
+				{
+					t = listViewTrainPackages.SelectedItems[0].Tag as string;
+				}
+				catch (Exception)
+				{
+					return;
+				}
+				if (t != null) {
+					if (Directory.Exists(t)) {
+						try
+						{
+							string File = Path.CombineFile(t, "train.dat");
+							if (System.IO.File.Exists(File))
+							{
+								Result.TrainFolder = t;
+								ShowTrain(false);
+								if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
+							}
+							else
+							{
+								groupboxTrainDetails.Visible = false;
+								buttonStart.Enabled = false;
+							}
+						}
+						catch
+						{
+							//Ignored
+						}
+					}
+				}
+			}
+		}
+
 		private void listviewTrainFolders_KeyDown(object sender, KeyEventArgs e) {
 			switch (e.KeyCode) {
 				case Keys.Return:

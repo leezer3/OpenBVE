@@ -340,6 +340,7 @@ namespace RouteViewer
 				case Key.F5:
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
+						
 						Bitmap bitmap = null;
 						CurrentlyLoading = true;
 						Renderer.OptionInterface = false;
@@ -353,13 +354,13 @@ namespace RouteViewer
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 						}
+						Renderer.Initialize();
 						CameraAlignment a = Renderer.Camera.Alignment;
 						if (LoadRoute(bitmap))
 						{
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
-							Renderer.Camera.Reset();
 							Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}

@@ -27,8 +27,6 @@ namespace TrainManager.Trains
 		public TrainSpecs Specs;
 		/// <summary>The cab handles</summary>
 		public CabHandles Handles;
-		/// <summary>Holds the passengers</summary>
-		public TrainPassengers Passengers;
 		/// <summary>Holds the safety systems for the train</summary>
 		public TrainSafetySystems SafetySystems;
 		/// <summary>Holds the cars</summary>
@@ -64,6 +62,22 @@ namespace TrainManager.Trains
 
 		/// <inheritdoc/>
 		public override int NumberOfCars => this.Cars.Length;
+
+		/// <summary>Gets the average cargo loading ratio for this train</summary>
+		public double CargoRatio
+		{
+			get
+			{
+				double r = 0;
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					r += Cars[i].Cargo.Ratio;
+				}
+
+				r /= Cars.Length;
+				return r;
+			}
+		}
 
 		public TrainBase(TrainState state)
 		{
@@ -423,14 +437,17 @@ namespace TrainManager.Trains
 				return;
 			}
 
-			// move cars
+			// Car level inital processing
 			for (int i = 0; i < Cars.Length; i++)
 			{
+				// move cars
 				Cars[i].Move(Cars[i].CurrentSpeed * TimeElapsed);
 				if (State == TrainState.Disposed)
 				{
 					return;
 				}
+				// update cargo and related score
+				Cars[i].Cargo.Update(Specs.CurrentAverageAcceleration, TimeElapsed);
 			}
 
 			// update station and doors
@@ -478,8 +495,6 @@ namespace TrainManager.Trains
 
 				Cars[DriverCar].Breaker.Update(breaker);
 			}
-			// passengers
-			Passengers.Update(Specs.CurrentAverageAcceleration, TimeElapsed);
 			// signals
 			if (CurrentSectionLimit == 0.0)
 			{
@@ -775,6 +790,17 @@ namespace TrainManager.Trains
 		{
 			this.Cars[CarIndex].Derailed = true;
 			this.Derailed = true;
+			if (Cars[CarIndex].Sounds.Loop != null)
+			{
+				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Loop.Source);
+			}
+			
+			for (int j = 0; j < Cars[CarIndex].Sounds.Run.Count; j++)
+			{
+				int key =  Cars[CarIndex].Sounds.Run.ElementAt(j).Key;
+				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Run[key].Source);
+			}
+
 			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 			{
 				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + CarIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
@@ -788,6 +814,15 @@ namespace TrainManager.Trains
 			{
 				var c = Car as CarBase;
 				// ReSharper disable once PossibleNullReferenceException
+				if (c.Sounds.Loop != null)
+				{
+					TrainManagerBase.currentHost.StopSound(c.Sounds.Loop.Source);
+				}
+				for (int j = 0; j < c.Sounds.Run.Count; j++)
+				{
+					int key =  c.Sounds.Run.ElementAt(j).Key;
+					TrainManagerBase.currentHost.StopSound(c.Sounds.Run[key].Source);
+				}
 				c.Derailed = true;
 				this.Derailed = true;
 				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
@@ -941,6 +976,7 @@ namespace TrainManager.Trains
 				{
 					Cars[i].Doors[0].AnticipatedOpen = TrainManagerBase.CurrentRoute.Stations[stationIndex].OpenLeftDoors;
 					Cars[i].Doors[1].AnticipatedOpen = TrainManagerBase.CurrentRoute.Stations[stationIndex].OpenRightDoors;
+					Cars[i].ReAdhesionDevice.Jump();
 				}
 				if (IsPlayerTrain)
 				{

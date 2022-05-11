@@ -520,14 +520,17 @@ namespace RouteViewer
 					OpenGlString.Draw(Fonts.SmallFont, "Mute:", new Vector2(Screen.Width - 32, 64), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - 32, 84), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+					if (!ForceLegacyOpenGL)
+					{
+						OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+						keys = new[] { new[] { "R" } };
+						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+					}
+					
 
 					keys = new[] { new[] { "F10" } };
 					Keys.Render(Screen.Width - 32, 104, 30, Fonts.SmallFont, keys);
-
-					keys = new[] { new[] { "R" } };
-					Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
-
+					
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
@@ -564,7 +567,8 @@ namespace RouteViewer
 					double x = 0.5 * Screen.Width - 256.0;
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {GetLengthString(Camera.Alignment.TrackPosition)} (X={GetLengthString(Camera.Alignment.Position.X)}, Y={GetLengthString(Camera.Alignment.Position.Y)}), Orientation: (Yaw={(Camera.Alignment.Yaw * 57.2957795130824).ToString("0.00", culture)}°, Pitch={(Camera.Alignment.Pitch * 57.2957795130824).ToString("0.00", culture)}°, Roll={(Camera.Alignment.Roll * 57.2957795130824).ToString("0.00", culture)}°)", new Vector2((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Adhesion={(100.0 * CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}" + " , Rain intensity= " + CameraTrackFollower.RainIntensity +"%", new Vector2((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)x, 40), TextAlignment.TopLeft, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)x, 40), TextAlignment.TopLeft, Color128.White, true);
+
 
 					int stationIndex = Program.Renderer.CameraTrackFollower.StationIndex;
 

@@ -7,7 +7,7 @@
 		MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower, 
 		MathIncrement, MathDecrement, MathFusedMultiplyAdd,
 		MathQuotient, MathMod, MathFloor, MathCeiling, MathRound, MathMin, MathMax, MathAbs, MathSign,
-		MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan,
+		MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan, MathPi,
 		CompareEqual, CompareUnequal, CompareLess, CompareGreater, CompareLessEqual, CompareGreaterEqual, CompareConditional,
 		LogicalNot, LogicalAnd, LogicalOr, LogicalNand, LogicalNor, LogicalXor,
 		/*
@@ -33,7 +33,8 @@
 		TimetableVisible, Panel2Timetable, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit,
 		SectionAspectNumber, CurrentObjectState,
-		RainDrop, SnowFlake, WiperPosition
+		RainDrop, SnowFlake, WiperPosition,
+		WheelRadius, WheelRadiusOfCar
 #pragma warning restore CS1591
 			
 		}

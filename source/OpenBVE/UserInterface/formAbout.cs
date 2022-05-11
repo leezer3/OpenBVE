@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
@@ -106,7 +107,16 @@ namespace OpenBve
 
 		private void buttonClose_Click(object sender, System.EventArgs e)
 		{
-			this.Close();
+			if (Program.CurrentHost.MonoRuntime)
+			{
+				// Use forceful exit on Mono to stop stuff hanging around
+				Environment.Exit(0);
+			}
+			else
+			{
+				this.Close();	
+			}
+			
 		}
 	}
 }

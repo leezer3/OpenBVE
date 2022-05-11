@@ -61,6 +61,8 @@ namespace TrainEditor {
 			internal double[] DelayBrakeDown;
 			internal double[] DelayLocoBrakeUp;
 			internal double[] DelayLocoBrakeDown;
+			internal double ElectricBrakeDelayUp;
+			internal double ElectricBrakeDelayDown;
 			internal Delay() {
 				this.DelayPowerUp = new[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
 				this.DelayPowerDown = new[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
@@ -277,7 +279,7 @@ namespace TrainEditor {
 			}
 		}
 
-		const int currentVersion = 17250;
+		const int currentVersion = 18230;
 
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>
@@ -297,7 +299,7 @@ namespace TrainEditor {
 				}
 			}
 			bool ver1220000 = false;
-			
+			int v = 0;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length != 0) {
 					string s = Lines[i].ToLowerInvariant();
@@ -316,7 +318,6 @@ namespace TrainEditor {
 							if (s.ToLowerInvariant().StartsWith("openbve"))
 							{
 								string tt = s.Substring(7, s.Length - 7);
-								int v;
 								if (int.TryParse(tt, System.Globalization.NumberStyles.Float, Culture, out v))
 								{
 									if (v > currentVersion)
@@ -434,6 +435,38 @@ namespace TrainEditor {
 									case 3:
 										if(a >= 0.0) t.Delay.DelayBrakeDown = new[] { a };
 										break;
+									case 4:
+										if (v < 18230)
+										{
+											if(a >= 0.0) t.Delay.DelayLocoBrakeUp = new[] { a };
+										}
+										else
+										{
+											if(a >= 0.0) t.Delay.ElectricBrakeDelayUp = a;
+										}
+										break;
+									case 5:
+										if (v < 18230)
+										{
+											if(a >= 0.0) t.Delay.DelayLocoBrakeDown = new[] { a };
+										}
+										else
+										{
+											if(a >= 0.0) t.Delay.ElectricBrakeDelayDown = a;
+										}
+										break;
+									case 6:
+										if (v >= 18230)
+										{
+											if(a >= 0.0) t.Delay.DelayLocoBrakeUp = new[] { a };
+										}
+										break;
+									case 7:
+										if (v >= 18230)
+										{
+											if(a >= 0.0) t.Delay.DelayLocoBrakeDown = new[] { a };
+										}
+										break;
 								}
 							}
 							else if (Lines[i].IndexOf(',') != -1)
@@ -441,22 +474,48 @@ namespace TrainEditor {
 								switch (n)
 								{
 									case 0:
-										t.Delay.DelayPowerUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 1:
-										t.Delay.DelayPowerDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 2:
-										t.Delay.DelayBrakeUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 3:
-										t.Delay.DelayBrakeDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 4:
-										t.Delay.DelayLocoBrakeUp = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										if (v < 18230)
+										{
+											t.Delay.ElectricBrakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray()[0];	
+										}
+										else
+										{
+											t.Delay.DelayLocoBrakeUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();	
+										}
 										break;
 									case 5:
-										t.Delay.DelayLocoBrakeDown = Lines[i].Split(new[] { ','}).Select(x => Double.Parse(x, Culture)).ToArray();
+										if (v < 18230)
+										{
+											t.Delay.ElectricBrakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray()[0];	
+										}
+										else
+										{
+											t.Delay.DelayLocoBrakeDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();	
+										}
+										break;
+									case 6:
+										if (v >= 18230)
+										{
+											t.Delay.DelayLocoBrakeUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+										}
+										break;
+									case 7:
+										if (v >= 18230)
+										{
+											t.Delay.DelayLocoBrakeDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+										}
 										break;
 								}
 							}
@@ -802,6 +861,8 @@ namespace TrainEditor {
 			b.AppendLine(string.Join(",", t.Delay.DelayPowerDown.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayPowerDown");
 			b.AppendLine(string.Join(",", t.Delay.DelayBrakeUp.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayBrakeUp");
 			b.AppendLine(string.Join(",", t.Delay.DelayBrakeDown.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayBrakeDown");
+			b.AppendLine(t.Delay.ElectricBrakeDelayUp.ToString(Culture).PadRight(n, ' ') + "; ElectricBrakeDelayUp");
+			b.AppendLine(t.Delay.ElectricBrakeDelayDown.ToString(Culture).PadRight(n, ' ') + "; ElectricBrakeDelayDown");
 			b.AppendLine(string.Join(",", t.Delay.DelayLocoBrakeUp.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayLocoBrakeUp (1.5.3.4+)");
 			b.AppendLine(string.Join(",", t.Delay.DelayLocoBrakeDown.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayLocoBrakeDown (1.5.3.4+)");
 			b.AppendLine("#MOVE");

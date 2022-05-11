@@ -120,6 +120,7 @@
     <Compile Include="Objects\Glow.cs" />
     <Compile Include="Objects\Helpers\Material.cs" />
     <Compile Include="Objects\Helpers\MeshBuilder.cs" />
+    <Compile Include="Objects\Helpers\ModelExporter.cs" />
     <Compile Include="Objects\Mesh.cs" />
     <Compile Include="Objects\MeshFace.cs" />
     <Compile Include="Objects\MeshFaceVertex.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="World\Transformations.cs" />
     <Compile Include="Math\Vectors\Vector2.cs" />
     <Compile Include="Math\Vectors\Vector3.cs" />
+    <Compile Include="World\UnitConversions\Force.cs" />
     <Compile Include="World\UnitConversions\Length.cs" />
     <Compile Include="World\UnitConversions\UnitConvertor.cs" />
     <Compile Include="World\UnitConversions\Weight.cs" />

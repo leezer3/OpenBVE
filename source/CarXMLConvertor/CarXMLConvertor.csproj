@@ -47,6 +47,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convert.Ats.cs" />
     <Compile Include="Convert.ExtensionsCfg.cs" />
     <Compile Include="Convert.Panel2.cs" />
     <Compile Include="Convert.PanelAnimated.cs" />
