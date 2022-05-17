@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Compatibility>
+  <!-- Misc stuff -->
+	<Object>
+		<Name>null.csv</Name>
+		<Path>null.csv</Path>
+		<Message></Message>
+	</Object>
+	<Object>
+		<Name>null.b3d</Name>
+		<Path>null.csv</Path>
+		<Message></Message>
+	</Object>
+  </Compatibility>
+</openBVE>
