@@ -333,5 +333,78 @@
 		<FileName>MGtoFP.csv</FileName>
 		<DisableSemiTransparentFaces>true</DisableSemiTransparentFaces>
 	</Patch>
+	<!-- Blighton- Treston Park v2-->
+	<!-- 2000s -->
+	<Patch>
+		<Hash>6306213E4A6768B8D9DA5EB7EA1472B0FB0707BD9C71B20B24D28327DEC2607C</Hash>
+		<FileName>159SWT All Stns.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>736B2ACC85B1F6DD3A84B9EAA6C38CE16BB11D0EC032BE62A416EFEF5D8C8A49</Hash>
+		<FileName>170SWT Semi Fast.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>E3F9C6C99AF0E0A935400063F6175BED1309A0366EC72F2F2D63D0FACC551BC7</Hash>
+		<FileName>319 8 Car All Stns.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>082266705CC9B694C1068E0C0308BB9A419374C5A2CDA0AF9166E818C420753C</Hash>
+		<FileName>319 All Stns.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>695B8ADD30CDA8B29CD3278FDCB06584AACAA3A80CCCB2EFCB292F51CCDC8B6A</Hash>
+		<FileName>319 Semi Fast.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>0C0BD575C328F406C1D2F9304B8C9A18B5AADB0AF68DC8D69D741B33DAE1CDE0</Hash>
+		<FileName>377 All Stns.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>353A1890E9143906582DE482435B98E8A0E6CAE2CB4BEBE6AA9930FDB10D192C</Hash>
+		<FileName>465 Local.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>2514923F23B327B29EC66994B66E2E11659CBE83A181B0F0A32E211AE19C8F50</Hash>
+		<FileName>CIG All Stns.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>958DE80D4C62B1773B5A53A854B01689B66FC253070BDEE1A8D7E72F7D3B11D1</Hash>
+		<FileName>HST Fast.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<!-- 1990s and 1980s routefiles are in different folders, but are identical -->
+	<Patch>
+		<Hash>07F78BF198D90788CD036BC4B545CD62B2D6A3F25A958694AEE7405922594E6E</Hash>
+		<FileName>CIG All Stns.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>FC7416A61700CD31C5F706F6A8512A775EF664122C69A02A05B1104BCD25092B</Hash>
+		<FileName>CIG SemiFast.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>F5A4AB12B78A86AFEDA4BF13478C63590A1C88D20D38365D1BF182745B550BB3</Hash>
+		<FileName>Cl201 DEMU Local.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>83705625DC945753D8F32E68942121AD55B9836800CA8EF9319EE58294B3A55E</Hash>
+		<FileName>Cl73Diesel SemiFast.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>F5271773FC6C439A758D0FEA5C4EA0FCA2F5FFE607AAB5891FE9D87E101757C1</Hash>
+		<FileName>Cl73Electric SemiFast.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>
