@@ -762,6 +762,15 @@ namespace Plugin
 									 */
 									a = 255;
 								}
+								if (enabledHacks.BveTsHacks && !string.IsNullOrEmpty(Builder.Materials[0].DaytimeTexture) && Builder.Materials[0].DaytimeTexture.EndsWith("Loop3\\CF_BW.bmp", StringComparison.InvariantCultureIgnoreCase))
+								{
+									/*
+									 * Glitched container color in Loop v3
+									 * This appears to actually be a 'true' developer typo (same in BVE Structure Viewer) but looks awful so let's fix
+									 */
+									break;
+								}
+
 								int m = Builder.Materials.Length;
 								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
