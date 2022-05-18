@@ -217,6 +217,21 @@
 		<FileName>Sandymill_Sprinter.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
 	</Patch>
+	<!-- Sandymill Loop, original RW version-->
+	<Patch>
+		<Hash>3F96A9C7AC4A7A6F08EC0F145FDCFA6FE403BED3D9BF1A3D96CD74F79B53D0C9</Hash>
+		<FileName>Loop1_8.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+		<Expression Number="2445">Stop(0)</Expression>
+		<Expression Number="5677">Dikeend(0)</Expression>
+	</Patch>
+	<Patch>
+		<Hash>6766F51B0E1F798549EB7D537E181F53A148AA6E4731BE39D37A6BDC8E945299</Hash>
+		<FileName>Loop3_0.rw</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+		<Expression Number="4278">Freeobj(3,4010)</Expression>
+		<Expression Number="6203">Dikeend(0)</Expression>
+	</Patch>
 	<!-- Bay Park -->
 	<Patch>
 		<Hash>09285CB0E873848E1E79A070EF8D51B20502B5FE07FA7FCCED55AF9485127A10</Hash>
