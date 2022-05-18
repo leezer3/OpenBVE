@@ -35,7 +35,9 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Indicates an invalid operation.</summary>
 		InvalidOperation = 5,
 		/// <summary>Indicates an unexpected exception.</summary>
-		UnexpectedException = 6
+		UnexpectedException = 6,
+		/// <summary>Indicates that the data was recognised, but is not supported</summary>
+		UnsupportedData,
 	}
 	/// <summary>The host application</summary>
 	public enum HostApplication

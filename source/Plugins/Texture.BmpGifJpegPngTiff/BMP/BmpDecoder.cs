@@ -232,15 +232,21 @@ namespace Plugin.BMP
 					 */
 
 					Format = BmpFormat.BmpVersion3;
-					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Bitmap V3 is not supported by this decoder in " + fileName);
+					Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "Bitmap V3 is not supported by this decoder in " + fileName);
 					return false;
 				}
 				
 				if (ImageSize == 0 && Format > BmpFormat.OS2v2)
 				{
-					// Compressed image size of zero should only be valid with uncompressed data, unless OS/2 bitmaps
-					// However, continue to load and see what happens
+					/* Compressed image size of zero should only be valid with uncompressed data, unless OS/2 bitmaps
+					 * However, continue to load and see what happens
+					 *
+					 * Only report this in debug mode, as this seems to be a 'common' problem....
+					 */
+					
+					#if DEBUG
 					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid compressed image size in Bitmap file " + fileName);
+					#endif
 				}
 
 				if (TopDown && CompressionFormat != CompressionFormat.BI_RGB && CompressionFormat != CompressionFormat.BITFIELDS)
