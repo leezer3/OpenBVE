@@ -268,9 +268,11 @@ namespace Plugin.BMP
 				if (ColorsUsed != 0)
 				{
 					buffer = new byte[ColorsUsed * colorSize];
-					if (fileReader.Read(buffer, 0, ColorsUsed * colorSize) != ColorsUsed * colorSize)
+					int readDataLength = fileReader.Read(buffer, 0, ColorsUsed * colorSize);
+					if (readDataLength != ColorsUsed * colorSize)
 					{
 						Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Insufficient ColorTable data in Bitmap file " + fileName);
+						ColorsUsed = readDataLength / colorSize; // will cause any missing colors to be mapped to black
 					}
 					for (int currentColor = 0; currentColor < ColorsUsed; currentColor++)
 					{
