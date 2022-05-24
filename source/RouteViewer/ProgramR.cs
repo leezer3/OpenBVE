@@ -661,6 +661,9 @@ namespace RouteViewer
 				case Key.R:
 					Renderer.SwitchOpenGLVersion();
 					break;
+				case Key.P:
+					Renderer.OptionPaths = !Renderer.OptionPaths;
+					break;
 			}
 		}
 

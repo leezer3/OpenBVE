@@ -99,6 +99,7 @@
     <Compile Include="FunctionScripts\FunctionScript.Notation.cs" />
     <Compile Include="FunctionScripts\Instructions.cs" />
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
+    <Compile Include="Graphics\Colors.ColorPalettes.cs" />
     <Compile Include="Graphics\Colors.cs" />
     <Compile Include="Interface\Input\Control.cs" />
     <Compile Include="Interface\Input\ControlMethod.cs" />

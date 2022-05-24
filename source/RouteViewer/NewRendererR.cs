@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,7 @@ namespace RouteViewer
 		// options
 		internal bool OptionInterface = true;
 		internal bool OptionEvents = false;
+		internal bool OptionPaths = false;
 
 		// textures
 		private Texture BrightnessChangeTexture;
@@ -47,7 +49,10 @@ namespace RouteViewer
 		private Texture RunSoundTexture;
 		private Texture LightingEventTexture;
 		private Texture WeatherEventTexture;
-		
+
+		internal Dictionary<int, Color24> trackColors = new Dictionary<int, Color24>();
+		internal List<int> usedTrackColors = new List<int>();
+
 		public override void Initialize()
 		{
 			base.Initialize();
@@ -262,6 +267,103 @@ namespace RouteViewer
 					}
 				}
 			}
+
+			if (OptionPaths)
+			{
+				// TODO: Write a shader to draw point list....
+				ResetOpenGlState();
+				if (AvailableNewRenderer)
+				{
+					DefaultShader.Deactivate();
+				}
+
+				// render track paths
+				for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
+				{
+					int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+					
+					if (!trackColors.ContainsKey(key))
+					{
+						if (key == 0)
+						{
+							trackColors.Add(key, Color24.Red);
+							usedTrackColors.Add(5);
+						}
+						else
+						{
+							var randomGenerator = new Random();
+							int colorIdx = 5; // known value already in list to make our while loop easy
+							while (usedTrackColors.Contains(colorIdx))
+							{
+								colorIdx = randomGenerator.Next(0, 255);
+							}
+							usedTrackColors.Add(colorIdx);
+							trackColors.Add(key, ColorPalettes.Windows256ColorPalette[colorIdx]); //use the 16 color Windows pallette for a decent set of contrasting colors	
+						}
+					}
+
+					Color24 trackColor = trackColors[key];
+
+					double halfDistance = (Math.Max(Interface.CurrentOptions.ViewingDistance, 1000) / 2.0) * 1.1;
+					int numElements = (int)(halfDistance / Program.CurrentRoute.BlockLength);
+					int firstElement = Math.Max(0, CameraTrackFollower.LastTrackElement - numElements);
+					int lastElement = Math.Min(Program.CurrentRoute.Tracks[key].Elements.Length, CameraTrackFollower.LastTrackElement + numElements);
+					if (lastElement < firstElement)
+					{
+						continue;
+					}
+
+					List<Vector3> points = new List<Vector3>();
+					for (int e = firstElement; e < lastElement; e++)
+					{
+						if (Program.CurrentRoute.Tracks[key].Elements[e].WorldPosition != Vector3.Zero)
+						{
+							points.Add(new Vector3(Program.CurrentRoute.Tracks[key].Elements[e].WorldPosition.X, Program.CurrentRoute.Tracks[key].Elements[e].WorldPosition.Y + 0.5, Program.CurrentRoute.Tracks[key].Elements[e].WorldPosition.Z));
+						}
+						
+					}
+
+
+					unsafe
+					{
+						GL.MatrixMode(MatrixMode.Projection);
+						GL.PushMatrix();
+						fixed (double* matrixPointer = &CurrentProjectionMatrix.Row0.X)
+						{
+							GL.LoadMatrix(matrixPointer);
+						}
+
+						GL.MatrixMode(MatrixMode.Modelview);
+						GL.PushMatrix();
+
+						fixed (double* matrixPointer = &CurrentViewMatrix.Row0.X)
+						{
+							GL.LoadMatrix(matrixPointer);
+						}
+
+						Matrix4D m = Camera.TranslationMatrix;
+						double* matrixPointer2 = &m.Row0.X;
+						{
+							GL.MultMatrix(matrixPointer2);
+						}
+					}
+
+					GL.LineWidth(2.0f);
+					GL.Begin(PrimitiveType.LineStrip);
+					GL.Color4(trackColor.R, trackColor.G, trackColor.B, 1.0f);
+					for (int j = 0; j < points.Count; j++)
+					{
+						GL.Vertex3(points[j].X, points[j].Y, -points[j].Z);
+					}
+
+					GL.End();
+					GL.PopMatrix();
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.PopMatrix();
+					GL.LineWidth(1.0f);
+				}
+			}
+
 
 			// render overlays
 			if (AvailableNewRenderer)
@@ -524,6 +626,15 @@ namespace RouteViewer
 					{
 						OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
 						keys = new[] { new[] { "R" } };
+						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - 32, 144), TextAlignment.TopRight, Color128.White, true);
+						keys = new[] { new[] { "P" } };
+						Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+					}
+					else
+					{
+						OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+						keys = new[] { new[] { "P" } };
 						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
 					}
 					
