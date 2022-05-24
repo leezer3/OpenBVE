@@ -276,7 +276,31 @@ namespace RouteViewer
 				{
 					DefaultShader.Deactivate();
 				}
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.PushMatrix();
+					fixed (double* matrixPointer = &CurrentProjectionMatrix.Row0.X)
+					{
+						GL.LoadMatrix(matrixPointer);
+					}
 
+					GL.MatrixMode(MatrixMode.Modelview);
+					GL.PushMatrix();
+
+					fixed (double* matrixPointer = &CurrentViewMatrix.Row0.X)
+					{
+						GL.LoadMatrix(matrixPointer);
+					}
+
+					Matrix4D m = Camera.TranslationMatrix;
+					double* matrixPointer2 = &m.Row0.X;
+					{
+						GL.MultMatrix(matrixPointer2);
+					}
+				}
+
+				GL.LineWidth(2.0f);
 				// render track paths
 				for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
 				{
@@ -298,7 +322,7 @@ namespace RouteViewer
 								colorIdx = randomGenerator.Next(0, 255);
 							}
 							usedTrackColors.Add(colorIdx);
-							trackColors.Add(key, ColorPalettes.Windows256ColorPalette[colorIdx]); //use the 16 color Windows pallette for a decent set of contrasting colors	
+							trackColors.Add(key, ColorPalettes.Windows256ColorPalette[colorIdx]); //use the 256 color Windows pallette for a decent set of contrasting colors	
 						}
 					}
 
@@ -306,8 +330,22 @@ namespace RouteViewer
 
 					double halfDistance = (Math.Max(Interface.CurrentOptions.ViewingDistance, 1000) / 2.0) * 1.1;
 					int numElements = (int)(halfDistance / Program.CurrentRoute.BlockLength);
-					int firstElement = Math.Max(0, CameraTrackFollower.LastTrackElement - numElements);
-					int lastElement = Math.Min(Program.CurrentRoute.Tracks[key].Elements.Length, CameraTrackFollower.LastTrackElement + numElements);
+
+					int startElement = CameraTrackFollower.LastTrackElement;
+					if (key != 0)
+					{
+						for (int e = 0; e < Program.CurrentRoute.Tracks[key].Elements.Length; e++)
+						{
+							if (Math.Abs(Program.CurrentRoute.Tracks[key].Elements[e].StartingTrackPosition -Program.CurrentRoute.Tracks[0].Elements[CameraTrackFollower.LastTrackElement].StartingTrackPosition) <= Program.CurrentRoute.BlockLength)
+							{
+								startElement = e;
+								break;
+							}
+						}
+					}
+
+					int firstElement = Math.Max(0, startElement - numElements);
+					int lastElement = Math.Min(Program.CurrentRoute.Tracks[key].Elements.Length, startElement + numElements);
 					if (lastElement < firstElement)
 					{
 						continue;
@@ -323,32 +361,10 @@ namespace RouteViewer
 						
 					}
 
-
-					unsafe
+					if (points.Count == 0)
 					{
-						GL.MatrixMode(MatrixMode.Projection);
-						GL.PushMatrix();
-						fixed (double* matrixPointer = &CurrentProjectionMatrix.Row0.X)
-						{
-							GL.LoadMatrix(matrixPointer);
-						}
-
-						GL.MatrixMode(MatrixMode.Modelview);
-						GL.PushMatrix();
-
-						fixed (double* matrixPointer = &CurrentViewMatrix.Row0.X)
-						{
-							GL.LoadMatrix(matrixPointer);
-						}
-
-						Matrix4D m = Camera.TranslationMatrix;
-						double* matrixPointer2 = &m.Row0.X;
-						{
-							GL.MultMatrix(matrixPointer2);
-						}
+						continue;
 					}
-
-					GL.LineWidth(2.0f);
 					GL.Begin(PrimitiveType.LineStrip);
 					GL.Color4(trackColor.R, trackColor.G, trackColor.B, 1.0f);
 					for (int j = 0; j < points.Count; j++)
@@ -357,11 +373,12 @@ namespace RouteViewer
 					}
 
 					GL.End();
-					GL.PopMatrix();
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.PopMatrix();
-					GL.LineWidth(1.0f);
+					
 				}
+				GL.PopMatrix();
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.PopMatrix();
+				GL.LineWidth(1.0f);
 			}
 
 
