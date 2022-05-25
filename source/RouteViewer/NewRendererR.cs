@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
+using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
@@ -49,9 +49,6 @@ namespace RouteViewer
 		private Texture RunSoundTexture;
 		private Texture LightingEventTexture;
 		private Texture WeatherEventTexture;
-
-		internal Dictionary<int, Color24> trackColors = new Dictionary<int, Color24>();
-		internal List<int> usedTrackColors = new List<int>();
 
 		public override void Initialize()
 		{
@@ -300,85 +297,15 @@ namespace RouteViewer
 					}
 				}
 
-				GL.LineWidth(2.0f);
 				// render track paths
 				for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
 				{
 					int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
-					
-					if (!trackColors.ContainsKey(key))
-					{
-						if (key == 0)
-						{
-							trackColors.Add(key, Color24.Red);
-							usedTrackColors.Add(5);
-						}
-						else
-						{
-							var randomGenerator = new Random();
-							int colorIdx = 5; // known value already in list to make our while loop easy
-							while (usedTrackColors.Contains(colorIdx))
-							{
-								colorIdx = randomGenerator.Next(0, 255);
-							}
-							usedTrackColors.Add(colorIdx);
-							trackColors.Add(key, ColorPalettes.Windows256ColorPalette[colorIdx]); //use the 256 color Windows pallette for a decent set of contrasting colors	
-						}
-					}
-
-					Color24 trackColor = trackColors[key];
-
-					double halfDistance = (Math.Max(Interface.CurrentOptions.ViewingDistance, 1000) / 2.0) * 1.1;
-					int numElements = (int)(halfDistance / Program.CurrentRoute.BlockLength);
-
-					int startElement = CameraTrackFollower.LastTrackElement;
-					if (key != 0)
-					{
-						for (int e = 0; e < Program.CurrentRoute.Tracks[key].Elements.Length; e++)
-						{
-							if (Math.Abs(Program.CurrentRoute.Tracks[key].Elements[e].StartingTrackPosition -Program.CurrentRoute.Tracks[0].Elements[CameraTrackFollower.LastTrackElement].StartingTrackPosition) <= Program.CurrentRoute.BlockLength)
-							{
-								startElement = e;
-								break;
-							}
-						}
-					}
-
-					int firstElement = Math.Max(0, startElement - numElements);
-					int lastElement = Math.Min(Program.CurrentRoute.Tracks[key].Elements.Length, startElement + numElements);
-					if (lastElement < firstElement)
-					{
-						continue;
-					}
-
-					List<Vector3> points = new List<Vector3>();
-					for (int e = firstElement; e < lastElement; e++)
-					{
-						if (Program.CurrentRoute.Tracks[key].Elements[e].WorldPosition != Vector3.Zero)
-						{
-							points.Add(new Vector3(Program.CurrentRoute.Tracks[key].Elements[e].WorldPosition.X, Program.CurrentRoute.Tracks[key].Elements[e].WorldPosition.Y + 0.5, Program.CurrentRoute.Tracks[key].Elements[e].WorldPosition.Z));
-						}
-						
-					}
-
-					if (points.Count == 0)
-					{
-						continue;
-					}
-					GL.Begin(PrimitiveType.LineStrip);
-					GL.Color4(trackColor.R, trackColor.G, trackColor.B, 1.0f);
-					for (int j = 0; j < points.Count; j++)
-					{
-						GL.Vertex3(points[j].X, points[j].Y, -points[j].Z);
-					}
-
-					GL.End();
-					
+					trackColors[key].Render();
 				}
 				GL.PopMatrix();
 				GL.MatrixMode(MatrixMode.Projection);
 				GL.PopMatrix();
-				GL.LineWidth(1.0f);
 			}
 
 
@@ -650,7 +577,7 @@ namespace RouteViewer
 					}
 					else
 					{
-						OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Rail Paths:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
 						keys = new[] { new[] { "P" } };
 						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
 					}

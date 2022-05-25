@@ -120,6 +120,9 @@ namespace LibRender2
 		protected List<Matrix4D> projectionMatrixList;
 		protected List<Matrix4D> viewMatrixList;
 
+		public List<int> usedTrackColors = new List<int>();
+		public Dictionary<int, RailPath> trackColors = new Dictionary<int, RailPath>();
+
 #pragma warning disable 0219, CS0169
 		/// <summary>Holds the last openGL error</summary>
 		/// <remarks>Is only used in debug builds, hence the pragma</remarks>
