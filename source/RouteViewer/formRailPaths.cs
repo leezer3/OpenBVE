@@ -50,6 +50,7 @@ namespace RouteViewer
 
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
+			Program.pathForm = null;
 			this.Close();
 		}
 
