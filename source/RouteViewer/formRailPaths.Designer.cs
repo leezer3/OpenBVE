@@ -1,4 +1,4 @@
-﻿
+
 namespace RouteViewer
 {
 	partial class formRailPaths
@@ -55,24 +55,27 @@ namespace RouteViewer
 			this.dataGridViewPaths.Name = "dataGridViewPaths";
 			this.dataGridViewPaths.Size = new System.Drawing.Size(651, 396);
 			this.dataGridViewPaths.TabIndex = 0;
+			this.dataGridViewPaths.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewPaths_CellMouseUp);
 			this.dataGridViewPaths.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridViewPaths_CurrentCellDirtyStateChanged);
 			// 
 			// railIndex
 			// 
 			this.railIndex.HeaderText = "Rail Index";
 			this.railIndex.Name = "railIndex";
+			this.railIndex.ReadOnly = true;
 			this.railIndex.Width = 79;
 			// 
 			// railDescription
 			// 
+			this.railDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
 			this.railDescription.HeaderText = "Description";
 			this.railDescription.Name = "railDescription";
-			this.railDescription.Width = 85;
 			// 
 			// railColor
 			// 
 			this.railColor.HeaderText = "Color";
 			this.railColor.Name = "railColor";
+			this.railColor.ReadOnly = true;
 			this.railColor.Width = 56;
 			// 
 			// railVisible

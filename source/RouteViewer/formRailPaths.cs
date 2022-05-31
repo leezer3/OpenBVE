@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using LibRender2.Overlays;
+using OpenBveApi.Colors;
 
 namespace RouteViewer
 {
@@ -20,7 +21,6 @@ namespace RouteViewer
 			{
 				int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
 				RailPath path = Program.Renderer.trackColors[key];
-				Color c = path.Color;
 				object[] newRow =
 				{
 					key.ToString(),
@@ -37,8 +37,9 @@ namespace RouteViewer
 			{
 				int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
 				RailPath path = Program.Renderer.trackColors[key];
-				Color c = path.Color;
-				dataGridViewPaths.Rows[i].Cells[2].Style.BackColor = c;
+				// Drawn path color
+				dataGridViewPaths.Rows[i].Cells[2].Style.BackColor = path.Color;
+				dataGridViewPaths.Rows[i].Cells[2].Style.SelectionBackColor = path.Color;
 			}
 			dataGridViewPaths.Columns[5].Visible = false;
 			dataGridViewPaths.RowHeadersVisible = false;
@@ -69,6 +70,24 @@ namespace RouteViewer
 		private void checkBoxRenderPaths_CheckedChanged(object sender, EventArgs e)
 		{
 			Program.Renderer.OptionPaths = checkBoxRenderPaths.Checked;
+		}
+
+		private void dataGridViewPaths_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			if (dataGridViewPaths.CurrentCell.OwningColumn == dataGridViewPaths.Columns[2])
+			{
+				if (dataGridViewPaths.CurrentRow != null)
+				{
+					ColorDialog cd = new ColorDialog();
+					if (cd.ShowDialog() == DialogResult.OK)
+					{
+						Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[5].Value].Color = cd.Color;
+						dataGridViewPaths.CurrentCell.Style.BackColor = cd.Color;
+						dataGridViewPaths.CurrentCell.Style.SelectionBackColor = cd.Color;
+					}
+					
+				}
+			}
 		}
 	}
 }
