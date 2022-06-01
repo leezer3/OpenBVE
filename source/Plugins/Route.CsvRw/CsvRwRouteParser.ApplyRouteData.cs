@@ -217,10 +217,6 @@ namespace CsvRwRouteParser
 				int n = CurrentTrackLength;
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
-					if (PreviewOnly && j != 0)
-					{
-						break;
-					}
 					var key = CurrentRoute.Tracks.ElementAt(j).Key;
 					if (CurrentRoute.Tracks[key].Elements == null || CurrentRoute.Tracks[key].Elements.Length == 0)
 					{

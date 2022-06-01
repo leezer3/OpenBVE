@@ -74,13 +74,13 @@ namespace CsvRwRouteParser {
 			Data.Blocks[0].Accuracy = 2.0;
 			Data.Blocks[0].AdhesionMultiplier = 1.0;
 			Data.Blocks[0].CurrentTrackState = new TrackElement(0.0);
+			Data.Blocks[0].RailCycles = new RailCycle[1];
+			Data.Blocks[0].RailCycles[0].RailCycleIndex = -1;
 			if (!PreviewOnly)
 			{
 				Data.Blocks[0].Background = 0;
 				Data.Blocks[0].Fog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0);
 				Data.Blocks[0].Cycle = new[] {-1};
-				Data.Blocks[0].RailCycles = new RailCycle[1];
-				Data.Blocks[0].RailCycles[0].RailCycleIndex = -1;
 				Data.Blocks[0].Height = IsRW ? 0.3 : 0.0;
 				Data.Blocks[0].RailFreeObj = new Dictionary<int, List<FreeObj>>();
 				Data.Blocks[0].GroundFreeObj = new List<FreeObj>();

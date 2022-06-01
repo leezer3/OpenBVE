@@ -26,8 +26,7 @@ namespace CsvRwRouteParser
 			{
 				case TrackCommand.RailStart:
 				case TrackCommand.Rail:
-					if (!PreviewOnly)
-					{
+				{
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
@@ -112,7 +111,8 @@ namespace CsvRwRouteParser
 							Array.Resize(ref Data.Blocks[BlockIndex].RailType, idx + 1);
 						}
 
-						if (Arguments.Length >= 4 && Arguments[3].Length != 0)
+						// Ignore the RailStructureIndex in preview mode, obviously not visible!
+						if (!PreviewOnly && Arguments.Length >= 4 && Arguments[3].Length != 0)
 						{
 							int sttype;
 							if (!NumberFormats.TryParseIntVb6(Arguments[3], out sttype))
@@ -167,7 +167,6 @@ namespace CsvRwRouteParser
 					break;
 				case TrackCommand.RailEnd:
 				{
-					if (!PreviewOnly)
 					{
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
