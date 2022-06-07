@@ -30,6 +30,7 @@ namespace LibRender2.Trains
 					States = new[] {new ObjectState(s)},
 					CurrentState = 0
 				};
+				Groups[0].Elements[0].IsPartOfTrain = true;
 				currentHost.CreateDynamicObject(ref Groups[0].Elements[0].internalObject);
 			}
 			else if (Object is AnimatedObjectCollection)
@@ -39,6 +40,7 @@ namespace LibRender2.Trains
 				for (int h = 0; h < a.Objects.Length; h++)
 				{
 					Groups[0].Elements[h] = a.Objects[h].Clone();
+					Groups[0].Elements[h].IsPartOfTrain = true;
 					currentHost.CreateDynamicObject(ref Groups[0].Elements[h].internalObject);
 				}
 			}

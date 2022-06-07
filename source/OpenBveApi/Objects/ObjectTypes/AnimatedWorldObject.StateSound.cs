@@ -8,8 +8,6 @@ namespace OpenBveApi.Objects
 	/// <summary>Represents an animated object which plays a sound upon state change</summary>
 	public class AnimatedWorldObjectStateSound : WorldObject
 	{
-		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
-		public int SectionIndex;
 		/// <summary>The sound buffer array</summary>
 		public SoundHandle[] Buffers;
 		/// <summary>Whether a single buffer is used</summary>
@@ -49,7 +47,7 @@ namespace OpenBveApi.Objects
 				{
 					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
-					Object.Update(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
 					if (this.Object.CurrentState != this.lastState && currentHost.SimulationState != SimulationState.Loading)
 					{
 						if (SingleBuffer)
@@ -146,7 +144,7 @@ namespace OpenBveApi.Objects
 			currentObject.Direction = FinalTransformation.Z;
 			currentObject.Up = FinalTransformation.Y;
 			currentObject.Side = FinalTransformation.X;
-			currentObject.SectionIndex = FinalSectionIndex;
+			currentObject.Object.SectionIndex = FinalSectionIndex;
 			currentObject.TrackPosition = FinalTrackPosition;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{

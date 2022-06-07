@@ -8,8 +8,6 @@ namespace OpenBveApi.Objects
 	/// <summary>A container object for an animated object which follows a track</summary>
 	public class TrackFollowingObject : WorldObject
 	{
-		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
-		public int SectionIndex;
 		/// <summary>The front axle follower</summary>
 		public readonly TrackFollower FrontAxleFollower;
 		/// <summary>The rear axle follower</summary>
@@ -52,7 +50,7 @@ namespace OpenBveApi.Objects
 					if (base.Visible)
 					{
 						//Calculate the distance travelled
-						double delta = UpdateTrackFollowerScript(false, NearestTrain, NearestTrain?.DriverCar ?? 0, SectionIndex, TrackPosition, Position, true, timeDelta);
+						double delta = UpdateTrackFollowerScript(false, NearestTrain, NearestTrain?.DriverCar ?? 0, Object.SectionIndex, TrackPosition, Position, true, timeDelta);
 						//Update the front and rear axle track followers
 						FrontAxleFollower.UpdateAbsolute((TrackPosition + FrontAxlePosition) + delta, true, true);
 						RearAxleFollower.UpdateAbsolute((TrackPosition + RearAxlePosition) + delta, true, true);
@@ -63,7 +61,7 @@ namespace OpenBveApi.Objects
 					}
 
 					//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
-					Object.Update(false, NearestTrain, NearestTrain?.DriverCar ?? 0, SectionIndex, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(NearestTrain, NearestTrain?.DriverCar ?? 0, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
 				}
 				else
 				{
