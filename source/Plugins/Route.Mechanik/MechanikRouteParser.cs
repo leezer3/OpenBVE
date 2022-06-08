@@ -817,8 +817,9 @@ namespace MechanikRouteParser
 						{
 							nextHeldAtRed = true;
 						}
-						
-						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance, 1.0);
+
+						signal.Object().SectionIndex = s + 1;
+						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, StartingDistance, 1.0);
 					}
 
 					if (currentRouteData.Blocks[i].HornBlow)

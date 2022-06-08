@@ -300,7 +300,7 @@ namespace Plugin
 							{
 								if (AnimatedObject.Objects[o - rl] != null)
 								{
-									Result.Objects[o] = AnimatedObject.Objects[o - rl].Clone();
+									Result.Objects[o] = AnimatedObject.Objects[o - rl].Clone() as AnimatedObject;
 									for (int si = 0; si < Result.Objects[o].States.Length; si++)
 									{
 										Result.Objects[o].States[si].Translation *= Matrix4D.CreateTranslation(CurrentObjects[i].Position.X, CurrentObjects[i].Position.Y, -CurrentObjects[i].Position.Z);

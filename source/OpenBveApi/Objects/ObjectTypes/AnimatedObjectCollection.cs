@@ -71,7 +71,8 @@ namespace OpenBveApi.Objects
 							}
 							else
 							{
-								Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+								Objects[i].SectionIndex = SectionIndex;
+								Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, TrackPosition, Brightness);
 							}
 						}
 					}
@@ -82,7 +83,8 @@ namespace OpenBveApi.Objects
 					{
 						if (Objects[i].States.Length != 0)
 						{
-							Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+							Objects[i].SectionIndex = SectionIndex;
+							Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, TrackPosition, Brightness);
 						}
 					}
 				}
@@ -123,7 +125,7 @@ namespace OpenBveApi.Objects
 				AnimatedObjectCollection aoc = new AnimatedObjectCollection(currentHost);
 				if (Objects != null)
 				{
-					aoc.Objects = Objects.Select(x => x?.Clone()).ToArray();
+					aoc.Objects = Objects.Select(x => x?.Clone() as AnimatedObject).ToArray();
 				}
 				if (Sounds != null)
 				{
@@ -141,7 +143,7 @@ namespace OpenBveApi.Objects
 				};
 				for (int i = 0; i < Objects.Length; i++)
 				{
-					Result.Objects[i] = Objects[i].Clone();
+					Result.Objects[i] = Objects[i].Clone() as AnimatedObject;
 					for (int j = 0; j < Objects[i].States.Length; j++)
 					{
 						Result.Objects[i].States[j].Prototype = (StaticObject)Result.Objects[i].States[j].Prototype.Mirror();

@@ -39,7 +39,7 @@ namespace LibRender2.Trains
 				Groups[0].Elements = new AnimatedObject[a.Objects.Length];
 				for (int h = 0; h < a.Objects.Length; h++)
 				{
-					Groups[0].Elements[h] = a.Objects[h].Clone();
+					Groups[0].Elements[h] = a.Objects[h].Clone() as AnimatedObject;
 					Groups[0].Elements[h].IsPartOfTrain = true;
 					currentHost.CreateDynamicObject(ref Groups[0].Elements[h].internalObject);
 				}

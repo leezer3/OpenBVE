@@ -1422,7 +1422,7 @@ namespace Plugin
 								{
 									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(currentHost)
 									{
-										Object = Result.Objects[ObjectCount - 1].Clone(),
+										Object = Result.Objects[ObjectCount - 1].Clone() as AnimatedObject,
 										Buffers = new SoundHandle[fileNames.Length]
 									};
 									for (int j = 0; j < fileNames.Length; j++)

@@ -1,10 +1,7 @@
-using System.IO;
 using System.Linq;
-using CSScriptLibrary;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -12,7 +9,7 @@ using OpenBveApi.World;
 namespace OpenBveApi.Objects
 {
 	/// <summary>The base type for an animated object</summary>
-	public class AnimatedObject
+	public class AnimatedObject : UnifiedObject
 	{
 		/// <summary>The array of states</summary>
 		public ObjectState[] States;
@@ -109,9 +106,19 @@ namespace OpenBveApi.Objects
 			States = new ObjectState[] { };
 		}
 
+		public override void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int SectionIndex, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness, bool DuplicateMaterials = false)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		/// <summary>Clones this object</summary>
 		/// <returns>The new object</returns>
-		public AnimatedObject Clone()
+		public override UnifiedObject Clone()
 		{
 			AnimatedObject Result = new AnimatedObject(currentHost) { States = States.Select(x => (ObjectState)x.Clone()).ToArray() };
 
@@ -167,6 +174,16 @@ namespace OpenBveApi.Objects
 
 			}
 			return Result;
+		}
+
+		public override UnifiedObject Mirror()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override UnifiedObject Transform(double NearDistance, double FarDistance)
+		{
+			throw new System.NotImplementedException();
 		}
 
 		/// <summary>Checks whether this object contains any functions</summary>
@@ -563,7 +580,7 @@ namespace OpenBveApi.Objects
 									t = 1.0;
 								}
 
-								t = t - System.Math.Floor(t);
+								t -= System.Math.Floor(t);
 								t = 0.5 * (1.0 - System.Math.Tan(0.25 * (System.Math.PI - 2.0 * System.Math.PI * t)));
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;
@@ -704,10 +721,9 @@ namespace OpenBveApi.Objects
 		/// <param name="Position">The absolute position</param>
 		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
 		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
-		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
 		/// <param name="TrackPosition">The absolute track position</param>
 		/// <param name="Brightness">The brightness value at the track position</param>
-		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int SectionIndex, double TrackPosition, double Brightness)
+		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double TrackPosition, double Brightness)
 		{
 
 			int a = currentHost.AnimatedWorldObjectsUsed;
@@ -716,7 +732,7 @@ namespace OpenBveApi.Objects
 			//Place track followers if required
 			if (TrackFollowerFunction != null)
 			{
-				var o = this.Clone();
+				var o = this.Clone() as AnimatedObject;
 				currentHost.CreateDynamicObject(ref o.internalObject);
 				TrackFollowingObject currentObject = new TrackFollowingObject(currentHost)
 				{
@@ -761,7 +777,7 @@ namespace OpenBveApi.Objects
 			}
 			else
 			{
-				var o = this.Clone();
+				var o = this.Clone() as AnimatedObject;
 				currentHost.CreateDynamicObject(ref o.internalObject);
 				AnimatedWorldObject currentObject = new AnimatedWorldObject(currentHost)
 				{

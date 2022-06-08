@@ -40,7 +40,7 @@ namespace OpenBveApi.Objects
 		public virtual WorldObject Clone()
 		{
 			WorldObject wo = (WorldObject)MemberwiseClone();
-			wo.Object = Object?.Clone();
+			wo.Object = Object?.Clone() as AnimatedObject;
 
 			if (wo.Object != null)
 			{
