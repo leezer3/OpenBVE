@@ -62,7 +62,6 @@
     <Compile Include="BMP\BitsPerPixel.cs" />
     <Compile Include="BMP\BmpDecoder.cs" />
     <Compile Include="BMP\BmpFormat.cs" />
-    <Compile Include="BMP\ColorPalletes.cs" />
     <Compile Include="BMP\CompressionFormat.cs" />
     <Compile Include="GIF\ControlCode.cs" />
     <Compile Include="GIF\GifDecoder.cs" />
