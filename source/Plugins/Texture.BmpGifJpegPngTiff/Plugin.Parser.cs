@@ -4,10 +4,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
+using Plugin.BMP;
+using Plugin.GIF;
 
 namespace Plugin {
 	public partial class Plugin {
@@ -32,6 +35,7 @@ namespace Plugin {
 					byte[] buffer = new byte[6];
 					if (fs.Length > buffer.Length)
 					{
+						// ReSharper disable once MustUseReturnValue
 						fs.Read(buffer, 0, buffer.Length);
 					}
 					fs.Close();
@@ -55,6 +59,19 @@ namespace Plugin {
 							texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
 							return true;
 						}
+					}
+					
+					if (Encoding.ASCII.GetString(buffer, 0, 2) == "BM")
+					{
+						using (BmpDecoder decoder = new BmpDecoder())
+						{
+							if (decoder.Read(file))
+							{
+								texture = new Texture(decoder.Width, decoder.Height, 32, decoder.ImageData, decoder.ColorTable);
+								return true;
+							}
+						}
+						
 					}
 				}
 			}
