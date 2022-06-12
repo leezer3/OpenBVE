@@ -435,11 +435,15 @@ namespace OpenBve {
 					} else {
 						Program.TrainManager.Trains[i].LoadDefaultPlugin( Program.TrainManager.Trains[i].TrainFolder);
 					}
-					for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++) {
-						if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+					if (Program.TrainManager.Trains[i].IsPlayerTrain)
+					{
+						for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
 						{
-							ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
-							trainInputDevice.SetVehicleSpecs( Program.TrainManager.Trains[i].vehicleSpecs());
+							if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+							{
+								ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+								trainInputDevice.SetVehicleSpecs(Program.TrainManager.Trains[i].vehicleSpecs());
+							}
 						}
 					}
 				}
