@@ -14,12 +14,14 @@ namespace LibRender2.Trains
 		public int CurrentAdditionalGroup;
 		/// <summary>Whether this is visible from internal views</summary>
 		public readonly bool VisibleFromInterior;
+		/// <summary>Whether this is to be shown in overlay mode (e.g. panel)</summary>
+		public readonly ObjectType Type;
 
-		public CarSection(HostInterface Host, ObjectType Type, bool visibleFromInterior, UnifiedObject Object = null)
+		public CarSection(HostInterface Host, ObjectType ObjectType, bool visibleFromInterior, UnifiedObject Object = null)
 		{
 			currentHost = Host;
 			Groups = new ElementsGroup[1];
-			Groups[0] = new ElementsGroup(Type);
+			Groups[0] = new ElementsGroup();
 			VisibleFromInterior = visibleFromInterior;
 			if (Object is StaticObject)
 			{
@@ -44,6 +46,7 @@ namespace LibRender2.Trains
 					currentHost.CreateDynamicObject(ref Groups[0].Elements[h].internalObject);
 				}
 			}
+			Type = ObjectType;
 		}
 
 		/// <summary>Initalizes the CarSection</summary>
@@ -52,7 +55,7 @@ namespace LibRender2.Trains
 		{
 			for (int i = 0; i < Groups.Length; i++)
 			{
-				Groups[i].Initialize(CurrentlyVisible);
+				Groups[i].Initialize(CurrentlyVisible, Type);
 			}
 		}
 
@@ -63,7 +66,7 @@ namespace LibRender2.Trains
 			{
 				for (int i = 0; i < Groups[0].Elements.Length; i++)
 				{
-					currentHost.ShowObject(Groups[0].Elements[i].internalObject, Groups[0].Type);
+					currentHost.ShowObject(Groups[0].Elements[i].internalObject, Type);
 				}
 			}
 
@@ -72,7 +75,7 @@ namespace LibRender2.Trains
 			{
 				for (int i = 0; i < Groups[add].Elements.Length; i++)
 				{
-					currentHost.ShowObject(Groups[add].Elements[i].internalObject, Groups[add].Type);
+					currentHost.ShowObject(Groups[add].Elements[i].internalObject, Type);
 					
 				}
 			}

@@ -241,7 +241,7 @@ namespace TrainManager.Car
 					Up.Rotate(d, -baseCar.Specs.RollDueToTopplingAngle - baseCar.Specs.RollDueToCantAngle);
 				}
 				// apply pitching
-				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
+				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Type == ObjectType.Overlay)
 				{
 					d.Rotate(s, baseCar.Specs.PitchDueToAccelerationAngle);
 					Up.Rotate(s, baseCar.Specs.PitchDueToAccelerationAngle);

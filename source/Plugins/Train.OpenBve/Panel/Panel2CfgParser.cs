@@ -303,7 +303,7 @@ namespace Train.OpenBve
 			{
 				GroupIndex++;
 				Array.Resize(ref Car.CarSections[0].Groups, GroupIndex + 1);
-				Car.CarSections[0].Groups[GroupIndex] = new ElementsGroup(ObjectType.Overlay);
+				Car.CarSections[0].Groups[GroupIndex] = new ElementsGroup();
 			}
 
 			// parse lines for rest
