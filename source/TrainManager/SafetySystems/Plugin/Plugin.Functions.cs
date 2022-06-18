@@ -177,7 +177,7 @@ namespace TrainManager.Trains
 			Assembly assembly;
 			try
 			{
-				assembly = Assembly.LoadFile(pluginFile);
+				assembly = Assembly.LoadFrom(pluginFile);
 			}
 			catch (BadImageFormatException)
 			{
