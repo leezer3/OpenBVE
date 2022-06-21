@@ -108,7 +108,7 @@ namespace Train.OpenBve
 							if (n + 1 >= CarSection.Groups.Length)
 							{
 								Array.Resize(ref CarSection.Groups, n + 2);
-								CarSection.Groups[n + 1] = new ElementsGroup();
+								CarSection.Groups[n + 1] = new AnimatedElementsGroup(Plugin.currentHost, Plugin.Renderer);
 							}
 
 							ParsePanelAnimatedNode(SectionElement, FileName, TrainPath, CarSection, n + 1);
@@ -222,7 +222,7 @@ namespace Train.OpenBve
 										break;
 								}
 							}
-							CreateTouchElement(CarSection.Groups[GroupIndex], Position, Size, JumpScreen, SoundIndices.ToArray(), CommandEntries.ToArray());
+							CreateTouchElement(CarSection.Groups[GroupIndex] as AnimatedElementsGroup, Position, Size, JumpScreen, SoundIndices.ToArray(), CommandEntries.ToArray());
 						}
 						break;
 					case "include":
@@ -249,7 +249,13 @@ namespace Train.OpenBve
 													{
 														Plugin.currentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 													}
-													CarSection.Groups[GroupIndex].Elements = a.Objects;
+													AnimatedElementsGroup elementsGroup = CarSection.Groups[GroupIndex] as AnimatedElementsGroup;
+													if (elementsGroup == null)
+													{
+														elementsGroup = new AnimatedElementsGroup(Plugin.currentHost, Plugin.Renderer);
+													}
+													elementsGroup.Elements = a.Objects;
+													CarSection.Groups[GroupIndex] = elementsGroup;
 												}
 												else
 												{
@@ -373,7 +379,7 @@ namespace Train.OpenBve
 			}
 		}
 
-		private void CreateTouchElement(ElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries)
+		private void CreateTouchElement(AnimatedElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries)
 		{
 			Vertex t0 = new Vertex(Size.X, Size.Y, -Size.Z);
             Vertex t1 = new Vertex(Size.X, -Size.Y, -Size.Z);

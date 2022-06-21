@@ -104,6 +104,7 @@ namespace TrainManager.Trains
 					{
 						if (Cars[i].CarSections[cs].Groups.Length > 0)
 						{
+							/*
 							for (int k = 0; k < Cars[i].CarSections[cs].Groups[0].Elements.Length; k++)
 							{
 								if (Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject != null)
@@ -111,6 +112,7 @@ namespace TrainManager.Trains
 									Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.DaytimeNighttimeBlend = dnb;
 								}
 							}
+							*/
 						}
 					}
 

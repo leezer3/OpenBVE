@@ -94,16 +94,7 @@ namespace TrainManager.Car
 			int cs = CurrentCarSection;
 			if (cs >= 0)
 			{
-				for (int i = 0; i < CarSections[cs].Groups[0].Elements.Length; i++)
-				{
-					UpdateSectionElement(cs, i, p, d, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
-
-					// brightness change
-					if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
-					{
-						CarSections[cs].Groups[0].Elements[i].internalObject.DaytimeNighttimeBlend = dnb;
-					}
-				}
+				CarSections[cs].Groups[0].Update(baseTrain, baseCar.Index, baseCar.TrackPosition, dnb, p, d, Up, s, ForceUpdate, CurrentlyVisible, TimeElapsed, true);
 			}
 		}
 
@@ -120,17 +111,14 @@ namespace TrainManager.Car
 
 			const int idxToReverse = 0; //cannot have an interior view
 
-			foreach (AnimatedObject animatedObject in CarSections[idxToReverse].Groups[0].Elements)
-			{
-				animatedObject.Reverse();
-			}
+			CarSections[idxToReverse].Groups[0].Reverse();
 		}
 
 		public void LoadCarSections(UnifiedObject currentObject, bool visibleFromInterior)
 		{
 			int j = CarSections.Length;
 			Array.Resize(ref CarSections, j + 1);
-			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, currentObject);
+			CarSections[j] = new CarSection(TrainManagerBase.currentHost, TrainManagerBase.Renderer, ObjectType.Dynamic, visibleFromInterior, currentObject);
 		}
 
 		public void ChangeSection(int SectionIndex)
@@ -144,66 +132,18 @@ namespace TrainManager.Car
 
 			for (int i = 0; i < CarSections.Length; i++)
 			{
-				for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
-				{
-					TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Elements[j].internalObject);
-				}
+				CarSections[i].Groups[0].Hide();
 			}
 
 			if (SectionIndex >= 0)
 			{
 				CarSections[SectionIndex].Initialize(CurrentlyVisible);
-				for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
-				{
-					TrainManagerBase.currentHost.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
-				}
+				CarSections[SectionIndex].Groups[0].Show(ObjectType.Dynamic);
 			}
 
 			CurrentCarSection = SectionIndex;
 			UpdateObjects(0.0, true);
 		}
-
-		private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
-		{
-			//TODO: Check whether the UP and SIDE vectors should actually be recalculated, as this just uses that of the root car
-			{
-				Vector3 p = Position;
-				double timeDelta;
-				bool updatefunctions;
-
-				if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate != 0.0)
-				{
-					if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate >= CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate)
-					{
-						timeDelta =
-							CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate =
-							TimeElapsed;
-						updatefunctions = true;
-					}
-					else
-					{
-						timeDelta = TimeElapsed;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate += TimeElapsed;
-						updatefunctions = false;
-					}
-				}
-				else
-				{
-					timeDelta = CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate = TimeElapsed;
-					updatefunctions = true;
-				}
-
-				if (ForceUpdate)
-				{
-					updatefunctions = true;
-				}
-
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseTrain, baseCar.Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
-			}
-		}
-
 		public void UpdateTopplingCantAndSpring()
 		{
 			if (CarSections.Length != 0)
