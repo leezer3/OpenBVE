@@ -46,7 +46,7 @@
 		/// <param name="path">The path to the file or folder that contains the object.</param>
 		/// <param name="unifiedObject">Receives the object.</param>
 		/// <param name="Encoding">The encoding for the object</param>
-		/// <returns>Whether loading the texture was successful.</returns>
+		/// <returns>Whether loading the object was successful.</returns>
 		public abstract bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject);
 	}
 
