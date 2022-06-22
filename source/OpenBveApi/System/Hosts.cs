@@ -80,40 +80,54 @@ namespace OpenBveApi.Hosts {
 			}
 		}
 
+		private HostPlatform cachedPlatform = (HostPlatform)99; // value not in enum
+
 		/// <summary>Returns the current host platform</summary>
 		public HostPlatform Platform
 		{
 			get
 			{
+				if((int)cachedPlatform != 99)
+				{
+					return cachedPlatform;
+				}
 				if (Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT)
 				{
 					try
 					{
 						var version = GetWineVersion();
-						return HostPlatform.WINE;
+						cachedPlatform = HostPlatform.WINE;
+						return cachedPlatform;
 					}
 					catch
 					{
 						//ignored
 					}
-					return HostPlatform.MicrosoftWindows;
+					cachedPlatform = HostPlatform.MicrosoftWindows;
+					return cachedPlatform;
 				}
 				if (System.IO.File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
 				{
 					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
-					return HostPlatform.AppleOSX;
+					cachedPlatform = HostPlatform.AppleOSX;
+					return cachedPlatform;
 				}
 				string kernelName = DetectUnixKernel();
 
 				switch (kernelName)
 				{
 					case "Darwin":
-						return HostPlatform.AppleOSX;
+						cachedPlatform = HostPlatform.AppleOSX;
+						break;
 					case "FreeBSD":
-						return HostPlatform.FreeBSD;
+						cachedPlatform = HostPlatform.FreeBSD;
+						break;
+					default:
+						cachedPlatform = HostPlatform.GNULinux;
+						break;
 				}
-				
-				return HostPlatform.GNULinux;
+
+				return cachedPlatform;
 			}
 		}
 
