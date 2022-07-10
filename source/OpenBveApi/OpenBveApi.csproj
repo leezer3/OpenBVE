@@ -135,6 +135,8 @@
     <Compile Include="Objects\ObjectTypes\AnimatedObjectCollection.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedWorldObject.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedWorldObject.StateSound.cs" />
+    <Compile Include="Objects\ObjectTypes\HieararchyWorldObject.cs" />
+    <Compile Include="Objects\ObjectTypes\HierarchyAnimatedObject.cs" />
     <Compile Include="Objects\ObjectTypes\StaticObject.cs" />
     <Compile Include="Objects\ObjectTypes\TrackFollowingObject.cs" />
     <Compile Include="Objects\ObjectTypes\UnifiedObject.cs" />

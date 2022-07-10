@@ -79,16 +79,7 @@ namespace TrainManager.Car
 			{
 				if (CarSections[cs].Groups.Length > 0)
 				{
-					for (int i = 0; i < CarSections[cs].Groups[0].Elements.Length; i++)
-					{
-						UpdateSectionElement(cs, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
-
-						// brightness change
-						if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
-						{
-							CarSections[cs].Groups[0].Elements[i].internalObject.DaytimeNighttimeBlend = dnb;
-						}
-					}
+					CarSections[cs].Groups[0].Update(baseTrain, baseCar.Index, baseCar.TrackPosition, dnb, p, d, u, s, ForceUpdate, CurrentlyVisible, TimeElapsed, true);
 				}
 			}
 		}
@@ -104,70 +95,24 @@ namespace TrainManager.Car
 
 			for (int i = 0; i < CarSections.Length; i++)
 			{
-				for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
-				{
-					TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Elements[j].internalObject);
-				}
+				CarSections[i].Groups[0].Hide();
 			}
 
 			if (SectionIndex >= 0)
 			{
 				CarSections[SectionIndex].Initialize(baseCar.CurrentlyVisible);
-				for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
-				{
-					TrainManagerBase.currentHost.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
-				}
+				CarSections[SectionIndex].Groups[0].Show(ObjectType.Dynamic);
 			}
 
 			CurrentCarSection = SectionIndex;
 			UpdateObjects(0.0, true);
 		}
-
-		private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
-		{
-			{
-				Vector3 p = Position;
-				double timeDelta;
-				bool updatefunctions;
-
-				if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate != 0.0)
-				{
-					if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate >= CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate)
-					{
-						timeDelta =
-							CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate =
-							TimeElapsed;
-						updatefunctions = true;
-					}
-					else
-					{
-						timeDelta = TimeElapsed;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate += TimeElapsed;
-						updatefunctions = false;
-					}
-				}
-				else
-				{
-					timeDelta = CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate = TimeElapsed;
-					updatefunctions = true;
-				}
-
-				if (ForceUpdate)
-				{
-					updatefunctions = true;
-				}
-
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseTrain, baseCar.Index, (baseCar.RearAxle.Follower.TrackPosition + connectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
-			}
-		}
-
+		
 		public void LoadCarSections(UnifiedObject currentObject, bool visibleFromInterior)
 		{
 			int j = CarSections.Length;
 			Array.Resize(ref CarSections, j + 1);
-			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, currentObject);
+			CarSections[j] = new CarSection(TrainManagerBase.currentHost, TrainManagerBase.Renderer, ObjectType.Dynamic, visibleFromInterior, currentObject);
 		}
 	}
 }

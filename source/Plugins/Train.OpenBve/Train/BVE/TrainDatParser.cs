@@ -1253,7 +1253,6 @@ namespace Train.OpenBve
 			Train.Handles.Power.Driver = 0;
 			Train.Handles.Power.Safety = 0;
 			Train.Handles.Power.Actual = 0;
-			Train.Handles.Power.DelayedChanges = new HandleChange[] { };
 			Train.Handles.Brake.Driver = 0;
 			Train.Handles.Brake.Safety = 0;
 			Train.Handles.Brake.Actual = 0;

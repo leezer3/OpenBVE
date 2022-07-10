@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
@@ -179,7 +180,7 @@ namespace Train.OpenBve
 				{
 					Plugin.currentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var t, true);
 					SemiHeight = FullHeight - t.Height;
-					CreateElement(Car, 0, SemiHeight, t.Width, t.Height, WorldZ + EyeDistance, t, Color32.White);
+					CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, 0, SemiHeight, t.Width, t.Height, WorldZ + EyeDistance, t, Color32.White);
 				}
 			}
 			// parse lines for rest
@@ -453,14 +454,14 @@ namespace Train.OpenBve
 								if (Background != null)
 								{
 									Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var t, true);
-									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
+									CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 								}
 
 								// cover
 								if (Cover != null)
 								{
 									Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var t, true);
-									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
+									CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
 								}
 
 								if (Type == 0)
@@ -473,10 +474,10 @@ namespace Train.OpenBve
 											string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
 											string File = Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
 											Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-											int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, t, NeedleColor[k]);
-											Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-											Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-											Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
+											AnimatedObject element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, t, NeedleColor[k]);
+											element.RotateZDirection = Vector3.Backward;
+											element.RotateXDirection = Vector3.Right;
+											element.RotateYDirection = Vector3.Cross(element.RotateZDirection, element.RotateXDirection);
 											double c0 = (Angle * (Maximum - Minimum) - 2.0 * Minimum * Math.PI) / (Maximum - Minimum) + Math.PI;
 											double c1 = 2.0 * (Math.PI - Angle) / (Maximum - Minimum);
 											string Variable = "0";
@@ -499,7 +500,7 @@ namespace Train.OpenBve
 													break;
 											}
 
-											Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, Variable + " " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
+											element.RotateZFunction = new FunctionScript(Plugin.currentHost, Variable + " " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
 										}
 									}
 								}
@@ -508,19 +509,19 @@ namespace Train.OpenBve
 									// leds
 									if (NeedleType[1] != 0)
 									{
-										int j = CreateElement(Car, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, NeedleColor[1]);
-										double x0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
-										double y0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
-										double z0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
-										double x1 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
-										double y1 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
-										double z1 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
-										double x2 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
-										double y2 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
-										double z2 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
-										double x3 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
-										double y3 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
-										double z3 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
+										AnimatedObject element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, NeedleColor[1]);
+										double x0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
+										double y0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
+										double z0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
+										double x1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
+										double y1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
+										double z1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
+										double x2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
+										double y2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
+										double z2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
+										double x3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
+										double y3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
+										double z3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
 										double cx = 0.25 * (x0 + x1 + x2 + x3);
 										double cy = 0.25 * (y0 + y1 + y2 + y3);
 										double cz = 0.25 * (z0 + z1 + z2 + z3);
@@ -539,11 +540,11 @@ namespace Train.OpenBve
 											new[] {0, 7, 8},
 											new[] {0, 9, 10}
 										};
-										Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, NeedleColor[1]);
-										Car.CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = true;
-										Car.CarSections[0].Groups[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
-										Car.CarSections[0].Groups[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
-										Car.CarSections[0].Groups[0].Elements[j].LEDVectors = new[]
+										element.States[0].Prototype.Mesh = new Mesh(vertices, faces, NeedleColor[1]);
+										element.LEDClockwiseWinding = true;
+										element.LEDInitialAngle = Angle - 2.0 * Math.PI;
+										element.LEDLastAngle = 2.0 * Math.PI - Angle;
+										element.LEDVectors = new[]
 										{
 											new Vector3(x0, y0, z0),
 											new Vector3(x1, y1, z1),
@@ -576,7 +577,7 @@ namespace Train.OpenBve
 												break;
 										}
 
-										Car.CarSections[0].Groups[0].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, Variable + " " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
+										element.LEDFunction = new FunctionScript(Plugin.currentHost, Variable + " " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
 									}
 								}
 							}
@@ -767,14 +768,14 @@ namespace Train.OpenBve
 								{
 									// background/led
 									Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var t, true);
-									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
+									CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 								}
 
 								if (Cover != null)
 								{
 									// cover
 									Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var t, true);
-									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
+									CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
 								}
 
 								if (Atc != null)
@@ -784,7 +785,7 @@ namespace Train.OpenBve
 									if (w > 0 & h > 0)
 									{
 										int n = w / h;
-										int k = -1;
+										AnimatedObject element = null;
 										for (int j = 0; j < n; j++)
 										{
 											double s;
@@ -844,15 +845,19 @@ namespace Train.OpenBve
 											Plugin.currentHost.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out var t, true);
 											if (j == 0)
 											{
-												k = CreateElement(Car, x, y, h, h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White);
+												element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, x, y, h, h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White);
 											}
 											else
 											{
-												CreateElement(Car, x, y, h, h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White, true);
+												CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, x, y, h, h, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White, true);
 											}
 										}
 
-										Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "271 pluginstate", false);
+										if (element == null)
+										{
+											break;
+										}
+										element.StateFunction = new FunctionScript(Plugin.currentHost, "271 pluginstate", false);
 									}
 								}
 
@@ -862,31 +867,31 @@ namespace Train.OpenBve
 									string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
 									string File = Path.CombineFile(Folder, "needle_speedometer.png");
 									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-									Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
+									AnimatedObject element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
+									element.RotateZDirection = Vector3.Backward;
+									element.RotateXDirection = Vector3.Right;
+									element.RotateYDirection = Vector3.Cross(element.RotateZDirection, element.RotateXDirection);
 									double c0 = Angle + Math.PI;
 									double c1 = 2.0 * (Math.PI - Angle) / Maximum;
-									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
+									element.RotateZFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
 								}
 								else if (Type == 1)
 								{
 									// led
 									if (!NeedleOverridden) Needle = Color32.Black;
-									int j = CreateElement(Car, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, Needle);
-									double x0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
-									double y0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
-									double z0 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
-									double x1 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
-									double y1 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
-									double z1 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
-									double x2 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
-									double y2 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
-									double z2 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
-									double x3 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
-									double y3 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
-									double z3 = Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
+									AnimatedObject element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, Needle);
+									double x0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
+									double y0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
+									double z0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
+									double x1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
+									double y1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
+									double z1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
+									double x2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
+									double y2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
+									double z2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
+									double x3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
+									double y3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
+									double z3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
 									double cx = 0.25 * (x0 + x1 + x2 + x3);
 									double cy = 0.25 * (y0 + y1 + y2 + y3);
 									double cz = 0.25 * (z0 + z1 + z2 + z3);
@@ -905,11 +910,11 @@ namespace Train.OpenBve
 										new[] {0, 7, 8},
 										new[] {0, 9, 10}
 									};
-									Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Needle);
-									Car.CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = true;
-									Car.CarSections[0].Groups[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
-									Car.CarSections[0].Groups[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
-									Car.CarSections[0].Groups[0].Elements[j].LEDVectors = new[]
+									element.States[0].Prototype.Mesh = new Mesh(vertices, faces, Needle);
+									element.LEDClockwiseWinding = true;
+									element.LEDInitialAngle = Angle - 2.0 * Math.PI;
+									element.LEDLastAngle = 2.0 * Math.PI - Angle;
+									element.LEDVectors = new[]
 									{
 										new Vector3(x0, y0, z0),
 										new Vector3(x1, y1, z1),
@@ -919,7 +924,7 @@ namespace Train.OpenBve
 									};
 									double c0 = Angle;
 									double c1 = 2.0 * (Math.PI - Angle) / Maximum;
-									Car.CarSections[0].Groups[0].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
+									element.LEDFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
 								}
 							}
 								break;
@@ -1084,54 +1089,65 @@ namespace Train.OpenBve
 
 										{
 											// hundreds
-											int k = -1;
+											AnimatedObject k = null;
 											for (int j = 0; j < n; j++)
 											{
 												if (j == 0)
 												{
-													k = CreateElement(Car, CornerX, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
+													k = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
 												}
 												else
 												{
-													CreateElement(Car, CornerX, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+													CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 												}
 											}
 
-											Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
+											if (k != null)
+											{
+												k.StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
+											}
 										}
 										{
 											// tens
-											int k = -1;
+											AnimatedObject k = null;
 											for (int j = 0; j < n; j++)
 											{
 												if (j == 0)
 												{
-													k = CreateElement(Car, CornerX + Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
+													k = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX + Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
 												}
 												else
 												{
-													CreateElement(Car, CornerX + Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+													CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX + Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 												}
 											}
 
-											Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
+											if (k != null)
+											{
+												k.StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
+											}
+											
 										}
 										{
 											// ones
-											int k = -1;
+											AnimatedObject k = null;
 											for (int j = 0; j < n; j++)
 											{
 												if (j == 0)
 												{
-													k = CreateElement(Car, CornerX + 2.0 * Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
+													k = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX + 2.0 * Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
 												}
 												else
 												{
-													CreateElement(Car, CornerX + 2.0 * Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+													CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX + 2.0 * Width, CornerY + SemiHeight, Width, Height, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
 												}
 											}
 
-											Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * floor 10 mod", false);
+											if (k != null)
+											{
+												k.StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * floor 10 mod", false);
+											}
+											
 										}
 									}
 								}
@@ -1215,9 +1231,9 @@ namespace Train.OpenBve
 								{
 									Plugin.currentHost.RegisterTexture(TurnOn, new TextureParameters(null, Color24.Blue), out var t0, true);
 									Plugin.currentHost.RegisterTexture(TurnOff, new TextureParameters(null, Color24.Blue), out var t1, true);
-									int j = CreateElement(Car, CornerX, CornerY + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t0);
-									CreateElement(Car, CornerX, CornerY + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t1, true);
-									Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "doors 0 !=", false);
+									AnimatedObject element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX, CornerY + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t0);
+									CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX, CornerY + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t1, true);
+									element.StateFunction = new FunctionScript(Plugin.currentHost, "doors 0 !=", false);
 								}
 							}
 								break;
@@ -1331,7 +1347,7 @@ namespace Train.OpenBve
 								if (Background != null)
 								{
 									Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var t, true);
-									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
+									CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
 								}
 
 								string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
@@ -1339,34 +1355,34 @@ namespace Train.OpenBve
 									// hour
 									string File = Path.CombineFile(Folder, "needle_hour.png");
 									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 4.0 * StackDistance, t, Needle);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-									Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.000277777777777778 * floor 0.523598775598298 *", false);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
+									AnimatedObject element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 4.0 * StackDistance, t, Needle);
+									element.RotateZDirection = Vector3.Backward;
+									element.RotateXDirection = Vector3.Right;
+									element.RotateYDirection = Vector3.Cross(element.RotateZDirection, element.RotateXDirection);
+									element.RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.000277777777777778 * floor 0.523598775598298 *", false);
+									element.RotateZDamping = new Damping(20.0, 0.4);
 								}
 								{
 									// minute
 									string File = Path.CombineFile(Folder, "needle_minute.png");
 									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-									Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.0166666666666667 * floor 0.10471975511966 *", false);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
+									AnimatedObject element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
+									element.RotateZDirection = Vector3.Backward;
+									element.RotateXDirection = Vector3.Right;
+									element.RotateYDirection = Vector3.Cross(element.RotateZDirection, element.RotateXDirection);
+									element.RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.0166666666666667 * floor 0.10471975511966 *", false);
+									element.RotateZDamping = new Damping(20.0, 0.4);
 								}
 								{
 									// second
 									string File = Path.CombineFile(Folder, "needle_second.png");
 									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 6.0 * StackDistance, t, Needle);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-									Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, "time floor 0.10471975511966 *", false);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
+									AnimatedObject element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 6.0 * StackDistance, t, Needle);
+									element.RotateZDirection = Vector3.Backward;
+									element.RotateXDirection = Vector3.Right;
+									element.RotateYDirection = Vector3.Cross(element.RotateZDirection, element.RotateXDirection);
+									element.RotateZFunction = new FunctionScript(Plugin.currentHost, "time floor 0.10471975511966 *", false);
+									element.RotateZDamping = new Damping(20.0, 0.4);
 								}
 							}
 								break;
@@ -1457,26 +1473,30 @@ namespace Train.OpenBve
 									if (w > 0 & h > 0)
 									{
 										int n = w / Width;
-										int k = -1;
+										AnimatedObject element = null;
 										for (int j = 0; j < n; j++)
 										{
 											TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
 											Plugin.currentHost.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out var t);
 											if (j == 0)
 											{
-												k = CreateElement(Car, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White);
+												element = CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White);
 											}
 											else
 											{
-												CreateElement(Car, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White, true);
+												CreateElement(Car.CarSections[0].Groups[0] as AnimatedElementsGroup, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White, true);
 											}
 										}
 
+										if (element == null)
+										{
+											break;
+										}
 										if (Car.baseTrain.Handles.Brake is AirBrakeHandle)
 										{
 											int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
 											int em = maxpow + 3;
-											Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > " + maxpow.ToString(Culture) + " BrakeNotch + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
+											element.StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > " + maxpow.ToString(Culture) + " BrakeNotch + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
 										}
 										else
 										{
@@ -1485,13 +1505,13 @@ namespace Train.OpenBve
 												int em = Car.baseTrain.Handles.Power.MaximumNotch + 2 + Car.baseTrain.Handles.Brake.MaximumNotch;
 												int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
 												int maxpowp1 = maxpow + 1;
-												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " holdBrake " + maxpowp1.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpowp1.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ? ?", false);
+												element.StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " holdBrake " + maxpowp1.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpowp1.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ? ?", false);
 											}
 											else
 											{
 												int em = Car.baseTrain.Handles.Power.MaximumNotch + 1 + Car.baseTrain.Handles.Brake.MaximumNotch;
 												int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
-												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpow.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
+												element.StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpow.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
 											}
 										}
 									}
@@ -1540,14 +1560,18 @@ namespace Train.OpenBve
 			return Arguments;
 		}
 
-		private int CreateElement(CarBase Car, double Left, double Top, double WorldZ, Texture Texture, bool AddStateToLastElement = false)
+		private AnimatedObject CreateElement(AnimatedElementsGroup Group, double Left, double Top, double WorldZ, Texture Texture, bool AddStateToLastElement = false)
 		{
-			return CreateElement(Car, Left, Top, Texture.Width, Texture.Height, WorldZ, Texture, Color32.White, AddStateToLastElement);
+			return CreateElement(Group, Left, Top, Texture.Width, Texture.Height, WorldZ, Texture, Color32.White, AddStateToLastElement);
 		}
 
 		// create element
-		private int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement = false)
+		private AnimatedObject CreateElement(AnimatedElementsGroup Group, double Left, double Top, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement = false)
 		{
+			if (Group == null)
+			{
+				Group = new AnimatedElementsGroup(Plugin.currentHost, Plugin.Renderer);
+			}
 			// create object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			Vector3[] v = new Vector3[4];
@@ -1583,28 +1607,28 @@ namespace Train.OpenBve
 			// add object
 			if (AddStateToLastElement)
 			{
-				int n = Car.CarSections[0].Groups[0].Elements.Length - 1;
-				int j = Car.CarSections[0].Groups[0].Elements[n].States.Length;
-				Array.Resize(ref Car.CarSections[0].Groups[0].Elements[n].States, j + 1);
-				Car.CarSections[0].Groups[0].Elements[n].States[j] = new ObjectState
+				int n = Group.Elements.Length - 1;
+				int j = Group.Elements[n].States.Length;
+				Array.Resize(ref Group.Elements[n].States, j + 1);
+				Group.Elements[n].States[j] = new ObjectState
 				{
 					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
 					Prototype = Object
 				};
-				return n;
+				return Group.Elements[n];
 			}
 			else
 			{
-				int n = Car.CarSections[0].Groups[0].Elements.Length;
-				Array.Resize(ref Car.CarSections[0].Groups[0].Elements, n + 1);
-				Car.CarSections[0].Groups[0].Elements[n] = new AnimatedObject(Plugin.currentHost);
-				Car.CarSections[0].Groups[0].Elements[n].States = new[] {new ObjectState()};
-				Car.CarSections[0].Groups[0].Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Car.CarSections[0].Groups[0].Elements[n].States[0].Prototype = Object;
-				Car.CarSections[0].Groups[0].Elements[n].CurrentState = 0;
-				Car.CarSections[0].Groups[0].Elements[n].internalObject = new ObjectState(Object);
-				Plugin.currentHost.CreateDynamicObject(ref Car.CarSections[0].Groups[0].Elements[n].internalObject);
-				return n;
+				int n = Group.Elements.Length;
+				Array.Resize(ref Group.Elements, n + 1);
+				Group.Elements[n] = new AnimatedObject(Plugin.currentHost);
+				Group.Elements[n].States = new[] {new ObjectState()};
+				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
+				Group.Elements[n].States[0].Prototype = Object;
+				Group.Elements[n].CurrentState = 0;
+				Group.Elements[n].internalObject = new ObjectState(Object);
+				Plugin.currentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
+				return Group.Elements[n];
 			}
 		}
 

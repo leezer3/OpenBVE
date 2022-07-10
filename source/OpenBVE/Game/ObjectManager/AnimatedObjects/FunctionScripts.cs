@@ -1439,6 +1439,26 @@ namespace OpenBve {
 						}
 						s++;
 						break;
+					case Instructions.WheelRadius:
+						if (Train != null) {
+							Function.Stack[s] = Train.Cars[CarIndex].WheelRadius;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.WheelRadiusOfCar:
+						if (Train == null) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length) {
+								Function.Stack[s - 1] = Train.Cars[j].WheelRadius;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

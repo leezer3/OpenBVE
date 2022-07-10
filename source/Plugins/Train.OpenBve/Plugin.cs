@@ -436,7 +436,7 @@ namespace Train.OpenBve
 	    internal void ParsePanelConfig(TrainBase Train, Encoding Encoding)
 	    {
 		    Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
-		    Train.Cars[Train.DriverCar].CarSections[0] = new CarSection(currentHost, ObjectType.Overlay, true);
+		    Train.Cars[Train.DriverCar].CarSections[0] = new CarSection(currentHost, Renderer, ObjectType.Overlay, true);
 		    string File = Path.CombineFile(Train.TrainFolder, "panel.xml");
 		    if (!System.IO.File.Exists(File))
 		    {
@@ -514,14 +514,19 @@ namespace Train.OpenBve
 						    {
 							    currentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 						    }
-
-						    Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
+							AnimatedElementsGroup elementsGroup = Train.Cars[Train.DriverCar].CarSections[0].Groups[0] as AnimatedElementsGroup;
+							if (elementsGroup == null)
+							{
+								elementsGroup = new AnimatedElementsGroup(currentHost, Renderer);
+							}
+						    elementsGroup.Elements = a.Objects;
 						    if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
 						    {
 							    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 							    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 						    }
 
+						    Train.Cars[Train.DriverCar].CarSections[0].Groups[0] = elementsGroup;
 						    return;
 					    }
 					    catch

@@ -86,7 +86,14 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+			AnimatedElementsGroup group = Car.CarSections[0].Groups[add] as AnimatedElementsGroup;
+
+			if (group == null)
+			{
+				return;
+			}
+
+			TouchElement[] TouchElements = group.TouchElements;
 
 			if (TouchElements == null)
 			{
@@ -317,7 +324,14 @@ namespace OpenBve.Graphics.Renderers
 				return false;
 			}
 
-			TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+			AnimatedElementsGroup group = Car.CarSections[0].Groups[add] as AnimatedElementsGroup;
+
+			if (group == null)
+			{
+				return false;
+			}
+
+			TouchElement[] TouchElements = group.TouchElements;
 
 			if (TouchElements == null)
 			{
@@ -369,7 +383,14 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+			AnimatedElementsGroup group = Car.CarSections[0].Groups[add] as AnimatedElementsGroup;
+
+			if (group == null)
+			{
+				return;
+			}
+
+			TouchElement[] TouchElements = group.TouchElements;
 
 			if (TouchElements == null)
 			{
@@ -410,7 +431,14 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+			AnimatedElementsGroup group = Car.CarSections[0].Groups[add] as AnimatedElementsGroup;
+
+			if (group == null)
+			{
+				return;
+			}
+
+			TouchElement[] TouchElements = group.TouchElements;
 
 			if (TouchElements == null)
 			{

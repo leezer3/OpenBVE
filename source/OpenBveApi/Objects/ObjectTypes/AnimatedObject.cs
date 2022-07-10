@@ -1,10 +1,7 @@
-using System.IO;
 using System.Linq;
-using CSScriptLibrary;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using OpenBveApi.World;

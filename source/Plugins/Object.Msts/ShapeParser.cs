@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
@@ -90,6 +91,35 @@ namespace Plugin
 			internal int numVerticies;
 		}
 
+		struct Matrix
+		{
+			internal Matrix(string Name, Matrix4D Matrix)
+			{
+				name = Name;
+				matrix = Matrix;
+			}
+			internal string name;
+			internal Matrix4D matrix;
+		}
+
+		struct Animation
+		{
+			internal Dictionary<string, AnimationNode> Nodes;
+			/*
+			 * WARNING: MSTS glitch / 'feature':
+			 * This FPS number is divided by 30 for interior view objects
+			 * http://www.elvastower.com/forums/index.php?/topic/29692-animations-in-the-passenger-view-too-fast/page__p__213634
+			 */
+			internal double Framerate;
+		}
+
+		class AnimationNode
+		{
+			internal int[] Controllers;
+			internal Matrix4D[] Frames;
+			internal bool Rotate = false;
+		}
+
 		class Vertex
 		{
 			internal Vector3 Coordinates;
@@ -130,12 +160,13 @@ namespace Plugin
 				points = new List<Vector3>();
 				normals = new List<Vector3>();
 				uv_points = new List<Vector2>();
-				matrices = new List<Matrix4D>();
+				matrices = new List<Matrix>();
 				images = new List<string>();
 				textures = new List<Texture>();
 				prim_states = new List<PrimitiveState>();
 				vtx_states = new List<VertexStates>();
 				LODs = new List<LOD>();
+				Animations = new List<Animation>();
 			}
 
 			// Global variables used by all LODs
@@ -147,7 +178,7 @@ namespace Plugin
 			/// <summary>The texture-coordinates used by this shape</summary>
 			internal readonly List<Vector2> uv_points;
 			/// <summary>The matrices used to transform components of this shape</summary>
-			internal readonly List<Matrix4D> matrices;
+			internal readonly List<Matrix> matrices;
 			/// <summary>The filenames of all textures used by this shape</summary>
 			internal readonly List<string> images;
 			/// <summary>The textures used, with associated parameters</summary>
@@ -159,6 +190,8 @@ namespace Plugin
 
 			internal readonly List<VertexStates> vtx_states;
 
+			internal readonly List<Animation> Animations;
+
 			// The list of LODs actually containing the objects
 
 			/// <summary>The list of all LODs from the model</summary>
@@ -168,6 +201,7 @@ namespace Plugin
 
 			internal int currentPrimitiveState = -1;
 			internal int totalObjects = 0;
+			internal int currentFrame = 0;
 		}
 
 		private class LOD
@@ -193,20 +227,20 @@ namespace Plugin
 				this.vertexSets = new List<VertexSet>();
 				this.faces = new List<Face>();
 				this.materials = new List<Material>();
+				this.hierarchy = new List<string>();
 			}
 
-			internal void TransformVerticies(List<Matrix4D> matrices)
+			internal void TransformVerticies(List<Matrix> matrices)
 			{
-				//TODO: This moves the verticies
-				//We should actually split them and the associated faces and use position within our animated object instead
-				//This however works when we have no animation supported as per currently
+				transformedVertices = new List<Vertex>(verticies);
+				List<int> matrixChain = new List<int>();
 				for (int i = 0; i < verticies.Count; i++)
 				{
+					transformedVertices[i] = new Vertex(verticies[i].Coordinates, verticies[i].Normal);
 					for (int j = 0; j < vertexSets.Count; j++)
 					{
 						if (vertexSets[j].startVertex <= i && vertexSets[j].startVertex + vertexSets[j].numVerticies > i)
 						{
-							List<int> matrixChain = new List<int>();
 							int hi = vertexSets[j].hierarchyIndex;
 							if (hi != -1 && hi < matrices.Count)
 							{
@@ -231,16 +265,20 @@ namespace Plugin
 
 							for (int k = 0; k < matrixChain.Count; k++)
 							{
-								verticies[i].Coordinates.Transform(matrices[matrixChain[k]], false);
+								transformedVertices[i].Coordinates.Transform(matrices[matrixChain[k]].matrix, false);
 							}
-
 							break;
 						}
 					}
 				}
+
+				for (int i = 0; i < matrixChain.Count; i++)
+				{
+					hierarchy.Insert(0,matrices[matrixChain[i]].name);
+				}
 			}
 
-			internal void Apply(out StaticObject Object)
+			internal void Apply(out StaticObject Object, bool useTransformedVertics)
 			{
 				Object = new StaticObject(Plugin.currentHost)
 				{
@@ -261,7 +299,16 @@ namespace Plugin
 					Array.Resize(ref Object.Mesh.Vertices, mv + verticies.Count);
 					for (int i = 0; i < verticies.Count; i++)
 					{
-						Object.Mesh.Vertices[mv + i] = new OpenBveApi.Objects.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
+						if (useTransformedVertics)
+						{
+							//Use transformed vertices if we are not animated as will be faster
+							Object.Mesh.Vertices[mv + i] = new OpenBveApi.Objects.Vertex(transformedVertices[i].Coordinates, verticies[i].TextureCoordinates);
+						}
+						else
+						{
+							Object.Mesh.Vertices[mv + i] = new OpenBveApi.Objects.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
+						}
+
 					}
 
 					for (int i = 0; i < faces.Count; i++)
@@ -305,22 +352,26 @@ namespace Plugin
 					}
 				}
 			}
-
+			
 			internal readonly List<Vertex> verticies;
 			internal readonly List<VertexSet> vertexSets;
 			internal readonly List<Face> faces;
 			internal readonly List<Material> materials;
+			internal List<string> hierarchy;
+			internal List<Vertex> transformedVertices;
 		}
 
 		private static string currentFolder;
 
-		internal static AnimatedObjectCollection ReadObject(string fileName)
+		internal static UnifiedObject ReadObject(string fileName)
 		{
 			MsTsShape shape = new MsTsShape();
 			AnimatedObjectCollection Result = new AnimatedObjectCollection(Plugin.currentHost)
 			{
 				Objects = new AnimatedObject[4]
 			};
+
+			HierarchyAnimatedObject newResult = new HierarchyAnimatedObject(Plugin.currentHost);
 
 			currentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -384,12 +435,6 @@ namespace Plugin
 					{
 						s = Encoding.ASCII.GetString(newBytes);
 					}
-
-					s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
-					if (!s.StartsWith("shape", StringComparison.InvariantCultureIgnoreCase))
-					{
-						throw new Exception(); //Shape definition
-					}
 					TextualBlock block = new TextualBlock(s, KujuTokenID.shape);
 					ParseBlock(block, ref shape);
 				}
@@ -416,17 +461,26 @@ namespace Plugin
 				}
 			}
 			Array.Resize(ref Result.Objects, shape.totalObjects);
+			Array.Resize(ref newResult.Objects, shape.totalObjects);
 			int idx = 0;
 			double[] previousLODs = new double[shape.totalObjects];
 			for (int i = 0; i < shape.LODs.Count; i++)
 			{
 				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
-					Result.Objects[idx] = new AnimatedObject(Plugin.currentHost);
-					Result.Objects[idx].States = new ObjectState[1];
 					ObjectState aos = new ObjectState();
-					shape.LODs[i].subObjects[j].Apply(out aos.Prototype);
-					Result.Objects[idx].States[0] = aos;
+
+					shape.LODs[i].subObjects[j].Apply(out aos.Prototype, true);
+					
+
+
+					/*
+					 * OLD, TO REMOVE
+					 */
+					//Result.Objects[idx] = new AnimatedObject(Plugin.currentHost);
+					//Result.Objects[idx].States = new ObjectState[1];
+					
+					//Result.Objects[idx].States[0] = aos;
 					previousLODs[idx] = shape.LODs[i].viewingDistance;
 					int k = idx;
 					while (k > 0)
@@ -439,20 +493,51 @@ namespace Plugin
 						k--;
 
 					}
-
+					/*
+					 * END TO REMOVE
+					 */
 					if (k != 0)
 					{
-						Result.Objects[idx].StateFunction = new FunctionScript(Plugin.currentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]", true);
+						newResult.Objects[idx] = new HiearchyObject(newResult, shape.LODs[i].subObjects[j].hierarchy.ToArray(), aos, new FunctionScript(Plugin.currentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]", true));
 					}
 					else
 					{
-						Result.Objects[idx].StateFunction = new FunctionScript(Plugin.currentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]", true);
+						newResult.Objects[idx] = new HiearchyObject(newResult, shape.LODs[i].subObjects[j].hierarchy.ToArray(), aos, new FunctionScript(Plugin.currentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]", true));
 					}
+					//shape.
+				
+					for (int a = 0; a < shape.Animations.Count; a++)
+					{
+						for (int aN = 0; aN < shape.Animations[a].Nodes.Count; aN++)
+						{
+							string key = shape.Animations[a].Nodes.ElementAt(aN).Key;
+							string functionScript = string.Empty;
+							switch (key.ToUpperInvariant())
+							{
+								case "MAIN":
+									// not actually an animation
+									continue;
+								case "WHEELS12":
+									functionScript = "carnumber wheelradiusindex";
+									break;
+								default:
+									// Unsupported animation controller...
+									continue;
+							}
 
+							if (!newResult.HierarchyParts.ContainsKey(key))
+							{
+								newResult.HierarchyParts.Add(key, new HierarchyEntry(Plugin.currentHost, key, functionScript, shape.Animations[a].Nodes[key].Rotate ? shape.Animations[a].Nodes[key].Frames : null, shape.Animations[a].Nodes[key].Rotate ? null : shape.Animations[a].Nodes[key].Frames));
+							}
+							
+						}
+						
+					}
+					
 					idx++;
 				}
 			}
-			return Result;
+			return newResult;
 		}
 
 		private static LOD currentLOD;
@@ -461,23 +546,33 @@ namespace Plugin
 		{
 			Vertex v = null; //Crappy, but there we go.....
 			int[] t = null;
-			ParseBlock(block, ref shape, ref v, ref t);
+			AnimationNode node = null;
+			ParseBlock(block, ref shape, ref v, ref t, ref node);
 		}
 
 		private static void ParseBlock(Block block, ref MsTsShape shape, ref int[] array)
 		{
 			Vertex v = null; //Crappy, but there we go.....
-			ParseBlock(block, ref shape, ref v, ref array);
+			AnimationNode node = null;
+			ParseBlock(block, ref shape, ref v, ref array, ref node);
 		}
 
 		private static void ParseBlock(Block block, ref MsTsShape shape, ref Vertex v)
 		{
 			int[] t = null;
-			ParseBlock(block, ref shape, ref v, ref t);
+			AnimationNode node = null;
+			ParseBlock(block, ref shape, ref v, ref t, ref node);
+		}
+
+		private static void ParseBlock(Block block, ref MsTsShape shape, ref AnimationNode n)
+		{
+			Vertex v = null;
+			int[] t = null;
+			ParseBlock(block, ref shape, ref v, ref t, ref n);
 		}
 		
 
-		private static void ParseBlock(Block block, ref MsTsShape shape, ref Vertex vertex, ref int[] intArray)
+		private static void ParseBlock(Block block, ref MsTsShape shape, ref Vertex vertex, ref int[] intArray, ref AnimationNode animationNode)
 		{
 			float x, y, z;
 			Vector3 point;
@@ -522,6 +617,15 @@ namespace Plugin
 					ParseBlock(newBlock, ref shape);
 					newBlock = block.ReadSubBlock(KujuTokenID.lod_controls);
 					ParseBlock(newBlock, ref shape);
+					try
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.animations);
+						ParseBlock(newBlock, ref shape);
+					}
+					catch (EndOfStreamException)
+					{
+						// Animation controllers are optional
+					}
 					break;
 				case KujuTokenID.shape_header:
 				case KujuTokenID.volumes:
@@ -795,7 +899,7 @@ namespace Plugin
 					currentMatrix.Row1 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
 					currentMatrix.Row2 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
 					currentMatrix.Row3 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
-					shape.matrices.Add(currentMatrix);
+					shape.matrices.Add(new Matrix(block.Label, currentMatrix));
 					break;
 				case KujuTokenID.normals:
 					int normalCount = block.ReadUInt16();
@@ -1064,6 +1168,95 @@ namespace Plugin
 
 					//Looks as if vertex_uvs should always be of length 1, thus:
 					vertex.TextureCoordinates = shape.uv_points[vertex_uvs[0]];
+					break;
+
+				/*
+				 * ANIMATION CONTROLLERS AND RELATED STUFF
+				 */
+
+				case KujuTokenID.animations:
+					int numAnimations = block.ReadInt32();
+					for (int i = 0; i < numAnimations; i++)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.animation);
+						ParseBlock(newBlock, ref shape);
+					}
+					break;
+				case KujuTokenID.animation:
+					//ignore index value
+					int animationIndex = block.ReadInt32();
+					Animation animation = new Animation
+					{
+						Framerate = block.ReadInt32(),
+						Nodes = new Dictionary<string, AnimationNode>()
+					};
+					shape.Animations.Add(animation);
+					newBlock = block.ReadSubBlock(KujuTokenID.anim_nodes);
+					ParseBlock(newBlock, ref shape);
+					break;
+				case KujuTokenID.anim_nodes:
+					int numNodes = block.ReadInt32();
+					for (int i = 0; i < numNodes; i++)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.anim_node);
+						ParseBlock(newBlock, ref shape);
+					}
+					break;
+				case KujuTokenID.anim_node:
+					AnimationNode currentNode = new AnimationNode();
+					newBlock = block.ReadSubBlock(KujuTokenID.controllers);
+					ParseBlock(newBlock, ref shape, ref currentNode);
+					if (shape.Animations[shape.Animations.Count - 1].Nodes.ContainsKey(block.Label))
+					{
+						break;
+					}
+
+					shape.Animations[shape.Animations.Count - 1].Nodes.Add(block.Label, currentNode);
+					break;
+				case KujuTokenID.controllers:
+					int numControllers = block.ReadInt32();
+					for (int i = 0; i < numControllers; i++)
+					{
+						newBlock = block.ReadSubBlock(new[] { KujuTokenID.tcb_rot, KujuTokenID.linear_pos });
+						ParseBlock(newBlock, ref shape, ref animationNode);
+					}
+					break;
+				case KujuTokenID.tcb_rot:
+					int numFrames = block.ReadInt32();
+					animationNode.Frames = new Matrix4D[numFrames];
+					for (int i = 0; i < numFrames; i++)
+					{
+						newBlock = block.ReadSubBlock(new[] { KujuTokenID.tcb_key , KujuTokenID.slerp_rot});
+						ParseBlock(newBlock, ref shape, ref animationNode);
+					}
+
+					animationNode.Rotate = true;
+					break;
+				case KujuTokenID.tcb_key:
+					//Grab index of matrix within array
+					int matrixIndex = block.ReadInt32();
+					// No idea why, but as opposed to matrices earlier on this is now stored as a quaternion....
+					Quaternion q = new Quaternion(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					Matrix4D rotationMatrix = Matrix4D.CreateFromQuaternion(q);
+					animationNode.Frames[matrixIndex] += rotationMatrix;
+					break;
+				case KujuTokenID.linear_pos:
+					numFrames = block.ReadInt32();
+					animationNode.Frames = new Matrix4D[numFrames];
+					for (int i = 0; i < numFrames; i++)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.linear_key);
+						ParseBlock(newBlock, ref shape, ref animationNode);
+					}
+					animationNode.Rotate = false;
+					break;
+				case KujuTokenID.linear_key:
+					//Grab index of matrix within array
+					matrixIndex = block.ReadInt32();
+					// This on the other hand is stored as a simple X Y Z translation, again not as a matrix.....
+					Matrix4D translationMatrix = Matrix4D.CreateTranslation(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					animationNode.Frames[matrixIndex] += translationMatrix;
+					animationNode.Rotate = false;
 					break;
 			}
 		}

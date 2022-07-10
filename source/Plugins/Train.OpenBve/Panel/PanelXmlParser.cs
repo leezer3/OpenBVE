@@ -409,7 +409,7 @@ namespace Train.OpenBve
 							if (n + 1 >= CarSection.Groups.Length)
 							{
 								Array.Resize(ref CarSection.Groups, n + 2);
-								CarSection.Groups[n + 1] = new ElementsGroup();
+								CarSection.Groups[n + 1] = new AnimatedElementsGroup(Plugin.currentHost, Plugin.Renderer);
 							}
 
 							ParsePanelNode(SectionElement, FileName, Train, Car, ref CarSection, n + 1, Layer, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter.X, PanelCenter.Y, PanelOriginX, PanelOriginY);
@@ -560,7 +560,7 @@ namespace Train.OpenBve
 										break;
 								}
 							}
-							CreateTouchElement(CarSection.Groups[GroupIndex], Location, Size, JumpScreen, SoundIndices.ToArray(), CommandEntries.ToArray(), new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+							CreateTouchElement(ref CarSection.Groups[GroupIndex], Location, Size, JumpScreen, SoundIndices.ToArray(), CommandEntries.ToArray(), new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
 						}
 						break;
 					case "pilotlamp":
@@ -663,9 +663,9 @@ namespace Train.OpenBve
 								}
 								int w = tday.Width;
 								int h = tday.Height;
-								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
+								AnimatedObject element = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+								element.StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
 							}
 						}
 						break;
@@ -886,10 +886,10 @@ namespace Train.OpenBve
 								double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 								double nx = n * tday.Width;
 								double ny = n * tday.Height;
-								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color);
-								CarSection.Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
-								CarSection.Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
-								CarSection.Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(CarSection.Groups[GroupIndex].Elements[j].RotateZDirection, CarSection.Groups[GroupIndex].Elements[j].RotateXDirection);
+								AnimatedObject element = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color);
+								element.RotateZDirection = Vector3.Backward;
+								element.RotateXDirection = Vector3.Right;
+								element.RotateYDirection = Vector3.Cross(element.RotateZDirection, element.RotateXDirection);
 								string f;
 								switch (Subject.ToLowerInvariant())
 								{
@@ -913,13 +913,13 @@ namespace Train.OpenBve
 								f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
 								if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0)
 								{
-									CarSection.Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
+									element.RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 								}
-								CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+								element.RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
 								if (Backstop)
 								{
-									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
-									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
+									element.RotateZFunction.Minimum = InitialAngle;
+									element.RotateZFunction.Maximum = LastAngle;
 								}
 							}
 						}
@@ -1065,7 +1065,7 @@ namespace Train.OpenBve
 								}
 								int w = tday.Width;
 								int h = tday.Height;
-								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
+								AnimatedObject element = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								if (Maximum < Minimum)
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -1074,8 +1074,8 @@ namespace Train.OpenBve
 								string tf = Plugin.Panel2CfgParser.GetInfixFunction(Train, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
 								if (tf != String.Empty)
 								{
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+									element.TextureShiftXDirection = Direction;
+									element.TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
 								}
 							}
 						}
@@ -1268,14 +1268,19 @@ namespace Train.OpenBve
 											tnight[k] = null;
 										}
 									}
-									int j = -1;
+									AnimatedObject element = null;
 									for (int k = 0; k < tday.Length; k++)
 									{
-										int l = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, wday, Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
-										if (k == 0) j = l;
+										AnimatedObject l = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, wday, Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
+										if (k == 0) element = l;
+									}
+
+									if (element == null)
+									{
+										break;
 									}
 									string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-									CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+									element.StateFunction = new FunctionScript(Plugin.currentHost, f, false);
 								}
 							}
 						}
@@ -1403,21 +1408,21 @@ namespace Train.OpenBve
 							if (Radius != 0.0)
 							{
 								// create element
-								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color);
+								AnimatedObject element = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color);
 								InitialAngle += Math.PI;
 								LastAngle += Math.PI;
-								double x0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
-								double y0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
-								double z0 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
-								double x1 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
-								double y1 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
-								double z1 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
-								double x2 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
-								double y2 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
-								double z2 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
-								double x3 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
-								double y3 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
-								double z3 = CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
+								double x0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
+								double y0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
+								double z0 = element.States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
+								double x1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
+								double y1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
+								double z1 = element.States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
+								double x2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
+								double y2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
+								double z2 = element.States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
+								double x3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
+								double y3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
+								double z3 = element.States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
 								double cx = 0.25 * (x0 + x1 + x2 + x3);
 								double cy = 0.25 * (y0 + y1 + y2 + y3);
 								double cz = 0.25 * (z0 + z1 + z2 + z3);
@@ -1434,11 +1439,11 @@ namespace Train.OpenBve
 									new[] { 0, 7, 8 },
 									new[] { 0, 9, 10 }
 								};
-								CarSection.Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Color);
-								CarSection.Groups[GroupIndex].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
-								CarSection.Groups[GroupIndex].Elements[j].LEDInitialAngle = InitialAngle;
-								CarSection.Groups[GroupIndex].Elements[j].LEDLastAngle = LastAngle;
-								CarSection.Groups[GroupIndex].Elements[j].LEDVectors = new[]
+								element.States[0].Prototype.Mesh = new Mesh(vertices, faces, Color);
+								element.LEDClockwiseWinding = InitialAngle <= LastAngle;
+								element.LEDInitialAngle = InitialAngle;
+								element.LEDLastAngle = LastAngle;
+								element.LEDVectors = new[]
 								{
 									new Vector3(x0, y0, z0),
 									new Vector3(x1, y1, z1),
@@ -1460,7 +1465,7 @@ namespace Train.OpenBve
 									f += " " + s + " * floor " + t + " *";
 								}
 								f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
-								CarSection.Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+								element.LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
 							}
 							else
 							{
@@ -1551,9 +1556,9 @@ namespace Train.OpenBve
 							}
 							if (Width > 0.0 & Height > 0.0)
 							{
-								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White);
-								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "timetable", false);
-								Plugin.currentHost.AddObjectForCustomTimeTable(CarSection.Groups[GroupIndex].Elements[j]);
+								AnimatedObject element = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White);
+								element.StateFunction = new FunctionScript(Plugin.currentHost, "timetable", false);
+								Plugin.currentHost.AddObjectForCustomTimeTable(element);
 							}
 						}
 						break;
@@ -1770,11 +1775,11 @@ namespace Train.OpenBve
 						{
 							int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
 							double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
-							int panelDropIndex = Plugin.Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
+							AnimatedObject panelDrop = Plugin.Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
 							string f = drop + " raindrop";
 							try
 							{
-								Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+								panelDrop.StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
 							}
 							catch
 							{
@@ -1899,8 +1904,13 @@ namespace Train.OpenBve
 			}
 		}
 
-		internal void CreateTouchElement(ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
+		internal void CreateTouchElement(ref ElementsGroup _Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
+			AnimatedElementsGroup Group = _Group as AnimatedElementsGroup;
+			if (Group == null)
+			{
+				Group = new AnimatedElementsGroup(Plugin.currentHost, Plugin.Renderer);
+			}
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
 			{

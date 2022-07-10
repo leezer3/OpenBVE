@@ -320,7 +320,7 @@ namespace Train.OpenBve
 						}
 						Train.Cars[Car].HasInteriorView = true;
 						Train.Cars[Car].CarSections = new CarSection[1];
-						Train.Cars[Car].CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true);
+						Train.Cars[Car].CarSections[0] = new CarSection(Plugin.currentHost, Plugin.Renderer, ObjectType.Overlay, true);
 
 						string cv = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))
@@ -540,11 +540,19 @@ namespace Train.OpenBve
 							{
 								Plugin.currentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
-							Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
+
+							AnimatedElementsGroup elementsGroup = Train.Cars[Car].CarSections[0].Groups[0] as AnimatedElementsGroup;
+							if (elementsGroup == null)
+							{
+								elementsGroup = new AnimatedElementsGroup(Plugin.currentHost, Plugin.Renderer);
+							}
+							elementsGroup.Elements = a.Objects;
 							if (Train.Cars[Car].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
 							{
 								Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 							}
+
+							Train.Cars[Car].CarSections[0].Groups[0] = elementsGroup;
 						}
 						catch
 						{
