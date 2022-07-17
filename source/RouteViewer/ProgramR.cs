@@ -695,7 +695,7 @@ namespace RouteViewer
 				case Key.P:
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
-						if (pathForm == null)
+						if (pathForm == null || pathForm.IsDisposed)
 						{
 							pathForm = new formRailPaths();
 						}
