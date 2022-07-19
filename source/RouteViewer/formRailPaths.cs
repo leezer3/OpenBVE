@@ -89,5 +89,13 @@ namespace RouteViewer
 				}
 			}
 		}
+
+		private void dataGridViewPaths_CellValidated(object sender, DataGridViewCellEventArgs e)
+		{
+			if (dataGridViewPaths.CurrentRow != null && e.ColumnIndex ==  1 && dataGridViewPaths.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+			{
+				Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[5].Value].Description = dataGridViewPaths.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+			}
+		}
 	}
 }

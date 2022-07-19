@@ -56,6 +56,7 @@ namespace RouteViewer
 			this.dataGridViewPaths.Size = new System.Drawing.Size(651, 396);
 			this.dataGridViewPaths.TabIndex = 0;
 			this.dataGridViewPaths.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewPaths_CellMouseUp);
+			this.dataGridViewPaths.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPaths_CellValidated);
 			this.dataGridViewPaths.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridViewPaths_CurrentCellDirtyStateChanged);
 			// 
 			// railIndex
