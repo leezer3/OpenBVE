@@ -65,6 +65,7 @@
     <Compile Include="Events\TrackEnd.cs" />
     <Compile Include="Events\Transponder.cs" />
     <Compile Include="Events\Transponder.Types.cs" />
+    <Compile Include="Illustrations\MapMode.cs" />
     <Compile Include="Illustrations\RouteMap.cs" />
     <Compile Include="MessageManager\AbstractMessage.cs" />
     <Compile Include="MessageManager\MessageDependancy.cs" />

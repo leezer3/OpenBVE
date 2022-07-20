@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -150,15 +151,20 @@ namespace RouteManager2
 			zMin = imageOrigin.Y + (z0 - zMin) * imageScale.Y + imageSize.Y;
 			zMax = imageOrigin.Y + (z0 - zMax) * imageScale.Y + imageSize.Y;
 			// create bitmap
-			int		mode = inGame ? 1 : 0;
+			MapMode mode = inGame ? MapMode.InGame : MapMode.Preview;
 			Bitmap b = new Bitmap(Width, Height, inGame ? System.Drawing.Imaging.PixelFormat.Format32bppArgb
 				: System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 			Graphics g = Graphics.FromImage(b);
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-			g.Clear(mapColors[mode].background);
+			g.Clear(mapColors[(int)mode].background);
 
-			DrawRailPath(g, mode, CurrentRoute.Tracks[0], firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
+			{
+				int key = CurrentRoute.Tracks.ElementAt(i).Key;
+				DrawRailPath(g, key != 0 ? MapMode.SecondaryTrack : mode, CurrentRoute.Tracks[key], firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+			}
+			
 
 			// STATION ICONS
 			for (int i = firstUsedElement; i <= lastUsedElement; i++)
@@ -178,8 +184,8 @@ namespace RouteManager2
 							RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
 								StationDiameter, StationDiameter);
 							bool q = CurrentRoute.Stations[e.StationIndex].PlayerStops();
-							g.FillEllipse(q ? mapColors[mode].actStatnFill : mapColors[mode].inactStatnFill, r);
-							g.DrawEllipse(q ? mapColors[mode].actStatnBrdr : mapColors[mode].inactStatnBrdr, r);
+							g.FillEllipse(q ? mapColors[(int)mode].actStatnFill : mapColors[(int)mode].inactStatnFill, r);
+							g.DrawEllipse(q ? mapColors[(int)mode].actStatnBrdr : mapColors[(int)mode].inactStatnBrdr, r);
 							// adjust bitmap occupied area
 							if (r.Left < xMin)
 								xMin = r.Left;
@@ -258,11 +264,11 @@ namespace RouteManager2
 								else if (yt + m.Height > imageSize.Y)
 									yt = imageSize.Y - m.Height;
 								RectangleF r = new RectangleF((float)xt - 1.0f, (float)yt - 1.0f, m.Width + 2.0f, m.Height + 2.0f);
-								g.FillRectangle(stop ? mapColors[mode].actNameFill : mapColors[mode].inactNameFill,
+								g.FillRectangle(stop ? mapColors[(int)mode].actNameFill : mapColors[(int)mode].inactNameFill,
 									r.Left, r.Top, r.Width, r.Height);
-								g.DrawRectangle(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
+								g.DrawRectangle(stop ? mapColors[(int)mode].actNameBrdr : mapColors[(int)mode].inactNameBrdr,
 									r.Left, r.Top, r.Width, r.Height);
-								g.DrawString(t, f, stop ? mapColors[mode].actNameText : mapColors[mode].inactNameText,
+								g.DrawString(t, f, stop ? mapColors[(int)mode].actNameText : mapColors[(int)mode].inactNameText,
 									(float)xt, (float)yt);
 								// adjust bitmap occupied area
 								if (r.Left < xMin)
@@ -516,11 +522,12 @@ namespace RouteManager2
 			return b;
 		}
 
-		private static void DrawRailPath(Graphics g, int mode, Track currentTrack, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
+		private static void DrawRailPath(Graphics g, MapMode mode, Track currentTrack, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
 		{
 			int start = 0;
 			bool atc = false;
-			int elementsToDraw = lastUsedElement - firstUsedElement + 1;
+			int elementsToDraw = Math.Min(lastUsedElement - firstUsedElement + 1, currentTrack.Elements.Length - firstUsedElement);
+
 			PointF[] p = new PointF[elementsToDraw];
 			for (int i = 0; i < elementsToDraw; i++)
 			{
@@ -529,9 +536,13 @@ namespace RouteManager2
 				x = imageOrigin.X + (x - x0) * imageScale.X;
 				z = imageOrigin.Y + (z0 - z) * imageScale.Y + imageSize.Y;
 				p[i] = new PointF((float)x, (float)z);
+				if (currentTrack.Elements[i].Events == null)
+				{
+					continue;
+				}
 				// ATS / ATC
 				// for each track element, look for a StationStartEvent
-				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i + firstUsedElement].Events.Length; j++)
+				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Length; j++)
 				{
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is StationStartEvent)
 					{
@@ -546,7 +557,7 @@ namespace RouteManager2
 							{
 								atc = true;
 								if (i - start - 1 > 0)
-									g.DrawCurve(mapColors[mode].normalMap, p, start, i - start - 1);
+									g.DrawCurve(mapColors[(int)mode].normalMap, p, start, i - start - 1);
 								start = i;
 							}
 						}
@@ -556,7 +567,7 @@ namespace RouteManager2
 							{
 								atc = false;
 								if (i - start - 1 > 0)
-									g.DrawCurve(mapColors[mode].atcMap, p, start, i - start - 1);
+									g.DrawCurve(mapColors[(int)mode].atcMap, p, start, i - start - 1);
 								start = i;
 							}
 						}
@@ -565,15 +576,16 @@ namespace RouteManager2
 				}
 			}
 
-			try
+			if (mode == MapMode.SecondaryTrack)
 			{
-				DrawSegmentedCurve(g, atc ? mapColors[mode].atcMap : mapColors[mode].normalMap, p, start, elementsToDraw - start - 1);
+				//TODO: Store / get color from track
+				DrawSegmentedCurve(g, Pens.Blue, p, start, elementsToDraw - start - 1);
 			}
-			catch (Exception e)
+			else
 			{
-				//Console.WriteLine(e);
-				//throw;
+				DrawSegmentedCurve(g, atc ? mapColors[(int)mode].atcMap : mapColors[(int)mode].normalMap, p, start, elementsToDraw - start - 1);
 			}
+			
 			// draw all remaining track element not drawn yet
 			
 		}
