@@ -884,12 +884,17 @@ namespace CsvRwRouteParser
 									f = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
 								}
 
-								if (!System.IO.File.Exists(f) && Plugin.CurrentOptions.EnableBveTsHacks)
+								if (!File.Exists(f) && Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 									if (Arguments[0].StartsWith("Midland Suburban Line", StringComparison.InvariantCultureIgnoreCase))
 									{
 										Arguments[0] = "Midland Suburban Line Objects" + Arguments[0].Substring(21);
 										f = Path.CombineFile(ObjectPath, Arguments[0]);
+									}
+									else if (commandIndices[0] == 0)
+									{
+										// Background zero is defined but missing- Map to generic replacement, as otherwise some stuff will be completely blank
+										f = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
 									}
 								}
 

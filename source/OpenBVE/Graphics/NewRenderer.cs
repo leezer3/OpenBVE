@@ -55,21 +55,24 @@ namespace OpenBve.Graphics
 		public override void Initialize()
 		{
 			base.Initialize();
-
-			try
+			if (!ForceLegacyOpenGL && Interface.CurrentOptions.IsUseNewRenderer) // GL3 has already failed. Don't trigger unneccessary exceptions
 			{
-				if (pickingShader == null)
+				try
 				{
-					pickingShader = new Shader(this, "default", "picking", true);
+					if (pickingShader == null)
+					{
+						pickingShader = new Shader(this, "default", "picking", true);
+					}
+
+					pickingShader.Activate();
+					pickingShader.Deactivate();
 				}
-				pickingShader.Activate();
-				pickingShader.Deactivate();
-			}
-			catch
-			{
-				Interface.AddMessage(MessageType.Error, false, "Initializing the touch shader failed- Falling back to legacy openGL.");
-				Interface.CurrentOptions.IsUseNewRenderer = false;
-				ForceLegacyOpenGL = true;
+				catch
+				{
+					Interface.AddMessage(MessageType.Error, false, "Initializing the touch shader failed- Falling back to legacy openGL.");
+					Interface.CurrentOptions.IsUseNewRenderer = false;
+					ForceLegacyOpenGL = true;
+				}
 			}
 
 			events = new Events(this);
@@ -77,6 +80,8 @@ namespace OpenBve.Graphics
 			Touch = new Touch(this);
 			ObjectsSortedByStart = new int[] { };
 			ObjectsSortedByEnd = new int[] { };
+			
+			
 			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
 		
@@ -313,7 +318,10 @@ namespace OpenBve.Graphics
 
 			if (Interface.CurrentOptions.MotionBlur != MotionBlurMode.None)
 			{
-				DefaultShader.Deactivate();
+				if (AvailableNewRenderer)
+				{
+					DefaultShader.Deactivate();
+				}
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 			// overlay layer

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -397,12 +397,19 @@ namespace Plugin {
 								if (Content[Position] == ';') {
 									Position++;
 									break;
-								} else if (!char.IsWhiteSpace(Content, Position)) {
+								}
+
+								if (Position > 0 && Content[Position -1] == ';') {
+									// Array not terminated with two semi-colons
+									break;
+								}
+
+								if (!char.IsWhiteSpace(Content, Position)) {
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
-								} else {
-									Position++;
 								}
+
+								Position++;
 							}
 						} else {
 							// non-empty array
@@ -447,12 +454,19 @@ namespace Plugin {
 								if (Content[Position] == ';') {
 									Position++;
 									break;
-								} else if (!char.IsWhiteSpace(Content, Position)) {
+								}
+
+								if (Position > 0 && Content[Position -1] == ';') {
+									// Array not terminated with two semi-colons
+									break;
+								}
+
+								if (!char.IsWhiteSpace(Content, Position)) {
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
-								} else {
-									Position++;
 								}
+
+								Position++;
 							}
 						} else {
 							// non-empty array
@@ -498,16 +512,25 @@ namespace Plugin {
 								if (Content[Position] == ';') {
 									Position++;
 									break;
-								} else if (Content[Position] == '}' && Position == Content.Length -1 && Template.Members[m].StartsWith("MeshFace")) {
+								}
+								
+								if (Position > 0 && Content[Position - 1] == ';') {
+									// Array not terminated with two semi-colons
+									break;
+								}
+
+								if (Content[Position] == '}' && Position == Content.Length -1 && Template.Members[m].StartsWith("MeshFace")) {
 									// A mesh has been provided, but no faces etc.
 									// Usually found in null objects
 									break;
-								} else if (!char.IsWhiteSpace(Content, Position)) {
+								}
+								
+								if (!char.IsWhiteSpace(Content, Position)) {
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
-								} else {
-									Position++;
 								}
+
+								Position++;
 							}
 						} else {
 							int k;

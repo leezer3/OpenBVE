@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -63,11 +63,13 @@
       <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.2\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="formMessages.cs">
@@ -81,6 +83,12 @@
     </Compile>
     <Compile Include="formOptions.Designer.cs">
       <DependentUpon>formOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="formRailPaths.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formRailPaths.Designer.cs">
+      <DependentUpon>formRailPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="Game\MessageManager.cs" />
@@ -101,6 +109,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="formOptions.resx">
       <DependentUpon>formOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formRailPaths.resx">
+      <DependentUpon>formRailPaths.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

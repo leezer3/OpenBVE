@@ -96,7 +96,12 @@ namespace OpenBveApi.Objects
 		public bool isTimeTableObject;
 		/// <summary>Sets whether the openGL VAO should be updated by the renderer this frame</summary>
 		public bool UpdateVAO;
-		
+		/// <summary>Whether the object forms part of a train</summary>
+		public bool IsPartOfTrain;
+		/// <summary>The signalling section the object refers to</summary>
+		/// <remarks>This only applies to objects placed using the Track.Sig command</remarks>
+		public int SectionIndex;
+
 		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host)
 		{
@@ -137,6 +142,8 @@ namespace OpenBveApi.Objects
 			Result.LEDClockwiseWinding = this.LEDClockwiseWinding;
 			Result.LEDInitialAngle = this.LEDInitialAngle;
 			Result.LEDLastAngle = this.LEDLastAngle;
+			Result.SectionIndex = this.SectionIndex;
+			Result.IsPartOfTrain = false; // will be set by the CarSection load if appropriate
 			if (this.LEDVectors != null)
 			{
 				Result.LEDVectors = new Vector3[this.LEDVectors.Length];
@@ -204,10 +211,8 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary> Updates the position and state of the animated object</summary>
-		/// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
 		/// <param name="Train">The train, or a null reference otherwise</param>
 		/// <param name="CarIndex">If this object forms part of a train, the car index it refers to</param>
-		/// <param name="SectionIndex">If this object has been placed via Track.Sig, the index of the section it is attached to</param>
 		/// <param name="TrackPosition"></param>
 		/// <param name="Position"></param>
 		/// <param name="Direction"></param>
@@ -219,7 +224,7 @@ namespace OpenBveApi.Objects
 		/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
 		/// <param name="IsTouch">Whether Animated Object belonging to TouchElement class.</param>
 		/// <param name="Camera"></param>
-		public void Update(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false, dynamic Camera = null)
+		public void Update(AbstractTrain Train, int CarIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false, dynamic Camera = null)
 		{
 			// state change
 			if (StateFunction != null & UpdateFunctions)
@@ -720,7 +725,6 @@ namespace OpenBveApi.Objects
 					Up = FinalTransformation.Y,
 					Side = FinalTransformation.X,
 					Object = o,
-					SectionIndex = SectionIndex,
 					TrackPosition = TrackPosition,
 				};
 

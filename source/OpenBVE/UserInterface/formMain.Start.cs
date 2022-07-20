@@ -1504,16 +1504,19 @@ namespace OpenBve
 			// train not found
 			Result.TrainFolder = null;
 			TryLoadImage(pictureboxTrainImage, "train_error.png");
-			textboxTrainDescription.Text = (Translations.GetInterfaceString("start_train_notfound") + Interface.CurrentOptions.TrainName).ConvertNewlinesToCrLf();
-			comboboxTrainEncoding.Tag = new object();
-			comboboxTrainEncoding.SelectedIndex = 0;
-			comboboxTrainEncoding.Tag = null;
-			labelTrainEncoding.Enabled = false;
-			panelTrainEncoding.Enabled = false;
-			labelTrainEncodingPreview.Enabled = false;
-			textboxTrainEncodingPreview.Enabled = false;
-			textboxTrainEncodingPreview.Text = "";
-			groupboxTrainDetails.Visible = true;
+			lock (previewLock)
+			{
+				textboxTrainDescription.Text = (Translations.GetInterfaceString("start_train_notfound") + Interface.CurrentOptions.TrainName).ConvertNewlinesToCrLf();
+				comboboxTrainEncoding.Tag = new object();
+				comboboxTrainEncoding.SelectedIndex = 0;
+				comboboxTrainEncoding.Tag = null;
+				labelTrainEncoding.Enabled = false;
+				panelTrainEncoding.Enabled = false;
+				labelTrainEncodingPreview.Enabled = false;
+				textboxTrainEncodingPreview.Enabled = false;
+				textboxTrainEncodingPreview.Text = "";
+				groupboxTrainDetails.Visible = Result.RouteFile != null;
+			}
 		}
 
 	}

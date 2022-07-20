@@ -409,7 +409,7 @@ namespace Train.OpenBve
 							if (n + 1 >= CarSection.Groups.Length)
 							{
 								Array.Resize(ref CarSection.Groups, n + 2);
-								CarSection.Groups[n + 1] = new ElementsGroup(ObjectType.Overlay);
+								CarSection.Groups[n + 1] = new ElementsGroup();
 							}
 
 							ParsePanelNode(SectionElement, FileName, Train, Car, ref CarSection, n + 1, Layer, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter.X, PanelCenter.Y, PanelOriginX, PanelOriginY);

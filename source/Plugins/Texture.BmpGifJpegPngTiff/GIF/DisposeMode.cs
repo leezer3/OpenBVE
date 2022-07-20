@@ -1,4 +1,4 @@
-﻿namespace Plugin
+﻿namespace Plugin.GIF
 {
 	/// <summary>The available disposal modes for a GIF frame</summary>
 	internal enum DisposeMode

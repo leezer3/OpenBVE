@@ -174,12 +174,13 @@ namespace OpenBve
 				this.CursorFileName = "nk.png";
 				this.Panel2ExtendedMode = false;
 				this.Panel2ExtendedMinSize = 128;
-				this.CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
+				this.CurrentXParser = XParsers.NewXParser; //Set to new X parser by default
 				this.CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
 				this.CursorHideDelay = 10;
 				this.Accessibility = false;
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
+				this.IsUseNewRenderer = true;
 			}
 		}
 		/// <summary>The current game options</summary>

@@ -20,7 +20,7 @@ namespace CsvRwRouteParser
 		private int CurrentStop = -1;
 		private int CurrentSection = 0;
 		private bool DepartureSignalUsed = false;
-		private void ParseTrackCommand(TrackCommand Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly, int RailIndex = 0)
+		private void ParseTrackCommand(TrackCommand Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly, bool IsRw, int RailIndex = 0)
 		{
 			switch (Command)
 			{
@@ -2394,8 +2394,18 @@ namespace CsvRwRouteParser
 								}
 								else
 								{
+									Color24? transparentColor = new Color24(64, 64, 64);
 									OpenBveApi.Textures.Texture t;
-									Plugin.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
+									if (Plugin.CurrentOptions.EnableBveTsHacks && IsRw)
+									{
+										/*
+										 * RW routes were only for BVE1 / BVE2
+										 * This had markers in a black sidebar, so transparency should not be used here as it may produce odd results
+										 */
+										transparentColor = null;
+									}
+									Plugin.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, transparentColor), out t);
+									
 									message = new MarkerImage(Plugin.CurrentHost, t);
 								}
 

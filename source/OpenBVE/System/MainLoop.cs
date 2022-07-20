@@ -359,6 +359,9 @@ namespace OpenBve
 				switch (Interface.CurrentControls[i].Component)
 				{
 					case JoystickComponent.Axis:
+						// Assume that a joystick axis fulfills the criteria for the handle to be 'held' in place
+						TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+						TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
 						var axisState = Program.Joysticks.GetAxis(currentDevice, Interface.CurrentControls[i].Element);
 						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 						{
@@ -444,6 +447,9 @@ namespace OpenBve
 						//Test whether the state is the same as the last frame
 						if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
 						{
+							// Attempt to reset handle spring
+							TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+							TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
 							if (buttonState == ButtonState.Pressed)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
@@ -466,6 +472,9 @@ namespace OpenBve
 						//Test if the state is the same as last frame
 						if (hatState.ToString() != Interface.CurrentControls[i].LastState)
 						{
+							// Attempt to reset handle spring
+							TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+							TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
 							if ((int)hatState == Interface.CurrentControls[i].Direction)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
@@ -536,6 +545,10 @@ namespace OpenBve
 		/// <summary>Checks whether an OpenGL error has occured this frame</summary>
 		/// <param name="Location">The location of the caller (The main loop or the loading screen loop)</param>
 		internal static void CheckForOpenGlError(string Location) {
+			if (Program.Renderer.ReShadeInUse)
+			{
+				return;
+			}
 			var error = GL.GetError();
 			if (error != ErrorCode.NoError) {
 				string message = Location + ": ";

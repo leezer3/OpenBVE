@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Runtime;
+using OpenBveApi.Runtime;
 
 namespace Plugin {
 	/// <summary>The interface to be implemented by the plugin.</summary>
@@ -16,6 +16,10 @@ namespace Plugin {
 		/// <param name="properties">The properties supplied to the plugin on loading.</param>
 		/// <returns>Whether the plugin was loaded successfully.</returns>
 		public bool Load(LoadProperties properties) {
+			if (string.IsNullOrEmpty(properties.TrainFolder))
+			{
+				return false;
+			}
 			properties.Panel = new int[272];
 			properties.AISupport = AISupport.Basic;
 			this.Train = new Train(properties.Panel, properties.PlaySound);

@@ -449,6 +449,8 @@ namespace CarXmlConvertor
 						newLines.Add("<ReadhesionDevice>NotFitted</ReadhesionDevice>");
 						break;
 				}
+				newLines.Add("<Power>");
+				newLines.Add("<Notches>" + ConvertTrainDat.PowerNotches + "</Notches>");
 				newLines.Add("<AccelerationCurves>");
 				foreach (ConvertTrainDat.AccelerationCurve curve in ConvertTrainDat.AccelerationCurves)
 				{
@@ -461,6 +463,7 @@ namespace CarXmlConvertor
 					newLines.Add("</OpenBVE>");
 				}
 				newLines.Add("</AccelerationCurves>");
+				newLines.Add("</Power>");
 			}
 			else
 			{
@@ -518,6 +521,12 @@ namespace CarXmlConvertor
 				}
 			}
 			newLines.Add("<Brake>");
+			if (i == ConvertTrainDat.DriverCar)
+			{
+				newLines.Add("<Handle>");
+				newLines.Add("<Notches>" + ConvertTrainDat.BrakeNotches + "</Notches>");
+				newLines.Add("</Handle>");
+			}
 			if (ConvertTrainDat.MotorCars[i])
 			{
 
@@ -604,6 +613,7 @@ namespace CarXmlConvertor
 				newLines.Add("<RearAxle>" + -(0.4 * ConvertTrainDat.CarLength) + "</RearAxle>");
 				newLines.Add("</Car>");
 			}
+			newLines.Add("<DriverCar>" + ConvertTrainDat.DriverCar + "</DriverCar>");
 			string pluginFile = ConvertAts.DllPath(System.IO.Path.GetDirectoryName(FileName));
 			if (!string.IsNullOrEmpty(pluginFile))
 			{

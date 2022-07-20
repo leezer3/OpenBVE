@@ -1,4 +1,4 @@
-﻿namespace Plugin
+﻿namespace Plugin.GIF
 {
 	/// <summary>Control codes controlling the next action of the GIF decoder</summary>
 	internal enum ControlCode

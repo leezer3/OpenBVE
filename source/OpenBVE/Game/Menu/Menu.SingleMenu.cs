@@ -484,8 +484,16 @@ namespace OpenBve
 						Program.Joysticks.RefreshJoysticks();
 						Items = new MenuEntry[Interface.CurrentControls.Length + 1];
 						Items[0] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
+						int ci = 1;
 						for (i = 0; i < Interface.CurrentControls.Length; i++)
-							Items[i + 1] = new MenuCommand(Interface.CurrentControls[i].Command.ToString(), MenuTag.Control, i);
+						{
+							if (Interface.CurrentControls[i].Command != Translations.Command.None)
+							{
+								Items[ci] = new MenuCommand(Interface.CurrentControls[i].Command.ToString(), MenuTag.Control, i);
+								ci++;
+							}
+						}
+						Array.Resize(ref Items, ci);
 						if (Instance.Menus[0].Type == MenuType.GameStart)
 						{
 							// If the first menu in the current stack is the GL game menu, use left-align

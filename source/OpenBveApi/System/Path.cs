@@ -110,7 +110,16 @@ namespace OpenBveApi {
 			}
 			return absolute + queryString;
 		}
-		
+
+		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a directory.</summary>
+		/// <param name="absolute">The platform-specific absolute path.</param>
+		/// <param name="relative">The platform-independent relative path.</param>
+		/// <returns>A platform-specific absolute path to the specified directory.</returns>
+		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
+		public static string CombineDirectory(string absolute, string relative) {
+			return CombineDirectory(absolute, relative, false);
+		}
+
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a file.</summary>
 		/// <param name="absolute">The platform-specific absolute path.</param>
 		/// <param name="relative">The platform-independent relative path.</param>

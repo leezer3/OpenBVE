@@ -19,8 +19,12 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using LibRender2.Overlays;
+using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -59,6 +63,8 @@ namespace RouteViewer
 		internal static Sounds Sounds;
 
 		internal static TrainManager TrainManager;
+
+		internal static formRailPaths pathForm;
 
 			// main
 		[STAThread]
@@ -199,6 +205,31 @@ namespace RouteViewer
 			}
 			Renderer.Lighting.Initialize();
 			Renderer.InitializeVisibility();
+			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
+			{
+				int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+					
+				if (!Renderer.trackColors.ContainsKey(key))
+				{
+					if (key == 0)
+					{
+						Renderer.trackColors.Add(key, new RailPath(CurrentHost, Renderer, key, Program.CurrentRoute.BlockLength, Color24.Red));
+						Renderer.usedTrackColors.Add(5);
+					}
+					else
+					{
+						var randomGenerator = new Random();
+						int colorIdx = 5; // known value already in list to make our while loop easy
+						while (Renderer.usedTrackColors.Contains(colorIdx))
+						{
+							colorIdx = randomGenerator.Next(0, 255);
+						}
+						Renderer.usedTrackColors.Add(colorIdx);
+						Renderer.trackColors.Add(key, new RailPath(Program.CurrentHost, Renderer, key, Program.CurrentRoute.BlockLength, ColorPalettes.Windows256ColorPalette[colorIdx])); //use the 256 color Windows pallette for a decent set of contrasting colors	
+					}
+				}
+				Renderer.trackColors[key].Render();
+			}
 			return result;
 		}
 
@@ -340,6 +371,7 @@ namespace RouteViewer
 				case Key.F5:
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
+						
 						Bitmap bitmap = null;
 						CurrentlyLoading = true;
 						Renderer.OptionInterface = false;
@@ -353,6 +385,7 @@ namespace RouteViewer
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 						}
+						Renderer.Initialize();
 						CameraAlignment a = Renderer.Camera.Alignment;
 						if (LoadRoute(bitmap))
 						{
@@ -658,6 +691,32 @@ namespace RouteViewer
 					break;
 				case Key.R:
 					Renderer.SwitchOpenGLVersion();
+					break;
+				case Key.P:
+					if (CurrentRouteFile != null && CurrentlyLoading == false)
+					{
+						if (pathForm == null || pathForm.IsDisposed)
+						{
+							pathForm = new formRailPaths();
+						}
+						// Must be shown as a dialog box on Linux for paint events to work....
+						if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+						{
+							if (!pathForm.Visible)
+							{
+								pathForm.Show();
+							}
+							
+						}
+						else
+						{
+							pathForm.ShowDialog();
+							Application.DoEvents();
+						}
+
+					}
+					
+					//pathForm.ShowDialog();
 					break;
 			}
 		}

@@ -59,6 +59,10 @@ namespace TrainManager
 			{
 				Train.Cars[i].Specs.RollDueToTopplingAngle = 0.0;
 				Train.Cars[i].Derailed = false;
+				if (Train.Cars[i].Specs.IsMotorCar && Train.Cars[i].Sounds.Loop != null)
+				{
+					Train.Cars[i].Sounds.Loop.Play(Train.Cars[i], true);
+				}
 			}
 		}
 

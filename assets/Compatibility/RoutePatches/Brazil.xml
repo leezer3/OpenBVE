@@ -4,6 +4,8 @@
 		<Hash>F0D6AC84D94F63144F9ED5497CDF7697BDB45FF11223E2C001CF8BDA943D4E66</Hash>
 		<FileName>Jundiai-Francisco Morato.rw</FileName>
 		<LineEndingFix>true</LineEndingFix>
+		<!-- Fixes some randomly disappearing platform canopies -->
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>F92E0E2DFF6DCBB71E47B0083FD33B42104C2FA544BFD0DA04BEB78094D9836E</Hash>

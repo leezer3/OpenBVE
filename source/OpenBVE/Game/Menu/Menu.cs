@@ -1083,7 +1083,10 @@ namespace OpenBve
 				 * HACK: This is a property method, and is also used to
 				 * reset the timer and display string back to the starting values
 				 */
-				menu.Items[i].DisplayLength = menu.Items[i].DisplayLength;
+				if (menu.Items[i] != null)
+				{
+					menu.Items[i].DisplayLength = menu.Items[i].DisplayLength;
+				}
 			}
 
 			// HORIZONTAL PLACEMENT

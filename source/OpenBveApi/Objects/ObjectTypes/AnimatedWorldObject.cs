@@ -31,7 +31,7 @@ namespace OpenBveApi.Objects
 				{
 					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
-					Object.Update(false, NearestTrain, NearestTrain?.DriverCar ?? 0, SectionIndex, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(NearestTrain, NearestTrain?.DriverCar ?? 0, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
 				}
 				else
 				{

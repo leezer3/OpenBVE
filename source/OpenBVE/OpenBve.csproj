@@ -422,12 +422,12 @@
   <PropertyGroup>
     <!-- Generate AssemblyInfo.cs -->
     <!-- NOTE: Microsoft.TextTemplating.targets cannot process files that contain LF. -->
-    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">$(ProjectDir)..\DevTools\TextTransform\TextTransform.exe $(ProjectDir)\Properties\AssemblyInfo.tt</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">"$(ProjectDir)..\DevTools\TextTransform\TextTransform.exe" "$(ProjectDir)Properties\AssemblyInfo.tt"</PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">mono $(ProjectDir)../DevTools/TextTransform/TextTransform.exe $(ProjectDir)Properties/AssemblyInfo.tt</PreBuildEvent>
   </PropertyGroup>
   <Target Name="AfterBuild">
     <!-- Set LBA flag -->
-    <Exec Condition="'$(OS)' != 'Unix'" Command="$(TargetDir)DevTools\LBAHeader.exe $(TargetDir)OpenBve.exe" />
+    <Exec Condition="'$(OS)' != 'Unix'" Command='"$(TargetDir)DevTools\LBAHeader.exe" "$(TargetDir)OpenBve.exe"' />
     <Exec Condition="'$(OS)' == 'Unix'" Command="mono $(TargetDir)DevTools/LBAHeader.exe $(TargetDir)OpenBve.exe" />
     <!-- Copy in dependancies -->
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->

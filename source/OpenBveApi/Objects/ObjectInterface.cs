@@ -46,7 +46,7 @@
 		/// <param name="path">The path to the file or folder that contains the object.</param>
 		/// <param name="unifiedObject">Receives the object.</param>
 		/// <param name="Encoding">The encoding for the object</param>
-		/// <returns>Whether loading the texture was successful.</returns>
+		/// <returns>Whether loading the object was successful.</returns>
 		public abstract bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject);
 	}
 
@@ -64,5 +64,7 @@
 		/// <summary>Semi-transparent faces are disabled</summary>
 		/// <remarks>BVE2 did not support semi-transparent faces</remarks>
 		public bool DisableSemiTransparentFaces;
+		/// <summary>Whether aggressive RW bracket fixing is performed</summary>
+		public bool AggressiveRwBrackets;
 	}
 }

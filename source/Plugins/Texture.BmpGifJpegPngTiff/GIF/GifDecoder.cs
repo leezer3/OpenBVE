@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using OpenBveApi.Math;
 
-namespace Plugin
+namespace Plugin.GIF
 { 
 	/*
 	* No copyright asserted on the source code of this class.  May be used for

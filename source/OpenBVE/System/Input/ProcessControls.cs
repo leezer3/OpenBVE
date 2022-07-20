@@ -178,6 +178,9 @@ namespace OpenBve
 										break;
 									case Translations.Command.MiscFullscreen:
 										Screen.ToggleFullscreen();
+										Interface.CurrentControls[i].AnalogState = 0.0;
+										Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
+										RemoveControlRepeat(i);
 										break;
 									case Translations.Command.MiscMute:
 										Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
@@ -1826,6 +1829,9 @@ namespace OpenBve
 									case Translations.Command.MiscFullscreen:
 										// toggle fullscreen
 										Screen.ToggleFullscreen();
+										Interface.CurrentControls[i].AnalogState = 0.0;
+										Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
+										RemoveControlRepeat(i);
 										break;
 									case Translations.Command.MiscMute:
 										// mute

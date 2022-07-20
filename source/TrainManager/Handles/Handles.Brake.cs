@@ -52,10 +52,24 @@ namespace TrainManager.Handles
 					RemoveChanges(1);
 				}
 			}
+
+			// Spring increase
+			if (SpringType != SpringType.Unsprung && SpringTime > 0)
+			{
+				if (TrainManagerBase.currentHost.InGameTime > SpringTimer)
+				{
+					ApplyState(1, true);
+				}
+			}
 		}
 
 		public override void ApplyState(int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
 		{
+			if (baseTrain.Handles.Power.SpringType > SpringType.Single)
+			{
+				baseTrain.Handles.Power.SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
+			}
+			SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
 			int b = BrakeRelative ? BrakeValue + Driver : BrakeValue;
 			if (b < 0)
 			{

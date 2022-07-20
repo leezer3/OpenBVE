@@ -175,6 +175,7 @@
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+						<target state="translated">A linha seleccionada está corrompida: \r\n Não é possível localizar todos os objectos definidos.</target>
 					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
@@ -210,9 +211,11 @@
 					</trans-unit>
 					<trans-unit id="database_newer_expected">
 						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+						<target state="translated">A versão da base de dados do pacote parece ser mais recente que a suportada por esta edição do OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="database_invalid_xml">
 						<source>The package database XML was invalid, and has been re-created.</source>
+						<target state="translated">A base de dados XML do pacote é inválida e foi recreada.</target>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -2732,7 +2735,7 @@
 					</trans-unit>
 					<trans-unit id="main_breaker">
 						<source>Toggles the main breaker</source>
-						<target>Disjunctor principal</target>
+						<target state="translated">Disjuntor principal</target>
 					</trans-unit>
 				</group>
 				<group id="keys">
