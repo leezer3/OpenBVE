@@ -47,8 +47,23 @@ namespace RouteManager2.Stations
 			int j = -1;
 			for (int i = Stops.Length - 1; i >= 0; i--)
 			{
-				if (Cars <= Stops[i].Cars | Stops[i].Cars == 0)
+				if (Cars == Stops[i].Cars)
 				{
+					 // If we have found the specified number of cars, stop searching
+					 j = i;
+					break;
+				}
+				if (Cars < Stops[i].Cars | Stops[i].Cars == 0)
+				{
+					/*
+					 * The stop has greater than the specified number of cars (hence all cars will be platformed)
+					 * or is an all car stop, we should continue searching, in case there is a better candidate.
+					 */
+					if (j != -1 && Stops[i].Cars > Stops[j].Cars)
+					{
+						// If we already have a candidate, and the new candidate has more cars, ignore it (we should assume that we want to stop as close to the facilities as possible)
+						continue;
+					}
 					j = i;
 				}
 			}
