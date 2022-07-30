@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -45,15 +45,19 @@ namespace RouteManager2.Stations
 		public int GetStopIndex(int Cars)
 		{
 			int j = -1;
+			int allCars = -1;
 			for (int i = Stops.Length - 1; i >= 0; i--)
 			{
 				if (Cars == Stops[i].Cars)
 				{
 					 // If we have found the specified number of cars, stop searching
-					 j = i;
-					break;
+					 return i;
 				}
-				if (Cars < Stops[i].Cars | Stops[i].Cars == 0)
+				if (Stops[i].Cars == 0)
+				{
+					allCars = j;
+				}
+				if (Stops[i].Cars != 0 && Cars < Stops[i].Cars)
 				{
 					/*
 					 * The stop has greater than the specified number of cars (hence all cars will be platformed)
@@ -67,11 +71,19 @@ namespace RouteManager2.Stations
 					j = i;
 				}
 			}
-			if (j == -1)
+
+			if (allCars != -1)
 			{
-				return Stops.Length - 1;
+				// No specific stop point, but an all car stop- Return this
+				return allCars;
 			}
-			return j;
+			if (j != -1)
+			{
+				// No specific stop point or all-car stop, so return the stop point with the smallest number of cars above
+				return j;
+			}
+			// Return the final stop point, as nothing better :/
+			return Stops.Length -1;
 		}
 
 		/// <summary>Indicates whether the specified train stops at this station.</summary>
