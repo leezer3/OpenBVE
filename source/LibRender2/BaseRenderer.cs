@@ -1032,7 +1032,7 @@ namespace LibRender2
 
 
 		// Cached object state and matricies for shader drawing
-		protected ObjectState lastObjectState;
+		protected internal ObjectState lastObjectState;
 		private Matrix4D lastModelMatrix;
 		private Matrix4D lastModelViewMatrix;
 		private bool sendToShader;
@@ -1068,7 +1068,6 @@ namespace LibRender2
 		{
 			if (State != lastObjectState || State.Prototype.Dynamic)
 			{
-				lastObjectState = State;
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
 				sendToShader = true;
@@ -1279,6 +1278,7 @@ namespace LibRender2
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
+			lastObjectState = State;
 		}
 
 		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
