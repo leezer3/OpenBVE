@@ -1228,7 +1228,7 @@ namespace LibRender2
 			}
 
 			// nighttime polygon
-			if (material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			if (blendFactor != 0 && material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
 				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
@@ -1486,7 +1486,7 @@ namespace LibRender2
 			}
 
 			// nighttime polygon
-			if (material.NighttimeTexture != null && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			if (blendFactor != 0 && material.NighttimeTexture != null && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
 				GL.Enable(EnableCap.Texture2D);
