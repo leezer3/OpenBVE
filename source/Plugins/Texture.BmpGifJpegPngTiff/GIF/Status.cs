@@ -1,4 +1,4 @@
-﻿namespace Plugin
+﻿namespace Plugin.GIF
 {
 	internal partial class GifDecoder
 	{

@@ -159,7 +159,7 @@ namespace TrainManager.Car
 					updatefunctions = true;
 				}
 
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(true, baseTrain, baseCar.Index, CurrentCarSection, (baseCar.RearAxle.Follower.TrackPosition + connectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
+				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseTrain, baseCar.Index, (baseCar.RearAxle.Follower.TrackPosition + connectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
 			}
 		}
 

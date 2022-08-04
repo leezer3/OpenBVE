@@ -8,5 +8,9 @@
 	<ObjectList>
 		<FileName>UchiboV1Base.xml</FileName>
 	</ObjectList>
+	<!-- Misc stuff -->
+	<ObjectList>
+		<FileName>Misc.xml</FileName>
+	</ObjectList>
   </Compatibility>
 </openBVE>

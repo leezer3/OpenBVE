@@ -355,11 +355,12 @@ namespace Plugin
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
 											if (enabledHacks.BveTsHacks)
 											{
-												if (IsB3D && j == 0 && Arguments[j] == string.Empty)
+												if (j == 0 && string.IsNullOrEmpty(Arguments[j]))
 												{
 													/*
 													* Face ,1,2,3
 													* is interpreted by BVE as Face 0,1,2,3
+													* Applies to both CSV and B3D files
 													*/
 													a[j] = 0;
 												}
@@ -761,6 +762,15 @@ namespace Plugin
 									 */
 									a = 255;
 								}
+								if (enabledHacks.BveTsHacks && !string.IsNullOrEmpty(Builder.Materials[0].DaytimeTexture) && Builder.Materials[0].DaytimeTexture.EndsWith("Loop3\\CF_BW.bmp", StringComparison.InvariantCultureIgnoreCase))
+								{
+									/*
+									 * Glitched container color in Loop v3
+									 * This appears to actually be a 'true' developer typo (same in BVE Structure Viewer) but looks awful so let's fix
+									 */
+									break;
+								}
+
 								int m = Builder.Materials.Length;
 								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
@@ -970,6 +980,12 @@ namespace Plugin
 									b = b < 0 ? 0 : 255;
 								}
 								lastTransparentColor = new Color24((byte) r, (byte) g, (byte) b);
+								int ml = Builder.Materials.Length;
+								if (enabledHacks.BveTsHacks && !string.IsNullOrEmpty(Builder.Materials[ml -1].DaytimeTexture) && Builder.Materials[ml - 1].DaytimeTexture.StartsWith(CompatibilityFolder) && Builder.Materials[ml - 1].DaytimeTexture.IndexOf("Signals\\Static", StringComparison.InvariantCultureIgnoreCase) != -1)
+								{
+									// If using a replaced static signal texture ensure the transparent color is correct
+									lastTransparentColor = new Color24(0, 0, 255);
+								}
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].TransparentColor = lastTransparentColor.Value;
 									Builder.Materials[j].Flags |= MaterialFlags.TransparentColor;

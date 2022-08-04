@@ -108,7 +108,7 @@ namespace Train.OpenBve
 							if (n + 1 >= CarSection.Groups.Length)
 							{
 								Array.Resize(ref CarSection.Groups, n + 2);
-								CarSection.Groups[n + 1] = new ElementsGroup(ObjectType.Overlay);
+								CarSection.Groups[n + 1] = new ElementsGroup();
 							}
 
 							ParsePanelAnimatedNode(SectionElement, FileName, TrainPath, CarSection, n + 1);

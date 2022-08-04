@@ -1,0 +1,14 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+	<Patch>
+		<Hash>063C0CC13D573C216552B8C3E158DD0DCA8375C289B82F9C46997283C4218EA3</Hash>
+		<FileName>egypt.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>587FEB77E59A10A582DBE58B13B41E39F2878248AAF9959C5F7E75F5D18E9782</Hash>
+		<FileName>egyptstorm.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+  </RoutePatches>
+</openBVE>

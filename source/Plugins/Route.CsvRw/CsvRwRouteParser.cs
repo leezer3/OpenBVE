@@ -508,7 +508,7 @@ namespace CsvRwRouteParser {
 									TrackCommand parsedCommand;
 									if (Enum.TryParse(Command, true, out parsedCommand))
 									{
-										ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly);
+										ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly, IsRW);
 									}
 									else
 									{
@@ -528,7 +528,7 @@ namespace CsvRwRouteParser {
 											Command = Command.Substring(period + 1);
 											if (Enum.TryParse(Command, true, out parsedCommand))
 											{
-												ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly);
+												ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly, IsRW);
 											}
 											else
 											{

@@ -409,7 +409,7 @@ namespace Train.OpenBve
 							if (n + 1 >= CarSection.Groups.Length)
 							{
 								Array.Resize(ref CarSection.Groups, n + 2);
-								CarSection.Groups[n + 1] = new ElementsGroup(ObjectType.Overlay);
+								CarSection.Groups[n + 1] = new ElementsGroup();
 							}
 
 							ParsePanelNode(SectionElement, FileName, Train, Car, ref CarSection, n + 1, Layer, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter.X, PanelCenter.Y, PanelOriginX, PanelOriginY);
@@ -1552,7 +1552,7 @@ namespace Train.OpenBve
 							if (Width > 0.0 & Height > 0.0)
 							{
 								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White);
-								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "timetable", false);
+								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "panel2timetable", false);
 								Plugin.currentHost.AddObjectForCustomTimeTable(CarSection.Groups[GroupIndex].Elements[j]);
 							}
 						}

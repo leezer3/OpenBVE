@@ -1219,6 +1219,44 @@ namespace OpenBve {
 							Function.Stack[s] = p1 - p0;
 						}
 						s++; break;
+					case Instructions.DistanceLastStation:
+						if (Train == null)
+						{
+							Function.Stack[s] = 0.0; //Not part of a train, so distance is irrelevant
+						}
+						else
+						{
+							int stationIdx;
+							if (Train.Station >= 0 && Train.StationState != TrainStopState.Completed)
+							{
+								stationIdx = Train.LastStation;
+							}
+							else
+							{
+								stationIdx = Train.LastStation + 1;
+							}
+
+							stationIdx -= 1;
+
+							if (stationIdx < 0)
+							{
+								stationIdx = 0;
+							}
+							
+							int n = Program.CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
+							double p0 = Train.FrontCarTrackPosition();
+							double p1;
+							if (Program.CurrentRoute.Stations[stationIdx].Stops.Length > 0)
+							{
+								p1 = Program.CurrentRoute.Stations[stationIdx].Stops[n].TrackPosition;
+							}
+							else
+							{
+								p1 = Program.CurrentRoute.Stations[stationIdx].DefaultTrackPosition;
+							}
+							Function.Stack[s] = p1 - p0;
+						}
+						s++; break;
 					case Instructions.StopsNextStation:
 						if (Train == null)
 						{

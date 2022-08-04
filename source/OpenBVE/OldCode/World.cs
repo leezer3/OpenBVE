@@ -250,7 +250,7 @@ namespace OpenBve {
 					if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 						int c = TrainManager.PlayerTrain.DriverCar;
 						if (c >= 0) {
-							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || TrainManager.PlayerTrain.Cars[c].CarSections[0].Groups[0].Type != ObjectType.Overlay) {
+							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || TrainManager.PlayerTrain.Cars[c].CarSections[0].Type != ObjectType.Overlay) {
 								d2.Rotate(sF, -TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch);
 								u2.Rotate(sF, -TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch);
 							}

@@ -161,11 +161,14 @@ namespace TrainManager.SafetySystems
 			this.PluginMessage = data.DebugMessage;
 			this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
 			DisableTimeAcceleration = data.DisableTimeAcceleration;
-			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+			if (Train.IsPlayerTrain)
 			{
-				if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
+				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 				{
-					InputDevicePlugin.AvailablePlugins[i].SetElapseData(inputDevicePluginData);
+					if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
+					{
+						InputDevicePlugin.AvailablePlugins[i].SetElapseData(inputDevicePluginData);
+					}
 				}
 			}
 
@@ -562,18 +565,21 @@ namespace TrainManager.SafetySystems
 				if (update)
 				{
 					SetSignal(data);
+					if (Train.IsPlayerTrain)
+					{
+						for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
+						{
+							if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+							{
+								ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+								trainInputDevice.SetSignal(data);
+							}
+						}
+					}
 					this.LastAspects = new int[data.Length];
 					for (int i = 0; i < data.Length; i++)
 					{
 						this.LastAspects[i] = data[i].Aspect;
-					}
-					for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
-					{
-						if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
-						{
-							ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
-							trainInputDevice.SetSignal(data);
-						}
 					}
 				}
 			}
@@ -623,12 +629,15 @@ namespace TrainManager.SafetySystems
 				signal = new SignalData(-1, double.MaxValue);
 			}
 			SetBeacon(new BeaconData(type, optional, signal));
-			for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
+			if (Train.IsPlayerTrain)
 			{
-				if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+				for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
 				{
-					ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
-					trainInputDevice.SetBeacon(new BeaconData(type, optional, signal));
+					if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+					{
+						ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
+						trainInputDevice.SetBeacon(new BeaconData(type, optional, signal));
+					}
 				}
 			}
 		}

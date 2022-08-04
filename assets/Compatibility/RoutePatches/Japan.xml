@@ -75,5 +75,63 @@
 		<Expression Number="1292">.Sta 上大平台信号場(着);;C;0;0;0;0;;;0;</Expression>
 		<ViewingDistance>250</ViewingDistance>
 	</Patch>
+	<!-- cyber_blue_liner -->
+	<!-- BVE2 routefiles -->
+	<Patch>
+		<Hash>C15805011CDB796A82490177DB2C27B9B283B5D233F526193C56D98CC31CFAC3</Hash>
+		<FileName>3828M.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>5AECCC4F118C85EE087F1A13817CBC9CDACD1113084AAF610CDEDA5CC77DAA4C</Hash>
+		<FileName>4005M・Solｦ5Zc・.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>AAC52B524BF32173968009AEAE5A7431842BDCA3CAEE8172F07C7BAC4C0EE3F2</Hash>
+		<FileName>501M・S榮R1Zc・.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>0B1F524C8F04F057824D365B8611861F5C14BF396EAD785AB480F19B57AC3937</Hash>
+		<FileName>3828M(琮) - Copy.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>1AEBA61D24D9A4A1FAEF463D41363C5EDE524D1EEE27B259190B31011D1579FE</Hash>
+		<FileName>3828M(琮).csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>0353DB5FB20E74B282D832F54A2B6CE7BE57046E60A7C34580332BCD77EF827A</Hash>
+		<FileName>3828M(琮鮻菇).csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>612046D34367B302FC911A870FC679723A78BD9DF50A13E99072F39378985613</Hash>
+		<FileName>3828M(LO).csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>0FC0A2681F480D842E69F10D119E427593D55BF5F3A3A0B6BC64FBE3C0BFBF36</Hash>
+		<FileName>3828M(LO).csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- BVE4 routefiles -->
+		<Patch>
+		<Hash>4FD1D5328A90C0E508047D19DEFA91F51FE6D906A90A7BFC4E02525982175D60</Hash>
+		<FileName>3828M(ﾉV・LC魵oｯZ]Z匀+).csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>0D5A5CDED6C1BCC2384DDE28282A1D3CE356EC362013161AEF6D1D254E2FE1BD</Hash>
+		<FileName>4003M・禝糜秬・穉・禀3Zc・.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>5A7E23851B3621FA24FFBAC20AEBD04D89431EDE9CB03F6644B356BF26E2FE92</Hash>
+		<FileName>4005M・Solｦ5Zc・.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>

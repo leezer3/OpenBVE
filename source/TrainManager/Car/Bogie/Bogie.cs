@@ -200,7 +200,7 @@ namespace TrainManager.Car
 					updatefunctions = true;
 				}
 
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(true, baseTrain, baseCar.Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
+				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseTrain, baseCar.Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
 			}
 		}
 
@@ -241,7 +241,7 @@ namespace TrainManager.Car
 					Up.Rotate(d, -baseCar.Specs.RollDueToTopplingAngle - baseCar.Specs.RollDueToCantAngle);
 				}
 				// apply pitching
-				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Groups[0].Type == ObjectType.Overlay)
+				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Type == ObjectType.Overlay)
 				{
 					d.Rotate(s, baseCar.Specs.PitchDueToAccelerationAngle);
 					Up.Rotate(s, baseCar.Specs.PitchDueToAccelerationAngle);

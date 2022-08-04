@@ -295,7 +295,7 @@ namespace ObjectViewer.Graphics
 				else
 				{
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
 					keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "del" }, new[] { "F8" }, new[] { "F10" } };
 					Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
 					OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
@@ -308,8 +308,7 @@ namespace ObjectViewer.Graphics
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
 					keys = new[] { new[] { "F11" } };
 					Keys.Render(Screen.Width - 36, 124, 32, Fonts.SmallFont, keys);
-					keys = new[] { new[] { "R" } };
-					Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+					
 					OpenGlString.Draw(Fonts.SmallFont, $"WireFrame: {(OptionWireFrame ? "on" : "off")}", new Vector2(Screen.Width - 28, 4), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Normals: {(OptionNormals ? "on" : "off")}", new Vector2(Screen.Width - 28, 24), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Lighting: {(Program.LightingTarget == 0 ? "night" : "day")}", new Vector2(Screen.Width - 28, 44), TextAlignment.TopRight, TextColor);
@@ -317,8 +316,13 @@ namespace ObjectViewer.Graphics
 					OpenGlString.Draw(Fonts.SmallFont, $"Background: {GetBackgroundColorName()}", new Vector2(Screen.Width - 28, 84), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - 28, 104), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 44, 124), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Switch renderer type:", new Vector2(Screen.Width - 28, 144), TextAlignment.TopRight, TextColor);
-
+					if (!ForceLegacyOpenGL)
+					{
+						OpenGlString.Draw(Fonts.SmallFont, "Switch renderer type:", new Vector2(Screen.Width - 28, 144), TextAlignment.TopRight, TextColor);
+						keys = new[] { new[] { "R" } };
+						Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+					}
+					
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
