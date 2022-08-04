@@ -63,6 +63,7 @@ namespace OpenBve {
 		[STAThread]
 		private static void Main(string[] args) {
 			// --- load options and controls ---
+			CurrentHost = new Host();
 			try
 			{
 				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
@@ -75,7 +76,7 @@ namespace OpenBve {
 			}
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
-			CurrentHost = new Host();
+			
 			if (CurrentHost.Platform == HostPlatform.FreeBSD)
 			{
 				// The OpenTK X11 backend is broken on FreeBSD, so force SDL2

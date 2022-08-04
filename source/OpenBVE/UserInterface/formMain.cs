@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
@@ -526,12 +527,44 @@ namespace OpenBve {
 			Cursors.ListCursors(comboboxCursor);
 			checkBoxPanel2Extended.Checked = Interface.CurrentOptions.Panel2ExtendedMode;
 			LoadCompatibilitySignalSets();
-			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX)
-			{
-				// This gets us a much better Unicode glyph set
-				SetFont(this.Controls, "Arial Unicode MS");
-			}
+			SetFont(this.Controls, Interface.CurrentOptions.Font);
 			radiobuttonStart_CheckedChanged(this, EventArgs.Empty); // Mono mucks up the button colors and selections if non-default color and we don't reset them
+			string defaultFont = comboBoxFont.Font.Name;
+			comboBoxFont.DataSource = FontFamily.Families.ToList();
+			comboBoxFont.DrawMode = DrawMode.OwnerDrawFixed;
+			InstalledFontCollection systemFonts = new InstalledFontCollection();
+			
+			for (int i = 0; i < comboBoxFont.Items.Count; i++)
+			{
+				if (systemFonts.Families[i].Name == defaultFont)
+				{
+					comboBoxFont.SelectedIndex = i;
+					break;
+				}
+			}
+
+			comboBoxFont.DrawItem += comboBoxFont_DrawItem;
+		}
+
+		private void comboBoxFont_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			FontFamily font = comboBoxFont.Items[comboBoxFont.SelectedIndex] as FontFamily;
+			if (font != null)
+			{
+				SetFont(this.Controls, font.Name);
+				Interface.CurrentOptions.Font = font.Name;
+			}
+			
+		}
+
+		private void comboBoxFont_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			var comboBox = (ComboBox)sender;
+			var fontFamily = (FontFamily)comboBox.Items[e.Index];
+			var font = new Font(fontFamily, comboBox.Font.SizeInPoints);
+
+			e.DrawBackground();
+			e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y);
 		}
 
 		public static void SetFont(Control.ControlCollection ctrls, string fontName)

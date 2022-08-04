@@ -51,10 +51,14 @@ namespace LibRender2.Text
 			}
 		}
 		
-		internal Fonts(HostInterface currentHost, FileSystem fileSystem)
+		internal Fonts(HostInterface currentHost, FileSystem fileSystem, string fontName)
 		{
 			fontCollection = new PrivateFontCollection();
 			FontFamily uiFont = FontFamily.GenericSansSerif;
+			if (!string.IsNullOrEmpty(fontName))
+			{
+				uiFont = new FontFamily(fontName);
+			}
 			switch (currentHost.Platform)
 			{
 				case HostPlatform.AppleOSX:

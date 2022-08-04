@@ -6,6 +6,7 @@ using LibRender2.MotionBlurs;
 using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Packages;
 using SoundManager;
@@ -181,6 +182,15 @@ namespace OpenBve
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
+				if (Program.CurrentHost.Platform == HostPlatform.AppleOSX)
+				{
+					// This gets us a much better Unicode glyph set on Apple
+					this.Font = "Arial Unicode MS";
+				}
+				else
+				{
+					this.Font = "Microsoft Sans Serif";
+				}
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -279,6 +289,9 @@ namespace OpenBve
 											break;
 										case "accessibility":
 											Interface.CurrentOptions.Accessibility = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
+											break;
+										case "font":
+											Interface.CurrentOptions.Font = Value;
 											break;
 									} break;
 								case "display":
@@ -795,6 +808,7 @@ namespace OpenBve
 			Builder.AppendLine("kioskMode = " + (CurrentOptions.KioskMode ? "true" : "false"));
 			Builder.AppendLine("kioskModeTimer = " + CurrentOptions.KioskModeTimer);
 			Builder.AppendLine("accessibility = " + (CurrentOptions.Accessibility ? "true" : "false"));
+			Builder.AppendLine("font = " + CurrentOptions.Font);
 			Builder.AppendLine();
 			Builder.AppendLine("[display]");
 			Builder.AppendLine("preferNativeBackend = " + (CurrentOptions.PreferNativeBackend ? "true" : "false"));

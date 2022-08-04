@@ -283,7 +283,7 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
-			Fonts = new Fonts(currentHost, fileSystem);
+			Fonts = new Fonts(currentHost, fileSystem, currentOptions.Font);
 		}
 
 		/// <summary>
