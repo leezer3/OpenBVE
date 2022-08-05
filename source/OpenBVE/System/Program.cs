@@ -163,8 +163,7 @@ namespace OpenBve {
 			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			
 			// --- check the command-line arguments for route and train ---
-			formMain.MainDialogResult result = new formMain.MainDialogResult();
-			CommandLine.ParseArguments(args, ref result);
+			LaunchParameters result = CommandLine.ParseArguments(args);
 			// --- check whether route and train exist ---
 			if (result.RouteFile != null) {
 				if (!System.IO.File.Exists(result.RouteFile))
@@ -253,7 +252,7 @@ namespace OpenBve {
 				Game.Reset(false);
 			}
 			
-			// --- show the main menu if necessary ---
+			// --- show the main WinForms menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {
 				Joysticks.RefreshJoysticks();
 
@@ -346,7 +345,7 @@ namespace OpenBve {
 						Environment.Exit(0);
 					}
 				} catch (Exception ex) {
-					MessageBox.Show(ex.Message + "\n\nProcess = " + FileSystem.RestartProcess + "\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
 		}

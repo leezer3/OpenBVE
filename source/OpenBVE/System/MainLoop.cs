@@ -34,7 +34,7 @@ namespace OpenBve
 		
 		internal static double timeSinceLastMouseEvent;
 
-		internal static formMain.MainDialogResult currentResult;
+		internal static LaunchParameters currentResult;
 		//		internal static formRouteInformation RouteInformationForm;
 		//		internal static Thread RouteInfoThread;
 		//		internal static bool RouteInfoActive
@@ -50,7 +50,7 @@ namespace OpenBve
 
 		private static double kioskModeTimer;
 
-		internal static void StartLoopEx(formMain.MainDialogResult result)
+		internal static void StartLoopEx(LaunchParameters result)
 		{
 			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)

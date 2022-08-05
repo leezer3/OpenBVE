@@ -33,40 +33,14 @@ namespace OpenBve {
 			get { return base.Text; }
 			set { base.Text = value; }
 		}
-
-		// show main dialog
-		internal struct MainDialogResult
-		{
-			/// <summary>Whether to start the simulation</summary>
-			internal bool Start;
-			/// <summary>The absolute on-disk path of the route file to start the simulation with</summary>
-			internal string RouteFile;
-			/// <summary>The last file an error was encountered on (Used for changing character encodings)</summary>
-			internal string ErrorFile;
-			/// <summary>The text encoding of the selected route file</summary>
-			internal System.Text.Encoding RouteEncoding;
-			/// <summary>The absolute on-disk path of the train folder to start the simulation with</summary>
-			internal string TrainFolder;
-			/// <summary>The text encoding of the selected train</summary>
-			internal System.Text.Encoding TrainEncoding;
-			/// <summary>Whether the consist of the train is to be reversed on start</summary>
-			internal bool ReverseConsist;
-			internal string InitialStation;
-			internal double StartTime;
-			internal bool AIDriver;
-			internal bool FullScreen;
-			internal int Width;
-			internal int Height;
-			/// <summary>Whether to show the experimental GL menu</summary>
-			internal bool ExperimentalGLMenu;
-		}
-		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
+		
+		internal static LaunchParameters ShowMainDialog(LaunchParameters initial)
 		{
 			using (formMain Dialog = new formMain())
 			{
 				Dialog.Result = initial;
 				Dialog.ShowDialog();
-				MainDialogResult result = Dialog.Result;
+				LaunchParameters result = Dialog.Result;
 				//Dispose of the worker thread when closing the form
 				//If it's still running, it attempts to update a non-existant form and crashes nastily
 				Dialog.DisposePreviewRouteThread();
@@ -81,7 +55,7 @@ namespace OpenBve {
 		}
 
 		// members
-		private MainDialogResult Result;
+		private LaunchParameters Result;
 		private int[] EncodingCodepages = new int[0];
 		private Image JoystickImage = null;
 		private Image RailDriverImage = null;
