@@ -50,6 +50,13 @@ echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/local/lib/nuget.exe "$@"' | sudo tee
 sudo chmod 755 /usr/local/bin/nuget
 ```
 
+#### Required Additional System Libraries
+
+- libusb-1.0
+- fonts-noto-cjk [Optional- Gives a better Unicode glyph set in menus etc.]
+- libsdl2 [Optional- Required if SDL2 backend is to be used]
+
+
 ### Mac
 
 - Mono 5.20.1 or later, x86 only
