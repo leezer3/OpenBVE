@@ -543,6 +543,7 @@ namespace OpenBve {
 				}
 			}
 
+			panelOptionsPage2.Visible = false; // Deliberately hide, as changing font can glitch this into visibility
 			comboBoxFont.DrawItem += comboBoxFont_DrawItem;
 		}
 
