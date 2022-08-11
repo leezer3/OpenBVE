@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Drawing;
 using System.Drawing.Text;
 using OpenBveApi.FileSystem;
@@ -57,7 +58,16 @@ namespace LibRender2.Text
 			FontFamily uiFont = FontFamily.GenericSansSerif;
 			if (!string.IsNullOrEmpty(fontName))
 			{
-				uiFont = new FontFamily(fontName);
+				try
+				{
+					FontFamily newFont = new FontFamily(fontName);
+					uiFont = newFont;
+				}
+				catch
+				{
+					currentHost.ReportProblem(ProblemType.InvalidOperation, "Failed to load font " + fontName);
+				}
+				
 			}
 			switch (currentHost.Platform)
 			{

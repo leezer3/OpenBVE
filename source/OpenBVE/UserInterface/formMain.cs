@@ -527,7 +527,15 @@ namespace OpenBve {
 			Cursors.ListCursors(comboboxCursor);
 			checkBoxPanel2Extended.Checked = Interface.CurrentOptions.Panel2ExtendedMode;
 			LoadCompatibilitySignalSets();
-			SetFont(this.Controls, Interface.CurrentOptions.Font);
+			try
+			{
+				SetFont(this.Controls, Interface.CurrentOptions.Font);
+			}
+			catch
+			{
+				// ignore
+			}
+			
 			radiobuttonStart_CheckedChanged(this, EventArgs.Empty); // Mono mucks up the button colors and selections if non-default color and we don't reset them
 			string defaultFont = comboBoxFont.Font.Name;
 			comboBoxFont.DataSource = FontFamily.Families.ToList();
