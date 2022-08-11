@@ -182,14 +182,49 @@ namespace OpenBve
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
-				if (Program.CurrentHost.Platform == HostPlatform.AppleOSX)
+				switch (Program.CurrentHost.Platform)
 				{
-					// This gets us a much better Unicode glyph set on Apple
-					this.Font = "Arial Unicode MS";
-				}
-				else
-				{
-					this.Font = "Microsoft Sans Serif";
+					case HostPlatform.AppleOSX:
+						// This gets us a much better Unicode glyph set on Apple
+						this.Font = "Arial Unicode MS";
+						break;
+					case HostPlatform.FreeBSD:
+					case HostPlatform.GNULinux:
+						/*
+						 * Font support on Mono / Linux is a real mess, nothing with a full Unicode glyph set installed by default
+						 * Try and detect + select a sensible Noto Sans variant based upon our current locale
+						 */
+						CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
+						switch (currentCultureInfo.Name)
+						{
+							case "ru-RU":
+							case "uk-UA":
+							case "ro-RO":
+							case "hu-HU":
+								// Plain Noto Sans has better Cyrillic glyphs
+								this.Font = "Noto Sans Display";
+								break;
+							case "jp-JP":
+							case "zh-TW":
+							case "zh-CN":
+							case "zh-HK":
+								// For JP / CN, use the Japanese version of Noto Sans
+								this.Font = "Noto Sans CJK JP";
+								break;
+							case "ko-KR":
+								// Korean version of Noto Sans
+								this.Font = "Noto Sans CJK KR";
+								break;
+							default:
+								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
+								this.Font = "Noto Sans CJK JP";
+								break;
+						}
+						break;
+					default:
+						// This is what's set by default for WinForms
+						this.Font = "Microsoft Sans Serif";
+						break;
 				}
 			}
 		}
