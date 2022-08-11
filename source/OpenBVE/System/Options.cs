@@ -182,6 +182,7 @@ namespace OpenBve
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
+				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
 					case HostPlatform.AppleOSX:
@@ -194,7 +195,6 @@ namespace OpenBve
 						 * Font support on Mono / Linux is a real mess, nothing with a full Unicode glyph set installed by default
 						 * Try and detect + select a sensible Noto Sans variant based upon our current locale
 						 */
-						CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 						switch (currentCultureInfo.Name)
 						{
 							case "ru-RU":
@@ -218,6 +218,34 @@ namespace OpenBve
 							default:
 								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
 								this.Font = "Noto Sans CJK JP";
+								break;
+						}
+						break;
+					case HostPlatform.WINE:
+						// WINE reports slightly different font names to native
+						switch (currentCultureInfo.Name)
+						{
+							case "ru-RU":
+							case "uk-UA":
+							case "ro-RO":
+							case "hu-HU":
+								// Plain Noto Sans has better Cyrillic glyphs
+								this.Font = "Noto Sans Display Regular";
+								break;
+							case "jp-JP":
+							case "zh-TW":
+							case "zh-CN":
+							case "zh-HK":
+								// For JP / CN, use the Japanese version of Noto Sans
+								this.Font = "Noto Sans CJK JP Regular";
+								break;
+							case "ko-KR":
+								// Korean version of Noto Sans
+								this.Font = "Noto Sans CJK KR Regular";
+								break;
+							default:
+								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
+								this.Font = "Noto Sans CJK JP Regular";
 								break;
 						}
 						break;
