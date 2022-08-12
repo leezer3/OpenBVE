@@ -8,7 +8,7 @@ using OpenBveApi.Hosts;
 namespace LibRender2.Text
 {
 	/// <summary>Provides fonts</summary>
-	public class Fonts
+	public partial class Fonts
 	{
 		/// <summary>Represents a very small sans serif font.</summary>
 		public readonly OpenGlFont VerySmallFont;
@@ -28,6 +28,8 @@ namespace LibRender2.Text
 		public readonly OpenGlFont EvenLargerFont;
 
 		private readonly PrivateFontCollection fontCollection;
+
+		private static HostInterface currentHost;
 
 		/// <summary>Gets the next smallest font</summary>
 		/// <param name="currentFont">The font we require the smaller version for</param>
@@ -52,8 +54,9 @@ namespace LibRender2.Text
 			}
 		}
 		
-		internal Fonts(HostInterface currentHost, FileSystem fileSystem, string fontName)
+		internal Fonts(HostInterface host, FileSystem fileSystem, string fontName)
 		{
+			currentHost = host;
 			fontCollection = new PrivateFontCollection();
 			FontFamily uiFont = FontFamily.GenericSansSerif;
 			if (!string.IsNullOrEmpty(fontName))
@@ -68,13 +71,6 @@ namespace LibRender2.Text
 					currentHost.ReportProblem(ProblemType.InvalidOperation, "Failed to load font " + fontName);
 				}
 				
-			}
-			switch (currentHost.Platform)
-			{
-				case HostPlatform.AppleOSX:
-					// This gets us a much better Unicode glyph set
-					uiFont = new FontFamily("Arial Unicode MS");
-					break;
 			}
 			VerySmallFont = new OpenGlFont(uiFont, 9.0f);
 			SmallFont = new OpenGlFont(uiFont, 12.0f);

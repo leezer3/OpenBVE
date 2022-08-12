@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using LibRender2.MotionBlurs;
+using LibRender2.Text;
 using OpenBve.Input;
 using OpenBve.UserInterface;
 using OpenBveApi;
@@ -19,6 +22,7 @@ using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
 using Control = System.Windows.Forms.Control;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve {
 	internal partial class formMain : Form
@@ -538,13 +542,46 @@ namespace OpenBve {
 			
 			radiobuttonStart_CheckedChanged(this, EventArgs.Empty); // Mono mucks up the button colors and selections if non-default color and we don't reset them
 			string defaultFont = comboBoxFont.Font.Name;
-			comboBoxFont.DataSource = FontFamily.Families.ToList();
-			comboBoxFont.DrawMode = DrawMode.OwnerDrawFixed;
-			InstalledFontCollection systemFonts = new InstalledFontCollection();
 			
+			List<FontFamily> fonts = FontFamily.Families.ToList();
+			List<string> addedFonts = new List<string>();
+			for (int i = fonts.Count - 1; i > 0; i--)
+			{
+				
+				if ((Program.CurrentHost.Platform == HostPlatform.WINE && Fonts.BlockedFonts.Any(f => fonts[i].Name.StartsWith(f))) || (Program.CurrentHost.Platform != HostPlatform.WINE && Fonts.BlockedFonts.Contains(fonts[i].Name)))
+				{
+					fonts.RemoveAt(i);
+					continue;
+				}
+
+				if (Program.CurrentHost.Platform == HostPlatform.WINE && fonts[i].Name.StartsWith("Noto") && !fonts[i].Name.EndsWith("Regular"))
+				{
+					// Dump the bold, italic and stuff from Wine
+					fonts.RemoveAt(i);
+					continue;
+				}
+				/*
+				 * Under Mono, different font weights are returned as a separate font
+				 * Only use the first one, otherwise our list becomes absolutely massive
+				 *
+				 * We have no way to tell these apart (yuck), but the regular weight seems to be returned first normally
+				 *
+				 * Also avoids duplicates elsewhere, if someone has been installing multiple copies
+				 *
+				 * BUG: for some reason, the *first* Mono font box entry is glitched. We'll assume that this is another unavoidable oddity at present
+				 */
+				if (addedFonts.Contains(fonts[i].Name))
+				{
+					fonts.RemoveAt(i);
+					continue;
+				}
+				addedFonts.Add(fonts[i].Name);
+			}
+			comboBoxFont.DataSource = fonts;
+			comboBoxFont.DrawMode = DrawMode.OwnerDrawFixed;
 			for (int i = 0; i < comboBoxFont.Items.Count; i++)
 			{
-				if (systemFonts.Families[i].Name == defaultFont)
+				if (fonts[i].Name == defaultFont)
 				{
 					comboBoxFont.SelectedIndex = i;
 					break;
