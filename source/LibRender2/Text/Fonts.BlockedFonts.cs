@@ -17,6 +17,8 @@ namespace LibRender2.Text
 					case HostPlatform.GNULinux:
 					case HostPlatform.WINE:
 						return linuxBlockedFonts;
+					case HostPlatform.AppleOSX:
+						return appleBlockedFonts;
 				}
 
 				return new List<string>();
@@ -33,6 +35,7 @@ namespace LibRender2.Text
 			"MS Reference Specialty",
 			"MT Extra",
 			"Segoe MDL2 Assets",
+			"Symbol",
 			"Wingdings",
 			"Wingdings 2",
 			"Wingdings 3",
@@ -224,7 +227,80 @@ namespace LibRender2.Text
 			"Wingdings"
 		};
 
-
+		private static readonly List<string> appleBlockedFonts = new List<string>
+		{
+			".Al Bayan PUA",
+			".Al Nile PUA",
+			".Al Tarikh PUA",
+			".Apple Color Emoji UI",
+			".Arabic UI Display",
+			".Arabic UI Text",
+			".Arial Hebrew Desk Interface",
+			".Baghdad PUA",
+			".Damascus PUA",
+			".DecoType Naskh PUA",
+			".Diwan Kufi PUA",
+			".Farah PUA",
+			".Geeza Pro Interface",
+			".Geeza Pro PUA",
+			".KufiStandardGK PUA",
+			".LastResort",
+			".Muna PUA",
+			".Nadeem PUA",
+			".Noto Nastaliq Urdu UI",
+			".Sana PUA",
+			"Apple Braille",
+			"Apple Color Emoji",
+			"Arial Hebrew Scholar",
+			"Arial Hebrew",
+			"Bodoni Ornaments",
+			"Corsiva Hebrew",
+			"Devanagari MT",
+			"Gujarati MT",
+			"Gurmukhi MT",
+			"ITF Devanagari Marathi",
+			"ITF Devanagari",
+			"Kailasa",
+			"Kokonor",
+			"KufiStandardGK",
+			"Mshtakan",
+			"New Peninim MT",
+			"Noto Nastaliq Urdu",
+			"Raanana",
+			"STIXIntegralsD",
+			"STIXIntegralsSm",
+			"STIXIntegralsUp",
+			"STIXIntegralsUpD",
+			"STIXIntegralsUpSm",
+			"STIXNonUnicode",
+			"STIXSizeFiveSym",
+			"STIXSizeFourSym",
+			"STIXSizeOneSym",
+			"STIXSizeThreeSym",
+			"STIXSizeTwoSym",
+			"STIXVariants",
+			"Symbol",
+			"Webdings",
+			"Wingdings 2",
+			"Wingdings 3",
+			"Wingdings",
+			"Zapf Dingbats",
+			"البيان",
+			"التاريخ",
+			"بغداد",
+			"بيروت",
+			"جيزة",
+			"دمشق",
+			"ديوان ثلث",
+			"ديوان كوفي",
+			"صنعاء",
+			"فرح",
+			"منى",
+			"مِصحفي ذهبي",
+			"مِصحفي",
+			"نسخ",
+			"نديم",
+		};
 
 	}
 }
