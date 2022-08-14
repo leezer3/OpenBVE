@@ -597,8 +597,22 @@ namespace OpenBve {
 			FontFamily font = comboBoxFont.Items[comboBoxFont.SelectedIndex] as FontFamily;
 			if (font != null)
 			{
-				SetFont(this.Controls, font.Name);
-				Interface.CurrentOptions.Font = font.Name;
+				string oldFont = Interface.CurrentOptions.Font;
+				try
+				{
+					SetFont(this.Controls, font.Name);
+					Interface.CurrentOptions.Font = font.Name;
+					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, font.Name);
+				}
+				catch
+				{
+					// setting the font failed, so roll back
+					MessageBox.Show(@"Failed to set font " + font.Name);
+					SetFont(this.Controls, oldFont);
+					Interface.CurrentOptions.Font = oldFont;
+					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, oldFont);
+				}
+				
 			}
 			
 		}

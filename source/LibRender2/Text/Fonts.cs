@@ -54,7 +54,7 @@ namespace LibRender2.Text
 			}
 		}
 		
-		internal Fonts(HostInterface host, FileSystem fileSystem, string fontName)
+		public Fonts(HostInterface host, FileSystem fileSystem, string fontName)
 		{
 			currentHost = host;
 			fontCollection = new PrivateFontCollection();
