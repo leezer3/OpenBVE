@@ -50,6 +50,26 @@ namespace LibRender2.Text
 					return EvenLargerFont;
 			}
 		}
+
+		/// <summary>Gets the next largest font</summary>
+		/// <param name="currentFont">The font we require the larger version for</param>
+		/// <returns>The next larger font</returns>
+		public OpenGlFont NextLargestFont(OpenGlFont currentFont)
+		{
+			switch ((int)currentFont.FontSize)
+			{
+				case 9:
+					return SmallFont;
+				case 12:
+					return NormalFont;
+				case 16:
+					return LargeFont;
+				case 21:
+					return VeryLargeFont;
+				default:
+					return EvenLargerFont;
+			}
+		}
 		
 		internal Fonts(HostInterface currentHost, FileSystem fileSystem)
 		{
