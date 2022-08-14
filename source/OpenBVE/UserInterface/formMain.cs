@@ -577,6 +577,8 @@ namespace OpenBve {
 				}
 				addedFonts.Add(fonts[i].Name);
 			}
+			// Fonts can be returned in a random order (no idea why)- sort, ignoring the period that some seem to add at the front
+			fonts.Sort((x, y) => string.Compare(x.Name.TrimStart('.'), y.Name.TrimStart('.'), StringComparison.InvariantCultureIgnoreCase));
 			comboBoxFont.DataSource = fonts;
 			comboBoxFont.DrawMode = DrawMode.OwnerDrawFixed;
 			for (int i = 0; i < comboBoxFont.Items.Count; i++)

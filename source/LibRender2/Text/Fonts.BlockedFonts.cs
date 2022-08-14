@@ -39,7 +39,8 @@ namespace LibRender2.Text
 			"Wingdings",
 			"Wingdings 2",
 			"Wingdings 3",
-			"Webdings"
+			"Webdings",
+			"ZWAdobeF"
 		};
 
 		private static readonly List<string> linuxBlockedFonts = new List<string>
