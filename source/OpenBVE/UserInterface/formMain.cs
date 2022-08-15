@@ -1287,8 +1287,10 @@ namespace OpenBve {
 				string error;
 				Program.CurrentHost.UnloadPlugins(out error);
 			}
-			if (!OpenTK.Configuration.RunningOnMacOS)
+			if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && Program.CurrentHost.Platform != HostPlatform.FreeBSD)
 			{
+				// A FileSystemWatcher may crash when disposed as the game is closing (without launching a route) on these platforms
+				// This is a Mono issue
 				routeWatcher.Dispose();
 				trainWatcher.Dispose();
 			}
