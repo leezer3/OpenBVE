@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using OpenBve.UserInterface;
+using OpenBveApi.Hosts;
 using SharpCompress.Common;
 using SharpCompress.Writers;
 
@@ -33,7 +35,16 @@ namespace OpenBve
 				var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
 				if(File.Exists(file))
 				{
-					Process.Start(file);
+					if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+					{
+						Process.Start(file);
+					}
+					else
+					{
+						
+						formViewLog log = new formViewLog(File.ReadAllText(file));
+						log.ShowDialog();
+					}
 				}
 			}
 			catch
@@ -47,7 +58,15 @@ namespace OpenBve
 			{
 				var directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
 				var file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
-				Process.Start(file.FullName);
+				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+				{
+					Process.Start(file.FullName);
+				}
+				else
+				{
+					formViewLog log = new formViewLog(File.ReadAllText(file.FullName));
+					log.ShowDialog();
+				}
 			}
 			catch
 			{
