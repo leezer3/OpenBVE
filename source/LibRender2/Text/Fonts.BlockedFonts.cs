@@ -14,6 +14,7 @@ namespace LibRender2.Text
 				{
 					case HostPlatform.MicrosoftWindows:
 						return windowsBlockedFonts;
+					case HostPlatform.FreeBSD:
 					case HostPlatform.GNULinux:
 					case HostPlatform.WINE:
 						return linuxBlockedFonts;
@@ -52,6 +53,7 @@ namespace LibRender2.Text
 			"Dingbats",
 			"Droid Sans Fallback",
 			"Noto Color Emoji",
+			"Noto Emoji",
 			"Noto Kufi Arabic",
 			"Noto Music",
 			"Noto Naskh Arabic UI",
@@ -225,7 +227,14 @@ namespace LibRender2.Text
 			"Noto Serif Tibetan",
 			"OpenSymbol",
 			"Standard Symbols L",
-			"Wingdings"
+			"Wingdings",
+			// FreeBSD specific stuff
+			"Cursor",
+			"DejaVu Math TeX Gyre",
+			"Estrangelo Edessa",
+			"Goha-Tibeb Zemen",
+			"Bitstream Charter",
+			"Noto Kufi Arabic"
 		};
 
 		private static readonly List<string> appleBlockedFonts = new List<string>
@@ -302,6 +311,5 @@ namespace LibRender2.Text
 			"نسخ",
 			"نديم",
 		};
-
 	}
 }
