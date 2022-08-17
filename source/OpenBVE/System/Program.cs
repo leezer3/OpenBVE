@@ -136,7 +136,7 @@ namespace OpenBve {
 			
 			//Platform specific startup checks
 			// --- Check if we're running as root, and prompt not to ---
-			if (CurrentHost.Platform == HostPlatform.GNULinux || CurrentHost.Platform == HostPlatform.FreeBSD && (getuid() == 0 || geteuid() == 0))
+			if ((CurrentHost.Platform == HostPlatform.GNULinux || CurrentHost.Platform == HostPlatform.FreeBSD) && (getuid() == 0 || geteuid() == 0))
 			{
 				MessageBox.Show(
 					"You are currently running as the root user, or via the sudo command." + System.Environment.NewLine +

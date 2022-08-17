@@ -202,7 +202,7 @@ namespace OpenBve
 							case "ro-RO":
 							case "hu-HU":
 								// Plain Noto Sans has better Cyrillic glyphs
-								this.Font = "Noto Sans Display";
+								this.Font = "Noto Sans";
 								break;
 							case "jp-JP":
 							case "zh-TW":
@@ -230,7 +230,7 @@ namespace OpenBve
 							case "ro-RO":
 							case "hu-HU":
 								// Plain Noto Sans has better Cyrillic glyphs
-								this.Font = "Noto Sans Display Regular";
+								this.Font = "Noto Sans Regular";
 								break;
 							case "jp-JP":
 							case "zh-TW":
