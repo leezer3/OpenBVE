@@ -878,7 +878,7 @@ namespace CsvRwRouteParser
 								}
 
 								string f = Path.CombineFile(ObjectPath, Arguments[0]);
-								if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0] == "back_mthigh.bmp"))
+								if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0].ToLowerInvariant() == "back_mthigh.bmp" || Arguments[0].ToLowerInvariant() == "bg_fine.bmp"))
 								{
 									//Default background textures supplied with Uchibo for BVE1 / BVE2, so map to something that's not totally black
 									f = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
