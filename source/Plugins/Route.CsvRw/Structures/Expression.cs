@@ -146,7 +146,6 @@ namespace CsvRwRouteParser
 				{
 					bool found = false;
 					int argumentIndex = 0;
-					bool replaced = false;
 					i++;
 					while (i < Text.Length)
 					{
@@ -205,7 +204,6 @@ namespace CsvRwRouteParser
 									if (Text.StartsWith("sta") && i != Text.Length)
 									{
 										Text = Text.Remove(i, 1).Insert(i, "]");
-										replaced = true;
 										continue;
 									}
 									if ((Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase)) && i != Text.Length)
