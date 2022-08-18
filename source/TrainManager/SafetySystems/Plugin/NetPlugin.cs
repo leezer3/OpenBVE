@@ -23,15 +23,15 @@ namespace TrainManager.SafetySystems
 
 			internal SoundHandleEx(double volume, double pitch, SoundSource source)
 			{
-				base.MyVolume = volume;
-				base.MyPitch = pitch;
-				base.MyValid = true;
-				this.Source = source;
+				MyVolume = volume;
+				MyPitch = pitch;
+				MyValid = true;
+				Source = source;
 			}
 
 			internal new void Stop()
 			{
-				base.MyValid = false;
+				MyValid = false;
 				Source.Stop();
 			}
 		}
@@ -59,35 +59,35 @@ namespace TrainManager.SafetySystems
 		/// <param name="train">The base train</param>
 		internal NetPlugin(string pluginFile, string trainFolder, IRuntime api, TrainBase train)
 		{
-			base.PluginTitle = System.IO.Path.GetFileName(pluginFile);
-			base.PluginValid = true;
-			base.PluginMessage = null;
-			base.Train = train;
-			base.Panel = null;
-			base.SupportsAI = AISupport.None;
-			base.LastTime = 0.0;
-			base.LastReverser = -2;
-			base.LastPowerNotch = -1;
-			base.LastBrakeNotch = -1;
-			base.LastAspects = new int[] { };
-			base.LastSection = -1;
-			base.LastException = null;
-			this.PluginFolder = System.IO.Path.GetDirectoryName(pluginFile);
-			this.TrainFolder = trainFolder;
-			this.Api = api;
-			this.SoundHandles = new SoundHandleEx[16];
-			this.SoundHandlesCount = 0;
+			PluginTitle = System.IO.Path.GetFileName(pluginFile);
+			PluginValid = true;
+			PluginMessage = null;
+			Train = train;
+			Panel = null;
+			SupportsAI = AISupport.None;
+			LastTime = 0.0;
+			LastReverser = -2;
+			LastPowerNotch = -1;
+			LastBrakeNotch = -1;
+			LastAspects = new int[] { };
+			LastSection = -1;
+			LastException = null;
+			PluginFolder = System.IO.Path.GetDirectoryName(pluginFile);
+			TrainFolder = trainFolder;
+			Api = api;
+			SoundHandles = new SoundHandleEx[16];
+			SoundHandlesCount = 0;
 		}
 
 		// --- functions ---
 		public override bool Load(VehicleSpecs specs, InitializationModes mode)
 		{
-			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.PlaySound, this.AddInterfaceMessage, this.AddScore);
+			LoadProperties properties = new LoadProperties(PluginFolder, TrainFolder, PlaySound, PlaySound, AddInterfaceMessage, AddScore, OpenDoors, CloseDoors);
 			bool success;
 			try
 			{
-				success = this.Api.Load(properties);
-				base.SupportsAI = properties.AISupport;
+				success = Api.Load(properties);
+				SupportsAI = properties.AISupport;
 			}
 			catch (Exception ex)
 			{
@@ -106,7 +106,7 @@ namespace TrainManager.SafetySystems
 
 			if (success)
 			{
-				base.Panel = properties.Panel ?? new int[] { };
+				Panel = properties.Panel ?? new int[] { };
 #if !DEBUG
 				try {
 #endif
@@ -126,10 +126,10 @@ namespace TrainManager.SafetySystems
 
 			if (properties.FailureReason != null)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for the following reason: " + properties.FailureReason);
+				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " failed to load for the following reason: " + properties.FailureReason);
 				return false;
 			}
-			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for an unspecified reason.");
+			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " failed to load for an unspecified reason.");
 			return false;
 		}
 
@@ -138,7 +138,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.Unload();
+			Api.Unload();
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -152,7 +152,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.Initialize(mode);
+			Api.Initialize(mode);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -170,20 +170,20 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.Elapse(data);
-			for (int i = 0; i < this.SoundHandlesCount; i++)
+			Api.Elapse(data);
+			for (int i = 0; i < SoundHandlesCount; i++)
 			{
-				if (this.SoundHandles[i].Stopped | this.SoundHandles[i].Source.State == SoundSourceState.Stopped)
+				if (SoundHandles[i].Stopped | SoundHandles[i].Source.State == SoundSourceState.Stopped)
 				{
-					this.SoundHandles[i].Stop();
-					this.SoundHandles[i] = this.SoundHandles[this.SoundHandlesCount - 1];
-					this.SoundHandlesCount--;
+					SoundHandles[i].Stop();
+					SoundHandles[i] = SoundHandles[SoundHandlesCount - 1];
+					SoundHandlesCount--;
 					i--;
 				}
 				else
 				{
-					this.SoundHandles[i].Source.Pitch = Math.Max(0.01, this.SoundHandles[i].Pitch);
-					this.SoundHandles[i].Source.Volume = Math.Max(0.0, this.SoundHandles[i].Volume);
+					SoundHandles[i].Source.Pitch = Math.Max(0.01, SoundHandles[i].Pitch);
+					SoundHandles[i].Source.Volume = Math.Max(0.0, SoundHandles[i].Volume);
 				}
 			}
 #if !DEBUG
@@ -199,7 +199,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.SetReverser(reverser);
+			Api.SetReverser(reverser);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -213,7 +213,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.SetPower(powerNotch);
+			Api.SetPower(powerNotch);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -227,7 +227,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.SetBrake(brakeNotch);
+			Api.SetBrake(brakeNotch);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -241,7 +241,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.KeyDown(key);
+			Api.KeyDown(key);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -255,7 +255,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.KeyUp(key);
+			Api.KeyUp(key);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -269,7 +269,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.HornBlow(type);
+			Api.HornBlow(type);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -283,7 +283,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.DoorChange(oldState, newState);
+			Api.DoorChange(oldState, newState);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -297,7 +297,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.SetSignal(signal);
+			Api.SetSignal(signal);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -311,7 +311,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.SetBeacon(beacon);
+			Api.SetBeacon(beacon);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -325,7 +325,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			this.Api.PerformAI(data);
+			Api.PerformAI(data);
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
@@ -353,6 +353,18 @@ namespace TrainManager.SafetySystems
 			TrainManagerBase.currentHost.AddScore(Score, Message, Color, Timeout);
 		}
 
+		/// <summary>May be called from a .Net plugin to open the train doors</summary>
+		internal void OpenDoors(bool left, bool right)
+		{
+			Train.OpenDoors(left, right);
+		}
+
+		/// <summary>May be called from a .Net plugin to close the train doors</summary>
+		internal void CloseDoors(bool left, bool right)
+		{
+			Train.CloseDoors(left, right);
+		}
+
 		/// <summary>May be called from a .Net plugin, in order to play a sound from the driver's car of a train</summary>
 		/// <param name="index">The plugin-based of the sound to play</param>
 		/// <param name="volume">The volume of the sound- A volume of 1.0 represents nominal volume</param>
@@ -361,17 +373,17 @@ namespace TrainManager.SafetySystems
 		/// <returns>The sound handle, or null if not successful</returns>
 		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped)
 		{
-			if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null)
+			if (index >= 0 && index < Train.Cars[Train.DriverCar].Sounds.Plugin.Length && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null)
 			{
-				Train.Cars[Train.DriverCar].Sounds.Plugin[index].Play(pitch, volume, this.Train.Cars[this.Train.DriverCar], looped);
-				if (this.SoundHandlesCount == this.SoundHandles.Length)
+				Train.Cars[Train.DriverCar].Sounds.Plugin[index].Play(pitch, volume, Train.Cars[Train.DriverCar], looped);
+				if (SoundHandlesCount == SoundHandles.Length)
 				{
-					Array.Resize(ref this.SoundHandles, this.SoundHandles.Length << 1);
+					Array.Resize(ref SoundHandles, SoundHandles.Length << 1);
 				}
 
-				this.SoundHandles[this.SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[Train.DriverCar].Sounds.Plugin[index].Source);
-				this.SoundHandlesCount++;
-				return this.SoundHandles[this.SoundHandlesCount - 1];
+				SoundHandles[SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[Train.DriverCar].Sounds.Plugin[index].Source);
+				SoundHandlesCount++;
+				return SoundHandles[SoundHandlesCount - 1];
 			}
 
 			return null;
@@ -386,17 +398,17 @@ namespace TrainManager.SafetySystems
 		/// <returns>The sound handle, or null if not successful</returns>
 		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped, int CarIndex)
 		{
-			if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < this.Train.Cars.Length && CarIndex >= 0)
+			if (index >= 0 && index < Train.Cars[Train.DriverCar].Sounds.Plugin.Length && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < Train.Cars.Length && CarIndex >= 0)
 			{
-				Train.Cars[Train.DriverCar].Sounds.Plugin[index].Play(pitch, volume, this.Train.Cars[CarIndex], looped);
-				if (this.SoundHandlesCount == this.SoundHandles.Length)
+				Train.Cars[Train.DriverCar].Sounds.Plugin[index].Play(pitch, volume, Train.Cars[CarIndex], looped);
+				if (SoundHandlesCount == SoundHandles.Length)
 				{
-					Array.Resize(ref this.SoundHandles, this.SoundHandles.Length << 1);
+					Array.Resize(ref SoundHandles, SoundHandles.Length << 1);
 				}
 
-				this.SoundHandles[this.SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[Train.DriverCar].Sounds.Plugin[index].Source);
-				this.SoundHandlesCount++;
-				return this.SoundHandles[this.SoundHandlesCount - 1];
+				SoundHandles[SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[Train.DriverCar].Sounds.Plugin[index].Source);
+				SoundHandlesCount++;
+				return SoundHandles[SoundHandlesCount - 1];
 			}
 
 			return null;
