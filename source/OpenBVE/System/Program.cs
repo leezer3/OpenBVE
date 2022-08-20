@@ -63,6 +63,7 @@ namespace OpenBve {
 		[STAThread]
 		private static void Main(string[] args) {
 			// --- load options and controls ---
+			CurrentHost = new Host();
 			try
 			{
 				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
@@ -75,7 +76,7 @@ namespace OpenBve {
 			}
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
-			CurrentHost = new Host();
+			
 			if (CurrentHost.Platform == HostPlatform.FreeBSD)
 			{
 				// The OpenTK X11 backend is broken on FreeBSD, so force SDL2
@@ -135,7 +136,7 @@ namespace OpenBve {
 			
 			//Platform specific startup checks
 			// --- Check if we're running as root, and prompt not to ---
-			if (CurrentHost.Platform == HostPlatform.GNULinux && (getuid() == 0 || geteuid() == 0))
+			if ((CurrentHost.Platform == HostPlatform.GNULinux || CurrentHost.Platform == HostPlatform.FreeBSD) && (getuid() == 0 || geteuid() == 0))
 			{
 				MessageBox.Show(
 					"You are currently running as the root user, or via the sudo command." + System.Environment.NewLine +

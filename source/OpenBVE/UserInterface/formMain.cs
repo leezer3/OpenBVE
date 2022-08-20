@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using LibRender2.MotionBlurs;
+using LibRender2.Text;
 using OpenBve.Input;
 using OpenBve.UserInterface;
 using OpenBveApi;
@@ -18,6 +22,7 @@ using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
 using Control = System.Windows.Forms.Control;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve {
 	internal partial class formMain : Form
@@ -500,12 +505,102 @@ namespace OpenBve {
 			Cursors.ListCursors(comboboxCursor);
 			checkBoxPanel2Extended.Checked = Interface.CurrentOptions.Panel2ExtendedMode;
 			LoadCompatibilitySignalSets();
-			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX)
+			try
 			{
-				// This gets us a much better Unicode glyph set
-				SetFont(this.Controls, "Arial Unicode MS");
+				SetFont(this.Controls, Interface.CurrentOptions.Font);
 			}
+			catch
+			{
+				// ignore
+			}
+			
 			radiobuttonStart_CheckedChanged(this, EventArgs.Empty); // Mono mucks up the button colors and selections if non-default color and we don't reset them
+			string defaultFont = comboBoxFont.Font.Name;
+			
+			List<FontFamily> fonts = FontFamily.Families.ToList();
+			List<string> addedFonts = new List<string>();
+			for (int i = fonts.Count - 1; i > 0; i--)
+			{
+				
+				if ((Program.CurrentHost.Platform == HostPlatform.WINE && Fonts.BlockedFonts.Any(f => fonts[i].Name.StartsWith(f))) || (Program.CurrentHost.Platform != HostPlatform.WINE && Fonts.BlockedFonts.Contains(fonts[i].Name)))
+				{
+					fonts.RemoveAt(i);
+					continue;
+				}
+
+				if (Program.CurrentHost.Platform == HostPlatform.WINE && fonts[i].Name.StartsWith("Noto") && !fonts[i].Name.EndsWith("Regular"))
+				{
+					// Dump the bold, italic and stuff from Wine
+					fonts.RemoveAt(i);
+					continue;
+				}
+				/*
+				 * Under Mono, different font weights are returned as a separate font
+				 * Only use the first one, otherwise our list becomes absolutely massive
+				 *
+				 * We have no way to tell these apart (yuck), but the regular weight seems to be returned first normally
+				 *
+				 * Also avoids duplicates elsewhere, if someone has been installing multiple copies
+				 *
+				 * BUG: for some reason, the *first* Mono font box entry is glitched. We'll assume that this is another unavoidable oddity at present
+				 */
+				if (addedFonts.Contains(fonts[i].Name))
+				{
+					fonts.RemoveAt(i);
+					continue;
+				}
+				addedFonts.Add(fonts[i].Name);
+			}
+			// Fonts can be returned in a random order (no idea why)- sort, ignoring the period that some seem to add at the front
+			fonts.Sort((x, y) => string.Compare(x.Name.TrimStart('.'), y.Name.TrimStart('.'), StringComparison.InvariantCultureIgnoreCase));
+			comboBoxFont.DataSource = fonts;
+			comboBoxFont.DrawMode = DrawMode.OwnerDrawFixed;
+			for (int i = 0; i < comboBoxFont.Items.Count; i++)
+			{
+				if (fonts[i].Name == defaultFont)
+				{
+					comboBoxFont.SelectedIndex = i;
+					break;
+				}
+			}
+
+			panelOptionsPage2.Visible = false; // Deliberately hide, as changing font can glitch this into visibility
+			comboBoxFont.DrawItem += comboBoxFont_DrawItem;
+		}
+
+		private void comboBoxFont_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			FontFamily font = comboBoxFont.Items[comboBoxFont.SelectedIndex] as FontFamily;
+			if (font != null)
+			{
+				string oldFont = Interface.CurrentOptions.Font;
+				try
+				{
+					SetFont(this.Controls, font.Name);
+					Interface.CurrentOptions.Font = font.Name;
+					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, font.Name);
+				}
+				catch
+				{
+					// setting the font failed, so roll back
+					MessageBox.Show(@"Failed to set font " + font.Name);
+					SetFont(this.Controls, oldFont);
+					Interface.CurrentOptions.Font = oldFont;
+					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, oldFont);
+				}
+				
+			}
+			
+		}
+
+		private void comboBoxFont_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			var comboBox = (ComboBox)sender;
+			var fontFamily = (FontFamily)comboBox.Items[e.Index];
+			var font = new Font(fontFamily, comboBox.Font.SizeInPoints);
+
+			e.DrawBackground();
+			e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y);
 		}
 
 		public static void SetFont(Control.ControlCollection ctrls, string fontName)
@@ -1166,8 +1261,10 @@ namespace OpenBve {
 				string error;
 				Program.CurrentHost.UnloadPlugins(out error);
 			}
-			if (!OpenTK.Configuration.RunningOnMacOS)
+			if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && Program.CurrentHost.Platform != HostPlatform.FreeBSD)
 			{
+				// A FileSystemWatcher may crash when disposed as the game is closing (without launching a route) on these platforms
+				// This is a Mono issue
 				routeWatcher.Dispose();
 				trainWatcher.Dispose();
 			}
