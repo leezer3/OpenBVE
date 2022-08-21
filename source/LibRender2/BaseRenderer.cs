@@ -283,7 +283,7 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
-			Fonts = new Fonts(currentHost, fileSystem);
+			Fonts = new Fonts(currentHost, fileSystem, currentOptions.Font);
 		}
 
 		/// <summary>
@@ -1032,7 +1032,7 @@ namespace LibRender2
 
 
 		// Cached object state and matricies for shader drawing
-		protected ObjectState lastObjectState;
+		protected internal ObjectState lastObjectState;
 		private Matrix4D lastModelMatrix;
 		private Matrix4D lastModelViewMatrix;
 		private bool sendToShader;
@@ -1066,9 +1066,8 @@ namespace LibRender2
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
-			if (State != lastObjectState && !sendToShader || State.Prototype.Dynamic)
+			if (State != lastObjectState || State.Prototype.Dynamic)
 			{
-				lastObjectState = State;
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
 				sendToShader = true;
@@ -1229,7 +1228,7 @@ namespace LibRender2
 			}
 
 			// nighttime polygon
-			if (material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			if (blendFactor != 0 && material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
 				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
@@ -1279,6 +1278,7 @@ namespace LibRender2
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
+			lastObjectState = State;
 		}
 
 		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
@@ -1486,7 +1486,7 @@ namespace LibRender2
 			}
 
 			// nighttime polygon
-			if (material.NighttimeTexture != null && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			if (blendFactor != 0 && material.NighttimeTexture != null && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
 				GL.Enable(EnableCap.Texture2D);

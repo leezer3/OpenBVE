@@ -1113,14 +1113,14 @@ namespace OpenBve
 		// functions
 		// =========
 
-		private BlockingCollection<MainDialogResult> previewRouteResultQueue;
+		private BlockingCollection<LaunchParameters> previewRouteResultQueue;
 		private CancellationTokenSource previewRouteCancelTokenSource;
 		private Task previewRouteTask;
 		private bool previewRouteIsLoading;
 
 		private void InitializePreviewRouteThread()
 		{
-			previewRouteResultQueue = new BlockingCollection<MainDialogResult>();
+			previewRouteResultQueue = new BlockingCollection<LaunchParameters>();
 			previewRouteCancelTokenSource = new CancellationTokenSource();
 			previewRouteTask = Task.Run(() => PreviewRoute(previewRouteCancelTokenSource.Token));
 		}
@@ -1130,7 +1130,7 @@ namespace OpenBve
 			while (!previewRouteResultQueue.IsCompleted)
 			{
 				// Wait for a item to be put into the queue.
-				MainDialogResult result;
+				LaunchParameters result;
 				try
 				{
 					bool takeSuccess = previewRouteResultQueue.TryTake(out result, Timeout.Infinite, cancelToken);
@@ -1148,7 +1148,7 @@ namespace OpenBve
 
 				// Gets the last item put into the queue at this time.
 				{
-					MainDialogResult tmp;
+					LaunchParameters tmp;
 					while (previewRouteResultQueue.TryTake(out tmp))
 					{
 						result = tmp;
@@ -1186,7 +1186,7 @@ namespace OpenBve
 			}
 		}
 
-		private void PreviewLoadRoute(MainDialogResult result)
+		private void PreviewLoadRoute(LaunchParameters result)
 		{
 			string error; //ignored in this case, background thread
 			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))

@@ -994,6 +994,7 @@ namespace RouteViewer {
 						}
 						s++; break;
 					case Instructions.DistanceNextStation:
+					case Instructions.DistanceLastStation:
 					case Instructions.StopsNextStation:
 					case Instructions.NextStation:
 					case Instructions.NextStationStop:

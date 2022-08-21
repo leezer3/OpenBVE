@@ -28,6 +28,12 @@
 		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 		private readonly AddScoreDelegate MyAddScore;
 
+		/// <summary>The callback function for opening the train doors.</summary>
+		private readonly OpenDoorsDelegate MyOpenDoors;
+
+		/// <summary>The callback function for closing the train doors.</summary>
+		private readonly CloseDoorsDelegate MyCloseDoors;
+
 		/// <summary>The extent to which the plugin supports the AI.</summary>
 		private AISupport MyAISupport;
 
@@ -83,6 +89,24 @@
 			}
 		}
 
+		/// <summary>Gets the callback function for opening the train doors</summary>
+		public OpenDoorsDelegate OpenDoors
+		{
+			get
+			{
+				return this.MyOpenDoors;
+			}
+		}
+
+		/// <summary>Gets the callback function for closing the train doors</summary>
+		public CloseDoorsDelegate CloseDoors
+		{
+			get
+			{
+				return this.MyCloseDoors;
+			}
+		}
+
 		/// <summary>Gets the callback function for adding interface messages.</summary>
 		public AddInterfaceMessageDelegate AddMessage
 		{
@@ -134,7 +158,9 @@
 		/// <param name="playCarSound">The callback function for playing car-based sounds.</param>
 		/// <param name="addMessage">The callback function for adding interface messages.</param>
 		/// <param name="addScore">The callback function for adding scores.</param>
-		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, PlayCarSoundDelegate playCarSound, AddInterfaceMessageDelegate addMessage, AddScoreDelegate addScore)
+		/// <param name="openDoors">The callback function for opening the train doors</param>
+		/// <param name="closeDoors">The callback function for closing the train doors</param>
+		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, PlayCarSoundDelegate playCarSound, AddInterfaceMessageDelegate addMessage, AddScoreDelegate addScore, OpenDoorsDelegate openDoors, CloseDoorsDelegate closeDoors)
 		{
 			this.MyPluginFolder = pluginFolder;
 			this.MyTrainFolder = trainFolder;
@@ -142,6 +168,8 @@
 			this.MyPlayCarSound = playCarSound;
 			this.MyAddInterfaceMessage = addMessage;
 			this.MyAddScore = addScore;
+			this.MyOpenDoors = openDoors;
+			this.MyCloseDoors = closeDoors;
 			this.MyFailureReason = null;
 		}
 	}

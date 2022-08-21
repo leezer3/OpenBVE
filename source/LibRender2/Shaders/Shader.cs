@@ -236,6 +236,7 @@ namespace LibRender2.Shaders
 		/// <param name="ProjectionMatrix"></param>
 		public void SetCurrentProjectionMatrix(Matrix4D ProjectionMatrix)
 		{
+			renderer.lastObjectState = null; // clear the cached object state, as otherwise it might be stale
 			Matrix4 matrix = ConvertToMatrix4(ProjectionMatrix);
 			GL.ProgramUniformMatrix4(handle, UniformLayout.CurrentProjectionMatrix, false, ref matrix);
 		}
@@ -249,6 +250,7 @@ namespace LibRender2.Shaders
 		/// </param>
 		public void SetCurrentModelViewMatrix(Matrix4D ModelViewMatrix)
 		{
+			renderer.lastObjectState = null; // clear the cached object state, as otherwise it might be stale
 			Matrix4 matrix = ConvertToMatrix4(ModelViewMatrix);
 
 			// When transpose is false, B is equal to the transposed matrix of A.

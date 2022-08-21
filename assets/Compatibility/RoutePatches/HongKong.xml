@@ -10,6 +10,22 @@
 		<Hash>F3ECCC2ABA65EFFB3D1B62B351DAD0FB1E28262EC70384246A92679DB765AAF0</Hash>
 		<FileName>飼聾s.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
-	</Patch>	
+	</Patch>
+	<!--- KCR East Rail Extension -->
+	<Patch>
+		<Hash>75F63E0A0ABDC53003A80749275755D3F64FD7AA0D7FE64E3867A2B6EBD27C26</Hash>
+		<FileName>kcrc east extension(atc ver.)1.rw</FileName>
+		<SignalSet>KCR.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>2DD5C20EDC0371F5034EDB540642C0C3E203CC69A88FA27788A74F7A9B8D0930</Hash>
+		<FileName>kcrc east extension(atc ver.)2.rw</FileName>
+		<SignalSet>KCR.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>5128525449B435F808D6C8459735F857BE673194A4595886CA0C1E09D590D1D7</Hash>
+		<FileName>kcrc east extension(manual ver.1).rw</FileName>
+		<SignalSet>KCR.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>

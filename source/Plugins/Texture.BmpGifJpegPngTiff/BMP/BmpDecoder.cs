@@ -288,8 +288,8 @@ namespace Plugin.BMP
 					 * the color table is set to the one of the standard Windows color pallettes
 					 *
 					 * However, in practice there seem to be some bitmaps in the wild
-					 * which contain a color table regardless. Only observed with 256 color bitmaps
-					 * at the minute [CHECK!!]
+					 * which contain a color table regardless. 
+					 *
 					 */
 					switch (BitsPerPixel)
 					{
@@ -300,40 +300,12 @@ namespace Plugin.BMP
 						case BitsPerPixel.FourBitPalletized:
 							ColorsUsed = 16;
 							ColorTable = ColorPalettes.Windows16ColorPalette;
+							AttemptToFindColorTable(fileReader, colorSize);
 							break;
 						case BitsPerPixel.EightBitPalletized:
 							ColorsUsed = 256;
 							ColorTable = ColorPalettes.Windows256ColorPalette;
-
-							int possibleColorTableSize = dataOffset - (int)fileReader.Position;
-							int possibleColors = possibleColorTableSize / colorSize;
-							if (possibleColors > 3) // color table appears to be present, even though length was declared as zero
-							{
-								buffer = new byte[possibleColorTableSize];
-								// ReSharper disable once MustUseReturnValue
-								fileReader.Read(buffer, 0, possibleColorTableSize);
-								bool colorTableFound = false;
-								for (int i = 0; i < buffer.Length; i++)
-								{
-									// sense check- there should be some colors here, not just pure black / white!
-									if (buffer[i] != byte.MinValue && buffer[i] != byte.MaxValue)
-									{
-										colorTableFound = true;
-										break;
-									}
-								}
-
-								if (colorTableFound)
-								{
-									ColorsUsed = possibleColors;
-									ColorTable = new Color24[ColorsUsed];
-									for (int currentColor = 0; currentColor < ColorsUsed; currentColor++)
-									{
-										int idx = currentColor * colorSize;
-										ColorTable[currentColor] = new Color24(buffer[idx + 2], buffer[idx + 1], buffer[idx]); // stored as BGR in bitmap, we want RGB
-									}
-								}
-							}
+							AttemptToFindColorTable(fileReader, colorSize);
 							break;
 					}
 
@@ -802,6 +774,42 @@ namespace Plugin.BMP
 				ColorTable = reducedColorTable.ToArray();
 			}
 			return true;
+		}
+
+		/// <summary>Attempts to find an undeclared color table</summary>
+		private void AttemptToFindColorTable(Stream fileReader, int colorSize)
+		{
+			int possibleColorTableSize = dataOffset - (int)fileReader.Position;
+			int possibleColors = possibleColorTableSize / colorSize;
+			if (possibleColors > 3) // color table appears to be present, even though length was declared as zero
+			{
+				buffer = new byte[possibleColorTableSize];
+				// ReSharper disable once MustUseReturnValue
+				fileReader.Read(buffer, 0, possibleColorTableSize);
+				bool colorTableFound = false;
+				for (int i = 0; i < buffer.Length; i++)
+				{
+					// sense check- there should be some colors here, not just pure black / white!
+					if (buffer[i] != byte.MinValue && buffer[i] != byte.MaxValue)
+					{
+						colorTableFound = true;
+						break;
+					}
+				}
+
+				if (colorTableFound)
+				{
+					// Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Undeclared ColorTable found in Bitmap file " + fileName);
+					ColorsUsed = possibleColors;
+					ColorTable = new Color24[ColorsUsed];
+					for (int currentColor = 0; currentColor < ColorsUsed; currentColor++)
+					{
+						int idx = currentColor * colorSize;
+						ColorTable[currentColor] = new Color24(buffer[idx + 2], buffer[idx + 1], buffer[idx]); // stored as BGR in bitmap, we want RGB
+					}
+				}
+			}
+
 		}
 
 		/// <summary>Places the current row onto the pixel stack and starts a new row</summary>

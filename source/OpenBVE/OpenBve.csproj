@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -227,6 +227,12 @@
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
+    <Compile Include="UserInterface\formViewLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formViewLog.Designer.cs">
+      <DependentUpon>formViewLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\formImageExport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -257,6 +263,7 @@
     <Compile Include="System\Input\Keyboard.cs" />
     <Compile Include="System\Input\ProcessControls.cs" />
     <Compile Include="System\Scripting.cs" />
+    <Compile Include="UserInterface\LaunchParameters.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -269,6 +276,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formRaildriverCalibration.resx">
       <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserInterface\formViewLog.resx">
+      <DependentUpon>formViewLog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <Compile Include="Audio\Sounds.cs" />
@@ -427,7 +437,7 @@
   </PropertyGroup>
   <Target Name="AfterBuild">
     <!-- Set LBA flag -->
-    <Exec Condition="'$(OS)' != 'Unix'" Command='"$(TargetDir)DevTools\LBAHeader.exe" "$(TargetDir)OpenBve.exe"' />
+    <Exec Condition="'$(OS)' != 'Unix'" Command="&quot;$(TargetDir)DevTools\LBAHeader.exe&quot; &quot;$(TargetDir)OpenBve.exe&quot;" />
     <Exec Condition="'$(OS)' == 'Unix'" Command="mono $(TargetDir)DevTools/LBAHeader.exe $(TargetDir)OpenBve.exe" />
     <!-- Copy in dependancies -->
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
