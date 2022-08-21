@@ -162,7 +162,40 @@ namespace RouteManager2
 			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
 			{
 				int key = CurrentRoute.Tracks.ElementAt(i).Key;
-				DrawRailPath(g, key != 0 ? MapMode.SecondaryTrack : mode, CurrentRoute.Tracks[key], firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+				if (i == 0)
+				{
+					DrawRailPath(g, mode, CurrentRoute.Tracks[key], firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+				}
+				else
+				{
+					int startElement = -1;
+					for (int el = firstUsedElement; el < lastUsedElement; el++)
+					{
+						if (CurrentRoute.Tracks[key].Elements[el].IsDriveable)
+						{
+							if (startElement == -1)
+							{
+								startElement = el;
+							}
+							
+						}
+						else
+						{
+							if (startElement != -1)
+							{
+								DrawRailPath(g, MapMode.SecondaryTrack, CurrentRoute.Tracks[key], startElement, el, imageOrigin, imageSize, imageScale, x0, z0);
+								startElement = -1;
+							}
+						}
+					}
+
+					if (startElement != -1)
+					{
+						DrawRailPath(g, MapMode.SecondaryTrack, CurrentRoute.Tracks[key], startElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+					}
+					
+				}
+				
 			}
 			
 

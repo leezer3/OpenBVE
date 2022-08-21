@@ -3423,6 +3423,64 @@ namespace CsvRwRouteParser
 							SpringReturn = springReturn,
 							Name = switchName
 						};
+						if (Command == TrackCommand.Switch)
+						{
+							if (idx != 0)
+							{
+								int block = BlockIndex;
+								while (Data.Blocks[block].Rails.ContainsKey(idx))
+								{
+									Data.Blocks[block].Rails[idx].IsDriveable = true;
+									if (Data.Blocks[block].Rails[idx].RailEnded)
+									{
+										break;
+									}
+									block--;
+								}
+							}
+							if (idx1 != 0)
+							{
+								int block = BlockIndex;
+								while (Data.Blocks[block].Rails.ContainsKey(idx1))
+								{
+									Data.Blocks[block].Rails[idx1].IsDriveable = true;
+									if (Data.Blocks[block].Rails[idx1].RailEnded)
+									{
+										break;
+									}
+									block--;
+								}
+							}
+						}
+						if (Command == TrackCommand.SwitchT)
+						{
+							if (idx != 0)
+							{
+								int block = BlockIndex;
+								while (Data.Blocks[block].Rails.ContainsKey(idx))
+								{
+									Data.Blocks[block].Rails[idx].IsDriveable = true;
+									if (Data.Blocks[block].Rails[idx].RailStarted)
+									{
+										break;
+									}
+									block--;
+								}
+							}
+							if (idx1 != 0)
+							{
+								int block = BlockIndex;
+								while (Data.Blocks[block].Rails.ContainsKey(idx1))
+								{
+									Data.Blocks[block].Rails[idx1].IsDriveable = true;
+									if (Data.Blocks[block].Rails[idx1].RailStarted)
+									{
+										break;
+									}
+									block--;
+								}
+							}
+						}
 					}
 
 					break;
