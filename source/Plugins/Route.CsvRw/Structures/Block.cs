@@ -57,6 +57,7 @@ namespace CsvRwRouteParser
 			StopPositions = new Stop[] { };
 			Station = -1;
 			StationPassAlarm = false;
+			Switches = new Switch[] { };
 			if (!PreviewOnly)
 			{
 				BrightnessChanges = new Brightness[] { };
@@ -75,7 +76,6 @@ namespace CsvRwRouteParser
 				LightDefinition = new LightDefinition();
 				LightingChanges = new LightingChange[] { };
 				PatternObjs = new Dictionary<int, PatternObj>();
-				Switches = new Switch[] { };
 			}
 		}
 	}

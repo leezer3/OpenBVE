@@ -3354,9 +3354,8 @@ namespace CsvRwRouteParser
 					break;
 				case TrackCommand.Switch:
 				case TrackCommand.SwitchT:
-					if (!PreviewOnly)
-					{
-						bool trailing = Command == TrackCommand.SwitchT;
+				{
+					bool trailing = Command == TrackCommand.SwitchT;
 
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))

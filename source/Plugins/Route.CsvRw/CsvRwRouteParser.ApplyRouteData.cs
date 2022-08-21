@@ -555,13 +555,11 @@ namespace CsvRwRouteParser
 
 				Transformation TrackTransformation = null;
 				Transformation GroundTransformation = null;
-				if (!PreviewOnly)
-				{
-					double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
-					double TrackPitch = Math.Atan(Data.Blocks[i].Pitch);
-					GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
-					TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
-				}
+				double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
+				double TrackPitch = Math.Atan(Data.Blocks[i].Pitch);
+				GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
+				TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
+				
 				// switches
 				if (!PreviewOnly)
 				{
@@ -634,10 +632,10 @@ namespace CsvRwRouteParser
 					obj.CreateObject(Position, GroundTransformation, Data.Blocks[i].Height, StartingDistance, EndingDistance);
 				}
 				// rail-aligned objects
-				if (!PreviewOnly)
 				{
 					for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
 					{
+						NextRail:
 						int j = Data.Blocks[i].Rails.ElementAt(jj).Key;
 						if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted)
 						{
@@ -750,193 +748,219 @@ namespace CsvRwRouteParser
 							CurrentRoute.Tracks[j].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 							CurrentRoute.Tracks[j].Elements[n].IsDriveable = Data.Blocks[i].Rails[j].IsDriveable;
 						}
-						if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted)
-						{
-							if (!Data.Blocks[i].Rails[j].RailStartRefreshed && Data.Blocks[i].Rails[j].RailEnded)
-							{
-								int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
-								Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);
-								CurrentRoute.Tracks[j].Elements[n].Events[l] = new TrackEndEvent(Plugin.CurrentHost, Data.BlockInterval);
-							}
-							//In order to run on other tracks, we need to calculate the positions and stuff, so continue after here instead
-							continue;
-						}
-						if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[j]))
-						{
-							if (Data.Structure.RailObjects[Data.Blocks[i].RailType[j]] != null)
-							{
-								Data.Structure.RailObjects[Data.Blocks[i].RailType[j]].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
-							}
-						}
-						// points of interest
-						for (int k = 0; k < Data.Blocks[i].PointsOfInterest.Length; k++)
-						{
-							if (Data.Blocks[i].PointsOfInterest[k].RailIndex == j)
-							{
-								double d = Data.Blocks[i].PointsOfInterest[k].TrackPosition - StartingDistance;
-								double x = Data.Blocks[i].PointsOfInterest[k].Position.X;
-								double y = Data.Blocks[i].PointsOfInterest[k].Position.Y;
-								int m = CurrentRoute.PointsOfInterest.Length;
-								Array.Resize(ref CurrentRoute.PointsOfInterest, m + 1);
-								CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
-								if (i < Data.Blocks.Count - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
-								{
-									Vector2 trackOffset = Data.Blocks[i].Rails[j].MidPoint;
-									trackOffset.X = Data.Blocks[i].Rails[j].RailStart.X + d / Data.BlockInterval * trackOffset.X;
-									trackOffset.Y = Data.Blocks[i].Rails[j].RailStart.Y + d / Data.BlockInterval * trackOffset.Y;
-									CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + trackOffset.X, y + trackOffset.Y, 0.0);
-								}
-								else
-								{
-									double dx = Data.Blocks[i].Rails[j].RailStart.X;
-									double dy = Data.Blocks[i].Rails[j].RailStart.Y;
-									CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
-								}
-								CurrentRoute.PointsOfInterest[m].TrackYaw = Data.Blocks[i].PointsOfInterest[k].Yaw + planar;
-								CurrentRoute.PointsOfInterest[m].TrackPitch = Data.Blocks[i].PointsOfInterest[k].Pitch + updown;
-								CurrentRoute.PointsOfInterest[m].TrackRoll = Data.Blocks[i].PointsOfInterest[k].Roll;
-								CurrentRoute.PointsOfInterest[m].Text = Data.Blocks[i].PointsOfInterest[k].Text;
-							}
-						}
-						// poles
-						if (Data.Blocks[i].RailPole.Length > j)
-						{
-							Data.Blocks[i].RailPole[j].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance);
-						}
-						// walls
-						if (Data.Blocks[i].RailWall.ContainsKey(j))
-						{
-							Data.Blocks[i].RailWall[j].Create(pos, RailTransformation, StartingDistance, EndingDistance);
-						}
-						// dikes
-						if (Data.Blocks[i].RailDike.ContainsKey(j))
-						{
-							Data.Blocks[i].RailDike[j].Create(pos, RailTransformation, StartingDistance, EndingDistance);
-						}
-						// sounds
-						if (j == 0)
-						{
-							for (int k = 0; k < Data.Blocks[i].SoundEvents.Length; k++)
-							{
-								Data.Blocks[i].SoundEvents[k].Create(pos, StartingDistance, Direction, planar, updown);
-							}
-						}
-						// forms
-						for (int k = 0; k < Data.Blocks[i].Forms.Length; k++)
-						{
-							// primary rail
-							if (Data.Blocks[i].Forms[k].PrimaryRail == j)
-							{
-								Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, StartingDistance, EndingDistance, FileName);
-							}
-							// secondary rail
-							if (Data.Blocks[i].Forms[k].SecondaryRail == j)
-							{
-								Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, StartingDistance, EndingDistance, FileName);
-							}
-						}
-						// cracks
-						for (int k = 0; k < Data.Blocks[i].Cracks.Length; k++)
-						{
-							Data.Blocks[i].Cracks[k].Create(j, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, StartingDistance, EndingDistance, FileName);
-						}
-						// free objects
-						if (Data.Blocks[i].RailFreeObj.ContainsKey(j))
-						{
-							for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Count; k++)
-							{
-								Data.Blocks[i].RailFreeObj[j][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
-							}
-						}
 
-						// pattern objects
-						if (jj == 0)
+						if (!PreviewOnly)
 						{
-							for (int k = 0; k < Data.Blocks[i].PatternObjs.Count; k++)
+							if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted)
 							{
-								int key = Data.Blocks[i].PatternObjs.ElementAt(k).Key;
-								if (Data.Blocks[i].PatternObjs[key].Interval <= 0)
+								if (!Data.Blocks[i].Rails[j].RailStartRefreshed && Data.Blocks[i].Rails[j].RailEnded)
 								{
-									continue;
+									int l = CurrentRoute.Tracks[j].Elements[n].Events.Length;
+									Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, l + 1);
+									CurrentRoute.Tracks[j].Elements[n].Events[l] = new TrackEndEvent(Plugin.CurrentHost, Data.BlockInterval);
 								}
-								// patterns key off rail 0
-								while (Data.Blocks[i].PatternObjs[key].LastPlacement + Data.Blocks[i].PatternObjs[key].Interval < (i + 1) * Data.BlockInterval)
+
+								//In order to run on other tracks, we need to calculate the positions and stuff, so continue after here instead
+								continue;
+							}
+
+							if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[j]))
+							{
+								if (Data.Structure.RailObjects[Data.Blocks[i].RailType[j]] != null)
 								{
-									if (!Data.Blocks[i].PatternObjs[key].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance))
+									Data.Structure.RailObjects[Data.Blocks[i].RailType[j]].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+								}
+							}
+
+							// points of interest
+							for (int k = 0; k < Data.Blocks[i].PointsOfInterest.Length; k++)
+							{
+								if (Data.Blocks[i].PointsOfInterest[k].RailIndex == j)
+								{
+									double d = Data.Blocks[i].PointsOfInterest[k].TrackPosition - StartingDistance;
+									double x = Data.Blocks[i].PointsOfInterest[k].Position.X;
+									double y = Data.Blocks[i].PointsOfInterest[k].Position.Y;
+									int m = CurrentRoute.PointsOfInterest.Length;
+									Array.Resize(ref CurrentRoute.PointsOfInterest, m + 1);
+									CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
+									if (i < Data.Blocks.Count - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
 									{
-										break;
+										Vector2 trackOffset = Data.Blocks[i].Rails[j].MidPoint;
+										trackOffset.X = Data.Blocks[i].Rails[j].RailStart.X + d / Data.BlockInterval * trackOffset.X;
+										trackOffset.Y = Data.Blocks[i].Rails[j].RailStart.Y + d / Data.BlockInterval * trackOffset.Y;
+										CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + trackOffset.X, y + trackOffset.Y, 0.0);
+									}
+									else
+									{
+										double dx = Data.Blocks[i].Rails[j].RailStart.X;
+										double dy = Data.Blocks[i].Rails[j].RailStart.Y;
+										CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
+									}
+
+									CurrentRoute.PointsOfInterest[m].TrackYaw = Data.Blocks[i].PointsOfInterest[k].Yaw + planar;
+									CurrentRoute.PointsOfInterest[m].TrackPitch = Data.Blocks[i].PointsOfInterest[k].Pitch + updown;
+									CurrentRoute.PointsOfInterest[m].TrackRoll = Data.Blocks[i].PointsOfInterest[k].Roll;
+									CurrentRoute.PointsOfInterest[m].Text = Data.Blocks[i].PointsOfInterest[k].Text;
+								}
+							}
+
+							// poles
+							if (Data.Blocks[i].RailPole.Length > j)
+							{
+								Data.Blocks[i].RailPole[j].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance);
+							}
+
+							// walls
+							if (Data.Blocks[i].RailWall.ContainsKey(j))
+							{
+								Data.Blocks[i].RailWall[j].Create(pos, RailTransformation, StartingDistance, EndingDistance);
+							}
+
+							// dikes
+							if (Data.Blocks[i].RailDike.ContainsKey(j))
+							{
+								Data.Blocks[i].RailDike[j].Create(pos, RailTransformation, StartingDistance, EndingDistance);
+							}
+
+							// sounds
+							if (j == 0)
+							{
+								for (int k = 0; k < Data.Blocks[i].SoundEvents.Length; k++)
+								{
+									Data.Blocks[i].SoundEvents[k].Create(pos, StartingDistance, Direction, planar, updown);
+								}
+							}
+
+							// forms
+							for (int k = 0; k < Data.Blocks[i].Forms.Length; k++)
+							{
+								// primary rail
+								if (Data.Blocks[i].Forms[k].PrimaryRail == j)
+								{
+									Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, StartingDistance, EndingDistance, FileName);
+								}
+
+								// secondary rail
+								if (Data.Blocks[i].Forms[k].SecondaryRail == j)
+								{
+									Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, StartingDistance, EndingDistance, FileName);
+								}
+							}
+
+							// cracks
+							for (int k = 0; k < Data.Blocks[i].Cracks.Length; k++)
+							{
+								Data.Blocks[i].Cracks[k].Create(j, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, StartingDistance, EndingDistance, FileName);
+							}
+
+							// free objects
+							if (Data.Blocks[i].RailFreeObj.ContainsKey(j))
+							{
+								for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Count; k++)
+								{
+									Data.Blocks[i].RailFreeObj[j][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+								}
+							}
+
+							// pattern objects
+							if (jj == 0)
+							{
+								for (int k = 0; k < Data.Blocks[i].PatternObjs.Count; k++)
+								{
+									int key = Data.Blocks[i].PatternObjs.ElementAt(k).Key;
+									if (Data.Blocks[i].PatternObjs[key].Interval <= 0)
+									{
+										continue;
+									}
+
+									// patterns key off rail 0
+									while (Data.Blocks[i].PatternObjs[key].LastPlacement + Data.Blocks[i].PatternObjs[key].Interval < (i + 1) * Data.BlockInterval)
+									{
+										if (!Data.Blocks[i].PatternObjs[key].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance))
+										{
+											break;
+										}
+									}
+
+									if (i < Data.Blocks.Count - 1 && Data.Blocks[i + 1].PatternObjs.ContainsKey(key))
+									{
+										Data.Blocks[i + 1].PatternObjs[key].LastPlacement = Data.Blocks[i].PatternObjs[key].LastPlacement;
+										Data.Blocks[i + 1].PatternObjs[key].LastType = Data.Blocks[i].PatternObjs[key].LastType;
 									}
 								}
+							}
 
-								if (i < Data.Blocks.Count -1 && Data.Blocks[i + 1].PatternObjs.ContainsKey(key))
+							// transponder objects
+							if (j == 0)
+							{
+								for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 								{
-									Data.Blocks[i + 1].PatternObjs[key].LastPlacement = Data.Blocks[i].PatternObjs[key].LastPlacement;
-									Data.Blocks[i + 1].PatternObjs[key].LastType = Data.Blocks[i].PatternObjs[key].LastType;
+									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Transponders[k].TrackPosition);
+									Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
+								}
+
+								for (int k = 0; k < Data.Blocks[i].DestinationChanges.Length; k++)
+								{
+									Data.Blocks[i].DestinationChanges[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
+								}
+
+								for (int k = 0; k < Data.Blocks[i].HornBlows.Length; k++)
+								{
+									Data.Blocks[i].HornBlows[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
 								}
 							}
-						}
-						
-						// transponder objects
-						if (j == 0)
-						{
-							for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
+
+							// sections/signals/transponders
+							if (j == 0)
 							{
-								double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Transponders[k].TrackPosition);
-								Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
-							}
-							for (int k = 0; k < Data.Blocks[i].DestinationChanges.Length; k++)
-							{
-								Data.Blocks[i].DestinationChanges[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
-							}
-							for (int k = 0; k < Data.Blocks[i].HornBlows.Length; k++)
-							{
-								Data.Blocks[i].HornBlows[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
-							}
-						}
-						// sections/signals/transponders
-						if (j == 0)
-						{
-							// signals
-							for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
-							{
-								Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signals[k].TrackPosition));
-							}
-							// sections
-							for (int k = 0; k < Data.Blocks[i].Sections.Length; k++)
-							{
-								Data.Blocks[i].Sections[k].Create(CurrentRoute, Data.Blocks, i, n, Data.SignalSpeeds, StartingDistance, Data.BlockInterval);
-							}
-							// transponders introduced after corresponding sections
-							for (int l = 0; l < Data.Blocks[i].Transponders.Length; l++)
-							{
-								Data.Blocks[i].Transponders[l].CreateEvent(ref CurrentRoute.Tracks[0].Elements[n], StartingDistance);
+								// signals
+								for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
+								{
+									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signals[k].TrackPosition));
+								}
+
+								// sections
+								for (int k = 0; k < Data.Blocks[i].Sections.Length; k++)
+								{
+									Data.Blocks[i].Sections[k].Create(CurrentRoute, Data.Blocks, i, n, Data.SignalSpeeds, StartingDistance, Data.BlockInterval);
+								}
+
+								// transponders introduced after corresponding sections
+								for (int l = 0; l < Data.Blocks[i].Transponders.Length; l++)
+								{
+									Data.Blocks[i].Transponders[l].CreateEvent(ref CurrentRoute.Tracks[0].Elements[n], StartingDistance);
+								}
+
+								for (int l = 0; l < Data.Blocks[i].LightingChanges.Length; l++)
+								{
+									Data.Blocks[i].LightingChanges[l].Create(ref CurrentRoute.Tracks[0].Elements[n], Data.Structure.LightDefinitions);
+								}
 							}
 
-							for (int l = 0; l < Data.Blocks[i].LightingChanges.Length; l++)
+							// limit
+							if (j == 0)
 							{
-								Data.Blocks[i].LightingChanges[l].Create(ref CurrentRoute.Tracks[0].Elements[n], Data.Structure.LightDefinitions);
+								for (int k = 0; k < Data.Blocks[i].Limits.Length; k++)
+								{
+									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Limits[k].TrackPosition);
+									Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);
+								}
 							}
-						}
-						// limit
-						if (j == 0)
-						{
-							for (int k = 0; k < Data.Blocks[i].Limits.Length; k++)
+
+							// stop
+							if (j == 0)
 							{
-								double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Limits[k].TrackPosition);
-								Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);
-							}
-						}
-						// stop
-						if (j == 0)
-						{
-							for (int k = 0; k < Data.Blocks[i].StopPositions.Length; k++)
-							{
-								double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].StopPositions[k].TrackPosition);
-								Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
+								for (int k = 0; k < Data.Blocks[i].StopPositions.Length; k++)
+								{
+									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].StopPositions[k].TrackPosition);
+									Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
+								}
 							}
 						}
 					}
 				}
+
+				FinalizeBlock:
 				// finalize block
 				Position.X += Direction.X * c;
 				Position.Y += h;
