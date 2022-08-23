@@ -1560,6 +1560,21 @@ namespace OpenBve
 									case Translations.Command.GearDown:
 									case Translations.Command.RaisePantograph:
 									case Translations.Command.LowerPantograph:
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(
+												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+
+										break;
+									case Translations.Command.Headlights:
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(
+												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+										TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();
+										break;
 									case Translations.Command.MainBreaker:
 										if (TrainManager.PlayerTrain.Plugin != null)
 										{

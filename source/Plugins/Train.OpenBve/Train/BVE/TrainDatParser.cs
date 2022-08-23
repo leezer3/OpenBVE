@@ -1264,6 +1264,7 @@ namespace Train.OpenBve
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
+			Train.SafetySystems.Headlights = new LightSource(1);
 			switch (Plugin.CurrentOptions.TrainStart)
 			{
 				// starting mode

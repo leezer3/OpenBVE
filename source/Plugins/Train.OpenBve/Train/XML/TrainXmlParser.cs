@@ -237,7 +237,7 @@ namespace Train.OpenBve
 
 					}
 				}
-				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Plugin");
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Plugin or self::HeadlightStates]");
 				if (DocumentNodes != null && DocumentNodes.Count > 0)
 				{
 					// More optional, but needs to be loaded after the car list
@@ -256,6 +256,16 @@ namespace Train.OpenBve
 										Train.Plugin = null;
 									}
 								}
+								break;
+							case "HeadlightStates":
+								int numStates;
+								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out numStates))
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "NumStates is invalid for HeadlightStates in XML file " + fileName);
+									break;
+								}
+
+								Train.SafetySystems.Headlights = new LightSource(numStates);
 								break;
 						}
 					}
