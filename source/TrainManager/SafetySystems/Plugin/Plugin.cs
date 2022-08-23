@@ -154,12 +154,13 @@ namespace TrainManager.SafetySystems
 			double totalTime = TrainManagerBase.currentHost.InGameTime;
 			double elapsedTime = TrainManagerBase.currentHost.InGameTime - LastTime;
 
-			ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, TrainManagerBase.Renderer.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
+			ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, this.Train.SafetySystems.Headlights.CurrentState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, TrainManagerBase.Renderer.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
 			ElapseData inputDevicePluginData = data;
 			LastTime = TrainManagerBase.currentHost.InGameTime;
 			Elapse(ref data);
 			this.PluginMessage = data.DebugMessage;
 			this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
+			this.Train.SafetySystems.Headlights.SetState(data.HeadlightState);
 			DisableTimeAcceleration = data.DisableTimeAcceleration;
 			if (Train.IsPlayerTrain)
 			{
