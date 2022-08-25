@@ -9,6 +9,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 
 namespace LibRender2.Objects
@@ -19,6 +20,8 @@ namespace LibRender2.Objects
 		private readonly CameraProperties camera;
 		private readonly BaseOptions currentOptions;
 		private readonly BaseRenderer renderer;
+
+		private readonly QuadTree quadTree = new QuadTree(500); //FIXME: Should this actually be the visibility distance? Let's use a fixed number at the minute
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;
@@ -86,6 +89,7 @@ namespace LibRender2.Objects
 		public void ShowObject(ObjectState State, ObjectType Type)
 		{
 			bool result = AddObject(State);
+			quadTree.Add(State, Orientation3.Default);
 
 			if (!renderer.ForceLegacyOpenGL && State.Prototype.Mesh.VAO == null)
 			{
