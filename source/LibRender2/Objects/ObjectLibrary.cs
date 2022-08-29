@@ -21,7 +21,7 @@ namespace LibRender2.Objects
 		private readonly BaseOptions currentOptions;
 		private readonly BaseRenderer renderer;
 
-		private readonly QuadTree quadTree = new QuadTree(500); //FIXME: Should this actually be the visibility distance? Let's use a fixed number at the minute
+		internal readonly QuadTree quadTree = new QuadTree(500); //FIXME: Should this actually be the visibility distance? Let's use a fixed number at the minute
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;

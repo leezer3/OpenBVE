@@ -1,19 +1,19 @@
 ﻿namespace OpenBveApi.Routes
 {
 	/// <summary>Represents some rectangular bounds on the grid.</summary>
-	internal struct QuadTreeBounds
+	public struct QuadTreeBounds
 	{
 		/// <summary>The left edge, i.e. the smallest x-coordinate.</summary>
-		internal double Left;
+		public double Left;
 
 		/// <summary>The right edge, i.e. the highest x-coordinate.</summary>
-		internal double Right;
+		public double Right;
 
 		/// <summary>The near edge, i.e. the smallest z-coordinate.</summary>
-		internal double Near;
+		public double Near;
 
 		/// <summary>The far edge, i.e. the highest z-coordinate.</summary>
-		internal double Far;
+		public double Far;
 
 		/// <summary>Creates a new instance of this structure.</summary>
 		/// <param name="left">The left edge, i.e. the smallest x-coordinate.</param>

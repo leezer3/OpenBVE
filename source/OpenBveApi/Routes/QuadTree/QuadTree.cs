@@ -474,7 +474,7 @@ namespace OpenBveApi.Routes
 		/// <param name="position">The position.</param>
 		/// <param name="leaf">Receives the leaf node on success.</param>
 		/// <returns>The success of the operation.</returns>
-		internal bool GetLeafNode(Vector3 position, out QuadTreeLeafNode leaf)
+		public bool GetLeafNode(Vector3 position, out QuadTreeLeafNode leaf)
 		{
 			return GetLeafNode(position, Root, out leaf);
 		}

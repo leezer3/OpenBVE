@@ -5,10 +5,10 @@ using OpenBveApi.Textures;
 namespace OpenBveApi.Routes
 {
 	/// <summary>Represents an abstract leaf node.</summary>
-	internal abstract class QuadTreeLeafNode : QuadNode
+	public abstract class QuadTreeLeafNode : QuadNode
 	{
 		/// <summary>The list of all leaf nodes in the quad collection that are visible from within the bounding rectangle of this filler node.</summary>
-		internal QuadTreePopulatedLeafNode[] VisibleLeafNodes;
+		public QuadTreePopulatedLeafNode[] VisibleLeafNodes;
 	}
 
 	/// <summary>Represents an unpopulated leaf node.</summary>
@@ -24,10 +24,10 @@ namespace OpenBveApi.Routes
 	}
 
 	/// <summary>Represents a populated leaf node.</summary>
-	internal class QuadTreePopulatedLeafNode : QuadTreeLeafNode
+	public class QuadTreePopulatedLeafNode : QuadTreeLeafNode
 	{
 		/// <summary>A list of static objects attached to this quad node.</summary>
-		internal ObjectState[] Objects;
+		public ObjectState[] Objects;
 
 		/// <summary>The number of static objects attached to this quad node.</summary>
 		internal int StaticObjectCount;
@@ -36,7 +36,7 @@ namespace OpenBveApi.Routes
 		internal object[] TransparentFaces;
 
 		/// <summary>The number of handles to transparent faces.</summary>
-		internal int TransparentFaceCount;
+		public int TransparentFaceCount;
 
 		internal QuadTreePopulatedLeafNode(QuadInternalNode parent, QuadTreeBounds rectangle, ObjectState initialState)
 		{

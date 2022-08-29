@@ -624,6 +624,23 @@ namespace LibRender2
 
 		public void UpdateVisibility(double TrackPosition)
 		{
+			if (currentOptions.UseQuadTrees)
+			{
+				UpdateQuadTreeVisibility();
+			}
+			else
+			{
+				UpdateLegacyVisibility(TrackPosition);
+			}
+		}
+
+		public void UpdateQuadTreeVisibility()
+		{
+			Camera.UpdateQuadTreeLeaf();
+		}
+
+		private void UpdateLegacyVisibility(double TrackPosition)
+		{
 			if (ObjectsSortedByStart == null || ObjectsSortedByStart.Length == 0)
 			{
 				return;

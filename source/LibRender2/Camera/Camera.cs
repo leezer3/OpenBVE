@@ -3,6 +3,8 @@ using LibRender2.Camera;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 
 namespace LibRender2.Cameras
@@ -80,6 +82,10 @@ namespace LibRender2.Cameras
 		public CameraAlignment SavedExterior;
 		/// <summary>The saved track camera alignment</summary>
 		public CameraAlignment SavedTrack;
+		/// <summary>The current quad tree leaf node</summary>
+		public QuadTreeLeafNode QuadTreeLeaf;
+
+		public Vector3 QuadTreeLeafNodeCenter;
 
 		private Vector3 absolutePosition;
 
@@ -309,6 +315,133 @@ namespace LibRender2.Cameras
 			AlignmentDirection = new CameraAlignment();
 			AlignmentSpeed = new CameraAlignment();
 			VerticalViewingAngle = OriginalVerticalViewingAngle;
+		}
+
+		public void UpdateQuadTreeLeaf()
+		{
+			/*
+			 * Find the leaf node the camera is currently in.
+			 * */
+			QuadTreeLeafNode leaf;
+			if (Renderer.VisibleObjects.quadTree.GetLeafNode(AbsolutePosition, out leaf))
+			{
+				double x = 0.5 * (leaf.Rectangle.Left + leaf.Rectangle.Right);
+				double z = 0.5 * (leaf.Rectangle.Near + leaf.Rectangle.Far);
+				QuadTreeLeafNodeCenter = new OpenBveApi.Math.Vector3(x, 0.0, z);
+			}
+			else
+			{
+				leaf = null;
+				QuadTreeLeafNodeCenter = new OpenBveApi.Math.Vector3(0.0, 0.0, 0.0);
+			}
+
+			/*
+			 * Check if the leaf node the camera is in has changed.
+			 * */
+			if (leaf != QuadTreeLeaf)
+			{
+				if (leaf != null)
+				{
+					/*
+					 * The camera is within the bounds of a leaf node.
+					 * */
+					QuadTreePopulatedLeafNode[] oldLeafNodes;
+					if (QuadTreeLeaf != null)
+					{
+						oldLeafNodes = QuadTreeLeaf.VisibleLeafNodes;
+					}
+					else
+					{
+						oldLeafNodes = null;
+					}
+
+					QuadTreePopulatedLeafNode[] newLeafNodes = leaf.VisibleLeafNodes;
+					/*
+					 * Find leaf nodes that were visible before but are not any longer.
+					 * */
+					if (oldLeafNodes != null)
+					{
+						for (int i = 0; i < oldLeafNodes.Length; i++)
+						{
+							bool remove = true;
+							for (int j = 0; j < newLeafNodes.Length; j++)
+							{
+								if (oldLeafNodes[i] == newLeafNodes[j])
+								{
+									remove = false;
+									break;
+								}
+							}
+
+							if (remove)
+							{
+								/*
+								 * This leaf node is not visible any longer. Remove its
+								 * associated objects from the renderer.
+								 * */
+								for (int j = 0; j < oldLeafNodes[i].Objects.Length; j++)
+								{
+									Renderer.currentHost.HideObject(oldLeafNodes[i].Objects[j]);
+								}
+							}
+						}
+					}
+
+					/*
+					 * Find leaf nodes that are visible now but were not before.
+					 * */
+					for (int i = 0; i < newLeafNodes.Length; i++)
+					{
+						bool add = true;
+						if (oldLeafNodes != null)
+						{
+							for (int j = 0; j < oldLeafNodes.Length; j++)
+							{
+								if (newLeafNodes[i] == oldLeafNodes[j])
+								{
+									add = false;
+									break;
+								}
+							}
+						}
+
+						if (add)
+						{
+							/*
+							 * This leaf node has become visible. Add all
+							 * its faces to the renderer.
+							 * */
+							for (int j = 0; j < newLeafNodes[i].Objects.Length; j++)
+							{
+								Renderer.currentHost.ShowObject(newLeafNodes[i].Objects[j], ObjectType.Static);
+							}
+						}
+					}
+				}
+				else if (QuadTreeLeaf != null)
+				{
+					/*
+					 * Before, the camera was inside the bounds of
+					 * a leaf node, but now, it is not anymore.
+					 * Remove the transparent faces associated
+					 * to the old leaf node from the renderer.
+					 * */
+					QuadTreePopulatedLeafNode[] oldLeafNodes = QuadTreeLeaf.VisibleLeafNodes;
+					for (int i = 0; i < oldLeafNodes.Length; i++)
+					{
+						for (int j = 0; j < oldLeafNodes[i].TransparentFaceCount; j++)
+						{
+						}
+
+						oldLeafNodes[i].TransparentFaceCount = 0;
+					}
+				}
+			}
+
+			/*
+			 * Apply the found leaf node.
+			 * */
+			QuadTreeLeaf = leaf;
 		}
 	}
 }
