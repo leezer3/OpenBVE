@@ -359,6 +359,10 @@ namespace RouteViewer
 								{
 									UnifiedObject obj;
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+										if (obj == null)
+										{
+											continue;
+										}
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 										Object = obj;
 

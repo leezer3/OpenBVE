@@ -6,6 +6,7 @@ using LibRender2.MotionBlurs;
 using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Packages;
 using SoundManager;
@@ -181,6 +182,78 @@ namespace OpenBve
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
+				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
+				switch (Program.CurrentHost.Platform)
+				{
+					case HostPlatform.AppleOSX:
+						// This gets us a much better Unicode glyph set on Apple
+						this.Font = "Arial Unicode MS";
+						break;
+					case HostPlatform.FreeBSD:
+					case HostPlatform.GNULinux:
+						/*
+						 * Font support on Mono / Linux is a real mess, nothing with a full Unicode glyph set installed by default
+						 * Try and detect + select a sensible Noto Sans variant based upon our current locale
+						 */
+						switch (currentCultureInfo.Name)
+						{
+							case "ru-RU":
+							case "uk-UA":
+							case "ro-RO":
+							case "hu-HU":
+								// Plain Noto Sans has better Cyrillic glyphs
+								this.Font = "Noto Sans";
+								break;
+							case "jp-JP":
+							case "zh-TW":
+							case "zh-CN":
+							case "zh-HK":
+								// For JP / CN, use the Japanese version of Noto Sans
+								this.Font = "Noto Sans CJK JP";
+								break;
+							case "ko-KR":
+								// Korean version of Noto Sans
+								this.Font = "Noto Sans CJK KR";
+								break;
+							default:
+								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
+								this.Font = "Noto Sans CJK JP";
+								break;
+						}
+						break;
+					case HostPlatform.WINE:
+						// WINE reports slightly different font names to native
+						switch (currentCultureInfo.Name)
+						{
+							case "ru-RU":
+							case "uk-UA":
+							case "ro-RO":
+							case "hu-HU":
+								// Plain Noto Sans has better Cyrillic glyphs
+								this.Font = "Noto Sans Regular";
+								break;
+							case "jp-JP":
+							case "zh-TW":
+							case "zh-CN":
+							case "zh-HK":
+								// For JP / CN, use the Japanese version of Noto Sans
+								this.Font = "Noto Sans CJK JP Regular";
+								break;
+							case "ko-KR":
+								// Korean version of Noto Sans
+								this.Font = "Noto Sans CJK KR Regular";
+								break;
+							default:
+								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
+								this.Font = "Noto Sans CJK JP Regular";
+								break;
+						}
+						break;
+					default:
+						// This is what's set by default for WinForms
+						this.Font = "Microsoft Sans Serif";
+						break;
+				}
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -279,6 +352,9 @@ namespace OpenBve
 											break;
 										case "accessibility":
 											Interface.CurrentOptions.Accessibility = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
+											break;
+										case "font":
+											Interface.CurrentOptions.Font = Value;
 											break;
 									} break;
 								case "display":
@@ -795,6 +871,7 @@ namespace OpenBve
 			Builder.AppendLine("kioskMode = " + (CurrentOptions.KioskMode ? "true" : "false"));
 			Builder.AppendLine("kioskModeTimer = " + CurrentOptions.KioskModeTimer);
 			Builder.AppendLine("accessibility = " + (CurrentOptions.Accessibility ? "true" : "false"));
+			Builder.AppendLine("font = " + CurrentOptions.Font);
 			Builder.AppendLine();
 			Builder.AppendLine("[display]");
 			Builder.AppendLine("preferNativeBackend = " + (CurrentOptions.PreferNativeBackend ? "true" : "false"));

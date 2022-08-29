@@ -90,14 +90,18 @@ namespace Plugin
 						rootMatrix = new Matrix4D(scene.RootNode.TrafoMatrix);
 					}
 
+					SetReferenceMaterials(scene, ref scene.RootNode);
+
 					foreach (var mesh in scene.RootNode.Meshes)
 					{
 						MeshBuilder(ref obj, ref builder, mesh);
 					}
 
 					// Children Node
-					foreach (var node in scene.RootNode.Children)
+					for (int i = 0; i < scene.RootNode.Children.Count; i++)
 					{
+						Node node = scene.RootNode.Children[i];
+						SetReferenceMaterials(scene, ref node);
 						ChildrenNode(ref obj, ref builder, node);
 					}
 				}
@@ -120,6 +124,28 @@ namespace Plugin
 				return null;
 			}
 #endif
+		}
+
+		private static void SetReferenceMaterials(Scene scene, ref Node node)
+		{
+			foreach (var mesh in node.Meshes)
+			{
+				for (int i = 0; i < mesh.Materials.Count; i++)
+				{
+					if (mesh.Materials[i].IsReference)
+					{
+						for (int j = 0; j < scene.GlobalMaterials.Count; j++)
+						{
+							if (scene.GlobalMaterials[j].Name == mesh.Materials[i].Name)
+							{
+								mesh.Materials[i] = scene.GlobalMaterials[j];
+								break;
+							}
+						}
+					}
+				}
+			}
+			
 		}
 
 		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)

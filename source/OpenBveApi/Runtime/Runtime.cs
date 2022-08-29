@@ -39,6 +39,12 @@ namespace OpenBveApi.Runtime {
 	/// <param name="Time">The time in seconds for which to display the message</param>
 	public delegate void AddScoreDelegate(int Score, string Message, MessageColor Color, double Time);
 
+	/// <summary>Attempts to open the train doors</summary>
+	public delegate void OpenDoorsDelegate(bool left, bool right);
+
+	/// <summary>Attempts to close the train doors</summary>
+	public delegate void CloseDoorsDelegate(bool left, bool right);
+
 	/// <summary>Represents the interface for performing runtime train services.</summary>
 	public interface IRuntime
 	{

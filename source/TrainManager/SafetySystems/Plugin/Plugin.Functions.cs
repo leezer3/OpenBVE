@@ -142,7 +142,7 @@ namespace TrainManager.Trains
 
 			bool hasLocoBrake = Handles.HasLocoBrake;
 			int cars = Cars.Length;
-			return new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, cars);
+			return new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, SafetySystems.Headlights.NumberOfStates, cars);
 		}
 
 		/// <summary>Loads the specified plugin for the specified train.</summary>

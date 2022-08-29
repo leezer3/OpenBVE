@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -141,30 +141,44 @@ namespace OpenBve.Formats.DirectX
 			{
 				currentPosition++;
 			}
-
-			if (currentPosition == 0)
+			
+			if (token == TemplateID.TextureKey)
 			{
-				throw new Exception("Token " + token + " was not found.");
+				currentPosition++;
+				int p = currentPosition;
+				while (myText[currentPosition] != '}')
+				{
+					currentPosition++;
+				}
+				string s = myText.Substring(p, currentPosition - 1);
+				Label = s.Trim(new char[] { });
 			}
-
-			string s = myText.Substring(0, currentPosition);
-			int ws = s.IndexOf(' ');
-			if (ws != -1)
+			else
 			{
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
-				s = s.Substring(0, ws);
-			}
+				if (currentPosition == 0)
+				{
+					throw new Exception("Token " + token + " was not found.");
+				}
+				string s = myText.Substring(0, currentPosition);
+				int ws = s.IndexOf(' ');
+				if (ws != -1)
+				{
+					Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
+					s = s.Substring(0, ws);
+				}
 
-			TemplateID currentToken;
-			if (!Enum.TryParse(s, true, out currentToken))
-			{
-				throw new Exception("Invalid token " + s);
-			}
+				TemplateID currentToken;
+				if (!Enum.TryParse(s, true, out currentToken))
+				{
+					throw new Exception("Invalid token " + s);
+				}
 
-			if (currentToken != Token)
-			{
-				throw new Exception("Expected the " + Token + " token, got " + currentToken);
+				if (currentToken != Token)
+				{
+					throw new Exception("Expected the " + Token + " token, got " + currentToken);
+				}
 			}
+			
 
 			currentPosition++;
 		}
@@ -213,7 +227,14 @@ namespace OpenBve.Formats.DirectX
 
 			if (!Enum.TryParse(s, true, out currentToken))
 			{
-				throw new Exception("Unrecognised token " + s);
+				if (newToken == TemplateID.TextureKey)
+				{
+					currentToken = TemplateID.TextureKey;
+				}
+				else
+				{
+					throw new Exception("Unrecognised token " + s);	
+				}
 			}
 
 			if (newToken != currentToken)
@@ -286,7 +307,15 @@ namespace OpenBve.Formats.DirectX
 
 			if (!Enum.TryParse(s, true, out currentToken))
 			{
-				throw new Exception("Unrecognised token " + s);
+				if (validTokens.Contains(TemplateID.TextureKey))
+				{
+					currentToken = TemplateID.TextureKey;
+				}
+				else
+				{
+					throw new Exception("Unrecognised token " + s);	
+				}
+				
 			}
 
 			if (!validTokens.Contains(currentToken))
@@ -330,7 +359,7 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 				startPosition++;
 			}
-			string s = String.Empty;
+			string s = string.Empty;
 			while (currentPosition < myText.Length)
 			{
 				if (myText[currentPosition] == '{')

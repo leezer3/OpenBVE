@@ -30,6 +30,10 @@ namespace OpenBveApi.Runtime
 		[DataMember]
 		private readonly int MyCars;
 
+		/// <summary>The number of headlight states the train has.</summary>
+		[DataMember]
+		private readonly int MyHeadlightStates;
+
 		/// <summary>Gets the number of power notches the train has.</summary>
 		public int PowerNotches
 		{
@@ -108,6 +112,15 @@ namespace OpenBveApi.Runtime
 			}
 		}
 
+		/// <summary>Gets the number of headlight states the train has.</summary>
+		public int HeadlightStates
+		{
+			get
+			{
+				return this.MyHeadlightStates;
+			}
+		}
+
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="powerNotches">The number of power notches the train has.</param>
 		/// <param name="brakeType">The type of brake the train uses.</param>
@@ -139,6 +152,25 @@ namespace OpenBveApi.Runtime
 			this.MyHasHoldBrake = hasHoldBrake;
 			this.MyHasLocoBrake = hasLocoBrake;
 			this.MyCars = cars;
+		}
+
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="powerNotches">The number of power notches the train has.</param>
+		/// <param name="brakeType">The type of brake the train uses.</param>
+		/// <param name="brakeNotches">The number of brake notches the train has, including the hold brake, but excluding the emergency brake.</param>
+		/// <param name="hasHoldBrake">Whether the train has a hold brake.</param>
+		/// <param name="hasLocoBrake">Whether the train has a loco brake.</param>
+		/// <param name="cars">The number of cars the train has.</param>
+		/// <param name="headlightStates">The number of headlight states the train has</param>
+		public VehicleSpecs(int powerNotches, BrakeTypes brakeType, int brakeNotches, bool hasHoldBrake, bool hasLocoBrake, int cars, int headlightStates)
+		{
+			this.MyPowerNotches = powerNotches;
+			this.MyBrakeType = brakeType;
+			this.MyBrakeNotches = brakeNotches;
+			this.MyHasHoldBrake = hasHoldBrake;
+			this.MyHasLocoBrake = hasLocoBrake;
+			this.MyCars = cars;
+			this.MyHeadlightStates = headlightStates;
 		}
 	}
 }

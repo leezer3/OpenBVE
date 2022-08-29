@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -149,6 +150,8 @@ namespace Plugin
 		private static Matrix4D rootMatrix;
 		private static int currentLevel = 0;
 		private static int transformStart = 0;
+
+		private static readonly Dictionary<string, Material> rootMaterials = new Dictionary<string, Material>();
 
 		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
@@ -345,7 +348,7 @@ namespace Plugin
 					}
 					for (int i = 0; i < nMaterials; i++)
 					{
-						subBlock = block.ReadSubBlock(TemplateID.Material);
+						subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 					break;
@@ -363,7 +366,11 @@ namespace Plugin
 						builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
 						builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
 					}
-					
+					if (currentLevel == 0)
+					{
+						// Key based material definitions
+						rootMaterials.Add(block.Label, builder.Materials[m]);
+					}
 					if (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock(TemplateID.TextureFilename);
@@ -453,6 +460,19 @@ namespace Plugin
 					 * The current engine only supports clamping on a per-texture basis & this was discontinued in
 					 * later versions of DirectX so just validate this is structurally valid and ignore for the minute
 					 */
+					break;
+				case TemplateID.TextureKey:
+					if (string.IsNullOrEmpty(block.Label))
+					{
+						break;
+					}
+					int ml = builder.Materials.Length;
+					Array.Resize(ref builder.Materials, ml + 1);
+					builder.Materials[ml] = new Material();
+					if (rootMaterials.ContainsKey(block.Label))
+					{
+						builder.Materials[ml] = rootMaterials[block.Label];
+					}
 					break;
 			}
 		}

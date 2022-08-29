@@ -130,6 +130,13 @@ namespace OpenBve
 			else if (Program.Renderer.Screen.Height <= 890) menuFont = Program.Renderer.Fonts.LargeFont;
 			else if (Program.Renderer.Screen.Height <= 1150) menuFont = Program.Renderer.Fonts.VeryLargeFont;
 			else menuFont = Program.Renderer.Fonts.EvenLargerFont;
+
+			if (Interface.CurrentOptions.UserInterfaceFolder == "Large")
+			{
+				// If using the large HUD option, increase the text size in the menu too
+				menuFont = Program.Renderer.Fonts.NextLargestFont(menuFont);
+			}
+
 			em = (int)menuFont.FontSize;
 			lineHeight = (int)(em * LineSpacing);
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Drawing;
 using System.Drawing.Text;
 using OpenBveApi.FileSystem;
@@ -7,7 +8,7 @@ using OpenBveApi.Hosts;
 namespace LibRender2.Text
 {
 	/// <summary>Provides fonts</summary>
-	public class Fonts
+	public partial class Fonts
 	{
 		/// <summary>Represents a very small sans serif font.</summary>
 		public readonly OpenGlFont VerySmallFont;
@@ -27,6 +28,8 @@ namespace LibRender2.Text
 		public readonly OpenGlFont EvenLargerFont;
 
 		private readonly PrivateFontCollection fontCollection;
+
+		private static HostInterface currentHost;
 
 		/// <summary>Gets the next smallest font</summary>
 		/// <param name="currentFont">The font we require the smaller version for</param>
@@ -50,17 +53,44 @@ namespace LibRender2.Text
 					return EvenLargerFont;
 			}
 		}
-		
-		internal Fonts(HostInterface currentHost, FileSystem fileSystem)
+
+		/// <summary>Gets the next largest font</summary>
+		/// <param name="currentFont">The font we require the larger version for</param>
+		/// <returns>The next larger font</returns>
+		public OpenGlFont NextLargestFont(OpenGlFont currentFont)
 		{
+			switch ((int)currentFont.FontSize)
+			{
+				case 9:
+					return SmallFont;
+				case 12:
+					return NormalFont;
+				case 16:
+					return LargeFont;
+				case 21:
+					return VeryLargeFont;
+				default:
+					return EvenLargerFont;
+			}
+		}
+		
+		public Fonts(HostInterface host, FileSystem fileSystem, string fontName)
+		{
+			currentHost = host;
 			fontCollection = new PrivateFontCollection();
 			FontFamily uiFont = FontFamily.GenericSansSerif;
-			switch (currentHost.Platform)
+			if (!string.IsNullOrEmpty(fontName))
 			{
-				case HostPlatform.AppleOSX:
-					// This gets us a much better Unicode glyph set
-					uiFont = new FontFamily("Arial Unicode MS");
-					break;
+				try
+				{
+					FontFamily newFont = new FontFamily(fontName);
+					uiFont = newFont;
+				}
+				catch
+				{
+					currentHost.ReportProblem(ProblemType.InvalidOperation, "Failed to load font " + fontName);
+				}
+				
 			}
 			VerySmallFont = new OpenGlFont(uiFont, 9.0f);
 			SmallFont = new OpenGlFont(uiFont, 12.0f);

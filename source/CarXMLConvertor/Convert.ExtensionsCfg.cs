@@ -387,7 +387,7 @@ namespace CarXmlConvertor
 			{
 				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
 			}
-
+			newLines.Add("<HeadlightStates>1</HeadlightStates>");
 			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
 			if (File.Exists(trainTxt))
 			{
@@ -619,7 +619,7 @@ namespace CarXmlConvertor
 			{
 				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
 			}
-
+			newLines.Add("<HeadlightStates>1</HeadlightStates>");
 			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
 			if (File.Exists(trainTxt))
 			{
