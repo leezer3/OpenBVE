@@ -89,8 +89,7 @@ namespace LibRender2.Objects
 		public void ShowObject(ObjectState State, ObjectType Type)
 		{
 			bool result = AddObject(State);
-			quadTree.Add(State, Orientation3.Default);
-
+			
 			if (!renderer.ForceLegacyOpenGL && State.Prototype.Mesh.VAO == null)
 			{
 				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic, renderer.DefaultShader.VertexLayout, renderer);

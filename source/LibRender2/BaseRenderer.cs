@@ -613,13 +613,27 @@ namespace LibRender2
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
-
-			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-
-			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
+			
+			
+			if (currentOptions.UseQuadTrees)
 			{
-				VisibleObjects.ShowObject(state, ObjectType.Static);
+				foreach (ObjectState state in StaticObjectStates)
+				{
+					VisibleObjects.quadTree.Add(state, Orientation3.Default);
+				}
+				VisibleObjects.quadTree.CreateVisibilityLists(500);
+				UpdateQuadTreeVisibility();
 			}
+			else
+			{
+				double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+				foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
+				{
+					VisibleObjects.ShowObject(state, ObjectType.Static);
+				}
+			}
+			
+
 		}
 
 		public void UpdateVisibility(double TrackPosition)

@@ -272,7 +272,7 @@ namespace OpenBveApi.Routes
 		/// <summary>Creates the visibility lists for all nodes in this quad collection.</summary>
 		/// <param name="viewingDistance">The viewing distance.</param>
 		/// <remarks>Call this function whenever the viewing distance changes.</remarks>
-		internal void CreateVisibilityLists(double viewingDistance)
+		public void CreateVisibilityLists(double viewingDistance)
 		{
 			FinalizeBoundingRectangles(Root);
 			CreateVisibilityLists(Root, viewingDistance);
