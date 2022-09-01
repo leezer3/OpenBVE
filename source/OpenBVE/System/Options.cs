@@ -182,6 +182,7 @@ namespace OpenBve
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
+				this.ObjectVisibilityMode = VisibilityModes.TrackBased;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
@@ -157,7 +158,14 @@ namespace ObjectViewer.Graphics
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
-			foreach (FaceState face in VisibleObjects.OpaqueFaces)
+			List<FaceState> opaqueFaces, alphaFaces;
+			lock (VisibleObjects.LockObject)
+			{
+				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				alphaFaces = VisibleObjects.AlphaFaces.ToList();
+			}
+
+			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
 			}
@@ -172,7 +180,7 @@ namespace ObjectViewer.Graphics
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					face.Draw();
 				}
@@ -183,7 +191,7 @@ namespace ObjectViewer.Graphics
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 					{
@@ -199,7 +207,7 @@ namespace ObjectViewer.Graphics
 				GL.DepthMask(false);
 				bool additive = false;
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 					{

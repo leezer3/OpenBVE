@@ -277,7 +277,7 @@ namespace RouteViewer
 					Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 					Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-					Renderer.UpdateVisibility(a.TrackPosition, true);
+					//Renderer.UpdateVisibility(a.TrackPosition, true);
 					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				}
 				Program.CurrentlyLoading = false;
@@ -392,7 +392,7 @@ namespace RouteViewer
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
-							Renderer.UpdateVisibility(a.TrackPosition, true);
+							//Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
 						else

@@ -207,7 +207,7 @@ namespace ObjectViewer {
 			Game.Reset();
 			RefreshObjects();
 			Renderer.InitializeVisibility();
-			Renderer.UpdateVisibility(0.0, true);
+			Renderer.updateVisibility = true;
 			ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Renderer.ApplyBackgroundColor();
 		}
@@ -335,7 +335,7 @@ namespace ObjectViewer {
 
 		    Renderer.InitializeVisibility();
 		    Renderer.UpdateViewingDistances(600);
-		    Renderer.UpdateVisibility(0.0, true);
+		    Renderer.updateVisibility = true;
 		    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 		    Program.TrainManager.UpdateTrainObjects(0.0, true);
 		    Renderer.ApplyBackgroundColor();

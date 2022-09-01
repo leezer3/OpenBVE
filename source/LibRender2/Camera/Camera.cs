@@ -46,6 +46,7 @@ namespace LibRender2.Cameras
 			}
 			set
 			{
+				Renderer.updateVisibility = true;
 				absolutePosition = value;
 				TranslationMatrix = Matrix4D.CreateTranslation(-value.X, -value.Y, value.Z);
 			}

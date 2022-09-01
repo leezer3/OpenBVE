@@ -91,8 +91,7 @@ namespace OpenBveApi
 		public bool Accessibility;
 		/// <summary>The font to use</summary>
 		public string Font;
-		/// <summary>Whether quad trees are used to calculate visibility</summary>
-		/// <remarks>FIXME: needs to be implemented into route parser (?)</remarks>
-		public bool UseQuadTrees = true;
+		/// <summary>The object visibility mode in use</summary>
+		public VisibilityModes ObjectVisibilityMode;
 	}
 }

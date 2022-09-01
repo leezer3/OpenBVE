@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
@@ -175,6 +177,8 @@ namespace RouteViewer
 
 			// world layer
 			// opaque face
+			
+			
 			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
@@ -197,15 +201,21 @@ namespace RouteViewer
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
-
-			foreach (FaceState face in VisibleObjects.OpaqueFaces)
+			List<FaceState> opaqueFaces, alphaFaces;
+			lock (VisibleObjects.LockObject)
+			{
+				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				alphaFaces = VisibleObjects.AlphaFaces.ToList();
+			}
+			
+			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
 			}
 
 			// alpha face
 			ResetOpenGlState();
-			VisibleObjects.SortPolygonsInAlphaFaces();
+			alphaFaces.SortByDistance(Camera.AbsolutePosition);
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
@@ -213,7 +223,7 @@ namespace RouteViewer
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					face.Draw();
 				}
@@ -224,7 +234,7 @@ namespace RouteViewer
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 					{
@@ -240,7 +250,7 @@ namespace RouteViewer
 				GL.DepthMask(false);
 				bool additive = false;
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 					{

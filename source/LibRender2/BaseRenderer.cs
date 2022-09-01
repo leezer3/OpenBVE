@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 using LibRender2.Backgrounds;
 using LibRender2.Cameras;
 using LibRender2.Fogs;
@@ -22,6 +23,7 @@ using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -284,6 +286,13 @@ namespace LibRender2
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
 			Fonts = new Fonts(currentHost, fileSystem, currentOptions.Font);
+			VisibilityThread = new Thread(vt);
+			VisibilityThread.Start();
+		}
+
+		~BaseRenderer()
+		{
+			visibilityThread = false;
 		}
 
 		/// <summary>
@@ -609,13 +618,21 @@ namespace LibRender2
 		/// the required VAO objects</remarks>
 		public void InitializeVisibility()
 		{
+			for (int i = 0; i < StaticObjectStates.Count; i++)
+			{
+				VAOExtensions.CreateVAO(ref StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+			}
+			for (int i = 0; i < DynamicObjectStates.Count; i++)
+			{
+				VAOExtensions.CreateVAO(ref DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+			}
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 			
 			
-			if (currentOptions.UseQuadTrees)
+			if (currentOptions.ObjectVisibilityMode == VisibilityModes.QuadTree)
 			{
 				foreach (ObjectState state in StaticObjectStates)
 				{
@@ -636,9 +653,30 @@ namespace LibRender2
 
 		}
 
-		public void UpdateVisibility(double TrackPosition)
+		public bool updateVisibility;
+		public bool visibilityThread = true;
+
+		public Thread VisibilityThread;
+
+		private void vt()
 		{
-			if (currentOptions.UseQuadTrees)
+			while (visibilityThread)
+			{
+				if (updateVisibility)
+				{
+					UpdateVisibility(CameraTrackFollower.TrackPosition);
+					updateVisibility = false;
+				}
+				else
+				{
+					Thread.Sleep(100);
+				}
+			}
+		}
+
+		private void UpdateVisibility(double TrackPosition)
+		{
+			if (currentOptions.ObjectVisibilityMode == VisibilityModes.QuadTree)
 			{
 				UpdateQuadTreeVisibility();
 			}
@@ -648,8 +686,13 @@ namespace LibRender2
 			}
 		}
 
-		public void UpdateQuadTreeVisibility()
+		private void UpdateQuadTreeVisibility()
 		{
+			if (VisibleObjects == null || VisibleObjects.quadTree == null)
+			{
+				Thread.Sleep(10);
+				return;
+			}
 			Camera.UpdateQuadTreeLeaf();
 		}
 
@@ -807,22 +850,7 @@ namespace LibRender2
 			double d = BackgroundImageDistance + Camera.ExtraViewingDistance;
 			Camera.ForwardViewingDistance = d * max;
 			Camera.BackwardViewingDistance = -d * min;
-			UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z, true);
-		}
-
-		public void UpdateVisibility(double TrackPosition, bool ViewingDistanceChanged)
-		{
-			if (ViewingDistanceChanged)
-			{
-				UpdateVisibility(TrackPosition);
-				UpdateVisibility(TrackPosition - 0.001);
-				UpdateVisibility(TrackPosition + 0.001);
-				UpdateVisibility(TrackPosition);
-			}
-			else
-			{
-				UpdateVisibility(TrackPosition);
-			}
+			updateVisibility = true;
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
@@ -1098,6 +1126,7 @@ namespace LibRender2
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
+			
 			if (State != lastObjectState || State.Prototype.Dynamic)
 			{
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
@@ -1108,6 +1137,11 @@ namespace LibRender2
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
 				return;
+			}
+
+			if (State.Prototype.Mesh.VAO == null)
+			{
+				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, false, DefaultShader.VertexLayout, this);
 			}
 
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
@@ -1601,7 +1635,5 @@ namespace LibRender2
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PopMatrix();
 		}
-
-		
 	}
 }
