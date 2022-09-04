@@ -151,6 +151,31 @@
 			}
 		}
 
+		/*
+		 * DetailManager.dll reconstructs the LoadProperties in order to pass it through to child plugins
+		 * This isn't necessarily supported, but other people may do something similar with a shipped API
+		 * so keep around the old constructors
+		 * https://github.com/leezer3/OpenBVE/issues/813
+		 */
+
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="pluginFolder">The absolute path to the plugin folder.</param>
+		/// <param name="trainFolder">The absolute path to the train folder.</param>
+		/// <param name="playSound">The callback function for playing sounds.</param>
+		/// <param name="playCarSound">The callback function for playing car-based sounds.</param>
+		/// <param name="addMessage">The callback function for adding interface messages.</param>
+		/// <param name="addScore">The callback function for adding scores.</param>
+		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, PlayCarSoundDelegate playCarSound, AddInterfaceMessageDelegate addMessage, AddScoreDelegate addScore)
+		{
+			this.MyPluginFolder = pluginFolder;
+			this.MyTrainFolder = trainFolder;
+			this.MyPlaySound = playSound;
+			this.MyPlayCarSound = playCarSound;
+			this.MyAddInterfaceMessage = addMessage;
+			this.MyAddScore = addScore;
+			this.MyFailureReason = null;
+		}
+
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="pluginFolder">The absolute path to the plugin folder.</param>
 		/// <param name="trainFolder">The absolute path to the train folder.</param>
