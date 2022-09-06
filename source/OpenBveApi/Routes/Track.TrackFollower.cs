@@ -112,6 +112,11 @@ namespace OpenBveApi.Routes
 		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
 		public void UpdateRelative(double RelativeTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
+			if (RelativeTrackPosition == 0)
+			{
+				// not moved!
+				return;
+			}
 			UpdateAbsolute(TrackPosition + RelativeTrackPosition, UpdateWorldCoordinates, AddTrackInaccuracy);
 		}
 
