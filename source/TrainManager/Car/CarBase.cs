@@ -152,7 +152,7 @@ namespace TrainManager.Car
 					RearBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
 					if (baseTrain.State != TrainState.Disposed)
 					{
-						BeaconReceiver.UpdateRelative(Delta, true, true);
+						BeaconReceiver.UpdateRelative(Delta, true, false);
 					}
 				}
 			}
