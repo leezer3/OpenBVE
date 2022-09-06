@@ -8,12 +8,15 @@ namespace TrainManager.SafetySystems
 	{
 		/// <summary>Variable controlling whether the door startup hack has been performed</summary>
 		private bool doorStart;
+		/// <summary>Timer to reset vigilance when necessary</summary>
+		private double vigilanceTimer;
 
 		internal UKMUtAI(Plugin plugin)
 		{
 			Plugin = plugin;
 			currentStep = 0;
 			nextPluginAction = 0;
+			vigilanceTimer = 0;
 		}
 
 		internal override void Perform(AIData data)
@@ -236,6 +239,42 @@ namespace TrainManager.SafetySystems
 						data.Response = AIResponse.Short;
 					}
 					return;
+			}
+
+			vigilanceTimer += data.TimeElapsed;
+			if (vigilanceTimer > 20000 && Plugin.Train.CurrentSpeed != 0)
+			{
+				vigilanceTimer = 0;
+				if (data.Handles.BrakeNotch > 0)
+				{
+					if (data.Handles.BrakeNotch < Plugin.Train.Handles.Brake.MaximumNotch)
+					{
+						// quick further blip on the brakes to satisfy vigilance
+						data.Handles.BrakeNotch++;
+					}
+					else
+					{
+						// can't increase brake notch any further, so blip power, although it does nothing
+						data.Handles.PowerNotch++;
+					}
+					data.Response = AIResponse.Short;
+					return;
+				}
+				if (data.Handles.PowerNotch > 0)
+				{
+					// drop off the power a sec
+					data.Handles.PowerNotch--;
+					data.Response = AIResponse.Short;
+					return;
+				}
+
+				if (data.Handles.PowerNotch == 0)
+				{
+					// Running at appropriate speed with no power, so tap brakes a sec to control + satisfy vigilance
+					data.Handles.BrakeNotch++;
+					data.Response = AIResponse.Short;
+					return;
+				}
 			}
 
 		}
