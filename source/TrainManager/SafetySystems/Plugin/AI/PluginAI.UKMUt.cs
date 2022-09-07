@@ -21,52 +21,64 @@ namespace TrainManager.SafetySystems
 
 		internal override void Perform(AIData data)
 		{
-			if (Plugin.Panel[31] == 0)
+			if (Plugin.Train.CurrentSpeed != 0 && currentStep == 0)
 			{
-				//Panto is down, so run startup sequence
-				switch (currentStep)
-				{
-					case 0:
-						data.Handles.Reverser = 1;
-						data.Response = AIResponse.Long;
-						currentStep++;
-						return;
-					case 1:
-						data.Handles.Reverser = 0;
-						data.Response = AIResponse.Long;
-						currentStep++;
-						return;
-					case 2:
-						if (Plugin.Sound[2] == 0)
-						{
-							data.Response = AIResponse.Medium;
-							currentStep++;
-						}
-						return;
-					case 3:
-						Plugin.KeyDown(VirtualKeys.A1);
+				// ai asked to take over at speed, skip startup sequence
+				currentStep = 100;
+			}
+
+			switch (currentStep)
+			{
+				case 0:
+					// start of startup sequence- start by bringing up TPWS / AWS
+					data.Handles.Reverser = 1;
+					data.Response = AIResponse.Long;
+					currentStep++;
+					return;
+				case 1:
+					data.Handles.Reverser = 0;
+					data.Response = AIResponse.Long;
+					currentStep++;
+					return;
+				case 2:
+					if (Plugin.Sound[2] == 0)
+					{
 						data.Response = AIResponse.Medium;
 						currentStep++;
-						return;
-					case 4:
-						Plugin.KeyUp(VirtualKeys.A1);
-						data.Response = AIResponse.Medium;
+					}
+					return;
+				case 3:
+					Plugin.KeyDown(VirtualKeys.A1);
+					data.Response = AIResponse.Medium;
+					currentStep++;
+					return;
+				case 4:
+					Plugin.KeyUp(VirtualKeys.A1);
+					data.Response = AIResponse.Medium;
+					if (Plugin.Panel[31] == 0)
+					{
+						// need to raise the pantograph
 						currentStep++;
-						return;
-					case 5:
-						Plugin.KeyDown(VirtualKeys.D);
-						data.Response = AIResponse.Short;
-						currentStep++;
-						return;
-					case 6:
-						currentStep++;
-						return;
-					case 7:
-						Plugin.KeyUp(VirtualKeys.D);
-						data.Response = AIResponse.Short;
+					}
+					else
+					{
+						// startup test complete
 						currentStep = 100;
-						return;
-				}
+					}
+					return;
+				case 5:
+					Plugin.KeyDown(VirtualKeys.D);
+					data.Response = AIResponse.Short;
+					currentStep++;
+					return;
+				case 6:
+					currentStep++;
+					return;
+				case 7:
+					Plugin.KeyUp(VirtualKeys.D);
+					data.Response = AIResponse.Short;
+					currentStep = 100;
+					return;
 			}
 
 			if (!doorStart)
