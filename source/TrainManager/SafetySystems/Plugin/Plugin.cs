@@ -649,12 +649,13 @@ namespace TrainManager.SafetySystems
 		protected abstract void SetBeacon(BeaconData beacon);
 
 		/// <summary>Updates the AI.</summary>
+		/// <param name="timeElapsed">The elapsed time</param>
 		/// <returns>The AI response.</returns>
-		public AIResponse UpdateAI()
+		public AIResponse UpdateAI(double timeElapsed)
 		{
 			if (this.SupportsAI != AISupport.None)
 			{
-				AIData data = new AIData(GetHandles());
+				AIData data = new AIData(GetHandles(), timeElapsed);
 				this.PerformAI(data);
 				if (data.Response != AIResponse.None)
 				{

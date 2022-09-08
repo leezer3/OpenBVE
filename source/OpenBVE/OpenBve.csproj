@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -320,13 +320,13 @@
     </Compile>
     <Compile Include="Game\ObjectManager\AnimatedObjects\FunctionScripts.cs" />
     <Compile Include="Game\Game.cs" />
-    <Compile Include="OldCode\Interface.cs" />
+    <Compile Include="System\Interface.cs" />
     <Compile Include="System\Loading.cs" />
     <Compile Include="System\MainLoop.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="Game\Timetable.cs" />
-    <Compile Include="OldCode\TrainManager.cs" />
-    <Compile Include="OldCode\World.cs" />
+    <Compile Include="Game\TrainManager.cs" />
+    <Compile Include="Game\World.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager\RailDriver\RailDriver32.cs" />
     <Compile Include="System\Input\JoystickManager\RailDriver\RailDriver64.cs" />

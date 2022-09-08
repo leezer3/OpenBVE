@@ -55,10 +55,11 @@ namespace OpenBve
 			}
 
 			/// <summary>Sets the response time for actions triggered by a runtime plugin</summary>
+			/// <param name="timeElapsed">The elapsed time</param>
 			/// <returns>The response time</returns>
-			private AIResponse PerformPlugin()
+			private AIResponse PerformPlugin(double timeElapsed)
 			{
-				AIResponse response = Train.Plugin.UpdateAI();
+				AIResponse response = Train.Plugin.UpdateAI(timeElapsed);
 				if (response == AIResponse.Short)
 				{
 					CurrentInterval = 0.2 + 0.1 * Program.RandomNumberGenerator.NextDouble();
@@ -1022,7 +1023,7 @@ namespace OpenBve
 					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
 					if (Train.Plugin != null && Train.Plugin.SupportsAI != AISupport.None)
 					{
-						if (PerformPlugin() != AIResponse.None)
+						if (PerformPlugin(TimeElapsed) != AIResponse.None)
 						{
 							return;
 						}

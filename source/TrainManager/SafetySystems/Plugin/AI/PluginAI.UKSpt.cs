@@ -8,66 +8,83 @@ namespace TrainManager.SafetySystems
 	{
 		/// <summary>Variable controlling whether the door startup hack has been performed</summary>
 		private bool doorStart;
+		/// <summary>Timer to reset vigilance when necessary</summary>
+		private double vigilanceTimer;
 
 		internal UKSptAI(Plugin plugin)
 		{
 			Plugin = plugin;
 			currentStep = 0;
 			nextPluginAction = 0;
+			vigilanceTimer = 0;
 		}
 
 		internal override void Perform(AIData data)
 		{
-			if (Plugin.Panel[5] == 2)
+			if (Plugin.Train.CurrentSpeed != 0 && currentStep == 0)
 			{
-				//Engine is currently not running, so run startup sequence
-				switch (currentStep)
-				{
-					case 0:
-						data.Handles.Reverser = 1;
-						data.Response = AIResponse.Long;
-						currentStep++;
-						return;
-					case 1:
-						data.Handles.Reverser = 0;
-						data.Response = AIResponse.Long;
-						currentStep++;
-						return;
-					case 2:
-						if (Plugin.Sound[2] == 0)
-						{
-							data.Response = AIResponse.Medium;
-							currentStep++;
-						}
-						return;
-					case 3:
-						Plugin.KeyDown(VirtualKeys.A1);
-						data.Response = AIResponse.Medium;
-						currentStep++;
-						return;
-					case 4:
-						Plugin.KeyUp(VirtualKeys.A1);
-						data.Response = AIResponse.Medium;
-						currentStep++;
-						return;
-					case 5:
-						Plugin.KeyDown(VirtualKeys.D);
-						data.Response = AIResponse.Long;
-						currentStep++;
-						return;
-					case 6:
-						currentStep++;
-						return;
-					case 7:
-						Plugin.KeyUp(VirtualKeys.D);
-						data.Response = AIResponse.Medium;
-						currentStep = 100;
-						return;
-				}
+				// ai asked to take over at speed, skip startup sequence
+				currentStep = 100;
 			}
-			else if (Plugin.Panel[5] == 3)
+
+			switch (currentStep)
 			{
-				//Engine either stalled on start, or has been stopped by user
+				case 0:
+					// start of startup sequence- start by bringing up TPWS / AWS
+					data.Handles.Reverser = 1;
+					data.Response = AIResponse.Long;
+					currentStep++;
+					return;
+				case 1:
+					data.Handles.Reverser = 0;
+					data.Response = AIResponse.Long;
+					currentStep++;
+					return;
+				case 2:
+					if (Plugin.Sound[2] == 0)
+					{
+						data.Response = AIResponse.Medium;
+						currentStep++;
+					}
+					return;
+				case 3:
+					Plugin.KeyDown(VirtualKeys.A1);
+					data.Response = AIResponse.Medium;
+					currentStep++;
+					return;
+				case 4:
+					Plugin.KeyUp(VirtualKeys.A1);
+					data.Response = AIResponse.Medium;
+					// check engine state
+					if (Plugin.Panel[5] == 2)
+					{
+						// engine stopped, continue with startup
+						currentStep++;
+					}
+					else
+					{
+						// startup test complete
+						currentStep = 100;
+					}
+					return;
+				case 5:
+					Plugin.KeyDown(VirtualKeys.D);
+					data.Response = AIResponse.Long;
+					currentStep++;
+					return;
+				case 6:
+					currentStep++;
+					return;
+				case 7:
+					Plugin.KeyUp(VirtualKeys.D);
+					data.Response = AIResponse.Medium;
+					currentStep = 100;
+					return;
+			}
+
+			if (Plugin.Panel[5] == 3)
+			{
+				// engine either stalled on start, or has been stopped by user
 				currentStep = 5;
 			}
 
@@ -241,6 +258,42 @@ namespace TrainManager.SafetySystems
 						data.Response = AIResponse.Short;
 					}
 					return;
+			}
+
+			vigilanceTimer += data.TimeElapsed;
+			if (vigilanceTimer > 20000 && Plugin.Train.CurrentSpeed != 0)
+			{
+				vigilanceTimer = 0;
+				if (data.Handles.BrakeNotch > 0)
+				{
+					if (data.Handles.BrakeNotch < Plugin.Train.Handles.Brake.MaximumNotch)
+					{
+						// quick further blip on the brakes to satisfy vigilance
+						data.Handles.BrakeNotch++;
+					}
+					else
+					{
+						// can't increase brake notch any further, so blip power, although it does nothing
+						data.Handles.PowerNotch++;
+					}
+					data.Response = AIResponse.Short;
+					return;
+				}
+				if (data.Handles.PowerNotch > 0)
+				{
+					// drop off the power a sec
+					data.Handles.PowerNotch--;
+					data.Response = AIResponse.Short;
+					return;
+				}
+
+				if (data.Handles.PowerNotch == 0)
+				{
+					// Running at appropriate speed with no power, so tap brakes a sec to control + satisfy vigilance
+					data.Handles.BrakeNotch++;
+					data.Response = AIResponse.Short;
+					return;
+				}
 			}
 
 		}
