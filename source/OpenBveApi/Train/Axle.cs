@@ -21,6 +21,8 @@ namespace OpenBveApi.Trains
 		public bool PointSoundTriggered;
 		/// <summary>A reference to the base car</summary>
 		private readonly AbstractCar baseCar;
+		/// <summary>The wheel radius</summary>
+		public double WheelRadius;
 
 		private readonly double coefficientOfFriction;
 

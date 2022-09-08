@@ -1,0 +1,85 @@
+﻿using System;
+using SoundManager;
+
+namespace TrainManager.TractionModels.Steam
+{
+	public class ExhaustSteamInjector
+	{
+		/// <summary>Holds a reference to the base engine</summary>
+		private readonly SteamEngine Engine;
+		/// <summary>The base injection rate</summary>
+		private readonly double BaseInjectionRate;
+		/// <summary>The injection rate whilst active</summary>
+		public double InjectionRate => BaseInjectionRate * Math.Abs(Engine.Cutoff.Current) * Math.Abs(Engine.Regulator.Current);
+		/// <summary>Whether the injector is active</summary>
+		public bool Active;
+		/// <summary>Whether the start sound has been played</summary>
+		private bool startSoundPlayed;
+		/// <summary>The sound played when the injector is activated</summary>
+		public CarSound StartSound;
+		/// <summary>The sound played when the injector is active and working</summary>
+		public CarSound InjectingLoopSound;
+		/// <summary>The sound played when the injector is active and idle</summary>
+		public CarSound IdleLoopSound;
+		/// <summary>The sound played when the injector is stopped</summary>
+		public CarSound StopSound;
+
+		internal ExhaustSteamInjector(SteamEngine engine, double baseInjectionRate)
+		{
+			Engine = engine;
+			BaseInjectionRate = baseInjectionRate;
+		}
+
+		public void Update(double timeElapsed)
+		{
+			if (Active)
+			{
+				// just increase water level here
+				Engine.Boiler.WaterLevel += InjectionRate * timeElapsed;
+				if (!startSoundPlayed)
+				{
+					if (StartSound != null)
+					{
+						StartSound.Play(Engine.Car, false);
+					}
+					
+					startSoundPlayed = true;
+				}
+				else if(!StartSound.IsPlaying)
+				{
+					if (BaseInjectionRate != 0)
+					{
+						if (InjectingLoopSound != null && !InjectingLoopSound.IsPlaying)
+						{
+							InjectingLoopSound.Play(Engine.Car, true);
+						}
+					}
+					else
+					{
+						if (IdleLoopSound != null && !IdleLoopSound.IsPlaying)
+						{
+							InjectingLoopSound.Play(Engine.Car, true);
+						}
+					}
+					
+				}
+			}
+			else
+			{
+				if (InjectingLoopSound != null)
+				{
+					InjectingLoopSound.Stop();
+				}
+				if (IdleLoopSound != null)
+				{
+					IdleLoopSound.Stop();
+				}
+				if (startSoundPlayed && StopSound != null)
+				{
+					StopSound.Play(Engine.Car, false);
+				}
+				startSoundPlayed = false;
+			}
+		}
+	}
+}
