@@ -25,17 +25,22 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The shovel sound</summary>
 		public CarSound ShovelSound;
 
-		internal Firebox(SteamEngine engine, double maxArea, double maxTemperature, double conversionRate)
+		internal Firebox(SteamEngine engine, double maxArea, double maxTemperature, double conversionRate, double unitsPerShovel)
 		{
 			Engine = engine;
 			MaxArea = maxArea;
 			MaxTemperature = maxTemperature;
 			MaxConversionRate = conversionRate;
+			UnitsPerShovel = unitsPerShovel;
 		}
 
 		internal void Update(double timeElapsed)
 		{
 			double burntUnits = ConversionRate * timeElapsed;
+			if (Engine.Boiler.Blowers.Active)
+			{
+				burntUnits *= 2.0;
+			}
 			Mass -= burntUnits;
 			if (Mass < MaxArea)
 			{
@@ -50,7 +55,7 @@ namespace TrainManager.TractionModels.Steam
 		internal void AddFuel()
 		{
 			Mass += UnitsPerShovel;
-			Area += UnitsPerShovel;
+			Area += UnitsPerShovel * 0.1; // 1kg of coal to ~10cm square
 			if (Area > MaxArea)
 			{
 				Area = MaxArea;
