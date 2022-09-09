@@ -5,7 +5,7 @@ namespace TrainManager.BrakeSystems
 {
 	public class AutomaticAirBrake : CarBrake
 	{
-		public AutomaticAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, ReverserHandle ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves)
+		public AutomaticAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, AbstractReverser ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves)
 		{
 			electropneumaticBrakeType = type;
 			emergencyHandle = EmergencyHandle;

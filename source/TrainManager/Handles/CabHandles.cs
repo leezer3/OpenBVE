@@ -4,7 +4,7 @@
 	public struct CabHandles
 	{
 		/// <summary>The Reverser</summary>
-		public ReverserHandle Reverser;
+		public AbstractReverser Reverser;
 		/// <summary>The Power</summary>
 		public PowerHandle Power;
 		/// <summary>The Brake</summary>

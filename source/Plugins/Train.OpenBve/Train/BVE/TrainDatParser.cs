@@ -1292,8 +1292,8 @@ namespace Train.OpenBve
 					Train.Handles.EmergencyBrake.Driver = false;
 					Train.Handles.EmergencyBrake.Safety = false;
 					Train.Handles.EmergencyBrake.Actual = false;
-					Train.Handles.Reverser.Driver = ReverserPosition.Forwards;
-					Train.Handles.Reverser.Actual = ReverserPosition.Forwards;
+					Train.Handles.Reverser.Driver = (int)ReverserPosition.Forwards;
+					Train.Handles.Reverser.Actual = (int)ReverserPosition.Forwards;
 					break;
 				case TrainStartMode.EmergencyBrakesAts:
 					for (int i = 0; i < Cars; i++) {

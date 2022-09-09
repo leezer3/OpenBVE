@@ -15,7 +15,7 @@ namespace TrainManager.TractionModels
 		private bool startSoundPlayed;
 		/// <summary>The sound played when the blowers are active and working</summary>
 		public CarSound LoopSound;
-		/// <summary>The sound played when the injector is stopped</summary>
+		/// <summary>The sound played when the blowers are deactivated</summary>
 		public CarSound StopSound;
 		/// <summary>The temperature increase ratio</summary>
 		public readonly double Ratio;

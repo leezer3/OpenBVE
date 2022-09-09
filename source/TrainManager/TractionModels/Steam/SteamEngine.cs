@@ -1,5 +1,6 @@
 ﻿using System;
 using TrainManager.Car;
+using TrainManager.Handles;
 
 namespace TrainManager.TractionModels.Steam
 {
@@ -10,8 +11,6 @@ namespace TrainManager.TractionModels.Steam
 		internal readonly CarBase Car;
 
 		public readonly Boiler Boiler;
-
-		public readonly Cutoff Cutoff;
 
 		public readonly Regulator Regulator;
 
@@ -35,13 +34,7 @@ namespace TrainManager.TractionModels.Steam
 			 *			1L water ==> 4.15psi steam
 			 */
 			Boiler = new Boiler(this, 2000, 3000, 200, 240, 220, 120, 4.15);
-			/*
-			 * Cutoff
-			 *			75% max forwards
-			 *			50% max reverse
-			 *			10% around zero where cutoff is ineffective (due to standing resistance etc.)
-			 */
-			Cutoff = new Cutoff(this, 0.75, -0.5, 0.1);
+			
 			/*
 			 * Regulator
 			 *			100% max, assuming percentage based
@@ -54,6 +47,13 @@ namespace TrainManager.TractionModels.Steam
 			 *			20psi base stroke pressure, before reduction due to regulator / cutoff
 			 */
 			CylinderChest = new CylinderChest(this, 5, 20);
+			/*
+			 * Cutoff
+			 *			75% max forwards
+			 *			50% max reverse
+			 *			10% around zero where cutoff is ineffective (due to standing resistance etc.)
+			 */
+			Car.baseTrain.Handles.Reverser = new Cutoff(Car.baseTrain, 75, -50, 10);
 		}
 
 		private double lastTrackPosition;
@@ -63,11 +63,9 @@ namespace TrainManager.TractionModels.Steam
 			// update the boiler pressure and associated gubbins first
 			Boiler.Update(timeElapsed);
 			// get the distance travelled & convert to piston strokes
-			double distanceTravelled = Car.FrontAxle.Follower.TrackPosition - lastTrackPosition;
-			double numberOfStrokes = Math.Abs(distanceTravelled) / Car.FrontAxle.WheelRadius;
-			// drop the steam pressure appropriately
-			Boiler.SteamPressure -= numberOfStrokes * Cutoff.Ratio * CylinderChest.PressureUse;
+			CylinderChest.Update(timeElapsed, Car.FrontAxle.Follower.TrackPosition - lastTrackPosition);
 			lastTrackPosition = Car.FrontAxle.Follower.TrackPosition;
+
 		}
 	}
 }

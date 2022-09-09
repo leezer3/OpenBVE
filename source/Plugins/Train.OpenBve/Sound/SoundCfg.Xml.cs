@@ -7,6 +7,7 @@ using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
@@ -440,6 +441,11 @@ namespace Train.OpenBve
 									break;
 								case "reverser":
 								case "reverserhandle":
+									ReverserHandle reverser = Train.Handles.Reverser as ReverserHandle;
+									if (reverser == null)
+									{
+										break;
+									}
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
@@ -454,10 +460,10 @@ namespace Train.OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
-												ParseNode(cc, out Train.Handles.Reverser.EngageSound, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out reverser.EngageSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "off":
-												ParseNode(cc, out Train.Handles.Reverser.ReleaseSound, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out reverser.ReleaseSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");

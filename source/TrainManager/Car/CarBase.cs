@@ -15,6 +15,7 @@ using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
@@ -1205,8 +1206,7 @@ namespace TrainManager.Car
 							this.ReAdhesionDevice.Update(a);
 							// Update constant speed device
 
-							this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed,
-								baseTrain.Handles.Reverser.Actual);
+							this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, (ReverserPosition)baseTrain.Handles.Reverser.Actual);
 
 							// finalize
 							if (wheelspin != 0.0) a = 0.0;

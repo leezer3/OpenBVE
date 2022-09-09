@@ -12,7 +12,7 @@ namespace TrainManager.BrakeSystems
 		internal EmergencyHandle emergencyHandle;
 
 		/// <summary>Contains a reference to the reverser handle of the controlling train</summary>
-		internal ReverserHandle reverserHandle;
+		internal AbstractReverser reverserHandle;
 
 		/// <summary>Whether this is a main or auxiliary brake system</summary>
 		public BrakeType brakeType;

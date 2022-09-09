@@ -10,7 +10,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The base injection rate</summary>
 		private readonly double BaseInjectionRate;
 		/// <summary>The injection rate whilst active</summary>
-		public double InjectionRate => BaseInjectionRate * Math.Abs(Engine.Cutoff.Current) * Math.Abs(Engine.Regulator.Current);
+		public double InjectionRate => BaseInjectionRate * Math.Abs(Engine.Car.baseTrain.Handles.Reverser.Actual) * Math.Abs(Engine.Regulator.Current);
 		/// <summary>Whether the injector is active</summary>
 		public bool Active;
 		/// <summary>Whether the start sound has been played</summary>

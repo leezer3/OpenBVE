@@ -18,7 +18,7 @@ namespace TrainManager.TractionModels.Steam
 				{
 					return BaseInjectionRate * (Engine.Boiler.SteamPressure * Engine.Boiler.MinWorkingSteamPressure);
 				}
-				return BaseInjectionRate * Math.Abs(Engine.Cutoff.Current) * Math.Abs(Engine.Regulator.Current);
+				return BaseInjectionRate * Math.Abs(Engine.Car.baseTrain.Handles.Reverser.Actual) * Math.Abs(Engine.Regulator.Current);
 			}
 		}
 		/// <summary>Whether the injector is active</summary>
