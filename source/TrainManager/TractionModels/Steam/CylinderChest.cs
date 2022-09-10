@@ -1,5 +1,4 @@
 ﻿using System;
-using TrainManager.Handles;
 
 namespace TrainManager.TractionModels.Steam
 {
@@ -12,7 +11,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The base pressure used by a stroke</summary>
 		public readonly double BaseStrokePressure;
 		/// <summary>The pressure used by a single stroke</summary>
-		public double PressureUse => Engine.Regulator.Ratio * Engine.Car.baseTrain.Handles.Reverser.Actual * (StandingPressureLoss + BaseStrokePressure * Engine.Car.baseTrain.Handles.Reverser.Actual);
+		public double PressureUse => Engine.Car.baseTrain.Handles.Power.Ratio * Engine.Car.baseTrain.Handles.Reverser.Actual * (StandingPressureLoss + BaseStrokePressure * Engine.Car.baseTrain.Handles.Reverser.Actual);
 		/// <summary>The cylinder cocks</summary>
 		public CylinderCocks CylinderCocks;
 

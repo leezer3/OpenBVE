@@ -7,6 +7,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Trains;
 
@@ -683,8 +684,13 @@ namespace Train.OpenBve
 						}
 						i--; break;
 					case "[reverser]":
+						ReverserHandle reverser = train.Handles.Reverser as ReverserHandle;
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
+							if (reverser == null)
+							{
+								continue;
+							}
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
@@ -693,10 +699,10 @@ namespace Train.OpenBve
 								switch (a.ToLowerInvariant())
 								{
 									case "on":
-										train.Handles.Reverser.EngageSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
+										reverser.EngageSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
 										break;
 									case "off":
-										train.Handles.Reverser.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
+										reverser.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
 										break;
 									default:
 										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);

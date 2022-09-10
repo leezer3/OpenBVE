@@ -1031,7 +1031,8 @@ namespace Train.OpenBve
 			Train.Handles.Power = new PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown, Train);
 			if (powerReduceSteps != -1)
 			{
-				Train.Handles.Power.ReduceSteps = powerReduceSteps;
+				PowerHandle powerHandle = Train.Handles.Power as PowerHandle;
+				powerHandle.ReduceSteps = powerReduceSteps;
 			}
 
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)

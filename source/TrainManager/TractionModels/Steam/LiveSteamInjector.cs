@@ -1,5 +1,6 @@
 ﻿using System;
 using SoundManager;
+using TrainManager.Handles.Power;
 
 namespace TrainManager.TractionModels.Steam
 {
@@ -18,7 +19,7 @@ namespace TrainManager.TractionModels.Steam
 				{
 					return BaseInjectionRate * (Engine.Boiler.SteamPressure * Engine.Boiler.MinWorkingSteamPressure);
 				}
-				return BaseInjectionRate * Math.Abs(Engine.Car.baseTrain.Handles.Reverser.Actual) * Math.Abs(Engine.Regulator.Current);
+				return BaseInjectionRate * Math.Abs(Engine.Car.baseTrain.Handles.Reverser.Actual) * Engine.Car.baseTrain.Handles.Power.Ratio;
 			}
 		}
 		/// <summary>Whether the injector is active</summary>

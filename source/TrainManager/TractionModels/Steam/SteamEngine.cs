@@ -1,6 +1,7 @@
-﻿using System;
-using TrainManager.Car;
+﻿using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Handles.Power;
+using TrainManager.Power;
 
 namespace TrainManager.TractionModels.Steam
 {
@@ -9,14 +10,22 @@ namespace TrainManager.TractionModels.Steam
 	{
 		/// <summary>Holds a reference to the base car</summary>
 		internal readonly CarBase Car;
-
+		/// <summary>The boiler</summary>
 		public readonly Boiler Boiler;
-
-		public readonly Regulator Regulator;
-
+		/// <summary>The cylinder chest</summary>
 		public readonly CylinderChest CylinderChest;
-
-		public double PowerOutput;
+		/// <summary>The acceleration curves</summary>
+		public AccelerationCurve[] AccelerationCurves;
+		/// <summary>Gets the current acceleration output</summary>
+		public double PowerOutput
+		{
+			get
+			{
+				Regulator regulator = Car.baseTrain.Handles.Power as Regulator;
+				int curve = (int)(regulator.Ratio * AccelerationCurves.Length);
+				return AccelerationCurves[curve].GetAccelerationOutput(Car.CurrentSpeed, 1.0);
+			}
+		}
 
 		public SteamEngine(CarBase car)
 		{
@@ -34,13 +43,6 @@ namespace TrainManager.TractionModels.Steam
 			 *			1L water ==> 4.15psi steam
 			 */
 			Boiler = new Boiler(this, 2000, 3000, 200, 240, 220, 120, 4.15);
-			
-			/*
-			 * Regulator
-			 *			100% max, assuming percentage based
-			 *			TODO: should convert to slightly more generic, maybe actually use the Train.Handles
-			 */
-			Regulator = new Regulator(this, 100);
 			/*
 			 * Cylinder Chest
 			 *			5psi standing pressure loss (leakage etc.)

@@ -88,6 +88,7 @@
     <Compile Include="Handles\Brake\LocoBrake.cs" />
     <Compile Include="Handles\Brake\LocoBrake.Types.cs" />
     <Compile Include="Handles\Power\Power.cs" />
+    <Compile Include="Handles\Power\Regulator.cs" />
     <Compile Include="Handles\Reverser\Cutoff.cs" />
     <Compile Include="Handles\Reverser\Reverser.cs" />
     <Compile Include="Handles\Reverser\Reverser.Positions.cs" />
@@ -132,7 +133,6 @@
     <Compile Include="TractionModels\Steam\ExhaustSteamInjector.cs" />
     <Compile Include="TractionModels\Steam\Firebox.cs" />
     <Compile Include="TractionModels\Steam\LiveSteamInjector.cs" />
-    <Compile Include="TractionModels\Steam\Regulator.cs" />
     <Compile Include="TractionModels\Steam\SteamEngine.cs" />
     <Compile Include="TrainManager.cs" />
     <Compile Include="Train\BrakeSystem.cs" />

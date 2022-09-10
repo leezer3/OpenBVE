@@ -1,4 +1,3 @@
-﻿using System;
 using SoundManager;
 using TrainManager.Trains;
 
@@ -7,10 +6,6 @@ namespace TrainManager.Handles
 	/// <summary>Represnts a reverser handle</summary>
 	public class ReverserHandle : AbstractReverser
 	{
-		/// <summary>The notch set by the driver</summary>
-		public new ReverserPosition Driver;
-		/// <summary>The actual notch</summary>
-		public new ReverserPosition Actual;
 		/// <summary>Played when the reverser is moved to F or R</summary>
 		public CarSound EngageSound;
 		/// <summary>Played when the reverser is moved to N</summary>
@@ -18,8 +13,8 @@ namespace TrainManager.Handles
 		
 		public ReverserHandle(TrainBase train) : base(train)
 		{
-			Driver = ReverserPosition.Neutral;
-			Actual = ReverserPosition.Neutral;
+			Driver = (int)ReverserPosition.Neutral;
+			Actual = (int)ReverserPosition.Neutral;
 			EngageSound = new CarSound();
 			ReleaseSound = new CarSound();
 		}
@@ -32,20 +27,20 @@ namespace TrainManager.Handles
 				{
 					switch (Driver)
 					{
-						case ReverserPosition.Forwards:
+						case (int)ReverserPosition.Forwards:
 							return NotchDescriptions[3];
-						case ReverserPosition.Neutral:
+						case (int)ReverserPosition.Neutral:
 							return NotchDescriptions[2];
-						case ReverserPosition.Reverse:
+						case (int)ReverserPosition.Reverse:
 							return NotchDescriptions[1];
 					}
 				}
 
 				switch (Driver)
 				{
-					case ReverserPosition.Forwards:
+					case (int)ReverserPosition.Forwards:
 						return "F";
-					case ReverserPosition.Neutral:
+					case (int)ReverserPosition.Neutral:
 						return "N";
 					default:
 						return "B";
@@ -70,7 +65,7 @@ namespace TrainManager.Handles
 			if (r > 1) r = 1;
 			if (a != r)
 			{
-				Driver = (ReverserPosition)r;
+				Driver = r;
 				if (baseTrain.Plugin != null)
 				{
 					baseTrain.Plugin.UpdateReverser();

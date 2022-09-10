@@ -1434,17 +1434,11 @@ namespace OpenBve
 										break;
 									case Translations.Command.ReverserForward:
 										// reverser forward
-										if (TrainManager.PlayerTrain.Handles.Reverser.Driver < ReverserPosition.Forwards)
-										{
-											TrainManager.PlayerTrain.Handles.Reverser.ApplyState(1, true);
-										}
+										TrainManager.PlayerTrain.Handles.Reverser.ApplyState(1, true);
 										break;
 									case Translations.Command.ReverserBackward:
 										// reverser backward
-										if (TrainManager.PlayerTrain.Handles.Reverser.Driver > ReverserPosition.Reverse)
-										{
-											TrainManager.PlayerTrain.Handles.Reverser.ApplyState(-1, true);
-										}
+										TrainManager.PlayerTrain.Handles.Reverser.ApplyState(-1, true);
 										break;
 									case Translations.Command.HornPrimary:
 									case Translations.Command.HornSecondary:
