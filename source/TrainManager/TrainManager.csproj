@@ -126,7 +126,9 @@
     <Compile Include="TrackFollowingObject\AI\TravelPointData.cs" />
     <Compile Include="TrackFollowingObject\AI\TravelStopData.cs" />
     <Compile Include="TrackFollowingObject\TrackFollowingObject.cs" />
-    <Compile Include="TractionModels\Blowers.cs" />
+    <Compile Include="TractionModels\AbstractTractionModel.cs" />
+    <Compile Include="TractionModels\BVE\TrailerCar.cs" />
+    <Compile Include="TractionModels\Steam\Blowers.cs" />
     <Compile Include="TractionModels\Steam\Boiler.cs" />
     <Compile Include="TractionModels\Steam\CylinderChest.cs" />
     <Compile Include="TractionModels\Steam\CylinderCocks.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="TractionModels\Steam\Firebox.cs" />
     <Compile Include="TractionModels\Steam\LiveSteamInjector.cs" />
     <Compile Include="TractionModels\Steam\SteamEngine.cs" />
+    <Compile Include="TractionModels\BVE\MotorCar.cs" />
     <Compile Include="TrainManager.cs" />
     <Compile Include="Train\BrakeSystem.cs" />
     <Compile Include="Train\CommandEntry.cs" />

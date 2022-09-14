@@ -1,6 +1,5 @@
 ﻿using System;
 using SoundManager;
-using TrainManager.Handles.Power;
 
 namespace TrainManager.TractionModels.Steam
 {

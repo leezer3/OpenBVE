@@ -110,8 +110,8 @@ namespace OpenBve
                     return 0;
                 }
                 return CarIndex > Train.Cars.Length
-                    ? Train.Cars[0].Specs.Acceleration
-                    : Train.Cars[CarIndex].Specs.Acceleration;
+                    ? Train.Cars[0].TractionModel.Acceleration
+                    : Train.Cars[CarIndex].TractionModel.Acceleration;
             }
 
             /// <summary>Returns the acceleration that the first motor car is currently generating in m/s</summary>
@@ -125,14 +125,14 @@ namespace OpenBve
                     if (Train.Cars[j].Specs.IsMotorCar)
                     {
                         // hack: MotorAcceleration does not distinguish between forward/backward
-                        if (Train.Cars[j].Specs.MotorAcceleration < 0.0)
+                        if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0)
                         {
-                            return Train.Cars[j].Specs.MotorAcceleration*
+                            return Train.Cars[j].TractionModel.MotorAcceleration*
                                    (double) Math.Sign(Train.Cars[j].CurrentSpeed);
                         }
-                        if (Train.Cars[j].Specs.MotorAcceleration > 0.0)
+                        if (Train.Cars[j].TractionModel.MotorAcceleration > 0.0)
                         {
-                            return Train.Cars[j].Specs.MotorAcceleration*
+                            return Train.Cars[j].TractionModel.MotorAcceleration*
                                    (double) Train.Handles.Reverser.Actual;
                         }
                     }
@@ -150,14 +150,14 @@ namespace OpenBve
                 if (Train.Cars[CarIndex].Specs.IsMotorCar)
                 {
                     // hack: MotorAcceleration does not distinguish between forward/backward
-                    if (Train.Cars[CarIndex].Specs.MotorAcceleration < 0.0)
+                    if (Train.Cars[CarIndex].TractionModel.MotorAcceleration < 0.0)
                     {
-                        return Train.Cars[CarIndex].Specs.MotorAcceleration*
+                        return Train.Cars[CarIndex].TractionModel.MotorAcceleration*
                                (double) Math.Sign(Train.Cars[CarIndex].CurrentSpeed);
                     }
-                    if (Train.Cars[CarIndex].Specs.MotorAcceleration > 0.0)
+                    if (Train.Cars[CarIndex].TractionModel.MotorAcceleration > 0.0)
                     {
-                        return Train.Cars[CarIndex].Specs.MotorAcceleration*
+                        return Train.Cars[CarIndex].TractionModel.MotorAcceleration*
                                (double) Train.Handles.Reverser.Actual;
                     }
                 }

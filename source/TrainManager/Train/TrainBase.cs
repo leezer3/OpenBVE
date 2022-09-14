@@ -529,19 +529,19 @@ namespace TrainManager.Trains
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					Cars[i].CurrentSpeed = 0.0;
-					Cars[i].Specs.MotorAcceleration = 0.0;
+					Cars[i].TractionModel.MotorAcceleration = 0.0;
 				}
 
 				return;
 			}
 
 			// update brake system
-			UpdateBrakeSystem(TimeElapsed, out var DecelerationDueToBrake, out var DecelerationDueToMotor);
+			UpdateBrakeSystem(TimeElapsed);
 			// calculate new car speeds
 			double[] NewSpeeds = new double[Cars.Length];
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].UpdateSpeed(TimeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i], out NewSpeeds[i]);
+				Cars[i].TractionModel.Update(TimeElapsed, out NewSpeeds[i]);
 			}
 
 			// calculate center of mass position
@@ -740,10 +740,10 @@ namespace TrainManager.Trains
 			double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].Specs.Acceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
+				Cars[i].TractionModel.Acceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
 				Cars[i].CurrentSpeed = NewSpeeds[i];
 				CurrentSpeed += NewSpeeds[i];
-				Specs.CurrentAverageAcceleration += Cars[i].Specs.Acceleration;
+				Specs.CurrentAverageAcceleration += Cars[i].TractionModel.Acceleration;
 			}
 
 			double invcarlen = 1.0 / Cars.Length;

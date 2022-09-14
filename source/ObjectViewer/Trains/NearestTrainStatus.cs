@@ -52,7 +52,7 @@ namespace ObjectViewer.Trains
 			{
 				car.CurrentSpeed = Speed / 3.6;
 				car.Specs.PerceivedSpeed = Speed / 3.6;
-				car.Specs.Acceleration = Acceleration / 3.6;
+				car.TractionModel.Acceleration = Acceleration / 3.6;
 
 				if (!NearestTrain.IsExtensionsCfg)
 				{
@@ -111,7 +111,7 @@ namespace ObjectViewer.Trains
 			{
 				car.CurrentSpeed = 0.0;
 				car.Specs.PerceivedSpeed = 0.0;
-				car.Specs.Acceleration = 0.0;
+				car.TractionModel.Acceleration = 0.0;
 
 				car.Doors[0].State = 0.0;
 				car.Doors[0].AnticipatedOpen = false;

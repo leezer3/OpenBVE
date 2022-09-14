@@ -59,7 +59,7 @@ namespace TrainManager.Motor
 			double speed = Math.Abs(Car.Specs.PerceivedSpeed);
 			int idx = (int) Math.Round(speed * SpeedConversionFactor);
 			int odir = CurrentAccelerationDirection;
-			int ndir = Math.Sign(Car.Specs.MotorAcceleration);
+			int ndir = Math.Sign(Car.TractionModel.MotorAcceleration);
 			for (int h = 0; h < 2; h++)
 			{
 				int j = h == 0 ? BVEMotorSound.MotorP1 : BVEMotorSound.MotorP2;
@@ -112,7 +112,7 @@ namespace TrainManager.Motor
 								double max = Car.Specs.AccelerationCurveMaximum;
 								if (max != 0.0)
 								{
-									double cur = Car.Specs.MotorAcceleration;
+									double cur = Car.TractionModel.MotorAcceleration;
 									if (cur < 0.0) cur = 0.0;
 									gain *= Math.Pow(cur / max, 0.25);
 								}
@@ -123,7 +123,7 @@ namespace TrainManager.Motor
 								double max = Car.CarBrake.DecelerationAtServiceMaximumPressure(Car.baseTrain.Handles.Brake.Actual, Car.CurrentSpeed);
 								if (max != 0.0)
 								{
-									double cur = -Car.Specs.MotorAcceleration;
+									double cur = -Car.TractionModel.MotorAcceleration;
 									if (cur < 0.0) cur = 0.0;
 									gain *= Math.Pow(cur / max, 0.25);
 								}

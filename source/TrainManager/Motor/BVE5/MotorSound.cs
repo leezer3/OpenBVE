@@ -29,7 +29,7 @@ namespace TrainManager.Motor
 				return;
 			}
 			double speed = Math.Abs(Car.Specs.PerceivedSpeed) * 3.6; // km/h
-			int ndir = Math.Sign(Car.Specs.MotorAcceleration);
+			int ndir = Math.Sign(Car.TractionModel.MotorAcceleration);
 
 			if (ndir == 1)
 			{
@@ -75,7 +75,7 @@ namespace TrainManager.Motor
 							double max = Car.Specs.AccelerationCurveMaximum;
 							if (max != 0.0)
 							{
-								double cur = Car.Specs.MotorAcceleration;
+								double cur = Car.TractionModel.MotorAcceleration;
 								if (cur < 0.0) cur = 0.0;
 								gain *= Math.Pow(cur / max, 0.25);
 							}
@@ -139,7 +139,7 @@ namespace TrainManager.Motor
 							double max = Car.Specs.AccelerationCurveMaximum;
 							if (max != 0.0)
 							{
-								double cur = Car.Specs.MotorAcceleration;
+								double cur = Car.TractionModel.MotorAcceleration;
 								if (cur < 0.0) cur = 0.0;
 								gain *= Math.Pow(cur / max, 0.25);
 							}

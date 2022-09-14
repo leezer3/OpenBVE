@@ -1,15 +1,12 @@
 ﻿using TrainManager.Car;
 using TrainManager.Handles;
-using TrainManager.Handles.Power;
 using TrainManager.Power;
 
 namespace TrainManager.TractionModels.Steam
 {
 	/// <summary>The traction model for a simplistic steam engine</summary>
-	public class SteamEngine
+	public class SteamEngine : AbstractTractionModel
 	{
-		/// <summary>Holds a reference to the base car</summary>
-		internal readonly CarBase Car;
 		/// <summary>The boiler</summary>
 		public readonly Boiler Boiler;
 		/// <summary>The cylinder chest</summary>
@@ -22,14 +19,14 @@ namespace TrainManager.TractionModels.Steam
 			get
 			{
 				Regulator regulator = Car.baseTrain.Handles.Power as Regulator;
+				// ReSharper disable once PossibleNullReferenceException
 				int curve = (int)(regulator.Ratio * AccelerationCurves.Length);
 				return AccelerationCurves[curve].GetAccelerationOutput(Car.CurrentSpeed, 1.0);
 			}
 		}
 
-		public SteamEngine(CarBase car)
+		public SteamEngine(CarBase car) : base(car)
 		{
-			Car = car;
 			/* todo: generic parameters- load from config
 			 * Fudged average numbers here at the minute, based upon a hypothetical large tender loco
 			 *
@@ -60,14 +57,14 @@ namespace TrainManager.TractionModels.Steam
 
 		private double lastTrackPosition;
 
-		public void Update(double timeElapsed)
+		public override void Update(double timeElapsed, out double Speed)
 		{
 			// update the boiler pressure and associated gubbins first
 			Boiler.Update(timeElapsed);
 			// get the distance travelled & convert to piston strokes
 			CylinderChest.Update(timeElapsed, Car.FrontAxle.Follower.TrackPosition - lastTrackPosition);
 			lastTrackPosition = Car.FrontAxle.Follower.TrackPosition;
-
+			Speed = 0; // TODO
 		}
 	}
 }

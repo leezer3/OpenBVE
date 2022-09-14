@@ -335,7 +335,7 @@ namespace ObjectViewer {
 						break;
 					case Instructions.TrainAcceleration:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.Acceleration;
+							Function.Stack[s] = Train.Cars[CarIndex].TractionModel.Acceleration;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -345,7 +345,7 @@ namespace ObjectViewer {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.Acceleration;
+								Function.Stack[s - 1] = Train.Cars[j].TractionModel.Acceleration;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -359,10 +359,10 @@ namespace ObjectViewer {
 							for (int j = 0; j < Train.Cars.Length; j++) {
 								if (Train.Cars[j].Specs.IsMotorCar) {
 									// hack: MotorAcceleration does not distinguish between forward/backward
-									if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
-									} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
+									if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0) {
+										Function.Stack[s] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+									} else if (Train.Cars[j].TractionModel.MotorAcceleration > 0.0) {
+										Function.Stack[s] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
 									} else {
 										Function.Stack[s] = 0.0;
 									}
@@ -379,10 +379,10 @@ namespace ObjectViewer {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
 								// hack: MotorAcceleration does not distinguish between forward/backward
-								if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
-								} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
+								if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+								} else if (Train.Cars[j].TractionModel.MotorAcceleration > 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
 								} else {
 									Function.Stack[s - 1] = 0.0;
 								}

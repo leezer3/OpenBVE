@@ -488,6 +488,26 @@ namespace Train.OpenBve
 
 						}
 						break;
+					case "regulator":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "handle":
+										AbstractHandle regulator = new Regulator(Train);
+										ParseHandleNode(cc, ref regulator, Car, Train, fileName);
+										break;
+									case "accelerationcurves":
+										CopyAccelerationCurves = false;
+										Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(cc, fileName);
+										break;
+								}
+							}
+
+						}
+						break;
 					case "doors":
 						double doorWidth = 1.0;
 						double doorTolerance = 0.0;

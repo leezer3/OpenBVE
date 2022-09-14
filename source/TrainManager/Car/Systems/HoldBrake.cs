@@ -28,7 +28,7 @@ namespace TrainManager.Car
 				if (TrainManagerBase.currentHost.InGameTime >= NextUpdateTime)
 				{
 					NextUpdateTime = TrainManagerBase.currentHost.InGameTime + UpdateInterval;
-					this.CurrentDecelerationOutput += 0.8 * Car.Specs.Acceleration * Math.Sign(Car.Specs.PerceivedSpeed);
+					this.CurrentDecelerationOutput += 0.8 * Car.TractionModel.Acceleration * Math.Sign(Car.Specs.PerceivedSpeed);
 					if (this.CurrentDecelerationOutput < 0.0)
 					{
 						this.CurrentDecelerationOutput = 0.0;

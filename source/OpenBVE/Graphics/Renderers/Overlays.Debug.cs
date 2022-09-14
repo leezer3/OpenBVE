@@ -145,7 +145,7 @@ namespace OpenBve.Graphics.Renderers
 				"",
 				"=train",
 				"speed: " + (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) * 3.6).ToString("0.00", Culture) + " km/h",
-				"power (car " + car.ToString(Culture) +  "): " + (TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration < 0.0 ? TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration * Math.Sign(TrainManager.PlayerTrain.Cars[car].CurrentSpeed) : TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration * (double)TrainManager.PlayerTrain.Handles.Reverser.Actual).ToString("0.0000", Culture) + " m/s²",
+				"power (car " + car.ToString(Culture) +  "): " + (TrainManager.PlayerTrain.Cars[car].TractionModel.MotorAcceleration < 0.0 ? TrainManager.PlayerTrain.Cars[car].TractionModel.MotorAcceleration * Math.Sign(TrainManager.PlayerTrain.Cars[car].CurrentSpeed) : TrainManager.PlayerTrain.Cars[car].TractionModel.MotorAcceleration * (double)TrainManager.PlayerTrain.Handles.Reverser.Actual).ToString("0.0000", Culture) + " m/s²",
 				"acceleration: " + TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration.ToString("0.0000", Culture) + " m/s²",
 				"position: " + TrainManager.PlayerTrain.FrontCarTrackPosition().ToString("0.00", Culture) + " m",
 				"rain intensity: " + rainIntensity,
