@@ -16,6 +16,7 @@ using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
 using TrainManager.TractionModels.BVE;
+using TrainManager.TractionModels.Steam;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -155,6 +156,9 @@ namespace Train.OpenBve
 							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[] { };
 							Train.Cars[Car].TractionModel = new TrailerCar(Train.Cars[Car]);
 						}
+						break;
+					case "steamengine":
+						Train.Cars[Car].TractionModel = new SteamEngine(Train.Cars[Car]);
 						break;
 					case "mass":
 						double m;

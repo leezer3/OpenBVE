@@ -9,17 +9,17 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The maximum fire temperature</summary>
 		private readonly double MaxTemperature;
 		/// <summary>The current fire temperature</summary>
-		private double Temperature;
+		public double Temperature;
 		/// <summary>The maximum fire area</summary>
 		internal double MaxArea;
 		/// <summary>The current fire area</summary>
-		internal double Area;
+		public double FireArea;
 		/// <summary>The fire mass</summary>
-		internal double Mass;
+		public double FireMass;
 		/// <summary>The max conversion rate of fire mass into temperature</summary>
 		private readonly double MaxConversionRate;
 		/// <summary>The conversion rate of fire mass into temperature</summary>
-		internal double ConversionRate => MaxConversionRate * ((Area * MaxArea) * (Temperature * MaxTemperature));
+		public double ConversionRate => MaxConversionRate * ((FireArea * MaxArea) * (Temperature * MaxTemperature));
 		/// <summary>The number of units added per shovel of coal</summary>
 		public double UnitsPerShovel;
 		/// <summary>The shovel sound</summary>
@@ -41,10 +41,10 @@ namespace TrainManager.TractionModels.Steam
 			{
 				burntUnits *= 2.0;
 			}
-			Mass -= burntUnits;
-			if (Mass < MaxArea)
+			FireMass -= burntUnits;
+			if (FireMass < MaxArea)
 			{
-				Area -= burntUnits;
+				FireArea -= burntUnits;
 			}
 			if (Temperature < MaxTemperature)
 			{
@@ -54,11 +54,11 @@ namespace TrainManager.TractionModels.Steam
 
 		internal void AddFuel()
 		{
-			Mass += UnitsPerShovel;
-			Area += UnitsPerShovel * 0.1; // 1kg of coal to ~10cm square
-			if (Area > MaxArea)
+			FireMass += UnitsPerShovel;
+			FireArea += UnitsPerShovel * 0.1; // 1kg of coal to ~10cm square
+			if (FireArea > MaxArea)
 			{
-				Area = MaxArea;
+				FireArea = MaxArea;
 			}
 
 			if (ShovelSound != null)

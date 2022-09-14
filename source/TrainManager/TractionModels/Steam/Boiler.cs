@@ -17,7 +17,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The minimum working steam pressure</summary>
 		public readonly double MinWorkingSteamPressure;
 		/// <summary>The base water to steam conversion rate</summary>
-		private readonly double BaseSteamConversionRate;
+		private readonly double BaseSteamGenerationRate;
 		/// <summary>The live steam injector</summary>
 		public LiveSteamInjector LiveSteamInjector;
 		/// <summary>The exhaust steam injector</summary>
@@ -36,10 +36,12 @@ namespace TrainManager.TractionModels.Steam
 		public CarSound BlowoffLoopSound;
 		/// <summary>The blowoff end sound</summary>
 		public CarSound BlowoffEndSound;
+		/// <summary>The rate water is converted to steam</summary>
+		public double SteamGenerationRate => BaseSteamGenerationRate * Firebox.ConversionRate;
 
 		private bool startSoundPlayed;
 
-		internal Boiler(SteamEngine engine, double waterLevel, double maxWaterLevel, double steamPressure, double maxSteamPressure, double blowoffPressure, double minWorkingSteamPressure, double baseSteamConversionRate)
+		internal Boiler(SteamEngine engine, double waterLevel, double maxWaterLevel, double steamPressure, double maxSteamPressure, double blowoffPressure, double minWorkingSteamPressure, double baseSteamGenerationRate)
 		{
 			Engine = engine;
 			WaterLevel = waterLevel;
@@ -48,7 +50,7 @@ namespace TrainManager.TractionModels.Steam
 			MaxSteamPressure = maxSteamPressure;
 			BlowoffPressure = blowoffPressure;
 			MinWorkingSteamPressure = minWorkingSteamPressure;
-			BaseSteamConversionRate = baseSteamConversionRate;
+			BaseSteamGenerationRate = baseSteamGenerationRate;
 			/* More fudged averages for a large steam loco
 			 * Base injection rate of 3L /s
 			 * based on Davies and Metcalfe Monitor Type 11 (large tender locos)
@@ -77,9 +79,8 @@ namespace TrainManager.TractionModels.Steam
 			// now firebox
 			Firebox.Update(timeElapsed);
 			// convert water to steam pressure
-			double waterToSteam = BaseSteamConversionRate * Firebox.ConversionRate;
-			WaterLevel -= waterToSteam;
-			SteamPressure += waterToSteam;
+			WaterLevel -= SteamGenerationRate;
+			SteamPressure += SteamGenerationRate;
 			// handle blowoff
 			if (SteamPressure > BlowoffPressure)
 			{

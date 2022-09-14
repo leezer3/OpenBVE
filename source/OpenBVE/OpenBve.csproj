@@ -196,6 +196,7 @@
     <Compile Include="Graphics\Renderers\Overlays.ScoreMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
+    <Compile Include="Graphics\Renderers\Overlays.SteamEngine.cs" />
     <Compile Include="Graphics\Renderers\Touch.cs" />
     <Compile Include="Graphics\Textures.cs" />
     <Compile Include="Parsers\Script\TrackFollowingObjectParser.cs" />

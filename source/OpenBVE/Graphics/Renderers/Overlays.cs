@@ -145,6 +145,8 @@ namespace OpenBve.Graphics.Renderers
 				RenderBrakeSystemDebug();
 			}
 
+			RenderSteamEngineOverlay(); //TODO: Switch off if not required / selected by user
+
 			switch (Program.Renderer.CurrentInterface)
 			{
 				case InterfaceType.Pause:
