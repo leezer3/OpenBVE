@@ -1,4 +1,5 @@
-﻿using SoundManager;
+﻿using System;
+using SoundManager;
 
 namespace TrainManager.TractionModels.Steam
 {
@@ -32,6 +33,10 @@ namespace TrainManager.TractionModels.Steam
 			MaxTemperature = maxTemperature;
 			MaxConversionRate = conversionRate;
 			UnitsPerShovel = unitsPerShovel;
+			//fixme
+			FireArea = MaxArea / 2;
+			FireMass = MaxArea * 200;
+			Temperature = 1000;
 		}
 
 		internal void Update(double timeElapsed)
@@ -41,11 +46,20 @@ namespace TrainManager.TractionModels.Steam
 			{
 				burntUnits *= 2.0;
 			}
+
+			burntUnits = Math.Min(burntUnits, FireMass); // can't burn more than what's in the fire!
+
 			FireMass -= burntUnits;
 			if (FireMass < MaxArea)
 			{
 				FireArea -= burntUnits;
 			}
+			
+			if (FireArea < 0)
+			{
+				FireArea = 0;
+			}
+
 			if (Temperature < MaxTemperature)
 			{
 				Temperature += burntUnits;
@@ -56,6 +70,7 @@ namespace TrainManager.TractionModels.Steam
 		{
 			FireMass += UnitsPerShovel;
 			FireArea += UnitsPerShovel * 0.1; // 1kg of coal to ~10cm square
+			Temperature -= UnitsPerShovel * 200;
 			if (FireArea > MaxArea)
 			{
 				FireArea = MaxArea;
