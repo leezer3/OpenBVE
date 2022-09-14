@@ -1,4 +1,5 @@
 ﻿using System;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Car.Systems;
 
 namespace TrainManager.Car
@@ -27,9 +28,9 @@ namespace TrainManager.Car
 		public BveReAdhesionDevice(CarBase car, ReadhesionDeviceType type) : base(car)
 		{
 			this.DeviceType = type;
-			this.MaximumAccelerationOutput = Double.PositiveInfinity;
+			this.MaximumAccelerationOutput = double.PositiveInfinity;
 			this.ApplicationFactor = 0.0;
-			if (Car.Specs.IsMotorCar)
+			if (Car.TractionModel is BVEMotorCar)
 			{
 				switch (type)
 				{

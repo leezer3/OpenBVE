@@ -9,6 +9,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -41,7 +42,7 @@ namespace Train.OpenBve
 			{
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
-					if (Train.Cars[i].Specs.IsMotorCar)
+					if (Train.Cars[i].TractionModel is BVEMotorCar)
 					{
 						AccelerationCurves = new BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
 						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)

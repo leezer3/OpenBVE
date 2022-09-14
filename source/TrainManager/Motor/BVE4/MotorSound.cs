@@ -2,6 +2,7 @@
 using OpenBveApi.Hosts;
 using SoundManager;
 using TrainManager.Car;
+using TrainManager.TractionModels.BVE;
 
 namespace TrainManager.Motor
 {
@@ -52,7 +53,7 @@ namespace TrainManager.Motor
 
 		public override void Update(double TimeElapsed)
 		{
-			if (!Car.Specs.IsMotorCar)
+			if (!(Car.TractionModel is BVEMotorCar))
 			{
 				return;
 			}

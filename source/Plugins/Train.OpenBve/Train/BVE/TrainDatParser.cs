@@ -14,6 +14,7 @@ using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.SafetySystems;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -1135,27 +1136,28 @@ namespace Train.OpenBve
 			}
 			// assign motor cars
 			if (MotorCars == 1) {
-				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					Train.Cars[0].Specs.IsMotorCar = true;
+				if (FrontCarIsMotorCar | TrailerCars == 0)
+				{
+					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0]);
 				} else {
-					Train.Cars[Cars - 1].Specs.IsMotorCar = true;
+					Train.Cars[Cars - 1].TractionModel = new BVEMotorCar(Train.Cars[Cars - 1]);
 				}
 			} else if (MotorCars == 2) {
 				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					Train.Cars[0].Specs.IsMotorCar = true;
-					Train.Cars[Cars - 1].Specs.IsMotorCar = true;
+					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0]);
+					Train.Cars[Cars - 1].TractionModel = new BVEMotorCar(Train.Cars[Cars - 1]);
 				} else if (TrailerCars == 1) {
-					Train.Cars[1].Specs.IsMotorCar = true;
-					Train.Cars[2].Specs.IsMotorCar = true;
+					Train.Cars[1].TractionModel = new BVEMotorCar(Train.Cars[1]);
+					Train.Cars[2].TractionModel = new BVEMotorCar(Train.Cars[2]);
 				} else {
 					int i = (int)Math.Ceiling(0.25 * (Cars - 1));
 					int j = (int)Math.Floor(0.75 * (Cars - 1));
-					Train.Cars[i].Specs.IsMotorCar = true;
-					Train.Cars[j].Specs.IsMotorCar = true;
+					Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i]);
+					Train.Cars[j].TractionModel = new BVEMotorCar(Train.Cars[i]);
 				}
 			} else if (MotorCars > 0) {
 				if (FrontCarIsMotorCar) {
-					Train.Cars[0].Specs.IsMotorCar = true;
+					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0]);
 					double t = 1.0 + TrailerCars / (double)(MotorCars - 1);
 					double r = 0.0;
 					double x = 0.0;
@@ -1165,10 +1167,10 @@ namespace Train.OpenBve
 						r = x - y;
 						int i = (int)x;
 						if (i >= Cars) break;
-						Train.Cars[i].Specs.IsMotorCar = true;
+						Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i]);
 					}
 				} else {
-					Train.Cars[1].Specs.IsMotorCar = true;
+					Train.Cars[1].TractionModel = new BVEMotorCar(Train.Cars[1]);
 					double t = 1.0 + (TrailerCars - 1) / (double)(MotorCars - 1);
 					double r = 0.0;
 					double x = 1.0;
@@ -1178,7 +1180,7 @@ namespace Train.OpenBve
 						r = x - y;
 						int i = (int)x;
 						if (i >= Cars) break;
-						Train.Cars[i].Specs.IsMotorCar = true;
+						Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i]);
 					}
 				}
 			}
@@ -1194,13 +1196,13 @@ namespace Train.OpenBve
 					switch (locomotiveBrakeType)
 					{
 						case BrakeSystemType.AutomaticAirBrake:
-							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].TractionModel is BVEMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectricCommandBrake:
-							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].TractionModel is BVEMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectromagneticStraightAirBrake:
-							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].TractionModel is BVEMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
 							break;
 					}
 				}
@@ -1209,18 +1211,18 @@ namespace Train.OpenBve
 					switch (trainBrakeType)
 					{
 						case BrakeSystemType.AutomaticAirBrake:
-							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].TractionModel is BVEMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectricCommandBrake:
-							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].TractionModel is BVEMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectromagneticStraightAirBrake:
-							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].TractionModel is BVEMotorCar, BrakeControlSpeed, MotorDeceleration, electricBrakeDelayUp, electricBrakeDelayDown, DecelerationCurves);
 							break;
 					}
 				}
 
-				if (Train.Cars[i].Specs.IsMotorCar || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
+				if (Train.Cars[i].TractionModel is BVEMotorCar || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Main;
 				}
@@ -1393,8 +1395,8 @@ namespace Train.OpenBve
 			for (int i = 0; i < Cars; i++) {
 				Train.Cars[i].ConstSpeed = new CarConstSpeed(Train.Cars[i]);
 				Train.Cars[i].HoldBrake = new CarHoldBrake(Train.Cars[i]);
-				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
-				if (Train.Cars[i].Specs.IsMotorCar) {
+				Train.Cars[i].ReAdhesionDevice = new CarReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
+				if (Train.Cars[i].TractionModel is BVEMotorCar) {
 					// motor car
 					Train.Cars[i].EmptyMass = MotorCarMass;
 					Train.Cars[i].CargoMass = 0;

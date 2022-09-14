@@ -15,6 +15,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -137,7 +138,7 @@ namespace Train.OpenBve
 					case "motorcar":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
-							Train.Cars[Car].Specs.IsMotorCar = true;
+							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car]);
 							if (!CopyAccelerationCurves)
 							{
 								//We've already set the acceleration curves elsewhere in the XML, so don't copy the default ones
@@ -152,7 +153,7 @@ namespace Train.OpenBve
 						else
 						{
 							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[] { };
-							Train.Cars[Car].Specs.IsMotorCar = false;
+							Train.Cars[Car].TractionModel = new TrailerCar(Train.Cars[Car]);
 						}
 						break;
 					case "mass":

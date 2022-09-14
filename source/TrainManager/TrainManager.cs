@@ -5,6 +5,7 @@ using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 using RouteManager2;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 using TrackFollowingObject = TrainManager.Trains.TrackFollowingObject;
 
@@ -59,7 +60,7 @@ namespace TrainManager
 			{
 				Train.Cars[i].Specs.RollDueToTopplingAngle = 0.0;
 				Train.Cars[i].Derailed = false;
-				if (Train.Cars[i].Specs.IsMotorCar && Train.Cars[i].Sounds.Loop != null)
+				if (Train.Cars[i].TractionModel is BVEMotorCar && Train.Cars[i].Sounds.Loop != null)
 				{
 					Train.Cars[i].Sounds.Loop.Play(Train.Cars[i], true);
 				}

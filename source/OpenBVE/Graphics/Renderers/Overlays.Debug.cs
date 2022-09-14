@@ -5,6 +5,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.Handles;
+using TrainManager.TractionModels.BVE;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -116,7 +117,7 @@ namespace OpenBve.Graphics.Renderers
 			int car = 0;
 			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 			{
-				if (TrainManager.PlayerTrain.Cars[i].Specs.IsMotorCar)
+				if (TrainManager.PlayerTrain.Cars[i].TractionModel is BVEMotorCar)
 				{
 					car = i;
 					break;

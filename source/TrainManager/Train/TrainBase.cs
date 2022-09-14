@@ -15,6 +15,7 @@ using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.SafetySystems;
+using TrainManager.TractionModels.BVE;
 
 namespace TrainManager.Trains
 {
@@ -293,7 +294,7 @@ namespace TrainManager.Trains
 							Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 							Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
 
-							if (Cars[j].Specs.IsMotorCar && Cars[j].Sounds.Loop != null)
+							if (Cars[j].TractionModel is BVEMotorCar && Cars[j].Sounds.Loop != null)
 							{
 								Cars[j].Sounds.Loop.Play(Cars[j], true);
 							}

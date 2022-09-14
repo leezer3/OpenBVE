@@ -5,6 +5,7 @@ using OpenBveApi.Trains;
 using RouteManager2.Events;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace OpenBve
@@ -410,7 +411,7 @@ namespace OpenBve
 					double BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.DecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual, Train.Cars[Train.DriverCar].CurrentSpeed);
 					for (int i = 0; i < Train.Cars.Length; i++)
 					{
-						if (Train.Cars[i].Specs.IsMotorCar)
+						if (Train.Cars[i].TractionModel is BVEMotorCar)
 						{
 							if (Train.Cars[Train.DriverCar].CarBrake.motorDeceleration != 0 && Train.Cars[Train.DriverCar].CarBrake.motorDeceleration < BrakeDeceleration)
 							{

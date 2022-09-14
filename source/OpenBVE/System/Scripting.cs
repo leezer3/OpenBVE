@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using TrainManager.Handles;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 // ReSharper disable UnusedMember.Global
@@ -122,7 +123,7 @@ namespace OpenBve
                 if (Train == null) return 0.0;
                 for (int j = 0; j < Train.Cars.Length; j++)
                 {
-                    if (Train.Cars[j].Specs.IsMotorCar)
+                    if (Train.Cars[j].TractionModel is BVEMotorCar)
                     {
                         // hack: MotorAcceleration does not distinguish between forward/backward
                         if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0)
@@ -147,7 +148,7 @@ namespace OpenBve
             public static double accelerationMotor(TrainBase Train, int CarIndex)
             {
                 if (Train == null || Train.Cars.Length <= CarIndex) return 0.0;
-                if (Train.Cars[CarIndex].Specs.IsMotorCar)
+                if (Train.Cars[CarIndex].TractionModel is BVEMotorCar)
                 {
                     // hack: MotorAcceleration does not distinguish between forward/backward
                     if (Train.Cars[CarIndex].TractionModel.MotorAcceleration < 0.0)

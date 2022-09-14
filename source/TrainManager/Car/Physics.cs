@@ -5,8 +5,6 @@ namespace TrainManager.Car
 	/// <summary>Contains the physics related properties for the car</summary>
 	public class CarPhysics
 	{
-		/// <summary>Stores whether the car is a motor car</summary>
-		public bool IsMotorCar;
 		/// <summary>The acceleration curves for the car</summary>
 		public AccelerationCurve[] AccelerationCurves;
 		/// <summary>The maximum possible acceleration provided by any curve</summary>

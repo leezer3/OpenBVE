@@ -5,7 +5,7 @@ using TrainManager.Trains;
 namespace TrainManager.TractionModels.BVE
 {
 	/// <summary>The traction model for a BVE Trailer Car</summary>
-	class TrailerCar : AbstractTractionModel
+	public class TrailerCar : AbstractTractionModel
 	{
 		public TrailerCar(CarBase car) : base(car)
 		{

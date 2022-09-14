@@ -11,6 +11,7 @@ using TrainManager.Handles;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -368,9 +369,9 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of motor sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsMotorCar)
+									if (car.TractionModel is BVEMotorCar)
 									{
-										break;
+										ParseMotorSoundTableNode(c, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);	
 									}
 									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
 									ParseMotorSoundTableNode(c, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);

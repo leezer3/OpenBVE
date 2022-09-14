@@ -17,6 +17,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Power;
 using TrainManager.TractionModels;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace TrainManager.Car
@@ -116,6 +117,7 @@ namespace TrainManager.Car
 			FrontBogie.ChangeSection(-1);
 			RearBogie.ChangeSection(-1);
 			Cargo = new Passengers(this);
+			TractionModel = new TrailerCar(this);
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -137,6 +139,7 @@ namespace TrainManager.Car
 			};
 			Brightness = new Brightness(this);
 			Cargo = new Passengers(this);
+			TractionModel = new TrailerCar(this);
 		}
 
 		/// <summary>Moves the car</summary>

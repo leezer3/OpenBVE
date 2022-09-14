@@ -9,6 +9,7 @@ using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Motor;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -750,7 +751,7 @@ namespace Train.OpenBve
 									case "noise":
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											if (train.Cars[c].Specs.IsMotorCar | c == train.DriverCar)
+											if (train.Cars[c].TractionModel is BVEMotorCar | c == train.DriverCar)
 											{
 												train.Cars[c].Sounds.Loop = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
 											}
@@ -814,7 +815,7 @@ namespace Train.OpenBve
 			// Assign motor sounds to appropriate cars
 			for (int c = 0; c < train.Cars.Length; c++)
 			{
-				if (train.Cars[c].Specs.IsMotorCar)
+				if (train.Cars[c].TractionModel is BVEMotorCar)
 				{
 					if (train.Cars[c].Sounds.Motor is BVEMotorSound motorSound)
 					{

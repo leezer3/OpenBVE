@@ -6,6 +6,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using TrainManager.Car.Systems;
 using TrainManager.Handles;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace OpenBve {
@@ -355,7 +356,7 @@ namespace OpenBve {
 						if (Train != null) {
 							Function.Stack[s] = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								if (Train.Cars[j].Specs.IsMotorCar) {
+								if (Train.Cars[j].TractionModel is BVEMotorCar) {
 									// hack: MotorAcceleration does not distinguish between forward/backward
 									if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0) {
 										Function.Stack[s] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);

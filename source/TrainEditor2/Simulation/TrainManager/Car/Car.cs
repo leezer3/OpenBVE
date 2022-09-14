@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Math;
-using OpenBveApi.Trains;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
 using TrainManager.Car;
 using TrainManager.Motor;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace TrainEditor2.Simulation.TrainManager
@@ -21,7 +21,7 @@ namespace TrainEditor2.Simulation.TrainManager
 			{
 				Sounds = new CarSounds();
 				Specs = new CarPhysics();
-				Specs.IsMotorCar = true;
+				TractionModel = new TrailerCar(this);
 			}
 
 			public Car(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient) : base(train, index, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient)
