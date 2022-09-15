@@ -28,6 +28,8 @@ namespace TrainManager.TractionModels.Steam
 		public readonly Blowers Blowers;
 		/// <summary>The blowoff pressure</summary>
 		public double BlowoffPressure;
+		/// <summary>The pressure at which the blowoff resets</summary>
+		public double BlowoffEndPressure;
 		/// <summary>The rate of steam loss via the blowoff</summary>
 		public double BlowoffRate;
 		/// <summary>The blowoff start sound</summary>
@@ -40,6 +42,7 @@ namespace TrainManager.TractionModels.Steam
 		public double SteamGenerationRate => BaseSteamGenerationRate * Firebox.ConversionRate;
 
 		private bool startSoundPlayed;
+		private bool blowoff;
 
 		internal Boiler(SteamEngine engine, double waterLevel, double maxWaterLevel, double steamPressure, double maxSteamPressure, double blowoffPressure, double minWorkingSteamPressure, double baseSteamGenerationRate)
 		{
@@ -49,6 +52,7 @@ namespace TrainManager.TractionModels.Steam
 			SteamPressure = steamPressure;
 			MaxSteamPressure = maxSteamPressure;
 			BlowoffPressure = blowoffPressure;
+			BlowoffEndPressure = blowoffPressure * 0.8;
 			MinWorkingSteamPressure = minWorkingSteamPressure;
 			BaseSteamGenerationRate = baseSteamGenerationRate;
 			/* More fudged averages for a large steam loco
@@ -69,6 +73,7 @@ namespace TrainManager.TractionModels.Steam
 			 * Use approx 1psi / sec
 			 */
 			Blowers = new Blowers(engine, 2, 1);
+			BlowoffRate = 10.0;
 		}
 
 		internal void Update(double timeElapsed)
@@ -84,6 +89,10 @@ namespace TrainManager.TractionModels.Steam
 			// handle blowoff
 			if (SteamPressure > BlowoffPressure)
 			{
+				blowoff = true;
+			}
+			if(blowoff)
+			{
 				SteamPressure -= BlowoffRate;
 				if (!startSoundPlayed)
 				{
@@ -93,12 +102,17 @@ namespace TrainManager.TractionModels.Steam
 					}
 					startSoundPlayed = true;
 				}
-				else if (!BlowoffStartSound.IsPlaying)
+				else if (BlowoffLoopSound != null && !BlowoffStartSound.IsPlaying)
 				{
 					if (BlowoffLoopSound != null)
 					{
 						BlowoffLoopSound.Play(Engine.Car, true);
 					}
+				}
+
+				if (SteamPressure < BlowoffEndPressure)
+				{
+					blowoff = false;
 				}
 			}
 			else

@@ -20,7 +20,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The max conversion rate of fire mass into temperature</summary>
 		private readonly double MaxConversionRate;
 		/// <summary>The conversion rate of fire mass into temperature</summary>
-		public double ConversionRate => MaxConversionRate * ((FireArea * MaxArea) * (Temperature * MaxTemperature));
+		public double ConversionRate => MaxConversionRate * ((FireArea / MaxArea) * (Temperature / MaxTemperature));
 		/// <summary>The number of units added per shovel of coal</summary>
 		public double UnitsPerShovel;
 		/// <summary>The shovel sound</summary>
@@ -33,7 +33,7 @@ namespace TrainManager.TractionModels.Steam
 			MaxTemperature = maxTemperature;
 			MaxConversionRate = conversionRate;
 			UnitsPerShovel = unitsPerShovel;
-			//fixme
+			// TODO: More generic starting paramaters
 			FireArea = MaxArea / 2;
 			FireMass = MaxArea * 200;
 			Temperature = 1000;

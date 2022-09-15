@@ -37,9 +37,9 @@ namespace TrainManager.TractionModels.Steam
 			 *			240psi absolute max pressure
 			 *			220psi blowoff pressure
 			 *			120psi minimum working pressure
-			 *			1L water ==> 4.15psi steam
+			 *			1L water ==> 4.15psi steam ==> divide by 60min for rate / min ==> divide by 60 for rate /s [CONSTANT, BUT THIS DEPENDS ON BOILER SIZING??]
 			 */
-			Boiler = new Boiler(this, 2000, 3000, 200, 240, 220, 120, 4.15);
+			Boiler = new Boiler(this, 2000, 3000, 200, 240, 220, 120, 0.00152);
 			/*
 			 * Cylinder Chest
 			 *			5psi standing pressure loss (leakage etc.)
