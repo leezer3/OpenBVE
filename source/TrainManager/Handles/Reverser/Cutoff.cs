@@ -3,7 +3,7 @@ using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
-	class Cutoff : AbstractReverser
+	public class Cutoff : AbstractReverser
 	{
 		/// <summary>The maximum forwards cutoff setting</summary>
 		public readonly int ForwardMax;

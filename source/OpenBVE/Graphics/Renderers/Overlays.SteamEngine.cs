@@ -36,6 +36,8 @@ namespace OpenBve.Graphics.Renderers
 			renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, fireTemp, new Vector2(renderer.Screen.Width - 250, 65), TextAlignment.TopLeft, Color128.White, true);
 			string fireArea = "Fire Area: " + engine.Boiler.Firebox.FireArea.ToString("0.00");
 			renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, fireArea, new Vector2(renderer.Screen.Width - 250, 80), TextAlignment.TopLeft, Color128.White, true);
+			string blowers = "Blowers: " + (engine.Boiler.Blowers.Active ? "true" : "false");
+			renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, blowers, new Vector2(renderer.Screen.Width - 250, 95), TextAlignment.TopLeft, Color128.White, true);
 		}
 	}
 }

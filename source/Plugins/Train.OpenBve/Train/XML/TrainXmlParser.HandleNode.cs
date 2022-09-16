@@ -19,9 +19,10 @@ namespace Train.OpenBve
 					switch (cc.Name.ToLowerInvariant())
 					{
 						case "notches":
-							if (Car != Train.DriverCar)
+							Regulator regulator = Handle as Regulator;
+							if (Car != Train.DriverCar || regulator != null)
 							{
-								// only valid on driver car
+								// only valid on driver car, non percentage based handles
 								break;
 							}
 
@@ -32,9 +33,10 @@ namespace Train.OpenBve
 							}
 
 							int numberOfNotches;
-							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out numberOfNotches) | numberOfNotches < 0)
+							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out numberOfNotches) | numberOfNotches <= 0)
 							{
 								Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid number of handle notches defined for Car " + Car + " in XML file " + fileName);
+								break;
 							}
 
 							// remember to increase the max driver notch too

@@ -495,6 +495,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "regulator":
+						Train.Handles.Power = new Regulator(Train);
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							foreach (XmlNode cc in c.ChildNodes)
