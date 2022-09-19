@@ -7,11 +7,38 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>Holds a reference to the base engine</summary>
 		private readonly SteamEngine Engine;
 		/// <summary>Whether the cylinder cocks are open</summary>
-		public bool Open;
+		public bool Open
+		{
+			get => _Open;
+			set
+			{
+				if (value)
+				{
+					if (!_Open)
+					{
+						if (StartSound != null)
+						{
+							StartSound.Play(Engine.Car, false);
+						}
+					}
+				}
+				else
+				{
+					if (_Open)
+					{
+						if (StopSound != null)
+						{
+							StopSound.Play(Engine.Car, false);
+						}
+					}
+				}
+				_Open = value;
+			}
+		}
+		/// <summary>Backing property for Active</summary>
+		private bool _Open;
 		/// <summary>The sound played when the cylinder cocks are opened</summary>
 		public CarSound StartSound;
-		/// <summary>Whether the start sound has been played</summary>
-		private bool startSoundPlayed;
 		/// <summary>The sound played when the cylinder cocks are open with the regulator closed</summary>
 		public CarSound IdleLoopSound;
 		/// <summary>The sound played when the cylinder cocks are open with the regulator open</summary>
@@ -32,16 +59,7 @@ namespace TrainManager.TractionModels.Steam
 			if (Open)
 			{
 				Engine.Boiler.SteamPressure -= SteamUse * Engine.Car.baseTrain.Handles.Power.Actual * Engine.Car.baseTrain.Handles.Power.MaximumNotch * timeElapsed;
-				if (!startSoundPlayed)
-				{
-					if (StartSound != null)
-					{
-						StartSound.Play(Engine.Car, false);
-					}
-
-					startSoundPlayed = true;
-				}
-				else if (!StartSound.IsPlaying)
+				if (!StartSound.IsPlaying)
 				{
 					if (Engine.Car.baseTrain.Handles.Power.Actual != 0)
 					{
@@ -82,13 +100,6 @@ namespace TrainManager.TractionModels.Steam
 				{
 					IdleLoopSound.Stop();
 				}
-
-				if (startSoundPlayed && StopSound != null)
-				{
-					StopSound.Play(Engine.Car, false);
-				}
-
-				startSoundPlayed = false;
 			}
 		}
 	}

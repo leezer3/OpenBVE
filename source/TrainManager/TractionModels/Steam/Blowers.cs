@@ -8,11 +8,38 @@ namespace TrainManager.TractionModels
 		/// <summary>Holds a reference to the base engine</summary>
 		private readonly SteamEngine Engine;
 		/// <summary>Whether the blowers are active</summary>
-		public bool Active;
+		public bool Active
+		{
+			get => _Active;
+			set
+			{
+				if (value)
+				{
+					if (!_Active)
+					{
+						if (StartSound != null)
+						{
+							StartSound.Play(Engine.Car, false);
+						}
+					}
+				}
+				else
+				{
+					if (_Active)
+					{
+						if (StopSound != null)
+						{
+							StopSound.Play(Engine.Car, false);
+						}
+					}
+				}
+				_Active = value;
+			}
+		}
+		/// <summary>Backing property for Active</summary>
+		private bool _Active;
 		/// <summary>The sound played when the blowers are activated</summary>
 		public CarSound StartSound;
-		/// <summary>Whether the start sound has been played</summary>
-		private bool startSoundPlayed;
 		/// <summary>The sound played when the blowers are active and working</summary>
 		public CarSound LoopSound;
 		/// <summary>The sound played when the blowers are deactivated</summary>
@@ -34,21 +61,9 @@ namespace TrainManager.TractionModels
 			if (Active)
 			{
 				Engine.Boiler.SteamPressure -= SteamUse * timeElapsed;
-				if (!startSoundPlayed)
+				if(!StartSound.IsPlaying && LoopSound != null)
 				{
-					if (StartSound != null)
-					{
-						StartSound.Play(Engine.Car, false);
-					}
-					
-					startSoundPlayed = true;
-				}
-				else if(!StartSound.IsPlaying)
-				{
-					if (LoopSound != null)
-					{
-						LoopSound.Play(Engine.Car, true);
-					}
+					LoopSound.Play(Engine.Car, true);
 				}
 			}
 			else
@@ -56,13 +71,7 @@ namespace TrainManager.TractionModels
 				if (LoopSound != null)
 				{
 					LoopSound.Stop();
-					
 				}
-				if (startSoundPlayed && StopSound != null)
-				{
-					StopSound.Play(Engine.Car, false);
-				}
-				startSoundPlayed = false;
 			}
 		}
 	}

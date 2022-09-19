@@ -40,6 +40,8 @@ namespace TrainManager.TractionModels.Steam
 		public CarSound BlowoffEndSound;
 		/// <summary>The rate water is converted to steam</summary>
 		public double SteamGenerationRate => BaseSteamGenerationRate * Firebox.ConversionRate;
+		/// <summary>The bypass valve</summary>
+		public BypassValve BypassValve;
 
 		private bool startSoundPlayed;
 		private bool blowoff;
@@ -74,6 +76,7 @@ namespace TrainManager.TractionModels.Steam
 			 */
 			Blowers = new Blowers(engine, 2, 1);
 			BlowoffRate = 10.0;
+			BypassValve = new BypassValve(Engine, 5.0);
 		}
 
 		internal void Update(double timeElapsed)

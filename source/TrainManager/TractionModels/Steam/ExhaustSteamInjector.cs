@@ -12,9 +12,36 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The injection rate whilst active</summary>
 		public double InjectionRate => BaseInjectionRate * Math.Abs(Engine.Car.baseTrain.Handles.Reverser.Actual) * Engine.Car.baseTrain.Handles.Power.Ratio;
 		/// <summary>Whether the injector is active</summary>
-		public bool Active;
-		/// <summary>Whether the start sound has been played</summary>
-		private bool startSoundPlayed;
+		public bool Active
+		{
+			get => _Active;
+			set
+			{
+				if (value)
+				{
+					if (!_Active)
+					{
+						if (StartSound != null)
+						{
+							StartSound.Play(Engine.Car, false);
+						}
+					}
+				}
+				else
+				{
+					if (_Active)
+					{
+						if (StopSound != null)
+						{
+							StopSound.Play(Engine.Car, false);
+						}
+					}
+				}
+				_Active = value;
+			}
+		}
+		/// <summary>Backing property for Active</summary>
+		private bool _Active;
 		/// <summary>The sound played when the injector is activated</summary>
 		public CarSound StartSound;
 		/// <summary>The sound played when the injector is active and working</summary>
@@ -36,16 +63,7 @@ namespace TrainManager.TractionModels.Steam
 			{
 				// just increase water level here
 				Engine.Boiler.WaterLevel += InjectionRate * timeElapsed;
-				if (!startSoundPlayed)
-				{
-					if (StartSound != null)
-					{
-						StartSound.Play(Engine.Car, false);
-					}
-					
-					startSoundPlayed = true;
-				}
-				else if(!StartSound.IsPlaying)
+				if(!StartSound.IsPlaying)
 				{
 					if (BaseInjectionRate != 0)
 					{
@@ -74,11 +92,6 @@ namespace TrainManager.TractionModels.Steam
 				{
 					IdleLoopSound.Stop();
 				}
-				if (startSoundPlayed && StopSound != null)
-				{
-					StopSound.Play(Engine.Car, false);
-				}
-				startSoundPlayed = false;
 			}
 		}
 	}

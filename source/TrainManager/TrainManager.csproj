@@ -130,6 +130,8 @@
     <Compile Include="TractionModels\Generic\TrailerCar.cs" />
     <Compile Include="TractionModels\Steam\Blowers.cs" />
     <Compile Include="TractionModels\Steam\Boiler.cs" />
+    <Compile Include="TractionModels\Steam\BypassValve.cs" />
+    <Compile Include="TractionModels\Steam\BypassValve.Types.cs" />
     <Compile Include="TractionModels\Steam\CylinderChest.cs" />
     <Compile Include="TractionModels\Steam\CylinderCocks.cs" />
     <Compile Include="TractionModels\Steam\ExhaustSteamInjector.cs" />

@@ -22,11 +22,38 @@ namespace TrainManager.TractionModels.Steam
 			}
 		}
 		/// <summary>Whether the injector is active</summary>
-		public bool Active;
+		public bool Active
+		{
+			get => _Active;
+			set
+			{
+				if (value)
+				{
+					if (!_Active)
+					{
+						if (StartSound != null)
+						{
+							StartSound.Play(Engine.Car, false);
+						}
+					}
+				}
+				else
+				{
+					if (_Active)
+					{
+						if (StopSound != null)
+						{
+							StopSound.Play(Engine.Car, false);
+						}
+					}
+				}
+				_Active = value;
+			}
+		}
+		/// <summary>Backing property for Active</summary>
+		private bool _Active;
 		/// <summary>The sound played when the injector is activated</summary>
 		public CarSound StartSound;
-		/// <summary>Whether the start sound has been played</summary>
-		private bool startSoundPlayed;
 		/// <summary>The sound played when the injector is active and working</summary>
 		public CarSound LoopSound;
 		/// <summary>The sound played when the injector is stopped</summary>
@@ -46,16 +73,7 @@ namespace TrainManager.TractionModels.Steam
 				// increase water level and decrease steam pressure
 				Engine.Boiler.WaterLevel += InjectionRate * timeElapsed;
 				Engine.Boiler.SteamPressure -= InjectionRate * timeElapsed;
-				if (!startSoundPlayed)
-				{
-					if (StartSound != null)
-					{
-						StartSound.Play(Engine.Car, false);
-					}
-					
-					startSoundPlayed = true;
-				}
-				else if(!StartSound.IsPlaying)
+				if(!StartSound.IsPlaying)
 				{
 					if (LoopSound != null)
 					{
@@ -70,11 +88,6 @@ namespace TrainManager.TractionModels.Steam
 					LoopSound.Stop();
 					
 				}
-				if (startSoundPlayed && StopSound != null)
-				{
-					StopSound.Play(Engine.Car, false);
-				}
-				startSoundPlayed = false;
 			}
 		}
 	}
