@@ -38,6 +38,8 @@ namespace OpenBve.Graphics.Renderers
 			renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, fireArea, new Vector2(renderer.Screen.Width - 250, 80), TextAlignment.TopLeft, Color128.White, true);
 			string blowers = "Blowers: " + (engine.Boiler.Blowers.Active ? "true" : "false");
 			renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, blowers, new Vector2(renderer.Screen.Width - 250, 95), TextAlignment.TopLeft, Color128.White, true);
+			string cylinderCocks = "Cylinder Cocks: " + (engine.CylinderChest.CylinderCocks.Open ? "true" : "false");
+			renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, cylinderCocks, new Vector2(renderer.Screen.Width - 250, 110), TextAlignment.TopLeft, Color128.White, true);
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using TrainManager.Car;
+﻿using System;
+using TrainManager.Car;
 
 namespace TrainManager.TractionModels
 {
@@ -23,6 +24,30 @@ namespace TrainManager.TractionModels
 		protected AbstractTractionModel(CarBase car)
 		{
 			Car = car;
+		}
+		/// <summary>Base acceleration figure due to rolling on an incline</summary>
+		internal double PowerRollingCouplerAcceleration
+		{
+			get
+			{
+				double a = Car.FrontAxle.Follower.WorldDirection.Y;
+				double b = Car.RearAxle.Follower.WorldDirection.Y;
+				return -0.5 * (a + b) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+			}
+		
+		}
+		/// <summary>Base acceleration figure due to friction</summary>
+		internal double FrictionBrakeAcceleration
+		{
+			get
+			{
+				double v = Math.Abs(Car.CurrentSpeed);
+				double t = Car.Index == 0 & Car.CurrentSpeed >= 0.0 || Car.Index == Car.baseTrain.NumberOfCars - 1 & Car.CurrentSpeed <= 0.0 ? Car.Specs.ExposedFrontalArea : Car.Specs.UnexposedFrontalArea;
+				double a = Car.FrontAxle.GetResistance(v, t, TrainManagerBase.CurrentRoute.Atmosphere.GetAirDensity(Car.FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+				double b = Car.RearAxle.GetResistance(v, t, TrainManagerBase.CurrentRoute.Atmosphere.GetAirDensity(Car.FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+				return 0.5 * (a + b);
+			}
+			
 		}
 
 		/// <summary>Updates the traction model</summary>
