@@ -371,7 +371,7 @@ namespace Train.OpenBve
 									}
 									if (car.TractionModel is BVEMotorCar)
 									{
-										ParseMotorSoundTableNode(c, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);	
+										ParseMotorSoundTableNode(c, ref car.TractionModel.Sounds, center, SoundCfgParser.mediumRadius);	
 									}
 									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
 									ParseMotorSoundTableNode(c, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);

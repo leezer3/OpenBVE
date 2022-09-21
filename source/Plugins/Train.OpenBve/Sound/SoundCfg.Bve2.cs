@@ -104,10 +104,10 @@ namespace Train.OpenBve
 				// motor sound
 				if (train.Cars[i].TractionModel is BVEMotorCar)
 				{
-					if (train.Cars[i].Sounds.Motor is BVEMotorSound motorSound)
+					if (train.Cars[i].TractionModel.Sounds is BVEMotorSound motorSound)
 					{
 						System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-						train.Cars[i].Sounds.Motor.Position = center;
+						train.Cars[i].TractionModel.Sounds.Position = center;
 						for (int j = 0; j < motorSound.Tables.Length; j++)
 						{
 							for (int k = 0; k < motorSound.Tables[j].Entries.Length; k++)

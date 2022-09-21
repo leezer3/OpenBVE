@@ -13,8 +13,6 @@ namespace TrainManager.TractionModels.Steam
 		public readonly Boiler Boiler;
 		/// <summary>The cylinder chest</summary>
 		public readonly CylinderChest CylinderChest;
-		/// <summary>The acceleration curves</summary>
-		public AccelerationCurve[] AccelerationCurves;
 		/// <summary>Gets the current acceleration output</summary>
 		private double PowerOutput
 		{

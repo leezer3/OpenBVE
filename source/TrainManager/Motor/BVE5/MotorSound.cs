@@ -73,7 +73,7 @@ namespace TrainManager.Motor
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 							 * gain
 							 */
-							double max = Car.Specs.AccelerationCurveMaximum;
+							double max = Car.TractionModel.MaximumAcceleration;
 							if (max != 0.0)
 							{
 								double cur = Car.TractionModel.MotorAcceleration;
@@ -137,7 +137,7 @@ namespace TrainManager.Motor
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 							 * gain
 							 */
-							double max = Car.Specs.AccelerationCurveMaximum;
+							double max = Car.TractionModel.MaximumAcceleration;
 							if (max != 0.0)
 							{
 								double cur = Car.TractionModel.MotorAcceleration;

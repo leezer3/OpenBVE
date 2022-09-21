@@ -817,9 +817,9 @@ namespace Train.OpenBve
 			{
 				if (train.Cars[c].TractionModel is BVEMotorCar)
 				{
-					if (train.Cars[c].Sounds.Motor is BVEMotorSound motorSound)
+					if (train.Cars[c].TractionModel.Sounds is BVEMotorSound motorSound)
 					{
-						train.Cars[c].Sounds.Motor.Position = center;
+						train.Cars[c].TractionModel.Sounds.Position = center;
 						for (int i = 0; i < motorSound.Tables.Length; i++)
 						{
 							motorSound.Tables[i].Buffer = null;

@@ -44,10 +44,10 @@ namespace Train.OpenBve
 				{
 					if (Train.Cars[i].TractionModel is BVEMotorCar)
 					{
-						AccelerationCurves = new BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
-						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)
+						AccelerationCurves = new BveAccelerationCurve[Train.Cars[i].TractionModel.AccelerationCurves.Length];
+						for (int j = 0; j < Train.Cars[i].TractionModel.AccelerationCurves.Length; j++)
 						{
-							BveAccelerationCurve c = (BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
+							BveAccelerationCurve c = (BveAccelerationCurve)Train.Cars[i].TractionModel.AccelerationCurves[j];
 							AccelerationCurves[j] = c.Clone();
 						}
 						MotorSound = Train.Cars[i].Sounds.Motor as BVEMotorSound;

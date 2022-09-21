@@ -145,15 +145,15 @@ namespace Train.OpenBve
 								//We've already set the acceleration curves elsewhere in the XML, so don't copy the default ones
 								break;
 							}
-							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[AccelerationCurves.Length];
+							Train.Cars[Car].TractionModel.AccelerationCurves = new AccelerationCurve[AccelerationCurves.Length];
 							for (int i = 0; i < AccelerationCurves.Length; i++)
 							{
-								Train.Cars[Car].Specs.AccelerationCurves[i] = AccelerationCurves[i].Clone();
+								Train.Cars[Car].TractionModel.AccelerationCurves[i] = AccelerationCurves[i].Clone();
 							}
 						}
 						else
 						{
-							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[] { };
+							Train.Cars[Car].TractionModel.AccelerationCurves = new AccelerationCurve[] { };
 							Train.Cars[Car].TractionModel = new TrailerCar(Train.Cars[Car]);
 						}
 						break;
@@ -459,7 +459,7 @@ namespace Train.OpenBve
 													break;
 											}
 										}
-										Train.Cars[Car].Sounds.Motor = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
+										Train.Cars[Car].TractionModel.Sounds = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
 										break;
 								}
 							}
@@ -472,7 +472,7 @@ namespace Train.OpenBve
 						 * Retain this for the minute in case someone has actually used the thing (although the format is an ongoing WIP)....
 						 */
 						CopyAccelerationCurves = false;
-						Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(c, fileName);
+						Train.Cars[Car].TractionModel.AccelerationCurves = ParseAccelerationNode(c, fileName);
 						break;
 					case "power":
 						if (c.ChildNodes.OfType<XmlElement>().Any())
@@ -487,7 +487,7 @@ namespace Train.OpenBve
 										break;
 									case "accelerationcurves":
 										CopyAccelerationCurves = false;
-										Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(cc, fileName);
+										Train.Cars[Car].TractionModel.AccelerationCurves = ParseAccelerationNode(cc, fileName);
 										break;
 								}
 							}
@@ -508,7 +508,7 @@ namespace Train.OpenBve
 										break;
 									case "accelerationcurves":
 										CopyAccelerationCurves = false;
-										Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(cc, fileName);
+										Train.Cars[Car].TractionModel.AccelerationCurves = ParseAccelerationNode(cc, fileName);
 										break;
 								}
 							}

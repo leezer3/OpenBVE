@@ -150,7 +150,7 @@ namespace TrainManager.Trains
 			foreach (var Car in Cars)
 			{
 				Car.UpdateRunSounds(TimeElapsed);
-				Car.Sounds.Motor.Update(TimeElapsed);
+				Car.TractionModel.Sounds.Update(TimeElapsed);
 			}
 
 			// infrequent updates

@@ -36,10 +36,10 @@ namespace TrainManager.TractionModels.BVE
 				if (Car.baseTrain.Handles.Reverser.Actual != 0 & Car.baseTrain.Handles.Power.Actual > 0 & !Car.baseTrain.Handles.HoldBrake.Actual & !Car.baseTrain.Handles.EmergencyBrake.Actual)
 				{
 					// target acceleration
-					if (Car.baseTrain.Handles.Power.Actual - 1 < Car.Specs.AccelerationCurves.Length)
+					if (Car.baseTrain.Handles.Power.Actual - 1 < AccelerationCurves.Length)
 					{
 						// Load factor for a BVE2 / BVE4 / non-XML OpenBVE car is a constant 1.0
-						a = Car.Specs.AccelerationCurves[Car.baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)Car.baseTrain.Handles.Reverser.Actual * Car.CurrentSpeed, 1.0);
+						a = AccelerationCurves[Car.baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)Car.baseTrain.Handles.Reverser.Actual * Car.CurrentSpeed, 1.0);
 					}
 					else
 					{
@@ -305,8 +305,12 @@ namespace TrainManager.TractionModels.BVE
 					Speed = Car.CurrentSpeed + (a - b * d) * TimeElapsed;
 				}
 			}
+			if (Sounds != null)
+			{
+				Sounds.Update(TimeElapsed);
+			}
 		}
-
+		
 
 	}
 }

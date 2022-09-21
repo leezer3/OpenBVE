@@ -1400,22 +1400,19 @@ namespace Train.OpenBve
 					// motor car
 					Train.Cars[i].EmptyMass = MotorCarMass;
 					Train.Cars[i].CargoMass = 0;
-					Array.Resize(ref Train.Cars[i].Specs.AccelerationCurves, AccelerationCurves.Length);
+					Array.Resize(ref Train.Cars[i].TractionModel.AccelerationCurves, AccelerationCurves.Length);
 					for (int j = 0; j < AccelerationCurves.Length; j++)
 					{
-						Train.Cars[i].Specs.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
+						Train.Cars[i].TractionModel.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
-					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
+					Train.Cars[i].TractionModel.MaximumAcceleration = MaximumAcceleration;
 					
 					// motor sound
-					Train.Cars[i].Sounds.Motor = new BVEMotorSound(Train.Cars[i], 18.0, Tables);
+					Train.Cars[i].TractionModel.Sounds = new BVEMotorSound(Train.Cars[i], 18.0, Tables);
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;
 					Train.Cars[i].CargoMass = 0;
-					Train.Cars[i].Specs.AccelerationCurves = new AccelerationCurve[] { };
-					Train.Cars[i].Specs.AccelerationCurveMaximum = 0.0;
-					Train.Cars[i].Sounds.Motor = new BVEMotorSound(Train.Cars[i], 18.0);
 				}
 			}
 			// driver

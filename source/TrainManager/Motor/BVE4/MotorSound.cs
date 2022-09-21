@@ -110,7 +110,7 @@ namespace TrainManager.Motor
 							if (ndir == 1)
 							{
 								// power
-								double max = Car.Specs.AccelerationCurveMaximum;
+								double max = Car.TractionModel.MaximumAcceleration;
 								if (max != 0.0)
 								{
 									double cur = Car.TractionModel.MotorAcceleration;
