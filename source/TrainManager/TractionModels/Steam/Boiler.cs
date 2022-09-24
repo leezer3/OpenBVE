@@ -1,4 +1,5 @@
-﻿using SoundManager;
+﻿using System;
+using SoundManager;
 
 namespace TrainManager.TractionModels.Steam
 {
@@ -10,8 +11,15 @@ namespace TrainManager.TractionModels.Steam
 		public double WaterLevel;
 		/// <summary>The maximum water level</summary>
 		public readonly double MaxWaterLevel;
+
 		/// <summary>The steam pressure level</summary>
-		public double SteamPressure;
+		public double SteamPressure
+		{
+			get => _SteamPressure;
+			set => _SteamPressure = Math.Max(0, value); // ensure we can't go below zero pressure
+		}
+		/// <summary>Backing property for steam pressure</summary>
+		private double _SteamPressure;
 		/// <summary>The maximum steam pressure</summary>
 		public readonly double MaxSteamPressure;
 		/// <summary>The minimum working steam pressure</summary>

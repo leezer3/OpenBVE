@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -20,7 +20,7 @@ namespace TrainManager.TractionModels.Steam
 			{
 				Regulator regulator = Car.baseTrain.Handles.Power as Regulator;
 				// ReSharper disable once PossibleNullReferenceException
-				int curve = (int)(regulator.Ratio * AccelerationCurves.Length);
+				int curve = (int)Math.Ceiling(regulator.Ratio * (AccelerationCurves.Length - 1));
 				return AccelerationCurves[curve].GetAccelerationOutput(Car.CurrentSpeed, 1.0);
 			}
 		}
@@ -42,10 +42,10 @@ namespace TrainManager.TractionModels.Steam
 			Boiler = new Boiler(this, 2000, 3000, 200, 240, 220, 120, 0.00152);
 			/*
 			 * Cylinder Chest
-			 *			5psi standing pressure loss (leakage etc.)
-			 *			20psi base stroke pressure, before reduction due to regulator / cutoff
+			 *			0.005psi standing pressure loss (leakage etc.)
+			 *			0.2psi base stroke pressure, before reduction due to regulator / cutoff
 			 */
-			CylinderChest = new CylinderChest(this, 5, 20);
+			CylinderChest = new CylinderChest(this, 0.005, 0.2);
 			/*
 			 * Cutoff
 			 *			75% max forwards
@@ -88,6 +88,39 @@ namespace TrainManager.TractionModels.Steam
 				wheelSpin += cutoff.Actual * adjustedPowerOutput * Car.CurrentMass;
 				adjustedPowerOutput = 0;
 			}
+			if (!Car.Derailed)
+			{
+				if (MotorAcceleration < adjustedPowerOutput)
+				{
+					if (MotorAcceleration < 0.0)
+					{
+						MotorAcceleration += Car.CarBrake.JerkDown * TimeElapsed;
+					}
+					else
+					{
+						MotorAcceleration += Car.Specs.JerkPowerUp * TimeElapsed;
+					}
+
+					if (MotorAcceleration > adjustedPowerOutput)
+					{
+						MotorAcceleration = adjustedPowerOutput;
+					}
+				}
+				else
+				{
+					MotorAcceleration -= Car.Specs.JerkPowerDown * TimeElapsed;
+					if (MotorAcceleration < adjustedPowerOutput)
+					{
+						MotorAcceleration = adjustedPowerOutput;
+					}
+				}
+			}
+			else
+			{
+				MotorAcceleration = 0.0;
+			}
+
+
 			// brake
 			bool wheellock = wheelSpin == 0.0 & Car.Derailed;
 			if (!Car.Derailed & wheelSpin == 0.0)
@@ -159,12 +192,13 @@ namespace TrainManager.TractionModels.Steam
 			}
 			
 			// motor
-			if (Car.baseTrain.Handles.Reverser.Actual != 0)
+
+			if (cutoff.Actual != 0)
 			{
 				double factor = Car.EmptyMass / Car.CurrentMass;
 				if (MotorAcceleration > 0.0)
 				{
-					adjustedPowerRollingCouplerAcceleration += (double) Car.baseTrain.Handles.Reverser.Actual * MotorAcceleration * factor;
+					adjustedPowerRollingCouplerAcceleration += cutoff.Actual * MotorAcceleration * factor;
 				}
 				else
 				{

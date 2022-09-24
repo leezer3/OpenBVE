@@ -25,10 +25,10 @@ namespace TrainManager.Handles
 				}
 				if (Current != absCurrent)
 				{
-					return absCurrent * ReverseMax;
+					return (double)Current / ReverseMax;
 				}
 
-				return Current * ForwardMax;
+				return (double)Current / ForwardMax;
 			}
 		}
 		public Cutoff(TrainBase Train, int forwardsMax, int reverseMax, int ineffectiveRange) : base(Train)
