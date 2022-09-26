@@ -738,9 +738,23 @@ namespace OpenBve
 									string folderName = System.IO.Path.GetFileName(Folders[i]);
 									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
 									{
-										string File = Path.CombineFile(Folders[i], "train.dat");
+										string[] Files =
+										{
+											Path.CombineFile(Folders[i], "train.dat"),
+											Path.CombineFile(Folders[i], "train.xml"),
+										};
+										
 										ListViewItem Item = listView.Items.Add(folderName);
-										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
+										Item.ImageKey = @"folder";	
+										foreach (string File in Files)
+										{
+											if (System.IO.File.Exists(File))
+											{
+												Item.ImageKey = @"train";
+												break;
+											}
+											
+										}
 										Item.Tag = Folders[i];
 									}
 								}
@@ -785,18 +799,23 @@ namespace OpenBve
 					if (Directory.Exists(t)) {
 						try
 						{
-							string File = Path.CombineFile(t, "train.dat");
-							if (System.IO.File.Exists(File))
+							string[] Files =
 							{
-								Result.TrainFolder = t;
-								ShowTrain(false);
-								if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
-							}
-							else
+								Path.CombineFile(t, "train.dat"),
+								Path.CombineFile(t, "train.xml"),
+							};
+							foreach (string File in Files)
 							{
-								groupboxTrainDetails.Visible = false;
-								buttonStart.Enabled = false;
+								if (System.IO.File.Exists(File))
+								{
+									Result.TrainFolder = t;
+									ShowTrain(false);
+									if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
+									return;
+								}
 							}
+							groupboxTrainDetails.Visible = false;
+							buttonStart.Enabled = false;
 						}
 						catch
 						{

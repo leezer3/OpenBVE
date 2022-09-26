@@ -8,6 +8,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.Motor;
+using TrainManager.Car;
 using TrainManager.Power;
 using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
@@ -92,7 +93,7 @@ namespace Train.OpenBve
 				//Use the index here for easy access to the car count
 				for (int i = 0; i < DocumentNodes.Count; i++)
 				{
-					if (carIndex > Train.Cars.Length - 1)
+					if (carIndex > Train.Cars.Length - 1 && !Plugin.XMLOnly)
 					{
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
 						break;
@@ -101,6 +102,15 @@ namespace Train.OpenBve
 					{
 						if (DocumentNodes[i].Name == "Car")
 						{
+							if (Plugin.XMLOnly)
+							{
+								int numCars = Train.Cars.Length;
+								Array.Resize(ref Train.Cars, numCars + 1);
+								Array.Resize(ref interiorVisible, numCars + 1);
+								Array.Resize(ref CarObjects, numCars + 1);
+								Array.Resize(ref BogieObjects, (numCars + 1) * 2);
+								Train.Cars[numCars] = new CarBase(Train, numCars);
+							}
 							ParseCarNode(DocumentNodes[i], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 						}
 						else

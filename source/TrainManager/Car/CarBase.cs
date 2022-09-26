@@ -140,6 +140,7 @@ namespace TrainManager.Car
 			Brightness = new Brightness(this);
 			Cargo = new Passengers(this);
 			TractionModel = new TrailerCar(this);
+			ReAdhesionDevice = new CarReAdhesionDevice(this, ReadhesionDeviceType.NotFitted);
 		}
 
 		/// <summary>Moves the car</summary>
