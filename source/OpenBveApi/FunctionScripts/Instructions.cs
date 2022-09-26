@@ -34,7 +34,8 @@
 		RouteLimit,
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition,
-		WheelRadius, WheelRadiusOfCar
+		WheelRadius, WheelRadiusOfCar,
+		WheelSlip, WheelSlipCar
 #pragma warning restore CS1591
 			
 		}

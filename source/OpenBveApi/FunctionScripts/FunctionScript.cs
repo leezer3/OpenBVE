@@ -817,12 +817,21 @@ namespace OpenBveApi.FunctionScripting
 							n++; s++; if (s >= m) m = s; break;
 						case "wheelradius":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.BrakeBrakePipe;
+							InstructionSet[n] = Instructions.WheelRadius;
 							n++; s++; if (s >= m) m = s; break;
 						case "wheelradiusindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.BrakeBrakePipeOfCar;
+							InstructionSet[n] = Instructions.WheelRadiusOfCar;
+							n++; break;
+						case "wheelslip":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.WheelSlip;
+							n++; s++; if (s >= m) m = s; break;
+						case "wheelslipindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.WheelSlipCar;
 							n++; break;
 						// default
 						default:
