@@ -108,8 +108,20 @@ namespace Train.OpenBve
 								Array.Resize(ref Train.Cars, numCars + 1);
 								Array.Resize(ref interiorVisible, numCars + 1);
 								Array.Resize(ref CarObjects, numCars + 1);
+								Array.Resize(ref CarObjectsReversed, (numCars + 1) * 2);
 								Array.Resize(ref BogieObjects, (numCars + 1) * 2);
+								Array.Resize(ref BogieObjectsReversed, (numCars + 1) * 2);
+								Array.Resize(ref CouplerObjects, numCars + 1);
 								Train.Cars[numCars] = new CarBase(Train, numCars);
+								if (numCars > 0)
+								{
+									Train.Cars[numCars - 1].Coupler = new Coupler(0.27, 0.33, Train.Cars[numCars - 1], Train.Cars[numCars], Train);
+									Train.Cars[numCars].Coupler = new Coupler(0.27, 0.33, Train.Cars[numCars], null, Train);
+								}
+								else
+								{
+									Train.Cars[0].Coupler = new Coupler(0.27, 0.33, Train.Cars[0], null, Train);
+								}
 							}
 							ParseCarNode(DocumentNodes[i], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 						}

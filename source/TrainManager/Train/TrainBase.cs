@@ -89,9 +89,12 @@ namespace TrainManager.Trains
 			CurrentRouteLimit = double.PositiveInfinity;
 			CurrentSectionLimit = double.PositiveInfinity;
 			Cars = new CarBase[] { };
-				
 			Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 			Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
+			//FIXME: Too much stuff assumes we have these
+			SafetySystems.Headlights = new LightSource(1);
+			Handles.EmergencyBrake = new EmergencyHandle(this);
+			Handles.HoldBrake = new HoldBrakeHandle(this);
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>

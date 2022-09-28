@@ -238,7 +238,7 @@ namespace Train.OpenBve
 
 			if (Train.Cars[Car].CarBrake == null)
 			{
-				Train.Cars[Car].CarBrake = new ElectromagneticStraightAirBrake(Train.Cars[Car], EletropneumaticBrakeType.ClosingElectromagneticValve, Train.Handles.EmergencyBrake, Train.Handles.Reverser, 0, 0, 0, 0, Train.Cars[Car].TractionModel.AccelerationCurves);
+				Train.Cars[Car].CarBrake = new ElectromagneticStraightAirBrake(Train.Cars[Car], EletropneumaticBrakeType.ClosingElectromagneticValve, 0, 0, 0, 0, Train.Cars[Car].TractionModel.AccelerationCurves);
 			}
 			Train.Cars[Car].CarBrake.brakeType = type;
 			Train.Cars[Car].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);

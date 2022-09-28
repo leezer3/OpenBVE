@@ -69,11 +69,11 @@ namespace ObjectViewer.Trains
 
 				if (Specs.IsAirBrake)
 				{
-					train.Cars[i].CarBrake = new AutomaticAirBrake(train.Cars[i], EletropneumaticBrakeType.None, train.Handles.EmergencyBrake, train.Handles.Reverser, 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new AutomaticAirBrake(train.Cars[i], EletropneumaticBrakeType.None, 0.0, 0.0, new AccelerationCurve[] { });
 				}
 				else
 				{
-					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(train.Cars[i], EletropneumaticBrakeType.None, train.Handles.EmergencyBrake, train.Handles.Reverser, 0.0, 0.0, 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(train.Cars[i], EletropneumaticBrakeType.None, 0.0, 0.0, 0.0, 0.0, new AccelerationCurve[] { });
 				}
 				//At the minute, Object Viewer uses dummy brake systems
 				train.Cars[i].CarBrake.mainReservoir = new MainReservoir(Status.MainReservoirPressure * 1000.0);

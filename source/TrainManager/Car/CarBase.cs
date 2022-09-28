@@ -64,9 +64,9 @@ namespace TrainManager.Car
 		/// <summary>The windscreen</summary>
 		public Windscreen Windscreen;
 		/// <summary>The hold brake for this car</summary>
-		public CarHoldBrake HoldBrake;
+		public readonly CarHoldBrake HoldBrake;
 		/// <summary>The constant speed device for this car</summary>
-		public CarConstSpeed ConstSpeed;
+		public readonly CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
 		public AbstractReAdhesionDevice ReAdhesionDevice;
 		/// <summary>The position of the beacon reciever within the car</summary>
@@ -118,10 +118,13 @@ namespace TrainManager.Car
 			RearBogie.ChangeSection(-1);
 			Cargo = new Passengers(this);
 			TractionModel = new TrailerCar(this);
+			HoldBrake = new CarHoldBrake(this);
+			ConstSpeed = new CarConstSpeed(this);
 		}
 
 		public CarBase(TrainBase train, int index)
 		{
+			Specs = new CarPhysics();
 			baseTrain = train;
 			Index = index;
 			CarSections = new CarSection[] { };
@@ -141,6 +144,9 @@ namespace TrainManager.Car
 			Cargo = new Passengers(this);
 			TractionModel = new TrailerCar(this);
 			ReAdhesionDevice = new CarReAdhesionDevice(this, ReadhesionDeviceType.NotFitted);
+			Sounds = new CarSounds();
+			HoldBrake = new CarHoldBrake(this);
+			ConstSpeed = new CarConstSpeed(this);
 		}
 
 		/// <summary>Moves the car</summary>

@@ -9,11 +9,9 @@ namespace TrainManager.BrakeSystems
 {
 	public class ElectricCommandBrake : CarBrake
 	{
-		public ElectricCommandBrake(CarBase car, EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, AbstractReverser ReverserHandle, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves) : base(car)
+		public ElectricCommandBrake(CarBase car, EletropneumaticBrakeType type, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves) : base(car)
 		{
 			electropneumaticBrakeType = type;
-			emergencyHandle = EmergencyHandle;
-			reverserHandle = ReverserHandle;
 			brakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
 			motorDecelerationDelayUp = MotorDecelerationDelayUp;
@@ -25,7 +23,7 @@ namespace TrainManager.BrakeSystems
 		{
 			airSound = null;
 			double targetPressure;
-			if (emergencyHandle.Actual)
+			if (Car.baseTrain.Handles.EmergencyBrake.Actual)
 			{
 				if (brakeType == BrakeType.Main)
 				{
@@ -48,7 +46,7 @@ namespace TrainManager.BrakeSystems
 				targetPressure *= brakeCylinder.ServiceMaximumPressure;
 			}
 
-			if (!emergencyHandle.Actual & reverserHandle.Actual != 0)
+			if (!Car.baseTrain.Handles.EmergencyBrake.Actual & Car.baseTrain.Handles.Reverser.Actual != 0)
 			{
 				// brake control system
 				if ((Car.TractionModel is BVEMotorCar || Car.TractionModel is SteamEngine) & Math.Abs(currentSpeed) > brakeControlSpeed)
@@ -104,7 +102,7 @@ namespace TrainManager.BrakeSystems
 			{
 				// fill brake cylinder from main reservoir
 				double r;
-				if (emergencyHandle.Actual)
+				if (Car.baseTrain.Handles.EmergencyBrake.Actual)
 				{
 					r = 2.0 * brakeCylinder.EmergencyChargeRate;
 				}
@@ -140,7 +138,7 @@ namespace TrainManager.BrakeSystems
 				brakeCylinder.SoundPlayedForPressure = brakeCylinder.EmergencyMaximumPressure;
 			}
 			double pp;
-			if (emergencyHandle.Actual)
+			if (Car.baseTrain.Handles.EmergencyBrake.Actual)
 			{
 				pp = brakeCylinder.EmergencyMaximumPressure;
 			}

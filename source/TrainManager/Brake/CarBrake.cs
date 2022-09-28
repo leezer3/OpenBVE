@@ -10,13 +10,7 @@ namespace TrainManager.BrakeSystems
 		public readonly CarBase Car;
 
 		internal const double Tolerance = 5000.0;
-
-		/// <summary>Contains a reference to the EB handle of the controlling train</summary>
-		internal EmergencyHandle emergencyHandle;
-
-		/// <summary>Contains a reference to the reverser handle of the controlling train</summary>
-		internal AbstractReverser reverserHandle;
-
+		
 		/// <summary>Whether this is a main or auxiliary brake system</summary>
 		public BrakeType brakeType;
 
@@ -96,6 +90,10 @@ namespace TrainManager.BrakeSystems
 		/// <returns>The deceleration in m/s</returns>
 		public double DecelerationAtServiceMaximumPressure(int Notch, double currentSpeed)
 		{
+			if (decelerationCurves == null || decelerationCurves.Length == 0)
+			{
+				return 0;
+			}
 			if (Notch == 0)
 			{
 				return this.decelerationCurves[0].GetAccelerationOutput(currentSpeed, 1.0);
