@@ -39,6 +39,19 @@ namespace Train.OpenBve
 								break;
 							}
 
+							if (Handle == null)
+							{
+								string type = c.ParentNode.Name.ToLowerInvariant();
+								switch (type)
+								{
+									case "power":
+										Handle = new PowerHandle(numberOfNotches, numberOfNotches, new double[] { }, new double[] { }, Train);
+										continue;
+									case "brake":
+										Handle = new BrakeHandle(numberOfNotches, numberOfNotches, Train.Handles.EmergencyBrake, new double[] { }, new double[] { }, Train);
+										continue;
+								}
+							}
 							// remember to increase the max driver notch too
 							Handle.MaximumDriverNotch += numberOfNotches - Handle.MaximumNotch;
 							Handle.MaximumNotch = numberOfNotches;

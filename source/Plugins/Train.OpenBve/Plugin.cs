@@ -293,6 +293,9 @@ namespace Train.OpenBve
 					}
 					else
 					{
+						Array.Resize(ref CarObjects, currentTrain.Cars.Length + 1);
+						Array.Resize(ref BogieObjects, (currentTrain.Cars.Length + 1) * 2);
+						Array.Resize(ref CouplerObjects, currentTrain.Cars.Length + 1);
 						ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, currentTrain);
 					}
 				}

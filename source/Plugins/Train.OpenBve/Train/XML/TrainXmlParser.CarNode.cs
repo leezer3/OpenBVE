@@ -494,6 +494,11 @@ namespace Train.OpenBve
 						}
 						break;
 					case "regulator":
+						if (Car != Train.DriverCar)
+						{
+							// not valid on non-driver car
+							break;
+						}
 						Train.Handles.Power = new Regulator(Train);
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
