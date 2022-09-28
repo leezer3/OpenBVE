@@ -1,17 +1,19 @@
 ﻿using System;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.TractionModels.BVE;
+using TrainManager.TractionModels.Steam;
 
 namespace TrainManager.BrakeSystems
 {
 	public class ElectricCommandBrake : CarBrake
 	{
-		public ElectricCommandBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, AbstractReverser ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves)
+		public ElectricCommandBrake(CarBase car, EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, AbstractReverser ReverserHandle, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves) : base(car)
 		{
 			electropneumaticBrakeType = type;
 			emergencyHandle = EmergencyHandle;
 			reverserHandle = ReverserHandle;
-			isMotorCar = IsMotorCar;
 			brakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
 			motorDecelerationDelayUp = MotorDecelerationDelayUp;
@@ -49,7 +51,7 @@ namespace TrainManager.BrakeSystems
 			if (!emergencyHandle.Actual & reverserHandle.Actual != 0)
 			{
 				// brake control system
-				if (isMotorCar & Math.Abs(currentSpeed) > brakeControlSpeed)
+				if ((Car.TractionModel is BVEMotorCar || Car.TractionModel is SteamEngine) & Math.Abs(currentSpeed) > brakeControlSpeed)
 				{
 					switch (electropneumaticBrakeType)
 					{

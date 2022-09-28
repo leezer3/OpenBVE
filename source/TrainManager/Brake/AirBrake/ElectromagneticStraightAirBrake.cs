@@ -1,17 +1,19 @@
 ﻿using System;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.TractionModels.BVE;
+using TrainManager.TractionModels.Steam;
 
 namespace TrainManager.BrakeSystems
 {
 	public class ElectromagneticStraightAirBrake : CarBrake
 	{
-		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, AbstractReverser ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves)
+		public ElectromagneticStraightAirBrake(CarBase car, EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, AbstractReverser ReverserHandle, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves) : base(car)
 		{
 			electropneumaticBrakeType = type;
 			emergencyHandle = EmergencyHandle;
 			reverserHandle = ReverserHandle;
-			isMotorCar = IsMotorCar;
 			brakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
 			motorDecelerationDelayUp = MotorDecelerationDelayUp;
@@ -141,7 +143,7 @@ namespace TrainManager.BrakeSystems
 				targetPressure *= brakeCylinder.ServiceMaximumPressure;
 			}
 
-			if (isMotorCar & !emergencyHandle.Actual & reverserHandle.Actual != 0)
+			if ((Car.TractionModel is BVEMotorCar || Car.TractionModel is SteamEngine) & !emergencyHandle.Actual & reverserHandle.Actual != 0)
 			{
 				//If we meet the conditions for brake control system to activate
 				if (Math.Abs(currentSpeed) > brakeControlSpeed)

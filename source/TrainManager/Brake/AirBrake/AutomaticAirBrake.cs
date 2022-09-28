@@ -1,16 +1,16 @@
-﻿using TrainManager.Handles;
+﻿using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.Power;
 
 namespace TrainManager.BrakeSystems
 {
 	public class AutomaticAirBrake : CarBrake
 	{
-		public AutomaticAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, AbstractReverser ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves)
+		public AutomaticAirBrake(CarBase car, EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, AbstractReverser ReverserHandle, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves) : base(car)
 		{
 			electropneumaticBrakeType = type;
 			emergencyHandle = EmergencyHandle;
 			reverserHandle = ReverserHandle;
-			isMotorCar = IsMotorCar;
 			brakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
 			decelerationCurves = DecelerationCurves;
