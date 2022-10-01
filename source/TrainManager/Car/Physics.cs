@@ -6,10 +6,7 @@
 		/// <summary>The current percieved speed of the car</summary>
 		/// <remarks>Appears as if on a speedometer, accounting for wheel lock etc.</remarks>
 		public double PerceivedSpeed;
-		/// <summary>The jerk applied when the acceleration from the motor increases</summary>
-		public double JerkPowerUp;
-		/// <summary>The jerk applied when the acceleration from the motor decreases</summary>
-		public double JerkPowerDown;
+		
 		/// <summary>The body roll / shake direction</summary>
 		public double RollShakeDirection;
 		/// <summary>The amount of roll in radians applied due to toppling</summary>

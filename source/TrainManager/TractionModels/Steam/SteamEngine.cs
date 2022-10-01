@@ -9,6 +9,10 @@ namespace TrainManager.TractionModels.Steam
 	/// <summary>The traction model for a simplistic steam engine</summary>
 	public class SteamEngine : AbstractTractionModel
 	{
+		/// <summary>The jerk applied when the acceleration increases</summary>
+		private readonly double JerkPowerUp;
+		/// <summary>The jerk applied when the acceleration decreases</summary>
+		private readonly double JerkPowerDown;
 		/// <summary>The boiler</summary>
 		public readonly Boiler Boiler;
 		/// <summary>The cylinder chest</summary>
@@ -25,7 +29,7 @@ namespace TrainManager.TractionModels.Steam
 			}
 		}
 
-		public SteamEngine(CarBase car) : base(car)
+		public SteamEngine(CarBase car, double jerkPowerUp, double jerkPowerDown) : base(car)
 		{
 			/* todo: generic parameters- load from config
 			 * Fudged average numbers here at the minute, based upon a hypothetical large tender loco
@@ -53,6 +57,8 @@ namespace TrainManager.TractionModels.Steam
 			 *			10% around zero where cutoff is ineffective (due to standing resistance etc.)
 			 */
 			Car.baseTrain.Handles.Reverser = new Cutoff(Car.baseTrain, 75, -50, 10);
+			JerkPowerUp = jerkPowerUp;
+			JerkPowerDown = jerkPowerDown;
 		}
 
 		private double lastTrackPosition;
@@ -66,10 +72,10 @@ namespace TrainManager.TractionModels.Steam
 			CylinderChest.Update(TimeElapsed, Car.FrontAxle.Follower.TrackPosition - lastTrackPosition);
 			lastTrackPosition = Car.FrontAxle.Follower.TrackPosition;
 
-			double adjustedPowerOutput = PowerOutput;
 			double adjustedFrictionBrakeAcceleration = FrictionBrakeAcceleration;
 			double adjustedPowerRollingCouplerAcceleration = PowerRollingCouplerAcceleration;
-			double wheelSpin = 0.0;
+			// power
+			double wheelspin = 0.0;
 			double wheelSlipAccelerationMotorFront = 0.0;
 			double wheelSlipAccelerationMotorRear = 0.0;
 			double wheelSlipAccelerationBrakeFront = 0.0;
@@ -81,49 +87,95 @@ namespace TrainManager.TractionModels.Steam
 				wheelSlipAccelerationBrakeFront = Car.FrontAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 				wheelSlipAccelerationBrakeRear = Car.RearAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 			}
-			
-			if (adjustedPowerOutput > wheelSlipAccelerationMotorFront)
+
+			if (DecelerationDueToTraction == 0.0)
 			{
-				Car.FrontAxle.CurrentWheelSlip = true;
-				wheelSpin += cutoff.Actual * adjustedPowerOutput * Car.CurrentMass;
-				adjustedPowerOutput = 0;
-			}
-			if (!Car.Derailed)
-			{
-				if (MotorAcceleration < adjustedPowerOutput)
+				double a;
+				if (cutoff.Actual != 0 & Car.baseTrain.Handles.Power.Actual > 0 & !Car.baseTrain.Handles.HoldBrake.Actual & !Car.baseTrain.Handles.EmergencyBrake.Actual)
 				{
-					if (MotorAcceleration < 0.0)
+					// target acceleration
+					a = PowerOutput;
+
+					// readhesion device
+					if (a > Car.ReAdhesionDevice.MaximumAccelerationOutput)
 					{
-						MotorAcceleration += Car.CarBrake.JerkDown * TimeElapsed;
+						a = Car.ReAdhesionDevice.MaximumAccelerationOutput;
+					}
+
+					// wheel slip
+					if (a < wheelSlipAccelerationMotorFront)
+					{
+						Car.FrontAxle.CurrentWheelSlip = false;
 					}
 					else
 					{
-						MotorAcceleration += Car.Specs.JerkPowerUp * TimeElapsed;
+						Car.FrontAxle.CurrentWheelSlip = true;
+						wheelspin += (double)Car.baseTrain.Handles.Reverser.Actual * a * Car.CurrentMass;
 					}
 
-					if (MotorAcceleration > adjustedPowerOutput)
+					if (a < wheelSlipAccelerationMotorRear)
 					{
-						MotorAcceleration = adjustedPowerOutput;
+						Car.RearAxle.CurrentWheelSlip = false;
+					}
+					else
+					{
+						Car.RearAxle.CurrentWheelSlip = true;
+						wheelspin += (double)Car.baseTrain.Handles.Reverser.Actual * a * Car.CurrentMass;
+					}
+
+					// Update readhesion device
+					Car.ReAdhesionDevice.Update(a);
+					// Update constant speed device
+
+					Car.ConstSpeed.Update(ref a, Car.baseTrain.Specs.CurrentConstSpeed, (ReverserPosition)Car.baseTrain.Handles.Reverser.Actual);
+
+					// finalize
+					if (wheelspin != 0.0) a = 0.0;
+				}
+				else
+				{
+					a = 0.0;
+					Car.FrontAxle.CurrentWheelSlip = false;
+					Car.RearAxle.CurrentWheelSlip = false;
+				}
+
+
+				if (!Car.Derailed)
+				{
+					if (MotorAcceleration < a)
+					{
+						if (MotorAcceleration < 0.0)
+						{
+							MotorAcceleration += Car.CarBrake.JerkDown * TimeElapsed;
+						}
+						else
+						{
+							MotorAcceleration += JerkPowerUp * TimeElapsed;
+						}
+
+						if (MotorAcceleration > a)
+						{
+							MotorAcceleration = a;
+						}
+					}
+					else
+					{
+						MotorAcceleration -= JerkPowerDown * TimeElapsed;
+						if (MotorAcceleration < a)
+						{
+							MotorAcceleration = a;
+						}
 					}
 				}
 				else
 				{
-					MotorAcceleration -= Car.Specs.JerkPowerDown * TimeElapsed;
-					if (MotorAcceleration < adjustedPowerOutput)
-					{
-						MotorAcceleration = adjustedPowerOutput;
-					}
+					MotorAcceleration = 0.0;
 				}
 			}
-			else
-			{
-				MotorAcceleration = 0.0;
-			}
-
 
 			// brake
-			bool wheellock = wheelSpin == 0.0 & Car.Derailed;
-			if (!Car.Derailed & wheelSpin == 0.0)
+			bool wheellock = wheelspin == 0.0 & Car.Derailed;
+			if (!Car.Derailed & wheelspin == 0.0)
 			{
 				double a;
 				// motor
@@ -134,7 +186,7 @@ namespace TrainManager.TractionModels.Steam
 					{
 						if (MotorAcceleration > 0.0)
 						{
-							MotorAcceleration -= Car.Specs.JerkPowerDown * TimeElapsed;
+							MotorAcceleration -= JerkPowerDown * TimeElapsed;
 						}
 						else
 						{
@@ -190,15 +242,14 @@ namespace TrainManager.TractionModels.Steam
 			{
 				adjustedFrictionBrakeAcceleration += TrainBase.CoefficientOfGroundFriction * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			}
-			
-			// motor
 
-			if (cutoff.Actual != 0)
+			// motor
+			if (Car.baseTrain.Handles.Reverser.Actual != 0)
 			{
 				double factor = Car.EmptyMass / Car.CurrentMass;
 				if (MotorAcceleration > 0.0)
 				{
-					adjustedPowerRollingCouplerAcceleration += cutoff.Actual * MotorAcceleration * factor;
+					adjustedPowerRollingCouplerAcceleration += (double) Car.baseTrain.Handles.Reverser.Actual * MotorAcceleration * factor;
 				}
 				else
 				{
@@ -235,13 +286,13 @@ namespace TrainManager.TractionModels.Steam
 				{
 					target = 0.0;
 				}
-				else if (wheelSpin == 0.0)
+				else if (wheelspin == 0.0)
 				{
 					target = Car.CurrentSpeed;
 				}
 				else
 				{
-					target = Car.CurrentSpeed + wheelSpin / 2500.0;
+					target = Car.CurrentSpeed + wheelspin / 2500.0;
 				}
 
 				double diff = target - Car.Specs.PerceivedSpeed;
@@ -303,6 +354,10 @@ namespace TrainManager.TractionModels.Steam
 				{
 					Speed = Car.CurrentSpeed + (a - b * d) * TimeElapsed;
 				}
+			}
+			if (Sounds != null)
+			{
+				Sounds.Update(TimeElapsed);
 			}
 		}
 	}

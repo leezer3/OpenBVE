@@ -8,8 +8,15 @@ namespace TrainManager.TractionModels.BVE
 	/// <summary>The traction model for a BVE Motor Car</summary>
 	public class BVEMotorCar : AbstractTractionModel
 	{
-		public BVEMotorCar(CarBase car) : base(car)
+		/// <summary>The jerk applied when the acceleration from the motor increases</summary>
+		private readonly double JerkPowerUp;
+		/// <summary>The jerk applied when the acceleration from the motor decreases</summary>
+		private readonly double JerkPowerDown;
+
+		public BVEMotorCar(CarBase car, double jerkPowerUp, double jerkPowerDown) : base(car)
 		{
+			JerkPowerUp = jerkPowerUp;
+			JerkPowerDown = jerkPowerDown;
 		}
 
 		public override void Update(double TimeElapsed, out double Speed)
@@ -100,7 +107,7 @@ namespace TrainManager.TractionModels.BVE
 						}
 						else
 						{
-							MotorAcceleration += Car.Specs.JerkPowerUp * TimeElapsed;
+							MotorAcceleration += JerkPowerUp * TimeElapsed;
 						}
 
 						if (MotorAcceleration > a)
@@ -110,7 +117,7 @@ namespace TrainManager.TractionModels.BVE
 					}
 					else
 					{
-						MotorAcceleration -= Car.Specs.JerkPowerDown * TimeElapsed;
+						MotorAcceleration -= JerkPowerDown * TimeElapsed;
 						if (MotorAcceleration < a)
 						{
 							MotorAcceleration = a;
@@ -136,7 +143,7 @@ namespace TrainManager.TractionModels.BVE
 					{
 						if (MotorAcceleration > 0.0)
 						{
-							MotorAcceleration -= Car.Specs.JerkPowerDown * TimeElapsed;
+							MotorAcceleration -= JerkPowerDown * TimeElapsed;
 						}
 						else
 						{

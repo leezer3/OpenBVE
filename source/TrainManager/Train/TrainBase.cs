@@ -95,6 +95,8 @@ namespace TrainManager.Trains
 			SafetySystems.Headlights = new LightSource(1);
 			Handles.EmergencyBrake = new EmergencyHandle(this);
 			Handles.HoldBrake = new HoldBrakeHandle(this);
+			Handles.LocoBrake = new LocoAirBrakeHandle(this);
+			Handles.HasHoldBrake = false;
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>
@@ -484,6 +486,7 @@ namespace TrainManager.Trains
 				UpdateSafetySystem();
 			}
 
+			if (Cars[DriverCar].Breaker != null)
 			{
 				// breaker sound
 				bool breaker;
@@ -495,9 +498,9 @@ namespace TrainManager.Trains
 				{
 					breaker = Handles.Reverser.Actual != 0 & Handles.Power.Safety >= 1 & Handles.Brake.Safety == 0 & !Handles.EmergencyBrake.Safety & !Handles.HoldBrake.Actual;
 				}
-
 				Cars[DriverCar].Breaker.Update(breaker);
 			}
+
 			// signals
 			if (CurrentSectionLimit == 0.0)
 			{

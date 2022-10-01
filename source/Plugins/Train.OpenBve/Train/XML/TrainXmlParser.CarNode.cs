@@ -138,7 +138,7 @@ namespace Train.OpenBve
 					case "motorcar":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
-							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car]);
+							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], 10.0, 10.0);
 							if (!CopyAccelerationCurves)
 							{
 								//We've already set the acceleration curves elsewhere in the XML, so don't copy the default ones
@@ -157,7 +157,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "steamengine":
-						Train.Cars[Car].TractionModel = new SteamEngine(Train.Cars[Car]);
+						Train.Cars[Car].TractionModel = new SteamEngine(Train.Cars[Car], 10, 10);
 						Train.Cars[Car].FrontAxle.WheelRadius = 0.9; // nominal 6ft radius unless otherwise set
 						break;
 					case "mass":

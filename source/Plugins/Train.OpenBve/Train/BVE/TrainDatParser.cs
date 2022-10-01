@@ -1137,26 +1137,26 @@ namespace Train.OpenBve
 			if (MotorCars == 1) {
 				if (FrontCarIsMotorCar | TrailerCars == 0)
 				{
-					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0]);
+					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0], JerkPowerUp, JerkPowerDown);
 				} else {
-					Train.Cars[Cars - 1].TractionModel = new BVEMotorCar(Train.Cars[Cars - 1]);
+					Train.Cars[Cars - 1].TractionModel = new BVEMotorCar(Train.Cars[Cars - 1], JerkPowerUp, JerkPowerDown);
 				}
 			} else if (MotorCars == 2) {
 				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0]);
-					Train.Cars[Cars - 1].TractionModel = new BVEMotorCar(Train.Cars[Cars - 1]);
+					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0], JerkPowerUp, JerkPowerDown);
+					Train.Cars[Cars - 1].TractionModel = new BVEMotorCar(Train.Cars[Cars - 1], JerkPowerUp, JerkPowerDown);
 				} else if (TrailerCars == 1) {
-					Train.Cars[1].TractionModel = new BVEMotorCar(Train.Cars[1]);
-					Train.Cars[2].TractionModel = new BVEMotorCar(Train.Cars[2]);
+					Train.Cars[1].TractionModel = new BVEMotorCar(Train.Cars[1], JerkPowerUp, JerkPowerDown);
+					Train.Cars[2].TractionModel = new BVEMotorCar(Train.Cars[2], JerkPowerUp, JerkPowerDown);
 				} else {
 					int i = (int)Math.Ceiling(0.25 * (Cars - 1));
 					int j = (int)Math.Floor(0.75 * (Cars - 1));
-					Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i]);
-					Train.Cars[j].TractionModel = new BVEMotorCar(Train.Cars[i]);
+					Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i], JerkPowerUp, JerkPowerDown);
+					Train.Cars[j].TractionModel = new BVEMotorCar(Train.Cars[i], JerkPowerUp, JerkPowerDown);
 				}
 			} else if (MotorCars > 0) {
 				if (FrontCarIsMotorCar) {
-					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0]);
+					Train.Cars[0].TractionModel = new BVEMotorCar(Train.Cars[0], JerkPowerUp, JerkPowerDown);
 					double t = 1.0 + TrailerCars / (double)(MotorCars - 1);
 					double r = 0.0;
 					double x = 0.0;
@@ -1166,10 +1166,10 @@ namespace Train.OpenBve
 						r = x - y;
 						int i = (int)x;
 						if (i >= Cars) break;
-						Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i]);
+						Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i], JerkPowerUp, JerkPowerDown);
 					}
 				} else {
-					Train.Cars[1].TractionModel = new BVEMotorCar(Train.Cars[1]);
+					Train.Cars[1].TractionModel = new BVEMotorCar(Train.Cars[1], JerkPowerUp, JerkPowerDown);
 					double t = 1.0 + (TrailerCars - 1) / (double)(MotorCars - 1);
 					double r = 0.0;
 					double x = 1.0;
@@ -1179,7 +1179,7 @@ namespace Train.OpenBve
 						r = x - y;
 						int i = (int)x;
 						if (i >= Cars) break;
-						Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i]);
+						Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i], JerkPowerUp, JerkPowerDown);
 					}
 				}
 			}
@@ -1374,8 +1374,6 @@ namespace Train.OpenBve
 				Train.Cars[i].RearAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].FrontAxle.Position = AxleDistance;
 				Train.Cars[i].RearAxle.Position = -AxleDistance;
-				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
-				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
 				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;
 				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
 				Train.Cars[i].Doors[0] = new Door(-1, DoorWidth, DoorTolerance);

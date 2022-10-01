@@ -287,15 +287,15 @@ namespace Train.OpenBve
 				if (!XMLOnly)
 				{
 					// being used as an extension, so we need to load it now
+					Array.Resize(ref CarObjects, currentTrain.Cars.Length + 1);
+					Array.Resize(ref BogieObjects, (currentTrain.Cars.Length + 1) * 2);
+					Array.Resize(ref CouplerObjects, currentTrain.Cars.Length + 1);
 					if (File.Exists(tXml))
 					{
 						TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
 					}
 					else
 					{
-						Array.Resize(ref CarObjects, currentTrain.Cars.Length + 1);
-						Array.Resize(ref BogieObjects, (currentTrain.Cars.Length + 1) * 2);
-						Array.Resize(ref CouplerObjects, currentTrain.Cars.Length + 1);
 						ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, currentTrain);
 					}
 				}
