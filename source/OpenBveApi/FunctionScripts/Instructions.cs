@@ -35,8 +35,14 @@
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition,
 		WheelRadius, WheelRadiusOfCar,
-		WheelSlip, WheelSlipCar,
 		Sanders, SandLevel, SandShots
+		WheelSlip, WheelSlipCar,
+
+		/*
+		 * Steam engine related stuff
+		 */
+		BoilerPressure, BoilerWaterLevel, Cutoff, Blowers, CylinderCocks, BypassValve, LiveSteamInjector, ExhaustSteamInjector, FireArea, FireMass, FireTemperature
+
 #pragma warning restore CS1591
 			
 		}

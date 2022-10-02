@@ -7,6 +7,7 @@ using OpenBveApi.Trains;
 using TrainManager.Car.Systems;
 using TrainManager.Handles;
 using TrainManager.TractionModels.BVE;
+using TrainManager.TractionModels.Steam;
 using TrainManager.Trains;
 
 namespace OpenBve {
@@ -14,6 +15,11 @@ namespace OpenBve {
 		// execute function script
 		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
+			SteamEngine steamEngine = null;
+			if (Train != null && CarIndex < Train.Cars.Length)
+			{
+				steamEngine = Train.Cars[CarIndex].TractionModel as SteamEngine;
+			}
 			for (int i = 0; i < Function.InstructionSet.Length; i++) {
 				switch (Function.InstructionSet[i]) {
 						// system
@@ -1555,7 +1561,96 @@ namespace OpenBve {
 							}
 						}
 						break;
-					// default
+					case Instructions.BoilerPressure:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.SteamPressure;
+						break;
+					case Instructions.BoilerWaterLevel:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.WaterLevel;
+						break;
+					case Instructions.Cutoff:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Cutoff cutoff = Train.Handles.Reverser as Cutoff;
+						Function.Stack[s - 1] = cutoff.Current; // *not* actual- we want the driver set value for animations
+						break;
+					case Instructions.Blowers:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.Blowers.Active ? 1 : 0;
+						break;
+					case Instructions.CylinderCocks:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.CylinderCocks.Open ? 1 : 0;
+						break;
+					case Instructions.BypassValve:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.BypassValve.Active ? 1 : 0;
+						break;
+					case Instructions.LiveSteamInjector:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.LiveSteamInjector.Active ? 1 : 0;
+						break;
+					case Instructions.ExhaustSteamInjector:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.ExhaustSteamInjector.Active ? 1 : 0;
+						break;
+					case Instructions.FireArea:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.Firebox.FireArea;
+						break;
+					case Instructions.FireMass:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.Firebox.FireMass;
+						break;
+					case Instructions.FireTemperature:
+						if (steamEngine == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.Boiler.Firebox.Temperature;
+						break;
+						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}
