@@ -130,10 +130,46 @@ namespace TrainManager.SafetySystems
 				}
 			}
 
-			if (currentStep == 101)
+			if (Plugin.Sound[3] == 0)
 			{
-				//Raise the AWS horn cancel key
-				Plugin.KeyUp(VirtualKeys.A1);
+				//Vigilance alarm- driver to increase brakes to max
+				if (data.Handles.BrakeNotch != Plugin.Train.Handles.Brake.MaximumNotch)
+				{
+					data.Handles.BrakeNotch++;
+					data.Response = AIResponse.Short;
+					return;
+				}
+				if (data.Handles.PowerNotch != 0)
+				{
+					data.Handles.PowerNotch--;
+					data.Response = AIResponse.Short;
+					return;
+				}
+				//Wait for train to stop
+				if (Plugin.Train.CurrentSpeed != 0)
+				{
+					data.Response = AIResponse.Short;
+					return;
+				}
+				//Reset alarm
+				switch (currentStep)
+				{
+					case 100:
+						data.Response = AIResponse.Medium;
+						currentStep++;
+						return;
+					case 101:
+						Plugin.KeyDown(VirtualKeys.A2);
+						data.Response = AIResponse.Medium;
+						currentStep+= 2;
+						return;
+				}
+			}
+			
+			if (currentStep == 102 || currentStep == 103)
+			{
+				//Raise the cancel key
+				Plugin.KeyUp(currentStep == 102 ? VirtualKeys.A1 : VirtualKeys.A2);
 				data.Response = AIResponse.Medium;
 				currentStep = 100;
 				return;
