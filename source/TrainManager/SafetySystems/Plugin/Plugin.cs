@@ -127,7 +127,21 @@ namespace TrainManager.SafetySystems
 			double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;
 			double bpPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakePipe.CurrentPressure;
 			double sapPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.straightAirPipe.CurrentPressure;
-			VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, this.Train.Cars[0].FrontAxle.Follower);
+			bool wheelSlip = false;
+			for (int i = 0; i < this.Train.Cars.Length; i++)
+			{
+				if (this.Train.Cars[i].FrontAxle.CurrentWheelSlip)
+				{
+					/*
+					 * Find out if any car in the train is experincing wheelslip
+					 * Remember that only motor cars may experience wheelslip, and there is no
+					 * set position of these within the train, hence it's easier to just check all
+					 */
+					wheelSlip = true;
+					break;
+				}
+			}
+			VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, wheelSlip, this.Train.Cars[0].FrontAxle.Follower);
 			/*
 			 * Prepare the preceding vehicle state.
 			 * */
@@ -649,12 +663,13 @@ namespace TrainManager.SafetySystems
 		protected abstract void SetBeacon(BeaconData beacon);
 
 		/// <summary>Updates the AI.</summary>
+		/// <param name="timeElapsed">The elapsed time</param>
 		/// <returns>The AI response.</returns>
-		public AIResponse UpdateAI()
+		public AIResponse UpdateAI(double timeElapsed)
 		{
 			if (this.SupportsAI != AISupport.None)
 			{
-				AIData data = new AIData(GetHandles());
+				AIData data = new AIData(GetHandles(), timeElapsed);
 				this.PerformAI(data);
 				if (data.Response != AIResponse.None)
 				{

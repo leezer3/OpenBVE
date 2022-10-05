@@ -350,6 +350,7 @@ namespace CarXmlConvertor
 		{
 			TabbedList newLines = new TabbedList();
 			newLines.Add("<Train>");
+			newLines.Add("<DriverCar>" + ConvertTrainDat.DriverCar + "</DriverCar>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
 			{
 				if (SingleFile)

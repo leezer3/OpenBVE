@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-#Set base development branch revision numbers
-#This needs to be bumped once we have a stable release branch
+
+# Basic shell script to create appropriate version numbers in non C# code (Debian packages, OS-X app bundles)
+#
+# First, set the base development branch revision numbers
+# This needs to be bumped once we have a stable release branch
 MajorVersion=1
 MinorVersion=5
 
@@ -27,7 +30,37 @@ else
 	InfoVersion=$MajorVersion.$MinorVersion.$Revision.$Minutes-$USER
 fi
 
-cat > installers/debian/DEBIAN/control << EOF
+# determine revision and build numbers
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+cat > mac/OpenBVE.app/Contents/Info.plist << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleIdentifier</key>
+	<string>openbve.trainsimcentral.co.uk</string>
+	<key>CFBundleExecutable</key>
+	<string>OpenBVE</string>
+	<key>CFBundleIconFile</key>
+	<string>OpenBVE.icns</string>
+	<key>CFBundleName</key>
+	<string>OpenBVE</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$Version</string>
+	<key>CFBundleSignature</key>
+	<string>xmmd</string>
+	<key>CFBundleVersion</key>
+	<string>$Version</string>
+	<key>NSAppleScriptEnabled</key>
+	<string>NO</string>
+</dict>
+</plist>
+EOF
+chmod 644 mac/OpenBVE.app/Contents/Info.plist
+	else
+		cat > installers/debian/DEBIAN/control << EOF
 Package: openbve
 Priority: optional
 Section: universe/games
@@ -65,3 +98,5 @@ Description: realistic 3D train/railway simulator (main program)
  train extension plugins are not currently supported on Linux/Unix,
  because these would require Win32 emulation.
 EOF
+	fi
+

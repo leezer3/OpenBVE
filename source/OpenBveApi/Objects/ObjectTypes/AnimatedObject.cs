@@ -763,6 +763,7 @@ namespace OpenBveApi.Objects
 			{
 				var o = this.Clone();
 				currentHost.CreateDynamicObject(ref o.internalObject);
+				o.SectionIndex = SectionIndex;
 				AnimatedWorldObject currentObject = new AnimatedWorldObject(currentHost)
 				{
 					Position = Position,
