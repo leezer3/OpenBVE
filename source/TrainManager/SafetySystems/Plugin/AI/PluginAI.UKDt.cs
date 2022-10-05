@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 
 namespace TrainManager.SafetySystems
 {
@@ -260,6 +261,27 @@ namespace TrainManager.SafetySystems
 							lightsSet = true;
 						}
 						return;
+				}
+			}
+			//Handle DRA
+			if (Plugin.Train.StationState == TrainStopState.Boarding)
+			{
+				if (Plugin.Panel[13] == 0)
+				{
+					Plugin.KeyDown(VirtualKeys.S);
+					Plugin.KeyUp(VirtualKeys.S);
+					data.Response = AIResponse.Short;
+					return;
+				}
+			}
+			else
+			{
+				if (Plugin.Panel[13] == 1)
+				{
+					Plugin.KeyDown(VirtualKeys.S);
+					Plugin.KeyUp(VirtualKeys.S);
+					data.Response = AIResponse.Short;
+					return;
 				}
 			}
 			//UKDT fitted trains generally use the tail lights toggle for something else dummy (ETS etc.) which isn't directly relevant to the AI or the external appearance, so do nothing here
