@@ -5,6 +5,7 @@ using OpenBveApi.Runtime;
 using LibRender2.Overlays;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
+using TrainManager.Car.Systems;
 
 namespace RouteViewer {
 	internal static class FunctionScripts {
@@ -1081,6 +1082,33 @@ namespace RouteViewer {
 							}
 						}
 						break;
+					case Instructions.Sanders:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.Active ? 1 : 0;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.SandLevel:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.SandLevel;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.SandShots:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.NumberOfShots;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						} 
+						s++; break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}
