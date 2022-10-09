@@ -7,6 +7,7 @@ using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
@@ -537,6 +538,42 @@ namespace Train.OpenBve
 										break;
 									}
 									ParseArrayNode(c, out car.Sounds.Touch, center, SoundCfgParser.mediumRadius);
+									break;
+								case "sanders":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of sanders sounds was defined in in XML file " + fileName);
+										break;
+									}
+									Sanders sanders = car.ReAdhesionDevice as Sanders;
+									if (sanders == null)
+									{
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "activate":
+												ParseNode(cc, out sanders.ActivationSound, center, SoundCfgParser.smallRadius);
+												break;
+											case "emptyactivate":
+												ParseNode(cc, out sanders.EmptyActivationSound, center, SoundCfgParser.smallRadius);
+												break;
+											case "deactivate":
+												ParseNode(cc, out sanders.DeActivationSound, center, SoundCfgParser.smallRadius);
+												break;
+											case "loop":
+												ParseNode(cc, out sanders.LoopSound, center, SoundCfgParser.smallRadius);
+												break;
+											case "empty":
+												ParseNode(cc, out sanders.EmptySound, center, SoundCfgParser.smallRadius);
+												break;
+											default:
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
 									break;
 							}
 						}

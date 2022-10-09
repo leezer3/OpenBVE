@@ -19,6 +19,7 @@ using RouteManager2.Stations;
 using TrainManager;
 using TrainManager.Handles;
 using TrainManager.Car;
+using TrainManager.Car.Systems;
 
 namespace OpenBve
 {
@@ -1593,6 +1594,21 @@ namespace OpenBve
 											//Also inform the plugin that these keys have been pressed
 											TrainManager.PlayerTrain.Plugin.KeyDown(
 												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+										break;
+									case Translations.Command.Sanders:
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(
+												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+
+										for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
+										{
+											if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
+											{
+												sanders.Toggle();
+											}
 										}
 										break;
 									case Translations.Command.TimetableToggle:

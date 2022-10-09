@@ -62,10 +62,13 @@
     <Compile Include="Car\Door.DoorModes.cs" />
     <Compile Include="Car\Door.TrainDoorState.cs" />
     <Compile Include="Car\Physics.cs" />
+    <Compile Include="Car\Systems\AbstractReAdhesionDevice.cs" />
     <Compile Include="Car\Systems\ConstantSpeedDevice.cs" />
     <Compile Include="Car\Systems\HoldBrake.cs" />
     <Compile Include="Car\Systems\ReadhesionDevice.cs" />
     <Compile Include="Car\Systems\ReadhesionDevice.Types.cs" />
+    <Compile Include="Car\Systems\Sanders.cs" />
+    <Compile Include="Car\Systems\Sanders.Types.cs" />
     <Compile Include="Car\Windscreen\Raindrop.cs" />
     <Compile Include="Car\Windscreen\Windscreen.cs" />
     <Compile Include="Car\Windscreen\Wiper.cs" />

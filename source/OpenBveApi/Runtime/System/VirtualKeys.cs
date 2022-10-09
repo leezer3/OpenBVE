@@ -83,6 +83,8 @@
 		/// <summary>Called when the driver presses the left door button [NOTE: This is called whether or not opening succeeds/ is blocked]</summary>
 		LeftDoors = 35,
 		/// <summary>Called when the driver presses the right door button [NOTE: This is called whether or not opening succeeds/ is blocked]</summary>
-		RightDoors = 36
+		RightDoors = 36,
+		/// <summary>Called when the sanders are activated</summary>
+		Sanders = 37
 	}
 }
