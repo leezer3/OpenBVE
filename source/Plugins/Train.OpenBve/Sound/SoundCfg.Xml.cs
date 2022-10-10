@@ -796,17 +796,17 @@ namespace Train.OpenBve
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Sound position X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
 							x = 0.0;
 						}
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Sound position Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
 							y = 0.0;
 						}
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Sound position Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
 							z = 0.0;
 						}
 						Position = new Vector3(x,y,z);
