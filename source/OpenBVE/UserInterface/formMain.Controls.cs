@@ -485,7 +485,7 @@ namespace OpenBve {
 		{
 			try
 			{
-				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls"), out Interface.CurrentControls);
+				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls"), out Interface.CurrentControls);
 				for (int i = 0; i < listviewControls.SelectedItems.Count; i++)
 				{
 					listviewControls.SelectedItems[i].Selected = false;

@@ -363,8 +363,8 @@ namespace Train.OpenBve
 						SandersType type = SandersType.NotFitted;
 						double rate = double.MaxValue;
 						double level = 0;
-						double applicationTime = 0;
-						double activationTime = 0;
+						double applicationTime = 10.0;
+						double activationTime = 5.0;
 						int shots = int.MaxValue;
 						foreach (XmlNode cc in c.ChildNodes)
 						{

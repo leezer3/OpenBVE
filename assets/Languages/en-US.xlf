@@ -1837,6 +1837,12 @@
 					<trans-unit id="device_constspeed">
 						<source>Activates or deactivates the constant speed device</source>
 					</trans-unit>
+					<trans-unit id="play_micsounds">
+						<source>Activates or deactivates the system microphone soundsource</source>
+					</trans-unit>
+					<trans-unit id="sanders">
+						<source>Activates or deactivates the sanders</source>
+					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
 					</trans-unit>

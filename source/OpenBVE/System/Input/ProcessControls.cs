@@ -1995,6 +1995,22 @@ namespace OpenBve
 									case Translations.Command.RailDriverSpeedUnits:
 										Interface.CurrentOptions.RailDriverMPH = !Interface.CurrentOptions.RailDriverMPH;
 										break;
+									case Translations.Command.Sanders:
+										for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
+										{
+											if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
+											{
+												if (sanders.Type == SandersType.PressAndHold)
+												{
+													sanders.Toggle();
+												}
+											}
+										}
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.Sanders);
+										}
+										break;
 								}
 							}
 						}
