@@ -80,11 +80,13 @@
 		LowerPantograph = 33,
 		/// <summary>Toggles the main breaker. The default assignment is [N/A]. The numerical value of this constant is 34.</summary>
 		MainBreaker = 34,
-		/// <summary>Called when the driver presses the left door button [NOTE: This is called whether or not opening succeeds/ is blocked]</summary>
+		/// <summary>Called when the driver presses the left door button [NOTE: This is called whether or not opening succeeds/ is blocked]. The numerical value of this constant is 35.</summary>
 		LeftDoors = 35,
-		/// <summary>Called when the driver presses the right door button [NOTE: This is called whether or not opening succeeds/ is blocked]</summary>
+		/// <summary>Called when the driver presses the right door button [NOTE: This is called whether or not opening succeeds/ is blocked]. The numerical value of this constant is 36.</summary>
 		RightDoors = 36,
-		/// <summary>Called when the sanders are activated</summary>
-		Sanders = 37
+		/// <summary>Called when the sanders are activated. The default assignment is [S]. The numerical value of this constant is 37.</summary>
+		Sanders = 37,
+		/// <summary>Called when the headlights state changes. The default assignment is [H]. The numerical value of this constant is 38.</summary>
+		Headlights = 38
 	}
 }
