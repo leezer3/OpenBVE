@@ -35,7 +35,8 @@
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition,
 		WheelRadius, WheelRadiusOfCar,
-		WheelSlip, WheelSlipCar
+		WheelSlip, WheelSlipCar,
+		Sanders, SandLevel, SandShots
 #pragma warning restore CS1591
 			
 		}

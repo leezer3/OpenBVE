@@ -11,6 +11,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -23,7 +24,11 @@ namespace Train.OpenBve
 		private void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
 		{
 			string interiorFile = string.Empty;
-			ReadhesionDeviceType readhesionDevice = Train.Cars[0].ReAdhesionDevice.DeviceType;
+			ReadhesionDeviceType readhesionDevice = ReadhesionDeviceType.NotFitted;
+			if (Train.Cars[0].ReAdhesionDevice is BveReAdhesionDevice device)
+			{
+				readhesionDevice = device.DeviceType;
+			}
 			bool CopyAccelerationCurves = true;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
@@ -354,6 +359,66 @@ namespace Train.OpenBve
 								break;
 						}
 						break;
+					case "sanders":
+						SandersType type = SandersType.NotFitted;
+						double rate = double.MaxValue;
+						double level = 0;
+						double applicationTime = 10.0;
+						double activationTime = 5.0;
+						int shots = int.MaxValue;
+						foreach (XmlNode cc in c.ChildNodes)
+						{
+							switch (cc.Name.ToLowerInvariant())
+							{
+								case "type":
+									if (!Enum.TryParse(cc.InnerText, true, out type))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sanders type was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "rate":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rate))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sanders application rate was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "sandlevel":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out level))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sand level was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "numberofshots":
+									if (!NumberFormats.TryParseIntVb6(cc.InnerText, out shots))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sand level was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "applicationtime":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out applicationTime))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sanders application time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "activationtime":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out activationTime))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sanders activation time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+							}
+
+							Train.Cars[Car].ReAdhesionDevice = new Sanders(Train.Cars[Car], type)
+							{
+								ApplicationTime = applicationTime,
+								ActivationTime = activationTime,
+								SandLevel = level,
+								SandingRate = rate,
+								NumberOfShots = shots
+							};
+						}
+
+						break;
 					case "visiblefrominterior":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
@@ -558,7 +623,7 @@ namespace Train.OpenBve
 					Plugin.currentHost.AddMessage(MessageType.Warning, false, "Interior view file is not supported for Car " + Car + " in XML file " + fileName);
 				}
 			}
-			Train.Cars[Car].ReAdhesionDevice = new CarReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+			Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
 		}
 	}
 }

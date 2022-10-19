@@ -13,6 +13,7 @@ using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
 using TrainManager.BrakeSystems;
+using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Motor;
 using TrainManager.Power;
@@ -66,7 +67,7 @@ namespace TrainManager.Car
 		/// <summary>The constant speed device for this car</summary>
 		public CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
-		public CarReAdhesionDevice ReAdhesionDevice;
+		public AbstractReAdhesionDevice ReAdhesionDevice;
 		/// <summary>The position of the beacon reciever within the car</summary>
 		public double BeaconReceiverPosition;
 		/// <summary>The beacon reciever</summary>
@@ -1163,10 +1164,21 @@ namespace TrainManager.Car
 							}
 
 							// readhesion device
-							if (a > ReAdhesionDevice.MaximumAccelerationOutput)
+							if (ReAdhesionDevice is BveReAdhesionDevice device)
 							{
-								a = ReAdhesionDevice.MaximumAccelerationOutput;
+								if (a > device.MaximumAccelerationOutput)
+								{
+									a = device.MaximumAccelerationOutput;
+								}
 							}
+							else if (ReAdhesionDevice is Sanders sanders)
+							{
+								wheelSlipAccelerationMotorFront *= 2.0;
+								wheelSlipAccelerationMotorRear *= 2.0;
+								wheelSlipAccelerationBrakeFront *= 2.0;
+								wheelSlipAccelerationBrakeRear *= 2.0;
+							}
+							
 
 							// wheel slip
 							if (a < wheelSlipAccelerationMotorFront)

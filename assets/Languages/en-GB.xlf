@@ -2370,6 +2370,14 @@
 						<source>Activates or deactivates the constant speed device</source>
 						<target>Activates or deactivates the constant speed device</target>
 					</trans-unit>
+					<trans-unit id="play_micsounds">
+						<source>Activates or deactivates the system microphone soundsource</source>
+						<target>Activates or deactivates the system microphone soundsource</target>
+					</trans-unit>
+					<trans-unit id="sanders">
+						<source>Activates or deactivates the sanders</source>
+						<target>Activates or deactivates the sanders</target>
+					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
 						<target>Activates or deactivates the security system on some trains</target>

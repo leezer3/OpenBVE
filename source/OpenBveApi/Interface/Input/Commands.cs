@@ -302,7 +302,12 @@ namespace OpenBveApi.Interface {
 			/// <summary>Triggers a screen reader message with the distance and aspect to the next signal</summary>
 			AccessibilityNextSignal,
 			/// <summary>Triggers a screen reader message with the distance and aspect to the next station</summary>
-			AccessibilityNextStation
+			AccessibilityNextStation,
+			/*
+			 * Added in 1.8.4.3
+			 */
+			/// <summary>Toggles the sanders if fitted</summary>
+			Sanders
 		}
 
 		/// <summary>Defines the possible command types</summary>

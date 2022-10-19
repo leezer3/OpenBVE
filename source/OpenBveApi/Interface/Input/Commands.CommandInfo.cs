@@ -155,6 +155,7 @@
 			new CommandInfo(Command.HornMusic, CommandType.Digital, "HORN_MUSIC"),
 			new CommandInfo(Command.DeviceConstSpeed, CommandType.Digital, "DEVICE_CONSTSPEED"),
 			new CommandInfo(Command.PlayMicSounds, CommandType.Digital, "PLAY_MIC_SOUNDS"),
+			new CommandInfo(Command.Sanders, CommandType.Digital, "SANDERS"),
 
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618
