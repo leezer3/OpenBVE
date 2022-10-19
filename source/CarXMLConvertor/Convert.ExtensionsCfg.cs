@@ -488,7 +488,7 @@ namespace CarXmlConvertor
 				newLines.Add("<Object>" + CarInfos[i].Object + "</Object>");
 			}
 			newLines.Add("<Reversed>" + CarInfos[i].Reversed + "</Reversed>");
-			newLines.Add("<LoadingSway>" + CarInfos[i].Reversed + "</LoadingSway>");
+			newLines.Add("<LoadingSway>" + CarInfos[i].LoadingSway + "</LoadingSway>");
 			if (CarInfos[i].FrontBogie.AxlesDefined || !string.IsNullOrEmpty(CarInfos[i].FrontBogie.Object))
 			{
 				newLines.Add("<FrontBogie>");
@@ -570,7 +570,6 @@ namespace CarXmlConvertor
 			newLines.Add("<Width>" + ConvertTrainDat.DoorWidth / 1000.0 + "</Width>");
 			newLines.Add("<Tolerance>" + ConvertTrainDat.DoorTolerance / 1000.0 + "</Tolerance>");
 			newLines.Add("</Doors>");
-			newLines.Add("<LoadingSway>" + CarInfos[i].LoadingSway + "</LoadingSway>");
 			newLines.Add("</Car>");
 			if (i < Couplers.Length)
 			{
