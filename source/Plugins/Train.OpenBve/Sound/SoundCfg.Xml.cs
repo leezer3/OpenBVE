@@ -371,7 +371,7 @@ namespace Train.OpenBve
 									{
 										break;
 									}
-
+									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
 									ParseMotorSoundTableNode(c, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
 									break;
 								case "pilotlamp":
