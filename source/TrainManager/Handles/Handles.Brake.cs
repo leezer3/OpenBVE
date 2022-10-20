@@ -1,4 +1,7 @@
-﻿using TrainManager.Trains;
+﻿using System.Globalization;
+using OpenBveApi.Colors;
+using OpenBveApi.Interface;
+using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
@@ -129,6 +132,61 @@ namespace TrainManager.Handles
 				baseTrain.Plugin.UpdatePower();
 				baseTrain.Plugin.UpdateBrake();
 			}
+		}
+
+		public override string GetNotchDescription(out MessageColor color)
+		{
+			color = MessageColor.Gray;
+			if (NotchDescriptions == null || Driver >= NotchDescriptions.Length)
+			{
+				if (baseTrain.Handles.EmergencyBrake.Driver)
+				{
+					color = MessageColor.Red;
+					return Translations.QuickReferences.HandleEmergency;
+				}
+
+				if (baseTrain.Handles.HasHoldBrake && baseTrain.Handles.HoldBrake.Driver)
+				{
+					color = MessageColor.Green;
+					return Translations.QuickReferences.HandleHoldBrake;
+				}
+
+				if (Driver != 0)
+				{
+					color = MessageColor.Orange;
+					return Translations.QuickReferences.HandleBrake + Driver.ToString(CultureInfo.InvariantCulture);
+				}
+
+				return Translations.QuickReferences.HandleBrakeNull;
+			}
+			else
+			{
+				if (baseTrain.Handles.EmergencyBrake.Driver)
+				{
+					color = MessageColor.Red;
+					return NotchDescriptions[0];
+				}
+
+				int offset = 1;
+				if (baseTrain.Handles.HasHoldBrake)
+				{
+					offset = 2;
+					if (baseTrain.Handles.HoldBrake.Driver)
+					{
+						color = MessageColor.Green;
+						return NotchDescriptions[1];
+					}
+				}
+
+				if (Driver != 0)
+				{
+					color = MessageColor.Orange;
+					return NotchDescriptions[offset + Driver];
+				}
+
+				return NotchDescriptions[offset];
+			}
+
 		}
 	}
 }

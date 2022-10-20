@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Colors;
 using SoundManager;
 using TrainManager.Trains;
 
@@ -53,7 +54,7 @@ namespace TrainManager.Handles
 
 		/// <summary>The type of spring for this handle</summary>
 		public SpringType SpringType = SpringType.Unsprung;
-		
+
 		/// <summary>The time with no action in seconds before the sprung step increases or decreases</summary>
 		public double SpringTime = 0;
 
@@ -94,6 +95,16 @@ namespace TrainManager.Handles
 			Min = new CarSound();
 			Max = new CarSound();
 		}
+
+		/// <summary>Gets the description string for the current notch</summary>
+		/// <param name="color">The on-screen display color</param>
+		/// <returns>The notch description</returns>
+		public virtual string GetNotchDescription(out MessageColor color)
+		{
+			color = MessageColor.Gray;
+			return string.Empty;
+		}
+
 	}
 
 	/// <summary>Represents an abstract handle with a set number of notches</summary>
