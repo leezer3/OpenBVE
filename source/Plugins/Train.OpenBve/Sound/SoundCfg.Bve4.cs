@@ -93,7 +93,7 @@ namespace Train.OpenBve
 			{
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid file format encountered in " + FileName + ". The first line is expected to be \"Version 1.0\".");
 			}
-			List<string> MotorFiles = new List<string>();
+			Dictionary<int, string> MotorFiles = new Dictionary<int, string>();
 			double invfac = Lines.Count == 0 ? 0.1 : 0.1 / Lines.Count;
 			for (int i = 0; i < Lines.Count; i++)
 			{
@@ -204,7 +204,16 @@ namespace Train.OpenBve
 								{
 									if (k >= 0)
 									{
-										MotorFiles.Add(Path.CombineFile(trainFolder, b));
+										if (!MotorFiles.ContainsKey(k))
+										{
+											MotorFiles.Add(k, Path.CombineFile(trainFolder, b));
+										}
+										else
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, true, "A duplicate MotorSound with index " + k + " was declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											MotorFiles[k] = Path.CombineFile(trainFolder, b);
+										}
+										
 										if (!System.IO.File.Exists(MotorFiles[k]))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, true, "File " + MotorFiles[k] + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -811,7 +820,7 @@ namespace Train.OpenBve
 							for (int j = 0; j < motorSound.Tables[i].Entries.Length; j++)
 							{
 								int index = motorSound.Tables[i].Entries[j].SoundIndex;
-								if (index >= 0 && index < MotorFiles.Count && !string.IsNullOrEmpty(MotorFiles[index]))
+								if (MotorFiles.ContainsKey(index) && !string.IsNullOrEmpty(MotorFiles[index]))
 								{
 									Plugin.currentHost.RegisterSound(MotorFiles[index], SoundCfgParser.mediumRadius, out var mS);
 									motorSound.Tables[i].Entries[j].Buffer = mS as SoundBuffer;
