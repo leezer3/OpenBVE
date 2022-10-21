@@ -1603,27 +1603,16 @@ namespace Train.OpenBve
 					break;
 				case "klaxon":
 				case "horn":
-					Code = "klaxon";
-					break;
 				case "primaryklaxon":
 				case "primaryhorn":
-					Code = "primaryklaxon";
-					break;
 				case "secondaryklaxon":
 				case "secondaryhorn":
-					Code = "secondaryklaxon";
-					break;
 				case "doorbuttonl":
-					Code = "leftdoorbutton";
-					break;
 				case "doorbuttonr":
-					Code = "rightdoorbutton";
-					break;
-				case "routelimit":
-					Code = "routelimit";
-					break;
 				case "wiperposition":
-					Code = "wiperposition";
+				case "routelimit":
+				case "wheelslip":
+					Code = Subject.ToLowerInvariant();
 					break;
 				default:
 					{

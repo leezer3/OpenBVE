@@ -575,10 +575,12 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.RightDoorsTargetIndex;
 							n++; break;
+						case "doorbuttonl":
 						case "leftdoorbutton":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.LeftDoorButton;
 							n++; s++; if (s >= m) m = s; break;
+						case "doorbuttonr":
 						case "rightdoorbutton":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.RightDoorButton;
