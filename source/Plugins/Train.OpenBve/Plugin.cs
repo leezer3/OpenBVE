@@ -349,7 +349,7 @@ namespace Train.OpenBve
 				for (int i = 0; i < currentTrain.Cars.Length; i++)
 				{
 					currentTrain.Cars[i].DetermineDoorClosingSpeed();
-					if (currentTrain.Cars[i].Specs.IsMotorCar)
+					if (currentTrain.Cars[i].Specs.IsMotorCar && TrainXmlParser.MotorSoundXMLParsed != null)
 					{
 						if(!TrainXmlParser.MotorSoundXMLParsed[i])
 						{

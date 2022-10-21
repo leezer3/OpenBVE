@@ -288,9 +288,30 @@ namespace TrainManager.SafetySystems
 
 			if (TrainManagerBase.currentHost.InGameTime > nextPluginAction)
 			{
-				//If nothing else has happened recently, hit the vigilance reset key
-				Plugin.KeyDown(VirtualKeys.A2);
-				Plugin.KeyUp(VirtualKeys.A2);
+				//If nothing else has happened recently, blip power / brake (some trains don't like using the vigilance reset key to keep going)
+				if (data.Handles.BrakeNotch == 0)
+				{
+					if (data.Handles.PowerNotch > 0)
+					{
+						data.Handles.PowerNotch--;
+					}
+					else
+					{
+						data.Handles.BrakeNotch++;
+					}
+				}
+				else
+				{
+					if (data.Handles.BrakeNotch < Plugin.Train.Handles.Brake.MaximumDriverNotch)
+					{
+						data.Handles.BrakeNotch++;
+					}
+					else
+					{
+						// this actually does nothing, but satisfies the plugin
+						data.Handles.PowerNotch++;
+					}
+				}
 				data.Response = AIResponse.Short;
 				nextPluginAction = TrainManagerBase.currentHost.InGameTime + 20.0;
 				return;
