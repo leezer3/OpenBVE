@@ -1612,6 +1612,8 @@ namespace Train.OpenBve
 				case "wiperposition":
 				case "routelimit":
 				case "wheelslip":
+				case "sanders": 
+				case "sandlevel":
 					Code = Subject.ToLowerInvariant();
 					break;
 				default:
