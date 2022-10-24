@@ -526,13 +526,13 @@ namespace RouteViewer
 
 				for(int i = 0; i < Marker.MarkerTextures.Length; i++)
 				{
-					if (Program.CurrentHost.LoadTexture(ref Marker.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(ref Marker.MarkerTextures[i].Texture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						int w = Marker.MarkerTextures[i].Width;
-						int h = Marker.MarkerTextures[i].Height;
+						double w = Marker.MarkerTextures[i].Size.X == 0 ? Marker.MarkerTextures[i].Texture.Width : Marker.MarkerTextures[i].Size.X;
+						double h = Marker.MarkerTextures[i].Size.Y == 0 ? Marker.MarkerTextures[i].Texture.Height : Marker.MarkerTextures[i].Size.Y;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						Rectangle.Draw(Marker.MarkerTextures[i], new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
-						y += h + 8;
+						Rectangle.Draw(Marker.MarkerTextures[i].Texture, new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
+						y += (int)h + 8;
 					}
 				}
 			}

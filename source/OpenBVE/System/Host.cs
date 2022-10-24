@@ -519,9 +519,9 @@ namespace OpenBve {
 			return TrackFollowingObjectParser.ParseTrackFollowingObject(objectPath, tfoFile);
 		}
 
-		public override void AddMarker(Texture MarkerTexture)
+		public override void AddMarker(Texture MarkerTexture, Vector2 Size)
 		{
-			Program.Renderer.Marker.AddMarker(MarkerTexture);
+			Program.Renderer.Marker.AddMarker(MarkerTexture, Size);
 		}
 
 		public override void RemoveMarker(Texture MarkerTexture)
