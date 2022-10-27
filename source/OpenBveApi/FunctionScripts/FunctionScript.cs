@@ -719,6 +719,12 @@ namespace OpenBveApi.FunctionScripting
 						case "firetemperature":
 							InstructionSet[n] = Instructions.FireTemperature;
 							n++; s++; if (s >= m) m = s; break;
+						case "tenderwater":
+							InstructionSet[n] = Instructions.TenderWater;
+							n++; s++; if (s >= m) m = s; break;
+						case "tenderfuel":
+							InstructionSet[n] = Instructions.TenderFuel;
+							n++; s++; if (s >= m) m = s; break;
 						case "sanders":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.Sanders;

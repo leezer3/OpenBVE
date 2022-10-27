@@ -139,6 +139,7 @@
     <Compile Include="TractionModels\Steam\LiveSteamInjector.cs" />
     <Compile Include="TractionModels\Steam\SteamEngine.cs" />
     <Compile Include="TractionModels\BVE\MotorCar.cs" />
+    <Compile Include="TractionModels\Steam\Tender.cs" />
     <Compile Include="TrainManager.cs" />
     <Compile Include="Train\BrakeSystem.cs" />
     <Compile Include="Train\CommandEntry.cs" />

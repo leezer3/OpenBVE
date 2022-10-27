@@ -16,6 +16,8 @@ namespace TrainManager.TractionModels.Steam
 		public readonly Boiler Boiler;
 		/// <summary>The cylinder chest</summary>
 		public readonly CylinderChest CylinderChest;
+		/// <summary>The tender</summary>
+		public readonly Tender Tender;
 		/// <summary>Gets the current acceleration output</summary>
 		private double PowerOutput
 		{
@@ -56,6 +58,14 @@ namespace TrainManager.TractionModels.Steam
 			 *			10% around zero where cutoff is ineffective (due to standing resistance etc.)
 			 */
 			Car.baseTrain.Handles.Reverser = new Cutoff(Car.baseTrain, 75, -50, 10);
+			/*
+			 * Tender:
+			 *		Coal capacity of 40T
+			 *		Water capacity of 88,000L (~19,200 gallons)
+			 */
+			Tender = new Tender(40000, 40000, 88000, 88000);
+			
+
 			JerkPowerUp = jerkPowerUp;
 			JerkPowerDown = jerkPowerDown;
 		}

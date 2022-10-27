@@ -68,9 +68,10 @@ namespace TrainManager.TractionModels.Steam
 
 		internal void AddFuel()
 		{
-			FireMass += UnitsPerShovel;
-			FireArea += UnitsPerShovel * 0.1; // 1kg of coal to ~10cm square
-			Temperature -= UnitsPerShovel * 200;
+			double unitsAdded = Math.Min(Engine.Tender.FuelLevel, UnitsPerShovel);
+			FireMass += unitsAdded;
+			FireArea += unitsAdded * 0.1; // 1kg of coal to ~10cm square
+			Temperature -= unitsAdded * 200;
 			if (FireArea > MaxArea)
 			{
 				FireArea = MaxArea;

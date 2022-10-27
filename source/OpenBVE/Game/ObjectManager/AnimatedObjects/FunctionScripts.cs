@@ -1650,6 +1650,22 @@ namespace OpenBve {
 						}
 						Function.Stack[s] = steamEngine.Boiler.Firebox.Temperature;
 						s++; break;
+					case Instructions.TenderWater:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Tender.WaterLevel;
+						s++; break;
+					case Instructions.TenderFuel:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Tender.FuelLevel;
+						s++; break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
