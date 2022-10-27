@@ -1,7 +1,6 @@
 using System;
 using TrainManager.Car;
 using TrainManager.Handles;
-using TrainManager.Power;
 using TrainManager.Trains;
 
 namespace TrainManager.TractionModels.Steam

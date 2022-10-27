@@ -1614,6 +1614,9 @@ namespace Train.OpenBve
 				case "wheelslip":
 				case "sanders": 
 				case "sandlevel":
+				case "cutoff":
+				case "boilerpressure":
+				case "boilerwater":
 					Code = Subject.ToLowerInvariant();
 					break;
 				default:

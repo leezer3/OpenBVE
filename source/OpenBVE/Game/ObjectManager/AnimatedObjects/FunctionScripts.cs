@@ -1564,92 +1564,92 @@ namespace OpenBve {
 					case Instructions.BoilerPressure:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.SteamPressure;
-						break;
+						Function.Stack[s] = steamEngine.Boiler.SteamPressure;
+						s++; break;
 					case Instructions.BoilerWaterLevel:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.WaterLevel;
-						break;
+						Function.Stack[s] = steamEngine.Boiler.WaterLevel;
+						s++; break;
 					case Instructions.Cutoff:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
 						Cutoff cutoff = Train.Handles.Reverser as Cutoff;
-						Function.Stack[s - 1] = cutoff.Current; // *not* actual- we want the driver set value for animations
-						break;
+						Function.Stack[s] = cutoff.Current; // *not* actual- we want the driver set value for animations
+						s++; break;
 					case Instructions.Blowers:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.Blowers.Active ? 1 : 0;
+						Function.Stack[s] = steamEngine.Boiler.Blowers.Active ? 1 : 0;
 						break;
 					case Instructions.CylinderCocks:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.CylinderChest.CylinderCocks.Open ? 1 : 0;
-						break;
+						Function.Stack[s] = steamEngine.CylinderChest.CylinderCocks.Open ? 1 : 0;
+						s++; break;
 					case Instructions.BypassValve:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.BypassValve.Active ? 1 : 0;
-						break;
+						Function.Stack[s] = steamEngine.Boiler.BypassValve.Active ? 1 : 0;
+						s++; break;
 					case Instructions.LiveSteamInjector:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.LiveSteamInjector.Active ? 1 : 0;
-						break;
+						Function.Stack[s] = steamEngine.Boiler.LiveSteamInjector.Active ? 1 : 0;
+						s++; break;
 					case Instructions.ExhaustSteamInjector:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.ExhaustSteamInjector.Active ? 1 : 0;
-						break;
+						Function.Stack[s] = steamEngine.Boiler.ExhaustSteamInjector.Active ? 1 : 0;
+						s++; break;
 					case Instructions.FireArea:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.Firebox.FireArea;
-						break;
+						Function.Stack[s] = steamEngine.Boiler.Firebox.FireArea;
+						s++; break;
 					case Instructions.FireMass:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.Firebox.FireMass;
-						break;
+						Function.Stack[s] = steamEngine.Boiler.Firebox.FireMass;
+						s++; break;
 					case Instructions.FireTemperature:
 						if (steamEngine == null)
 						{
-							Function.Stack[s - 1] = 0.0;
+							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.Boiler.Firebox.Temperature;
-						break;
+						Function.Stack[s] = steamEngine.Boiler.Firebox.Temperature;
+						s++; break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
