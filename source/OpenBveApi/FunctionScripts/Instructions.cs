@@ -35,9 +35,9 @@
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition,
 		WheelRadius, WheelRadiusOfCar,
-		Sanders, SandLevel, SandShots
 		WheelSlip, WheelSlipCar,
-
+		Sanders, SandLevel, SandShots,
+		
 		/*
 		 * Steam engine related stuff
 		 */

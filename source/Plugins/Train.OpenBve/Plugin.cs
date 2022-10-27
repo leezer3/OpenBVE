@@ -17,6 +17,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using TrainManager.Motor;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -374,11 +375,11 @@ namespace Train.OpenBve
 				for (int i = 0; i < currentTrain.Cars.Length; i++)
 				{
 					currentTrain.Cars[i].DetermineDoorClosingSpeed();
-					if (currentTrain.Cars[i].Specs.IsMotorCar && TrainXmlParser.MotorSoundXMLParsed != null)
+					if (currentTrain.Cars[i].TractionModel is BVEMotorCar && TrainXmlParser.MotorSoundXMLParsed != null)
 					{
 						if(!TrainXmlParser.MotorSoundXMLParsed[i])
 						{
-							currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], TrainXmlParser.MotorSound.SpeedConversionFactor, TrainXmlParser.MotorSound.Tables);
+							currentTrain.Cars[i].TractionModel.Sounds = new BVEMotorSound(currentTrain.Cars[i], TrainXmlParser.MotorSound.SpeedConversionFactor, TrainXmlParser.MotorSound.Tables);
 						}
 					}
 				}

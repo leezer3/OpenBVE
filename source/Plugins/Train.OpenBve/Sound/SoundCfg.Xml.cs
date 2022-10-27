@@ -373,8 +373,13 @@ namespace Train.OpenBve
 									{
 										ParseMotorSoundTableNode(c, ref car.TractionModel.Sounds, center, SoundCfgParser.mediumRadius);	
 									}
+
+									if (TrainXmlParser.MotorSoundXMLParsed.Length >= car.Index)
+									{
+										Array.Resize(ref TrainXmlParser.MotorSoundXMLParsed, car.Index + 1);
+									}
 									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
-									ParseMotorSoundTableNode(c, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
+									ParseMotorSoundTableNode(c, ref car.TractionModel.Sounds, center, SoundCfgParser.mediumRadius);
 									break;
 								case "pilotlamp":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())

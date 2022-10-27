@@ -56,11 +56,12 @@ namespace OpenBve
 				}
 				this.SpeedLimit = Limit;
 				MotorCar = train.DriverCar;
-				if (!train.Cars[train.DriverCar].Specs.IsMotorCar)
+				// FIXME: Needs handling for steam engines
+				if (!(train.Cars[train.DriverCar].TractionModel is BVEMotorCar))
 				{
 					for (int i = 0; i < train.Cars.Length; i++)
 					{
-						if (train.Cars[i].Specs.IsMotorCar)
+						if (train.Cars[i].TractionModel is BVEMotorCar)
 						{
 							MotorCar = i;
 							break;

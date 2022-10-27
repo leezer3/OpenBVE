@@ -1389,7 +1389,7 @@ namespace Train.OpenBve
 
 			// assign motor/trailer-specific settings
 			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].ReAdhesionDevice = new CarReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
+				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
 				if (Train.Cars[i].TractionModel is BVEMotorCar) {
 					// motor car
 					Train.Cars[i].EmptyMass = MotorCarMass;

@@ -96,10 +96,14 @@ namespace TrainManager.TractionModels.Steam
 					// target acceleration
 					a = PowerOutput;
 
-					// readhesion device
-					if (a > Car.ReAdhesionDevice.MaximumAccelerationOutput)
+					BveReAdhesionDevice reAdhesionDevice = Car.ReAdhesionDevice as BveReAdhesionDevice;
+					if (reAdhesionDevice != null)
 					{
-						a = Car.ReAdhesionDevice.MaximumAccelerationOutput;
+						// readhesion device
+						if (a > reAdhesionDevice.MaximumAccelerationOutput)
+						{
+							a = reAdhesionDevice.MaximumAccelerationOutput;
+						}
 					}
 
 					// wheel slip

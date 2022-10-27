@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Colors;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -38,9 +39,7 @@ namespace TrainManager.Handles
 			IneffectiveRange = ineffectiveRange;
 			Current = 0;
 		}
-
-		public override string CurrentNotchDescription => Current + "%";
-
+		
 		public override void ApplyState(int Value, bool Relative)
 		{
 			if (Value != 0)
@@ -59,6 +58,24 @@ namespace TrainManager.Handles
 				}
 				TrainManagerBase.currentHost.AddBlackBoxEntry();
 			}
+		}
+
+		public override void Update()
+		{
+		}
+
+		/// <summary>Gets the description string for this notch</summary>
+		/// <param name="color">The on-screen display color</param>
+		/// <returns>The notch description</returns>
+		public override string GetNotchDescription(out MessageColor color)
+		{
+			color = MessageColor.Blue;
+			if (Current < 0)
+			{
+				color = MessageColor.Orange;
+			}
+
+			return Current + "%";
 		}
 	}
 }

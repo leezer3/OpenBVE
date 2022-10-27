@@ -51,7 +51,7 @@ namespace Train.OpenBve
 							BveAccelerationCurve c = (BveAccelerationCurve)Train.Cars[i].TractionModel.AccelerationCurves[j];
 							AccelerationCurves[j] = c.Clone();
 						}
-						MotorSound = Train.Cars[i].Sounds.Motor as BVEMotorSound;
+						MotorSound = Train.Cars[i].TractionModel.Sounds as BVEMotorSound;
 						break;
 					}
 				}

@@ -80,7 +80,7 @@ namespace OpenBve.Graphics.Renderers
 			}
 			// driver handles
 			{
-				string t = "driver: " + TrainManager.PlayerTrain.Handles.Reverser.CurrentNotchDescription;
+				string t = "driver: " + TrainManager.PlayerTrain.Handles.Reverser.GetNotchDescription(out _);
 				if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Driver != 0 ? "B" + TrainManager.PlayerTrain.Handles.Brake.Driver.ToString(Culture) : TrainManager.PlayerTrain.Handles.HoldBrake.Driver ? "HLD" : TrainManager.PlayerTrain.Handles.Power.Driver != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Driver.ToString(Culture) : "N");
