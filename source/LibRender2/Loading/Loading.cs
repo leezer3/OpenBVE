@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender2.Text;
+using LibRender2.Textures;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
@@ -62,6 +63,12 @@ namespace LibRender2.Loadings
 					renderer.TextureManager.RegisterTexture(backgroundFile, out TextureLoadingBkg);
 				}
 			}
+		}
+
+		/// <summary>Called when loading is complete</summary>
+		public void CompleteLoading()
+		{
+			TextureManager.UnloadTexture(ref TextureLoadingBkg);
 		}
 
 		/// <summary>Sets the loading screen background to a custom image</summary>

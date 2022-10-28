@@ -629,65 +629,64 @@ namespace RouteViewer
 
 					if (stationIndex >= 0)
 					{
-						StringBuilder t = new StringBuilder();
-						t.Append(Program.CurrentRoute.Stations[stationIndex].Name);
+						string s = Program.CurrentRoute.Stations[stationIndex].Name;
 
 						if (Program.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
 						{
-							t.Append($", Arrival: {GetTime(Program.CurrentRoute.Stations[stationIndex].ArrivalTime)}");
+							s+= $", Arrival: {GetTime(Program.CurrentRoute.Stations[stationIndex].ArrivalTime)}";
 						}
 
 						if (Program.CurrentRoute.Stations[stationIndex].DepartureTime >= 0.0)
 						{
-							t.Append($", Departure: {GetTime(Program.CurrentRoute.Stations[stationIndex].DepartureTime)}");
+							s += $", Departure: {GetTime(Program.CurrentRoute.Stations[stationIndex].DepartureTime)}";
 						}
 
 						if (Program.CurrentRoute.Stations[stationIndex].OpenLeftDoors & Program.CurrentRoute.Stations[stationIndex].OpenRightDoors)
 						{
-							t.Append(", [L][R]");
+							s += ", [L][R]";
 						}
 						else if (Program.CurrentRoute.Stations[stationIndex].OpenLeftDoors)
 						{
-							t.Append(", [L][-]");
+							s += ", [L][-]";
 						}
 						else if (Program.CurrentRoute.Stations[stationIndex].OpenRightDoors)
 						{
-							t.Append(", [-][R]");
+							s += ", [-][R]";
 						}
 						else
 						{
-							t.Append(", [-][-]");
+							s += ", [-][-]";
 						}
 
 						switch (Program.CurrentRoute.Stations[stationIndex].StopMode)
 						{
 							case StationStopMode.AllStop:
-								t.Append(", Stop");
+								s += ", Stop";
 								break;
 							case StationStopMode.AllPass:
-								t.Append(", Pass");
+								s += ", Pass";
 								break;
 							case StationStopMode.PlayerStop:
-								t.Append(", Player stops - others pass");
+								s += ", Player stops - others pass";
 								break;
 							case StationStopMode.PlayerPass:
-								t.Append(", Player passes - others stop");
+								s += ", Player passes - others stop";
 								break;
 						}
 
 						switch (Program.CurrentRoute.Stations[stationIndex].Type)
 						{
 							case StationType.ChangeEnds:
-								t.Append(", Change ends");
+								s += ", Change ends";
 								break;
 							case StationType.Jump:
-								t.Append(", then Jumps to " + Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[stationIndex].JumpIndex].Name);
+								s += ", then Jumps to " + Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[stationIndex].JumpIndex].Name;
 								break;
 						}
 
-						t.Append(", Ratio=").Append((100.0 * Program.CurrentRoute.Stations[stationIndex].PassengerRatio).ToString("0", culture)).Append("%");
+						s += ", Ratio=" + (100.0 * Program.CurrentRoute.Stations[stationIndex].PassengerRatio).ToString("0", culture) + "%";
 
-						OpenGlString.Draw(Fonts.SmallFont, t.ToString(), new Vector2((int)x, 60), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, s, new Vector2((int)x, 60), TextAlignment.TopLeft, Color128.White, true);
 					}
 
 					if (Interface.LogMessages.Count == 1)
@@ -766,15 +765,15 @@ namespace RouteViewer
 			}
 
 			values[Program.CurrentRoute.UnitOfLength.Length - 1] = Value / Program.CurrentRoute.UnitOfLength[Program.CurrentRoute.UnitOfLength.Length - 1];
-			StringBuilder builder = new StringBuilder();
+			string s = string.Empty;
 
 			for (int i = 0; i < values.Length - 1; i++)
 			{
-				builder.Append(values[i].ToString(culture) + ":");
+				s += values[i].ToString(culture) + ":";
 			}
 
-			builder.Append(values[values.Length - 1].ToString("0.00", culture));
-			return builder.ToString();
+			s += values[values.Length - 1].ToString("0.00", culture);
+			return s;
 		}
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
