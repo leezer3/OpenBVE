@@ -16,7 +16,7 @@ namespace Plugin.GIF
 	*
 	* Modifications & bugfixes for OpenBVE and general cleanup by Christopher Lees
 	*/
-	internal partial class GifDecoder 
+	internal partial class GifDecoder : IDisposable
 	{
 		internal static byte[] GIF87Header = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };     // "GIF87a"
 		internal static byte[] GIF89Header = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };     // "GIF89a"
@@ -722,6 +722,11 @@ namespace Plugin.GIF
 			{
 				ReadBlock();
 			} while (blockSize > 0 && !Error);
+		}
+
+		public void Dispose()
+		{
+			inStream?.Dispose();
 		}
 	}
 }

@@ -41,24 +41,27 @@ namespace Plugin {
 					fs.Close();
 					if (buffer.SequenceEqual(GifDecoder.GIF87Header) || buffer.SequenceEqual(GifDecoder.GIF89Header))
 					{
-						GifDecoder decoder = new GifDecoder();
-						decoder.Read(file);
-						int frameCount = decoder.GetFrameCount();
-						int duration = 0;
-						if (frameCount != 1)
+						using (GifDecoder decoder = new GifDecoder())
 						{
-							Vector2 frameSize = decoder.GetFrameSize();
-							byte[][] frameBytes = new byte[frameCount][];
-							for (int i = 0; i < frameCount; i++)
+							decoder.Read(file);
+							int frameCount = decoder.GetFrameCount();
+							int duration = 0;
+							if (frameCount != 1)
 							{
-								int[] framePixels = decoder.GetFrame(i);
-								frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
-								Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
-								duration += decoder.GetDuration(i);
+								Vector2 frameSize = decoder.GetFrameSize();
+								byte[][] frameBytes = new byte[frameCount][];
+								for (int i = 0; i < frameCount; i++)
+								{
+									int[] framePixels = decoder.GetFrame(i);
+									frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
+									Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
+									duration += decoder.GetDuration(i);
+								}
+								texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
+								return true;
 							}
-							texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
-							return true;
 						}
+						
 					}
 					
 					if (Encoding.ASCII.GetString(buffer, 0, 2) == "BM")
