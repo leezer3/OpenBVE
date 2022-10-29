@@ -646,7 +646,7 @@ namespace Plugin.GIF
 			frames.Add(bitmap); // add image to frame list
 			delays.Add(delay);
 
-			if (transparency) 
+			if (transparency && activeColorTable != null) 
 			{
 				activeColorTable[transIndex] = save;
 			}
