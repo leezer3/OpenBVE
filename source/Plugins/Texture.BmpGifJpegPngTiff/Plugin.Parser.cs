@@ -88,17 +88,20 @@ namespace Plugin {
 			 * any format, not necessarily the one that allows
 			 * us to extract the bitmap data easily.
 			 */
-			int width, height;
-			Color24[] palette;
-			Bitmap bitmap = new Bitmap(file);
-			byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
-			if (raw != null)
+			using (Bitmap bitmap = new Bitmap(file))
 			{
-				texture = new Texture(width, height, 32, raw, palette);
-				return true;
+				int width, height;
+				Color24[] palette;
+				byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
+				if (raw != null)
+				{
+					texture = new Texture(width, height, 32, raw, palette);
+					return true;
+				}
+				texture = null;
+				return false;
 			}
-			texture = null;
-			return false;
+			
 		}
 
 		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height, out Color24[] p)

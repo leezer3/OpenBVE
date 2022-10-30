@@ -20,6 +20,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2.Overlays;
@@ -408,6 +409,8 @@ namespace RouteViewer
 						{
 							bitmap.Dispose();
 						}
+						GCSettings.LargeObjectHeapCompactionMode =  GCLargeObjectHeapCompactionMode.CompactOnce; 
+						GC.Collect();
 						
 					}
 					break;
