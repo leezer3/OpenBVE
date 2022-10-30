@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -91,11 +89,10 @@ namespace Plugin {
 			using (Bitmap bitmap = new Bitmap(file))
 			{
 				int width, height;
-				Color24[] palette;
-				byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
+				byte[] raw = GetRawBitmapData(bitmap, out width, out height);
 				if (raw != null)
 				{
-					texture = new Texture(width, height, 32, raw, palette);
+					texture = new Texture(width, height, 32, raw, null);
 					return true;
 				}
 				texture = null;
@@ -104,93 +101,8 @@ namespace Plugin {
 			
 		}
 
-		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height, out Color24[] p)
+		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height)
 		{
-			p = null;
-			if (EnabledHacks.ReduceTransparencyColorDepth && (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb))
-			{
-				/*
-				 * Our source bitmap is *not* a 256 color bitmap but has been made for BVE2 / BVE4.
-				 * These process transparency in 256 colors (even if the file is 24bpp / 32bpp), thus:
-				 * Let's open the bitmap, and attempt to construct a reduced color pallette
-				 * If our bitmap contains more than 256 unique colors, we break out of the loop
-				 * and assume that this file is an incorrect match
-				 *
-				 * WARNING NOTE:
-				 * Unfortunately, we can't just pull out the color pallette from the bitmap, as there
-				 * is no native way to remove unused entries. We therefore have to itinerate through
-				 * each pixel.....
-				 * This is *slow* so use with caution!
-				 *
-				 */
-
-				BitmapData inputData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-				HashSet<Color24> reducedPallette = new HashSet<Color24>();
-				unsafe
-				{
-					byte* bmpPtr = (byte*) inputData.Scan0.ToPointer();
-					int ic, oc, r;
-					if (bitmap.PixelFormat == PixelFormat.Format24bppRgb)
-					{
-						for (r = 0; r < inputData.Height; r++)
-						for (ic = oc = 0; oc < inputData.Width; ic += 3, oc++)
-						{
-							byte blue = bmpPtr[r * inputData.Stride + ic];
-							byte green = bmpPtr[r * inputData.Stride + ic + 1];
-							byte red = bmpPtr[r * inputData.Stride + ic + 2];
-							Color24 c = new Color24(red, green, blue);
-							if (!reducedPallette.Contains(c))
-							{
-								reducedPallette.Add(c);
-							}
-							if (reducedPallette.Count > 256)
-							{
-								//as breaking out of nested loops is a pita
-								goto EndLoop;
-							}
-						}
-					}
-					else
-					{
-						for (r = 0; r < inputData.Height; r++)
-						for (ic = oc = 0; oc < inputData.Width; ic += 4, oc++)
-						{
-							byte blue = bmpPtr[r * inputData.Stride + ic];
-							byte green = bmpPtr[r * inputData.Stride + ic + 1];
-							byte red = bmpPtr[r * inputData.Stride + ic + 2];
-							Color24 c = new Color24(red, green, blue);
-							if (!reducedPallette.Contains(c))
-							{
-								reducedPallette.Add(c);
-							}
-							if (reducedPallette.Count > 256)
-							{
-								//as breaking out of nested loops is a pita
-								goto EndLoop;
-							}
-						}
-					}
-				}
-
-				p = reducedPallette.ToArray();
-				EndLoop:
-				bitmap.UnlockBits(inputData);
-			}
-			
-			
-			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb && p == null)
-			{
-				/* Otherwise, only store the color palette data for
-				 * textures using a restricted palette
-				 * With a large number of textures loaded at
-				 * once, this can save a decent chunk of memory
-				 */
-				p = new Color24[bitmap.Palette.Entries.Length];
-				for (int i = 0; i < bitmap.Palette.Entries.Length; i++)
-				{
-					p[i] = bitmap.Palette.Entries[i];
-				}
-			}
 			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			/* 
 			 * If the bitmap format is not already 32-bit BGRA,
