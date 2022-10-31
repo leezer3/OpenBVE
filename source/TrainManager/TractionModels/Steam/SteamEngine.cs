@@ -1,4 +1,5 @@
 using System;
+using OpenBveApi.Interface;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Trains;
@@ -371,6 +372,68 @@ namespace TrainManager.TractionModels.Steam
 			if (Sounds != null)
 			{
 				Sounds.Update(TimeElapsed);
+			}
+		}
+
+		public override void HandleKeyDown(Translations.Command command)
+		{
+			switch (command)
+			{
+				case Translations.Command.Blowers:
+					if (Boiler.Blowers.Active)
+					{
+						if (Boiler.Blowers.StartSound != null)
+						{
+							Boiler.Blowers.StartSound.Play(Car, false);
+						}
+					}
+					else
+					{
+						if (Boiler.Blowers.StopSound != null)
+						{
+							Boiler.Blowers.StopSound.Play(Car, false);
+						}
+					}
+
+					Boiler.Blowers.Active = !Boiler.Blowers.Active;
+					break;
+				case Translations.Command.LiveSteamInjector:
+					if (Boiler.LiveSteamInjector.Active)
+					{
+						if (Boiler.LiveSteamInjector.StartSound != null)
+						{
+							Boiler.LiveSteamInjector.StartSound.Play(Car, false);
+						}
+					}
+					else
+					{
+						if (Boiler.LiveSteamInjector.StopSound != null)
+						{
+							Boiler.LiveSteamInjector.StopSound.Play(Car, false);
+						}
+					}
+
+					Boiler.LiveSteamInjector.Active = !Boiler.LiveSteamInjector.Active;
+					break;
+				case Translations.Command.ExhaustSteamInjector:
+					if (Boiler.ExhaustSteamInjector.Active)
+					{
+						if (Boiler.ExhaustSteamInjector.StartSound != null)
+						{
+							Boiler.ExhaustSteamInjector.StartSound.Play(Car, false);
+						}
+					}
+					else
+					{
+						if (Boiler.ExhaustSteamInjector.StopSound != null)
+						{
+							Boiler.ExhaustSteamInjector.StopSound.Play(Car, false);
+						}
+					}
+
+					Boiler.ExhaustSteamInjector.Active = !Boiler.ExhaustSteamInjector.Active;
+					break;
+
 			}
 		}
 	}

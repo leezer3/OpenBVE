@@ -75,7 +75,7 @@ namespace TrainManager.TractionModels.Steam
 				Engine.Boiler.WaterLevel += waterInjected;
 				Engine.Boiler.SteamPressure -= waterInjected;
 				Engine.Tender.WaterLevel -= waterInjected;
-				if(!StartSound.IsPlaying)
+				if(StartSound == null || !StartSound.IsPlaying)
 				{
 					if (LoopSound != null)
 					{

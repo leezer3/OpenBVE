@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Interface;
 using TrainManager.Car;
 using TrainManager.Motor;
 using TrainManager.Power;
@@ -65,6 +66,20 @@ namespace TrainManager.TractionModels
 		public virtual void Update(double TimeElapsed, out double Speed)
 		{
 			Speed = 0;
+		}
+
+		/// <summary>Handles key down events</summary>
+		/// <param name="command">The command pressed</param>
+		public virtual void HandleKeyDown(Translations.Command command)
+		{
+
+		}
+
+		/// <summary>Handles key up events</summary>
+		/// <param name="command">The command pressed</param>
+		public virtual void HandleKeyUp(Translations.Command command)
+		{
+
 		}
 	}
 }

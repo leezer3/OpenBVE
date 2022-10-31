@@ -691,8 +691,8 @@ namespace OpenBve
 							if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Pressed)
 							{
 								// pressed
-								Interface.CurrentControls[i].DigitalState =
-									DigitalControlState.PressedAcknowledged;
+								Interface.CurrentControls[i].DigitalState = DigitalControlState.PressedAcknowledged;
+								TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.HandleKeyDown(Interface.CurrentControls[i].Command);
 								switch (Interface.CurrentControls[i].Command)
 								{
 									case Translations.Command.MiscQuit:
@@ -1890,8 +1890,8 @@ namespace OpenBve
 							else if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Released)
 							{
 								// released
-								Interface.CurrentControls[i].DigitalState =
-									DigitalControlState.ReleasedAcknowledged;
+								Interface.CurrentControls[i].DigitalState = DigitalControlState.ReleasedAcknowledged;
+								TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.HandleKeyUp(Interface.CurrentControls[i].Command);
 								switch (Interface.CurrentControls[i].Command)
 								{
 									case Translations.Command.SingleBrake:

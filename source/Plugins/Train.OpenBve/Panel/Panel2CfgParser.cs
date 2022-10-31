@@ -1617,8 +1617,13 @@ namespace Train.OpenBve
 				case "cutoff":
 				case "boilerpressure":
 				case "boilerwater":
+				case "tankswater":
 				case "tenderwater":
+				case "tanksfuel":
 				case "tenderfuel":
+				case "livesteaminjector":
+				case "exhauststeaminjector":
+				case "blowers":
 					Code = Subject.ToLowerInvariant();
 					break;
 				default:

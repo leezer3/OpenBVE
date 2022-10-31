@@ -65,7 +65,7 @@ namespace TrainManager.TractionModels.Steam
 				double waterInjected = Math.Min(Engine.Tender.WaterLevel, InjectionRate * timeElapsed);
 				Engine.Boiler.WaterLevel += waterInjected;
 				Engine.Tender.WaterLevel -= waterInjected;
-				if(!StartSound.IsPlaying)
+				if(StartSound == null || !StartSound.IsPlaying)
 				{
 					if (BaseInjectionRate != 0)
 					{

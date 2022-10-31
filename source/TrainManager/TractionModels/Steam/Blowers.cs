@@ -61,7 +61,7 @@ namespace TrainManager.TractionModels
 			if (Active)
 			{
 				Engine.Boiler.SteamPressure -= SteamUse * timeElapsed;
-				if(!StartSound.IsPlaying && LoopSound != null)
+				if(StartSound == null || !StartSound.IsPlaying && LoopSound != null)
 				{
 					LoopSound.Play(Engine.Car, true);
 				}

@@ -720,9 +720,11 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.FireTemperature;
 							n++; s++; if (s >= m) m = s; break;
 						case "tenderwater":
+						case "tankswater":
 							InstructionSet[n] = Instructions.TenderWater;
 							n++; s++; if (s >= m) m = s; break;
 						case "tenderfuel":
+						case "tanksfuel":
 							InstructionSet[n] = Instructions.TenderFuel;
 							n++; s++; if (s >= m) m = s; break;
 						case "sanders":
