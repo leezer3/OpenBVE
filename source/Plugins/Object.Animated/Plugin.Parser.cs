@@ -163,6 +163,15 @@ namespace Plugin
 												Result.Objects[ObjectCount] = a.Objects[k];
 												ObjectCount++;
 											}
+											for (int kk = 0; kk < a.Sounds.Length; kk++)
+											{
+												if (SoundCount >= Result.Sounds.Length)
+												{
+													Array.Resize(ref Result.Sounds, Result.Sounds.Length << 1);
+												}
+												Result.Sounds[SoundCount] = a.Sounds[kk];
+												SoundCount++;
+											}
 										}
 									}
 								}
