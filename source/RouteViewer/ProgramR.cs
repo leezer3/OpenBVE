@@ -370,6 +370,10 @@ namespace RouteViewer
 					AltPressed = true;
 					break;
 				case Key.F5:
+					if (CurrentlyLoading)
+					{
+						return;
+					}
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
 						
