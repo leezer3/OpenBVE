@@ -20,6 +20,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2.Overlays;
@@ -87,7 +88,7 @@ namespace RouteViewer
 			}
 			
 			// command line arguments
-			StringBuilder objectsToLoad = new StringBuilder();
+			string objectsToLoad = string.Empty;
 			if (args.Length != 0)
 			{
 				for (int i = 0; i < args.Length; i++)
@@ -100,7 +101,7 @@ namespace RouteViewer
 							{
 								if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
 								{
-									objectsToLoad.Append(args[i] + " ");
+									objectsToLoad += args[i] + " ";
 									continue;
 								}
 
@@ -408,6 +409,8 @@ namespace RouteViewer
 						{
 							bitmap.Dispose();
 						}
+						GCSettings.LargeObjectHeapCompactionMode =  GCLargeObjectHeapCompactionMode.CompactOnce; 
+						GC.Collect();
 						
 					}
 					break;
