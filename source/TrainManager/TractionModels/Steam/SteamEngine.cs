@@ -1,4 +1,5 @@
 using System;
+using System.ServiceModel.Configuration;
 using OpenBveApi.Interface;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -19,6 +20,8 @@ namespace TrainManager.TractionModels.Steam
 		public readonly CylinderChest CylinderChest;
 		/// <summary>The tender</summary>
 		public readonly Tender Tender;
+		/// <summary>The automatic fireman</summary>
+		internal readonly AutomaticFireman Fireman;
 		/// <summary>Gets the current acceleration output</summary>
 		private double PowerOutput
 		{
@@ -65,7 +68,7 @@ namespace TrainManager.TractionModels.Steam
 			 *		Water capacity of 88,000L (~19,200 gallons)
 			 */
 			Tender = new Tender(40000, 40000, 88000, 88000);
-			
+			Fireman = new AutomaticFireman(this);
 
 			JerkPowerUp = jerkPowerUp;
 			JerkPowerDown = jerkPowerDown;
@@ -101,6 +104,7 @@ namespace TrainManager.TractionModels.Steam
 			if (DecelerationDueToTraction == 0.0)
 			{
 				double a;
+				// ReSharper disable once PossibleNullReferenceException
 				if (cutoff.Actual != 0 & Car.baseTrain.Handles.Power.Actual > 0 & !Car.baseTrain.Handles.HoldBrake.Actual & !Car.baseTrain.Handles.EmergencyBrake.Actual)
 				{
 					// target acceleration
@@ -373,67 +377,33 @@ namespace TrainManager.TractionModels.Steam
 			{
 				Sounds.Update(TimeElapsed);
 			}
+
+			Fireman.Update(TimeElapsed);
 		}
 
+		
 		public override void HandleKeyDown(Translations.Command command)
 		{
 			switch (command)
 			{
 				case Translations.Command.Blowers:
-					if (Boiler.Blowers.Active)
-					{
-						if (Boiler.Blowers.StartSound != null)
-						{
-							Boiler.Blowers.StartSound.Play(Car, false);
-						}
-					}
-					else
-					{
-						if (Boiler.Blowers.StopSound != null)
-						{
-							Boiler.Blowers.StopSound.Play(Car, false);
-						}
-					}
-
 					Boiler.Blowers.Active = !Boiler.Blowers.Active;
 					break;
 				case Translations.Command.LiveSteamInjector:
-					if (Boiler.LiveSteamInjector.Active)
-					{
-						if (Boiler.LiveSteamInjector.StartSound != null)
-						{
-							Boiler.LiveSteamInjector.StartSound.Play(Car, false);
-						}
-					}
-					else
-					{
-						if (Boiler.LiveSteamInjector.StopSound != null)
-						{
-							Boiler.LiveSteamInjector.StopSound.Play(Car, false);
-						}
-					}
-
 					Boiler.LiveSteamInjector.Active = !Boiler.LiveSteamInjector.Active;
 					break;
 				case Translations.Command.ExhaustSteamInjector:
-					if (Boiler.ExhaustSteamInjector.Active)
-					{
-						if (Boiler.ExhaustSteamInjector.StartSound != null)
-						{
-							Boiler.ExhaustSteamInjector.StartSound.Play(Car, false);
-						}
-					}
-					else
-					{
-						if (Boiler.ExhaustSteamInjector.StopSound != null)
-						{
-							Boiler.ExhaustSteamInjector.StopSound.Play(Car, false);
-						}
-					}
-
 					Boiler.ExhaustSteamInjector.Active = !Boiler.ExhaustSteamInjector.Active;
 					break;
-
+				case Translations.Command.CylinderCocks:
+					CylinderChest.CylinderCocks.Open = !CylinderChest.CylinderCocks.Open;
+					break;
+				case Translations.Command.ShovelFire:
+					Boiler.Firebox.AddFuel();
+					break;
+				case Translations.Command.AutomaticFireman:
+					Fireman.Active = !Fireman.Active;
+					break;
 			}
 		}
 	}

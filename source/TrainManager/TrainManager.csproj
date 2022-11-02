@@ -128,6 +128,7 @@
     <Compile Include="TrackFollowingObject\TrackFollowingObject.cs" />
     <Compile Include="TractionModels\AbstractTractionModel.cs" />
     <Compile Include="TractionModels\Generic\TrailerCar.cs" />
+    <Compile Include="TractionModels\Steam\AutomaticFireman.cs" />
     <Compile Include="TractionModels\Steam\Blowers.cs" />
     <Compile Include="TractionModels\Steam\Boiler.cs" />
     <Compile Include="TractionModels\Steam\BypassValve.cs" />

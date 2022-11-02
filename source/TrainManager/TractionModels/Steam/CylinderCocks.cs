@@ -35,7 +35,7 @@ namespace TrainManager.TractionModels.Steam
 				_Open = value;
 			}
 		}
-		/// <summary>Backing property for Active</summary>
+		/// <summary>Backing property for Open</summary>
 		private bool _Open;
 		/// <summary>The sound played when the cylinder cocks are opened</summary>
 		public CarSound StartSound;
