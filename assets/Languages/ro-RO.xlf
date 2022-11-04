@@ -68,6 +68,10 @@
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>Noua versiune [version] ([date]) se poate descărca de pe pagina oficială.</target>
 					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+						<target>The most recent nightly build from [date] is available for download.</target>
+					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
 						<target>Închide</target>
