@@ -11,13 +11,7 @@ namespace TrainManager.Cargo
 
 		private double freightMass;
 
-		public override double Mass
-		{
-			get
-			{
-				return freightMass;
-			}
-		}
+		public override double Mass => freightMass;
 
 		public RobustFreight(CarBase car)
 		{

@@ -628,11 +628,6 @@ namespace TrainManager.SafetySystems
 					if (signal.Aspect == 0) break;
 					sectionIndex++;
 				}
-
-				if (sectionIndex >= TrainManagerBase.CurrentRoute.Sections.Length)
-				{
-					signal = new SignalData(-1, double.MaxValue);
-				}
 			}
 
 			if (sectionIndex >= 0)

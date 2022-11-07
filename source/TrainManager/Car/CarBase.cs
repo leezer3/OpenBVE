@@ -15,7 +15,6 @@ using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
-using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
