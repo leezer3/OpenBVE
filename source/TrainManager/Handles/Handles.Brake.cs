@@ -137,7 +137,9 @@ namespace TrainManager.Handles
 		public override string GetNotchDescription(out MessageColor color)
 		{
 			color = MessageColor.Gray;
-			if (NotchDescriptions == null || Driver >= NotchDescriptions.Length)
+			int offset = baseTrain.Handles.HasHoldBrake ? 2 : 1;
+
+			if (NotchDescriptions == null || offset + Driver >= NotchDescriptions.Length)
 			{
 				if (baseTrain.Handles.EmergencyBrake.Driver)
 				{
@@ -167,15 +169,9 @@ namespace TrainManager.Handles
 					return NotchDescriptions[0];
 				}
 
-				int offset = 1;
-				if (baseTrain.Handles.HasHoldBrake)
-				{
-					offset = 2;
-					if (baseTrain.Handles.HoldBrake.Driver)
-					{
-						color = MessageColor.Green;
-						return NotchDescriptions[1];
-					}
+				if (baseTrain.Handles.HasHoldBrake && baseTrain.Handles.HoldBrake.Driver) {
+					color = MessageColor.Green;
+					return NotchDescriptions[1];
 				}
 
 				if (Driver != 0)
