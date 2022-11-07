@@ -59,7 +59,7 @@ namespace TrainManager.TractionModels.Steam
 			if (Open)
 			{
 				Engine.Boiler.SteamPressure -= SteamUse * Engine.Car.baseTrain.Handles.Power.Actual * Engine.Car.baseTrain.Handles.Power.MaximumNotch * timeElapsed;
-				if (!StartSound.IsPlaying)
+				if (StartSound == null || !StartSound.IsPlaying)
 				{
 					if (Engine.Car.baseTrain.Handles.Power.Actual != 0)
 					{

@@ -1,4 +1,5 @@
-﻿using TrainManager.Trains;
+﻿using OpenBveApi.Colors;
+using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
@@ -95,6 +96,16 @@ namespace TrainManager.Handles
 				baseTrain.Plugin.UpdatePower();
 				baseTrain.Plugin.UpdateBrake();
 			}
+		}
+
+		public override string GetNotchDescription(out MessageColor color)
+		{
+			color = MessageColor.Gray;
+			if (Actual > 0)
+			{
+				color = MessageColor.Blue;
+			}
+			return Driver + "%";
 		}
 	}
 }

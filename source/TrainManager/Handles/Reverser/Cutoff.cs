@@ -69,11 +69,16 @@ namespace TrainManager.Handles
 		/// <returns>The notch description</returns>
 		public override string GetNotchDescription(out MessageColor color)
 		{
-			color = MessageColor.Blue;
-			if (Current < 0)
+			color = MessageColor.Gray;
+			if (Actual < 0)
 			{
 				color = MessageColor.Orange;
 			}
+			else if (Actual > 0)
+			{
+				color = MessageColor.Blue;
+			}
+
 
 			return Current + "%";
 		}
