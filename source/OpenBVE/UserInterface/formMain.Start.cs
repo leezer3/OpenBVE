@@ -988,14 +988,18 @@ namespace OpenBve
 		private void listviewTrainRecently_SelectedIndexChanged(object sender, EventArgs e) {
 			if (listviewTrainRecently.SelectedItems.Count == 1) {
 				string t = listviewTrainRecently.SelectedItems[0].Tag as string;
-				if (t != null) {
-					if (Directory.Exists(t)) {
-						string File = Path.CombineFile(t, "train.dat");
-						if (System.IO.File.Exists(File)) {
-							Result.TrainFolder = t;
-							ShowTrain(false);
-							if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
-						}
+				if (t == null || !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+				{
+					return;
+				}
+
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(t))
+					{
+						Result.TrainFolder = t;
+						ShowTrain(false);
+						if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
 					}
 				}
 			}
