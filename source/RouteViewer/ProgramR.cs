@@ -370,6 +370,10 @@ namespace RouteViewer
 					AltPressed = true;
 					break;
 				case Key.F5:
+					if (CurrentlyLoading)
+					{
+						return;
+					}
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
 						
@@ -386,7 +390,7 @@ namespace RouteViewer
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 						}
-						Renderer.Initialize();
+						Renderer.Reset();
 						CameraAlignment a = Renderer.Camera.Alignment;
 						if (LoadRoute(bitmap))
 						{

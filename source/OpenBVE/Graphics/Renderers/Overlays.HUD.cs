@@ -76,7 +76,18 @@ namespace OpenBve.Graphics.Renderers
 					Element.TransitionState = 0.0;
 					break;
 				case "power":
+					if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
+					{
+						return;
+					}
+					t = TrainManager.PlayerTrain.Handles.Power.GetNotchDescription(out sc);
+					Element.TransitionState = 0.0;
+					break;
 				case "single":
+					if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
+					{
+						return;
+					}
 					t = TrainManager.PlayerTrain.Handles.Power.GetNotchDescription(out sc);
 					Element.TransitionState = 0.0;
 					break;

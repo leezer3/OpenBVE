@@ -61,8 +61,7 @@ namespace TrainManager.BrakeSystems
 							// delay-filling control
 							double a = motorDeceleration;
 							double pr = targetPressure / brakeCylinder.ServiceMaximumPressure;
-							double b;
-							b = pr * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
+							double b = pr * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
 							double d = b - a;
 							if (d > 0.0)
 							{

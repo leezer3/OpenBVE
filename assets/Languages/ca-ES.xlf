@@ -63,6 +63,10 @@
 						<source>You already have the latest version.</source>
 						<target>Ja teniu la versió més recent.</target>
 					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+						<target>The most recent nightly build from [date] is available for download.</target>
+					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>Ja hi ha disponible la nova versió [version] ([date]) al lloc web oficial.</target>

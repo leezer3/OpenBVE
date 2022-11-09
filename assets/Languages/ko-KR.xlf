@@ -68,6 +68,10 @@
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>최신 버전인 [version] ([date])을 공식 홈페이지에서 사용할 수 있습니다.</target>
 					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+						<target>The most recent nightly build from [date] is available for download.</target>
+					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
 						<target>닫기</target>
