@@ -1,8 +1,10 @@
 using System;
 using System.ServiceModel.Configuration;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace TrainManager.TractionModels.Steam
@@ -21,7 +23,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The tender</summary>
 		public readonly Tender Tender;
 		/// <summary>The automatic fireman</summary>
-		internal readonly AutomaticFireman Fireman;
+		public readonly AutomaticFireman Fireman;
 		/// <summary>Gets the current acceleration output</summary>
 		private double PowerOutput
 		{
@@ -72,6 +74,25 @@ namespace TrainManager.TractionModels.Steam
 
 			JerkPowerUp = jerkPowerUp;
 			JerkPowerDown = jerkPowerDown;
+
+			bool mixedTraction = false;
+			for (int i = 0; i < Car.baseTrain.Cars.Length; i++)
+			{
+				if (Car.baseTrain.Cars[i].TractionModel is BVEMotorCar)
+				{
+					mixedTraction = true;
+					break;
+				}
+			}
+
+			if (mixedTraction)
+			{
+				Car.baseTrain.TractionType |= TractionType.Steam;
+			}
+			else
+			{
+				Car.baseTrain.TractionType = TractionType.Steam;
+			}
 		}
 
 		private double lastTrackPosition;

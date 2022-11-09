@@ -2,10 +2,11 @@
 
 namespace TrainManager.TractionModels.Steam
 {
-	internal class AutomaticFireman
+	/// <summary>A simple automatic fireman</summary>
+	public class AutomaticFireman
 	{
 		/// <summary>Whether the Automatic Fireman is active</summary>
-		internal bool Active;
+		public bool Active;
 		/// <summary>The last response</summary>
 		internal AIResponse lastAction;
 		/// <summary>Holds a reference to the base steam engine</summary>
@@ -93,18 +94,23 @@ namespace TrainManager.TractionModels.Steam
 			// Apply cylinder cocks when appropriate
 			if (Engine.Car.CurrentSpeed == 0)
 			{
-				if (!Engine.CylinderChest.CylinderCocks.Open)
+				// Check that we're not below working pressure- It's pointless to blast everything out if so
+				if (!(Engine.Car.baseTrain.Handles.Power.Ratio > 0.5 && Engine.Boiler.SteamPressure < Engine.Boiler.MinWorkingSteamPressure))
 				{
-					if (!delayNextAction)
+					if (!Engine.CylinderChest.CylinderCocks.Open)
 					{
-						lastAction = AIResponse.Long;
-						delayNextAction = true;
-						return;
-					}
+						if (!delayNextAction)
+						{
+							lastAction = AIResponse.Long;
+							delayNextAction = true;
+							return;
+						}
 
-					delayNextAction = false;
-					Engine.CylinderChest.CylinderCocks.Open = true;
+						delayNextAction = false;
+						Engine.CylinderChest.CylinderCocks.Open = true;
+					}
 				}
+				
 			}
 			else
 			{

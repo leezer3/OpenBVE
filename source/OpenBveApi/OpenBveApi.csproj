@@ -180,6 +180,7 @@
     <Compile Include="Runtime\System\SoundHandle.cs" />
     <Compile Include="Runtime\System\Speed.cs" />
     <Compile Include="Runtime\System\Time.cs" />
+    <Compile Include="Train\TractionTypes.cs" />
     <Compile Include="Runtime\Train\VehicleSpecs.cs" />
     <Compile Include="Runtime\Train\VehicleState.cs" />
     <Compile Include="Runtime\System\VirtualKeys.cs" />

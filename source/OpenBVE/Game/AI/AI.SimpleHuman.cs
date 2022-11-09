@@ -6,6 +6,7 @@ using RouteManager2.Events;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.TractionModels.BVE;
+using TrainManager.TractionModels.Steam;
 using TrainManager.Trains;
 
 namespace OpenBve
@@ -36,6 +37,8 @@ namespace OpenBve
 			private readonly TrainBase Train;
 			/// <summary>The index to the first motor car, if the driver car is not a motor car</summary>
 			private readonly int MotorCar;
+			/// <summary>The index to the first steam engine</summary>
+			private readonly int SteamEngine = -1;
 			// functions
 			internal SimpleHumanDriverAI(TrainBase train, double Limit)
 			{
@@ -56,15 +59,35 @@ namespace OpenBve
 				}
 				this.SpeedLimit = Limit;
 				MotorCar = train.DriverCar;
-				// FIXME: Needs handling for steam engines
-				if (!(train.Cars[train.DriverCar].TractionModel is BVEMotorCar))
+				
+				if ((train.TractionType & TractionType.Electric) != 0)
 				{
-					for (int i = 0; i < train.Cars.Length; i++)
+					// Has a BVE motor car somewhere in the formation- Find it if the driver car is not one
+					if (!(train.Cars[train.DriverCar].TractionModel is BVEMotorCar))
 					{
-						if (train.Cars[i].TractionModel is BVEMotorCar)
+						for (int i = 0; i < train.Cars.Length; i++)
 						{
-							MotorCar = i;
-							break;
+							if (train.Cars[i].TractionModel is BVEMotorCar)
+							{
+								MotorCar = i;
+								break;
+							}
+						}
+					}
+				}
+
+				if ((train.TractionType & TractionType.Steam) != 0)
+				{
+					// Has a steam engine somewhere in the formation
+					if (!(train.Cars[train.DriverCar].TractionModel is SteamEngine))
+					{
+						for (int i = 0; i < train.Cars.Length; i++)
+						{
+							if (train.Cars[i].TractionModel is SteamEngine)
+							{
+								SteamEngine = i;
+								break;
+							}
 						}
 					}
 				}
@@ -102,6 +125,13 @@ namespace OpenBve
 					}
 					return;
 				}
+				// Make sure auto fireman is on if appropriate
+				if (SteamEngine != -1)
+				{
+					SteamEngine engine = Train.Cars[SteamEngine].TractionModel as SteamEngine;
+					engine.Fireman.Active = true;
+				}
+
 				// personality
 				double spd = Train.CurrentSpeed;
 				if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)

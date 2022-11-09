@@ -97,6 +97,7 @@ namespace TrainManager.Trains
 			Handles.HoldBrake = new HoldBrakeHandle(this);
 			Handles.LocoBrake = new LocoAirBrakeHandle(this);
 			Handles.HasHoldBrake = false;
+			TractionType = TractionType.Electric; // Original BVE was built around emulating a generic Japanese EMU
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>
