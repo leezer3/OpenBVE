@@ -84,7 +84,7 @@ namespace TrainManager.TractionModels.Steam
 			}
 
 			// Now think about the fire
-			if (Engine.Boiler.Firebox.FireMass < Engine.Boiler.Firebox.MaxArea)
+			if (Engine.Boiler.Firebox.FireMass < Engine.Boiler.Firebox.MaxArea * 200)
 			{
 				Engine.Boiler.Firebox.AddFuel();
 				lastAction = AIResponse.Long;

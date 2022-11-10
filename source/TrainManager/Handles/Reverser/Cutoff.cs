@@ -15,7 +15,7 @@ namespace TrainManager.Handles
 		/// <summary>The current cutoff setting</summary>
 		public int Current;
 		/// <summary>The actual used cuttoff ratio</summary>
-		public new double Actual
+		public override double Ratio
 		{
 			get
 			{

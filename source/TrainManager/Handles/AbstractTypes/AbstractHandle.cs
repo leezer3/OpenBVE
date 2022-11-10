@@ -62,7 +62,7 @@ namespace TrainManager.Handles
 		public int MaxSpring;
 
 		/// <summary>The current ratio</summary>
-		public double Ratio => (double)Actual / MaximumNotch;
+		public virtual double Ratio => (double)Actual / MaximumNotch;
 
 		internal double SpringTimer;
 
