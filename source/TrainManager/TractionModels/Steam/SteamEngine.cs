@@ -56,7 +56,7 @@ namespace TrainManager.TractionModels.Steam
 			 *			0.005psi standing pressure loss (leakage etc.)
 			 *			0.2psi base stroke pressure, before reduction due to regulator / cutoff
 			 */
-			CylinderChest = new CylinderChest(this, 0.005, 0.2);
+			CylinderChest = new CylinderChest(this, 0.005, 0.02);
 			/*
 			 * Cutoff
 			 *			75% max forwards

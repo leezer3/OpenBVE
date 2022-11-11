@@ -83,12 +83,17 @@ namespace TrainManager.TractionModels.Steam
 				}
 			}
 
-			// Now think about the fire
-			if (Engine.Boiler.Firebox.FireMass < Engine.Boiler.Firebox.MaxArea * 200)
+			// Now think about the fire- 80% mass is fine to do nothing
+			if (Engine.Boiler.Firebox.FireMass < Engine.Boiler.Firebox.MaxArea * 16)
 			{
-				Engine.Boiler.Firebox.AddFuel();
-				lastAction = AIResponse.Long;
-				return;
+				// With below 80% fire mass, fireman *thinks* about adding fuel, but we must either be hot enough for the temp drop not to matter or low on fuel
+				if (Engine.Boiler.Firebox.FireMass < Engine.Boiler.Firebox.MaxArea * 8 || Engine.Boiler.Firebox.Temperature > Engine.Boiler.Firebox.MaxTemperature * 0.8)
+				{
+					Engine.Boiler.Firebox.AddFuel();
+					lastAction = AIResponse.Long;
+					return;
+				}
+				
 			}
 
 			// Apply cylinder cocks when appropriate

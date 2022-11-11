@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SoundManager;
 
 namespace TrainManager.TractionModels.Steam
@@ -8,7 +8,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>Holds a reference to the base engine</summary>
 		private readonly SteamEngine Engine;
 		/// <summary>The maximum fire temperature</summary>
-		private readonly double MaxTemperature;
+		internal readonly double MaxTemperature;
 		/// <summary>The current fire temperature</summary>
 		public double Temperature;
 		/// <summary>The maximum fire area</summary>
@@ -35,7 +35,7 @@ namespace TrainManager.TractionModels.Steam
 			UnitsPerShovel = unitsPerShovel;
 			// TODO: More generic starting paramaters
 			FireArea = MaxArea / 2;
-			FireMass = MaxArea * 200;
+			FireMass = MaxArea * 20;
 			Temperature = 1000;
 		}
 
@@ -71,7 +71,7 @@ namespace TrainManager.TractionModels.Steam
 			double unitsAdded = Math.Min(Engine.Tender.FuelLevel, UnitsPerShovel);
 			FireMass += unitsAdded;
 			FireArea += unitsAdded * 0.1; // 1kg of coal to ~10cm square
-			Temperature -= unitsAdded * 200;
+			Temperature -= unitsAdded * 10;
 			if (FireArea > MaxArea)
 			{
 				FireArea = MaxArea;

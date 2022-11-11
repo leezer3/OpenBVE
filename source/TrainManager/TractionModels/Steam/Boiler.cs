@@ -74,10 +74,10 @@ namespace TrainManager.TractionModels.Steam
 			/*
 			 * 10m square fire
 			 * 1000c max temp
-			 * 0.25kg of coal per sec ==> + 1c (burn rate of 1kg lasting 1 hour into 1000c)
+			 * 0.1kg of coal per sec ==> + 1c (burn rate of 1kg lasting 1 hour into 1000c)
 			 * Fireman adds 3kg per shovelful
 			 */
-			Firebox = new Firebox(engine, 10, 1000, 0.25, 3);
+			Firebox = new Firebox(engine, 10, 1000, 0.1, 3);
 			/*
 			 * Double temp increase / fuel use
 			 * Use approx 1psi / sec
