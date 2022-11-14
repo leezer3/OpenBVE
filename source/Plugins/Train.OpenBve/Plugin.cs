@@ -17,6 +17,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using TrainManager.Motor;
+using TrainManager.Power;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -59,6 +60,10 @@ namespace Train.OpenBve
 	    internal Control[] CurrentControls;
 
 	    internal double LastProgress;
+
+	    internal static BVEMotorSoundTable[] MotorSoundTables;
+	    internal static BveAccelerationCurve[] AccelerationCurves;
+	    internal static double MaximumAcceleration;
 
 		public Plugin()
 	    {
@@ -349,11 +354,11 @@ namespace Train.OpenBve
 				for (int i = 0; i < currentTrain.Cars.Length; i++)
 				{
 					currentTrain.Cars[i].DetermineDoorClosingSpeed();
-					if (currentTrain.Cars[i].Specs.IsMotorCar && TrainXmlParser.MotorSoundXMLParsed != null)
+					if (currentTrain.Cars[i].Specs.IsMotorCar && currentTrain.Cars[i].Sounds.Motor == null && TrainXmlParser.MotorSoundXMLParsed != null)
 					{
 						if(!TrainXmlParser.MotorSoundXMLParsed[i])
 						{
-							currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], TrainXmlParser.MotorSound.SpeedConversionFactor, TrainXmlParser.MotorSound.Tables);
+							currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
 						}
 					}
 				}
