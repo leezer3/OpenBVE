@@ -1666,6 +1666,20 @@ namespace OpenBve {
 						}
 						Function.Stack[s] = steamEngine.Tender.FuelLevel;
 						s++; break;
+					/*
+					 * NOTE:
+					 * It is possible to animate wheel positions in other ways
+					 * However, when animating valve gear, this variable should be used in order
+					 * for everything to remain fully in sync (as we don't support animation bones...)
+					 */
+					case Instructions.ValveGearWheelPosition:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.WheelPosition * 0.0628319;
+						s++; break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

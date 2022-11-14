@@ -1,7 +1,6 @@
 ﻿using SoundManager;
-using TrainManager.TractionModels.Steam;
 
-namespace TrainManager.TractionModels
+namespace TrainManager.TractionModels.Steam
 {
 	public class Blowers
 	{

@@ -22,6 +22,7 @@ namespace OpenBveApi.Trains
 		/// <summary>A reference to the base car</summary>
 		private readonly AbstractCar baseCar;
 		/// <summary>The wheel radius</summary>
+		/// <remarks>Units of M</remarks>
 		public double WheelRadius;
 
 		private readonly double coefficientOfFriction;

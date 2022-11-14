@@ -14,6 +14,8 @@ namespace TrainManager.TractionModels.Steam
 		public double PressureUse => Engine.Car.baseTrain.Handles.Power.Ratio * Engine.Car.baseTrain.Handles.Reverser.Ratio * (StandingPressureLoss + BaseStrokePressure * Engine.Car.baseTrain.Handles.Reverser.Ratio);
 		/// <summary>The cylinder cocks</summary>
 		public CylinderCocks CylinderCocks;
+		/// <summary>The valve gear</summary>
+		public ValveGear ValveGear;
 
 		public CylinderChest(SteamEngine engine, double standingPressureLoss, double baseStrokePressure)
 		{
@@ -30,6 +32,7 @@ namespace TrainManager.TractionModels.Steam
 			// drop the steam pressure appropriately
 			Engine.Boiler.SteamPressure -= numberOfStrokes * Engine.Car.baseTrain.Handles.Reverser.Actual * PressureUse;
 			CylinderCocks.Update(timeElapsed);
+			ValveGear.Update();
 		}
 	}
 }

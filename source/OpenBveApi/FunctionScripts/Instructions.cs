@@ -41,7 +41,8 @@
 		/*
 		 * Steam engine related stuff
 		 */
-		BoilerPressure, BoilerWaterLevel, Cutoff, Blowers, CylinderCocks, BypassValve, LiveSteamInjector, ExhaustSteamInjector, FireArea, FireMass, FireTemperature, TenderWater, TenderFuel
+		BoilerPressure, BoilerWaterLevel, Cutoff, Blowers, CylinderCocks, BypassValve, LiveSteamInjector, ExhaustSteamInjector, FireArea, FireMass, FireTemperature, TenderWater, TenderFuel,
+		ValveGearWheelPosition
 
 #pragma warning restore CS1591
 			
