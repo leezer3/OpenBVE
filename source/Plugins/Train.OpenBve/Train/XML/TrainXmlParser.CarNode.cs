@@ -144,11 +144,13 @@ namespace Train.OpenBve
 								//We've already set the acceleration curves elsewhere in the XML, so don't copy the default ones
 								break;
 							}
-							Train.Cars[Car].TractionModel.AccelerationCurves = new AccelerationCurve[AccelerationCurves.Length];
-							for (int i = 0; i < AccelerationCurves.Length; i++)
+							Train.Cars[Car].TractionModel.AccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
+							for (int i = 0; i < Plugin.AccelerationCurves.Length; i++)
 							{
-								Train.Cars[Car].TractionModel.AccelerationCurves[i] = AccelerationCurves[i].Clone();
+								Train.Cars[Car].TractionModel.AccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
 							}
+
+							Train.Cars[Car].TractionModel.MaximumAcceleration = Plugin.MaximumAcceleration;
 						}
 						else
 						{

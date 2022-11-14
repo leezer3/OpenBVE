@@ -17,6 +17,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using TrainManager.Motor;
+using TrainManager.Power;
 using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
@@ -60,6 +61,10 @@ namespace Train.OpenBve
 	    internal Control[] CurrentControls;
 
 	    internal double LastProgress;
+
+	    internal static BVEMotorSoundTable[] MotorSoundTables;
+	    internal static BveAccelerationCurve[] AccelerationCurves;
+	    internal static double MaximumAcceleration;
 
 	    internal static bool XMLOnly;
 
@@ -379,7 +384,7 @@ namespace Train.OpenBve
 					{
 						if(!TrainXmlParser.MotorSoundXMLParsed[i])
 						{
-							currentTrain.Cars[i].TractionModel.Sounds = new BVEMotorSound(currentTrain.Cars[i], TrainXmlParser.MotorSound.SpeedConversionFactor, TrainXmlParser.MotorSound.Tables);
+							currentTrain.Cars[i].TractionModel.Sounds = new BVEMotorSound(currentTrain.Cars[i], 18, MotorSoundTables);
 						}
 					}
 				}

@@ -104,10 +104,11 @@ namespace Train.OpenBve
 				// motor sound
 				if (train.Cars[i].TractionModel is BVEMotorCar)
 				{
-					if (train.Cars[i].TractionModel.Sounds is BVEMotorSound motorSound)
+					if (train.Cars[i].TractionModel.Sounds == null)
 					{
+						BVEMotorSound motorSound = new BVEMotorSound(train.Cars[i], 18.0, Plugin.MotorSoundTables);
 						System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-						train.Cars[i].TractionModel.Sounds.Position = center;
+						motorSound.Position = center;
 						for (int j = 0; j < motorSound.Tables.Length; j++)
 						{
 							for (int k = 0; k < motorSound.Tables[j].Entries.Length; k++)
@@ -120,6 +121,8 @@ namespace Train.OpenBve
 								}
 							}
 						}
+
+						train.Cars[i].TractionModel.Sounds = motorSound;
 					}
 					else
 					{

@@ -1387,6 +1387,10 @@ namespace Train.OpenBve
 				Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
 			}
 
+			Plugin.MotorSoundTables = Tables;
+			Plugin.AccelerationCurves = AccelerationCurves;
+			Plugin.MaximumAcceleration = MaximumAcceleration;
+
 			// assign motor/trailer-specific settings
 			for (int i = 0; i < Cars; i++) {
 				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
@@ -1399,10 +1403,6 @@ namespace Train.OpenBve
 					{
 						Train.Cars[i].TractionModel.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
-					Train.Cars[i].TractionModel.MaximumAcceleration = MaximumAcceleration;
-					
-					// motor sound
-					Train.Cars[i].TractionModel.Sounds = new BVEMotorSound(Train.Cars[i], 18.0, Tables);
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;
