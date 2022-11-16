@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -372,7 +372,7 @@ namespace Train.OpenBve
 										break;
 									}
 									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
-									ParseMotorSoundTableNode(c, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
+									ParseMotorSoundTableNode(c, car, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
 									break;
 								case "pilotlamp":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -621,10 +621,11 @@ namespace Train.OpenBve
 
 		/// <summary>Parses an XML motor table node into a BVE motor sound table</summary>
 		/// <param name="node">The node</param>
+		/// <param name="Car">The car</param>
 		/// <param name="motorSound">The motor sound tables to assign this node's contents to</param>
 		/// <param name="Position">The default sound position</param>
 		/// <param name="Radius">The default sound radius</param>
-		private void ParseMotorSoundTableNode(XmlNode node, ref AbstractMotorSound motorSound, Vector3 Position, double Radius)
+		private void ParseMotorSoundTableNode(XmlNode node, CarBase Car, ref AbstractMotorSound motorSound, Vector3 Position, double Radius)
 		{
 			foreach (XmlNode c in node.ChildNodes)
 			{
@@ -650,6 +651,13 @@ namespace Train.OpenBve
 
 					if (idx >= 0)
 					{
+						if (motorSound == null && Plugin.MotorSoundTables != null)
+						{
+							// We are using train.dat, and the sound.xml in extension mode but this car was not initially set as a motor car
+							// Construct a new motor sound table
+							motorSound = new BVEMotorSound(Car, 18.0, Plugin.MotorSoundTables);
+						}
+
 						if (motorSound is BVEMotorSound bveMotorSound)
 						{
 							for (int i = 0; i < bveMotorSound.Tables.Length; i++)
