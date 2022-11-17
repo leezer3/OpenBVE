@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Security;
 using System.Threading;
 using System.Windows.Forms;
 using Path = OpenBveApi.Path;
@@ -392,8 +393,8 @@ namespace CarXmlConvertor
 			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
 			if (File.Exists(trainTxt))
 			{
-				string desc = File.ReadAllText(trainTxt);
-				newLines.Add("<Description>" + desc + "</Description>");
+				string desc = File.ReadAllText(trainTxt, OpenBveApi.TextEncoding.GetSystemEncodingFromFile(trainTxt));
+				newLines.Add("<Description>" + SecurityElement.Escape(desc) + "</Description>");
 			}
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");
