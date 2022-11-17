@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using System.Xml;
 using Path = OpenBveApi.Path;
 
 namespace CarXmlConvertor
@@ -105,13 +107,52 @@ namespace CarXmlConvertor
 			}
 	        updateLogBoxText += "Loading existing sound.cfg file " + ConvertSoundCfg.FileName + Environment.NewLine;
 			ConvertSoundCfg.Process(this);
-	        if (File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertExtensionsCfg.FileName), "train.xml")))
+			string trainXML = Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertExtensionsCfg.FileName), "train.xml");
+	        if (File.Exists(trainXML))
 	        {
+		        FileVersionInfo programVersion = null;
+		        bool olderConvertorVersion = false;
 		        updateLogBoxText += "INFO: An existing train.xml file was detected." + Environment.NewLine;
-				if (MessageBox.Show("The selected folder already contains a train.xml file. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+		        try
 		        {
-			        return;
+			        programVersion = FileVersionInfo.GetVersionInfo("OpenBve.exe");
 		        }
+		        catch
+		        {
+			        // Ignore- Most likely the convertor has been copied elsewhere
+		        }
+		        //The current XML file to load
+		        XmlDocument currentXML = new XmlDocument();
+		        currentXML.Load(trainXML);
+		        if (currentXML.DocumentElement != null)
+		        {
+			        XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/ConvertorVersion");
+			        if (DocumentNodes != null && DocumentNodes.Count > 0)
+			        {
+						Version v = Version.Parse(DocumentNodes[0].InnerText);
+						if (programVersion != null && v < Version.Parse(programVersion.FileVersion))
+						{
+							olderConvertorVersion = true;
+						} 
+						
+			        }
+		        }
+
+		        if (olderConvertorVersion)
+		        {
+			        if (MessageBox.Show("The selected folder appears to contain a train.xml file converted with an older version of CarXMLConvertor. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+			        {
+				        return;
+			        }
+		        }
+		        else
+		        {
+			        if (MessageBox.Show("The selected folder already contains a train.xml file. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+			        {
+				        return;
+			        }
+		        }
+		        
 		        updateLogBoxText += "Overwriting...." + Environment.NewLine;
 			}
 			if (this.radioButtonSingleFile.Checked == true)
