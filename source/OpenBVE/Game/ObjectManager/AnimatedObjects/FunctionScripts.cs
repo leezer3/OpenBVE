@@ -1676,9 +1676,41 @@ namespace OpenBve {
 						if (steamEngine == null)
 						{
 							Function.Stack[s] = 0.0;
-							break;
+							s++; break;
 						}
-						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.WheelPosition * 0.0628319;
+						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.WheelPosition * -0.0628319;
+						s++; break;
+					case Instructions.ValveGearLeftPivotX:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							s++; break;
+						}
+						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.LeftPivotLocation.X;
+						s++; break;
+					case Instructions.ValveGearLeftPivotY:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							s++; break;
+						}
+						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.LeftPivotLocation.Y;
+						s++; break;
+					case Instructions.ValveGearRightPivotX:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							s++; break;
+						}
+						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.RightPivotLocation.X;
+						s++; break;
+					case Instructions.ValveGearRightPivotY:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							s++; break;
+						}
+						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.RightPivotLocation.Y;
 						s++; break;
 						// default
 					default:

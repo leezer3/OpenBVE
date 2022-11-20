@@ -48,6 +48,7 @@ namespace TrainManager.TractionModels.Steam
 			BaseStrokePressure = baseStrokePressure;
 			// 5psi / s loss when the cylinder cocks are open
 			CylinderCocks = new CylinderCocks(Engine, 5);
+			ValveGear = new ValveGear(engine);
 		}
 
 		public void Update(double timeElapsed, double distanceTravelled)
