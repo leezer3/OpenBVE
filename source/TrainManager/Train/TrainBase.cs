@@ -843,6 +843,14 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].Reverse();
+				// Re-create the coupler with appropriate distances between the cars
+				double minDistance = 0, maxDistance = 0;
+				if (i < Cars.Length - 1)
+				{
+					minDistance = Cars[i + 1].Coupler.MinimumDistanceBetweenCars;
+					maxDistance = Cars[i + 1].Coupler.MaximumDistanceBetweenCars;
+				}
+				Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null, this);
 			}
 			PlaceCars(trackPosition);
 			DriverCar = Cars.Length - 1 - DriverCar;
