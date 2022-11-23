@@ -104,6 +104,13 @@ namespace SoundManager
 		/// <param name="looped">Whether the sound is to be played looped</param>
 		public void Play(double pitch, double volume, AbstractCar Car, bool looped)
 		{
+			if (looped && IsPlaying)
+			{
+				// If looped and already playing, update the pitch / volume values
+				Source.Volume = volume;
+				Source.Pitch = pitch;
+				return;
+			}
 			if (Buffer != null)
 			{
 				if (SoundsBase.Sources.Length == SoundsBase.SourceCount)

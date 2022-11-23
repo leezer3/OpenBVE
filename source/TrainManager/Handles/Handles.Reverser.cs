@@ -1,4 +1,6 @@
-﻿using SoundManager;
+﻿using OpenBveApi.Colors;
+using OpenBveApi.Interface;
+using SoundManager;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -63,6 +65,44 @@ namespace TrainManager.Handles
 					ReleaseSound.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 				}
 			}
+		}
+
+		/// <summary>Gets the description string for this notch</summary>
+		/// <param name="color">The on-screen display color</param>
+		/// <returns>The notch description</returns>
+		public string GetNotchDescription(out MessageColor color)
+		{
+			color = MessageColor.Gray;
+			if (NotchDescriptions == null || NotchDescriptions.Length < 3)
+			{
+				switch (Driver)
+				{
+					case ReverserPosition.Reverse:
+						color = MessageColor.Orange;
+						return Translations.QuickReferences.HandleBackward;
+					case ReverserPosition.Neutral:
+						return Translations.QuickReferences.HandleNeutral;
+					case ReverserPosition.Forwards:
+						color = MessageColor.Blue;
+						return Translations.QuickReferences.HandleForward;
+				}
+			}
+			else
+			{
+				switch (Driver)
+				{
+					case ReverserPosition.Reverse:
+						color = MessageColor.Orange;
+						return NotchDescriptions[2];
+					case ReverserPosition.Neutral:
+						return NotchDescriptions[0];
+					case ReverserPosition.Forwards:
+						color = MessageColor.Blue;
+						return NotchDescriptions[1];
+				}
+			}
+
+			return string.Empty;
 		}
 	}
 }

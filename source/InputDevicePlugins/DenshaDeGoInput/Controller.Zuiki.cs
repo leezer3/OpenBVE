@@ -131,7 +131,7 @@ namespace DenshaDeGoInput
 				if (!cachedControllers.ContainsKey(guid))
 				{
 					// ZKNS-001
-					if (id == "0f0d:00c1")
+					if (id == "0f0d:00c1" || id == "33dd:0002")
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 8, 9, 0, 1, 2, 3, 4, 5 };

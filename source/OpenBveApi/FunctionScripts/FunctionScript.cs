@@ -575,10 +575,12 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.RightDoorsTargetIndex;
 							n++; break;
+						case "doorbuttonl":
 						case "leftdoorbutton":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.LeftDoorButton;
 							n++; s++; if (s >= m) m = s; break;
+						case "doorbuttonr":
 						case "rightdoorbutton":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.RightDoorButton;
@@ -817,13 +819,34 @@ namespace OpenBveApi.FunctionScripting
 							n++; s++; if (s >= m) m = s; break;
 						case "wheelradius":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.BrakeBrakePipe;
+							InstructionSet[n] = Instructions.WheelRadius;
 							n++; s++; if (s >= m) m = s; break;
 						case "wheelradiusindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.BrakeBrakePipeOfCar;
+							InstructionSet[n] = Instructions.WheelRadiusOfCar;
 							n++; break;
+						case "wheelslip":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.WheelSlip;
+							n++; s++; if (s >= m) m = s; break;
+						case "wheelslipindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.WheelSlipCar;
+							n++; break;
+						case "sanders":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.Sanders;
+							n++; s++; if (s >= m) m = s; break;
+						case "sandlevel":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.SandLevel;
+							n++; s++; if (s >= m) m = s; break;
+						case "sandshots":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.SandShots;
+							n++; s++; if (s >= m) m = s; break;
 						// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);

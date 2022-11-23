@@ -48,7 +48,6 @@ namespace RouteViewer {
 			Program.CurrentRoute.Stations = new RouteStation[] { };
 			Program.CurrentRoute.Sections = new Section[] { };
 			Program.CurrentRoute.BufferTrackPositions = new double[] { };
-			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
 			Interface.CurrentOptions.TrainName = "";

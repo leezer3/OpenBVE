@@ -1775,7 +1775,8 @@ namespace OpenBve {
 
 		private void checkForUpdate()
 		{
-			string xmlURL = "http://openbve-project.net/version.xml";
+			string xmlURL;
+			xmlURL = Interface.CurrentOptions.DailyBuildUpdates ? "https://vps.bvecornwall.co.uk/OpenBVE/Builds/version.xml" : "http://openbve-project.net/version.xml";
 			HttpWebRequest hwRequest = (HttpWebRequest)WebRequest.Create(xmlURL);
 			hwRequest.Timeout = 5000;
 			HttpWebResponse hwResponse = null;
@@ -1804,7 +1805,10 @@ namespace OpenBve {
 								switch (elementName)
 								{
 									case "version":
-										newVersion = new Version(reader.Value);
+										if (!Interface.CurrentOptions.DailyBuildUpdates)
+										{
+											newVersion = new Version(reader.Value);
+										}
 										break;
 									case "url":
 										url = reader.Value;
@@ -1831,11 +1835,9 @@ namespace OpenBve {
 				if (hwResponse != null) hwResponse.Close();
 			}
 			Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-			bool newerVersion = curVersion.CompareTo(newVersion) < 0;
-			if (newerVersion)
+			if (Interface.CurrentOptions.DailyBuildUpdates)
 			{
-				string question = Translations.GetInterfaceString("panel_updates_new");
-				question = question.Replace("[version]", newVersion.ToString());
+				string question = Translations.GetInterfaceString("panel_updates_daily");
 				question = question.Replace("[date]", date);
 				if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
 				{
@@ -1844,8 +1846,23 @@ namespace OpenBve {
 			}
 			else
 			{
-				MessageBox.Show(Translations.GetInterfaceString("panel_updates_old"));
+				bool newerVersion = curVersion.CompareTo(newVersion) < 0;
+				if (newerVersion)
+				{
+					string question = Translations.GetInterfaceString("panel_updates_new");
+					question = question.Replace("[version]", newVersion.ToString());
+					question = question.Replace("[date]", date);
+					if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+					{
+						Process.Start(url);
+					}
+				}
+				else
+				{
+					MessageBox.Show(Translations.GetInterfaceString("panel_updates_old"));
+				}
 			}
+			
 		}
 
 		private formAbout AboutDialog;

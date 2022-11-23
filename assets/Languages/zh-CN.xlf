@@ -67,6 +67,10 @@
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>新版本 ([version] / [date]) 已在官网可供下载。</target>
 					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+						<target>The most recent nightly build from [date] is available for download.</target>
+					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
 						<target>退出游戏</target>
@@ -2399,6 +2403,14 @@
 					<trans-unit id="device_constspeed">
 						<source>Activates or deactivates the constant speed device</source>
 						<target>开关定速设备</target>
+					</trans-unit>
+					<trans-unit id="play_micsounds">
+						<source>Activates or deactivates the system microphone soundsource</source>
+						<target>Activates or deactivates the system microphone soundsource</target>
+					</trans-unit>
+					<trans-unit id="sanders">
+						<source>Activates or deactivates the sanders</source>
+						<target>Activates or deactivates the sanders</target>
 					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>

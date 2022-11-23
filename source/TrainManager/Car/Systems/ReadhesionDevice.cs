@@ -1,8 +1,11 @@
 ﻿using System;
+using TrainManager.Car.Systems;
 
 namespace TrainManager.Car
 {
-	public class CarReAdhesionDevice
+	/// <summary>Implements a BVE2 / BVE4 readhesion device</summary>
+	/// <remarks>Designed to simulate an electric motor control system reacting to wheelslip</remarks>
+	public class BveReAdhesionDevice : AbstractReAdhesionDevice
 	{
 		/// <summary>The time between updates in seconds</summary>
 		public double UpdateInterval;
@@ -18,14 +21,11 @@ namespace TrainManager.Car
 		private double NextUpdateTime;
 		/// <summary>The amount of time with NO wheelslip occuring</summary>
 		private double TimeStable;
-		/// <summary>Holds a reference to the base car</summary>
-		private readonly CarBase Car;
 		/// <summary>The type of device</summary>
 		public readonly ReadhesionDeviceType DeviceType;
 
-		public CarReAdhesionDevice(CarBase car, ReadhesionDeviceType type)
+		public BveReAdhesionDevice(CarBase car, ReadhesionDeviceType type) : base(car)
 		{
-			this.Car = car;
 			this.DeviceType = type;
 			this.MaximumAccelerationOutput = Double.PositiveInfinity;
 			this.ApplicationFactor = 0.0;
@@ -69,7 +69,7 @@ namespace TrainManager.Car
 
 		/// <summary>Called once a frame to update the re-adhesion device when powering</summary>
 		/// <param name="CurrentAcceleration">The current acceleration output</param>
-		public void Update(double CurrentAcceleration)
+		public override void Update(double CurrentAcceleration)
 		{
 			if (TrainManagerBase.currentHost.InGameTime < NextUpdateTime)
 			{
@@ -108,7 +108,7 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Called to reset the readhesion device after a jump</summary>
-		public void Jump()
+		public override void Jump()
 		{
 			NextUpdateTime = 0;
 			MaximumAccelerationOutput = double.PositiveInfinity;

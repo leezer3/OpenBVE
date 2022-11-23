@@ -16,6 +16,8 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using TrainManager.Motor;
+using TrainManager.Power;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -58,6 +60,10 @@ namespace Train.OpenBve
 	    internal Control[] CurrentControls;
 
 	    internal double LastProgress;
+
+	    internal static BVEMotorSoundTable[] MotorSoundTables;
+	    internal static BveAccelerationCurve[] AccelerationCurves;
+	    internal static double MaximumAcceleration;
 
 		public Plugin()
 	    {
@@ -336,7 +342,7 @@ namespace Train.OpenBve
 				if (Cancel) return false;
 				SoundCfgParser.ParseSoundConfig(currentTrain);
 				/*
-				 * Determine door opening / closing speed
+				 * Determine door opening / closing speed & copy in any missing bits (e.g. motor sound tables)
 				 * This *must* be done after the sound configuration has loaded
 				 * (As the original BVE / OpenBVE implimentation calculates this from
 				 * the length of the sound buffer)
@@ -348,6 +354,13 @@ namespace Train.OpenBve
 				for (int i = 0; i < currentTrain.Cars.Length; i++)
 				{
 					currentTrain.Cars[i].DetermineDoorClosingSpeed();
+					if (currentTrain.Cars[i].Specs.IsMotorCar && currentTrain.Cars[i].Sounds.Motor == null && TrainXmlParser.MotorSoundXMLParsed != null)
+					{
+						if(!TrainXmlParser.MotorSoundXMLParsed[i])
+						{
+							currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
+						}
+					}
 				}
 			}
 			// place cars

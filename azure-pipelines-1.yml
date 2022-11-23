@@ -39,7 +39,7 @@ jobs:
 - job: AppleMakeBuild
   displayName: 'Build on Apple OS-X (makefile)'
   pool:
-    vmImage: 'macos-10.15'
+    vmImage: 'macos-11'
 
   variables:
     solution: 'OpenBVE.sln'
@@ -48,8 +48,6 @@ jobs:
 
   steps:
   - task: NuGetToolInstaller@1
-### Default Mono version isn't high enough on this OS-X image so kick to the latest
-  - script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 6_8_0
   - script: make publish 
 
 ### Linux makefile build

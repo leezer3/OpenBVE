@@ -5,6 +5,7 @@ using OpenBveApi.Runtime;
 using LibRender2.Overlays;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
+using TrainManager.Car.Systems;
 
 namespace RouteViewer {
 	internal static class FunctionScripts {
@@ -1061,6 +1062,53 @@ namespace RouteViewer {
 						}
 						s++;
 						break;
+					case Instructions.WheelSlip:
+						if (Train != null) {
+							Function.Stack[s] = Train.Cars[CarIndex].FrontAxle.CurrentWheelSlip ? 1 : 0;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.WheelSlipCar:
+						if (Train == null) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length) {
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.CurrentWheelSlip ? 1 : 0;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.Sanders:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.Active ? 1 : 0;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.SandLevel:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.SandLevel;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.SandShots:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.NumberOfShots;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						} 
+						s++; break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}

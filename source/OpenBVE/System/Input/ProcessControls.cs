@@ -19,6 +19,7 @@ using RouteManager2.Stations;
 using TrainManager;
 using TrainManager.Handles;
 using TrainManager.Car;
+using TrainManager.Car.Systems;
 
 namespace OpenBve
 {
@@ -1595,6 +1596,21 @@ namespace OpenBve
 												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
 										}
 										break;
+									case Translations.Command.Sanders:
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(
+												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+
+										for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
+										{
+											if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
+											{
+												sanders.Toggle();
+											}
+										}
+										break;
 									case Translations.Command.TimetableToggle:
 										// option: timetable
 										if (Interface.CurrentOptions.TimeTableStyle == TimeTableMode.None)
@@ -1978,6 +1994,22 @@ namespace OpenBve
 										break;
 									case Translations.Command.RailDriverSpeedUnits:
 										Interface.CurrentOptions.RailDriverMPH = !Interface.CurrentOptions.RailDriverMPH;
+										break;
+									case Translations.Command.Sanders:
+										for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
+										{
+											if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
+											{
+												if (sanders.Type == SandersType.PressAndHold)
+												{
+													sanders.Toggle();
+												}
+											}
+										}
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.Sanders);
+										}
 										break;
 								}
 							}

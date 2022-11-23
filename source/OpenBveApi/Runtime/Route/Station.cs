@@ -92,7 +92,7 @@ namespace OpenBveApi.Runtime
 			Name = s.Name;
 			ArrivalTime = s.ArrivalTime;
 			DepartureTime = s.DepartureTime;
-			StopTime = s.DepartureTime - s.ArrivalTime;
+			ExpectedTimeStopped = s.ExpectedTimeStopped;
 			ForceStopSignal = s.ForceStopSignal;
 			OpenLeftDoors = s.OpenLeftDoors;
 			OpenRightDoors = s.OpenRightDoors;

@@ -1,4 +1,29 @@
-﻿using OpenBveApi.Runtime;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2022, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 
 namespace TrainManager.SafetySystems
 {
@@ -144,10 +169,46 @@ namespace TrainManager.SafetySystems
 				}
 			}
 
-			if (currentStep == 101)
+			if (Plugin.Sound[3] == 0)
 			{
-				//Raise the AWS horn cancel key
-				Plugin.KeyUp(VirtualKeys.A1);
+				//Vigilance alarm- driver to increase brakes to max
+				if (data.Handles.BrakeNotch != Plugin.Train.Handles.Brake.MaximumNotch)
+				{
+					data.Handles.BrakeNotch++;
+					data.Response = AIResponse.Short;
+					return;
+				}
+				if (data.Handles.PowerNotch != 0)
+				{
+					data.Handles.PowerNotch--;
+					data.Response = AIResponse.Short;
+					return;
+				}
+				//Wait for train to stop
+				if (Plugin.Train.CurrentSpeed != 0)
+				{
+					data.Response = AIResponse.Short;
+					return;
+				}
+				//Reset alarm
+				switch (currentStep)
+				{
+					case 100:
+						data.Response = AIResponse.Medium;
+						currentStep++;
+						return;
+					case 101:
+						Plugin.KeyDown(VirtualKeys.A2);
+						data.Response = AIResponse.Medium;
+						currentStep+= 2;
+						return;
+				}
+			}
+			
+			if (currentStep == 102 || currentStep == 103)
+			{
+				//Raise the cancel key
+				Plugin.KeyUp(currentStep == 102 ? VirtualKeys.A1 : VirtualKeys.A2);
 				data.Response = AIResponse.Medium;
 				currentStep = 100;
 				return;
@@ -202,13 +263,55 @@ namespace TrainManager.SafetySystems
 						return;
 				}
 			}
+			//Handle DRA
+			if (Plugin.Train.StationState == TrainStopState.Boarding)
+			{
+				if (Plugin.Panel[13] == 0)
+				{
+					Plugin.KeyDown(VirtualKeys.S);
+					Plugin.KeyUp(VirtualKeys.S);
+					data.Response = AIResponse.Short;
+					return;
+				}
+			}
+			else
+			{
+				if (Plugin.Panel[13] == 1)
+				{
+					Plugin.KeyDown(VirtualKeys.S);
+					Plugin.KeyUp(VirtualKeys.S);
+					data.Response = AIResponse.Short;
+					return;
+				}
+			}
 			//UKDT fitted trains generally use the tail lights toggle for something else dummy (ETS etc.) which isn't directly relevant to the AI or the external appearance, so do nothing here
 
 			if (TrainManagerBase.currentHost.InGameTime > nextPluginAction)
 			{
-				//If nothing else has happened recently, hit the vigilance reset key
-				Plugin.KeyDown(VirtualKeys.A2);
-				Plugin.KeyUp(VirtualKeys.A2);
+				//If nothing else has happened recently, blip power / brake (some trains don't like using the vigilance reset key to keep going)
+				if (data.Handles.BrakeNotch == 0)
+				{
+					if (data.Handles.PowerNotch > 0)
+					{
+						data.Handles.PowerNotch--;
+					}
+					else
+					{
+						data.Handles.BrakeNotch++;
+					}
+				}
+				else
+				{
+					if (data.Handles.BrakeNotch < Plugin.Train.Handles.Brake.MaximumDriverNotch)
+					{
+						data.Handles.BrakeNotch++;
+					}
+					else
+					{
+						// this actually does nothing, but satisfies the plugin
+						data.Handles.PowerNotch++;
+					}
+				}
 				data.Response = AIResponse.Short;
 				nextPluginAction = TrainManagerBase.currentHost.InGameTime + 20.0;
 				return;

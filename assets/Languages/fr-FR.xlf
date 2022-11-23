@@ -67,6 +67,10 @@
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>Une nouvelle version [version] ([date]) est téléchargeable depuis le Site Web officiel.</target>
 					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+						<target>The most recent nightly build from [date] is available for download.</target>
+					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
 						<target>Fermer</target>
@@ -2369,6 +2373,14 @@
 					<trans-unit id="device_constspeed">
 						<source>Activates or deactivates the constant speed device</source>
 						<target>Active/désactive le dispositif de régulation de vitesse</target>
+					</trans-unit>
+					<trans-unit id="play_micsounds">
+						<source>Activates or deactivates the system microphone soundsource</source>
+						<target>Activates or deactivates the system microphone soundsource</target>
+					</trans-unit>
+					<trans-unit id="sanders">
+						<source>Activates or deactivates the sanders</source>
+						<target>Activates or deactivates the sanders</target>
 					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
