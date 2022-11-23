@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Security;
 using System.Threading;
 using System.Windows.Forms;
 using Path = OpenBveApi.Path;
@@ -350,6 +352,15 @@ namespace CarXmlConvertor
 		{
 			TabbedList newLines = new TabbedList();
 			newLines.Add("<Train>");
+			try
+			{
+				FileVersionInfo programVersion = FileVersionInfo.GetVersionInfo("OpenBve.exe");
+				newLines.Add("<ConvertorVersion>" + programVersion.FileVersion + "</ConvertorVersion>");
+			}
+			catch
+			{
+				// Ignore- Most likely the convertor has been copied elsewhere
+			}
 			newLines.Add("<DriverCar>" + ConvertTrainDat.DriverCar + "</DriverCar>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
 			{
@@ -392,8 +403,8 @@ namespace CarXmlConvertor
 			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
 			if (File.Exists(trainTxt))
 			{
-				string desc = File.ReadAllText(trainTxt);
-				newLines.Add("<Description>" + desc + "</Description>");
+				string desc = File.ReadAllText(trainTxt, OpenBveApi.TextEncoding.GetSystemEncodingFromFile(trainTxt));
+				newLines.Add("<Description>" + SecurityElement.Escape(desc) + "</Description>");
 			}
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");
