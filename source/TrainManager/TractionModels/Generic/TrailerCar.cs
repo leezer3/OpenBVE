@@ -13,24 +13,9 @@ namespace TrainManager.TractionModels.BVE
 
 		public override void Update(double TimeElapsed, out double Speed)
 		{
-			double PowerRollingCouplerAcceleration;
-			// rolling on an incline
-			{
-				double a = Car.FrontAxle.Follower.WorldDirection.Y;
-				double b = Car.RearAxle.Follower.WorldDirection.Y;
-				PowerRollingCouplerAcceleration = -0.5 * (a + b) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
-			}
 			// friction
-			double FrictionBrakeAcceleration;
-			{
-				double v = Math.Abs(Car.CurrentSpeed);
-				double t = Car.Index == 0 & Car.CurrentSpeed >= 0.0 || Car.Index == Car.baseTrain.NumberOfCars - 1 & Car.CurrentSpeed <= 0.0 ? Car.Specs.ExposedFrontalArea : Car.Specs.UnexposedFrontalArea;
-				double a = Car.FrontAxle.GetResistance(v, t, TrainManagerBase.CurrentRoute.Atmosphere.GetAirDensity(Car.FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-				double b = Car.RearAxle.GetResistance(v, t, TrainManagerBase.CurrentRoute.Atmosphere.GetAirDensity(Car.FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-				FrictionBrakeAcceleration = 0.5 * (a + b);
-			}
-			// power
-			double wheelspin = 0.0;
+			double adjustedFrictionBrakeAcceleration = FrictionBrakeAcceleration;
+
 			double wheelSlipAccelerationBrakeFront = 0.0;
 			double wheelSlipAccelerationBrakeRear = 0.0;
 			if (!Car.Derailed)
@@ -43,18 +28,16 @@ namespace TrainManager.TractionModels.BVE
 			Car.RearAxle.CurrentWheelSlip = false;
 
 			// brake
-			bool wheellock = wheelspin == 0.0 & Car.Derailed;
-			if (!Car.Derailed & wheelspin == 0.0)
+			bool wheellock = false;
+			if (!Car.Derailed)
 			{
-				double a;
 				// brake
-				a = Car.TractionModel.DecelerationDueToBrake;
+				double a = Car.TractionModel.DecelerationDueToBrake;
 				if (Car.CurrentSpeed >= -0.01 & Car.CurrentSpeed <= 0.01)
 				{
 					double rf = Car.FrontAxle.Follower.WorldDirection.Y;
 					double rr = Car.RearAxle.Follower.WorldDirection.Y;
-					double ra = Math.Abs(0.5 * (rf + rr) *
-					                     TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					double ra = Math.Abs(0.5 * (rf + rr) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 					if (a > ra) a = ra;
 				}
 
@@ -65,7 +48,7 @@ namespace TrainManager.TractionModels.BVE
 				}
 				else
 				{
-					FrictionBrakeAcceleration += 0.5 * a * factor;
+					adjustedFrictionBrakeAcceleration += 0.5 * a * factor;
 				}
 
 				if (a >= wheelSlipAccelerationBrakeRear)
@@ -74,13 +57,12 @@ namespace TrainManager.TractionModels.BVE
 				}
 				else
 				{
-					FrictionBrakeAcceleration += 0.5 * a * factor;
+					adjustedFrictionBrakeAcceleration += 0.5 * a * factor;
 				}
 			}
 			else if (Car.Derailed)
 			{
-				FrictionBrakeAcceleration += TrainBase.CoefficientOfGroundFriction *
-				                             TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+				adjustedFrictionBrakeAcceleration += TrainBase.CoefficientOfGroundFriction * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			}
 
 			MotorAcceleration = 0.0;
@@ -88,23 +70,14 @@ namespace TrainManager.TractionModels.BVE
 			
 			// perceived speed
 			{
-				double target;
+				double target = Car.CurrentSpeed;
 				if (wheellock)
 				{
 					target = 0.0;
 				}
-				else if (wheelspin == 0.0)
-				{
-					target = Car.CurrentSpeed;
-				}
-				else
-				{
-					target = Car.CurrentSpeed + wheelspin / 2500.0;
-				}
 
 				double diff = target - Car.Specs.PerceivedSpeed;
-				double rate = (diff < 0.0 ? 5.0 : 1.0) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity *
-				              TimeElapsed;
+				double rate = (diff < 0.0 ? 5.0 : 1.0) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity * TimeElapsed;
 				rate *= 1.0 - 0.7 / (diff * diff + 1.0);
 				double factor = rate * rate;
 				factor = 1.0 - factor / (factor + 1000.0);
@@ -122,7 +95,7 @@ namespace TrainManager.TractionModels.BVE
 			{
 				int d = Math.Sign(Car.CurrentSpeed);
 				double a = PowerRollingCouplerAcceleration;
-				double b = FrictionBrakeAcceleration;
+				double b = adjustedFrictionBrakeAcceleration;
 				if (Math.Abs(a) < b)
 				{
 					if (Math.Sign(a) == d)
