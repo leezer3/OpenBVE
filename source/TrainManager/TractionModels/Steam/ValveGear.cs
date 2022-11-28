@@ -40,9 +40,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The connecting rod</summary>
 		internal ValveGearRod ConnectingRod;
 		/// <summary>The left crank rod</summary>
-		internal ValveGearRod LeftCrankRod;
-		/// <summary>The right crank rod</summary>
-		internal ValveGearRod RightCrankRod;
+		internal ValveGearRod[] CrankRods;
 		/// <summary>The location of the left valve gear pivot</summary>
 		public Vector2 LeftPivotLocation;
 		/// <summary>The location of the right valve gear pivot</summary>
@@ -51,9 +49,12 @@ namespace TrainManager.TractionModels.Steam
 		public ValveGear(SteamEngine engine)
 		{
 			// FIXME: Values from 81xx as temp to port...
-			LeftCrankRod = new ValveGearRod(0.35, 1.28);
-			RightCrankRod = new ValveGearRod(0.35, 1.28);
-			ConnectingRod = new ValveGearRod(0.35, 1.28);
+			CrankRods = new ValveGearRod[]
+			{
+				new ValveGearRod(0.35, 1.28, 0),
+				new ValveGearRod(0.35, 1.28, 90)
+			};
+			ConnectingRod = new ValveGearRod(0.35, 1.28, 0);
 			Engine = engine;
 			crankCircumference = ConnectingRod.Radius * 2 * Math.PI;
 		}
@@ -89,16 +90,11 @@ namespace TrainManager.TractionModels.Steam
 				LeftPivotLocation.Y =  ConnectingRod.Radius * Math.Cos(halfCircleDegrees * turnedDegrees);
 				RightPivotLocation.X = -ConnectingRod.Radius * Math.Sin(halfCircleDegrees * (turnedDegrees + 90));
 				RightPivotLocation.Y =  ConnectingRod.Radius * Math.Cos(halfCircleDegrees * (turnedDegrees + 90));
-				if (LeftCrankRod.Length > 0)
-				{
-					LeftCrankRod.Position = LeftCrankRod.Radius * Math.Cos(halfCircleDegrees * (turnedDegrees + 90)) + Math.Sqrt(Math.Pow(LeftCrankRod.Length, 2) - Math.Pow(LeftCrankRod.Radius, 2) * Math.Pow(Math.Sin(halfCircleDegrees * (turnedDegrees + 90)), 2));
-					LeftCrankRod.Angle = Math.Asin(LeftCrankRod.Radius * Math.Sin(halfCircleDegrees * (turnedDegrees + 90)) / LeftCrankRod.Length);
-				}
-				if (RightCrankRod.Length > 0)
-				{
-					RightCrankRod.Position = LeftCrankRod.Radius * Math.Cos(halfCircleDegrees * (turnedDegrees + 180)) + Math.Sqrt(Math.Pow(LeftCrankRod.Length, 2) - Math.Pow(LeftCrankRod.Radius, 2) * Math.Pow(Math.Sin(halfCircleDegrees * (turnedDegrees + 180)), 2));
-					RightCrankRod.Angle = Math.Asin(LeftCrankRod.Radius * Math.Sin(halfCircleDegrees * (turnedDegrees + 180)) / LeftCrankRod.Length);
-				}
+			}
+
+			for (int i = 0; i < CrankRods.Length; i++)
+			{
+				CrankRods[i].Update(turnedDegrees);
 			}
 		}
 	}

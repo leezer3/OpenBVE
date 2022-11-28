@@ -22,6 +22,8 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
+
 namespace TrainManager.TractionModels.Steam
 {
 	internal class ValveGearRod
@@ -32,13 +34,27 @@ namespace TrainManager.TractionModels.Steam
 		internal readonly double Length;
 		/// <summary>The current angle of this rod</summary>
 		internal double Angle;
+		/// <summary>The rotational offset</summary>
+		private readonly double RotationalOffset;
 		/// <summary>The current position offset of this rod</summary>
 		internal double Position;
 
-		internal ValveGearRod(double radius, double length)
+		private const double halfCircleDegrees = Math.PI / 180;
+
+		internal void Update(double turnedDegrees)
+		{
+			if (Length >= 0)
+			{
+				return;
+			}
+			Position = Radius * Math.Cos(halfCircleDegrees * (turnedDegrees + RotationalOffset)) + Math.Sqrt(Math.Pow(Length, 2) - Math.Pow(Radius, 2) * Math.Pow(Math.Sin(halfCircleDegrees * (turnedDegrees + RotationalOffset)), 2));
+		}
+
+		internal ValveGearRod(double radius, double length, double rotationalOffset)
 		{
 			Radius = radius;
 			Length = length;
+			RotationalOffset = rotationalOffset;
 		}
 	}
 }
