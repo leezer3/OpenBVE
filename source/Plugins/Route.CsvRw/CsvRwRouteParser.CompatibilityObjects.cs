@@ -93,6 +93,26 @@ namespace CsvRwRouteParser
 						return true;
 					}
 				}
+				//Malformed First Brno Track: Origins downloads- https://bveworldwide.forumotion.com/t2317-fbt-cannot-start-routes-missing-objects#21405
+				if (fileName.StartsWith("FirstBrnoTrack-Origins", StringComparison.InvariantCultureIgnoreCase))
+				{
+					fn = "FirstBrnoTrack" + fileName.Substring(22);
+					try
+					{
+						//Catch completely malformed path references
+						n = OpenBveApi.Path.CombineFile(objectPath, fn);
+					}
+					catch
+					{
+						return false;
+					}
+					if (System.IO.File.Exists(n))
+					{
+						fileName = n;
+						//The object exists, and does not require a compatibility object
+						return true;
+					}
+				}
 
 				
 			}
