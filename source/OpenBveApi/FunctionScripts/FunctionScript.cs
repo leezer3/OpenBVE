@@ -743,23 +743,23 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.ValveGearWheelPosition;
 							n++; s++; if (s >= m) m = s; break;
-						case "valvegearleftpivotx":
-							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.ValveGearLeftPivotX;
-							n++; s++; if (s >= m) m = s; break;
-						case "valvegearleftpivoty":
-							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.ValveGearLeftPivotY;
-							n++; s++; if (s >= m) m = s; break;
-						case "valvegearrightpivotx":
-							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.ValveGearRightPivotX;
-							n++; s++; if (s >= m) m = s; break;
-						case "valvegearrightpivoty":
-							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.ValveGearRightPivotY;
-							n++; s++; if (s >= m) m = s; break;
-						// default
+						case "valvegearpivotxindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							InstructionSet[n] = Instructions.ValveGearPivotXIndex;
+							n++; break;
+						case "valvegearpivotyindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							InstructionSet[n] = Instructions.ValveGearPivotYIndex;
+							n++; break;
+						case "valvegearcrankangleindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							InstructionSet[n] = Instructions.ValveGearCrankAngleIndex;
+							n++; break;
+						case "valvegearcrankpositionindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							InstructionSet[n] = Instructions.ValveGearCrankPositionIndex;
+							n++; break;
+							// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);
 					}

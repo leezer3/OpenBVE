@@ -37,30 +37,29 @@ namespace TrainManager.TractionModels.Steam
 		private readonly double crankCircumference;
 		/// <summary>The current rotational position of the wheel</summary>
 		public double WheelPosition;
-		/// <summary>The connecting rod</summary>
-		internal ValveGearRod ConnectingRod;
-		/// <summary>The left crank rod</summary>
-		internal ValveGearRod[] CrankRods;
-		/// <summary>The location of the left valve gear pivot</summary>
-		public Vector2 LeftPivotLocation;
-		/// <summary>The location of the right valve gear pivot</summary>
-		public Vector2 RightPivotLocation;
+		/// <summary>The crank rods</summary>
+		public ValveGearRod[] CrankRods;
+		/// <summary>The pivots</summary>
+		public ValveGearPivot[] Pivots;
 
 		public ValveGear(SteamEngine engine)
 		{
 			// FIXME: Values from 81xx as temp to port...
-			CrankRods = new ValveGearRod[]
+			CrankRods = new[]
 			{
 				new ValveGearRod(0.35, 1.28, 0),
 				new ValveGearRod(0.35, 1.28, 90)
 			};
-			ConnectingRod = new ValveGearRod(0.35, 1.28, 0);
+			Pivots = new[]
+			{
+				new ValveGearPivot(0.35, 0),
+				new ValveGearPivot(0.35, 90)
+			};
 			Engine = engine;
-			crankCircumference = ConnectingRod.Radius * 2 * Math.PI;
+			crankCircumference = 0.35 * 2 * Math.PI;
 		}
 
 		private double previousLocation;
-		private const double halfCircleDegrees = Math.PI / 180;
 
 		internal void Update()
 		{
@@ -84,17 +83,14 @@ namespace TrainManager.TractionModels.Steam
 
 			double turnedDegrees = 3.6 * WheelPosition;
 
-			if (ConnectingRod.Radius > 0)
-			{
-				LeftPivotLocation.X = -ConnectingRod.Radius * Math.Sin(halfCircleDegrees * turnedDegrees);
-				LeftPivotLocation.Y =  ConnectingRod.Radius * Math.Cos(halfCircleDegrees * turnedDegrees);
-				RightPivotLocation.X = -ConnectingRod.Radius * Math.Sin(halfCircleDegrees * (turnedDegrees + 90));
-				RightPivotLocation.Y =  ConnectingRod.Radius * Math.Cos(halfCircleDegrees * (turnedDegrees + 90));
-			}
-
 			for (int i = 0; i < CrankRods.Length; i++)
 			{
 				CrankRods[i].Update(turnedDegrees);
+			}
+
+			for (int i = 0; i < Pivots.Length; i++)
+			{
+				Pivots[i].Update(turnedDegrees);
 			}
 		}
 	}

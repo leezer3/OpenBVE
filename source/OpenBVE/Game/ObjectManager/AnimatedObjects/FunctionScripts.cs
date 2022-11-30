@@ -1680,38 +1680,54 @@ namespace OpenBve {
 						}
 						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.WheelPosition * -0.0628319;
 						s++; break;
-					case Instructions.ValveGearLeftPivotX:
+					case Instructions.ValveGearPivotXIndex:
 						if (steamEngine == null)
 						{
-							Function.Stack[s] = 0.0;
-							s++; break;
+							Function.Stack[s - 1] = 0.0;
+							break;
 						}
-						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.LeftPivotLocation.X;
-						s++; break;
-					case Instructions.ValveGearLeftPivotY:
+
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.Pivots[j].Position.X;
+						}
+						break;
+					case Instructions.ValveGearPivotYIndex:
 						if (steamEngine == null)
 						{
-							Function.Stack[s] = 0.0;
-							s++; break;
+							Function.Stack[s - 1] = 0.0;
+							break;
 						}
-						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.LeftPivotLocation.Y;
-						s++; break;
-					case Instructions.ValveGearRightPivotX:
+
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.Pivots[j].Position.Y;
+						}
+						break;
+					case Instructions.ValveGearCrankAngleIndex:
 						if (steamEngine == null)
 						{
-							Function.Stack[s] = 0.0;
-							s++; break;
+							Function.Stack[s - 1] = 0.0;
+							break;
 						}
-						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.RightPivotLocation.X;
-						s++; break;
-					case Instructions.ValveGearRightPivotY:
+						
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[j].Angle;
+						}
+						break;
+					case Instructions.ValveGearCrankPositionIndex:
 						if (steamEngine == null)
 						{
-							Function.Stack[s] = 0.0;
-							s++; break;
+							Function.Stack[s - 1] = 0.0;
+							break;
 						}
-						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.RightPivotLocation.Y;
-						s++; break;
+					
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[j].Position;
+						}
+							break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

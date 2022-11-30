@@ -23,39 +23,35 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using OpenBveApi.Math;
 
 namespace TrainManager.TractionModels.Steam
 {
-	public class ValveGearRod
+	public class ValveGearPivot
 	{
-		/// <summary>The radius of this rod's rotation</summary>
-		internal readonly double Radius;
-		/// <summary>The length of this rod</summary>
-		internal readonly double Length;
-		/// <summary>The current angle of this rod</summary>
-		public double Angle;
+		/// <summary>The position on the wheel of this pivot</summary>
+		public Vector2 Position;
 		/// <summary>The rotational offset</summary>
 		private readonly double RotationalOffset;
-		/// <summary>The current position offset of this rod</summary>
-		public double Position;
+		/// <summary>The radius of the pivot point</summary>
+		internal readonly double Radius;
 
 		private const double halfCircleDegrees = Math.PI / 180;
 
+		internal ValveGearPivot(double radius, double rotationalOffset)
+		{
+			Radius = radius;
+			RotationalOffset = rotationalOffset;
+		}
+
 		internal void Update(double turnedDegrees)
 		{
-			if (Length <= 0 || Radius <= 0)
+			if (Radius <= 0)
 			{
 				return;
 			}
-			Position = Radius * Math.Cos(halfCircleDegrees * (turnedDegrees + RotationalOffset)) + Math.Sqrt(Math.Pow(Length, 2) - Math.Pow(Radius, 2) * Math.Pow(Math.Sin(halfCircleDegrees * (turnedDegrees + RotationalOffset)), 2));
-			Angle = Math.Asin(Radius * Math.Sin(halfCircleDegrees * (turnedDegrees + RotationalOffset)) / Length) / 2.0;
-		}
-
-		internal ValveGearRod(double radius, double length, double rotationalOffset)
-		{
-			Radius = radius;
-			Length = length;
-			RotationalOffset = rotationalOffset;
+			Position.X = -Radius * Math.Sin(halfCircleDegrees * (turnedDegrees + RotationalOffset));
+			Position.Y =  Radius * Math.Cos(halfCircleDegrees * (turnedDegrees + RotationalOffset));
 		}
 	}
 }

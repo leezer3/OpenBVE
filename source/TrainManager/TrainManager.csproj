@@ -143,6 +143,7 @@
     <Compile Include="TractionModels\Steam\Tender.cs" />
     <Compile Include="TractionModels\Steam\ValveGear.cs" />
     <Compile Include="TractionModels\Steam\ValveGear.Rod.cs" />
+    <Compile Include="TractionModels\Steam\ValveGearPivot.cs" />
     <Compile Include="TrainManager.cs" />
     <Compile Include="Train\BrakeSystem.cs" />
     <Compile Include="Train\CommandEntry.cs" />
