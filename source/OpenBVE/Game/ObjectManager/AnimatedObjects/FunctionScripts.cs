@@ -13,8 +13,9 @@ using TrainManager.Trains;
 namespace OpenBve {
 	internal static class FunctionScripts {
 		// execute function script
-		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
-			int s = 0, c = 0;
+		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		{
+			int s = 0, c = 0, ps;
 			SteamEngine steamEngine = null;
 			if (Train != null && CarIndex < Train.Cars.Length)
 			{
@@ -1681,53 +1682,40 @@ namespace OpenBve {
 						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.WheelPosition * -0.0628319;
 						s++; break;
 					case Instructions.ValveGearPivotXIndex:
-						if (steamEngine == null)
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.CrankRods.Length)
 						{
 							Function.Stack[s - 1] = 0.0;
 							break;
 						}
-
-						{
-							int j = (int)Math.Round(Function.Stack[s - 1]);
-							Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.Pivots[j].Position.X;
-						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.Pivots[ps].Position.X;
 						break;
 					case Instructions.ValveGearPivotYIndex:
-						if (steamEngine == null)
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.Pivots.Length)
 						{
 							Function.Stack[s - 1] = 0.0;
 							break;
 						}
-
-						{
-							int j = (int)Math.Round(Function.Stack[s - 1]);
-							Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.Pivots[j].Position.Y;
-						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.Pivots[ps].Position.Y;
 						break;
 					case Instructions.ValveGearCrankAngleIndex:
-						if (steamEngine == null)
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.CrankRods.Length)
 						{
 							Function.Stack[s - 1] = 0.0;
 							break;
 						}
-						
-						{
-							int j = (int)Math.Round(Function.Stack[s - 1]);
-							Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[j].Angle;
-						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[ps].Angle;
 						break;
 					case Instructions.ValveGearCrankPositionIndex:
-						if (steamEngine == null)
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.CrankRods.Length)
 						{
 							Function.Stack[s - 1] = 0.0;
 							break;
 						}
-					
-						{
-							int j = (int)Math.Round(Function.Stack[s - 1]);
-							Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[j].Position;
-						}
-							break;
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[ps].Position; break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
