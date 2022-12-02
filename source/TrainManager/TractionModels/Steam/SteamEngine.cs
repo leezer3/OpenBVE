@@ -47,6 +47,8 @@ namespace TrainManager.TractionModels.Steam
 		public readonly Tender Tender;
 		/// <summary>The automatic fireman</summary>
 		public readonly AutomaticFireman Fireman;
+		/// <summary>Whether the info overlay is shown</summary>
+		public bool ShowOverlay;
 		/// <summary>Gets the current acceleration output</summary>
 		private double PowerOutput
 		{
@@ -447,6 +449,9 @@ namespace TrainManager.TractionModels.Steam
 					break;
 				case Translations.Command.AutomaticFireman:
 					Fireman.Active = !Fireman.Active;
+					break;
+				case Translations.Command.TractionInfo:
+					ShowOverlay = !ShowOverlay;
 					break;
 			}
 		}

@@ -70,7 +70,8 @@ namespace TrainManager.TractionModels.Steam
 		public CarSound BlowoffLoopSound;
 		/// <summary>The blowoff end sound</summary>
 		public CarSound BlowoffEndSound;
-		/// <summary>The rate water is converted to steam</summary>
+		/// <summary>The rate at water is converted to steam</summary>
+		/// <remarks>Units per millisecond</remarks>
 		public double SteamGenerationRate => BaseSteamGenerationRate * Firebox.ConversionRate;
 		/// <summary>The bypass valve</summary>
 		public BypassValve BypassValve;

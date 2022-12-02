@@ -313,7 +313,9 @@ namespace OpenBveApi.Interface {
 			/// <summary>Shovels coal onto the fire</summary>
 			ShovelFire,
 			/// <summary>Enables or disables the automatic fireman</summary>
-			AutomaticFireman
+			AutomaticFireman,
+			/// <summary>Shows or hides the traction specific info display</summary>
+			TractionInfo,
 		}
 
 		/// <summary>Defines the possible command types</summary>

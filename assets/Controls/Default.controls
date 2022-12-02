@@ -1,7 +1,7 @@
 ﻿; Current control configuration
 ; =============================
 ; This file was automatically generated. Please modify only if you know what you're doing.
-; Default keyconfig version 4- 10.10.2022
+; Default keyconfig version 5- 02.12.2022
 
 POWER_INCREASE, keyboard, Z, 0
 POWER_DECREASE, keyboard, A, 0
@@ -26,6 +26,8 @@ HEADLIGHTS, keyboard, H, 0
 LIVE_STEAM_INJECTOR, keyboard, I, 0
 EXHAUST_STEAM_INJECTOR, keyboard, O, 0
 BLOWERS, keyboard, K, 0
+STEAM_INFO, keyboard, I, 2
+AUTOMATIC_FIREMAN, keyboard, F, 2
 GEAR_UP, keyboard, G, 0
 GEAR_DOWN, keyboard, G, 2
 RAISE_PANTOGRAPH, keyboard, P, 0
