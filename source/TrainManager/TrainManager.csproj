@@ -138,6 +138,7 @@
     <Compile Include="TractionModels\Steam\ExhaustSteamInjector.cs" />
     <Compile Include="TractionModels\Steam\Firebox.cs" />
     <Compile Include="TractionModels\Steam\LiveSteamInjector.cs" />
+    <Compile Include="TractionModels\Steam\Overlay.cs" />
     <Compile Include="TractionModels\Steam\SteamEngine.cs" />
     <Compile Include="TractionModels\BVE\MotorCar.cs" />
     <Compile Include="TractionModels\Steam\Tender.cs" />

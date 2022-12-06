@@ -33,7 +33,7 @@ using TrainManager.Trains;
 namespace TrainManager.TractionModels.Steam
 {
 	/// <summary>The traction model for a simplistic steam engine</summary>
-	public class SteamEngine : AbstractTractionModel
+	public partial class SteamEngine : AbstractTractionModel
 	{
 		/// <summary>The jerk applied when the acceleration increases</summary>
 		private readonly double JerkPowerUp;

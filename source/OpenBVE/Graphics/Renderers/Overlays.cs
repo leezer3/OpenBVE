@@ -145,7 +145,16 @@ namespace OpenBve.Graphics.Renderers
 				RenderBrakeSystemDebug();
 			}
 
-			RenderSteamEngineOverlay(); //TODO: Switch off if not required / selected by user
+			double overlayOffset = 0;
+			// traction model overlays
+			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+			{
+				/*
+				 * FIXME: Whilst this handles multiple traction types with overlays
+				 *        it does not check the screen bounds, or allow for scrolling
+				 */
+				TrainManager.PlayerTrain.Cars[i].TractionModel.RenderOverlay(ref overlayOffset);
+			}
 
 			switch (Program.Renderer.CurrentInterface)
 			{
