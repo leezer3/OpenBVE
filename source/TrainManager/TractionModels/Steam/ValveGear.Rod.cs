@@ -38,6 +38,10 @@ namespace TrainManager.TractionModels.Steam
 		private readonly double RotationalOffset;
 		/// <summary>The current position offset of this rod</summary>
 		public double Position;
+		/// <summary>Whether the connected piston is currently emitting steam</summary>
+		public bool CylinderSteam;
+
+		private readonly SteamEngine Engine;
 
 		private const double halfCircleDegrees = Math.PI / 180;
 
@@ -47,12 +51,16 @@ namespace TrainManager.TractionModels.Steam
 			{
 				return;
 			}
-			Position = Radius * Math.Cos(halfCircleDegrees * (turnedDegrees + RotationalOffset)) + Math.Sqrt(Math.Pow(Length, 2) - Math.Pow(Radius, 2) * Math.Pow(Math.Sin(halfCircleDegrees * (turnedDegrees + RotationalOffset)), 2));
-			Angle = Math.Asin(Radius * Math.Sin(halfCircleDegrees * (turnedDegrees + RotationalOffset)) / Length) / 2.0;
+
+			double finalDegrees = turnedDegrees + RotationalOffset;
+			Position = Radius * Math.Cos(halfCircleDegrees * finalDegrees) + Math.Sqrt(Math.Pow(Length, 2) - Math.Pow(Radius, 2) * Math.Pow(Math.Sin(halfCircleDegrees * finalDegrees), 2));
+			Angle = Math.Asin(Radius * Math.Sin(halfCircleDegrees * finalDegrees) / Length) / 2.0;
+			CylinderSteam = (finalDegrees >= 190 && finalDegrees <= 350) || Engine.CylinderChest.CylinderCocks.Open;
 		}
 
-		internal ValveGearRod(double radius, double length, double rotationalOffset)
+		internal ValveGearRod(SteamEngine engine, double radius, double length, double rotationalOffset)
 		{
+			Engine = engine;
 			Radius = radius;
 			Length = length;
 			RotationalOffset = rotationalOffset;

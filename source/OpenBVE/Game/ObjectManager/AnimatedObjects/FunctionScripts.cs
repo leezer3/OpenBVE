@@ -1715,7 +1715,17 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 							break;
 						}
-						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[ps].Position; break;
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[ps].Position; 
+						break;
+					case Instructions.ValveGearCylinderSteamIndex:
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.CrankRods.Length)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[ps].CylinderSteam ? 1 : 0; 
+						break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

@@ -47,8 +47,8 @@ namespace TrainManager.TractionModels.Steam
 			// FIXME: Values from 81xx as temp to port...
 			CrankRods = new[]
 			{
-				new ValveGearRod(0.35, 1.28, 0),
-				new ValveGearRod(0.35, 1.28, 90)
+				new ValveGearRod(engine, 0.35, 1.28, 0),
+				new ValveGearRod(engine, 0.35, 1.28, 90)
 			};
 			Pivots = new[]
 			{

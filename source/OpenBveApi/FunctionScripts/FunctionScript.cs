@@ -759,6 +759,10 @@ namespace OpenBveApi.FunctionScripting
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							InstructionSet[n] = Instructions.ValveGearCrankPositionIndex;
 							n++; break;
+						case "valvegearcylindersteamindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							InstructionSet[n] = Instructions.ValveGearCylinderSteamIndex;
+							n++; break;
 							// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);

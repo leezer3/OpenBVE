@@ -300,6 +300,7 @@ namespace OpenBveApi.FunctionScripting
 				case "valvegearpivoty":
 				case "valvegearcrankangle":
 				case "valvegearcrankposition":
+				case "valvegearcylindersteam":
 				// station index functions
 				case "distancestation":
 				case "stopsstation":
