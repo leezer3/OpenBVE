@@ -22,10 +22,10 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace TrainManager.TractionModels.Steam
+namespace TrainManager.Cargo
 {
 	/// <summary>A tender carrying water, coal etc.</summary>
-	public class Tender
+	public class Tender : CargoBase
 	{
 		/// <summary>The current fuel level </summary>
 		public double FuelLevel;
@@ -35,6 +35,8 @@ namespace TrainManager.TractionModels.Steam
 		public double WaterLevel;
 		/// <summary>The max water level</summary>
 		public readonly double MaxWaterLevel;
+		// 1L of water weighs roughly 1kg, so this works OK-ish
+		public override double Mass => FuelLevel + WaterLevel;
 
 		public Tender(double fuelLevel, double maxFuelLevel, double waterLevel, double maxWaterLevel)
 		{

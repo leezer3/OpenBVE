@@ -26,6 +26,7 @@ using System;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using TrainManager.Car;
+using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
@@ -43,7 +44,7 @@ namespace TrainManager.TractionModels.Steam
 		public readonly Boiler Boiler;
 		/// <summary>The cylinder chest</summary>
 		public readonly CylinderChest CylinderChest;
-		/// <summary>The tender</summary>
+		/// <summary>Holds a reference to the tender</summary>
 		public readonly Tender Tender;
 		/// <summary>The automatic fireman</summary>
 		public readonly AutomaticFireman Fireman;
@@ -93,8 +94,12 @@ namespace TrainManager.TractionModels.Steam
 			 * Tender:
 			 *		Coal capacity of 40T
 			 *		Water capacity of 88,000L (~19,200 gallons)
+			 *
+			 * FIXME: Allow passing in of the car index for the tender
+			 *        Multiple tender cars???
 			 */
 			Tender = new Tender(40000, 40000, 88000, 88000);
+			Car.Cargo = Tender;
 			Fireman = new AutomaticFireman(this);
 
 			JerkPowerUp = jerkPowerUp;

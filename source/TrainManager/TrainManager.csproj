@@ -54,6 +54,7 @@
     <Compile Include="Cargo\NoLoad.cs" />
     <Compile Include="Cargo\Passengers.cs" />
     <Compile Include="Cargo\RobustFreight.cs" />
+    <Compile Include="Cargo\Tender.cs" />
     <Compile Include="Car\Bogie\Bogie.cs" />
     <Compile Include="Car\CarBase.cs" />
     <Compile Include="Car\CarSounds.cs" />
@@ -141,7 +142,6 @@
     <Compile Include="TractionModels\Steam\Overlay.cs" />
     <Compile Include="TractionModels\Steam\SteamEngine.cs" />
     <Compile Include="TractionModels\BVE\MotorCar.cs" />
-    <Compile Include="TractionModels\Steam\Tender.cs" />
     <Compile Include="TractionModels\Steam\ValveGear.cs" />
     <Compile Include="TractionModels\Steam\ValveGear.Rod.cs" />
     <Compile Include="TractionModels\Steam\ValveGearPivot.cs" />

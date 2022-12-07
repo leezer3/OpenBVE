@@ -28,6 +28,9 @@ namespace TrainManager.TractionModels
 		public double MaximumAcceleration;
 		/// <summary>The motor sounds</summary>
 		public AbstractMotorSound Sounds;
+		/// <summary>The current mass of the traction model</summary>
+		/// <remarks>May be modified by fuel consumption etc.</remarks>
+		public virtual double Mass => 0;
 
 		/// <summary>Creates a new abstract traction model</summary>
 		protected AbstractTractionModel(CarBase car)
