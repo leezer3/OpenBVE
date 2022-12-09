@@ -41,7 +41,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The jerk applied when the acceleration decreases</summary>
 		private readonly double JerkPowerDown;
 		/// <summary>The boiler</summary>
-		public readonly Boiler Boiler;
+		public Boiler Boiler;
 		/// <summary>The cylinder chest</summary>
 		public readonly CylinderChest CylinderChest;
 		/// <summary>Holds a reference to the tender</summary>

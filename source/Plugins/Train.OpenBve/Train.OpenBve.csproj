@@ -57,6 +57,7 @@
     <Compile Include="Train\BVE\ExtensionsCfgParser.cs" />
     <Compile Include="Train\BVE\TrainDatParser.cs" />
     <Compile Include="Train\BVE\TrainDatparser.Formats.cs" />
+    <Compile Include="Train\XML\Traction\Steam.cs" />
     <Compile Include="Train\XML\TrainXmlParser.AccelerationNode.cs" />
     <Compile Include="Train\XML\TrainXmlParser.BrakeNode.cs" />
     <Compile Include="Train\XML\TrainXmlParser.CarNode.cs" />

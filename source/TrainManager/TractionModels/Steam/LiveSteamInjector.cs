@@ -32,7 +32,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>Holds a reference to the base engine</summary>
 		private readonly SteamEngine Engine;
 		/// <summary>The base injection rate</summary>
-		private readonly double BaseInjectionRate;
+		public double BaseInjectionRate;
 		/// <summary>The injection rate whilst active</summary>
 		public double InjectionRate
 		{

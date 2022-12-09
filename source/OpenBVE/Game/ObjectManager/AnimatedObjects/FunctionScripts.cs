@@ -1609,7 +1609,7 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 							break;
 						}
-						Function.Stack[s] = steamEngine.Boiler.BypassValve.Active ? 1 : 0;
+						Function.Stack[s] = steamEngine.CylinderChest.BypassValve.Active ? 1 : 0;
 						s++; break;
 					case Instructions.LiveSteamInjector:
 						if (steamEngine == null)

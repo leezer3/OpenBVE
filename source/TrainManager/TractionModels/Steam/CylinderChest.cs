@@ -40,6 +40,8 @@ namespace TrainManager.TractionModels.Steam
 		public CylinderCocks CylinderCocks;
 		/// <summary>The valve gear</summary>
 		public ValveGear ValveGear;
+		/// <summary>The bypass valve</summary>
+		public BypassValve BypassValve;
 
 		public CylinderChest(SteamEngine engine, double standingPressureLoss, double baseStrokePressure)
 		{
@@ -49,6 +51,7 @@ namespace TrainManager.TractionModels.Steam
 			// 5psi / s loss when the cylinder cocks are open
 			CylinderCocks = new CylinderCocks(Engine, 5);
 			ValveGear = new ValveGear(engine);
+			BypassValve = new BypassValve(engine, BypassValveType.None, 5.0);
 		}
 
 		public void Update(double timeElapsed, double distanceTravelled)
@@ -58,6 +61,10 @@ namespace TrainManager.TractionModels.Steam
 			Engine.Boiler.SteamPressure -= numberOfStrokes * Engine.Car.baseTrain.Handles.Reverser.Actual * PressureUse;
 			CylinderCocks.Update(timeElapsed);
 			ValveGear.Update();
+			if (BypassValve.Type != BypassValveType.None)
+			{
+				BypassValve.Update(timeElapsed);
+			}
 		}
 	}
 }

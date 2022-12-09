@@ -50,15 +50,14 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The shovel sound</summary>
 		public CarSound ShovelSound;
 
-		internal Firebox(SteamEngine engine, double maxArea, double maxTemperature, double conversionRate, double unitsPerShovel)
+		public Firebox(SteamEngine engine, double fireArea, double maxArea, double maxTemperature, double conversionRate, double unitsPerShovel)
 		{
 			Engine = engine;
 			MaxArea = maxArea;
 			MaxTemperature = maxTemperature;
 			MaxConversionRate = conversionRate;
 			UnitsPerShovel = unitsPerShovel;
-			// TODO: More generic starting paramaters
-			FireArea = MaxArea / 2;
+			FireArea = fireArea;
 			FireMass = MaxArea * 20;
 			Temperature = 1000;
 		}

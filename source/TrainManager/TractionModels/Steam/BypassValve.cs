@@ -76,10 +76,11 @@ namespace TrainManager.TractionModels
 		/// <summary>The amount of steam used</summary>
 		private readonly double SteamUse;
 
-		public BypassValve(SteamEngine engine, double steamUse)
+		public BypassValve(SteamEngine engine, BypassValveType type, double steamUse)
 		{
 			Engine = engine;
 			SteamUse = steamUse;
+			Type = type;
 		}
 
 		public void Update(double timeElapsed)

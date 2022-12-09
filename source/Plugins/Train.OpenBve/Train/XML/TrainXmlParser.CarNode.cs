@@ -159,8 +159,10 @@ namespace Train.OpenBve
 						}
 						break;
 					case "steamengine":
-						Train.Cars[Car].TractionModel = new SteamEngine(Train.Cars[Car], 10, 10);
-						Train.Cars[Car].FrontAxle.WheelRadius = 0.9; // nominal 6ft radius unless otherwise set
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							ParseSteamEngineNode(c, fileName, Car, ref Train);
+						}
 						break;
 					case "mass":
 						double m;
