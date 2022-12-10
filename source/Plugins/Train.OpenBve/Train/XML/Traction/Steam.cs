@@ -22,10 +22,13 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using TrainManager.TractionModels;
 using TrainManager.TractionModels.Steam;
 using TrainManager.Trains;
 
@@ -40,6 +43,12 @@ namespace Train.OpenBve
 			double waterLevel = 2000, maxWaterLevel = 3000, steamPressure = 200, maxSteamPressure = 240, blowoffPressure = 220, minWorkingPressure = 120, steamGenerationRate = 0.00152, liveSteamInjectionRate = 3.0, exhaustSteamInjectionRate = 3.0;
 			// firebox properties
 			double fireArea = 7, maxFireArea = 10, maxFireTemp = 1000, fireConversionRate = 0.1, shovelSize = 3;
+			// cylinder chest properties
+			double cylinderChestPressureLoss = 0.005, cylinderChestBasePressureUse = 0.02;
+			BypassValveType bypassValveType = BypassValveType.None;
+			// valve gear properties
+			List<ValveGearRod> valveGearRods = new List<ValveGearRod>();
+			List<ValveGearPivot> valveGearPivots = new List<ValveGearPivot>();
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				switch (c.Name.ToLowerInvariant())
@@ -163,18 +172,126 @@ namespace Train.OpenBve
 								}
 							}
 						}
-
+						break;
+					case "cylinderchest":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "standingpressureloss":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out cylinderChestPressureLoss) | cylinderChestPressureLoss <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid standing pressure loss defined for Steam Engine Cylinder Chest " + Car + " in XML file " + fileName);
+											cylinderChestPressureLoss = 0.005;
+										}
+										break;
+									case "basepressureuse":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out cylinderChestBasePressureUse) | cylinderChestBasePressureUse <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid base pressure use defined for Steam Engine Cylinder Chest " + Car + " in XML file " + fileName);
+											cylinderChestBasePressureUse = 0.005;
+										}
+										break;
+									case "sniftingvalve":
+									case "bypassvalve":
+										if (!Enum.TryParse(cc.InnerText, true, out bypassValveType))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid bypass (snifting) valve type use defined for Steam Engine Cylinder Chest " + Car + " in XML file " + fileName);
+										}
+										break;
+								}
+							}
+						}
+						break;
+					case "valvegear":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "crank":
+										if (cc.ChildNodes.OfType<XmlElement>().Any())
+										{
+											double radius = 0, length = 0, rotationalOffset = 0;
+											foreach (XmlNode ccc in c.ChildNodes)
+											{
+												switch (ccc.Name.ToLowerInvariant())
+												{
+													case "radius":
+														if (!NumberFormats.TryParseDoubleVb6(ccc.InnerText, out radius) | radius <= 0.0)
+														{
+															Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Radius for Valve Gear Crank " + valveGearRods.Count + " defined for Steam Engine " + Car + " in XML file " + fileName);
+														}
+														break;
+													case "length":
+														if (!NumberFormats.TryParseDoubleVb6(ccc.InnerText, out length) | length <= 0.0)
+														{
+															Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Length for Valve Gear Crank " + valveGearRods.Count + " defined for Steam Engine " + Car + " in XML file " + fileName);
+														}
+														break;
+													case "offset":
+														if (!NumberFormats.TryParseDoubleVb6(ccc.InnerText, out rotationalOffset))
+														{
+															Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Rotational Offset for Valve Gear Crank " + valveGearRods.Count + " defined for Steam Engine " + Car + " in XML file " + fileName);
+														}
+														break;
+												}
+											}
+											if (radius != 0 && length != 0)
+											{
+												valveGearRods.Add(new ValveGearRod(steamEngine, radius, length, rotationalOffset));
+											}
+										}
+										break;
+									case "pivot":
+										if (cc.ChildNodes.OfType<XmlElement>().Any())
+										{
+											double radius = 0, rotationalOffset = 0;
+											foreach (XmlNode ccc in c.ChildNodes)
+											{
+												switch (ccc.Name.ToLowerInvariant())
+												{
+													case "radius":
+														if (!NumberFormats.TryParseDoubleVb6(ccc.InnerText, out radius) | radius <= 0.0)
+														{
+															Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Radius for Valve Gear Crank " + valveGearRods.Count + " defined for Steam Engine " + Car + " in XML file " + fileName);
+														}
+														break;
+													case "offset":
+														if (!NumberFormats.TryParseDoubleVb6(ccc.InnerText, out rotationalOffset))
+														{
+															Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Rotational Offset for Valve Gear Crank " + valveGearRods.Count + " defined for Steam Engine " + Car + " in XML file " + fileName);
+														}
+														break;
+												}
+											}
+											if (radius != 0)
+											{
+												valveGearPivots.Add(new ValveGearPivot(radius, rotationalOffset));
+											}
+										}
+										break;
+								}
+							}
+						}
 						break;
 				}
 			}
 
 			// somewhat inelegant, but this gives us a better XML structure as we need all the properties defined
 			// FIXME: Should probably check the max against the current etc.
+			// IDEA: Is passing through constructed boiler, firebox injectors etc. better as that would allow readonly, whilst avoiding parameter bloat?
 			steamEngine.Boiler = new Boiler(steamEngine, waterLevel, maxWaterLevel, steamPressure, maxSteamPressure, blowoffPressure, minWorkingPressure, steamGenerationRate);
 			steamEngine.Boiler.LiveSteamInjector.BaseInjectionRate = liveSteamInjectionRate;
 			steamEngine.Boiler.ExhaustSteamInjector.BaseInjectionRate = exhaustSteamInjectionRate;
 			steamEngine.Boiler.Firebox = new Firebox(steamEngine, fireArea, maxFireArea, maxFireTemp, fireConversionRate, shovelSize);
-
+			steamEngine.CylinderChest = new CylinderChest(steamEngine, cylinderChestPressureLoss, cylinderChestBasePressureUse);
+			steamEngine.CylinderChest.BypassValve.Type = bypassValveType;
+			steamEngine.CylinderChest.ValveGear.CrankRods = valveGearRods.ToArray();
+			steamEngine.CylinderChest.ValveGear.Pivots = valveGearPivots.ToArray();
 			Train.Cars[Car].TractionModel = steamEngine;
 		}
 	}

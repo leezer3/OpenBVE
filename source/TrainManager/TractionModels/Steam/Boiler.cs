@@ -108,7 +108,6 @@ namespace TrainManager.TractionModels.Steam
 			 */
 			Blowers = new Blowers(engine, 2, 1);
 			BlowoffRate = 10.0;
-			BypassValve = new BypassValve(Engine, 5.0);
 		}
 
 		internal void Update(double timeElapsed)

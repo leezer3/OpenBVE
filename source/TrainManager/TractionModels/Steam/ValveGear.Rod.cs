@@ -58,7 +58,7 @@ namespace TrainManager.TractionModels.Steam
 			CylinderSteam = (finalDegrees >= 190 && finalDegrees <= 350) || Engine.CylinderChest.CylinderCocks.Open;
 		}
 
-		internal ValveGearRod(SteamEngine engine, double radius, double length, double rotationalOffset)
+		public ValveGearRod(SteamEngine engine, double radius, double length, double rotationalOffset)
 		{
 			Engine = engine;
 			Radius = radius;

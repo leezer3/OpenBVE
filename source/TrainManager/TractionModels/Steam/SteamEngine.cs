@@ -43,7 +43,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The boiler</summary>
 		public Boiler Boiler;
 		/// <summary>The cylinder chest</summary>
-		public readonly CylinderChest CylinderChest;
+		public CylinderChest CylinderChest;
 		/// <summary>Holds a reference to the tender</summary>
 		public readonly Tender Tender;
 		/// <summary>The automatic fireman</summary>

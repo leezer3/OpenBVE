@@ -38,7 +38,7 @@ namespace TrainManager.TractionModels.Steam
 
 		private const double halfCircleDegrees = Math.PI / 180;
 
-		internal ValveGearPivot(double radius, double rotationalOffset)
+		public ValveGearPivot(double radius, double rotationalOffset)
 		{
 			Radius = radius;
 			RotationalOffset = rotationalOffset;
