@@ -1056,7 +1056,7 @@ namespace LibRender2
 			lastModelMatrix = ModelMatrix;
 			lastModelViewMatrix = ModelViewMatrix;
 			sendToShader = true;
-			RenderFace(Shader, State, Face);
+			RenderFace(Shader, State, Face, false, true);
 		}
 
 		/// <summary>Draws a face using the specified shader</summary>
@@ -1064,9 +1064,10 @@ namespace LibRender2
 		/// <param name="State">The ObjectState to draw</param>
 		/// <param name="Face">The Face within the ObjectState</param>
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		/// <param name="screenSpace">Used when a forced matrix, for items which are in screen space not camera space</param>
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false, bool screenSpace = false)
 		{
-			if (State != lastObjectState || State.Prototype.Dynamic)
+			if ((State != lastObjectState || State.Prototype.Dynamic) && !screenSpace)
 			{
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
