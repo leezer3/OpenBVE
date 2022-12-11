@@ -313,6 +313,23 @@ namespace LibRender2
 					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
 					currentOptions.IsUseNewRenderer = false;
 					ForceLegacyOpenGL = true;
+					try
+					{
+						/*
+						 * Nasty little edge case with some Intel graphics- They create the shader OK
+						 * but it crashes on use, but remains active
+						 * Deactivate it, otherwise we get a grey screen
+						 */
+						if (DefaultShader != null)
+						{
+							DefaultShader.Deactivate();
+						}
+					}
+					catch 
+					{ 
+						// ignored
+					}
+					
 				}
 
 				if (DefaultShader == null)
@@ -323,7 +340,6 @@ namespace LibRender2
 					ForceLegacyOpenGL = true;
 				}
 			}
-			
 
 			Background = new Background(this);
 			Fog = new Fog();
