@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using OpenBveApi.Math;
 
 namespace TrainManager.TractionModels.Steam
 {
@@ -33,30 +32,21 @@ namespace TrainManager.TractionModels.Steam
 	{
 		/// <summary>Holds a reference to the base engine</summary>
 		public readonly SteamEngine Engine;
-		/// <summary>The circumference of the circle described by the crank pivot point</summary>
-		private readonly double crankCircumference;
+		/// <summary>The circumference of the circle described by the wheel</summary>
+		public readonly double WheelCircumference;
 		/// <summary>The current rotational position of the wheel</summary>
 		public double WheelPosition;
 		/// <summary>The crank rods</summary>
-		public ValveGearRod[] CrankRods;
+		public readonly ValveGearRod[] CrankRods;
 		/// <summary>The pivots</summary>
-		public ValveGearPivot[] Pivots;
+		public readonly ValveGearPivot[] Pivots;
 
-		public ValveGear(SteamEngine engine)
+		public ValveGear(SteamEngine engine, double wheelCircumference, ValveGearRod[] crankRods, ValveGearPivot[] pivots)
 		{
-			// FIXME: Values from 81xx as temp to port...
-			CrankRods = new[]
-			{
-				new ValveGearRod(engine, 0.35, 1.28, 0),
-				new ValveGearRod(engine, 0.35, 1.28, 90)
-			};
-			Pivots = new[]
-			{
-				new ValveGearPivot(0.35, 0),
-				new ValveGearPivot(0.35, 90)
-			};
 			Engine = engine;
-			crankCircumference = 0.35 * 2 * Math.PI;
+			WheelCircumference = wheelCircumference;
+			CrankRods = crankRods;
+			Pivots = pivots;
 		}
 
 		private double previousLocation;
@@ -66,7 +56,7 @@ namespace TrainManager.TractionModels.Steam
 			double distanceTravelled = Engine.Car.TrackPosition - previousLocation;
 			previousLocation = Engine.Car.TrackPosition;
 
-			double percentageRotated = (distanceTravelled / crankCircumference) * 35;
+			double percentageRotated = (distanceTravelled / WheelCircumference) * 35;
 			if (Math.Abs(percentageRotated) > 100)
 			{
 				percentageRotated = 0;

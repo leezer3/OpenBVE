@@ -28,6 +28,7 @@ using System.Linq;
 using System.Xml;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using TrainManager.Cargo;
 using TrainManager.TractionModels;
 using TrainManager.TractionModels.Steam;
 using TrainManager.Trains;
@@ -39,16 +40,52 @@ namespace Train.OpenBve
 		private void ParseSteamEngineNode(XmlNode Node, string fileName, int Car, ref TrainBase Train)
 		{
 			SteamEngine steamEngine = new SteamEngine(Train.Cars[Car], 10, 10);
-			// boiler properties
+			/*
+			 * --------------------------------------------------------------------------------------
+			 * Fudged average numbers here at the minute, based upon a hypothetical large tender loco
+			 * --------------------------------------------------------------------------------------
+			 *
+			 * Boiler: 
+			 *			2000L starting level
+			 *			3000L capacity
+			 *			200psi starting pressure
+			 *			240psi absolute max pressure
+			 *			220psi blowoff pressure
+			 *			120psi minimum working pressure
+			 *			1L water ==> 4.15psi steam ==> divide by 60min for rate / min ==> divide by 60 for rate /s [CONSTANT, BUT THIS DEPENDS ON BOILER SIZING??]
+			 *			3L /s injection rate (Davies & Metcalfe Monitor Type 11 injector, typically used on large tender locos)
+			 */
 			double waterLevel = 2000, maxWaterLevel = 3000, steamPressure = 200, maxSteamPressure = 240, blowoffPressure = 220, minWorkingPressure = 120, steamGenerationRate = 0.00152, liveSteamInjectionRate = 3.0, exhaustSteamInjectionRate = 3.0;
-			// firebox properties
+			/*
+			 * Firebox:
+			 *			7m² starting area
+			 *			10m² max area
+			 *			1000c max temp
+			 *			0.1kg burnt per second at max size
+			 *			3kg shovel size
+			 */
 			double fireArea = 7, maxFireArea = 10, maxFireTemp = 1000, fireConversionRate = 0.1, shovelSize = 3;
-			// cylinder chest properties
+			/*
+			 * Cylinder Chest
+			 *			0.005psi standing pressure loss (leakage etc.)
+			 *			0.2psi base stroke pressure, before reduction due to regulator / cutoff
+			 */
 			double cylinderChestPressureLoss = 0.005, cylinderChestBasePressureUse = 0.02;
 			BypassValveType bypassValveType = BypassValveType.None;
-			// valve gear properties
+			/*
+			 * Valve gear has no starting properties, too loco specific
+			 */
 			List<ValveGearRod> valveGearRods = new List<ValveGearRod>();
 			List<ValveGearPivot> valveGearPivots = new List<ValveGearPivot>();
+			double wheelCircumference = 0;
+			/*
+			 * Tender:
+			 *		Coal capacity of 40T
+			 *		Water capacity of 88,000L (~19,200 gallons)
+			 *
+			 */
+			int tenderCar = Car;
+			double fuelCapacity = 40000, fuelLoad = 40000, waterCapacity = 88000, waterLoad = 88000;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				switch (c.Name.ToLowerInvariant())
@@ -274,6 +311,59 @@ namespace Train.OpenBve
 											}
 										}
 										break;
+									case "wheelcircumference":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out wheelCircumference) | wheelCircumference <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid wheel circumference defined for Steam Engine Valve Gear " + Car + " in XML file " + fileName);
+											cylinderChestBasePressureUse = 0.005;
+										}
+										break;
+								}
+							}
+						}
+						break;
+					case "tender":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "carindex":
+										if (!NumberFormats.TryParseIntVb6(cc.InnerText, out tenderCar) | tenderCar < 0 | tenderCar > Train.Cars.Length - 1)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid tender car index defined for Steam Engine " + Car + " in XML file " + fileName);
+											cylinderChestPressureLoss = 0.005;
+										}
+										break;
+									case "fuelcapacity":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out fuelCapacity) | fuelCapacity <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Fuel Capacity defined for Steam Engine Tender " + Car + " in XML file " + fileName);
+											fuelCapacity = 40000;
+										}
+										break;
+									case "fuelload":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out fuelLoad) | fuelLoad <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Fuel Load defined for Steam Engine Tender " + Car + " in XML file " + fileName);
+											fuelLoad = 40000;
+										}
+										break;
+									case "watercapacity":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out waterCapacity) | waterCapacity <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Water Capacity defined for Steam Engine Tender " + Car + " in XML file " + fileName);
+											waterCapacity = 88000;
+										}
+										break;
+									case "waterload":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out waterLoad) | waterLoad <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Water Load defined for Steam Engine Tender " + Car + " in XML file " + fileName);
+											waterLoad = 88000;
+										}
+										break;
 								}
 							}
 						}
@@ -290,8 +380,19 @@ namespace Train.OpenBve
 			steamEngine.Boiler.Firebox = new Firebox(steamEngine, fireArea, maxFireArea, maxFireTemp, fireConversionRate, shovelSize);
 			steamEngine.CylinderChest = new CylinderChest(steamEngine, cylinderChestPressureLoss, cylinderChestBasePressureUse);
 			steamEngine.CylinderChest.BypassValve.Type = bypassValveType;
-			steamEngine.CylinderChest.ValveGear.CrankRods = valveGearRods.ToArray();
-			steamEngine.CylinderChest.ValveGear.Pivots = valveGearPivots.ToArray();
+			steamEngine.CylinderChest.ValveGear = new ValveGear(steamEngine, wheelCircumference, valveGearRods.ToArray(), valveGearPivots.ToArray());
+			if (fuelCapacity < fuelLoad)
+			{
+				fuelLoad = fuelCapacity;
+			}
+
+			if (waterCapacity < waterLoad)
+			{
+				waterLoad = waterCapacity;
+			}
+			Tender tender = new Tender(fuelLoad, fuelCapacity, waterLevel, waterLoad);
+			steamEngine.Tender = tender;
+			Train.Cars[tenderCar].Cargo = tender;
 			Train.Cars[Car].TractionModel = steamEngine;
 		}
 	}

@@ -89,23 +89,9 @@ namespace TrainManager.TractionModels.Steam
 			BlowoffEndPressure = blowoffPressure * 0.8;
 			MinWorkingSteamPressure = minWorkingSteamPressure;
 			BaseSteamGenerationRate = baseSteamGenerationRate;
-			/* More fudged averages for a large steam loco
-			 * Base injection rate of 3L /s
-			 * based on Davies and Metcalfe Monitor Type 11 (large tender locos)
-			 */
 			LiveSteamInjector = new LiveSteamInjector(engine, 3.0);
 			ExhaustSteamInjector = new ExhaustSteamInjector(engine, 3.0);
-			/*
-			 * 10m square fire
-			 * 1000c max temp
-			 * 0.1kg of coal per sec ==> + 1c (burn rate of 1kg lasting 1 hour into 1000c)
-			 * Fireman adds 3kg per shovelful
-			 */
 			Firebox = new Firebox(engine, 7, 10, 1000, 0.1, 3);
-			/*
-			 * Double temp increase / fuel use
-			 * Use approx 1psi / sec
-			 */
 			Blowers = new Blowers(engine, 2, 1);
 			BlowoffRate = 10.0;
 		}

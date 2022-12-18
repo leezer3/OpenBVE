@@ -45,7 +45,7 @@ namespace TrainManager.TractionModels.Steam
 		/// <summary>The cylinder chest</summary>
 		public CylinderChest CylinderChest;
 		/// <summary>Holds a reference to the tender</summary>
-		public readonly Tender Tender;
+		public Tender Tender;
 		/// <summary>The automatic fireman</summary>
 		public readonly AutomaticFireman Fireman;
 		/// <summary>Whether the info overlay is shown</summary>
@@ -64,24 +64,9 @@ namespace TrainManager.TractionModels.Steam
 
 		public SteamEngine(CarBase car, double jerkPowerUp, double jerkPowerDown) : base(car)
 		{
-			/* todo: generic parameters- load from config
-			 * Fudged average numbers here at the minute, based upon a hypothetical large tender loco
-			 *
-			 * Boiler: 
-			 *			2000L starting level
-			 *			3000L capacity
-			 *			200psi starting pressure
-			 *			240psi absolute max pressure
-			 *			220psi blowoff pressure
-			 *			120psi minimum working pressure
-			 *			1L water ==> 4.15psi steam ==> divide by 60min for rate / min ==> divide by 60 for rate /s [CONSTANT, BUT THIS DEPENDS ON BOILER SIZING??]
-			 */
+			
 			Boiler = new Boiler(this, 2000, 3000, 200, 240, 220, 120, 0.00152);
-			/*
-			 * Cylinder Chest
-			 *			0.005psi standing pressure loss (leakage etc.)
-			 *			0.2psi base stroke pressure, before reduction due to regulator / cutoff
-			 */
+			
 			CylinderChest = new CylinderChest(this, 0.005, 0.02);
 			/*
 			 * Cutoff
@@ -90,14 +75,7 @@ namespace TrainManager.TractionModels.Steam
 			 *			10% around zero where cutoff is ineffective (due to standing resistance etc.)
 			 */
 			Car.baseTrain.Handles.Reverser = new Cutoff(Car.baseTrain, 75, -50, 10);
-			/*
-			 * Tender:
-			 *		Coal capacity of 40T
-			 *		Water capacity of 88,000L (~19,200 gallons)
-			 *
-			 * FIXME: Allow passing in of the car index for the tender
-			 *        Multiple tender cars???
-			 */
+			
 			Tender = new Tender(40000, 40000, 88000, 88000);
 			Car.Cargo = Tender;
 			Fireman = new AutomaticFireman(this);
