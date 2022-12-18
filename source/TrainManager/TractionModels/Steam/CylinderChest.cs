@@ -48,9 +48,8 @@ namespace TrainManager.TractionModels.Steam
 			Engine = engine;
 			StandingPressureLoss = standingPressureLoss;
 			BaseStrokePressure = baseStrokePressure;
-			// 5psi / s loss when the cylinder cocks are open
 			CylinderCocks = new CylinderCocks(Engine, 5);
-			ValveGear = new ValveGear(engine);
+			ValveGear = new ValveGear(engine, 0.35, new ValveGearRod[] {}, new ValveGearPivot[] {});
 			BypassValve = new BypassValve(engine, BypassValveType.None, 5.0);
 		}
 

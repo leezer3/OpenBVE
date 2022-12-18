@@ -69,8 +69,9 @@ namespace Train.OpenBve
 			 * Cylinder Chest
 			 *			0.005psi standing pressure loss (leakage etc.)
 			 *			0.2psi base stroke pressure, before reduction due to regulator / cutoff
+			 *			5psi / second additional pressure loss when cylinder cocks are open with full regulator
 			 */
-			double cylinderChestPressureLoss = 0.005, cylinderChestBasePressureUse = 0.02;
+			double cylinderChestPressureLoss = 0.005, cylinderChestBasePressureUse = 0.02, cylinderCockLeakRate = 5;
 			BypassValveType bypassValveType = BypassValveType.None;
 			/*
 			 * Valve gear has no starting properties, too loco specific
@@ -238,6 +239,13 @@ namespace Train.OpenBve
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid bypass (snifting) valve type use defined for Steam Engine Cylinder Chest " + Car + " in XML file " + fileName);
 										}
 										break;
+									case "cylindercockleakrate":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out cylinderCockLeakRate) | cylinderCockLeakRate <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid cylinder cock leak rate defined for Steam Engine Cylinder Chest " + Car + " in XML file " + fileName);
+											cylinderChestBasePressureUse = 0.005;
+										}
+										break;
 								}
 							}
 						}
@@ -381,6 +389,7 @@ namespace Train.OpenBve
 			steamEngine.CylinderChest = new CylinderChest(steamEngine, cylinderChestPressureLoss, cylinderChestBasePressureUse);
 			steamEngine.CylinderChest.BypassValve.Type = bypassValveType;
 			steamEngine.CylinderChest.ValveGear = new ValveGear(steamEngine, wheelCircumference, valveGearRods.ToArray(), valveGearPivots.ToArray());
+			steamEngine.CylinderChest.CylinderCocks = new CylinderCocks(steamEngine, cylinderCockLeakRate);
 			if (fuelCapacity < fuelLoad)
 			{
 				fuelLoad = fuelCapacity;
