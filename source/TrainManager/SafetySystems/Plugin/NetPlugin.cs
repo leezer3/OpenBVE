@@ -373,7 +373,7 @@ namespace TrainManager.SafetySystems
 		/// <returns>The sound handle, or null if not successful</returns>
 		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped)
 		{
-			if (index >= 0 && index < Train.Cars[Train.DriverCar].Sounds.Plugin.Length && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null)
+			if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(index) && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null)
 			{
 				Train.Cars[Train.DriverCar].Sounds.Plugin[index].Play(pitch, volume, Train.Cars[Train.DriverCar], looped);
 				if (SoundHandlesCount == SoundHandles.Length)
@@ -398,7 +398,7 @@ namespace TrainManager.SafetySystems
 		/// <returns>The sound handle, or null if not successful</returns>
 		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped, int CarIndex)
 		{
-			if (index >= 0 && index < Train.Cars[Train.DriverCar].Sounds.Plugin.Length && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < Train.Cars.Length && CarIndex >= 0)
+			if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(index) && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < Train.Cars.Length && CarIndex >= 0)
 			{
 				Train.Cars[Train.DriverCar].Sounds.Plugin[index].Play(pitch, volume, Train.Cars[CarIndex], looped);
 				if (SoundHandlesCount == SoundHandles.Length)
@@ -410,7 +410,6 @@ namespace TrainManager.SafetySystems
 				SoundHandlesCount++;
 				return SoundHandles[SoundHandlesCount - 1];
 			}
-
 			return null;
 		}
 	}
