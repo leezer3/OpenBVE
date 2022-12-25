@@ -369,7 +369,17 @@ namespace Plugin
 					if (currentLevel == 0)
 					{
 						// Key based material definitions
-						rootMaterials.Add(block.Label, builder.Materials[m]);
+						if (!string.IsNullOrEmpty(block.Label))
+						{
+							if (rootMaterials.ContainsKey(block.Label))
+							{
+								rootMaterials[block.Label] = builder.Materials[m];
+							}
+							else
+							{
+								rootMaterials.Add(block.Label, builder.Materials[m]);	
+							}
+						}
 					}
 					if (block.Position() < block.Length() - 5)
 					{
