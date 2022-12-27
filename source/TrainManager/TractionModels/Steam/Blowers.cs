@@ -23,10 +23,11 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using SoundManager;
+using TrainManager.Trains;
 
 namespace TrainManager.TractionModels.Steam
 {
-	public class Blowers
+	public class Blowers : AbstractDevice
 	{
 		/// <summary>Holds a reference to the base engine</summary>
 		private readonly SteamEngine Engine;
@@ -42,7 +43,7 @@ namespace TrainManager.TractionModels.Steam
 					{
 						if (StartSound != null)
 						{
-							StartSound.Play(Engine.Car, false);
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(StartSound, 1.0, 1.0, SoundPosition, Engine.Car, false);
 						}
 					}
 				}
@@ -50,9 +51,10 @@ namespace TrainManager.TractionModels.Steam
 				{
 					if (_Active)
 					{
-						if (StopSound != null)
+						if (EndSound != null)
 						{
-							StopSound.Play(Engine.Car, false);
+							Source.Stop();
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(EndSound, 1.0, 1.0, SoundPosition, Engine.Car, false);
 						}
 					}
 				}
@@ -61,12 +63,6 @@ namespace TrainManager.TractionModels.Steam
 		}
 		/// <summary>Backing property for Active</summary>
 		private bool _Active;
-		/// <summary>The sound played when the blowers are activated</summary>
-		public CarSound StartSound;
-		/// <summary>The sound played when the blowers are active and working</summary>
-		public CarSound LoopSound;
-		/// <summary>The sound played when the blowers are deactivated</summary>
-		public CarSound StopSound;
 		/// <summary>The temperature increase ratio</summary>
 		public readonly double Ratio;
 		/// <summary>The amount of steam used</summary>
@@ -84,16 +80,16 @@ namespace TrainManager.TractionModels.Steam
 			if (Active)
 			{
 				Engine.Boiler.SteamPressure -= SteamUse * timeElapsed;
-				if(StartSound == null || !StartSound.IsPlaying && LoopSound != null)
+				if(StartSound == null || !Source.IsPlaying() && LoopSound != null)
 				{
-					LoopSound.Play(Engine.Car, true);
+					Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, Engine.Car, true);
 				}
 			}
 			else
 			{
 				if (LoopSound != null)
 				{
-					LoopSound.Stop();
+					Source.Stop();
 				}
 			}
 		}

@@ -24,10 +24,11 @@
 
 using System;
 using SoundManager;
+using TrainManager.Trains;
 
 namespace TrainManager.TractionModels.Steam
 {
-	public class LiveSteamInjector
+	public class LiveSteamInjector : AbstractDevice
 	{
 		/// <summary>Holds a reference to the base engine</summary>
 		private readonly SteamEngine Engine;
@@ -57,7 +58,7 @@ namespace TrainManager.TractionModels.Steam
 					{
 						if (StartSound != null)
 						{
-							StartSound.Play(Engine.Car, false);
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(StartSound, 1.0, 1.0, SoundPosition, Engine.Car, false);
 						}
 					}
 				}
@@ -65,9 +66,10 @@ namespace TrainManager.TractionModels.Steam
 				{
 					if (_Active)
 					{
-						if (StopSound != null)
+						if (EndSound != null)
 						{
-							StopSound.Play(Engine.Car, false);
+							Source.Stop();
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(EndSound, 1.0, 1.0, SoundPosition, Engine.Car, false);
 						}
 					}
 				}
@@ -76,12 +78,6 @@ namespace TrainManager.TractionModels.Steam
 		}
 		/// <summary>Backing property for Active</summary>
 		private bool _Active;
-		/// <summary>The sound played when the injector is activated</summary>
-		public CarSound StartSound;
-		/// <summary>The sound played when the injector is active and working</summary>
-		public CarSound LoopSound;
-		/// <summary>The sound played when the injector is stopped</summary>
-		public CarSound StopSound;
 
 
 		internal LiveSteamInjector(SteamEngine engine, double baseInjectionRate)
@@ -99,20 +95,9 @@ namespace TrainManager.TractionModels.Steam
 				Engine.Boiler.WaterLevel += waterInjected;
 				Engine.Boiler.SteamPressure -= waterInjected;
 				Engine.Tender.WaterLevel -= waterInjected;
-				if(StartSound == null || !StartSound.IsPlaying)
+				if(StartSound == null || !Source.IsPlaying() && LoopSound != null)
 				{
-					if (LoopSound != null)
-					{
-						LoopSound.Play(Engine.Car, true);
-					}
-				}
-			}
-			else
-			{
-				if (LoopSound != null)
-				{
-					LoopSound.Stop();
-					
+					Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, Engine.Car, true);
 				}
 			}
 		}

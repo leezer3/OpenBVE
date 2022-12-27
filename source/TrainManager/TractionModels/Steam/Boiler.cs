@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using SoundManager;
 
 namespace TrainManager.TractionModels.Steam
 {
@@ -58,25 +57,12 @@ namespace TrainManager.TractionModels.Steam
 		public Firebox Firebox;
 		/// <summary>The blowers</summary>
 		public readonly Blowers Blowers;
-		/// <summary>The blowoff pressure</summary>
-		public double BlowoffPressure;
-		/// <summary>The pressure at which the blowoff resets</summary>
-		public double BlowoffEndPressure;
-		/// <summary>The rate of steam loss via the blowoff</summary>
-		public double BlowoffRate;
-		/// <summary>The blowoff start sound</summary>
-		public CarSound BlowoffStartSound;
-		/// <summary>The blowoff loop sound</summary>
-		public CarSound BlowoffLoopSound;
-		/// <summary>The blowoff end sound</summary>
-		public CarSound BlowoffEndSound;
+		/// <summary>The blowoff</summary>
+		public readonly Blowoff Blowoff;
 		/// <summary>The rate at water is converted to steam</summary>
 		/// <remarks>Units per millisecond</remarks>
 		public double SteamGenerationRate => BaseSteamGenerationRate * Firebox.ConversionRate;
 		
-
-		private bool startSoundPlayed;
-		private bool blowoff;
 
 		public Boiler(SteamEngine engine, double waterLevel, double maxWaterLevel, double steamPressure, double maxSteamPressure, double blowoffPressure, double minWorkingSteamPressure, double baseSteamGenerationRate)
 		{
@@ -85,15 +71,13 @@ namespace TrainManager.TractionModels.Steam
 			MaxWaterLevel = maxWaterLevel;
 			SteamPressure = steamPressure;
 			MaxSteamPressure = maxSteamPressure;
-			BlowoffPressure = blowoffPressure;
-			BlowoffEndPressure = blowoffPressure * 0.8;
+			Blowoff = new Blowoff(engine, 10.0, blowoffPressure, blowoffPressure * 0.8);
 			MinWorkingSteamPressure = minWorkingSteamPressure;
 			BaseSteamGenerationRate = baseSteamGenerationRate;
 			LiveSteamInjector = new LiveSteamInjector(engine, 3.0);
 			ExhaustSteamInjector = new ExhaustSteamInjector(engine, 3.0);
 			Firebox = new Firebox(engine, 7, 10, 1000, 0.1, 3);
 			Blowers = new Blowers(engine, 2, 1);
-			BlowoffRate = 10.0;
 		}
 
 		internal void Update(double timeElapsed)
@@ -106,50 +90,7 @@ namespace TrainManager.TractionModels.Steam
 			// convert water to steam pressure
 			WaterLevel -= SteamGenerationRate;
 			SteamPressure += SteamGenerationRate;
-			// handle blowoff
-			if (SteamPressure > BlowoffPressure)
-			{
-				blowoff = true;
-			}
-			if(blowoff)
-			{
-				SteamPressure -= BlowoffRate;
-				if (!startSoundPlayed)
-				{
-					if (BlowoffStartSound != null)
-					{
-						BlowoffStartSound.Play(Engine.Car, false);
-					}
-					startSoundPlayed = true;
-				}
-				else if (BlowoffLoopSound != null && !BlowoffStartSound.IsPlaying)
-				{
-					if (BlowoffLoopSound != null)
-					{
-						BlowoffLoopSound.Play(Engine.Car, true);
-					}
-				}
-
-				if (SteamPressure < BlowoffEndPressure)
-				{
-					blowoff = false;
-				}
-			}
-			else
-			{
-				if (startSoundPlayed)
-				{
-					if (BlowoffLoopSound != null && BlowoffLoopSound.IsPlaying)
-					{
-						BlowoffLoopSound.Stop();
-					}
-					if (BlowoffEndSound != null)
-					{
-						BlowoffEndSound.Play(Engine.Car, false);
-					}
-					startSoundPlayed = false;
-				}
-			}
+			Blowoff.Update(timeElapsed);
 			Blowers.Update(timeElapsed);
 		}
 	}

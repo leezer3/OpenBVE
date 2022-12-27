@@ -131,6 +131,7 @@
     <Compile Include="TractionModels\Generic\TrailerCar.cs" />
     <Compile Include="TractionModels\Steam\AutomaticFireman.cs" />
     <Compile Include="TractionModels\Steam\Blowers.cs" />
+    <Compile Include="TractionModels\Steam\Blowoff.cs" />
     <Compile Include="TractionModels\Steam\Boiler.cs" />
     <Compile Include="TractionModels\Steam\BypassValve.cs" />
     <Compile Include="TractionModels\Steam\BypassValve.Types.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="TractionModels\Steam\ValveGear.Rod.cs" />
     <Compile Include="TractionModels\Steam\ValveGearPivot.cs" />
     <Compile Include="TrainManager.cs" />
+    <Compile Include="Train\AbstractDevice.cs" />
     <Compile Include="Train\BrakeSystem.cs" />
     <Compile Include="Train\CommandEntry.cs" />
     <Compile Include="Train\Doors.cs" />

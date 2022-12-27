@@ -24,10 +24,11 @@
 
 using System;
 using SoundManager;
+using TrainManager.Trains;
 
 namespace TrainManager.TractionModels.Steam
 {
-	public class ExhaustSteamInjector
+	public class ExhaustSteamInjector : AbstractDevice
 	{
 		/// <summary>Holds a reference to the base engine</summary>
 		private readonly SteamEngine Engine;
@@ -47,7 +48,7 @@ namespace TrainManager.TractionModels.Steam
 					{
 						if (StartSound != null)
 						{
-							StartSound.Play(Engine.Car, false);
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(StartSound, 1.0, 1.0, SoundPosition, Engine.Car, false);
 						}
 					}
 				}
@@ -55,9 +56,10 @@ namespace TrainManager.TractionModels.Steam
 				{
 					if (_Active)
 					{
-						if (StopSound != null)
+						if (EndSound != null)
 						{
-							StopSound.Play(Engine.Car, false);
+							Source.Stop();
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(EndSound, 1.0, 1.0, SoundPosition, Engine.Car, false);
 						}
 					}
 				}
@@ -66,14 +68,6 @@ namespace TrainManager.TractionModels.Steam
 		}
 		/// <summary>Backing property for Active</summary>
 		private bool _Active;
-		/// <summary>The sound played when the injector is activated</summary>
-		public CarSound StartSound;
-		/// <summary>The sound played when the injector is active and working</summary>
-		public CarSound InjectingLoopSound;
-		/// <summary>The sound played when the injector is active and idle</summary>
-		public CarSound IdleLoopSound;
-		/// <summary>The sound played when the injector is stopped</summary>
-		public CarSound StopSound;
 
 		internal ExhaustSteamInjector(SteamEngine engine, double baseInjectionRate)
 		{
@@ -89,20 +83,22 @@ namespace TrainManager.TractionModels.Steam
 				double waterInjected = Math.Min(Engine.Tender.WaterLevel, InjectionRate * timeElapsed);
 				Engine.Boiler.WaterLevel += waterInjected;
 				Engine.Tender.WaterLevel -= waterInjected;
-				if(StartSound == null || !StartSound.IsPlaying)
+				if(StartSound == null || !Source.IsPlaying())
 				{
 					if (BaseInjectionRate != 0)
 					{
-						if (InjectingLoopSound != null && !InjectingLoopSound.IsPlaying)
+						if (LoopSound != null)
 						{
-							InjectingLoopSound.Play(Engine.Car, true);
+							Source.Stop();
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, Engine.Car, true);
 						}
 					}
 					else
 					{
-						if (IdleLoopSound != null && !IdleLoopSound.IsPlaying)
+						if (IdleLoopSound != null)
 						{
-							InjectingLoopSound.Play(Engine.Car, true);
+							Source.Stop();
+							Source = (SoundSource)TrainManagerBase.currentHost.PlaySound(IdleLoopSound, 1.0, 1.0, SoundPosition, Engine.Car, true);
 						}
 					}
 					
@@ -110,14 +106,7 @@ namespace TrainManager.TractionModels.Steam
 			}
 			else
 			{
-				if (InjectingLoopSound != null)
-				{
-					InjectingLoopSound.Stop();
-				}
-				if (IdleLoopSound != null)
-				{
-					IdleLoopSound.Stop();
-				}
+				Source.Stop();
 			}
 		}
 	}

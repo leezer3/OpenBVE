@@ -52,7 +52,7 @@ namespace Train.OpenBve
 			 *			240psi absolute max pressure
 			 *			220psi blowoff pressure
 			 *			120psi minimum working pressure
-			 *			1L water ==> 4.15psi steam ==> divide by 60min for rate / min ==> divide by 60 for rate /s [CONSTANT, BUT THIS DEPENDS ON BOILER SIZING??]
+			 *			1L water ==> 4.15psi steam ==> divide by 60min for rate / min ==> divide by 60 for rate /s
 			 *			3L /s injection rate (Davies & Metcalfe Monitor Type 11 injector, typically used on large tender locos)
 			 */
 			double waterLevel = 2000, maxWaterLevel = 3000, steamPressure = 200, maxSteamPressure = 240, blowoffPressure = 220, minWorkingPressure = 120, steamGenerationRate = 0.00152, liveSteamInjectionRate = 3.0, exhaustSteamInjectionRate = 3.0;
