@@ -1052,7 +1052,7 @@ namespace OpenBve {
 			{
 				panelOptionsPage2.Hide();
 			}
-			
+
 
 		}
 
@@ -1445,6 +1445,9 @@ namespace OpenBve {
 			radiobuttonControls.BackColor = SystemColors.ButtonFace;
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+
+			//HACK: Column Header won't appear in Mono without resizing it...
+			listviewScore.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 		}
 		private void radiobuttonControls_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1466,6 +1469,8 @@ namespace OpenBve {
 			radiobuttonControls.BackColor = SystemColors.ButtonHighlight;
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			//HACK: Column Header in list view won't appear in Mono without resizing it...
+			listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 		}
 		private void radiobuttonOptions_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1888,6 +1893,8 @@ namespace OpenBve {
 				panelOptionsLeft.Hide();
 				panelOptionsRight.Hide();
 				panelOptionsPage2.Show();
+				//HACK: Column Header in list view won't appear in Mono without resizing it...
+				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
 			else
 			{
