@@ -7,7 +7,8 @@ namespace OpenBve.UserInterface
 		public formViewLog(string text)
 		{
 			InitializeComponent();
-			textBoxLog.Text = text;
+
+			this.Shown += (sender, e) => textBoxLog.Text = text;
 		}
 
 		private void buttonClose_Click(object sender, System.EventArgs e)

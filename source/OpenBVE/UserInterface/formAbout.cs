@@ -33,7 +33,7 @@ namespace OpenBve
 				this.Icon = new Icon(File);
 			}
 			catch { }
-			
+
 			StringBuilder builder = new StringBuilder();
 			builder.AppendLine("CoreFX:");
 			builder.AppendLine(OpenBveApi.Resource.CoreFX);
@@ -102,7 +102,7 @@ namespace OpenBve
 			builder.AppendLine("XamlBehaviors for WPF:");
 			builder.AppendLine(OpenBveApi.Resource.XamlBehaviorsForWPF);
 
-			textBoxOpenSourceLicences.Text = builder.ToString();
+			this.Shown += (sender, e) => textBoxOpenSourceLicences.Text = builder.ToString();
 		}
 
 		private void buttonClose_Click(object sender, System.EventArgs e)
