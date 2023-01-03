@@ -1870,14 +1870,10 @@ namespace OpenBve {
 			
 		}
 
-		private formAbout AboutDialog;
-
 		private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if (AboutDialog == null || AboutDialog.Visible == false)
-			{
-				AboutDialog = new formAbout();
-				AboutDialog.Show();
+			using (formAbout f = new formAbout()) {
+				f.ShowDialog();
 			}
 		}
 
