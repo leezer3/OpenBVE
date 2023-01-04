@@ -45,6 +45,8 @@ namespace OpenBve
 						formViewLog log = new formViewLog(File.ReadAllText(file));
 						log.ShowDialog();
 					}
+				} else {
+					MessageBox.Show("No game logs were found.", "View previous log", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
 			catch
@@ -70,15 +72,16 @@ namespace OpenBve
 			}
 			catch
 			{
-				MessageBox.Show("No crash logs were found.");
+				MessageBox.Show("No crash logs were found.", "View previous crash log", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
 		private void buttonReportProblem_Click(object sender, System.EventArgs e)
 		{
+			string fileName = "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip";
 			try
 			{
-				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) , "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip")))
+				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName)))
 				{
 					using (var zipWriter = WriterFactory.Open(ProblemReport, ArchiveType.Zip, CompressionType.LZMA))
 					{
@@ -126,6 +129,9 @@ namespace OpenBve
 			catch
 			{
 			}
+
+			MessageBox.Show("The report has been saved as \"" + fileName + "\" on your desktop." + Environment.NewLine + Environment.NewLine +
+			"You may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.", "Bug Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			this.Close();
 		}
 	}
