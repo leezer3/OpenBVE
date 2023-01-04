@@ -1413,13 +1413,8 @@ namespace OpenBve {
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelStartTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
 			//Update the route/ train displays in case a package has been installed
 			textboxRouteFolder_TextChanged(this, EventArgs.Empty);
 			textboxTrainFolder_TextChanged(this, EventArgs.Empty);
@@ -1438,13 +1433,8 @@ namespace OpenBve {
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelReviewTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
 
 			//HACK: Column Header won't appear in Mono without resizing it...
 			listviewScore.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
@@ -1462,13 +1452,8 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelControlsTitle.BackColor;
 			pictureboxJoysticks.Visible = true;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
 			//HACK: Column Header in list view won't appear in Mono without resizing it...
 			listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 		}
@@ -1485,13 +1470,8 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelOptionsTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1504,13 +1484,8 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelPackages.Visible = true;
-			panelPanels.BackColor = labelPackagesTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonHighlight;
+			UpdatePanelColor();
 			//Load packages & rest panel states
 			if (radioButtonPackages.Checked)
 			{
@@ -1525,6 +1500,43 @@ namespace OpenBve {
 					MessageBox.Show(Translations.GetInterfaceString(errorMessage));
 				}
 				comboBoxPackageType.SelectedIndex = 0;
+			}
+		}
+
+		private void UpdatePanelColor() {
+			if(panelStart.Visible) {
+				panelPanels.BackColor = labelStartTitle.BackColor;
+				radiobuttonStart.BackColor = Color.White;
+			} else {
+				radiobuttonStart.BackColor = Color.LightGray;
+			}
+
+			if (panelReview.Visible) {
+				panelPanels.BackColor = labelReviewTitle.BackColor;
+				radiobuttonReview.BackColor = Color.White;
+			} else {
+				radiobuttonReview.BackColor = Color.LightGray;
+			}
+
+			if (panelControls.Visible) {
+				panelPanels.BackColor = labelControlsTitle.BackColor;
+				radiobuttonControls.BackColor = Color.White;
+			} else {
+				radiobuttonControls.BackColor = Color.LightGray;
+			}
+
+			if (panelOptions.Visible) {
+				panelPanels.BackColor = labelOptionsTitle.BackColor;
+				radiobuttonOptions.BackColor = Color.White;
+			} else {
+				radiobuttonOptions.BackColor = Color.LightGray;
+			}
+
+			if (panelPackages.Visible) {
+				panelPanels.BackColor = labelPackagesTitle.BackColor;
+				radioButtonPackages.BackColor = Color.White;
+			} else {
+				radioButtonPackages.BackColor = Color.LightGray;
 			}
 		}
 

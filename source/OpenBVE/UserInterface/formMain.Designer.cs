@@ -1546,6 +1546,7 @@ namespace OpenBve {
 			// buttonOptionsPrevious
 			// 
 			this.buttonOptionsPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOptionsPrevious.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonOptionsPrevious.Location = new System.Drawing.Point(484, 38);
 			this.buttonOptionsPrevious.Name = "buttonOptionsPrevious";
 			this.buttonOptionsPrevious.Size = new System.Drawing.Size(99, 23);
@@ -1557,6 +1558,7 @@ namespace OpenBve {
 			// buttonOptionsNext
 			// 
 			this.buttonOptionsNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOptionsNext.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonOptionsNext.Location = new System.Drawing.Point(589, 38);
 			this.buttonOptionsNext.Name = "buttonOptionsNext";
 			this.buttonOptionsNext.Size = new System.Drawing.Size(99, 23);
@@ -2105,6 +2107,7 @@ namespace OpenBve {
 			this.groupBoxRailDriver.Controls.Add(this.buttonRailDriverCalibration);
 			this.groupBoxRailDriver.Controls.Add(this.comboBoxRailDriverUnits);
 			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverSpeedUnits);
+			this.groupBoxRailDriver.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxRailDriver.Location = new System.Drawing.Point(0, 230);
 			this.groupBoxRailDriver.Name = "groupBoxRailDriver";
 			this.groupBoxRailDriver.Size = new System.Drawing.Size(316, 75);
@@ -2124,6 +2127,8 @@ namespace OpenBve {
 			// buttonRailDriverCalibration
 			// 
 			this.buttonRailDriverCalibration.Location = new System.Drawing.Point(230, 45);
+			this.buttonRailDriverCalibration.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonRailDriverCalibration.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonRailDriverCalibration.Name = "buttonRailDriverCalibration";
 			this.buttonRailDriverCalibration.Size = new System.Drawing.Size(75, 23);
 			this.buttonRailDriverCalibration.TabIndex = 4;
@@ -2488,6 +2493,7 @@ namespace OpenBve {
 			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
 			this.groupBoxInputDevice.Controls.Add(this.buttonInputDeviceConfig);
+			this.groupBoxInputDevice.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxInputDevice.Location = new System.Drawing.Point(6, 374);
 			this.groupBoxInputDevice.Name = "groupBoxInputDevice";
 			this.groupBoxInputDevice.Size = new System.Drawing.Size(674, 173);
@@ -2570,6 +2576,7 @@ namespace OpenBve {
 			// 
 			this.buttonInputDeviceConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonInputDeviceConfig.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonInputDeviceConfig.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonInputDeviceConfig.Enabled = false;
 			this.buttonInputDeviceConfig.Location = new System.Drawing.Point(220, 141);
 			this.buttonInputDeviceConfig.Name = "buttonInputDeviceConfig";
@@ -2585,6 +2592,7 @@ namespace OpenBve {
 			this.groupBoxObjectParser.Controls.Add(this.comboBoxObjparser);
 			this.groupBoxObjectParser.Controls.Add(this.labelXparser);
 			this.groupBoxObjectParser.Controls.Add(this.comboBoxXparser);
+			this.groupBoxObjectParser.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxObjectParser.Location = new System.Drawing.Point(334, 258);
 			this.groupBoxObjectParser.Name = "groupBoxObjectParser";
 			this.groupBoxObjectParser.Size = new System.Drawing.Size(305, 110);
@@ -2640,6 +2648,7 @@ namespace OpenBve {
 			this.groupBoxKioskMode.Controls.Add(this.labelKioskTimeout);
 			this.groupBoxKioskMode.Controls.Add(this.numericUpDownKioskTimeout);
 			this.groupBoxKioskMode.Controls.Add(this.checkBoxEnableKiosk);
+			this.groupBoxKioskMode.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxKioskMode.Location = new System.Drawing.Point(334, 164);
 			this.groupBoxKioskMode.Name = "groupBoxKioskMode";
 			this.groupBoxKioskMode.Size = new System.Drawing.Size(305, 88);
@@ -2692,6 +2701,7 @@ namespace OpenBve {
 			this.groupBoxAdvancedOptions.Controls.Add(this.updownTimeAccelerationFactor);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxIsUseNewRenderer);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
+			this.groupBoxAdvancedOptions.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(6, 160);
 			this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
 			this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(316, 208);
@@ -2859,7 +2869,9 @@ namespace OpenBve {
 			// buttonOtherDirectory
 			// 
 			this.buttonOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOtherDirectory.Location = new System.Drawing.Point(600, 82);
+			this.buttonOtherDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonOtherDirectory.BackColor = System.Drawing.SystemColors.Control;
+			this.buttonOtherDirectory.Location = new System.Drawing.Point(600, 83);
 			this.buttonOtherDirectory.Name = "buttonOtherDirectory";
 			this.buttonOtherDirectory.Size = new System.Drawing.Size(75, 23);
 			this.buttonOtherDirectory.TabIndex = 8;
@@ -2880,6 +2892,8 @@ namespace OpenBve {
 			// 
 			this.textBoxOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxOtherDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxOtherDirectory.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxOtherDirectory.Location = new System.Drawing.Point(200, 84);
 			this.textBoxOtherDirectory.Name = "textBoxOtherDirectory";
 			this.textBoxOtherDirectory.ReadOnly = true;
@@ -2889,7 +2903,9 @@ namespace OpenBve {
 			// buttonTrainInstallationDirectory
 			// 
 			this.buttonTrainInstallationDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(600, 49);
+			this.buttonTrainInstallationDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonTrainInstallationDirectory.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(600, 51);
 			this.buttonTrainInstallationDirectory.Name = "buttonTrainInstallationDirectory";
 			this.buttonTrainInstallationDirectory.Size = new System.Drawing.Size(75, 23);
 			this.buttonTrainInstallationDirectory.TabIndex = 5;
@@ -2910,6 +2926,8 @@ namespace OpenBve {
 			// 
 			this.textBoxTrainDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxTrainDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxTrainDirectory.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxTrainDirectory.Location = new System.Drawing.Point(200, 51);
 			this.textBoxTrainDirectory.Name = "textBoxTrainDirectory";
 			this.textBoxTrainDirectory.ReadOnly = true;
@@ -2919,7 +2937,9 @@ namespace OpenBve {
 			// buttonSetRouteDirectory
 			// 
 			this.buttonSetRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSetRouteDirectory.Location = new System.Drawing.Point(600, 18);
+			this.buttonSetRouteDirectory.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonSetRouteDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonSetRouteDirectory.Location = new System.Drawing.Point(600, 20);
 			this.buttonSetRouteDirectory.Name = "buttonSetRouteDirectory";
 			this.buttonSetRouteDirectory.Size = new System.Drawing.Size(75, 23);
 			this.buttonSetRouteDirectory.TabIndex = 2;
@@ -2940,6 +2960,8 @@ namespace OpenBve {
 			// 
 			this.textBoxRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxRouteDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxRouteDirectory.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxRouteDirectory.Location = new System.Drawing.Point(200, 20);
 			this.textBoxRouteDirectory.Name = "textBoxRouteDirectory";
 			this.textBoxRouteDirectory.ReadOnly = true;
@@ -3027,6 +3049,7 @@ namespace OpenBve {
 			// radioButtonPackages
 			// 
 			this.radioButtonPackages.AutoSize = true;
+			this.radioButtonPackages.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonPackages.Location = new System.Drawing.Point(8, 144);
 			this.radioButtonPackages.Name = "radioButtonPackages";
 			this.radioButtonPackages.Size = new System.Drawing.Size(133, 17);
@@ -3047,6 +3070,7 @@ namespace OpenBve {
 			// radiobuttonOptions
 			// 
 			this.radiobuttonOptions.AutoSize = true;
+			this.radiobuttonOptions.ForeColor = System.Drawing.Color.Black;
 			this.radiobuttonOptions.Location = new System.Drawing.Point(8, 112);
 			this.radiobuttonOptions.Name = "radiobuttonOptions";
 			this.radiobuttonOptions.Size = new System.Drawing.Size(61, 17);
@@ -3058,6 +3082,7 @@ namespace OpenBve {
 			// radiobuttonControls
 			// 
 			this.radiobuttonControls.AutoSize = true;
+			this.radiobuttonControls.ForeColor = System.Drawing.Color.Black;
 			this.radiobuttonControls.Location = new System.Drawing.Point(8, 80);
 			this.radiobuttonControls.Name = "radiobuttonControls";
 			this.radiobuttonControls.Size = new System.Drawing.Size(113, 17);
@@ -3069,6 +3094,7 @@ namespace OpenBve {
 			// radiobuttonReview
 			// 
 			this.radiobuttonReview.AutoSize = true;
+			this.radiobuttonReview.ForeColor = System.Drawing.Color.Black;
 			this.radiobuttonReview.Location = new System.Drawing.Point(8, 48);
 			this.radiobuttonReview.Name = "radiobuttonReview";
 			this.radiobuttonReview.Size = new System.Drawing.Size(109, 17);
@@ -3080,6 +3106,7 @@ namespace OpenBve {
 			// radiobuttonStart
 			// 
 			this.radiobuttonStart.AutoSize = true;
+			this.radiobuttonStart.ForeColor = System.Drawing.Color.Black;
 			this.radiobuttonStart.Checked = true;
 			this.radiobuttonStart.Location = new System.Drawing.Point(8, 16);
 			this.radiobuttonStart.Name = "radiobuttonStart";
@@ -3088,6 +3115,7 @@ namespace OpenBve {
 			this.radiobuttonStart.TabStop = true;
 			this.radiobuttonStart.Text = "Start new game";
 			this.radiobuttonStart.UseVisualStyleBackColor = true;
+			
 			this.radiobuttonStart.CheckedChanged += new System.EventHandler(this.radiobuttonStart_CheckedChanged);
 			// 
 			// labelPanelsTop
@@ -3236,6 +3264,7 @@ namespace OpenBve {
 			this.groupboxScore.Controls.Add(this.checkboxScorePenalties);
 			this.groupboxScore.Controls.Add(this.buttonScoreExport);
 			this.groupboxScore.Controls.Add(this.listviewScore);
+			this.groupboxScore.ForeColor = System.Drawing.Color.Black;
 			this.groupboxScore.Location = new System.Drawing.Point(272, 176);
 			this.groupboxScore.Name = "groupboxScore";
 			this.groupboxScore.Size = new System.Drawing.Size(419, 383);
@@ -3258,6 +3287,7 @@ namespace OpenBve {
 			// buttonScoreExport
 			// 
 			this.buttonScoreExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonScoreExport.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonScoreExport.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonScoreExport.Location = new System.Drawing.Point(291, 351);
 			this.buttonScoreExport.Name = "buttonScoreExport";
@@ -3935,6 +3965,8 @@ namespace OpenBve {
 			this.textboxJoystickGrab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxJoystickGrab.BackColor = System.Drawing.Color.White;
+			this.textboxJoystickGrab.ForeColor = System.Drawing.Color.Black;
 			this.textboxJoystickGrab.Location = new System.Drawing.Point(462, 72);
 			this.textboxJoystickGrab.Multiline = true;
 			this.textboxJoystickGrab.Name = "textboxJoystickGrab";
@@ -4646,6 +4678,7 @@ namespace OpenBve {
 			// labelDependancyType
 			// 
 			this.labelDependancyType.AutoSize = true;
+			this.labelDependancyType.ForeColor = System.Drawing.Color.Black;
 			this.labelDependancyType.Location = new System.Drawing.Point(0, 35);
 			this.labelDependancyType.Name = "labelDependancyType";
 			this.labelDependancyType.Size = new System.Drawing.Size(224, 13);
@@ -4869,6 +4902,7 @@ namespace OpenBve {
 			// labelPackageListType
 			// 
 			this.labelPackageListType.AutoSize = true;
+			this.labelPackageListType.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageListType.Location = new System.Drawing.Point(8, 41);
 			this.labelPackageListType.Name = "labelPackageListType";
 			this.labelPackageListType.Size = new System.Drawing.Size(224, 13);
@@ -4878,6 +4912,8 @@ namespace OpenBve {
 			// createPackageButton
 			// 
 			this.createPackageButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.createPackageButton.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.createPackageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.createPackageButton.Location = new System.Drawing.Point(281, 549);
 			this.createPackageButton.Name = "createPackageButton";
 			this.createPackageButton.Size = new System.Drawing.Size(136, 23);
@@ -4889,6 +4925,8 @@ namespace OpenBve {
 			// buttonUninstallPackage
 			// 
 			this.buttonUninstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonUninstallPackage.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonUninstallPackage.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonUninstallPackage.Location = new System.Drawing.Point(555, 549);
 			this.buttonUninstallPackage.Name = "buttonUninstallPackage";
 			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
@@ -4900,6 +4938,8 @@ namespace OpenBve {
 			// buttonInstallPackage
 			// 
 			this.buttonInstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonInstallPackage.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonInstallPackage.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonInstallPackage.Location = new System.Drawing.Point(8, 549);
 			this.buttonInstallPackage.Name = "buttonInstallPackage";
 			this.buttonInstallPackage.Size = new System.Drawing.Size(136, 23);
@@ -5004,6 +5044,8 @@ namespace OpenBve {
 			// buttonBack2
 			// 
 			this.buttonBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonBack2.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonBack2.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonBack2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonBack2.Location = new System.Drawing.Point(445, 565);
 			this.buttonBack2.Name = "buttonBack2";
@@ -5016,6 +5058,8 @@ namespace OpenBve {
 			// buttonNext
 			// 
 			this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonNext.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonNext.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonNext.Enabled = false;
 			this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonNext.Location = new System.Drawing.Point(571, 565);
@@ -5025,6 +5069,7 @@ namespace OpenBve {
 			this.buttonNext.Text = "Next >";
 			this.buttonNext.UseVisualStyleBackColor = true;
 			this.buttonNext.Click += new System.EventHandler(this.buttonInstall_Click);
+
 			// 
 			// labelInstallText
 			// 
@@ -5052,6 +5097,8 @@ namespace OpenBve {
 			// buttonSelectPackage
 			// 
 			this.buttonSelectPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonSelectPackage.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonSelectPackage.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonSelectPackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonSelectPackage.Location = new System.Drawing.Point(134, 535);
 			this.buttonSelectPackage.Name = "buttonSelectPackage";
@@ -5065,6 +5112,8 @@ namespace OpenBve {
 			// 
 			this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageDescription.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxPackageDescription.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 417);
 			this.textBoxPackageDescription.Multiline = true;
 			this.textBoxPackageDescription.Name = "textBoxPackageDescription";
@@ -5077,6 +5126,7 @@ namespace OpenBve {
 			// labelPackageDescription
 			// 
 			this.labelPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageDescription.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageDescription.Location = new System.Drawing.Point(8, 420);
 			this.labelPackageDescription.Name = "labelPackageDescription";
 			this.labelPackageDescription.Size = new System.Drawing.Size(120, 13);
@@ -5100,6 +5150,7 @@ namespace OpenBve {
 			// labelPackageWebsite
 			// 
 			this.labelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageWebsite.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageWebsite.Location = new System.Drawing.Point(8, 397);
 			this.labelPackageWebsite.Name = "labelPackageWebsite";
 			this.labelPackageWebsite.Size = new System.Drawing.Size(120, 13);
@@ -5111,6 +5162,8 @@ namespace OpenBve {
 			// 
 			this.textBoxPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageVersion.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxPackageVersion.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxPackageVersion.Location = new System.Drawing.Point(134, 369);
 			this.textBoxPackageVersion.Name = "textBoxPackageVersion";
 			this.textBoxPackageVersion.Size = new System.Drawing.Size(423, 20);
@@ -5120,6 +5173,7 @@ namespace OpenBve {
 			// labelPackageVersion
 			// 
 			this.labelPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageVersion.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageVersion.Location = new System.Drawing.Point(8, 372);
 			this.labelPackageVersion.Name = "labelPackageVersion";
 			this.labelPackageVersion.Size = new System.Drawing.Size(120, 13);
@@ -5131,6 +5185,8 @@ namespace OpenBve {
 			// 
 			this.textBoxPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageAuthor.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxPackageAuthor.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxPackageAuthor.Location = new System.Drawing.Point(134, 345);
 			this.textBoxPackageAuthor.Name = "textBoxPackageAuthor";
 			this.textBoxPackageAuthor.Size = new System.Drawing.Size(423, 20);
@@ -5140,6 +5196,7 @@ namespace OpenBve {
 			// labelPackageAuthor
 			// 
 			this.labelPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageAuthor.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageAuthor.Location = new System.Drawing.Point(8, 348);
 			this.labelPackageAuthor.Name = "labelPackageAuthor";
 			this.labelPackageAuthor.Size = new System.Drawing.Size(120, 13);
@@ -5151,6 +5208,8 @@ namespace OpenBve {
 			// 
 			this.textBoxPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageName.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxPackageName.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxPackageName.Location = new System.Drawing.Point(134, 321);
 			this.textBoxPackageName.Name = "textBoxPackageName";
 			this.textBoxPackageName.Size = new System.Drawing.Size(423, 20);
@@ -5160,6 +5219,7 @@ namespace OpenBve {
 			// labelPackageName
 			// 
 			this.labelPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageName.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageName.Location = new System.Drawing.Point(8, 324);
 			this.labelPackageName.Name = "labelPackageName";
 			this.labelPackageName.Size = new System.Drawing.Size(120, 13);
@@ -5205,6 +5265,8 @@ namespace OpenBve {
 			// buttonCancel
 			// 
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonCancel.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonCancel.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonCancel.Location = new System.Drawing.Point(445, 565);
 			this.buttonCancel.Name = "buttonCancel";
@@ -5420,6 +5482,8 @@ namespace OpenBve {
 			// buttonCancel2
 			// 
 			this.buttonCancel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonCancel2.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonCancel2.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCancel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonCancel2.Location = new System.Drawing.Point(445, 565);
 			this.buttonCancel2.Name = "buttonCancel2";
@@ -5432,6 +5496,8 @@ namespace OpenBve {
 			// SaveFileNameButton
 			// 
 			this.SaveFileNameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.SaveFileNameButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.SaveFileNameButton.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.SaveFileNameButton.Location = new System.Drawing.Point(571, 510);
 			this.SaveFileNameButton.Name = "SaveFileNameButton";
 			this.SaveFileNameButton.Size = new System.Drawing.Size(120, 23);
@@ -5452,6 +5518,7 @@ namespace OpenBve {
 			// labelSaveAs
 			// 
 			this.labelSaveAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelSaveAs.ForeColor = System.Drawing.Color.Black;
 			this.labelSaveAs.AutoSize = true;
 			this.labelSaveAs.Location = new System.Drawing.Point(8, 495);
 			this.labelSaveAs.Name = "labelSaveAs";
@@ -5462,6 +5529,7 @@ namespace OpenBve {
 			// labelDependanciesNextStep
 			// 
 			this.labelDependanciesNextStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelDependanciesNextStep.ForeColor = System.Drawing.Color.Black;
 			this.labelDependanciesNextStep.AutoSize = true;
 			this.labelDependanciesNextStep.Location = new System.Drawing.Point(8, 541);
 			this.labelDependanciesNextStep.Name = "labelDependanciesNextStep";
@@ -5472,6 +5540,8 @@ namespace OpenBve {
 			// buttonCreateProceed
 			// 
 			this.buttonCreateProceed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonCreateProceed.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonCreateProceed.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCreateProceed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonCreateProceed.Location = new System.Drawing.Point(571, 565);
 			this.buttonCreateProceed.Name = "buttonCreateProceed";
@@ -5495,6 +5565,7 @@ namespace OpenBve {
 			// radioButtonQ2Other
 			// 
 			this.radioButtonQ2Other.AutoSize = true;
+			this.radioButtonQ2Other.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ2Other.Location = new System.Drawing.Point(119, 1);
 			this.radioButtonQ2Other.Name = "radioButtonQ2Other";
 			this.radioButtonQ2Other.Size = new System.Drawing.Size(51, 17);
@@ -5507,6 +5578,7 @@ namespace OpenBve {
 			// radioButtonQ2Train
 			// 
 			this.radioButtonQ2Train.AutoSize = true;
+			this.radioButtonQ2Train.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ2Train.Location = new System.Drawing.Point(64, 1);
 			this.radioButtonQ2Train.Name = "radioButtonQ2Train";
 			this.radioButtonQ2Train.Size = new System.Drawing.Size(49, 17);
@@ -5519,6 +5591,7 @@ namespace OpenBve {
 			// radioButtonQ2Route
 			// 
 			this.radioButtonQ2Route.AutoSize = true;
+			this.radioButtonQ2Route.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ2Route.Location = new System.Drawing.Point(3, 1);
 			this.radioButtonQ2Route.Name = "radioButtonQ2Route";
 			this.radioButtonQ2Route.Size = new System.Drawing.Size(54, 17);
@@ -5531,6 +5604,7 @@ namespace OpenBve {
 			// labelPackageType
 			// 
 			this.labelPackageType.AutoSize = true;
+			this.labelPackageType.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageType.Location = new System.Drawing.Point(8, 50);
 			this.labelPackageType.Name = "labelPackageType";
 			this.labelPackageType.Size = new System.Drawing.Size(159, 13);
@@ -5550,6 +5624,7 @@ namespace OpenBve {
 			// radioButtonQ1No
 			// 
 			this.radioButtonQ1No.AutoSize = true;
+			this.radioButtonQ1No.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ1No.Enabled = false;
 			this.radioButtonQ1No.Location = new System.Drawing.Point(64, 1);
 			this.radioButtonQ1No.Name = "radioButtonQ1No";
@@ -5563,6 +5638,7 @@ namespace OpenBve {
 			// radioButtonQ1Yes
 			// 
 			this.radioButtonQ1Yes.AutoSize = true;
+			this.radioButtonQ1Yes.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ1Yes.Enabled = false;
 			this.radioButtonQ1Yes.Location = new System.Drawing.Point(3, 1);
 			this.radioButtonQ1Yes.Name = "radioButtonQ1Yes";
@@ -5600,6 +5676,7 @@ namespace OpenBve {
 			// 
 			this.labelReplacePackage.AutoSize = true;
 			this.labelReplacePackage.Enabled = false;
+			this.labelReplacePackage.ForeColor = System.Drawing.Color.Black;
 			this.labelReplacePackage.Location = new System.Drawing.Point(8, 94);
 			this.labelReplacePackage.Name = "labelReplacePackage";
 			this.labelReplacePackage.Size = new System.Drawing.Size(188, 13);
@@ -5716,6 +5793,8 @@ namespace OpenBve {
 			// newPackageClearSelectionButton
 			// 
 			this.newPackageClearSelectionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.newPackageClearSelectionButton.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.newPackageClearSelectionButton.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.newPackageClearSelectionButton.Location = new System.Drawing.Point(572, 326);
 			this.newPackageClearSelectionButton.Name = "newPackageClearSelectionButton";
 			this.newPackageClearSelectionButton.Size = new System.Drawing.Size(121, 23);
@@ -5740,6 +5819,8 @@ namespace OpenBve {
 			// addPackageItemsButton
 			// 
 			this.addPackageItemsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.addPackageItemsButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.addPackageItemsButton.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.addPackageItemsButton.Location = new System.Drawing.Point(8, 326);
 			this.addPackageItemsButton.Name = "addPackageItemsButton";
 			this.addPackageItemsButton.Size = new System.Drawing.Size(121, 23);
@@ -5751,6 +5832,7 @@ namespace OpenBve {
 			// labelSelectFiles
 			// 
 			this.labelSelectFiles.AutoSize = true;
+			this.labelSelectFiles.ForeColor = System.Drawing.Color.Black;
 			this.labelSelectFiles.Location = new System.Drawing.Point(8, 51);
 			this.labelSelectFiles.Name = "labelSelectFiles";
 			this.labelSelectFiles.Size = new System.Drawing.Size(190, 13);
@@ -5767,6 +5849,7 @@ namespace OpenBve {
 			// labelNewGUID
 			// 
 			this.labelNewGUID.AutoSize = true;
+			this.labelNewGUID.ForeColor = System.Drawing.Color.Black;
 			this.labelNewGUID.Location = new System.Drawing.Point(8, 3);
 			this.labelNewGUID.Name = "labelNewGUID";
 			this.labelNewGUID.Size = new System.Drawing.Size(281, 13);
