@@ -98,7 +98,7 @@ namespace OpenBve
 						if (!Interface.CurrentOptions.KioskMode)
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
-							Items[1] = new MenuCommand(Translations.GetInterfaceString("options"), MenuTag.Options, 0);
+							Items[1] = new MenuCommand(Translations.GetInterfaceString("options_title"), MenuTag.Options, 0);
 							Items[2] = new MenuCommand(Translations.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
 							Items[3] = new MenuCommand(Translations.GetInterfaceString("packages_title"), MenuTag.Packages, 0);
 							Items[4] = new MenuCommand(Translations.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
