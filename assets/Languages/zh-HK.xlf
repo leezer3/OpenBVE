@@ -1177,7 +1177,7 @@
 						<target>開放</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 						<target>未檢測到RailDriver控制器。</target>
 					</trans-unit>
 					<trans-unit id="config_error">

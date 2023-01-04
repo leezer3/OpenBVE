@@ -1160,7 +1160,7 @@
 						<target>Indítás</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 						<target>Nem érzékelhető RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="config_error">

@@ -1159,7 +1159,7 @@
 						<target>Launch</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 						<target>RailDriverのコントローラーを検出できませんでした。</target>
 					</trans-unit>
 					<trans-unit id="config_error">

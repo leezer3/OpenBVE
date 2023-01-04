@@ -896,7 +896,7 @@
 						<source>Launch</source>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>

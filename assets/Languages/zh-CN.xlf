@@ -1163,7 +1163,7 @@
 						<target>启动</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 						<target>未检测到RailDriver控制器。</target>
 					</trans-unit>
 					<trans-unit id="config_error">

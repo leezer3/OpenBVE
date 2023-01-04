@@ -1158,8 +1158,8 @@
 						<target>Launch</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
-						<target>No RailDriver conrollers detected.</target>
+						<source>No RailDriver controllers detected.</source>
+						<target>No RailDriver controllers detected.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>

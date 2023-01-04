@@ -1158,7 +1158,7 @@
 						<target>Inicia</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 						<target>No s'ha detectat cap dispositiu RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
