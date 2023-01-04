@@ -37,7 +37,7 @@ namespace OpenBve
                     MessageBox.Show("An unsupported joystick is connected: \n \n Too many axis. \n \n Please unplug all USB joysticks & gamepads and try again.");
                     Environment.Exit(0);
                 }
-                MessageBox.Show("Unhandled exception:\n\n" + ex.Message);
+                MessageBox.Show("Unhandled exception:\n\n" + ex.Message, "OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 LogCrash(ex + Environment.StackTrace);
 
             }
@@ -45,7 +45,7 @@ namespace OpenBve
             {
                 try
                 {
-                    MessageBox.Show("A fatal exception occured inside the UnhandledExceptionHandler: \n\n"
+                    MessageBox.Show("A fatal exception occured inside the UnhandledExceptionHandler:" + Environment.NewLine + Environment.NewLine
                         + exc.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         LogCrash(exc + Environment.StackTrace);
                 }
@@ -68,7 +68,7 @@ namespace OpenBve
 	        }
             try
             {
-                MessageBox.Show("An unhandled Windows Forms Exception occured." + Environment.NewLine + Environment.NewLine + "Please consider reporting this using the CrashLog found under the \"Report Problem\" button in the main menu.");
+                MessageBox.Show("An unhandled Windows Forms Exception occured." + Environment.NewLine + Environment.NewLine + "Please consider reporting this with the \"Report Problem\" button on the bottom left of the main menu.", "OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 LogCrash(t.Exception + Environment.NewLine + Environment.StackTrace);
             }
             catch (Exception exc)

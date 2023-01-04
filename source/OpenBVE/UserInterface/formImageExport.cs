@@ -43,14 +43,14 @@ namespace OpenBve
 				}
 				catch
 				{
-					MessageBox.Show("An error occured- Please check for write permission.");
+					MessageBox.Show("An error has occured." + Environment.NewLine + "Please check whether you have write permission for that directory.", "Export Image", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					return;
 				}
 				Close();
 			}
 			else
 			{
-				MessageBox.Show("Invalid or non-existant path- Please retry.");
+				MessageBox.Show("Invalid or non-existant path, please retry.", "Export Image", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 		}
 
