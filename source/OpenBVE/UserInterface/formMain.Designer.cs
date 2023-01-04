@@ -2715,9 +2715,19 @@ namespace OpenBve {
 			this.checkBoxPanel2Extended.Location = new System.Drawing.Point(8, 183);
 			this.checkBoxPanel2Extended.Name = "checkBoxPanel2Extended";
 			this.checkBoxPanel2Extended.Size = new System.Drawing.Size(159, 17);
-			this.checkBoxPanel2Extended.TabIndex = 17;
+			this.checkBoxPanel2Extended.TabIndex = 20;
 			this.checkBoxPanel2Extended.Text = "Enable Panel2 extend mode";
 			this.checkBoxPanel2Extended.UseVisualStyleBackColor = true;
+			// 
+			// comboboxCursor
+			// 
+			this.comboboxCursor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboboxCursor.FormattingEnabled = true;
+			this.comboboxCursor.Location = new System.Drawing.Point(48, 158);
+			this.comboboxCursor.Name = "comboboxCursor";
+			this.comboboxCursor.Size = new System.Drawing.Size(108, 21);
+			this.comboboxCursor.TabIndex = 19;
+			this.comboboxCursor.SelectedIndexChanged += new System.EventHandler(this.comboboxCursor_SelectedIndexChanged);
 			// 
 			// pictureboxCursor
 			// 
@@ -2725,7 +2735,7 @@ namespace OpenBve {
 			this.pictureboxCursor.Name = "pictureboxCursor";
 			this.pictureboxCursor.Size = new System.Drawing.Size(32, 32);
 			this.pictureboxCursor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.pictureboxCursor.TabIndex = 16;
+			this.pictureboxCursor.TabIndex = 18;
 			this.pictureboxCursor.TabStop = false;
 			// 
 			// labelCursor
@@ -2737,15 +2747,18 @@ namespace OpenBve {
 			this.labelCursor.TabIndex = 17;
 			this.labelCursor.Text = "Cursor";
 			// 
-			// comboboxCursor
+			// updownTimeAccelerationFactor
 			// 
-			this.comboboxCursor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboboxCursor.FormattingEnabled = true;
-			this.comboboxCursor.Location = new System.Drawing.Point(48, 158);
-			this.comboboxCursor.Name = "comboboxCursor";
-			this.comboboxCursor.Size = new System.Drawing.Size(108, 21);
-			this.comboboxCursor.TabIndex = 18;
-			this.comboboxCursor.SelectedIndexChanged += new System.EventHandler(this.comboboxCursor_SelectedIndexChanged);
+			this.updownTimeAccelerationFactor.Location = new System.Drawing.Point(150, 122);
+			this.updownTimeAccelerationFactor.Maximum = new decimal(new int[] {
+			5,
+			0,
+			0,
+			0});
+			this.updownTimeAccelerationFactor.Name = "updownTimeAccelerationFactor";
+			this.updownTimeAccelerationFactor.Size = new System.Drawing.Size(52, 20);
+			this.updownTimeAccelerationFactor.TabIndex = 16;
+			this.updownTimeAccelerationFactor.ValueChanged += new System.EventHandler(this.updownTimeAccelerationFactor_ValueChanged);
 			// 
 			// checkBoxHacks
 			// 
@@ -2786,19 +2799,6 @@ namespace OpenBve {
 			this.labelTimeAcceleration.Size = new System.Drawing.Size(126, 13);
 			this.labelTimeAcceleration.TabIndex = 10;
 			this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
-			// 
-			// updownTimeAccelerationFactor
-			// 
-			this.updownTimeAccelerationFactor.Location = new System.Drawing.Point(150, 122);
-			this.updownTimeAccelerationFactor.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-			this.updownTimeAccelerationFactor.Name = "updownTimeAccelerationFactor";
-			this.updownTimeAccelerationFactor.Size = new System.Drawing.Size(52, 20);
-			this.updownTimeAccelerationFactor.TabIndex = 3;
-			this.updownTimeAccelerationFactor.ValueChanged += new System.EventHandler(this.updownTimeAccelerationFactor_ValueChanged);
 			// 
 			// checkBoxIsUseNewRenderer
 			// 

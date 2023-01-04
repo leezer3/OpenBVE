@@ -1464,6 +1464,10 @@
 						<source>Show error messages</source>
 						<target>Zeige Fehler</target>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+						<target>Accessibility Aids</target>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>Weitere Optionen</target>
@@ -1486,6 +1490,10 @@
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
 						<target>Unload unused textures</target>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
+						<target>Cursor</target>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1625,6 +1633,10 @@
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
+						<target>Object Parser</target>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>

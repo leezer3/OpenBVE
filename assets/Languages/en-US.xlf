@@ -1128,6 +1128,9 @@
 					<trans-unit id="verbosity_errormessages">
 						<source>Show error messages</source>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 					</trans-unit>
@@ -1142,6 +1145,9 @@
 					</trans-unit>
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1203,6 +1209,9 @@
 					<trans-unit id="hud_size_large">
 						<source>Large</source>
 					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
+					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
 					</trans-unit>
@@ -1247,6 +1256,9 @@
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>

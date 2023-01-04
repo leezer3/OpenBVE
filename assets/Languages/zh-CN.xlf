@@ -1468,6 +1468,10 @@
 						<source>Show error messages</source>
 						<target>显示错误</target>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+						<target>Accessibility Aids</target>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>高级设置</target>
@@ -1487,6 +1491,10 @@
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
 						<target>卸载未使用的材质</target>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
+						<target>Cursor</target>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1568,6 +1576,10 @@
 						<source>Large</source>
 						<target>大</target>
 					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
+						<target>Font:</target>
+					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
 						<target>修复旧线路的透明材质问题。</target>
@@ -1623,6 +1635,9 @@
 					<trans-unit id="input_device_plugin_config">
 						<source>Config</source>
 						<target>配置</target>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>

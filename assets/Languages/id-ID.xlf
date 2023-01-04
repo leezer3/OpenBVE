@@ -1485,6 +1485,10 @@
 						<source>Show error messages</source>
 						<target>Lihat error</target>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+						<target>Accessibility Aids</target>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>Lainnya</target>
@@ -1504,6 +1508,10 @@
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
 						<target>Jangan muat gambar tidak dipakai</target>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
+						<target>Cursor</target>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1585,6 +1593,10 @@
 						<source>Large</source>
 						<target>Besar</target>
 					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
+						<target>Font:</target>
+					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
 						<target>Coba perbaiki transparansi di konten lawas.</target>
@@ -1644,6 +1656,9 @@
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
 						<target>Gunakan Panel2 Extended</target>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>

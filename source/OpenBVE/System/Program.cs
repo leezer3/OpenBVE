@@ -181,9 +181,9 @@ namespace OpenBve {
 			if (result.RouteFile != null & result.TrainFolder == null)
 			{
 				string error;
-				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer) || true)
 				{
-					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
 				Game.Reset(false);
@@ -205,7 +205,7 @@ namespace OpenBve {
 
 				if (!CurrentHost.UnloadPlugins(out error))
 				{
-					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				if (!loaded)
 				{

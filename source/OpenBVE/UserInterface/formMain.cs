@@ -30,7 +30,6 @@ namespace OpenBve {
 		private formMain()
 		{
 			InitializeComponent();
-			this.Text = Translations.GetInterfaceString("program_title");
 		}
 
 		public sealed override string Text
@@ -623,6 +622,8 @@ namespace OpenBve {
 		private void ApplyLanguage()
 		{
 			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
+			// Main form title bar
+			this.Text = Translations.GetInterfaceString("program_title");
 			/*
 			 * Localisation for strings in main panel
 			 */
@@ -651,6 +652,7 @@ namespace OpenBve {
 			labelHUDSmall.Text = Translations.GetInterfaceString("options_hud_size_small");
 			labelHUDNormal.Text = Translations.GetInterfaceString("options_hud_size_normal");
 			labelHUDLarge.Text = Translations.GetInterfaceString("options_hud_size_large");
+			labelFontName.Text = Translations.GetInterfaceString("options_font");
 			//Windowed Mode
 			groupboxWindow.Text = Translations.GetInterfaceString("options_display_window");
 			labelWindowWidth.Text = Translations.GetInterfaceString("options_display_window_width");
@@ -703,12 +705,14 @@ namespace OpenBve {
 			groupboxVerbosity.Text = Translations.GetInterfaceString("options_verbosity");
 			checkboxWarningMessages.Text = Translations.GetInterfaceString("options_verbosity_warningmessages");
 			checkboxErrorMessages.Text = Translations.GetInterfaceString("options_verbosity_errormessages");
+			checkBoxAccessibility.Text = Translations.GetInterfaceString("options_verbosity_accessibilityaids");
 			//Advanced Options
 			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString("options_advanced");
 			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString("options_advanced_load_advance");
 			checkBoxUnloadTextures.Text = Translations.GetInterfaceString("options_advanced_unload_textures");
 			checkBoxIsUseNewRenderer.Text = Translations.GetInterfaceString("options_advanced_is_use_new_renderer");
 			labelTimeAcceleration.Text = Translations.GetInterfaceString("options_advanced_timefactor");
+			labelCursor.Text = Translations.GetInterfaceString("options_advanced_cursor");
 			//Other Options
 			groupBoxOther.Text = Translations.GetInterfaceString("options_other");
 			labelTimeTableDisplayMode.Text = Translations.GetInterfaceString("options_other_timetable_mode");
@@ -720,8 +724,6 @@ namespace OpenBve {
 			buttonOptionsPrevious.Text = Translations.GetInterfaceString("options_page_previous");
 			buttonOptionsNext.Text = Translations.GetInterfaceString("options_page_next");
 			checkBoxPanel2Extended.Text = Translations.GetInterfaceString("options_panel2_extended");
-			labelXparser.Text = Translations.GetInterfaceString("options_xobject_parser");
-			labelObjparser.Text = Translations.GetInterfaceString("options_objobject_parser");
 			/*
 			 * Options Page 2
 			 */
@@ -737,6 +739,7 @@ namespace OpenBve {
 			labelTrainInstallDirectory.Text = Translations.GetInterfaceString("options_package_train_directory");
 			labelOtherInstallDirectory.Text = Translations.GetInterfaceString("options_package_other_directory");
 			labelPackageCompression.Text = Translations.GetInterfaceString("options_package_compression");
+			//Kiosk Mode
 			groupBoxKioskMode.Text = Translations.GetInterfaceString("options_kiosk_mode");
 			checkBoxEnableKiosk.Text = Translations.GetInterfaceString("options_kiosk_mode_enable");
 			labelKioskTimeout.Text = Translations.GetInterfaceString("options_kiosk_mode_timer");
@@ -747,6 +750,11 @@ namespace OpenBve {
 			buttonRailDriverCalibration.Text = Translations.GetInterfaceString("raildriver_launch");
 			checkBoxTransparencyFix.Text = Translations.GetInterfaceString("options_transparencyfix");
 			checkBoxHacks.Text = Translations.GetInterfaceString("options_hacks_enable");
+			//Object Parser Options
+			groupBoxObjectParser.Text = Translations.GetInterfaceString("options_object_parser");
+			labelXparser.Text = Translations.GetInterfaceString("options_xobject_parser");
+			labelObjparser.Text = Translations.GetInterfaceString("options_objobject_parser");
+			//Input Device
 			groupBoxInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin");
 			labelInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin_warning");
 			listviewInputDevice.Columns[0].Text = Translations.GetInterfaceString("options_input_device_plugin_name");
