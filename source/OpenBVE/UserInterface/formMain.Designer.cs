@@ -458,6 +458,7 @@ namespace OpenBve {
 			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
+			this.labelNoDependencyReminder = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -4594,6 +4595,7 @@ namespace OpenBve {
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackageDependsAdd.Controls.Add(this.buttonBack);
 			this.panelPackageDependsAdd.Controls.Add(this.buttonRemove);
+			this.panelPackageDependsAdd.Controls.Add(this.labelNoDependencyReminder);
 			this.panelPackageDependsAdd.Controls.Add(this.labelDependanciesHeader);
 			this.panelPackageDependsAdd.Controls.Add(this.labelDependanciesHeaderBacking);
 			this.panelPackageDependsAdd.Controls.Add(this.buttonCreatePackage);
@@ -4630,6 +4632,16 @@ namespace OpenBve {
 			this.buttonRemove.Text = "Remove";
 			this.buttonRemove.UseVisualStyleBackColor = true;
 			this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
+			//
+			// labelNoDependencyReminder
+			//
+			this.labelNoDependencyReminder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelNoDependencyReminder.ForeColor = System.Drawing.Color.Black;
+			this.labelNoDependencyReminder.Location = new System.Drawing.Point(8, 560);
+			this.labelNoDependencyReminder.Name = "labelNoDependencyReminder";
+			this.labelNoDependencyReminder.Size = new System.Drawing.Size(400, 48);
+			this.labelNoDependencyReminder.TabIndex = 24;
+			this.labelNoDependencyReminder.Text = "If your package does not rely on other dependencies, you may continue by clicking the \"Create\" button.";
 			// 
 			// labelDependanciesHeader
 			// 
@@ -6492,5 +6504,6 @@ namespace OpenBve {
 		private System.Windows.Forms.ListView listViewTrainPackages;
 		private System.Windows.Forms.ComboBox comboBoxFont;
 		private System.Windows.Forms.Label labelFontName;
+		private System.Windows.Forms.Label labelNoDependencyReminder;
 	}
 }

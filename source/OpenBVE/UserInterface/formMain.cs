@@ -1024,6 +1024,7 @@ namespace OpenBve {
 			dataGridViewTextBoxColumn3.HeaderText = Translations.GetInterfaceString("packages_list_maximum");
 			dataGridViewTextBoxColumn4.HeaderText = Translations.GetInterfaceString("packages_list_packagetype");
 			buttonRemove.Text = Translations.GetInterfaceString("packages_creation_dependancies_remove");
+			labelNoDependencyReminder.Text = Translations.GetInterfaceString("packages_creation_dependancies_skip_if_none");
 			website.HeaderText = Translations.GetInterfaceString("packages_list_website");
 			//Version Error panel
 			labelBrokenDependancies.Text = Translations.GetInterfaceString("packages_install_dependancies_broken");

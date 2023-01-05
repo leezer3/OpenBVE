@@ -510,6 +510,9 @@
 					<trans-unit id="creation_dependancies_remove">
 						<source>Remove</source>
 					</trans-unit>
+					<trans-unit id="creation_dependancies_skip_if_none">
+						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
+					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
 					</trans-unit>
