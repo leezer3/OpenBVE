@@ -2012,8 +2012,19 @@ namespace OpenBve {
 
 		private void tabcontrolRouteDetails_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			// MONO issue on some systems means that the map may not draw initially, so force redraw
-			pictureboxRouteMap.Invalidate();
+			if (Program.CurrentHost.MonoRuntime) {
+				// MONO issue on some systems means that the map may not draw initially, so force redraw
+				pictureboxRouteMap.Invalidate();
+				// HACK: On some mono systems, the preview would not appear if it's in the base resolution.
+				// If so, resize the image height by 1px
+				if (pictureboxRouteMap.Image.Size == pictureboxRouteMap.Size) {
+					pictureboxRouteMap.Height = pictureboxRouteMap.Height + 1;
+				}
+
+				if (pictureboxRouteGradient.Image.Size == pictureboxRouteGradient.Size) {
+					pictureboxRouteGradient.Height = pictureboxRouteGradient.Height + 1;
+				}
+			}
 		}
 		
 		private void toolStripExport_Click(object sender, EventArgs e)
