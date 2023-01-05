@@ -4226,7 +4226,8 @@ namespace OpenBve {
 			this.textBoxUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxUninstallResult.BackColor = System.Drawing.SystemColors.Menu;
+			this.textBoxUninstallResult.BackColor = System.Drawing.Color.White;
+			this.textBoxUninstallResult.ForeColor = System.Drawing.Color.Black;
 			this.textBoxUninstallResult.Location = new System.Drawing.Point(8, 94);
 			this.textBoxUninstallResult.Multiline = true;
 			this.textBoxUninstallResult.Name = "textBoxUninstallResult";
@@ -4238,6 +4239,7 @@ namespace OpenBve {
 			// labelUninstallLog
 			// 
 			this.labelUninstallLog.AutoSize = true;
+			this.labelUninstallLog.ForeColor = System.Drawing.Color.Black;
 			this.labelUninstallLog.Location = new System.Drawing.Point(8, 74);
 			this.labelUninstallLog.Name = "labelUninstallLog";
 			this.labelUninstallLog.Size = new System.Drawing.Size(109, 13);
@@ -4247,6 +4249,7 @@ namespace OpenBve {
 			// labelUninstallSuccess
 			// 
 			this.labelUninstallSuccess.AutoSize = true;
+			this.labelUninstallSuccess.ForeColor = System.Drawing.Color.Black;
 			this.labelUninstallSuccess.Location = new System.Drawing.Point(8, 54);
 			this.labelUninstallSuccess.Name = "labelUninstallSuccess";
 			this.labelUninstallSuccess.Size = new System.Drawing.Size(142, 13);
@@ -4279,6 +4282,8 @@ namespace OpenBve {
 			// buttonUninstallFinish
 			// 
 			this.buttonUninstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.buttonUninstallFinish.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonUninstallFinish.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonUninstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonUninstallFinish.Location = new System.Drawing.Point(276, 543);
 			this.buttonUninstallFinish.Name = "buttonUninstallFinish";
@@ -4309,7 +4314,8 @@ namespace OpenBve {
 			this.textBoxFilesInstalled.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxFilesInstalled.BackColor = System.Drawing.SystemColors.Menu;
+			this.textBoxFilesInstalled.BackColor = System.Drawing.Color.White;
+			this.textBoxFilesInstalled.ForeColor = System.Drawing.Color.Black;
 			this.textBoxFilesInstalled.Location = new System.Drawing.Point(8, 94);
 			this.textBoxFilesInstalled.Multiline = true;
 			this.textBoxFilesInstalled.Name = "textBoxFilesInstalled";
@@ -4321,6 +4327,7 @@ namespace OpenBve {
 			// labelListFilesInstalled
 			// 
 			this.labelListFilesInstalled.AutoSize = true;
+			this.labelListFilesInstalled.ForeColor = System.Drawing.Color.Black;
 			this.labelListFilesInstalled.Location = new System.Drawing.Point(8, 74);
 			this.labelListFilesInstalled.Name = "labelListFilesInstalled";
 			this.labelListFilesInstalled.Size = new System.Drawing.Size(181, 13);
@@ -4330,6 +4337,7 @@ namespace OpenBve {
 			// labelInstallSuccess1
 			// 
 			this.labelInstallSuccess1.AutoSize = true;
+			this.labelInstallSuccess1.ForeColor = System.Drawing.Color.Black;
 			this.labelInstallSuccess1.Location = new System.Drawing.Point(8, 54);
 			this.labelInstallSuccess1.Name = "labelInstallSuccess1";
 			this.labelInstallSuccess1.Size = new System.Drawing.Size(129, 13);
@@ -4362,6 +4370,8 @@ namespace OpenBve {
 			// buttonInstallFinish
 			// 
 			this.buttonInstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.buttonInstallFinish.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonInstallFinish.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonInstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonInstallFinish.Location = new System.Drawing.Point(276, 543);
 			this.buttonInstallFinish.Name = "buttonInstallFinish";
@@ -4534,6 +4544,7 @@ namespace OpenBve {
 			// labelProgressFile
 			// 
 			this.labelProgressFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelProgressFile.ForeColor = System.Drawing.Color.Black;
 			this.labelProgressFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelProgressFile.Location = new System.Drawing.Point(1, 431);
 			this.labelProgressFile.Name = "labelProgressFile";
@@ -4545,6 +4556,7 @@ namespace OpenBve {
 			// labelProgressPercent
 			// 
 			this.labelProgressPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelProgressPercent.ForeColor = System.Drawing.Color.Black;
 			this.labelProgressPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelProgressPercent.Location = new System.Drawing.Point(290, 401);
 			this.labelProgressPercent.Name = "labelProgressPercent";
@@ -4556,6 +4568,7 @@ namespace OpenBve {
 			// labelPleaseWait
 			// 
 			this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPleaseWait.ForeColor = System.Drawing.Color.Black;
 			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelPleaseWait.Location = new System.Drawing.Point(1, 462);
 			this.labelPleaseWait.Name = "labelPleaseWait";
@@ -4593,6 +4606,8 @@ namespace OpenBve {
 			// buttonBack
 			// 
 			this.buttonBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonBack.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonBack.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonBack.Location = new System.Drawing.Point(445, 565);
 			this.buttonBack.Name = "buttonBack";
@@ -4605,6 +4620,8 @@ namespace OpenBve {
 			// buttonRemove
 			// 
 			this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonRemove.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonRemove.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonRemove.Enabled = false;
 			this.buttonRemove.Location = new System.Drawing.Point(8, 525);
 			this.buttonRemove.Name = "buttonRemove";
@@ -4640,6 +4657,8 @@ namespace OpenBve {
 			// buttonCreatePackage
 			// 
 			this.buttonCreatePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonCreatePackage.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonCreatePackage.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCreatePackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonCreatePackage.Location = new System.Drawing.Point(571, 565);
 			this.buttonCreatePackage.Name = "buttonCreatePackage";
@@ -4833,6 +4852,8 @@ namespace OpenBve {
 			// buttonReccomends
 			// 
 			this.buttonReccomends.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonReccomends.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonReccomends.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonReccomends.Enabled = false;
 			this.buttonReccomends.Location = new System.Drawing.Point(517, 1);
 			this.buttonReccomends.Name = "buttonReccomends";
@@ -4860,6 +4881,8 @@ namespace OpenBve {
 			// buttonDepends
 			// 
 			this.buttonDepends.Enabled = false;
+			this.buttonDepends.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonDepends.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonDepends.Location = new System.Drawing.Point(0, 2);
 			this.buttonDepends.Name = "buttonDepends";
 			this.buttonDepends.Size = new System.Drawing.Size(166, 23);
