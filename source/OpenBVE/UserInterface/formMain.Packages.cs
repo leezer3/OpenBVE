@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -195,42 +195,68 @@ namespace OpenBve
 				currentPackage = Manipulation.ReadPackage(openPackageFileDialog.FileName);
 				if (currentPackage != null)
 				{
-					buttonNext.Enabled = true;
-					textBoxPackageName.Text = currentPackage.Name;
-					textBoxPackageAuthor.Text = currentPackage.Author;
-					if (currentPackage.Description != null)
-					{
-						textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
-					}
-					textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
-					if (currentPackage.Website != null)
-					{
-						linkLabelPackageWebsite.Links.Clear();
-						linkLabelPackageWebsite.Text = currentPackage.Website;
-						LinkLabel.Link link = new LinkLabel.Link {LinkData = currentPackage.Website};
-						linkLabelPackageWebsite.Links.Add(link);
-					}
-					else
-					{
-						linkLabelPackageWebsite.Text = Translations.GetInterfaceString("packages_selection_none_website");
-					}
-					if (currentPackage.PackageImage != null)
-					{
-						pictureBoxPackageImage.Image = currentPackage.PackageImage;
-					}
-					else
-					{
-						TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
-					}
+					ShowPackageToInstall();
 				}
 				else
 				{
 					//ReadPackage returns null if the file is not a package.....
-
 					MessageBox.Show(Translations.GetInterfaceString("packages_install_invalid"));
 				}
 			}
 		}
+
+		private void panelPackageInstall_DragDrop(object sender, DragEventArgs e)
+		{
+			string[] dropped = (string[])e.Data.GetData(DataFormats.FileDrop);
+			if (dropped == null || dropped.Length == 0)
+			{
+				return;
+			}
+			for (int i = 0; i < dropped.Length; i++)
+			{
+				currentPackage = Manipulation.ReadPackage(dropped[i]);
+				if (currentPackage != null)
+				{
+					ShowPackageToInstall();
+					return;
+				}
+			}
+		}
+
+		private void ShowPackageToInstall()
+		{
+			buttonNext.Enabled = true;
+			textBoxPackageName.Text = currentPackage.Name;
+			textBoxPackageAuthor.Text = currentPackage.Author;
+			if (currentPackage.Description != null)
+			{
+				textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
+			}
+
+			textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
+			if (currentPackage.Website != null)
+			{
+				linkLabelPackageWebsite.Links.Clear();
+				linkLabelPackageWebsite.Text = currentPackage.Website;
+				LinkLabel.Link link = new LinkLabel.Link { LinkData = currentPackage.Website };
+				linkLabelPackageWebsite.Links.Add(link);
+			}
+			else
+			{
+				linkLabelPackageWebsite.Text = Translations.GetInterfaceString("packages_selection_none_website");
+			}
+
+			if (currentPackage.PackageImage != null)
+			{
+				pictureBoxPackageImage.Image = currentPackage.PackageImage;
+			}
+			else
+			{
+				TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
+			}
+		}
+
+	
 
 		private void buttonInstallFinished_Click(object sender, EventArgs e)
 		{

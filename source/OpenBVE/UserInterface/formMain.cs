@@ -1999,5 +1999,10 @@ namespace OpenBve {
 			
 			exporter.ShowDialog();
 		}
+
+		private void panelPackageInstall_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+		}
 	}
 }

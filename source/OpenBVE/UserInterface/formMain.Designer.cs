@@ -319,6 +319,23 @@ namespace OpenBve {
 			this.labelPackagesTitleSeparator = new System.Windows.Forms.Label();
 			this.labelPackagesTitle = new System.Windows.Forms.Label();
 			this.labelPackagesTitleBackground = new System.Windows.Forms.Label();
+			this.panelPackageInstall = new System.Windows.Forms.Panel();
+			this.buttonBack2 = new System.Windows.Forms.Button();
+			this.buttonNext = new System.Windows.Forms.Button();
+			this.labelInstallText = new System.Windows.Forms.Label();
+			this.labelInstallHeader = new System.Windows.Forms.Label();
+			this.buttonSelectPackage = new System.Windows.Forms.Button();
+			this.textBoxPackageDescription = new System.Windows.Forms.TextBox();
+			this.labelPackageDescription = new System.Windows.Forms.Label();
+			this.linkLabelPackageWebsite = new System.Windows.Forms.LinkLabel();
+			this.labelPackageWebsite = new System.Windows.Forms.Label();
+			this.textBoxPackageVersion = new System.Windows.Forms.TextBox();
+			this.labelPackageVersion = new System.Windows.Forms.Label();
+			this.textBoxPackageAuthor = new System.Windows.Forms.TextBox();
+			this.labelPackageAuthor = new System.Windows.Forms.Label();
+			this.textBoxPackageName = new System.Windows.Forms.TextBox();
+			this.labelPackageName = new System.Windows.Forms.Label();
+			this.pictureBoxPackageImage = new System.Windows.Forms.PictureBox();
 			this.panelUninstallResult = new System.Windows.Forms.Panel();
 			this.textBoxUninstallResult = new System.Windows.Forms.TextBox();
 			this.labelUninstallLog = new System.Windows.Forms.Label();
@@ -387,23 +404,6 @@ namespace OpenBve {
 			this.routeAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.routeWebsite = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.labelInstalledPackages = new System.Windows.Forms.Label();
-			this.panelPackageInstall = new System.Windows.Forms.Panel();
-			this.buttonBack2 = new System.Windows.Forms.Button();
-			this.buttonNext = new System.Windows.Forms.Button();
-			this.labelInstallText = new System.Windows.Forms.Label();
-			this.labelInstallHeader = new System.Windows.Forms.Label();
-			this.buttonSelectPackage = new System.Windows.Forms.Button();
-			this.textBoxPackageDescription = new System.Windows.Forms.TextBox();
-			this.labelPackageDescription = new System.Windows.Forms.Label();
-			this.linkLabelPackageWebsite = new System.Windows.Forms.LinkLabel();
-			this.labelPackageWebsite = new System.Windows.Forms.Label();
-			this.textBoxPackageVersion = new System.Windows.Forms.TextBox();
-			this.labelPackageVersion = new System.Windows.Forms.Label();
-			this.textBoxPackageAuthor = new System.Windows.Forms.TextBox();
-			this.labelPackageAuthor = new System.Windows.Forms.Label();
-			this.textBoxPackageName = new System.Windows.Forms.TextBox();
-			this.labelPackageName = new System.Windows.Forms.Label();
-			this.pictureBoxPackageImage = new System.Windows.Forms.PictureBox();
 			this.panelVersionError = new System.Windows.Forms.Panel();
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.labelNewVersionNumber = new System.Windows.Forms.Label();
@@ -539,6 +539,8 @@ namespace OpenBve {
 			this.panelJoystick.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
+			this.panelPackageInstall.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
 			this.panelUninstallResult.SuspendLayout();
 			this.panelSuccess.SuspendLayout();
 			this.panelDependancyError.SuspendLayout();
@@ -554,8 +556,6 @@ namespace OpenBve {
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages3)).BeginInit();
 			this.panelPackageList.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages)).BeginInit();
-			this.panelPackageInstall.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
 			this.panelVersionError.SuspendLayout();
 			this.groupBoxVersionErrorAction.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewBrokenDependancies)).BeginInit();
@@ -4124,13 +4124,13 @@ namespace OpenBve {
 			this.panelPackages.Controls.Add(this.labelPackagesTitleSeparator);
 			this.panelPackages.Controls.Add(this.labelPackagesTitle);
 			this.panelPackages.Controls.Add(this.labelPackagesTitleBackground);
+			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelUninstallResult);
 			this.panelPackages.Controls.Add(this.panelSuccess);
 			this.panelPackages.Controls.Add(this.panelDependancyError);
 			this.panelPackages.Controls.Add(this.panelPleaseWait);
 			this.panelPackages.Controls.Add(this.panelPackageDependsAdd);
 			this.panelPackages.Controls.Add(this.panelPackageList);
-			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelVersionError);
 			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Location = new System.Drawing.Point(160, 0);
@@ -4172,6 +4172,214 @@ namespace OpenBve {
 			this.labelPackagesTitleBackground.Name = "labelPackagesTitleBackground";
 			this.labelPackagesTitleBackground.Size = new System.Drawing.Size(699, 32);
 			this.labelPackagesTitleBackground.TabIndex = 0;
+			// 
+			// panelPackageInstall
+			// 
+			this.panelPackageInstall.AllowDrop = true;
+			this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageInstall.Controls.Add(this.buttonBack2);
+			this.panelPackageInstall.Controls.Add(this.buttonNext);
+			this.panelPackageInstall.Controls.Add(this.labelInstallText);
+			this.panelPackageInstall.Controls.Add(this.labelInstallHeader);
+			this.panelPackageInstall.Controls.Add(this.buttonSelectPackage);
+			this.panelPackageInstall.Controls.Add(this.textBoxPackageDescription);
+			this.panelPackageInstall.Controls.Add(this.labelPackageDescription);
+			this.panelPackageInstall.Controls.Add(this.linkLabelPackageWebsite);
+			this.panelPackageInstall.Controls.Add(this.labelPackageWebsite);
+			this.panelPackageInstall.Controls.Add(this.textBoxPackageVersion);
+			this.panelPackageInstall.Controls.Add(this.labelPackageVersion);
+			this.panelPackageInstall.Controls.Add(this.textBoxPackageAuthor);
+			this.panelPackageInstall.Controls.Add(this.labelPackageAuthor);
+			this.panelPackageInstall.Controls.Add(this.textBoxPackageName);
+			this.panelPackageInstall.Controls.Add(this.labelPackageName);
+			this.panelPackageInstall.Controls.Add(this.pictureBoxPackageImage);
+			this.panelPackageInstall.Location = new System.Drawing.Point(0, 34);
+			this.panelPackageInstall.Name = "panelPackageInstall";
+			this.panelPackageInstall.Size = new System.Drawing.Size(699, 597);
+			this.panelPackageInstall.TabIndex = 4;
+			this.panelPackageInstall.DragDrop += new System.Windows.Forms.DragEventHandler(this.panelPackageInstall_DragDrop);
+			this.panelPackageInstall.DragEnter += new System.Windows.Forms.DragEventHandler(this.panelPackageInstall_DragEnter);
+			// 
+			// buttonBack2
+			// 
+			this.buttonBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonBack2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonBack2.Location = new System.Drawing.Point(445, 565);
+			this.buttonBack2.Name = "buttonBack2";
+			this.buttonBack2.Size = new System.Drawing.Size(120, 24);
+			this.buttonBack2.TabIndex = 18;
+			this.buttonBack2.Text = "< Back";
+			this.buttonBack2.UseVisualStyleBackColor = true;
+			this.buttonBack2.Click += new System.EventHandler(this.buttonBack2_Click);
+			// 
+			// buttonNext
+			// 
+			this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonNext.Enabled = false;
+			this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonNext.Location = new System.Drawing.Point(571, 565);
+			this.buttonNext.Name = "buttonNext";
+			this.buttonNext.Size = new System.Drawing.Size(120, 24);
+			this.buttonNext.TabIndex = 17;
+			this.buttonNext.Text = "Next >";
+			this.buttonNext.UseVisualStyleBackColor = true;
+			this.buttonNext.Click += new System.EventHandler(this.buttonInstall_Click);
+			// 
+			// labelInstallText
+			// 
+			this.labelInstallText.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.labelInstallText.BackColor = System.Drawing.Color.Silver;
+			this.labelInstallText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstallText.ForeColor = System.Drawing.Color.Black;
+			this.labelInstallText.Location = new System.Drawing.Point(179, 16);
+			this.labelInstallText.Name = "labelInstallText";
+			this.labelInstallText.Size = new System.Drawing.Size(340, 16);
+			this.labelInstallText.TabIndex = 16;
+			this.labelInstallText.Text = "Install a Package";
+			this.labelInstallText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelInstallHeader
+			// 
+			this.labelInstallHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstallHeader.BackColor = System.Drawing.Color.Silver;
+			this.labelInstallHeader.Location = new System.Drawing.Point(8, 8);
+			this.labelInstallHeader.Name = "labelInstallHeader";
+			this.labelInstallHeader.Size = new System.Drawing.Size(683, 32);
+			this.labelInstallHeader.TabIndex = 15;
+			// 
+			// buttonSelectPackage
+			// 
+			this.buttonSelectPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonSelectPackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonSelectPackage.Location = new System.Drawing.Point(134, 535);
+			this.buttonSelectPackage.Name = "buttonSelectPackage";
+			this.buttonSelectPackage.Size = new System.Drawing.Size(180, 24);
+			this.buttonSelectPackage.TabIndex = 14;
+			this.buttonSelectPackage.Text = "Select Package...";
+			this.buttonSelectPackage.UseVisualStyleBackColor = true;
+			this.buttonSelectPackage.Click += new System.EventHandler(this.buttonSelectPackage_Click);
+			// 
+			// textBoxPackageDescription
+			// 
+			this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 417);
+			this.textBoxPackageDescription.Multiline = true;
+			this.textBoxPackageDescription.Name = "textBoxPackageDescription";
+			this.textBoxPackageDescription.ReadOnly = true;
+			this.textBoxPackageDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBoxPackageDescription.Size = new System.Drawing.Size(423, 112);
+			this.textBoxPackageDescription.TabIndex = 13;
+			this.textBoxPackageDescription.Text = "No package selected.";
+			// 
+			// labelPackageDescription
+			// 
+			this.labelPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageDescription.Location = new System.Drawing.Point(8, 420);
+			this.labelPackageDescription.Name = "labelPackageDescription";
+			this.labelPackageDescription.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageDescription.TabIndex = 12;
+			this.labelPackageDescription.Text = "Package Description:";
+			this.labelPackageDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// linkLabelPackageWebsite
+			// 
+			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.linkLabelPackageWebsite.AutoSize = true;
+			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(134, 397);
+			this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
+			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 13);
+			this.linkLabelPackageWebsite.TabIndex = 11;
+			this.linkLabelPackageWebsite.TabStop = true;
+			this.linkLabelPackageWebsite.Text = "No package selected.";
+			this.linkLabelPackageWebsite.Click += new System.EventHandler(this.linkLabelPackageWebsite_Click);
+			// 
+			// labelPackageWebsite
+			// 
+			this.labelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageWebsite.Location = new System.Drawing.Point(8, 397);
+			this.labelPackageWebsite.Name = "labelPackageWebsite";
+			this.labelPackageWebsite.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageWebsite.TabIndex = 10;
+			this.labelPackageWebsite.Text = "Package Website:";
+			this.labelPackageWebsite.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxPackageVersion
+			// 
+			this.textBoxPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageVersion.Location = new System.Drawing.Point(134, 369);
+			this.textBoxPackageVersion.Name = "textBoxPackageVersion";
+			this.textBoxPackageVersion.Size = new System.Drawing.Size(423, 20);
+			this.textBoxPackageVersion.TabIndex = 9;
+			this.textBoxPackageVersion.Text = "No package selected.";
+			// 
+			// labelPackageVersion
+			// 
+			this.labelPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageVersion.Location = new System.Drawing.Point(8, 372);
+			this.labelPackageVersion.Name = "labelPackageVersion";
+			this.labelPackageVersion.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageVersion.TabIndex = 8;
+			this.labelPackageVersion.Text = "Package Version:";
+			this.labelPackageVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxPackageAuthor
+			// 
+			this.textBoxPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageAuthor.Location = new System.Drawing.Point(134, 345);
+			this.textBoxPackageAuthor.Name = "textBoxPackageAuthor";
+			this.textBoxPackageAuthor.Size = new System.Drawing.Size(423, 20);
+			this.textBoxPackageAuthor.TabIndex = 7;
+			this.textBoxPackageAuthor.Text = "No package selected.";
+			// 
+			// labelPackageAuthor
+			// 
+			this.labelPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageAuthor.Location = new System.Drawing.Point(8, 348);
+			this.labelPackageAuthor.Name = "labelPackageAuthor";
+			this.labelPackageAuthor.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageAuthor.TabIndex = 6;
+			this.labelPackageAuthor.Text = "Package Author:";
+			this.labelPackageAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxPackageName
+			// 
+			this.textBoxPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageName.Location = new System.Drawing.Point(134, 321);
+			this.textBoxPackageName.Name = "textBoxPackageName";
+			this.textBoxPackageName.Size = new System.Drawing.Size(423, 20);
+			this.textBoxPackageName.TabIndex = 5;
+			this.textBoxPackageName.Text = "No package selected.";
+			// 
+			// labelPackageName
+			// 
+			this.labelPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageName.Location = new System.Drawing.Point(8, 324);
+			this.labelPackageName.Name = "labelPackageName";
+			this.labelPackageName.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageName.TabIndex = 4;
+			this.labelPackageName.Text = "Package Name:";
+			this.labelPackageName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// pictureBoxPackageImage
+			// 
+			this.pictureBoxPackageImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureBoxPackageImage.Location = new System.Drawing.Point(8, 54);
+			this.pictureBoxPackageImage.Name = "pictureBoxPackageImage";
+			this.pictureBoxPackageImage.Size = new System.Drawing.Size(683, 241);
+			this.pictureBoxPackageImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureBoxPackageImage.TabIndex = 3;
+			this.pictureBoxPackageImage.TabStop = false;
+			this.pictureBoxPackageImage.Click += new System.EventHandler(this.pictureBoxPackageImage_Click);
 			// 
 			// panelUninstallResult
 			// 
@@ -4975,211 +5183,6 @@ namespace OpenBve {
 			this.labelInstalledPackages.Text = "Installed Packages";
 			this.labelInstalledPackages.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// panelPackageInstall
-			// 
-			this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelPackageInstall.Controls.Add(this.buttonBack2);
-			this.panelPackageInstall.Controls.Add(this.buttonNext);
-			this.panelPackageInstall.Controls.Add(this.labelInstallText);
-			this.panelPackageInstall.Controls.Add(this.labelInstallHeader);
-			this.panelPackageInstall.Controls.Add(this.buttonSelectPackage);
-			this.panelPackageInstall.Controls.Add(this.textBoxPackageDescription);
-			this.panelPackageInstall.Controls.Add(this.labelPackageDescription);
-			this.panelPackageInstall.Controls.Add(this.linkLabelPackageWebsite);
-			this.panelPackageInstall.Controls.Add(this.labelPackageWebsite);
-			this.panelPackageInstall.Controls.Add(this.textBoxPackageVersion);
-			this.panelPackageInstall.Controls.Add(this.labelPackageVersion);
-			this.panelPackageInstall.Controls.Add(this.textBoxPackageAuthor);
-			this.panelPackageInstall.Controls.Add(this.labelPackageAuthor);
-			this.panelPackageInstall.Controls.Add(this.textBoxPackageName);
-			this.panelPackageInstall.Controls.Add(this.labelPackageName);
-			this.panelPackageInstall.Controls.Add(this.pictureBoxPackageImage);
-			this.panelPackageInstall.Location = new System.Drawing.Point(0, 34);
-			this.panelPackageInstall.Name = "panelPackageInstall";
-			this.panelPackageInstall.Size = new System.Drawing.Size(699, 597);
-			this.panelPackageInstall.TabIndex = 4;
-			// 
-			// buttonBack2
-			// 
-			this.buttonBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonBack2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBack2.Location = new System.Drawing.Point(445, 565);
-			this.buttonBack2.Name = "buttonBack2";
-			this.buttonBack2.Size = new System.Drawing.Size(120, 24);
-			this.buttonBack2.TabIndex = 18;
-			this.buttonBack2.Text = "< Back";
-			this.buttonBack2.UseVisualStyleBackColor = true;
-			this.buttonBack2.Click += new System.EventHandler(this.buttonBack2_Click);
-			// 
-			// buttonNext
-			// 
-			this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonNext.Enabled = false;
-			this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonNext.Location = new System.Drawing.Point(571, 565);
-			this.buttonNext.Name = "buttonNext";
-			this.buttonNext.Size = new System.Drawing.Size(120, 24);
-			this.buttonNext.TabIndex = 17;
-			this.buttonNext.Text = "Next >";
-			this.buttonNext.UseVisualStyleBackColor = true;
-			this.buttonNext.Click += new System.EventHandler(this.buttonInstall_Click);
-			// 
-			// labelInstallText
-			// 
-			this.labelInstallText.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.labelInstallText.BackColor = System.Drawing.Color.Silver;
-			this.labelInstallText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelInstallText.ForeColor = System.Drawing.Color.Black;
-			this.labelInstallText.Location = new System.Drawing.Point(179, 16);
-			this.labelInstallText.Name = "labelInstallText";
-			this.labelInstallText.Size = new System.Drawing.Size(340, 16);
-			this.labelInstallText.TabIndex = 16;
-			this.labelInstallText.Text = "Install a Package";
-			this.labelInstallText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelInstallHeader
-			// 
-			this.labelInstallHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInstallHeader.BackColor = System.Drawing.Color.Silver;
-			this.labelInstallHeader.Location = new System.Drawing.Point(8, 8);
-			this.labelInstallHeader.Name = "labelInstallHeader";
-			this.labelInstallHeader.Size = new System.Drawing.Size(683, 32);
-			this.labelInstallHeader.TabIndex = 15;
-			// 
-			// buttonSelectPackage
-			// 
-			this.buttonSelectPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonSelectPackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonSelectPackage.Location = new System.Drawing.Point(134, 535);
-			this.buttonSelectPackage.Name = "buttonSelectPackage";
-			this.buttonSelectPackage.Size = new System.Drawing.Size(180, 24);
-			this.buttonSelectPackage.TabIndex = 14;
-			this.buttonSelectPackage.Text = "Select Package...";
-			this.buttonSelectPackage.UseVisualStyleBackColor = true;
-			this.buttonSelectPackage.Click += new System.EventHandler(this.buttonSelectPackage_Click);
-			// 
-			// textBoxPackageDescription
-			// 
-			this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 417);
-			this.textBoxPackageDescription.Multiline = true;
-			this.textBoxPackageDescription.Name = "textBoxPackageDescription";
-			this.textBoxPackageDescription.ReadOnly = true;
-			this.textBoxPackageDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBoxPackageDescription.Size = new System.Drawing.Size(423, 112);
-			this.textBoxPackageDescription.TabIndex = 13;
-			this.textBoxPackageDescription.Text = "No package selected.";
-			// 
-			// labelPackageDescription
-			// 
-			this.labelPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.labelPackageDescription.Location = new System.Drawing.Point(8, 420);
-			this.labelPackageDescription.Name = "labelPackageDescription";
-			this.labelPackageDescription.Size = new System.Drawing.Size(120, 13);
-			this.labelPackageDescription.TabIndex = 12;
-			this.labelPackageDescription.Text = "Package Description:";
-			this.labelPackageDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// linkLabelPackageWebsite
-			// 
-			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.linkLabelPackageWebsite.AutoSize = true;
-			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(134, 397);
-			this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
-			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 13);
-			this.linkLabelPackageWebsite.TabIndex = 11;
-			this.linkLabelPackageWebsite.TabStop = true;
-			this.linkLabelPackageWebsite.Text = "No package selected.";
-			this.linkLabelPackageWebsite.Click += new System.EventHandler(this.linkLabelPackageWebsite_Click);
-			// 
-			// labelPackageWebsite
-			// 
-			this.labelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.labelPackageWebsite.Location = new System.Drawing.Point(8, 397);
-			this.labelPackageWebsite.Name = "labelPackageWebsite";
-			this.labelPackageWebsite.Size = new System.Drawing.Size(120, 13);
-			this.labelPackageWebsite.TabIndex = 10;
-			this.labelPackageWebsite.Text = "Package Website:";
-			this.labelPackageWebsite.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxPackageVersion
-			// 
-			this.textBoxPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPackageVersion.Location = new System.Drawing.Point(134, 369);
-			this.textBoxPackageVersion.Name = "textBoxPackageVersion";
-			this.textBoxPackageVersion.Size = new System.Drawing.Size(423, 20);
-			this.textBoxPackageVersion.TabIndex = 9;
-			this.textBoxPackageVersion.Text = "No package selected.";
-			// 
-			// labelPackageVersion
-			// 
-			this.labelPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.labelPackageVersion.Location = new System.Drawing.Point(8, 372);
-			this.labelPackageVersion.Name = "labelPackageVersion";
-			this.labelPackageVersion.Size = new System.Drawing.Size(120, 13);
-			this.labelPackageVersion.TabIndex = 8;
-			this.labelPackageVersion.Text = "Package Version:";
-			this.labelPackageVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxPackageAuthor
-			// 
-			this.textBoxPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPackageAuthor.Location = new System.Drawing.Point(134, 345);
-			this.textBoxPackageAuthor.Name = "textBoxPackageAuthor";
-			this.textBoxPackageAuthor.Size = new System.Drawing.Size(423, 20);
-			this.textBoxPackageAuthor.TabIndex = 7;
-			this.textBoxPackageAuthor.Text = "No package selected.";
-			// 
-			// labelPackageAuthor
-			// 
-			this.labelPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.labelPackageAuthor.Location = new System.Drawing.Point(8, 348);
-			this.labelPackageAuthor.Name = "labelPackageAuthor";
-			this.labelPackageAuthor.Size = new System.Drawing.Size(120, 13);
-			this.labelPackageAuthor.TabIndex = 6;
-			this.labelPackageAuthor.Text = "Package Author:";
-			this.labelPackageAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxPackageName
-			// 
-			this.textBoxPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPackageName.Location = new System.Drawing.Point(134, 321);
-			this.textBoxPackageName.Name = "textBoxPackageName";
-			this.textBoxPackageName.Size = new System.Drawing.Size(423, 20);
-			this.textBoxPackageName.TabIndex = 5;
-			this.textBoxPackageName.Text = "No package selected.";
-			// 
-			// labelPackageName
-			// 
-			this.labelPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.labelPackageName.Location = new System.Drawing.Point(8, 324);
-			this.labelPackageName.Name = "labelPackageName";
-			this.labelPackageName.Size = new System.Drawing.Size(120, 13);
-			this.labelPackageName.TabIndex = 4;
-			this.labelPackageName.Text = "Package Name:";
-			this.labelPackageName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// pictureBoxPackageImage
-			// 
-			this.pictureBoxPackageImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.pictureBoxPackageImage.Location = new System.Drawing.Point(8, 54);
-			this.pictureBoxPackageImage.Name = "pictureBoxPackageImage";
-			this.pictureBoxPackageImage.Size = new System.Drawing.Size(683, 241);
-			this.pictureBoxPackageImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.pictureBoxPackageImage.TabIndex = 3;
-			this.pictureBoxPackageImage.TabStop = false;
-			this.pictureBoxPackageImage.Click += new System.EventHandler(this.pictureBoxPackageImage_Click);
-			// 
 			// panelVersionError
 			// 
 			this.panelVersionError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -5780,6 +5783,7 @@ namespace OpenBve {
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(859, 631);
 			this.Controls.Add(this.labelVerticalSeparator);
+			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelInfo);
@@ -5790,7 +5794,6 @@ namespace OpenBve {
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
 			this.Controls.Add(this.panelControls);
-			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelReview);
 			this.KeyPreview = true;
 			this.Name = "formMain";
@@ -5907,6 +5910,9 @@ namespace OpenBve {
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
 			this.panelPackages.PerformLayout();
+			this.panelPackageInstall.ResumeLayout(false);
+			this.panelPackageInstall.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
 			this.panelUninstallResult.ResumeLayout(false);
 			this.panelUninstallResult.PerformLayout();
 			this.panelSuccess.ResumeLayout(false);
@@ -5927,9 +5933,6 @@ namespace OpenBve {
 			this.panelPackageList.ResumeLayout(false);
 			this.panelPackageList.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages)).EndInit();
-			this.panelPackageInstall.ResumeLayout(false);
-			this.panelPackageInstall.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
 			this.panelVersionError.ResumeLayout(false);
 			this.panelVersionError.PerformLayout();
 			this.groupBoxVersionErrorAction.ResumeLayout(false);
