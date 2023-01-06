@@ -2017,12 +2017,16 @@ namespace OpenBve {
 				pictureboxRouteMap.Invalidate();
 				// HACK: On some mono systems, the preview would not appear if it's in the base resolution.
 				// If so, resize the image height by 1px
-				if (pictureboxRouteMap.Image.Size == pictureboxRouteMap.Size) {
-					pictureboxRouteMap.Height = pictureboxRouteMap.Height + 1;
+				if(pictureboxRouteMap.Image != null) {
+					if (pictureboxRouteMap.Image.Size == pictureboxRouteMap.Size) {
+						pictureboxRouteMap.Height = pictureboxRouteMap.Height + 1;
+					}
 				}
 
-				if (pictureboxRouteGradient.Image.Size == pictureboxRouteGradient.Size) {
-					pictureboxRouteGradient.Height = pictureboxRouteGradient.Height + 1;
+				if (pictureboxRouteGradient.Image != null) {
+					if (pictureboxRouteGradient.Image.Size == pictureboxRouteGradient.Size) {
+						pictureboxRouteGradient.Height = pictureboxRouteGradient.Height + 1;
+					}
 				}
 			}
 		}
