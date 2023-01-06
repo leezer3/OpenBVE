@@ -110,28 +110,29 @@ namespace OpenBve
 						zipWriter.Write("Problem Description.txt", ms);
 						//Finally add the package database to the archive- Again, this isn't necessarily helpful, but we may well want to see it
 						var packageDatabase = new DirectoryInfo(Program.FileSystem.PackageDatabaseFolder);
-						FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories);
-						foreach (var currentFile in databaseFiles)
-						{
-							if (currentFile.Name.ToLowerInvariant() == "packages.xml")
-							{
-								zipWriter.Write("PackageDatabase\\" + currentFile.Name, currentFile);
-							}
-							else
-							{
-								zipWriter.Write("PackageDatabase\\Installed\\" + currentFile.Name, currentFile);
+						if(packageDatabase.Exists) {
+							FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories); ;
+							foreach (var currentFile in databaseFiles) {
+								if (currentFile.Name.ToLowerInvariant() == "packages.xml") {
+									zipWriter.Write("PackageDatabase\\" + currentFile.Name, currentFile);
+								} else {
+									zipWriter.Write("PackageDatabase\\Installed\\" + currentFile.Name, currentFile);
+								}
 							}
 						}
-						MessageBox.Show(ProblemReport.Name + Environment.NewLine + Environment.NewLine + "Created successfully.");
+
+						// Successful
+						MessageBox.Show("The report has been saved as \"" + fileName + "\" on your desktop." + Environment.NewLine + Environment.NewLine +
+						"You may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.", "Report Problem", MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 				}
 			}
 			catch
 			{
+				MessageBox.Show("Cannot create bug report!" + Environment.NewLine + Environment.NewLine +
+				"You may access the Log and Crash Log directly by clicking the \"View Log\" button, then submit the logs to the discussion board or open an issue on GitHub.", "Report Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 
-			MessageBox.Show("The report has been saved as \"" + fileName + "\" on your desktop." + Environment.NewLine + Environment.NewLine +
-			"You may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.", "Bug Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			this.Close();
 		}
 	}
