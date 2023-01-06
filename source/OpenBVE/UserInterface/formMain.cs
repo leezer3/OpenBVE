@@ -578,7 +578,6 @@ namespace OpenBve {
 					SetFont(this.Controls, font.Name);
 					Interface.CurrentOptions.Font = font.Name;
 					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, font.Name);
-					MessageBox.Show(font.Name);
 				}
 				catch
 				{
