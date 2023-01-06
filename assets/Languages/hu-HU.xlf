@@ -23,7 +23,7 @@
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
+						<source>OpenBVE</source>
 						<target state="translated">OpenBVE</target>
 					</trans-unit>
 				</group>

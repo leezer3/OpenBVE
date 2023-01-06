@@ -140,7 +140,7 @@ namespace OpenBve {
 				}
 			}
 			catch { }
-			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the openBVE startup path.");
+			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the " + Translations.GetInterfaceString("program_title") + " startup path.");
 			return Application.StartupPath;
 		}
 

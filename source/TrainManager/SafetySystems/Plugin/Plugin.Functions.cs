@@ -187,7 +187,7 @@ namespace TrainManager.Trains
 					AssemblyName myAssembly = AssemblyName.GetAssemblyName(pluginFile);
 					if (IntPtr.Size != 4 && myAssembly.ProcessorArchitecture == ProcessorArchitecture.X86)
 					{
-						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " can only be used with the 32-bit version of OpenBVE");
+						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " can only be used with the 32-bit version of " + Translations.GetInterfaceString("program_title"));
 						return false;
 					}
 				}
@@ -244,7 +244,7 @@ namespace TrainManager.Trains
 					}
 				}
 
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
+				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString("program_title") + ".");
 				return false;
 			}
 
@@ -256,7 +256,7 @@ namespace TrainManager.Trains
 			{
 				if (!Win32Plugin.CheckHeader(pluginFile))
 				{
-					TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with openBVE.");
+					TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with "  + Translations.GetInterfaceString("program_title") + ".");
 					return false;
 				}
 			}
@@ -301,7 +301,7 @@ namespace TrainManager.Trains
 			else
 			{
 				Plugin = null;
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
+				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString("program_title") + ".");
 				return false;
 			}
 		}

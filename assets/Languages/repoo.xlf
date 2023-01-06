@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="fi-FI">
+		<body>
+			<group id="grp1">
+				<group id="grp2">
+					<group id="grp3">
+						<trans-unit id="manual_switching3">
+							<source>Manual switching3</source>
+							<target>Manual switching3</target>
+						</trans-unit>
+						<trans-unit id="manual_switching3">
+							<source>Manual switching3</source>
+							<target>Manual switching3</target>
+						</trans-unit>
+					</group>
+						<trans-unit id="manual_switching2">
+							<source>Manual switching2</source>
+							<target>Manual switching2</target>
+						</trans-unit>
+						<trans-unit id="manual_switching2">
+							<source>Manual switching2</source>
+							<target>Manual switching2</target>
+						</trans-unit>
+				</group>
+						<trans-unit id="manual_switching1">
+							<source>Manual switching1</source>
+							<target>Manual switching1</target>
+						</trans-unit>
+						<trans-unit id="manual_switching1">
+							<source>Manual switching1</source>
+							<target>Manual switching1</target>
+						</trans-unit>
+			</group>
+			<group id="grp2A">
+				<group id="grp2A">
+					<group id="grp3A">
+						<trans-unit id="manual_switching3C">
+							<source>Manual switching3</source>
+							<target>Manual switching3</target>
+						</trans-unit>
+						<trans-unit id="manual_switching3C">
+							<source>Manual switching3</source>
+							<target>Manual switching3</target>
+						</trans-unit>
+					</group>
+						<trans-unit id="manual_switching2C">
+							<source>Manual switching2</source>
+							<target>Manual switching2</target>
+						</trans-unit>
+						<trans-unit id="manual_switching2C">
+							<source>Manual switching2</source>
+							<target>Manual switching2</target>
+						</trans-unit>
+				</group>
+						<trans-unit id="manual_switching1C">
+							<source>Manual switching1</source>
+							<target>Manual switching1</target>
+						</trans-unit>
+						<trans-unit id="manual_switching1C">
+							<source>Manual switching1</source>
+							<target>Manual switching1</target>
+						</trans-unit>
+			</group>
+			<group id="grp3A">
+				<group id="grp2B">
+					<group id="grp3B">
+						<trans-unit id="manual_switching3B">
+							<source>Manual switching3</source>
+							<target>Manual switching3</target>
+						</trans-unit>
+						<trans-unit id="manual_switching3B">
+							<source>Manual switching3</source>
+							<target>Manual switching3</target>
+						</trans-unit>
+					</group>
+						<trans-unit id="manual_switching2B">
+							<source>Manual switching2</source>
+							<target>Manual switching2</target>
+						</trans-unit>
+						<trans-unit id="manual_switching2B">
+							<source>Manual switching2</source>
+							<target>Manual switching2</target>
+						</trans-unit>
+				</group>
+						<trans-unit id="manual_switching1B">
+							<source>Manual switching1</source>
+							<target>Manual switching1</target>
+						</trans-unit>
+						<trans-unit id="manual_switching1B">
+							<source>Manual switching1</source>
+							<target>Manual switching1</target>
+						</trans-unit>
+			</group>
+		</body>
+	</file>
+</xliff>

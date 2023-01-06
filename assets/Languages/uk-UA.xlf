@@ -24,8 +24,8 @@
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
-						<target>openBVE</target>
+						<source>OpenBVE</source>
+						<target>OpenBVE</target>
 					</trans-unit>
 				</group>
 				<group id="panel">

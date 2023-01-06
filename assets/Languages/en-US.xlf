@@ -19,7 +19,7 @@
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
+						<source>OpenBVE</source>
 					</trans-unit>
 				</group>
 				<group id="panel">
