@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using OpenBveApi.Hosts;
 
 namespace LibRender2.Text
@@ -28,6 +28,7 @@ namespace LibRender2.Text
 
 		private static readonly List<string> windowsBlockedFonts = new List<string>
 		{
+			"Aharoni", // no regular variant, so crashes
 			"Bookshelf Symbol 7",
 			"HoloLens MDL2 Assets",
 			"Marlett",
