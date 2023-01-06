@@ -578,11 +578,12 @@ namespace OpenBve {
 					SetFont(this.Controls, font.Name);
 					Interface.CurrentOptions.Font = font.Name;
 					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, font.Name);
+					MessageBox.Show(font.Name);
 				}
 				catch
 				{
 					// setting the font failed, so roll back
-					MessageBox.Show(@"Failed to set font " + font.Name);
+					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					SetFont(this.Controls, oldFont);
 					Interface.CurrentOptions.Font = oldFont;
 					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, oldFont);
@@ -596,10 +597,18 @@ namespace OpenBve {
 		{
 			var comboBox = (ComboBox)sender;
 			var fontFamily = (FontFamily)comboBox.Items[e.Index];
-			var font = new Font(fontFamily, comboBox.Font.SizeInPoints);
+			var fallback = false;
+			Font font;
+			try {
+				font = new Font(fontFamily, comboBox.Font.SizeInPoints);
+			} catch {
+				// Fallback to render the font name with current font
+				font = new Font(Interface.CurrentOptions.Font, comboBox.Font.SizeInPoints);
+				fallback = true;
+			}
 
 			e.DrawBackground();
-			e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y);
+			e.Graphics.DrawString((fallback ? fontFamily.Name : font.Name), font, (fallback ? Brushes.Red : Brushes.Black), e.Bounds.X, e.Bounds.Y);
 		}
 
 		public static void SetFont(Control.ControlCollection ctrls, string fontName)
