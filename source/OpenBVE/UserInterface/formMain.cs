@@ -534,6 +534,13 @@ namespace OpenBve {
 					fonts.RemoveAt(i);
 					continue;
 				}
+
+				if (fonts[i].Name.IndexOf("MathJax", 0, StringComparison.OrdinalIgnoreCase) != -1)
+				{
+					// Cross-platform browser Math fonts, useless for general use
+					fonts.RemoveAt(i);
+					continue;
+				}
 				/*
 				 * Under Mono, different font weights are returned as a separate font
 				 * Only use the first one, otherwise our list becomes absolutely massive

@@ -30,6 +30,7 @@ namespace LibRender2.Text
 		{
 			"Aharoni", // no regular variant, so crashes
 			"Bookshelf Symbol 7",
+			"Cambria Math",
 			"HoloLens MDL2 Assets",
 			"Marlett",
 			"MS Outlook",
@@ -229,6 +230,13 @@ namespace LibRender2.Text
 			"OpenSymbol",
 			"Standard Symbols L",
 			"Wingdings",
+			/* Some random non-useful stuff from the URW postscript font set
+			 * https://github.com/ArtifexSoftware/urw-base35-fonts/tree/master/fonts
+			 */
+			"C059",
+			"D050000L",
+			"P052",
+			"Z003",
 			// FreeBSD specific stuff
 			"Cursor",
 			"DejaVu Math TeX Gyre",
