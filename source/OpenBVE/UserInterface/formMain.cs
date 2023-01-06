@@ -1860,7 +1860,7 @@ namespace OpenBve {
 			catch (WebException)
 			{
 				//The internet connection is broken.....
-				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"));
+				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"), Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			finally
