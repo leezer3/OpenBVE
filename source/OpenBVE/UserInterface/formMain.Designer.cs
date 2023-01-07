@@ -1615,18 +1615,19 @@ namespace OpenBve {
 			// 
 			// labelFontName
 			// 
-			this.labelFontName.AutoSize = true;
-			this.labelFontName.Location = new System.Drawing.Point(8, 160);
+			this.labelFontName.AutoSize = false;
+			this.labelFontName.Location = new System.Drawing.Point(8, 148);
 			this.labelFontName.Name = "labelFontName";
-			this.labelFontName.Size = new System.Drawing.Size(31, 13);
+			this.labelFontName.Size = new System.Drawing.Size(50, 36);
 			this.labelFontName.TabIndex = 13;
 			this.labelFontName.Text = "Font:";
+			this.labelFontName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelHUDLarge
 			// 
 			this.labelHUDLarge.AutoSize = false;
 			this.labelHUDLarge.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-			this.labelHUDLarge.Location = new System.Drawing.Point(255, 125);
+			this.labelHUDLarge.Location = new System.Drawing.Point(258, 125);
 			this.labelHUDLarge.Name = "labelHUDLarge";
 			this.labelHUDLarge.Size = new System.Drawing.Size(72, 48);
 			this.labelHUDLarge.TabIndex = 12;
@@ -1636,7 +1637,7 @@ namespace OpenBve {
 			// 
 			this.labelHUDNormal.AutoSize = false;
 			this.labelHUDNormal.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-			this.labelHUDNormal.Location = new System.Drawing.Point(160, 125);
+			this.labelHUDNormal.Location = new System.Drawing.Point(162, 125);
 			this.labelHUDNormal.Name = "labelHUDNormal";
 			this.labelHUDNormal.Size = new System.Drawing.Size(70, 48);
 			this.labelHUDNormal.TabIndex = 11;
@@ -1646,7 +1647,7 @@ namespace OpenBve {
 			// 
 			this.labelHUDSmall.AutoSize = false;
 			this.labelHUDSmall.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-			this.labelHUDSmall.Location = new System.Drawing.Point(64, 125);
+			this.labelHUDSmall.Location = new System.Drawing.Point(66, 125);
 			this.labelHUDSmall.Name = "labelHUDSmall";
 			this.labelHUDSmall.Size = new System.Drawing.Size(70, 48);
 			this.labelHUDSmall.TabIndex = 10;
@@ -1762,7 +1763,7 @@ namespace OpenBve {
 			this.labelWindowHeight.AutoEllipsis = true;
 			this.labelWindowHeight.Location = new System.Drawing.Point(8, 50);
 			this.labelWindowHeight.Name = "labelWindowHeight";
-			this.labelWindowHeight.Size = new System.Drawing.Size(148, 16);
+			this.labelWindowHeight.Size = new System.Drawing.Size(148, 18);
 			this.labelWindowHeight.TabIndex = 2;
 			this.labelWindowHeight.Text = "Height:";
 			this.labelWindowHeight.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1872,7 +1873,7 @@ namespace OpenBve {
 			this.labelFullscreenHeight.AutoEllipsis = true;
 			this.labelFullscreenHeight.Location = new System.Drawing.Point(8, 50);
 			this.labelFullscreenHeight.Name = "labelFullscreenHeight";
-			this.labelFullscreenHeight.Size = new System.Drawing.Size(148, 16);
+			this.labelFullscreenHeight.Size = new System.Drawing.Size(148, 18);
 			this.labelFullscreenHeight.TabIndex = 2;
 			this.labelFullscreenHeight.Text = "Height:";
 			this.labelFullscreenHeight.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1954,7 +1955,7 @@ namespace OpenBve {
 			this.labelAntiAliasing.AutoEllipsis = true;
 			this.labelAntiAliasing.Location = new System.Drawing.Point(8, 66);
 			this.labelAntiAliasing.Name = "labelAntiAliasing";
-			this.labelAntiAliasing.Size = new System.Drawing.Size(148, 16);
+			this.labelAntiAliasing.Size = new System.Drawing.Size(148, 18);
 			this.labelAntiAliasing.TabIndex = 4;
 			this.labelAntiAliasing.Text = "Level of anti-aliasing:";
 			this.labelAntiAliasing.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2015,7 +2016,7 @@ namespace OpenBve {
 			this.labelAnisotropic.Enabled = false;
 			this.labelAnisotropic.Location = new System.Drawing.Point(8, 42);
 			this.labelAnisotropic.Name = "labelAnisotropic";
-			this.labelAnisotropic.Size = new System.Drawing.Size(148, 16);
+			this.labelAnisotropic.Size = new System.Drawing.Size(148, 18);
 			this.labelAnisotropic.TabIndex = 2;
 			this.labelAnisotropic.Text = "Level of anisotropic filtering:";
 			this.labelAnisotropic.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2243,7 +2244,7 @@ namespace OpenBve {
 			this.labelDistance.AutoEllipsis = true;
 			this.labelDistance.Location = new System.Drawing.Point(9, 26);
 			this.labelDistance.Name = "labelDistance";
-			this.labelDistance.Size = new System.Drawing.Size(136, 16);
+			this.labelDistance.Size = new System.Drawing.Size(136, 18);
 			this.labelDistance.TabIndex = 0;
 			this.labelDistance.Text = "Viewing distance:";
 			this.labelDistance.TextAlign = System.Drawing.ContentAlignment.TopRight;
