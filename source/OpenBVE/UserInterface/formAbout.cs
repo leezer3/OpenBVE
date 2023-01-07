@@ -11,6 +11,7 @@ namespace OpenBve
 		public formAbout()
 		{
 			InitializeComponent();
+			ApplyLanguage();
 			labelProductName.Text = Translations.GetInterfaceString("program_title") + @" v" + Application.ProductVersion + Program.VersionSuffix;
 			try
 			{
@@ -104,6 +105,14 @@ namespace OpenBve
 			builder.AppendLine(OpenBveApi.Resource.XamlBehaviorsForWPF);
 
 			this.Shown += (sender, e) => textBoxOpenSourceLicences.Text = builder.ToString();
+		}
+
+		private void ApplyLanguage() {
+			this.Text = Translations.GetInterfaceString("about_title");
+			textBoxMain.Text = Translations.GetInterfaceString("about_description");
+			label1.Text = Translations.GetInterfaceString("about_open_source_licenses");
+			labelOpenSourceHeader.Text = Translations.GetInterfaceString("about_open_source_licenses_header");
+			buttonClose.Text = Translations.GetInterfaceString("about_close");
 		}
 
 		private void buttonClose_Click(object sender, System.EventArgs e)

@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenBve.UserInterface;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using SharpCompress.Common;
 using SharpCompress.Writers;
 
@@ -26,6 +27,18 @@ namespace OpenBve
 			{
 				// Ignored- Just an icon
 			}
+			ApplyLanguage();
+		}
+
+		private void ApplyLanguage() {
+			this.Text = Translations.GetInterfaceString("bug_report_title");
+			textBoxReportLabel.Text = Translations.GetInterfaceString("bug_report_description");
+			labelViewLog.Text = Translations.GetInterfaceString("bug_report_view_log");
+			labelViewCrash.Text = Translations.GetInterfaceString("bug_report_view_crash_log");
+			label1.Text = Translations.GetInterfaceString("bug_report_enter_description");
+			buttonReportProblem.Text = Translations.GetInterfaceString("bug_report_save");
+			buttonViewLog.Text = Translations.GetInterfaceString("bug_report_view_log_button");
+			buttonViewCrashLog.Text = Translations.GetInterfaceString("bug_report_view_log_button");
 		}
 
 		private void buttonViewLog_Click(object sender, System.EventArgs e)
@@ -46,7 +59,7 @@ namespace OpenBve
 						log.ShowDialog();
 					}
 				} else {
-					MessageBox.Show("No game logs were found.", "View previous log", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					MessageBox.Show(Translations.GetInterfaceString("bug_report_no_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
 			catch
@@ -72,7 +85,7 @@ namespace OpenBve
 			}
 			catch
 			{
-				MessageBox.Show("No crash logs were found.", "View previous crash log", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show(Translations.GetInterfaceString("bug_report_no_crash_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
@@ -121,16 +134,14 @@ namespace OpenBve
 							}
 						}
 
-						// Successful
-						MessageBox.Show("The report has been saved as \"" + fileName + "\" on your desktop." + Environment.NewLine + Environment.NewLine +
-						"You may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.", "Report Problem", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						// Successful, would've thrown into the catch block otherwise.
+						MessageBox.Show(Translations.GetInterfaceString("bug_report_saved").Replace("[filename]", fileName), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 				}
 			}
 			catch
 			{
-				MessageBox.Show("Cannot create bug report!" + Environment.NewLine + Environment.NewLine +
-				"You may access the Log and Crash Log directly by clicking the \"View Log\" button, then submit the logs to the discussion board or open an issue on GitHub.", "Report Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(Translations.GetInterfaceString("bug_report_save_failed"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 
 			this.Close();
