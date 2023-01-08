@@ -25,6 +25,7 @@ namespace OpenBve
 		private PackageOperation currentOperation = PackageOperation.None;
 		private PackageType newPackageType;
 		private string ImageFile;
+		private string lastSelectedFolder = null;
 		private BackgroundWorker workerThread = new BackgroundWorker();
 		private bool RemoveFromDatabase = true;
 		private Package dependantPackage;
@@ -1400,8 +1401,11 @@ namespace OpenBve
 				//Mono doesn't like our fancy folder selector
 				//Some versions of OS-X crash, and Linux just falls back- Safer to specifically use the old version on these...
 				var MonoDialog = new FolderBrowserDialog();
+				MonoDialog.RootFolder = Environment.SpecialFolder.MyComputer;
+				if (lastSelectedFolder != null) MonoDialog.SelectedPath = lastSelectedFolder;
 				if (MonoDialog.ShowDialog() == DialogResult.OK)
 				{
+					lastSelectedFolder = MonoDialog.SelectedPath;
 					folder = Directory.GetParent(MonoDialog.SelectedPath).ToString();
 					folderDisplay = MonoDialog.SelectedPath;
 					files = Directory.GetFiles(folderDisplay, "*.*", SearchOption.AllDirectories);
@@ -1412,9 +1416,11 @@ namespace OpenBve
 			{
 				//Use the fancy folder selector dialog on Windows
 				var dialog = new FolderSelectDialog();
+				if (lastSelectedFolder != null) dialog.InitialDirectory = lastSelectedFolder;
 				if (dialog.Show(Handle))
 				{
 					DialogOK = true;
+					lastSelectedFolder = dialog.FileName;
 					folder = Directory.GetParent(dialog.FileName).ToString();
 					folderDisplay = dialog.FileName;
 					files = Directory.GetFiles(dialog.FileName, "*.*", SearchOption.AllDirectories);
