@@ -48,7 +48,6 @@
 						<target>Close</target>
 					</trans-unit>
 				</group>
-				</group>
 				<group id="bug_report">
 					<trans-unit id="title">
 						<source>Report Problem</source>
