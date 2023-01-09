@@ -2149,9 +2149,9 @@ namespace OpenBve {
 			this.comboBoxRailDriverUnits.Items.AddRange(new object[] {
             "Miles per Hour (MPH)",
             "Kilometers per Hour (KPH)"});
-			this.comboBoxRailDriverUnits.Location = new System.Drawing.Point(138, 16);
+			this.comboBoxRailDriverUnits.Location = new System.Drawing.Point(140, 16);
 			this.comboBoxRailDriverUnits.Name = "comboBoxRailDriverUnits";
-			this.comboBoxRailDriverUnits.Size = new System.Drawing.Size(160, 21);
+			this.comboBoxRailDriverUnits.Size = new System.Drawing.Size(165, 21);
 			this.comboBoxRailDriverUnits.TabIndex = 3;
 			this.comboBoxRailDriverUnits.SelectedIndexChanged += new System.EventHandler(this.comboBoxRailDriverUnits_SelectedIndexChanged);
 			// 
@@ -2571,7 +2571,7 @@ namespace OpenBve {
 			this.checkBoxInputDeviceEnable.Enabled = false;
 			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 136);
 			this.checkBoxInputDeviceEnable.Name = "checkBoxInputDeviceEnable";
-			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(190, 34);
+			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(230, 34);
 			this.checkBoxInputDeviceEnable.TabIndex = 2;
 			this.checkBoxInputDeviceEnable.Text = "Enable this Input Device Plugin";
 			this.checkBoxInputDeviceEnable.UseVisualStyleBackColor = true;

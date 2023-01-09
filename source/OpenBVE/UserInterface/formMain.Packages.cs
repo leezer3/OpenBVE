@@ -651,7 +651,7 @@ namespace OpenBve
 			}
 			else
 			{
-				MessageBox.Show(Translations.GetInterfaceString("packages_selection_none"));
+				MessageBox.Show(Translations.GetInterfaceString("packages_selection_none"), Translations.GetInterfaceString("packages_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
@@ -663,7 +663,7 @@ namespace OpenBve
 				//prompt as to whether the user would like to remove the broken package
 				if (RemoveFromDatabase == false)
 				{
-					if (MessageBox.Show(Translations.GetInterfaceString("packages_uninstall_database_remove"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+					if (MessageBox.Show(Translations.GetInterfaceString("packages_uninstall_database_remove"), Translations.GetInterfaceString("packages_title"), MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
 						RemoveFromDatabase = true;
 					}

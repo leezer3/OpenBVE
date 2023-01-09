@@ -68,15 +68,14 @@ namespace OpenBve
 	        }
             try
             {
-                MessageBox.Show("An unhandled Windows Forms Exception occured." + Environment.NewLine + Environment.NewLine + "Please consider reporting this with the \"Report Problem\" button on the bottom left of the main menu.", "OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show("An unhandled Windows Forms Exception occured. \r\n\r\n OpenBVE will now exit. Please consider reporting this with the \"Report Problem\" button on the bottom left of the main menu.", "OpenBVE Crashed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 LogCrash(t.Exception + Environment.NewLine + Environment.StackTrace);
             }
             catch (Exception exc)
             {
                 try
                 {
-                    MessageBox.Show("A fatal exception occured inside the UIThreadException handler",
-                        "Fatal Windows Forms Error", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Stop);
+                    MessageBox.Show("Fatal Error: A fatal exception occured inside the UIThreadException handler");
                         LogCrash(exc + Environment.StackTrace);
                 }
                 finally
