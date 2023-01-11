@@ -300,7 +300,7 @@ namespace OpenBveApi.Packages
 					brokenPackages.Add(Train);
 				}
 			}
-			foreach (Package Other in currentDatabase.InstalledRoutes)
+			foreach (Package Other in currentDatabase.InstalledOther)
 			{
 				if (packagesToRemove.Contains(Other.GUID))
 				{
