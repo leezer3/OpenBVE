@@ -10,7 +10,7 @@ namespace OpenBveApi.Interface {
         public static void LoadLanguageFiles(string LanguageFolder) {
 			if (!Directory.Exists(LanguageFolder))
 			{
-				MessageBox.Show(@"The default language files have been moved or deleted.");
+				MessageBox.Show(@"The default language files have been moved or deleted.", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				LoadEmbeddedLanguage();
 				return;
 			}
@@ -18,7 +18,7 @@ namespace OpenBveApi.Interface {
 				string[] LanguageFiles = Directory.GetFiles(LanguageFolder, "*.xlf");
 	            if (LanguageFiles.Length == 0)
 	            {
-		            MessageBox.Show(@"No valid language files were found.");
+		            MessageBox.Show(@"No valid language files were found.", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					LoadEmbeddedLanguage();
 		            return;
 	            }

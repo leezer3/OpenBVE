@@ -19,7 +19,59 @@
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
+						<source>OpenBVE</source>
+					</trans-unit>
+				</group>
+				<group id="about">
+					<trans-unit id="title">
+						<source>About</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
+					</trans-unit>
+					<trans-unit id="open_source_licenses">
+						<source>Open Source Licenses</source>
+					</trans-unit>
+					<trans-unit id="open_source_licenses_header">
+						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+					</trans-unit>
+				</group>
+				<group id="bug_report">
+					<trans-unit id="title">
+						<source>Report Problem</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
+					</trans-unit>
+					<trans-unit id="view_log_button">
+						<source>View...</source>
+					</trans-unit>
+					<trans-unit id="view_log">
+						<source>View the previous log:</source>
+					</trans-unit>
+					<trans-unit id="view_crash_log">
+						<source>View the previous crash log:</source>
+					</trans-unit>
+					<trans-unit id="enter_description">
+						<source>Please enter a brief description of the problem:</source>
+					</trans-unit>
+					<trans-unit id="no_log">
+						<source>No simulation logs were found.</source>
+					</trans-unit>
+					<trans-unit id="no_crash_log">
+						<source>No crash logs were found.</source>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save Bug Report</source>
+					</trans-unit>
+					<trans-unit id="saved">
+						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+					</trans-unit>
+					<trans-unit id="save_failed">
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -510,6 +562,9 @@
 					<trans-unit id="creation_dependancies_remove">
 						<source>Remove</source>
 					</trans-unit>
+					<trans-unit id="creation_dependancies_skip_if_none">
+						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
+					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
 					</trans-unit>
@@ -896,7 +951,7 @@
 						<source>Launch</source>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
@@ -1128,6 +1183,9 @@
 					<trans-unit id="verbosity_errormessages">
 						<source>Show error messages</source>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 					</trans-unit>
@@ -1142,6 +1200,9 @@
 					</trans-unit>
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1203,6 +1264,9 @@
 					<trans-unit id="hud_size_large">
 						<source>Large</source>
 					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
+					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
 					</trans-unit>
@@ -1247,6 +1311,9 @@
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>

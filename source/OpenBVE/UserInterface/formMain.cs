@@ -30,7 +30,6 @@ namespace OpenBve {
 		private formMain()
 		{
 			InitializeComponent();
-			this.Text = Translations.GetInterfaceString("program_title");
 		}
 
 		public sealed override string Text
@@ -583,7 +582,7 @@ namespace OpenBve {
 				catch
 				{
 					// setting the font failed, so roll back
-					MessageBox.Show(@"Failed to set font " + font.Name);
+					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					SetFont(this.Controls, oldFont);
 					Interface.CurrentOptions.Font = oldFont;
 					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, oldFont);
@@ -597,10 +596,18 @@ namespace OpenBve {
 		{
 			var comboBox = (ComboBox)sender;
 			var fontFamily = (FontFamily)comboBox.Items[e.Index];
-			var font = new Font(fontFamily, comboBox.Font.SizeInPoints);
+			var fallback = false;
+			Font font;
+			try {
+				font = new Font(fontFamily, comboBox.Font.SizeInPoints);
+			} catch {
+				// Fallback to render the font name with current font
+				font = new Font(Interface.CurrentOptions.Font, comboBox.Font.SizeInPoints);
+				fallback = true;
+			}
 
 			e.DrawBackground();
-			e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y);
+			e.Graphics.DrawString((fallback ? fontFamily.Name : font.Name), font, (fallback ? Brushes.Red : Brushes.Black), e.Bounds.X, e.Bounds.Y);
 		}
 
 		public static void SetFont(Control.ControlCollection ctrls, string fontName)
@@ -623,6 +630,8 @@ namespace OpenBve {
 		private void ApplyLanguage()
 		{
 			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
+			// Main form title bar
+			this.Text = Translations.GetInterfaceString("program_title");
 			/*
 			 * Localisation for strings in main panel
 			 */
@@ -651,6 +660,7 @@ namespace OpenBve {
 			labelHUDSmall.Text = Translations.GetInterfaceString("options_hud_size_small");
 			labelHUDNormal.Text = Translations.GetInterfaceString("options_hud_size_normal");
 			labelHUDLarge.Text = Translations.GetInterfaceString("options_hud_size_large");
+			labelFontName.Text = Translations.GetInterfaceString("options_font");
 			//Windowed Mode
 			groupboxWindow.Text = Translations.GetInterfaceString("options_display_window");
 			labelWindowWidth.Text = Translations.GetInterfaceString("options_display_window_width");
@@ -703,12 +713,14 @@ namespace OpenBve {
 			groupboxVerbosity.Text = Translations.GetInterfaceString("options_verbosity");
 			checkboxWarningMessages.Text = Translations.GetInterfaceString("options_verbosity_warningmessages");
 			checkboxErrorMessages.Text = Translations.GetInterfaceString("options_verbosity_errormessages");
+			checkBoxAccessibility.Text = Translations.GetInterfaceString("options_verbosity_accessibilityaids");
 			//Advanced Options
 			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString("options_advanced");
 			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString("options_advanced_load_advance");
 			checkBoxUnloadTextures.Text = Translations.GetInterfaceString("options_advanced_unload_textures");
 			checkBoxIsUseNewRenderer.Text = Translations.GetInterfaceString("options_advanced_is_use_new_renderer");
 			labelTimeAcceleration.Text = Translations.GetInterfaceString("options_advanced_timefactor");
+			labelCursor.Text = Translations.GetInterfaceString("options_advanced_cursor");
 			//Other Options
 			groupBoxOther.Text = Translations.GetInterfaceString("options_other");
 			labelTimeTableDisplayMode.Text = Translations.GetInterfaceString("options_other_timetable_mode");
@@ -720,8 +732,6 @@ namespace OpenBve {
 			buttonOptionsPrevious.Text = Translations.GetInterfaceString("options_page_previous");
 			buttonOptionsNext.Text = Translations.GetInterfaceString("options_page_next");
 			checkBoxPanel2Extended.Text = Translations.GetInterfaceString("options_panel2_extended");
-			labelXparser.Text = Translations.GetInterfaceString("options_xobject_parser");
-			labelObjparser.Text = Translations.GetInterfaceString("options_objobject_parser");
 			/*
 			 * Options Page 2
 			 */
@@ -737,6 +747,7 @@ namespace OpenBve {
 			labelTrainInstallDirectory.Text = Translations.GetInterfaceString("options_package_train_directory");
 			labelOtherInstallDirectory.Text = Translations.GetInterfaceString("options_package_other_directory");
 			labelPackageCompression.Text = Translations.GetInterfaceString("options_package_compression");
+			//Kiosk Mode
 			groupBoxKioskMode.Text = Translations.GetInterfaceString("options_kiosk_mode");
 			checkBoxEnableKiosk.Text = Translations.GetInterfaceString("options_kiosk_mode_enable");
 			labelKioskTimeout.Text = Translations.GetInterfaceString("options_kiosk_mode_timer");
@@ -747,6 +758,11 @@ namespace OpenBve {
 			buttonRailDriverCalibration.Text = Translations.GetInterfaceString("raildriver_launch");
 			checkBoxTransparencyFix.Text = Translations.GetInterfaceString("options_transparencyfix");
 			checkBoxHacks.Text = Translations.GetInterfaceString("options_hacks_enable");
+			//Object Parser Options
+			groupBoxObjectParser.Text = Translations.GetInterfaceString("options_object_parser");
+			labelXparser.Text = Translations.GetInterfaceString("options_xobject_parser");
+			labelObjparser.Text = Translations.GetInterfaceString("options_objobject_parser");
+			//Input Device
 			groupBoxInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin");
 			labelInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin_warning");
 			listviewInputDevice.Columns[0].Text = Translations.GetInterfaceString("options_input_device_plugin_name");
@@ -1016,6 +1032,7 @@ namespace OpenBve {
 			dataGridViewTextBoxColumn3.HeaderText = Translations.GetInterfaceString("packages_list_maximum");
 			dataGridViewTextBoxColumn4.HeaderText = Translations.GetInterfaceString("packages_list_packagetype");
 			buttonRemove.Text = Translations.GetInterfaceString("packages_creation_dependancies_remove");
+			labelNoDependencyReminder.Text = Translations.GetInterfaceString("packages_creation_dependancies_skip_if_none");
 			website.HeaderText = Translations.GetInterfaceString("packages_list_website");
 			//Version Error panel
 			labelBrokenDependancies.Text = Translations.GetInterfaceString("packages_install_dependancies_broken");
@@ -1052,7 +1069,7 @@ namespace OpenBve {
 			{
 				panelOptionsPage2.Hide();
 			}
-			
+
 
 		}
 
@@ -1413,13 +1430,8 @@ namespace OpenBve {
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelStartTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
 			//Update the route/ train displays in case a package has been installed
 			textboxRouteFolder_TextChanged(this, EventArgs.Empty);
 			textboxTrainFolder_TextChanged(this, EventArgs.Empty);
@@ -1438,13 +1450,11 @@ namespace OpenBve {
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelReviewTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
+
+			//HACK: Column Header won't appear in Mono without resizing it...
+			listviewScore.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 		}
 		private void radiobuttonControls_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1459,13 +1469,10 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelControlsTitle.BackColor;
 			pictureboxJoysticks.Visible = true;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
+			//HACK: Column Header in list view won't appear in Mono without resizing it...
+			listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 		}
 		private void radiobuttonOptions_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1480,13 +1487,8 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelOptionsTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1499,13 +1501,8 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelPackages.Visible = true;
-			panelPanels.BackColor = labelPackagesTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonHighlight;
+			UpdatePanelColor();
 			//Load packages & rest panel states
 			if (radioButtonPackages.Checked)
 			{
@@ -1520,6 +1517,43 @@ namespace OpenBve {
 					MessageBox.Show(Translations.GetInterfaceString(errorMessage));
 				}
 				comboBoxPackageType.SelectedIndex = 0;
+			}
+		}
+
+		private void UpdatePanelColor() {
+			if(panelStart.Visible) {
+				panelPanels.BackColor = labelStartTitle.BackColor;
+				radiobuttonStart.BackColor = Color.White;
+			} else {
+				radiobuttonStart.BackColor = Color.LightGray;
+			}
+
+			if (panelReview.Visible) {
+				panelPanels.BackColor = labelReviewTitle.BackColor;
+				radiobuttonReview.BackColor = Color.White;
+			} else {
+				radiobuttonReview.BackColor = Color.LightGray;
+			}
+
+			if (panelControls.Visible) {
+				panelPanels.BackColor = labelControlsTitle.BackColor;
+				radiobuttonControls.BackColor = Color.White;
+			} else {
+				radiobuttonControls.BackColor = Color.LightGray;
+			}
+
+			if (panelOptions.Visible) {
+				panelPanels.BackColor = labelOptionsTitle.BackColor;
+				radiobuttonOptions.BackColor = Color.White;
+			} else {
+				radiobuttonOptions.BackColor = Color.LightGray;
+			}
+
+			if (panelPackages.Visible) {
+				panelPanels.BackColor = labelPackagesTitle.BackColor;
+				radioButtonPackages.BackColor = Color.White;
+			} else {
+				radioButtonPackages.BackColor = Color.LightGray;
 			}
 		}
 
@@ -1826,7 +1860,7 @@ namespace OpenBve {
 			catch (WebException)
 			{
 				//The internet connection is broken.....
-				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"));
+				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"), Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			finally
@@ -1865,14 +1899,10 @@ namespace OpenBve {
 			
 		}
 
-		private formAbout AboutDialog;
-
 		private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if (AboutDialog == null || AboutDialog.Visible == false)
-			{
-				AboutDialog = new formAbout();
-				AboutDialog.Show();
+			using (formAbout f = new formAbout()) {
+				f.ShowDialog();
 			}
 		}
 
@@ -1888,6 +1918,8 @@ namespace OpenBve {
 				panelOptionsLeft.Hide();
 				panelOptionsRight.Hide();
 				panelOptionsPage2.Show();
+				//HACK: Column Header in list view won't appear in Mono without resizing it...
+				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
 			else
 			{
@@ -1988,8 +2020,23 @@ namespace OpenBve {
 
 		private void tabcontrolRouteDetails_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			// MONO issue on some systems means that the map may not draw initially, so force redraw
-			pictureboxRouteMap.Invalidate();
+			if (Program.CurrentHost.MonoRuntime) {
+				// MONO issue on some systems means that the map may not draw initially, so force redraw
+				pictureboxRouteMap.Invalidate();
+				// HACK: On some mono systems, the preview would not appear if it's in the base resolution.
+				// If so, resize the image height by 1px
+				if(pictureboxRouteMap.Image != null) {
+					if (pictureboxRouteMap.Image.Size == pictureboxRouteMap.Size) {
+						pictureboxRouteMap.Height = pictureboxRouteMap.Height + 1;
+					}
+				}
+
+				if (pictureboxRouteGradient.Image != null) {
+					if (pictureboxRouteGradient.Image.Size == pictureboxRouteGradient.Size) {
+						pictureboxRouteGradient.Height = pictureboxRouteGradient.Height + 1;
+					}
+				}
+			}
 		}
 		
 		private void toolStripExport_Click(object sender, EventArgs e)

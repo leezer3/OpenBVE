@@ -224,7 +224,7 @@ namespace ObjectViewer
             catch
             {
                 MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
-                                "Please check you have write permission.");
+                                "Please ensure you have write permission.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

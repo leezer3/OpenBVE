@@ -322,12 +322,12 @@ namespace TrainEditor {
 								{
 									if (v > currentVersion)
 									{
-										MessageBox.Show("The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
+										MessageBox.Show("The train.dat " + FileName + " was created with a newer version of OpenBVE." + Environment.NewLine + Environment.NewLine + "Please update your OpenBVE.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 									}
 								}
 								else
 								{
-									MessageBox.Show("The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
+									MessageBox.Show("The train.dat version \"" + Lines[0].ToLowerInvariant() + "\" is invalid in " + FileName, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 								}
 							}
 							break;

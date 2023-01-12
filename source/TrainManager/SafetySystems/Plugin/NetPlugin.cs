@@ -95,7 +95,7 @@ namespace TrainManager.SafetySystems
 				{
 					//TTC plugin, broken when multi-threading is used
 					success = false;
-					properties.FailureReason = "This plugin does not function correctly with current versions of openBVE. Please ask the plugin developer to fix this.";
+					properties.FailureReason = "This plugin does not function correctly with the current version of " + Translations.GetInterfaceString("program_title") + ". Please ask the plugin developer to fix this.";
 				}
 				else
 				{

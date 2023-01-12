@@ -51,6 +51,7 @@
 			// 
 			// textBoxProblemDescription
 			// 
+			this.textBoxProblemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right) | System.Windows.Forms.AnchorStyles.Bottom)));
 			this.textBoxProblemDescription.Location = new System.Drawing.Point(15, 150);
 			this.textBoxProblemDescription.Multiline = true;
 			this.textBoxProblemDescription.Name = "textBoxProblemDescription";
@@ -68,6 +69,7 @@
 			// 
 			// buttonViewLog
 			// 
+			this.buttonViewLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonViewLog.Location = new System.Drawing.Point(360, 81);
 			this.buttonViewLog.Name = "buttonViewLog";
 			this.buttonViewLog.Size = new System.Drawing.Size(113, 23);
@@ -78,6 +80,7 @@
 			// 
 			// buttonViewCrashLog
 			// 
+			this.buttonViewCrashLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonViewCrashLog.Location = new System.Drawing.Point(360, 108);
 			this.buttonViewCrashLog.Name = "buttonViewCrashLog";
 			this.buttonViewCrashLog.Size = new System.Drawing.Size(113, 23);
@@ -97,7 +100,9 @@
 			// 
 			// textBoxReportLabel
 			// 
+			this.textBoxReportLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxReportLabel.BackColor = System.Drawing.SystemColors.Control;
+			this.textBoxReportLabel.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.textBoxReportLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.textBoxReportLabel.Location = new System.Drawing.Point(17, 6);
 			this.textBoxReportLabel.Multiline = true;
@@ -109,12 +114,13 @@
 			// 
 			// buttonReportProblem
 			// 
+			this.buttonReportProblem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonReportProblem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonReportProblem.Location = new System.Drawing.Point(330, 339);
 			this.buttonReportProblem.Name = "buttonReportProblem";
 			this.buttonReportProblem.Size = new System.Drawing.Size(142, 36);
 			this.buttonReportProblem.TabIndex = 7;
-			this.buttonReportProblem.Text = "Report Problem";
+			this.buttonReportProblem.Text = "Save bug report";
 			this.buttonReportProblem.UseVisualStyleBackColor = true;
 			this.buttonReportProblem.Click += new System.EventHandler(this.buttonReportProblem_Click);
 			// 

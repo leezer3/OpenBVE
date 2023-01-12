@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenBve.UserInterface;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using SharpCompress.Common;
 using SharpCompress.Writers;
 
@@ -26,6 +27,18 @@ namespace OpenBve
 			{
 				// Ignored- Just an icon
 			}
+			ApplyLanguage();
+		}
+
+		private void ApplyLanguage() {
+			this.Text = Translations.GetInterfaceString("bug_report_title");
+			textBoxReportLabel.Text = Translations.GetInterfaceString("bug_report_description");
+			labelViewLog.Text = Translations.GetInterfaceString("bug_report_view_log");
+			labelViewCrash.Text = Translations.GetInterfaceString("bug_report_view_crash_log");
+			label1.Text = Translations.GetInterfaceString("bug_report_enter_description");
+			buttonReportProblem.Text = Translations.GetInterfaceString("bug_report_save");
+			buttonViewLog.Text = Translations.GetInterfaceString("bug_report_view_log_button");
+			buttonViewCrashLog.Text = Translations.GetInterfaceString("bug_report_view_log_button");
 		}
 
 		private void buttonViewLog_Click(object sender, System.EventArgs e)
@@ -45,6 +58,8 @@ namespace OpenBve
 						formViewLog log = new formViewLog(File.ReadAllText(file));
 						log.ShowDialog();
 					}
+				} else {
+					MessageBox.Show(Translations.GetInterfaceString("bug_report_no_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
 			catch
@@ -70,15 +85,16 @@ namespace OpenBve
 			}
 			catch
 			{
-				MessageBox.Show("No crash logs were found.");
+				MessageBox.Show(Translations.GetInterfaceString("bug_report_no_crash_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
 		private void buttonReportProblem_Click(object sender, System.EventArgs e)
 		{
+			string fileName = "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip";
 			try
 			{
-				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) , "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip")))
+				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName)))
 				{
 					using (var zipWriter = WriterFactory.Open(ProblemReport, ArchiveType.Zip, CompressionType.LZMA))
 					{
@@ -107,25 +123,27 @@ namespace OpenBve
 						zipWriter.Write("Problem Description.txt", ms);
 						//Finally add the package database to the archive- Again, this isn't necessarily helpful, but we may well want to see it
 						var packageDatabase = new DirectoryInfo(Program.FileSystem.PackageDatabaseFolder);
-						FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories);
-						foreach (var currentFile in databaseFiles)
-						{
-							if (currentFile.Name.ToLowerInvariant() == "packages.xml")
-							{
-								zipWriter.Write("PackageDatabase\\" + currentFile.Name, currentFile);
-							}
-							else
-							{
-								zipWriter.Write("PackageDatabase\\Installed\\" + currentFile.Name, currentFile);
+						if(packageDatabase.Exists) {
+							FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories); ;
+							foreach (var currentFile in databaseFiles) {
+								if (currentFile.Name.ToLowerInvariant() == "packages.xml") {
+									zipWriter.Write("PackageDatabase\\" + currentFile.Name, currentFile);
+								} else {
+									zipWriter.Write("PackageDatabase\\Installed\\" + currentFile.Name, currentFile);
+								}
 							}
 						}
-						MessageBox.Show(ProblemReport.Name + Environment.NewLine + Environment.NewLine + "Created successfully.");
+
+						// Successful, would've thrown into the catch block otherwise.
+						MessageBox.Show(Translations.GetInterfaceString("bug_report_saved").Replace("[filename]", fileName), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 				}
 			}
 			catch
 			{
+				MessageBox.Show(Translations.GetInterfaceString("bug_report_save_failed"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
+
 			this.Close();
 		}
 	}
