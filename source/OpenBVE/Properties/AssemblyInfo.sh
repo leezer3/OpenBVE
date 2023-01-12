@@ -38,9 +38,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("openBVE")]
-[assembly: AssemblyProduct("openBVE")]
-[assembly: AssemblyCopyright("The openBVE Project")]
+[assembly: AssemblyTitle("OpenBVE")]
+[assembly: AssemblyProduct("OpenBVE")]
+[assembly: AssemblyCopyright("The OpenBVE Project")]
 [assembly: ComVisible(false)]
 [assembly: AssemblyVersion("$Version")]
 [assembly: AssemblyInformationalVersion("$InfoVersion")]
