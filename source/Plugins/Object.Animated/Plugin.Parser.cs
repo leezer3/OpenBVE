@@ -683,6 +683,78 @@ namespace Plugin
 															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													} break;
+												case "scalexfunction":
+													try
+													{
+														double X;
+														if (double.TryParse(b, NumberStyles.Float, Culture, out X))
+														{
+															throw new NotImplementedException("not yet implemented");
+														}
+														Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case "scalexscript":
+													try
+													{
+														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case "scaleyfunction":
+													try
+													{
+														double Y;
+														if (double.TryParse(b, NumberStyles.Float, Culture, out Y))
+														{
+															throw new NotImplementedException("not yet implemented");
+														}
+														Result.Objects[ObjectCount].ScaleYFunction = new FunctionScript(currentHost, b, true);
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case "scaleyscript":
+													try
+													{
+														Result.Objects[ObjectCount].ScaleYFunction = new CSAnimationScript(currentHost, 
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case "scalezfunction":
+													try
+													{
+														double Z;
+														if (double.TryParse(b, NumberStyles.Float, Culture, out Z))
+														{
+															throw new NotImplementedException("not yet implemented");
+														}
+														Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case "scalezscript":
+													try
+													{
+														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
 												case "textureshiftxdirection":
 												case "textureshiftydirection":
 													{

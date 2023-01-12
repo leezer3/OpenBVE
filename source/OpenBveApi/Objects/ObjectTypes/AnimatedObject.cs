@@ -1,10 +1,7 @@
-using System.IO;
 using System.Linq;
-using CSScriptLibrary;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -20,6 +17,12 @@ namespace OpenBveApi.Objects
 		public AnimationScript StateFunction;
 		/// <summary>The index of the current state</summary>
 		public int CurrentState;
+		/// <summary>The function script controlling scaling in the X direction</summary>
+		public AnimationScript ScaleXFunction;
+		/// <summary>The function script controlling scaling in the Y direction</summary>
+		public AnimationScript ScaleYFunction;
+		/// <summary>The function script controlling scaling in the Z direction</summary>
+		public AnimationScript ScaleZFunction;
 		/// <summary>A 3D vector describing the direction taken when TranslateXFunction is called</summary>
 		public Vector3 TranslateXDirection;
 		/// <summary>A 3D vector describing the direction taken when TranslateXYFunction is called</summary>
@@ -135,6 +138,9 @@ namespace OpenBveApi.Objects
 			Result.RotateYDamping = RotateYDamping?.Clone();
 			Result.RotateZFunction = RotateZFunction?.Clone();
 			Result.RotateZDamping = RotateZDamping?.Clone();
+			Result.ScaleXFunction = ScaleXFunction?.Clone();
+			Result.ScaleYFunction = ScaleYFunction?.Clone();
+			Result.ScaleZFunction = ScaleZFunction?.Clone();
 			Result.TextureShiftXDirection = this.TextureShiftXDirection;
 			Result.TextureShiftYDirection = this.TextureShiftYDirection;
 			Result.TextureShiftXFunction = TextureShiftXFunction?.Clone();
@@ -174,6 +180,7 @@ namespace OpenBveApi.Objects
 		{
 			if (this.StateFunction != null) return false;
 			if (this.TrackFollowerFunction != null) return false;
+			if (this.ScaleXFunction != null | this.ScaleYFunction != null | this.ScaleZFunction != null) return false;
 			if (this.TranslateXFunction != null | this.TranslateYFunction != null | this.TranslateZFunction != null) return false;
 			if (this.RotateXFunction != null | this.RotateYFunction != null | this.RotateZFunction != null) return false;
 			if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
@@ -338,6 +345,34 @@ namespace OpenBveApi.Objects
 				}
 			}
 
+			bool scaleX = ScaleXFunction != null;
+			bool scaleY = ScaleYFunction != null;
+			bool scaleZ = ScaleZFunction != null;
+			Vector3 scale = Vector3.One;
+			if (scaleX)
+			{
+				scale.X = ScaleXFunction.LastResult;
+				if (UpdateFunctions)
+				{
+					scale.X = ScaleXFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+				}
+			}
+			if (scaleY)
+			{
+				scale.Y = ScaleYFunction.LastResult;
+				if (UpdateFunctions)
+				{
+					scale.Y = ScaleYFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+				}
+			}
+			if (scaleZ)
+			{
+				scale.Z = ScaleZFunction.LastResult;
+				if (UpdateFunctions)
+				{
+					scale.Z = ScaleZFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+				}
+			}
 			// texture shift
 			bool shiftx = TextureShiftXFunction != null;
 			bool shifty = TextureShiftYFunction != null;
@@ -655,6 +690,16 @@ namespace OpenBveApi.Objects
 			if (rotateZ)
 			{
 				internalObject.Rotate *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateZDirection.X, RotateZDirection.Y, -RotateZDirection.Z), 2.0 * System.Math.PI - radianZ);
+			}
+
+			// scale
+			if (scaleX | scaleY | scaleZ)
+			{
+				Matrix4D scaleM = Matrix4D.Identity;
+				scaleM.Row0 *= scale.X;
+				scaleM.Row1 *= scale.Y;
+				scaleM.Row2 *= scale.Z;
+				internalObject.Scale = scaleM;
 			}
 
 			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D)
