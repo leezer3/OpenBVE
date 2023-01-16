@@ -660,7 +660,7 @@ namespace LibRender2
 				{
 					VisibleObjects.quadTree.Add(state, Orientation3.Default);
 				}
-				VisibleObjects.quadTree.CreateVisibilityLists(500);
+				VisibleObjects.quadTree.Initialize(currentOptions.ViewingDistance);
 				UpdateQuadTreeVisibility();
 			}
 			else

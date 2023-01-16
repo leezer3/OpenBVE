@@ -57,11 +57,6 @@ namespace OpenBveApi.Routes
 				// the root node exists
 				while (true)
 				{
-					if (objectState.WorldPosition != Vector3.Zero)
-					{
-						int b = 0;
-						b++;
-					}
 					if (objectState.WorldPosition.X >= Root.Rectangle.Left & objectState.WorldPosition.X <= Root.Rectangle.Right & objectState.WorldPosition.Z >= Root.Rectangle.Near & objectState.WorldPosition.Z <= Root.Rectangle.Far)
 					{
 						// the position is within the bounds of the root node
@@ -269,257 +264,29 @@ namespace OpenBveApi.Routes
 			}
 		}
 
-		/// <summary>Creates the visibility lists for all nodes in this quad collection.</summary>
+		/// <summary>Initializes the quad tree</summary>
 		/// <param name="viewingDistance">The viewing distance.</param>
 		/// <remarks>Call this function whenever the viewing distance changes.</remarks>
-		public void CreateVisibilityLists(double viewingDistance)
+		public void Initialize(double viewingDistance)
 		{
-			FinalizeBoundingRectangles(Root);
-			CreateVisibilityLists(Root, viewingDistance);
+			Root.FinalizeBoundingRectangles();
+			Root.CreateVisibilityLists(Root, viewingDistance);
 		}
-
-		/// <summary>Finalizes the bounding rectangles for the specified node and all its child nodes.</summary>
-		/// <param name="node">The node for which to finalize visiblity lists.</param>
-		/// <remarks>This function is used to get rid of uninitialized bounding rectangles.</remarks>
-		private void FinalizeBoundingRectangles(QuadNode node)
-		{
-			if (node is QuadInternalNode)
-			{
-				QuadInternalNode intern = (QuadInternalNode)node;
-				for (int i = 0; i < intern.Children.Length; i++)
-				{
-					FinalizeBoundingRectangles(intern.Children[i]);
-				}
-			}
-			else if (node is QuadTreeLeafNode)
-			{
-				QuadTreeLeafNode leaf = (QuadTreeLeafNode)node;
-				if (leaf.BoundingRectangle.Left > leaf.BoundingRectangle.Right | leaf.BoundingRectangle.Near > leaf.BoundingRectangle.Far)
-				{
-					if (leaf is QuadTreePopulatedLeafNode)
-					{
-						QuadTreeUnpopulatedLeafNode unpopulated = new QuadTreeUnpopulatedLeafNode(leaf.Parent, leaf.Rectangle);
-						unpopulated.BoundingRectangle = unpopulated.Rectangle;
-						for (int i = 0; i < leaf.Parent.Children.Length; i++)
-						{
-							if (unpopulated.Parent.Children[i] == leaf)
-							{
-								unpopulated.Parent.Children[i] = unpopulated;
-							}
-						}
-
-						unpopulated.Parent.UpdateBoundingRectangle();
-					}
-					else
-					{
-						leaf.BoundingRectangle = leaf.Rectangle;
-						leaf.Parent.UpdateBoundingRectangle();
-					}
-				}
-			}
-		}
-
-		/// <summary>Creates the visibility lists for the specified node and all its child nodes.</summary>
-		/// <param name="node">The node for which to create visiblity lists.</param>
-		/// <param name="viewingDistance">The viewing distance.</param>
-		private void CreateVisibilityLists(QuadNode node, double viewingDistance)
-		{
-			if (node is QuadInternalNode)
-			{
-				QuadInternalNode intern = (QuadInternalNode)node;
-				for (int i = 0; i < intern.Children.Length; i++)
-				{
-					CreateVisibilityLists(intern.Children[i], viewingDistance);
-				}
-			}
-			else if (node is QuadTreeLeafNode)
-			{
-				QuadTreeLeafNode leaf = (QuadTreeLeafNode)node;
-				CreateVisibilityList(leaf, viewingDistance);
-			}
-		}
-
-		/// <summary>Creates the visibility list for the specified leaf node.</summary>
-		/// <param name="leaf">The leaf node for which to create its visibility list.</param>
-		/// <param name="viewingDistance">The viewing distance.</param>
-		private void CreateVisibilityList(QuadTreeLeafNode leaf, double viewingDistance)
-		{
-			List<QuadTreePopulatedLeafNode> nodes = new List<QuadTreePopulatedLeafNode>();
-			CreateVisibilityList(leaf, Root, nodes, viewingDistance);
-			leaf.VisibleLeafNodes = nodes.ToArray();
-		}
-
-		/// <summary>Creates the visibility list for the specified leaf node.</summary>
-		/// <param name="leaf">The leaf node for which to create its visibility list.</param>
-		/// <param name="node">The node to potentially include in the visiblity list if visible.</param>
-		/// <param name="nodes">The list of visible leaf nodes.</param>
-		/// <param name="viewingDistance">The viewing distance.</param>
-		private void CreateVisibilityList(QuadTreeLeafNode leaf, QuadNode node, List<QuadTreePopulatedLeafNode> nodes, double viewingDistance)
-		{
-			if (node != null)
-			{
-				bool visible;
-				if (
-					leaf.BoundingRectangle.Left <= node.BoundingRectangle.Right &
-					leaf.BoundingRectangle.Right >= node.BoundingRectangle.Left &
-					leaf.BoundingRectangle.Near <= node.BoundingRectangle.Far &
-					leaf.BoundingRectangle.Far >= node.BoundingRectangle.Near
-				)
-				{
-					/*
-					 * If the bounding rectangles intersect directly, the node is
-					 * definately visible from at least some point inside the leaf.
-					 * */
-					visible = true;
-				}
-				else if (
-					leaf.BoundingRectangle.Left - viewingDistance <= node.BoundingRectangle.Right &
-					leaf.BoundingRectangle.Right + viewingDistance >= node.BoundingRectangle.Left &
-					leaf.BoundingRectangle.Near - viewingDistance <= node.BoundingRectangle.Far &
-					leaf.BoundingRectangle.Far + viewingDistance >= node.BoundingRectangle.Near
-				)
-				{
-					/*
-					 * If the leaf bounding rectangle extended by the viewing distance
-					 * in all directions intersects with the node bounding rectangle,
-					 * visibility is at least a possibility.
-					 * */
-					if (
-						leaf.BoundingRectangle.Left <= node.BoundingRectangle.Right &
-						leaf.BoundingRectangle.Right >= node.BoundingRectangle.Left |
-						leaf.BoundingRectangle.Near <= node.BoundingRectangle.Far &
-						leaf.BoundingRectangle.Far >= node.BoundingRectangle.Near
-					)
-					{
-						/*
-						 * The bounding rectangles intersect, but either only on
-						 * the x-axis, or on the y-axis. This case is always visible
-						 * given that the above constraint (extension by viewing
-						 * distance) is also met.
-						 * */
-						visible = true;
-					}
-					else
-					{
-						/*
-						 * The bounding rectangles don't intersect on either axis.
-						 * Visibility is given if the smallest vertex-to-vertex
-						 * distance is smaller than the viewing distance.
-						 * */
-						if (leaf.BoundingRectangle.Right <= node.BoundingRectangle.Left)
-						{
-							if (leaf.BoundingRectangle.Far <= node.BoundingRectangle.Near)
-							{
-								double x = leaf.BoundingRectangle.Right - node.BoundingRectangle.Left;
-								double y = leaf.BoundingRectangle.Far - node.BoundingRectangle.Near;
-								visible = x * x + y * y <= viewingDistance * viewingDistance;
-							}
-							else
-							{
-								double x = leaf.BoundingRectangle.Right - node.BoundingRectangle.Left;
-								double y = leaf.BoundingRectangle.Near - node.BoundingRectangle.Far;
-								visible = x * x + y * y <= viewingDistance * viewingDistance;
-							}
-						}
-						else
-						{
-							if (leaf.BoundingRectangle.Far <= node.BoundingRectangle.Near)
-							{
-								double x = leaf.BoundingRectangle.Left - node.BoundingRectangle.Right;
-								double y = leaf.BoundingRectangle.Far - node.BoundingRectangle.Near;
-								visible = x * x + y * y <= viewingDistance * viewingDistance;
-							}
-							else
-							{
-								double x = leaf.BoundingRectangle.Left - node.BoundingRectangle.Right;
-								double y = leaf.BoundingRectangle.Near - node.BoundingRectangle.Far;
-								visible = x * x + y * y <= viewingDistance * viewingDistance;
-							}
-						}
-					}
-				}
-				else
-				{
-					/*
-					 * If the leaf bounding rectangle extended by the viewing distance
-					 * in all directions doesn't intersect with the node bounding rectangle,
-					 * visibility is not possible.
-					 * */
-					visible = false;
-				}
-
-				if (visible)
-				{
-					/*
-					 * The node is visible and is either added to the list of visible nodes if
-					 * a leaf node, or recursively processed for all children if an internal node.
-					 * */
-					if (node is QuadInternalNode)
-					{
-						QuadInternalNode intern = (QuadInternalNode)node;
-						for (int i = 0; i < intern.Children.Length; i++)
-						{
-							CreateVisibilityList(leaf, intern.Children[i], nodes, viewingDistance);
-						}
-					}
-					else if (node is QuadTreePopulatedLeafNode)
-					{
-						nodes.Add((QuadTreePopulatedLeafNode)node);
-					}
-				}
-			}
-		}
-
+		
 		/// <summary>Gets the leaf node for a specified position.</summary>
 		/// <param name="position">The position.</param>
 		/// <param name="leaf">Receives the leaf node on success.</param>
 		/// <returns>The success of the operation.</returns>
 		public bool GetLeafNode(Vector3 position, out QuadTreeLeafNode leaf)
 		{
-			return GetLeafNode(position, Root, out leaf);
-		}
-
-		private bool GetLeafNode(Vector3 position, QuadNode node, out QuadTreeLeafNode leaf)
-		{
-			if (node != null)
+			if (Root != null)
 			{
-				if (
-					position.X >= node.Rectangle.Left &
-					position.X <= node.Rectangle.Right &
-					position.Z >= node.Rectangle.Near &
-					position.Z <= node.Rectangle.Far
-				)
-				{
-					if (node is QuadInternalNode)
-					{
-						QuadInternalNode intern = (QuadInternalNode)node;
-						for (int i = 0; i < intern.Children.Length; i++)
-						{
-							if (GetLeafNode(position, intern.Children[i], out leaf))
-							{
-								return true;
-							}
-						}
-
-						leaf = null;
-						return false;
-					}
-
-					if (node is QuadTreeLeafNode)
-					{
-						leaf = (QuadTreeLeafNode)node;
-						return true;
-					}
-
-					throw new InvalidOperationException();
-				}
-
-				leaf = null;
-				return false;
+				return Root.GetLeafNode(position, out leaf);
 			}
 
 			leaf = null;
 			return false;
+
 		}
 	}
 }

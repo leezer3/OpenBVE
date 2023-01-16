@@ -1,4 +1,6 @@
-﻿namespace OpenBveApi.Routes
+﻿using OpenBveApi.Math;
+
+namespace OpenBveApi.Routes
 {
 	/// <summary>Represents an internal grid node.</summary>
 	internal class QuadInternalNode : QuadNode
@@ -44,10 +46,44 @@
 				}
 			}
 
-			if (Parent is QuadInternalNode)
+			if (Parent != null)
 			{
-				QuadInternalNode intern = Parent;
-				intern.UpdateBoundingRectangle();
+				Parent.UpdateBoundingRectangle();
+			}
+		}
+
+		public override void FinalizeBoundingRectangles()
+		{
+			for (int i = 0; i < Children.Length; i++)
+			{
+				Children[i].FinalizeBoundingRectangles();
+			}
+		}
+
+		public override bool GetLeafNode(Vector3 position, out QuadTreeLeafNode leaf)
+		{
+			if (position.X >= Rectangle.Left &
+			    position.X <= Rectangle.Right &
+			    position.Z >= Rectangle.Near &
+			    position.Z <= Rectangle.Far)
+			{
+				for (int i = 0; i < Children.Length; i++)
+				{
+					if (Children[i].GetLeafNode(position, out leaf))
+					{
+						return true;
+					}
+				}
+			}
+			leaf = null;
+			return false;
+		}
+
+		public override void CreateVisibilityLists(QuadNode rootNode, double viewingDistance)
+		{
+			for (int i = 0; i < Children.Length; i++)
+			{
+				Children[i].CreateVisibilityLists(rootNode, viewingDistance);
 			}
 		}
 	}

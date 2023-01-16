@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System.Collections.Generic;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
@@ -9,6 +10,149 @@ namespace OpenBveApi.Routes
 	{
 		/// <summary>The list of all leaf nodes in the quad collection that are visible from within the bounding rectangle of this filler node.</summary>
 		public QuadTreePopulatedLeafNode[] VisibleLeafNodes;
+
+		/// <inheritdoc />
+		public override bool GetLeafNode(Vector3 position, out QuadTreeLeafNode leaf)
+		{
+			if (position.X >= Rectangle.Left &
+			    position.X <= Rectangle.Right &
+			    position.Z >= Rectangle.Near &
+			    position.Z <= Rectangle.Far)
+			{
+				leaf = this;
+				return true;
+			}
+			leaf = null;
+			return false;
+		}
+
+		/// <inheritdoc />
+		public override void CreateVisibilityLists(QuadNode rootNode, double viewingDistance)
+		{
+			List<QuadTreePopulatedLeafNode> nodes = new List<QuadTreePopulatedLeafNode>();
+			CreateVisibilityList(rootNode, nodes, viewingDistance);
+			VisibleLeafNodes = nodes.ToArray();
+		}
+
+		/// <summary>Creates the visibility list for the specified leaf node.</summary>
+		/// <param name="node">The node to potentially include in the visiblity list if visible.</param>
+		/// <param name="nodes">The list of visible leaf nodes.</param>
+		/// <param name="viewingDistance">The viewing distance.</param>
+		private void CreateVisibilityList(QuadNode node, List<QuadTreePopulatedLeafNode> nodes, double viewingDistance)
+		{
+			if (node != null)
+			{
+				bool visible;
+				if (
+					BoundingRectangle.Left <= node.BoundingRectangle.Right &
+					BoundingRectangle.Right >= node.BoundingRectangle.Left &
+					BoundingRectangle.Near <= node.BoundingRectangle.Far &
+					BoundingRectangle.Far >= node.BoundingRectangle.Near
+				)
+				{
+					/*
+					 * If the bounding rectangles intersect directly, the node is
+					 * definately visible from at least some point inside the leaf.
+					 * */
+					visible = true;
+				}
+				else if (
+					BoundingRectangle.Left - viewingDistance <= node.BoundingRectangle.Right &
+					BoundingRectangle.Right + viewingDistance >= node.BoundingRectangle.Left &
+					BoundingRectangle.Near - viewingDistance <= node.BoundingRectangle.Far &
+					BoundingRectangle.Far + viewingDistance >= node.BoundingRectangle.Near
+				)
+				{
+					/*
+					 * If the leaf bounding rectangle extended by the viewing distance
+					 * in all directions intersects with the node bounding rectangle,
+					 * visibility is at least a possibility.
+					 * */
+					if (
+						BoundingRectangle.Left <= node.BoundingRectangle.Right &
+						BoundingRectangle.Right >= node.BoundingRectangle.Left |
+						BoundingRectangle.Near <= node.BoundingRectangle.Far &
+						BoundingRectangle.Far >= node.BoundingRectangle.Near
+					)
+					{
+						/*
+						 * The bounding rectangles intersect, but either only on
+						 * the x-axis, or on the y-axis. This case is always visible
+						 * given that the above constraint (extension by viewing
+						 * distance) is also met.
+						 * */
+						visible = true;
+					}
+					else
+					{
+						/*
+						 * The bounding rectangles don't intersect on either axis.
+						 * Visibility is given if the smallest vertex-to-vertex
+						 * distance is smaller than the viewing distance.
+						 * */
+						if (BoundingRectangle.Right <= node.BoundingRectangle.Left)
+						{
+							if (BoundingRectangle.Far <= node.BoundingRectangle.Near)
+							{
+								double x = BoundingRectangle.Right - node.BoundingRectangle.Left;
+								double y = BoundingRectangle.Far - node.BoundingRectangle.Near;
+								visible = x * x + y * y <= viewingDistance * viewingDistance;
+							}
+							else
+							{
+								double x = BoundingRectangle.Right - node.BoundingRectangle.Left;
+								double y = BoundingRectangle.Near - node.BoundingRectangle.Far;
+								visible = x * x + y * y <= viewingDistance * viewingDistance;
+							}
+						}
+						else
+						{
+							if (BoundingRectangle.Far <= node.BoundingRectangle.Near)
+							{
+								double x = BoundingRectangle.Left - node.BoundingRectangle.Right;
+								double y = BoundingRectangle.Far - node.BoundingRectangle.Near;
+								visible = x * x + y * y <= viewingDistance * viewingDistance;
+							}
+							else
+							{
+								double x = BoundingRectangle.Left - node.BoundingRectangle.Right;
+								double y = BoundingRectangle.Near - node.BoundingRectangle.Far;
+								visible = x * x + y * y <= viewingDistance * viewingDistance;
+							}
+						}
+					}
+				}
+				else
+				{
+					/*
+					 * If the leaf bounding rectangle extended by the viewing distance
+					 * in all directions doesn't intersect with the node bounding rectangle,
+					 * visibility is not possible.
+					 * */
+					visible = false;
+				}
+
+				if (visible)
+				{
+					/*
+					 * The node is visible and is either added to the list of visible nodes if
+					 * a leaf node, or recursively processed for all children if an internal node.
+					 * */
+					if (node is QuadInternalNode)
+					{
+						QuadInternalNode intern = (QuadInternalNode)node;
+						for (int i = 0; i < intern.Children.Length; i++)
+						{
+							CreateVisibilityList(intern.Children[i], nodes, viewingDistance);
+						}
+					}
+					else if (node is QuadTreePopulatedLeafNode)
+					{
+						nodes.Add((QuadTreePopulatedLeafNode)node);
+					}
+				}
+			}
+		}
 	}
 
 	/// <summary>Represents an unpopulated leaf node.</summary>
@@ -20,6 +164,15 @@ namespace OpenBveApi.Routes
 			Rectangle = rectangle;
 			BoundingRectangle = QuadTreeBounds.Uninitialized;
 			VisibleLeafNodes = null;
+		}
+
+		public override void FinalizeBoundingRectangles()
+		{
+			if (BoundingRectangle.Left > BoundingRectangle.Right | BoundingRectangle.Near > BoundingRectangle.Far)
+			{
+				BoundingRectangle = Rectangle;
+				Parent.UpdateBoundingRectangle();
+			}
 		}
 	}
 
@@ -107,10 +260,9 @@ namespace OpenBveApi.Routes
 				}
 			}
 
-			if (Parent is QuadInternalNode)
+			if (Parent != null)
 			{
-				QuadInternalNode intern = Parent;
-				intern.UpdateBoundingRectangle();
+				Parent.UpdateBoundingRectangle();
 			}
 		}
 
@@ -128,6 +280,25 @@ namespace OpenBveApi.Routes
 						//Textures.LoadTexture(apiHandle.TextureIndex, true);
 					}
 				}
+			}
+		}
+
+		/// <inheritdoc />
+		public override void FinalizeBoundingRectangles()
+		{
+			if (BoundingRectangle.Left > BoundingRectangle.Right | BoundingRectangle.Near > BoundingRectangle.Far)
+			{
+				QuadTreeUnpopulatedLeafNode unpopulated = new QuadTreeUnpopulatedLeafNode(Parent, Rectangle);
+				unpopulated.BoundingRectangle = unpopulated.Rectangle;
+				for (int i = 0; i < Parent.Children.Length; i++)
+				{
+					if (unpopulated.Parent.Children[i] == this)
+					{
+						unpopulated.Parent.Children[i] = unpopulated;
+					}
+				}
+
+				unpopulated.Parent.UpdateBoundingRectangle();
 			}
 		}
 	}
