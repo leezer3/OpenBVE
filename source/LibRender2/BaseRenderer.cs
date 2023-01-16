@@ -292,12 +292,11 @@ namespace LibRender2
 
 		~BaseRenderer()
 		{
-			visibilityThread = false;
+			DeInitialize();
 		}
 
-		/// <summary>
-		/// Call this once to initialise the renderer
-		/// </summary>
+		/// <summary>Call this once to initialise the renderer</summary>
+		/// <remarks>A call to DeInitialize should be made when closing the progam to release resources</remarks>
 		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
@@ -397,6 +396,13 @@ namespace LibRender2
 					ReShadeInUse = true;
 				}
 			}
+		}
+
+		/// <summary>Deinitializes the renderer</summary>
+		public void DeInitialize()
+		{
+			// terminate spinning thread
+			visibilityThread = false;
 		}
 
 		/// <summary>Should be called when the OpenGL version is switched mid-game</summary>

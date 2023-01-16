@@ -176,7 +176,7 @@ namespace RouteViewer
 			processCommandLineArgs = true;
 			currentGameWindow.Run();
 			//Unload
-			Sounds.Deinitialize();
+			Sounds.DeInitialize();
 		}
 		
 		// load route

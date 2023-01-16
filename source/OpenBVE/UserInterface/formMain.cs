@@ -1278,7 +1278,7 @@ namespace OpenBve {
 					InputDevicePlugin.CallPluginUnload(i);
 				}
 			}
-			Program.Sounds.Deinitialize();
+			Program.Sounds.DeInitialize();
 			DisposePreviewRouteThread();
 			{
 				// ReSharper disable once NotAccessedVariable

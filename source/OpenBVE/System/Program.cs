@@ -349,6 +349,10 @@ namespace OpenBve {
 					MessageBox.Show(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
+			else
+			{
+				Deinitialize();
+			}
 		}
 
 		
@@ -382,7 +386,8 @@ namespace OpenBve {
 		{
 			string error;
 			Program.CurrentHost.UnloadPlugins(out error);
-			Sounds.Deinitialize();
+			Sounds.DeInitialize();
+			Renderer.DeInitialize();
 			if (currentGameWindow != null)
 			{
 				currentGameWindow.Dispose();

@@ -16,12 +16,11 @@ namespace LibRender2.Objects
 {
 	public class VisibleObjectLibrary
 	{
-		private readonly HostInterface currentHost;
 		private readonly CameraProperties camera;
 		private readonly BaseOptions currentOptions;
 		private readonly BaseRenderer renderer;
 
-		internal readonly QuadTree quadTree = new QuadTree(500); //FIXME: Should this actually be the visibility distance? Let's use a fixed number at the minute
+		internal readonly QuadTree quadTree;
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;
@@ -38,11 +37,9 @@ namespace LibRender2.Objects
 
 		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseOptions CurrentOptions, BaseRenderer Renderer)
 		{
-			currentHost = CurrentHost;
 			camera = Camera;
 			currentOptions = CurrentOptions;
 			renderer = Renderer;
-
 			myObjects = new List<ObjectState>();
 			myOpaqueFaces = new List<FaceState>();
 			myAlphaFaces = new List<FaceState>();
@@ -54,6 +51,7 @@ namespace LibRender2.Objects
 			AlphaFaces = myAlphaFaces.AsReadOnly();
 			OverlayOpaqueFaces = myOverlayOpaqueFaces.AsReadOnly();
 			OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
+			quadTree = new QuadTree(renderer.currentOptions.ViewingDistance);
 		}
 
 		private bool AddObject(ObjectState state)
@@ -333,8 +331,6 @@ namespace LibRender2.Objects
 				}
 			});
 			faces.OrderBy(d => distances);
-			int b = 0;
-			b++;
 		}
 	}
 }
