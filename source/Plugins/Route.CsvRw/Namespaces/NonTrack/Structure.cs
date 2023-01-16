@@ -807,7 +807,7 @@ namespace CsvRwRouteParser
 					if (Command == StructureCommand.Object)
 					{
 						IsHmmsim = true;
-						Data.AccurateObjectDisposal = true;
+						Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
 					}
 					if (commandIndices[0] < 0)
 					{

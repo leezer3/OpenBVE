@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi
@@ -91,7 +92,8 @@ namespace OpenBveApi
 		public bool Accessibility;
 		/// <summary>The font to use</summary>
 		public string Font;
-		/// <summary>The object visibility mode in use</summary>
-		public VisibilityModes ObjectVisibilityMode;
+		/// <summary>The object disposal mode in use</summary>
+		/// <remarks>Not saved</remarks>
+		public ObjectDisposalMode ObjectDisposalMode;
 	}
 }

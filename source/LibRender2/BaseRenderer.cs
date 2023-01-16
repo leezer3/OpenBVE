@@ -648,7 +648,7 @@ namespace LibRender2
 			ObjectsSortedByEndPointer = 0;
 			
 			
-			if (currentOptions.ObjectVisibilityMode == VisibilityModes.QuadTree)
+			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
 				foreach (ObjectState state in StaticObjectStates)
 				{
@@ -692,7 +692,7 @@ namespace LibRender2
 
 		private void UpdateVisibility(double TrackPosition)
 		{
-			if (currentOptions.ObjectVisibilityMode == VisibilityModes.QuadTree)
+			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
 				UpdateQuadTreeVisibility();
 			}

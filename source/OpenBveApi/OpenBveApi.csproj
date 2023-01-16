@@ -101,7 +101,6 @@
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
     <Compile Include="Graphics\Colors.ColorPalettes.cs" />
     <Compile Include="Graphics\Colors.cs" />
-    <Compile Include="Graphics\VisibilityModes.cs" />
     <Compile Include="Interface\Input\Control.cs" />
     <Compile Include="Interface\Input\ControlMethod.cs" />
     <Compile Include="Interface\Input\DigitalControlState.cs" />

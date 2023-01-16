@@ -63,7 +63,7 @@ namespace CsvRwRouteParser
 			}
 
 			CurrentRoute.BlockLength = Data.BlockInterval;
-			CurrentRoute.AccurateObjectDisposal = Data.AccurateObjectDisposal ? ObjectDisposalMode.Accurate : ObjectDisposalMode.Legacy;
+			CurrentRoute.AccurateObjectDisposal = Plugin.CurrentOptions.ObjectDisposalMode;
 			Data.CreateMissingBlocks(LastBlock, PreviewOnly);
 			// interpolate height
 			if (!PreviewOnly)
