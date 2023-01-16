@@ -1155,11 +1155,6 @@ namespace LibRender2
 				return;
 			}
 
-			if (State.Prototype.Mesh.VAO == null)
-			{
-				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, false, DefaultShader.VertexLayout, this);
-			}
-
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
 			VertexArrayObject VAO = (VertexArrayObject)State.Prototype.Mesh.VAO;
 

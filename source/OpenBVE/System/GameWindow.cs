@@ -170,7 +170,6 @@ namespace OpenBve
 			Program.TrainManager.UpdateTrainObjects(TimeElapsed, false);
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 			{
-				Program.Renderer.updateVisibility = true;
 				int d = TrainManager.PlayerTrain.DriverCar;
 				Program.Renderer.Camera.CurrentSpeed = TrainManager.PlayerTrain.Cars[d].CurrentSpeed;
 			}
