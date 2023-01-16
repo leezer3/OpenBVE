@@ -23,8 +23,76 @@
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
-						<target>openBVE</target>
+						<source>OpenBVE</source>
+						<target>OpenBVE</target>
+					</trans-unit>
+				</group>
+				<group id="about">
+					<trans-unit id="title">
+						<source>About</source>
+						<target>About</target>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
+						<target>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</target>
+					</trans-unit>
+					<trans-unit id="open_source_licenses">
+						<source>Open Source Licenses</source>
+						<target>Open Source Licenses</target>
+					</trans-unit>
+					<trans-unit id="open_source_licenses_header">
+						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
+						<target>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>Close</target>
+					</trans-unit>
+				</group>
+				<group id="bug_report">
+					<trans-unit id="title">
+						<source>Report Problem</source>
+						<target>Report Problem</target>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
+						<target>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</target>
+					</trans-unit>
+					<trans-unit id="view_log_button">
+						<source>View...</source>
+						<target>View...</target>
+					</trans-unit>
+					<trans-unit id="view_log">
+						<source>View the previous log:</source>
+						<target>View the previous log:</target>
+					</trans-unit>
+					<trans-unit id="view_crash_log">
+						<source>View the previous crash log:</source>
+						<target>View the previous crash log:</target>
+					</trans-unit>
+					<trans-unit id="enter_description">
+						<source>Please enter a brief description of the problem:</source>
+						<target>Please enter a brief description of the problem:</target>
+					</trans-unit>
+					<trans-unit id="no_log">
+						<source>No simulation logs were found.</source>
+						<target>No simulation logs were found.</target>
+					</trans-unit>
+					<trans-unit id="no_crash_log">
+						<source>No crash logs were found.</source>
+						<target>No crash logs were found.</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save Bug Report</source>
+						<target>Save Bug Report</target>
+					</trans-unit>
+					<trans-unit id="saved">
+						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
+					</trans-unit>
+					<trans-unit id="save_failed">
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -67,6 +135,10 @@
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>新バージョン[version] ([date]) が利用可能です。変更点:\r\n\r\n</target>
+					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+						<target>The most recent nightly build from [date] is available for download.</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
@@ -650,6 +722,10 @@
 						<source>Remove</source>
 						<target>リストから削除</target>
 					</trans-unit>
+					<trans-unit id="creation_dependancies_skip_if_none">
+						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
+						<target>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</target>
+					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
 						<target>パッケージの詳細と、その依存関係を次のページで割り当てます。</target>
@@ -1155,7 +1231,7 @@
 						<target>Launch</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 						<target>RailDriverのコントローラーを検出できませんでした。</target>
 					</trans-unit>
 					<trans-unit id="config_error">
@@ -1460,6 +1536,10 @@
 						<source>Show error messages</source>
 						<target>エラーを表示</target>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+						<target>Accessibility Aids</target>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>詳細設定</target>
@@ -1482,6 +1562,10 @@
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
 						<target>20秒以上前に使用されたテクスチャデータのメモリ割り当てを開放</target>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
+						<target>Cursor</target>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1563,6 +1647,10 @@
 						<source>Large</source>
 						<target>大きい</target>
 					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
+						<target>Font:</target>
+					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
 						<target>Attempt to fix transparency issues in older content.</target>
@@ -1621,6 +1709,9 @@
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
@@ -2370,6 +2461,14 @@
 					<trans-unit id="device_constspeed">
 						<source>Activates or deactivates the constant speed device</source>
 						<target>定速運転装置切替</target>
+					</trans-unit>
+					<trans-unit id="play_micsounds">
+						<source>Activates or deactivates the system microphone soundsource</source>
+						<target>Activates or deactivates the system microphone soundsource</target>
+					</trans-unit>
+					<trans-unit id="sanders">
+						<source>Activates or deactivates the sanders</source>
+						<target>Activates or deactivates the sanders</target>
 					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>

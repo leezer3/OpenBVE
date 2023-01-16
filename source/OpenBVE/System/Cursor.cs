@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using OpenBveApi.Interface;
 using OpenTK;
 
 namespace OpenBve
@@ -105,7 +106,7 @@ namespace OpenBve
 		{
 			if (!Directory.Exists(CursorFolder))
 			{
-				MessageBox.Show(@"The default cursor images have been moved or deleted.");
+				MessageBox.Show(@"The default cursor images have been moved or deleted.", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				LoadEmbeddedCursorImages();
 				return;
 			}

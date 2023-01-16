@@ -632,7 +632,8 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Adds a marker texture to the host application's display</summary>
 		/// <param name="MarkerTexture">The texture to add</param>
-		public virtual void AddMarker(Texture MarkerTexture)
+		/// <param name="Size">The size to draw</param>
+		public virtual void AddMarker(Texture MarkerTexture, Vector2 Size)
 		{
 
 		}

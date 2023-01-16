@@ -16,13 +16,7 @@ namespace TrainManager.Cargo
 
 		private double passengerMass;
 
-		public override double Mass
-		{
-			get
-			{
-				return passengerMass;
-			}
-		}
+		public override double Mass => passengerMass;
 
 		public Passengers(CarBase car)
 		{

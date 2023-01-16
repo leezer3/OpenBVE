@@ -102,6 +102,8 @@ namespace OpenBve
 			internal bool KioskMode;
 			/// <summary>The timer before AI controls are enabled in kiosk mode</summary>
 			internal double KioskModeTimer; //5 minutes by default set in ctor
+
+			internal bool DailyBuildUpdates;
 			/*
 			 * Note: The following options were (are) used by the Managed Content system, and are currently non-functional
 			 */
@@ -182,6 +184,7 @@ namespace OpenBve
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
+				this.DailyBuildUpdates = false;
 				this.ObjectVisibilityMode = VisibilityModes.TrackBased;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
@@ -356,6 +359,16 @@ namespace OpenBve
 											break;
 										case "font":
 											Interface.CurrentOptions.Font = Value;
+											break;
+										case "dailybuildupdates":
+											if (Value == "true" || Value == "1")
+											{
+												Interface.CurrentOptions.DailyBuildUpdates = true;
+											}
+											else
+											{
+												Interface.CurrentOptions.DailyBuildUpdates = false;
+											}
 											break;
 									} break;
 								case "display":
@@ -873,6 +886,7 @@ namespace OpenBve
 			Builder.AppendLine("kioskModeTimer = " + CurrentOptions.KioskModeTimer);
 			Builder.AppendLine("accessibility = " + (CurrentOptions.Accessibility ? "true" : "false"));
 			Builder.AppendLine("font = " + CurrentOptions.Font);
+			Builder.AppendLine("dailybuildupdates = " + (CurrentOptions.DailyBuildUpdates ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[display]");
 			Builder.AppendLine("preferNativeBackend = " + (CurrentOptions.PreferNativeBackend ? "true" : "false"));

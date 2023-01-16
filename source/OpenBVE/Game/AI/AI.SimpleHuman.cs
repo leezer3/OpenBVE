@@ -33,6 +33,8 @@ namespace OpenBve
 			private readonly double SpeedLimit;
 			/// <summary>Holds a reference to the train the AI is driving</summary>
 			private readonly TrainBase Train;
+			/// <summary>The index to the first motor car, if the driver car is not a motor car</summary>
+			private readonly int MotorCar;
 			// functions
 			internal SimpleHumanDriverAI(TrainBase train, double Limit)
 			{
@@ -52,6 +54,18 @@ namespace OpenBve
 					this.LastStation = -1;
 				}
 				this.SpeedLimit = Limit;
+				MotorCar = train.DriverCar;
+				if (!train.Cars[train.DriverCar].Specs.IsMotorCar)
+				{
+					for (int i = 0; i < train.Cars.Length; i++)
+					{
+						if (train.Cars[i].Specs.IsMotorCar)
+						{
+							MotorCar = i;
+							break;
+						}
+					}
+				}
 			}
 
 			/// <summary>Sets the response time for actions triggered by a runtime plugin</summary>
@@ -314,7 +328,12 @@ namespace OpenBve
 				{
 					// drive
 					Train.Handles.Reverser.ApplyState(ReverserPosition.Forwards);
-					if (Train.Cars[Train.DriverCar].FrontAxle.CurrentWheelSlip | Train.Cars[Train.DriverCar].RearAxle.CurrentWheelSlip)
+
+					/*
+					 * BVETS motor cars detect wheelslip, others do not at present
+					 * FIXME: When new traction modelling is merged, this changes
+					 */
+					if (Train.Cars[MotorCar].FrontAxle.CurrentWheelSlip | Train.Cars[MotorCar].RearAxle.CurrentWheelSlip)
 					{
 						// react to wheel slip
 						if (Train.Handles.Power.Driver > 1)

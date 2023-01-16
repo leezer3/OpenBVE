@@ -1,4 +1,7 @@
-﻿using TrainManager.Trains;
+﻿using System.Globalization;
+using OpenBveApi.Colors;
+using OpenBveApi.Interface;
+using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
@@ -139,6 +142,34 @@ namespace TrainManager.Handles
 			{
 				baseTrain.Plugin.UpdatePower();
 				baseTrain.Plugin.UpdateBrake();
+			}
+		}
+
+		public override string GetNotchDescription(out MessageColor color)
+		{
+			color = MessageColor.Gray;
+
+			if (baseTrain.Handles.HandleType == HandleType.SingleHandle && (baseTrain.Handles.Brake.Driver != 0 || baseTrain.Handles.EmergencyBrake.Driver))
+			{
+				return baseTrain.Handles.Brake.GetNotchDescription(out color);
+			}
+
+			if (Driver > 0)
+			{
+				color = MessageColor.Blue;
+			}
+			if (NotchDescriptions == null || Driver >= NotchDescriptions.Length)
+			{
+				if (Driver > 0)
+				{
+					return Translations.QuickReferences.HandlePower + Driver.ToString(CultureInfo.InvariantCulture);
+				}
+
+				return Translations.QuickReferences.HandlePowerNull;
+			}
+			else
+			{
+				return NotchDescriptions[Driver];
 			}
 		}
 	}

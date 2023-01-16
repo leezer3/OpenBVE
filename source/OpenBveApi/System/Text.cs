@@ -172,21 +172,36 @@ namespace OpenBveApi
 		/// <returns>The detected encoding, or UTF-8 if this is not found</returns>
 		public static Encoding DetermineBVE5FileEncoding(string FileName)
 		{
-			using (StreamReader reader = new StreamReader(FileName))
+			try
 			{
-				var firstLine = reader.ReadLine();
-				if (firstLine == null)
+				using (StreamReader reader = new StreamReader(FileName))
 				{
-					return Encoding.UTF8;
+					var firstLine = reader.ReadLine();
+					if (firstLine == null)
+					{
+						return Encoding.UTF8;
+					}
+
+					string[] Header = firstLine.Split(':');
+					if (Header.Length == 1)
+					{
+						return Encoding.UTF8;
+					}
+
+					string[] Arguments = Header[1].Split(',');
+					try
+					{
+						return Encoding.GetEncoding(Arguments[0].ToLowerInvariant().Trim());
+					}
+					catch
+					{
+						return Encoding.UTF8;
+					}
 				}
-				string[] Header = firstLine.Split(':');
-				if (Header.Length == 1)
-				{
-					return Encoding.UTF8;
-				}
-				string[] Arguments = Header[1].Split(',');
-				try { return Encoding.GetEncoding(Arguments[0].ToLowerInvariant().Trim()); }
-				catch { return Encoding.UTF8; }
+			}
+			catch
+			{
+				return Encoding.UTF8;
 			}
 		}
 

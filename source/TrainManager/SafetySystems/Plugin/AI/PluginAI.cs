@@ -3,6 +3,7 @@
 namespace TrainManager.SafetySystems
 {
 	/// <summary>Represents an abstract AI controller handling tasks for a specific plugin</summary>
+	/// <remarks>This is used for legacy Win32 plugins, which do not have a method to handle AI internally</remarks>
 	internal abstract class PluginAI
 	{
 		/// <summary>The plugin</summary>

@@ -319,6 +319,23 @@ namespace OpenBve {
 			this.labelPackagesTitleSeparator = new System.Windows.Forms.Label();
 			this.labelPackagesTitle = new System.Windows.Forms.Label();
 			this.labelPackagesTitleBackground = new System.Windows.Forms.Label();
+			this.panelPackageInstall = new System.Windows.Forms.Panel();
+			this.buttonBack2 = new System.Windows.Forms.Button();
+			this.buttonNext = new System.Windows.Forms.Button();
+			this.labelInstallText = new System.Windows.Forms.Label();
+			this.labelInstallHeader = new System.Windows.Forms.Label();
+			this.buttonSelectPackage = new System.Windows.Forms.Button();
+			this.textBoxPackageDescription = new System.Windows.Forms.TextBox();
+			this.labelPackageDescription = new System.Windows.Forms.Label();
+			this.linkLabelPackageWebsite = new System.Windows.Forms.LinkLabel();
+			this.labelPackageWebsite = new System.Windows.Forms.Label();
+			this.textBoxPackageVersion = new System.Windows.Forms.TextBox();
+			this.labelPackageVersion = new System.Windows.Forms.Label();
+			this.textBoxPackageAuthor = new System.Windows.Forms.TextBox();
+			this.labelPackageAuthor = new System.Windows.Forms.Label();
+			this.textBoxPackageName = new System.Windows.Forms.TextBox();
+			this.labelPackageName = new System.Windows.Forms.Label();
+			this.pictureBoxPackageImage = new System.Windows.Forms.PictureBox();
 			this.panelUninstallResult = new System.Windows.Forms.Panel();
 			this.textBoxUninstallResult = new System.Windows.Forms.TextBox();
 			this.labelUninstallLog = new System.Windows.Forms.Label();
@@ -387,23 +404,6 @@ namespace OpenBve {
 			this.routeAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.routeWebsite = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.labelInstalledPackages = new System.Windows.Forms.Label();
-			this.panelPackageInstall = new System.Windows.Forms.Panel();
-			this.buttonBack2 = new System.Windows.Forms.Button();
-			this.buttonNext = new System.Windows.Forms.Button();
-			this.labelInstallText = new System.Windows.Forms.Label();
-			this.labelInstallHeader = new System.Windows.Forms.Label();
-			this.buttonSelectPackage = new System.Windows.Forms.Button();
-			this.textBoxPackageDescription = new System.Windows.Forms.TextBox();
-			this.labelPackageDescription = new System.Windows.Forms.Label();
-			this.linkLabelPackageWebsite = new System.Windows.Forms.LinkLabel();
-			this.labelPackageWebsite = new System.Windows.Forms.Label();
-			this.textBoxPackageVersion = new System.Windows.Forms.TextBox();
-			this.labelPackageVersion = new System.Windows.Forms.Label();
-			this.textBoxPackageAuthor = new System.Windows.Forms.TextBox();
-			this.labelPackageAuthor = new System.Windows.Forms.Label();
-			this.textBoxPackageName = new System.Windows.Forms.TextBox();
-			this.labelPackageName = new System.Windows.Forms.Label();
-			this.pictureBoxPackageImage = new System.Windows.Forms.PictureBox();
 			this.panelVersionError = new System.Windows.Forms.Panel();
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.labelNewVersionNumber = new System.Windows.Forms.Label();
@@ -458,6 +458,7 @@ namespace OpenBve {
 			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
+			this.labelNoDependencyReminder = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -539,6 +540,8 @@ namespace OpenBve {
 			this.panelJoystick.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
+			this.panelPackageInstall.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
 			this.panelUninstallResult.SuspendLayout();
 			this.panelSuccess.SuspendLayout();
 			this.panelDependancyError.SuspendLayout();
@@ -554,8 +557,6 @@ namespace OpenBve {
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages3)).BeginInit();
 			this.panelPackageList.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages)).BeginInit();
-			this.panelPackageInstall.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
 			this.panelVersionError.SuspendLayout();
 			this.groupBoxVersionErrorAction.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewBrokenDependancies)).BeginInit();
@@ -1546,6 +1547,7 @@ namespace OpenBve {
 			// buttonOptionsPrevious
 			// 
 			this.buttonOptionsPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOptionsPrevious.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonOptionsPrevious.Location = new System.Drawing.Point(484, 38);
 			this.buttonOptionsPrevious.Name = "buttonOptionsPrevious";
 			this.buttonOptionsPrevious.Size = new System.Drawing.Size(99, 23);
@@ -1557,6 +1559,7 @@ namespace OpenBve {
 			// buttonOptionsNext
 			// 
 			this.buttonOptionsNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOptionsNext.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonOptionsNext.Location = new System.Drawing.Point(589, 38);
 			this.buttonOptionsNext.Name = "buttonOptionsNext";
 			this.buttonOptionsNext.Size = new System.Drawing.Size(99, 23);
@@ -1612,37 +1615,41 @@ namespace OpenBve {
 			// 
 			// labelFontName
 			// 
-			this.labelFontName.AutoSize = true;
-			this.labelFontName.Location = new System.Drawing.Point(8, 160);
+			this.labelFontName.AutoSize = false;
+			this.labelFontName.Location = new System.Drawing.Point(8, 148);
 			this.labelFontName.Name = "labelFontName";
-			this.labelFontName.Size = new System.Drawing.Size(31, 13);
+			this.labelFontName.Size = new System.Drawing.Size(50, 36);
 			this.labelFontName.TabIndex = 13;
 			this.labelFontName.Text = "Font:";
+			this.labelFontName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelHUDLarge
 			// 
-			this.labelHUDLarge.AutoSize = true;
-			this.labelHUDLarge.Location = new System.Drawing.Point(267, 125);
+			this.labelHUDLarge.AutoSize = false;
+			this.labelHUDLarge.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			this.labelHUDLarge.Location = new System.Drawing.Point(258, 125);
 			this.labelHUDLarge.Name = "labelHUDLarge";
-			this.labelHUDLarge.Size = new System.Drawing.Size(34, 13);
+			this.labelHUDLarge.Size = new System.Drawing.Size(72, 48);
 			this.labelHUDLarge.TabIndex = 12;
 			this.labelHUDLarge.Text = "Large";
 			// 
 			// labelHUDNormal
 			// 
-			this.labelHUDNormal.AutoSize = true;
-			this.labelHUDNormal.Location = new System.Drawing.Point(174, 125);
+			this.labelHUDNormal.AutoSize = false;
+			this.labelHUDNormal.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			this.labelHUDNormal.Location = new System.Drawing.Point(162, 125);
 			this.labelHUDNormal.Name = "labelHUDNormal";
-			this.labelHUDNormal.Size = new System.Drawing.Size(40, 13);
+			this.labelHUDNormal.Size = new System.Drawing.Size(70, 48);
 			this.labelHUDNormal.TabIndex = 11;
 			this.labelHUDNormal.Text = "Normal";
 			// 
 			// labelHUDSmall
 			// 
-			this.labelHUDSmall.AutoSize = true;
-			this.labelHUDSmall.Location = new System.Drawing.Point(84, 125);
+			this.labelHUDSmall.AutoSize = false;
+			this.labelHUDSmall.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			this.labelHUDSmall.Location = new System.Drawing.Point(66, 125);
 			this.labelHUDSmall.Name = "labelHUDSmall";
-			this.labelHUDSmall.Size = new System.Drawing.Size(32, 13);
+			this.labelHUDSmall.Size = new System.Drawing.Size(70, 48);
 			this.labelHUDSmall.TabIndex = 10;
 			this.labelHUDSmall.Text = "Small";
 			// 
@@ -1756,7 +1763,7 @@ namespace OpenBve {
 			this.labelWindowHeight.AutoEllipsis = true;
 			this.labelWindowHeight.Location = new System.Drawing.Point(8, 50);
 			this.labelWindowHeight.Name = "labelWindowHeight";
-			this.labelWindowHeight.Size = new System.Drawing.Size(148, 16);
+			this.labelWindowHeight.Size = new System.Drawing.Size(148, 18);
 			this.labelWindowHeight.TabIndex = 2;
 			this.labelWindowHeight.Text = "Height:";
 			this.labelWindowHeight.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1866,7 +1873,7 @@ namespace OpenBve {
 			this.labelFullscreenHeight.AutoEllipsis = true;
 			this.labelFullscreenHeight.Location = new System.Drawing.Point(8, 50);
 			this.labelFullscreenHeight.Name = "labelFullscreenHeight";
-			this.labelFullscreenHeight.Size = new System.Drawing.Size(148, 16);
+			this.labelFullscreenHeight.Size = new System.Drawing.Size(148, 18);
 			this.labelFullscreenHeight.TabIndex = 2;
 			this.labelFullscreenHeight.Text = "Height:";
 			this.labelFullscreenHeight.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1948,7 +1955,7 @@ namespace OpenBve {
 			this.labelAntiAliasing.AutoEllipsis = true;
 			this.labelAntiAliasing.Location = new System.Drawing.Point(8, 66);
 			this.labelAntiAliasing.Name = "labelAntiAliasing";
-			this.labelAntiAliasing.Size = new System.Drawing.Size(148, 16);
+			this.labelAntiAliasing.Size = new System.Drawing.Size(148, 18);
 			this.labelAntiAliasing.TabIndex = 4;
 			this.labelAntiAliasing.Text = "Level of anti-aliasing:";
 			this.labelAntiAliasing.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1961,18 +1968,19 @@ namespace OpenBve {
 			this.labelTransparencyQuality.Name = "labelTransparencyQuality";
 			this.labelTransparencyQuality.Size = new System.Drawing.Size(76, 16);
 			this.labelTransparencyQuality.TabIndex = 9;
-			this.labelTransparencyQuality.Text = "Quality";
+			this.labelTransparencyQuality.Text = "Smooth";
 			this.labelTransparencyQuality.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// labelTransparencyPerformance
 			// 
 			this.labelTransparencyPerformance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTransparencyPerformance.AutoEllipsis = true;
-			this.labelTransparencyPerformance.Location = new System.Drawing.Point(156, 136);
+			this.labelTransparencyPerformance.Location = new System.Drawing.Point(130, 136);
 			this.labelTransparencyPerformance.Name = "labelTransparencyPerformance";
 			this.labelTransparencyPerformance.Size = new System.Drawing.Size(76, 16);
 			this.labelTransparencyPerformance.TabIndex = 8;
-			this.labelTransparencyPerformance.Text = "Performance";
+			this.labelTransparencyPerformance.Text = "Sharp";
+			this.labelTransparencyPerformance.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// labelTransparency
 			// 
@@ -2008,7 +2016,7 @@ namespace OpenBve {
 			this.labelAnisotropic.Enabled = false;
 			this.labelAnisotropic.Location = new System.Drawing.Point(8, 42);
 			this.labelAnisotropic.Name = "labelAnisotropic";
-			this.labelAnisotropic.Size = new System.Drawing.Size(148, 16);
+			this.labelAnisotropic.Size = new System.Drawing.Size(148, 18);
 			this.labelAnisotropic.TabIndex = 2;
 			this.labelAnisotropic.Text = "Level of anisotropic filtering:";
 			this.labelAnisotropic.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2067,7 +2075,7 @@ namespace OpenBve {
 			this.groupBoxOther.Controls.Add(this.comboBoxTimeTableDisplayMode);
 			this.groupBoxOther.Controls.Add(this.labelTimeTableDisplayMode);
 			this.groupBoxOther.ForeColor = System.Drawing.Color.Black;
-			this.groupBoxOther.Location = new System.Drawing.Point(3, 468);
+			this.groupBoxOther.Location = new System.Drawing.Point(0, 468);
 			this.groupBoxOther.Name = "groupBoxOther";
 			this.groupBoxOther.Size = new System.Drawing.Size(316, 48);
 			this.groupBoxOther.TabIndex = 19;
@@ -2105,6 +2113,7 @@ namespace OpenBve {
 			this.groupBoxRailDriver.Controls.Add(this.buttonRailDriverCalibration);
 			this.groupBoxRailDriver.Controls.Add(this.comboBoxRailDriverUnits);
 			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverSpeedUnits);
+			this.groupBoxRailDriver.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxRailDriver.Location = new System.Drawing.Point(0, 230);
 			this.groupBoxRailDriver.Name = "groupBoxRailDriver";
 			this.groupBoxRailDriver.Size = new System.Drawing.Size(316, 75);
@@ -2115,7 +2124,7 @@ namespace OpenBve {
 			// labelRailDriverCalibration
 			// 
 			this.labelRailDriverCalibration.AutoSize = true;
-			this.labelRailDriverCalibration.Location = new System.Drawing.Point(7, 53);
+			this.labelRailDriverCalibration.Location = new System.Drawing.Point(7, 46);
 			this.labelRailDriverCalibration.Name = "labelRailDriverCalibration";
 			this.labelRailDriverCalibration.Size = new System.Drawing.Size(78, 13);
 			this.labelRailDriverCalibration.TabIndex = 5;
@@ -2124,6 +2133,8 @@ namespace OpenBve {
 			// buttonRailDriverCalibration
 			// 
 			this.buttonRailDriverCalibration.Location = new System.Drawing.Point(230, 45);
+			this.buttonRailDriverCalibration.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonRailDriverCalibration.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonRailDriverCalibration.Name = "buttonRailDriverCalibration";
 			this.buttonRailDriverCalibration.Size = new System.Drawing.Size(75, 23);
 			this.buttonRailDriverCalibration.TabIndex = 4;
@@ -2138,18 +2149,19 @@ namespace OpenBve {
 			this.comboBoxRailDriverUnits.Items.AddRange(new object[] {
             "Miles per Hour (MPH)",
             "Kilometers per Hour (KPH)"});
-			this.comboBoxRailDriverUnits.Location = new System.Drawing.Point(138, 16);
+			this.comboBoxRailDriverUnits.Location = new System.Drawing.Point(140, 16);
 			this.comboBoxRailDriverUnits.Name = "comboBoxRailDriverUnits";
-			this.comboBoxRailDriverUnits.Size = new System.Drawing.Size(170, 21);
+			this.comboBoxRailDriverUnits.Size = new System.Drawing.Size(165, 21);
 			this.comboBoxRailDriverUnits.TabIndex = 3;
 			this.comboBoxRailDriverUnits.SelectedIndexChanged += new System.EventHandler(this.comboBoxRailDriverUnits_SelectedIndexChanged);
 			// 
 			// labelRailDriverSpeedUnits
 			// 
-			this.labelRailDriverSpeedUnits.AutoSize = true;
-			this.labelRailDriverSpeedUnits.Location = new System.Drawing.Point(7, 19);
+			this.labelRailDriverSpeedUnits.AutoSize = false;
+			this.labelRailDriverSpeedUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelRailDriverSpeedUnits.Location = new System.Drawing.Point(7, 14);
 			this.labelRailDriverSpeedUnits.Name = "labelRailDriverSpeedUnits";
-			this.labelRailDriverSpeedUnits.Size = new System.Drawing.Size(125, 13);
+			this.labelRailDriverSpeedUnits.Size = new System.Drawing.Size(130, 30);
 			this.labelRailDriverSpeedUnits.TabIndex = 2;
 			this.labelRailDriverSpeedUnits.Text = "LED Display speed units:";
 			// 
@@ -2185,12 +2197,12 @@ namespace OpenBve {
 			this.labelMotionBlur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelMotionBlur.AutoEllipsis = true;
-			this.labelMotionBlur.Location = new System.Drawing.Point(9, 51);
+			this.labelMotionBlur.Location = new System.Drawing.Point(5, 51);
 			this.labelMotionBlur.Name = "labelMotionBlur";
-			this.labelMotionBlur.Size = new System.Drawing.Size(136, 16);
+			this.labelMotionBlur.Size = new System.Drawing.Size(140, 16);
 			this.labelMotionBlur.TabIndex = 3;
 			this.labelMotionBlur.Text = "Motion blur:";
-			this.labelMotionBlur.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.labelMotionBlur.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// labelDistanceUnit
 			// 
@@ -2232,7 +2244,7 @@ namespace OpenBve {
 			this.labelDistance.AutoEllipsis = true;
 			this.labelDistance.Location = new System.Drawing.Point(9, 26);
 			this.labelDistance.Name = "labelDistance";
-			this.labelDistance.Size = new System.Drawing.Size(136, 16);
+			this.labelDistance.Size = new System.Drawing.Size(136, 18);
 			this.labelDistance.TabIndex = 0;
 			this.labelDistance.Text = "Viewing distance:";
 			this.labelDistance.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2255,12 +2267,12 @@ namespace OpenBve {
 			// 
 			// checkBoxEBAxis
 			// 
-			this.checkBoxEBAxis.AutoSize = true;
+			this.checkBoxEBAxis.AutoSize = false;
 			this.checkBoxEBAxis.Checked = true;
 			this.checkBoxEBAxis.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.checkBoxEBAxis.Location = new System.Drawing.Point(8, 41);
 			this.checkBoxEBAxis.Name = "checkBoxEBAxis";
-			this.checkBoxEBAxis.Size = new System.Drawing.Size(134, 17);
+			this.checkBoxEBAxis.Size = new System.Drawing.Size(190, 36);
 			this.checkBoxEBAxis.TabIndex = 18;
 			this.checkBoxEBAxis.Text = "Allow EB on brake axis";
 			this.checkBoxEBAxis.UseVisualStyleBackColor = true;
@@ -2292,9 +2304,10 @@ namespace OpenBve {
 			// labelJoystickAxisThreshold
 			// 
 			this.labelJoystickAxisThreshold.AutoEllipsis = true;
-			this.labelJoystickAxisThreshold.Location = new System.Drawing.Point(200, 16);
+			this.labelJoystickAxisThreshold.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+			this.labelJoystickAxisThreshold.Location = new System.Drawing.Point(110, 10);
 			this.labelJoystickAxisThreshold.Name = "labelJoystickAxisThreshold";
-			this.labelJoystickAxisThreshold.Size = new System.Drawing.Size(104, 13);
+			this.labelJoystickAxisThreshold.Size = new System.Drawing.Size(180, 16);
 			this.labelJoystickAxisThreshold.TabIndex = 1;
 			this.labelJoystickAxisThreshold.Text = "Joystick threshold:";
 			this.labelJoystickAxisThreshold.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2317,7 +2330,7 @@ namespace OpenBve {
 			// checkBoxAccessibility
 			// 
 			this.checkBoxAccessibility.AutoSize = true;
-			this.checkBoxAccessibility.Location = new System.Drawing.Point(176, 22);
+			this.checkBoxAccessibility.Location = new System.Drawing.Point(176, 21);
 			this.checkBoxAccessibility.Name = "checkBoxAccessibility";
 			this.checkBoxAccessibility.Size = new System.Drawing.Size(106, 17);
 			this.checkBoxAccessibility.TabIndex = 2;
@@ -2327,7 +2340,7 @@ namespace OpenBve {
 			// checkboxErrorMessages
 			// 
 			this.checkboxErrorMessages.AutoSize = true;
-			this.checkboxErrorMessages.Location = new System.Drawing.Point(8, 41);
+			this.checkboxErrorMessages.Location = new System.Drawing.Point(8, 38);
 			this.checkboxErrorMessages.Name = "checkboxErrorMessages";
 			this.checkboxErrorMessages.Size = new System.Drawing.Size(127, 17);
 			this.checkboxErrorMessages.TabIndex = 1;
@@ -2337,7 +2350,7 @@ namespace OpenBve {
 			// checkboxWarningMessages
 			// 
 			this.checkboxWarningMessages.AutoSize = true;
-			this.checkboxWarningMessages.Location = new System.Drawing.Point(8, 24);
+			this.checkboxWarningMessages.Location = new System.Drawing.Point(8, 21);
 			this.checkboxWarningMessages.Name = "checkboxWarningMessages";
 			this.checkboxWarningMessages.Size = new System.Drawing.Size(143, 17);
 			this.checkboxWarningMessages.TabIndex = 0;
@@ -2367,13 +2380,11 @@ namespace OpenBve {
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.checkBoxLoadingSway.AutoSize = true;
-			this.checkBoxLoadingSway.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.checkBoxLoadingSway.Location = new System.Drawing.Point(176, 24);
+			this.checkBoxLoadingSway.Location = new System.Drawing.Point(176, 21);
 			this.checkBoxLoadingSway.Name = "checkBoxLoadingSway";
 			this.checkBoxLoadingSway.Size = new System.Drawing.Size(123, 17);
 			this.checkBoxLoadingSway.TabIndex = 4;
 			this.checkBoxLoadingSway.Text = "Enable loading sway";
-			this.checkBoxLoadingSway.TextAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.checkBoxLoadingSway.UseVisualStyleBackColor = true;
 			// 
 			// checkboxBlackBox
@@ -2382,19 +2393,17 @@ namespace OpenBve {
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.checkboxBlackBox.AutoSize = true;
-			this.checkboxBlackBox.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.checkboxBlackBox.Location = new System.Drawing.Point(176, 41);
+			this.checkboxBlackBox.Location = new System.Drawing.Point(176, 38);
 			this.checkboxBlackBox.Name = "checkboxBlackBox";
 			this.checkboxBlackBox.Size = new System.Drawing.Size(108, 17);
 			this.checkboxBlackBox.TabIndex = 3;
 			this.checkboxBlackBox.Text = "Enable black box";
-			this.checkboxBlackBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.checkboxBlackBox.UseVisualStyleBackColor = true;
 			// 
 			// checkboxDerailments
 			// 
 			this.checkboxDerailments.AutoSize = true;
-			this.checkboxDerailments.Location = new System.Drawing.Point(8, 58);
+			this.checkboxDerailments.Location = new System.Drawing.Point(8, 55);
 			this.checkboxDerailments.Name = "checkboxDerailments";
 			this.checkboxDerailments.Size = new System.Drawing.Size(81, 17);
 			this.checkboxDerailments.TabIndex = 2;
@@ -2404,7 +2413,7 @@ namespace OpenBve {
 			// checkboxCollisions
 			// 
 			this.checkboxCollisions.AutoSize = true;
-			this.checkboxCollisions.Location = new System.Drawing.Point(8, 41);
+			this.checkboxCollisions.Location = new System.Drawing.Point(8, 38);
 			this.checkboxCollisions.Name = "checkboxCollisions";
 			this.checkboxCollisions.Size = new System.Drawing.Size(69, 17);
 			this.checkboxCollisions.TabIndex = 1;
@@ -2414,7 +2423,7 @@ namespace OpenBve {
 			// checkboxToppling
 			// 
 			this.checkboxToppling.AutoSize = true;
-			this.checkboxToppling.Location = new System.Drawing.Point(8, 24);
+			this.checkboxToppling.Location = new System.Drawing.Point(8, 21);
 			this.checkboxToppling.Name = "checkboxToppling";
 			this.checkboxToppling.Size = new System.Drawing.Size(67, 17);
 			this.checkboxToppling.TabIndex = 0;
@@ -2459,7 +2468,7 @@ namespace OpenBve {
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelSoundNumber.Location = new System.Drawing.Point(5, 18);
 			this.labelSoundNumber.Name = "labelSoundNumber";
-			this.labelSoundNumber.Size = new System.Drawing.Size(136, 14);
+			this.labelSoundNumber.Size = new System.Drawing.Size(136, 16);
 			this.labelSoundNumber.TabIndex = 2;
 			this.labelSoundNumber.Text = "Number of allowed sounds:";
 			this.labelSoundNumber.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2488,6 +2497,7 @@ namespace OpenBve {
 			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
 			this.groupBoxInputDevice.Controls.Add(this.buttonInputDeviceConfig);
+			this.groupBoxInputDevice.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxInputDevice.Location = new System.Drawing.Point(6, 374);
 			this.groupBoxInputDevice.Name = "groupBoxInputDevice";
 			this.groupBoxInputDevice.Size = new System.Drawing.Size(674, 173);
@@ -2499,9 +2509,9 @@ namespace OpenBve {
 			// 
 			this.labelInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInputDevice.Location = new System.Drawing.Point(4, 20);
+			this.labelInputDevice.Location = new System.Drawing.Point(8, 17);
 			this.labelInputDevice.Name = "labelInputDevice";
-			this.labelInputDevice.Size = new System.Drawing.Size(658, 14);
+			this.labelInputDevice.Size = new System.Drawing.Size(658, 17);
 			this.labelInputDevice.TabIndex = 0;
 			this.labelInputDevice.Text = "WARNING: If you are turn on the Input Device Plugin(s), it may be happen the conf" +
     "lict of input setting(s).";
@@ -2556,11 +2566,12 @@ namespace OpenBve {
 			// checkBoxInputDeviceEnable
 			// 
 			this.checkBoxInputDeviceEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.checkBoxInputDeviceEnable.AutoSize = true;
+			this.checkBoxInputDeviceEnable.CheckAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.checkBoxInputDeviceEnable.AutoSize = false;
 			this.checkBoxInputDeviceEnable.Enabled = false;
-			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 141);
+			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 136);
 			this.checkBoxInputDeviceEnable.Name = "checkBoxInputDeviceEnable";
-			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(174, 17);
+			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(230, 34);
 			this.checkBoxInputDeviceEnable.TabIndex = 2;
 			this.checkBoxInputDeviceEnable.Text = "Enable this Input Device Plugin";
 			this.checkBoxInputDeviceEnable.UseVisualStyleBackColor = true;
@@ -2568,12 +2579,14 @@ namespace OpenBve {
 			// 
 			// buttonInputDeviceConfig
 			// 
-			this.buttonInputDeviceConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonInputDeviceConfig.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.buttonInputDeviceConfig.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonInputDeviceConfig.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonInputDeviceConfig.Enabled = false;
-			this.buttonInputDeviceConfig.Location = new System.Drawing.Point(220, 141);
+			this.buttonInputDeviceConfig.Location = new System.Drawing.Point(270, 140);
 			this.buttonInputDeviceConfig.Name = "buttonInputDeviceConfig";
-			this.buttonInputDeviceConfig.Size = new System.Drawing.Size(96, 24);
+			this.buttonInputDeviceConfig.Size = new System.Drawing.Size(106, 25);
+			this.buttonInputDeviceConfig.MaximumSize = new System.Drawing.Size(106, 25);
 			this.buttonInputDeviceConfig.TabIndex = 3;
 			this.buttonInputDeviceConfig.Text = "Config";
 			this.buttonInputDeviceConfig.UseVisualStyleBackColor = true;
@@ -2581,11 +2594,13 @@ namespace OpenBve {
 			// 
 			// groupBoxObjectParser
 			// 
+			this.groupBoxObjectParser.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			this.groupBoxObjectParser.Controls.Add(this.labelObjparser);
 			this.groupBoxObjectParser.Controls.Add(this.comboBoxObjparser);
 			this.groupBoxObjectParser.Controls.Add(this.labelXparser);
 			this.groupBoxObjectParser.Controls.Add(this.comboBoxXparser);
-			this.groupBoxObjectParser.Location = new System.Drawing.Point(334, 258);
+			this.groupBoxObjectParser.ForeColor = System.Drawing.Color.Black;
+			this.groupBoxObjectParser.Location = new System.Drawing.Point(375, 258);
 			this.groupBoxObjectParser.Name = "groupBoxObjectParser";
 			this.groupBoxObjectParser.Size = new System.Drawing.Size(305, 110);
 			this.groupBoxObjectParser.TabIndex = 23;
@@ -2594,10 +2609,11 @@ namespace OpenBve {
 			// 
 			// labelObjparser
 			// 
-			this.labelObjparser.AutoSize = true;
-			this.labelObjparser.Location = new System.Drawing.Point(7, 48);
+			this.labelObjparser.AutoSize = false;
+			this.labelObjparser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelObjparser.Location = new System.Drawing.Point(7, 44);
 			this.labelObjparser.Name = "labelObjparser";
-			this.labelObjparser.Size = new System.Drawing.Size(93, 13);
+			this.labelObjparser.Size = new System.Drawing.Size(113, 26);
 			this.labelObjparser.TabIndex = 0;
 			this.labelObjparser.Text = "Obj Object Parser:";
 			// 
@@ -2608,17 +2624,18 @@ namespace OpenBve {
 			this.comboBoxObjparser.Items.AddRange(new object[] {
             "Original",
             "Assimp"});
-			this.comboBoxObjparser.Location = new System.Drawing.Point(107, 44);
+			this.comboBoxObjparser.Location = new System.Drawing.Point(127, 44);
 			this.comboBoxObjparser.Name = "comboBoxObjparser";
-			this.comboBoxObjparser.Size = new System.Drawing.Size(190, 21);
+			this.comboBoxObjparser.Size = new System.Drawing.Size(170, 21);
 			this.comboBoxObjparser.TabIndex = 1;
 			// 
 			// labelXparser
 			// 
-			this.labelXparser.AutoSize = true;
-			this.labelXparser.Location = new System.Drawing.Point(17, 25);
+			this.labelXparser.AutoSize = false;
+			this.labelXparser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelXparser.Location = new System.Drawing.Point(7, 17);
 			this.labelXparser.Name = "labelXparser";
-			this.labelXparser.Size = new System.Drawing.Size(84, 13);
+			this.labelXparser.Size = new System.Drawing.Size(113, 26);
 			this.labelXparser.TabIndex = 0;
 			this.labelXparser.Text = "X Object Parser:";
 			// 
@@ -2630,29 +2647,32 @@ namespace OpenBve {
             "Original",
             "NewXParser",
             "Assimp"});
-			this.comboBoxXparser.Location = new System.Drawing.Point(107, 21);
+			this.comboBoxXparser.Location = new System.Drawing.Point(127, 21);
 			this.comboBoxXparser.Name = "comboBoxXparser";
-			this.comboBoxXparser.Size = new System.Drawing.Size(190, 21);
+			this.comboBoxXparser.Size = new System.Drawing.Size(170, 21);
 			this.comboBoxXparser.TabIndex = 1;
 			// 
 			// groupBoxKioskMode
 			// 
+			this.groupBoxKioskMode.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			this.groupBoxKioskMode.Controls.Add(this.labelKioskTimeout);
 			this.groupBoxKioskMode.Controls.Add(this.numericUpDownKioskTimeout);
 			this.groupBoxKioskMode.Controls.Add(this.checkBoxEnableKiosk);
-			this.groupBoxKioskMode.Location = new System.Drawing.Point(334, 164);
+			this.groupBoxKioskMode.ForeColor = System.Drawing.Color.Black;
+			this.groupBoxKioskMode.Location = new System.Drawing.Point(375, 160);
 			this.groupBoxKioskMode.Name = "groupBoxKioskMode";
-			this.groupBoxKioskMode.Size = new System.Drawing.Size(305, 88);
+			this.groupBoxKioskMode.Size = new System.Drawing.Size(305, 92);
 			this.groupBoxKioskMode.TabIndex = 22;
 			this.groupBoxKioskMode.TabStop = false;
 			this.groupBoxKioskMode.Text = "Kiosk Mode";
 			// 
 			// labelKioskTimeout
 			// 
-			this.labelKioskTimeout.AutoSize = true;
-			this.labelKioskTimeout.Location = new System.Drawing.Point(8, 43);
+			this.labelKioskTimeout.AutoSize = false;
+			this.labelKioskTimeout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelKioskTimeout.Location = new System.Drawing.Point(8, 37);
 			this.labelKioskTimeout.Name = "labelKioskTimeout";
-			this.labelKioskTimeout.Size = new System.Drawing.Size(91, 13);
+			this.labelKioskTimeout.Size = new System.Drawing.Size(155, 30);
 			this.labelKioskTimeout.TabIndex = 2;
 			this.labelKioskTimeout.Text = "Control timeout (s)";
 			// 
@@ -2666,7 +2686,7 @@ namespace OpenBve {
             0,
             0});
 			this.numericUpDownKioskTimeout.Name = "numericUpDownKioskTimeout";
-			this.numericUpDownKioskTimeout.Size = new System.Drawing.Size(131, 20);
+			this.numericUpDownKioskTimeout.Size = new System.Drawing.Size(131, 23);
 			this.numericUpDownKioskTimeout.TabIndex = 1;
 			// 
 			// checkBoxEnableKiosk
@@ -2674,13 +2694,14 @@ namespace OpenBve {
 			this.checkBoxEnableKiosk.AutoSize = true;
 			this.checkBoxEnableKiosk.Location = new System.Drawing.Point(9, 20);
 			this.checkBoxEnableKiosk.Name = "checkBoxEnableKiosk";
-			this.checkBoxEnableKiosk.Size = new System.Drawing.Size(118, 17);
+			this.checkBoxEnableKiosk.Size = new System.Drawing.Size(118, 20);
 			this.checkBoxEnableKiosk.TabIndex = 0;
 			this.checkBoxEnableKiosk.Text = "Enable Kiosk Mode";
 			this.checkBoxEnableKiosk.UseVisualStyleBackColor = true;
 			// 
 			// groupBoxAdvancedOptions
 			// 
+			this.groupBoxAdvancedOptions.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxPanel2Extended);
 			this.groupBoxAdvancedOptions.Controls.Add(this.pictureboxCursor);
 			this.groupBoxAdvancedOptions.Controls.Add(this.labelCursor);
@@ -2692,9 +2713,10 @@ namespace OpenBve {
 			this.groupBoxAdvancedOptions.Controls.Add(this.updownTimeAccelerationFactor);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxIsUseNewRenderer);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
+			this.groupBoxAdvancedOptions.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(6, 160);
 			this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
-			this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(316, 208);
+			this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(358, 208);
 			this.groupBoxAdvancedOptions.TabIndex = 21;
 			this.groupBoxAdvancedOptions.TabStop = false;
 			this.groupBoxAdvancedOptions.Text = "Advanced Options";
@@ -2705,27 +2727,9 @@ namespace OpenBve {
 			this.checkBoxPanel2Extended.Location = new System.Drawing.Point(8, 183);
 			this.checkBoxPanel2Extended.Name = "checkBoxPanel2Extended";
 			this.checkBoxPanel2Extended.Size = new System.Drawing.Size(159, 17);
-			this.checkBoxPanel2Extended.TabIndex = 17;
+			this.checkBoxPanel2Extended.TabIndex = 20;
 			this.checkBoxPanel2Extended.Text = "Enable Panel2 extend mode";
 			this.checkBoxPanel2Extended.UseVisualStyleBackColor = true;
-			// 
-			// pictureboxCursor
-			// 
-			this.pictureboxCursor.Location = new System.Drawing.Point(8, 145);
-			this.pictureboxCursor.Name = "pictureboxCursor";
-			this.pictureboxCursor.Size = new System.Drawing.Size(32, 32);
-			this.pictureboxCursor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.pictureboxCursor.TabIndex = 16;
-			this.pictureboxCursor.TabStop = false;
-			// 
-			// labelCursor
-			// 
-			this.labelCursor.AutoSize = true;
-			this.labelCursor.Location = new System.Drawing.Point(48, 145);
-			this.labelCursor.Name = "labelCursor";
-			this.labelCursor.Size = new System.Drawing.Size(37, 13);
-			this.labelCursor.TabIndex = 17;
-			this.labelCursor.Text = "Cursor";
 			// 
 			// comboboxCursor
 			// 
@@ -2734,8 +2738,39 @@ namespace OpenBve {
 			this.comboboxCursor.Location = new System.Drawing.Point(48, 158);
 			this.comboboxCursor.Name = "comboboxCursor";
 			this.comboboxCursor.Size = new System.Drawing.Size(108, 21);
-			this.comboboxCursor.TabIndex = 18;
+			this.comboboxCursor.TabIndex = 19;
 			this.comboboxCursor.SelectedIndexChanged += new System.EventHandler(this.comboboxCursor_SelectedIndexChanged);
+			// 
+			// pictureboxCursor
+			// 
+			this.pictureboxCursor.Location = new System.Drawing.Point(8, 145);
+			this.pictureboxCursor.Name = "pictureboxCursor";
+			this.pictureboxCursor.Size = new System.Drawing.Size(32, 32);
+			this.pictureboxCursor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureboxCursor.TabIndex = 18;
+			this.pictureboxCursor.TabStop = false;
+			// 
+			// labelCursor
+			// 
+			this.labelCursor.AutoSize = true;
+			this.labelCursor.Location = new System.Drawing.Point(48, 140);
+			this.labelCursor.Name = "labelCursor";
+			this.labelCursor.Size = new System.Drawing.Size(37, 13);
+			this.labelCursor.TabIndex = 17;
+			this.labelCursor.Text = "Cursor";
+			// 
+			// updownTimeAccelerationFactor
+			// 
+			this.updownTimeAccelerationFactor.Location = new System.Drawing.Point(200, 122);
+			this.updownTimeAccelerationFactor.Maximum = new decimal(new int[] {
+			5,
+			0,
+			0,
+			0});
+			this.updownTimeAccelerationFactor.Name = "updownTimeAccelerationFactor";
+			this.updownTimeAccelerationFactor.Size = new System.Drawing.Size(52, 20);
+			this.updownTimeAccelerationFactor.TabIndex = 16;
+			this.updownTimeAccelerationFactor.ValueChanged += new System.EventHandler(this.updownTimeAccelerationFactor_ValueChanged);
 			// 
 			// checkBoxHacks
 			// 
@@ -2771,24 +2806,11 @@ namespace OpenBve {
 			// labelTimeAcceleration
 			// 
 			this.labelTimeAcceleration.AutoSize = true;
-			this.labelTimeAcceleration.Location = new System.Drawing.Point(8, 125);
+			this.labelTimeAcceleration.Location = new System.Drawing.Point(8, 123);
 			this.labelTimeAcceleration.Name = "labelTimeAcceleration";
 			this.labelTimeAcceleration.Size = new System.Drawing.Size(126, 13);
 			this.labelTimeAcceleration.TabIndex = 10;
 			this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
-			// 
-			// updownTimeAccelerationFactor
-			// 
-			this.updownTimeAccelerationFactor.Location = new System.Drawing.Point(150, 122);
-			this.updownTimeAccelerationFactor.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-			this.updownTimeAccelerationFactor.Name = "updownTimeAccelerationFactor";
-			this.updownTimeAccelerationFactor.Size = new System.Drawing.Size(52, 20);
-			this.updownTimeAccelerationFactor.TabIndex = 3;
-			this.updownTimeAccelerationFactor.ValueChanged += new System.EventHandler(this.updownTimeAccelerationFactor_ValueChanged);
 			// 
 			// checkBoxIsUseNewRenderer
 			// 
@@ -2827,9 +2849,9 @@ namespace OpenBve {
 			this.groupBoxPackageOptions.Controls.Add(this.labelRouteInstallDirectory);
 			this.groupBoxPackageOptions.Controls.Add(this.textBoxRouteDirectory);
 			this.groupBoxPackageOptions.ForeColor = System.Drawing.Color.Black;
-			this.groupBoxPackageOptions.Location = new System.Drawing.Point(0, 0);
+			this.groupBoxPackageOptions.Location = new System.Drawing.Point(6, 0);
 			this.groupBoxPackageOptions.Name = "groupBoxPackageOptions";
-			this.groupBoxPackageOptions.Size = new System.Drawing.Size(680, 154);
+			this.groupBoxPackageOptions.Size = new System.Drawing.Size(674, 154);
 			this.groupBoxPackageOptions.TabIndex = 19;
 			this.groupBoxPackageOptions.TabStop = false;
 			this.groupBoxPackageOptions.Text = "Package Management";
@@ -2859,7 +2881,9 @@ namespace OpenBve {
 			// buttonOtherDirectory
 			// 
 			this.buttonOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOtherDirectory.Location = new System.Drawing.Point(600, 82);
+			this.buttonOtherDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonOtherDirectory.BackColor = System.Drawing.SystemColors.Control;
+			this.buttonOtherDirectory.Location = new System.Drawing.Point(594, 83);
 			this.buttonOtherDirectory.Name = "buttonOtherDirectory";
 			this.buttonOtherDirectory.Size = new System.Drawing.Size(75, 23);
 			this.buttonOtherDirectory.TabIndex = 8;
@@ -2869,10 +2893,11 @@ namespace OpenBve {
 			// 
 			// labelOtherInstallDirectory
 			// 
-			this.labelOtherInstallDirectory.AutoSize = true;
-			this.labelOtherInstallDirectory.Location = new System.Drawing.Point(6, 85);
+			this.labelOtherInstallDirectory.AutoSize = false;
+			this.labelOtherInstallDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelOtherInstallDirectory.Location = new System.Drawing.Point(6, 80);
 			this.labelOtherInstallDirectory.Name = "labelOtherInstallDirectory";
-			this.labelOtherInstallDirectory.Size = new System.Drawing.Size(158, 13);
+			this.labelOtherInstallDirectory.Size = new System.Drawing.Size(175, 30);
 			this.labelOtherInstallDirectory.TabIndex = 7;
 			this.labelOtherInstallDirectory.Text = "Other items installation directory:";
 			// 
@@ -2880,16 +2905,20 @@ namespace OpenBve {
 			// 
 			this.textBoxOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxOtherDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxOtherDirectory.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxOtherDirectory.Location = new System.Drawing.Point(200, 84);
 			this.textBoxOtherDirectory.Name = "textBoxOtherDirectory";
 			this.textBoxOtherDirectory.ReadOnly = true;
-			this.textBoxOtherDirectory.Size = new System.Drawing.Size(393, 20);
+			this.textBoxOtherDirectory.Size = new System.Drawing.Size(387, 20);
 			this.textBoxOtherDirectory.TabIndex = 6;
 			// 
 			// buttonTrainInstallationDirectory
 			// 
 			this.buttonTrainInstallationDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(600, 49);
+			this.buttonTrainInstallationDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonTrainInstallationDirectory.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(594, 51);
 			this.buttonTrainInstallationDirectory.Name = "buttonTrainInstallationDirectory";
 			this.buttonTrainInstallationDirectory.Size = new System.Drawing.Size(75, 23);
 			this.buttonTrainInstallationDirectory.TabIndex = 5;
@@ -2910,16 +2939,20 @@ namespace OpenBve {
 			// 
 			this.textBoxTrainDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxTrainDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxTrainDirectory.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxTrainDirectory.Location = new System.Drawing.Point(200, 51);
 			this.textBoxTrainDirectory.Name = "textBoxTrainDirectory";
 			this.textBoxTrainDirectory.ReadOnly = true;
-			this.textBoxTrainDirectory.Size = new System.Drawing.Size(393, 20);
+			this.textBoxTrainDirectory.Size = new System.Drawing.Size(387, 20);
 			this.textBoxTrainDirectory.TabIndex = 3;
 			// 
 			// buttonSetRouteDirectory
 			// 
 			this.buttonSetRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSetRouteDirectory.Location = new System.Drawing.Point(600, 18);
+			this.buttonSetRouteDirectory.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonSetRouteDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonSetRouteDirectory.Location = new System.Drawing.Point(594, 20);
 			this.buttonSetRouteDirectory.Name = "buttonSetRouteDirectory";
 			this.buttonSetRouteDirectory.Size = new System.Drawing.Size(75, 23);
 			this.buttonSetRouteDirectory.TabIndex = 2;
@@ -2940,10 +2973,12 @@ namespace OpenBve {
 			// 
 			this.textBoxRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxRouteDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxRouteDirectory.BackColor = System.Drawing.SystemColors.Control;
 			this.textBoxRouteDirectory.Location = new System.Drawing.Point(200, 20);
 			this.textBoxRouteDirectory.Name = "textBoxRouteDirectory";
 			this.textBoxRouteDirectory.ReadOnly = true;
-			this.textBoxRouteDirectory.Size = new System.Drawing.Size(393, 20);
+			this.textBoxRouteDirectory.Size = new System.Drawing.Size(387, 20);
 			this.textBoxRouteDirectory.TabIndex = 0;
 			// 
 			// pictureboxLanguage
@@ -3027,6 +3062,7 @@ namespace OpenBve {
 			// radioButtonPackages
 			// 
 			this.radioButtonPackages.AutoSize = true;
+			this.radioButtonPackages.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonPackages.Location = new System.Drawing.Point(8, 144);
 			this.radioButtonPackages.Name = "radioButtonPackages";
 			this.radioButtonPackages.Size = new System.Drawing.Size(133, 17);
@@ -3047,6 +3083,7 @@ namespace OpenBve {
 			// radiobuttonOptions
 			// 
 			this.radiobuttonOptions.AutoSize = true;
+			this.radiobuttonOptions.ForeColor = System.Drawing.Color.Black;
 			this.radiobuttonOptions.Location = new System.Drawing.Point(8, 112);
 			this.radiobuttonOptions.Name = "radiobuttonOptions";
 			this.radiobuttonOptions.Size = new System.Drawing.Size(61, 17);
@@ -3058,6 +3095,7 @@ namespace OpenBve {
 			// radiobuttonControls
 			// 
 			this.radiobuttonControls.AutoSize = true;
+			this.radiobuttonControls.ForeColor = System.Drawing.Color.Black;
 			this.radiobuttonControls.Location = new System.Drawing.Point(8, 80);
 			this.radiobuttonControls.Name = "radiobuttonControls";
 			this.radiobuttonControls.Size = new System.Drawing.Size(113, 17);
@@ -3069,6 +3107,7 @@ namespace OpenBve {
 			// radiobuttonReview
 			// 
 			this.radiobuttonReview.AutoSize = true;
+			this.radiobuttonReview.ForeColor = System.Drawing.Color.Black;
 			this.radiobuttonReview.Location = new System.Drawing.Point(8, 48);
 			this.radiobuttonReview.Name = "radiobuttonReview";
 			this.radiobuttonReview.Size = new System.Drawing.Size(109, 17);
@@ -3080,6 +3119,7 @@ namespace OpenBve {
 			// radiobuttonStart
 			// 
 			this.radiobuttonStart.AutoSize = true;
+			this.radiobuttonStart.ForeColor = System.Drawing.Color.Black;
 			this.radiobuttonStart.Checked = true;
 			this.radiobuttonStart.Location = new System.Drawing.Point(8, 16);
 			this.radiobuttonStart.Name = "radiobuttonStart";
@@ -3088,6 +3128,7 @@ namespace OpenBve {
 			this.radiobuttonStart.TabStop = true;
 			this.radiobuttonStart.Text = "Start new game";
 			this.radiobuttonStart.UseVisualStyleBackColor = true;
+			
 			this.radiobuttonStart.CheckedChanged += new System.EventHandler(this.radiobuttonStart_CheckedChanged);
 			// 
 			// labelPanelsTop
@@ -3236,6 +3277,7 @@ namespace OpenBve {
 			this.groupboxScore.Controls.Add(this.checkboxScorePenalties);
 			this.groupboxScore.Controls.Add(this.buttonScoreExport);
 			this.groupboxScore.Controls.Add(this.listviewScore);
+			this.groupboxScore.ForeColor = System.Drawing.Color.Black;
 			this.groupboxScore.Location = new System.Drawing.Point(272, 176);
 			this.groupboxScore.Name = "groupboxScore";
 			this.groupboxScore.Size = new System.Drawing.Size(419, 383);
@@ -3258,6 +3300,7 @@ namespace OpenBve {
 			// buttonScoreExport
 			// 
 			this.buttonScoreExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonScoreExport.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonScoreExport.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonScoreExport.Location = new System.Drawing.Point(291, 351);
 			this.buttonScoreExport.Name = "buttonScoreExport";
@@ -3935,6 +3978,8 @@ namespace OpenBve {
 			this.textboxJoystickGrab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxJoystickGrab.BackColor = System.Drawing.Color.White;
+			this.textboxJoystickGrab.ForeColor = System.Drawing.Color.Black;
 			this.textboxJoystickGrab.Location = new System.Drawing.Point(462, 72);
 			this.textboxJoystickGrab.Multiline = true;
 			this.textboxJoystickGrab.Name = "textboxJoystickGrab";
@@ -4124,13 +4169,13 @@ namespace OpenBve {
 			this.panelPackages.Controls.Add(this.labelPackagesTitleSeparator);
 			this.panelPackages.Controls.Add(this.labelPackagesTitle);
 			this.panelPackages.Controls.Add(this.labelPackagesTitleBackground);
+			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelUninstallResult);
 			this.panelPackages.Controls.Add(this.panelSuccess);
 			this.panelPackages.Controls.Add(this.panelDependancyError);
 			this.panelPackages.Controls.Add(this.panelPleaseWait);
 			this.panelPackages.Controls.Add(this.panelPackageDependsAdd);
 			this.panelPackages.Controls.Add(this.panelPackageList);
-			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelVersionError);
 			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Location = new System.Drawing.Point(160, 0);
@@ -4173,810 +4218,9 @@ namespace OpenBve {
 			this.labelPackagesTitleBackground.Size = new System.Drawing.Size(699, 32);
 			this.labelPackagesTitleBackground.TabIndex = 0;
 			// 
-			// panelUninstallResult
-			// 
-			this.panelUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelUninstallResult.Controls.Add(this.textBoxUninstallResult);
-			this.panelUninstallResult.Controls.Add(this.labelUninstallLog);
-			this.panelUninstallResult.Controls.Add(this.labelUninstallSuccess);
-			this.panelUninstallResult.Controls.Add(this.labelUninstallSuccessHeader);
-			this.panelUninstallResult.Controls.Add(this.labelUninstallSuccessHeaderBacking);
-			this.panelUninstallResult.Controls.Add(this.buttonUninstallFinish);
-			this.panelUninstallResult.Location = new System.Drawing.Point(0, 34);
-			this.panelUninstallResult.Name = "panelUninstallResult";
-			this.panelUninstallResult.Size = new System.Drawing.Size(699, 597);
-			this.panelUninstallResult.TabIndex = 25;
-			// 
-			// textBoxUninstallResult
-			// 
-			this.textBoxUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxUninstallResult.BackColor = System.Drawing.SystemColors.Menu;
-			this.textBoxUninstallResult.Location = new System.Drawing.Point(8, 94);
-			this.textBoxUninstallResult.Multiline = true;
-			this.textBoxUninstallResult.Name = "textBoxUninstallResult";
-			this.textBoxUninstallResult.ReadOnly = true;
-			this.textBoxUninstallResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBoxUninstallResult.Size = new System.Drawing.Size(683, 438);
-			this.textBoxUninstallResult.TabIndex = 19;
-			// 
-			// labelUninstallLog
-			// 
-			this.labelUninstallLog.AutoSize = true;
-			this.labelUninstallLog.Location = new System.Drawing.Point(8, 74);
-			this.labelUninstallLog.Name = "labelUninstallLog";
-			this.labelUninstallLog.Size = new System.Drawing.Size(109, 13);
-			this.labelUninstallLog.TabIndex = 18;
-			this.labelUninstallLog.Text = "A log is shown below:";
-			// 
-			// labelUninstallSuccess
-			// 
-			this.labelUninstallSuccess.AutoSize = true;
-			this.labelUninstallSuccess.Location = new System.Drawing.Point(8, 54);
-			this.labelUninstallSuccess.Name = "labelUninstallSuccess";
-			this.labelUninstallSuccess.Size = new System.Drawing.Size(142, 13);
-			this.labelUninstallSuccess.TabIndex = 17;
-			this.labelUninstallSuccess.Text = "Uninstallation was sucessful.";
-			// 
-			// labelUninstallSuccessHeader
-			// 
-			this.labelUninstallSuccessHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.labelUninstallSuccessHeader.BackColor = System.Drawing.Color.Silver;
-			this.labelUninstallSuccessHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUninstallSuccessHeader.ForeColor = System.Drawing.Color.Black;
-			this.labelUninstallSuccessHeader.Location = new System.Drawing.Point(179, 16);
-			this.labelUninstallSuccessHeader.Name = "labelUninstallSuccessHeader";
-			this.labelUninstallSuccessHeader.Size = new System.Drawing.Size(340, 16);
-			this.labelUninstallSuccessHeader.TabIndex = 16;
-			this.labelUninstallSuccessHeader.Text = "Uninstallation Successful";
-			this.labelUninstallSuccessHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelUninstallSuccessHeaderBacking
-			// 
-			this.labelUninstallSuccessHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelUninstallSuccessHeaderBacking.BackColor = System.Drawing.Color.Silver;
-			this.labelUninstallSuccessHeaderBacking.Location = new System.Drawing.Point(8, 8);
-			this.labelUninstallSuccessHeaderBacking.Name = "labelUninstallSuccessHeaderBacking";
-			this.labelUninstallSuccessHeaderBacking.Size = new System.Drawing.Size(683, 32);
-			this.labelUninstallSuccessHeaderBacking.TabIndex = 15;
-			// 
-			// buttonUninstallFinish
-			// 
-			this.buttonUninstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.buttonUninstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonUninstallFinish.Location = new System.Drawing.Point(276, 543);
-			this.buttonUninstallFinish.Name = "buttonUninstallFinish";
-			this.buttonUninstallFinish.Size = new System.Drawing.Size(146, 40);
-			this.buttonUninstallFinish.TabIndex = 14;
-			this.buttonUninstallFinish.Text = "OK";
-			this.buttonUninstallFinish.UseVisualStyleBackColor = true;
-			this.buttonUninstallFinish.Click += new System.EventHandler(this.buttonUninstallFinish_Click);
-			// 
-			// panelSuccess
-			// 
-			this.panelSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelSuccess.Controls.Add(this.textBoxFilesInstalled);
-			this.panelSuccess.Controls.Add(this.labelListFilesInstalled);
-			this.panelSuccess.Controls.Add(this.labelInstallSuccess1);
-			this.panelSuccess.Controls.Add(this.labelInstallSuccess2);
-			this.panelSuccess.Controls.Add(this.labelInstallSuccessBacking);
-			this.panelSuccess.Controls.Add(this.buttonInstallFinish);
-			this.panelSuccess.Location = new System.Drawing.Point(0, 34);
-			this.panelSuccess.Name = "panelSuccess";
-			this.panelSuccess.Size = new System.Drawing.Size(699, 597);
-			this.panelSuccess.TabIndex = 23;
-			// 
-			// textBoxFilesInstalled
-			// 
-			this.textBoxFilesInstalled.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxFilesInstalled.BackColor = System.Drawing.SystemColors.Menu;
-			this.textBoxFilesInstalled.Location = new System.Drawing.Point(8, 94);
-			this.textBoxFilesInstalled.Multiline = true;
-			this.textBoxFilesInstalled.Name = "textBoxFilesInstalled";
-			this.textBoxFilesInstalled.ReadOnly = true;
-			this.textBoxFilesInstalled.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBoxFilesInstalled.Size = new System.Drawing.Size(683, 438);
-			this.textBoxFilesInstalled.TabIndex = 19;
-			// 
-			// labelListFilesInstalled
-			// 
-			this.labelListFilesInstalled.AutoSize = true;
-			this.labelListFilesInstalled.Location = new System.Drawing.Point(8, 74);
-			this.labelListFilesInstalled.Name = "labelListFilesInstalled";
-			this.labelListFilesInstalled.Size = new System.Drawing.Size(181, 13);
-			this.labelListFilesInstalled.TabIndex = 18;
-			this.labelListFilesInstalled.Text = "A list of files installed is shown below:";
-			// 
-			// labelInstallSuccess1
-			// 
-			this.labelInstallSuccess1.AutoSize = true;
-			this.labelInstallSuccess1.Location = new System.Drawing.Point(8, 54);
-			this.labelInstallSuccess1.Name = "labelInstallSuccess1";
-			this.labelInstallSuccess1.Size = new System.Drawing.Size(129, 13);
-			this.labelInstallSuccess1.TabIndex = 17;
-			this.labelInstallSuccess1.Text = "Installation was sucessful.";
-			// 
-			// labelInstallSuccess2
-			// 
-			this.labelInstallSuccess2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.labelInstallSuccess2.BackColor = System.Drawing.Color.Silver;
-			this.labelInstallSuccess2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelInstallSuccess2.ForeColor = System.Drawing.Color.Black;
-			this.labelInstallSuccess2.Location = new System.Drawing.Point(179, 16);
-			this.labelInstallSuccess2.Name = "labelInstallSuccess2";
-			this.labelInstallSuccess2.Size = new System.Drawing.Size(340, 16);
-			this.labelInstallSuccess2.TabIndex = 16;
-			this.labelInstallSuccess2.Text = "Installation Successful";
-			this.labelInstallSuccess2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelInstallSuccessBacking
-			// 
-			this.labelInstallSuccessBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInstallSuccessBacking.BackColor = System.Drawing.Color.Silver;
-			this.labelInstallSuccessBacking.Location = new System.Drawing.Point(8, 8);
-			this.labelInstallSuccessBacking.Name = "labelInstallSuccessBacking";
-			this.labelInstallSuccessBacking.Size = new System.Drawing.Size(683, 32);
-			this.labelInstallSuccessBacking.TabIndex = 15;
-			// 
-			// buttonInstallFinish
-			// 
-			this.buttonInstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.buttonInstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonInstallFinish.Location = new System.Drawing.Point(276, 543);
-			this.buttonInstallFinish.Name = "buttonInstallFinish";
-			this.buttonInstallFinish.Size = new System.Drawing.Size(146, 40);
-			this.buttonInstallFinish.TabIndex = 14;
-			this.buttonInstallFinish.Text = "OK";
-			this.buttonInstallFinish.UseVisualStyleBackColor = true;
-			this.buttonInstallFinish.Click += new System.EventHandler(this.buttonInstallFinished_Click);
-			// 
-			// panelDependancyError
-			// 
-			this.panelDependancyError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelDependancyError.Controls.Add(this.buttonAbort);
-			this.panelDependancyError.Controls.Add(this.dataGridViewDependancies);
-			this.panelDependancyError.Controls.Add(this.labelMissingDependanciesText2);
-			this.panelDependancyError.Controls.Add(this.labelMissingDependanciesText1);
-			this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeader);
-			this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeaderBacking);
-			this.panelDependancyError.Controls.Add(this.buttonProceedAnyway);
-			this.panelDependancyError.Location = new System.Drawing.Point(0, 34);
-			this.panelDependancyError.Name = "panelDependancyError";
-			this.panelDependancyError.Size = new System.Drawing.Size(699, 597);
-			this.panelDependancyError.TabIndex = 5;
-			// 
-			// buttonAbort
-			// 
-			this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonAbort.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonAbort.Location = new System.Drawing.Point(445, 565);
-			this.buttonAbort.Name = "buttonAbort";
-			this.buttonAbort.Size = new System.Drawing.Size(120, 24);
-			this.buttonAbort.TabIndex = 21;
-			this.buttonAbort.Text = "Abort";
-			this.buttonAbort.UseVisualStyleBackColor = true;
-			this.buttonAbort.Click += new System.EventHandler(this.buttonCancel_Click);
-			// 
-			// dataGridViewDependancies
-			// 
-			this.dataGridViewDependancies.AllowUserToAddRows = false;
-			this.dataGridViewDependancies.AllowUserToDeleteRows = false;
-			this.dataGridViewDependancies.AllowUserToResizeColumns = false;
-			this.dataGridViewDependancies.AllowUserToResizeRows = false;
-			this.dataGridViewDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewDependancies.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewDependancies.BackgroundColor = System.Drawing.SystemColors.Control;
-			this.dataGridViewDependancies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewDependancies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn5,
-            this.dataGridViewTextBoxColumn6,
-            this.dataGridViewTextBoxColumn7,
-            this.dataGridViewTextBoxColumn8,
-            this.website});
-			this.dataGridViewDependancies.Location = new System.Drawing.Point(8, 94);
-			this.dataGridViewDependancies.MultiSelect = false;
-			this.dataGridViewDependancies.Name = "dataGridViewDependancies";
-			this.dataGridViewDependancies.ReadOnly = true;
-			this.dataGridViewDependancies.RowHeadersVisible = false;
-			this.dataGridViewDependancies.RowHeadersWidth = 90;
-			this.dataGridViewDependancies.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewDependancies.Size = new System.Drawing.Size(683, 438);
-			this.dataGridViewDependancies.TabIndex = 20;
-			this.dataGridViewDependancies.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDependancies_CellContentClick);
-			// 
-			// dataGridViewTextBoxColumn5
-			// 
-			this.dataGridViewTextBoxColumn5.HeaderText = "Name";
-			this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-			this.dataGridViewTextBoxColumn5.ReadOnly = true;
-			this.dataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// dataGridViewTextBoxColumn6
-			// 
-			this.dataGridViewTextBoxColumn6.HeaderText = "Minimum Version";
-			this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-			this.dataGridViewTextBoxColumn6.ReadOnly = true;
-			this.dataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// dataGridViewTextBoxColumn7
-			// 
-			this.dataGridViewTextBoxColumn7.HeaderText = "Maximum Version";
-			this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-			this.dataGridViewTextBoxColumn7.ReadOnly = true;
-			this.dataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// dataGridViewTextBoxColumn8
-			// 
-			this.dataGridViewTextBoxColumn8.HeaderText = "Author";
-			this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
-			this.dataGridViewTextBoxColumn8.ReadOnly = true;
-			this.dataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// website
-			// 
-			this.website.HeaderText = "Website";
-			this.website.Name = "website";
-			this.website.ReadOnly = true;
-			this.website.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// labelMissingDependanciesText2
-			// 
-			this.labelMissingDependanciesText2.AutoSize = true;
-			this.labelMissingDependanciesText2.Location = new System.Drawing.Point(8, 74);
-			this.labelMissingDependanciesText2.Name = "labelMissingDependanciesText2";
-			this.labelMissingDependanciesText2.Size = new System.Drawing.Size(167, 13);
-			this.labelMissingDependanciesText2.TabIndex = 18;
-			this.labelMissingDependanciesText2.Text = "These are shown in the list below:";
-			// 
-			// labelMissingDependanciesText1
-			// 
-			this.labelMissingDependanciesText1.AutoSize = true;
-			this.labelMissingDependanciesText1.Location = new System.Drawing.Point(8, 54);
-			this.labelMissingDependanciesText1.Name = "labelMissingDependanciesText1";
-			this.labelMissingDependanciesText1.Size = new System.Drawing.Size(232, 13);
-			this.labelMissingDependanciesText1.TabIndex = 17;
-			this.labelMissingDependanciesText1.Text = "The current package has unmet dependancies.";
-			// 
-			// labelDependancyErrorHeader
-			// 
-			this.labelDependancyErrorHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.labelDependancyErrorHeader.BackColor = System.Drawing.Color.Silver;
-			this.labelDependancyErrorHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelDependancyErrorHeader.ForeColor = System.Drawing.Color.Black;
-			this.labelDependancyErrorHeader.Location = new System.Drawing.Point(179, 16);
-			this.labelDependancyErrorHeader.Name = "labelDependancyErrorHeader";
-			this.labelDependancyErrorHeader.Size = new System.Drawing.Size(340, 16);
-			this.labelDependancyErrorHeader.TabIndex = 16;
-			this.labelDependancyErrorHeader.Text = "Dependancy Error";
-			this.labelDependancyErrorHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelDependancyErrorHeaderBacking
-			// 
-			this.labelDependancyErrorHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDependancyErrorHeaderBacking.BackColor = System.Drawing.Color.Silver;
-			this.labelDependancyErrorHeaderBacking.Location = new System.Drawing.Point(8, 8);
-			this.labelDependancyErrorHeaderBacking.Name = "labelDependancyErrorHeaderBacking";
-			this.labelDependancyErrorHeaderBacking.Size = new System.Drawing.Size(683, 32);
-			this.labelDependancyErrorHeaderBacking.TabIndex = 15;
-			// 
-			// buttonProceedAnyway
-			// 
-			this.buttonProceedAnyway.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonProceedAnyway.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonProceedAnyway.Location = new System.Drawing.Point(571, 565);
-			this.buttonProceedAnyway.Name = "buttonProceedAnyway";
-			this.buttonProceedAnyway.Size = new System.Drawing.Size(120, 24);
-			this.buttonProceedAnyway.TabIndex = 14;
-			this.buttonProceedAnyway.Text = "Ignore";
-			this.buttonProceedAnyway.UseVisualStyleBackColor = true;
-			this.buttonProceedAnyway.Click += new System.EventHandler(this.buttonProceedAnyway_Click);
-			// 
-			// panelPleaseWait
-			// 
-			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelPleaseWait.Controls.Add(this.labelProgressFile);
-			this.panelPleaseWait.Controls.Add(this.labelProgressPercent);
-			this.panelPleaseWait.Controls.Add(this.labelPleaseWait);
-			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
-			this.panelPleaseWait.Location = new System.Drawing.Point(0, 34);
-			this.panelPleaseWait.Name = "panelPleaseWait";
-			this.panelPleaseWait.Size = new System.Drawing.Size(699, 597);
-			this.panelPleaseWait.TabIndex = 28;
-			// 
-			// labelProgressFile
-			// 
-			this.labelProgressFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelProgressFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelProgressFile.Location = new System.Drawing.Point(1, 431);
-			this.labelProgressFile.Name = "labelProgressFile";
-			this.labelProgressFile.Size = new System.Drawing.Size(697, 24);
-			this.labelProgressFile.TabIndex = 7;
-			this.labelProgressFile.Text = "Unknown File...";
-			this.labelProgressFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelProgressPercent
-			// 
-			this.labelProgressPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelProgressPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelProgressPercent.Location = new System.Drawing.Point(290, 401);
-			this.labelProgressPercent.Name = "labelProgressPercent";
-			this.labelProgressPercent.Size = new System.Drawing.Size(118, 24);
-			this.labelProgressPercent.TabIndex = 6;
-			this.labelProgressPercent.Text = "0%";
-			this.labelProgressPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelPleaseWait
-			// 
-			this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPleaseWait.Location = new System.Drawing.Point(1, 462);
-			this.labelPleaseWait.Name = "labelPleaseWait";
-			this.labelPleaseWait.Size = new System.Drawing.Size(697, 24);
-			this.labelPleaseWait.TabIndex = 5;
-			this.labelPleaseWait.Text = "Processing, please wait...";
-			this.labelPleaseWait.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// pictureBoxProcessing
-			// 
-			this.pictureBoxProcessing.Anchor = System.Windows.Forms.AnchorStyles.None;
-			this.pictureBoxProcessing.Location = new System.Drawing.Point(174, 46);
-			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
-			this.pictureBoxProcessing.Size = new System.Drawing.Size(350, 350);
-			this.pictureBoxProcessing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pictureBoxProcessing.TabIndex = 4;
-			this.pictureBoxProcessing.TabStop = false;
-			// 
-			// panelPackageDependsAdd
-			// 
-			this.panelPackageDependsAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelPackageDependsAdd.Controls.Add(this.buttonBack);
-			this.panelPackageDependsAdd.Controls.Add(this.buttonRemove);
-			this.panelPackageDependsAdd.Controls.Add(this.labelDependanciesHeader);
-			this.panelPackageDependsAdd.Controls.Add(this.labelDependanciesHeaderBacking);
-			this.panelPackageDependsAdd.Controls.Add(this.buttonCreatePackage);
-			this.panelPackageDependsAdd.Controls.Add(this.splitContainerDependancies);
-			this.panelPackageDependsAdd.Location = new System.Drawing.Point(0, 34);
-			this.panelPackageDependsAdd.Name = "panelPackageDependsAdd";
-			this.panelPackageDependsAdd.Size = new System.Drawing.Size(699, 597);
-			this.panelPackageDependsAdd.TabIndex = 26;
-			// 
-			// buttonBack
-			// 
-			this.buttonBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBack.Location = new System.Drawing.Point(445, 565);
-			this.buttonBack.Name = "buttonBack";
-			this.buttonBack.Size = new System.Drawing.Size(120, 24);
-			this.buttonBack.TabIndex = 28;
-			this.buttonBack.Text = "< Back";
-			this.buttonBack.UseVisualStyleBackColor = true;
-			this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
-			// 
-			// buttonRemove
-			// 
-			this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonRemove.Enabled = false;
-			this.buttonRemove.Location = new System.Drawing.Point(8, 525);
-			this.buttonRemove.Name = "buttonRemove";
-			this.buttonRemove.Size = new System.Drawing.Size(166, 23);
-			this.buttonRemove.TabIndex = 25;
-			this.buttonRemove.Text = "Remove";
-			this.buttonRemove.UseVisualStyleBackColor = true;
-			this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
-			// 
-			// labelDependanciesHeader
-			// 
-			this.labelDependanciesHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.labelDependanciesHeader.BackColor = System.Drawing.Color.Silver;
-			this.labelDependanciesHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelDependanciesHeader.ForeColor = System.Drawing.Color.Black;
-			this.labelDependanciesHeader.Location = new System.Drawing.Point(179, 16);
-			this.labelDependanciesHeader.Name = "labelDependanciesHeader";
-			this.labelDependanciesHeader.Size = new System.Drawing.Size(340, 16);
-			this.labelDependanciesHeader.TabIndex = 16;
-			this.labelDependanciesHeader.Text = "Select Dependancies";
-			this.labelDependanciesHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelDependanciesHeaderBacking
-			// 
-			this.labelDependanciesHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDependanciesHeaderBacking.BackColor = System.Drawing.Color.Silver;
-			this.labelDependanciesHeaderBacking.Location = new System.Drawing.Point(8, 8);
-			this.labelDependanciesHeaderBacking.Name = "labelDependanciesHeaderBacking";
-			this.labelDependanciesHeaderBacking.Size = new System.Drawing.Size(683, 32);
-			this.labelDependanciesHeaderBacking.TabIndex = 15;
-			// 
-			// buttonCreatePackage
-			// 
-			this.buttonCreatePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonCreatePackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCreatePackage.Location = new System.Drawing.Point(571, 565);
-			this.buttonCreatePackage.Name = "buttonCreatePackage";
-			this.buttonCreatePackage.Size = new System.Drawing.Size(120, 24);
-			this.buttonCreatePackage.TabIndex = 14;
-			this.buttonCreatePackage.Text = "Create";
-			this.buttonCreatePackage.UseVisualStyleBackColor = true;
-			this.buttonCreatePackage.Click += new System.EventHandler(this.buttonCreatePackage_Click);
-			// 
-			// splitContainerDependancies
-			// 
-			this.splitContainerDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainerDependancies.Location = new System.Drawing.Point(8, 50);
-			this.splitContainerDependancies.Name = "splitContainerDependancies";
-			this.splitContainerDependancies.Orientation = System.Windows.Forms.Orientation.Horizontal;
-			// 
-			// splitContainerDependancies.Panel1
-			// 
-			this.splitContainerDependancies.Panel1.Controls.Add(this.labelDependancyType);
-			this.splitContainerDependancies.Panel1.Controls.Add(this.comboBoxDependancyType);
-			this.splitContainerDependancies.Panel1.Controls.Add(this.dataGridViewPackages2);
-			this.splitContainerDependancies.Panel1.Controls.Add(this.labelInstalledDependancies);
-			// 
-			// splitContainerDependancies.Panel2
-			// 
-			this.splitContainerDependancies.Panel2.Controls.Add(this.dataGridViewPackages3);
-			this.splitContainerDependancies.Panel2.Controls.Add(this.buttonReccomends);
-			this.splitContainerDependancies.Panel2.Controls.Add(this.labelSelectedDependencies);
-			this.splitContainerDependancies.Panel2.Controls.Add(this.buttonDepends);
-			this.splitContainerDependancies.Size = new System.Drawing.Size(683, 469);
-			this.splitContainerDependancies.SplitterDistance = 244;
-			this.splitContainerDependancies.TabIndex = 27;
-			// 
-			// labelDependancyType
-			// 
-			this.labelDependancyType.AutoSize = true;
-			this.labelDependancyType.Location = new System.Drawing.Point(0, 35);
-			this.labelDependancyType.Name = "labelDependancyType";
-			this.labelDependancyType.Size = new System.Drawing.Size(224, 13);
-			this.labelDependancyType.TabIndex = 25;
-			this.labelDependancyType.Text = "Select the type of packages you wish to view:";
-			// 
-			// comboBoxDependancyType
-			// 
-			this.comboBoxDependancyType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxDependancyType.FormattingEnabled = true;
-			this.comboBoxDependancyType.Items.AddRange(new object[] {
-            "Route",
-            "Train",
-            "Other"});
-			this.comboBoxDependancyType.Location = new System.Drawing.Point(0, 55);
-			this.comboBoxDependancyType.Name = "comboBoxDependancyType";
-			this.comboBoxDependancyType.Size = new System.Drawing.Size(221, 21);
-			this.comboBoxDependancyType.TabIndex = 26;
-			this.comboBoxDependancyType.SelectedIndexChanged += new System.EventHandler(this.comboBoxDependancyType_SelectedIndexChanged);
-			// 
-			// dataGridViewPackages2
-			// 
-			this.dataGridViewPackages2.AllowUserToAddRows = false;
-			this.dataGridViewPackages2.AllowUserToDeleteRows = false;
-			this.dataGridViewPackages2.AllowUserToResizeColumns = false;
-			this.dataGridViewPackages2.AllowUserToResizeRows = false;
-			this.dataGridViewPackages2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewPackages2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewPackages2.BackgroundColor = System.Drawing.SystemColors.Control;
-			this.dataGridViewPackages2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewPackages2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn13,
-            this.dataGridViewTextBoxColumn14,
-            this.dataGridViewTextBoxColumn15,
-            this.dataGridViewTextBoxColumn16});
-			this.dataGridViewPackages2.Location = new System.Drawing.Point(0, 81);
-			this.dataGridViewPackages2.MultiSelect = false;
-			this.dataGridViewPackages2.Name = "dataGridViewPackages2";
-			this.dataGridViewPackages2.ReadOnly = true;
-			this.dataGridViewPackages2.RowHeadersVisible = false;
-			this.dataGridViewPackages2.RowHeadersWidth = 90;
-			this.dataGridViewPackages2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewPackages2.Size = new System.Drawing.Size(683, 162);
-			this.dataGridViewPackages2.TabIndex = 21;
-			this.dataGridViewPackages2.SelectionChanged += new System.EventHandler(this.dataGridViewPackages2_SelectionChanged);
-			// 
-			// dataGridViewTextBoxColumn13
-			// 
-			this.dataGridViewTextBoxColumn13.HeaderText = "Name";
-			this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
-			this.dataGridViewTextBoxColumn13.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn14
-			// 
-			this.dataGridViewTextBoxColumn14.HeaderText = "Version";
-			this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
-			this.dataGridViewTextBoxColumn14.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn15
-			// 
-			this.dataGridViewTextBoxColumn15.HeaderText = "Author";
-			this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
-			this.dataGridViewTextBoxColumn15.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn16
-			// 
-			this.dataGridViewTextBoxColumn16.HeaderText = "Website";
-			this.dataGridViewTextBoxColumn16.Name = "dataGridViewTextBoxColumn16";
-			this.dataGridViewTextBoxColumn16.ReadOnly = true;
-			// 
-			// labelInstalledDependancies
-			// 
-			this.labelInstalledDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInstalledDependancies.AutoEllipsis = true;
-			this.labelInstalledDependancies.BackColor = System.Drawing.Color.Silver;
-			this.labelInstalledDependancies.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelInstalledDependancies.ForeColor = System.Drawing.Color.White;
-			this.labelInstalledDependancies.Location = new System.Drawing.Point(0, 0);
-			this.labelInstalledDependancies.Name = "labelInstalledDependancies";
-			this.labelInstalledDependancies.Size = new System.Drawing.Size(683, 24);
-			this.labelInstalledDependancies.TabIndex = 20;
-			this.labelInstalledDependancies.Text = "Installed Packages";
-			this.labelInstalledDependancies.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// dataGridViewPackages3
-			// 
-			this.dataGridViewPackages3.AllowUserToAddRows = false;
-			this.dataGridViewPackages3.AllowUserToDeleteRows = false;
-			this.dataGridViewPackages3.AllowUserToResizeColumns = false;
-			this.dataGridViewPackages3.AllowUserToResizeRows = false;
-			this.dataGridViewPackages3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewPackages3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewPackages3.BackgroundColor = System.Drawing.SystemColors.Control;
-			this.dataGridViewPackages3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewPackages3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4,
-            this.columnDependancy});
-			this.dataGridViewPackages3.Location = new System.Drawing.Point(0, 60);
-			this.dataGridViewPackages3.MultiSelect = false;
-			this.dataGridViewPackages3.Name = "dataGridViewPackages3";
-			this.dataGridViewPackages3.ReadOnly = true;
-			this.dataGridViewPackages3.RowHeadersVisible = false;
-			this.dataGridViewPackages3.RowHeadersWidth = 90;
-			this.dataGridViewPackages3.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewPackages3.Size = new System.Drawing.Size(683, 161);
-			this.dataGridViewPackages3.TabIndex = 22;
-			this.dataGridViewPackages3.SelectionChanged += new System.EventHandler(this.dataGridViewPackages3_SelectionChanged);
-			// 
-			// dataGridViewTextBoxColumn1
-			// 
-			this.dataGridViewTextBoxColumn1.HeaderText = "Name";
-			this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-			this.dataGridViewTextBoxColumn1.ReadOnly = true;
-			this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// dataGridViewTextBoxColumn2
-			// 
-			this.dataGridViewTextBoxColumn2.HeaderText = "Minimum Version";
-			this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-			this.dataGridViewTextBoxColumn2.ReadOnly = true;
-			this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// dataGridViewTextBoxColumn3
-			// 
-			this.dataGridViewTextBoxColumn3.HeaderText = "Maximum Version";
-			this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-			this.dataGridViewTextBoxColumn3.ReadOnly = true;
-			this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// dataGridViewTextBoxColumn4
-			// 
-			this.dataGridViewTextBoxColumn4.HeaderText = "Type";
-			this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-			this.dataGridViewTextBoxColumn4.ReadOnly = true;
-			this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// columnDependancy
-			// 
-			this.columnDependancy.HeaderText = "";
-			this.columnDependancy.Name = "columnDependancy";
-			this.columnDependancy.ReadOnly = true;
-			this.columnDependancy.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// buttonReccomends
-			// 
-			this.buttonReccomends.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonReccomends.Enabled = false;
-			this.buttonReccomends.Location = new System.Drawing.Point(517, 1);
-			this.buttonReccomends.Name = "buttonReccomends";
-			this.buttonReccomends.Size = new System.Drawing.Size(166, 23);
-			this.buttonReccomends.TabIndex = 24;
-			this.buttonReccomends.Text = "Add Reccomendation";
-			this.buttonReccomends.UseVisualStyleBackColor = true;
-			this.buttonReccomends.Click += new System.EventHandler(this.buttonReccomends_Click);
-			// 
-			// labelSelectedDependencies
-			// 
-			this.labelSelectedDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelSelectedDependencies.AutoEllipsis = true;
-			this.labelSelectedDependencies.BackColor = System.Drawing.Color.Silver;
-			this.labelSelectedDependencies.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelSelectedDependencies.ForeColor = System.Drawing.Color.White;
-			this.labelSelectedDependencies.Location = new System.Drawing.Point(0, 30);
-			this.labelSelectedDependencies.Name = "labelSelectedDependencies";
-			this.labelSelectedDependencies.Size = new System.Drawing.Size(683, 24);
-			this.labelSelectedDependencies.TabIndex = 21;
-			this.labelSelectedDependencies.Text = "Selected Packages";
-			this.labelSelectedDependencies.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// buttonDepends
-			// 
-			this.buttonDepends.Enabled = false;
-			this.buttonDepends.Location = new System.Drawing.Point(0, 2);
-			this.buttonDepends.Name = "buttonDepends";
-			this.buttonDepends.Size = new System.Drawing.Size(166, 23);
-			this.buttonDepends.TabIndex = 23;
-			this.buttonDepends.Text = "Add Dependancy";
-			this.buttonDepends.UseVisualStyleBackColor = true;
-			this.buttonDepends.Click += new System.EventHandler(this.buttonDepends_Click);
-			// 
-			// panelPackageList
-			// 
-			this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelPackageList.Controls.Add(this.comboBoxPackageType);
-			this.panelPackageList.Controls.Add(this.labelPackageListType);
-			this.panelPackageList.Controls.Add(this.createPackageButton);
-			this.panelPackageList.Controls.Add(this.buttonUninstallPackage);
-			this.panelPackageList.Controls.Add(this.buttonInstallPackage);
-			this.panelPackageList.Controls.Add(this.dataGridViewPackages);
-			this.panelPackageList.Controls.Add(this.labelInstalledPackages);
-			this.panelPackageList.Location = new System.Drawing.Point(0, 34);
-			this.panelPackageList.Name = "panelPackageList";
-			this.panelPackageList.Size = new System.Drawing.Size(699, 597);
-			this.panelPackageList.TabIndex = 3;
-			// 
-			// comboBoxPackageType
-			// 
-			this.comboBoxPackageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxPackageType.FormattingEnabled = true;
-			this.comboBoxPackageType.Items.AddRange(new object[] {
-            "Routes",
-            "Trains",
-            "Other"});
-			this.comboBoxPackageType.Location = new System.Drawing.Point(8, 61);
-			this.comboBoxPackageType.Name = "comboBoxPackageType";
-			this.comboBoxPackageType.Size = new System.Drawing.Size(221, 21);
-			this.comboBoxPackageType.TabIndex = 25;
-			this.comboBoxPackageType.SelectedIndexChanged += new System.EventHandler(this.comboBoxPackageType_SelectedIndexChanged);
-			// 
-			// labelPackageListType
-			// 
-			this.labelPackageListType.AutoSize = true;
-			this.labelPackageListType.Location = new System.Drawing.Point(8, 41);
-			this.labelPackageListType.Name = "labelPackageListType";
-			this.labelPackageListType.Size = new System.Drawing.Size(224, 13);
-			this.labelPackageListType.TabIndex = 24;
-			this.labelPackageListType.Text = "Select the type of packages you wish to view:";
-			// 
-			// createPackageButton
-			// 
-			this.createPackageButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.createPackageButton.Location = new System.Drawing.Point(281, 549);
-			this.createPackageButton.Name = "createPackageButton";
-			this.createPackageButton.Size = new System.Drawing.Size(136, 23);
-			this.createPackageButton.TabIndex = 23;
-			this.createPackageButton.Text = "Create Package";
-			this.createPackageButton.UseVisualStyleBackColor = true;
-			this.createPackageButton.Click += new System.EventHandler(this.createPackageButton_Click);
-			// 
-			// buttonUninstallPackage
-			// 
-			this.buttonUninstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonUninstallPackage.Location = new System.Drawing.Point(555, 549);
-			this.buttonUninstallPackage.Name = "buttonUninstallPackage";
-			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
-			this.buttonUninstallPackage.TabIndex = 21;
-			this.buttonUninstallPackage.Text = "Uninstall Package";
-			this.buttonUninstallPackage.UseVisualStyleBackColor = true;
-			this.buttonUninstallPackage.Click += new System.EventHandler(this.buttonUninstallPackage_Click);
-			// 
-			// buttonInstallPackage
-			// 
-			this.buttonInstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonInstallPackage.Location = new System.Drawing.Point(8, 549);
-			this.buttonInstallPackage.Name = "buttonInstallPackage";
-			this.buttonInstallPackage.Size = new System.Drawing.Size(136, 23);
-			this.buttonInstallPackage.TabIndex = 20;
-			this.buttonInstallPackage.Text = "Install Package";
-			this.buttonInstallPackage.UseVisualStyleBackColor = true;
-			this.buttonInstallPackage.Click += new System.EventHandler(this.buttonInstallPackage_Click);
-			// 
-			// dataGridViewPackages
-			// 
-			this.dataGridViewPackages.AllowUserToAddRows = false;
-			this.dataGridViewPackages.AllowUserToDeleteRows = false;
-			this.dataGridViewPackages.AllowUserToResizeColumns = false;
-			this.dataGridViewPackages.AllowUserToResizeRows = false;
-			this.dataGridViewPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewPackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewPackages.BackgroundColor = System.Drawing.SystemColors.Control;
-			this.dataGridViewPackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewPackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.routeName,
-            this.routeVersion,
-            this.routeAuthor,
-            this.routeWebsite});
-			this.dataGridViewPackages.Location = new System.Drawing.Point(8, 88);
-			this.dataGridViewPackages.MultiSelect = false;
-			this.dataGridViewPackages.Name = "dataGridViewPackages";
-			this.dataGridViewPackages.ReadOnly = true;
-			this.dataGridViewPackages.RowHeadersVisible = false;
-			this.dataGridViewPackages.RowHeadersWidth = 90;
-			this.dataGridViewPackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewPackages.Size = new System.Drawing.Size(683, 454);
-			this.dataGridViewPackages.TabIndex = 19;
-			this.dataGridViewPackages.SelectionChanged += new System.EventHandler(this.dataGridViewPackages_SelectionChanged);
-			// 
-			// routeName
-			// 
-			this.routeName.HeaderText = "Name";
-			this.routeName.Name = "routeName";
-			this.routeName.ReadOnly = true;
-			// 
-			// routeVersion
-			// 
-			this.routeVersion.HeaderText = "Version";
-			this.routeVersion.Name = "routeVersion";
-			this.routeVersion.ReadOnly = true;
-			// 
-			// routeAuthor
-			// 
-			this.routeAuthor.HeaderText = "Author";
-			this.routeAuthor.Name = "routeAuthor";
-			this.routeAuthor.ReadOnly = true;
-			// 
-			// routeWebsite
-			// 
-			this.routeWebsite.HeaderText = "Website";
-			this.routeWebsite.Name = "routeWebsite";
-			this.routeWebsite.ReadOnly = true;
-			// 
-			// labelInstalledPackages
-			// 
-			this.labelInstalledPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInstalledPackages.AutoEllipsis = true;
-			this.labelInstalledPackages.BackColor = System.Drawing.Color.Silver;
-			this.labelInstalledPackages.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelInstalledPackages.ForeColor = System.Drawing.Color.White;
-			this.labelInstalledPackages.Location = new System.Drawing.Point(8, 6);
-			this.labelInstalledPackages.Name = "labelInstalledPackages";
-			this.labelInstalledPackages.Size = new System.Drawing.Size(683, 24);
-			this.labelInstalledPackages.TabIndex = 17;
-			this.labelInstalledPackages.Text = "Installed Packages";
-			this.labelInstalledPackages.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// panelPackageInstall
 			// 
+			this.panelPackageInstall.AllowDrop = true;
 			this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -5000,6 +4244,8 @@ namespace OpenBve {
 			this.panelPackageInstall.Name = "panelPackageInstall";
 			this.panelPackageInstall.Size = new System.Drawing.Size(699, 597);
 			this.panelPackageInstall.TabIndex = 4;
+			this.panelPackageInstall.DragDrop += new System.Windows.Forms.DragEventHandler(this.panelPackageInstall_DragDrop);
+			this.panelPackageInstall.DragEnter += new System.Windows.Forms.DragEventHandler(this.panelPackageInstall_DragEnter);
 			// 
 			// buttonBack2
 			// 
@@ -5180,6 +4426,1075 @@ namespace OpenBve {
 			this.pictureBoxPackageImage.TabStop = false;
 			this.pictureBoxPackageImage.Click += new System.EventHandler(this.pictureBoxPackageImage_Click);
 			// 
+			// panelUninstallResult
+			// 
+			this.panelUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelUninstallResult.Controls.Add(this.textBoxUninstallResult);
+			this.panelUninstallResult.Controls.Add(this.labelUninstallLog);
+			this.panelUninstallResult.Controls.Add(this.labelUninstallSuccess);
+			this.panelUninstallResult.Controls.Add(this.labelUninstallSuccessHeader);
+			this.panelUninstallResult.Controls.Add(this.labelUninstallSuccessHeaderBacking);
+			this.panelUninstallResult.Controls.Add(this.buttonUninstallFinish);
+			this.panelUninstallResult.Location = new System.Drawing.Point(0, 34);
+			this.panelUninstallResult.Name = "panelUninstallResult";
+			this.panelUninstallResult.Size = new System.Drawing.Size(699, 597);
+			this.panelUninstallResult.TabIndex = 25;
+			// 
+			// textBoxUninstallResult
+			// 
+			this.textBoxUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxUninstallResult.BackColor = System.Drawing.Color.White;
+			this.textBoxUninstallResult.ForeColor = System.Drawing.Color.Black;
+			this.textBoxUninstallResult.Location = new System.Drawing.Point(8, 94);
+			this.textBoxUninstallResult.Multiline = true;
+			this.textBoxUninstallResult.Name = "textBoxUninstallResult";
+			this.textBoxUninstallResult.ReadOnly = true;
+			this.textBoxUninstallResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBoxUninstallResult.Size = new System.Drawing.Size(683, 438);
+			this.textBoxUninstallResult.TabIndex = 19;
+			// 
+			// labelUninstallLog
+			// 
+			this.labelUninstallLog.AutoSize = true;
+			this.labelUninstallLog.ForeColor = System.Drawing.Color.Black;
+			this.labelUninstallLog.Location = new System.Drawing.Point(8, 74);
+			this.labelUninstallLog.Name = "labelUninstallLog";
+			this.labelUninstallLog.Size = new System.Drawing.Size(109, 13);
+			this.labelUninstallLog.TabIndex = 18;
+			this.labelUninstallLog.Text = "A log is shown below:";
+			// 
+			// labelUninstallSuccess
+			// 
+			this.labelUninstallSuccess.AutoSize = true;
+			this.labelUninstallSuccess.ForeColor = System.Drawing.Color.Black;
+			this.labelUninstallSuccess.Location = new System.Drawing.Point(8, 54);
+			this.labelUninstallSuccess.Name = "labelUninstallSuccess";
+			this.labelUninstallSuccess.Size = new System.Drawing.Size(142, 13);
+			this.labelUninstallSuccess.TabIndex = 17;
+			this.labelUninstallSuccess.Text = "Uninstallation was sucessful.";
+			// 
+			// labelUninstallSuccessHeader
+			// 
+			this.labelUninstallSuccessHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.labelUninstallSuccessHeader.BackColor = System.Drawing.Color.Silver;
+			this.labelUninstallSuccessHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelUninstallSuccessHeader.ForeColor = System.Drawing.Color.Black;
+			this.labelUninstallSuccessHeader.Location = new System.Drawing.Point(179, 16);
+			this.labelUninstallSuccessHeader.Name = "labelUninstallSuccessHeader";
+			this.labelUninstallSuccessHeader.Size = new System.Drawing.Size(340, 16);
+			this.labelUninstallSuccessHeader.TabIndex = 16;
+			this.labelUninstallSuccessHeader.Text = "Uninstallation Successful";
+			this.labelUninstallSuccessHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelUninstallSuccessHeaderBacking
+			// 
+			this.labelUninstallSuccessHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelUninstallSuccessHeaderBacking.BackColor = System.Drawing.Color.Silver;
+			this.labelUninstallSuccessHeaderBacking.Location = new System.Drawing.Point(8, 8);
+			this.labelUninstallSuccessHeaderBacking.Name = "labelUninstallSuccessHeaderBacking";
+			this.labelUninstallSuccessHeaderBacking.Size = new System.Drawing.Size(683, 32);
+			this.labelUninstallSuccessHeaderBacking.TabIndex = 15;
+			// 
+			// buttonUninstallFinish
+			// 
+			this.buttonUninstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.buttonUninstallFinish.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonUninstallFinish.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonUninstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonUninstallFinish.Location = new System.Drawing.Point(276, 543);
+			this.buttonUninstallFinish.Name = "buttonUninstallFinish";
+			this.buttonUninstallFinish.Size = new System.Drawing.Size(146, 40);
+			this.buttonUninstallFinish.TabIndex = 14;
+			this.buttonUninstallFinish.Text = "OK";
+			this.buttonUninstallFinish.UseVisualStyleBackColor = true;
+			this.buttonUninstallFinish.Click += new System.EventHandler(this.buttonUninstallFinish_Click);
+			// 
+			// panelSuccess
+			// 
+			this.panelSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelSuccess.Controls.Add(this.textBoxFilesInstalled);
+			this.panelSuccess.Controls.Add(this.labelListFilesInstalled);
+			this.panelSuccess.Controls.Add(this.labelInstallSuccess1);
+			this.panelSuccess.Controls.Add(this.labelInstallSuccess2);
+			this.panelSuccess.Controls.Add(this.labelInstallSuccessBacking);
+			this.panelSuccess.Controls.Add(this.buttonInstallFinish);
+			this.panelSuccess.Location = new System.Drawing.Point(0, 34);
+			this.panelSuccess.Name = "panelSuccess";
+			this.panelSuccess.Size = new System.Drawing.Size(699, 597);
+			this.panelSuccess.TabIndex = 23;
+			// 
+			// textBoxFilesInstalled
+			// 
+			this.textBoxFilesInstalled.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxFilesInstalled.BackColor = System.Drawing.Color.White;
+			this.textBoxFilesInstalled.ForeColor = System.Drawing.Color.Black;
+			this.textBoxFilesInstalled.Location = new System.Drawing.Point(8, 94);
+			this.textBoxFilesInstalled.Multiline = true;
+			this.textBoxFilesInstalled.Name = "textBoxFilesInstalled";
+			this.textBoxFilesInstalled.ReadOnly = true;
+			this.textBoxFilesInstalled.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBoxFilesInstalled.Size = new System.Drawing.Size(683, 438);
+			this.textBoxFilesInstalled.TabIndex = 19;
+			// 
+			// labelListFilesInstalled
+			// 
+			this.labelListFilesInstalled.AutoSize = true;
+			this.labelListFilesInstalled.ForeColor = System.Drawing.Color.Black;
+			this.labelListFilesInstalled.Location = new System.Drawing.Point(8, 74);
+			this.labelListFilesInstalled.Name = "labelListFilesInstalled";
+			this.labelListFilesInstalled.Size = new System.Drawing.Size(181, 13);
+			this.labelListFilesInstalled.TabIndex = 18;
+			this.labelListFilesInstalled.Text = "A list of files installed is shown below:";
+			// 
+			// labelInstallSuccess1
+			// 
+			this.labelInstallSuccess1.AutoSize = true;
+			this.labelInstallSuccess1.ForeColor = System.Drawing.Color.Black;
+			this.labelInstallSuccess1.Location = new System.Drawing.Point(8, 54);
+			this.labelInstallSuccess1.Name = "labelInstallSuccess1";
+			this.labelInstallSuccess1.Size = new System.Drawing.Size(129, 13);
+			this.labelInstallSuccess1.TabIndex = 17;
+			this.labelInstallSuccess1.Text = "Installation was sucessful.";
+			// 
+			// labelInstallSuccess2
+			// 
+			this.labelInstallSuccess2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.labelInstallSuccess2.BackColor = System.Drawing.Color.Silver;
+			this.labelInstallSuccess2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstallSuccess2.ForeColor = System.Drawing.Color.Black;
+			this.labelInstallSuccess2.Location = new System.Drawing.Point(179, 16);
+			this.labelInstallSuccess2.Name = "labelInstallSuccess2";
+			this.labelInstallSuccess2.Size = new System.Drawing.Size(340, 16);
+			this.labelInstallSuccess2.TabIndex = 16;
+			this.labelInstallSuccess2.Text = "Installation Successful";
+			this.labelInstallSuccess2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelInstallSuccessBacking
+			// 
+			this.labelInstallSuccessBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstallSuccessBacking.BackColor = System.Drawing.Color.Silver;
+			this.labelInstallSuccessBacking.Location = new System.Drawing.Point(8, 8);
+			this.labelInstallSuccessBacking.Name = "labelInstallSuccessBacking";
+			this.labelInstallSuccessBacking.Size = new System.Drawing.Size(683, 32);
+			this.labelInstallSuccessBacking.TabIndex = 15;
+			// 
+			// buttonInstallFinish
+			// 
+			this.buttonInstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.buttonInstallFinish.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonInstallFinish.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonInstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonInstallFinish.Location = new System.Drawing.Point(276, 543);
+			this.buttonInstallFinish.Name = "buttonInstallFinish";
+			this.buttonInstallFinish.Size = new System.Drawing.Size(146, 40);
+			this.buttonInstallFinish.TabIndex = 14;
+			this.buttonInstallFinish.Text = "OK";
+			this.buttonInstallFinish.UseVisualStyleBackColor = true;
+			this.buttonInstallFinish.Click += new System.EventHandler(this.buttonInstallFinished_Click);
+			// 
+			// panelDependancyError
+			// 
+			this.panelDependancyError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelDependancyError.Controls.Add(this.buttonAbort);
+			this.panelDependancyError.Controls.Add(this.dataGridViewDependancies);
+			this.panelDependancyError.Controls.Add(this.labelMissingDependanciesText2);
+			this.panelDependancyError.Controls.Add(this.labelMissingDependanciesText1);
+			this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeader);
+			this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeaderBacking);
+			this.panelDependancyError.Controls.Add(this.buttonProceedAnyway);
+			this.panelDependancyError.Location = new System.Drawing.Point(0, 34);
+			this.panelDependancyError.Name = "panelDependancyError";
+			this.panelDependancyError.Size = new System.Drawing.Size(699, 597);
+			this.panelDependancyError.TabIndex = 5;
+			// 
+			// buttonAbort
+			// 
+			this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonAbort.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonAbort.Location = new System.Drawing.Point(445, 565);
+			this.buttonAbort.Name = "buttonAbort";
+			this.buttonAbort.Size = new System.Drawing.Size(120, 24);
+			this.buttonAbort.TabIndex = 21;
+			this.buttonAbort.Text = "Abort";
+			this.buttonAbort.UseVisualStyleBackColor = true;
+			this.buttonAbort.Click += new System.EventHandler(this.buttonCancel_Click);
+			// 
+			// dataGridViewDependancies
+			// 
+			this.dataGridViewDependancies.AllowUserToAddRows = false;
+			this.dataGridViewDependancies.AllowUserToDeleteRows = false;
+			this.dataGridViewDependancies.AllowUserToResizeColumns = false;
+			this.dataGridViewDependancies.AllowUserToResizeRows = false;
+			this.dataGridViewDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewDependancies.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewDependancies.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewDependancies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewDependancies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6,
+            this.dataGridViewTextBoxColumn7,
+            this.dataGridViewTextBoxColumn8,
+            this.website});
+			this.dataGridViewDependancies.Location = new System.Drawing.Point(8, 94);
+			this.dataGridViewDependancies.MultiSelect = false;
+			this.dataGridViewDependancies.Name = "dataGridViewDependancies";
+			this.dataGridViewDependancies.ReadOnly = true;
+			this.dataGridViewDependancies.RowHeadersVisible = false;
+			this.dataGridViewDependancies.RowHeadersWidth = 90;
+			this.dataGridViewDependancies.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewDependancies.Size = new System.Drawing.Size(683, 438);
+			this.dataGridViewDependancies.TabIndex = 20;
+			this.dataGridViewDependancies.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDependancies_CellContentClick);
+			// 
+			// dataGridViewTextBoxColumn5
+			// 
+			this.dataGridViewTextBoxColumn5.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+			this.dataGridViewTextBoxColumn5.ReadOnly = true;
+			this.dataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// dataGridViewTextBoxColumn6
+			// 
+			this.dataGridViewTextBoxColumn6.HeaderText = "Minimum Version";
+			this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+			this.dataGridViewTextBoxColumn6.ReadOnly = true;
+			this.dataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// dataGridViewTextBoxColumn7
+			// 
+			this.dataGridViewTextBoxColumn7.HeaderText = "Maximum Version";
+			this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+			this.dataGridViewTextBoxColumn7.ReadOnly = true;
+			this.dataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// dataGridViewTextBoxColumn8
+			// 
+			this.dataGridViewTextBoxColumn8.HeaderText = "Author";
+			this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+			this.dataGridViewTextBoxColumn8.ReadOnly = true;
+			this.dataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// website
+			// 
+			this.website.HeaderText = "Website";
+			this.website.Name = "website";
+			this.website.ReadOnly = true;
+			this.website.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// labelMissingDependanciesText2
+			// 
+			this.labelMissingDependanciesText2.AutoSize = true;
+			this.labelMissingDependanciesText2.Location = new System.Drawing.Point(8, 74);
+			this.labelMissingDependanciesText2.Name = "labelMissingDependanciesText2";
+			this.labelMissingDependanciesText2.Size = new System.Drawing.Size(167, 13);
+			this.labelMissingDependanciesText2.TabIndex = 18;
+			this.labelMissingDependanciesText2.Text = "These are shown in the list below:";
+			// 
+			// labelMissingDependanciesText1
+			// 
+			this.labelMissingDependanciesText1.AutoSize = true;
+			this.labelMissingDependanciesText1.Location = new System.Drawing.Point(8, 54);
+			this.labelMissingDependanciesText1.Name = "labelMissingDependanciesText1";
+			this.labelMissingDependanciesText1.Size = new System.Drawing.Size(232, 13);
+			this.labelMissingDependanciesText1.TabIndex = 17;
+			this.labelMissingDependanciesText1.Text = "The current package has unmet dependancies.";
+			// 
+			// labelDependancyErrorHeader
+			// 
+			this.labelDependancyErrorHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.labelDependancyErrorHeader.BackColor = System.Drawing.Color.Silver;
+			this.labelDependancyErrorHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelDependancyErrorHeader.ForeColor = System.Drawing.Color.Black;
+			this.labelDependancyErrorHeader.Location = new System.Drawing.Point(179, 16);
+			this.labelDependancyErrorHeader.Name = "labelDependancyErrorHeader";
+			this.labelDependancyErrorHeader.Size = new System.Drawing.Size(340, 16);
+			this.labelDependancyErrorHeader.TabIndex = 16;
+			this.labelDependancyErrorHeader.Text = "Dependancy Error";
+			this.labelDependancyErrorHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelDependancyErrorHeaderBacking
+			// 
+			this.labelDependancyErrorHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelDependancyErrorHeaderBacking.BackColor = System.Drawing.Color.Silver;
+			this.labelDependancyErrorHeaderBacking.Location = new System.Drawing.Point(8, 8);
+			this.labelDependancyErrorHeaderBacking.Name = "labelDependancyErrorHeaderBacking";
+			this.labelDependancyErrorHeaderBacking.Size = new System.Drawing.Size(683, 32);
+			this.labelDependancyErrorHeaderBacking.TabIndex = 15;
+			// 
+			// buttonProceedAnyway
+			// 
+			this.buttonProceedAnyway.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonProceedAnyway.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonProceedAnyway.Location = new System.Drawing.Point(571, 565);
+			this.buttonProceedAnyway.Name = "buttonProceedAnyway";
+			this.buttonProceedAnyway.Size = new System.Drawing.Size(120, 24);
+			this.buttonProceedAnyway.TabIndex = 14;
+			this.buttonProceedAnyway.Text = "Ignore";
+			this.buttonProceedAnyway.UseVisualStyleBackColor = true;
+			this.buttonProceedAnyway.Click += new System.EventHandler(this.buttonProceedAnyway_Click);
+			// 
+			// panelPleaseWait
+			// 
+			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPleaseWait.Controls.Add(this.labelProgressFile);
+			this.panelPleaseWait.Controls.Add(this.labelProgressPercent);
+			this.panelPleaseWait.Controls.Add(this.labelPleaseWait);
+			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
+			this.panelPleaseWait.Location = new System.Drawing.Point(0, 34);
+			this.panelPleaseWait.Name = "panelPleaseWait";
+			this.panelPleaseWait.Size = new System.Drawing.Size(699, 597);
+			this.panelPleaseWait.TabIndex = 28;
+			// 
+			// labelProgressFile
+			// 
+			this.labelProgressFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelProgressFile.ForeColor = System.Drawing.Color.Black;
+			this.labelProgressFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelProgressFile.Location = new System.Drawing.Point(1, 431);
+			this.labelProgressFile.Name = "labelProgressFile";
+			this.labelProgressFile.Size = new System.Drawing.Size(697, 24);
+			this.labelProgressFile.TabIndex = 7;
+			this.labelProgressFile.Text = "Unknown File...";
+			this.labelProgressFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelProgressPercent
+			// 
+			this.labelProgressPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelProgressPercent.ForeColor = System.Drawing.Color.Black;
+			this.labelProgressPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelProgressPercent.Location = new System.Drawing.Point(290, 401);
+			this.labelProgressPercent.Name = "labelProgressPercent";
+			this.labelProgressPercent.Size = new System.Drawing.Size(118, 24);
+			this.labelProgressPercent.TabIndex = 6;
+			this.labelProgressPercent.Text = "0%";
+			this.labelProgressPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPleaseWait
+			// 
+			this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPleaseWait.ForeColor = System.Drawing.Color.Black;
+			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPleaseWait.Location = new System.Drawing.Point(1, 462);
+			this.labelPleaseWait.Name = "labelPleaseWait";
+			this.labelPleaseWait.Size = new System.Drawing.Size(697, 24);
+			this.labelPleaseWait.TabIndex = 5;
+			this.labelPleaseWait.Text = "Processing, please wait...";
+			this.labelPleaseWait.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// pictureBoxProcessing
+			// 
+			this.pictureBoxProcessing.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this.pictureBoxProcessing.Location = new System.Drawing.Point(174, 46);
+			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
+			this.pictureBoxProcessing.Size = new System.Drawing.Size(350, 350);
+			this.pictureBoxProcessing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBoxProcessing.TabIndex = 4;
+			this.pictureBoxProcessing.TabStop = false;
+			// 
+			// panelPackageDependsAdd
+			// 
+			this.panelPackageDependsAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageDependsAdd.Controls.Add(this.buttonBack);
+			this.panelPackageDependsAdd.Controls.Add(this.buttonRemove);
+			this.panelPackageDependsAdd.Controls.Add(this.labelNoDependencyReminder);
+			this.panelPackageDependsAdd.Controls.Add(this.labelDependanciesHeader);
+			this.panelPackageDependsAdd.Controls.Add(this.labelDependanciesHeaderBacking);
+			this.panelPackageDependsAdd.Controls.Add(this.buttonCreatePackage);
+			this.panelPackageDependsAdd.Controls.Add(this.splitContainerDependancies);
+			this.panelPackageDependsAdd.Location = new System.Drawing.Point(0, 34);
+			this.panelPackageDependsAdd.Name = "panelPackageDependsAdd";
+			this.panelPackageDependsAdd.Size = new System.Drawing.Size(699, 597);
+			this.panelPackageDependsAdd.TabIndex = 26;
+			// 
+			// buttonBack
+			// 
+			this.buttonBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonBack.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonBack.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonBack.Location = new System.Drawing.Point(445, 565);
+			this.buttonBack.Name = "buttonBack";
+			this.buttonBack.Size = new System.Drawing.Size(120, 24);
+			this.buttonBack.TabIndex = 28;
+			this.buttonBack.Text = "< Back";
+			this.buttonBack.UseVisualStyleBackColor = true;
+			this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
+			// 
+			// buttonRemove
+			// 
+			this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonRemove.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonRemove.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonRemove.Enabled = false;
+			this.buttonRemove.Location = new System.Drawing.Point(8, 525);
+			this.buttonRemove.Name = "buttonRemove";
+			this.buttonRemove.Size = new System.Drawing.Size(166, 23);
+			this.buttonRemove.TabIndex = 25;
+			this.buttonRemove.Text = "Remove";
+			this.buttonRemove.UseVisualStyleBackColor = true;
+			this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
+			//
+			// labelNoDependencyReminder
+			//
+			this.labelNoDependencyReminder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelNoDependencyReminder.ForeColor = System.Drawing.Color.Black;
+			this.labelNoDependencyReminder.Location = new System.Drawing.Point(8, 560);
+			this.labelNoDependencyReminder.Name = "labelNoDependencyReminder";
+			this.labelNoDependencyReminder.Size = new System.Drawing.Size(400, 48);
+			this.labelNoDependencyReminder.TabIndex = 24;
+			this.labelNoDependencyReminder.Text = "If your package does not rely on other dependencies, you may continue by clicking the \"Create\" button.";
+			// 
+			// labelDependanciesHeader
+			// 
+			this.labelDependanciesHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.labelDependanciesHeader.BackColor = System.Drawing.Color.Silver;
+			this.labelDependanciesHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelDependanciesHeader.ForeColor = System.Drawing.Color.Black;
+			this.labelDependanciesHeader.Location = new System.Drawing.Point(179, 16);
+			this.labelDependanciesHeader.Name = "labelDependanciesHeader";
+			this.labelDependanciesHeader.Size = new System.Drawing.Size(340, 16);
+			this.labelDependanciesHeader.TabIndex = 16;
+			this.labelDependanciesHeader.Text = "Select Dependancies";
+			this.labelDependanciesHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelDependanciesHeaderBacking
+			// 
+			this.labelDependanciesHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelDependanciesHeaderBacking.BackColor = System.Drawing.Color.Silver;
+			this.labelDependanciesHeaderBacking.Location = new System.Drawing.Point(8, 8);
+			this.labelDependanciesHeaderBacking.Name = "labelDependanciesHeaderBacking";
+			this.labelDependanciesHeaderBacking.Size = new System.Drawing.Size(683, 32);
+			this.labelDependanciesHeaderBacking.TabIndex = 15;
+			// 
+			// buttonCreatePackage
+			// 
+			this.buttonCreatePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonCreatePackage.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonCreatePackage.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonCreatePackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonCreatePackage.Location = new System.Drawing.Point(571, 565);
+			this.buttonCreatePackage.Name = "buttonCreatePackage";
+			this.buttonCreatePackage.Size = new System.Drawing.Size(120, 24);
+			this.buttonCreatePackage.TabIndex = 14;
+			this.buttonCreatePackage.Text = "Create";
+			this.buttonCreatePackage.UseVisualStyleBackColor = true;
+			this.buttonCreatePackage.Click += new System.EventHandler(this.buttonCreatePackage_Click);
+			// 
+			// splitContainerDependancies
+			// 
+			this.splitContainerDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainerDependancies.Location = new System.Drawing.Point(8, 50);
+			this.splitContainerDependancies.Name = "splitContainerDependancies";
+			this.splitContainerDependancies.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainerDependancies.Panel1
+			// 
+			this.splitContainerDependancies.Panel1.Controls.Add(this.labelDependancyType);
+			this.splitContainerDependancies.Panel1.Controls.Add(this.comboBoxDependancyType);
+			this.splitContainerDependancies.Panel1.Controls.Add(this.dataGridViewPackages2);
+			this.splitContainerDependancies.Panel1.Controls.Add(this.labelInstalledDependancies);
+			// 
+			// splitContainerDependancies.Panel2
+			// 
+			this.splitContainerDependancies.Panel2.Controls.Add(this.dataGridViewPackages3);
+			this.splitContainerDependancies.Panel2.Controls.Add(this.buttonReccomends);
+			this.splitContainerDependancies.Panel2.Controls.Add(this.labelSelectedDependencies);
+			this.splitContainerDependancies.Panel2.Controls.Add(this.buttonDepends);
+			this.splitContainerDependancies.Size = new System.Drawing.Size(683, 469);
+			this.splitContainerDependancies.SplitterDistance = 244;
+			this.splitContainerDependancies.TabIndex = 27;
+			// 
+			// labelDependancyType
+			// 
+			this.labelDependancyType.AutoSize = true;
+			this.labelDependancyType.ForeColor = System.Drawing.Color.Black;
+			this.labelDependancyType.Location = new System.Drawing.Point(0, 35);
+			this.labelDependancyType.Name = "labelDependancyType";
+			this.labelDependancyType.Size = new System.Drawing.Size(224, 13);
+			this.labelDependancyType.TabIndex = 25;
+			this.labelDependancyType.Text = "Select the type of packages you wish to view:";
+			// 
+			// comboBoxDependancyType
+			// 
+			this.comboBoxDependancyType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxDependancyType.FormattingEnabled = true;
+			this.comboBoxDependancyType.Items.AddRange(new object[] {
+            "Route",
+            "Train",
+            "Other"});
+			this.comboBoxDependancyType.Location = new System.Drawing.Point(0, 55);
+			this.comboBoxDependancyType.Name = "comboBoxDependancyType";
+			this.comboBoxDependancyType.Size = new System.Drawing.Size(221, 21);
+			this.comboBoxDependancyType.TabIndex = 26;
+			this.comboBoxDependancyType.SelectedIndexChanged += new System.EventHandler(this.comboBoxDependancyType_SelectedIndexChanged);
+			// 
+			// dataGridViewPackages2
+			// 
+			this.dataGridViewPackages2.AllowUserToAddRows = false;
+			this.dataGridViewPackages2.AllowUserToDeleteRows = false;
+			this.dataGridViewPackages2.AllowUserToResizeColumns = false;
+			this.dataGridViewPackages2.AllowUserToResizeRows = false;
+			this.dataGridViewPackages2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewPackages2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewPackages2.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewPackages2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewPackages2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn13,
+            this.dataGridViewTextBoxColumn14,
+            this.dataGridViewTextBoxColumn15,
+            this.dataGridViewTextBoxColumn16});
+			this.dataGridViewPackages2.Location = new System.Drawing.Point(0, 81);
+			this.dataGridViewPackages2.MultiSelect = false;
+			this.dataGridViewPackages2.Name = "dataGridViewPackages2";
+			this.dataGridViewPackages2.ReadOnly = true;
+			this.dataGridViewPackages2.RowHeadersVisible = false;
+			this.dataGridViewPackages2.RowHeadersWidth = 90;
+			this.dataGridViewPackages2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewPackages2.Size = new System.Drawing.Size(683, 162);
+			this.dataGridViewPackages2.TabIndex = 21;
+			this.dataGridViewPackages2.SelectionChanged += new System.EventHandler(this.dataGridViewPackages2_SelectionChanged);
+			// 
+			// dataGridViewTextBoxColumn13
+			// 
+			this.dataGridViewTextBoxColumn13.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
+			this.dataGridViewTextBoxColumn13.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn14
+			// 
+			this.dataGridViewTextBoxColumn14.HeaderText = "Version";
+			this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
+			this.dataGridViewTextBoxColumn14.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn15
+			// 
+			this.dataGridViewTextBoxColumn15.HeaderText = "Author";
+			this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
+			this.dataGridViewTextBoxColumn15.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn16
+			// 
+			this.dataGridViewTextBoxColumn16.HeaderText = "Website";
+			this.dataGridViewTextBoxColumn16.Name = "dataGridViewTextBoxColumn16";
+			this.dataGridViewTextBoxColumn16.ReadOnly = true;
+			// 
+			// labelInstalledDependancies
+			// 
+			this.labelInstalledDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstalledDependancies.AutoEllipsis = true;
+			this.labelInstalledDependancies.BackColor = System.Drawing.Color.Silver;
+			this.labelInstalledDependancies.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstalledDependancies.ForeColor = System.Drawing.Color.White;
+			this.labelInstalledDependancies.Location = new System.Drawing.Point(0, 0);
+			this.labelInstalledDependancies.Name = "labelInstalledDependancies";
+			this.labelInstalledDependancies.Size = new System.Drawing.Size(683, 24);
+			this.labelInstalledDependancies.TabIndex = 20;
+			this.labelInstalledDependancies.Text = "Installed Packages";
+			this.labelInstalledDependancies.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// dataGridViewPackages3
+			// 
+			this.dataGridViewPackages3.AllowUserToAddRows = false;
+			this.dataGridViewPackages3.AllowUserToDeleteRows = false;
+			this.dataGridViewPackages3.AllowUserToResizeColumns = false;
+			this.dataGridViewPackages3.AllowUserToResizeRows = false;
+			this.dataGridViewPackages3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewPackages3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewPackages3.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewPackages3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewPackages3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4,
+            this.columnDependancy});
+			this.dataGridViewPackages3.Location = new System.Drawing.Point(0, 60);
+			this.dataGridViewPackages3.MultiSelect = false;
+			this.dataGridViewPackages3.Name = "dataGridViewPackages3";
+			this.dataGridViewPackages3.ReadOnly = true;
+			this.dataGridViewPackages3.RowHeadersVisible = false;
+			this.dataGridViewPackages3.RowHeadersWidth = 90;
+			this.dataGridViewPackages3.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewPackages3.Size = new System.Drawing.Size(683, 161);
+			this.dataGridViewPackages3.TabIndex = 22;
+			this.dataGridViewPackages3.SelectionChanged += new System.EventHandler(this.dataGridViewPackages3_SelectionChanged);
+			// 
+			// dataGridViewTextBoxColumn1
+			// 
+			this.dataGridViewTextBoxColumn1.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+			this.dataGridViewTextBoxColumn1.ReadOnly = true;
+			this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// dataGridViewTextBoxColumn2
+			// 
+			this.dataGridViewTextBoxColumn2.HeaderText = "Minimum Version";
+			this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+			this.dataGridViewTextBoxColumn2.ReadOnly = true;
+			this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// dataGridViewTextBoxColumn3
+			// 
+			this.dataGridViewTextBoxColumn3.HeaderText = "Maximum Version";
+			this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+			this.dataGridViewTextBoxColumn3.ReadOnly = true;
+			this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// dataGridViewTextBoxColumn4
+			// 
+			this.dataGridViewTextBoxColumn4.HeaderText = "Type";
+			this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+			this.dataGridViewTextBoxColumn4.ReadOnly = true;
+			this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// columnDependancy
+			// 
+			this.columnDependancy.HeaderText = "";
+			this.columnDependancy.Name = "columnDependancy";
+			this.columnDependancy.ReadOnly = true;
+			this.columnDependancy.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// buttonReccomends
+			// 
+			this.buttonReccomends.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonReccomends.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonReccomends.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonReccomends.Enabled = false;
+			this.buttonReccomends.Location = new System.Drawing.Point(517, 1);
+			this.buttonReccomends.Name = "buttonReccomends";
+			this.buttonReccomends.Size = new System.Drawing.Size(166, 23);
+			this.buttonReccomends.TabIndex = 24;
+			this.buttonReccomends.Text = "Add Reccomendation";
+			this.buttonReccomends.UseVisualStyleBackColor = true;
+			this.buttonReccomends.Click += new System.EventHandler(this.buttonReccomends_Click);
+			// 
+			// labelSelectedDependencies
+			// 
+			this.labelSelectedDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelSelectedDependencies.AutoEllipsis = true;
+			this.labelSelectedDependencies.BackColor = System.Drawing.Color.Silver;
+			this.labelSelectedDependencies.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelSelectedDependencies.ForeColor = System.Drawing.Color.White;
+			this.labelSelectedDependencies.Location = new System.Drawing.Point(0, 30);
+			this.labelSelectedDependencies.Name = "labelSelectedDependencies";
+			this.labelSelectedDependencies.Size = new System.Drawing.Size(683, 24);
+			this.labelSelectedDependencies.TabIndex = 21;
+			this.labelSelectedDependencies.Text = "Selected Packages";
+			this.labelSelectedDependencies.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// buttonDepends
+			// 
+			this.buttonDepends.Enabled = false;
+			this.buttonDepends.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonDepends.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonDepends.Location = new System.Drawing.Point(0, 2);
+			this.buttonDepends.Name = "buttonDepends";
+			this.buttonDepends.Size = new System.Drawing.Size(166, 23);
+			this.buttonDepends.TabIndex = 23;
+			this.buttonDepends.Text = "Add Dependancy";
+			this.buttonDepends.UseVisualStyleBackColor = true;
+			this.buttonDepends.Click += new System.EventHandler(this.buttonDepends_Click);
+			// 
+			// panelPackageList
+			// 
+			this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageList.Controls.Add(this.comboBoxPackageType);
+			this.panelPackageList.Controls.Add(this.labelPackageListType);
+			this.panelPackageList.Controls.Add(this.createPackageButton);
+			this.panelPackageList.Controls.Add(this.buttonUninstallPackage);
+			this.panelPackageList.Controls.Add(this.buttonInstallPackage);
+			this.panelPackageList.Controls.Add(this.dataGridViewPackages);
+			this.panelPackageList.Controls.Add(this.labelInstalledPackages);
+			this.panelPackageList.Location = new System.Drawing.Point(0, 34);
+			this.panelPackageList.Name = "panelPackageList";
+			this.panelPackageList.Size = new System.Drawing.Size(699, 597);
+			this.panelPackageList.TabIndex = 3;
+			// 
+			// comboBoxPackageType
+			// 
+			this.comboBoxPackageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxPackageType.FormattingEnabled = true;
+			this.comboBoxPackageType.Items.AddRange(new object[] {
+            "Routes",
+            "Trains",
+            "Other"});
+			this.comboBoxPackageType.Location = new System.Drawing.Point(8, 61);
+			this.comboBoxPackageType.Name = "comboBoxPackageType";
+			this.comboBoxPackageType.Size = new System.Drawing.Size(221, 21);
+			this.comboBoxPackageType.TabIndex = 25;
+			this.comboBoxPackageType.SelectedIndexChanged += new System.EventHandler(this.comboBoxPackageType_SelectedIndexChanged);
+			// 
+			// labelPackageListType
+			// 
+			this.labelPackageListType.AutoSize = true;
+			this.labelPackageListType.ForeColor = System.Drawing.Color.Black;
+			this.labelPackageListType.Location = new System.Drawing.Point(8, 41);
+			this.labelPackageListType.Name = "labelPackageListType";
+			this.labelPackageListType.Size = new System.Drawing.Size(224, 13);
+			this.labelPackageListType.TabIndex = 24;
+			this.labelPackageListType.Text = "Select the type of packages you wish to view:";
+			// 
+			// createPackageButton
+			// 
+			this.createPackageButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.createPackageButton.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.createPackageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.createPackageButton.Location = new System.Drawing.Point(281, 549);
+			this.createPackageButton.Name = "createPackageButton";
+			this.createPackageButton.Size = new System.Drawing.Size(136, 23);
+			this.createPackageButton.TabIndex = 23;
+			this.createPackageButton.Text = "Create Package";
+			this.createPackageButton.UseVisualStyleBackColor = true;
+			this.createPackageButton.Click += new System.EventHandler(this.createPackageButton_Click);
+			// 
+			// buttonUninstallPackage
+			// 
+			this.buttonUninstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonUninstallPackage.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonUninstallPackage.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonUninstallPackage.Location = new System.Drawing.Point(555, 549);
+			this.buttonUninstallPackage.Name = "buttonUninstallPackage";
+			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
+			this.buttonUninstallPackage.TabIndex = 21;
+			this.buttonUninstallPackage.Text = "Uninstall Package";
+			this.buttonUninstallPackage.UseVisualStyleBackColor = true;
+			this.buttonUninstallPackage.Click += new System.EventHandler(this.buttonUninstallPackage_Click);
+			// 
+			// buttonInstallPackage
+			// 
+			this.buttonInstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonInstallPackage.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonInstallPackage.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonInstallPackage.Location = new System.Drawing.Point(8, 549);
+			this.buttonInstallPackage.Name = "buttonInstallPackage";
+			this.buttonInstallPackage.Size = new System.Drawing.Size(136, 23);
+			this.buttonInstallPackage.TabIndex = 20;
+			this.buttonInstallPackage.Text = "Install Package";
+			this.buttonInstallPackage.UseVisualStyleBackColor = true;
+			this.buttonInstallPackage.Click += new System.EventHandler(this.buttonInstallPackage_Click);
+			// 
+			// dataGridViewPackages
+			// 
+			this.dataGridViewPackages.AllowUserToAddRows = false;
+			this.dataGridViewPackages.AllowUserToDeleteRows = false;
+			this.dataGridViewPackages.AllowUserToResizeColumns = false;
+			this.dataGridViewPackages.AllowUserToResizeRows = false;
+			this.dataGridViewPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewPackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewPackages.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewPackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewPackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.routeName,
+            this.routeVersion,
+            this.routeAuthor,
+            this.routeWebsite});
+			this.dataGridViewPackages.Location = new System.Drawing.Point(8, 88);
+			this.dataGridViewPackages.MultiSelect = false;
+			this.dataGridViewPackages.Name = "dataGridViewPackages";
+			this.dataGridViewPackages.ReadOnly = true;
+			this.dataGridViewPackages.RowHeadersVisible = false;
+			this.dataGridViewPackages.RowHeadersWidth = 90;
+			this.dataGridViewPackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewPackages.Size = new System.Drawing.Size(683, 454);
+			this.dataGridViewPackages.TabIndex = 19;
+			this.dataGridViewPackages.SelectionChanged += new System.EventHandler(this.dataGridViewPackages_SelectionChanged);
+			// 
+			// routeName
+			// 
+			this.routeName.HeaderText = "Name";
+			this.routeName.Name = "routeName";
+			this.routeName.ReadOnly = true;
+			// 
+			// routeVersion
+			// 
+			this.routeVersion.HeaderText = "Version";
+			this.routeVersion.Name = "routeVersion";
+			this.routeVersion.ReadOnly = true;
+			// 
+			// routeAuthor
+			// 
+			this.routeAuthor.HeaderText = "Author";
+			this.routeAuthor.Name = "routeAuthor";
+			this.routeAuthor.ReadOnly = true;
+			// 
+			// routeWebsite
+			// 
+			this.routeWebsite.HeaderText = "Website";
+			this.routeWebsite.Name = "routeWebsite";
+			this.routeWebsite.ReadOnly = true;
+			// 
+			// labelInstalledPackages
+			// 
+			this.labelInstalledPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstalledPackages.AutoEllipsis = true;
+			this.labelInstalledPackages.BackColor = System.Drawing.Color.Silver;
+			this.labelInstalledPackages.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstalledPackages.ForeColor = System.Drawing.Color.White;
+			this.labelInstalledPackages.Location = new System.Drawing.Point(8, 6);
+			this.labelInstalledPackages.Name = "labelInstalledPackages";
+			this.labelInstalledPackages.Size = new System.Drawing.Size(683, 24);
+			this.labelInstalledPackages.TabIndex = 17;
+			this.labelInstalledPackages.Text = "Installed Packages";
+			this.labelInstalledPackages.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// panelPackageInstall
+			// 
+			this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageInstall.Controls.Add(this.buttonBack2);
+			this.panelPackageInstall.Controls.Add(this.buttonNext);
+			this.panelPackageInstall.Controls.Add(this.labelInstallText);
+			this.panelPackageInstall.Controls.Add(this.labelInstallHeader);
+			this.panelPackageInstall.Controls.Add(this.buttonSelectPackage);
+			this.panelPackageInstall.Controls.Add(this.textBoxPackageDescription);
+			this.panelPackageInstall.Controls.Add(this.labelPackageDescription);
+			this.panelPackageInstall.Controls.Add(this.linkLabelPackageWebsite);
+			this.panelPackageInstall.Controls.Add(this.labelPackageWebsite);
+			this.panelPackageInstall.Controls.Add(this.textBoxPackageVersion);
+			this.panelPackageInstall.Controls.Add(this.labelPackageVersion);
+			this.panelPackageInstall.Controls.Add(this.textBoxPackageAuthor);
+			this.panelPackageInstall.Controls.Add(this.labelPackageAuthor);
+			this.panelPackageInstall.Controls.Add(this.textBoxPackageName);
+			this.panelPackageInstall.Controls.Add(this.labelPackageName);
+			this.panelPackageInstall.Controls.Add(this.pictureBoxPackageImage);
+			this.panelPackageInstall.Location = new System.Drawing.Point(0, 34);
+			this.panelPackageInstall.Name = "panelPackageInstall";
+			this.panelPackageInstall.Size = new System.Drawing.Size(699, 597);
+			this.panelPackageInstall.TabIndex = 4;
+			// 
+			// buttonBack2
+			// 
+			this.buttonBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonBack2.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonBack2.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonBack2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonBack2.Location = new System.Drawing.Point(445, 565);
+			this.buttonBack2.Name = "buttonBack2";
+			this.buttonBack2.Size = new System.Drawing.Size(120, 24);
+			this.buttonBack2.TabIndex = 18;
+			this.buttonBack2.Text = "< Back";
+			this.buttonBack2.UseVisualStyleBackColor = true;
+			this.buttonBack2.Click += new System.EventHandler(this.buttonBack2_Click);
+			// 
+			// buttonNext
+			// 
+			this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonNext.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonNext.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonNext.Enabled = false;
+			this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonNext.Location = new System.Drawing.Point(571, 565);
+			this.buttonNext.Name = "buttonNext";
+			this.buttonNext.Size = new System.Drawing.Size(120, 24);
+			this.buttonNext.TabIndex = 17;
+			this.buttonNext.Text = "Next >";
+			this.buttonNext.UseVisualStyleBackColor = true;
+			this.buttonNext.Click += new System.EventHandler(this.buttonInstall_Click);
+
+			// 
+			// labelInstallText
+			// 
+			this.labelInstallText.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.labelInstallText.BackColor = System.Drawing.Color.Silver;
+			this.labelInstallText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstallText.ForeColor = System.Drawing.Color.Black;
+			this.labelInstallText.Location = new System.Drawing.Point(179, 16);
+			this.labelInstallText.Name = "labelInstallText";
+			this.labelInstallText.Size = new System.Drawing.Size(340, 16);
+			this.labelInstallText.TabIndex = 16;
+			this.labelInstallText.Text = "Install a Package";
+			this.labelInstallText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelInstallHeader
+			// 
+			this.labelInstallHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstallHeader.BackColor = System.Drawing.Color.Silver;
+			this.labelInstallHeader.Location = new System.Drawing.Point(8, 8);
+			this.labelInstallHeader.Name = "labelInstallHeader";
+			this.labelInstallHeader.Size = new System.Drawing.Size(683, 32);
+			this.labelInstallHeader.TabIndex = 15;
+			// 
+			// buttonSelectPackage
+			// 
+			this.buttonSelectPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonSelectPackage.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.buttonSelectPackage.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonSelectPackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonSelectPackage.Location = new System.Drawing.Point(134, 535);
+			this.buttonSelectPackage.Name = "buttonSelectPackage";
+			this.buttonSelectPackage.Size = new System.Drawing.Size(180, 24);
+			this.buttonSelectPackage.TabIndex = 14;
+			this.buttonSelectPackage.Text = "Select Package...";
+			this.buttonSelectPackage.UseVisualStyleBackColor = true;
+			this.buttonSelectPackage.Click += new System.EventHandler(this.buttonSelectPackage_Click);
+			// 
+			// textBoxPackageDescription
+			// 
+			this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageDescription.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxPackageDescription.BackColor = System.Drawing.SystemColors.Control;
+			this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 417);
+			this.textBoxPackageDescription.Multiline = true;
+			this.textBoxPackageDescription.Name = "textBoxPackageDescription";
+			this.textBoxPackageDescription.ReadOnly = true;
+			this.textBoxPackageDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBoxPackageDescription.Size = new System.Drawing.Size(423, 112);
+			this.textBoxPackageDescription.TabIndex = 13;
+			this.textBoxPackageDescription.Text = "No package selected.";
+			// 
+			// labelPackageDescription
+			// 
+			this.labelPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageDescription.ForeColor = System.Drawing.Color.Black;
+			this.labelPackageDescription.Location = new System.Drawing.Point(8, 420);
+			this.labelPackageDescription.Name = "labelPackageDescription";
+			this.labelPackageDescription.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageDescription.TabIndex = 12;
+			this.labelPackageDescription.Text = "Package Description:";
+			this.labelPackageDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// linkLabelPackageWebsite
+			// 
+			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.linkLabelPackageWebsite.AutoSize = true;
+			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(134, 397);
+			this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
+			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 13);
+			this.linkLabelPackageWebsite.TabIndex = 11;
+			this.linkLabelPackageWebsite.TabStop = true;
+			this.linkLabelPackageWebsite.Text = "No package selected.";
+			this.linkLabelPackageWebsite.Click += new System.EventHandler(this.linkLabelPackageWebsite_Click);
+			// 
+			// labelPackageWebsite
+			// 
+			this.labelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageWebsite.ForeColor = System.Drawing.Color.Black;
+			this.labelPackageWebsite.Location = new System.Drawing.Point(8, 397);
+			this.labelPackageWebsite.Name = "labelPackageWebsite";
+			this.labelPackageWebsite.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageWebsite.TabIndex = 10;
+			this.labelPackageWebsite.Text = "Package Website:";
+			this.labelPackageWebsite.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxPackageVersion
+			// 
+			this.textBoxPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageVersion.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxPackageVersion.BackColor = System.Drawing.SystemColors.Control;
+			this.textBoxPackageVersion.Location = new System.Drawing.Point(134, 369);
+			this.textBoxPackageVersion.Name = "textBoxPackageVersion";
+			this.textBoxPackageVersion.Size = new System.Drawing.Size(423, 20);
+			this.textBoxPackageVersion.TabIndex = 9;
+			this.textBoxPackageVersion.Text = "No package selected.";
+			// 
+			// labelPackageVersion
+			// 
+			this.labelPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageVersion.ForeColor = System.Drawing.Color.Black;
+			this.labelPackageVersion.Location = new System.Drawing.Point(8, 372);
+			this.labelPackageVersion.Name = "labelPackageVersion";
+			this.labelPackageVersion.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageVersion.TabIndex = 8;
+			this.labelPackageVersion.Text = "Package Version:";
+			this.labelPackageVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxPackageAuthor
+			// 
+			this.textBoxPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageAuthor.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxPackageAuthor.BackColor = System.Drawing.SystemColors.Control;
+			this.textBoxPackageAuthor.Location = new System.Drawing.Point(134, 345);
+			this.textBoxPackageAuthor.Name = "textBoxPackageAuthor";
+			this.textBoxPackageAuthor.Size = new System.Drawing.Size(423, 20);
+			this.textBoxPackageAuthor.TabIndex = 7;
+			this.textBoxPackageAuthor.Text = "No package selected.";
+			// 
+			// labelPackageAuthor
+			// 
+			this.labelPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageAuthor.ForeColor = System.Drawing.Color.Black;
+			this.labelPackageAuthor.Location = new System.Drawing.Point(8, 348);
+			this.labelPackageAuthor.Name = "labelPackageAuthor";
+			this.labelPackageAuthor.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageAuthor.TabIndex = 6;
+			this.labelPackageAuthor.Text = "Package Author:";
+			this.labelPackageAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxPackageName
+			// 
+			this.textBoxPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageName.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxPackageName.BackColor = System.Drawing.SystemColors.Control;
+			this.textBoxPackageName.Location = new System.Drawing.Point(134, 321);
+			this.textBoxPackageName.Name = "textBoxPackageName";
+			this.textBoxPackageName.Size = new System.Drawing.Size(423, 20);
+			this.textBoxPackageName.TabIndex = 5;
+			this.textBoxPackageName.Text = "No package selected.";
+			// 
+			// labelPackageName
+			// 
+			this.labelPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelPackageName.ForeColor = System.Drawing.Color.Black;
+			this.labelPackageName.Location = new System.Drawing.Point(8, 324);
+			this.labelPackageName.Name = "labelPackageName";
+			this.labelPackageName.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageName.TabIndex = 4;
+			this.labelPackageName.Text = "Package Name:";
+			this.labelPackageName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// pictureBoxPackageImage
+			// 
+			this.pictureBoxPackageImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureBoxPackageImage.Location = new System.Drawing.Point(8, 54);
+			this.pictureBoxPackageImage.Name = "pictureBoxPackageImage";
+			this.pictureBoxPackageImage.Size = new System.Drawing.Size(683, 241);
+			this.pictureBoxPackageImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureBoxPackageImage.TabIndex = 3;
+			this.pictureBoxPackageImage.TabStop = false;
+			this.pictureBoxPackageImage.Click += new System.EventHandler(this.pictureBoxPackageImage_Click);
+			// 
 			// panelVersionError
 			// 
 			this.panelVersionError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -5205,6 +5520,8 @@ namespace OpenBve {
 			// buttonCancel
 			// 
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonCancel.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonCancel.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonCancel.Location = new System.Drawing.Point(445, 565);
 			this.buttonCancel.Name = "buttonCancel";
@@ -5420,6 +5737,8 @@ namespace OpenBve {
 			// buttonCancel2
 			// 
 			this.buttonCancel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonCancel2.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonCancel2.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCancel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonCancel2.Location = new System.Drawing.Point(445, 565);
 			this.buttonCancel2.Name = "buttonCancel2";
@@ -5432,6 +5751,8 @@ namespace OpenBve {
 			// SaveFileNameButton
 			// 
 			this.SaveFileNameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.SaveFileNameButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.SaveFileNameButton.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.SaveFileNameButton.Location = new System.Drawing.Point(571, 510);
 			this.SaveFileNameButton.Name = "SaveFileNameButton";
 			this.SaveFileNameButton.Size = new System.Drawing.Size(120, 23);
@@ -5452,6 +5773,7 @@ namespace OpenBve {
 			// labelSaveAs
 			// 
 			this.labelSaveAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelSaveAs.ForeColor = System.Drawing.Color.Black;
 			this.labelSaveAs.AutoSize = true;
 			this.labelSaveAs.Location = new System.Drawing.Point(8, 495);
 			this.labelSaveAs.Name = "labelSaveAs";
@@ -5462,6 +5784,7 @@ namespace OpenBve {
 			// labelDependanciesNextStep
 			// 
 			this.labelDependanciesNextStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelDependanciesNextStep.ForeColor = System.Drawing.Color.Black;
 			this.labelDependanciesNextStep.AutoSize = true;
 			this.labelDependanciesNextStep.Location = new System.Drawing.Point(8, 541);
 			this.labelDependanciesNextStep.Name = "labelDependanciesNextStep";
@@ -5472,6 +5795,8 @@ namespace OpenBve {
 			// buttonCreateProceed
 			// 
 			this.buttonCreateProceed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonCreateProceed.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonCreateProceed.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCreateProceed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonCreateProceed.Location = new System.Drawing.Point(571, 565);
 			this.buttonCreateProceed.Name = "buttonCreateProceed";
@@ -5495,6 +5820,7 @@ namespace OpenBve {
 			// radioButtonQ2Other
 			// 
 			this.radioButtonQ2Other.AutoSize = true;
+			this.radioButtonQ2Other.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ2Other.Location = new System.Drawing.Point(119, 1);
 			this.radioButtonQ2Other.Name = "radioButtonQ2Other";
 			this.radioButtonQ2Other.Size = new System.Drawing.Size(51, 17);
@@ -5507,6 +5833,7 @@ namespace OpenBve {
 			// radioButtonQ2Train
 			// 
 			this.radioButtonQ2Train.AutoSize = true;
+			this.radioButtonQ2Train.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ2Train.Location = new System.Drawing.Point(64, 1);
 			this.radioButtonQ2Train.Name = "radioButtonQ2Train";
 			this.radioButtonQ2Train.Size = new System.Drawing.Size(49, 17);
@@ -5519,6 +5846,7 @@ namespace OpenBve {
 			// radioButtonQ2Route
 			// 
 			this.radioButtonQ2Route.AutoSize = true;
+			this.radioButtonQ2Route.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ2Route.Location = new System.Drawing.Point(3, 1);
 			this.radioButtonQ2Route.Name = "radioButtonQ2Route";
 			this.radioButtonQ2Route.Size = new System.Drawing.Size(54, 17);
@@ -5531,6 +5859,7 @@ namespace OpenBve {
 			// labelPackageType
 			// 
 			this.labelPackageType.AutoSize = true;
+			this.labelPackageType.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageType.Location = new System.Drawing.Point(8, 50);
 			this.labelPackageType.Name = "labelPackageType";
 			this.labelPackageType.Size = new System.Drawing.Size(159, 13);
@@ -5550,6 +5879,7 @@ namespace OpenBve {
 			// radioButtonQ1No
 			// 
 			this.radioButtonQ1No.AutoSize = true;
+			this.radioButtonQ1No.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ1No.Enabled = false;
 			this.radioButtonQ1No.Location = new System.Drawing.Point(64, 1);
 			this.radioButtonQ1No.Name = "radioButtonQ1No";
@@ -5563,6 +5893,7 @@ namespace OpenBve {
 			// radioButtonQ1Yes
 			// 
 			this.radioButtonQ1Yes.AutoSize = true;
+			this.radioButtonQ1Yes.ForeColor = System.Drawing.Color.Black;
 			this.radioButtonQ1Yes.Enabled = false;
 			this.radioButtonQ1Yes.Location = new System.Drawing.Point(3, 1);
 			this.radioButtonQ1Yes.Name = "radioButtonQ1Yes";
@@ -5600,6 +5931,7 @@ namespace OpenBve {
 			// 
 			this.labelReplacePackage.AutoSize = true;
 			this.labelReplacePackage.Enabled = false;
+			this.labelReplacePackage.ForeColor = System.Drawing.Color.Black;
 			this.labelReplacePackage.Location = new System.Drawing.Point(8, 94);
 			this.labelReplacePackage.Name = "labelReplacePackage";
 			this.labelReplacePackage.Size = new System.Drawing.Size(188, 13);
@@ -5716,6 +6048,8 @@ namespace OpenBve {
 			// newPackageClearSelectionButton
 			// 
 			this.newPackageClearSelectionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.newPackageClearSelectionButton.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.newPackageClearSelectionButton.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.newPackageClearSelectionButton.Location = new System.Drawing.Point(572, 326);
 			this.newPackageClearSelectionButton.Name = "newPackageClearSelectionButton";
 			this.newPackageClearSelectionButton.Size = new System.Drawing.Size(121, 23);
@@ -5740,6 +6074,8 @@ namespace OpenBve {
 			// addPackageItemsButton
 			// 
 			this.addPackageItemsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.addPackageItemsButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.addPackageItemsButton.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.addPackageItemsButton.Location = new System.Drawing.Point(8, 326);
 			this.addPackageItemsButton.Name = "addPackageItemsButton";
 			this.addPackageItemsButton.Size = new System.Drawing.Size(121, 23);
@@ -5751,6 +6087,7 @@ namespace OpenBve {
 			// labelSelectFiles
 			// 
 			this.labelSelectFiles.AutoSize = true;
+			this.labelSelectFiles.ForeColor = System.Drawing.Color.Black;
 			this.labelSelectFiles.Location = new System.Drawing.Point(8, 51);
 			this.labelSelectFiles.Name = "labelSelectFiles";
 			this.labelSelectFiles.Size = new System.Drawing.Size(190, 13);
@@ -5767,6 +6104,7 @@ namespace OpenBve {
 			// labelNewGUID
 			// 
 			this.labelNewGUID.AutoSize = true;
+			this.labelNewGUID.ForeColor = System.Drawing.Color.Black;
 			this.labelNewGUID.Location = new System.Drawing.Point(8, 3);
 			this.labelNewGUID.Name = "labelNewGUID";
 			this.labelNewGUID.Size = new System.Drawing.Size(281, 13);
@@ -5780,6 +6118,7 @@ namespace OpenBve {
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(859, 631);
 			this.Controls.Add(this.labelVerticalSeparator);
+			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelInfo);
@@ -5790,12 +6129,11 @@ namespace OpenBve {
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
 			this.Controls.Add(this.panelControls);
-			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelReview);
 			this.KeyPreview = true;
 			this.Name = "formMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "openBVE";
+			this.Text = "OpenBVE";
 			this.Load += new System.EventHandler(this.formMain_Load);
 			this.Shown += new System.EventHandler(this.formMain_Shown);
 			this.Resize += new System.EventHandler(this.formMain_Resize);
@@ -5907,6 +6245,9 @@ namespace OpenBve {
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
 			this.panelPackages.PerformLayout();
+			this.panelPackageInstall.ResumeLayout(false);
+			this.panelPackageInstall.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
 			this.panelUninstallResult.ResumeLayout(false);
 			this.panelUninstallResult.PerformLayout();
 			this.panelSuccess.ResumeLayout(false);
@@ -5927,9 +6268,6 @@ namespace OpenBve {
 			this.panelPackageList.ResumeLayout(false);
 			this.panelPackageList.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages)).EndInit();
-			this.panelPackageInstall.ResumeLayout(false);
-			this.panelPackageInstall.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
 			this.panelVersionError.ResumeLayout(false);
 			this.panelVersionError.PerformLayout();
 			this.groupBoxVersionErrorAction.ResumeLayout(false);
@@ -6386,5 +6724,6 @@ namespace OpenBve {
 		private System.Windows.Forms.ListView listViewTrainPackages;
 		private System.Windows.Forms.ComboBox comboBoxFont;
 		private System.Windows.Forms.Label labelFontName;
+		private System.Windows.Forms.Label labelNoDependencyReminder;
 	}
 }

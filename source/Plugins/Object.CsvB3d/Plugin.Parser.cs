@@ -835,6 +835,7 @@ namespace Plugin
 									a = a < 0 ? 0 : 255;
 								}
 								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
+								Builder.ApplyColor(newColor, false);
 								Object.ApplyColor(newColor, false);
 							}
 						} break;
@@ -873,12 +874,8 @@ namespace Plugin
 									b = b < 0 ? 0 : 255;
 								}
 								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)255);
+								Builder.ApplyColor(newColor, true);
 								Object.ApplyColor(newColor, true);
-								for (int j = 0; j < Builder.Materials.Length; j++)
-								{
-									Builder.Materials[j].EmissiveColor = (Color24)newColor;
-									Builder.Materials[j].Flags |= MaterialFlags.Emissive;
-								}
 							}
 						} break;
 						case "setemissivecolor":

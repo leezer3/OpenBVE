@@ -147,7 +147,7 @@ namespace LibRender2.Primitives
 			}
 			else
 			{
-				int maxFittingLines = (int)(internalSize.Y / myFont.MeasureString(Text).Y);
+				int maxFittingLines = (int)(internalSize.Y / myFont.FontSize);
 				if (topLine + maxFittingLines > splitString.Count)
 				{
 					topLine = Math.Max(0, splitString.Count - maxFittingLines);
@@ -168,8 +168,9 @@ namespace LibRender2.Primitives
 
 				if (CanScroll)
 				{
+					double scrollBarHeight = (Size.Y - 4) * maxFittingLines / splitString.Count;
 					double percentageScroll = topLine / (double)(splitString.Count - maxFittingLines);
-					renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 13, Location.Y + (Size.Y - 14) * percentageScroll), new Vector2(10, 10), myScrollbarColor);
+					renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 13, Location.Y + (Size.Y - scrollBarHeight) * percentageScroll), new Vector2(10, scrollBarHeight), myScrollbarColor);
 				}
 
 			}

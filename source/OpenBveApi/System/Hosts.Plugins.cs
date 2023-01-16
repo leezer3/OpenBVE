@@ -117,7 +117,7 @@ namespace OpenBveApi.Hosts
 			Plugins = list.ToArray();
 			if (Plugins.Length == 0)
 			{
-				errorMessage = "No available content loading plugins were found." + Environment.NewLine + " Please re-download openBVE.";
+				errorMessage = "No available content loading plugins were found." + Environment.NewLine + " Please re-download OpenBVE.";
 				return false;
 			}
 			errorMessage = builder.ToString().Trim(new char[] { });

@@ -322,6 +322,23 @@ namespace LibRender2
 					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
 					currentOptions.IsUseNewRenderer = false;
 					ForceLegacyOpenGL = true;
+					try
+					{
+						/*
+						 * Nasty little edge case with some Intel graphics- They create the shader OK
+						 * but it crashes on use, but remains active
+						 * Deactivate it, otherwise we get a grey screen
+						 */
+						if (DefaultShader != null)
+						{
+							DefaultShader.Deactivate();
+						}
+					}
+					catch 
+					{ 
+						// ignored
+					}
+					
 				}
 
 				if (DefaultShader == null)
@@ -332,7 +349,6 @@ namespace LibRender2
 					ForceLegacyOpenGL = true;
 				}
 			}
-			
 
 			Background = new Background(this);
 			Fog = new Fog();
@@ -1116,7 +1132,7 @@ namespace LibRender2
 			lastModelMatrix = ModelMatrix;
 			lastModelViewMatrix = ModelViewMatrix;
 			sendToShader = true;
-			RenderFace(Shader, State, Face);
+			RenderFace(Shader, State, Face, false, true);
 		}
 
 		/// <summary>Draws a face using the specified shader</summary>
@@ -1124,10 +1140,10 @@ namespace LibRender2
 		/// <param name="State">The ObjectState to draw</param>
 		/// <param name="Face">The Face within the ObjectState</param>
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		/// <param name="screenSpace">Used when a forced matrix, for items which are in screen space not camera space</param>
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false, bool screenSpace = false)
 		{
-			
-			if (State != lastObjectState || State.Prototype.Dynamic)
+			if ((State != lastObjectState || State.Prototype.Dynamic) && !screenSpace)
 			{
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;

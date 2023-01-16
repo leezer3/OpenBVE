@@ -485,7 +485,7 @@ namespace OpenBve {
 		{
 			try
 			{
-				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls"), out Interface.CurrentControls);
+				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls"), out Interface.CurrentControls);
 				for (int i = 0; i < listviewControls.SelectedItems.Count; i++)
 				{
 					listviewControls.SelectedItems[i].Selected = false;
@@ -532,8 +532,8 @@ namespace OpenBve {
 			if (!radiobuttonJoystick.Checked)
 			{
 				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grabbing");
-				textboxJoystickGrab.BackColor = Color.Crimson;
-				textboxJoystickGrab.ForeColor = Color.White;
+				textboxJoystickGrab.BackColor = Color.LightSkyBlue;
+				textboxJoystickGrab.ForeColor = Color.Black;
 				KeyGrab = true;
 				return;
 
@@ -550,8 +550,8 @@ namespace OpenBve {
 			} else {
 				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab_normal");
 			}
-			textboxJoystickGrab.BackColor = Color.Crimson;
-			textboxJoystickGrab.ForeColor = Color.White;
+			textboxJoystickGrab.BackColor = Color.LightSkyBlue;
+			textboxJoystickGrab.ForeColor = Color.Black;
 		}
 
 		private void textboxJoystickGrab_KeyDown(object sender, KeyEventArgs e)
@@ -574,7 +574,7 @@ namespace OpenBve {
 				}
 			}
 			textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
-			textboxJoystickGrab.BackColor = panelControls.BackColor;
+			textboxJoystickGrab.BackColor = Color.White;
 			textboxJoystickGrab.ForeColor = Color.Black;
 			comboboxKeyboardKey.Focus();
 		}
@@ -587,7 +587,7 @@ namespace OpenBve {
 			{
 				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
 			}
-			textboxJoystickGrab.BackColor = panelControls.BackColor;
+			textboxJoystickGrab.BackColor = Color.White;
 			textboxJoystickGrab.ForeColor = Color.Black;
 			KeyGrab = false;
 		}

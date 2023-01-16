@@ -169,6 +169,7 @@ namespace RouteViewer
 				if (wait > 0)
 					Thread.Sleep((int)(wait));
 			}
+			Program.Renderer.Loading.CompleteLoading();
 			if (!Loading.Cancel)
 			{
 				Program.Renderer.PopMatrix(MatrixMode.Modelview);

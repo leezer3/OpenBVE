@@ -329,6 +329,18 @@ namespace OpenBve
 		}
 
 
+		internal void DragFile(object sender, OpenTK.Input.FileDropEventArgs e)
+		{
+			if (Menus[CurrMenu].Type == MenuType.PackageInstall)
+			{
+				currentFile = e.FileName;
+				if (!packageWorkerThread.IsBusy)
+				{
+					packageWorkerThread.RunWorkerAsync();
+				}
+			}
+		}
+
 		/// <summary>Processes a mouse move event</summary>
 		/// <param name="x">The screen-relative x coordinate of the move event</param>
 		/// <param name="y">The screen-relative y coordinate of the move event</param>

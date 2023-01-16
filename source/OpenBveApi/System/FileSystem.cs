@@ -295,8 +295,10 @@ namespace OpenBveApi.FileSystem {
 									system.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
 									if (!Directory.Exists(system.DataFolder))
 									{
-										//If we are unable to find the data folder, this is a critical error, as it contains all sorts of essential stuff.....
-										MessageBox.Show(@"Critical error:" + Environment.NewLine + @"Unable to find the openBVE data folder.....", @"openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										//If we are still unable to find the default data folder, this is a critical error, as it contains all sorts of essential stuff.....
+										MessageBox.Show(@"Unable to find the OpenBVE Data folder." + Environment.NewLine + 
+										"OpenBVE will now exit as the Data folder is required for normal operation." + Environment.NewLine + Environment.NewLine + 
+										"Please consider reinstalling OpenBVE.", "Critical Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										Environment.Exit(0);
 									}
 								}
@@ -424,7 +426,7 @@ namespace OpenBveApi.FileSystem {
 		public void ClearLogFile(string version) {
 			try {
 				string file = System.IO.Path.Combine(this.SettingsFolder, "log.txt");
-				System.IO.File.WriteAllText(file, @"openBVE Log: " + DateTime.Now + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new System.Text.UTF8Encoding(true));
+				System.IO.File.WriteAllText(file, @"OpenBVE Log: " + DateTime.Now + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new System.Text.UTF8Encoding(true));
 			} catch { }
 		}
 

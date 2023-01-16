@@ -25,8 +25,9 @@ namespace Train.OpenBve
 		private static string currentPath;
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
-		private static BveAccelerationCurve[] AccelerationCurves;
+		
 		private static readonly char[] separatorChars = { ';', ',' };
+		internal static bool[] MotorSoundXMLParsed;
 		internal void Parse(string fileName, TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, out bool[] interiorVisible)
 		{
 			//The current XML file to load
@@ -34,21 +35,7 @@ namespace Train.OpenBve
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
 			currentPath = System.IO.Path.GetDirectoryName(fileName);
-			if (File.Exists(Path.CombineFile(currentPath, "train.dat")))
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					if (Train.Cars[i].Specs.IsMotorCar)
-					{
-						AccelerationCurves = new BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
-						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)
-						{
-							BveAccelerationCurve c = (BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
-							AccelerationCurves[j] = c.Clone();
-						}
-					}
-				}
-			}
+			MotorSoundXMLParsed = new bool[Train.Cars.Length];
 			CarObjectsReversed = new bool[Train.Cars.Length];
 			BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			interiorVisible = new bool[Train.Cars.Length];
@@ -270,7 +257,9 @@ namespace Train.OpenBve
 						}
 					}
 				}
-
+				/*
+				 * Add final properties and stuff
+				 */
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
 					if (CarObjects[i] != null)
