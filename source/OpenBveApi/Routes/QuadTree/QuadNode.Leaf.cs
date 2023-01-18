@@ -184,12 +184,7 @@ namespace OpenBveApi.Routes
 
 		/// <summary>The number of static objects attached to this quad node.</summary>
 		internal int StaticObjectCount;
-
-		/// <summary>A list of handles to transparent faces as obtained from the renderer.</summary>
-		internal object[] TransparentFaces;
-
-		/// <summary>The number of handles to transparent faces.</summary>
-		public int TransparentFaceCount;
+		
 
 		internal QuadTreePopulatedLeafNode(QuadInternalNode parent, QuadTreeBounds rectangle, ObjectState initialState)
 		{
@@ -207,9 +202,6 @@ namespace OpenBveApi.Routes
 				Objects = new ObjectState[] { null };
 				StaticObjectCount = 0;
 			}
-
-			TransparentFaces = new object[1];
-			TransparentFaceCount = 0;
 		}
 
 		internal QuadTreePopulatedLeafNode(QuadTreeUnpopulatedLeafNode unpopulated)
@@ -220,8 +212,6 @@ namespace OpenBveApi.Routes
 			VisibleLeafNodes = null;
 			Objects = new ObjectState[] { null };
 			StaticObjectCount = 0;
-			TransparentFaces = new object[1];
-			TransparentFaceCount = 0;
 		}
 
 		/// <summary>Takes an object, its position and orientation on the quad node, and then updates the bounding rectangle accordingly.</summary>

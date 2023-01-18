@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
 
 namespace OpenBveApi.Routes
 {
@@ -14,6 +14,17 @@ namespace OpenBveApi.Routes
 		/// <summary>The smallest rectangle that encloses all child nodes and attached objects in world coordinates.</summary>
 		internal QuadTreeBounds BoundingRectangle;
 
+		/// <summary>Gets the center of the node</summary>
+		public Vector3 Center
+		{
+			get
+			{
+				double x = 0.5 * (Rectangle.Left + Rectangle.Right);
+				double z = 0.5 * (Rectangle.Near + Rectangle.Far);
+				return new Vector3(x, 0.0, z);
+			}
+		}
+
 		/// <summary>Finalizes the bounding rectangles for this node and all its child nodes.</summary>
 		/// <remarks>This function is used to get rid of uninitialized bounding rectangles.</remarks>
 		public abstract void FinalizeBoundingRectangles();
@@ -28,6 +39,9 @@ namespace OpenBveApi.Routes
 			return false;
 		}
 
+		/// <summary>Creates the visibility lists for the node</summary>
+		/// <param name="rootNode">The root node of the quad tree</param>
+		/// <param name="viewingDistance">The viewing distance</param>
 		public virtual void CreateVisibilityLists(QuadNode rootNode, double viewingDistance)
 		{
 

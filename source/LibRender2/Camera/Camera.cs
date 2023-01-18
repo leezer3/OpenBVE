@@ -85,9 +85,7 @@ namespace LibRender2.Cameras
 		public CameraAlignment SavedTrack;
 		/// <summary>The current quad tree leaf node</summary>
 		public QuadTreeLeafNode QuadTreeLeaf;
-
-		public Vector3 QuadTreeLeafNodeCenter;
-
+		
 		private Vector3 absolutePosition;
 
 		internal CameraProperties(BaseRenderer renderer)
@@ -324,18 +322,8 @@ namespace LibRender2.Cameras
 			 * Find the leaf node the camera is currently in.
 			 * */
 			QuadTreeLeafNode leaf;
-			if (Renderer.VisibleObjects.quadTree.GetLeafNode(AbsolutePosition, out leaf))
-			{
-				double x = 0.5 * (leaf.Rectangle.Left + leaf.Rectangle.Right);
-				double z = 0.5 * (leaf.Rectangle.Near + leaf.Rectangle.Far);
-				QuadTreeLeafNodeCenter = new Vector3(x, 0.0, z);
-			}
-			else
-			{
-				leaf = null;
-				QuadTreeLeafNodeCenter = new Vector3(0.0, 0.0, 0.0);
-			}
-
+			Renderer.VisibleObjects.quadTree.GetLeafNode(AbsolutePosition, out leaf);
+			
 			/*
 			 * Check if the leaf node the camera is in has changed.
 			 * */
@@ -446,8 +434,6 @@ namespace LibRender2.Cameras
 							}
 							Renderer.currentHost.HideObject(oldLeafNodes[i].Objects[j]);
 						}
-
-						oldLeafNodes[i].TransparentFaceCount = 0;
 					}
 				}
 			}

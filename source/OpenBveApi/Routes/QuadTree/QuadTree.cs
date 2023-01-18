@@ -12,7 +12,7 @@ namespace OpenBveApi.Routes
 		internal QuadNode Root;
 
 		/// <summary>The side length of a leaf node.</summary>
-		internal double SideLength;
+		internal readonly double SideLength;
 
 		internal List<ObjectState> Objects = new List<ObjectState>();
 
@@ -38,6 +38,8 @@ namespace OpenBveApi.Routes
 			if (Root == null)
 			{
 				// the root node does not exist yet
+				// as our object must be in world-space, it's world position is a good starting point for the tree, as
+				// routes may start at any arbritary track position
 				Vector3 quadPosition = new Vector3(0.0, objectState.WorldPosition.Y, 0.0);
 				QuadTreePopulatedLeafNode leaf = new QuadTreePopulatedLeafNode(
 					null,
