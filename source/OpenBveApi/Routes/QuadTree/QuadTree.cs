@@ -14,7 +14,7 @@ namespace OpenBveApi.Routes
 		/// <summary>The side length of a leaf node.</summary>
 		internal readonly double SideLength;
 
-		internal List<ObjectState> Objects = new List<ObjectState>();
+		internal readonly List<ObjectState> Objects;
 
 		/// <summary>Creates an empty quad with a null root node.</summary>
 		/// <param name="sideLength">The side length of a leaf node.</param>
@@ -22,6 +22,14 @@ namespace OpenBveApi.Routes
 		{
 			Root = null;
 			SideLength = sideLength;
+			Objects = new List<ObjectState>();
+		}
+
+		/// <summary>Clears the quad tree</summary>
+		public void Clear()
+		{
+			Objects.Clear();
+			Root = null;
 		}
 
 		/// <summary>Adds a new instance of a static object to the quad.</summary>
@@ -271,6 +279,10 @@ namespace OpenBveApi.Routes
 		/// <remarks>Call this function whenever the viewing distance changes.</remarks>
 		public void Initialize(double viewingDistance)
 		{
+			if (Root == null)
+			{
+				return;
+			}
 			if (viewingDistance <= 0)
 			{
 				throw new InvalidOperationException("Invalid viewing distance.");

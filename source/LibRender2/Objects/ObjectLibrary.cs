@@ -20,7 +20,7 @@ namespace LibRender2.Objects
 		private readonly BaseOptions currentOptions;
 		private readonly BaseRenderer renderer;
 
-		internal readonly QuadTree quadTree;
+		public readonly QuadTree quadTree;
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;

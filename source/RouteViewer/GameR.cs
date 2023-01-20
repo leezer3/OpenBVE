@@ -62,6 +62,7 @@ namespace RouteViewer {
 			Program.Renderer.InfoTotalQuads = 0;
 			Program.Renderer.InfoTotalQuadStrip = 0;
 			Program.Renderer.InfoTotalPolygon = 0;
+			Program.Renderer.VisibleObjects.quadTree.Clear();
 			// object manager
 			Program.Renderer.InitializeVisibility();
 			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
