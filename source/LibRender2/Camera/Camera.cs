@@ -321,41 +321,29 @@ namespace LibRender2.Cameras
 			/*
 			 * Find the leaf node the camera is currently in.
 			 * */
-			QuadTreeLeafNode leaf;
-			Renderer.VisibleObjects.quadTree.GetLeafNode(AbsolutePosition, out leaf);
+			QuadTreeLeafNode currentLeaf;
+			Renderer.VisibleObjects.quadTree.GetLeafNode(AbsolutePosition, out currentLeaf);
 			
 			/*
 			 * Check if the leaf node the camera is in has changed.
 			 * */
-			if (leaf != QuadTreeLeaf)
+			if (currentLeaf != QuadTreeLeaf)
 			{
-				if (leaf != null)
+				if (currentLeaf != null)
 				{
 					/*
 					 * The camera is within the bounds of a leaf node.
-					 * */
-					QuadTreePopulatedLeafNode[] oldLeafNodes;
-					if (QuadTreeLeaf != null)
-					{
-						oldLeafNodes = QuadTreeLeaf.VisibleLeafNodes;
-					}
-					else
-					{
-						oldLeafNodes = null;
-					}
-
-					QuadTreePopulatedLeafNode[] newLeafNodes = leaf.VisibleLeafNodes;
-					/*
+					 * 
 					 * Find leaf nodes that were visible before but are not any longer.
 					 * */
-					if (oldLeafNodes != null)
+					if (QuadTreeLeaf?.VisibleLeafNodes != null && currentLeaf.VisibleLeafNodes != null)
 					{
-						for (int i = 0; i < oldLeafNodes.Length; i++)
+						for (int i = 0; i < QuadTreeLeaf?.VisibleLeafNodes.Length; i++)
 						{
 							bool remove = true;
-							for (int j = 0; j < newLeafNodes.Length; j++)
+							for (int j = 0; j < currentLeaf.VisibleLeafNodes.Length; j++)
 							{
-								if (oldLeafNodes[i] == newLeafNodes[j])
+								if (QuadTreeLeaf?.VisibleLeafNodes[i] == currentLeaf.VisibleLeafNodes[j])
 								{
 									remove = false;
 									break;
@@ -368,9 +356,9 @@ namespace LibRender2.Cameras
 								 * This leaf node is not visible any longer. Remove its
 								 * associated objects from the renderer.
 								 * */
-								for (int j = 0; j < oldLeafNodes[i].Objects.Length; j++)
+								for (int j = 0; j < QuadTreeLeaf?.VisibleLeafNodes[i].Objects.Length; j++)
 								{
-									Renderer.currentHost.HideObject(oldLeafNodes[i].Objects[j]);
+									Renderer.currentHost.HideObject(QuadTreeLeaf?.VisibleLeafNodes[i].Objects[j]);
 								}
 							}
 						}
@@ -379,16 +367,16 @@ namespace LibRender2.Cameras
 					/*
 					 * Find leaf nodes that are visible now but were not before.
 					 * */
-					if (newLeafNodes != null)
+					if (currentLeaf.VisibleLeafNodes != null)
 					{
-						for (int i = 0; i < newLeafNodes.Length; i++)
+						for (int i = 0; i < currentLeaf.VisibleLeafNodes.Length; i++)
 						{
 							bool add = true;
-							if (oldLeafNodes != null)
+							if (QuadTreeLeaf?.VisibleLeafNodes != null)
 							{
-								for (int j = 0; j < oldLeafNodes.Length; j++)
+								for (int j = 0; j < QuadTreeLeaf?.VisibleLeafNodes.Length; j++)
 								{
-									if (newLeafNodes[i] == oldLeafNodes[j])
+									if (currentLeaf.VisibleLeafNodes[i] == QuadTreeLeaf?.VisibleLeafNodes[j])
 									{
 										add = false;
 										break;
@@ -402,13 +390,13 @@ namespace LibRender2.Cameras
 								 * This leaf node has become visible. Add all
 								 * its faces to the renderer.
 								 * */
-								for (int j = 0; j < newLeafNodes[i].Objects.Length; j++)
+								for (int j = 0; j < currentLeaf.VisibleLeafNodes[i].Objects.Length; j++)
 								{
-									if (newLeafNodes[i].Objects[j] == null)
+									if (currentLeaf.VisibleLeafNodes[i].Objects[j] == null)
 									{
 										continue;
 									}
-									Renderer.currentHost.ShowObject(newLeafNodes[i].Objects[j], ObjectType.Static);
+									Renderer.currentHost.ShowObject(currentLeaf.VisibleLeafNodes[i].Objects[j], ObjectType.Static);
 								}
 							}
 						}
@@ -423,16 +411,15 @@ namespace LibRender2.Cameras
 					 * Remove the transparent faces associated
 					 * to the old leaf node from the renderer.
 					 * */
-					QuadTreePopulatedLeafNode[] oldLeafNodes = QuadTreeLeaf.VisibleLeafNodes;
-					for (int i = 0; i < oldLeafNodes.Length; i++)
+					for (int i = 0; i < QuadTreeLeaf.VisibleLeafNodes.Length; i++)
 					{
-						for (int j = 0; j < oldLeafNodes[i].Objects.Length; j++)
+						for (int j = 0; j < QuadTreeLeaf.VisibleLeafNodes[i].Objects.Length; j++)
 						{
-							if (oldLeafNodes[i].Objects[j] == null)
+							if (QuadTreeLeaf.VisibleLeafNodes[i].Objects[j] == null)
 							{
 								continue;
 							}
-							Renderer.currentHost.HideObject(oldLeafNodes[i].Objects[j]);
+							Renderer.currentHost.HideObject(QuadTreeLeaf.VisibleLeafNodes[i].Objects[j]);
 						}
 					}
 				}
@@ -441,7 +428,7 @@ namespace LibRender2.Cameras
 			/*
 			 * Apply the found leaf node.
 			 * */
-			QuadTreeLeaf = leaf;
+			QuadTreeLeaf = currentLeaf;
 		}
 	}
 }
