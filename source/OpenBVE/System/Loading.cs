@@ -140,7 +140,7 @@ namespace OpenBve {
 				}
 			}
 			catch { }
-			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the openBVE startup path.");
+			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the " + Translations.GetInterfaceString("program_title") + " startup path.");
 			return Application.StartupPath;
 		}
 
@@ -319,7 +319,7 @@ namespace OpenBve {
 					}
 					var currentError = Translations.GetInterfaceString("errors_critical_file");
 					currentError = currentError.Replace("[file]", System.IO.Path.GetFileName(CurrentRouteFile));
-					MessageBox.Show(currentError, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(currentError, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + Program.CurrentHost.Plugins[i].Route.LastException.Message);
 					CrashHandler.LoadingCrash(Program.CurrentHost.Plugins[i].Route.LastException.Message, false);
 					Program.RestartArguments = " ";

@@ -38,6 +38,7 @@ namespace OpenBve.UserInterface
 			this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxLog.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.textBoxLog.Location = new System.Drawing.Point(13, 13);
 			this.textBoxLog.Multiline = true;
 			this.textBoxLog.Name = "textBoxLog";

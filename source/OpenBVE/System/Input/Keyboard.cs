@@ -63,9 +63,14 @@ namespace OpenBve
 					}
 				}
 			}
-			// Attempt to reset handle spring
-			TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-			TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			
+			if (TrainManager.PlayerTrain != null)
+			{
+				// Attempt to reset handle spring
+				TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+				TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			}
+			
 			
 			BlockKeyRepeat = false;
 			//Remember to reset the keyboard modifier after we're done, else it repeats.....
@@ -109,8 +114,11 @@ namespace OpenBve
 			}
 
 			// Attempt to reset handle spring
-			TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-			TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			if (TrainManager.PlayerTrain != null)
+			{
+				TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+				TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			}
 			BlockKeyRepeat = false;
 		}
 	}

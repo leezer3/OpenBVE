@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="zh-HK">
 		<body>
 			<group id="language">
@@ -12,18 +12,83 @@
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>Alvin Wong, I-Circle BVE, Kenny Hui@HKTSS</target>
+					<target>Alvin Wong, I-Circle BVE, LX86</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
-					<target>2019-06-29</target>
+					<target>2023-01-07</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
+						<source>OpenBVE</source>
 						<target>OpenBVE</target>
+					</trans-unit>
+				</group>
+				<group id="about">
+					<trans-unit id="title">
+						<source>About</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
+						<target>OpenBVE 是一款免費，開源及跨平台的火車模擬器，支持 2D / 3D 駕駛室和沿途景色。\r\n\r\n此程式最初由 Michelle 開發，並在合法的情況下發佈到公眾領域 (Public Domain)。</target>
+					</trans-unit>
+					<trans-unit id="open_source_licenses">
+						<source>Open Source Licenses</source>
+						<target>開源軟件授權</target>
+					</trans-unit>
+					<trans-unit id="open_source_licenses_header">
+						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
+						<target>OpenBVE 使用了多個開源的函式庫(library)，其軟件授權如下:</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>關閉</target>
+					</trans-unit>
+				</group>
+				<group id="bug_report">
+					<trans-unit id="title">
+						<source>Report Problem</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
+					</trans-unit>
+					<trans-unit id="view_log_button">
+						<source>View...</source>
+						<target>查看...</target>
+					</trans-unit>
+					<trans-unit id="view_log">
+						<source>View the previous log:</source>
+						<target>查看上次遊玩日誌:</target>
+					</trans-unit>
+					<trans-unit id="view_crash_log">
+						<source>View the previous crash log:</source>
+						<target>查看上次崩潰日誌:</target>
+					</trans-unit>
+					<trans-unit id="enter_description">
+						<source>Please enter a brief description of the problem:</source>
+						<target>請簡短地輸入問題描述:</target>
+					</trans-unit>
+					<trans-unit id="no_log">
+						<source>No simulation logs were found.</source>
+						<target>沒有上次遊玩日誌。</target>
+					</trans-unit>
+					<trans-unit id="no_crash_log">
+						<source>No crash logs were found.</source>
+						<target>沒有上次崩潰日誌。</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save Bug Report</source>
+						<target>儲存錯誤報告</target>
+					</trans-unit>
+					<trans-unit id="saved">
+						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>錯誤報告已在你的桌面上儲存為&quot;[filename]&quot;。 \r\n\r\n您可以在官方討論區提交錯誤報告，或在 GitHub 上新增一個issue並附上此 zip 檔案。</target>
+					</trans-unit>
+					<trans-unit id="save_failed">
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>無法創建錯誤報告！ \r\n\r\n您可以按下 &quot;查看...&quot; 按鈕來查看遊玩及崩潰日誌，然後將這些日誌提交到官方討論區或在 GitHub 上新增一個issue。</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -37,7 +102,7 @@
 					</trans-unit>
 					<trans-unit id="getaddons">
 						<source>Get Add-ons</source>
-						<target>取得外掛</target>
+						<target>取得擴展</target>
 					</trans-unit>
 					<trans-unit id="controls">
 						<source>Customize controls</source>
@@ -57,23 +122,22 @@
 					</trans-unit>
 					<trans-unit id="updates_invalid">
 						<source>A connection to the server could be established. Unfortunately, the version information could not be retrieved.</source>
-						<target>可以與伺服器建立連接，但版本資訊不能被存取。</target>
+						<target>可連接到伺服器，但未能讀取版本資訊。</target>
 					</trans-unit>
 					<trans-unit id="updates_old">
 						<source>You already have the latest version.</source>
-						<target>你目前所使用的版本已經是最新。</target>
-					</trans-unit>
-					<trans-unit id="updates_new">
-						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
-						<target>最新版本 [version] ([date]) 已經於官方網站提供下載。</target>
+						<target>你目前的版本已是最新。</target>
 					</trans-unit>
 					<trans-unit id="updates_daily">
 						<source>The most recent nightly build from [date] is available for download.</source>
-						<target>The most recent nightly build from [date] is available for download.</target>
+						<target>最新的測試版已在 [date] 發佈並可供下載。</target>
+					</trans-unit>
+					<trans-unit id="updates_new">
+						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
+						<target>有最新版本可供下載: [version] ([date])，請到官方網站下載</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-						<target>關閉</target>
 					</trans-unit>
 					<trans-unit id="packages">
 						<source>Package Management</source>
@@ -81,11 +145,11 @@
 					</trans-unit>
 					<trans-unit id="reportbug">
 						<source>Report Problem</source>
-						<target>報告問題</target>
+						<target>回報問題</target>
 					</trans-unit>
 					<trans-unit id="about">
 						<source>About</source>
-						<target>關於</target>
+						<target>關於OpenBVE</target>
 					</trans-unit>
 				</group>
 				<group id="mode">
@@ -99,7 +163,7 @@
 					</trans-unit>
 					<trans-unit id="expert">
 						<source>Expert</source>
-						<target>專家</target>
+						<target>專業</target>
 					</trans-unit>
 					<trans-unit id="unknown">
 						<source>Unknown</source>
@@ -109,11 +173,11 @@
 				<group id="errors">
 					<trans-unit id="critical_file">
 						<source>A critical error occured whilst parsing the [file] file</source>
-						<target>處理文件:[file] 時發生錯誤。</target>
+						<target>處理檔案:[file] 時發生錯誤。</target>
 					</trans-unit>
 					<trans-unit id="filesystem_invalid">
 						<source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
-						<target>無法訪問文件系統或系統無效，原因:</target>
+						<target>無法讀取設定檔:</target>
 					</trans-unit>
 					<trans-unit id="warning">
 						<source>Warning:</source>
@@ -121,23 +185,23 @@
 					</trans-unit>
 					<trans-unit id="controls_missing">
 						<source>No control configuration files found.</source>
-						<target>找不到控制配置文件。</target>
+						<target>找不到控制配置檔案。</target>
 					</trans-unit>
 					<trans-unit id="controls_oldversion">
 						<source>An older key-configuration file was found.</source>
-						<target>找到了較舊的控制配置文件。</target>
+						<target>找到了較舊的控制配置檔案。</target>
 					</trans-unit>
 					<trans-unit id="controls_reset">
 						<source>The current key-configuration has been reset to defaults.</source>
-						<target>當前的控制配置已重置為默認</target>
+						<target>已重置控制配置</target>
 					</trans-unit>
 					<trans-unit id="controls_default_oldversion">
 						<source>The default key assingment file is an older version or corrupt.</source>
-						<target>默認鍵盤配置文件是舊版本或已損壞。</target>
+						<target>預設鍵盤配置檔案已損壞或是舊版本。</target>
 					</trans-unit>
 					<trans-unit id="controls_default_missing">
 						<source>The default key assignment file does not exist.</source>
-						<target>默認控制配置文件不存在。</target>
+						<target>預設控制配置檔案不存在。</target>
 					</trans-unit>
 					<trans-unit id="controls_ingame">
 						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
@@ -145,7 +209,7 @@
 					</trans-unit>
 					<trans-unit id="sound_openal_version">
 						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
-						<target>需要OpenAL 1.1。您似乎擁有1.0。</target>
+						<target>需要OpenAL 1.1。您似乎安裝了1.0。</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_context">
 						<source>The OpenAL context could not be created.</source>
@@ -161,27 +225,27 @@
 					</trans-unit>
 					<trans-unit id="fullscreen_switch2">
 						<source>Please check your fullscreen resolution settings.</source>
-						<target>請檢查全螢幕模式解像度設定</target>
+						<target>請檢查全螢幕解像度設定</target>
 					</trans-unit>
 					<trans-unit id="route_please_select">
 						<source>Please first select a route file to begin.</source>
-						<target>首先請選擇路線檔案</target>
+						<target>請先選擇路線檔案</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
 						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
-						<target>所選路線已損壞: \r\n 沒有WithTrack部分。</target>
+						<target>未能讀取路線: \r\n 沒有WithTrack部分。</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_nostations">
 						<source>The selected route is corrupt: \r\n No stations defined.</source>
-						<target>所選路線已損壞: \r\n 沒有定義車站。</target>
+						<target>未能讀取路線: \r\n 沒有定義車站。</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_noobjects">
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
-						<target>所選路線已損壞: \r\n 沒有定義物件。</target>
+						<target>未能讀取路線: \r\n 沒有定義物件。</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
-						<target>所選路線已損壞: \r\n 未能找到所有已定意義的物件。</target>
+						<target>未能讀取路線: \r\n 未能找到所有已定義的物件。</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
@@ -192,15 +256,15 @@
 					</trans-unit>
 					<trans-unit id="plugin_failure2">
 						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
-						<target>將會使用內置ATS/ATC系統, 但可能會有問題</target>
+						<target>將會使用內置ATS/ATC系統, 但可能會出現問題</target>
 					</trans-unit>
 					<trans-unit id="package_filename_empty">
 						<source>Attempted to create a package with an empty filename.</source>
-						<target>試圖創建一個帶有空文件名的包。</target>
+						<target>不能創建一個没有檔案名的擴展包。</target>
 					</trans-unit>
 					<trans-unit id="package_directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>您嘗試保存擴展包文件的資料夾不存在: \r \n</target>
+						<target>您嘗試保存擴展包的資料夾不存在: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
@@ -208,15 +272,15 @@
 					</trans-unit>
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
-						<target>無法創建以下文件: \r \n</target>
+						<target>無法創建以下檔案: \r \n</target>
 					</trans-unit>
 					<trans-unit id="security_checkaccess">
 						<source>Please check that this path is accessible.</source>
-						<target>請檢查此路徑是否可訪問</target>
+						<target>請檢查此位置是否可讀取。</target>
 					</trans-unit>
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
-						<target>如果您嘗試在&quot;Program Files&quot;或&quot;ProgramData&quot;文件夾中安裝插件，則可能需要管理員權限. \r\n\r\n 安全考慮，不建議這樣做</target>
+						<target>如果您要在&quot;Program Files&quot; 或 &quot;ProgramData&quot; 文件夾中安裝內容，則可能需要管理員權限. \r\n\r\n 但因安全考慮，一般不建議這樣做</target>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -233,7 +297,7 @@
 					</trans-unit>
 					<trans-unit id="route_addons">
 						<source>Add-ons</source>
-						<target>外掛</target>
+						<target>擴展</target>
 					</trans-unit>
 					<trans-unit id="route_browse">
 						<source>Browse manually</source>
@@ -285,7 +349,7 @@
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Do you wish to use the default train?</source>
-						<target>你希望使用默認的列車嗎?</target>
+						<target>你想使用預設列車嗎?</target>
 					</trans-unit>
 					<trans-unit id="train_default_no">
 						<source>No</source>
@@ -301,7 +365,7 @@
 					</trans-unit>
 					<trans-unit id="train_addons">
 						<source>Add-ons</source>
-						<target>外掛</target>
+						<target>擴展</target>
 					</trans-unit>
 					<trans-unit id="train_browse">
 						<source>Browse manually</source>
@@ -316,7 +380,7 @@
 					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
-						<target>使用路線所建議的預設列車</target>
+						<target>使用路線建議的預設列車</target>
 					</trans-unit>
 					<trans-unit id="train_details">
 						<source>Details</source>
@@ -344,11 +408,11 @@
 					</trans-unit>
 					<trans-unit id="train_notfound">
 						<source>The default train could not be found:\r\n\r\n</source>
-						<target>未能找到默認列車: \r\n\r\n</target>
+						<target>未能找到預設列車: \r\n\r\n</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
 						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
-						<target>--- 這列車所使用的保安系統插件並不能於你的作業系統中使用。遊戲內建的 ATS / ATC 保安系統將會被使用，這有可能引致列車操作上問題。 ---</target>
+						<target>--- 這列車使用的插件不能在你的作業系統使用。遊戲內建的 ATS / ATC 保安系統將會被使用，但有可能引致列車操作問題。 ---</target>
 					</trans-unit>
 					<trans-unit id="start">
 						<source>Start</source>
@@ -468,7 +532,7 @@
 					</trans-unit>
 					<trans-unit id="blackbox_format_text">
 						<source>Formatted text</source>
-						<target>已格式化文本</target>
+						<target>已格式化文字</target>
 					</trans-unit>
 					<trans-unit id="blackbox_export">
 						<source>Export...</source>
@@ -557,7 +621,7 @@
 					</trans-unit>
 					<trans-unit id="install_invalid">
 						<source>This file does not appear to be a valid openBVE package.</source>
-						<target>該文件似乎不是有效的OpenBVE擴展包。</target>
+						<target>此檔案不是有效的OpenBVE擴展包。</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
 						<source>Package Version Error</source>
@@ -585,7 +649,7 @@
 					</trans-unit>
 					<trans-unit id="install_success_files">
 						<source>A list of files installed is shown below:</source>
-						<target>安裝的文件列表如下所示：</target>
+						<target>已安裝的檔案列表:</target>
 					</trans-unit>
 					<trans-unit id="install_failure">
 						<source>Unfortunately, package installation failed.</source>
@@ -609,7 +673,7 @@
 					</trans-unit>
 					<trans-unit id="install_dependancies_broken">
 						<source>The following dependancies may be broken by this action:</source>
-						<target>有些依賴可能被這個動作破壞。</target>
+						<target>有些依賴可能被這個操作而損壞。</target>
 					</trans-unit>
 					<trans-unit id="install_reccomends_unmet">
 						<source>The following packages are recommended, but not installed:</source>
@@ -649,15 +713,15 @@
 					</trans-unit>
 					<trans-unit id="creation_saveas_button">
 						<source>Save As...</source>
-						<target>儲存為</target>
+						<target>另存為</target>
 					</trans-unit>
 					<trans-unit id="creation_saveas_label">
 						<source>Save package as:</source>
-						<target>儲存擴展包為</target>
+						<target>另存擴展包為</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies">
 						<source>Select Dependancies</source>
-						<target>選擇依賴擴展包</target>
+						<target>選擇依賴擴展包 (Dependencies)</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_add">
 						<source>Add Dependancy</source>
@@ -667,9 +731,13 @@
 						<source>Remove</source>
 						<target>移除</target>
 					</trans-unit>
+					<trans-unit id="creation_dependancies_skip_if_none">
+						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
+						<target>如果您的擴展包不需使用其他依賴包，您可以直接按下 &quot;創建&quot;。</target>
+					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
-						<target>你可以在下一步添加擴展包的細節和依賴。</target>
+						<target>你可以在下一步添加擴展包的資料和依賴(Dependencies)。</target>
 					</trans-unit>
 					<trans-unit id="creation_reccommends_add">
 						<source>Add Recommendation</source>
@@ -681,11 +749,11 @@
 					</trans-unit>
 					<trans-unit id="creation_additems">
 						<source>Add Item(s)</source>
-						<target>增加項目</target>
+						<target>增加打包項目</target>
 					</trans-unit>
 					<trans-unit id="creation_selecteditems">
 						<source>The following files and folders will be packaged:</source>
-						<target>將會打包以下的檔案:</target>
+						<target>將會打包以下的檔案/資料夾:</target>
 					</trans-unit>
 					<trans-unit id="creation_new_guid">
 						<source>The new package has been assigned the following GUID:</source>
@@ -744,11 +812,11 @@
 					</trans-unit>
 					<trans-unit id="creation_invalid_nofiles">
 						<source>No files were selected to package- Please retry.</source>
-						<target>未選擇要打包的文件-請重試。</target>
+						<target>未選擇要打包的檔案，請重試。</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>
-						<target>所選文件名無效-請重試。</target>
+						<target>所選檔案位置無效，請重試。</target>
 					</trans-unit>
 					<trans-unit id="creation_new_id">
 						<source>The new package has been assigned the following GUID:</source>
@@ -764,7 +832,7 @@
 					</trans-unit>
 					<trans-unit id="creation_replace">
 						<source>Is this to replace an existing package?</source>
-						<target>這是替代前一個的擴展包的嗎？</target>
+						<target>這是取代另一個的擴展包的嗎？</target>
 					</trans-unit>
 					<trans-unit id="creation_yes">
 						<source>Yes</source>
@@ -776,11 +844,11 @@
 					</trans-unit>
 					<trans-unit id="replace_select">
 						<source>Replace this Package</source>
-						<target>替代這個擴展包</target>
+						<target>取代這個擴展包</target>
 					</trans-unit>
 					<trans-unit id="replace_choose">
 						<source>Please select the package you wish to replace:</source>
-						<target>請選擇你想要讓它替代的擴展包:</target>
+						<target>請選擇你想取代的擴展包:</target>
 					</trans-unit>
 					<trans-unit id="replace_noneavailable">
 						<source>No packages are currently installed.</source>
@@ -804,7 +872,7 @@
 					</trans-unit>
 					<trans-unit id="uninstall_failure">
 						<source>Unfortunately, uninstallation of this package failed.</source>
-						<target>該擴展包的卸載失敗。</target>
+						<target>擴展包卸載失敗。</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure_header">
 						<source>Uninstallation Failed</source>
@@ -820,11 +888,11 @@
 					</trans-unit>
 					<trans-unit id="uninstall_log">
 						<source>A log is shown below:</source>
-						<target>在卸載過程中執行了下列操作:</target>
+						<target>卸載過程日誌(log):</target>
 					</trans-unit>
 					<trans-unit id="uninstall_button">
 						<source>Uninstall Package</source>
-						<target>卸載擴展包</target>
+						<target>刪除擴展包</target>
 					</trans-unit>
 					<trans-unit id="uninstall_broken">
 						<source>Some existing packages may be broken by this action.</source>
@@ -832,7 +900,7 @@
 					</trans-unit>
 					<trans-unit id="uninstall_missing_xml">
 						<source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
-						<target>無法卸載這個擴展包。 \r\n XML文件缺失。</target>
+						<target>無法卸載這個擴展包。 \r\n XML檔案缺失。</target>
 					</trans-unit>
 					<trans-unit id="uninstall_database_remove">
 						<source>Do you wish to remove this package from the database?</source>
@@ -840,7 +908,7 @@
 					</trans-unit>
 					<trans-unit id="database_save_error">
 						<source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
-						<target>保存擴展包數據時出現問題。 \r\n 請檢查寫入權限。</target>
+						<target>儲存擴展包時出現問題。 \r\n 請檢查權限。</target>
 					</trans-unit>
 					<trans-unit id="version_new">
 						<source>New version:</source>
@@ -852,7 +920,7 @@
 					</trans-unit>
 					<trans-unit id="success">
 						<source>Finished!</source>
-						<target>已完成!</target>
+						<target>完成!</target>
 					</trans-unit>
 					<trans-unit id="selected">
 						<source>Selected Packages</source>
@@ -860,7 +928,7 @@
 					</trans-unit>
 					<trans-unit id="dependancy">
 						<source>Dependancy</source>
-						<target>相依擴展包</target>
+						<target>依賴擴展包</target>
 					</trans-unit>
 					<trans-unit id="recommendation">
 						<source>Recommendation</source>
@@ -880,11 +948,11 @@
 					</trans-unit>
 					<trans-unit id="button_next">
 						<source>Next &gt;</source>
-						<target>下一頁...</target>
+						<target>繼續 &gt;</target>
 					</trans-unit>
 					<trans-unit id="button_back">
 						<source>&lt; Back</source>
-						<target>上一頁...</target>
+						<target>&lt; 返回</target>
 					</trans-unit>
 					<trans-unit id="button_cancel">
 						<source>Cancel</source>
@@ -900,7 +968,7 @@
 					</trans-unit>
 					<trans-unit id="button_create">
 						<source>Create</source>
-						<target>創造</target>
+						<target>創建擴展包</target>
 					</trans-unit>
 					<trans-unit id="button_ignore">
 						<source>Ignore</source>
@@ -912,15 +980,15 @@
 					</trans-unit>
 					<trans-unit id="filename_empty">
 						<source>Attempted to create a package with an empty filename.</source>
-						<target>試圖創建一個帶有空文件名的擴展包。</target>
+						<target>試圖創建一個沒有檔案名的擴展包。</target>
 					</trans-unit>
 					<trans-unit id="directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>您嘗試保存擴展包文件的資料夾不存在: \r \n</target>
+						<target>您嘗試保存擴展包的資料夾不存在: \r \n</target>
 					</trans-unit>
 					<trans-unit id="directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
-						<target>嘗試保存擴展包文件的目錄中沒有寫訪問權限: \r \n</target>
+						<target>嘗試保存擴展包的目錄沒有寫訪問權限: \r \n</target>
 					</trans-unit>
 					<trans-unit id="file_generic">
 						<source>Failed to create the following file: \r \n</source>
@@ -928,11 +996,11 @@
 					</trans-unit>
 					<trans-unit id="database_newer_expected">
 						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-						<target>擴展包資料庫xml無效, 並已重新制造</target>
+						<target>擴展包資料庫XML無效, 並已重新制造</target>
 					</trans-unit>
 					<trans-unit id="database_invalid_xml">
 						<source>The package database XML was invalid, and has been re-created.</source>
-						<target>擴展包資料庫xml無效, 並已重新制造</target>
+						<target>擴展包資料庫XML無效, 並已重新制造</target>
 					</trans-unit>
 				</group>
 				<group id="controls">
@@ -988,7 +1056,7 @@
 					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
-						<target>重置為默認值</target>
+						<target>重置為預設值</target>
 					</trans-unit>
 					<trans-unit id="up">
 						<source>Move up</source>
@@ -1016,11 +1084,11 @@
 					</trans-unit>
 					<trans-unit id="selection_keyboard_assignment_grab">
 						<source>Click here to enable keyboard grab to automatically select the desired key.</source>
-						<target>接此啟動偵察鍵盤以自動地選擇適當的鍵。</target>
+						<target>按此設置想要的鍵。</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_assignment_grabbing">
 						<source>Please press any key...</source>
-						<target> 請按下你想分配的按鍵...</target>
+						<target>按下你想分配的按鍵...</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard_key">
 						<source>Key:</source>
@@ -1177,8 +1245,8 @@
 						<target>開放</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
-						<target>未檢測到RailDriver控制器。</target>
+						<source>No RailDriver controllers detected.</source>
+						<target>未有檢測到RailDriver控制器。</target>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
@@ -1230,11 +1298,11 @@
 					</trans-unit>
 					<trans-unit id="calibration_k">
 						<source>Move the wiper switch to OFF and press 'Next'.</source>
-						<target>將雨刮器開關移至“關閉”，然後按“下一步”。</target>
+						<target>將水撥開關移至“關閉”，然後按“下一步”。</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
 						<source>Move the wiper switch to FULL and press 'Next'.</source>
-						<target>將雨刮器開關移至FULL（滿），然後按下一步。</target>
+						<target>將水撥開關移至&quot;滿&quot;（FULL），然後按下一步。</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
 						<source>Move the lights switch to OFF and press 'Next'.</source>
@@ -1242,7 +1310,7 @@
 					</trans-unit>
 					<trans-unit id="calibration_n">
 						<source>Move the lights switch to FULL and press 'Next'.</source>
-						<target>將燈光開關移至FULL，然後按“下一步”。</target>
+						<target>將燈光開關移至&quot;滿&quot;（FULL），然後按“下一步”。</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
 						<source>Calibration complete.</source>
@@ -1252,7 +1320,7 @@
 				<group id="options">
 					<trans-unit id="resolution">
 						<source>Resolution:</source>
-						<target>解像度</target>
+						<target>解像度：</target>
 					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
@@ -1279,7 +1347,7 @@
 					</trans-unit>
 					<trans-unit id="display_vsync">
 						<source>Vertical synchronization:</source>
-						<target>垂直同步(VSync)：</target>
+						<target>垂直同步 (VSync)：</target>
 					</trans-unit>
 					<trans-unit id="display_vsync_off">
 						<source>Disabled</source>
@@ -1387,7 +1455,7 @@
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur">
 						<source>Motion blur:</source>
-						<target>運動模糊：</target>
+						<target>動態模糊 (Motion blur)：</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_motionblur_none">
 						<source>Disabled</source>
@@ -1447,7 +1515,7 @@
 					</trans-unit>
 					<trans-unit id="misc_controls_ebaxis">
 						<source>Allow EB on brake axis</source>
-						<target>允許EB​​在製動軸上</target>
+						<target>允許EB在製動軸上</target>
 					</trans-unit>
 					<trans-unit id="misc_sound">
 						<source>Sound</source>
@@ -1485,6 +1553,10 @@
 						<source>Show error messages</source>
 						<target>顯示錯誤訊息</target>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+						<target>無障礙輔助</target>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>進階選項</target>
@@ -1505,6 +1577,10 @@
 						<source>Unload unused textures</source>
 						<target>卸載未使用的材質</target>
 					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
+						<target>滑鼠標誌</target>
+					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
 						<target>其他</target>
@@ -1519,7 +1595,7 @@
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_default">
 						<source>Default</source>
-						<target>默認</target>
+						<target>預設</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_autogenerated">
 						<source>Auto-generated timetable</source>
@@ -1547,7 +1623,7 @@
 					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
-						<target>包壓縮格式:</target>
+						<target>擴展包壓縮格式:</target>
 					</trans-unit>
 					<trans-unit id="page_previous">
 						<source>Previous Page...</source>
@@ -1567,7 +1643,7 @@
 					</trans-unit>
 					<trans-unit id="kiosk_mode_timer">
 						<source>Control Timeout (s)</source>
-						<target>控制超時（秒)</target>
+						<target>轉為自動駕駛的時間(秒)</target>
 					</trans-unit>
 					<trans-unit id="hud_size">
 						<source>HUD Size</source>
@@ -1585,9 +1661,13 @@
 						<source>Large</source>
 						<target>大</target>
 					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
+						<target>字體:</target>
+					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
-						<target>嘗試解決舊內容中的透明度問題。</target>
+						<target>嘗試解決較舊作品中的透明度問題。</target>
 					</trans-unit>
 					<trans-unit id="hacks_enable">
 						<source>Enable hacks for buggy older content.</source>
@@ -1599,7 +1679,7 @@
 					</trans-unit>
 					<trans-unit id="input_device_plugin_warning">
 						<source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
-						<target>警告：如果啟用輸入設備插件，則它們可能與一個或多個控件衝突。</target>
+						<target>注意：如果啟用輸入設備插件，可能會與已設定的控制鍵發生衝突。</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_name">
 						<source>Name</source>
@@ -1615,7 +1695,7 @@
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_disable">
 						<source>Disable</source>
-						<target>禁用</target>
+						<target>停用</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_enable">
 						<source>Enable</source>
@@ -1631,7 +1711,7 @@
 					</trans-unit>
 					<trans-unit id="input_device_plugin_file_name">
 						<source>File Name</source>
-						<target>文件名</target>
+						<target>檔案名</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_switch">
 						<source>Enable this Input Device Plugin</source>
@@ -1645,17 +1725,21 @@
 						<source>Enable Panel2 Extended Mode</source>
 						<target> 啟用 Panel2 擴展模式</target>
 					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
+						<target>模型載入器</target>
+					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
-						<target>X Object Parser</target>
+						<target>.x 模型載入器</target>
 					</trans-unit>
 					<trans-unit id="objobject_parser">
 						<source>OBJ Object Parser</source>
-						<target>OBJ Object Parser</target>
+						<target>.obj 模型載入器</target>
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
-						<target>默認信號:</target>
+						<target>預設信號:</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">
@@ -1758,7 +1842,7 @@
 					</trans-unit>
 					<trans-unit id="almost">
 						<source>Almost ready to start</source>
-						<target>差不多可以開始</target>
+						<target>就快可以開始</target>
 					</trans-unit>
 					<trans-unit id="almost_filesnotfound">
 						<source>Files not found:</source>
@@ -1770,7 +1854,7 @@
 					</trans-unit>
 					<trans-unit id="almost_help_general">
 						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
-						<target>在載入路線和列車時遇到一些問題。如果你是路線或列車製作者，以下的問題清單可能值得一看。\r\n\r\n作為一個普通的玩家，你目前可以選擇「略過」來開始遊戲。</target>
+						<target>在載入路線和列車時遇到一些問題。如果你是路線或列車製作者，以下的問題清單可能值得一看。\r\n\r\n否則，你可選擇「略過」來開始遊戲。</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
@@ -1790,7 +1874,6 @@
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save report...</source>
-						<target>儲存報告……</target>
 					</trans-unit>
 					<trans-unit id="ignore">
 						<source>Ignore</source>
@@ -1838,11 +1921,11 @@
 					</trans-unit>
 					<trans-unit id="signal_overspeed">
 						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
-						<target>請減速！信號指示的車速限制為 [limit] [unit]，但列車的車速為 [speed] [unit]。</target>
+						<target>請減速！信號指示的車速限制為 [limit] [unit]，但目前車速為 [speed] [unit]。</target>
 					</trans-unit>
 					<trans-unit id="route_overspeed">
 						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
-						<target>請減速！車速指示牌所標註的車速限制為 [limit] [unit]，但列車的車速為 [speed] [unit]。</target>
+						<target>請減速！車速指示牌所標註的車速限制為 [limit] [unit]，但目前車速為 [speed] [unit]。</target>
 					</trans-unit>
 					<trans-unit id="route_newlimit">
 						<source>New speed limit: [limit] [unit].</source>
@@ -1850,11 +1933,11 @@
 					</trans-unit>
 					<trans-unit id="route_nextsection">
 						<source>Next signal in [distance]</source>
-						<target>下一個信號的距離還有 [distance]</target>
+						<target>距離下一個信號還有 [distance]</target>
 					</trans-unit>
 					<trans-unit id="route_nextsection_aspect">
 						<source>Next signal in [distance], with aspect [aspect]</source>
-						<target>下一個信號的距離還有 [distance], 號誌為 [aspect]</target>
+						<target>距離下一個信號還有 [distance], 號誌為 [aspect]</target>
 					</trans-unit>
 					<trans-unit id="route_nextstation">
 						<source>Next station is [name] in [distance]</source>
@@ -1862,23 +1945,23 @@
 					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
-						<target>你已經到達了 [name]。</target>
+						<target>你已到達 [name]。</target>
 					</trans-unit>
 					<trans-unit id="station_arrival_late">
 						<source>You have arrived at [name] and are [time] late.</source>
-						<target>你遲了 [time] 到達 [name] 。</target>
+						<target>你已到達 [name]，遲了[time]</target>
 					</trans-unit>
 					<trans-unit id="station_arrival_early">
 						<source>You have arrived at [name] and are [time] early.</source>
-						<target>你早了 [time] 到達 [name] 。</target>
+						<target>你已到達 [name]，早了 [time]  </target>
 					</trans-unit>
 					<trans-unit id="station_overrun">
 						<source>Overrun: [difference] m.</source>
-						<target>超越停站點：[difference] m。</target>
+						<target>超越停站位置：[difference] m。</target>
 					</trans-unit>
 					<trans-unit id="station_underrun">
 						<source>Underrun: [difference] m.</source>
-						<target>離停站點差︰[difference] m。</target>
+						<target>距離停站位置差︰[difference] m。</target>
 					</trans-unit>
 					<trans-unit id="station_terminal">
 						<source>This is the terminal station.</source>
@@ -1894,27 +1977,27 @@
 					</trans-unit>
 					<trans-unit id="station_correct">
 						<source>Please correct your stop position.</source>
-						<target>請修正你的停站位置。</target>
+						<target>請修正你的停車位置。</target>
 					</trans-unit>
 					<trans-unit id="station_depart_closedoors">
 						<source>Boarding complete. You may close the doors now.</source>
-						<target>你現在可以關閉車門和離站。</target>
+						<target>你現在可以關門及駛離車站。</target>
 					</trans-unit>
 					<trans-unit id="station_depart">
 						<source>Boarding complete.</source>
-						<target>你現在可以離站。</target>
+						<target>你現在可以駛離車站。</target>
 					</trans-unit>
 					<trans-unit id="station_passed">
 						<source>You have passed [name] where you should have stopped.</source>
-						<target>你未有於 [name] 停站。</target>
+						<target>你未有在 [name] 停車。</target>
 					</trans-unit>
 					<trans-unit id="station_passed_boarding">
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
-						<target>你未有於 [name] 讓乘客上落車，請立刻駛回車站。</target>
+						<target>你未有在 [name] 讓乘客上落車，請立刻駛回車站。</target>
 					</trans-unit>
 					<trans-unit id="train_currentspeed">
 						<source>The train's current speed is [speed]</source>
-						<target>現時列車速度為 [speed]</target>
+						<target>現時車速為 [speed]</target>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
@@ -1923,27 +2006,27 @@
 				<group id="notification">
 					<trans-unit id="interior">
 						<source>Interior camera</source>
-						<target>車內視點</target>
+						<target>車內視覺</target>
 					</trans-unit>
 					<trans-unit id="interior_lookahead">
 						<source>Interior camera (look ahead)</source>
-						<target>車內視點 (向前展望)</target>
+						<target>車內視覺 (向前展望)</target>
 					</trans-unit>
 					<trans-unit id="exterior">
 						<source>Exterior camera</source>
-						<target>車外視點</target>
+						<target>車外視覺</target>
 					</trans-unit>
 					<trans-unit id="track">
 						<source>Track camera</source>
-						<target>軌道視點</target>
+						<target>軌道視覺</target>
 					</trans-unit>
 					<trans-unit id="flybynormal">
 						<source>Fly-by camera (normal)</source>
-						<target>定點觀察 (正常)</target>
+						<target>定點觀察</target>
 					</trans-unit>
 					<trans-unit id="flybyzooming">
 						<source>Fly-by camera (zooming)</source>
-						<target>定點觀察 (緊隨列車)</target>
+						<target>定點觀察 (可放大)</target>
 					</trans-unit>
 					<trans-unit id="cpu_normal">
 						<source>CPU: normal</source>
@@ -1955,23 +2038,23 @@
 					</trans-unit>
 					<trans-unit id="backfaceculling_on">
 						<source>Backface culling: on</source>
-						<target>背向面去除：啟動</target>
+						<target>背面剔除：開啟</target>
 					</trans-unit>
 					<trans-unit id="backfaceculling_off">
 						<source>Backface culling: off</source>
-						<target>背向面去除：關閉</target>
+						<target>背面剔除：關閉</target>
 					</trans-unit>
 					<trans-unit id="notavailableexpert">
 						<source>This feature is not available in Expert mode.</source>
-						<target>這功能於專家模式中並不提供。</target>
+						<target>這功能於專業模式中不可開啟。</target>
 					</trans-unit>
 					<trans-unit id="aiunable">
 						<source>The AI might be unable to fully operate this train.</source>
-						<target>人工智能司機可能無法完全控制這列車。</target>
+						<target>人工智能司機可能無法完全操作這列車。</target>
 					</trans-unit>
 					<trans-unit id="camerarestriction_on">
 						<source>Camera restriction: on</source>
-						<target>鏡頭限制：啟動</target>
+						<target>鏡頭限制：開啟</target>
 					</trans-unit>
 					<trans-unit id="camerarestriction_off">
 						<source>Camera restriction: off</source>
@@ -1979,7 +2062,7 @@
 					</trans-unit>
 					<trans-unit id="mousegrab_on">
 						<source>Mouse grab: on</source>
-						<target>滑鼠抓動：啟動</target>
+						<target>滑鼠抓動：開啟</target>
 					</trans-unit>
 					<trans-unit id="mousegrab_off">
 						<source>Mouse grab: off</source>
@@ -2029,7 +2112,7 @@
 					</trans-unit>
 					<trans-unit id="station_stop">
 						<source>Stop</source>
-						<target>停站位置不準確</target>
+						<target>停站位置誤差</target>
 					</trans-unit>
 					<trans-unit id="station_departure">
 						<source>Premature departure</source>
@@ -2142,11 +2225,11 @@
 					</trans-unit>
 					<trans-unit id="customize_controls">
 						<source>Customise controls</source>
-						<target>定義控制按鍵</target>
+						<target>自訂控制按鍵</target>
 					</trans-unit>
 					<trans-unit id="assign">
 						<source>Please press any key or move a joystick axis to set this control...</source>
-						<target>請按任意鍵或移動操縱桿軸以設置此控件...</target>
+						<target>請按任意鍵或移動操縱桿軸...</target>
 					</trans-unit>
 					<trans-unit id="keyboard">
 						<source>Keyboard</source>
@@ -2154,7 +2237,7 @@
 					</trans-unit>
 					<trans-unit id="joystick">
 						<source>Joystick</source>
-						<target>遊戲桿</target>
+						<target>控制桿</target>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
 						<source>N/A</source>
@@ -2417,11 +2500,11 @@
 					</trans-unit>
 					<trans-unit id="play_micsounds">
 						<source>Activates or deactivates the system microphone soundsource</source>
-						<target>Activates or deactivates the system microphone soundsource</target>
+						<target>啟動或關閉系統麥克風聲源</target>
 					</trans-unit>
 					<trans-unit id="sanders">
 						<source>Activates or deactivates the sanders</source>
-						<target>Activates or deactivates the sanders</target>
+						<target>啟用或停用放沙裝置</target>
 					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
@@ -2509,23 +2592,23 @@
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>
-						<target>切換至車內視點</target>
+						<target>切換至車內視覺</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
 						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
-						<target>進入車內視點, 但沒有面板</target>
+						<target>切換至車內視覺 (沒有面板)</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
 						<source>Switches to the train's exterior view</source>
-						<target>切換至車外視點</target>
+						<target>切換至車外視覺</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
 						<source>Switches to the track view</source>
-						<target>切換至軌道視點</target>
+						<target>切換至軌道視覺</target>
 					</trans-unit>
 					<trans-unit id="camera_flyby">
 						<source>Switches between different fly-by views</source>
-						<target>切換到不同的定點觀察視野</target>
+						<target>切換到不同的定點觀察視覺</target>
 					</trans-unit>
 					<trans-unit id="camera_move_forward">
 						<source>Moves the camera forward</source>
@@ -2601,15 +2684,15 @@
 					</trans-unit>
 					<trans-unit id="timetable_toggle">
 						<source>Toggles through different timetable modes</source>
-						<target>切換到不同的時刻表模式</target>
+						<target>切換到不同的時間表模式</target>
 					</trans-unit>
 					<trans-unit id="timetable_up">
 						<source>Scrolls the timetable up</source>
-						<target>向上捲動時刻表</target>
+						<target>向上捲動時間表</target>
 					</trans-unit>
 					<trans-unit id="timetable_down">
 						<source>Scrolls the timetable down</source>
-						<target>向下捲動時刻表</target>
+						<target>向下捲動時間表</target>
 					</trans-unit>
 					<trans-unit id="menu_activate">
 						<source>Displays the in-game menu</source>
@@ -2649,7 +2732,7 @@
 					</trans-unit>
 					<trans-unit id="misc_timefactor">
 						<source>Toggles through different time acceleration factors</source>
-						<target>切換到不同的時間速度</target>
+						<target>切換到不同的時間倍速</target>
 					</trans-unit>
 					<trans-unit id="misc_fps">
 						<source>Shows or hides the frame rate display</source>
@@ -2657,7 +2740,7 @@
 					</trans-unit>
 					<trans-unit id="misc_ai">
 						<source>Activates or deactivates the virtual driver (AI)</source>
-						<target>啟動或關閉人工智能司機</target>
+						<target>啟動或關閉人工智能司機 (AI)</target>
 					</trans-unit>
 					<trans-unit id="misc_pause">
 						<source>Pauses or resumes the simulation</source>
@@ -2669,11 +2752,11 @@
 					</trans-unit>
 					<trans-unit id="misc_mute">
 						<source>Mutes sound or resumes playing sounds</source>
-						<target>遊戲靜音 / 回復播放音效</target>
+						<target>切換靜音模式</target>
 					</trans-unit>
 					<trans-unit id="misc_quit">
 						<source>Quits the simulation</source>
-						<target>結束遊戲</target>
+						<target>退出遊戲</target>
 					</trans-unit>
 					<trans-unit id="misc_interface">
 						<source>Toggles through different interface modes</source>
@@ -2681,7 +2764,7 @@
 					</trans-unit>
 					<trans-unit id="misc_backface">
 						<source>Activates or deactivates backface culling</source>
-						<target>啟動或關閉背向面去除</target>
+						<target>啟動或關閉背面剔除</target>
 					</trans-unit>
 					<trans-unit id="misc_cpumode">
 						<source>Switches to or from reduced CPU mode</source>
@@ -2701,7 +2784,7 @@
 					</trans-unit>
 					<trans-unit id="debug_ats">
 						<source>Shows or hides plugin debug output</source>
-						<target>顯示或隱藏插件調試輸出</target>
+						<target>顯示或隱藏插件除錯輸出</target>
 					</trans-unit>
 					<trans-unit id="debug_touch_mode">
 						<source>Shows or hides the touch range</source>
@@ -2733,7 +2816,7 @@
 					</trans-unit>
 					<trans-unit id="headlights">
 						<source>Toggles the train headlights</source>
-						<target>切換火車頭燈</target>
+						<target>切換車頭燈</target>
 					</trans-unit>
 					<trans-unit id="live_steam_injector">
 						<source>Activates or deactivates the live steam injector</source>
@@ -2773,11 +2856,11 @@
 					</trans-unit>
 					<trans-unit id="raise_pantograph">
 						<source>Raises the pantograph</source>
-						<target>提出受電弓</target>
+						<target>升起集電弓</target>
 					</trans-unit>
 					<trans-unit id="lower_pantograph">
 						<source>Lowers the pantograph</source>
-						<target>降低受電弓</target>
+						<target>降低集電弓</target>
 					</trans-unit>
 					<trans-unit id="main_breaker">
 						<source>Toggles the main breaker</source>
@@ -2964,7 +3047,7 @@
 					</trans-unit>
 					<trans-unit id="greater">
 						<source>Greater</source>
-						<target>Greater (&gt;)</target>
+						<target>&gt;</target>
 					</trans-unit>
 					<trans-unit id="hash">
 						<source>Hash</source>
@@ -3401,15 +3484,15 @@
 					</trans-unit>
 					<trans-unit id="label_ldoor">
 						<source>L DOOR</source>
-						<target>L DOOR</target>
+						<target>左門</target>
 					</trans-unit>
 					<trans-unit id="label_rdoor">
 						<source>R DOOR</source>
-						<target>R DOOR</target>
+						<target>右門</target>
 					</trans-unit>
 					<trans-unit id="linkLabel_driver">
 						<source>My controller is not detected or does not work properly</source>
-						<target>未檢測到我的控制器 或 控制器無法正常工作</target>
+						<target>未檢測到控制器 / 控制器無法正常工作?</target>
 					</trans-unit>
 					<trans-unit id="help_title">
 						<source>Help</source>
@@ -3522,15 +3605,15 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="new_message">
 						<source>Do you want to save data before creating a new train?</source>
-						<target>您要在創建新火車之前保存數據嗎？</target>
+						<target>您要在創建新列車前儲存資料嗎？</target>
 					</trans-unit>
 					<trans-unit id="open_message">
 						<source>Do you want to save data before opening another train?</source>
-						<target>您要在打開另一列火車之前保存數據嗎？</target>
+						<target>您要在打開另一列列車前儲存資料嗎？</target>
 					</trans-unit>
 					<trans-unit id="close_message">
 						<source>Do you want to save data before closing?</source>
-						<target>您要在關閉之前保存數據嗎？</target>
+						<target>您要在關閉前儲存資料嗎？</target>
 					</trans-unit>
 					<trans-unit id="properties_one">
 						<source>Properties (1)</source>
@@ -4006,7 +4089,7 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="note">
 						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
-						<target> 請注意: 本頁看到的特性至少需要以下的OpenBVE版本:</target>
+						<target>注意: 本頁看到的功能至少需要以下的OpenBVE版本:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
@@ -4125,7 +4208,7 @@ Please follow the following instructions:
 						</trans-unit>
 						<trans-unit id="wrongtype">
 							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
-							<target>您嘗試打開列車數據。 \n\n  但TrainEditor2不能直接讀取列車數據。 \n\n  請使用導入(Import)功能將列車數據導入到TrainEditor2格式。</target>
+							<target>您嘗試打開列車數據。 \n\n  但TrainEditor2不能直接讀取列車資料。 \n\n  請使用導入(Import)功能將列車資料導入到TrainEditor2格式。</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
@@ -5372,7 +5455,7 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="filename">
 						<source>Filename</source>
-						<target>文件名</target>
+						<target>檔案名</target>
 					</trans-unit>
 					<trans-unit id="position">
 						<source>Position</source>
@@ -5426,11 +5509,11 @@ Please follow the following instructions:
 					<group id="message">
 						<trans-unit id="empty_filename">
 							<source>File name has not been entered.</source>
-							<target>尚未輸入文件名。</target>
+							<target>尚未輸入檔案名。</target>
 						</trans-unit>
 						<trans-unit id="key_exist">
 							<source>The specified key is already set.</source>
-							<target>指定的鍵已設置。</target>
+							<target>指定的鍵已被設定。</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -5460,7 +5543,6 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="description">
 						<source>Description</source>
-						<target>描述</target>
 					</trans-unit>
 				</group>
 				<group id="message">
@@ -5479,7 +5561,7 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="non_negative">
 						<source>non-negative</source>
-						<target>非負</target>
+						<target>非負數</target>
 					</trans-unit>
 					<trans-unit id="non_zero">
 						<source>non-zero</source>

@@ -59,7 +59,7 @@ jobs:
 - job: LinuxMakeBuild
   displayName: 'Build on Linux (makefile)'
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu-20.04'
 
   variables:
     solution: 'OpenBVE.sln'

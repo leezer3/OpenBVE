@@ -88,7 +88,7 @@ namespace Train.OpenBve
 									{
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.Plugin, center, SoundCfgParser.mediumRadius);
+									ParseDictionaryNode(c, out car.Sounds.Plugin, center, SoundCfgParser.mediumRadius);
 									break;
 								case "brake":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())

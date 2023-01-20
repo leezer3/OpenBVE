@@ -374,14 +374,15 @@ namespace TrainManager.SafetySystems
 					{
 						if (this.Sound[i] == SoundInstructions.Stop)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
-								Train.Cars[Train.DriverCar].Sounds.Plugin[i].Stop();
+								base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Stop();
 							}
+							
 						}
 						else if (this.Sound[i] > SoundInstructions.Stop & this.Sound[i] <= SoundInstructions.PlayLooping)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer != null)
 								{
@@ -399,7 +400,7 @@ namespace TrainManager.SafetySystems
 						}
 						else if (this.Sound[i] == SoundInstructions.PlayOnce)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer != null)
 								{

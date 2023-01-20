@@ -69,6 +69,7 @@
             this.textBoxMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxMain.ForeColor = System.Drawing.SystemColors.ControlText;
             this.textBoxMain.BackColor = System.Drawing.SystemColors.Control;
             this.textBoxMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxMain.Location = new System.Drawing.Point(147, 41);
@@ -98,7 +99,8 @@
             this.textBoxOpenSourceLicences.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxOpenSourceLicences.BackColor = System.Drawing.SystemColors.Control;
+			this.textBoxOpenSourceLicences.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.textBoxOpenSourceLicences.BackColor = System.Drawing.SystemColors.Control;
             this.textBoxOpenSourceLicences.Location = new System.Drawing.Point(17, 188);
             this.textBoxOpenSourceLicences.Multiline = true;
             this.textBoxOpenSourceLicences.Name = "textBoxOpenSourceLicences";
@@ -120,10 +122,12 @@
             this.labelOpenSourceHeader.TabIndex = 3;
             this.labelOpenSourceHeader.Text = "OpenBVE makes use of several open-source libraries, whose licences are reproduced" +
     " below:";
-            // 
-            // buttonClose
-            // 
-            this.buttonClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			// 
+			// buttonClose
+			// 
+			this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonClose.Location = new System.Drawing.Point(328, 354);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(144, 24);

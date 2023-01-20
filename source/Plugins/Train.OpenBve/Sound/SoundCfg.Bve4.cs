@@ -541,17 +541,14 @@ namespace Train.OpenBve
 								{
 									if (k >= 0)
 									{
-										int n = train.Cars[train.DriverCar].Sounds.Plugin.Length;
-										if (k >= n)
+										if (!train.Cars[train.DriverCar].Sounds.Plugin.ContainsKey(k))
 										{
-											Array.Resize(ref train.Cars[train.DriverCar].Sounds.Plugin, k + 1);
-											for (int h = n; h < k; h++)
-											{
-												train.Cars[train.DriverCar].Sounds.Plugin[h] = new CarSound();
-											}
+											train.Cars[train.DriverCar].Sounds.Plugin.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel));
 										}
-
-										train.Cars[train.DriverCar].Sounds.Plugin[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
+										else
+										{
+											train.Cars[train.DriverCar].Sounds.Plugin[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
+										}
 									}
 									else
 									{

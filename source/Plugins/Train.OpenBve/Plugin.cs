@@ -119,7 +119,12 @@ namespace Train.OpenBve
 			}
 			if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
 			{
-				string vehicleTxt = Path.CombineFile(path, "vehicle.txt");
+				string vehicleTxt;
+				try {
+					vehicleTxt = Path.CombineFile(path, "vehicle.txt");
+				} catch {
+					return false;
+				}
 				if (File.Exists(vehicleTxt))
 				{
 					string[] lines = File.ReadAllLines(vehicleTxt);
