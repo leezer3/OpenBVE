@@ -271,6 +271,10 @@ namespace OpenBveApi.Routes
 		/// <remarks>Call this function whenever the viewing distance changes.</remarks>
 		public void Initialize(double viewingDistance)
 		{
+			if (viewingDistance <= 0)
+			{
+				throw new InvalidOperationException("Invalid viewing distance.");
+			}
 			Root.FinalizeBoundingRectangles();
 			Root.CreateVisibilityLists(Root, viewingDistance);
 		}

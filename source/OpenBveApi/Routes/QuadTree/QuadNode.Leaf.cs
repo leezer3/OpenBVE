@@ -40,7 +40,7 @@ namespace OpenBveApi.Routes
 		/// <param name="viewingDistance">The viewing distance.</param>
 		private void CreateVisibilityList(QuadNode node, List<QuadTreePopulatedLeafNode> nodes, double viewingDistance)
 		{
-			if (node != null)
+			if (node != null && viewingDistance > 0)
 			{
 				bool visible;
 				if (
