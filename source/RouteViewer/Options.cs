@@ -87,7 +87,15 @@ namespace RouteViewer
 										case "isusenewrenderer":
 											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
-									}
+										case "viewingdistance":
+											{
+												int a;
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
+													a = 600;
+												}
+												Interface.CurrentOptions.ViewingDistance = a;
+											} break;
+                                }
 									break;
 								case "quality":
 									switch (Key) {
@@ -187,6 +195,7 @@ namespace RouteViewer
                 Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
                 Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
                 Builder.AppendLine("isUseNewRenderer = " + (Interface.CurrentOptions.IsUseNewRenderer ? "true" : "false"));
+                Builder.AppendLine("viewingdistance = " + Interface.CurrentOptions.ViewingDistance);
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {

@@ -2,12 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
-using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
@@ -550,8 +547,14 @@ namespace RouteViewer
 			if (!Program.CurrentlyLoading)
 			{
 				string[][] keys;
+				int totalObjects = 0;
+				lock (VisibleObjects.LockObject)
+				{
+					totalObjects += VisibleObjects.Objects.Count;
+					totalObjects += ObjectManager.AnimatedWorldObjectsUsed;
+				}
 
-				if (VisibleObjects.Objects.Count == 0 && ObjectManager.AnimatedWorldObjectsUsed == 0)
+				if (totalObjects == 0)
 				{
 					keys = new[] { new[] { "F7" }, new[] { "F8" } };
 					Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
@@ -732,11 +735,15 @@ namespace RouteViewer
 					if (RenderStatsOverlay)
 					{
 						Keys.Render(4, Screen.Height - 126, 116, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
-						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+						lock (VisibleObjects.LockObject)
+						{
+							OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+						}
+						
 					}
 				}
 			}

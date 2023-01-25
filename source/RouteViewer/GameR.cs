@@ -52,11 +52,11 @@ namespace RouteViewer {
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
 			Interface.CurrentOptions.TrainName = "";
 			Interface.CurrentOptions.TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			Program.CurrentRoute.PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
-			Program.CurrentRoute.CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
-			Program.CurrentRoute.NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
-			Program.CurrentRoute.NoFogStart = (float)Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + 200.0f;
-			Program.CurrentRoute.NoFogEnd = 2.0f * Program.CurrentRoute.NoFogStart;
+			Program.CurrentRoute.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
+			Program.CurrentRoute.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
+			Program.CurrentRoute.PreviousFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
+			Program.CurrentRoute.CurrentFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
+			Program.CurrentRoute.NextFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
 			Program.Renderer.InfoTotalTriangles = 0;
 			Program.Renderer.InfoTotalTriangleStrip = 0;
 			Program.Renderer.InfoTotalQuads = 0;
