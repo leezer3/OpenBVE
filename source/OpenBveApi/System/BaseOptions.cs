@@ -44,6 +44,8 @@ namespace OpenBveApi
 		public bool OldTransparencyMode;
 		/// <summary>The viewing distance in meters</summary>
 		public int ViewingDistance;
+		/// <summary>The size of a leaf when using QuadTree visibility</summary>
+		public int QuadTreeLeafSize;
 		/// <summary>Whether toppling is enabled</summary>
 		public bool Toppling;
 		/// <summary>Whether derailments are enabled</summary>

@@ -95,8 +95,19 @@ namespace RouteViewer
 												}
 												Interface.CurrentOptions.ViewingDistance = a;
 											} break;
-                                }
-									break;
+										case "quadleafsize":
+											{
+												int a;
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												{
+													if (a >= 50 && a <= 500)
+													{
+														Interface.CurrentOptions.QuadTreeLeafSize = a;
+													}
+												}
+												Interface.CurrentOptions.QuadTreeLeafSize = a;
+											} break;
+					                } break;
 								case "quality":
 									switch (Key) {
 										case "interpolation":
@@ -196,6 +207,7 @@ namespace RouteViewer
                 Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
                 Builder.AppendLine("isUseNewRenderer = " + (Interface.CurrentOptions.IsUseNewRenderer ? "true" : "false"));
                 Builder.AppendLine("viewingdistance = " + Interface.CurrentOptions.ViewingDistance);
+                Builder.AppendLine("quadleafsize = " + Interface.CurrentOptions.QuadTreeLeafSize);
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {

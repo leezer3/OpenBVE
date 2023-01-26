@@ -4,6 +4,7 @@ using TrainManager.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using SoundManager;
 using TrainManager.Handles;
 
@@ -193,6 +194,7 @@ namespace OpenBve.Graphics.Renderers
 				"bvets hacks: " + (Interface.CurrentOptions.EnableBveTsHacks ? "enabled" : "disabled"),
 				"time acceleration: " + MainLoop.TimeFactor + "x",
 				"viewing distance: " + Interface.CurrentOptions.ViewingDistance + "m",
+				"visibility mode: " + Interface.CurrentOptions.ObjectDisposalMode + (Interface.CurrentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree ? ", leaf size " + Interface.CurrentOptions.QuadTreeLeafSize + "m" : string.Empty),
 				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
 				"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
 				Game.InfoDebugString ?? ""

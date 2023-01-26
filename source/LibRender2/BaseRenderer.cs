@@ -660,7 +660,7 @@ namespace LibRender2
 				{
 					VisibleObjects.quadTree.Add(state, Orientation3.Default);
 				}
-				VisibleObjects.quadTree.Initialize(250); // fixed quad size of 250 at the minute, large enough to be sensible tile size, but not too big
+				VisibleObjects.quadTree.Initialize(currentOptions.QuadTreeLeafSize);
 				UpdateQuadTreeVisibility();
 			}
 			else
