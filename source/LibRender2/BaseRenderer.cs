@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 using LibRender2.Backgrounds;
 using LibRender2.Cameras;
 using LibRender2.Fogs;
@@ -22,6 +23,7 @@ using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -284,11 +286,17 @@ namespace LibRender2
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
 			Fonts = new Fonts(currentHost, fileSystem, currentOptions.Font);
+			VisibilityThread = new Thread(vt);
+			VisibilityThread.Start();
 		}
 
-		/// <summary>
-		/// Call this once to initialise the renderer
-		/// </summary>
+		~BaseRenderer()
+		{
+			DeInitialize();
+		}
+
+		/// <summary>Call this once to initialise the renderer</summary>
+		/// <remarks>A call to DeInitialize should be made when closing the progam to release resources</remarks>
 		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
@@ -388,6 +396,13 @@ namespace LibRender2
 					ReShadeInUse = true;
 				}
 			}
+		}
+
+		/// <summary>Deinitializes the renderer</summary>
+		public void DeInitialize()
+		{
+			// terminate spinning thread
+			visibilityThread = false;
 		}
 
 		/// <summary>Should be called when the OpenGL version is switched mid-game</summary>
@@ -500,10 +515,10 @@ namespace LibRender2
 		{
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Matrix4D Rotate = (Matrix4D)new Transformation(LocalTransformation, WorldTransformation);
-			return CreateStaticObject(Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		public int CreateStaticObject(StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			if (Prototype == null)
 			{
@@ -579,9 +594,10 @@ namespace LibRender2
 				Rotate = Rotate,
 				Brightness = Brightness,
 				StartingDistance = startingDistance,
-				EndingDistance = endingDistance
+				EndingDistance = endingDistance,
+				WorldPosition = Position
 			});
-
+			
 			foreach (MeshFace face in Prototype.Mesh.Faces)
 			{
 				switch (face.Flags & FaceFlags.FaceTypeMask)
@@ -624,20 +640,85 @@ namespace LibRender2
 		/// the required VAO objects</remarks>
 		public void InitializeVisibility()
 		{
+			for (int i = 0; i < StaticObjectStates.Count; i++)
+			{
+				VAOExtensions.CreateVAO(ref StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+			}
+			for (int i = 0; i < DynamicObjectStates.Count; i++)
+			{
+				VAOExtensions.CreateVAO(ref DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+			}
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
-
-			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-
-			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
+			
+			
+			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
-				VisibleObjects.ShowObject(state, ObjectType.Static);
+				foreach (ObjectState state in StaticObjectStates)
+				{
+					VisibleObjects.quadTree.Add(state, Orientation3.Default);
+				}
+				VisibleObjects.quadTree.Initialize(currentOptions.QuadTreeLeafSize);
+				UpdateQuadTreeVisibility();
+			}
+			else
+			{
+				double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+				foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
+				{
+					VisibleObjects.ShowObject(state, ObjectType.Static);
+				}
+			}
+			
+
+		}
+
+		public bool updateVisibility;
+		public bool visibilityThread = true;
+
+		public Thread VisibilityThread;
+
+		private void vt()
+		{
+			while (visibilityThread)
+			{
+				if (updateVisibility)
+				{
+					UpdateVisibility(CameraTrackFollower.TrackPosition);
+					updateVisibility = false;
+				}
+				else
+				{
+					Thread.Sleep(100);
+				}
 			}
 		}
 
-		public void UpdateVisibility(double TrackPosition)
+		private void UpdateVisibility(double TrackPosition)
+		{
+			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
+			{
+				UpdateQuadTreeVisibility();
+			}
+			else
+			{
+				UpdateLegacyVisibility(TrackPosition);
+			}
+		}
+
+		private void UpdateQuadTreeVisibility()
+		{
+			if (VisibleObjects == null || VisibleObjects.quadTree == null)
+			{
+				Thread.Sleep(10);
+				return;
+			}
+			Camera.UpdateQuadTreeLeaf();
+		}
+
+		private void UpdateLegacyVisibility(double TrackPosition)
 		{
 			if (ObjectsSortedByStart == null || ObjectsSortedByStart.Length == 0)
 			{
@@ -791,22 +872,7 @@ namespace LibRender2
 			double d = BackgroundImageDistance + Camera.ExtraViewingDistance;
 			Camera.ForwardViewingDistance = d * max;
 			Camera.BackwardViewingDistance = -d * min;
-			UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z, true);
-		}
-
-		public void UpdateVisibility(double TrackPosition, bool ViewingDistanceChanged)
-		{
-			if (ViewingDistanceChanged)
-			{
-				UpdateVisibility(TrackPosition);
-				UpdateVisibility(TrackPosition - 0.001);
-				UpdateVisibility(TrackPosition + 0.001);
-				UpdateVisibility(TrackPosition);
-			}
-			else
-			{
-				UpdateVisibility(TrackPosition);
-			}
+			updateVisibility = true;
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
@@ -1586,7 +1652,5 @@ namespace LibRender2
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PopMatrix();
 		}
-
-		
 	}
 }

@@ -67,7 +67,28 @@ namespace CsvRwRouteParser
 					break;
 				case OptionsCommand.UnitOfLength:
 				case OptionsCommand.UnitOfSpeed:
+					break;
 				case OptionsCommand.ObjectVisibility:
+					if (Arguments.Length < 1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					}
+					else
+					{
+						int a;
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (a < 0 || a > 3)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be between 0 and 3 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else
+						{
+							//TODO: Set this back in the base options please....
+						}
+					}
 					break;
 				case OptionsCommand.SectionBehavior:
 					if (Arguments.Length < 1)

@@ -1094,7 +1094,14 @@ namespace OpenBve {
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int)Math.Round(updownAnisotropic.Value);
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
 			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
-			Interface.CurrentOptions.ViewingDistance = (int)Math.Round(updownDistance.Value);
+			int newViewingDistance = (int)Math.Round(updownDistance.Value);
+			if (newViewingDistance != Interface.CurrentOptions.ViewingDistance)
+			{
+				Interface.CurrentOptions.ViewingDistance = newViewingDistance;
+				Interface.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Interface.CurrentOptions.ViewingDistance / 10.0d) * 10); // quad tree size set to 10% of viewing distance to the nearest 10
+			}
+			
+			
 			Interface.CurrentOptions.MotionBlur = (MotionBlurMode)comboboxMotionBlur.SelectedIndex;
 			Interface.CurrentOptions.Toppling = checkboxToppling.Checked;
 			Interface.CurrentOptions.Collisions = checkboxCollisions.Checked;
@@ -1278,7 +1285,7 @@ namespace OpenBve {
 					InputDevicePlugin.CallPluginUnload(i);
 				}
 			}
-			Program.Sounds.Deinitialize();
+			Program.Sounds.DeInitialize();
 			DisposePreviewRouteThread();
 			{
 				// ReSharper disable once NotAccessedVariable

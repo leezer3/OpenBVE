@@ -60,11 +60,10 @@ namespace CsvRwRouteParser {
 			}
 
 			RoutePatchDatabaseParser.LoadRoutePatchDatabase(ref availableRoutefilePatches);
-
+			Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Legacy;
 			RouteData Data = new RouteData
 			{
 				BlockInterval = 25.0,
-				AccurateObjectDisposal = false,
 				FirstUsedBlock = -1,
 				Blocks = new List<Block>()
 			};

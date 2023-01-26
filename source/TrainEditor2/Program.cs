@@ -59,7 +59,7 @@ namespace TrainEditor2
 			string error;
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, null, Renderer))
 			{
-				SoundApi.Deinitialize();
+				SoundApi.DeInitialize();
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
@@ -70,7 +70,7 @@ namespace TrainEditor2
 			Application.Run(new FormEditor());
 
 			CurrentHost.UnloadPlugins(out error);
-			SoundApi.Deinitialize();
+			SoundApi.DeInitialize();
 
 			Interface.SaveOptions();
 		}

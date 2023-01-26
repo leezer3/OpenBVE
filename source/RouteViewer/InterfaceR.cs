@@ -19,6 +19,11 @@ namespace RouteViewer {
 			internal bool LoadingProgressBar;
 			internal bool LoadingLogo;
 			internal bool LoadingBackground;
+
+			internal Options()
+			{
+				ViewingDistance = 600;
+			}
 		}
 
 		/// <summary>The current options in use</summary>

@@ -23,6 +23,7 @@ namespace RouteViewer
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
 			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
 			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
+			numericUpDownViewingDistance.Value = Interface.CurrentOptions.ViewingDistance;
         }
 
         internal static DialogResult ShowOptions()
@@ -40,6 +41,7 @@ namespace RouteViewer
 	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
 	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 	    readonly InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
+	    readonly int previousViewingDistance = Interface.CurrentOptions.ViewingDistance;
 	    private bool GraphicsModeChanged = false;
 
         private void button1_Click(object sender, EventArgs e)
@@ -108,9 +110,11 @@ namespace RouteViewer
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
 			Interface.CurrentOptions.CurrentXParser = (XParsers) comboBoxNewXParser.SelectedIndex;
 			Interface.CurrentOptions.CurrentObjParser = (ObjParsers) comboBoxNewObjParser.SelectedIndex;
+			Interface.CurrentOptions.ViewingDistance = (int)numericUpDownViewingDistance.Value;
+			Interface.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Interface.CurrentOptions.ViewingDistance / 10.0d) * 10); // quad tree size set to 10% of viewing distance to the nearest 10
 			Options.SaveOptions();
 			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
-			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged)
+			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged || Interface.CurrentOptions.ViewingDistance != previousViewingDistance)
 			{
 				this.DialogResult = DialogResult.OK;
 			}
