@@ -287,6 +287,11 @@ namespace OpenBve
 
 		private void Extract(Package packageToReplace = null)
 		{
+			if (workerThread.IsBusy)
+			{
+				MessageBox.Show(Translations.GetInterfaceString("packages_error_ busy_thread"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				return;
+			}
 			ProblemEncountered = false;
 			panelPleaseWait.Show();
 			workerThread.DoWork += delegate
@@ -869,6 +874,11 @@ namespace OpenBve
 
 		private void buttonCreatePackage_Click(object sender, EventArgs e)
 		{
+			if (workerThread.IsBusy)
+			{
+				MessageBox.Show(Translations.GetInterfaceString("packages_error_ busy_thread"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				return;
+			}
 			var directory = Path.GetDirectoryName(currentPackage.FileName);
 			try
 			{
@@ -949,8 +959,7 @@ namespace OpenBve
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
 			};
-
-			 workerThread.RunWorkerAsync();	
+			workerThread.RunWorkerAsync();	
 		}
 
 		private void buttonCreateProceed_Click(object sender, EventArgs e)
