@@ -131,6 +131,7 @@ namespace OpenBve
 				this.AnisotropicFilteringMaximum = 0;
 				this.AntiAliasingLevel = 0;
 				this.ViewingDistance = 600;
+				this.QuadTreeLeafSize = 60;
 				this.MotionBlur = MotionBlurMode.None;
 				this.Toppling = true;
 				this.Collisions = true;
@@ -514,6 +515,17 @@ namespace OpenBve
 													if (a >= 100 && a <= 10000)
 													{
 														Interface.CurrentOptions.ViewingDistance = a;
+													}
+												}
+											} break;
+										case "quadleafsize":
+											{
+												int a;
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												{
+													if (a >= 50 && a <= 500)
+													{
+														Interface.CurrentOptions.QuadTreeLeafSize = a;
 													}
 												}
 											} break;
@@ -923,6 +935,7 @@ namespace OpenBve
 			Builder.AppendLine("transparencyMode = " + ((int)CurrentOptions.TransparencyMode).ToString(Culture));
 			Builder.AppendLine("oldtransparencymode = " + (CurrentOptions.OldTransparencyMode ? "true" : "false"));
 			Builder.AppendLine("viewingDistance = " + CurrentOptions.ViewingDistance.ToString(Culture));
+			Builder.AppendLine("quadLeafSize = " + CurrentOptions.QuadTreeLeafSize.ToString(Culture));
 			{
 				string t; switch (CurrentOptions.MotionBlur)
 				{

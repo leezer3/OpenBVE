@@ -29,12 +29,7 @@ namespace OpenBveApi.Objects
 		public StaticObject(HostInterface Host)
 		{
 			currentHost = Host;
-			Mesh = new Mesh
-			{
-				Faces = new MeshFace[] { },
-				Materials = new MeshMaterial[] { },
-				Vertices = new VertexTemplate[] { }
-			};
+			Mesh = new Mesh();
 		}
 
 		/// <summary>Creates a clone of this object.</summary>

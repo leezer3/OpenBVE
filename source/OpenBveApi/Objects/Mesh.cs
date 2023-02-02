@@ -4,7 +4,7 @@ using OpenBveApi.Math;
 namespace OpenBveApi.Objects
 {
 	/// <summary>Represents a mesh consisting of a series of vertices, faces and material properties.</summary>
-	public struct Mesh
+	public class Mesh
 	{
 		/// <summary>The shared verticies for the mesh</summary>
 		public VertexTemplate[] Vertices;
@@ -19,6 +19,14 @@ namespace OpenBveApi.Objects
 		public object VAO;
 		/// <summary>The OpenGL/OpenTK VAO for the normals</summary>
 		public object NormalsVAO;
+
+		/// <summary>Creates a new empty mesh</summary>
+		public Mesh()
+		{
+			Faces = new MeshFace[] { };
+			Materials = new MeshMaterial[] { };
+			Vertices = new VertexTemplate[] { };
+		}
 
 		/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 		/// <param name="Vertices">The vertices that make up one face.</param>

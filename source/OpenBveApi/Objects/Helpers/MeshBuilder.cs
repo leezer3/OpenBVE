@@ -311,5 +311,17 @@ namespace OpenBveApi.Objects
 				}
 			}
 		}
+
+		/// <summary>Applies a color to all materials in the MeshBuilder</summary>
+		public void ApplyColor(Color32 color, bool emissive) {
+			for (int i = 0; i < Materials.Length; i++) {
+				if (emissive) {
+					Materials[i].EmissiveColor = (Color24)color;
+					Materials[i].Flags |= MaterialFlags.Emissive;
+				} else {
+					Materials[i].Color = color;
+				}
+			}
+		}
 	}
 }

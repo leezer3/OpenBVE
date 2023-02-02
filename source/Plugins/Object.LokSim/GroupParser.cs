@@ -229,12 +229,7 @@ namespace Plugin
 					//If we use multiples, the Z-sorting throws a wobbly
 					StaticObject staticObject = new StaticObject(Plugin.currentHost)
 					{
-						Mesh = new Mesh
-						{
-							Vertices = new VertexTemplate[0],
-							Faces = new MeshFace[0],
-							Materials = new MeshMaterial[0]
-						}
+						Mesh = new Mesh()
 					};
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{

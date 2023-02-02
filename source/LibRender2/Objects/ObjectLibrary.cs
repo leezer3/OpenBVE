@@ -9,16 +9,18 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 
 namespace LibRender2.Objects
 {
 	public class VisibleObjectLibrary
 	{
-		private readonly HostInterface currentHost;
 		private readonly CameraProperties camera;
 		private readonly BaseOptions currentOptions;
 		private readonly BaseRenderer renderer;
+
+		public readonly QuadTree quadTree;
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;
@@ -31,13 +33,13 @@ namespace LibRender2.Objects
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
 		public ReadOnlyCollection<FaceState> OverlayAlphaFaces;
 
+		public readonly object LockObject = new object();
+
 		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseOptions CurrentOptions, BaseRenderer Renderer)
 		{
-			currentHost = CurrentHost;
 			camera = Camera;
 			currentOptions = CurrentOptions;
 			renderer = Renderer;
-
 			myObjects = new List<ObjectState>();
 			myOpaqueFaces = new List<FaceState>();
 			myAlphaFaces = new List<FaceState>();
@@ -49,6 +51,7 @@ namespace LibRender2.Objects
 			AlphaFaces = myAlphaFaces.AsReadOnly();
 			OverlayOpaqueFaces = myOverlayOpaqueFaces.AsReadOnly();
 			OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
+			quadTree = new QuadTree(renderer.currentOptions.ViewingDistance);
 		}
 
 		private bool AddObject(ObjectState state)
@@ -64,34 +67,36 @@ namespace LibRender2.Objects
 
 		private void RemoveObject(ObjectState state)
 		{
-			if (myObjects.Contains(state))
+			lock (LockObject)
 			{
-				myObjects.Remove(state);
-				myOpaqueFaces.RemoveAll(x => x.Object == state);
-				myAlphaFaces.RemoveAll(x => x.Object == state);
-				myOverlayOpaqueFaces.RemoveAll(x => x.Object == state);
-				myOverlayAlphaFaces.RemoveAll(x => x.Object == state);
+				if (myObjects.Contains(state))
+				{
+					myObjects.Remove(state);
+					myOpaqueFaces.RemoveAll(x => x.Object == state);
+					myAlphaFaces.RemoveAll(x => x.Object == state);
+					myOverlayOpaqueFaces.RemoveAll(x => x.Object == state);
+					myOverlayAlphaFaces.RemoveAll(x => x.Object == state);
+				}	
 			}
+			
 		}
 
 		public void Clear()
 		{
-			myObjects.Clear();
-			myOpaqueFaces.Clear();
-			myAlphaFaces.Clear();
-			myOverlayOpaqueFaces.Clear();
-			myOverlayAlphaFaces.Clear();
+			lock (LockObject)
+			{
+				myObjects.Clear();
+				myOpaqueFaces.Clear();
+				myAlphaFaces.Clear();
+				myOverlayOpaqueFaces.Clear();
+				myOverlayAlphaFaces.Clear();
+			}
 		}
 
 		public void ShowObject(ObjectState State, ObjectType Type)
 		{
 			bool result = AddObject(State);
-
-			if (!renderer.ForceLegacyOpenGL && State.Prototype.Mesh.VAO == null)
-			{
-				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic, renderer.DefaultShader.VertexLayout, renderer);
-			}
-
+			
 			if (!result)
 			{
 				return;
@@ -145,8 +150,6 @@ namespace LibRender2.Objects
 				{
 					if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)
 					{
-						currentHost.LoadTexture(ref State.Prototype.Mesh.Materials[face.Material].DaytimeTexture, (OpenGlTextureWrapMode)State.Prototype.Mesh.Materials[face.Material].WrapMode);
-
 						if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
 						{
 							alpha = true;
@@ -159,8 +162,6 @@ namespace LibRender2.Objects
 
 					if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
 					{
-						currentHost.LoadTexture(ref State.Prototype.Mesh.Materials[face.Material].NighttimeTexture, (OpenGlTextureWrapMode)State.Prototype.Mesh.Materials[face.Material].WrapMode);
-
 						if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
 						{
 							alpha = true;
@@ -187,43 +188,47 @@ namespace LibRender2.Objects
 						throw new ArgumentOutOfRangeException(nameof(Type), Type, null);
 				}
 
-				if (!alpha)
+				lock (LockObject)
 				{
-					/*
-					 * If an opaque face, itinerate through the list to see if the prototype is present in the list
-					 * When the new renderer is in use, this prevents re-binding the VBO as it is simply re-drawn with
-					 * a different translation matrix
-					 * NOTE: The shader isn't currently smart enough to do depth discards, so if this changes may need to
-					 * be revisited
-					 */
-					if (list.Count == 0)
+					if (!alpha)
 					{
-						list.Add(new FaceState(State, face, renderer));
-					}
-					else
-					{
-						for (int i = 0; i < list.Count; i++)
+						/*
+						 * If an opaque face, itinerate through the list to see if the prototype is present in the list
+						 * When the new renderer is in use, this prevents re-binding the VBO as it is simply re-drawn with
+						 * a different translation matrix
+						 * NOTE: The shader isn't currently smart enough to do depth discards, so if this changes may need to
+						 * be revisited
+						 */
+						if (list.Count == 0)
 						{
+							list.Add(new FaceState(State, face, renderer));
+						}
+						else
+						{
+							for (int i = 0; i < list.Count; i++)
+							{
 
-							if (list[i].Object.Prototype == State.Prototype)
-							{
-								list.Insert(i, new FaceState(State, face, renderer));
-								break;
-							}
-							if (i == list.Count - 1)
-							{
-								list.Add(new FaceState(State, face, renderer));
-								break;
+								if (list[i].Object.Prototype == State.Prototype)
+								{
+									list.Insert(i, new FaceState(State, face, renderer));
+									break;
+								}
+
+								if (i == list.Count - 1)
+								{
+									list.Add(new FaceState(State, face, renderer));
+									break;
+								}
 							}
 						}
 					}
-				}
-				else
-				{
-					/*
-					 * Alpha faces should be inserted at the end of the list- We're going to sort it anyway so it makes no odds
-					 */
-					list.Add(new FaceState(State, face, renderer));
+					else
+					{
+						/*
+						 * Alpha faces should be inserted at the end of the list- We're going to sort it anyway so it makes no odds
+						 */
+						list.Add(new FaceState(State, face, renderer));
+					}
 				}
 			}
 		}
@@ -273,6 +278,8 @@ namespace LibRender2.Objects
 			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
 		}
 
+
+
 		public void SortPolygonsInAlphaFaces()
 		{
 			myAlphaFaces = SortPolygons(myAlphaFaces);
@@ -283,6 +290,47 @@ namespace LibRender2.Objects
 		{
 			myOverlayAlphaFaces = SortPolygons(myOverlayAlphaFaces);
 			OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
+		}
+	}
+
+	public static class ListExtensions
+	{
+		public static void SortByDistance(this List<FaceState> faces, Vector3 camera)
+		{
+			// calculate distance
+			double[] distances = new double[faces.Count];
+
+			Parallel.For(0, faces.Count, i =>
+			{
+				if (faces[i].Face.Vertices.Length >= 3)
+				{
+					Vector4 v0 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
+					Vector4 v1 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
+					Vector4 v2 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
+					Vector4 w1 = v1 - v0;
+					Vector4 w2 = v2 - v0;
+					v0.Z *= -1.0;
+					w1.Z *= -1.0;
+					w2.Z *= -1.0;
+					v0 = Vector4.Transform(v0, faces[i].Object.ModelMatrix);
+					w1 = Vector4.Transform(w1, faces[i].Object.ModelMatrix);
+					w2 = Vector4.Transform(w2, faces[i].Object.ModelMatrix);
+					v0.Z *= -1.0;
+					w1.Z *= -1.0;
+					w2.Z *= -1.0;
+					Vector3 d = Vector3.Cross(w1.Xyz, w2.Xyz);
+					double t = d.Norm();
+
+					if (t != 0.0)
+					{
+						d /= t;
+						Vector3 w0 = v0.Xyz - camera;
+						t = Vector3.Dot(d, w0);
+						distances[i] = -t * t;
+					}
+				}
+			});
+			faces.OrderBy(d => distances);
 		}
 	}
 }

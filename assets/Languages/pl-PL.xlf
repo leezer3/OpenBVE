@@ -1006,6 +1006,9 @@
 						<source>The package database XML was invalid, and has been re-created.</source>
 						<target>Kod XML bazy danych był nieprawidłowy i został odtworzony.</target>
 					</trans-unit>
+					<trans-unit id="error_busy_thread">
+						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">

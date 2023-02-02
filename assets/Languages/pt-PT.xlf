@@ -289,6 +289,9 @@
 						<source>The package database XML was invalid, and has been re-created.</source>
 						<target state="translated">A base de dados XML do pacote é inválida e foi recreada.</target>
 					</trans-unit>
+					<trans-unit id="error_busy_thread">
+						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">

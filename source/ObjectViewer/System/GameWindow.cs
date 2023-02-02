@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using ObjectViewer.Trains;
 using OpenBveApi;
 using OpenTK;
@@ -294,12 +295,17 @@ namespace ObjectViewer
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.UpdateViewport();
 			Program.Renderer.InitializeVisibility();
-            Program.Renderer.UpdateVisibility(0.0, true);
+			Program.Renderer.updateVisibility = true;
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Program.RefreshObjects();
         }
 
-		protected override void OnUnload(EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
+        {
+	        Program.Renderer.visibilityThread = false;
+        }
+
+        protected override void OnUnload(EventArgs e)
 		{
 			formTrain.Instance?.CloseUI_Async();
 		}

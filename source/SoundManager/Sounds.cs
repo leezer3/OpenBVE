@@ -84,8 +84,9 @@ namespace SoundManager
 
 		// --- initialization and deinitialization ---
 
-		/// <summary>Initializes audio. A call to Deinitialize must be made when terminating the program.</summary>
+		/// <summary>Initializes audio.</summary>
 		/// <returns>Whether initializing audio was successful.</returns>
+		/// <remarks>A call to DeInitialize should be made when closing the program to release any held resources</remarks>
 		public void Initialize(HostInterface host, SoundRange range)
 		{
 			if (host.Platform == HostPlatform.MicrosoftWindows)
@@ -102,7 +103,7 @@ namespace SoundManager
 					if (!ok) throw new System.ComponentModel.Win32Exception();
 				}
 			}
-			Deinitialize();
+			DeInitialize();
 
 			CurrentHost = host;
 
@@ -179,7 +180,7 @@ namespace SoundManager
 		}
 
 		/// <summary>Deinitializes audio.</summary>
-		public void Deinitialize()
+		public void DeInitialize()
 		{
 			StopAllSounds();
 			UnloadAllBuffers();
