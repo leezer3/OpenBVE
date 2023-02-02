@@ -373,7 +373,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Represents a vector pointing down.</summary>
 		public static readonly Vector2 Down = new Vector2(0.0, 1.0);
 
-		/// <summary>Represents a vector pointing right.</summary>
+		/// <summary>Represents a unary vector.</summary>
 		public static readonly Vector2 One = new Vector2(1.0, 1.0);
 
 		/// <summary>Returns the representation of the vector in string format</summary>

@@ -734,6 +734,9 @@ namespace OpenBveApi.Math {
 		/// <summary>Represents a vector pointing down.</summary>
 		public static readonly Vector3 Forward = new Vector3(0.0, 0.0, 1.0);
 
+		/// <summary>Represents a unary vector.</summary>
+		public static readonly Vector3 One = new Vector3(1.0, 1.0, 1.0);
+
 		/// <summary>Returns the representation of the vector in string format</summary>
 		public override string ToString()
 		{

@@ -217,6 +217,7 @@ namespace Plugin
 								string StateFunctionRpn = null;
 								bool StateFunctionIsPostfix = false;
 								int StateFunctionLine = -1;
+								Vector3 Scale = Vector3.One;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
 									if (Lines[i].Length != 0)
@@ -641,6 +642,72 @@ namespace Plugin
 															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 														}
 													} break;
+												case AnimatedKey.ScaleXFunction:
+													try
+													{
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.X))
+														{
+															Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
+														}
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleXScript:
+													try
+													{
+														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleYFunction:
+													try
+													{
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.Y))
+														{
+															Result.Objects[ObjectCount].ScaleYFunction = new FunctionScript(currentHost, b, true);	
+														}
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleYScript:
+													try
+													{
+														Result.Objects[ObjectCount].ScaleYFunction = new CSAnimationScript(currentHost, 
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleZFunction:
+													try
+													{
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.Z))
+														{
+															Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
+														}
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleZScript:
+													try
+													{
+														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
+															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
 												case AnimatedKey.TextureShiftXDirection:
 												case AnimatedKey.TextureShiftYDirection:
 													{
@@ -757,7 +824,7 @@ namespace Plugin
 									i++;
 								}
 								i--;
-
+								
 								if (StateFiles != null)
 								{
 									// create the object
@@ -797,7 +864,17 @@ namespace Plugin
 											currentHost.LoadObject(StateFiles[k], Encoding, out currentObject);
 											if (currentObject is StaticObject)
 											{
-												Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
+												if (Scale != Vector3.One)
+												{
+													StaticObject obj = (StaticObject)currentObject.Clone();
+													obj.ApplyScale(Scale);
+													Result.Objects[ObjectCount].States[k].Prototype = obj;
+												}
+												else
+												{
+													Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
+												}
+
 											}
 											else if (currentObject is AnimatedObjectCollection)
 											{

@@ -168,6 +168,12 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		/// <summary>Scales the MeshBuilder by the given value</summary>
+		public void ApplyScale(Vector3 scale)
+		{
+			ApplyScale(scale.X, scale.Y, scale.Z);
+		}
+
 		/// <summary>Scales the MeshBuilder by the given values</summary>
 		public void ApplyScale(double x, double y, double z)
 		{
