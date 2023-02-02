@@ -82,7 +82,7 @@ namespace TrainManager.SafetySystems
 		// --- functions ---
 		public override bool Load(VehicleSpecs specs, InitializationModes mode)
 		{
-			LoadProperties properties = new LoadProperties(PluginFolder, TrainFolder, PlaySound, PlaySound, AddInterfaceMessage, AddScore, OpenDoors, CloseDoors);
+			LoadProperties properties = new LoadProperties(PluginFolder, TrainFolder, PlayMultiCarSound, PlayCarSound, PlayMultiCarSound, AddInterfaceMessage, AddScore, OpenDoors, CloseDoors);
 			bool success;
 			try
 			{
@@ -371,7 +371,7 @@ namespace TrainManager.SafetySystems
 		/// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
 		/// <param name="looped">Whether the sound is looped</param>
 		/// <returns>The sound handle, or null if not successful</returns>
-		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped)
+		internal SoundHandleEx PlayMultiCarSound(int index, double volume, double pitch, bool looped)
 		{
 			if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(index) && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null)
 			{
@@ -396,7 +396,7 @@ namespace TrainManager.SafetySystems
 		/// <param name="looped">Whether the sound is looped</param>
 		/// <param name="CarIndex">The index of the car which is to emit the sound</param>
 		/// <returns>The sound handle, or null if not successful</returns>
-		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped, int CarIndex)
+		internal SoundHandleEx PlayCarSound(int index, double volume, double pitch, bool looped, int CarIndex)
 		{
 			if (CarIndex < 0 || CarIndex >= Train.Cars.Length)
 			{
@@ -435,6 +435,23 @@ namespace TrainManager.SafetySystems
 			SoundHandles[SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[CarIndex].Sounds.Plugin[index].Source);
 			SoundHandlesCount++;
 			return SoundHandles[SoundHandlesCount - 1];
+		}
+
+		/// <summary>May be called from a .Net plugin, in order to play a sound from multiple cars of a train</summary>
+		/// <param name="index">The plugin-based of the sound to play</param>
+		/// <param name="volume">The volume of the sound- A volume of 1.0 represents nominal volume</param>
+		/// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
+		/// <param name="looped">Whether the sound is looped</param>
+		/// <param name="CarIndicies">The index of the cars which are to emit the sound</param>
+		/// <returns>The sound handle, or null if not successful</returns>
+		internal SoundHandleEx[] PlayMultiCarSound(int index, double volume, double pitch, bool looped, int[] CarIndicies)
+		{
+			SoundHandleEx[] soundHandles = new SoundHandleEx[CarIndicies.Length];
+			for (int i = 0; i < CarIndicies.Length; i++)
+			{
+				soundHandles[i] = PlayCarSound(index, volume, pitch, looped, CarIndicies[i]);
+			}
+			return soundHandles;
 		}
 	}
 }
