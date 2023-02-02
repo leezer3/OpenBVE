@@ -398,19 +398,43 @@ namespace TrainManager.SafetySystems
 		/// <returns>The sound handle, or null if not successful</returns>
 		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped, int CarIndex)
 		{
-			if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(index) && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < Train.Cars.Length && CarIndex >= 0)
+			if (CarIndex < 0 || CarIndex >= Train.Cars.Length)
 			{
-				Train.Cars[Train.DriverCar].Sounds.Plugin[index].Play(pitch, volume, Train.Cars[CarIndex], looped);
-				if (SoundHandlesCount == SoundHandles.Length)
-				{
-					Array.Resize(ref SoundHandles, SoundHandles.Length << 1);
-				}
-
-				SoundHandles[SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[Train.DriverCar].Sounds.Plugin[index].Source);
-				SoundHandlesCount++;
-				return SoundHandles[SoundHandlesCount - 1];
+				// Not a valid car
+				return null;
 			}
-			return null;
+			
+			/*
+			 * WARNING:
+			 * A bug combined with an oversight in the original implementation of this feature allowed sounds to duplicate
+			 *
+			 * Any given sound should only be playing from one source. Thus, if the sound does not
+			 * exist in the new car, clone from the driver car into a new CarSound with the same index in the new car.
+			 *
+			 * This allows any given sound index to be playing *once* in each car of the train
+			 * (As opposed to the original intention of any sound index being available in any one given place)
+			 *
+			 * NOTES:
+			 * If a separate soundset has been loaded via XML for the car, this may produce different sounds, but is unavoidable
+			 */
+
+			if (!Train.Cars[CarIndex].Sounds.Plugin.ContainsKey(index))
+			{
+				if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(index))
+				{
+					Train.Cars[CarIndex].Sounds.Plugin.Add(index, Train.Cars[Train.DriverCar].Sounds.Plugin[index].Clone());
+				}
+			}
+
+			Train.Cars[CarIndex].Sounds.Plugin[index].Play(pitch, volume, Train.Cars[CarIndex], looped);
+			if (SoundHandlesCount == SoundHandles.Length)
+			{
+				Array.Resize(ref SoundHandles, SoundHandles.Length << 1);
+			}
+
+			SoundHandles[SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[CarIndex].Sounds.Plugin[index].Source);
+			SoundHandlesCount++;
+			return SoundHandles[SoundHandlesCount - 1];
 		}
 	}
 }
