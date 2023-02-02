@@ -264,6 +264,12 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Applys scale</summary>
+		public void ApplyScale(Vector3 scale)
+		{
+			ApplyScale(scale.X, scale.Y, scale.Z);
+		}
+
+		/// <summary>Applys scale</summary>
 		public void ApplyScale(double x, double y, double z)
 		{
 			float rx = (float) (1.0 / x);

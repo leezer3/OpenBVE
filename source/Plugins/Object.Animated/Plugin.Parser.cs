@@ -217,6 +217,7 @@ namespace Plugin
 								string StateFunctionRpn = null;
 								bool StateFunctionIsPostfix = false;
 								int StateFunctionLine = -1;
+								Vector3 Scale = Vector3.One;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
 									if (Lines[i].Length != 0)
@@ -641,21 +642,19 @@ namespace Plugin
 															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 														}
 													} break;
-												case "scalexfunction":
+												case AnimatedKey.ScaleXFunction:
 													try
 													{
-														double X;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out X))
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.X))
 														{
-															throw new NotImplementedException("not yet implemented");
+															Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
 														}
-														Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
-												case "scalexscript":
+												case AnimatedKey.ScaleXScript:
 													try
 													{
 														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
@@ -665,21 +664,19 @@ namespace Plugin
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
-												case "scaleyfunction":
+												case AnimatedKey.ScaleYFunction:
 													try
 													{
-														double Y;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Y))
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.Y))
 														{
-															throw new NotImplementedException("not yet implemented");
+															Result.Objects[ObjectCount].ScaleYFunction = new FunctionScript(currentHost, b, true);	
 														}
-														Result.Objects[ObjectCount].ScaleYFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
-												case "scaleyscript":
+												case AnimatedKey.ScaleYScript:
 													try
 													{
 														Result.Objects[ObjectCount].ScaleYFunction = new CSAnimationScript(currentHost, 
@@ -689,21 +686,19 @@ namespace Plugin
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
-												case "scalezfunction":
+												case AnimatedKey.ScaleZFunction:
 													try
 													{
-														double Z;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Z))
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.Z))
 														{
-															throw new NotImplementedException("not yet implemented");
+															Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
 														}
-														Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
-												case "scalezscript":
+												case AnimatedKey.ScaleZScript:
 													try
 													{
 														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
@@ -713,8 +708,6 @@ namespace Plugin
 													{
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
-												case "textureshiftxdirection":
-												case "textureshiftydirection":
 												case AnimatedKey.TextureShiftXDirection:
 												case AnimatedKey.TextureShiftYDirection:
 													{
@@ -831,7 +824,7 @@ namespace Plugin
 									i++;
 								}
 								i--;
-
+								
 								if (StateFiles != null)
 								{
 									// create the object
@@ -871,7 +864,17 @@ namespace Plugin
 											currentHost.LoadObject(StateFiles[k], Encoding, out currentObject);
 											if (currentObject is StaticObject)
 											{
-												Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
+												if (Scale != Vector3.One)
+												{
+													StaticObject obj = (StaticObject)currentObject.Clone();
+													obj.ApplyScale(Scale);
+													Result.Objects[ObjectCount].States[k].Prototype = obj;
+												}
+												else
+												{
+													Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
+												}
+
 											}
 											else if (currentObject is AnimatedObjectCollection)
 											{

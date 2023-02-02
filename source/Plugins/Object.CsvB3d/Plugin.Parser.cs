@@ -549,31 +549,28 @@ namespace Plugin
 								if (Arguments.Length > 3) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								double x = 1.0, y = 1.0, z = 1.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x)) {
+								Vector3 Scale = Vector3.One;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Scale.X)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument X in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 1.0;
-								} else if (x == 0.0) {
+								} else if (Scale.X == 0.0) {
 									currentHost.AddMessage(MessageType.Error, false, "X is required to be different from zero in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 1.0;
+									Scale.X = 1.0;
 								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y)) {
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out Scale.Y)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Y in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 1.0;
-								} else if (y == 0.0) {
+								} else if (Scale.Y == 0.0) {
 									currentHost.AddMessage(MessageType.Error, false, "Y is required to be different from zero in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 1.0;
+									Scale.Y = 1.0;
 								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z)) {
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out Scale.Z)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument Z in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 1.0;
-								} else if (z == 0.0) {
+								} else if (Scale.Z == 0.0) {
 									currentHost.AddMessage(MessageType.Error, false, "Z is required to be different from zero in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 1.0;
+									Scale.Z = 1.0;
 								}
-								Builder.ApplyScale(x, y, z);
+								Builder.ApplyScale(Scale);
 								if (cmd == B3DCsvCommands.ScaleAll) {
-									Object.ApplyScale(x, y, z);
+									Object.ApplyScale(Scale);
 								}
 							} break;
 						case B3DCsvCommands.Rotate:

@@ -54,6 +54,12 @@
 		PitchFunction,
 		VolumeFunction,
 		PlayOnShow,
-		PlayOnHide
+		PlayOnHide,
+		ScaleXFunction,
+		ScaleXScript,
+		ScaleYFunction,
+		ScaleYScript,
+		ScaleZFunction,
+		ScaleZScript
 	}
 }
