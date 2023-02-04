@@ -6,6 +6,7 @@ using LibRender2.Overlays;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Car.Systems;
+using TrainManager.TractionModels.BVE;
 
 namespace RouteViewer {
 	internal static class FunctionScripts {
@@ -333,7 +334,7 @@ namespace RouteViewer {
 						break;
 					case Instructions.TrainAcceleration:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.Acceleration;
+							Function.Stack[s] = Train.Cars[CarIndex].TractionModel.Acceleration;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -343,7 +344,7 @@ namespace RouteViewer {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.Acceleration;
+								Function.Stack[s - 1] = Train.Cars[j].TractionModel.Acceleration;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -355,12 +356,12 @@ namespace RouteViewer {
 						if (Train != null) {
 							Function.Stack[s] = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								if (Train.Cars[j].Specs.IsMotorCar) {
+								if (Train.Cars[j].TractionModel is BVEMotorCar) {
 									// hack: MotorAcceleration does not distinguish between forward/backward
-									if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
-									} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
+									if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0) {
+										Function.Stack[s] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+									} else if (Train.Cars[j].TractionModel.MotorAcceleration > 0.0) {
+										Function.Stack[s] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
 									} else {
 										Function.Stack[s] = 0.0;
 									}
@@ -377,10 +378,10 @@ namespace RouteViewer {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
 								// hack: MotorAcceleration does not distinguish between forward/backward
-								if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
-								} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
+								if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+								} else if (Train.Cars[j].TractionModel.MotorAcceleration > 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
 								} else {
 									Function.Stack[s - 1] = 0.0;
 								}
@@ -1109,6 +1110,26 @@ namespace RouteViewer {
 							}
 						} 
 						s++; break;
+					case Instructions.WheelRadius:
+						if (Train != null) {
+							Function.Stack[s] = Train.Cars[CarIndex].FrontAxle.WheelRadius;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.WheelRadiusOfCar:
+						if (Train == null) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length) {
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.WheelRadius;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}

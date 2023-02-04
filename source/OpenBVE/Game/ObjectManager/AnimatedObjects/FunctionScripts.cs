@@ -6,13 +6,21 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using TrainManager.Car.Systems;
 using TrainManager.Handles;
+using TrainManager.TractionModels.BVE;
+using TrainManager.TractionModels.Steam;
 using TrainManager.Trains;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
 		// execute function script
-		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
-			int s = 0, c = 0;
+		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		{
+			int s = 0, c = 0, ps;
+			SteamEngine steamEngine = null;
+			if (Train != null && CarIndex < Train.Cars.Length)
+			{
+				steamEngine = Train.Cars[CarIndex].TractionModel as SteamEngine;
+			}
 			for (int i = 0; i < Function.InstructionSet.Length; i++) {
 				switch (Function.InstructionSet[i]) {
 						// system
@@ -333,7 +341,7 @@ namespace OpenBve {
 						break;
 					case Instructions.TrainAcceleration:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.Acceleration;
+							Function.Stack[s] = Train.Cars[CarIndex].TractionModel.Acceleration;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -343,7 +351,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.Acceleration;
+								Function.Stack[s - 1] = Train.Cars[j].TractionModel.Acceleration;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -355,12 +363,12 @@ namespace OpenBve {
 						if (Train != null) {
 							Function.Stack[s] = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								if (Train.Cars[j].Specs.IsMotorCar) {
+								if (Train.Cars[j].TractionModel is BVEMotorCar) {
 									// hack: MotorAcceleration does not distinguish between forward/backward
-									if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
-									} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
+									if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0) {
+										Function.Stack[s] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+									} else if (Train.Cars[j].TractionModel.MotorAcceleration > 0.0) {
+										Function.Stack[s] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
 									} else {
 										Function.Stack[s] = 0.0;
 									}
@@ -377,10 +385,10 @@ namespace OpenBve {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
 								// hack: MotorAcceleration does not distinguish between forward/backward
-								if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
-								} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
+								if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+								} else if (Train.Cars[j].TractionModel.MotorAcceleration > 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
 								} else {
 									Function.Stack[s - 1] = 0.0;
 								}
@@ -1533,6 +1541,191 @@ namespace OpenBve {
 							}
 						} 
 						s++; break;
+						// default
+					case Instructions.WheelRadius:
+						if (Train != null) {
+							Function.Stack[s] = Train.Cars[CarIndex].FrontAxle.WheelRadius;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.WheelRadiusOfCar:
+						if (Train == null) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length) {
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.WheelRadius;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.BoilerPressure:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Boiler.SteamPressure;
+						s++; break;
+					case Instructions.BoilerWaterLevel:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Boiler.WaterLevel;
+						s++; break;
+					case Instructions.Cutoff:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Cutoff cutoff = Train.Handles.Reverser as Cutoff;
+						Function.Stack[s] = cutoff.Current; // *not* actual- we want the driver set value for animations
+						s++; break;
+					case Instructions.Blowers:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Boiler.Blowers.Active ? 1 : 0;
+						break;
+					case Instructions.CylinderCocks:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.CylinderChest.CylinderCocks.Open ? 1 : 0;
+						s++; break;
+					case Instructions.BypassValve:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.CylinderChest.BypassValve.Active ? 1 : 0;
+						s++; break;
+					case Instructions.LiveSteamInjector:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Boiler.LiveSteamInjector.Active ? 1 : 0;
+						s++; break;
+					case Instructions.ExhaustSteamInjector:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Boiler.ExhaustSteamInjector.Active ? 1 : 0;
+						s++; break;
+					case Instructions.FireArea:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Boiler.Firebox.FireArea;
+						s++; break;
+					case Instructions.FireMass:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Boiler.Firebox.FireMass;
+						s++; break;
+					case Instructions.FireTemperature:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Boiler.Firebox.Temperature;
+						s++; break;
+					case Instructions.TenderWater:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Tender.WaterLevel;
+						s++; break;
+					case Instructions.TenderFuel:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							break;
+						}
+						Function.Stack[s] = steamEngine.Tender.FuelLevel;
+						s++; break;
+					/*
+					 * NOTE:
+					 * It is possible to animate wheel positions in other ways
+					 * However, when animating valve gear, this variable should be used in order
+					 * for everything to remain fully in sync (as we don't support animation bones...)
+					 */
+					case Instructions.ValveGearWheelPosition:
+						if (steamEngine == null)
+						{
+							Function.Stack[s] = 0.0;
+							s++; break;
+						}
+						Function.Stack[s] = steamEngine.CylinderChest.ValveGear.WheelPosition * -0.0628319;
+						s++; break;
+					case Instructions.ValveGearPivotXIndex:
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.CrankRods.Length)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.Pivots[ps].Position.X;
+						break;
+					case Instructions.ValveGearPivotYIndex:
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.Pivots.Length)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.Pivots[ps].Position.Y;
+						break;
+					case Instructions.ValveGearCrankAngleIndex:
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.CrankRods.Length)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[ps].Angle;
+						break;
+					case Instructions.ValveGearCrankPositionIndex:
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.CrankRods.Length)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[ps].Position; 
+						break;
+					case Instructions.ValveGearCylinderSteamIndex:
+						ps = (int)Math.Round(Function.Stack[s - 1]);
+						if (steamEngine == null || ps >= steamEngine.CylinderChest.ValveGear.CrankRods.Length)
+						{
+							Function.Stack[s - 1] = 0.0;
+							break;
+						}
+						Function.Stack[s - 1] = steamEngine.CylinderChest.ValveGear.CrankRods[ps].CylinderSteam ? 1 : 0; 
+						break;
 						// default
 					default:
 						throw new System.InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

@@ -1,12 +1,12 @@
-﻿using OpenBveApi.Routes;
-
-namespace OpenBveApi.Trains
+﻿namespace OpenBveApi.Trains
 {
 	/// <summary>An abstract train</summary>
 	public abstract class AbstractTrain
 	{
 		/// <summary>The current state of the train</summary>
 		public TrainState State;
+		/// <summary>The traction types present in the train</summary>
+		public TractionType TractionType;
 		/// <summary>Holds the AI controlling the train if any</summary>
 		public GeneralAI AI;
 		/// <summary>The current station state</summary>

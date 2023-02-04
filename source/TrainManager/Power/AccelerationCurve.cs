@@ -27,7 +27,7 @@ namespace TrainManager.Power
 		public double StageOneAcceleration;
 		public double StageTwoSpeed;
 		public double StageTwoExponent;
-		private readonly double Multiplier;
+		public double Multiplier;
 
 		public override double GetAccelerationOutput(double Speed, double Loading)
 		{

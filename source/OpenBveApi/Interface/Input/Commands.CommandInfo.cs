@@ -192,6 +192,8 @@
 			new CommandInfo(Command.IncreaseCutoff, CommandType.Digital, "INCREASE_CUTOFF"),
 			new CommandInfo(Command.DecreaseCutoff, CommandType.Digital, "DECREASE_CUTOFF"),
 			new CommandInfo(Command.Blowers, CommandType.Digital, "BLOWERS"),
+			new CommandInfo(Command.AutomaticFireman, CommandType.Digital, "AUTOMATIC_FIREMAN"),
+			new CommandInfo(Command.TractionInfo, CommandType.Digital, "TRACTION_INFO"),
 			//Diesel Locomotive
 			new CommandInfo(Command.EngineStart, CommandType.Digital, "ENGINE_START"),
 			new CommandInfo(Command.EngineStop, CommandType.Digital, "ENGINE_STOP"),

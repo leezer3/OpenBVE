@@ -77,11 +77,11 @@ namespace TrainManager.Trains
 			// Set the state quantity of the train.
 			if (DeltaPosition < 0)
 			{
-				Train.Handles.Reverser.Driver = ReverserPosition.Reverse;
+				Train.Handles.Reverser.Driver = (int)ReverserPosition.Reverse;
 			}
 			else if (DeltaPosition > 0)
 			{
-				Train.Handles.Reverser.Driver = ReverserPosition.Forwards;
+				Train.Handles.Reverser.Driver = (int)ReverserPosition.Forwards;
 			}
 
 			Train.Handles.Reverser.Actual = Train.Handles.Reverser.Driver;
@@ -114,8 +114,8 @@ namespace TrainManager.Trains
 
 				Car.CurrentSpeed = Train.CurrentSpeed;
 				Car.Specs.PerceivedSpeed = Train.CurrentSpeed;
-				Car.Specs.Acceleration = Train.Specs.CurrentAverageAcceleration;
-				Car.Specs.MotorAcceleration = Train.Specs.CurrentAverageAcceleration;
+				Car.TractionModel.Acceleration = Train.Specs.CurrentAverageAcceleration;
+				Car.TractionModel.MotorAcceleration = Train.Specs.CurrentAverageAcceleration;
 			}
 
 			CurrentPosition = NewPosition;

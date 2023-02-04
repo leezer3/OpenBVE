@@ -267,8 +267,7 @@ namespace ObjectViewer
 
 			if (NearestTrain.IsExtensionsCfg)
 			{
-				double[] decelerationDueToBrake, decelerationDueToMotor;
-				Program.TrainManager.Trains[0].UpdateBrakeSystem(RealTimeElapsed, out decelerationDueToBrake, out decelerationDueToMotor);
+				Program.TrainManager.Trains[0].UpdateBrakeSystem(RealTimeElapsed);
 			}
 
 			TotalTimeElapsedForInfo += RealTimeElapsed;

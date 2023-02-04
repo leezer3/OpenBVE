@@ -19,13 +19,14 @@ namespace Train.OpenBve
 			double brakePipeNormalPressure = 0.0, brakePipeChargeRate = 10000000.0, brakePipeServiceRate = 1500000.0, brakePipeEmergencyRate = 5000000.0;
 			double straightAirPipeServiceRate = 300000.0, straightAirPipeEmergencyRate = 400000.0, straightAirPipeReleaseRate = 200000.0;
 			double brakeCylinderServiceMaximumPressure = 440000.0, brakeCylinderEmergencyMaximumPressure = 440000.0, brakeCylinderEmergencyRate = 300000.0, brakeCylinderReleaseRate = 200000.0;
+			BrakeType type = BrakeType.Auxiliary;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
 				switch (c.Name.ToLowerInvariant())
 				{
 					case "compressor":
-						Train.Cars[Car].CarBrake.brakeType = BrakeType.Main; //We have a compressor so must be a main brake type
+						type = BrakeType.Main; //We have a compressor so must be a main brake type
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							foreach (XmlNode cc in c.ChildNodes)
@@ -234,7 +235,12 @@ namespace Train.OpenBve
 					
 				}
 			}
-			
+
+			if (Train.Cars[Car].CarBrake == null)
+			{
+				Train.Cars[Car].CarBrake = new ElectromagneticStraightAirBrake(Train.Cars[Car], EletropneumaticBrakeType.ClosingElectromagneticValve, 0, 0, 0, 0, Train.Cars[Car].TractionModel.AccelerationCurves);
+			}
+			Train.Cars[Car].CarBrake.brakeType = type;
 			Train.Cars[Car].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
 			Train.Cars[Car].CarBrake.airCompressor = new Compressor(compressorRate, Train.Cars[Car].CarBrake.mainReservoir, Train.Cars[Car]);
 			Train.Cars[Car].CarBrake.equalizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);

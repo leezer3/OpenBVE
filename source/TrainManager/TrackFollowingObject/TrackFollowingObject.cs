@@ -1,6 +1,7 @@
 ﻿using System;
 using LibRender2.Trains;
 using OpenBveApi.Trains;
+using TrainManager.TractionModels.BVE;
 
 namespace TrainManager.Trains
 {
@@ -62,7 +63,7 @@ namespace TrainManager.Trains
 						Cars[i].RearBogie.ChangeSection(0);
 						Cars[i].Coupler.ChangeSection(0);
 
-						if (Cars[i].Specs.IsMotorCar && Cars[i].Sounds.Loop != null)
+						if (Cars[i].TractionModel is BVEMotorCar && Cars[i].Sounds.Loop != null)
 						{
 							Cars[i].Sounds.Loop.Play(Cars[i], true);
 						}
@@ -149,9 +150,9 @@ namespace TrainManager.Trains
 			foreach (var Car in Cars)
 			{
 				Car.UpdateRunSounds(TimeElapsed);
-				if (Car.Sounds.Motor != null)
+				if (Car.TractionModel.Sounds != null)
 				{
-					Car.Sounds.Motor.Update(TimeElapsed);
+					Car.TractionModel.Sounds.Update(TimeElapsed);
 				}
 				
 			}

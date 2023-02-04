@@ -2,6 +2,7 @@ using System;
 using OpenBveApi.Sounds;
 using SoundManager;
 using TrainManager.Car;
+using TrainManager.TractionModels.BVE;
 
 namespace TrainManager.Motor
 {
@@ -24,12 +25,12 @@ namespace TrainManager.Motor
 
 		public override void Update(double TimeElapsed)
 		{
-			if (!Car.Specs.IsMotorCar)
+			if (!(Car.TractionModel is BVEMotorCar))
 			{
 				return;
 			}
 			double speed = Math.Abs(Car.Specs.PerceivedSpeed) * 3.6; // km/h
-			int ndir = Math.Sign(Car.Specs.MotorAcceleration);
+			int ndir = Math.Sign(Car.TractionModel.MotorAcceleration);
 
 			if (ndir == 1)
 			{
@@ -77,10 +78,10 @@ namespace TrainManager.Motor
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 							 * gain
 							 */
-							double max = Car.Specs.AccelerationCurveMaximum;
+							double max = Car.TractionModel.MaximumAcceleration;
 							if (max != 0.0)
 							{
-								double cur = Car.Specs.MotorAcceleration;
+								double cur = Car.TractionModel.MotorAcceleration;
 								if (cur < 0.0) cur = 0.0;
 								gain *= Math.Pow(cur / max, 0.25);
 							}
@@ -141,10 +142,10 @@ namespace TrainManager.Motor
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 							 * gain
 							 */
-							double max = Car.Specs.AccelerationCurveMaximum;
+							double max = Car.TractionModel.MaximumAcceleration;
 							if (max != 0.0)
 							{
-								double cur = Car.Specs.MotorAcceleration;
+								double cur = Car.TractionModel.MotorAcceleration;
 								if (cur < 0.0) cur = 0.0;
 								gain *= Math.Pow(cur / max, 0.25);
 							}

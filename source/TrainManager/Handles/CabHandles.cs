@@ -4,9 +4,9 @@
 	public struct CabHandles
 	{
 		/// <summary>The Reverser</summary>
-		public ReverserHandle Reverser;
+		public AbstractReverser Reverser;
 		/// <summary>The Power</summary>
-		public PowerHandle Power;
+		public AbstractHandle Power;
 		/// <summary>The Brake</summary>
 		public AbstractHandle Brake;
 		/// <summary>The Loco brake handle</summary>

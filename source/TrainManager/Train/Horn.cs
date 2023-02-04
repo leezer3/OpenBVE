@@ -6,22 +6,8 @@ using TrainManager.Car;
 namespace TrainManager.Trains
 {
 	/// <summary>Represents a horn or whistle</summary>
-	public class Horn
+	public class Horn : AbstractDevice
 	{
-		/// <summary>The sound source for this horn</summary>
-		public SoundSource Source;
-		/// <summary>The sound buffer to be played once when playback commences</summary>
-		public SoundBuffer StartSound;
-		/// <summary>The loop sound</summary>
-		public SoundBuffer LoopSound;
-		/// <summary>The sound buffer to be played once when playback ends</summary>
-		public SoundBuffer EndSound;
-		/// <summary>The position of the sound within the train car</summary>
-		public Vector3 SoundPosition;
-		/// <summary>Whether this horn has start and end sounds, or uses the legacy loop/ stretch method</summary>
-		public bool StartEndSounds;
-		/// <summary>Stores whether the sound is looped or stretched when using the legacy method</summary>
-		public bool Loop;
 		/// <summary>Stores the loop state</summary>
 		private bool LoopStarted;
 		/// <summary>Holds a reference to the base car</summary>

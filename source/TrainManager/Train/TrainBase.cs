@@ -15,6 +15,7 @@ using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.SafetySystems;
+using TrainManager.TractionModels.BVE;
 
 namespace TrainManager.Trains
 {
@@ -88,9 +89,15 @@ namespace TrainManager.Trains
 			CurrentRouteLimit = double.PositiveInfinity;
 			CurrentSectionLimit = double.PositiveInfinity;
 			Cars = new CarBase[] { };
-				
 			Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 			Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
+			//FIXME: Too much stuff assumes we have these
+			SafetySystems.Headlights = new LightSource(1);
+			Handles.EmergencyBrake = new EmergencyHandle(this);
+			Handles.HoldBrake = new HoldBrakeHandle(this);
+			Handles.LocoBrake = new LocoAirBrakeHandle(this);
+			Handles.HasHoldBrake = false;
+			TractionType = TractionType.Electric; // Original BVE was built around emulating a generic Japanese EMU
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>
@@ -293,7 +300,7 @@ namespace TrainManager.Trains
 							Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 							Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
 
-							if (Cars[j].Specs.IsMotorCar && Cars[j].Sounds.Loop != null)
+							if (Cars[j].TractionModel is BVEMotorCar && Cars[j].Sounds.Loop != null)
 							{
 								Cars[j].Sounds.Loop.Play(Cars[j], true);
 							}
@@ -472,10 +479,6 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].UpdateRunSounds(TimeElapsed);
-				if (Cars[i].Sounds.Motor != null)
-				{
-					Cars[i].Sounds.Motor.Update(TimeElapsed);
-				}
 			}
 
 			// safety system
@@ -484,6 +487,7 @@ namespace TrainManager.Trains
 				UpdateSafetySystem();
 			}
 
+			if (Cars[DriverCar].Breaker != null)
 			{
 				// breaker sound
 				bool breaker;
@@ -495,9 +499,9 @@ namespace TrainManager.Trains
 				{
 					breaker = Handles.Reverser.Actual != 0 & Handles.Power.Safety >= 1 & Handles.Brake.Safety == 0 & !Handles.EmergencyBrake.Safety & !Handles.HoldBrake.Actual;
 				}
-
 				Cars[DriverCar].Breaker.Update(breaker);
 			}
+
 			// signals
 			if (CurrentSectionLimit == 0.0)
 			{
@@ -532,19 +536,19 @@ namespace TrainManager.Trains
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					Cars[i].CurrentSpeed = 0.0;
-					Cars[i].Specs.MotorAcceleration = 0.0;
+					Cars[i].TractionModel.MotorAcceleration = 0.0;
 				}
 
 				return;
 			}
 
 			// update brake system
-			UpdateBrakeSystem(TimeElapsed, out var DecelerationDueToBrake, out var DecelerationDueToMotor);
+			UpdateBrakeSystem(TimeElapsed);
 			// calculate new car speeds
 			double[] NewSpeeds = new double[Cars.Length];
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].UpdateSpeed(TimeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i], out NewSpeeds[i]);
+				Cars[i].TractionModel.Update(TimeElapsed, out NewSpeeds[i]);
 			}
 
 			// calculate center of mass position
@@ -743,10 +747,10 @@ namespace TrainManager.Trains
 			double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].Specs.Acceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
+				Cars[i].TractionModel.Acceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
 				Cars[i].CurrentSpeed = NewSpeeds[i];
 				CurrentSpeed += NewSpeeds[i];
-				Specs.CurrentAverageAcceleration += Cars[i].Specs.Acceleration;
+				Specs.CurrentAverageAcceleration += Cars[i].TractionModel.Acceleration;
 			}
 
 			double invcarlen = 1.0 / Cars.Length;

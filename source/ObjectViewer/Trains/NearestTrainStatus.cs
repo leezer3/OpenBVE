@@ -52,7 +52,7 @@ namespace ObjectViewer.Trains
 			{
 				car.CurrentSpeed = Speed / 3.6;
 				car.Specs.PerceivedSpeed = Speed / 3.6;
-				car.Specs.Acceleration = Acceleration / 3.6;
+				car.TractionModel.Acceleration = Acceleration / 3.6;
 
 				if (!NearestTrain.IsExtensionsCfg)
 				{
@@ -69,8 +69,8 @@ namespace ObjectViewer.Trains
 				car.Doors[1].AnticipatedOpen = RightDoorAnticipatedOpen;
 			}
 
-			train.Handles.Reverser.Driver = (ReverserPosition)Reverser;
-			train.Handles.Reverser.Actual = (ReverserPosition)Reverser;
+			train.Handles.Reverser.Driver = Reverser;
+			train.Handles.Reverser.Actual = Reverser;
 			train.Handles.Power.Driver = PowerNotch;
 			train.Handles.Power.Actual = PowerNotch;
 			train.Handles.Brake.Driver = BrakeNotch;
@@ -111,7 +111,7 @@ namespace ObjectViewer.Trains
 			{
 				car.CurrentSpeed = 0.0;
 				car.Specs.PerceivedSpeed = 0.0;
-				car.Specs.Acceleration = 0.0;
+				car.TractionModel.Acceleration = 0.0;
 
 				car.Doors[0].State = 0.0;
 				car.Doors[0].AnticipatedOpen = false;
@@ -119,8 +119,8 @@ namespace ObjectViewer.Trains
 				car.Doors[1].AnticipatedOpen = false;
 			}
 
-			train.Handles.Reverser.Driver = ReverserPosition.Neutral;
-			train.Handles.Reverser.Actual = ReverserPosition.Neutral;
+			train.Handles.Reverser.Driver = (int)ReverserPosition.Neutral;
+			train.Handles.Reverser.Actual = (int)ReverserPosition.Neutral;
 			train.Handles.Power.Driver = 0;
 			train.Handles.Power.Actual = 0;
 			train.Handles.Brake.Driver = 0;

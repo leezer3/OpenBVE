@@ -241,7 +241,7 @@ namespace TrainManager.SafetySystems
 			{
 				if (virtualHandles)
 				{
-					this.Train.Handles.Reverser.Actual = (ReverserPosition) handles.Reverser;
+					this.Train.Handles.Reverser.Actual = handles.Reverser;
 				}
 				else
 				{

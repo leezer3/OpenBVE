@@ -7,9 +7,12 @@ using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.TractionModels.BVE;
+using TrainManager.TractionModels.Steam;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -291,20 +294,24 @@ namespace Train.OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
+										AbstractDevice device = new Horn(car);
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "primary":
 												//Primary horn
-												ParseHornNode(cc, car, out car.Horns[0], front, SoundCfgParser.largeRadius);
+												ParseDeviceNode(cc, car, device, front, SoundCfgParser.largeRadius);
+												car.Horns[0] = (Horn)device;
 												break;
 											case "secondary":
 												//Secondary horn
-												ParseHornNode(cc, car, out car.Horns[1], front, SoundCfgParser.largeRadius);
+												ParseDeviceNode(cc, car, device, front, SoundCfgParser.largeRadius);
+												car.Horns[1] = (Horn)device;
 												break;
 											case "music":
 												//Music horn
-												ParseHornNode(cc, car, out car.Horns[2], front, SoundCfgParser.largeRadius);
-												car.Horns[2].Loop = true;
+												ParseDeviceNode(cc, car, device, front, SoundCfgParser.largeRadius);
+												device.Loop = true;
+												car.Horns[2] = (Horn)device;
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -367,12 +374,17 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of motor sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsMotorCar)
+									if (car.TractionModel is BVEMotorCar)
 									{
-										break;
+										ParseMotorSoundTableNode(c, car, ref car.TractionModel.Sounds, center, SoundCfgParser.mediumRadius);	
+									}
+
+									if (TrainXmlParser.MotorSoundXMLParsed.Length >= car.Index)
+									{
+										Array.Resize(ref TrainXmlParser.MotorSoundXMLParsed, car.Index + 1);
 									}
 									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
-									ParseMotorSoundTableNode(c, car, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
+									ParseMotorSoundTableNode(c, car, ref car.TractionModel.Sounds, center, SoundCfgParser.mediumRadius);
 									break;
 								case "pilotlamp":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -440,6 +452,11 @@ namespace Train.OpenBve
 									break;
 								case "reverser":
 								case "reverserhandle":
+									ReverserHandle reverser = Train.Handles.Reverser as ReverserHandle;
+									if (reverser == null)
+									{
+										break;
+									}
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
@@ -454,10 +471,10 @@ namespace Train.OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
-												ParseNode(cc, out Train.Handles.Reverser.EngageSound, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out reverser.EngageSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "off":
-												ParseNode(cc, out Train.Handles.Reverser.ReleaseSound, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out reverser.ReleaseSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -575,6 +592,35 @@ namespace Train.OpenBve
 										}
 									}
 									break;
+								case "steamengine":
+									SteamEngine engine = car.TractionModel as SteamEngine;
+									if (engine == null)
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "Traction model for car " + car.Index + " is not SteamEngine, but sounds were declared.");
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "livesteaminjector":
+												ParseDeviceNode(cc, car, engine.Boiler.LiveSteamInjector, center, SoundCfgParser.mediumRadius);
+												break;
+											case "exhauststeaminjector":
+												ParseDeviceNode(cc, car, engine.Boiler.ExhaustSteamInjector, center, SoundCfgParser.mediumRadius);
+												break;
+											case "blowers":
+												ParseDeviceNode(cc, car, engine.Boiler.Blowers, center, SoundCfgParser.largeRadius);
+												break;
+											case "blowoff":
+												ParseDeviceNode(cc, car, engine.Boiler.Blowoff, center, SoundCfgParser.largeRadius);
+												break;
+											case "cylindercocks":
+												ParseDeviceNode(cc, car, engine.CylinderChest.CylinderCocks, center, SoundCfgParser.largeRadius);
+												break;
+										}
+									}
+									break;
 							}
 						}
 					}
@@ -582,40 +628,42 @@ namespace Train.OpenBve
 			}
 		}
 
-		/// <summary>Parses an XML horn node</summary>
+		/// <summary>Parses an XML device node</summary>
 		/// <param name="node">The node to parse</param>
 		/// <param name="car">The car</param>
-		/// <param name="Horn">The horn to apply this node's contents to</param>
+		/// <param name="Device">The horn to apply this node's contents to</param>
 		/// <param name="Position">The default sound position</param>
 		/// <param name="Radius">The default sound radius</param>
-		private void ParseHornNode(XmlNode node, CarBase car, out Horn Horn, Vector3 Position, double Radius)
+		private void ParseDeviceNode(XmlNode node, CarBase car, AbstractDevice Device, Vector3 Position, double Radius)
 		{
-			Horn = new Horn(car);
 			foreach (XmlNode c in node.ChildNodes)
 			{
 				switch (c.Name.ToLowerInvariant())
 				{
 					case "start":
-						ParseNode(c, out Horn.StartSound, ref Position, Radius);
-						Horn.StartEndSounds = true;
+						ParseNode(c, out Device.StartSound, ref Position, Radius);
+						Device.StartEndSounds = true;
 						break;
 					case "loop":
-						ParseNode(c, out Horn.LoopSound, ref Position, Radius);
+						ParseNode(c, out Device.LoopSound, ref Position, Radius);
+						break;
+					case "idleloop":
+						ParseNode(c, out Device.IdleLoopSound, ref Position, Radius);
 						break;
 					case "end":
 					case "release":
 					case "stop":
-						ParseNode(c, out Horn.EndSound, ref Position, Radius);
-						Horn.StartEndSounds = true;
+						ParseNode(c, out Device.EndSound, ref Position, Radius);
+						Device.StartEndSounds = true;
 						break;
 					case "toggle":
 						if (c.InnerText.ToLowerInvariant() == "true" || c.InnerText.ToLowerInvariant() == "1")
 						{
-							Horn.Loop = true;
+							Device.Loop = true;
 						}
 						break;
 				}
-				Horn.SoundPosition = Position;
+				Device.SoundPosition = Position;
 			}
 		}
 

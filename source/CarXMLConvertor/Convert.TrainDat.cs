@@ -34,7 +34,7 @@ namespace CarXmlConvertor
 		internal static int PowerNotches = 0;
 		internal static int BrakeNotches = 0;
 		private static MainForm mainForm;
-		internal static List<AccelerationCurve> AccelerationCurves = new List<AccelerationCurve>();
+		internal static AccelerationCurve[] AccelerationCurves = new AccelerationCurve[] {};
 
 		internal static void Process(MainForm form)
 		{
@@ -281,7 +281,9 @@ namespace CarXmlConvertor
 									}
 								} m++;
 							} i++; n++;
-							AccelerationCurves.Add(curve);
+							int ac = AccelerationCurves.Length;
+							Array.Resize(ref AccelerationCurves, ac + 1);
+							AccelerationCurves[ac] = curve;
 						} i--; break;
 					case "#handle":
 						i++;
@@ -415,6 +417,11 @@ namespace CarXmlConvertor
 				}
 			}
 			ConvertSoundCfg.DriverPosition.Z = 0.5 * CarLength + ConvertSoundCfg.DriverPosition.Z;
+			double factor = 1.0 + NumberOfTrailerCars * TrailerCarMass / (NumberOfMotorCars * MotorCarMass);
+			for (int i = 0; i < AccelerationCurves.Length; i++)
+			{
+				AccelerationCurves[i].Multiplier = factor;
+			}
 		}
 
 		private static int ParseFormat(string[] lines)
@@ -451,6 +458,7 @@ namespace CarXmlConvertor
 			internal double StageOneSpeed;
 			internal double StageTwoSpeed;
 			internal double StageTwoExponent;
+			internal double Multiplier;
 		}
 	}
 }

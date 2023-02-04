@@ -18,6 +18,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -64,6 +65,8 @@ namespace Train.OpenBve
 	    internal static BVEMotorSoundTable[] MotorSoundTables;
 	    internal static BveAccelerationCurve[] AccelerationCurves;
 	    internal static double MaximumAcceleration;
+
+	    internal static bool XMLOnly;
 
 		public Plugin()
 	    {
@@ -160,6 +163,7 @@ namespace Train.OpenBve
 					 * At present, XML is used only as an extension, but acceleration etc. will be implemented
 					 * When this is done, return true here
 					 */
+					return true;
 				}
 
 				return false;
@@ -193,6 +197,7 @@ namespace Train.OpenBve
 					 * At present, XML is used only as an extension, but acceleration etc. will be implemented
 					 * When this is done, return true here
 					 */
+					return true;
 				}
 			}
 			return false;
@@ -200,6 +205,10 @@ namespace Train.OpenBve
 
 	    public override bool LoadTrain(Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
 	    {
+		    bool[] VisibleFromInterior = new bool[0];
+		    UnifiedObject[] CarObjects = new UnifiedObject[0];
+		    UnifiedObject[] BogieObjects = new UnifiedObject[0];
+		    UnifiedObject[] CouplerObjects = new UnifiedObject[0];
 		    CurrentProgress = 0.0;
 		    LastProgress = 0.0;
 		    IsLoading = true;
@@ -247,7 +256,21 @@ namespace Train.OpenBve
 				{
 					TrainData = Path.CombineFile(currentTrain.TrainFolder, "train.dat");
 				}
-				TrainDatParser.Parse(TrainData, Encoding, currentTrain);
+
+				if (File.Exists(TrainData))
+				{
+					TrainDatParser.Parse(TrainData, Encoding, currentTrain);
+				}
+				else
+				{
+					string tXml = Path.CombineFile(currentTrain.TrainFolder, "train.xml");
+					if (File.Exists(tXml))
+					{
+						XMLOnly = true;
+						TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
+					}
+				}
+				
 			    LastProgress = 0.1;
 			    Thread.Sleep(1);
 			    if (Cancel)
@@ -271,20 +294,23 @@ namespace Train.OpenBve
 			// add exterior section
 			if (currentTrain.State != TrainState.Bogus)
 			{
-				bool[] VisibleFromInterior;
-				UnifiedObject[] CarObjects = new UnifiedObject[currentTrain.Cars.Length];
-				UnifiedObject[] BogieObjects = new UnifiedObject[currentTrain.Cars.Length * 2];
-				UnifiedObject[] CouplerObjects = new UnifiedObject[currentTrain.Cars.Length];
-
 				string tXml = Path.CombineFile(currentTrain.TrainFolder, "train.xml");
-				if (File.Exists(tXml))
+				if (!XMLOnly)
 				{
-					TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
+					// being used as an extension, so we need to load it now
+					Array.Resize(ref CarObjects, currentTrain.Cars.Length + 1);
+					Array.Resize(ref BogieObjects, (currentTrain.Cars.Length + 1) * 2);
+					Array.Resize(ref CouplerObjects, currentTrain.Cars.Length + 1);
+					if (File.Exists(tXml))
+					{
+						TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
+					}
+					else
+					{
+						ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, currentTrain);
+					}
 				}
-				else
-				{
-					ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, currentTrain);
-				}
+				
 
 				currentTrain.CameraCar = currentTrain.DriverCar;
 				Thread.Sleep(1);
@@ -359,11 +385,11 @@ namespace Train.OpenBve
 				for (int i = 0; i < currentTrain.Cars.Length; i++)
 				{
 					currentTrain.Cars[i].DetermineDoorClosingSpeed();
-					if (currentTrain.Cars[i].Specs.IsMotorCar && currentTrain.Cars[i].Sounds.Motor == null && TrainXmlParser.MotorSoundXMLParsed != null)
+					if (currentTrain.Cars[i].TractionModel is BVEMotorCar && TrainXmlParser.MotorSoundXMLParsed != null)
 					{
 						if(!TrainXmlParser.MotorSoundXMLParsed[i])
 						{
-							currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
+							currentTrain.Cars[i].TractionModel.Sounds = new BVEMotorSound(currentTrain.Cars[i], 18, MotorSoundTables);
 						}
 					}
 				}

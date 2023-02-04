@@ -307,7 +307,15 @@ namespace OpenBveApi.Interface {
 			 * Added in 1.8.4.3
 			 */
 			/// <summary>Toggles the sanders if fitted</summary>
-			Sanders
+			Sanders,
+			/// <summary>Toggles the state of the cylinder cocks</summary>
+			CylinderCocks,
+			/// <summary>Shovels coal onto the fire</summary>
+			ShovelFire,
+			/// <summary>Enables or disables the automatic fireman</summary>
+			AutomaticFireman,
+			/// <summary>Shows or hides the traction specific info display</summary>
+			TractionInfo,
 		}
 
 		/// <summary>Defines the possible command types</summary>

@@ -32,7 +32,7 @@ namespace TrainManager.Car
 			if (TrainManagerBase.currentHost.InGameTime >= this.NextUpdateTime)
 			{
 				this.NextUpdateTime = TrainManagerBase.currentHost.InGameTime + UpdateInterval;
-				this.CurrentAccelerationOutput -= 0.8 * this.Car.Specs.Acceleration * (double)ReverserPosition;
+				this.CurrentAccelerationOutput -= 0.8 * this.Car.TractionModel.Acceleration * (double)ReverserPosition;
 				if (this.CurrentAccelerationOutput < 0.0)
 				{
 					this.CurrentAccelerationOutput = 0.0;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace OpenBveApi.FunctionScripting
 {
@@ -295,6 +295,12 @@ namespace OpenBveApi.FunctionScripting
 				case "brakepipe":
 				case "brakecylinder":
 				case "straightairpipe":
+				case "wheelradius":
+				case "valvegearpivotx":
+				case "valvegearpivoty":
+				case "valvegearcrankangle":
+				case "valvegearcrankposition":
+				case "valvegearcylindersteam":
 				// station index functions
 				case "distancestation":
 				case "stopsstation":

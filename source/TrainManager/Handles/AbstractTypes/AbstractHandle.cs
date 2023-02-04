@@ -61,6 +61,9 @@ namespace TrainManager.Handles
 		/// <summary>The maximum notch a handle may spring to</summary>
 		public int MaxSpring;
 
+		/// <summary>The current ratio</summary>
+		public virtual double Ratio => (double)Actual / MaximumNotch;
+
 		internal double SpringTimer;
 
 		internal readonly TrainBase baseTrain;

@@ -1,4 +1,5 @@
 ﻿using SoundManager;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
 
@@ -6,14 +7,10 @@ namespace TrainManager.BrakeSystems
 {
 	public abstract class CarBrake
 	{
+		public readonly CarBase Car;
+
 		internal const double Tolerance = 5000.0;
-
-		/// <summary>Contains a reference to the EB handle of the controlling train</summary>
-		internal EmergencyHandle emergencyHandle;
-
-		/// <summary>Contains a reference to the reverser handle of the controlling train</summary>
-		internal ReverserHandle reverserHandle;
-
+		
 		/// <summary>Whether this is a main or auxiliary brake system</summary>
 		public BrakeType brakeType;
 
@@ -32,9 +29,6 @@ namespace TrainManager.BrakeSystems
 		internal EletropneumaticBrakeType electropneumaticBrakeType;
 
 		public StraightAirPipe straightAirPipe;
-
-		/// <summary>Stores whether the car is a motor car</summary>
-		internal bool isMotorCar;
 
 		/// <summary>The speed at which the brake control system activates in m/s</summary>
 		public double brakeControlSpeed;
@@ -96,6 +90,10 @@ namespace TrainManager.BrakeSystems
 		/// <returns>The deceleration in m/s</returns>
 		public double DecelerationAtServiceMaximumPressure(int Notch, double currentSpeed)
 		{
+			if (decelerationCurves == null || decelerationCurves.Length == 0)
+			{
+				return 0;
+			}
 			if (Notch == 0)
 			{
 				return this.decelerationCurves[0].GetAccelerationOutput(currentSpeed, 1.0);
@@ -113,6 +111,11 @@ namespace TrainManager.BrakeSystems
 		public virtual double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
 		{
 			return motorDeceleration;
+		}
+
+		public CarBrake(CarBase car)
+		{
+			Car = car;
 		}
 	}
 }

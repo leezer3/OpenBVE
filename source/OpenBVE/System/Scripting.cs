@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using TrainManager.Handles;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 // ReSharper disable UnusedMember.Global
@@ -110,8 +111,8 @@ namespace OpenBve
                     return 0;
                 }
                 return CarIndex > Train.Cars.Length
-                    ? Train.Cars[0].Specs.Acceleration
-                    : Train.Cars[CarIndex].Specs.Acceleration;
+                    ? Train.Cars[0].TractionModel.Acceleration
+                    : Train.Cars[CarIndex].TractionModel.Acceleration;
             }
 
             /// <summary>Returns the acceleration that the first motor car is currently generating in m/s</summary>
@@ -122,17 +123,17 @@ namespace OpenBve
                 if (Train == null) return 0.0;
                 for (int j = 0; j < Train.Cars.Length; j++)
                 {
-                    if (Train.Cars[j].Specs.IsMotorCar)
+                    if (Train.Cars[j].TractionModel is BVEMotorCar)
                     {
                         // hack: MotorAcceleration does not distinguish between forward/backward
-                        if (Train.Cars[j].Specs.MotorAcceleration < 0.0)
+                        if (Train.Cars[j].TractionModel.MotorAcceleration < 0.0)
                         {
-                            return Train.Cars[j].Specs.MotorAcceleration*
+                            return Train.Cars[j].TractionModel.MotorAcceleration*
                                    (double) Math.Sign(Train.Cars[j].CurrentSpeed);
                         }
-                        if (Train.Cars[j].Specs.MotorAcceleration > 0.0)
+                        if (Train.Cars[j].TractionModel.MotorAcceleration > 0.0)
                         {
-                            return Train.Cars[j].Specs.MotorAcceleration*
+                            return Train.Cars[j].TractionModel.MotorAcceleration*
                                    (double) Train.Handles.Reverser.Actual;
                         }
                     }
@@ -147,17 +148,17 @@ namespace OpenBve
             public static double accelerationMotor(TrainBase Train, int CarIndex)
             {
                 if (Train == null || Train.Cars.Length <= CarIndex) return 0.0;
-                if (Train.Cars[CarIndex].Specs.IsMotorCar)
+                if (Train.Cars[CarIndex].TractionModel is BVEMotorCar)
                 {
                     // hack: MotorAcceleration does not distinguish between forward/backward
-                    if (Train.Cars[CarIndex].Specs.MotorAcceleration < 0.0)
+                    if (Train.Cars[CarIndex].TractionModel.MotorAcceleration < 0.0)
                     {
-                        return Train.Cars[CarIndex].Specs.MotorAcceleration*
+                        return Train.Cars[CarIndex].TractionModel.MotorAcceleration*
                                (double) Math.Sign(Train.Cars[CarIndex].CurrentSpeed);
                     }
-                    if (Train.Cars[CarIndex].Specs.MotorAcceleration > 0.0)
+                    if (Train.Cars[CarIndex].TractionModel.MotorAcceleration > 0.0)
                     {
-                        return Train.Cars[CarIndex].Specs.MotorAcceleration*
+                        return Train.Cars[CarIndex].TractionModel.MotorAcceleration*
                                (double) Train.Handles.Reverser.Actual;
                     }
                 }

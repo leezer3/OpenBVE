@@ -15,6 +15,8 @@ using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.TractionModels.BVE;
+using TrainManager.TractionModels.Steam;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -81,7 +83,6 @@ namespace Train.OpenBve
 						}
 						break;
 					case "brake":
-						Train.Cars[Car].CarBrake.brakeType = BrakeType.Auxiliary;
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							ParseBrakeNode(c, fileName, Car, ref Train);
@@ -137,24 +138,30 @@ namespace Train.OpenBve
 					case "motorcar":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
-							Train.Cars[Car].Specs.IsMotorCar = true;
+							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], 10.0, 10.0);
 							if (!CopyAccelerationCurves)
 							{
 								//We've already set the acceleration curves elsewhere in the XML, so don't copy the default ones
 								break;
 							}
-							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
+							Train.Cars[Car].TractionModel.AccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
 							for (int i = 0; i < Plugin.AccelerationCurves.Length; i++)
 							{
-								Train.Cars[Car].Specs.AccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
+								Train.Cars[Car].TractionModel.AccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
 							}
 
-							Train.Cars[Car].Specs.AccelerationCurveMaximum = Plugin.MaximumAcceleration;
+							Train.Cars[Car].TractionModel.MaximumAcceleration = Plugin.MaximumAcceleration;
 						}
 						else
 						{
-							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[] { };
-							Train.Cars[Car].Specs.IsMotorCar = false;
+							Train.Cars[Car].TractionModel.AccelerationCurves = new AccelerationCurve[] { };
+							Train.Cars[Car].TractionModel = new TrailerCar(Train.Cars[Car]);
+						}
+						break;
+					case "steamengine":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							ParseSteamEngineNode(c, fileName, Car, ref Train);
 						}
 						break;
 					case "mass":
@@ -455,7 +462,7 @@ namespace Train.OpenBve
 													break;
 											}
 										}
-										Train.Cars[Car].Sounds.Motor = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
+										Train.Cars[Car].TractionModel.Sounds = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
 										break;
 								}
 							}
@@ -468,7 +475,7 @@ namespace Train.OpenBve
 						 * Retain this for the minute in case someone has actually used the thing (although the format is an ongoing WIP)....
 						 */
 						CopyAccelerationCurves = false;
-						Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(c, fileName);
+						Train.Cars[Car].TractionModel.AccelerationCurves = ParseAccelerationNode(c, fileName);
 						break;
 					case "power":
 						if (c.ChildNodes.OfType<XmlElement>().Any())
@@ -483,7 +490,33 @@ namespace Train.OpenBve
 										break;
 									case "accelerationcurves":
 										CopyAccelerationCurves = false;
-										Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(cc, fileName);
+										Train.Cars[Car].TractionModel.AccelerationCurves = ParseAccelerationNode(cc, fileName);
+										break;
+								}
+							}
+
+						}
+						break;
+					case "regulator":
+						if (Car != Train.DriverCar)
+						{
+							// not valid on non-driver car
+							break;
+						}
+						Train.Handles.Power = new Regulator(Train);
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "handle":
+										AbstractHandle regulator = new Regulator(Train);
+										ParseHandleNode(cc, ref regulator, Car, Train, fileName);
+										break;
+									case "accelerationcurves":
+										CopyAccelerationCurves = false;
+										Train.Cars[Car].TractionModel.AccelerationCurves = ParseAccelerationNode(cc, fileName);
 										break;
 								}
 							}

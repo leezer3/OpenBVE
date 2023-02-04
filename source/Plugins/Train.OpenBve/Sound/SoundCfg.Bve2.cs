@@ -4,6 +4,7 @@ using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Motor;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -101,9 +102,9 @@ namespace Train.OpenBve
 				train.Cars[i].Sounds.SpringL = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
 				train.Cars[i].Sounds.SpringR = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
 				// motor sound
-				if (train.Cars[i].Specs.IsMotorCar)
+				if (train.Cars[i].TractionModel is BVEMotorCar)
 				{
-					if (train.Cars[i].Sounds.Motor == null)
+					if (train.Cars[i].TractionModel.Sounds == null)
 					{
 						BVEMotorSound motorSound = new BVEMotorSound(train.Cars[i], 18.0, Plugin.MotorSoundTables);
 						System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -121,7 +122,7 @@ namespace Train.OpenBve
 							}
 						}
 
-						train.Cars[i].Sounds.Motor = motorSound;
+						train.Cars[i].TractionModel.Sounds = motorSound;
 					}
 					else
 					{

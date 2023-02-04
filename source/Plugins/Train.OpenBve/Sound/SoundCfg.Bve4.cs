@@ -7,7 +7,9 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
+using TrainManager.Handles;
 using TrainManager.Motor;
+using TrainManager.TractionModels.BVE;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -680,8 +682,13 @@ namespace Train.OpenBve
 						}
 						i--; break;
 					case "[reverser]":
+						ReverserHandle reverser = train.Handles.Reverser as ReverserHandle;
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
+							if (reverser == null)
+							{
+								continue;
+							}
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
@@ -690,10 +697,10 @@ namespace Train.OpenBve
 								switch (a.ToLowerInvariant())
 								{
 									case "on":
-										train.Handles.Reverser.EngageSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
+										reverser.EngageSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
 										break;
 									case "off":
-										train.Handles.Reverser.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
+										reverser.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
 										break;
 									default:
 										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -741,7 +748,7 @@ namespace Train.OpenBve
 									case "noise":
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											if (train.Cars[c].Specs.IsMotorCar | c == train.DriverCar)
+											if (train.Cars[c].TractionModel is BVEMotorCar | c == train.DriverCar)
 											{
 												train.Cars[c].Sounds.Loop = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
 											}
@@ -805,12 +812,12 @@ namespace Train.OpenBve
 			// Assign motor sounds to appropriate cars
 			for (int c = 0; c < train.Cars.Length; c++)
 			{
-				if (train.Cars[c].Specs.IsMotorCar)
+				if (train.Cars[c].TractionModel is BVEMotorCar)
 				{
-					if (train.Cars[c].Sounds.Motor == null)
+					if (train.Cars[c].TractionModel.Sounds == null)
 					{
-						BVEMotorSound motorSound = new BVEMotorSound(train.Cars[c], 18.0, Plugin.MotorSoundTables);
-						motorSound.Position = center;
+						BVEMotorSound motorSound  = new BVEMotorSound(train.Cars[c], 18.0, Plugin.MotorSoundTables);
+						train.Cars[c].TractionModel.Sounds.Position = center;
 						for (int i = 0; i < motorSound.Tables.Length; i++)
 						{
 							motorSound.Tables[i].Buffer = null;
@@ -826,7 +833,7 @@ namespace Train.OpenBve
 							}
 						}
 
-						train.Cars[c].Sounds.Motor = motorSound;
+						train.Cars[c].TractionModel.Sounds = motorSound;
 					}
 					else
 					{
