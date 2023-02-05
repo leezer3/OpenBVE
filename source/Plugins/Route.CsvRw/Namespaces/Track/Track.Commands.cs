@@ -138,6 +138,8 @@
 		/// <summary>Starts a repeating object cycle</summary>
 		PatternObj,
 		/// <summary>Ends a repeating object cycle</summary>
-		PatternEnd
+		PatternEnd,
+		/// <summary>Plays a sound</summary>
+		Sound
 	}
 }

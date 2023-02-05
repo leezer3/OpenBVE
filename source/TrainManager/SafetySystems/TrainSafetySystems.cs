@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Runtime;
+using SoundManager;
 using TrainManager.Trains;
 
 namespace TrainManager.SafetySystems
@@ -15,5 +16,7 @@ namespace TrainManager.SafetySystems
 		public DoorInterlockStates DoorInterlockState;
 		/// <summary>The train headlights</summary>
 		public LightSource Headlights;
+		/// <summary>An announcement queued for manual playback</summary>
+		public SoundBuffer QueuedAnnouncement;
 	}
 }

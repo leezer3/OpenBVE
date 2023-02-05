@@ -225,7 +225,7 @@ namespace SoundManager
 					continue;
 				}
 
-				if (((PathOrigin)Buffers[i].Origin).Path == path)
+				if (((PathOrigin)Buffers[i].Origin).Path == path && Buffers[i].TrailingSilence == 0.0)
 				{
 					return Buffers[i];
 				}
@@ -243,6 +243,30 @@ namespace SoundManager
 			{
 				return null;
 			}
+			BufferCount++;
+			return Buffers[BufferCount - 1];
+		}
+
+		/// <summary>Registers a sound buffer and returns a handle to the buffer.</summary>
+		/// <param name="path">The path to the sound.</param>
+		/// <param name="radius">The default effective radius.</param>
+		/// <param name="trailingSilence">The amount of trailing silence to play whilst looping this sound</param>
+		/// <returns>The handle to the sound buffer.</returns>
+		public SoundBuffer RegisterBuffer(string path, double radius, double trailingSilence)
+		{
+			for (int i = 0; i < BufferCount; i++)
+			{
+				if (!(Buffers[i].Origin is PathOrigin) || Buffers[i].TrailingSilence != trailingSilence) continue;
+				if (((PathOrigin)Buffers[i].Origin).Path == path)
+				{
+					return Buffers[i];
+				}
+			}
+			if (Buffers.Length == BufferCount)
+			{
+				Array.Resize<SoundBuffer>(ref Buffers, Buffers.Length << 1);
+			}
+			Buffers[BufferCount] = new SoundBuffer(CurrentHost, path, radius, trailingSilence);
 			BufferCount++;
 			return Buffers[BufferCount - 1];
 		}

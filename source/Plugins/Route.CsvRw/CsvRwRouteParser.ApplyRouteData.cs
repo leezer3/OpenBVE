@@ -486,27 +486,7 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.Blocks[i].SoundEvents.Length; j++)
 					{
-						if ((int)Data.Blocks[i].SoundEvents[j].Type > 1 && (int)Data.Blocks[i].SoundEvents[j].Type < 6 )
-						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							double d = Data.Blocks[i].SoundEvents[j].TrackPosition - StartingDistance;
-							switch (Data.Blocks[i].SoundEvents[j].Type)
-							{
-								case SoundType.TrainStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero);
-									break;
-								case SoundType.TrainAllCarStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, true, false, Vector3.Zero);
-									break;
-								case SoundType.TrainDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
-									break;
-								case SoundType.TrainAllCarDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, true, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
-									break;
-							}
-						}
+						Data.Blocks[i].SoundEvents[j].CreateEvent(CurrentRoute, n, StartingDistance);
 					}
 				}
 				// turn
@@ -763,7 +743,7 @@ namespace CsvRwRouteParser
 						{
 							for (int k = 0; k < Data.Blocks[i].SoundEvents.Length; k++)
 							{
-								Data.Blocks[i].SoundEvents[k].Create(pos, StartingDistance, Direction, planar, updown);
+								Data.Blocks[i].SoundEvents[k].CreateAmbient(pos, StartingDistance, Direction, planar, updown);
 							}
 						}
 						// forms

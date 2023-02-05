@@ -32,6 +32,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
 using Route.Mechanik;
@@ -867,7 +868,7 @@ namespace MechanikRouteParser
 					}
 					int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
 					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(Plugin.CurrentHost, 0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(Plugin.CurrentHost, 0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, SoundType.TrainStatic, currentRouteData.Blocks[i].Sounds[j].Looped, currentRouteData.Blocks[i].Sounds[j].Position);
 				}
 			}
 			Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);

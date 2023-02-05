@@ -27,6 +27,8 @@
 		StaticObject = 8,
 		/// <summary>The sound source is emitted by an animated object, and may move</summary>
 		AnimatedObject = 9,
+		/// <summary>The sound is train based, but player triggered in the driver car</summary>
+		TrainPlayerTrigger = 10,
 		/// <summary>The sound source is undefined</summary>
 		Undefined = -1
 	}
