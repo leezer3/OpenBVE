@@ -118,13 +118,8 @@ namespace SoundManager
 			}
 			if (Buffer != null)
 			{
-				if (SoundsBase.Sources.Length == SoundsBase.SourceCount)
-				{
-					Array.Resize(ref SoundsBase.Sources, SoundsBase.Sources.Length << 1);
-				}
-				SoundsBase.Sources[SoundsBase.SourceCount] = new SoundSource(Buffer, Buffer.Radius, pitch, volume, Position, Car, looped);
-				this.Source = SoundsBase.Sources[SoundsBase.SourceCount];
-				SoundsBase.SourceCount++;
+				SoundsBase.Sources.Add(new SoundSource(Buffer, Buffer.Radius, pitch, volume, Position, Car, looped));
+				this.Source = SoundsBase.Sources[SoundsBase.Sources.Count - 1];
 			}
 			
 		}

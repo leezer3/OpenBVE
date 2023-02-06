@@ -15,7 +15,7 @@ namespace OpenBve
 			if (train is TrainBase)
 			{
 				var t = (TrainBase) train;
-				for (int i = 0; i < SourceCount; i++)
+				for (int i = 0; i < Sources.Count; i++)
 				{
 					if (t.Cars.Contains(Sources[i].Parent) || Sources[i].Parent == train)
 					{

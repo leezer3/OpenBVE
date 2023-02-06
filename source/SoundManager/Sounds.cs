@@ -24,16 +24,10 @@ namespace SoundManager
 		private ContextHandle OpenAlContext;
 
 		/// <summary>A list of all sound buffers.</summary>
-		private SoundBuffer[] Buffers = new SoundBuffer[16];
-
-		/// <summary>The number of sound buffers.</summary>
-		private int BufferCount = 0;
+		private readonly List<SoundBuffer> Buffers = new List<SoundBuffer>();
 
 		/// <summary>A list of all sound sources.</summary>
-		protected internal static SoundSource[] Sources = new SoundSource[16];
-
-		/// <summary>The number of sound sources.</summary>
-		protected internal static int SourceCount = 0;
+		protected internal static List<SoundSource> Sources = new List<SoundSource>();
 
 		/// <summary>The gain threshold. Sounds with gains below this value are not played.</summary>
 		protected const double GainThreshold = 0.0001;
@@ -218,7 +212,7 @@ namespace SoundManager
 			{
 				return null;
 			}
-			for (int i = 0; i < BufferCount; i++)
+			for (int i = 0; i < Buffers.Count; i++)
 			{
 				if (!(Buffers[i].Origin is PathOrigin))
 				{
@@ -230,21 +224,16 @@ namespace SoundManager
 					return Buffers[i];
 				}
 			}
-			if (Buffers.Length == BufferCount)
-			{
-				Array.Resize(ref Buffers, Buffers.Length << 1);
-			}
 
 			try
 			{
-				Buffers[BufferCount] = new SoundBuffer(CurrentHost, path, radius);
+				Buffers.Add(new SoundBuffer(CurrentHost, path, radius));
 			}
 			catch
 			{
 				return null;
 			}
-			BufferCount++;
-			return Buffers[BufferCount - 1];
+			return Buffers[Buffers.Count - 1];
 		}
 
 		/// <summary>Registers a sound buffer and returns a handle to the buffer.</summary>
@@ -254,7 +243,7 @@ namespace SoundManager
 		/// <returns>The handle to the sound buffer.</returns>
 		public SoundBuffer RegisterBuffer(string path, double radius, double trailingSilence)
 		{
-			for (int i = 0; i < BufferCount; i++)
+			for (int i = 0; i < Buffers.Count; i++)
 			{
 				if (!(Buffers[i].Origin is PathOrigin) || Buffers[i].TrailingSilence != trailingSilence) continue;
 				if (((PathOrigin)Buffers[i].Origin).Path == path)
@@ -262,13 +251,8 @@ namespace SoundManager
 					return Buffers[i];
 				}
 			}
-			if (Buffers.Length == BufferCount)
-			{
-				Array.Resize<SoundBuffer>(ref Buffers, Buffers.Length << 1);
-			}
-			Buffers[BufferCount] = new SoundBuffer(CurrentHost, path, radius, trailingSilence);
-			BufferCount++;
-			return Buffers[BufferCount - 1];
+			Buffers.Add(new SoundBuffer(CurrentHost, path, radius, trailingSilence));
+			return Buffers[Buffers.Count - 1];
 		}
 
 		/// <summary>Registers a sound buffer and returns a handle to the buffer.</summary>
@@ -277,21 +261,15 @@ namespace SoundManager
 		/// <returns>The handle to the sound buffer.</returns>
 		public SoundBuffer RegisterBuffer(Sound data, double radius)
 		{
-			if (Buffers.Length == BufferCount)
-			{
-				Array.Resize(ref Buffers, Buffers.Length << 1);
-			}
-
 			try
 			{
-				Buffers[BufferCount] = new SoundBuffer(data, radius);
+				Buffers.Add(new SoundBuffer(data, radius));
 			}
 			catch
 			{
 				return null;
 			}
-			BufferCount++;
-			return Buffers[BufferCount - 1];
+			return Buffers[Buffers.Count - 1];
 		}
 
 		/// <summary>Attempts to load a new sound buffer</summary>
@@ -331,7 +309,7 @@ namespace SoundManager
 		/// <summary>Loads all sound buffers immediately.</summary>
 		internal void LoadAllBuffers()
 		{
-			for (int i = 0; i < BufferCount; i++)
+			for (int i = 0; i < Buffers.Count; i++)
 			{
 				LoadBuffer(Buffers[i]);
 			}
@@ -356,7 +334,7 @@ namespace SoundManager
 		/// <summary>Unloads all sound buffers immediately.</summary>
 		internal void UnloadAllBuffers()
 		{
-			for (int i = 0; i < BufferCount; i++)
+			for (int i = 0; i < Buffers.Count; i++)
 			{
 				UnloadBuffer(Buffers[i]);
 			}
@@ -397,13 +375,8 @@ namespace SoundManager
 		/// <returns>The sound source.</returns>
 		public SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, bool looped)
 		{
-			if (Sources.Length == SourceCount)
-			{
-				Array.Resize(ref Sources, Sources.Length << 1);
-			}
-			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, null, looped);
-			SourceCount++;
-			return Sources[SourceCount - 1];
+			Sources.Add(new SoundSource(buffer, buffer.Radius, pitch, volume, position, null, looped));
+			return Sources[Sources.Count - 1];
 		}
 
 		/// <summary>Plays a sound.</summary>
@@ -419,13 +392,8 @@ namespace SoundManager
 			if (buffer is SoundBuffer)
 			{
 				SoundBuffer b = (SoundBuffer)buffer;
-				if (Sources.Length == SourceCount)
-				{
-					Array.Resize(ref Sources, Sources.Length << 1);
-				}
-				Sources[SourceCount] = new SoundSource(b, b.Radius, pitch, volume, position, parent, looped);
-				SourceCount++;
-				return Sources[SourceCount - 1];
+				Sources.Add(new SoundSource(b, b.Radius, pitch, volume, position, parent, looped));
+				return Sources[Sources.Count - 1];
 			}
 			throw new NotSupportedException();
 		}
@@ -442,13 +410,8 @@ namespace SoundManager
 			if (buffer is SoundBuffer)
 			{
 				SoundBuffer b = (SoundBuffer)buffer;
-				if (Sources.Length == SourceCount)
-				{
-					Array.Resize(ref Sources, Sources.Length << 1);
-				}
-				Sources[SourceCount] = new SoundSource(b, b.Radius, pitch, volume, position, null, looped);
-				SourceCount++;
-				return Sources[SourceCount - 1];
+				Sources.Add(new SoundSource(b, b.Radius, pitch, volume, position, null, looped));
+				return Sources[Sources.Count - 1];
 			}
 			throw new NotSupportedException();
 		}
@@ -486,7 +449,7 @@ namespace SoundManager
 		/// <summary>Stops all sounds.</summary>
 		public void StopAllSounds()
 		{
-			for (int i = 0; i < SourceCount; i++)
+			for (int i = 0; i < Sources.Count; i++)
 			{
 				if (Sources[i] == null)
 				{
@@ -505,7 +468,7 @@ namespace SoundManager
 		/// <param name="train">The train.</param>
 		public virtual void StopAllSounds(object train)
 		{
-			for (int i = 0; i < SourceCount; i++)
+			for (int i = 0; i < Sources.Count; i++)
 			{
 				if (Sources[i] == null)
 				{
@@ -563,7 +526,7 @@ namespace SoundManager
 		/// <returns>The number of registered sound buffers.</returns>
 		public int GetNumberOfRegisteredBuffers()
 		{
-			return BufferCount;
+			return Buffers.Count;
 		}
 
 		/// <summary>Gets the number of loaded sound buffers.</summary>
@@ -571,7 +534,7 @@ namespace SoundManager
 		public int GetNumberOfLoadedBuffers()
 		{
 			int count = 0;
-			for (int i = 0; i < BufferCount; i++)
+			for (int i = 0; i < Buffers.Count; i++)
 			{
 				if (Buffers[i].Loaded)
 				{
@@ -585,7 +548,7 @@ namespace SoundManager
 		/// <returns>The number of registered sound sources.</returns>
 		public int GetNumberOfRegisteredSources()
 		{
-			return SourceCount;
+			return Sources.Count;
 		}
 
 		/// <summary>Gets the number of playing sound sources.</summary>
@@ -593,7 +556,7 @@ namespace SoundManager
 		public int GetNumberOfPlayingSources()
 		{
 			int count = 0;
-			for (int i = 0; i < SourceCount; i++)
+			for (int i = 0; i < Sources.Count; i++)
 			{
 				if (Sources[i] == null)
 				{
