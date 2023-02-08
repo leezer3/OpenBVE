@@ -172,7 +172,7 @@ namespace ObjectViewer.Graphics
 
 			// alpha face
 			ResetOpenGlState();
-			VisibleObjects.SortPolygonsInAlphaFaces();
+			alphaFaces.SortByDistance(Camera.AbsolutePosition);
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{

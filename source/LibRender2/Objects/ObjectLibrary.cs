@@ -150,11 +150,15 @@ namespace LibRender2.Objects
 				{
 					if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)
 					{
-						if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
+						// Have to load the texture bytes in order to determine transparency type
+						Texture daytimeTexture; 
+						State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin.GetTexture(out daytimeTexture);
+						TextureTransparencyType transparencyType = daytimeTexture.GetTransparencyType();
+						if (transparencyType == TextureTransparencyType.Alpha)
 						{
 							alpha = true;
 						}
-						else if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Transparency == TextureTransparencyType.Partial && currentOptions.TransparencyMode == TransparencyMode.Quality)
+						else if (transparencyType == TextureTransparencyType.Partial && currentOptions.TransparencyMode == TransparencyMode.Quality)
 						{
 							alpha = true;
 						}
@@ -162,11 +166,14 @@ namespace LibRender2.Objects
 
 					if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
 					{
-						if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
+						Texture nighttimeTexture; 
+						State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin.GetTexture(out nighttimeTexture);
+						TextureTransparencyType transparencyType = nighttimeTexture.GetTransparencyType();
+						if (transparencyType == TextureTransparencyType.Alpha)
 						{
 							alpha = true;
 						}
-						else if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Transparency == TextureTransparencyType.Partial && currentOptions.TransparencyMode == TransparencyMode.Quality)
+						else if (transparencyType == TextureTransparencyType.Partial && currentOptions.TransparencyMode == TransparencyMode.Quality)
 						{
 							alpha = true;
 						}
@@ -276,14 +283,6 @@ namespace LibRender2.Objects
 
 			// sort
 			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
-		}
-
-
-
-		public void SortPolygonsInAlphaFaces()
-		{
-			myAlphaFaces = SortPolygons(myAlphaFaces);
-			AlphaFaces = myAlphaFaces.AsReadOnly();
 		}
 
 		public void SortPolygonsInOverlayAlphaFaces()
