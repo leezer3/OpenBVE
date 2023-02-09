@@ -14,6 +14,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
+// ReSharper disable RedundantNameQualifier - Needed as otherwise it actually breaks :/
 
 namespace OpenBveApi.Hosts {
 
@@ -95,6 +96,7 @@ namespace OpenBveApi.Hosts {
 				{
 					try
 					{
+						// ReSharper disable once UnusedVariable
 						var version = GetWineVersion();
 						cachedPlatform = HostPlatform.WINE;
 						return cachedPlatform;
@@ -273,6 +275,18 @@ namespace OpenBveApi.Hosts {
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
 		public virtual bool RegisterSound(string path, double radius, out SoundHandle handle)
+		{
+			handle = null;
+			return false;
+		}
+
+		/// <summary>Registers a sound and returns a handle to the sound.</summary>
+		/// <param name="path">The path to the file or folder that contains the sound.</param>
+		/// <param name="radius">The sound radius</param>
+		/// <param name="trailingSilence">The trailing silence to be played upon repetition of the sound</param>
+		/// <param name="handle">Receives a handle to the sound.</param>
+		/// <returns>Whether loading the sound was successful.</returns>
+		public virtual bool RegisterSound(string path, double radius, double trailingSilence, out SoundHandle handle)
 		{
 			handle = null;
 			return false;

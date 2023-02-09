@@ -1,4 +1,5 @@
-﻿using OpenBveApi.FunctionScripting;
+﻿using System;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 using OpenTK.Audio.OpenAL;
@@ -41,6 +42,27 @@ namespace SoundManager
 		internal FunctionScript VolumeFunction;
 
 		internal double InternalVolumeFactor;
+
+		/// <summary>Sets the amount of trailing silence to be played after this sound when looping</summary>
+		internal double TrailingSilence;
+
+		/// <summary>Creates a new sound buffer</summary>
+		/// <param name="host">The host application</param>
+		/// <param name="path">The on-disk path to the sound to load</param>
+		/// <param name="radius">The radius for this sound</param>
+		/// <param name="trailingSilence">The amount of trailing silence to play</param>
+		internal SoundBuffer(HostInterface host, string path, double radius, double trailingSilence) {
+			Origin = new PathOrigin(path, host);
+			Radius = radius;
+			Loaded = false;
+			OpenAlBufferName = 0;
+			_duration = 0.0;
+			InternalVolumeFactor = 0.5;
+			Ignore = false;
+			PitchFunction = null;
+			VolumeFunction = null;
+			TrailingSilence = trailingSilence;
+		}
 
 		/// <summary>Creates a new sound buffer</summary>
 		/// <param name="host">The host application</param>
@@ -141,6 +163,12 @@ namespace SoundManager
 					byte[] bytes = sound.GetMonoMix();
 					AL.GenBuffers(1, out OpenAlBufferName);
 					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
+					if (TrailingSilence != 0)
+					{
+						int sampleCount = (int)(TrailingSilence * sound.SampleRate);
+						int b = bytes.Length;
+						Array.Resize(ref bytes, b + sampleCount); // n.b. Default value of byte in array is zero, hence new duration is silent
+					}
 					AL.BufferData(OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
 					_duration = sound.Duration;
 					Loaded = true;

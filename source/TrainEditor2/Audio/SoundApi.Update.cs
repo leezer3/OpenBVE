@@ -34,7 +34,7 @@ namespace TrainEditor2.Audio
 			 * and ensure that all others are stopped.
 			 * */
 			List<SoundSourceAttenuation> toBePlayed = new List<SoundSourceAttenuation>();
-			for (int i = 0; i < SourceCount; i++)
+			for (int i = Sources.Count - 1; i > 0; i--)
 			{
 				if (Sources[i].State == SoundSourceState.StopPending)
 				{
@@ -44,11 +44,7 @@ namespace TrainEditor2.Audio
 					 * sound sources.
 					 * */
 					AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-					Sources[i].State = SoundSourceState.Stopped;
-					Sources[i].OpenAlSourceName = 0;
-					Sources[i] = Sources[SourceCount - 1];
-					SourceCount--;
-					i--;
+					Sources.RemoveAt(i);
 				}
 				else if (Sources[i].State == SoundSourceState.Stopped)
 				{
@@ -56,9 +52,7 @@ namespace TrainEditor2.Audio
 					 * The sound was already stopped. Remove it from
 					 * the list of sound sources.
 					 * */
-					Sources[i] = Sources[SourceCount - 1];
-					SourceCount--;
-					i--;
+					Sources.RemoveAt(i);
 				}
 				else if (GlobalMute)
 				{
@@ -76,11 +70,7 @@ namespace TrainEditor2.Audio
 					}
 					if (!Sources[i].Looped)
 					{
-						Sources[i].State = SoundSourceState.Stopped;
-						Sources[i].OpenAlSourceName = 0;
-						Sources[i] = Sources[SourceCount - 1];
-						SourceCount--;
-						i--;
+						Sources.RemoveAt(i);
 					}
 				}
 				else
@@ -99,11 +89,7 @@ namespace TrainEditor2.Audio
 							 * Remove it from the list of sound sources.
 							 * */
 							AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-							Sources[i].State = SoundSourceState.Stopped;
-							Sources[i].OpenAlSourceName = 0;
-							Sources[i] = Sources[SourceCount - 1];
-							SourceCount--;
-							i--;
+							Sources.RemoveAt(i);
 							continue;
 						}
 					}
@@ -140,11 +126,7 @@ namespace TrainEditor2.Audio
 						}
 						if (!Sources[i].Looped)
 						{
-							Sources[i].State = SoundSourceState.Stopped;
-							Sources[i].OpenAlSourceName = 0;
-							Sources[i] = Sources[SourceCount - 1];
-							SourceCount--;
-							i--;
+							Sources.RemoveAt(i);
 						}
 					}
 					else

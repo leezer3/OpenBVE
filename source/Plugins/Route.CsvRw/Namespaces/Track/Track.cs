@@ -2835,6 +2835,24 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
+				case TrackCommand.Sound:
+					// XML Sound- All properties to be loaded from the XML
+					if (PreviewOnly)
+					{
+						break;
+					}
+					string fileName = Path.CombineFile(Arguments[0], SoundPath);
+					if (!System.IO.File.Exists(fileName))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SoundFile " + Arguments[0] + " was not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					}
+					else
+					{
+						int n = Data.Blocks[BlockIndex].SoundEvents.Length;
+						Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+						Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, fileName);
+					}
+					break;
 				case TrackCommand.PreTrain:
 				{
 					if (!PreviewOnly)

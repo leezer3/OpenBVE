@@ -49,7 +49,7 @@ namespace RouteViewer
 			 * Update the sound sources
 			 * */
 			int actuallyPlaying = 0;
-			for (int i = 0; i < SourceCount; i++) {
+			for (int i = Sources.Count - 1; i > 0; i--) {
 				if (Sources[i].State == SoundSourceState.StopPending) {
 					/*
 					 * The sound is still playing but is to be stopped.
@@ -57,19 +57,13 @@ namespace RouteViewer
 					 * sound sources.
 					 * */
 					AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-					Sources[i].State = SoundSourceState.Stopped;
-					Sources[i].OpenAlSourceName = 0;
-					Sources[i] = Sources[SourceCount - 1];
-					SourceCount--;
-					i--;
+					Sources.RemoveAt(i);
 				} else if (Sources[i].State == SoundSourceState.Stopped) {
 					/*
 					 * The sound was already stopped. Remove it from
 					 * the list of sound sources.
 					 * */
-					Sources[i] = Sources[SourceCount - 1];
-					SourceCount--;
-					i--;
+					Sources.RemoveAt(i);
 				} else if (GlobalMute) {
 					/*
 					 * The sound is playing or about to be played, but
@@ -83,11 +77,7 @@ namespace RouteViewer
 						Sources[i].OpenAlSourceName = 0;
 					}
 					if (!Sources[i].Looped) {
-						Sources[i].State = SoundSourceState.Stopped;
-						Sources[i].OpenAlSourceName = 0;
-						Sources[i] = Sources[SourceCount - 1];
-						SourceCount--;
-						i--;
+						Sources.RemoveAt(i);
 					}
 				} else {
 					/*
@@ -147,11 +137,7 @@ namespace RouteViewer
 							Sources[i].OpenAlSourceName = 0;
 						}
 						if (!Sources[i].Looped) {
-							Sources[i].State = SoundSourceState.Stopped;
-							Sources[i].OpenAlSourceName = 0;
-							Sources[i] = Sources[SourceCount - 1];
-							SourceCount--;
-							i--;
+							Sources.RemoveAt(i);
 						}
 					} else {
 						/*
@@ -191,11 +177,7 @@ namespace RouteViewer
 								 * Remove it from the list of sound sources.
 								 * */
 								AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-								Sources[i].State = SoundSourceState.Stopped;
-								Sources[i].OpenAlSourceName = 0;
-								Sources[i] = Sources[SourceCount - 1];
-								SourceCount--;
-								i--;
+								Sources.RemoveAt(i);
 							} else {
 								actuallyPlaying++;
 							}
@@ -293,7 +275,7 @@ namespace RouteViewer
 			 * and ensure that all others are stopped.
 			 * */
 			List<SoundSourceAttenuation> toBePlayed = new List<SoundSourceAttenuation>();
-			for (int i = 0; i < SourceCount; i++) {
+			for (int i = Sources.Count - 1; i > 0; i--) {
 				if (Sources[i].State == SoundSourceState.StopPending) {
 					/*
 					 * The sound is still playing but is to be stopped.
@@ -301,19 +283,13 @@ namespace RouteViewer
 					 * sound sources.
 					 * */
 					AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-					Sources[i].State = SoundSourceState.Stopped;
-					Sources[i].OpenAlSourceName = 0;
-					Sources[i] = Sources[SourceCount - 1];
-					SourceCount--;
-					i--;
+					Sources.RemoveAt(i);
 				} else if (Sources[i].State == SoundSourceState.Stopped) {
 					/*
 					 * The sound was already stopped. Remove it from
 					 * the list of sound sources.
 					 * */
-					Sources[i] = Sources[SourceCount - 1];
-					SourceCount--;
-					i--;
+					Sources.RemoveAt(i);
 				} else if (GlobalMute) {
 					/*
 					 * The sound is playing or about to be played, but
@@ -327,11 +303,7 @@ namespace RouteViewer
 						Sources[i].OpenAlSourceName = 0;
 					}
 					if (!Sources[i].Looped) {
-						Sources[i].State = SoundSourceState.Stopped;
-						Sources[i].OpenAlSourceName = 0;
-						Sources[i] = Sources[SourceCount - 1];
-						SourceCount--;
-						i--;
+						Sources.RemoveAt(i);
 					}
 				} else {
 					/*
@@ -346,11 +318,7 @@ namespace RouteViewer
 							 * Remove it from the list of sound sources.
 							 * */
 							AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-							Sources[i].State = SoundSourceState.Stopped;
-							Sources[i].OpenAlSourceName = 0;
-							Sources[i] = Sources[SourceCount - 1];
-							SourceCount--;
-							i--;
+							Sources.RemoveAt(i);
 							continue;
 						}
 					}
@@ -396,11 +364,7 @@ namespace RouteViewer
 							Sources[i].OpenAlSourceName = 0;
 						}
 						if (!Sources[i].Looped) {
-							Sources[i].State = SoundSourceState.Stopped;
-							Sources[i].OpenAlSourceName = 0;
-							Sources[i] = Sources[SourceCount - 1];
-							SourceCount--;
-							i--;
+							Sources.RemoveAt(i);
 						}
 					} else {
 						/*
