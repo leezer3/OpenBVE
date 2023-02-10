@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Camera;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
@@ -46,6 +46,10 @@ namespace LibRender2.Cameras
 			}
 			set
 			{
+				if (value == absolutePosition)
+				{
+					return;
+				}
 				Renderer.updateVisibility = true;
 				absolutePosition = value;
 				TranslationMatrix = Matrix4D.CreateTranslation(-value.X, -value.Y, value.Z);
