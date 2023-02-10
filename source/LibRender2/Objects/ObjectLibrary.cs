@@ -24,7 +24,7 @@ namespace LibRender2.Objects
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;
-		private List<FaceState> myAlphaFaces;
+		private readonly List<FaceState> myAlphaFaces;
 		private readonly List<FaceState> myOverlayOpaqueFaces;
 		private List<FaceState> myOverlayAlphaFaces;
 		public readonly ReadOnlyCollection<ObjectState> Objects;

@@ -79,8 +79,25 @@ namespace LibRender2.Cameras
 		public const double ExteriorTopAngularSpeed = 10.0;
 		/// <summary>The top speed when zooming in or out</summary>
 		public const double ZoomTopSpeed = 2.0;
+
 		/// <summary>The current camera mode</summary>
-		public CameraViewMode CurrentMode;
+		public CameraViewMode CurrentMode
+		{
+			get
+			{
+				return currentMode;
+			}
+			set
+			{
+				if (currentMode == value)
+				{
+					return;
+				}
+				currentMode = value;
+				Renderer.updateVisibility = true;
+				Renderer.LastUpdatedTrackPosition += 0.01;
+			}
+		}
 		/// <summary>The current camera restriction mode</summary>
 		public CameraRestrictionMode CurrentRestriction = CameraRestrictionMode.NotAvailable;
 		/// <summary>The saved exterior camera alignment</summary>
@@ -92,6 +109,7 @@ namespace LibRender2.Cameras
 		
 		private Vector3 absolutePosition;
 
+		private CameraViewMode currentMode;
 		internal CameraProperties(BaseRenderer renderer)
 		{
 			Renderer = renderer;

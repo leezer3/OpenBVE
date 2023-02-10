@@ -62,7 +62,7 @@ namespace LibRender2
 		protected int[] ObjectsSortedByEnd;
 		protected int ObjectsSortedByStartPointer;
 		protected int ObjectsSortedByEndPointer;
-		protected double LastUpdatedTrackPosition;
+		protected internal double LastUpdatedTrackPosition;
 		/// <summary>Whether ReShade is in use</summary>
 		/// <remarks>Don't use OpenGL error checking with ReShade, as this breaks</remarks>
 		public bool ReShadeInUse;
@@ -684,9 +684,9 @@ namespace LibRender2
 		{
 			while (visibilityThread)
 			{
-				if (updateVisibility)
+				if (updateVisibility && CameraTrackFollower != null)
 				{
-					UpdateVisibility(CameraTrackFollower.TrackPosition);
+					UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
 					updateVisibility = false;
 				}
 				else
@@ -873,6 +873,7 @@ namespace LibRender2
 			Camera.ForwardViewingDistance = d * max;
 			Camera.BackwardViewingDistance = -d * min;
 			updateVisibility = true;
+			LastUpdatedTrackPosition += 0.001;
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
