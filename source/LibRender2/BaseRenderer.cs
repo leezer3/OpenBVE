@@ -640,19 +640,21 @@ namespace LibRender2
 		/// the required VAO objects</remarks>
 		public void InitializeVisibility()
 		{
-			for (int i = 0; i < StaticObjectStates.Count; i++)
+			if (!ForceLegacyOpenGL) // as we might want to switch renderer types
 			{
-				VAOExtensions.CreateVAO(ref StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
-			}
-			for (int i = 0; i < DynamicObjectStates.Count; i++)
-			{
-				VAOExtensions.CreateVAO(ref DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+				for (int i = 0; i < StaticObjectStates.Count; i++)
+				{
+					VAOExtensions.CreateVAO(ref StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+				}
+				for (int i = 0; i < DynamicObjectStates.Count; i++)
+				{
+					VAOExtensions.CreateVAO(ref DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+				}
 			}
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
-			
 			
 			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
@@ -671,8 +673,6 @@ namespace LibRender2
 					VisibleObjects.ShowObject(state, ObjectType.Static);
 				}
 			}
-			
-
 		}
 
 		public bool updateVisibility;
