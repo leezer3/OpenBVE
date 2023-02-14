@@ -464,7 +464,7 @@ namespace Plugin
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + currentKey);
 						}
-						Materials[currentKey].Color.A = (byte)((1 - a) * 255);
+						Materials[currentKey].Color.A = (byte)(a * 255);
 						break;
 					case "map_kd":
 					case "map_ka":
