@@ -94,7 +94,7 @@ namespace Plugin
 						for (int i = 0; i < nVerts; i++)
 						{
 							Vertex v = new Vertex(allVertices[(int)face.Vertices[i]]);
-							if (i <= allTexCoords.Count)
+							if (allTexCoords.Count > 0 && i <= allTexCoords.Count)
 							{
 								v.TextureCoordinates = allTexCoords[(int)face.TexturCoords[i]];
 							}
