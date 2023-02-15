@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Parsers\AssimpObjParser.cs" />
+    <Compile Include="Parsers\Commands.cs" />
     <Compile Include="Parsers\WavefrontObjParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
