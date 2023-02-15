@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -85,12 +86,15 @@ namespace OpenBve {
 		/// <summary>Gets the absolute Railway folder for a given route file</summary>
 		/// <returns>The absolute on-disk path of the railway folder</returns>
 		internal static string GetRailwayFolder(string RouteFile) {
-			try {
+			try
+			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
-				
-				while (true) {
+
+				while (true)
+				{
 					string Subfolder = OpenBveApi.Path.CombineDirectory(Folder, "Railway");
-					if (System.IO.Directory.Exists(Subfolder)) {
+					if (System.IO.Directory.Exists(Subfolder))
+					{
 						if (System.IO.Directory.EnumerateDirectories(Subfolder).Any() || System.IO.Directory.EnumerateFiles(Subfolder).Any())
 						{
 							//HACK: Ignore completely empty directories
@@ -98,19 +102,31 @@ namespace OpenBve {
 							Program.FileSystem.AppendToLogFile(Subfolder + " : Railway folder found.");
 							return Subfolder;
 						}
+
 						Program.FileSystem.AppendToLogFile(Subfolder + " : Railway folder candidate rejected- Directory empty.");
 					}
+
 					if (Folder == null) continue;
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
 					if (Info == null) break;
 					Folder = Info.FullName;
 				}
-			} catch { }
+			}
+			catch
+			{
+				// ignored
+			}
 			
-			//If the Route, Object and Sound folders exist, but are not in a railway folder.....
+			// If the Route, Object and Sound folders exist, but are not in a railway folder.....
 			try
 			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				if (Folder == null)
+				{
+					// Unlikely to work, but attempt to make the best of it
+					Program.FileSystem.AppendToLogFile("The route file appears to be stored on a root path- Returning the " + Translations.GetInterfaceString("program_title") + " startup path.");
+					return Application.StartupPath;
+				}
 				string candidate = null;
 				while (true)
 				{
@@ -122,10 +138,12 @@ namespace OpenBve {
 						Program.FileSystem.AppendToLogFile(Folder + " : Railway folder found.");
 						return Folder;
 					}
+
 					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder))
 					{
 						candidate = Folder;
 					}
+
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
 					if (Info == null)
 					{
@@ -134,12 +152,17 @@ namespace OpenBve {
 							Program.FileSystem.AppendToLogFile(Folder + " : The best candidate for the Railway folder has been selected- Sound folder not detected.");
 							return candidate;
 						}
+
 						break;
 					}
+
 					Folder = Info.FullName;
 				}
 			}
-			catch { }
+			catch
+			{
+				// ignored
+			}
 			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the " + Translations.GetInterfaceString("program_title") + " startup path.");
 			return Application.StartupPath;
 		}
