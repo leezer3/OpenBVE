@@ -40,11 +40,8 @@ namespace RouteViewer {
 						Function.Stack[s] = Function.Stack[s - 1];
 						s++; break;
 					case Instructions.StackSwap:
-						{
-							double a = Function.Stack[s - 1];
-							Function.Stack[s - 1] = Function.Stack[s - 2];
-							Function.Stack[s - 2] = a;
-						} break;
+						(Function.Stack[s - 1], Function.Stack[s - 2]) = (Function.Stack[s - 2], Function.Stack[s - 1]);
+						break;
 						// math
 					case Instructions.MathPlus:
 						Function.Stack[s - 2] += Function.Stack[s - 1];
