@@ -86,8 +86,8 @@ namespace OpenBve
 				{
 					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
 					string RailwayFolder = Loading.GetRailwayFolder(currentFile);
-					string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
-					string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
+					string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
+					string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(currentFile, RouteEncoding, null, ObjectFolder, SoundFolder, true, ref Route))
 					{
 						Program.CurrentRoute = (CurrentRoute) Route;
@@ -155,9 +155,9 @@ namespace OpenBve
 					int i;
 					for (i = 0; i < f.Length; i++)
 					{
-						string g = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(currentFile),
+						string g = Path.CombineFile(System.IO.Path.GetDirectoryName(currentFile),
 							System.IO.Path.GetFileNameWithoutExtension(currentFile) + f[i]);
-						if (System.IO.File.Exists(g))
+						if (File.Exists(g))
 						{
 							try
 							{

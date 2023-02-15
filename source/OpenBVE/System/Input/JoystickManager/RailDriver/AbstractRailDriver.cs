@@ -128,17 +128,17 @@ namespace OpenBve.Input
 
 		internal void SaveCalibration(string calibrationFile)
 		{
-			List<string> lines = new List<string>();
-			lines.Add("<openBVE>");
-			lines.Add("<RailDriverCalibration>");
+			List<string> lines = new List<string>
+			{
+				"<openBVE>",
+				"<RailDriverCalibration>"
+			};
 			for (int i = 0; i < Calibration.Length; i++)
 			{
 				if (Calibration[i].Maximum < Calibration[i].Minimum)
 				{
 					//If calibration min and max are reversed flip them
-					int t = Calibration[i].Maximum;
-					Calibration[i].Maximum = Calibration[i].Minimum;
-					Calibration[i].Minimum = t;
+					(Calibration[i].Maximum, Calibration[i].Minimum) = (Calibration[i].Minimum, Calibration[i].Maximum);
 				}
 
 				if (Calibration[i].Maximum == Calibration[i].Minimum)

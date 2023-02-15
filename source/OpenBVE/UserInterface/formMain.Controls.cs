@@ -293,9 +293,7 @@ namespace OpenBve {
 			if (listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				if (j > 0) {
-					Control c = Interface.CurrentControls[j];
-					Interface.CurrentControls[j] = Interface.CurrentControls[j - 1];
-					Interface.CurrentControls[j - 1] = c;
+					(Interface.CurrentControls[j], Interface.CurrentControls[j - 1]) = (Interface.CurrentControls[j - 1], Interface.CurrentControls[j]);
 					ListViewItem v = listviewControls.Items[j];
 					listviewControls.Items.RemoveAt(j);
 					listviewControls.Items.Insert(j - 1, v);
@@ -308,9 +306,7 @@ namespace OpenBve {
 			if (listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				if (j < Interface.CurrentControls.Length - 1) {
-					Control c = Interface.CurrentControls[j];
-					Interface.CurrentControls[j] = Interface.CurrentControls[j + 1];
-					Interface.CurrentControls[j + 1] = c;
+					(Interface.CurrentControls[j], Interface.CurrentControls[j + 1]) = (Interface.CurrentControls[j + 1], Interface.CurrentControls[j]);
 					ListViewItem v = listviewControls.Items[j];
 					listviewControls.Items.RemoveAt(j);
 					listviewControls.Items.Insert(j + 1, v);

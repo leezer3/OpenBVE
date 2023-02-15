@@ -74,15 +74,15 @@ namespace OpenBve {
 		// load
 		private void formMain_Load(object sender, EventArgs e)
 		{
-			this.MinimumSize = this.Size;
+			MinimumSize = Size;
 			if (Interface.CurrentOptions.MainMenuWidth == -1 & Interface.CurrentOptions.MainMenuHeight == -1)
 			{
-				this.WindowState = FormWindowState.Maximized;
+				WindowState = FormWindowState.Maximized;
 			}
 			else if (Interface.CurrentOptions.MainMenuWidth > 0 & Interface.CurrentOptions.MainMenuHeight > 0)
 			{
-				this.Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
-				this.CenterToScreen();
+				Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
+				CenterToScreen();
 			}
 			labelVersion.Text = @"v" + Application.ProductVersion + Program.VersionSuffix;
 			if (IntPtr.Size != 4)
@@ -94,7 +94,7 @@ namespace OpenBve {
 			try
 			{
 				string File = Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
-				this.Icon = new Icon(File);
+				Icon = new Icon(File);
 			}
 			catch { }
 			radiobuttonStart.Appearance = Appearance.Button;
@@ -172,7 +172,7 @@ namespace OpenBve {
 			string[] flags = { };
 			try
 			{
-				flags = System.IO.Directory.GetFiles(flagsFolder);
+				flags = Directory.GetFiles(flagsFolder);
 			}
 			catch (Exception)
 			{
@@ -268,14 +268,14 @@ namespace OpenBve {
 			}
 			listviewTrainRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			// text boxes
-			if (Interface.CurrentOptions.RouteFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.RouteFolder))
+			if (Interface.CurrentOptions.RouteFolder.Length != 0 && Directory.Exists(Interface.CurrentOptions.RouteFolder))
 			{
 				textboxRouteFolder.Text = Interface.CurrentOptions.RouteFolder;
 			}
 			else {
 				textboxRouteFolder.Text = Program.FileSystem.InitialRouteFolder;
 			}
-			if (Interface.CurrentOptions.TrainFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.TrainFolder))
+			if (Interface.CurrentOptions.TrainFolder.Length != 0 && Directory.Exists(Interface.CurrentOptions.TrainFolder))
 			{
 				textboxTrainFolder.Text = Interface.CurrentOptions.TrainFolder;
 			}
@@ -506,7 +506,7 @@ namespace OpenBve {
 			LoadCompatibilitySignalSets();
 			try
 			{
-				SetFont(this.Controls, Interface.CurrentOptions.Font);
+				SetFont(Controls, Interface.CurrentOptions.Font);
 			}
 			catch
 			{
@@ -582,7 +582,7 @@ namespace OpenBve {
 				string oldFont = Interface.CurrentOptions.Font;
 				try
 				{
-					SetFont(this.Controls, font.Name);
+					SetFont(Controls, font.Name);
 					Interface.CurrentOptions.Font = font.Name;
 					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, font.Name);
 				}
@@ -590,7 +590,7 @@ namespace OpenBve {
 				{
 					// setting the font failed, so roll back
 					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-					SetFont(this.Controls, oldFont);
+					SetFont(Controls, oldFont);
 					Interface.CurrentOptions.Font = oldFont;
 					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, oldFont);
 				}
@@ -638,7 +638,7 @@ namespace OpenBve {
 		{
 			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			// Main form title bar
-			this.Text = Translations.GetInterfaceString("program_title");
+			Text = Translations.GetInterfaceString("program_title");
 			/*
 			 * Localisation for strings in main panel
 			 */
@@ -1122,8 +1122,8 @@ namespace OpenBve {
 			Interface.CurrentOptions.ShowErrorMessages = checkboxErrorMessages.Checked;
 			Interface.CurrentOptions.RouteFolder = textboxRouteFolder.Text;
 			Interface.CurrentOptions.TrainFolder = textboxTrainFolder.Text;
-			Interface.CurrentOptions.MainMenuWidth = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Width;
-			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
+			Interface.CurrentOptions.MainMenuWidth = WindowState == FormWindowState.Maximized ? -1 : Size.Width;
+			Interface.CurrentOptions.MainMenuHeight = WindowState == FormWindowState.Maximized ? -1 : Size.Height;
 			Interface.CurrentOptions.KioskMode = checkBoxEnableKiosk.Checked;
 			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
 			Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxXparser.SelectedIndex;
@@ -1203,7 +1203,7 @@ namespace OpenBve {
 				string[] a = new string[Interface.CurrentOptions.RecentlyUsedRoutes.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 				{
-					if (System.IO.File.Exists(Interface.CurrentOptions.RecentlyUsedRoutes[i]))
+					if (File.Exists(Interface.CurrentOptions.RecentlyUsedRoutes[i]))
 					{
 						a[n] = Interface.CurrentOptions.RecentlyUsedRoutes[i];
 						n++;
@@ -1218,7 +1218,7 @@ namespace OpenBve {
 				string[] a = new string[Interface.CurrentOptions.RecentlyUsedTrains.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 				{
-					if (System.IO.Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
+					if (Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
 					{
 						a[n] = Interface.CurrentOptions.RecentlyUsedTrains[i];
 						n++;
@@ -1233,7 +1233,7 @@ namespace OpenBve {
 				TextEncoding.EncodingValue[] a = new TextEncoding.EncodingValue[Interface.CurrentOptions.RouteEncodings.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++)
 				{
-					if (System.IO.File.Exists(Interface.CurrentOptions.RouteEncodings[i].Value))
+					if (File.Exists(Interface.CurrentOptions.RouteEncodings[i].Value))
 					{
 						a[n] = Interface.CurrentOptions.RouteEncodings[i];
 						n++;
@@ -1248,7 +1248,7 @@ namespace OpenBve {
 				TextEncoding.EncodingValue[] a = new TextEncoding.EncodingValue[Interface.CurrentOptions.TrainEncodings.Length];
 				for (int i = 0; i < Interface.CurrentOptions.TrainEncodings.Length; i++)
 				{
-					if (System.IO.Directory.Exists(Interface.CurrentOptions.TrainEncodings[i].Value))
+					if (Directory.Exists(Interface.CurrentOptions.TrainEncodings[i].Value))
 					{
 						a[n] = Interface.CurrentOptions.TrainEncodings[i];
 						n++;
@@ -1268,7 +1268,7 @@ namespace OpenBve {
 						continue;
 					}
 					string PluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
-					if (System.IO.File.Exists(PluginPath))
+					if (File.Exists(PluginPath))
 					{
 						a[n] = Info.FileName;
 						n++;
@@ -1403,12 +1403,12 @@ namespace OpenBve {
 			}
 			//TODO: Needs focus changing when packages tab is selected
 			formMain_Resize(null, null);
-			if (this.WindowState != FormWindowState.Maximized)
+			if (WindowState != FormWindowState.Maximized)
 			{
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
 				if (Width >= 0.95 * s.WorkingArea.Width | Height >= 0.95 * s.WorkingArea.Height)
 				{
-					this.WindowState = FormWindowState.Maximized;
+					WindowState = FormWindowState.Maximized;
 				}
 			}
 			radiobuttonStart.Focus();
@@ -1592,7 +1592,7 @@ namespace OpenBve {
 			if (sender != null)
 			{
 				//Don't cause an infinite loop
-				this.Close();
+				Close();
 			}
 			//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
 			//This fixes the main form failing to close on Linux
@@ -1633,7 +1633,7 @@ namespace OpenBve {
 			{
 				currentJoystickStates = new JoystickState[Program.Joysticks.AttachedJoysticks.Values.Count];
 			}	
-			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
+			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
 
@@ -1737,7 +1737,7 @@ namespace OpenBve {
 		{
 			try
 			{
-				string File = OpenBveApi.Path.CombineFile(Folder, Title);
+				string File = Path.CombineFile(Folder, Title);
 				if (System.IO.File.Exists(File))
 				{
 					try
@@ -1768,7 +1768,7 @@ namespace OpenBve {
 				}
 				if (System.IO.File.Exists(File))
 				{
-					System.IO.FileInfo f = new System.IO.FileInfo(File);
+					FileInfo f = new FileInfo(File);
 					if (f.Length == 0)
 					{
 						Box.Image = Box.ErrorImage;
@@ -2055,7 +2055,7 @@ namespace OpenBve {
 		
 		private void toolStripExport_Click(object sender, EventArgs e)
 		{
-			System.Windows.Forms.Control sourceControl = ((ContextMenuStrip)((ToolStripItem)sender).Owner).SourceControl;
+			Control sourceControl = ((ContextMenuStrip)((ToolStripItem)sender).Owner).SourceControl;
 			formImageExport exporter = sourceControl == pictureboxRouteMap ? new formImageExport(true, Result.RouteFile) : new formImageExport(false, Result.RouteFile);
 			
 			exporter.ShowDialog();

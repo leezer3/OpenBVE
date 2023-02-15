@@ -41,7 +41,7 @@ namespace OpenBve
 			buttonViewCrashLog.Text = Translations.GetInterfaceString("bug_report_view_log_button");
 		}
 
-		private void buttonViewLog_Click(object sender, System.EventArgs e)
+		private void buttonViewLog_Click(object sender, EventArgs e)
 		{
 			try
 			{
@@ -64,10 +64,12 @@ namespace OpenBve
 			}
 			catch
 			{
+				// Actually failed to load, but same difference
+				MessageBox.Show(Translations.GetInterfaceString("bug_report_no_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
-		private void buttonViewCrashLog_Click(object sender, System.EventArgs e)
+		private void buttonViewCrashLog_Click(object sender, EventArgs e)
 		{
 			try
 			{
@@ -89,7 +91,7 @@ namespace OpenBve
 			}
 		}
 
-		private void buttonReportProblem_Click(object sender, System.EventArgs e)
+		private void buttonReportProblem_Click(object sender, EventArgs e)
 		{
 			string fileName = "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip";
 			try
@@ -113,6 +115,7 @@ namespace OpenBve
 						}
 						catch
 						{
+							// unable to find / load crash log- Access issues?
 						}
 						if (crashLog != null)
 						{

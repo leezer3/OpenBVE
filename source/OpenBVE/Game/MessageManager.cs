@@ -27,7 +27,7 @@ namespace OpenBve
 		{
 			if (Interface.CurrentOptions.GameMode <= Mode)
 			{
-				MessageManager.GameMessage message = new MessageManager.GameMessage
+				GameMessage message = new GameMessage
 				{
 					InternalText = Text,
 					MessageToDisplay = String.Empty,
@@ -36,7 +36,7 @@ namespace OpenBve
 					Timeout = Timeout,
 					Key = key
 				};
-				MessageManager.AddMessage(message);
+				AddMessage(message);
 			}
 		}
 
@@ -44,7 +44,7 @@ namespace OpenBve
 		/// <param name="message">The message to add</param>
 		internal static void AddMessage(AbstractMessage message)
 		{
-			if (TrainManager.PlayerTrain.StationState == TrainStopState.Jumping || message.Mode < Interface.CurrentOptions.GameMode)
+			if (TrainManagerBase.PlayerTrain.StationState == TrainStopState.Jumping || message.Mode < Interface.CurrentOptions.GameMode)
 			{
 				//Ignore messages triggered during a jump & dummy stations
 				return;
