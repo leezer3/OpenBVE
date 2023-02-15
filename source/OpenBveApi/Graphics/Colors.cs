@@ -122,7 +122,7 @@ namespace OpenBveApi.Colors {
 			Color = Blue;
 			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
-				string a = Expression.Substring(1).TrimStart(new char[] { });
+				string a = Expression.Substring(1).TrimStart();
 				int x; if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
 				{
 					int r = (x >> 16) & 0xFF;
@@ -336,8 +336,8 @@ namespace OpenBveApi.Colors {
 		{
 			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
-				string a = Expression.Substring(1).TrimStart(new char[] { });
-				int x; if (Int32.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
+				string a = Expression.Substring(1).TrimStart();
+				int x; if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
 				{
 					int r = (x >> 16) & 0xFF;
 					int g = (x >> 8) & 0xFF;

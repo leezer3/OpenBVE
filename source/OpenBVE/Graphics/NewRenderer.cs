@@ -246,11 +246,13 @@ namespace OpenBve.Graphics
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces;
+			List<FaceState> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
 				alphaFaces = VisibleObjects.AlphaFaces.ToList();
+				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
+				overlayAlphaFaces = VisibleObjects.OverlayAlphaFaces.ToList();
 			}
 			
 			foreach (FaceState face in opaqueFaces)
@@ -375,22 +377,21 @@ namespace OpenBve.Graphics
 				
 
 				// overlay opaque face
-				foreach (FaceState face in VisibleObjects.OverlayOpaqueFaces)
+				foreach (FaceState face in overlayOpaqueFaces)
 				{
 					face.Draw();
 				}
 
 				// overlay alpha face
 				ResetOpenGlState();
-				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
-
+				overlayAlphaFaces.SortByDistance(Camera.AbsolutePosition);
 				if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 				{
 					SetBlendFunc();
 					SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					GL.DepthMask(false);
 
-					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
+					foreach (FaceState face in overlayAlphaFaces)
 					{
 						face.Draw();
 					}
@@ -401,7 +402,7 @@ namespace OpenBve.Graphics
 					SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 					GL.DepthMask(true);
 
-					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
+					foreach (FaceState face in overlayAlphaFaces)
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 						{
@@ -417,7 +418,7 @@ namespace OpenBve.Graphics
 					GL.DepthMask(false);
 					bool additive = false;
 
-					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
+					foreach (FaceState face in overlayAlphaFaces)
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 						{
@@ -463,8 +464,8 @@ namespace OpenBve.Graphics
 				UnsetAlphaFunc();
 				GL.Disable(EnableCap.DepthTest);
 				GL.DepthMask(false);
-				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
-				foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
+				overlayAlphaFaces.SortByDistance(Camera.AbsolutePosition);
+				foreach (FaceState face in overlayAlphaFaces)
 				{
 					face.Draw();
 				}

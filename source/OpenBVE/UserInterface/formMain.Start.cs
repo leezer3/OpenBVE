@@ -794,8 +794,11 @@ namespace OpenBve
 							}
 							else
 							{
-								groupboxTrainDetails.Visible = false;
-								buttonStart.Enabled = false;
+								lock (previewLock)
+								{
+									groupboxTrainDetails.Visible = false;
+									buttonStart.Enabled = false;
+								}
 							}
 						}
 						catch
@@ -956,8 +959,11 @@ namespace OpenBve
 							}
 							else
 							{
-								groupboxTrainDetails.Visible = false;
-								buttonStart.Enabled = false;
+								lock (previewLock)
+								{
+									groupboxTrainDetails.Visible = false;
+									buttonStart.Enabled = false;
+								}
 							}
 						}
 						catch

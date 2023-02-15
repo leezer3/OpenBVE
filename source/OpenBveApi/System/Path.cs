@@ -28,7 +28,7 @@ namespace OpenBveApi {
 		/// <param name="allowQueryStr">If a part similar to a URL query string at the end of the path should be preserved.</param>
 		/// <returns>A platform-specific absolute path to the specified directory.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
-		public static string CombineDirectory(string absolute, string relative, bool allowQueryStr = false) {
+		public static string CombineDirectory(string absolute, string relative, bool allowQueryStr) {
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string directory = CombineDirectory(absolute, relative.Substring(0, index).TrimEnd());

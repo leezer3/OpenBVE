@@ -26,7 +26,7 @@ namespace OpenBve
 		private static RouteState RoutefileState;
 		private static readonly Picturebox routePictureBox = new Picturebox(Program.Renderer);
 		private static readonly Textbox routeDescriptionBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
-		private static Dictionary<string, Texture> iconCache = new Dictionary<string, Texture>();
+		private static readonly Dictionary<string, Texture> iconCache = new Dictionary<string, Texture>();
 		private static Package currentPackage;
 		private static PackageOperation currentOperation;
 		private static bool packagePreview;

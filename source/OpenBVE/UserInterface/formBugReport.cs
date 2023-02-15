@@ -124,7 +124,7 @@ namespace OpenBve
 						//Finally add the package database to the archive- Again, this isn't necessarily helpful, but we may well want to see it
 						var packageDatabase = new DirectoryInfo(Program.FileSystem.PackageDatabaseFolder);
 						if(packageDatabase.Exists) {
-							FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories); ;
+							FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories);
 							foreach (var currentFile in databaseFiles) {
 								if (currentFile.Name.ToLowerInvariant() == "packages.xml") {
 									zipWriter.Write("PackageDatabase\\" + currentFile.Name, currentFile);

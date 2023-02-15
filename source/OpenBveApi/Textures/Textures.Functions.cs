@@ -116,7 +116,7 @@ namespace OpenBveApi.Textures {
 		    if (color == null) {
 				return texture;
 			}
-			if (texture.Palette != null && texture.CompatibleTransparencyMode == true)
+			if (texture.Palette != null && texture.CompatibleTransparencyMode)
 			{
 				switch (texture.Palette.Length)
 				{

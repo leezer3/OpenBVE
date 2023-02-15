@@ -78,7 +78,7 @@ namespace OpenBve.Input
 				}
 				
 			}
-			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows || devices == null || RailDriverInit == true)
+			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows || devices == null || RailDriverInit)
 			{
 				return;
 			}

@@ -113,7 +113,7 @@ namespace OpenBveApi.Math {
 			}
 			else
 			{
-				string[] parameters = Expression.Split(new[] { ':'});
+				string[] parameters = Expression.Split(':');
 				if (parameters.Length <= UnitFactors.Length)
 				{
 					Value = 0.0;
@@ -154,7 +154,7 @@ namespace OpenBveApi.Math {
 			}
 			else
 			{
-				string[] parameters = Expression.Split(new[] { ':'});
+				string[] parameters = Expression.Split(':');
 				Value = 0.0;
 				if (parameters.Length <= UnitFactors.Length)
 				{
