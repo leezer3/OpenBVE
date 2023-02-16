@@ -106,7 +106,12 @@ namespace TrainManager.Motor
 				BVE5MotorSoundTableEntry nextEntry = BrakeSoundTable[0];
 				for (int i = 0; i < BrakeSoundTable.Length; i++)
 				{
-					if (BrakeSoundTable[i].Speed <= speed && BrakeSoundTable[i + 1].Speed >= speed)
+					double nextSpeed = BrakeSoundTable[i].Speed;
+					if (i < BrakeSoundTable.Length - 1)
+					{
+						nextSpeed = BrakeSoundTable[i + 1].Speed;
+					}
+					if (BrakeSoundTable[i].Speed <= speed && nextSpeed >= speed)
 					{
 						break;
 					}
