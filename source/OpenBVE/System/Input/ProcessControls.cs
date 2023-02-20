@@ -1082,14 +1082,7 @@ namespace OpenBve
 												}
 												break;
 											default:
-												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
-												{
-													Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
-												}
-												else
-												{
-													Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.Off;
-												}
+												Program.Renderer.Camera.CurrentRestriction = Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off ? TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode : CameraRestrictionMode.Off;
 												World.InitializeCameraRestriction();
 												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
 												{

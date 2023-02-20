@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -34,8 +33,8 @@ namespace OpenBve {
 
 		public sealed override string Text
 		{
-			get { return base.Text; }
-			set { base.Text = value; }
+			get => base.Text;
+			set => base.Text = value;
 		}
 		
 		internal static LaunchParameters ShowMainDialog(LaunchParameters initial)
@@ -61,11 +60,11 @@ namespace OpenBve {
 		// members
 		private LaunchParameters Result;
 		private int[] EncodingCodepages = new int[0];
-		private Image JoystickImage = null;
-		private Image RailDriverImage = null;
-		private Image GamepadImage = null;
-		private Image XboxImage = null;
-		private Image ZukiImage = null;
+		private Image JoystickImage;
+		private Image RailDriverImage;
+		private Image GamepadImage;
+		private Image XboxImage;
+		private Image ZukiImage;
 
 		// ====
 		// form
@@ -96,7 +95,10 @@ namespace OpenBve {
 				string File = Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
 				Icon = new Icon(File);
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
 			radiobuttonStart.Appearance = Appearance.Button;
 			radiobuttonStart.AutoSize = false;
 			radiobuttonStart.Size = new Size(buttonClose.Width, buttonClose.Height);
@@ -321,7 +323,7 @@ namespace OpenBve {
 					radiobuttonReview.Enabled = false;
 				}
 				else {
-					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
+					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
 					int index = (int)Math.Floor(ratio * Translations.RatingsCount);
@@ -622,15 +624,9 @@ namespace OpenBve {
 			foreach (Control ctrl in ctrls)
 			{
 				// recursive
-				if (ctrl.Controls != null)
-				{
-					SetFont(ctrl.Controls, fontName);
-				}
-				if (ctrl != null)
-				{
-					ctrl.Font = new Font(fontName, ctrl.Font.Size);
-				};
-			};
+				SetFont(ctrl.Controls, fontName);
+				ctrl.Font = new Font(fontName, ctrl.Font.Size);
+			}
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
@@ -851,18 +847,12 @@ namespace OpenBve {
 				default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unkown"); break;
 			}
 			{
-				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
+				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / Game.CurrentScore.Maximum;
 				if (ratio < 0.0) ratio = 0.0;
 				if (ratio > 1.0) ratio = 1.0;
 				int index = (int)Math.Floor(ratio * Translations.RatingsCount);
 				if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
-				if (Game.CurrentScore.Maximum == 0)
-				{
-					labelRatingDescription.Text = Translations.GetInterfaceString("rating_unknown");
-				}
-				else {
-					labelRatingDescription.Text = Translations.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				}
+				labelRatingDescription.Text = Game.CurrentScore.Maximum == 0 ? Translations.GetInterfaceString("rating_unknown") : Translations.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			}
 			labelRatingAchievedCaption.Text = Translations.GetInterfaceString("review_score_rating_achieved");
 			labelRatingMaximumCaption.Text = Translations.GetInterfaceString("review_score_rating_maximum");
@@ -1361,7 +1351,11 @@ namespace OpenBve {
 				tabcontrolTrainDetails.Width = groupboxTrainDetails.Width - 2 * tabcontrolTrainDetails.Left;
 				tabcontrolTrainDetails.Height = groupboxTrainDetails.Height - 3 * tabcontrolTrainDetails.Top / 2;
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
+
 			try
 			{
 				int width = Math.Min((panelOptions.Width - 24) / 2, 420);
@@ -1369,7 +1363,11 @@ namespace OpenBve {
 				panelOptionsRight.Left = panelOptionsLeft.Left + width + 8;
 				panelOptionsRight.Width = width;
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
+
 			try
 			{
 				int width = Math.Min((panelReview.Width - 32) / 3, 360);
@@ -1379,7 +1377,10 @@ namespace OpenBve {
 				groupboxReviewDateTime.Left = groupboxReviewTrain.Left + width + 8;
 				groupboxReviewDateTime.Width = width;
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
 		}
 
 		// shown
@@ -1746,6 +1747,7 @@ namespace OpenBve {
 					}
 					catch
 					{
+						return null;
 					}
 				}
 				return null;
@@ -1823,8 +1825,7 @@ namespace OpenBve {
 
 		private void checkForUpdate()
 		{
-			string xmlURL;
-			xmlURL = Interface.CurrentOptions.DailyBuildUpdates ? "https://vps.bvecornwall.co.uk/OpenBVE/Builds/version.xml" : "http://openbve-project.net/version.xml";
+			string xmlURL = Interface.CurrentOptions.DailyBuildUpdates ? "https://vps.bvecornwall.co.uk/OpenBVE/Builds/version.xml" : "http://openbve-project.net/version.xml";
 			HttpWebRequest hwRequest = (HttpWebRequest)WebRequest.Create(xmlURL);
 			hwRequest.Timeout = 5000;
 			HttpWebResponse hwResponse = null;
@@ -1883,6 +1884,10 @@ namespace OpenBve {
 				if (hwResponse != null) hwResponse.Close();
 			}
 			Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+			if (url == null)
+			{
+				return;
+			}
 			if (Interface.CurrentOptions.DailyBuildUpdates)
 			{
 				string question = Translations.GetInterfaceString("panel_updates_daily");

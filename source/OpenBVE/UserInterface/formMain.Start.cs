@@ -1206,6 +1206,7 @@ namespace OpenBve
 
 			Game.Reset(false);
 
+			// ReSharper disable once AssignNullToNotNullAttribute - Already checked when loading plugins
 			RouteInterface routeInterface = Program.CurrentHost.Plugins.Select(x => x.Route).FirstOrDefault(x => x != null && x.CanLoadRoute(result.RouteFile));
 
 			if (routeInterface == null)
@@ -1427,6 +1428,7 @@ namespace OpenBve
 
 				bool canLoad = false;
 				Image trainImage = null;
+				// ReSharper disable once PossibleNullReferenceException - Already checked when loading plugins
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
 					if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))

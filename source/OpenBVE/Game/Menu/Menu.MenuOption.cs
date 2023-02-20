@@ -48,7 +48,7 @@ namespace OpenBve
 					case MenuOptionType.AnisotropicLevel:
 						for (int i = 0; i < Entries.Length; i++)
 						{
-							int level = int.Parse(entries[i] as string, NumberStyles.Integer);
+							int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
 							if (level == Interface.CurrentOptions.AnisotropicFilteringLevel)
 							{
 								CurrentlySelectedOption = i;
@@ -59,7 +59,7 @@ namespace OpenBve
 					case MenuOptionType.AntialiasingLevel:
 						for (int i = 0; i < Entries.Length; i++)
 						{
-							int level = int.Parse(entries[i] as string, NumberStyles.Integer);
+							int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
 							if (level == Interface.CurrentOptions.AntiAliasingLevel)
 							{
 								CurrentlySelectedOption = i;

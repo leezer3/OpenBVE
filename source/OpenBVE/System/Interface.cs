@@ -33,7 +33,7 @@ namespace OpenBve {
 						int n = Expression.Length - i - 1;
 						if (n == 1 | n == 2) {
 							uint m; if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out m)) {
-								Value = 3600.0 * (double)h + 60.0 * (double)m;
+								Value = 3600.0 * h + 60.0 * m;
 								return true;
 							}
 						} else if (n >= 3) {
@@ -57,7 +57,7 @@ namespace OpenBve {
 									}
 								}
 								if (uint.TryParse(ss, NumberStyles.None, Culture, out s)) {
-									Value = 3600.0 * (double)h + 60.0 * (double)m + (double)s;
+									Value = 3600.0 * h + 60.0 * m + s;
 									return true;
 								}
 							}
@@ -65,7 +65,7 @@ namespace OpenBve {
 					}
 				} else if (i == -1) {
 					int h; if (int.TryParse(Expression, NumberStyles.Integer, Culture, out h)) {
-						Value = 3600.0 * (double)h;
+						Value = 3600.0 * h;
 						return true;
 					}
 				}

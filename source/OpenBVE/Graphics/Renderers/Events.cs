@@ -136,15 +136,13 @@ namespace OpenBve.Graphics.Renderers
 							s = 0.15;
 							dy = 0.4;
 							TransponderEvent ev = e as TransponderEvent;
-							if (ev.Type == 21)
-							{
-								// beacon type 21 is reserved for legacy weather events
-								t = WeatherEventTexture;
-							}
-							else
-							{
-								t = TransponderTexture;
-							}
+							/*
+							 * NOTE:
+							 * Beacon 21 is used by legacy beacon based BVE4 weather events
+							 * e.g. OS_ATS, UK* family of plugins etc.
+							 * Use the weather event texture in this case
+							 */
+							t = ev.Type == 21 ? WeatherEventTexture : TransponderTexture;
 
 						}
 						else if (e is SoundEvent)

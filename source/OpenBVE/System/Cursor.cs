@@ -11,11 +11,11 @@ namespace OpenBve
 {
 	internal class Cursor
 	{
-		internal string FileName { get; private set; }
-		internal MouseCursor MyCursor { get; private set; }
-		internal MouseCursor MyCursorPlus { get; private set; }
-		internal MouseCursor MyCursorMinus { get; private set; }
-		internal Image Image { get; private set; }
+		internal readonly string FileName;
+		internal readonly MouseCursor MyCursor;
+		internal readonly MouseCursor MyCursorPlus;
+		internal readonly MouseCursor MyCursorMinus;
+		internal readonly Image Image;
 
 		internal Cursor(string fileName, Bitmap image)
 		{

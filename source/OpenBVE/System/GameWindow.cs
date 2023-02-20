@@ -593,14 +593,7 @@ namespace OpenBve
 			}
 			if (PlayerFirstStationIndex == -1)
 			{
-				if (os == -1)
-				{
-					PlayerFirstStationIndex = 0;
-				}
-				else
-				{
-					PlayerFirstStationIndex = os;	
-				}
+				PlayerFirstStationIndex = os == -1 ? 0 : os;
 			}
 			{
 				int s = Program.CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
@@ -626,14 +619,7 @@ namespace OpenBve
 							//Set the start position to be the buffer position plus the train length plus 1m
 							PlayerFirstStationPosition = Program.CurrentRoute.BufferTrackPositions[j] + TrainLength + 1;
 							//Update the station stop location
-							if (s >= 0)
-							{
-								Program.CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
-							}
-							else
-							{
-								Program.CurrentRoute.Stations[PlayerFirstStationIndex].DefaultTrackPosition = PlayerFirstStationPosition;
-							}
+							Program.CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
 							break;
 						}
 					}
@@ -680,14 +666,7 @@ namespace OpenBve
 				{
 					OtherFirstStationIndex = i;
 					int s = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
-					if (s >= 0)
-					{
-						OtherFirstStationPosition = Program.CurrentRoute.Stations[i].Stops[s].TrackPosition;
-					}
-					else
-					{
-						OtherFirstStationPosition = Program.CurrentRoute.Stations[i].DefaultTrackPosition;
-					}
+					OtherFirstStationPosition = s >= 0 ? Program.CurrentRoute.Stations[i].Stops[s].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
 					if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0)
 					{
 						if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0)

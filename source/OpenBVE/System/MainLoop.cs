@@ -35,18 +35,6 @@ namespace OpenBve
 		internal static double timeSinceLastMouseEvent;
 
 		internal static LaunchParameters currentResult;
-		//		internal static formRouteInformation RouteInformationForm;
-		//		internal static Thread RouteInfoThread;
-		//		internal static bool RouteInfoActive
-		//		{
-		//			get
-		//			{
-		//				return RouteInformationForm != null && RouteInformationForm.IsHandleCreated && RouteInformationForm.Visible;
-		//			}
-		//		}
-
-
-		//		internal static AppDomain RouteInfoFormDomain;
 
 		private static double kioskModeTimer;
 
@@ -99,14 +87,8 @@ namespace OpenBve
 					Interface.CurrentOptions.WindowHeight = result.Height;
 				}
 			}
-			if (Interface.CurrentOptions.IsUseNewRenderer)
-			{
-				Program.FileSystem.AppendToLogFile("Using openGL 3.0 (new) renderer");
-			}
-			else
-			{
-				Program.FileSystem.AppendToLogFile("Using openGL 1.2 (old) renderer");
-			}
+
+			Program.FileSystem.AppendToLogFile(Interface.CurrentOptions.IsUseNewRenderer ? "Using openGL 3.0 (new) renderer" : "Using openGL 1.2 (old) renderer");
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
 				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);

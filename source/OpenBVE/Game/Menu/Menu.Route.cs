@@ -84,7 +84,8 @@ namespace OpenBve
 			{
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(currentFile))
 				{
-					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+					// ReSharper disable once RedundantCast
+					object Route = (object)Program.CurrentRoute; // must cast to allow us to use the ref keyword correctly.
 					string RailwayFolder = Loading.GetRailwayFolder(currentFile);
 					string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
 					string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
@@ -181,14 +182,7 @@ namespace OpenBve
 
 				// description
 				string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
-				if (Description.Length != 0)
-				{
-					routeDescriptionBox.Text = Description;
-				}
-				else
-				{
-					routeDescriptionBox.Text = System.IO.Path.GetFileNameWithoutExtension(currentFile);
-				}
+				routeDescriptionBox.Text = Description.Length != 0 ? Description : System.IO.Path.GetFileNameWithoutExtension(currentFile);
 			}
 			catch (Exception ex)
 			{

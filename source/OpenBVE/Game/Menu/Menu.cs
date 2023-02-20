@@ -266,14 +266,7 @@ namespace OpenBve
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				if (Program.Joysticks.AttachedJoysticks[device] is AbstractRailDriver)
-				{
-					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.RailDriver;
-				}
-				else
-				{
-					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.Joystick;
-				}
+				Interface.CurrentControls[CustomControlIdx].Method = Program.Joysticks.AttachedJoysticks[device] is AbstractRailDriver ? ControlMethod.RailDriver : ControlMethod.Joystick;
 				Interface.CurrentControls[CustomControlIdx].Device = device;
 				Interface.CurrentControls[CustomControlIdx].Component = component;
 				Interface.CurrentControls[CustomControlIdx].Element = element;
