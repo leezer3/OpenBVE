@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -127,8 +127,7 @@ namespace Train.OpenBve
 				}
 				else
 				{
-					BVE5MotorSoundTableEntry newEntry = new BVE5MotorSoundTableEntry();
-					newEntry.Speed = speed;
+					BVE5MotorSoundTableEntry newEntry = new BVE5MotorSoundTableEntry(speed);
 					double[] pitchValues = setPoints.ElementAt(i).Value;
 					Array.Resize(ref newEntry.Sounds, pitchValues.Length);
 					for (int k = 0; k < pitchValues.Length; k++)
@@ -213,8 +212,7 @@ namespace Train.OpenBve
 				}
 				else
 				{
-					BVE5MotorSoundTableEntry newEntry = new BVE5MotorSoundTableEntry();
-					newEntry.Speed = speed;
+					BVE5MotorSoundTableEntry newEntry = new BVE5MotorSoundTableEntry(speed);
 					double[] gainValues = setPoints.ElementAt(i).Value;
 					Array.Resize(ref newEntry.Sounds, gainValues.Length);
 					for (int k = 0; k < gainValues.Length; k++)

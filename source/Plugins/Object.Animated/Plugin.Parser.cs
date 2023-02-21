@@ -44,7 +44,7 @@ namespace Plugin
 			{
 				if (Lines[i].Length != 0)
 				{
-					string sct = Lines[i].Trim().Trim(new[]{'[', ']' });
+					string sct = Lines[i].Trim().Trim('[', ']');
 					AnimatedSection Section;
 					Enum.TryParse(sct, true, out Section);
 					switch (Section)
