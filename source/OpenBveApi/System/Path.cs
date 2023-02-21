@@ -227,6 +227,17 @@ namespace OpenBveApi {
 		{
 			char[] a = System.IO.Path.GetInvalidFileNameChars();
 			char[] b = System.IO.Path.GetInvalidPathChars();
+
+			if (!IsAbsolutePath(Expression))
+			{
+				if (Expression.IndexOfAny(InvalidPathChars) != -1)
+				{
+					// Check our platform independant list first
+					return true;
+				}
+			}
+			
+
 			for (int i = 0; i < Expression.Length; i++)
 			{
 				for (int j = 0; j < a.Length; j++)

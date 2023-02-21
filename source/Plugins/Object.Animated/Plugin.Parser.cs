@@ -276,12 +276,12 @@ namespace Plugin
 																s[k] = s[k].Trim(new char[] { });
 																if (s[k].Length == 0)
 																{
-																	currentHost.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+																	currentHost.AddMessage(MessageType.Error, false, "File " + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																	StateFiles[k] = null;
 																}
 																else if (OpenBveApi.Path.ContainsInvalidChars(s[k]))
 																{
-																	currentHost.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " contains illegal characters in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+																	currentHost.AddMessage(MessageType.Error, false, "File " + k.ToString(Culture) + " contains illegal characters in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																	StateFiles[k] = null;
 																}
 																else
