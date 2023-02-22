@@ -202,7 +202,7 @@ namespace RouteViewer
 			lock (VisibleObjects.LockObject)
 			{
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
-				alphaFaces = VisibleObjects.AlphaFaces.ToList();
+				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 			
 			foreach (FaceState face in opaqueFaces)
@@ -212,7 +212,6 @@ namespace RouteViewer
 
 			// alpha face
 			ResetOpenGlState();
-			alphaFaces.SortByDistance(Camera.AbsolutePosition);
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{

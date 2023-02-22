@@ -162,7 +162,7 @@ namespace ObjectViewer.Graphics
 			lock (VisibleObjects.LockObject)
 			{
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
-				alphaFaces = VisibleObjects.AlphaFaces.ToList();
+				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 
 			foreach (FaceState face in opaqueFaces)
@@ -172,7 +172,6 @@ namespace ObjectViewer.Graphics
 
 			// alpha face
 			ResetOpenGlState();
-			alphaFaces.SortByDistance(Camera.AbsolutePosition);
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{

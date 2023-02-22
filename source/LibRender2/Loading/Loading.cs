@@ -15,7 +15,7 @@ namespace LibRender2.Loadings
 		private readonly BaseRenderer renderer;
 
 		// the components of the screen background color
-		private readonly Color128 bkg = new Color128(0.5f, 0.5f, 0.5f, 1.0f);
+		private readonly Color128 bkg = Color128.Grey;
 
 		// the openBVE yellow
 		private static readonly Color128 ColourProgressBar = new Color128(1.00f, 0.69f, 0.00f, 1.00f);
@@ -98,7 +98,6 @@ namespace LibRender2.Loadings
 
 			// BACKGROUND IMAGE
 			int fontHeight = (int)Font.FontSize;
-			int logoBottom;
 			//int versionTop;
 			int halfWidth = renderer.Screen.Width / 2;
 
@@ -143,7 +142,7 @@ namespace LibRender2.Loadings
 
 			if (showProgress)
 			{
-				logoBottom = renderer.Screen.Height / 2;
+				int logoBottom = renderer.Screen.Height / 2;
 
 				// take the height remaining below the logo and divide in 3 horiz. parts
 				int blankHeight = (renderer.Screen.Height - logoBottom) / 3;

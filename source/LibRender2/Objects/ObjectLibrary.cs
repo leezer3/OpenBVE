@@ -4,9 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using LibRender2.Cameras;
-using OpenBveApi;
 using OpenBveApi.Graphics;
-using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -16,8 +14,6 @@ namespace LibRender2.Objects
 {
 	public class VisibleObjectLibrary
 	{
-		private readonly CameraProperties camera;
-		private readonly BaseOptions currentOptions;
 		private readonly BaseRenderer renderer;
 
 		public readonly QuadTree quadTree;
@@ -26,19 +22,17 @@ namespace LibRender2.Objects
 		private readonly List<FaceState> myOpaqueFaces;
 		private readonly List<FaceState> myAlphaFaces;
 		private readonly List<FaceState> myOverlayOpaqueFaces;
-		private List<FaceState> myOverlayAlphaFaces;
+		private readonly List<FaceState> myOverlayAlphaFaces;
 		public readonly ReadOnlyCollection<ObjectState> Objects;
 		public readonly ReadOnlyCollection<FaceState> OpaqueFaces;  // StaticOpaque and DynamicOpaque
-		public ReadOnlyCollection<FaceState> AlphaFaces;  // DynamicAlpha
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
-		public ReadOnlyCollection<FaceState> OverlayAlphaFaces;
+		public readonly ReadOnlyCollection<FaceState> AlphaFaces;  // DynamicAlpha
+		public readonly ReadOnlyCollection<FaceState> OverlayAlphaFaces;
 
 		public readonly object LockObject = new object();
 
-		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseOptions CurrentOptions, BaseRenderer Renderer)
+		internal VisibleObjectLibrary(BaseRenderer Renderer)
 		{
-			camera = Camera;
-			currentOptions = CurrentOptions;
 			renderer = Renderer;
 			myObjects = new List<ObjectState>();
 			myOpaqueFaces = new List<FaceState>();
@@ -130,7 +124,7 @@ namespace LibRender2.Objects
 
 				bool alpha = false;
 
-				if (Type == ObjectType.Overlay && camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+				if (Type == ObjectType.Overlay && renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					alpha = true;
 				}
@@ -158,7 +152,7 @@ namespace LibRender2.Objects
 						{
 							alpha = true;
 						}
-						else if (transparencyType == TextureTransparencyType.Partial && currentOptions.TransparencyMode == TransparencyMode.Quality)
+						else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
 						{
 							alpha = true;
 						}
@@ -173,7 +167,7 @@ namespace LibRender2.Objects
 						{
 							alpha = true;
 						}
-						else if (transparencyType == TextureTransparencyType.Partial && currentOptions.TransparencyMode == TransparencyMode.Quality)
+						else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
 						{
 							alpha = true;
 						}
@@ -245,7 +239,12 @@ namespace LibRender2.Objects
 			RemoveObject(State);
 		}
 
-		private List<FaceState> SortPolygons(List<FaceState> faces)
+		public List<FaceState> GetSortedPolygons(bool overlay = false)
+		{
+			return GetSortedPolygons(overlay ? OverlayAlphaFaces : AlphaFaces);
+		}
+
+		private List<FaceState> GetSortedPolygons(ReadOnlyCollection<FaceState> faces)
 		{
 			// calculate distance
 			double[] distances = new double[faces.Count];
@@ -274,7 +273,7 @@ namespace LibRender2.Objects
 					if (t != 0.0)
 					{
 						d /= t;
-						Vector3 w0 = v0.Xyz - camera.AbsolutePosition;
+						Vector3 w0 = v0.Xyz - renderer.Camera.AbsolutePosition;
 						t = Vector3.Dot(d, w0);
 						distances[i] = -t * t;
 					}
@@ -282,54 +281,7 @@ namespace LibRender2.Objects
 			});
 
 			// sort
-			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
-		}
-
-		public void SortPolygonsInOverlayAlphaFaces()
-		{
-			myOverlayAlphaFaces = SortPolygons(myOverlayAlphaFaces);
-			OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
-		}
-	}
-
-	public static class ListExtensions
-	{
-		public static void SortByDistance(this List<FaceState> faces, Vector3 camera)
-		{
-			// calculate distance
-			double[] distances = new double[faces.Count];
-
-			Parallel.For(0, faces.Count, i =>
-			{
-				if (faces[i].Face.Vertices.Length >= 3)
-				{
-					Vector4 v0 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
-					Vector4 v1 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
-					Vector4 v2 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
-					Vector4 w1 = v1 - v0;
-					Vector4 w2 = v2 - v0;
-					v0.Z *= -1.0;
-					w1.Z *= -1.0;
-					w2.Z *= -1.0;
-					v0 = Vector4.Transform(v0, faces[i].Object.ModelMatrix);
-					w1 = Vector4.Transform(w1, faces[i].Object.ModelMatrix);
-					w2 = Vector4.Transform(w2, faces[i].Object.ModelMatrix);
-					v0.Z *= -1.0;
-					w1.Z *= -1.0;
-					w2.Z *= -1.0;
-					Vector3 d = Vector3.Cross(w1.Xyz, w2.Xyz);
-					double t = d.Norm();
-
-					if (t != 0.0)
-					{
-						d /= t;
-						Vector3 w0 = v0.Xyz - camera;
-						t = Vector3.Dot(d, w0);
-						distances[i] = -t * t;
-					}
-				}
-			});
-			faces.OrderBy(d => distances);
+			return faces.OrderBy(d => distances).ToList();
 		}
 	}
 }

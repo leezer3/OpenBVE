@@ -23,7 +23,6 @@ using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
-using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -89,13 +88,8 @@ namespace LibRender2
 		}
 
 		/// <summary>Holds a reference to the previous interface type of the game</summary>
-		public InterfaceType PreviousInterface
-		{
-			get
-			{
-				return previousInterface;
-			}
-		}
+		public InterfaceType PreviousInterface => previousInterface;
+
 		//Backing properties for the interface values
 		private InterfaceType currentInterface = InterfaceType.Normal;
 		private InterfaceType previousInterface = InterfaceType.Normal;
@@ -361,7 +355,7 @@ namespace LibRender2
 
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
-			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
+			VisibleObjects = new VisibleObjectLibrary(this);
 			whitePixel = new Texture(new Texture(1, 1, 32, new byte[] {255, 255, 255, 255}, null));
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -1443,14 +1437,7 @@ namespace LibRender2
 				}
 			}
 
-			if ((material.Flags & MaterialFlags.Emissive) != 0)
-			{
-				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
-			}
-			else
-			{
-				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(0.0f, 0.0f, 0.0f, 1.0f));
-			}
+			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, (material.Flags & MaterialFlags.Emissive) != 0 ? new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255) : Color4.Black);
 
 			// fog
 			if (OptionFog)

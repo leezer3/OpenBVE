@@ -165,7 +165,7 @@ namespace LibRender2.Primitives
 			
 			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
-			Shader.SetColor(color == null ? Color128.White : color.Value);
+			Shader.SetColor(color ?? Color128.White);
 			Shader.SetPoint(point);
 			Shader.SetSize(size);
 			Shader.SetCoordinates(coordinates);

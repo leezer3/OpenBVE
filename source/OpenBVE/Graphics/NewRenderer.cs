@@ -250,9 +250,9 @@ namespace OpenBve.Graphics
 			lock (VisibleObjects.LockObject)
 			{
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
-				alphaFaces = VisibleObjects.AlphaFaces.ToList();
+				alphaFaces = VisibleObjects.GetSortedPolygons();
 				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
-				overlayAlphaFaces = VisibleObjects.OverlayAlphaFaces.ToList();
+				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
 			}
 			
 			foreach (FaceState face in opaqueFaces)
@@ -263,7 +263,6 @@ namespace OpenBve.Graphics
 			// alpha face
 			ResetOpenGlState();
 			
-			alphaFaces.SortByDistance(Camera.AbsolutePosition);
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
 				SetBlendFunc();
@@ -384,7 +383,6 @@ namespace OpenBve.Graphics
 
 				// overlay alpha face
 				ResetOpenGlState();
-				overlayAlphaFaces.SortByDistance(Camera.AbsolutePosition);
 				if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 				{
 					SetBlendFunc();
@@ -464,7 +462,6 @@ namespace OpenBve.Graphics
 				UnsetAlphaFunc();
 				GL.Disable(EnableCap.DepthTest);
 				GL.DepthMask(false);
-				overlayAlphaFaces.SortByDistance(Camera.AbsolutePosition);
 				foreach (FaceState face in overlayAlphaFaces)
 				{
 					face.Draw();

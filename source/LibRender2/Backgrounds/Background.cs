@@ -146,6 +146,11 @@ namespace LibRender2.Backgrounds
 				if (data.VAO == null)
 				{
 					data.CreateVAO(renderer.DefaultShader.VertexLayout, renderer);
+					if (data.VAO == null)
+					{
+						// Failed during creation of the VAO
+						return;
+					}
 				}
 
 				renderer.DefaultShader.Activate();
