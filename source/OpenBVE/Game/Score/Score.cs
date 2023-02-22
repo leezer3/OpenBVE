@@ -179,10 +179,7 @@ namespace OpenBve
 						{
 							int x = ScoreValueRedSignal;
 							CurrentValue += x;
-							if (x != 0)
-							{
-								AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
-							}
+							AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
 							RedSignal = true;
 						}
 					}

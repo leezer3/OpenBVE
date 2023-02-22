@@ -118,7 +118,7 @@ namespace LibRender2.Primitives
 			topLine = 0;
 			BackgroundTexture = null;
 			BackgroundColor = backgroundColor;
-			myScrollbarColor = new Color128(1.0f, 0.69f, 0.0f, 1.0f);
+			myScrollbarColor = Color128.Orange;
 		}
 
 		public void VerticalScroll(int numberOfLines)

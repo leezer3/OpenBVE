@@ -215,7 +215,6 @@
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Input\JoystickManager\AbstractJoystick.cs" />
     <Compile Include="System\Input\JoystickManager\AbstractJoystickManager.cs" />
-    <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Input\InputDevicePlugin.cs" />
     <Compile Include="System\Input\JoystickManager\ConfigurationLink.cs" />

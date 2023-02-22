@@ -17,7 +17,7 @@ using TrainManager.Trains;
 namespace RouteViewer
 {
 	/// <summary>Represents the host application.</summary>
-	internal class Host : OpenBveApi.Hosts.HostInterface
+	internal class Host : HostInterface
 	{
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
@@ -58,7 +58,7 @@ namespace RouteViewer
 		/// <returns>Whether querying the dimensions was successful.</returns>
 		public override bool QueryTextureDimensions(string path, out int width, out int height)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			if (File.Exists(path) || Directory.Exists(path))
 			{
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
@@ -106,7 +106,7 @@ namespace RouteViewer
 			}
 			else
 			{
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			width = 0;
 			height = 0;
@@ -118,9 +118,9 @@ namespace RouteViewer
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool LoadTexture(string path, OpenBveApi.Textures.TextureParameters parameters, out OpenBveApi.Textures.Texture texture)
+		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			if (File.Exists(path) || Directory.Exists(path))
 			{
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
@@ -164,7 +164,7 @@ namespace RouteViewer
 			}
 			else
 			{
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			texture = null;
 			return false;
@@ -176,7 +176,7 @@ namespace RouteViewer
 		}
 		
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				Texture data;
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
@@ -187,7 +187,7 @@ namespace RouteViewer
 					return true;
 				}
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			handle = null;
 			return false;
@@ -204,7 +204,7 @@ namespace RouteViewer
 			return true;
 		}
 
-		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out OpenBveApi.Textures.Texture handle)
+		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle)
 		{
 			handle = new Texture(texture, parameters);
 			return true;
@@ -218,7 +218,7 @@ namespace RouteViewer
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool LoadSound(string path, out OpenBveApi.Sounds.Sound sound)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			if (File.Exists(path) || Directory.Exists(path))
 			{
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
@@ -252,7 +252,7 @@ namespace RouteViewer
 			}
 			else
 			{
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			sound = null;
 			return false;
@@ -264,13 +264,13 @@ namespace RouteViewer
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool RegisterSound(string path, out OpenBveApi.Sounds.SoundHandle handle)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			if (File.Exists(path) || Directory.Exists(path))
 			{
 				handle = Program.Sounds.RegisterBuffer(path, 0.0);
 			}
 			else
 			{
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			handle = null;
 			return false;
@@ -283,12 +283,12 @@ namespace RouteViewer
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool RegisterSound(string path, double radius, out OpenBveApi.Sounds.SoundHandle handle)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			if (File.Exists(path) || Directory.Exists(path))
 			{
 				handle = Program.Sounds.RegisterBuffer(path, radius);
 				return true;
 			}
-			ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+			ReportProblem(ProblemType.PathNotFound, path);
 			handle = null;
 			return false;
 		}
@@ -306,7 +306,7 @@ namespace RouteViewer
 		public override bool LoadStaticObject(string path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
 			Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Object != null) {
 						try {
@@ -335,7 +335,7 @@ namespace RouteViewer
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			Object = null;
 			return false;
@@ -348,7 +348,7 @@ namespace RouteViewer
 				return true;
 			}
 
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
@@ -393,7 +393,7 @@ namespace RouteViewer
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			Object = null;
 			return false;
@@ -481,14 +481,8 @@ namespace RouteViewer
 			return null;
 		}
 
-		public override AbstractTrain[] Trains
-		{
-			get
-			{
-				// ReSharper disable once CoVariantArrayConversion
-				return Program.TrainManager.Trains;
-			}
-		}
+		// ReSharper disable once CoVariantArrayConversion
+		public override AbstractTrain[] Trains => Program.TrainManager.Trains;
 
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)
 		{

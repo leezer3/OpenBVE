@@ -32,13 +32,7 @@ namespace RouteViewer {
 				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {}, this);
 				Handles.HoldBrake = new HoldBrakeHandle(this);
 			}
-			public override int NumberOfCars
-			{
-				get
-				{
-					return this.Cars.Length;
-				}
-			}
+			public override int NumberOfCars => this.Cars.Length;
 
 			public override double FrontCarTrackPosition()
 			{
@@ -50,13 +44,7 @@ namespace RouteViewer {
 				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
 			}
 
-			public override bool IsPlayerTrain
-			{
-				get
-				{
-					return true;
-				}
-			}
+			public override bool IsPlayerTrain => true;
 		}
 	}
 }

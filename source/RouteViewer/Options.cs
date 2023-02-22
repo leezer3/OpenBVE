@@ -54,7 +54,7 @@ namespace RouteViewer
                             if (j >= 0)
                             {
                                 Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-                                Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+                                Value = Lines[i].Substring(j + 1).TrimStart();
                             }
                             else
                             {
@@ -151,34 +151,13 @@ namespace RouteViewer
 									switch(Key)
 									{
 										case "showlogo":
-											if(Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingLogo = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingLogo = false;
-											}
+											Interface.CurrentOptions.LoadingLogo = Value.Trim().ToLowerInvariant() == "true";
 											break;
 										case "showprogressbar":
-											if (Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingProgressBar = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingProgressBar = false;
-											}
+											Interface.CurrentOptions.LoadingProgressBar = Value.Trim().ToLowerInvariant() == "true";
 											break;
 										case "showbackground":
-											if (Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingBackground = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingBackground = false;
-											}
+											Interface.CurrentOptions.LoadingBackground = Value.Trim().ToLowerInvariant() == "true";
 											break;
 
 									}
@@ -236,7 +215,7 @@ namespace RouteViewer
             }
             catch
             {
-                MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
+                MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
                                 "Please check you have write permission.");
             }
         }

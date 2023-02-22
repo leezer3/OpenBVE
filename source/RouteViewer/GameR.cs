@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using OpenBveApi.Colors;
-using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -116,9 +115,9 @@ namespace RouteViewer {
 				Program.Renderer.Camera.Alignment.TrackPosition = t;
 				World.UpdateAbsoluteCamera(0.0);
 				return true;
-			} else {
-				return false;
 			}
+
+			return false;
 		}
 
 	}

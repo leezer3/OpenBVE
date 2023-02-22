@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
-using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenTK;
@@ -94,7 +93,7 @@ namespace RouteViewer
 
             Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
-			Program.Sounds.Initialize(Program.CurrentHost, SoundRange.Low);
+			Program.Sounds.Initialize(SoundRange.Low);
 			Program.Renderer.UpdateViewport();
             if (Program.processCommandLineArgs)
             {
@@ -206,11 +205,6 @@ namespace RouteViewer
 			{
 				Monitor.Wait(locker);
 			}
-		}
-
-		public override void Dispose()
-		{
-			base.Dispose();
 		}
     }
 }

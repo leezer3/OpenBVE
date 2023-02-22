@@ -131,7 +131,7 @@ namespace OpenBve {
 			}
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
-			Sounds = new Sounds();
+			Sounds = new Sounds(CurrentHost);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			
 			//Platform specific startup checks

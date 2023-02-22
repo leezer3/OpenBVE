@@ -664,26 +664,38 @@ namespace OpenBveApi.Colors {
 		}
 
 		// --- read-only fields ---
-		/// <summary>Represents a black color.</summary>
+		/// <summary>Represents a black color</summary>
 		public static readonly Color128 Black = new Color128(0.0f, 0.0f, 0.0f);
-		/// <summary>Represents a black color.</summary>
+		/// <summary>Represents a black color</summary>
 		public static readonly Color128 Grey = new Color128(0.5f, 0.5f, 0.5f);
-		/// <summary>Represents a red color.</summary>
+		/// <summary>Represents a red color</summary>
 		public static readonly Color128 Red = new Color128(1.0f, 0.0f, 0.0f);
-		/// <summary>Represents a green color.</summary>
+		/// <summary>Represents a green color</summary>
 		public static readonly Color128 Green = new Color128(0.0f, 1.0f, 0.0f);
-		/// <summary>Represents a blue color.</summary>
+		/// <summary>Represents a blue color</summary>
 		public static readonly Color128 Blue = new Color128(0.0f, 0.0f, 1.0f);
-		/// <summary>Represents a cyan color.</summary>
+		/// <summary>Represents a cyan color</summary>
 		public static readonly Color128 Cyan = new Color128(0.0f, 1.0f, 1.0f);
-		/// <summary>Represents a magenta color.</summary>
+		/// <summary>Represents a magenta color</summary>
 		public static readonly Color128 Magenta = new Color128(1.0f, 0.0f, 1.0f);
-		/// <summary>Represents a yellow color.</summary>
+		/// <summary>Represents a yellow color</summary>
 		public static readonly Color128 Yellow = new Color128(1.0f, 1.0f, 0.0f);
-		/// <summary>Represents a white color.</summary>
+		/// <summary>Represents a white color</summary>
 		public static readonly Color128 White = new Color128(1.0f, 1.0f, 1.0f);
-		/// <summary>Represents a transparent black color.</summary>
+		/// <summary>Represents a transparent black color</summary>
 		public static readonly Color128 Transparent = new Color128(0.0f, 0.0f, 0.0f, 0.0f);
+		
+		/*
+		 * Colors used by overlays etc.
+		 * Where possible, use the standard web pallette names
+		 */
+		/// <summary>Represents a semi transparent grey color</summary>
+		public static readonly Color128 SemiTransparentGrey = new Color128(0.5f, 0.5f, 0.5f, 0.5f);
+		/// <summary>Represents a deep sky blue color</summary>
+		public static readonly Color128 DeepSkyBlue = new Color128(0.0f, 0.75f, 1.0f);
+		/// <summary>Represents an orange color</summary>
+		public static readonly Color128 Orange = new Color128(1.0f, 0.69f, 0.0f);
+
 		// --- conversions ---
 		/// <summary>Performs a widening conversion from Color96 to Color128.</summary>
 		/// <param name="value">The Color96 value.</param>

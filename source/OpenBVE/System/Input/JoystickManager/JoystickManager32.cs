@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Hosts;
+﻿using OpenBveApi.Hosts;
 using PIEHid32Net;
 
 namespace OpenBve.Input

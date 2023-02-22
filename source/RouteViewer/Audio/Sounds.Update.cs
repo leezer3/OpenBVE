@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
@@ -276,7 +277,7 @@ namespace RouteViewer
 			}
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
-		    var Orientation = new float[]{(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
+		    var Orientation = new[]{(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
 			AL.Listener(ALListenerfv.Orientation, ref Orientation);
 			/*
 			 * Set up the atmospheric attributes.
@@ -521,6 +522,10 @@ namespace RouteViewer
 					}
 				}
 			}
+		}
+
+		public Sounds(HostInterface currentHost) : base(currentHost)
+		{
 		}
 	}
 }

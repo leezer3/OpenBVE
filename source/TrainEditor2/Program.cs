@@ -53,8 +53,8 @@ namespace TrainEditor2
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 
-			SoundApi = new SoundApi();
-			SoundApi.Initialize(CurrentHost, SoundRange.Medium);
+			SoundApi = new SoundApi(CurrentHost);
+			SoundApi.Initialize(SoundRange.Medium);
 
 			string error;
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, null, Renderer))

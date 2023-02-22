@@ -40,7 +40,7 @@ namespace OpenBve
 
 		internal static void StartLoopEx(LaunchParameters result)
 		{
-			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
+			Program.Sounds.Initialize(Interface.CurrentOptions.SoundRange);
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				Tolk.Load();

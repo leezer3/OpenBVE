@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using LibRender2.Screens;
@@ -14,7 +13,7 @@ namespace OpenBve
 			private readonly MenuOptionType Type;
 
 			/// <summary>Holds the entries for all options</summary>
-			internal readonly object[] Entries;
+			private readonly object[] Entries;
 
 			/// <summary>Gets the current option</summary>
 			internal object CurrentOption => Entries[CurrentlySelectedOption];

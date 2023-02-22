@@ -29,14 +29,7 @@ namespace TrainManager.Car
 			MinimumDistanceBetweenCars = minimumDistance;
 			MaximumDistanceBetweenCars = maximumDistance;
 			baseCar = frontCar;
-			if (rearCar != null)
-			{
-				connectedCar = rearCar;
-			}
-			else
-			{
-				connectedCar = frontCar;
-			}
+			connectedCar = rearCar ?? frontCar;
 
 			CarSections = new CarSection[] { };
 			baseTrain = train;

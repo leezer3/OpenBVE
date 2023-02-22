@@ -27,7 +27,7 @@ namespace SoundManager
 		private SoundBuffer[] Buffers = new SoundBuffer[16];
 
 		/// <summary>The number of sound buffers.</summary>
-		private int BufferCount = 0;
+		private int BufferCount;
 
 		/// <summary>A list of all sound sources.</summary>
 		protected internal static SoundSource[] Sources = new SoundSource[16];
@@ -59,7 +59,7 @@ namespace SoundManager
 		/// <summary>Buffer for storing recorded data.</summary>
 		protected readonly byte[] MicStore = new byte[BufferSize * 2];
 
-		private HostInterface CurrentHost = null;
+		private readonly HostInterface CurrentHost;
 
 		/// <summary>Whether sound events are currently suppressed</summary>
 		public static bool SuppressSoundEvents = false;
@@ -82,14 +82,17 @@ namespace SoundManager
 		protected const double MaxLogClampFactor = -1.0;
 
 
-		// --- initialization and deinitialization ---
+		protected SoundsBase(HostInterface currentHost)
+		{
+			CurrentHost = currentHost;
+		}
 
 		/// <summary>Initializes audio.</summary>
 		/// <returns>Whether initializing audio was successful.</returns>
 		/// <remarks>A call to DeInitialize should be made when closing the program to release any held resources</remarks>
-		public void Initialize(HostInterface host, SoundRange range)
+		public void Initialize(SoundRange range)
 		{
-			if (host.Platform == HostPlatform.MicrosoftWindows)
+			if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				/*
 				*  If shipping an AnyCPU build and OpenALSoft / SDL, these are architecture specific PInvokes
@@ -104,8 +107,6 @@ namespace SoundManager
 				}
 			}
 			DeInitialize();
-
-			CurrentHost = host;
 
 			switch (range)
 			{
@@ -201,8 +202,6 @@ namespace SoundManager
 				OpenAlMic.Dispose();
 				OpenAlMic = null;
 			}
-
-			CurrentHost = null;
 		}
 
 

@@ -28,7 +28,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
-using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace RouteViewer
 {
@@ -75,7 +74,7 @@ namespace RouteViewer
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 			FileSystem.CreateFileSystem();
-			Sounds = new Sounds();
+			Sounds = new Sounds(CurrentHost);
 			Options.LoadOptions();
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
@@ -142,7 +141,7 @@ namespace RouteViewer
 				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
 				if (System.IO.File.Exists(File))
 				{
-					System.Diagnostics.Process.Start(File, objectsToLoad.ToString());
+					System.Diagnostics.Process.Start(File, objectsToLoad);
 					if (string.IsNullOrEmpty(CurrentRouteFile))
 					{
 						//We only supplied objects, so launch Object Viewer instead
@@ -423,7 +422,7 @@ namespace RouteViewer
 					}
 					break;
 				case Key.F7:
-					if (CurrentlyLoading == true)
+					if (CurrentlyLoading)
 					{
 						break;
 					}
@@ -500,7 +499,7 @@ namespace RouteViewer
 					Dialog.Dispose();
 					break;
 				case Key.F8:
-					if (Program.CurrentlyLoading == true)
+					if (CurrentlyLoading)
 					{
 						//Don't allow the user to update the settings during loading, bad idea..
 						break;

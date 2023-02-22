@@ -18,7 +18,7 @@ namespace LibRender2.Loadings
 		private readonly Color128 bkg = Color128.Grey;
 
 		// the openBVE yellow
-		private static readonly Color128 ColourProgressBar = new Color128(1.00f, 0.69f, 0.00f, 1.00f);
+		private static readonly Color128 ColourProgressBar = Color128.Orange;
 
 		// the percentage to lower the logo centre from the screen top (currently set at the golden ratio)
 		private const double logoCentreYFactor = 0.381966;
