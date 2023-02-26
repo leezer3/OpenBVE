@@ -351,6 +351,12 @@ namespace OpenBveApi.Textures {
 		/// <exception cref="System.NotSupportedException">Raised when the bits per pixel in the texture is not supported.</exception>
 		public TextureTransparencyType GetTransparencyType()
 		{
+			if (knownTransparencyType)
+			{
+				return transparencyType;
+			}
+
+			knownTransparencyType = true;
 			for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
 			{
 				if (this.MyBytes[CurrentFrame][i] != 255)
@@ -359,15 +365,22 @@ namespace OpenBveApi.Textures {
 					{
 						if (this.MyBytes[CurrentFrame][j] != 0 & this.MyBytes[CurrentFrame][j] != 255)
 						{
+							transparencyType = TextureTransparencyType.Alpha;
 							return TextureTransparencyType.Alpha;
 						}
 					}
 
+					transparencyType = TextureTransparencyType.Partial;
 					return TextureTransparencyType.Partial;
 				}
 			}
+
+			transparencyType = TextureTransparencyType.Opaque;
 			return TextureTransparencyType.Opaque;
 		}
+
+		private bool knownTransparencyType;
+		private TextureTransparencyType transparencyType;
 
 		/// <summary>Inverts the lightness values of a texture used for a glow</summary>
 		public void InvertLightness()

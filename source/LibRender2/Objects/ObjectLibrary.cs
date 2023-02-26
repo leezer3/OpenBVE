@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using LibRender2.Textures;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -145,7 +146,16 @@ namespace LibRender2.Objects
 					{
 						// Have to load the texture bytes in order to determine transparency type
 						Texture daytimeTexture; 
-						State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin.GetTexture(out daytimeTexture);
+						if (TextureManager.textureCache.ContainsKey(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin))
+						{
+							daytimeTexture = TextureManager.textureCache[State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin];
+						}
+						else
+						{
+							State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin.GetTexture(out daytimeTexture);
+							TextureManager.textureCache.Add(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin, daytimeTexture);
+						}
+
 						TextureTransparencyType transparencyType = daytimeTexture.GetTransparencyType();
 						if (transparencyType == TextureTransparencyType.Alpha)
 						{
@@ -160,7 +170,15 @@ namespace LibRender2.Objects
 					if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
 					{
 						Texture nighttimeTexture; 
-						State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin.GetTexture(out nighttimeTexture);
+						if (TextureManager.textureCache.ContainsKey(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin))
+						{
+							nighttimeTexture = TextureManager.textureCache[State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin];
+						}
+						else
+						{
+							State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin.GetTexture(out nighttimeTexture);
+							TextureManager.textureCache.Add(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin, nighttimeTexture);
+						}
 						TextureTransparencyType transparencyType = nighttimeTexture.GetTransparencyType();
 						if (transparencyType == TextureTransparencyType.Alpha)
 						{

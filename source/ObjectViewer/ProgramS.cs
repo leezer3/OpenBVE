@@ -260,6 +260,7 @@ namespace ObjectViewer {
 	    internal static void RefreshObjects()
 	    {
 		    LightingRelative = -1.0;
+			Renderer.Reset();
 		    Game.Reset();
 			formTrain.Instance?.DisableUI();
 		    for (int i = 0; i < Files.Count; i++)
