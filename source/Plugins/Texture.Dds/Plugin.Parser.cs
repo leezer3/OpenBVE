@@ -56,6 +56,10 @@ namespace Plugin
                     byte[] rawData = this.DecompressData(header, data, pixelFormat);
                     CreateTexture(header.width, header.height, rawData);
                 }
+                else
+                {
+	                throw new InvalidDataException("No data read from DDS file.");
+                }
             }
         }
 
@@ -66,29 +70,11 @@ namespace Plugin
             if ((header.flags & DDSD_LINEARSIZE) > 1)
             {
                 data = reader.ReadBytes((int)header.sizeorpitch);
+                return data;
             }
-            else
-            {
-                int bps = header.width * header.pixelFormat.rgbbitcount / 8;
-                int uncompressedSize = bps * header.height * header.depth;
-                data = new byte[uncompressedSize];
-
-                MemoryStream mem = new MemoryStream(uncompressedSize);
-
-                for (int z = 0; z < header.depth; z++)
-                {
-                    for (int y = 0; y < header.height; y++)
-                    {
-                        mem.Write(reader.ReadBytes(bps), 0, bps);
-                    }
-                }
-                mem.Seek(0, SeekOrigin.Begin);
-
-                mem.Read(data, 0, data.Length);
-                mem.Close();
-            }
-
+            data = reader.ReadBytes((header.pixelFormat.rgbbitcount / 8) * header.width * header.height);
             return data;
+
         }
 
         private void CreateTexture(int width, int height, byte[] rawData)
@@ -137,7 +123,17 @@ namespace Plugin
 	        }
             header.pixelFormat.flags = reader.ReadUInt32();
             header.pixelFormat.fourcc = (FourCC)reader.ReadUInt32();
-            header.pixelFormat.rgbbitcount = (int)reader.ReadUInt32();
+            int rgbbitcount = (int)reader.ReadUInt32();
+            if (rgbbitcount == 0)
+            {
+				/* Textures supplied with https://bowlroll.net/file/250304
+				 * Possibly has something to do with the FourCC, but documentation is sparse
+				 *
+				 * Use 16 as a best guess sensible value for the minute
+				*/ 
+	            rgbbitcount = 16;
+            }
+			header.pixelFormat.rgbbitcount = rgbbitcount;
             header.pixelFormat.rbitmask = reader.ReadUInt32();
             header.pixelFormat.gbitmask = reader.ReadUInt32();
             header.pixelFormat.bbitmask = reader.ReadUInt32();
