@@ -13,16 +13,14 @@
 // ReSharper disable NotAccessedField.Local
 
 using System;
-using System.Runtime.InteropServices;
 using System.IO;
 using OpenBveApi.Colors;
-using OpenBveApi.Textures;
 
-namespace Plugin
+namespace Texture.Dds
 {
     public class DDSImage
     {
-	    internal Texture myTexture;
+	    internal OpenBveApi.Textures.Texture myTexture;
         public DDSImage(byte[] ddsImage)
         {
             if (ddsImage == null) return;
@@ -42,24 +40,20 @@ namespace Plugin
 
         private void Parse(BinaryReader reader)
         {
-            DdsHeader header = new DdsHeader();
+            DdsHeader header = new DdsHeader(reader);
+            if (header.depth == 0) header.depth = 1;
 
-            if (this.ReadHeader(reader, ref header))
+            int blocksize;
+            PixelFormat pixelFormat = this.GetFormat(header, out blocksize);
+            byte[] data = this.ReadData(reader, header);
+            if (data != null)
             {
-                if (header.depth == 0) header.depth = 1;
-
-                int blocksize;
-                PixelFormat pixelFormat = this.GetFormat(header, out blocksize);
-                byte[] data = this.ReadData(reader, header);
-                if (data != null)
-                {
-                    byte[] rawData = this.DecompressData(header, data, pixelFormat);
-                    CreateTexture(header.width, header.height, rawData);
-                }
-                else
-                {
-	                throw new InvalidDataException("No data read from DDS file.");
-                }
+	            byte[] rawData = this.DecompressData(header, data, pixelFormat);
+	            CreateTexture(header.width, header.height, rawData);
+            }
+            else
+            {
+	            throw new InvalidDataException("No data read from DDS file.");
             }
         }
 
@@ -89,61 +83,7 @@ namespace Plugin
 		        textureData[i + 2] = rawData[i + 2]; // blue
 		        textureData[i + 3] = rawData[i + 3]; // alpha
 	        }
-	        myTexture = new Texture(width, height, 32, textureData, null);
-        }
-
-        private bool ReadHeader(BinaryReader reader, ref DdsHeader header)
-        {
-            byte[] signature = reader.ReadBytes(4);
-	        if (!(signature[0] == 'D' && signature[1] == 'D' && signature[2] == 'S' && signature[3] == ' '))
-	        {
-		        throw new InvalidDataException("DDS Header invalid.");
-	        }
-
-	        if (reader.ReadUInt32() != 124)
-	        {
-		        throw new InvalidDataException("DDS Header size invalid.");
-	        }
-
-	        header.flags = reader.ReadUInt32();
-            header.height = (int)reader.ReadUInt32();
-            header.width = (int)reader.ReadUInt32();
-            header.sizeorpitch = reader.ReadUInt32();
-            header.depth = (int)reader.ReadUInt32();
-            header.mipmapcount = reader.ReadUInt32();
-            header.alphabitdepth = reader.ReadUInt32();
-
-            for (int i = 0; i < 10; i++)
-            {
-                reader.ReadUInt32();	//Reserved 10 DWORD values : Microsoft documentation states unused
-            }
-	        if (reader.ReadUInt32() != 32)
-	        {
-		        throw new InvalidDataException("Pixel Format size invalid.");
-	        }
-            header.pixelFormat.flags = reader.ReadUInt32();
-            header.pixelFormat.fourcc = (FourCC)reader.ReadUInt32();
-            int rgbbitcount = (int)reader.ReadUInt32();
-            if (rgbbitcount == 0)
-            {
-				/* Textures supplied with https://bowlroll.net/file/250304
-				 * Possibly has something to do with the FourCC, but documentation is sparse
-				 *
-				 * Use 16 as a best guess sensible value for the minute
-				*/ 
-	            rgbbitcount = 16;
-            }
-			header.pixelFormat.rgbbitcount = rgbbitcount;
-            header.pixelFormat.rbitmask = reader.ReadUInt32();
-            header.pixelFormat.gbitmask = reader.ReadUInt32();
-            header.pixelFormat.bbitmask = reader.ReadUInt32();
-            header.pixelFormat.alphabitmask = reader.ReadUInt32();
-            header.ddscaps.caps1 = reader.ReadUInt32();
-            header.ddscaps.caps2 = reader.ReadUInt32();
-            header.ddscaps.caps3 = reader.ReadUInt32();
-            header.ddscaps.caps4 = reader.ReadUInt32();
-            header.texturestage = reader.ReadUInt32();
-            return true;
+	        myTexture = new OpenBveApi.Textures.Texture(width, height, 32, textureData, null);
         }
 
         private PixelFormat GetFormat(DdsHeader header, out int blocksize)
@@ -222,25 +162,11 @@ namespace Plugin
             {
                 if ((header.pixelFormat.flags & DDPF_LUMINANCE) == DDPF_LUMINANCE)
                 {
-                    if ((header.pixelFormat.flags & DDPF_ALPHAPIXELS) == DDPF_ALPHAPIXELS)
-                    {
-                        format = PixelFormat.LUMINANCE_ALPHA;
-                    }
-                    else
-                    {
-                        format = PixelFormat.LUMINANCE;
-                    }
+	                format = (header.pixelFormat.flags & DDPF_ALPHAPIXELS) == DDPF_ALPHAPIXELS ? PixelFormat.LUMINANCE_ALPHA : PixelFormat.LUMINANCE;
                 }
                 else
                 {
-                    if ((header.pixelFormat.flags & DDPF_ALPHAPIXELS) == DDPF_ALPHAPIXELS)
-                    {
-                        format = PixelFormat.RGBA;
-                    }
-                    else
-                    {
-                        format = PixelFormat.RGB;
-                    }
+	                format = (header.pixelFormat.flags & DDPF_ALPHAPIXELS) == DDPF_ALPHAPIXELS ? PixelFormat.RGBA : PixelFormat.RGB;
                 }
                 blocksize = (header.width * header.height * header.depth * (header.pixelFormat.rgbbitcount >> 3));
             }
@@ -441,27 +367,25 @@ namespace Plugin
 
             if (e == 0)
             {
-                if (m == 0)
+	            if (m == 0)
                 {
                     //
                     // Plus or minus zero
                     //
                     return (uint)(s << 31);
                 }
-                else
-                {
-                    //
-                    // Denormalized number -- renormalize it
-                    //
-                    while ((m & 0x00000400) == 0)
-                    {
-                        m <<= 1;
-                        e -= 1;
-                    }
 
-                    e += 1;
-                    m &= ~0x00000400;
-                }
+	            //
+	            // Denormalized number -- renormalize it
+	            //
+	            while ((m & 0x00000400) == 0)
+	            {
+		            m <<= 1;
+		            e -= 1;
+	            }
+
+	            e += 1;
+	            m &= ~0x00000400;
             }
             else if (e == 31)
             {
@@ -482,8 +406,8 @@ namespace Plugin
             //
             // Normalized number
             //
-            e = e + (127 - 15);
-            m = m << 13;
+            e += (127 - 15);
+            m <<= 13;
 
             //
             // Assemble s, e and m.
@@ -1559,63 +1483,7 @@ namespace Plugin
             }
             return rawData;
         }
-		
-        private struct DdsHeader
-        {
-            public uint flags;
-            public int height;
-            public int width;
-            public uint sizeorpitch;
-            public int depth;
-            public uint mipmapcount;
-            public uint alphabitdepth;
-
-            [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-            public struct PixelFormat
-            {
-                public uint flags;
-                public FourCC fourcc;
-                public int rgbbitcount;
-                public uint rbitmask;
-                public uint gbitmask;
-                public uint bbitmask;
-                public uint alphabitmask;
-            }
-            public PixelFormat pixelFormat;
-
-            [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-            public struct ddscapsstruct
-            {
-                public uint caps1;
-                public uint caps2;
-                public uint caps3;
-                public uint caps4;
-            }
-            public ddscapsstruct ddscaps;
-            public uint texturestage;
-
-            internal bool Check16BitComponents()
-            {
-	            if (pixelFormat.rgbbitcount != 32)
-	            {
-		            return false;
-	            }
-	            if (pixelFormat.rbitmask == 0x3FF00000 && pixelFormat.gbitmask == 0x000FFC00 && pixelFormat.bbitmask == 0x000003FF
-	                && pixelFormat.alphabitmask == 0xC0000000)
-	            {
-		            // a2b10g10r10 format
-		            return true;
-	            }
-	            if (pixelFormat.rbitmask == 0x000003FF && pixelFormat.gbitmask == 0x000FFC00 && pixelFormat.bbitmask == 0x3FF00000
-	                && pixelFormat.alphabitmask == 0xC0000000)
-	            {
-		            // a2r10g10b10 format
-		            return true;
-	            }
-	            return false;
-            }
-        }
-
+        
         private const int DDSD_CAPS = 0x00000001;
         private const int DDSD_HEIGHT = 0x00000002;
         private const int DDSD_WIDTH = 0x00000004;

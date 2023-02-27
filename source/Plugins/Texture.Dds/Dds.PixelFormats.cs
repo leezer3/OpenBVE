@@ -1,5 +1,5 @@
 ﻿// ReSharper disable UnusedMember.Global
-namespace Plugin
+namespace Texture.Dds
 {
 	/// <summary>Various pixel formats/compressors used by the DDS image.</summary>
 	internal enum PixelFormat

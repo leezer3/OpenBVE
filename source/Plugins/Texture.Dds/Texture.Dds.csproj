@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dds.FourCc.cs" />
+    <Compile Include="Dds.Header.cs" />
     <Compile Include="Dds.PixelFormats.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Plugin.Parser.cs">

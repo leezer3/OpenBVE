@@ -2,7 +2,7 @@
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
-namespace Plugin {
+namespace Texture.Dds {
 	/// <summary>Implements the texture interface.</summary>
 	public class Plugin : TextureInterface {
 		// --- functions ---

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
-namespace Plugin
+namespace Texture.Tga
 {
 	public partial class Plugin : TextureInterface
 	{
@@ -99,7 +99,7 @@ namespace Plugin
 			CompressedGreyscale = 11
 		}
 
-		internal bool Parse(string fileName, out Texture texture)
+		internal bool Parse(string fileName, out OpenBveApi.Textures.Texture texture)
 		{
 
 			byte[] filebytes = File.ReadAllBytes(fileName);
@@ -679,7 +679,7 @@ namespace Plugin
 					raw[i] = raw[i + 2];
 					raw[i + 2] = temp;
 				}
-				texture = new Texture(width, height, 32, raw, null);
+				texture = new OpenBveApi.Textures.Texture(width, height, 32, raw, null);
 				return true;
 			}
 			else
