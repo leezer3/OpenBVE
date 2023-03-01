@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -1015,6 +1016,22 @@ namespace OpenBve
 					World.UpdateAbsoluteCamera(0.0);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
+			}
+
+			if (IntPtr.Size == 4)
+			{
+				using (Process proc = Process.GetCurrentProcess())
+				{
+					long memoryUsed = proc.PrivateMemorySize64;
+					MessageBox.Show(memoryUsed.ToString());
+					if ((memoryUsed > 900000000 && !Interface.CurrentOptions.LoadInAdvance) || memoryUsed > 1600000000)
+					{
+						// Either using ~900mb at the first station or 1.5gb + with all textures loaded is likely to cause critical OOM errors with the 32-bit process memory limit
+						// Turn on UnloadUnusedTextures to try and mitigate
+						Program.FileSystem.AppendToLogFile("Automatically enabling UnloadUnusedTextures due to memory pressure.");
+						Interface.CurrentOptions.UnloadUnusedTextures = true;
+					}
+				}
 			}
 		}
 
