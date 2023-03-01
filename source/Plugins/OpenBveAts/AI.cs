@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	internal class AI {
 		
 		// --- members ---

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	/// <summary>Represents ATC.</summary>
 	internal class Atc : Device {
 		
@@ -41,9 +41,9 @@ namespace Plugin {
 		private struct CompatibilityLimit {
 			// --- members ---
 			/// <summary>The speed limit.</summary>
-			internal double Limit;
+			internal readonly double Limit;
 			/// <summary>The track position.</summary>
-			internal double Location;
+			internal readonly double Location;
 			// --- constructors ---
 			/// <summary>Creates a new compatibility limit.</summary>
 			/// <param name="limit">The speed limit.</param>
@@ -58,7 +58,7 @@ namespace Plugin {
 		// --- members ---
 		
 		/// <summary>The underlying train.</summary>
-		private Train Train;
+		private readonly Train Train;
 		
 		/// <summary>The current state of the system.</summary>
 		internal States State;
@@ -73,7 +73,7 @@ namespace Plugin {
 		private CompatibilityStates CompatibilityState;
 		
 		/// <summary>A list of all ATC speed limits in the route.</summary>
-		private List<CompatibilityLimit> CompatibilityLimits;
+		private readonly List<CompatibilityLimit> CompatibilityLimits;
 		
 		/// <summary>The element in the CompatibilityLimits list that holds the last encountered speed limit.</summary>
 		private int CompatibilityLimitPointer;
@@ -85,7 +85,7 @@ namespace Plugin {
 		// --- parameters ---
 		
 		/// <summary>Whether to automatically switch between ATS and ATC.</summary>
-		private bool AutomaticSwitch = false;
+		private readonly bool AutomaticSwitch;
 		
 		/// <summary>The permitted compatibility ATC speeds, which are X, 0, 15, 25, 45, 65, 75, 90, 100, 110 and 120.</summary>
 		private readonly double[] CompatibilitySpeeds = new double[] {
@@ -422,7 +422,7 @@ namespace Plugin {
 					break;
 				case -16777214:
 					{
-						double limit = (double)(beacon.Optional & 4095) / 3.6;
+						double limit = (beacon.Optional & 4095) / 3.6;
 						double position = (beacon.Optional >> 12);
 						CompatibilityLimit item = new CompatibilityLimit(limit, position);
 						if (!this.CompatibilityLimits.Contains(item)) {
