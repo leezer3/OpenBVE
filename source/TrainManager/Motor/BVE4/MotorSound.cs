@@ -120,7 +120,12 @@ namespace TrainManager.Motor
 							else if (ndir == -1)
 							{
 								// brake
-								double max = Car.CarBrake.DecelerationAtServiceMaximumPressure(Car.baseTrain.Handles.Brake.Actual, Car.CurrentSpeed);
+								double max = -Car.Specs.MotorAcceleration;
+								if (Car.baseTrain != null)
+								{
+									// train / brake system not simulated in TrainEditor2
+									max = Car.CarBrake.DecelerationAtServiceMaximumPressure(Car.baseTrain.Handles.Brake.Actual, Car.CurrentSpeed);
+								}
 								if (max != 0.0)
 								{
 									double cur = -Car.Specs.MotorAcceleration;
