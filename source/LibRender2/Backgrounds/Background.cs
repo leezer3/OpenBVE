@@ -247,9 +247,7 @@ namespace LibRender2.Backgrounds
 				float y0, y1;
 				if (data.KeepAspectRatio)
 				{
-					int tw = data.Texture.Width;
-					int th = data.Texture.Height;
-					double hh = Math.PI * data.BackgroundImageDistance * th / (tw * data.Repetition);
+					double hh = Math.PI * data.BackgroundImageDistance * data.Texture.Height / (data.Texture.Width * data.Repetition);
 					y0 = (float)(-0.5 * hh);
 					y1 = (float)(1.5 * hh);
 				}

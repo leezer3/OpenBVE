@@ -163,9 +163,7 @@ namespace OpenBve.Graphics.Renderers
 					{
 						if (Program.CurrentHost.LoadTexture(ref Left.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
-							double u = Left.BackgroundTexture.Width;
-							double v = Left.BackgroundTexture.Height;
-							renderer.Rectangle.Draw(Left.BackgroundTexture, new Vector2(x, y), new Vector2(u, v), bc);
+							renderer.Rectangle.Draw(Left.BackgroundTexture, new Vector2(x, y), bc);
 						}
 					}
 					// right background
@@ -173,9 +171,7 @@ namespace OpenBve.Graphics.Renderers
 					{
 						if (Program.CurrentHost.LoadTexture(ref Right.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
-							double u = Right.BackgroundTexture.Width;
-							double v = Right.BackgroundTexture.Height;
-							renderer.Rectangle.Draw(Right.BackgroundTexture, new Vector2(x + w - u, y), new Vector2(u, v), bc);
+							renderer.Rectangle.Draw(Right.BackgroundTexture, new Vector2(x + w - Right.BackgroundTexture.Width, y), bc);
 						}
 					}
 					// middle background
@@ -202,9 +198,7 @@ namespace OpenBve.Graphics.Renderers
 					{
 						if (Program.CurrentHost.LoadTexture(ref Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
-							double u = Left.OverlayTexture.Width;
-							double v = Left.OverlayTexture.Height;
-							renderer.Rectangle.Draw(Left.OverlayTexture, new Vector2(x, y), new Vector2(u, v), oc);
+							renderer.Rectangle.Draw(Left.OverlayTexture, new Vector2(x, y), oc);
 						}
 					}
 					// right overlay
@@ -212,9 +206,7 @@ namespace OpenBve.Graphics.Renderers
 					{
 						if (Program.CurrentHost.LoadTexture(ref Right.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
-							double u = Right.OverlayTexture.Width;
-							double v = Right.OverlayTexture.Height;
-							renderer.Rectangle.Draw(Right.OverlayTexture, new Vector2(x + w - u, y), new Vector2(u, v), oc);
+							renderer.Rectangle.Draw(Right.OverlayTexture, new Vector2(x + w - Right.OverlayTexture.Width, y), oc);
 						}
 					}
 					// middle overlay

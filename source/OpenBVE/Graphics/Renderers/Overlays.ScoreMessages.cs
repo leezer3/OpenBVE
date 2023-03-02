@@ -194,9 +194,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (Program.CurrentHost.LoadTexture(ref Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						double u = Left.OverlayTexture.Width;
-						double v = Left.OverlayTexture.Height;
-						renderer.Rectangle.Draw(Left.OverlayTexture, new Vector2(px, py), new Vector2(u, v), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
+						renderer.Rectangle.Draw(Left.OverlayTexture, new Vector2(px, py), new Vector2(Left.OverlayTexture.Width, Left.OverlayTexture.Height), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
 					}
 				}
 				// right overlay

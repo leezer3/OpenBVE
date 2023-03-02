@@ -1134,9 +1134,6 @@ namespace Train.OpenBve
 								{
 									double LocationX = 0.0, LocationY = 0.0;
 									double Width = 0.0, Height = 0.0;
-									//We read the transparent color for the timetable from the config file, but it is never used
-									//TODO: Fix or depreciate??
-									Color24 TransparentColor = Color24.Blue;
 									double Layer = 0.0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
@@ -1173,14 +1170,15 @@ namespace Train.OpenBve
 													} else if (Height <= 0.0) {
 														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
-												case PanelKey.TransparentColor:
-													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
 												case PanelKey.Layer:
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Layer)) {
 														Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
+												case PanelKey.TransparentColor:
+													// The original code read this, but never used it
+													// Deliberately deprecate.
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported for " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													break;
 											}
 										} i++;
 									} i--;

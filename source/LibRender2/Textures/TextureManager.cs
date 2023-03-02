@@ -276,9 +276,8 @@ namespace LibRender2.Textures
 					{
 						texture.OpenGlTextures[(int)wrap].Name = names[0];
 					}
-					
-					handle.Width = texture.Width;
-					handle.Height = texture.Height;
+
+					handle.Size = texture.Size;
 					handle.Transparency = texture.GetTransparencyType();
 
 					switch (Interpolation)
@@ -354,16 +353,14 @@ namespace LibRender2.Textures
 						 * format, it will likely be upconverted to 32-bits per channel
 						 * again, and this is wasted effort.
 						 * */
-						int width = texture.Width;
-						int height = texture.Height;
-						int stride = (3 * (width + 1) >> 2) << 2;
+						int stride = (3 * (texture.Width + 1) >> 2) << 2;
 						byte[] oldBytes = texture.Bytes;
 						byte[] newBytes = new byte[stride * texture.Height];
 						int i = 0, j = 0;
 
-						for (int y = 0; y < height; y++)
+						for (int y = 0; y < texture.Height; y++)
 						{
-							for (int x = 0; x < width; x++)
+							for (int x = 0; x < texture.Width; x++)
 							{
 								newBytes[j + 0] = oldBytes[i + 0];
 								newBytes[j + 1] = oldBytes[i + 1];
@@ -372,7 +369,7 @@ namespace LibRender2.Textures
 								j += 3;
 							}
 
-							j += stride - 3 * width;
+							j += stride - 3 * texture.Width;
 						}
 
 						GL.TexImage2D(TextureTarget.Texture2D, 0,

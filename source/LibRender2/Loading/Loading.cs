@@ -106,17 +106,15 @@ namespace LibRender2.Loadings
 				int bkgHeight, bkgWidth;
 
 				// stretch the background image to fit at least one screen dimension
-				double ratio = TextureLoadingBkg.Width / (double)TextureLoadingBkg.Height;
-
-				if (renderer.Screen.Width / ratio > renderer.Screen.Height) // if screen ratio is shorter than bkg...
+				if (renderer.Screen.Width / TextureLoadingBkg.AspectRatio > renderer.Screen.Height) // if screen ratio is shorter than bkg...
 				{
 					bkgHeight = renderer.Screen.Height; // set height to screen height
-					bkgWidth = (int)(renderer.Screen.Height * ratio); // and scale width proprtionally
+					bkgWidth = (int)(renderer.Screen.Height * TextureLoadingBkg.AspectRatio); // and scale width proprtionally
 				}
 				else // if screen ratio is wider than bkg...
 				{
 					bkgWidth = renderer.Screen.Width; // set width to screen width
-					bkgHeight = (int)(renderer.Screen.Width / ratio); // and scale height accordingly
+					bkgHeight = (int)(renderer.Screen.Width / TextureLoadingBkg.AspectRatio); // and scale height accordingly
 				}
 
 				// draw the background image down from the top screen edge
@@ -131,7 +129,7 @@ namespace LibRender2.Loadings
 				{
 					// place the centre of the logo at from the screen top
 					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - renderer.ProgramLogo.Height / 2.0);
-					renderer.Rectangle.DrawAlpha(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), new Vector2(renderer.ProgramLogo.Width, renderer.ProgramLogo.Height), Color128.White);
+					renderer.Rectangle.DrawAlpha(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), Color128.White);
 				}
 			}
 			// ReSharper disable once RedundantIfElseBlock

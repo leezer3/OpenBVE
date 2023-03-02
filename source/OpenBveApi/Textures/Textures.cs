@@ -3,16 +3,15 @@
 using System;
 using System.Drawing;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 
 namespace OpenBveApi.Textures {
 
 	/// <summary>Represents a texture.</summary>
 	public class Texture
 	{
-		/// <summary>The width of the texture in pixels.</summary>
-		private int MyWidth;
-		/// <summary>The height of the texture in pixels.</summary>
-		private int MyHeight;
+		/// <summary>The size of the texture in pixels</summary>
+		private Vector2 MySize;
 		/// <summary>The number of bits per pixel. Must be 32.</summary>
 		private readonly int MyBitsPerPixel;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
@@ -50,12 +49,12 @@ namespace OpenBveApi.Textures {
 		/// <returns></returns>
 		public Color24 GetPixel(int X, int Y, int frame = 0)
 		{
-			if (X > MyWidth)
+			if (X > MySize.X)
 			{
 				throw new ArgumentException("X is outside the bounds of the image");
 			}
 
-			if (Y > MyWidth)
+			if (Y > MySize.Y)
 			{
 				throw new ArgumentException("Y is outside the bounds of the image");
 			}
@@ -90,8 +89,8 @@ namespace OpenBveApi.Textures {
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
 
-			this.MyWidth = width;
-			this.MyHeight = height;
+			this.MySize.X = width;
+			this.MySize.Y = height;
 			this.MyBitsPerPixel = bitsPerPixel;
 			this.MyBytes = new byte[1][];
 			this.MyBytes[0] = bytes;
@@ -125,8 +124,8 @@ namespace OpenBveApi.Textures {
 			}
 
 			this.Origin = new ByteArrayOrigin(width, height, bytes, frameInterval);
-			this.MyWidth = width;
-			this.MyHeight = height;
+			this.MySize.X = width;
+			this.MySize.Y = height;
 			this.MyBitsPerPixel = bitsPerPixel;
 			this.MyBytes = bytes;
 			this.MyPalette = null;
@@ -194,11 +193,11 @@ namespace OpenBveApi.Textures {
 		{
 			get
 			{
-				return this.MyWidth;
+				return (int)this.MySize.X;
 			}
 			set
 			{
-				this.MyWidth = value;
+				this.MySize.X = value;
 			}
 		}
 		/// <summary>Gets the height of the texture in pixels.</summary>
@@ -206,11 +205,24 @@ namespace OpenBveApi.Textures {
 		{
 			get
 			{
-				return this.MyHeight;
+				return (int)this.MySize.Y;
 			}
 			set
 			{
-				this.MyHeight = value;
+				this.MySize.Y = value;
+			}
+		}
+
+		/// <summary>Gets the size of the texture in pixels</summary>
+		public Vector2 Size
+		{
+			get
+			{
+				return MySize;
+			}
+			set
+			{
+				MySize = value;
 			}
 		}
 
@@ -219,7 +231,7 @@ namespace OpenBveApi.Textures {
 		{
 			get
 			{
-				return (double)this.MyWidth / this.MyHeight;
+				return (double)this.MySize.X / this.MySize.Y;
 			}
 		}
 
@@ -279,8 +291,8 @@ namespace OpenBveApi.Textures {
 			if (ReferenceEquals(b, null)) return false;
 			if (a.MultipleFrames != b.MultipleFrames) return false;
 			if (a.Origin != b.Origin) return false;
-			if (a.MyWidth != b.MyWidth) return false;
-			if (a.MyHeight != b.MyHeight) return false;
+			if (a.MySize.X != b.MySize.X) return false;
+			if (a.MySize.Y != b.MySize.Y) return false;
 			if (a.MyBitsPerPixel != b.MyBitsPerPixel) return false;
 			if (a.MyBytes.Length != b.MyBytes.Length) return false;
 			for (int i = 0; i < a.MyBytes.Length; i++)
@@ -301,8 +313,8 @@ namespace OpenBveApi.Textures {
 			if (ReferenceEquals(b, null)) return true;
 			if (a.MultipleFrames != b.MultipleFrames) return true;
 			if (a.Origin != b.Origin) return true;
-			if (a.MyWidth != b.MyWidth) return true;
-			if (a.MyHeight != b.MyHeight) return true;
+			if (a.MySize.X != b.MySize.X) return true;
+			if (a.MySize.Y != b.MySize.Y) return true;
 			if (a.MyBitsPerPixel != b.MyBitsPerPixel) return true;
 			if (a.MyBytes.Length != b.MyBytes.Length) return true;
 			for (int i = 0; i < a.MyBytes.Length; i++)
@@ -324,8 +336,8 @@ namespace OpenBveApi.Textures {
 			Texture x = (Texture) obj;
 			if (MultipleFrames != x.MultipleFrames) return false;
 			if (Origin != x.Origin) return false;
-			if (MyWidth != x.MyWidth) return false;
-			if (MyHeight != x.MyHeight) return false;
+			if (MySize.X != x.MySize.X) return false;
+			if (MySize.Y != x.MySize.Y) return false;
 			if (MyBitsPerPixel != x.MyBitsPerPixel) return false;
 			if (MyBytes.Length != x.MyBytes.Length) return false;
 			for (int i = 0; i < MyBytes.Length; i++)

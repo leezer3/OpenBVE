@@ -666,9 +666,7 @@ namespace Train.OpenBve
 								{
 									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
 								}
-								int w = tday.Width;
-								int h = tday.Height;
-								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
+								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
 							}
@@ -1070,9 +1068,7 @@ namespace Train.OpenBve
 								{
 									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
 								}
-								int w = tday.Width;
-								int h = tday.Height;
-								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
+								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								if (Maximum < Minimum)
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -1481,9 +1477,6 @@ namespace Train.OpenBve
 						{
 							double LocationX = 0.0, LocationY = 0.0;
 							double Width = 0.0, Height = 0.0;
-							//We read the transparent color for the timetable from the config file, but it is never used
-							//TODO: Fix or depreciate??
-							Color24 TransparentColor = Color24.Blue;
 							double Layer = 0.0;
 
 							foreach (XElement KeyNode in SectionElement.Elements())
@@ -1535,17 +1528,16 @@ namespace Train.OpenBve
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
-									case PanelKey.TransparentColor:
-										if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										break;
 									case PanelKey.Layer:
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Layer))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
+										break;
+									case PanelKey.TransparentColor:
+										// The original Panel2 code read this, but never used it
+										// Deliberately deprecate.
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported for " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										break;
 								}
 							}
