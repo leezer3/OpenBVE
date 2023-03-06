@@ -1,6 +1,9 @@
-﻿using OpenBveApi.Interface;
+﻿using System;
+using System.Runtime.InteropServices;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 
 namespace CsvRwRouteParser
 {
@@ -86,8 +89,13 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							//TODO: Set this back in the base options please....
+							Plugin.CurrentOptions.ObjectDisposalMode = (ObjectDisposalMode)a;
+							if (Plugin.CurrentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
+							{
+								Plugin.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Plugin.CurrentOptions.ViewingDistance / 10.0d) * 10);
+							}
 						}
+						
 					}
 					break;
 				case OptionsCommand.SectionBehavior:
