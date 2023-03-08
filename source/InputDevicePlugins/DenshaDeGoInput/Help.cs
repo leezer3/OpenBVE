@@ -69,14 +69,7 @@ namespace DenshaDeGoInput
 			textBoxController1.Text = Translations.GetInterfaceString("denshadego_help_controller1_textbox");
 			textBoxController2.Text = Translations.GetInterfaceString("denshadego_help_controller2_textbox");
 			textBoxWindows.Text = Translations.GetInterfaceString("denshadego_help_windows_textbox");
-			if (DenshaDeGoInput.LibUsbIssue)
-			{
-				textBoxLinux.Text = Translations.GetInterfaceString("denshadego_help_libusb_symlink");
-			}
-			else
-			{
-				textBoxLinux.Text = Translations.GetInterfaceString("denshadego_help_linux_textbox");	
-			}
+			textBoxLinux.Text = Translations.GetInterfaceString(DenshaDeGoInput.LibUsbIssue ? "denshadego_help_libusb_symlink" : "denshadego_help_linux_textbox");
 			buttonZadig.Text = Translations.GetInterfaceString("denshadego_help_zadig_button");
 			buttonWindows.Text = Translations.GetInterfaceString("denshadego_help_windows_button");
 			buttonLinux.Text = Translations.GetInterfaceString("denshadego_help_linux_button");

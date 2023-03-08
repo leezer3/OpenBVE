@@ -36,7 +36,7 @@ namespace DenshaDeGoInput
 	internal class ClassicController : Controller
 	{
 		/// <summary>A cached list of supported connected controllers.</summary>
-		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
+		private static readonly Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
 
 		/// <summary>Whether the adapter uses a hat to map the direction buttons.</summary>
 		internal static bool UsesHat;

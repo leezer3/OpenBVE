@@ -34,7 +34,7 @@ namespace DenshaDeGoInput
 	internal class UnbalanceController : Controller
 	{
 		/// <summary>A cached list of supported connected controllers.</summary>
-		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
+		private static readonly Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
 
 		/// <summary>The OpenTK joystick index for this controller.</summary>
 		private int joystickIndex;
@@ -128,11 +128,11 @@ namespace DenshaDeGoInput
 					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (ButtonState)(dPadLeft ? 1 : 0);
 					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (ButtonState)(dPadRight ? 1 : 0);
 					// Disable original buttons if necessary
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] ^ (ButtonState)(dPadAny ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] ^ (ButtonState)(dPadLeft ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] ^ (ButtonState)(dPadDown ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] ^ (ButtonState)(dPadRight ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] ^ (ButtonState)(dPadUp ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] ^= (ButtonState)(dPadAny ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] ^= (ButtonState)(dPadLeft ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] ^= (ButtonState)(dPadDown ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] ^= (ButtonState)(dPadRight ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] ^= (ButtonState)(dPadUp ? 1 : 0);
 				}
 				else
 				{

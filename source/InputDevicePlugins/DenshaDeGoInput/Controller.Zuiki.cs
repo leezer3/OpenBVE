@@ -34,7 +34,7 @@ namespace DenshaDeGoInput
 	internal class ZuikiController : Controller
 	{
 		/// <summary>A cached list of supported connected controllers.</summary>
-		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
+		private static readonly Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
 
 		/// <summary>The OpenTK joystick index for this controller.</summary>
 		private int joystickIndex;

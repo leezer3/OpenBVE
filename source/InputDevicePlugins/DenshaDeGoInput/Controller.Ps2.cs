@@ -34,9 +34,9 @@ namespace DenshaDeGoInput
 	internal class Ps2Controller : Controller
 	{
 		/// <summary>A cached list of supported connected controllers.</summary>
-		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
+		private static readonly Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
 
-		private static string[] controllerIds =
+		private static readonly string[] controllerIds =
 		{
 			// TCPP-20009 (Type II)
 			"0ae4:0004",

@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using System.CodeDom;
 
 namespace DenshaDeGoInput
 {
@@ -131,9 +130,7 @@ namespace DenshaDeGoInput
 			/// <summary>The Product ID</summary>
 			internal readonly string PID;
 
-			/// <summary>
-			/// Gets a string representing a controller's vendor and product ID.
-			/// </summary>
+			/// <summary>Gets a controller's vendor and product ID.</summary>
 			/// <param name="guid">The OpenTK GUID of the joystick.</param>
 			internal ControllerID(Guid guid)
 			{
@@ -189,7 +186,7 @@ namespace DenshaDeGoInput
 							{
 								case "0003":
 									return ControllerType.DG255;
-									case "0004":
+								case "0004":
 									return ControllerType.PS2TypeII;
 								case "0005":
 									return ControllerType.PS2Shinkansen;
@@ -208,6 +205,7 @@ namespace DenshaDeGoInput
 			}
 		}
 
+		/// <summary>The types of known controller</summary>
 		internal enum ControllerType
 		{
 			/// <summary>Classic controllers, connected via pad adaptor</summary>
