@@ -185,7 +185,7 @@ namespace DenshaDeGoInput
 							switch (PID)
 							{
 								case "0003":
-									return ControllerType.DG255;
+									return ControllerType.PCTwoHandle;
 								case "0004":
 									return ControllerType.PS2TypeII;
 								case "0005":
@@ -193,7 +193,7 @@ namespace DenshaDeGoInput
 								case "0007":
 									return ControllerType.PS2Ryojouhen;
 								case "0008":
-									return ControllerType.DRC184;
+									return ControllerType.PCRyojouhen;
 							}
 							DenshaDeGoInput.CurrentHost.AddMessage("Densha DeGo! Input: Unrecognised Taito Corp. PID " + PID + " - Please report this.");
 							break;
@@ -220,10 +220,11 @@ namespace DenshaDeGoInput
 			/// <summary>TCPP-20014 (Ryojouhen)</summary>
 			PS2Ryojouhen,
 			// ** Unbalance Controllers **
-			/// <summary>DGC-255 / DGOC-44U</summary>
-			DG255,
-			/// <summary>DRC-184 / DYC288</summary>
-			DRC184,
+
+			/// <summary>DGC-255 / DGOC-44U (Normally PC Two-Handle)</summary>
+			PCTwoHandle,
+			/// <summary>DRC-184 / DYC288 (Ryojouhen controller for PC)</summary>
+			PCRyojouhen,
 
 		}
 	}

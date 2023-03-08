@@ -161,7 +161,7 @@ namespace DenshaDeGoInput
 				if (!cachedControllers.ContainsKey(guid))
 				{
 					// DGC-255/DGOC-44U/P&P
-					if (id.Type == ControllerType.DG255)
+					if (id.Type == ControllerType.PCTwoHandle)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D;
 						if (Joystick.GetCapabilities(i).HatCount > 0 || comboDpad)
@@ -183,7 +183,7 @@ namespace DenshaDeGoInput
 						cachedControllers.Add(guid, newcontroller);
 					}
 					// DRC-184/DYC-288
-					if (id.Type == ControllerType.DRC184)
+					if (id.Type == ControllerType.PCRyojouhen)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 5, 6, 2, 1, 0, -1, 4, 3 };
