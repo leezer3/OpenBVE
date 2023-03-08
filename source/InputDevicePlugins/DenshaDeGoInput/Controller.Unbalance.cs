@@ -154,14 +154,14 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < 10; i++)
 			{
 				Guid guid = Joystick.GetGuid(i);
-				string id = GetControllerID(guid);
+				ControllerID id = new ControllerID(guid);
 				string name = Joystick.GetName(i);
 				bool comboDpad = name == "TAITO Densha de Go! Plug & Play";
 
 				if (!cachedControllers.ContainsKey(guid))
 				{
 					// DGC-255/DGOC-44U/P&P
-					if (id == "0ae4:0003")
+					if (id.Type == ControllerType.DG255)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D;
 						if (Joystick.GetCapabilities(i).HatCount > 0 || comboDpad)
@@ -183,7 +183,7 @@ namespace DenshaDeGoInput
 						cachedControllers.Add(guid, newcontroller);
 					}
 					// DRC-184/DYC-288
-					if (id == "0ae4:0008")
+					if (id.Type == ControllerType.DRC184)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 5, 6, 2, 1, 0, -1, 4, 3 };

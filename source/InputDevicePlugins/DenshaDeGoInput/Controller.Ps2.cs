@@ -90,10 +90,10 @@ namespace DenshaDeGoInput
 			byte buttonData;
 			byte dpadData;
 			byte pedalData;
-			switch (Id)
+			switch (Id.Type)
 			{
 				// TCPP-20009 (Type II)
-				case "0ae4:0004":
+				case ControllerType.PS2TypeII:
 					brakeData = inputBuffer[1];
 					powerData = inputBuffer[2];
 					buttonData = inputBuffer[5];
@@ -158,10 +158,10 @@ namespace DenshaDeGoInput
 			// Horn pedal
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] = pedalData == 0x0 ? ButtonState.Pressed : ButtonState.Released;
 
-			switch (Id)
+			switch (Id.Type)
 			{
 				// TCPP-20009 (Type II)
-				case "0ae4:0004":
+				case ControllerType.PS2TypeII:
 					outputBuffer = new byte[] { 0x0, 0x3 };
 					if (DenshaDeGoInput.Ingame)
 					{
@@ -170,7 +170,7 @@ namespace DenshaDeGoInput
 					}
 					break;
 				// TCPP-20011 (Shinkansen)
-				case "0ae4:0005":
+				case ControllerType.PS2Shinkansen:
 					double speed = Math.Round(DenshaDeGoInput.CurrentTrainSpeed, 0);
 					double limit = Math.Round(DenshaDeGoInput.CurrentSpeedLimit, 0);
 					int speed1 = (int)(speed % 10);
@@ -233,13 +233,13 @@ namespace DenshaDeGoInput
 			foreach (KeyValuePair<Guid, LibUsb.UsbController> usbController in LibUsb.GetSupportedControllers())
 			{
 				Guid guid = usbController.Key;
-				string id = GetControllerID(guid);
+				ControllerID id = new ControllerID(guid);
 				string name = usbController.Value.ControllerName;
 
 				if (!cachedControllers.ContainsKey(guid))
 				{
 					// TCPP-20009 (Type II)
-					if (id == "0ae4:0004")
+					if (id.Type == ControllerType.PS2TypeII)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
 						byte[] buttonBytes = { 0x10, 0x20, 0x2, 0x1, 0x4, 0x8, 0x0, 0x0 };
@@ -257,7 +257,7 @@ namespace DenshaDeGoInput
 						cachedControllers.Add(guid, newcontroller);
 					}
 					// TCPP-20011 (Shinkansen)
-					if (id == "0ae4:0005")
+					if (id.Type == ControllerType.PS2Shinkansen)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
 						byte[] buttonBytes = { 0x10, 0x20, 0x8, 0x4, 0x2, 0x1, 0x0, 0x0 };
@@ -275,7 +275,7 @@ namespace DenshaDeGoInput
 						cachedControllers.Add(guid, newcontroller);
 					}
 					// TCPP-20014 (Ryojouhen)
-					if (id == "0ae4:0007")
+					if (id.Type == ControllerType.PS2Ryojouhen)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.Pedal | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						byte[] buttonBytes = { 0x20, 0x40, 0x4, 0x2, 0x1, 0x0, 0x10, 0x8 };

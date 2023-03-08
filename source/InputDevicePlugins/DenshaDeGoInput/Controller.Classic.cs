@@ -284,7 +284,7 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < 10; i++)
 			{
 				Guid guid = Joystick.GetGuid(i);
-				string id = GetControllerID(guid);
+				ControllerID id = new ControllerID(guid);
 				string name = Joystick.GetName(i);
 
 				if (!cachedControllers.ContainsKey(guid))

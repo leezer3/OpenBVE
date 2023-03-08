@@ -125,13 +125,13 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < 10; i++)
 			{
 				Guid guid = Joystick.GetGuid(i);
-				string id = GetControllerID(guid);
+				ControllerID id = new ControllerID(guid);
 				string name = Joystick.GetName(i);
 
 				if (!cachedControllers.ContainsKey(guid))
 				{
 					// ZKNS-001
-					if (id == "0f0d:00c1" || id == "33dd:0002")
+					if (id.Type == ControllerType.Zuki)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 8, 9, 0, 1, 2, 3, 4, 5 };
