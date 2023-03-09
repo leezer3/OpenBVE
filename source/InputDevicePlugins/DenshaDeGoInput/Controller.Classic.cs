@@ -36,7 +36,7 @@ namespace DenshaDeGoInput
 	internal class ClassicController : Controller
 	{
 		/// <summary>A cached list of supported connected controllers.</summary>
-		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
+		private static readonly Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
 
 		/// <summary>Whether the adapter uses a hat to map the direction buttons.</summary>
 		internal static bool UsesHat;
@@ -284,7 +284,7 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < 10; i++)
 			{
 				Guid guid = Joystick.GetGuid(i);
-				string id = GetControllerID(guid);
+				ControllerID id = new ControllerID(guid);
 				string name = Joystick.GetName(i);
 
 				if (!cachedControllers.ContainsKey(guid))

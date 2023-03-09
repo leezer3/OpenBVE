@@ -27,8 +27,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Timers;
-using OpenTK.Input;
 using OpenBveApi.Interface;
 using Timer = System.Timers.Timer;
 
@@ -39,9 +37,9 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Internal list of connected controllers.
 		/// </summary>
-		private List<Guid> controllerList = new List<Guid>();
+		private readonly List<Guid> controllerList = new List<Guid>();
 
-		private Timer Timer1;
+		private readonly Timer Timer1;
 
 		public Config()
 		{

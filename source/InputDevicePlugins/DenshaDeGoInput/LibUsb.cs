@@ -41,7 +41,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Dictionary containing the supported USB controllers
 		/// </summary>
-		private static Dictionary<Guid, UsbController> supportedUsbControllers = new Dictionary<Guid, UsbController>();
+		private static readonly Dictionary<Guid, UsbController> supportedUsbControllers = new Dictionary<Guid, UsbController>();
 
 		/// <summary>
 		/// GUID of the active controller
