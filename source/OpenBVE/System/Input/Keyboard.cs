@@ -2,7 +2,6 @@
 using LibRender2.Screens;
 using OpenTK.Input;
 using OpenBveApi.Interface;
-using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -17,7 +16,7 @@ namespace OpenBve
 				MainLoop.kioskModeTimer = 0;
 				TrainManager.PlayerTrain.AI = null;
 			}
-			if (Loading.Complete == true && e.Key == OpenTK.Input.Key.F4 && e.Alt == true)
+			if (Loading.Complete && e.Key == Key.F4 && e.Alt)
 			{
 				// Catch standard ALT + F4 quit and push confirmation prompt
 				Game.Menu.PushMenu(MenuType.Quit);

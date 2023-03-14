@@ -42,7 +42,7 @@ namespace LibRender2.Primitives
 					//Draw box containing backing color first
 					Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
 					//Calculate the new size
-					newSize = new Vector2(Texture.Width, Texture.Height);
+					newSize = Texture.Size;
 					if (newSize.X > Size.X)
 					{
 						newSize.X = Size.X;
@@ -59,7 +59,7 @@ namespace LibRender2.Primitives
 					//Draw box containing backing color first
 					Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
 					//Calculate the new size
-					newSize = new Vector2(Texture.Width, Texture.Height);
+					newSize = Texture.Size;
 					if (newSize.X > Size.X)
 					{
 						newSize.X = Size.X;
@@ -80,9 +80,8 @@ namespace LibRender2.Primitives
 					//Draw box containing backing color first
 					Renderer.Rectangle.Draw(null, Location, Size, BackgroundColor);
 					//Calculate the new size
-					double ratioW = Size.X / Texture.Width;
-					double ratioH = Size.Y / Texture.Height;
-					double newRatio = ratioW < ratioH ? ratioW : ratioH;
+					Vector2 ratio = Size / Texture.Size;
+					double newRatio = ratio.X < ratio.Y ? ratio.X : ratio.Y;
 					newSize = new Vector2(Texture.Width, Texture.Height) * newRatio;
 					Renderer.Rectangle.DrawAlpha(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White);
 					break;

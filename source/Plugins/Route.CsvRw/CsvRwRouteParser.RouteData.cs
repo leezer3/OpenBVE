@@ -17,8 +17,6 @@ namespace CsvRwRouteParser
 			/// This value is used to convert between the speed set by Options.UnitsOfSpeed and m/s
 			/// </summary>
 			internal double UnitOfSpeed;
-			
-			internal bool AccurateObjectDisposal;
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
 			internal readonly StructureData Structure = new StructureData();

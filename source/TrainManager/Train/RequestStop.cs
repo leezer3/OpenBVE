@@ -33,15 +33,8 @@ namespace TrainManager.Trains
 				else
 				{
 					//We don't meet the conditions for this request stop
-					if (stopRequest.FullSpeed)
-					{
-						//Pass at linespeed, rather than braking as if for stop
-						NextStopSkipped = StopSkipMode.Linespeed;
-					}
-					else
-					{
-						NextStopSkipped = StopSkipMode.Decelerate;
-					}
+					//Pass at linespeed, rather than braking as if for stop
+					NextStopSkipped = stopRequest.FullSpeed ? StopSkipMode.Linespeed : StopSkipMode.Decelerate;
 
 					//Play sound
 					Cars[DriverCar].Sounds.RequestStop[1].Play(Cars[DriverCar], false);
@@ -65,15 +58,8 @@ namespace TrainManager.Trains
 			else
 			{
 				Cars[DriverCar].Sounds.RequestStop[1].Play(Cars[DriverCar], false);
-				if (stopRequest.FullSpeed)
-				{
-					//Pass at linespeed, rather than braking as if for stop
-					NextStopSkipped = StopSkipMode.Linespeed;
-				}
-				else
-				{
-					NextStopSkipped = StopSkipMode.Decelerate;
-				}
+				//Pass at linespeed, rather than braking as if for stop
+				NextStopSkipped = stopRequest.FullSpeed ? StopSkipMode.Linespeed : StopSkipMode.Decelerate;
 
 				//Play sound
 				Cars[DriverCar].Sounds.RequestStop[1].Play(Cars[DriverCar], false);

@@ -1,6 +1,6 @@
-﻿using OpenBveApi.Runtime;
+using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	/// <summary>Represents an abstract device.</summary>
 	internal abstract class Device {
 		

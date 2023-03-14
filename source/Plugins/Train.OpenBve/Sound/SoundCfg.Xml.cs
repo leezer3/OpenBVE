@@ -371,6 +371,11 @@ namespace Train.OpenBve
 									{
 										break;
 									}
+
+									if (TrainXmlParser.MotorSoundXMLParsed == null)
+									{
+										TrainXmlParser.MotorSoundXMLParsed = new bool[Train.Cars.Length];
+									}
 									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
 									ParseMotorSoundTableNode(c, car, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
 									break;

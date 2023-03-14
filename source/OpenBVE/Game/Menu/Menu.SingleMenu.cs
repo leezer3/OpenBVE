@@ -30,8 +30,7 @@ namespace OpenBve
 			/// <summary>The absolute width</summary>
 			public readonly double Width = 0;
 			/// <summary>The absolute height</summary>
-			public readonly double Height = 0; 
-			private readonly double MaxWidth;
+			public readonly double Height = 0;
 
 			private int lastSelection = int.MaxValue;
 			private int currentSelection;
@@ -63,9 +62,8 @@ namespace OpenBve
 			/********************
 				MENU C'TOR
 			*********************/
-			public SingleMenu(MenuType menuType, int data = 0, double maxWidth = 0)
+			public SingleMenu(MenuType menuType, int data = 0, double MaxWidth = 0)
 			{
-				MaxWidth = maxWidth;
 				Type = menuType;
 				int i, menuItem;
 				int jump = 0;

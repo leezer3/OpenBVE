@@ -131,7 +131,7 @@ namespace OpenBve {
 			}
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
-			Sounds = new Sounds();
+			Sounds = new Sounds(CurrentHost);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			
 			//Platform specific startup checks
@@ -181,7 +181,7 @@ namespace OpenBve {
 			if (result.RouteFile != null & result.TrainFolder == null)
 			{
 				string error;
-				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer) || true)
+				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
 				{
 					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
@@ -349,6 +349,10 @@ namespace OpenBve {
 					MessageBox.Show(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
+			else
+			{
+				Deinitialize();
+			}
 		}
 
 		
@@ -382,7 +386,8 @@ namespace OpenBve {
 		{
 			string error;
 			Program.CurrentHost.UnloadPlugins(out error);
-			Sounds.Deinitialize();
+			Sounds.DeInitialize();
+			Renderer.DeInitialize();
 			if (currentGameWindow != null)
 			{
 				currentGameWindow.Dispose();

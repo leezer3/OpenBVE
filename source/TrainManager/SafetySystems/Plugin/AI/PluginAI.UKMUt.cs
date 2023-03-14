@@ -376,14 +376,7 @@ namespace TrainManager.SafetySystems
 
 		public override void BeginJump(InitializationModes mode)
 		{
-			if (mode == InitializationModes.OffEmergency)
-			{
-				currentStep = 0;
-			}
-			else
-			{
-				currentStep = 100;
-			}
+			currentStep = mode == InitializationModes.OffEmergency ? 0 : 100;
 		}
 
 		public override void EndJump()

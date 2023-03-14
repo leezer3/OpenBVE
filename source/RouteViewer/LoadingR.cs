@@ -110,6 +110,11 @@ namespace RouteViewer {
 			try
 			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				if (Folder == null)
+				{
+					// Unlikely to work, but attempt to make the best of it
+					return Application.StartupPath;
+				}
 				string candidate = null;
 				while (true)
 				{
@@ -126,7 +131,6 @@ namespace RouteViewer {
 						candidate = Folder;
 					}
 
-					// ReSharper disable once AssignNullToNotNullAttribute
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
 					if (Info == null)
 					{

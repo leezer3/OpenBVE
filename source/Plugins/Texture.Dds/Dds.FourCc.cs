@@ -1,5 +1,6 @@
-﻿namespace Plugin
+﻿namespace Texture.Dds
 {
+	/// <summary>The known DDS FourCC values</summary>
 	enum FourCC : uint
 	{
 		DXT1 = 0x31545844,

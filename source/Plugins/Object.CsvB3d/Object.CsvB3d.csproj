@@ -43,6 +43,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Plugin.Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

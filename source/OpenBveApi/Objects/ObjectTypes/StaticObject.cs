@@ -29,12 +29,7 @@ namespace OpenBveApi.Objects
 		public StaticObject(HostInterface Host)
 		{
 			currentHost = Host;
-			Mesh = new Mesh
-			{
-				Faces = new MeshFace[] { },
-				Materials = new MeshMaterial[] { },
-				Vertices = new VertexTemplate[] { }
-			};
+			Mesh = new Mesh();
 		}
 
 		/// <summary>Creates a clone of this object.</summary>
@@ -266,6 +261,12 @@ namespace OpenBveApi.Objects
 				}
 
 			}
+		}
+
+		/// <summary>Applys scale</summary>
+		public void ApplyScale(Vector3 scale)
+		{
+			ApplyScale(scale.X, scale.Y, scale.Z);
 		}
 
 		/// <summary>Applys scale</summary>

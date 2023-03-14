@@ -234,14 +234,8 @@ namespace OpenBve
                 {
                     outputFile.WriteLine(Program.CurrentRoute.Information.ErrorsAndWarnings);
                 }
-                if (Train)
-                {
-                    outputFile.WriteLine("The current train plugin caused the following exception: ");
-                }
-                else
-                {
-                    outputFile.WriteLine("The current routefile caused the following exception: ");
-                }
+
+                outputFile.WriteLine(Train ? "The current train plugin caused the following exception: " : "The current routefile caused the following exception: ");
                 outputFile.WriteLine(ExceptionText);
                 double MemoryUsed;
                 using (Process proc = Process.GetCurrentProcess())

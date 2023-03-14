@@ -7,7 +7,6 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using TrainManager.Power;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 

@@ -1,5 +1,4 @@
 ﻿
-using System;
 using System.Drawing;
 using System.Drawing.Text;
 using OpenBveApi.FileSystem;
@@ -26,8 +25,6 @@ namespace LibRender2.Text
 		public readonly OpenGlFont VeryLargeFont;
 
 		public readonly OpenGlFont EvenLargerFont;
-
-		private readonly PrivateFontCollection fontCollection;
 
 		private static HostInterface currentHost;
 
@@ -77,7 +74,6 @@ namespace LibRender2.Text
 		public Fonts(HostInterface host, FileSystem fileSystem, string fontName)
 		{
 			currentHost = host;
-			fontCollection = new PrivateFontCollection();
 			FontFamily uiFont = FontFamily.GenericSansSerif;
 			if (!string.IsNullOrEmpty(fontName))
 			{

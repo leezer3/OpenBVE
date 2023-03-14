@@ -293,9 +293,7 @@ namespace OpenBve {
 			if (listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				if (j > 0) {
-					Control c = Interface.CurrentControls[j];
-					Interface.CurrentControls[j] = Interface.CurrentControls[j - 1];
-					Interface.CurrentControls[j - 1] = c;
+					(Interface.CurrentControls[j], Interface.CurrentControls[j - 1]) = (Interface.CurrentControls[j - 1], Interface.CurrentControls[j]);
 					ListViewItem v = listviewControls.Items[j];
 					listviewControls.Items.RemoveAt(j);
 					listviewControls.Items.Insert(j - 1, v);
@@ -308,9 +306,7 @@ namespace OpenBve {
 			if (listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				if (j < Interface.CurrentControls.Length - 1) {
-					Control c = Interface.CurrentControls[j];
-					Interface.CurrentControls[j] = Interface.CurrentControls[j + 1];
-					Interface.CurrentControls[j + 1] = c;
+					(Interface.CurrentControls[j], Interface.CurrentControls[j + 1]) = (Interface.CurrentControls[j + 1], Interface.CurrentControls[j]);
 					ListViewItem v = listviewControls.Items[j];
 					listviewControls.Items.RemoveAt(j);
 					listviewControls.Items.Insert(j + 1, v);
@@ -431,15 +427,8 @@ namespace OpenBve {
 			{
 				textboxJoystickGrab.Enabled = false;
 			}
-			if (radiobuttonJoystick.Checked)
-			{
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab");
-			}
-			else
-			{
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
-			}
 
+			textboxJoystickGrab.Text = Translations.GetInterfaceString(radiobuttonJoystick.Checked ? "controls_selection_joystick_assignment_grab" : "controls_selection_keyboard_assignment_grab");
 		}
 
 		// details
@@ -545,11 +534,8 @@ namespace OpenBve {
 					FullAxis = true;
 				}
 			}
-			if (FullAxis) {
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab_fullaxis");
-			} else {
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab_normal");
-			}
+
+			textboxJoystickGrab.Text = Translations.GetInterfaceString(FullAxis ? "controls_selection_joystick_assignment_grab_fullaxis" : "controls_selection_joystick_assignment_grab_normal");
 			textboxJoystickGrab.BackColor = Color.LightSkyBlue;
 			textboxJoystickGrab.ForeColor = Color.Black;
 		}
@@ -579,14 +565,7 @@ namespace OpenBve {
 			comboboxKeyboardKey.Focus();
 		}
 		private void textboxJoystickGrab_Leave(object sender, EventArgs e) {
-			if (radiobuttonJoystick.Checked)
-			{
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab");
-			}
-			else
-			{
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
-			}
+			textboxJoystickGrab.Text = Translations.GetInterfaceString(radiobuttonJoystick.Checked ? "controls_selection_joystick_assignment_grab" : "controls_selection_keyboard_assignment_grab");
 			textboxJoystickGrab.BackColor = Color.White;
 			textboxJoystickGrab.ForeColor = Color.Black;
 			KeyGrab = false;

@@ -1,13 +1,13 @@
 using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	/// <summary>The interface to be implemented by the plugin.</summary>
-	public class Plugin : IRuntime {
+	public class OpenBveAts : IRuntime {
 
 		// --- members ---
 		
 		/// <summary>The train that is simulated by this plugin.</summary>
-		private Train Train = null;
+		private Train Train;
 		
 		
 		// --- interface functions ---

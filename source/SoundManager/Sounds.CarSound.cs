@@ -89,6 +89,11 @@ namespace SoundManager
 			this.Buffer = null;
 		}
 
+		public CarSound Clone()
+		{
+			return new CarSound(this.Buffer, this.Position);
+		}
+
 		/// <summary>Plays the sound at the original pitch and volume</summary>
 		/// <param name="Car">The parent car</param>
 		/// <param name="looped">Whether the sound is to be played looped</param>

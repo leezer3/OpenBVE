@@ -59,47 +59,47 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>The buttons the controller has</summary>
-		internal protected ControllerButtons Buttons
+		protected internal ControllerButtons Buttons
 		{
 			get;
 			protected set;
 		}
 
 		/// <summary>The name of the controller</summary>
-		internal protected string ControllerName;
+		protected internal string ControllerName;
 
 		/// <summary>The amount of brake notches</summary>
-		internal protected int BrakeNotches
+		protected internal int BrakeNotches
 		{
 			get;
 			protected set;
 		}
 		/// <summary>The amount of power notches</summary>
-		internal protected int PowerNotches
+		protected internal int PowerNotches
 		{
 			get;
 			protected set;
 		}
 
 		/// <summary>The Guid for the controller</summary>
-		internal protected Guid Guid
+		protected internal Guid Guid
 		{
 			get;
 			protected set;
 		}
 
 		/// <summary>A string with the vendor and product ID for the controller</summary>
-		internal protected string Id
+		protected internal ControllerID Id
 		{
 			get;
 			protected set;
 		}
 
 		/// <summary>Whether the controller is connected</summary>
-		internal protected bool IsConnected;
+		protected internal bool IsConnected;
 
 		/// <summary>Whether the controller requires calibration</summary>
-		internal protected bool RequiresCalibration
+		protected internal bool RequiresCalibration
 		{
 			get;
 			protected set;
@@ -108,7 +108,7 @@ namespace DenshaDeGoInput
 		internal Controller()
 		{
 			Guid = Guid.Empty;
-			Id = string.Empty;
+			Id = new ControllerID();
 			ControllerName = string.Empty;
 			IsConnected = false;
 			RequiresCalibration = false;
@@ -122,26 +122,110 @@ namespace DenshaDeGoInput
 		{
 		}
 
-		/// <summary>
-		/// Gets a string representing a controller's vendor and product ID.
-		/// </summary>
-		/// <param name="guid">The GUID of the joystick.</param>
-		/// <returns>String representing the controller's vendor and product ID.</returns>
-		internal static string GetControllerID(Guid guid)
+		/// <summary>A USB controller ID</summary>
+		internal class ControllerID
 		{
-			string id = guid.ToString("N");
-			// OpenTK joysticks have a GUID which contains the vendor and product ID. It differs between platforms.
-			switch (DenshaDeGoInput.CurrentHost.Platform)
+			/// <summary>The Vendor ID</summary>
+			internal readonly string VID;
+			/// <summary>The Product ID</summary>
+			internal readonly string PID;
+
+			/// <summary>Gets a controller's vendor and product ID.</summary>
+			/// <param name="guid">The OpenTK GUID of the joystick.</param>
+			internal ControllerID(Guid guid)
 			{
-				case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
-					id = id.Substring(4, 4) + ":" + id.Substring(0, 4);
-					break;
-				default:
-					id = id.Substring(10, 2) + id.Substring(8, 2) + ":" + id.Substring(18, 2) + id.Substring(16, 2);
-					break;
+				string id = guid.ToString("N");
+				// OpenTK joysticks have a GUID which contains the vendor and product ID. It differs between platforms.
+				switch (DenshaDeGoInput.CurrentHost.Platform)
+				{
+					case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
+						VID = id.Substring(4, 4);
+						PID = id.Substring(0, 4);
+						break;
+					default:
+						VID = id.Substring(10, 2) + id.Substring(8, 2);
+						PID = id.Substring(18, 2) + id.Substring(16, 2);
+						break;
+				}
 			}
-			return id;
+
+			internal ControllerID()
+			{
+				VID = string.Empty;
+				PID = string.Empty;
+			}
+
+
+			internal ControllerType Type
+			{
+				get
+				{
+					switch (VID)
+					{
+						case "0f0d":
+							// Hori Inc
+							if (PID == "00c1")
+							{
+								return ControllerType.Zuki;
+							}
+							// May actually be a USB fight stick, but if we get the PIDs for these we can block them
+							DenshaDeGoInput.CurrentHost.AddMessage("Densha DeGo! Input: Unrecognised Hori Inc. PID " + PID + " - Please report this.");
+							break;
+						case "33dd":
+							// Zuki Inc
+							if (PID == "0001" || PID == "0002")
+							{
+								return ControllerType.Zuki;
+							}
+							// Zuki Inc 
+							DenshaDeGoInput.CurrentHost.AddMessage("Densha DeGo! Input: Unrecognised Zuki Inc. PID " + PID + " - Please report this.");
+							break;
+						case "0ae4":
+							// Taito Corp
+							switch (PID)
+							{
+								case "0003":
+									return ControllerType.PCTwoHandle;
+								case "0004":
+									return ControllerType.PS2TypeII;
+								case "0005":
+									return ControllerType.PS2Shinkansen;
+								case "0007":
+									return ControllerType.PS2Ryojouhen;
+								case "0008":
+									return ControllerType.PCRyojouhen;
+							}
+							DenshaDeGoInput.CurrentHost.AddMessage("Densha DeGo! Input: Unrecognised Taito Corp. PID " + PID + " - Please report this.");
+							break;
+
+					}
+
+					return ControllerType.GenericUSB;
+				}
+			}
 		}
 
+		/// <summary>The types of known controller</summary>
+		internal enum ControllerType
+		{
+			/// <summary>Classic controllers, connected via pad adaptor</summary>
+			GenericUSB,
+			/// <summary>Zuki Controller for Switch</summary>
+			Zuki,
+			// ** PS2 USB Controllers **
+			/// <summary>TCPP-20009 (Type II)</summary>
+			PS2TypeII,
+			/// <summary>TCPP-20011 (Shinkansen)</summary>
+			PS2Shinkansen,
+			/// <summary>TCPP-20014 (Ryojouhen)</summary>
+			PS2Ryojouhen,
+			// ** Unbalance Controllers **
+
+			/// <summary>DGC-255 / DGOC-44U (Normally PC Two-Handle)</summary>
+			PCTwoHandle,
+			/// <summary>DRC-184 / DYC288 (Ryojouhen controller for PC)</summary>
+			PCRyojouhen,
+
+		}
 	}
 }

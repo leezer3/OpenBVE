@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using LibRender2.Screens;
@@ -14,7 +13,7 @@ namespace OpenBve
 			private readonly MenuOptionType Type;
 
 			/// <summary>Holds the entries for all options</summary>
-			internal readonly object[] Entries;
+			private readonly object[] Entries;
 
 			/// <summary>Gets the current option</summary>
 			internal object CurrentOption => Entries[CurrentlySelectedOption];
@@ -48,7 +47,7 @@ namespace OpenBve
 					case MenuOptionType.AnisotropicLevel:
 						for (int i = 0; i < Entries.Length; i++)
 						{
-							int level = int.Parse(entries[i] as string, NumberStyles.Integer);
+							int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
 							if (level == Interface.CurrentOptions.AnisotropicFilteringLevel)
 							{
 								CurrentlySelectedOption = i;
@@ -59,7 +58,7 @@ namespace OpenBve
 					case MenuOptionType.AntialiasingLevel:
 						for (int i = 0; i < Entries.Length; i++)
 						{
-							int level = int.Parse(entries[i] as string, NumberStyles.Integer);
+							int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
 							if (level == Interface.CurrentOptions.AntiAliasingLevel)
 							{
 								CurrentlySelectedOption = i;

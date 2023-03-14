@@ -523,6 +523,7 @@ namespace OpenBve
 											? CameraProperties.InteriorTopAngularSpeed
 											: CameraProperties.ExteriorTopAngularSpeed;
 										Program.Renderer.Camera.AlignmentDirection.Yaw = -s*Interface.CurrentControls[i].AnalogState;
+										Program.Renderer.updateVisibility = true;
 									}
 										break;
 									case Translations.Command.CameraRotateRight:
@@ -533,6 +534,7 @@ namespace OpenBve
 											? CameraProperties.InteriorTopAngularSpeed
 											: CameraProperties.ExteriorTopAngularSpeed;
 										Program.Renderer.Camera.AlignmentDirection.Yaw = s*Interface.CurrentControls[i].AnalogState;
+										Program.Renderer.updateVisibility = true;
 									}
 										break;
 									case Translations.Command.CameraRotateUp:
@@ -570,6 +572,7 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentDirection.Roll = -s*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
+											Program.Renderer.updateVisibility = true;
 										}
 										break;
 									case Translations.Command.CameraRotateCW:
@@ -585,6 +588,7 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentDirection.Roll = s*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
+											Program.Renderer.updateVisibility = true;
 										}
 										break;
 									case Translations.Command.CameraZoomIn:
@@ -1082,14 +1086,7 @@ namespace OpenBve
 												}
 												break;
 											default:
-												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
-												{
-													Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
-												}
-												else
-												{
-													Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.Off;
-												}
+												Program.Renderer.Camera.CurrentRestriction = Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off ? TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode : CameraRestrictionMode.Off;
 												World.InitializeCameraRestriction();
 												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
 												{

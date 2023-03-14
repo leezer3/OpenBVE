@@ -28,7 +28,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
-using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace RouteViewer
 {
@@ -75,7 +74,7 @@ namespace RouteViewer
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 			FileSystem.CreateFileSystem();
-			Sounds = new Sounds();
+			Sounds = new Sounds(CurrentHost);
 			Options.LoadOptions();
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
@@ -142,7 +141,7 @@ namespace RouteViewer
 				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
 				if (System.IO.File.Exists(File))
 				{
-					System.Diagnostics.Process.Start(File, objectsToLoad.ToString());
+					System.Diagnostics.Process.Start(File, objectsToLoad);
 					if (string.IsNullOrEmpty(CurrentRouteFile))
 					{
 						//We only supplied objects, so launch Object Viewer instead
@@ -176,7 +175,7 @@ namespace RouteViewer
 			processCommandLineArgs = true;
 			currentGameWindow.Run();
 			//Unload
-			Sounds.Deinitialize();
+			Sounds.DeInitialize();
 		}
 		
 		// load route
@@ -204,6 +203,8 @@ namespace RouteViewer
 				result = false;
 				CurrentRouteFile = null;
 			}
+
+			Renderer.Camera.QuadTreeLeaf = null;
 			Renderer.Lighting.Initialize();
 			Renderer.InitializeVisibility();
 			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
@@ -265,6 +266,8 @@ namespace RouteViewer
 
 		internal static void UpdateGraphicsSettings()
 		{
+			Renderer.Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
 			if (CurrentRouteFile != null)
 			{
 				Program.CurrentlyLoading = true;
@@ -278,9 +281,9 @@ namespace RouteViewer
 					Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 					Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-					Renderer.UpdateVisibility(a.TrackPosition, true);
 					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				}
+				Renderer.UpdateViewingDistances(Interface.CurrentOptions.ViewingDistance);
 				Program.CurrentlyLoading = false;
 			}
 		}
@@ -397,7 +400,7 @@ namespace RouteViewer
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
-							Renderer.UpdateVisibility(a.TrackPosition, true);
+							//Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
 						else
@@ -419,7 +422,7 @@ namespace RouteViewer
 					}
 					break;
 				case Key.F7:
-					if (CurrentlyLoading == true)
+					if (CurrentlyLoading)
 					{
 						break;
 					}
@@ -496,7 +499,7 @@ namespace RouteViewer
 					Dialog.Dispose();
 					break;
 				case Key.F8:
-					if (Program.CurrentlyLoading == true)
+					if (CurrentlyLoading)
 					{
 						//Don't allow the user to update the settings during loading, bad idea..
 						break;

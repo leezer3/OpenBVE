@@ -41,7 +41,7 @@ namespace OpenBve
 			buttonViewCrashLog.Text = Translations.GetInterfaceString("bug_report_view_log_button");
 		}
 
-		private void buttonViewLog_Click(object sender, System.EventArgs e)
+		private void buttonViewLog_Click(object sender, EventArgs e)
 		{
 			try
 			{
@@ -64,10 +64,12 @@ namespace OpenBve
 			}
 			catch
 			{
+				// Actually failed to load, but same difference
+				MessageBox.Show(Translations.GetInterfaceString("bug_report_no_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
-		private void buttonViewCrashLog_Click(object sender, System.EventArgs e)
+		private void buttonViewCrashLog_Click(object sender, EventArgs e)
 		{
 			try
 			{
@@ -89,7 +91,7 @@ namespace OpenBve
 			}
 		}
 
-		private void buttonReportProblem_Click(object sender, System.EventArgs e)
+		private void buttonReportProblem_Click(object sender, EventArgs e)
 		{
 			string fileName = "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip";
 			try
@@ -113,6 +115,7 @@ namespace OpenBve
 						}
 						catch
 						{
+							// unable to find / load crash log- Access issues?
 						}
 						if (crashLog != null)
 						{
@@ -124,7 +127,7 @@ namespace OpenBve
 						//Finally add the package database to the archive- Again, this isn't necessarily helpful, but we may well want to see it
 						var packageDatabase = new DirectoryInfo(Program.FileSystem.PackageDatabaseFolder);
 						if(packageDatabase.Exists) {
-							FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories); ;
+							FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories);
 							foreach (var currentFile in databaseFiles) {
 								if (currentFile.Name.ToLowerInvariant() == "packages.xml") {
 									zipWriter.Write("PackageDatabase\\" + currentFile.Name, currentFile);

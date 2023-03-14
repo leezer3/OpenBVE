@@ -156,6 +156,11 @@
     <Compile Include="Routes\Events.TriggerTypes.cs" />
     <Compile Include="Routes\LightDefinition.cs" />
     <Compile Include="Routes\ObjectDisposalMode.cs" />
+    <Compile Include="Routes\QuadTree\QuadNode.cs" />
+    <Compile Include="Routes\QuadTree\QuadNode.Internal.cs" />
+    <Compile Include="Routes\QuadTree\QuadNode.Leaf.cs" />
+    <Compile Include="Routes\QuadTree\QuadTree.Bounds.cs" />
+    <Compile Include="Routes\QuadTree\QuadTree.cs" />
     <Compile Include="Routes\RouteInterface.cs" />
     <Compile Include="Routes\StaticBackground.cs" />
     <Compile Include="Routes\Track.cs" />
@@ -265,6 +270,7 @@
     <EmbeddedResource Include="Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

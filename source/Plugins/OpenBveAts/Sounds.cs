@@ -1,6 +1,6 @@
 using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	internal class Sounds {
 		
 		// --- classes ---
@@ -58,7 +58,7 @@ namespace Plugin {
 			// --- looping ---
 			this.AtsBell = new Sound(0);
 			this.AtsChime = new Sound(1);
-			this.Eb = new Sounds.Sound(5);
+			this.Eb = new Sound(5);
 			this.LoopingSounds = new[] { this.AtsBell, this.AtsChime, this.Eb };
 			// --- play once ---
 			this.AtsPBell = new Sound(2);

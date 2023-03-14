@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -175,9 +174,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (Program.CurrentHost.LoadTexture(ref Left.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						double u = Left.BackgroundTexture.Width;
-						double v = Left.BackgroundTexture.Height;
-						renderer.Rectangle.Draw(Left.BackgroundTexture, new Vector2(px, py), new Vector2(u, v), new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
+						renderer.Rectangle.Draw(Left.BackgroundTexture, new Vector2(px, py), new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
 					}
 				}
 				// right background
@@ -185,9 +182,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (Program.CurrentHost.LoadTexture(ref Right.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						double u = Right.BackgroundTexture.Width;
-						double v = Right.BackgroundTexture.Height;
-						renderer.Rectangle.Draw(Right.BackgroundTexture, new Vector2(px + w - u, py), new Vector2(u, v), new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
+						renderer.Rectangle.Draw(Right.BackgroundTexture, new Vector2(px + w - Right.BackgroundTexture.Width, py), new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
 					}
 				}
 				// middle background
@@ -226,9 +221,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (Program.CurrentHost.LoadTexture(ref Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						double u = Left.OverlayTexture.Width;
-						double v = Left.OverlayTexture.Height;
-						renderer.Rectangle.Draw(Left.OverlayTexture, new Vector2(px, py), new Vector2(u, v), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
+						renderer.Rectangle.Draw(Left.OverlayTexture, new Vector2(px, py), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
 					}
 				}
 				// right overlay
@@ -236,9 +229,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (Program.CurrentHost.LoadTexture(ref Right.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						double u = Right.OverlayTexture.Width;
-						double v = Right.OverlayTexture.Height;
-						renderer.Rectangle.Draw(Right.OverlayTexture, new Vector2(px + w - u, py), new Vector2(u, v), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
+						renderer.Rectangle.Draw(Right.OverlayTexture, new Vector2(px + w - Right.OverlayTexture.Width, py), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
 					}
 				}
 				// middle overlay

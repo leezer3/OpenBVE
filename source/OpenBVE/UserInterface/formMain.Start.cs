@@ -90,7 +90,7 @@ namespace OpenBve
 			currentRouteFolder = Folder;
 			try
 			{
-				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
+				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !string.IsNullOrEmpty(Folder) && Folder.Length > 2)
 				{
 					//BUG: Mono's filesystem watcher can exceed the OS-X handles limit on some systems
 					//Triggered by NWM which has 600+ files in the route folder
@@ -794,8 +794,11 @@ namespace OpenBve
 							}
 							else
 							{
-								groupboxTrainDetails.Visible = false;
-								buttonStart.Enabled = false;
+								lock (previewLock)
+								{
+									groupboxTrainDetails.Visible = false;
+									buttonStart.Enabled = false;
+								}
 							}
 						}
 						catch
@@ -956,8 +959,11 @@ namespace OpenBve
 							}
 							else
 							{
-								groupboxTrainDetails.Visible = false;
-								buttonStart.Enabled = false;
+								lock (previewLock)
+								{
+									groupboxTrainDetails.Visible = false;
+									buttonStart.Enabled = false;
+								}
 							}
 						}
 						catch
@@ -1200,6 +1206,7 @@ namespace OpenBve
 
 			Game.Reset(false);
 
+			// ReSharper disable once AssignNullToNotNullAttribute - Already checked when loading plugins
 			RouteInterface routeInterface = Program.CurrentHost.Plugins.Select(x => x.Route).FirstOrDefault(x => x != null && x.CanLoadRoute(result.RouteFile));
 
 			if (routeInterface == null)
@@ -1421,6 +1428,7 @@ namespace OpenBve
 
 				bool canLoad = false;
 				Image trainImage = null;
+				// ReSharper disable once PossibleNullReferenceException - Already checked when loading plugins
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
 					if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))

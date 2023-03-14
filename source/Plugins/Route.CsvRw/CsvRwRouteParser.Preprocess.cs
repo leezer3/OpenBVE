@@ -371,7 +371,24 @@ namespace CsvRwRouteParser
 											file = args[2 * ia];
 											offset = 0.0;
 										}
-										files[ia] = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
+
+										try
+										{
+											files[ia] = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
+										}
+										catch
+										{
+											continueWithNextExpression = true;
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The filename " + file + " contains invalid characters in " + t + Epilog);
+											for (int ta = i; ta < Expressions.Length - 1; ta++)
+											{
+												Expressions[ta] = Expressions[ta + 1];
+											}
+											Array.Resize(ref Expressions, Expressions.Length - 1);
+											i--;
+											break;
+										}
+										
 										offsets[ia] = offset;
 										if (!System.IO.File.Exists(files[ia])) {
 											continueWithNextExpression = true;

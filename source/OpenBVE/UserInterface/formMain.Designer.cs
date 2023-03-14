@@ -4295,18 +4295,6 @@ namespace OpenBve {
 			this.labelInstallHeader.Size = new System.Drawing.Size(683, 32);
 			this.labelInstallHeader.TabIndex = 15;
 			// 
-			// buttonSelectPackage
-			// 
-			this.buttonSelectPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonSelectPackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonSelectPackage.Location = new System.Drawing.Point(134, 535);
-			this.buttonSelectPackage.Name = "buttonSelectPackage";
-			this.buttonSelectPackage.Size = new System.Drawing.Size(180, 24);
-			this.buttonSelectPackage.TabIndex = 14;
-			this.buttonSelectPackage.Text = "Select Package...";
-			this.buttonSelectPackage.UseVisualStyleBackColor = true;
-			this.buttonSelectPackage.Click += new System.EventHandler(this.buttonSelectPackage_Click);
-			// 
 			// textBoxPackageDescription
 			// 
 			this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 

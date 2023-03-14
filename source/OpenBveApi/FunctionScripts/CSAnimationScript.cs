@@ -77,7 +77,7 @@ namespace OpenBveApi.FunctionScripting {
 						break;
 					} else if (ctor.GetParameters().Length == 1 
 						&& ctor.GetParameters()[0].ParameterType == typeof(Dictionary<string, string>)) {
-						scriptObject = Activator.CreateInstance(scriptType, new object[] { args });
+						scriptObject = Activator.CreateInstance(scriptType, args);
 						break;
 					}
 				}

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	/// <summary>Represents a train that is simulated by this plugin.</summary>
 	internal class Train {
 		

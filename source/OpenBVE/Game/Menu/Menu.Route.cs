@@ -26,7 +26,7 @@ namespace OpenBve
 		private static RouteState RoutefileState;
 		private static readonly Picturebox routePictureBox = new Picturebox(Program.Renderer);
 		private static readonly Textbox routeDescriptionBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
-		private static Dictionary<string, Texture> iconCache = new Dictionary<string, Texture>();
+		private static readonly Dictionary<string, Texture> iconCache = new Dictionary<string, Texture>();
 		private static Package currentPackage;
 		private static PackageOperation currentOperation;
 		private static bool packagePreview;
@@ -84,10 +84,11 @@ namespace OpenBve
 			{
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(currentFile))
 				{
-					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+					// ReSharper disable once RedundantCast
+					object Route = (object)Program.CurrentRoute; // must cast to allow us to use the ref keyword correctly.
 					string RailwayFolder = Loading.GetRailwayFolder(currentFile);
-					string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
-					string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
+					string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
+					string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(currentFile, RouteEncoding, null, ObjectFolder, SoundFolder, true, ref Route))
 					{
 						Program.CurrentRoute = (CurrentRoute) Route;
@@ -155,9 +156,9 @@ namespace OpenBve
 					int i;
 					for (i = 0; i < f.Length; i++)
 					{
-						string g = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(currentFile),
+						string g = Path.CombineFile(System.IO.Path.GetDirectoryName(currentFile),
 							System.IO.Path.GetFileNameWithoutExtension(currentFile) + f[i]);
-						if (System.IO.File.Exists(g))
+						if (File.Exists(g))
 						{
 							try
 							{
@@ -181,14 +182,7 @@ namespace OpenBve
 
 				// description
 				string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
-				if (Description.Length != 0)
-				{
-					routeDescriptionBox.Text = Description;
-				}
-				else
-				{
-					routeDescriptionBox.Text = System.IO.Path.GetFileNameWithoutExtension(currentFile);
-				}
+				routeDescriptionBox.Text = Description.Length != 0 ? Description : System.IO.Path.GetFileNameWithoutExtension(currentFile);
 			}
 			catch (Exception ex)
 			{

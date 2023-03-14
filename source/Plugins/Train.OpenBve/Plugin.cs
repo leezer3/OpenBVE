@@ -67,10 +67,7 @@ namespace Train.OpenBve
 
 		public Plugin()
 	    {
-		    if (TrainDatParser == null)
-		    {
-			    TrainDatParser = new TrainDatParser(this);
-		    }
+		    TrainDatParser = new TrainDatParser(this);
 
 		    if (ExtensionsCfgParser == null)
 		    {

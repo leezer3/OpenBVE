@@ -1,4 +1,4 @@
-﻿namespace Plugin
+﻿namespace Texture.Tga
 {
 	internal enum VerticalTransferOrder
 	{

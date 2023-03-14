@@ -45,6 +45,28 @@ namespace LibRender2.Primitives
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 		}
 
+		/// <summary>Draws a simple 2D rectangle using two-pass alpha blending, using the texture size.</summary>
+		/// <param name="texture">The texture, or a null reference.</param>
+		/// <param name="point">The top-left coordinates in pixels.</param>
+		/// <param name="color">The color, or a null reference.</param>
+		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
+		public void DrawAlpha(Texture texture, Vector2 point, Color128? color = null, Vector2? textureCoordinates = null)
+		{
+			if (texture == null)
+			{
+				return;
+			}
+			renderer.UnsetBlendFunc();
+			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+			GL.DepthMask(true);
+			Draw(texture, point, texture.Size, color, textureCoordinates);
+			renderer.SetBlendFunc();
+			renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
+			GL.DepthMask(false);
+			Draw(texture, point, texture.Size, color, textureCoordinates);
+			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+		}
+
 		/// <summary>Draws a simple 2D rectangle.</summary>
 		/// <param name="texture">The texture, or a null reference.</param>
 		/// <param name="point">The top-left coordinates in pixels.</param>
@@ -67,6 +89,34 @@ namespace LibRender2.Primitives
 			else
 			{
 				DrawImmediate(texture, point, size, color, textureCoordinates);	
+			}
+		}
+
+		/// <summary>Draws a simple 2D rectangle, using the texture size.</summary>
+		/// <param name="texture">The texture, or a null reference.</param>
+		/// <param name="point">The top-left coordinates in pixels.</param>
+		/// <param name="color">The color, or a null reference.</param>
+		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
+		public void Draw(Texture texture, Vector2 point, Color128? color = null, Vector2? textureCoordinates = null)
+		{
+			if (texture == null)
+			{
+				return;
+			}
+			if (renderer.AvailableNewRenderer && Shader != null)
+			{
+				if (textureCoordinates == null)
+				{
+					DrawWithShader(texture, point, texture.Size, color, Vector2.One);
+				}
+				else
+				{
+					DrawWithShader(texture, point, texture.Size, color, (Vector2)textureCoordinates);
+				}
+			}
+			else
+			{
+				DrawImmediate(texture, point, texture.Size, color, textureCoordinates);	
 			}
 		}
 
@@ -165,7 +215,7 @@ namespace LibRender2.Primitives
 			
 			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
-			Shader.SetColor(color == null ? Color128.White : color.Value);
+			Shader.SetColor(color ?? Color128.White);
 			Shader.SetPoint(point);
 			Shader.SetSize(size);
 			Shader.SetCoordinates(coordinates);

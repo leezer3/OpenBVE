@@ -207,7 +207,7 @@ namespace ObjectViewer {
 			Game.Reset();
 			RefreshObjects();
 			Renderer.InitializeVisibility();
-			Renderer.UpdateVisibility(0.0, true);
+			Renderer.updateVisibility = true;
 			ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Renderer.ApplyBackgroundColor();
 		}
@@ -260,6 +260,7 @@ namespace ObjectViewer {
 	    internal static void RefreshObjects()
 	    {
 		    LightingRelative = -1.0;
+			Renderer.Reset();
 		    Game.Reset();
 			formTrain.Instance?.DisableUI();
 		    for (int i = 0; i < Files.Count; i++)
@@ -335,7 +336,7 @@ namespace ObjectViewer {
 
 		    Renderer.InitializeVisibility();
 		    Renderer.UpdateViewingDistances(600);
-		    Renderer.UpdateVisibility(0.0, true);
+		    Renderer.updateVisibility = true;
 		    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 		    Program.TrainManager.UpdateTrainObjects(0.0, true);
 		    Renderer.ApplyBackgroundColor();

@@ -27,7 +27,7 @@ namespace SoundManager
 		private SoundBuffer[] Buffers = new SoundBuffer[16];
 
 		/// <summary>The number of sound buffers.</summary>
-		private int BufferCount = 0;
+		private int BufferCount;
 
 		/// <summary>A list of all sound sources.</summary>
 		protected internal static SoundSource[] Sources = new SoundSource[16];
@@ -59,7 +59,7 @@ namespace SoundManager
 		/// <summary>Buffer for storing recorded data.</summary>
 		protected readonly byte[] MicStore = new byte[BufferSize * 2];
 
-		private HostInterface CurrentHost = null;
+		private readonly HostInterface CurrentHost;
 
 		/// <summary>Whether sound events are currently suppressed</summary>
 		public static bool SuppressSoundEvents = false;
@@ -82,13 +82,17 @@ namespace SoundManager
 		protected const double MaxLogClampFactor = -1.0;
 
 
-		// --- initialization and deinitialization ---
-
-		/// <summary>Initializes audio. A call to Deinitialize must be made when terminating the program.</summary>
-		/// <returns>Whether initializing audio was successful.</returns>
-		public void Initialize(HostInterface host, SoundRange range)
+		protected SoundsBase(HostInterface currentHost)
 		{
-			if (host.Platform == HostPlatform.MicrosoftWindows)
+			CurrentHost = currentHost;
+		}
+
+		/// <summary>Initializes audio.</summary>
+		/// <returns>Whether initializing audio was successful.</returns>
+		/// <remarks>A call to DeInitialize should be made when closing the program to release any held resources</remarks>
+		public void Initialize(SoundRange range)
+		{
+			if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				/*
 				*  If shipping an AnyCPU build and OpenALSoft / SDL, these are architecture specific PInvokes
@@ -102,9 +106,7 @@ namespace SoundManager
 					if (!ok) throw new System.ComponentModel.Win32Exception();
 				}
 			}
-			Deinitialize();
-
-			CurrentHost = host;
+			DeInitialize();
 
 			switch (range)
 			{
@@ -179,7 +181,7 @@ namespace SoundManager
 		}
 
 		/// <summary>Deinitializes audio.</summary>
-		public void Deinitialize()
+		public void DeInitialize()
 		{
 			StopAllSounds();
 			UnloadAllBuffers();
@@ -200,8 +202,6 @@ namespace SoundManager
 				OpenAlMic.Dispose();
 				OpenAlMic = null;
 			}
-
-			CurrentHost = null;
 		}
 
 

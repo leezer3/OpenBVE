@@ -18,23 +18,23 @@ namespace OpenBve
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "logo.png");
 				if (System.IO.File.Exists(File))
 				{
-					try
-					{
-						pictureBoxLogo.Image = ImageExtensions.FromFile(File);
-					}
-					catch
-					{
-					}
+					pictureBoxLogo.Image = ImageExtensions.FromFile(File);
 				}
 			}
 			catch
-			{ }
+			{
+				// Ignored
+			}
+
 			try
 			{
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
 				this.Icon = new Icon(File);
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
 
 			StringBuilder builder = new StringBuilder();
 			builder.AppendLine("CoreFX:");
@@ -115,7 +115,7 @@ namespace OpenBve
 			buttonClose.Text = Translations.GetInterfaceString("about_close");
 		}
 
-		private void buttonClose_Click(object sender, System.EventArgs e)
+		private void buttonClose_Click(object sender, EventArgs e)
 		{
 			if (Program.CurrentHost.MonoRuntime)
 			{
@@ -124,7 +124,7 @@ namespace OpenBve
 			}
 			else
 			{
-				this.Close();	
+				Close();	
 			}
 			
 		}

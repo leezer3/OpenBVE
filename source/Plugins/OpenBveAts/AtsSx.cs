@@ -1,7 +1,7 @@
 using System;
 using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	/// <summary>Represents ATS-Sx.</summary>
 	internal class AtsSx : Device {
 		

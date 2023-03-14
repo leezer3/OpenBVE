@@ -30,9 +30,9 @@ namespace LibRender2.Trains
 				Groups[0].Elements[0] = new AnimatedObject(Host)
 				{
 					States = new[] {new ObjectState(s)},
-					CurrentState = 0
+					CurrentState = 0,
+					IsPartOfTrain = true
 				};
-				Groups[0].Elements[0].IsPartOfTrain = true;
 				currentHost.CreateDynamicObject(ref Groups[0].Elements[0].internalObject);
 			}
 			else if (Object is AnimatedObjectCollection)

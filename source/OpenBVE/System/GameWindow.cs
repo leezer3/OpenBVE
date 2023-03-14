@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -170,7 +171,6 @@ namespace OpenBve
 			Program.TrainManager.UpdateTrainObjects(TimeElapsed, false);
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 			{
-				Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 				int d = TrainManager.PlayerTrain.DriverCar;
 				Program.Renderer.Camera.CurrentSpeed = TrainManager.PlayerTrain.Cars[d].CurrentSpeed;
 			}
@@ -472,6 +472,7 @@ namespace OpenBve
 				}
 			}
 			Program.Renderer.TextureManager.UnloadAllTextures();
+			Program.Renderer.visibilityThread = false;
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{
 				InputDevicePlugin.CallPluginUnload(i);
@@ -593,14 +594,7 @@ namespace OpenBve
 			}
 			if (PlayerFirstStationIndex == -1)
 			{
-				if (os == -1)
-				{
-					PlayerFirstStationIndex = 0;
-				}
-				else
-				{
-					PlayerFirstStationIndex = os;	
-				}
+				PlayerFirstStationIndex = os == -1 ? 0 : os;
 			}
 			{
 				int s = Program.CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
@@ -626,14 +620,7 @@ namespace OpenBve
 							//Set the start position to be the buffer position plus the train length plus 1m
 							PlayerFirstStationPosition = Program.CurrentRoute.BufferTrackPositions[j] + TrainLength + 1;
 							//Update the station stop location
-							if (s >= 0)
-							{
-								Program.CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
-							}
-							else
-							{
-								Program.CurrentRoute.Stations[PlayerFirstStationIndex].DefaultTrackPosition = PlayerFirstStationPosition;
-							}
+							Program.CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
 							break;
 						}
 					}
@@ -680,14 +667,7 @@ namespace OpenBve
 				{
 					OtherFirstStationIndex = i;
 					int s = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
-					if (s >= 0)
-					{
-						OtherFirstStationPosition = Program.CurrentRoute.Stations[i].Stops[s].TrackPosition;
-					}
-					else
-					{
-						OtherFirstStationPosition = Program.CurrentRoute.Stations[i].DefaultTrackPosition;
-					}
+					OtherFirstStationPosition = s >= 0 ? Program.CurrentRoute.Stations[i].Stops[s].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
 					if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0)
 					{
 						if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0)
@@ -820,7 +800,7 @@ namespace OpenBve
 			//Place the initial camera in the driver car
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-			Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
+			Program.Renderer.updateVisibility = true;
 			Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
 			Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
 			// signalling sections
@@ -1036,6 +1016,22 @@ namespace OpenBve
 					World.UpdateAbsoluteCamera(0.0);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
+			}
+
+			if (IntPtr.Size == 4)
+			{
+				using (Process proc = Process.GetCurrentProcess())
+				{
+					long memoryUsed = proc.PrivateMemorySize64;
+					MessageBox.Show(memoryUsed.ToString());
+					if ((memoryUsed > 900000000 && !Interface.CurrentOptions.LoadInAdvance) || memoryUsed > 1600000000)
+					{
+						// Either using ~900mb at the first station or 1.5gb + with all textures loaded is likely to cause critical OOM errors with the 32-bit process memory limit
+						// Turn on UnloadUnusedTextures to try and mitigate
+						Program.FileSystem.AppendToLogFile("Automatically enabling UnloadUnusedTextures due to memory pressure.");
+						Interface.CurrentOptions.UnloadUnusedTextures = true;
+					}
+				}
 			}
 		}
 

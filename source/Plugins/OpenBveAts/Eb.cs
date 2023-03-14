@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	/// <summary>Represents the EB device.</summary>
 	internal class Eb : Device {
 		

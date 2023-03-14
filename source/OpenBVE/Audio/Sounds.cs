@@ -1,7 +1,6 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
+using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
-using OpenBveApi.Trains;
 using OpenTK.Audio.OpenAL;
 using SoundManager;
 using TrainManager.Trains;
@@ -14,9 +13,8 @@ namespace OpenBve
 		/// <param name="train">The train.</param>
 		public override void StopAllSounds(object train)
 		{
-			if (train is TrainBase)
+			if (train is TrainBase t)
 			{
-				var t = (TrainBase) train;
 				for (int i = 0; i < SourceCount; i++)
 				{
 					if (t.Cars.Contains(Sources[i].Parent) || Sources[i].Parent == train)
@@ -30,6 +28,10 @@ namespace OpenBve
 					}
 				}
 			}
+		}
+
+		public Sounds(HostInterface currentHost) : base(currentHost)
+		{
 		}
 	}
 }
