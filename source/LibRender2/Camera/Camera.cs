@@ -1,5 +1,6 @@
 using System;
 using LibRender2.Camera;
+using LibRender2.Objects;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -44,7 +45,7 @@ namespace LibRender2.Cameras
 				{
 					return;
 				}
-				Renderer.updateVisibility = true;
+				Renderer.UpdateVisibility(false);
 				absolutePosition = value;
 				TranslationMatrix = Matrix4D.CreateTranslation(-value.X, -value.Y, value.Z);
 			}
@@ -58,7 +59,18 @@ namespace LibRender2.Cameras
 		/// <summary>The current relative camera alignment</summary>
 		public CameraAlignment Alignment;
 		/// <summary>The current relative camera Direction</summary>
-		public CameraAlignment AlignmentDirection;
+		public CameraAlignment AlignmentDirection
+		{
+			get
+			{
+				return alignmentDirection;
+			}
+			set
+			{
+				Renderer.UpdateVisibility(true);
+				alignmentDirection = value;
+			}
+		}
 		/// <summary>The current relative camera Speed</summary>
 		public CameraAlignment AlignmentSpeed;
 		/// <summary>The current camera movement speed</summary>
@@ -88,8 +100,7 @@ namespace LibRender2.Cameras
 					return;
 				}
 				currentMode = value;
-				Renderer.updateVisibility = true;
-				Renderer.LastUpdatedTrackPosition += 0.01;
+				Renderer.UpdateVisibility(true);
 			}
 		}
 		/// <summary>The current camera restriction mode</summary>
@@ -102,11 +113,15 @@ namespace LibRender2.Cameras
 		public QuadTreeLeafNode QuadTreeLeaf;
 		
 		private Vector3 absolutePosition;
+		private CameraAlignment alignmentDirection;
 
 		private CameraViewMode currentMode;
 		internal CameraProperties(BaseRenderer renderer)
 		{
 			Renderer = renderer;
+			alignmentDirection = new CameraAlignment();
+			Alignment = new CameraAlignment();
+			AlignmentSpeed = new CameraAlignment();
 		}
 
 		/// <summary>Tests whether the camera may move further in the current direction</summary>
