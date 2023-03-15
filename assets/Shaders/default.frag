@@ -19,7 +19,7 @@ out vec4 fragColor;
 
 void main(void)
 {
-	vec4 finalColor = vec4(oColor.rgb, 1.0) * texture(uTexture, oUv);
+	vec4 finalColor = oColor * texture(uTexture, oUv);
 
 	if((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
 	{

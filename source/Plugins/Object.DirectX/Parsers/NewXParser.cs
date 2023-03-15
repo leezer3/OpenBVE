@@ -456,7 +456,19 @@ namespace Plugin
 					int nVertexColors = block.ReadUInt16();
 					for (int i = 0; i < nVertexColors; i++)
 					{
-						builder.Vertices[i] = new ColoredVertex((Vertex)builder.Vertices[i], new Color128(255 * block.ReadSingle(), 255 * block.ReadSingle(), 255 * block.ReadSingle()));
+						int idx = block.ReadUInt16();
+						ColoredVertex c = builder.Vertices[idx] as ColoredVertex;
+						if (c != null)
+						{
+							c.Color.R = block.ReadSingle();
+							c.Color.G = block.ReadSingle();
+							c.Color.B = block.ReadSingle();
+							c.Color.A = block.ReadSingle();
+						}
+						else
+						{
+							builder.Vertices[idx] = new ColoredVertex((Vertex)builder.Vertices[idx], new Color128(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), block.ReadSingle()));
+						}
 					}
 					break;
 				case TemplateID.MeshFaceWraps:

@@ -1567,7 +1567,7 @@ namespace LibRender2
 					if (vertices[Face.Vertices[i].Index] is ColoredVertex)
 					{
 						ColoredVertex v = (ColoredVertex)vertices[Face.Vertices[i].Index];
-						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
+						GL.Color4(v.Color.R, v.Color.G, v.Color.B, v.Color.A);
 					}
 
 					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
