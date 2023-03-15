@@ -175,8 +175,7 @@ namespace Plugin
 				{
 					throw new Exception("fVerts must be greater than zero");
 				}
-				MeshFace f = new MeshFace();
-				f.Vertices = new MeshFaceVertex[fVerts];
+				MeshFace f = new MeshFace(fVerts);
 				for (int j = 0; j < fVerts; j++)
 				{
 					f.Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];

@@ -445,7 +445,7 @@ namespace Plugin
 										}
 									}
 									if (q) {
-										MeshFace f = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
+										MeshFace f = new MeshFace(Arguments.Length);
 										for (int j = 0; j < Arguments.Length; j++) {
 											f.Vertices[j].Index = (ushort)a[j];
 											if (j < Normals.Count)

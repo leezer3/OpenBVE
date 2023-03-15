@@ -52,7 +52,6 @@
     <Compile Include="Helpers\TokenID.cs" />
     <Compile Include="Parsers\AssimpXParser.cs" />
     <Compile Include="Parsers\NewXParser.cs" />
-    <Compile Include="Parsers\XObjectParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
