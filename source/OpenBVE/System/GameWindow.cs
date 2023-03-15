@@ -800,7 +800,7 @@ namespace OpenBve
 			//Place the initial camera in the driver car
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-			Program.Renderer.updateVisibility = true;
+			Program.Renderer.UpdateVisibility(true);
 			Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
 			Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
 			// signalling sections

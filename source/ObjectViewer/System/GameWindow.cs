@@ -295,7 +295,7 @@ namespace ObjectViewer
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.UpdateViewport();
 			Program.Renderer.InitializeVisibility();
-			Program.Renderer.updateVisibility = true;
+			Program.Renderer.UpdateVisibility(true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Program.RefreshObjects();
         }

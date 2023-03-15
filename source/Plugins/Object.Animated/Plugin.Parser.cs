@@ -231,6 +231,7 @@ namespace Plugin
 											if(!Enum.TryParse(a, true, out key))
 											{
 												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+												i++;
 												continue;
 											}
 											switch (key)
@@ -1497,8 +1498,25 @@ namespace Plugin
 								 */
 								return ReadObject(FileName, System.Text.Encoding.GetEncoding(1252));
 							}
-							currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-							return null;
+
+							if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
+							{
+								/*
+								 * Unknown section- skip it
+								 * Either going to be a typo, or something introduced in a newer version
+								 */
+								currentHost.AddMessage(MessageType.Error, false, "Unknown section " + sct + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								while (i + 1 < Lines.Length && !(Lines[i + 1].StartsWith("[", StringComparison.Ordinal) & Lines[i + 1].EndsWith("]", StringComparison.Ordinal)))
+								{
+									i++;
+								}
+							}
+							else
+							{
+								currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+								return null;	
+							}
+							break;
 					}
 				}
 			}

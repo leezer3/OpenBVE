@@ -669,7 +669,8 @@ namespace LibRender2
 			}
 		}
 
-		public bool updateVisibility;
+		private VisibilityUpdate updateVisibility;
+		
 		public bool visibilityThread = true;
 
 		public Thread VisibilityThread;
@@ -678,16 +679,21 @@ namespace LibRender2
 		{
 			while (visibilityThread)
 			{
-				if (updateVisibility && CameraTrackFollower != null)
+				if (updateVisibility != VisibilityUpdate.None && CameraTrackFollower != null)
 				{
 					UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
-					updateVisibility = false;
+					updateVisibility = VisibilityUpdate.None;
 				}
 				else
 				{
 					Thread.Sleep(100);
 				}
 			}
+		}
+
+		public void UpdateVisibility(bool force)
+		{
+			updateVisibility = force ? VisibilityUpdate.Force : VisibilityUpdate.None;
 		}
 
 		private void UpdateVisibility(double TrackPosition)
@@ -698,7 +704,22 @@ namespace LibRender2
 			}
 			else
 			{
-				UpdateLegacyVisibility(TrackPosition);
+				if (updateVisibility == VisibilityUpdate.Normal)
+				{
+					UpdateLegacyVisibility(TrackPosition);
+				}
+				else
+				{
+					/*
+					 * The original visibility algorithm fails to handle correctly cases where the
+					 * camera angle is rotated, but the track position does not change
+					 *
+					 * Horrible kludge...
+					 */
+					UpdateLegacyVisibility(TrackPosition + 0.01);
+					UpdateLegacyVisibility(TrackPosition - 0.01);
+				}
+				
 			}
 		}
 
@@ -866,8 +887,7 @@ namespace LibRender2
 			double d = BackgroundImageDistance + Camera.ExtraViewingDistance;
 			Camera.ForwardViewingDistance = d * max;
 			Camera.BackwardViewingDistance = -d * min;
-			updateVisibility = true;
-			LastUpdatedTrackPosition += 0.001;
+			updateVisibility = VisibilityUpdate.Force;
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>

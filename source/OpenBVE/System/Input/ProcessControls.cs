@@ -523,7 +523,6 @@ namespace OpenBve
 											? CameraProperties.InteriorTopAngularSpeed
 											: CameraProperties.ExteriorTopAngularSpeed;
 										Program.Renderer.Camera.AlignmentDirection.Yaw = -s*Interface.CurrentControls[i].AnalogState;
-										Program.Renderer.updateVisibility = true;
 									}
 										break;
 									case Translations.Command.CameraRotateRight:
@@ -534,7 +533,6 @@ namespace OpenBve
 											? CameraProperties.InteriorTopAngularSpeed
 											: CameraProperties.ExteriorTopAngularSpeed;
 										Program.Renderer.Camera.AlignmentDirection.Yaw = s*Interface.CurrentControls[i].AnalogState;
-										Program.Renderer.updateVisibility = true;
 									}
 										break;
 									case Translations.Command.CameraRotateUp:
@@ -572,7 +570,6 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentDirection.Roll = -s*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
-											Program.Renderer.updateVisibility = true;
 										}
 										break;
 									case Translations.Command.CameraRotateCW:
@@ -588,7 +585,6 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentDirection.Roll = s*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
-											Program.Renderer.updateVisibility = true;
 										}
 										break;
 									case Translations.Command.CameraZoomIn:
