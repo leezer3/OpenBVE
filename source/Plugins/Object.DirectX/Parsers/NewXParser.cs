@@ -44,6 +44,17 @@ namespace Plugin
 			currentFile = FileName;
 			byte[] Data = File.ReadAllBytes(FileName);
 			
+			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
+			{
+				// Object is actually a single line text file containing relative path to the 'real' X
+				// Found in BRSigs\Night
+				string relativePath = Encoding.ASCII.GetString(Data);
+				if (!OpenBveApi.Path.ContainsInvalidChars(relativePath))
+				{
+					return ReadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), relativePath), Encoding);
+				}
+			}
+
 			// floating-point format
 			int FloatingPointSize;
 			if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50)

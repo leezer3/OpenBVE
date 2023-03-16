@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.IO;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
@@ -48,7 +49,18 @@ namespace Plugin
 			try
 			{
 #endif
-				XFileParser parser = new XFileParser(System.IO.File.ReadAllBytes(FileName));
+			byte[] buffer = System.IO.File.ReadAllBytes(FileName);
+				if (buffer.Length < 16 || buffer[0] != 120 | buffer[1] != 111 | buffer[2] != 102 | buffer[3] != 32)
+				{
+					// Object is actually a single line text file containing relative path to the 'real' X
+					// Found in BRSigs\Night
+					string relativePath = System.Text.Encoding.ASCII.GetString(buffer);
+					if (!OpenBveApi.Path.ContainsInvalidChars(relativePath))
+					{
+						return ReadObject(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), relativePath));
+					}
+				}
+				XFileParser parser = new XFileParser(buffer);
 				Scene scene = parser.GetImportedData();
 
 				StaticObject obj = new StaticObject(Plugin.currentHost);

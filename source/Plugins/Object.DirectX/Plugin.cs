@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -60,15 +60,24 @@ namespace Plugin
 		    }
 	    }
 
+	    private int pathRecursions;
+
 	    public override bool CanLoadObject(string path)
 	    {
-		    if (string.IsNullOrEmpty(path) || !File.Exists(path))
+		    if (string.IsNullOrEmpty(path) || !File.Exists(path) || pathRecursions > 2)
 		    {
+			    pathRecursions = 0;
 			    return false;
 		    }
 		    byte[] Data = File.ReadAllBytes(path);
 		    if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
 		    {
+			    string potentialPath = System.Text.Encoding.ASCII.GetString(Data);
+			    if (!OpenBveApi.Path.ContainsInvalidChars(potentialPath))
+			    {
+				    pathRecursions++;
+				    return CanLoadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(path), potentialPath));
+			    }
 			    // not an x object
 			    return false;
 		    }
@@ -76,6 +85,7 @@ namespace Plugin
 		    if (Data[4] != 48 | Data[5] != 51 | Data[6] != 48 | Data[7] != 50 & Data[7] != 51)
 		    {
 			    // unrecognized version
+			    pathRecursions = 0;
 			    return false;
 		    }
 
@@ -90,8 +100,10 @@ namespace Plugin
 		    }
 		    else
 		    {
+			    pathRecursions = 0;
 			    return false;
 		    }
+		    pathRecursions = 0;
 		    return true;
 	    }
 
