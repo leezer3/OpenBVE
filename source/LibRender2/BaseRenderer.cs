@@ -735,7 +735,7 @@ namespace LibRender2
 
 		private void UpdateLegacyVisibility(double TrackPosition)
 		{
-			if (ObjectsSortedByStart == null || ObjectsSortedByStart.Length == 0)
+			if (ObjectsSortedByStart == null || ObjectsSortedByStart.Length == 0 || StaticObjectStates.Count == 0)
 			{
 				return;
 			}
