@@ -524,7 +524,7 @@ namespace RouteViewer
 					string previousRoute = CurrentRouteFile;
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
-					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat;*.txt|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|BVE5 Routes|*.txt|All files|*";
+					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat;*.txt;*.l3dfpl|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|BVE5 Routes|*.txt|LokSim3D Routes|*.l3dfpl|All files|*";
 					if (Dialog.ShowDialog() == DialogResult.OK)
 					{
 						Application.DoEvents();

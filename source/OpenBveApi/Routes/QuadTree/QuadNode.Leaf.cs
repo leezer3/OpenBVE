@@ -227,6 +227,10 @@ namespace OpenBveApi.Routes
 			Vector3 absolutePosition = quadCenter + quadPosition;
 			for (int i = 0; i < objectState.Prototype.Mesh.Vertices.Length; i++)
 			{
+				if (objectState.Prototype.Mesh.Vertices[i] == null)
+				{
+					return;
+				}
 				Vector3 vector = absolutePosition + Vector3.Rotate(objectState.Prototype.Mesh.Vertices[i].Coordinates, quadOrientation);
 				if (vector.X < BoundingRectangle.Left)
 				{
