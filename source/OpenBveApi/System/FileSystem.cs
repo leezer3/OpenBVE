@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using OpenBveApi.Hosts;
 
 // ReSharper disable PossibleNullReferenceException
@@ -55,6 +56,9 @@ namespace OpenBveApi.FileSystem {
 		/// <summary>The location to which Loksim3D packages will be installed</summary>
 		public string LoksimPackageInstallationDirectory;
 
+		/// <summary>The Loksim3D data directory</summary>
+		public string LoksimDataDirectory;
+
 		/// <summary>Any lines loaded from the filesystem.cfg which were not understood</summary>
 		internal string[] NotUnderstoodLines;
 
@@ -105,6 +109,22 @@ namespace OpenBveApi.FileSystem {
 			this.TrainInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
 			this.OtherInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Other");
 			this.LoksimPackageInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent"), "Loksim3D");
+			if (currentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				try
+				{
+					RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Loksim-Group\\Install");
+					LoksimDataDirectory = key.GetValue("InstallDataDirPath").ToString();
+				}
+				catch
+				{
+					LoksimDataDirectory = LoksimPackageInstallationDirectory; // minor fudge
+				}
+			}
+			else
+			{
+				LoksimDataDirectory = LoksimPackageInstallationDirectory; // FIXME: Should this be saved on non Win-32 platforms??
+			}
 			this.RestartProcess = assemblyFile;
 			this.RestartArguments = string.Empty;
 		}
