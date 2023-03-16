@@ -1,6 +1,5 @@
 using System;
 using LibRender2.Camera;
-using LibRender2.Objects;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;

@@ -231,7 +231,6 @@ namespace AssimpNET.X
 				MemoryStream outputStream = new MemoryStream();
 				int currentBlock = 0;
 				byte[] previousBlockBytes = new byte[(int)MSZIP_BLOCK];
-				byte[] blockBytes;
 				while (currentPosition + 3 < End)
 				{
 #pragma warning disable CS0219
@@ -273,7 +272,7 @@ namespace AssimpNET.X
 					inputStream.Position = currentPosition + 2;
 
 					// Decompress the compressed block
-					blockBytes = new byte[compressedBlockSize];
+					byte[] blockBytes = new byte[compressedBlockSize];
 					inputStream.Read(blockBytes, 0, compressedBlockSize);
 					byte[] decompressedBytes = DeflateCompression.ZlibDecompressWithDictionary(blockBytes, currentBlock == 0 ? null : previousBlockBytes);
 
@@ -614,8 +613,7 @@ namespace AssimpNET.X
 			string transformNodeName;
 			GetNextTokenAsString(out transformNodeName);
 
-			Bone bone = new Bone();
-			bone.Name = transformNodeName;
+			Bone bone = new Bone(transformNodeName);
 
 			// read vertex weights
 			uint numWeights = ReadInt();
@@ -623,8 +621,7 @@ namespace AssimpNET.X
 
 			for (int a = 0; a < (int)numWeights; a++)
 			{
-				BoneWeight weight = new BoneWeight();
-				weight.Vertex = ReadInt();
+				BoneWeight weight = new BoneWeight(ReadInt());
 				bone.Weights.Add(weight);
 			}
 
@@ -846,8 +843,7 @@ namespace AssimpNET.X
 				{
 					// template materials
 					string matName = GetNextToken();
-					Material material = new Material();
-					material.IsReference = true;
+					Material material = new Material(true);
 					//Use default BVE white color so this is visible if the global material is missing, otherwise will be overwritten
 					material.Diffuse = Color128.White;
 					material.Name = matName;
@@ -875,7 +871,7 @@ namespace AssimpNET.X
 
 		protected void ParseDataObjectMaterial(out Material material)
 		{
-			material = new Material();
+			material = new Material(false);
 
 			string matName;
 			ReadHeadOfDataObject(out matName);
@@ -884,7 +880,6 @@ namespace AssimpNET.X
 				matName = "material" + LineNumber;
 			}
 			material.Name = matName;
-			material.IsReference = false;
 
 			// read material values
 			material.Diffuse = ReadRGBA();
@@ -938,8 +933,7 @@ namespace AssimpNET.X
 			string animName;
 			ReadHeadOfDataObject(out animName);
 
-			Animation anim = new Animation();
-			anim.Name = animName;
+			Animation anim = new Animation(animName);
 
 			while (true)
 			{
@@ -1577,7 +1571,7 @@ namespace AssimpNET.X
 
 		protected float ReadFloat()
 		{
-			float result = 0.0f;
+			float result;
 
 			if (IsBinaryFormat)
 			{
@@ -1605,26 +1599,20 @@ namespace AssimpNET.X
 						currentPosition += 8;
 						return result;
 					}
-					else
-					{
-						currentPosition = End;
-						return 0.0f;
-					}
+
+					currentPosition = End;
+					return 0.0f;
 				}
-				else
+
+				if (End - currentPosition >= 4)
 				{
-					if (End - currentPosition >= 4)
-					{
-						result = BitConverter.ToSingle(Buffer, currentPosition);
-						currentPosition += 4;
-						return result;
-					}
-					else
-					{
-						currentPosition = End;
-						return 0.0f;
-					}
+					result = BitConverter.ToSingle(Buffer, currentPosition);
+					currentPosition += 4;
+					return result;
 				}
+
+				currentPosition = End;
+				return 0.0f;
 			}
 
 			// text version

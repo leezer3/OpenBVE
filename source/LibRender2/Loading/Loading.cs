@@ -72,12 +72,6 @@ namespace LibRender2.Loadings
 		}
 
 		/// <summary>Sets the loading screen background to a custom image</summary>
-		public void SetLoadingBkg(string fileName)
-		{
-			renderer.TextureManager.RegisterTexture(fileName, out TextureLoadingBkg);
-			customLoadScreen = true;
-		}
-
 		public void SetLoadingBkg(Texture texture)
 		{
 			if (customLoadScreen || texture == null)
@@ -125,7 +119,7 @@ namespace LibRender2.Loadings
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
 			if (!customLoadScreen)
 			{
-				if (renderer.ProgramLogo != null && renderer.LoadLogo())
+				if (showLogo && renderer.ProgramLogo != null && renderer.LoadLogo())
 				{
 					// place the centre of the logo at from the screen top
 					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - renderer.ProgramLogo.Height / 2.0);

@@ -279,7 +279,7 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
-			Fonts = new Fonts(currentHost, fileSystem, currentOptions.Font);
+			Fonts = new Fonts(currentHost, currentOptions.Font);
 			VisibilityThread = new Thread(vt);
 			VisibilityThread.Start();
 		}
@@ -1278,6 +1278,7 @@ namespace LibRender2
 			// daytime polygon
 			{
 				// texture
+				// ReSharper disable once PossibleInvalidOperationException
 				if (material.DaytimeTexture != null && currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 				{
 					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
@@ -1508,6 +1509,7 @@ namespace LibRender2
 				// texture
 				if (material.DaytimeTexture != null)
 				{
+					// ReSharper disable once PossibleInvalidOperationException
 					if (currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 					{
 						GL.Enable(EnableCap.Texture2D);
