@@ -283,7 +283,7 @@ namespace Plugin
 										{
 											//Defines the verticies in this face
 											//**NOTE**: A vertex may appear in multiple faces with different texture co-ordinates
-											if (childNode.Attributes["Points"] != null)
+											if (childNode.Attributes["Points"] != null && !string.IsNullOrEmpty(childNode.Attributes["Points"].Value))
 											{
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
 												//Add 1 to the length of the face array
