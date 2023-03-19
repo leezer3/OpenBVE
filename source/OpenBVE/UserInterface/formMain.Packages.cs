@@ -1281,7 +1281,7 @@ namespace OpenBve
 			{
 				DialogResult = DialogResult.OK,
 				Name = "okButton",
-				Size = new Size(75, 23),
+				Size = new Size(75, 26),
 				Text = Translations.GetInterfaceString("packages_button_ok"),
 				Location = new Point(size.Width - 80 - 80, 39)
 			};
@@ -1291,7 +1291,7 @@ namespace OpenBve
 			{
 				DialogResult = DialogResult.Cancel,
 				Name = "cancelButton",
-				Size = new Size(75, 23),
+				Size = new Size(75, 26),
 				Text = Translations.GetInterfaceString("packages_button_cancel"),
 				Location = new Point(size.Width - 80, 39)
 			};

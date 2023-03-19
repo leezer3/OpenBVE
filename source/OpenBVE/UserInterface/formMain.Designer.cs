@@ -603,10 +603,9 @@ namespace OpenBve {
 			this.buttonClose.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonClose.Location = new System.Drawing.Point(8, 599);
 			this.buttonClose.Name = "buttonClose";
-			this.buttonClose.Size = new System.Drawing.Size(144, 24);
+			this.buttonClose.Size = new System.Drawing.Size(144, 26);
 			this.buttonClose.TabIndex = 5;
 			this.buttonClose.Text = "Close";
-			this.buttonClose.UseVisualStyleBackColor = true;
 			this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
 			// 
 			// panelStart
@@ -651,7 +650,7 @@ namespace OpenBve {
 			this.labelMode.ForeColor = System.Drawing.Color.Black;
 			this.labelMode.Location = new System.Drawing.Point(16, 601);
 			this.labelMode.Name = "labelMode";
-			this.labelMode.Size = new System.Drawing.Size(128, 16);
+			this.labelMode.Size = new System.Drawing.Size(128, 18);
 			this.labelMode.TabIndex = 10;
 			this.labelMode.Text = "Mode of driving:";
 			this.labelMode.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -907,7 +906,7 @@ namespace OpenBve {
 			this.labelReverseConsist.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.labelReverseConsist.Location = new System.Drawing.Point(8, 59);
 			this.labelReverseConsist.Name = "labelReverseConsist";
-			this.labelReverseConsist.Size = new System.Drawing.Size(96, 16);
+			this.labelReverseConsist.Size = new System.Drawing.Size(96, 18);
 			this.labelReverseConsist.TabIndex = 11;
 			this.labelReverseConsist.Text = "Reverse Consist:";
 			this.labelReverseConsist.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -932,7 +931,7 @@ namespace OpenBve {
 			this.labelTrainEncoding.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.labelTrainEncoding.Location = new System.Drawing.Point(0, 0);
 			this.labelTrainEncoding.Name = "labelTrainEncoding";
-			this.labelTrainEncoding.Size = new System.Drawing.Size(96, 16);
+			this.labelTrainEncoding.Size = new System.Drawing.Size(96, 18);
 			this.labelTrainEncoding.TabIndex = 0;
 			this.labelTrainEncoding.Text = "Encoding:";
 			this.labelTrainEncoding.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -943,7 +942,7 @@ namespace OpenBve {
 			this.buttonTrainEncodingBig5.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonTrainEncodingBig5.Location = new System.Drawing.Point(212, 24);
 			this.buttonTrainEncodingBig5.Name = "buttonTrainEncodingBig5";
-			this.buttonTrainEncodingBig5.Size = new System.Drawing.Size(64, 24);
+			this.buttonTrainEncodingBig5.Size = new System.Drawing.Size(64, 26);
 			this.buttonTrainEncodingBig5.TabIndex = 9;
 			this.buttonTrainEncodingBig5.Text = "Big5";
 			this.buttonTrainEncodingBig5.UseVisualStyleBackColor = true;
@@ -967,7 +966,7 @@ namespace OpenBve {
 			this.buttonTrainEncodingShiftJis.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonTrainEncodingShiftJis.Location = new System.Drawing.Point(148, 24);
 			this.buttonTrainEncodingShiftJis.Name = "buttonTrainEncodingShiftJis";
-			this.buttonTrainEncodingShiftJis.Size = new System.Drawing.Size(64, 24);
+			this.buttonTrainEncodingShiftJis.Size = new System.Drawing.Size(64, 26);
 			this.buttonTrainEncodingShiftJis.TabIndex = 3;
 			this.buttonTrainEncodingShiftJis.Text = "Shift_JIS";
 			this.buttonTrainEncodingShiftJis.UseVisualStyleBackColor = true;
@@ -979,7 +978,7 @@ namespace OpenBve {
 			this.buttonTrainEncodingLatin1.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonTrainEncodingLatin1.Location = new System.Drawing.Point(84, 24);
 			this.buttonTrainEncodingLatin1.Name = "buttonTrainEncodingLatin1";
-			this.buttonTrainEncodingLatin1.Size = new System.Drawing.Size(64, 24);
+			this.buttonTrainEncodingLatin1.Size = new System.Drawing.Size(64, 26);
 			this.buttonTrainEncodingLatin1.TabIndex = 2;
 			this.buttonTrainEncodingLatin1.Text = "Latin-1";
 			this.buttonTrainEncodingLatin1.UseVisualStyleBackColor = true;
@@ -991,7 +990,7 @@ namespace OpenBve {
 			this.labelTrainEncodingPreview.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.labelTrainEncodingPreview.Location = new System.Drawing.Point(7, 80);
 			this.labelTrainEncodingPreview.Name = "labelTrainEncodingPreview";
-			this.labelTrainEncodingPreview.Size = new System.Drawing.Size(96, 16);
+			this.labelTrainEncodingPreview.Size = new System.Drawing.Size(96, 18);
 			this.labelTrainEncodingPreview.TabIndex = 4;
 			this.labelTrainEncodingPreview.Text = "Preview:";
 			this.labelTrainEncodingPreview.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1018,7 +1017,7 @@ namespace OpenBve {
 			this.buttonStart.Enabled = false;
 			this.buttonStart.Location = new System.Drawing.Point(571, 599);
 			this.buttonStart.Name = "buttonStart";
-			this.buttonStart.Size = new System.Drawing.Size(120, 24);
+			this.buttonStart.Size = new System.Drawing.Size(120, 26);
 			this.buttonStart.TabIndex = 12;
 			this.buttonStart.Text = "Start";
 			this.buttonStart.UseVisualStyleBackColor = true;
@@ -1034,7 +1033,7 @@ namespace OpenBve {
 			this.labelStart.ForeColor = System.Drawing.Color.White;
 			this.labelStart.Location = new System.Drawing.Point(7, 567);
 			this.labelStart.Name = "labelStart";
-			this.labelStart.Size = new System.Drawing.Size(684, 24);
+			this.labelStart.Size = new System.Drawing.Size(684, 26);
 			this.labelStart.TabIndex = 9;
 			this.labelStart.Text = "Start";
 			this.labelStart.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1334,7 +1333,7 @@ namespace OpenBve {
 			this.labelCompatibilitySignalSet.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.labelCompatibilitySignalSet.Location = new System.Drawing.Point(13, 6);
 			this.labelCompatibilitySignalSet.Name = "labelCompatibilitySignalSet";
-			this.labelCompatibilitySignalSet.Size = new System.Drawing.Size(96, 16);
+			this.labelCompatibilitySignalSet.Size = new System.Drawing.Size(96, 18);
 			this.labelCompatibilitySignalSet.TabIndex = 8;
 			this.labelCompatibilitySignalSet.Text = "Default Signals:";
 			this.labelCompatibilitySignalSet.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1373,7 +1372,7 @@ namespace OpenBve {
 			this.buttonRouteEncodingLatin1.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonRouteEncodingLatin1.Location = new System.Drawing.Point(84, 24);
 			this.buttonRouteEncodingLatin1.Name = "buttonRouteEncodingLatin1";
-			this.buttonRouteEncodingLatin1.Size = new System.Drawing.Size(64, 24);
+			this.buttonRouteEncodingLatin1.Size = new System.Drawing.Size(64, 26);
 			this.buttonRouteEncodingLatin1.TabIndex = 2;
 			this.buttonRouteEncodingLatin1.Text = "Latin-1";
 			this.buttonRouteEncodingLatin1.UseVisualStyleBackColor = true;
@@ -1385,7 +1384,7 @@ namespace OpenBve {
 			this.buttonRouteEncodingBig5.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonRouteEncodingBig5.Location = new System.Drawing.Point(212, 24);
 			this.buttonRouteEncodingBig5.Name = "buttonRouteEncodingBig5";
-			this.buttonRouteEncodingBig5.Size = new System.Drawing.Size(64, 24);
+			this.buttonRouteEncodingBig5.Size = new System.Drawing.Size(64, 26);
 			this.buttonRouteEncodingBig5.TabIndex = 4;
 			this.buttonRouteEncodingBig5.Text = "Big5";
 			this.buttonRouteEncodingBig5.UseVisualStyleBackColor = true;
@@ -1397,7 +1396,7 @@ namespace OpenBve {
 			this.labelRouteEncoding.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.labelRouteEncoding.Location = new System.Drawing.Point(0, 0);
 			this.labelRouteEncoding.Name = "labelRouteEncoding";
-			this.labelRouteEncoding.Size = new System.Drawing.Size(96, 16);
+			this.labelRouteEncoding.Size = new System.Drawing.Size(96, 18);
 			this.labelRouteEncoding.TabIndex = 0;
 			this.labelRouteEncoding.Text = "Encoding:";
 			this.labelRouteEncoding.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1408,7 +1407,7 @@ namespace OpenBve {
 			this.buttonRouteEncodingShiftJis.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonRouteEncodingShiftJis.Location = new System.Drawing.Point(148, 24);
 			this.buttonRouteEncodingShiftJis.Name = "buttonRouteEncodingShiftJis";
-			this.buttonRouteEncodingShiftJis.Size = new System.Drawing.Size(64, 24);
+			this.buttonRouteEncodingShiftJis.Size = new System.Drawing.Size(64, 26);
 			this.buttonRouteEncodingShiftJis.TabIndex = 3;
 			this.buttonRouteEncodingShiftJis.Text = "Shift_JIS";
 			this.buttonRouteEncodingShiftJis.UseVisualStyleBackColor = true;
@@ -1433,7 +1432,7 @@ namespace OpenBve {
 			this.labelRouteEncodingPreview.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.labelRouteEncodingPreview.Location = new System.Drawing.Point(12, 87);
 			this.labelRouteEncodingPreview.Name = "labelRouteEncodingPreview";
-			this.labelRouteEncodingPreview.Size = new System.Drawing.Size(96, 16);
+			this.labelRouteEncodingPreview.Size = new System.Drawing.Size(96, 18);
 			this.labelRouteEncodingPreview.TabIndex = 5;
 			this.labelRouteEncodingPreview.Text = "Preview:";
 			this.labelRouteEncodingPreview.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1550,7 +1549,7 @@ namespace OpenBve {
 			this.buttonOptionsPrevious.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonOptionsPrevious.Location = new System.Drawing.Point(484, 38);
 			this.buttonOptionsPrevious.Name = "buttonOptionsPrevious";
-			this.buttonOptionsPrevious.Size = new System.Drawing.Size(99, 23);
+			this.buttonOptionsPrevious.Size = new System.Drawing.Size(99, 26);
 			this.buttonOptionsPrevious.TabIndex = 19;
 			this.buttonOptionsPrevious.Text = "Previous Page...";
 			this.buttonOptionsPrevious.UseVisualStyleBackColor = true;
@@ -1562,7 +1561,7 @@ namespace OpenBve {
 			this.buttonOptionsNext.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonOptionsNext.Location = new System.Drawing.Point(589, 38);
 			this.buttonOptionsNext.Name = "buttonOptionsNext";
-			this.buttonOptionsNext.Size = new System.Drawing.Size(99, 23);
+			this.buttonOptionsNext.Size = new System.Drawing.Size(99, 26);
 			this.buttonOptionsNext.TabIndex = 18;
 			this.buttonOptionsNext.Text = "Next Page...";
 			this.buttonOptionsNext.UseVisualStyleBackColor = true;
@@ -1689,7 +1688,7 @@ namespace OpenBve {
 			this.labelVSync.AutoEllipsis = true;
 			this.labelVSync.Location = new System.Drawing.Point(8, 72);
 			this.labelVSync.Name = "labelVSync";
-			this.labelVSync.Size = new System.Drawing.Size(148, 16);
+			this.labelVSync.Size = new System.Drawing.Size(148, 18);
 			this.labelVSync.TabIndex = 2;
 			this.labelVSync.Text = "Vertical syncronization:";
 			this.labelVSync.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1798,7 +1797,7 @@ namespace OpenBve {
 			this.labelWindowWidth.AutoEllipsis = true;
 			this.labelWindowWidth.Location = new System.Drawing.Point(8, 26);
 			this.labelWindowWidth.Name = "labelWindowWidth";
-			this.labelWindowWidth.Size = new System.Drawing.Size(148, 16);
+			this.labelWindowWidth.Size = new System.Drawing.Size(148, 18);
 			this.labelWindowWidth.TabIndex = 0;
 			this.labelWindowWidth.Text = "Width:";
 			this.labelWindowWidth.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1838,7 +1837,7 @@ namespace OpenBve {
 			this.labelFullscreenBits.AutoEllipsis = true;
 			this.labelFullscreenBits.Location = new System.Drawing.Point(8, 74);
 			this.labelFullscreenBits.Name = "labelFullscreenBits";
-			this.labelFullscreenBits.Size = new System.Drawing.Size(148, 16);
+			this.labelFullscreenBits.Size = new System.Drawing.Size(148, 18);
 			this.labelFullscreenBits.TabIndex = 4;
 			this.labelFullscreenBits.Text = "Bits per pixel:";
 			this.labelFullscreenBits.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1908,7 +1907,7 @@ namespace OpenBve {
 			this.labelFullscreenWidth.AutoEllipsis = true;
 			this.labelFullscreenWidth.Location = new System.Drawing.Point(8, 26);
 			this.labelFullscreenWidth.Name = "labelFullscreenWidth";
-			this.labelFullscreenWidth.Size = new System.Drawing.Size(148, 16);
+			this.labelFullscreenWidth.Size = new System.Drawing.Size(148, 18);
 			this.labelFullscreenWidth.TabIndex = 0;
 			this.labelFullscreenWidth.Text = "Width:";
 			this.labelFullscreenWidth.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1989,7 +1988,7 @@ namespace OpenBve {
 			this.labelTransparency.AutoEllipsis = true;
 			this.labelTransparency.Location = new System.Drawing.Point(8, 100);
 			this.labelTransparency.Name = "labelTransparency";
-			this.labelTransparency.Size = new System.Drawing.Size(148, 16);
+			this.labelTransparency.Size = new System.Drawing.Size(148, 18);
 			this.labelTransparency.TabIndex = 6;
 			this.labelTransparency.Text = "Transparency:";
 			this.labelTransparency.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2039,7 +2038,7 @@ namespace OpenBve {
 			this.labelInterpolation.AutoEllipsis = true;
 			this.labelInterpolation.Location = new System.Drawing.Point(8, 18);
 			this.labelInterpolation.Name = "labelInterpolation";
-			this.labelInterpolation.Size = new System.Drawing.Size(148, 16);
+			this.labelInterpolation.Size = new System.Drawing.Size(148, 18);
 			this.labelInterpolation.TabIndex = 0;
 			this.labelInterpolation.Text = "Mode:";
 			this.labelInterpolation.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2100,7 +2099,7 @@ namespace OpenBve {
 			this.labelTimeTableDisplayMode.AutoEllipsis = true;
 			this.labelTimeTableDisplayMode.Location = new System.Drawing.Point(3, 17);
 			this.labelTimeTableDisplayMode.Name = "labelTimeTableDisplayMode";
-			this.labelTimeTableDisplayMode.Size = new System.Drawing.Size(153, 16);
+			this.labelTimeTableDisplayMode.Size = new System.Drawing.Size(153, 18);
 			this.labelTimeTableDisplayMode.TabIndex = 0;
 			this.labelTimeTableDisplayMode.Text = "Timetable Display Mode:";
 			this.labelTimeTableDisplayMode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2132,11 +2131,11 @@ namespace OpenBve {
 			// 
 			// buttonRailDriverCalibration
 			// 
-			this.buttonRailDriverCalibration.Location = new System.Drawing.Point(230, 45);
+			this.buttonRailDriverCalibration.Location = new System.Drawing.Point(230, 42);
 			this.buttonRailDriverCalibration.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonRailDriverCalibration.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonRailDriverCalibration.Name = "buttonRailDriverCalibration";
-			this.buttonRailDriverCalibration.Size = new System.Drawing.Size(75, 23);
+			this.buttonRailDriverCalibration.Size = new System.Drawing.Size(75, 26);
 			this.buttonRailDriverCalibration.TabIndex = 4;
 			this.buttonRailDriverCalibration.Text = "Launch...";
 			this.buttonRailDriverCalibration.UseVisualStyleBackColor = true;
@@ -2199,7 +2198,7 @@ namespace OpenBve {
 			this.labelMotionBlur.AutoEllipsis = true;
 			this.labelMotionBlur.Location = new System.Drawing.Point(5, 51);
 			this.labelMotionBlur.Name = "labelMotionBlur";
-			this.labelMotionBlur.Size = new System.Drawing.Size(140, 16);
+			this.labelMotionBlur.Size = new System.Drawing.Size(140, 18);
 			this.labelMotionBlur.TabIndex = 3;
 			this.labelMotionBlur.Text = "Motion blur:";
 			this.labelMotionBlur.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2210,7 +2209,7 @@ namespace OpenBve {
 			this.labelDistanceUnit.AutoEllipsis = true;
 			this.labelDistanceUnit.Location = new System.Drawing.Point(272, 24);
 			this.labelDistanceUnit.Name = "labelDistanceUnit";
-			this.labelDistanceUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelDistanceUnit.Size = new System.Drawing.Size(24, 18);
 			this.labelDistanceUnit.TabIndex = 2;
 			this.labelDistanceUnit.Text = "m";
 			// 
@@ -2307,7 +2306,7 @@ namespace OpenBve {
 			this.labelJoystickAxisThreshold.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			this.labelJoystickAxisThreshold.Location = new System.Drawing.Point(110, 10);
 			this.labelJoystickAxisThreshold.Name = "labelJoystickAxisThreshold";
-			this.labelJoystickAxisThreshold.Size = new System.Drawing.Size(180, 16);
+			this.labelJoystickAxisThreshold.Size = new System.Drawing.Size(180, 18);
 			this.labelJoystickAxisThreshold.TabIndex = 1;
 			this.labelJoystickAxisThreshold.Text = "Joystick threshold:";
 			this.labelJoystickAxisThreshold.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2468,7 +2467,7 @@ namespace OpenBve {
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelSoundNumber.Location = new System.Drawing.Point(5, 18);
 			this.labelSoundNumber.Name = "labelSoundNumber";
-			this.labelSoundNumber.Size = new System.Drawing.Size(136, 16);
+			this.labelSoundNumber.Size = new System.Drawing.Size(136, 18);
 			this.labelSoundNumber.TabIndex = 2;
 			this.labelSoundNumber.Text = "Number of allowed sounds:";
 			this.labelSoundNumber.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2883,9 +2882,9 @@ namespace OpenBve {
 			this.buttonOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOtherDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonOtherDirectory.BackColor = System.Drawing.SystemColors.Control;
-			this.buttonOtherDirectory.Location = new System.Drawing.Point(594, 83);
+			this.buttonOtherDirectory.Location = new System.Drawing.Point(594, 81);
 			this.buttonOtherDirectory.Name = "buttonOtherDirectory";
-			this.buttonOtherDirectory.Size = new System.Drawing.Size(75, 23);
+			this.buttonOtherDirectory.Size = new System.Drawing.Size(75, 26);
 			this.buttonOtherDirectory.TabIndex = 8;
 			this.buttonOtherDirectory.Text = "Choose...";
 			this.buttonOtherDirectory.UseVisualStyleBackColor = true;
@@ -2918,9 +2917,9 @@ namespace OpenBve {
 			this.buttonTrainInstallationDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonTrainInstallationDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonTrainInstallationDirectory.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(594, 51);
+			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(594, 49);
 			this.buttonTrainInstallationDirectory.Name = "buttonTrainInstallationDirectory";
-			this.buttonTrainInstallationDirectory.Size = new System.Drawing.Size(75, 23);
+			this.buttonTrainInstallationDirectory.Size = new System.Drawing.Size(75, 26);
 			this.buttonTrainInstallationDirectory.TabIndex = 5;
 			this.buttonTrainInstallationDirectory.Text = "Choose...";
 			this.buttonTrainInstallationDirectory.UseVisualStyleBackColor = true;
@@ -2952,9 +2951,9 @@ namespace OpenBve {
 			this.buttonSetRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonSetRouteDirectory.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonSetRouteDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.buttonSetRouteDirectory.Location = new System.Drawing.Point(594, 20);
+			this.buttonSetRouteDirectory.Location = new System.Drawing.Point(594, 18);
 			this.buttonSetRouteDirectory.Name = "buttonSetRouteDirectory";
-			this.buttonSetRouteDirectory.Size = new System.Drawing.Size(75, 23);
+			this.buttonSetRouteDirectory.Size = new System.Drawing.Size(75, 26);
 			this.buttonSetRouteDirectory.TabIndex = 2;
 			this.buttonSetRouteDirectory.Text = "Choose...";
 			this.buttonSetRouteDirectory.UseVisualStyleBackColor = true;
@@ -3181,7 +3180,7 @@ namespace OpenBve {
 			this.labelBlackBoxFormat.ForeColor = System.Drawing.Color.Black;
 			this.labelBlackBoxFormat.Location = new System.Drawing.Point(8, 602);
 			this.labelBlackBoxFormat.Name = "labelBlackBoxFormat";
-			this.labelBlackBoxFormat.Size = new System.Drawing.Size(96, 16);
+			this.labelBlackBoxFormat.Size = new System.Drawing.Size(96, 18);
 			this.labelBlackBoxFormat.TabIndex = 11;
 			this.labelBlackBoxFormat.Text = "Format:";
 			this.labelBlackBoxFormat.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3207,7 +3206,7 @@ namespace OpenBve {
 			this.labelReviewTimeValue.AutoEllipsis = true;
 			this.labelReviewTimeValue.Location = new System.Drawing.Point(104, 32);
 			this.labelReviewTimeValue.Name = "labelReviewTimeValue";
-			this.labelReviewTimeValue.Size = new System.Drawing.Size(88, 16);
+			this.labelReviewTimeValue.Size = new System.Drawing.Size(88, 18);
 			this.labelReviewTimeValue.TabIndex = 3;
 			this.labelReviewTimeValue.Text = "?";
 			// 
@@ -3216,7 +3215,7 @@ namespace OpenBve {
 			this.labelReviewTimeCaption.AutoEllipsis = true;
 			this.labelReviewTimeCaption.Location = new System.Drawing.Point(8, 32);
 			this.labelReviewTimeCaption.Name = "labelReviewTimeCaption";
-			this.labelReviewTimeCaption.Size = new System.Drawing.Size(96, 16);
+			this.labelReviewTimeCaption.Size = new System.Drawing.Size(96, 18);
 			this.labelReviewTimeCaption.TabIndex = 2;
 			this.labelReviewTimeCaption.Text = "Time:";
 			this.labelReviewTimeCaption.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3228,7 +3227,7 @@ namespace OpenBve {
 			this.labelReviewDateValue.AutoEllipsis = true;
 			this.labelReviewDateValue.Location = new System.Drawing.Point(104, 16);
 			this.labelReviewDateValue.Name = "labelReviewDateValue";
-			this.labelReviewDateValue.Size = new System.Drawing.Size(88, 16);
+			this.labelReviewDateValue.Size = new System.Drawing.Size(88, 18);
 			this.labelReviewDateValue.TabIndex = 1;
 			this.labelReviewDateValue.Text = "?";
 			// 
@@ -3237,7 +3236,7 @@ namespace OpenBve {
 			this.labelReviewDateCaption.AutoEllipsis = true;
 			this.labelReviewDateCaption.Location = new System.Drawing.Point(8, 16);
 			this.labelReviewDateCaption.Name = "labelReviewDateCaption";
-			this.labelReviewDateCaption.Size = new System.Drawing.Size(96, 16);
+			this.labelReviewDateCaption.Size = new System.Drawing.Size(96, 18);
 			this.labelReviewDateCaption.TabIndex = 0;
 			this.labelReviewDateCaption.Text = "Date:";
 			this.labelReviewDateCaption.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3246,9 +3245,9 @@ namespace OpenBve {
 			// 
 			this.buttonBlackBoxExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonBlackBoxExport.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonBlackBoxExport.Location = new System.Drawing.Point(256, 598);
+			this.buttonBlackBoxExport.Location = new System.Drawing.Point(256, 597);
 			this.buttonBlackBoxExport.Name = "buttonBlackBoxExport";
-			this.buttonBlackBoxExport.Size = new System.Drawing.Size(120, 24);
+			this.buttonBlackBoxExport.Size = new System.Drawing.Size(120, 26);
 			this.buttonBlackBoxExport.TabIndex = 13;
 			this.buttonBlackBoxExport.Text = "Export...";
 			this.buttonBlackBoxExport.UseVisualStyleBackColor = false;
@@ -3302,9 +3301,9 @@ namespace OpenBve {
 			this.buttonScoreExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonScoreExport.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonScoreExport.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonScoreExport.Location = new System.Drawing.Point(291, 351);
+			this.buttonScoreExport.Location = new System.Drawing.Point(291, 350);
 			this.buttonScoreExport.Name = "buttonScoreExport";
-			this.buttonScoreExport.Size = new System.Drawing.Size(120, 24);
+			this.buttonScoreExport.Size = new System.Drawing.Size(120, 26);
 			this.buttonScoreExport.TabIndex = 2;
 			this.buttonScoreExport.Text = "Export...";
 			this.buttonScoreExport.UseVisualStyleBackColor = false;
@@ -3378,7 +3377,7 @@ namespace OpenBve {
 			this.labelReviewTrainValue.AutoEllipsis = true;
 			this.labelReviewTrainValue.Location = new System.Drawing.Point(8, 32);
 			this.labelReviewTrainValue.Name = "labelReviewTrainValue";
-			this.labelReviewTrainValue.Size = new System.Drawing.Size(192, 16);
+			this.labelReviewTrainValue.Size = new System.Drawing.Size(192, 18);
 			this.labelReviewTrainValue.TabIndex = 1;
 			this.labelReviewTrainValue.Text = "?";
 			// 
@@ -3387,7 +3386,7 @@ namespace OpenBve {
 			this.labelReviewTrainCaption.AutoSize = true;
 			this.labelReviewTrainCaption.Location = new System.Drawing.Point(8, 16);
 			this.labelReviewTrainCaption.Name = "labelReviewTrainCaption";
-			this.labelReviewTrainCaption.Size = new System.Drawing.Size(39, 13);
+			this.labelReviewTrainCaption.Size = new System.Drawing.Size(39, 18);
 			this.labelReviewTrainCaption.TabIndex = 0;
 			this.labelReviewTrainCaption.Text = "Folder:";
 			// 
@@ -3410,7 +3409,7 @@ namespace OpenBve {
 			this.labelReviewRouteValue.AutoEllipsis = true;
 			this.labelReviewRouteValue.Location = new System.Drawing.Point(8, 32);
 			this.labelReviewRouteValue.Name = "labelReviewRouteValue";
-			this.labelReviewRouteValue.Size = new System.Drawing.Size(192, 16);
+			this.labelReviewRouteValue.Size = new System.Drawing.Size(192, 18);
 			this.labelReviewRouteValue.TabIndex = 1;
 			this.labelReviewRouteValue.Text = "?";
 			// 
@@ -3419,7 +3418,7 @@ namespace OpenBve {
 			this.labelReviewRouteCaption.AutoSize = true;
 			this.labelReviewRouteCaption.Location = new System.Drawing.Point(8, 16);
 			this.labelReviewRouteCaption.Name = "labelReviewRouteCaption";
-			this.labelReviewRouteCaption.Size = new System.Drawing.Size(26, 13);
+			this.labelReviewRouteCaption.Size = new System.Drawing.Size(26, 18);
 			this.labelReviewRouteCaption.TabIndex = 0;
 			this.labelReviewRouteCaption.Text = "File:";
 			// 
@@ -3464,25 +3463,25 @@ namespace OpenBve {
 			this.labelRatingRatioValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelRatingRatioValue.Location = new System.Drawing.Point(128, 104);
 			this.labelRatingRatioValue.Name = "labelRatingRatioValue";
-			this.labelRatingRatioValue.Size = new System.Drawing.Size(120, 16);
+			this.labelRatingRatioValue.Size = new System.Drawing.Size(120, 18);
 			this.labelRatingRatioValue.TabIndex = 9;
 			this.labelRatingRatioValue.Text = "?";
 			// 
 			// labelRatingModeValue
 			// 
 			this.labelRatingModeValue.AutoEllipsis = true;
-			this.labelRatingModeValue.Location = new System.Drawing.Point(128, 24);
+			this.labelRatingModeValue.Location = new System.Drawing.Point(128, 22);
 			this.labelRatingModeValue.Name = "labelRatingModeValue";
-			this.labelRatingModeValue.Size = new System.Drawing.Size(120, 16);
+			this.labelRatingModeValue.Size = new System.Drawing.Size(120, 18);
 			this.labelRatingModeValue.TabIndex = 1;
 			this.labelRatingModeValue.Text = "?";
 			// 
 			// labelRatingModeCaption
 			// 
 			this.labelRatingModeCaption.AutoEllipsis = true;
-			this.labelRatingModeCaption.Location = new System.Drawing.Point(8, 24);
+			this.labelRatingModeCaption.Location = new System.Drawing.Point(8, 22);
 			this.labelRatingModeCaption.Name = "labelRatingModeCaption";
-			this.labelRatingModeCaption.Size = new System.Drawing.Size(120, 16);
+			this.labelRatingModeCaption.Size = new System.Drawing.Size(120, 18);
 			this.labelRatingModeCaption.TabIndex = 0;
 			this.labelRatingModeCaption.Text = "Mode:";
 			this.labelRatingModeCaption.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3493,7 +3492,7 @@ namespace OpenBve {
 			this.labelRatingRatioCaption.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelRatingRatioCaption.Location = new System.Drawing.Point(8, 104);
 			this.labelRatingRatioCaption.Name = "labelRatingRatioCaption";
-			this.labelRatingRatioCaption.Size = new System.Drawing.Size(120, 16);
+			this.labelRatingRatioCaption.Size = new System.Drawing.Size(120, 18);
 			this.labelRatingRatioCaption.TabIndex = 8;
 			this.labelRatingRatioCaption.Text = "Ratio:";
 			this.labelRatingRatioCaption.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3503,7 +3502,7 @@ namespace OpenBve {
 			this.labelRatingMaximumValue.AutoEllipsis = true;
 			this.labelRatingMaximumValue.Location = new System.Drawing.Point(128, 88);
 			this.labelRatingMaximumValue.Name = "labelRatingMaximumValue";
-			this.labelRatingMaximumValue.Size = new System.Drawing.Size(120, 16);
+			this.labelRatingMaximumValue.Size = new System.Drawing.Size(120, 18);
 			this.labelRatingMaximumValue.TabIndex = 7;
 			this.labelRatingMaximumValue.Text = "?";
 			// 
@@ -3512,7 +3511,7 @@ namespace OpenBve {
 			this.labelRatingMaximumCaption.AutoEllipsis = true;
 			this.labelRatingMaximumCaption.Location = new System.Drawing.Point(8, 88);
 			this.labelRatingMaximumCaption.Name = "labelRatingMaximumCaption";
-			this.labelRatingMaximumCaption.Size = new System.Drawing.Size(120, 16);
+			this.labelRatingMaximumCaption.Size = new System.Drawing.Size(120, 18);
 			this.labelRatingMaximumCaption.TabIndex = 6;
 			this.labelRatingMaximumCaption.Text = "Maximum:";
 			this.labelRatingMaximumCaption.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3522,7 +3521,7 @@ namespace OpenBve {
 			this.labelRatingAchievedValue.AutoEllipsis = true;
 			this.labelRatingAchievedValue.Location = new System.Drawing.Point(128, 72);
 			this.labelRatingAchievedValue.Name = "labelRatingAchievedValue";
-			this.labelRatingAchievedValue.Size = new System.Drawing.Size(120, 16);
+			this.labelRatingAchievedValue.Size = new System.Drawing.Size(120, 18);
 			this.labelRatingAchievedValue.TabIndex = 5;
 			this.labelRatingAchievedValue.Text = "?";
 			// 
@@ -3531,7 +3530,7 @@ namespace OpenBve {
 			this.labelRatingAchievedCaption.AutoEllipsis = true;
 			this.labelRatingAchievedCaption.Location = new System.Drawing.Point(8, 72);
 			this.labelRatingAchievedCaption.Name = "labelRatingAchievedCaption";
-			this.labelRatingAchievedCaption.Size = new System.Drawing.Size(120, 16);
+			this.labelRatingAchievedCaption.Size = new System.Drawing.Size(120, 18);
 			this.labelRatingAchievedCaption.TabIndex = 4;
 			this.labelRatingAchievedCaption.Text = "Achieved:";
 			this.labelRatingAchievedCaption.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3649,7 +3648,7 @@ namespace OpenBve {
 			this.buttonControlReset.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonControlReset.Location = new System.Drawing.Point(8, 293);
 			this.buttonControlReset.Name = "buttonControlReset";
-			this.buttonControlReset.Size = new System.Drawing.Size(96, 24);
+			this.buttonControlReset.Size = new System.Drawing.Size(96, 26);
 			this.buttonControlReset.TabIndex = 12;
 			this.buttonControlReset.Text = "Reset to defaults";
 			this.buttonControlReset.UseVisualStyleBackColor = true;
@@ -3659,9 +3658,9 @@ namespace OpenBve {
 			// 
 			this.buttonControlsExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlsExport.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlsExport.Location = new System.Drawing.Point(320, 264);
+			this.buttonControlsExport.Location = new System.Drawing.Point(320, 262);
 			this.buttonControlsExport.Name = "buttonControlsExport";
-			this.buttonControlsExport.Size = new System.Drawing.Size(96, 24);
+			this.buttonControlsExport.Size = new System.Drawing.Size(96, 26);
 			this.buttonControlsExport.TabIndex = 7;
 			this.buttonControlsExport.Text = "Export...";
 			this.buttonControlsExport.UseVisualStyleBackColor = true;
@@ -3671,9 +3670,9 @@ namespace OpenBve {
 			// 
 			this.buttonControlsImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlsImport.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlsImport.Location = new System.Drawing.Point(216, 264);
+			this.buttonControlsImport.Location = new System.Drawing.Point(216, 262);
 			this.buttonControlsImport.Name = "buttonControlsImport";
-			this.buttonControlsImport.Size = new System.Drawing.Size(96, 24);
+			this.buttonControlsImport.Size = new System.Drawing.Size(96, 26);
 			this.buttonControlsImport.TabIndex = 6;
 			this.buttonControlsImport.Text = "Import...";
 			this.buttonControlsImport.UseVisualStyleBackColor = true;
@@ -3683,9 +3682,9 @@ namespace OpenBve {
 			// 
 			this.buttonControlDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonControlDown.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlDown.Location = new System.Drawing.Point(595, 264);
+			this.buttonControlDown.Location = new System.Drawing.Point(595, 262);
 			this.buttonControlDown.Name = "buttonControlDown";
-			this.buttonControlDown.Size = new System.Drawing.Size(96, 24);
+			this.buttonControlDown.Size = new System.Drawing.Size(96, 26);
 			this.buttonControlDown.TabIndex = 9;
 			this.buttonControlDown.Text = "Move down";
 			this.buttonControlDown.UseVisualStyleBackColor = true;
@@ -3695,9 +3694,9 @@ namespace OpenBve {
 			// 
 			this.buttonControlUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonControlUp.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlUp.Location = new System.Drawing.Point(491, 264);
+			this.buttonControlUp.Location = new System.Drawing.Point(491, 262);
 			this.buttonControlUp.Name = "buttonControlUp";
-			this.buttonControlUp.Size = new System.Drawing.Size(96, 24);
+			this.buttonControlUp.Size = new System.Drawing.Size(96, 26);
 			this.buttonControlUp.TabIndex = 8;
 			this.buttonControlUp.Text = "Move up";
 			this.buttonControlUp.UseVisualStyleBackColor = true;
@@ -3707,9 +3706,9 @@ namespace OpenBve {
 			// 
 			this.buttonControlRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlRemove.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlRemove.Location = new System.Drawing.Point(112, 264);
+			this.buttonControlRemove.Location = new System.Drawing.Point(112, 262);
 			this.buttonControlRemove.Name = "buttonControlRemove";
-			this.buttonControlRemove.Size = new System.Drawing.Size(96, 24);
+			this.buttonControlRemove.Size = new System.Drawing.Size(96, 26);
 			this.buttonControlRemove.TabIndex = 5;
 			this.buttonControlRemove.Text = "Remove";
 			this.buttonControlRemove.UseVisualStyleBackColor = true;
@@ -3719,9 +3718,9 @@ namespace OpenBve {
 			// 
 			this.buttonControlAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlAdd.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlAdd.Location = new System.Drawing.Point(8, 264);
+			this.buttonControlAdd.Location = new System.Drawing.Point(8, 262);
 			this.buttonControlAdd.Name = "buttonControlAdd";
-			this.buttonControlAdd.Size = new System.Drawing.Size(96, 24);
+			this.buttonControlAdd.Size = new System.Drawing.Size(96, 26);
 			this.buttonControlAdd.TabIndex = 4;
 			this.buttonControlAdd.Text = "Add";
 			this.buttonControlAdd.UseVisualStyleBackColor = true;
@@ -3885,7 +3884,7 @@ namespace OpenBve {
 			this.labelKeyboardKey.AutoEllipsis = true;
 			this.labelKeyboardKey.Location = new System.Drawing.Point(0, 3);
 			this.labelKeyboardKey.Name = "labelKeyboardKey";
-			this.labelKeyboardKey.Size = new System.Drawing.Size(80, 16);
+			this.labelKeyboardKey.Size = new System.Drawing.Size(80, 18);
 			this.labelKeyboardKey.TabIndex = 0;
 			this.labelKeyboardKey.Text = "Key:";
 			this.labelKeyboardKey.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3895,7 +3894,7 @@ namespace OpenBve {
 			this.checkboxKeyboardAlt.AutoSize = true;
 			this.checkboxKeyboardAlt.Location = new System.Drawing.Point(192, 26);
 			this.checkboxKeyboardAlt.Name = "checkboxKeyboardAlt";
-			this.checkboxKeyboardAlt.Size = new System.Drawing.Size(38, 17);
+			this.checkboxKeyboardAlt.Size = new System.Drawing.Size(38, 18);
 			this.checkboxKeyboardAlt.TabIndex = 5;
 			this.checkboxKeyboardAlt.Text = "Alt";
 			this.checkboxKeyboardAlt.UseVisualStyleBackColor = true;
@@ -3906,7 +3905,7 @@ namespace OpenBve {
 			this.checkboxKeyboardCtrl.AutoSize = true;
 			this.checkboxKeyboardCtrl.Location = new System.Drawing.Point(136, 26);
 			this.checkboxKeyboardCtrl.Name = "checkboxKeyboardCtrl";
-			this.checkboxKeyboardCtrl.Size = new System.Drawing.Size(41, 17);
+			this.checkboxKeyboardCtrl.Size = new System.Drawing.Size(41, 18);
 			this.checkboxKeyboardCtrl.TabIndex = 4;
 			this.checkboxKeyboardCtrl.Text = "Ctrl";
 			this.checkboxKeyboardCtrl.UseVisualStyleBackColor = true;
@@ -3917,7 +3916,7 @@ namespace OpenBve {
 			this.checkboxKeyboardShift.AutoSize = true;
 			this.checkboxKeyboardShift.Location = new System.Drawing.Point(80, 26);
 			this.checkboxKeyboardShift.Name = "checkboxKeyboardShift";
-			this.checkboxKeyboardShift.Size = new System.Drawing.Size(47, 17);
+			this.checkboxKeyboardShift.Size = new System.Drawing.Size(47, 18);
 			this.checkboxKeyboardShift.TabIndex = 3;
 			this.checkboxKeyboardShift.Text = "Shift";
 			this.checkboxKeyboardShift.UseVisualStyleBackColor = true;
@@ -3928,7 +3927,7 @@ namespace OpenBve {
 			this.labelKeyboardModifier.AutoEllipsis = true;
 			this.labelKeyboardModifier.Location = new System.Drawing.Point(0, 26);
 			this.labelKeyboardModifier.Name = "labelKeyboardModifier";
-			this.labelKeyboardModifier.Size = new System.Drawing.Size(80, 16);
+			this.labelKeyboardModifier.Size = new System.Drawing.Size(80, 18);
 			this.labelKeyboardModifier.TabIndex = 2;
 			this.labelKeyboardModifier.Text = "Modifiers:";
 			this.labelKeyboardModifier.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3958,7 +3957,7 @@ namespace OpenBve {
 			this.labelCommandOption.AutoEllipsis = true;
 			this.labelCommandOption.Location = new System.Drawing.Point(463, 51);
 			this.labelCommandOption.Name = "labelCommandOption";
-			this.labelCommandOption.Size = new System.Drawing.Size(120, 16);
+			this.labelCommandOption.Size = new System.Drawing.Size(120, 18);
 			this.labelCommandOption.TabIndex = 7;
 			this.labelCommandOption.Text = "CommandOption:";
 			this.labelCommandOption.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3968,7 +3967,7 @@ namespace OpenBve {
 			this.labelCommand.AutoEllipsis = true;
 			this.labelCommand.Location = new System.Drawing.Point(8, 24);
 			this.labelCommand.Name = "labelCommand";
-			this.labelCommand.Size = new System.Drawing.Size(80, 16);
+			this.labelCommand.Size = new System.Drawing.Size(80, 18);
 			this.labelCommand.TabIndex = 0;
 			this.labelCommand.Text = "Command:";
 			this.labelCommand.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -4008,7 +4007,7 @@ namespace OpenBve {
 			this.labelJoystickAssignmentCaption.AutoEllipsis = true;
 			this.labelJoystickAssignmentCaption.Location = new System.Drawing.Point(0, 0);
 			this.labelJoystickAssignmentCaption.Name = "labelJoystickAssignmentCaption";
-			this.labelJoystickAssignmentCaption.Size = new System.Drawing.Size(192, 16);
+			this.labelJoystickAssignmentCaption.Size = new System.Drawing.Size(192, 18);
 			this.labelJoystickAssignmentCaption.TabIndex = 0;
 			this.labelJoystickAssignmentCaption.Text = "Assignment:";
 			// 
@@ -4026,7 +4025,7 @@ namespace OpenBve {
 			this.radiobuttonJoystick.AutoSize = true;
 			this.radiobuttonJoystick.Location = new System.Drawing.Point(272, 48);
 			this.radiobuttonJoystick.Name = "radiobuttonJoystick";
-			this.radiobuttonJoystick.Size = new System.Drawing.Size(66, 17);
+			this.radiobuttonJoystick.Size = new System.Drawing.Size(66, 18);
 			this.radiobuttonJoystick.TabIndex = 3;
 			this.radiobuttonJoystick.TabStop = true;
 			this.radiobuttonJoystick.Text = "Joystick:";
@@ -4038,7 +4037,7 @@ namespace OpenBve {
 			this.radiobuttonKeyboard.AutoSize = true;
 			this.radiobuttonKeyboard.Location = new System.Drawing.Point(8, 48);
 			this.radiobuttonKeyboard.Name = "radiobuttonKeyboard";
-			this.radiobuttonKeyboard.Size = new System.Drawing.Size(73, 17);
+			this.radiobuttonKeyboard.Size = new System.Drawing.Size(73, 18);
 			this.radiobuttonKeyboard.TabIndex = 2;
 			this.radiobuttonKeyboard.TabStop = true;
 			this.radiobuttonKeyboard.Text = "Keyboard:";
@@ -4070,7 +4069,7 @@ namespace OpenBve {
 			this.linkLabelReportBug.LinkColor = System.Drawing.Color.Gold;
 			this.linkLabelReportBug.Location = new System.Drawing.Point(8, 56);
 			this.linkLabelReportBug.Name = "linkLabelReportBug";
-			this.linkLabelReportBug.Size = new System.Drawing.Size(128, 16);
+			this.linkLabelReportBug.Size = new System.Drawing.Size(128, 18);
 			this.linkLabelReportBug.TabIndex = 8;
 			this.linkLabelReportBug.TabStop = true;
 			this.linkLabelReportBug.Text = "Report Problem";
@@ -4087,7 +4086,7 @@ namespace OpenBve {
 			this.linkLabelCheckUpdates.LinkColor = System.Drawing.Color.Gold;
 			this.linkLabelCheckUpdates.Location = new System.Drawing.Point(8, 40);
 			this.linkLabelCheckUpdates.Name = "linkLabelCheckUpdates";
-			this.linkLabelCheckUpdates.Size = new System.Drawing.Size(128, 16);
+			this.linkLabelCheckUpdates.Size = new System.Drawing.Size(128, 18);
 			this.linkLabelCheckUpdates.TabIndex = 7;
 			this.linkLabelCheckUpdates.TabStop = true;
 			this.linkLabelCheckUpdates.Text = "Check for updates";
@@ -4104,7 +4103,7 @@ namespace OpenBve {
 			this.aboutLabel.LinkColor = System.Drawing.Color.Gold;
 			this.aboutLabel.Location = new System.Drawing.Point(8, 72);
 			this.aboutLabel.Name = "aboutLabel";
-			this.aboutLabel.Size = new System.Drawing.Size(128, 16);
+			this.aboutLabel.Size = new System.Drawing.Size(128, 18);
 			this.aboutLabel.TabIndex = 6;
 			this.aboutLabel.TabStop = true;
 			this.aboutLabel.Text = "About";
@@ -4121,7 +4120,7 @@ namespace OpenBve {
 			this.linkHomepage.LinkColor = System.Drawing.Color.Gold;
 			this.linkHomepage.Location = new System.Drawing.Point(8, 24);
 			this.linkHomepage.Name = "linkHomepage";
-			this.linkHomepage.Size = new System.Drawing.Size(128, 16);
+			this.linkHomepage.Size = new System.Drawing.Size(128, 18);
 			this.linkHomepage.TabIndex = 3;
 			this.linkHomepage.TabStop = true;
 			this.linkHomepage.Text = "Visit homepage";
@@ -4138,7 +4137,7 @@ namespace OpenBve {
 			this.labelVersion.ForeColor = System.Drawing.Color.White;
 			this.labelVersion.Location = new System.Drawing.Point(8, 8);
 			this.labelVersion.Name = "labelVersion";
-			this.labelVersion.Size = new System.Drawing.Size(144, 16);
+			this.labelVersion.Size = new System.Drawing.Size(144, 18);
 			this.labelVersion.TabIndex = 1;
 			this.labelVersion.Text = "v0.0.0.0";
 			this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -4251,9 +4250,9 @@ namespace OpenBve {
 			// 
 			this.buttonBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonBack2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBack2.Location = new System.Drawing.Point(445, 565);
+			this.buttonBack2.Location = new System.Drawing.Point(445, 561);
 			this.buttonBack2.Name = "buttonBack2";
-			this.buttonBack2.Size = new System.Drawing.Size(120, 24);
+			this.buttonBack2.Size = new System.Drawing.Size(120, 28);
 			this.buttonBack2.TabIndex = 18;
 			this.buttonBack2.Text = "< Back";
 			this.buttonBack2.UseVisualStyleBackColor = true;
@@ -4264,9 +4263,9 @@ namespace OpenBve {
 			this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonNext.Enabled = false;
 			this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonNext.Location = new System.Drawing.Point(571, 565);
+			this.buttonNext.Location = new System.Drawing.Point(571, 561);
 			this.buttonNext.Name = "buttonNext";
-			this.buttonNext.Size = new System.Drawing.Size(120, 24);
+			this.buttonNext.Size = new System.Drawing.Size(120, 28);
 			this.buttonNext.TabIndex = 17;
 			this.buttonNext.Text = "Next >";
 			this.buttonNext.UseVisualStyleBackColor = true;
@@ -4280,7 +4279,7 @@ namespace OpenBve {
 			this.labelInstallText.ForeColor = System.Drawing.Color.Black;
 			this.labelInstallText.Location = new System.Drawing.Point(179, 16);
 			this.labelInstallText.Name = "labelInstallText";
-			this.labelInstallText.Size = new System.Drawing.Size(340, 16);
+			this.labelInstallText.Size = new System.Drawing.Size(340, 18);
 			this.labelInstallText.TabIndex = 16;
 			this.labelInstallText.Text = "Install a Package";
 			this.labelInstallText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -4313,7 +4312,7 @@ namespace OpenBve {
 			this.labelPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageDescription.Location = new System.Drawing.Point(8, 420);
 			this.labelPackageDescription.Name = "labelPackageDescription";
-			this.labelPackageDescription.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageDescription.Size = new System.Drawing.Size(120, 16);
 			this.labelPackageDescription.TabIndex = 12;
 			this.labelPackageDescription.Text = "Package Description:";
 			this.labelPackageDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4325,7 +4324,7 @@ namespace OpenBve {
 			this.linkLabelPackageWebsite.AutoSize = true;
 			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(134, 397);
 			this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
-			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 13);
+			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 16);
 			this.linkLabelPackageWebsite.TabIndex = 11;
 			this.linkLabelPackageWebsite.TabStop = true;
 			this.linkLabelPackageWebsite.Text = "No package selected.";
@@ -4336,7 +4335,7 @@ namespace OpenBve {
 			this.labelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageWebsite.Location = new System.Drawing.Point(8, 397);
 			this.labelPackageWebsite.Name = "labelPackageWebsite";
-			this.labelPackageWebsite.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageWebsite.Size = new System.Drawing.Size(120, 16);
 			this.labelPackageWebsite.TabIndex = 10;
 			this.labelPackageWebsite.Text = "Package Website:";
 			this.labelPackageWebsite.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4356,7 +4355,7 @@ namespace OpenBve {
 			this.labelPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageVersion.Location = new System.Drawing.Point(8, 372);
 			this.labelPackageVersion.Name = "labelPackageVersion";
-			this.labelPackageVersion.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageVersion.Size = new System.Drawing.Size(120, 16);
 			this.labelPackageVersion.TabIndex = 8;
 			this.labelPackageVersion.Text = "Package Version:";
 			this.labelPackageVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4376,7 +4375,7 @@ namespace OpenBve {
 			this.labelPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageAuthor.Location = new System.Drawing.Point(8, 348);
 			this.labelPackageAuthor.Name = "labelPackageAuthor";
-			this.labelPackageAuthor.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageAuthor.Size = new System.Drawing.Size(120, 16);
 			this.labelPackageAuthor.TabIndex = 6;
 			this.labelPackageAuthor.Text = "Package Author:";
 			this.labelPackageAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4396,7 +4395,7 @@ namespace OpenBve {
 			this.labelPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageName.Location = new System.Drawing.Point(8, 324);
 			this.labelPackageName.Name = "labelPackageName";
-			this.labelPackageName.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageName.Size = new System.Drawing.Size(120, 18);
 			this.labelPackageName.TabIndex = 4;
 			this.labelPackageName.Text = "Package Name:";
 			this.labelPackageName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4549,7 +4548,7 @@ namespace OpenBve {
 			this.labelInstallSuccess1.ForeColor = System.Drawing.Color.Black;
 			this.labelInstallSuccess1.Location = new System.Drawing.Point(8, 54);
 			this.labelInstallSuccess1.Name = "labelInstallSuccess1";
-			this.labelInstallSuccess1.Size = new System.Drawing.Size(129, 13);
+			this.labelInstallSuccess1.Size = new System.Drawing.Size(129, 18);
 			this.labelInstallSuccess1.TabIndex = 17;
 			this.labelInstallSuccess1.Text = "Installation was sucessful.";
 			// 
@@ -4561,7 +4560,7 @@ namespace OpenBve {
 			this.labelInstallSuccess2.ForeColor = System.Drawing.Color.Black;
 			this.labelInstallSuccess2.Location = new System.Drawing.Point(179, 16);
 			this.labelInstallSuccess2.Name = "labelInstallSuccess2";
-			this.labelInstallSuccess2.Size = new System.Drawing.Size(340, 16);
+			this.labelInstallSuccess2.Size = new System.Drawing.Size(340, 18);
 			this.labelInstallSuccess2.TabIndex = 16;
 			this.labelInstallSuccess2.Text = "Installation Successful";
 			this.labelInstallSuccess2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -4757,7 +4756,7 @@ namespace OpenBve {
 			this.labelProgressFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelProgressFile.Location = new System.Drawing.Point(1, 431);
 			this.labelProgressFile.Name = "labelProgressFile";
-			this.labelProgressFile.Size = new System.Drawing.Size(697, 24);
+			this.labelProgressFile.Size = new System.Drawing.Size(697, 30);
 			this.labelProgressFile.TabIndex = 7;
 			this.labelProgressFile.Text = "Unknown File...";
 			this.labelProgressFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -4769,7 +4768,7 @@ namespace OpenBve {
 			this.labelProgressPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelProgressPercent.Location = new System.Drawing.Point(290, 401);
 			this.labelProgressPercent.Name = "labelProgressPercent";
-			this.labelProgressPercent.Size = new System.Drawing.Size(118, 24);
+			this.labelProgressPercent.Size = new System.Drawing.Size(118, 30);
 			this.labelProgressPercent.TabIndex = 6;
 			this.labelProgressPercent.Text = "0%";
 			this.labelProgressPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -4781,7 +4780,7 @@ namespace OpenBve {
 			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelPleaseWait.Location = new System.Drawing.Point(1, 462);
 			this.labelPleaseWait.Name = "labelPleaseWait";
-			this.labelPleaseWait.Size = new System.Drawing.Size(697, 24);
+			this.labelPleaseWait.Size = new System.Drawing.Size(697, 30);
 			this.labelPleaseWait.TabIndex = 5;
 			this.labelPleaseWait.Text = "Processing, please wait...";
 			this.labelPleaseWait.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -4819,9 +4818,9 @@ namespace OpenBve {
 			this.buttonBack.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonBack.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBack.Location = new System.Drawing.Point(445, 565);
+			this.buttonBack.Location = new System.Drawing.Point(445, 561);
 			this.buttonBack.Name = "buttonBack";
-			this.buttonBack.Size = new System.Drawing.Size(120, 24);
+			this.buttonBack.Size = new System.Drawing.Size(120, 28);
 			this.buttonBack.TabIndex = 28;
 			this.buttonBack.Text = "< Back";
 			this.buttonBack.UseVisualStyleBackColor = true;
@@ -4835,7 +4834,7 @@ namespace OpenBve {
 			this.buttonRemove.Enabled = false;
 			this.buttonRemove.Location = new System.Drawing.Point(8, 525);
 			this.buttonRemove.Name = "buttonRemove";
-			this.buttonRemove.Size = new System.Drawing.Size(166, 23);
+			this.buttonRemove.Size = new System.Drawing.Size(166, 26);
 			this.buttonRemove.TabIndex = 25;
 			this.buttonRemove.Text = "Remove";
 			this.buttonRemove.UseVisualStyleBackColor = true;
@@ -4859,7 +4858,7 @@ namespace OpenBve {
 			this.labelDependanciesHeader.ForeColor = System.Drawing.Color.Black;
 			this.labelDependanciesHeader.Location = new System.Drawing.Point(179, 16);
 			this.labelDependanciesHeader.Name = "labelDependanciesHeader";
-			this.labelDependanciesHeader.Size = new System.Drawing.Size(340, 16);
+			this.labelDependanciesHeader.Size = new System.Drawing.Size(340, 20);
 			this.labelDependanciesHeader.TabIndex = 16;
 			this.labelDependanciesHeader.Text = "Select Dependancies";
 			this.labelDependanciesHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -4880,9 +4879,9 @@ namespace OpenBve {
 			this.buttonCreatePackage.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonCreatePackage.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCreatePackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCreatePackage.Location = new System.Drawing.Point(571, 565);
+			this.buttonCreatePackage.Location = new System.Drawing.Point(571, 561);
 			this.buttonCreatePackage.Name = "buttonCreatePackage";
-			this.buttonCreatePackage.Size = new System.Drawing.Size(120, 24);
+			this.buttonCreatePackage.Size = new System.Drawing.Size(120, 28);
 			this.buttonCreatePackage.TabIndex = 14;
 			this.buttonCreatePackage.Text = "Create";
 			this.buttonCreatePackage.UseVisualStyleBackColor = true;
@@ -5000,7 +4999,7 @@ namespace OpenBve {
 			this.labelInstalledDependancies.ForeColor = System.Drawing.Color.White;
 			this.labelInstalledDependancies.Location = new System.Drawing.Point(0, 0);
 			this.labelInstalledDependancies.Name = "labelInstalledDependancies";
-			this.labelInstalledDependancies.Size = new System.Drawing.Size(683, 24);
+			this.labelInstalledDependancies.Size = new System.Drawing.Size(683, 26);
 			this.labelInstalledDependancies.TabIndex = 20;
 			this.labelInstalledDependancies.Text = "Installed Packages";
 			this.labelInstalledDependancies.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -5075,9 +5074,9 @@ namespace OpenBve {
 			this.buttonReccomends.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonReccomends.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonReccomends.Enabled = false;
-			this.buttonReccomends.Location = new System.Drawing.Point(517, 1);
+			this.buttonReccomends.Location = new System.Drawing.Point(517, 0);
 			this.buttonReccomends.Name = "buttonReccomends";
-			this.buttonReccomends.Size = new System.Drawing.Size(166, 23);
+			this.buttonReccomends.Size = new System.Drawing.Size(166, 26);
 			this.buttonReccomends.TabIndex = 24;
 			this.buttonReccomends.Text = "Add Reccomendation";
 			this.buttonReccomends.UseVisualStyleBackColor = true;
@@ -5103,9 +5102,9 @@ namespace OpenBve {
 			this.buttonDepends.Enabled = false;
 			this.buttonDepends.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonDepends.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.buttonDepends.Location = new System.Drawing.Point(0, 2);
+			this.buttonDepends.Location = new System.Drawing.Point(0, 0);
 			this.buttonDepends.Name = "buttonDepends";
-			this.buttonDepends.Size = new System.Drawing.Size(166, 23);
+			this.buttonDepends.Size = new System.Drawing.Size(166, 26);
 			this.buttonDepends.TabIndex = 23;
 			this.buttonDepends.Text = "Add Dependancy";
 			this.buttonDepends.UseVisualStyleBackColor = true;
@@ -5159,7 +5158,7 @@ namespace OpenBve {
 			this.createPackageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.createPackageButton.Location = new System.Drawing.Point(281, 549);
 			this.createPackageButton.Name = "createPackageButton";
-			this.createPackageButton.Size = new System.Drawing.Size(136, 23);
+			this.createPackageButton.Size = new System.Drawing.Size(136, 26);
 			this.createPackageButton.TabIndex = 23;
 			this.createPackageButton.Text = "Create Package";
 			this.createPackageButton.UseVisualStyleBackColor = true;
@@ -5172,7 +5171,7 @@ namespace OpenBve {
 			this.buttonUninstallPackage.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonUninstallPackage.Location = new System.Drawing.Point(555, 549);
 			this.buttonUninstallPackage.Name = "buttonUninstallPackage";
-			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
+			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 26);
 			this.buttonUninstallPackage.TabIndex = 21;
 			this.buttonUninstallPackage.Text = "Uninstall Package";
 			this.buttonUninstallPackage.UseVisualStyleBackColor = true;
@@ -5185,7 +5184,7 @@ namespace OpenBve {
 			this.buttonInstallPackage.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonInstallPackage.Location = new System.Drawing.Point(8, 549);
 			this.buttonInstallPackage.Name = "buttonInstallPackage";
-			this.buttonInstallPackage.Size = new System.Drawing.Size(136, 23);
+			this.buttonInstallPackage.Size = new System.Drawing.Size(136, 26);
 			this.buttonInstallPackage.TabIndex = 20;
 			this.buttonInstallPackage.Text = "Install Package";
 			this.buttonInstallPackage.UseVisualStyleBackColor = true;
@@ -5253,7 +5252,7 @@ namespace OpenBve {
 			this.labelInstalledPackages.ForeColor = System.Drawing.Color.White;
 			this.labelInstalledPackages.Location = new System.Drawing.Point(8, 6);
 			this.labelInstalledPackages.Name = "labelInstalledPackages";
-			this.labelInstalledPackages.Size = new System.Drawing.Size(683, 24);
+			this.labelInstalledPackages.Size = new System.Drawing.Size(683, 26);
 			this.labelInstalledPackages.TabIndex = 17;
 			this.labelInstalledPackages.Text = "Installed Packages";
 			this.labelInstalledPackages.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -5290,9 +5289,9 @@ namespace OpenBve {
 			this.buttonBack2.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonBack2.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonBack2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBack2.Location = new System.Drawing.Point(445, 565);
+			this.buttonBack2.Location = new System.Drawing.Point(445, 561);
 			this.buttonBack2.Name = "buttonBack2";
-			this.buttonBack2.Size = new System.Drawing.Size(120, 24);
+			this.buttonBack2.Size = new System.Drawing.Size(120, 28);
 			this.buttonBack2.TabIndex = 18;
 			this.buttonBack2.Text = "< Back";
 			this.buttonBack2.UseVisualStyleBackColor = true;
@@ -5305,9 +5304,9 @@ namespace OpenBve {
 			this.buttonNext.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonNext.Enabled = false;
 			this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonNext.Location = new System.Drawing.Point(571, 565);
+			this.buttonNext.Location = new System.Drawing.Point(571, 561);
 			this.buttonNext.Name = "buttonNext";
-			this.buttonNext.Size = new System.Drawing.Size(120, 24);
+			this.buttonNext.Size = new System.Drawing.Size(120, 28);
 			this.buttonNext.TabIndex = 17;
 			this.buttonNext.Text = "Next >";
 			this.buttonNext.UseVisualStyleBackColor = true;
@@ -5345,7 +5344,7 @@ namespace OpenBve {
 			this.buttonSelectPackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonSelectPackage.Location = new System.Drawing.Point(134, 535);
 			this.buttonSelectPackage.Name = "buttonSelectPackage";
-			this.buttonSelectPackage.Size = new System.Drawing.Size(180, 24);
+			this.buttonSelectPackage.Size = new System.Drawing.Size(180, 28);
 			this.buttonSelectPackage.TabIndex = 14;
 			this.buttonSelectPackage.Text = "Select Package...";
 			this.buttonSelectPackage.UseVisualStyleBackColor = true;
@@ -5372,19 +5371,18 @@ namespace OpenBve {
 			this.labelPackageDescription.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageDescription.Location = new System.Drawing.Point(8, 420);
 			this.labelPackageDescription.Name = "labelPackageDescription";
-			this.labelPackageDescription.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageDescription.Size = new System.Drawing.Size(120, 18);
 			this.labelPackageDescription.TabIndex = 12;
 			this.labelPackageDescription.Text = "Package Description:";
 			this.labelPackageDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// linkLabelPackageWebsite
 			// 
-			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left))));
 			this.linkLabelPackageWebsite.AutoSize = true;
 			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(134, 397);
 			this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
-			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 13);
+			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 18);
 			this.linkLabelPackageWebsite.TabIndex = 11;
 			this.linkLabelPackageWebsite.TabStop = true;
 			this.linkLabelPackageWebsite.Text = "No package selected.";
@@ -5396,7 +5394,7 @@ namespace OpenBve {
 			this.labelPackageWebsite.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageWebsite.Location = new System.Drawing.Point(8, 397);
 			this.labelPackageWebsite.Name = "labelPackageWebsite";
-			this.labelPackageWebsite.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageWebsite.Size = new System.Drawing.Size(120, 18);
 			this.labelPackageWebsite.TabIndex = 10;
 			this.labelPackageWebsite.Text = "Package Website:";
 			this.labelPackageWebsite.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -5419,7 +5417,7 @@ namespace OpenBve {
 			this.labelPackageVersion.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageVersion.Location = new System.Drawing.Point(8, 372);
 			this.labelPackageVersion.Name = "labelPackageVersion";
-			this.labelPackageVersion.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageVersion.Size = new System.Drawing.Size(120, 18);
 			this.labelPackageVersion.TabIndex = 8;
 			this.labelPackageVersion.Text = "Package Version:";
 			this.labelPackageVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -5442,7 +5440,7 @@ namespace OpenBve {
 			this.labelPackageAuthor.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageAuthor.Location = new System.Drawing.Point(8, 348);
 			this.labelPackageAuthor.Name = "labelPackageAuthor";
-			this.labelPackageAuthor.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageAuthor.Size = new System.Drawing.Size(120, 18);
 			this.labelPackageAuthor.TabIndex = 6;
 			this.labelPackageAuthor.Text = "Package Author:";
 			this.labelPackageAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -5465,7 +5463,7 @@ namespace OpenBve {
 			this.labelPackageName.ForeColor = System.Drawing.Color.Black;
 			this.labelPackageName.Location = new System.Drawing.Point(8, 324);
 			this.labelPackageName.Name = "labelPackageName";
-			this.labelPackageName.Size = new System.Drawing.Size(120, 13);
+			this.labelPackageName.Size = new System.Drawing.Size(120, 18);
 			this.labelPackageName.TabIndex = 4;
 			this.labelPackageName.Text = "Package Name:";
 			this.labelPackageName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -5511,9 +5509,9 @@ namespace OpenBve {
 			this.buttonCancel.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonCancel.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCancel.Location = new System.Drawing.Point(445, 565);
+			this.buttonCancel.Location = new System.Drawing.Point(445, 561);
 			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(120, 24);
+			this.buttonCancel.Size = new System.Drawing.Size(120, 28);
 			this.buttonCancel.TabIndex = 29;
 			this.buttonCancel.Text = "Cancel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
@@ -5728,9 +5726,9 @@ namespace OpenBve {
 			this.buttonCancel2.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonCancel2.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCancel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCancel2.Location = new System.Drawing.Point(445, 565);
+			this.buttonCancel2.Location = new System.Drawing.Point(445, 561);
 			this.buttonCancel2.Name = "buttonCancel2";
-			this.buttonCancel2.Size = new System.Drawing.Size(120, 24);
+			this.buttonCancel2.Size = new System.Drawing.Size(120, 28);
 			this.buttonCancel2.TabIndex = 38;
 			this.buttonCancel2.Text = "Cancel";
 			this.buttonCancel2.UseVisualStyleBackColor = true;
@@ -5743,7 +5741,7 @@ namespace OpenBve {
 			this.SaveFileNameButton.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.SaveFileNameButton.Location = new System.Drawing.Point(571, 510);
 			this.SaveFileNameButton.Name = "SaveFileNameButton";
-			this.SaveFileNameButton.Size = new System.Drawing.Size(120, 23);
+			this.SaveFileNameButton.Size = new System.Drawing.Size(120, 26);
 			this.SaveFileNameButton.TabIndex = 37;
 			this.SaveFileNameButton.Text = "Save As....";
 			this.SaveFileNameButton.UseVisualStyleBackColor = true;
@@ -5786,9 +5784,9 @@ namespace OpenBve {
 			this.buttonCreateProceed.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonCreateProceed.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.buttonCreateProceed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCreateProceed.Location = new System.Drawing.Point(571, 565);
+			this.buttonCreateProceed.Location = new System.Drawing.Point(571, 561);
 			this.buttonCreateProceed.Name = "buttonCreateProceed";
-			this.buttonCreateProceed.Size = new System.Drawing.Size(120, 24);
+			this.buttonCreateProceed.Size = new System.Drawing.Size(120, 28);
 			this.buttonCreateProceed.TabIndex = 22;
 			this.buttonCreateProceed.Text = "Next >";
 			this.buttonCreateProceed.UseVisualStyleBackColor = true;
@@ -5898,9 +5896,9 @@ namespace OpenBve {
 			this.labelPackageCreationHeader.BackColor = System.Drawing.Color.Silver;
 			this.labelPackageCreationHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelPackageCreationHeader.ForeColor = System.Drawing.Color.Black;
-			this.labelPackageCreationHeader.Location = new System.Drawing.Point(179, 16);
+			this.labelPackageCreationHeader.Location = new System.Drawing.Point(179, 14);
 			this.labelPackageCreationHeader.Name = "labelPackageCreationHeader";
-			this.labelPackageCreationHeader.Size = new System.Drawing.Size(340, 16);
+			this.labelPackageCreationHeader.Size = new System.Drawing.Size(340, 20);
 			this.labelPackageCreationHeader.TabIndex = 16;
 			this.labelPackageCreationHeader.Text = "Create a Package";
 			this.labelPackageCreationHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -5956,7 +5954,7 @@ namespace OpenBve {
 			this.packageToReplaceLabel.AutoSize = true;
 			this.packageToReplaceLabel.Location = new System.Drawing.Point(8, 4);
 			this.packageToReplaceLabel.Name = "packageToReplaceLabel";
-			this.packageToReplaceLabel.Size = new System.Drawing.Size(230, 13);
+			this.packageToReplaceLabel.Size = new System.Drawing.Size(230, 16);
 			this.packageToReplaceLabel.TabIndex = 24;
 			this.packageToReplaceLabel.Text = "Please select the package you wish to replace:";
 			// 
@@ -6040,7 +6038,7 @@ namespace OpenBve {
 			this.newPackageClearSelectionButton.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.newPackageClearSelectionButton.Location = new System.Drawing.Point(572, 326);
 			this.newPackageClearSelectionButton.Name = "newPackageClearSelectionButton";
-			this.newPackageClearSelectionButton.Size = new System.Drawing.Size(121, 23);
+			this.newPackageClearSelectionButton.Size = new System.Drawing.Size(121, 26);
 			this.newPackageClearSelectionButton.TabIndex = 30;
 			this.newPackageClearSelectionButton.Text = "Clear Selection";
 			this.newPackageClearSelectionButton.UseVisualStyleBackColor = true;
@@ -6066,7 +6064,7 @@ namespace OpenBve {
 			this.addPackageItemsButton.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.addPackageItemsButton.Location = new System.Drawing.Point(8, 326);
 			this.addPackageItemsButton.Name = "addPackageItemsButton";
-			this.addPackageItemsButton.Size = new System.Drawing.Size(121, 23);
+			this.addPackageItemsButton.Size = new System.Drawing.Size(121, 26);
 			this.addPackageItemsButton.TabIndex = 28;
 			this.addPackageItemsButton.Text = "Add Folder";
 			this.addPackageItemsButton.UseVisualStyleBackColor = true;
