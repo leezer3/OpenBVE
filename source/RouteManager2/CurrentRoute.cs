@@ -81,19 +81,23 @@ namespace RouteManager2
 
 		public Atmosphere Atmosphere;
 
-		public double[] BufferTrackPositions = new double[] { };
+		public double[] BufferTrackPositions = { };
 
 		/// <summary>The current in game time, expressed as the number of seconds since midnight on the first day</summary>
 		public double SecondsSinceMidnight;
 
 		/// <summary>Holds the length conversion units</summary>
-		public double[] UnitOfLength = new double[] { 1.0 };
+		public double[] UnitOfLength = { 1.0 };
 
 		/// <summary>The length of a block in meters</summary>
 		public double BlockLength = 25.0;
 
 		/// <summary>Controls the object disposal mode</summary>
 		public ObjectDisposalMode AccurateObjectDisposal;
+
+		/// <summary>Whether running in the nominal 'F' direction increases or decreases the TrackPosition</summary>
+		/// <remarks>'F' is the direction that the current cab faces</remarks>
+		public bool ReverseDirection;
 
 		public CurrentRoute(HostInterface host, BaseRenderer renderer)
 		{
@@ -511,6 +515,61 @@ namespace RouteManager2
 			renderer.Lighting.OptionDiffuseColor = Atmosphere.DiffuseLightColor;
 			renderer.Lighting.OptionLightPosition = Atmosphere.LightPosition;
 			renderer.Lighting.ShouldInitialize = true;
+		}
+
+		/// <summary>The index of the first station</summary>
+		public int PlayerFirstStationIndex
+		{
+			get
+			{
+				int idx = ReverseDirection ? Stations.Length - 1 : 0;
+				bool f = false;
+				int os = -1;
+				if (ReverseDirection)
+				{
+					for (int i = Stations.Length -1; i > 0; i--)
+					{
+						if (!string.IsNullOrEmpty(InitialStationName))
+						{
+							if (InitialStationName.ToLowerInvariant() == Stations[i].Name.ToLowerInvariant())
+							{
+								return i;
+							}
+						}
+						if (Stations[i].StopMode == StationStopMode.AllStop | Stations[i].StopMode == StationStopMode.PlayerStop & Stations[i].Stops.Length != 0)
+						{
+							if (f == false)
+							{
+								os = i;
+								f = true;
+							}
+						}
+					}
+				}
+				else
+				{
+					for (int i = 0; i < Stations.Length; i++)
+					{
+						if (!string.IsNullOrEmpty(InitialStationName))
+						{
+							if (InitialStationName.ToLowerInvariant() == Stations[i].Name.ToLowerInvariant())
+							{
+								return i;
+							}
+						}
+						if (Stations[i].StopMode == StationStopMode.AllStop | Stations[i].StopMode == StationStopMode.PlayerStop & Stations[i].Stops.Length != 0)
+						{
+							if (f == false)
+							{
+								os = i;
+								f = true;
+							}
+						}
+					}
+				}
+				
+				return os == -1 ? idx : os;
+			}
 		}
 	}
 }

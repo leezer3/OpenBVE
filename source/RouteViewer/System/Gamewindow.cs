@@ -38,7 +38,13 @@ namespace RouteViewer
 	        if (Loading.Complete && currentlyLoading)
 	        {
 		        currentlyLoading = false;
+		        if (Program.CurrentRoute.ReverseDirection)
+		        {
+			        Program.Renderer.Camera.Alignment.Yaw = 180 / 57.2957795130824;
+					Program.Renderer.UpdateVisibility(true);
+		        }
 	        }
+	        
         }
 
         //This renders the frame

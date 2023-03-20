@@ -1066,8 +1066,21 @@ namespace CsvRwRouteParser
 			}
 			if (CurrentRoute.Stations.Length != 0)
 			{
-				CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type = StationType.Terminal;
+				if (CurrentRoute.ReverseDirection)
+				{
+					CurrentRoute.Stations[0].Type = StationType.Terminal;
+					if (CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type == StationType.Terminal)
+					{
+						CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type = StationType.Normal;
+					}
+				}
+				else
+				{
+					CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type = StationType.Terminal;
+				}
+				
 			}
+			
 			if (CurrentRoute.Tracks[0].Elements.Length != 0)
 			{
 				int n = CurrentRoute.Tracks[0].Elements.Length - 1;

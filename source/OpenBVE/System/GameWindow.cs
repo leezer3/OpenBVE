@@ -570,32 +570,9 @@ namespace OpenBve
 			// starting time and track position
 			Program.CurrentRoute.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
-			int PlayerFirstStationIndex = -1;
+			int PlayerFirstStationIndex = Program.CurrentRoute.PlayerFirstStationIndex;
 			double PlayerFirstStationPosition;
-			int os = -1;
-			bool f = false;
-			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
-			{
-				if (!String.IsNullOrEmpty(Program.CurrentRoute.InitialStationName))
-				{
-					if (Program.CurrentRoute.InitialStationName.ToLowerInvariant() == Program.CurrentRoute.Stations[i].Name.ToLowerInvariant())
-					{
-						PlayerFirstStationIndex = i;
-					}
-				}
-				if (Program.CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | Program.CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerStop & Program.CurrentRoute.Stations[i].Stops.Length != 0)
-				{
-					if (f == false)
-					{
-						os = i;
-						f = true;
-					}
-				}
-			}
-			if (PlayerFirstStationIndex == -1)
-			{
-				PlayerFirstStationIndex = os == -1 ? 0 : os;
-			}
+			
 			{
 				int s = Program.CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 				if (s >= 0)
@@ -767,6 +744,10 @@ namespace OpenBve
 			// move train in position
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 			{
+				if (Program.CurrentRoute.ReverseDirection)
+				{
+					Program.TrainManager.Trains[i].Reverse();
+				}
 				double p;
 				if (Program.TrainManager.Trains[i].IsPlayerTrain)
 				{

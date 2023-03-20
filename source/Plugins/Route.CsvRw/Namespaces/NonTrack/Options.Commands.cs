@@ -23,6 +23,7 @@
 		FogBehavior,
 		/// <summary>Controls whether BVETS Hacks are forced on / off for this route</summary>
 		EnableBveTsHacks,
-
+		/// <summary>Controls whether the route is driven in the reverse direction to construction</summary>
+		ReverseDirection,
 	}
 }
