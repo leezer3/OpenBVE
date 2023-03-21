@@ -183,6 +183,7 @@ namespace CsvRwRouteParser {
 			
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
+			CurrentRoute.ReverseDirection = false;
 			CurrentRoute.Stations = new RouteStation[] { };
 			Data.RequestStops = new StopRequest[] { };
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / Expressions.Length;
