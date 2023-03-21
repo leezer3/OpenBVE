@@ -152,7 +152,7 @@ namespace CsvRwRouteParser
 			}
 			// create objects and track
 			Vector3 Position = Vector3.Zero;
-			Vector2 Direction = new Vector2(0.0, 1.0);
+			Vector2 Direction = Vector2.Down;
 			double CurrentSpeedLimit = double.PositiveInfinity;
 			int CurrentRunIndex = 0;
 			int CurrentFlangeIndex = 0;

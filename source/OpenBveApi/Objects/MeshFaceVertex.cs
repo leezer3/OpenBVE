@@ -18,7 +18,7 @@ namespace OpenBveApi.Objects
 		public MeshFaceVertex(int Index)
 		{
 			this.Index = (ushort) Index;
-			this.Normal = new Vector3(0.0f, 0.0f, 0.0f);
+			this.Normal = Vector3.Zero;
 		}
 
 		/// <summary>Creates a new MeshFaceVertex with the specified normal vector</summary>

@@ -116,7 +116,7 @@ namespace OpenBveApi.Objects
 					{
 						if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
 						{
-							Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
+							Faces[FaceIndex].Vertices[j].Normal = Vector3.Down;
 						}
 					}
 				}

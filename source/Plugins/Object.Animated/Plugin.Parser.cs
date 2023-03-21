@@ -201,8 +201,8 @@ namespace Plugin
 									RotateXDirection = Vector3.Right,
 									RotateYDirection = Vector3.Down,
 									RotateZDirection = Vector3.Forward,
-									TextureShiftXDirection = new Vector2(1.0, 0.0),
-									TextureShiftYDirection = new Vector2(0.0, 1.0),
+									TextureShiftXDirection = Vector2.Right,
+									TextureShiftYDirection = Vector2.Down,
 									RefreshRate = 0.0,
 								};
 								Vector3 Position = Vector3.Zero;

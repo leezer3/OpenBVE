@@ -232,7 +232,7 @@ namespace OpenBve.Graphics.Renderers
 		private void RenderATSDebugOverlay()
 		{
 			// debug
-			renderer.Rectangle.Draw(null, new Vector2(0.0f, 0.0f), new Vector2(renderer.Screen.Width, renderer.Screen.Height), Color128.SemiTransparentGrey);
+			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), Color128.SemiTransparentGrey);
 			string[] Lines;
 			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
 			{
