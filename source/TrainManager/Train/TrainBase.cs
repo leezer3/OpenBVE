@@ -836,13 +836,13 @@ namespace TrainManager.Trains
 		}
 
 		/// <inheritdoc/>
-		public override void Reverse()
+		public override void Reverse(bool flipInterior = false, bool flipDriver = false)
 		{
 			double trackPosition = Cars[0].TrackPosition;
 			Cars = Cars.Reverse().ToArray();
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].Reverse();
+				Cars[i].Reverse(flipInterior);
 				// Re-create the coupler with appropriate distances between the cars
 				double minDistance = 0, maxDistance = 0;
 				if (i < Cars.Length - 1)
@@ -854,6 +854,7 @@ namespace TrainManager.Trains
 			}
 			PlaceCars(trackPosition);
 			DriverCar = Cars.Length - 1 - DriverCar;
+			CameraCar = Cars.Length - 1 - CameraCar;
 			UpdateCabObjects();
 		}
 

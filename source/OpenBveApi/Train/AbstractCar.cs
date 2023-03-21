@@ -75,7 +75,7 @@ namespace OpenBveApi.Trains
 		}
 
 		/// <summary>Call this method to reverse (flip) the car</summary>
-		public virtual void Reverse()
+		public virtual void Reverse(bool flipInterior = false)
 		{
 
 		}

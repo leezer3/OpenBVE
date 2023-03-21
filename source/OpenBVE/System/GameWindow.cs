@@ -746,7 +746,7 @@ namespace OpenBve
 			{
 				if (Program.CurrentRoute.ReverseDirection)
 				{
-					Program.TrainManager.Trains[i].Reverse();
+					Program.TrainManager.Trains[i].Reverse(true, true);
 				}
 				double p;
 				if (Program.TrainManager.Trains[i].IsPlayerTrain)
@@ -909,6 +909,10 @@ namespace OpenBve
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
+			if (Program.CurrentRoute.ReverseDirection)
+			{
+				Program.Renderer.Camera.Alignment.Yaw = 180 / 57.2957795130824;
+			}
 			switch (Interface.CurrentOptions.InitialViewpoint)
 			{
 				case 0:

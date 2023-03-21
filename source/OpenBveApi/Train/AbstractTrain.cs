@@ -1,6 +1,4 @@
-﻿using OpenBveApi.Routes;
-
-namespace OpenBveApi.Trains
+﻿namespace OpenBveApi.Trains
 {
 	/// <summary>An abstract train</summary>
 	public abstract class AbstractTrain
@@ -88,7 +86,7 @@ namespace OpenBveApi.Trains
 		}
 
 		/// <summary>Call this method to reverse (flip) the entire train</summary>
-		public virtual void Reverse()
+		public virtual void Reverse(bool FlipInterior = false, bool FlipDriver = false)
 		{
 
 		}
