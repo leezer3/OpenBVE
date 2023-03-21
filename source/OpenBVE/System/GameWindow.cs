@@ -258,8 +258,13 @@ namespace OpenBve
 				TimeElapsed = RealTimeElapsed * (double)TimeFactor;
 				if (loadComplete && !firstFrame)
 				{
-					//Our current in-game time is equal to or greater than the startup time, but the first frame has not yet been processed
-					//Therefore, reset the timer to zero as time consuming texture loads may cause us to be late at the first station
+					/*
+					 * Our current in-game time is equal to or greater than the startup time, but the first frame has not yet been processed
+					 * Therefore, reset the timer to zero as time consuming texture loads may cause us to be late at the first station
+					 *
+					 * Also update the viewing distances in case of jumps etc.
+					 */
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					RealTimeElapsed = 0.0;
 					TimeElapsed = 0.0;
 					firstFrame = true;
