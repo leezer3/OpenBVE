@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Hosts;
+using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
 
 namespace RouteManager2.Events
@@ -9,14 +9,22 @@ namespace RouteManager2.Events
 		/// <summary>The index of the station this event describes</summary>
 		public readonly int StationIndex;
 
-		public StationStartEvent(double TrackPositionDelta, int StationIndex) : base(TrackPositionDelta)
+		private readonly CurrentRoute currentRoute;
+
+		public StationStartEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, int StationIndex) : base(TrackPositionDelta)
 		{
 			DontTriggerAnymore = false;
 			this.StationIndex = StationIndex;
+			currentRoute = CurrentRoute;
 		}
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
+			if (currentRoute.ReverseDirection)
+			{
+				direction = -direction;
+			}
+
 			trackFollower.EnterStation(StationIndex, direction);
 
 			if (trackFollower.TriggerType == EventTriggerType.TrainFront)
@@ -46,6 +54,10 @@ namespace RouteManager2.Events
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
+			if (currentRoute.ReverseDirection)
+			{
+				direction = -direction;
+			}
 			trackFollower.LeaveStation(StationIndex, direction);
 
 			switch (trackFollower.TriggerType)

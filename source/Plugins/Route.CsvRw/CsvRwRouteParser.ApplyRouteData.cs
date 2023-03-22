@@ -417,7 +417,15 @@ namespace CsvRwRouteParser
 					int s = Data.Blocks[i].Station;
 					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
 					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(0.0, s);
+					if (CurrentRoute.ReverseDirection)
+					{
+						CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, 0.0, s);
+					}
+					else
+					{
+						CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(CurrentRoute, 0.0, s);
+					}
+					
 					double dx, dy = 3.0;
 					if (CurrentRoute.Stations[s].OpenLeftDoors && !CurrentRoute.Stations[s].OpenRightDoors)
 					{
@@ -942,7 +950,15 @@ namespace CsvRwRouteParser
 						double d = p - (k + Data.FirstUsedBlock) * Data.BlockInterval;
 						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(Plugin.CurrentHost, CurrentRoute, d, i);
+						if (CurrentRoute.ReverseDirection)
+						{
+							CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationStartEvent(CurrentRoute, d, i);
+						}
+						else
+						{
+							CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(Plugin.CurrentHost, CurrentRoute, d, i);
+						}
+						
 					}
 				}
 			}
