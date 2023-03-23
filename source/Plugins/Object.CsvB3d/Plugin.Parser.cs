@@ -1352,14 +1352,12 @@ namespace Plugin
 									  "TextPadding is not a supported command - did you mean SetTextPadding? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								if (Arguments.Length > 2)
+								Vector2 Padding;
+								if(!Vector2.TryParse(Arguments, out Padding))
 								{
-									currentHost.AddMessage(MessageType.Warning, false,
-									  "At most 2 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									currentHost.AddMessage(MessageType.Warning, false, "Invalid TextPadding at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Vector2 Padding = new Vector2(0, 0);
-								double.TryParse(Arguments[0], out Padding.X);
-								double.TryParse(Arguments[1], out Padding.Y);
+
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
 									Builder.Materials[j].TextPadding = Padding;

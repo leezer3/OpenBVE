@@ -17,7 +17,7 @@
 		StackCopy, StackSwap,
 		MathRandom, MathRandomInt,
 		TimeSecondsSinceMidnight, TimeHourDigit, TimeMinuteDigit, TimeSecondDigit, CameraDistance, CameraXDistance, CameraYDistance, CameraZDistance,CameraView,
-		TrainCars, TrainCarNumber, TrainDestination, PlayerTrain,
+		TrainCars, TrainCarNumber, TrainDestination, PlayerTrain, TrainLength,
 		TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
 		TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, CurveRadiusOfCar, FrontAxleCurveRadius, FrontAxleCurveRadiusOfCar, RearAxleCurveRadius, RearAxleCurveRadiusOfCar, CurveCant, CurveCantOfCar, Pitch, PitchOfCar, Odometer, OdometerOfCar, BrightnessOfCar,

@@ -82,6 +82,43 @@ namespace OpenBveApi.Math {
 			return success;
 		}
 
+		/// <summary>Parses a Vector3 from a list of strings</summary>
+		/// <param name="arguments">The list of strings</param>
+		/// <param name="v">The out Vector</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Vector3.
+		/// If any part fails parsing, it will be set to zero</remarks>
+		public static bool TryParse(string[] arguments, out Vector3 v)
+		{
+			bool success = arguments.Length == 3;
+			v.X = 0; v.Y = 0; v.Z = 0; 
+			for (int i = 0; i < arguments.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(arguments[i], out v.X))
+						{
+							success = false;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(arguments[i], out v.Y))
+						{
+							success = false;
+						}
+						break;
+					case 2:
+						if (!double.TryParse(arguments[i], out v.Z))
+						{
+							success = false;
+						}
+						break;
+				}
+			}
+			return success;
+		}
+
 		/// <summary>Interpolates between two Vector3 values using a simple Cosine algorithm</summary>
 		/// <param name="Vector1">The first vector</param>
 		/// <param name="Vector2">The second vector</param>

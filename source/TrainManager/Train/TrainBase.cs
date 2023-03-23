@@ -5,6 +5,7 @@ using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
@@ -76,6 +77,20 @@ namespace TrainManager.Trains
 
 				r /= Cars.Length;
 				return r;
+			}
+		}
+
+		public override double Length
+		{
+			get
+			{
+				double myLength = 0;
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					myLength += Cars[i].Length;
+				}
+
+				return myLength;
 			}
 		}
 
@@ -851,6 +866,13 @@ namespace TrainManager.Trains
 					maxDistance = Cars[i + 1].Coupler.MaximumDistanceBetweenCars;
 				}
 				Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null, this);
+			}
+
+			if (flipInterior)
+			{
+				// Flipping for reverse running, so we need to change the trigger types for the 'new' front / back cars
+				Cars[0].FrontAxle.Follower.TriggerType = EventTriggerType.RearCarRearAxle;
+				Cars[Cars.Length - 1].RearAxle.Follower.TriggerType = EventTriggerType.FrontCarFrontAxle;
 			}
 			PlaceCars(trackPosition);
 			DriverCar = Cars.Length - 1 - DriverCar;

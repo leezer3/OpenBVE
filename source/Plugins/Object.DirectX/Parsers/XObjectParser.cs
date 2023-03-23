@@ -1422,7 +1422,7 @@ namespace Plugin {
 										return false;
 									}
 									Faces[j][k] = faceVertexIndices[k];
-									FaceNormals[j][k] = new Vector3(0.0f, 0.0f, 0.0f);
+									FaceNormals[j][k] = Vector3.Zero;
 								}
 							}
 							int ds = 4;
