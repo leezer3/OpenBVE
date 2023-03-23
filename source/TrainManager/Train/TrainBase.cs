@@ -867,13 +867,6 @@ namespace TrainManager.Trains
 				}
 				Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null, this);
 			}
-
-			if (flipInterior)
-			{
-				// Flipping for reverse running, so we need to change the trigger types for the 'new' front / back cars
-				Cars[0].FrontAxle.Follower.TriggerType = EventTriggerType.RearCarRearAxle;
-				Cars[Cars.Length - 1].RearAxle.Follower.TriggerType = EventTriggerType.FrontCarFrontAxle;
-			}
 			PlaceCars(trackPosition);
 			DriverCar = Cars.Length - 1 - DriverCar;
 			CameraCar = Cars.Length - 1 - CameraCar;
