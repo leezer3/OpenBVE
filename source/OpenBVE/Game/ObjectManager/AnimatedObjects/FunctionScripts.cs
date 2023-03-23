@@ -288,6 +288,13 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.TrainLength:
+						if (Train != null) {
+							Function.Stack[s] = Train.Length;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					case Instructions.TrainSpeed:
 						if (Train != null) {
 							Function.Stack[s] = Train.Cars[CarIndex].CurrentSpeed;
