@@ -749,10 +749,6 @@ namespace OpenBve
 			// move train in position
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 			{
-				if (Program.CurrentRoute.ReverseDirection)
-				{
-					Program.TrainManager.Trains[i].Reverse(true, true);
-				}
 				double p;
 				if (Program.TrainManager.Trains[i].IsPlayerTrain)
 				{
@@ -766,6 +762,17 @@ namespace OpenBve
 				else
 				{
 					p = OtherFirstStationPosition;
+				}
+				if (Program.CurrentRoute.ReverseDirection)
+				{
+					/*
+					 * Flip the train if running in reverse direction
+					 * We also need to add the length of the train so that the driver car is actually positioned on the platform
+					 *
+					 * Position on routes not specificially designed for reverse running may well be wrong, but that's life
+					 */
+					Program.TrainManager.Trains[i].Reverse(true, true);
+					p += Program.TrainManager.Trains[i].Length;
 				}
 				for (int j = 0; j < Program.TrainManager.Trains[i].Cars.Length; j++)
 				{
