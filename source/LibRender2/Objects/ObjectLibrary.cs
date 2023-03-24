@@ -302,7 +302,7 @@ namespace LibRender2.Objects
 			});
 
 			// sort
-			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
+			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => -list.Distance).Select(list => list.Face).ToList();
 		}
 	}
 }
