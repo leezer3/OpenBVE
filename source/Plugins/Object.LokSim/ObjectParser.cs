@@ -287,9 +287,7 @@ namespace Plugin
 											{
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
 												//Add 1 to the length of the face array
-												MeshFace f = new MeshFace();
-												//Create the vertex array for the face
-												f.Vertices = new MeshFaceVertex[Verticies.Length];
+												MeshFace f = new MeshFace(Verticies.Length);
 												//Run through the vertices list and grab from the temp array
 
 												int smallestX = TextureWidth;

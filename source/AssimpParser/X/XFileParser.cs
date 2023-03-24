@@ -1692,10 +1692,7 @@ namespace AssimpNET.X
 			{
 				throw new Exception(text);
 			}
-			else
-			{
-				throw new Exception("Line " + LineNumber + ": " + text);
-			}
+			throw new Exception("Line " + LineNumber + ": " + text);
 		}
 
 		// Filters the imported hierarchy for some degenerated cases that some exporters produce.

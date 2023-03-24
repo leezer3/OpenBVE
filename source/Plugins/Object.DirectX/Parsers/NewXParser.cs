@@ -40,10 +40,21 @@ namespace Plugin
 		internal static StaticObject ReadObject(string FileName, Encoding Encoding)
 		{
 			rootMatrix = Matrix4D.NoTransformation;
-			currentFolder = System.IO.Path.GetDirectoryName(FileName);
+			currentFolder = Path.GetDirectoryName(FileName);
 			currentFile = FileName;
-			byte[] Data = System.IO.File.ReadAllBytes(FileName);
+			byte[] Data = File.ReadAllBytes(FileName);
 			
+			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
+			{
+				// Object is actually a single line text file containing relative path to the 'real' X
+				// Found in BRSigs\Night
+				string relativePath = Encoding.ASCII.GetString(Data);
+				if (!OpenBveApi.Path.ContainsInvalidChars(relativePath))
+				{
+					return ReadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), relativePath), Encoding);
+				}
+			}
+
 			// floating-point format
 			int FloatingPointSize;
 			if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50)
@@ -161,6 +172,7 @@ namespace Plugin
 				default:
 					return;
 				case TemplateID.Template:
+					// ReSharper disable once UnusedVariable
 					string GUID = block.ReadString();
 					/*
 					 * Valid Microsoft templates are listed here:
@@ -173,7 +185,9 @@ namespace Plugin
 					 */
 					return;
 				case TemplateID.Header:
+					// ReSharper disable once UnusedVariable
 					int majorVersion = block.ReadUInt16();
+					// ReSharper disable once UnusedVariable
 					int minorVersion = block.ReadUInt16();
 					int flags = block.ReadUInt16();
 					switch (flags)
@@ -299,12 +313,13 @@ namespace Plugin
 					for (int i = 0; i < nFaces; i++)
 					{
 						int fVerts = block.ReadUInt16();
-						if (nFaces == 0)
+						if (fVerts == 0)
 						{
-							throw new Exception("fVerts must be greater than zero");
+							// Assuming here that a face must contain vertices
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "fVerts was declared as zero");
+							break;
 						}
-						MeshFace f = new MeshFace();
-						f.Vertices = new MeshFaceVertex[fVerts];
+						MeshFace f = new MeshFace(fVerts);
 						for (int j = 0; j < fVerts; j++)
 						{
 							f.Vertices[j].Index = block.ReadUInt16();
@@ -413,7 +428,7 @@ namespace Plugin
 						material.DaytimeTexture = null;
 					}
 
-					if (!System.IO.File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
+					if (!File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
 						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + material.DaytimeTexture + " was not found in file " + currentFile);
 						material.DaytimeTexture = null;
@@ -457,6 +472,11 @@ namespace Plugin
 					for (int i = 0; i < nVertexColors; i++)
 					{
 						int idx = block.ReadUInt16();
+						if (idx >= builder.Vertices.Count)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MeshVertexColors index " + idx +  " should be less than nVertices in Mesh " + block.Label);
+							continue;
+						}
 						ColoredVertex c = builder.Vertices[idx] as ColoredVertex;
 						if (c != null)
 						{
