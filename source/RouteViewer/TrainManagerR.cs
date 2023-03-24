@@ -34,15 +34,9 @@ namespace RouteViewer {
 			}
 			public override int NumberOfCars => this.Cars.Length;
 
-			public override double FrontCarTrackPosition()
-			{
-				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
-			}
+			public override double FrontCarTrackPosition => Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
 
-			public override double RearCarTrackPosition()
-			{
-				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
-			}
+			public override double RearCarTrackPosition => Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
 
 			public override bool IsPlayerTrain => true;
 		}

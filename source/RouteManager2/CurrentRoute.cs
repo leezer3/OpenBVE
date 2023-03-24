@@ -246,7 +246,7 @@ namespace RouteManager2
 
 							if (c >= 0)
 							{
-								double p0 = train.FrontCarTrackPosition();
+								double p0 = train.FrontCarTrackPosition;
 								double p1 = Stations[d].Stops[c].TrackPosition - Stations[d].Stops[c].BackwardTolerance;
 
 								if (p0 >= p1)

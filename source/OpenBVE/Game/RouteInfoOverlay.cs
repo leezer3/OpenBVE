@@ -101,7 +101,7 @@ namespace OpenBve
 			case state.gradient:
 				Program.Renderer.Rectangle.Draw(gradientImage, origin, gradientSize);
 				// get current train position in track
-				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition());
+				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition);
 				// convert to gradient profile offset
 				xPos = gradientSize.Y * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
 						(Program.CurrentRoute.Information.GradientMaxTrack - Program.CurrentRoute.Information.GradientMinTrack);

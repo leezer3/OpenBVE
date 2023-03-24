@@ -5,7 +5,6 @@ using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
-using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
@@ -345,12 +344,12 @@ namespace TrainManager.Trains
 						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_newlimit"), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 					}
 
-					Section nextSection = TrainManagerBase.CurrentRoute.NextSection(FrontCarTrackPosition());
+					Section nextSection = TrainManagerBase.CurrentRoute.NextSection(FrontCarTrackPosition);
 					if (nextSection != null)
 					{
 						//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
 						//Aspect announce to be triggered via a separate keybind
-						double tPos = nextSection.TrackPosition - FrontCarTrackPosition();
+						double tPos = nextSection.TrackPosition - FrontCarTrackPosition;
 						if (!nextSection.AccessibilityAnnounced && tPos < 500)
 						{
 							string s = Translations.GetInterfaceString("message_route_nextsection").Replace("[distance]", $"{tPos:0.0}") + "m";
@@ -358,12 +357,12 @@ namespace TrainManager.Trains
 							nextSection.AccessibilityAnnounced = true;
 						}
 					}
-					RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(FrontCarTrackPosition());
+					RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(FrontCarTrackPosition);
 					if (nextStation != null)
 					{
 						//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
 						//Aspect announce to be triggered via a separate keybind
-						double tPos = nextStation.DefaultTrackPosition - FrontCarTrackPosition();
+						double tPos = nextStation.DefaultTrackPosition - FrontCarTrackPosition;
 						if (!nextStation.AccessibilityAnnounced && tPos < 500)
 						{
 							string s = Translations.GetInterfaceString("message_route_nextstation").Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
@@ -873,18 +872,32 @@ namespace TrainManager.Trains
 			UpdateCabObjects();
 		}
 
-			
+
 
 		/// <inheritdoc/>
-		public override double FrontCarTrackPosition()
+		public override double FrontCarTrackPosition
 		{
-			return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
+			get
+			{
+				if (TrainManagerBase.CurrentRoute.ReverseDirection)
+				{
+					return Cars[Cars.Length - 1].FrontAxle.Follower.TrackPosition - Cars[Cars.Length - 1].FrontAxle.Position + 0.5 * Cars[Cars.Length -  1].Length;
+				}
+				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
+			}
 		}
-
+		
 		/// <inheritdoc/>
-		public override double RearCarTrackPosition()
+		public override double RearCarTrackPosition
 		{
-			return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
+			get
+			{
+				if (TrainManagerBase.CurrentRoute.ReverseDirection)
+				{
+					return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;	
+				}
+				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
+			}
 		}
 
 		/// <inheritdoc/>

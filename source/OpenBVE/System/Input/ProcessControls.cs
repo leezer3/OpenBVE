@@ -1864,21 +1864,21 @@ namespace OpenBve
 									Program.CurrentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
 									break;
 								case Translations.Command.AccessibilityNextSignal:
-									Section nextSection = TrainManagerBase.CurrentRoute.NextSection(TrainManagerBase.PlayerTrain.FrontCarTrackPosition());
+									Section nextSection = TrainManagerBase.CurrentRoute.NextSection(TrainManagerBase.PlayerTrain.FrontCarTrackPosition);
 									if (nextSection != null)
 									{
-										double tPos = nextSection.TrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition();
+										double tPos = nextSection.TrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition;
 										string st = Translations.GetInterfaceString("message_route_nextsection_aspect").Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[aspect]", nextSection.CurrentAspect.ToString());
 										Program.CurrentHost.AddMessage(st, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
 									}
 									break; 
 								case Translations.Command.AccessibilityNextStation:
-									RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(TrainManagerBase.PlayerTrain.FrontCarTrackPosition());
+									RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(TrainManagerBase.PlayerTrain.FrontCarTrackPosition);
 									if (nextStation != null)
 									{
 										//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
 										//Aspect announce to be triggered via a separate keybind
-										double tPos = nextStation.DefaultTrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition();
+										double tPos = nextStation.DefaultTrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition;
 										string stt = Translations.GetInterfaceString("message_route_nextstation").Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
 										Program.CurrentHost.AddMessage(stt, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
 										nextStation.AccessibilityAnnounced = true;
