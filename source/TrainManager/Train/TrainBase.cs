@@ -5,6 +5,7 @@ using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
@@ -92,6 +93,9 @@ namespace TrainManager.Trains
 				return myLength;
 			}
 		}
+
+		/// <summary>The direction of travel on the current track</summary>
+		public TrackDirection CurrentDirection => TrainManagerBase.CurrentRoute.Tracks[Cars[DriverCar].FrontAxle.Follower.TrackIndex].Direction;
 
 		public TrainBase(TrainState state)
 		{
@@ -879,7 +883,7 @@ namespace TrainManager.Trains
 		{
 			get
 			{
-				if (TrainManagerBase.CurrentRoute.ReverseDirection)
+				if (CurrentDirection == TrackDirection.Reverse)
 				{
 					return Cars[Cars.Length - 1].FrontAxle.Follower.TrackPosition - Cars[Cars.Length - 1].FrontAxle.Position + 0.5 * Cars[Cars.Length -  1].Length;
 				}
@@ -892,7 +896,7 @@ namespace TrainManager.Trains
 		{
 			get
 			{
-				if (TrainManagerBase.CurrentRoute.ReverseDirection)
+				if (CurrentDirection == TrackDirection.Reverse)
 				{
 					return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;	
 				}
@@ -1052,7 +1056,7 @@ namespace TrainManager.Trains
 		/// <param name="shouldIncrement">Whether to increase or decrease the camera car index</param>
 		public void ChangeCameraCar(bool shouldIncrement)
 		{
-			if (TrainManagerBase.CurrentRoute.ReverseDirection)
+			if (CurrentDirection == TrackDirection.Reverse)
 			{
 				// If in the reverse direction, the last car is Car0 and the direction of increase is reversed
 				shouldIncrement = !shouldIncrement;
@@ -1063,7 +1067,7 @@ namespace TrainManager.Trains
 				if (CameraCar < Cars.Length - 1)
 				{
 					CameraCar++;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManagerBase.CurrentRoute.ReverseDirection ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 						MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 				}
 			}
@@ -1072,7 +1076,7 @@ namespace TrainManager.Trains
 				if (CameraCar > 0)
 				{
 					CameraCar--;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManagerBase.CurrentRoute.ReverseDirection ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 						MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 				}
 			}

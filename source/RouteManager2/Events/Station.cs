@@ -20,7 +20,7 @@ namespace RouteManager2.Events
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (currentRoute.ReverseDirection)
+			if (currentRoute.Tracks[trackFollower.TrackIndex].Direction == TrackDirection.Reverse)
 			{
 				direction = -direction;
 			}
@@ -54,7 +54,7 @@ namespace RouteManager2.Events
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (currentRoute.ReverseDirection)
+			if (currentRoute.Tracks[trackFollower.TrackIndex].Direction == TrackDirection.Reverse)
 			{
 				direction = -direction;
 			}

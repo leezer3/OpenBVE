@@ -204,7 +204,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							CurrentRoute.ReverseDirection = a == 1;
+							CurrentRoute.Tracks[0].Direction = a == 1 ? TrackDirection.Reverse : TrackDirection.Forwards;
 						}
 					}
 					break;

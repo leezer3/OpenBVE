@@ -1,5 +1,6 @@
 using System;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Events;
@@ -454,7 +455,7 @@ namespace OpenBve
 					}
 					reduceDecelerationCruiseAndStart = false;
 					// look ahead
-					if (Program.CurrentRoute.ReverseDirection)
+					if (Train.CurrentDirection == TrackDirection.Reverse)
 					{
 						LookAheadBackwards();
 					}

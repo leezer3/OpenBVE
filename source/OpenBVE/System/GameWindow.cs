@@ -763,7 +763,7 @@ namespace OpenBve
 				{
 					p = OtherFirstStationPosition;
 				}
-				if (Program.CurrentRoute.ReverseDirection)
+				if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 				{
 					/*
 					 * Flip the train if running in reverse direction
@@ -794,7 +794,7 @@ namespace OpenBve
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 			Program.Renderer.UpdateVisibility(true);
-			if (Program.CurrentRoute.ReverseDirection)
+			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 			{
 				double reverse = 180 / 57.2957795130824;
 				Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(2.5, 1.5, 15), 0.3 + reverse, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
@@ -931,7 +931,7 @@ namespace OpenBve
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
-			if (Program.CurrentRoute.ReverseDirection)
+			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 			{
 				Program.Renderer.Camera.Alignment.Yaw = 180 / 57.2957795130824;
 			}

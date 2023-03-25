@@ -2,6 +2,7 @@
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
@@ -99,7 +100,7 @@ namespace TrainManager.Trains
 				double tf, tb;
 				if (n >= 0)
 				{
-					int frontCar = TrainManagerBase.CurrentRoute.ReverseDirection ? Cars.Length -1 : 0;
+					int frontCar = CurrentDirection == TrackDirection.Reverse ? Cars.Length -1 : 0;
 
 					double p0 = Cars[frontCar].FrontAxle.Follower.TrackPosition - Cars[frontCar].FrontAxle.Position + 0.5 * Cars[frontCar].Length;
 					double p1 = TrainManagerBase.CurrentRoute.Stations[i].Stops[n].TrackPosition;

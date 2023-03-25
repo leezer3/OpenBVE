@@ -417,7 +417,7 @@ namespace CsvRwRouteParser
 					int s = Data.Blocks[i].Station;
 					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
 					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					if (CurrentRoute.ReverseDirection)
+					if (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
 					{
 						CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, 0.0, s);
 					}
@@ -950,7 +950,7 @@ namespace CsvRwRouteParser
 						double d = p - (k + Data.FirstUsedBlock) * Data.BlockInterval;
 						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						if (CurrentRoute.ReverseDirection)
+						if (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
 						{
 							CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationStartEvent(CurrentRoute, d, i);
 						}
@@ -1082,7 +1082,7 @@ namespace CsvRwRouteParser
 			}
 			if (CurrentRoute.Stations.Length != 0)
 			{
-				if (CurrentRoute.ReverseDirection)
+				if (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
 				{
 					CurrentRoute.Stations[0].Type = StationType.Terminal;
 					if (CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type == StationType.Terminal)

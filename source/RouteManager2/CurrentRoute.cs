@@ -95,17 +95,13 @@ namespace RouteManager2
 		/// <summary>Controls the object disposal mode</summary>
 		public ObjectDisposalMode AccurateObjectDisposal;
 
-		/// <summary>Whether running in the nominal 'F' direction increases or decreases the TrackPosition</summary>
-		/// <remarks>'F' is the direction that the current cab faces</remarks>
-		public bool ReverseDirection;
-
 		public CurrentRoute(HostInterface host, BaseRenderer renderer)
 		{
 			currentHost = host;
 			this.renderer = renderer;
 			
 			Tracks = new Dictionary<int, Track>();
-			Track t = new Track()
+			Track t = new Track
 			{
 				Elements = new TrackElement[0]
 			};
@@ -522,10 +518,10 @@ namespace RouteManager2
 		{
 			get
 			{
-				int idx = ReverseDirection ? Stations.Length - 1 : 0;
+				int idx = Tracks[0].Direction == TrackDirection.Forwards ? Stations.Length - 1 : 0;
 				bool f = false;
 				int os = -1;
-				if (ReverseDirection)
+				if (Tracks[0].Direction == TrackDirection.Forwards)
 				{
 					for (int i = Stations.Length -1; i > 0; i--)
 					{

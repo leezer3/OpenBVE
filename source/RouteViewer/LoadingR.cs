@@ -222,7 +222,7 @@ namespace RouteViewer {
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			double FirstStationPosition = 0.0;
-			if (Program.CurrentRoute.ReverseDirection)
+			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 			{
 				for (int i = Program.CurrentRoute.Stations.Length - 1; i > 0; i--) {
 					if (Program.CurrentRoute.Stations[i].Stops.Length != 0) {

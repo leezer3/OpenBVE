@@ -50,7 +50,7 @@ namespace OpenBve.Graphics.Renderers
 			// safety handles
 			{
 				string t = "safety: ";
-				if (Program.CurrentRoute.ReverseDirection)
+				if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 				{
 					t += (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "F" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "B" : "N");
 				}
@@ -89,7 +89,7 @@ namespace OpenBve.Graphics.Renderers
 			// driver handles
 			{
 				string t = "driver: ";
-				if (Program.CurrentRoute.ReverseDirection)
+				if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 				{
 					t += (TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Reverse ? "F" : TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Forwards ? "B" : "N");
 				}

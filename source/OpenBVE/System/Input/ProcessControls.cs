@@ -20,6 +20,7 @@ using TrainManager;
 using TrainManager.Handles;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
+using OpenBveApi.Routes;
 
 namespace OpenBve
 {
@@ -848,7 +849,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraExterior:
 										// camera: exterior
-										if (Program.CurrentRoute.ReverseDirection)
+										if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 										{
 											MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.Cars.Length - TrainManager.PlayerTrain.CameraCar), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
@@ -1012,7 +1013,7 @@ namespace OpenBve
 											Program.Renderer.Camera.Alignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
 												0.0);
 										}
-										Program.Renderer.Camera.Alignment.Yaw = Program.CurrentRoute.ReverseDirection ? 180 / 57.2957795130824 : 0;
+										Program.Renderer.Camera.Alignment.Yaw = TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse ? 180 / 57.2957795130824 : 0;
 										Program.Renderer.Camera.Alignment.Pitch = 0.0;
 										Program.Renderer.Camera.Alignment.Roll = 0.0;
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Track)

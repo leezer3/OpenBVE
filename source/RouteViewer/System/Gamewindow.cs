@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -38,7 +39,7 @@ namespace RouteViewer
 	        if (Loading.Complete && currentlyLoading)
 	        {
 		        currentlyLoading = false;
-		        if (Program.CurrentRoute.ReverseDirection)
+		        if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 		        {
 			        Program.Renderer.Camera.Alignment.Yaw = 180 / 57.2957795130824;
 					Program.Renderer.UpdateVisibility(true);

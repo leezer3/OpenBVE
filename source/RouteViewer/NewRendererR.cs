@@ -633,7 +633,7 @@ namespace RouteViewer
 					// info
 					double x = 0.5 * Screen.Width - 256.0;
 					double Yaw = Camera.Alignment.Yaw * 57.2957795130824;
-					if (Program.CurrentRoute.ReverseDirection)
+					if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 					{
 						Yaw -= 180;
 					}
