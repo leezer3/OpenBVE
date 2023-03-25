@@ -794,8 +794,18 @@ namespace OpenBve
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 			Program.Renderer.UpdateVisibility(true);
-			Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
-			Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
+			if (Program.CurrentRoute.ReverseDirection)
+			{
+				double reverse = 180 / 57.2957795130824;
+				Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(2.5, 1.5, 15), 0.3 + reverse, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
+				Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(3.0, 2.5, 0.0), 0.3 + reverse, 0.0, 0.0, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.Cars.Length - 1].TrackPosition, 1.0);
+			}
+			else
+			{
+				Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
+				Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
+			}
+			
 			// signalling sections
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 			{

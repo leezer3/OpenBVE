@@ -1047,5 +1047,36 @@ namespace TrainManager.Trains
 				TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
 			}
 		}
+
+		/// <summary>Change the camera car</summary>
+		/// <param name="shouldIncrement">Whether to increase or decrease the camera car index</param>
+		public void ChangeCameraCar(bool shouldIncrement)
+		{
+			if (TrainManagerBase.CurrentRoute.ReverseDirection)
+			{
+				// If in the reverse direction, the last car is Car0 and the direction of increase is reversed
+				shouldIncrement = !shouldIncrement;
+			}
+
+			if (shouldIncrement)
+			{
+				if (CameraCar < Cars.Length - 1)
+				{
+					CameraCar++;
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManagerBase.CurrentRoute.ReverseDirection ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+						MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+				}
+			}
+			else
+			{
+				if (CameraCar > 0)
+				{
+					CameraCar--;
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManagerBase.CurrentRoute.ReverseDirection ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+						MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+				}
+			}
+
+		}
 	}
 }

@@ -848,8 +848,17 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraExterior:
 										// camera: exterior
-										MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+										if (Program.CurrentRoute.ReverseDirection)
+										{
+											MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.Cars.Length - TrainManager.PlayerTrain.CameraCar), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+										}
+										else
+										{
+											MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+										}
+										
 										SaveCameraSettings();
 										Program.Renderer.Camera.CurrentMode = CameraViewMode.Exterior;
 										RestoreCameraSettings();
@@ -916,12 +925,7 @@ namespace OpenBve
 										//If we are in the exterior train view, shift down one car until we hit the last car
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 										{
-											if (TrainManager.PlayerTrain.CameraCar < TrainManager.PlayerTrain.Cars.Length - 1)
-											{
-												TrainManager.PlayerTrain.CameraCar++;
-												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
-												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
-											}
+											TrainManager.PlayerTrain.ChangeCameraCar(false);
 											return;
 										}
 										//Otherwise, check if we can move down to the previous POI
@@ -962,12 +966,7 @@ namespace OpenBve
 										//If we are in the exterior train view, shift up one car until we hit index 0
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 										{
-											if (TrainManager.PlayerTrain.CameraCar > 0)
-											{
-												TrainManager.PlayerTrain.CameraCar--;
-												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
-												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
-											}
+											TrainManagerBase.PlayerTrain.ChangeCameraCar(true);
 											return;
 										}
 										//Otherwise, check if we can move up to the next POI
@@ -1013,7 +1012,7 @@ namespace OpenBve
 											Program.Renderer.Camera.Alignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
 												0.0);
 										}
-										Program.Renderer.Camera.Alignment.Yaw = 0.0;
+										Program.Renderer.Camera.Alignment.Yaw = Program.CurrentRoute.ReverseDirection ? 180 / 57.2957795130824 : 0;
 										Program.Renderer.Camera.Alignment.Pitch = 0.0;
 										Program.Renderer.Camera.Alignment.Roll = 0.0;
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Track)
