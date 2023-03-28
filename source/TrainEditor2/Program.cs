@@ -40,7 +40,7 @@ namespace TrainEditor2
 
 			try
 			{
-				FileSystem = FileSystem.FromCommandLineArgs(new string[0], null);
+				FileSystem = FileSystem.FromCommandLineArgs(new string[0], CurrentHost);
 				FileSystem.CreateFileSystem();
 			}
 			catch (Exception ex)
