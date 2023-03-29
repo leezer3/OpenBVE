@@ -13,21 +13,30 @@ namespace Plugin
 		// --- structures and enumerations ---
 		private abstract class WaveFormatEx
 		{
-			internal ushort wFormatTag;
+			internal readonly ushort wFormatTag;
 			internal ushort nChannels;
 			internal uint nSamplesPerSec;
 			internal uint nAvgBytesPerSec;
 			internal ushort nBlockAlign;
 			internal ushort wBitsPerSample;
 			internal ushort cbSize;
+
+			protected WaveFormatEx(ushort tag)
+			{
+				wFormatTag = tag;
+			}
 		}
 
 		private class WaveFormatPcm : WaveFormatEx
 		{
+			public WaveFormatPcm(ushort tag) : base(tag)
+			{
+			}
 		}
 
 		private class WaveFormatAdPcm : WaveFormatEx
 		{
+
 			internal struct CoefSet
 			{
 				internal short iCoef1;
@@ -61,10 +70,24 @@ namespace Plugin
 				230, 230, 230, 230, 307, 409, 512, 614,
 				768, 614, 512, 409, 307, 230, 230, 230
 			};
+
+			public WaveFormatAdPcm(ushort tag) : base(tag)
+			{
+			}
 		}
 
 		private class WaveFormatMp3 : WaveFormatEx
 		{
+			public WaveFormatMp3(ushort tag) : base(tag)
+			{
+			}
+		}
+
+		private class WaveFormatExtensible : WaveFormatEx
+		{
+			public WaveFormatExtensible(ushort tag) : base(tag)
+			{
+			}
 		}
 
 
@@ -194,22 +217,25 @@ namespace Plugin
 
 					ushort wFormatTag = reader.ReadUInt16(endianness);
 
-					if (wFormatTag == 0x0001 || wFormatTag == 0x0003)
+					switch (wFormatTag)
 					{
-						format = new WaveFormatPcm { wFormatTag = wFormatTag };
-					}
-					else if (wFormatTag == 0x0002)
-					{
-						format = new WaveFormatAdPcm { wFormatTag = wFormatTag };
-					}
-					else if (wFormatTag == 0x0050 || wFormatTag == 0x0055)
-					{
-						format = new WaveFormatMp3 { wFormatTag = wFormatTag };
-					}
-					else
-					{
-						// unsupported format
-						throw new InvalidDataException("Unsupported wFormatTag");
+						case 0x0001:
+						case 0x0003:
+							format = new WaveFormatPcm(wFormatTag);
+							break;
+						case 0x0002:
+							format = new WaveFormatAdPcm(wFormatTag);
+							break;
+						case 0x0050:
+						case 0x0055:
+							format = new WaveFormatMp3(wFormatTag);
+							break;
+						case 0xFFFE:
+							format = new WaveFormatExtensible(wFormatTag);
+							break;
+						default:
+							// unsupported format
+							throw new InvalidDataException("Unsupported wFormatTag");
 					}
 
 					format.nChannels = reader.ReadUInt16(endianness);
@@ -491,6 +517,7 @@ namespace Plugin
 			switch (formatTag)
 			{
 				case 0x0001:
+				case 0xFFFE:
 					switch (bytesPerSample)
 					{
 						case 3:
