@@ -109,7 +109,7 @@ namespace AssimpNET.X
 	public class Material
 	{
 		public string Name;
-		public bool IsReference; // if true, mName holds a name by which the actual material can be found in the material list
+		public readonly bool IsReference; // if true, mName holds a name by which the actual material can be found in the material list
 		public Color128 Diffuse;
 		public float SpecularExponent;
 		public Color128 Specular;
@@ -117,21 +117,37 @@ namespace AssimpNET.X
 		public List<TexEntry> Textures = new List<TexEntry>();
 
 		public uint SceneIndex; // the index under which it was stored in the scene's material list
+
+		public Material(bool isReference)
+		{
+			IsReference = isReference;
+		}
 	}
 
 	/** Helper structure to represent a bone weight */
 	public class BoneWeight
 	{
-		public uint Vertex;
+		public readonly uint Vertex;
 		public float Weight;
+
+		public BoneWeight(uint vertex)
+		{
+			Vertex = vertex;
+		}
+
 	}
 
 	/** Helper structure to represent a bone in a mesh */
 	public class Bone
 	{
-		public string Name;
+		public readonly string Name;
 		public List<BoneWeight> Weights = new List<BoneWeight>();
 		public Matrix4D OffsetMatrix;
+
+		public Bone(string name)
+		{
+			Name = name;
+		}
 	}
 
 	/** Helper structure to represent an XFile mesh */
@@ -190,8 +206,13 @@ namespace AssimpNET.X
 	/** Helper structure to represent an animation set in a XFile */
 	public class Animation
 	{
-		public string Name;
+		public readonly string Name;
 		public List<AnimBone> Anims = new List<AnimBone>();
+
+		public Animation(string name)
+		{
+			Name = name;
+		}
 	}
 
 	/** Helper structure analogue to aiScene */

@@ -46,23 +46,14 @@ namespace OpenBveApi.Trains
 		public abstract double RearCarTrackPosition();
 
 		/// <summary>Returns true if this is the player driven train</summary>
-		public virtual bool IsPlayerTrain
-		{
-			get
-			{
-				//An abstract train in and of itself cannot be the player train
-				return false;
-			}
-		}
+		/// <remarks>NOTE: An abstract train in and of itself cannot be the player train</remarks>
+		public virtual bool IsPlayerTrain => false;
 
 		/// <summary>Returns the number of cars in this train</summary>
-		public virtual int NumberOfCars
-		{
-			get
-			{
-				return 0;
-			}
-		}
+		public virtual int NumberOfCars => 0;
+
+		/// <summary>Gets the length of the train</summary>
+		public virtual double Length => 0;
 
 		/// <summary>Updates the train</summary>
 		/// <param name="TimeElapsed">The time elapsed since the last call to update</param>

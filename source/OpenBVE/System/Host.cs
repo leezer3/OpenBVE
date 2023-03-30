@@ -565,7 +565,7 @@ namespace OpenBve {
 			{
 				Value = Score,
 				Color = Color,
-				RendererPosition = new Vector2(0, 0),
+				RendererPosition = Vector2.Null,
 				RendererAlpha = 0.0,
 				Text = Message,
 				Timeout = Timeout

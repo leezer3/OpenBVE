@@ -5,6 +5,7 @@ using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
@@ -76,6 +77,20 @@ namespace TrainManager.Trains
 
 				r /= Cars.Length;
 				return r;
+			}
+		}
+
+		public override double Length
+		{
+			get
+			{
+				double myLength = 0;
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					myLength += Cars[i].Length;
+				}
+
+				return myLength;
 			}
 		}
 

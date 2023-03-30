@@ -94,7 +94,7 @@ namespace Plugin
 						for (int i = 0; i < nVerts; i++)
 						{
 							Vertex v = new Vertex(allVertices[(int)face.Vertices[i]]);
-							if (allTexCoords.Count > 0 && i <= allTexCoords.Count)
+							if (allTexCoords.Count > 0 && i <= allTexCoords.Count && face.TexturCoords.Count > 0 && i <= face.TexturCoords.Count)
 							{
 								v.TextureCoordinates = allTexCoords[(int)face.TexturCoords[i]];
 							}
@@ -102,10 +102,7 @@ namespace Plugin
 							
 						}
 
-						MeshFace f = new MeshFace
-						{
-							Vertices = new MeshFaceVertex[nVerts]
-						};
+						MeshFace f = new MeshFace(nVerts);
 						for (int i = 0; i < nVerts; i++)
 						{
 							f.Vertices[i].Index = (ushort)i;

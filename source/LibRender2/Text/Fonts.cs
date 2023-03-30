@@ -1,7 +1,4 @@
-﻿
-using System.Drawing;
-using System.Drawing.Text;
-using OpenBveApi.FileSystem;
+﻿using System.Drawing;
 using OpenBveApi.Hosts;
 
 namespace LibRender2.Text
@@ -71,7 +68,7 @@ namespace LibRender2.Text
 			}
 		}
 		
-		public Fonts(HostInterface host, FileSystem fileSystem, string fontName)
+		public Fonts(HostInterface host, string fontName)
 		{
 			currentHost = host;
 			FontFamily uiFont = FontFamily.GenericSansSerif;

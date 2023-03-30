@@ -326,7 +326,7 @@ namespace TrainManager.SafetySystems
 					else
 					{
 						this.Train.Handles.EmergencyBrake.Release();
-						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 					}
 				}
 				else if (handles.BrakeNotch == 3)

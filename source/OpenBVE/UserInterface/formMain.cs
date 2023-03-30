@@ -586,7 +586,7 @@ namespace OpenBve {
 				{
 					SetFont(Controls, font.Name);
 					Interface.CurrentOptions.Font = font.Name;
-					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, font.Name);
+					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, font.Name);
 				}
 				catch
 				{
@@ -594,7 +594,7 @@ namespace OpenBve {
 					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					SetFont(Controls, oldFont);
 					Interface.CurrentOptions.Font = oldFont;
-					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, Program.FileSystem, oldFont);
+					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, oldFont);
 				}
 				
 			}

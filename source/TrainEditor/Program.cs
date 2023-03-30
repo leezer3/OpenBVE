@@ -12,6 +12,7 @@ namespace TrainEditor {
 		/// <summary>Information about the file system organization.</summary>
 		internal static FileSystem FileSystem = null;
 
+		internal static HostInterface CurrentHost;
 		// --- functions ---
 
 		/// <summary>Is executed when the program starts.</summary>
@@ -20,8 +21,9 @@ namespace TrainEditor {
 		private static void Main(string[] args) {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+			CurrentHost = new Host();
 			try {
-				FileSystem = FileSystem.FromCommandLineArgs(args, null);
+				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 				FileSystem.CreateFileSystem();
 			} catch (Exception ex) {
 				MessageBox.Show(Translations.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, "TrainEditor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
