@@ -251,8 +251,6 @@ namespace OpenBve.Graphics
 			{
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
 				alphaFaces = VisibleObjects.GetSortedPolygons();
-				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
-				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
 			}
 			
 			foreach (FaceState face in opaqueFaces)
@@ -349,6 +347,12 @@ namespace OpenBve.Graphics
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
+			lock (VisibleObjects.LockObject)
+			{
+				// Due to what is probably a timing issue, get the overlay faces separately immediately before drawing to avoid occasional flickering in some cab components
+				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
+				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
+			}
 			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
 			{
 				ResetOpenGlState(); // TODO: inserted
