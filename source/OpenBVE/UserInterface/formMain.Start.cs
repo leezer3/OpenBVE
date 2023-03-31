@@ -1437,7 +1437,17 @@ namespace OpenBve
 						trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(Result.TrainFolder);
 						if (!UserSelectedEncoding)
 						{
-							Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
+							string descriptionFile = Path.CombineFile(Result.TrainFolder, "train.txt");
+							if (!File.Exists(descriptionFile))
+							{
+								descriptionFile = Path.CombineFile(Result.TrainFolder, "readme.txt");
+							}
+
+							if (!File.Exists(descriptionFile))
+							{
+								descriptionFile = Path.CombineFile(Result.TrainFolder, "read me.txt");
+							}
+							Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(descriptionFile);
 							comboboxTrainEncoding.Tag = new object();
 							comboboxTrainEncoding.SelectedIndex = 0;
 							comboboxTrainEncoding.Items[0] = $"{Result.TrainEncoding.EncodingName} - {Result.TrainEncoding.CodePage}";
