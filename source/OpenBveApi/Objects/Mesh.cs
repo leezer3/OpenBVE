@@ -41,7 +41,7 @@ namespace OpenBveApi.Objects
 			this.Faces[0].Vertices = new MeshFaceVertex[Vertices.Length];
 			for (int i = 0; i < Vertices.Length; i++)
 			{
-				this.Faces[0].Vertices[i].Index = (ushort) i;
+				this.Faces[0].Vertices[i].Index = i;
 			}
 
 			this.BoundingBox = new Vector3[2];

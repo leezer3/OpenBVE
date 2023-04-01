@@ -105,7 +105,7 @@ namespace Plugin
 						MeshFace f = new MeshFace(nVerts);
 						for (int i = 0; i < nVerts; i++)
 						{
-							f.Vertices[i].Index = (ushort)i;
+							f.Vertices[i].Index = i;
 							f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
 						}
 						f.Material = 1;

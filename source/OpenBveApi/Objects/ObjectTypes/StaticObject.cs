@@ -238,7 +238,7 @@ namespace OpenBveApi.Objects
 				Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
 				for (int j = 0; j < Mesh.Faces[mf + i].Vertices.Length; j++)
 				{
-					Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+					Mesh.Faces[mf + i].Vertices[j].Index += mv;
 				}
 
 				Mesh.Faces[mf + i].Material += (ushort) mm;
@@ -683,7 +683,7 @@ namespace OpenBveApi.Objects
 								{
 									if (Mesh.Faces[k].Vertices[h].Index == j)
 									{
-										Mesh.Faces[k].Vertices[h].Index = (ushort) i;
+										Mesh.Faces[k].Vertices[h].Index = i;
 									}
 									else if (Mesh.Faces[k].Vertices[h].Index > j)
 									{

@@ -275,7 +275,7 @@ namespace Plugin
 
 						for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
 						{
-							Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+							Object.Mesh.Faces[mf + i].Vertices[j].Index += mv;
 						}
 
 						Object.Mesh.Faces[mf + i].Material += (ushort) mm;
