@@ -190,7 +190,7 @@ namespace Plugin
 				MeshFace f = new MeshFace(fVerts);
 				for (int j = 0; j < fVerts; j++)
 				{
-					f.Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];
+					f.Vertices[j].Index = (int)mesh.PosFaces[i].Indices[j];
 				}
 				builder.Faces.Add(f);
 			}

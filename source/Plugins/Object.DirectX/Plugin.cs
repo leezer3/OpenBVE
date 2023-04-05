@@ -55,7 +55,7 @@ namespace Plugin
 			    currentXParser = (XParsers) parserType;
 			    if (currentXParser == XParsers.Original)
 			    {
-				    currentHost.AddMessage(MessageType.Error, false, "The original X Parser has been deprecated- Using the NewXParser");
+				    currentHost.AddMessage(MessageType.Information, false, "The original X Parser has been deprecated- Using the NewXParser");
 			    }
 		    }
 	    }

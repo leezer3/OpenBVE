@@ -43,6 +43,9 @@ namespace OpenBve.Formats.DirectX
 
 		public int FloatingPointSize;
 
+		/// <summary>Reads an integer from the block</summary>
+		public abstract int ReadUInt();
+
 		/// <summary>Reads an unsigned 16-bit integer from the block</summary>
 		public abstract ushort ReadUInt16();
 
@@ -425,6 +428,25 @@ namespace OpenBve.Formats.DirectX
 
 		private int startPosition;
 
+		public override int ReadUInt()
+		{
+			startPosition = currentPosition;
+			string s = getNextValue();
+			if (char.IsWhiteSpace(myText[currentPosition]))
+			{
+				while (char.IsWhiteSpace(myText[currentPosition]))
+				{
+					currentPosition++;
+				}
+			}
+			int val;
+			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out val))
+			{
+				return val;
+			}
+			throw new Exception("Unable to parse " + s + " to a valid integer in block " + Token);
+		}
+
 		public override ushort ReadUInt16()
 		{
 			startPosition = currentPosition;
@@ -714,13 +736,18 @@ namespace OpenBve.Formats.DirectX
 			}
 		}
 
+		public override int ReadUInt()
+		{
+			int u = cachedIntegers[0];
+			cachedIntegers.RemoveAt(0);
+			return u;
+		}
+
 		public override ushort ReadUInt16()
 		{
 			ushort u = (ushort)cachedIntegers[0];
 			cachedIntegers.RemoveAt(0);
 			return u;
-
-
 		}
 
 		public override float ReadSingle()

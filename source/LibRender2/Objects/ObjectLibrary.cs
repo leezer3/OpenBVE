@@ -22,12 +22,12 @@ namespace LibRender2.Objects
 		private readonly List<FaceState> myOpaqueFaces;
 		private readonly List<FaceState> myAlphaFaces;
 		private readonly List<FaceState> myOverlayOpaqueFaces;
-		private readonly List<FaceState> myOverlayAlphaFaces;
+		private List<FaceState> myOverlayAlphaFaces;
 		public readonly ReadOnlyCollection<ObjectState> Objects;
 		public readonly ReadOnlyCollection<FaceState> OpaqueFaces;  // StaticOpaque and DynamicOpaque
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
 		public readonly ReadOnlyCollection<FaceState> AlphaFaces;  // DynamicAlpha
-		public readonly ReadOnlyCollection<FaceState> OverlayAlphaFaces;
+		public ReadOnlyCollection<FaceState> OverlayAlphaFaces;
 
 		public readonly object LockObject = new object();
 
@@ -262,7 +262,13 @@ namespace LibRender2.Objects
 
 		public List<FaceState> GetSortedPolygons(bool overlay = false)
 		{
-			return GetSortedPolygons(overlay ? OverlayAlphaFaces : AlphaFaces);
+			if (overlay)
+			{
+				myOverlayAlphaFaces = GetSortedPolygons(myOverlayAlphaFaces.AsReadOnly());
+				OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
+				return OverlayAlphaFaces.ToList();
+			}
+			return GetSortedPolygons(AlphaFaces);
 		}
 
 		private List<FaceState> GetSortedPolygons(ReadOnlyCollection<FaceState> faces)
@@ -300,7 +306,6 @@ namespace LibRender2.Objects
 					}
 				}
 			});
-
 			// sort
 			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
 		}

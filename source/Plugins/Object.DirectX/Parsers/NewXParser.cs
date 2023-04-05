@@ -271,7 +271,7 @@ namespace Plugin
 						builder.Apply(ref obj);
 						builder = new MeshBuilder(Plugin.currentHost);
 					}
-					int nVerts = block.ReadUInt16();
+					int nVerts = block.ReadUInt();
 					if (nVerts == 0)
 					{
 						//Some null objects contain an empty mesh
@@ -281,7 +281,7 @@ namespace Plugin
 					{
 						builder.Vertices.Add(new Vertex(new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle())));
 					}
-					int nFaces = block.ReadUInt16();
+					int nFaces = block.ReadUInt();
 					if (nFaces == 0)
 					{
 						try
@@ -312,7 +312,7 @@ namespace Plugin
 					}
 					for (int i = 0; i < nFaces; i++)
 					{
-						int fVerts = block.ReadUInt16();
+						int fVerts = block.ReadUInt();
 						if (fVerts == 0)
 						{
 							// Assuming here that a face must contain vertices
@@ -322,7 +322,7 @@ namespace Plugin
 						MeshFace f = new MeshFace(fVerts);
 						for (int j = 0; j < fVerts; j++)
 						{
-							f.Vertices[j].Index = block.ReadUInt16();
+							f.Vertices[j].Index = block.ReadUInt();
 						}
 						builder.Faces.Add(f);
 					}
@@ -334,12 +334,12 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.MeshMaterialList:
-					int nMaterials = block.ReadUInt16();
-					int nFaceIndices = block.ReadUInt16();
+					int nMaterials = block.ReadUInt();
+					int nFaceIndices = block.ReadUInt();
 					if (nFaceIndices == 1 && builder.Faces.Count > 1)
 					{
 						//Single material for all faces
-						int globalMaterial = block.ReadUInt16();
+						int globalMaterial = block.ReadUInt();
 						for (int i = 0; i < builder.Faces.Count; i++)
 						{
 							MeshFace f = builder.Faces[i];
@@ -351,7 +351,7 @@ namespace Plugin
 					{
 						for (int i = 0; i < nFaceIndices; i++)
 						{
-							int fMaterial = block.ReadUInt16();
+							int fMaterial = block.ReadUInt();
 							MeshFace f = builder.Faces[i];
 							f.Material = (ushort) (fMaterial + 1);
 							builder.Faces[i] = f;
@@ -435,43 +435,43 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.MeshTextureCoords:
-					int nCoords = block.ReadUInt16();
+					int nCoords = block.ReadUInt();
 					for (int i = 0; i < nCoords; i++)
 					{
 						builder.Vertices[i].TextureCoordinates = new Vector2(block.ReadSingle(), block.ReadSingle());
 					}
 					break;
 				case TemplateID.MeshNormals:
-					int nNormals = block.ReadUInt16();
+					int nNormals = block.ReadUInt();
 					Vector3[] normals = new Vector3[nNormals];
 					for (int i = 0; i < nNormals; i++)
 					{
 						normals[i] = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 						normals[i].Normalize();
 					}
-					int nFaceNormals = block.ReadUInt16();
+					int nFaceNormals = block.ReadUInt();
 					if (nFaceNormals != builder.Faces.Count)
 					{
 						throw new Exception("nFaceNormals must match the number of faces in the mesh");
 					}
 					for (int i = 0; i < nFaceNormals; i++)
 					{
-						int nVertexNormals = block.ReadUInt16();
+						int nVertexNormals = block.ReadUInt();
 						if (nVertexNormals != builder.Faces[i].Vertices.Length)
 						{
 							throw new Exception("nVertexNormals must match the number of verticies in the face");
 						}
 						for (int j = 0; j < nVertexNormals; j++)
 						{
-							builder.Faces[i].Vertices[j].Normal = normals[block.ReadUInt16()];
+							builder.Faces[i].Vertices[j].Normal = normals[block.ReadUInt()];
 						}
 					}
 					break;
 				case TemplateID.MeshVertexColors:
-					int nVertexColors = block.ReadUInt16();
+					int nVertexColors = block.ReadUInt();
 					for (int i = 0; i < nVertexColors; i++)
 					{
-						int idx = block.ReadUInt16();
+						int idx = block.ReadUInt();
 						if (idx >= builder.Vertices.Count)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MeshVertexColors index " + idx +  " should be less than nVertices in Mesh " + block.Label);
@@ -492,7 +492,7 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.MeshFaceWraps:
-					int nMeshFaceWraps = block.ReadUInt16();
+					int nMeshFaceWraps = block.ReadUInt();
 					if (nMeshFaceWraps != builder.Faces.Count)
 					{
 						throw new Exception("nMeshFaceWraps must match the number of faces in the mesh");

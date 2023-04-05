@@ -305,7 +305,7 @@ namespace Plugin
 													//Set coordinates
 													Builder.Vertices.Add(new Vertex(tempVertices[currentVertex].Coordinates));
 													//Set the vertex index
-													f.Vertices[j].Index = (ushort)(Builder.Vertices.Count - 1);
+													f.Vertices[j].Index = Builder.Vertices.Count - 1;
 													//Set the normals
 													f.Vertices[j].Normal = tempNormals[currentVertex];
 													//Now deal with the texture

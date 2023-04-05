@@ -400,6 +400,11 @@ namespace Train.OpenBve
 					// No description, but a readme- Let's try that instead to at least give something
 					descriptionFile = Path.CombineFile(trainPath, "readme.txt");
 			    }
+			    if (!File.Exists(descriptionFile))
+			    {
+				    // another variant on readme
+				    descriptionFile = Path.CombineFile(trainPath, "read me.txt");
+			    }
 			    if (File.Exists(descriptionFile))
 			    {
 				    if (encoding == null)
