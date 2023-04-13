@@ -210,8 +210,7 @@ namespace OpenBve
 			MainLoop.ProcessControls(TimeElapsed);
 			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 			{
-				var railDriver = Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] as AbstractRailDriver;
-				if (railDriver != null)
+				if (Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver railDriver)
 				{
 					if (Interface.CurrentOptions.RailDriverMPH)
 					{
@@ -242,7 +241,10 @@ namespace OpenBve
 			{
 				Interface.SaveLogs();
 			}
-			catch { }
+			catch
+			{
+				Interface.CurrentOptions.BlackBox = false;
+			}
 		}
 
 		protected override void OnUpdateFrame(FrameEventArgs e)
@@ -255,7 +257,7 @@ namespace OpenBve
 			{
 				
 				RealTimeElapsed = CPreciseTimer.GetElapsedTime();
-				TimeElapsed = RealTimeElapsed * (double)TimeFactor;
+				TimeElapsed = RealTimeElapsed * TimeFactor;
 				if (loadComplete && !firstFrame)
 				{
 					//Our current in-game time is equal to or greater than the startup time, but the first frame has not yet been processed
@@ -310,7 +312,7 @@ namespace OpenBve
 					{
 						const int maxChunks = 2;
 						int chunks = Math.Min((int) Math.Round(TimeElapsed/chunkTime), maxChunks);
-						double time = TimeElapsed/(double) chunks;
+						double time = TimeElapsed/chunks;
 						for (int i = 0; i < chunks; i++)
 						{
 							Program.CurrentRoute.SecondsSinceMidnight += time;
@@ -894,23 +896,23 @@ namespace OpenBve
 				string Messages;
 				if (filesNotFound != 0)
 				{
-					NotFound = filesNotFound.ToString() + " file(s) not found";
+					NotFound = filesNotFound + " file(s) not found";
 					MessageManager.AddMessage(NotFound, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					
 				}
 				if (errors != 0 & warnings != 0)
 				{
-					Messages = errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)";
+					Messages = errors + " error(s), " + warnings + " warning(s)";
 					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				else if (errors != 0)
 				{
-					Messages = errors.ToString() + " error(s)";
+					Messages = errors + " error(s)";
 					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				else
 				{
-					Messages = warnings.ToString() + " warning(s)";
+					Messages = warnings + " warning(s)";
 					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				Program.CurrentRoute.Information.FilesNotFound = NotFound;
@@ -1133,11 +1135,6 @@ namespace OpenBve
 				//A missing texture is probably better than an infinite loadscreen
 				Monitor.Wait(locker, 1000);
 			}
-		}
-		
-		public override void Dispose()
-		{
-			base.Dispose();
 		}
 	}
 }

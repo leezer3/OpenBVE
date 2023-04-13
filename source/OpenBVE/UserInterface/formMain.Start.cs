@@ -372,8 +372,7 @@ namespace OpenBve
 		{
 			if (listviewRouteFiles.SelectedItems.Count == 1)
 			{
-				string t = listviewRouteFiles.SelectedItems[0].Tag as string;
-				if (t != null)
+				if (listviewRouteFiles.SelectedItems[0].Tag is string t)
 				{
 					if (t.Length == 0 || Directory.Exists(t))
 					{
@@ -391,8 +390,7 @@ namespace OpenBve
 					listviewRouteFiles_DoubleClick(null, null);
 					break;
 				case Keys.Back:
-					string t = listviewRouteFiles.Tag as string;
-					if (t != null)
+					if (listviewRouteFiles.Tag is string t)
 					{
 						if (t.Length == 0 || Directory.Exists(t))
 						{
@@ -407,8 +405,7 @@ namespace OpenBve
 		{
 			if (listViewRoutePackages.SelectedItems.Count == 1)
 			{
-				string t = listViewRoutePackages.SelectedItems[0].Tag as string;
-				if (t != null)
+				if (listViewRoutePackages.SelectedItems[0].Tag is string t)
 				{
 					if (t.Length == 0 || Directory.Exists(t))
 					{

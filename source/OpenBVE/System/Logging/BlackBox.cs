@@ -103,7 +103,7 @@ namespace OpenBve
 		/// <summary>Saves the current in-game black box log</summary>
 		internal static void SaveLogs(bool forceSave = false)
 		{
-			if (Interface.CurrentOptions.BlackBox == false)
+			if (CurrentOptions.BlackBox == false)
 			{
 				return;
 			}

@@ -15,13 +15,7 @@ namespace OpenBve.Input
 		internal bool RailDriverInit;
 
 		/// <summary>Gets the number of RailDriver controllers connected</summary>
-		internal virtual int RailDriverCount
-		{
-			get
-			{
-				return 0;
-			}
-		}
+		internal virtual int RailDriverCount => 0;
 
 		internal ButtonState GetButton(Guid Device, int Button)
 		{

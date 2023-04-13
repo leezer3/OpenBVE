@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using DavyKager;
-using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Overlays;
 using LibRender2.Screens;
