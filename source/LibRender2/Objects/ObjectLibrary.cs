@@ -104,20 +104,22 @@ namespace LibRender2.Objects
 				{
 					if (State.Prototype.Mesh.Materials[face.Material].WrapMode == null)
 					{
-						// If the object does not have a stored wrapping mode, determine it now
-						foreach (VertexTemplate vertex in State.Prototype.Mesh.Vertices)
+						if (State.Prototype.Mesh.Vertices.Length < 5000)
 						{
-							if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+							// If the object does not have a stored wrapping mode and has a sensible number of verticies to check, determine it now
+							foreach (VertexTemplate vertex in State.Prototype.Mesh.Vertices)
 							{
-								wrap |= OpenGlTextureWrapMode.RepeatClamp;
-							}
+								if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.RepeatClamp;
+								}
 
-							if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
-							{
-								wrap |= OpenGlTextureWrapMode.ClampRepeat;
+								if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.ClampRepeat;
+								}
 							}
 						}
-
 						State.Prototype.Mesh.Materials[face.Material].WrapMode = wrap;
 					}
 				}
@@ -194,7 +196,7 @@ namespace LibRender2.Objects
 						}
 					}
 				}
-
+				
 				List<FaceState> list;
 
 				switch (Type)
