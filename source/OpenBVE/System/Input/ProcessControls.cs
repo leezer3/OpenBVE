@@ -1451,10 +1451,10 @@ namespace OpenBve
 												if (TrainManager.PlayerTrain.Plugin != null)
 												{
 													TrainManager.PlayerTrain.Plugin.HornBlow(j == 0
-														? OpenBveApi.Runtime.HornTypes.Primary
+														? HornTypes.Primary
 														: j == 1
-															? OpenBveApi.Runtime.HornTypes.Secondary
-															: OpenBveApi.Runtime.HornTypes.Music);
+															? HornTypes.Secondary
+															: HornTypes.Music);
 												}
 											}
 										}

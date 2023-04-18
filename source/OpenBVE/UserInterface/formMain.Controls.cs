@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBve.Input;
 using OpenBve.UserInterface;
@@ -10,7 +8,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenTK.Input;
 using Key = OpenBveApi.Input.Key;
-using Control = OpenBveApi.Interface.Control;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
@@ -599,7 +596,7 @@ namespace OpenBve {
 			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 			Font f = new Font(this.Font.Name, 0.875f * this.Font.Size);
 			float x = 2.0f, y = 2.0f;
-			float threshold = ((float)trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (float)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
+			float threshold = (trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 			configureLinkLocations = new Vector2[Program.Joysticks.AttachedJoysticks.Count][];
 			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
@@ -753,16 +750,12 @@ namespace OpenBve {
 						float v = y + h + 8.0f;
 						{ // axes
 							int n = Program.Joysticks.AttachedJoysticks[guid].AxisCount();
-							float g = (float)pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
+							float g = pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
 							for (int j = 0; j < n; j++) {
 								float r = (float)Program.Joysticks.AttachedJoysticks[guid].GetAxis(j);
 								float r0 = r < 0.0f ? r : 0.0f;
 								float r1 = r > 0.0f ? r : 0.0f;
-								if ((float)Math.Abs((double)r) < threshold) {
-									e.Graphics.FillRectangle(Brushes.RosyBrown, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
-								} else {
-									e.Graphics.FillRectangle(Brushes.Firebrick, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
-								}
+								e.Graphics.FillRectangle((float)Math.Abs((double)r) < threshold ? Brushes.RosyBrown : Brushes.Firebrick, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
 								if (device == i & component == JoystickComponent.Axis & element == j) {
 									if (direction == -1 & type != Translations.CommandType.AnalogFull) {
 										e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
@@ -787,10 +780,10 @@ namespace OpenBve {
 						
 						{ // buttons
 							int n = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
-							float g = (float)0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
+							float g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 							for (int j = 0; j < n; j++) {
 								bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
-								float dv = (float)(j & 1) * (g + 8.0f);
+								float dv = (j & 1) * (g + 8.0f);
 								if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
 								if (device == i & component == JoystickComponent.Button & element == j) {
 									e.Graphics.DrawRectangle(ps, u, v + dv, g, g);

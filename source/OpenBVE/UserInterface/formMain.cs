@@ -468,7 +468,7 @@ namespace OpenBve {
 			checkboxJoysticksUsed.Checked = Interface.CurrentOptions.UseJoysticks;
 			checkBoxEBAxis.Checked = Interface.CurrentOptions.AllowAxisEB;
 			{
-				double a = (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum) * Interface.CurrentOptions.JoystickAxisThreshold + (double)trackbarJoystickAxisThreshold.Minimum;
+				double a = (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum) * Interface.CurrentOptions.JoystickAxisThreshold + trackbarJoystickAxisThreshold.Minimum;
 				int b = (int)Math.Round(a);
 				if (b < trackbarJoystickAxisThreshold.Minimum) b = trackbarJoystickAxisThreshold.Minimum;
 				if (b > trackbarJoystickAxisThreshold.Maximum) b = trackbarJoystickAxisThreshold.Maximum;
@@ -1106,7 +1106,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;
 			Interface.CurrentOptions.AllowAxisEB = checkBoxEBAxis.Checked;
-			Interface.CurrentOptions.JoystickAxisThreshold = ((double)trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
+			Interface.CurrentOptions.JoystickAxisThreshold = (trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 			Interface.CurrentOptions.SoundNumber = (int)Math.Round(updownSoundNumber.Value);
 			Interface.CurrentOptions.ShowWarningMessages = checkboxWarningMessages.Checked;
 			Interface.CurrentOptions.ShowErrorMessages = checkboxErrorMessages.Checked;

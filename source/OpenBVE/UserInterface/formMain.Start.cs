@@ -277,8 +277,7 @@ namespace OpenBve
 										continue;
 									}
 
-									string error;
-									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 									{
 										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 									}
@@ -808,8 +807,7 @@ namespace OpenBve
 		}
 		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e)
 		{
-			string error;
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -868,8 +866,7 @@ namespace OpenBve
 
 		private void listViewTrainPackages_DoubleClick(object sender, EventArgs e)
 		{
-			string error;
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -1195,8 +1192,7 @@ namespace OpenBve
 
 		private void PreviewLoadRoute(LaunchParameters result)
 		{
-			string error; //ignored in this case, background thread
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -1417,8 +1413,7 @@ namespace OpenBve
 		{
 			lock (previewLock)
 			{
-				string error; //ignored in this case, background thread
-				if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+				if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 				{
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}

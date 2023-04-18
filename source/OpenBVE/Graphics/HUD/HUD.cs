@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenBveApi.Sounds;
 using SoundManager;
 
 namespace OpenBve
@@ -530,7 +529,7 @@ namespace OpenBve
 												}
 												else
 												{
-													CurrentHudElements[Length - 1].Transition = (HUD.Transition) n;
+													CurrentHudElements[Length - 1].Transition = (Transition) n;
 												}
 											}
 											else

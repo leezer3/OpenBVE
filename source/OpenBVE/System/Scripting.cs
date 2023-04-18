@@ -127,8 +127,7 @@ namespace OpenBve
                         // hack: MotorAcceleration does not distinguish between forward/backward
                         if (Train.Cars[j].Specs.MotorAcceleration < 0.0)
                         {
-                            return Train.Cars[j].Specs.MotorAcceleration*
-                                   (double) Math.Sign(Train.Cars[j].CurrentSpeed);
+                            return Train.Cars[j].Specs.MotorAcceleration * Math.Sign(Train.Cars[j].CurrentSpeed);
                         }
                         if (Train.Cars[j].Specs.MotorAcceleration > 0.0)
                         {
@@ -152,13 +151,11 @@ namespace OpenBve
                     // hack: MotorAcceleration does not distinguish between forward/backward
                     if (Train.Cars[CarIndex].Specs.MotorAcceleration < 0.0)
                     {
-                        return Train.Cars[CarIndex].Specs.MotorAcceleration*
-                               (double) Math.Sign(Train.Cars[CarIndex].CurrentSpeed);
+                        return Train.Cars[CarIndex].Specs.MotorAcceleration * Math.Sign(Train.Cars[CarIndex].CurrentSpeed);
                     }
                     if (Train.Cars[CarIndex].Specs.MotorAcceleration > 0.0)
                     {
-                        return Train.Cars[CarIndex].Specs.MotorAcceleration*
-                               (double) Train.Handles.Reverser.Actual;
+                        return Train.Cars[CarIndex].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
                     }
                 }
                 return 0.0;
@@ -554,25 +551,25 @@ namespace OpenBve
                     {
                         return 3;
                     }
-                    return (int) Train.Handles.Brake.Driver;
+                    return Train.Handles.Brake.Driver;
                 }
                 if (Train.Handles.HasHoldBrake)
                 {
                     if (Train.Handles.EmergencyBrake.Driver)
                     {
-                        return (int) Train.Handles.Brake.MaximumNotch + 2;
+                        return Train.Handles.Brake.MaximumNotch + 2;
                     }
                     if (Train.Handles.Brake.Driver > 0)
                     {
-                        return (int) Train.Handles.Brake.Driver + 1;
+                        return Train.Handles.Brake.Driver + 1;
                     }
                     return Train.Handles.HoldBrake.Driver ? 1 : 0;
                 }
                 if (Train.Handles.EmergencyBrake.Driver)
                 {
-                    return (int) Train.Handles.Brake.MaximumNotch + 1;
+                    return Train.Handles.Brake.MaximumNotch + 1;
                 }
-                return (int) Train.Handles.Brake.Driver;
+                return Train.Handles.Brake.Driver;
             }
 
             /// <summary>Returns the maximum possible brake notch (Including EB) for the selected train</summary>
