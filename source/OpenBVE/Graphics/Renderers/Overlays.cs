@@ -56,15 +56,15 @@ namespace OpenBve.Graphics.Renderers
 					//HUD
 					foreach (HUD.Element element in HUD.CurrentHudElements)
 					{
-						switch (element.Subject.ToLowerInvariant())
+						switch (element.Subject)
 						{
-							case "messages":
+							case HUDSubject.Messages:
 								RenderGameMessages(element, TimeElapsed);
 								break;
-							case "scoremessages":
+							case HUDSubject.ScoreMessages:
 								RenderScoreMessages(element, TimeElapsed);
 								break;
-							case "ats":
+							case HUDSubject.ATS:
 								RenderATSLamps(element, TimeElapsed);
 								break;
 							default:

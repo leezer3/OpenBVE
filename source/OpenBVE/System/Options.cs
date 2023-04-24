@@ -25,10 +25,8 @@ namespace OpenBve
 			internal MotionBlurMode MotionBlur;
 			/// <summary>Whether duplicate verticies are culled during loading</summary>
 			internal bool ObjectOptimizationVertexCulling;
-			
 			/// <summary>Whether collisions between trains are enabled</summary>
 			internal bool Collisions;
-			
 			/// <summary>Whether the black-box data logger is enabled</summary>
 			internal bool BlackBox;
 			/// <summary>Whether joystick support is enabled</summary>
@@ -78,7 +76,6 @@ namespace OpenBve
 			internal bool PreferNativeBackend = true;
 			/// <summary>Stores whether the RailDriver speed display is in MPH (true) or KPH (false)</summary>
 			internal bool RailDriverMPH;
-			
 			/// <summary>The list of enable Input Device Plugins</summary>
 			internal string[] EnableInputDevicePlugins;
 			/// <summary>The time in seconds after which the mouse cursor is hidden</summary>

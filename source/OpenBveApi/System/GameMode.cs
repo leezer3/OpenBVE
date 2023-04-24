@@ -9,5 +9,7 @@
 		Normal = 1,
 		/// <summary>Expert</summary>
 		Expert = 2,
+		/// <summary>Developer</summary>
+		Developer = 3
 	}
 }
