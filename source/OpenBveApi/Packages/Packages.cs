@@ -380,7 +380,7 @@ namespace OpenBveApi.Packages
 			}
 			catch (Exception ex)
 			{
-				OnProblemReport(null, new ProblemReport((int)((double)cf / packageFiles.Count * 100), fp, ex));
+				OnProblemReport(null, new ProblemReport(packageFiles != null ? (int)((double)cf / packageFiles.Count * 100) : 0, fp, ex));
 			}
 			OnCompletion(null, new CompletionReport(PackageOperation.Creating));
 		}

@@ -79,12 +79,14 @@ namespace OpenBveApi.Interface
 
 				internal XliffFile(TextReader reader, string languageCode)
 				{
+					// ReSharper disable PossibleNullReferenceException
+					// Exceptions will propagate up the load chain anyway
 					XDocument xml = XDocument.Load(reader);
 					XNamespace xmlns = xml.Root.Name.Namespace;
 					XElement body = xml.Root.Element(xmlns + "file").Element(xmlns + "body");
-
 					Groups = body.Elements(xmlns + "group").Select(g => new Group(xmlns, g, languageCode)).ToArray();
 					Units = body.Elements(xmlns + "trans-unit").Select(t => new Unit(xmlns, t, languageCode)).Where(t => !string.IsNullOrEmpty(t.Value)).ToArray();
+					// ReSharper restore PossibleNullReferenceException
 				}
 			}
 

@@ -135,22 +135,22 @@ namespace OpenBveApi.Hosts {
 		private struct UName
 		{
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string sysname;
+			internal readonly string sysname;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string nodename;
+			private readonly string nodename;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string release;
+			private readonly string release;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string version;
+			private readonly string version;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string machine;
+			private readonly string machine;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1024)]
-			public string extraJustInCase;
+			private readonly string extraJustInCase;
 
 		}
 

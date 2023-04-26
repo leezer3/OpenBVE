@@ -64,6 +64,7 @@ namespace OpenBveApi.Packages
 								}
 								catch
 								{
+									// ignored
 								}
 								break;
 							case "DeleteFiles":

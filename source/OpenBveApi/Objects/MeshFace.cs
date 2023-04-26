@@ -76,7 +76,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Flips the MeshFace</summary>
 		public void Flip()
 		{
-			if (((FaceFlags)Flags & FaceFlags.FaceTypeMask) == FaceFlags.QuadStrip)
+			if ((Flags & FaceFlags.FaceTypeMask) == FaceFlags.QuadStrip)
 			{
 				for (int i = 0; i < Vertices.Length; i += 2)
 				{

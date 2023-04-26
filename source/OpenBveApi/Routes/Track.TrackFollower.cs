@@ -53,15 +53,17 @@ namespace OpenBveApi.Routes
 		/// <summary>Clones the TrackFollower</summary>
 		public TrackFollower Clone()
 		{
-			TrackFollower t = new TrackFollower(currentHost, Train, Car);
-			t.LastTrackElement = LastTrackElement;
-			t.TrackPosition = TrackPosition;
-			t.WorldPosition = new Vector3(WorldPosition);
-			t.WorldDirection = new Vector3(WorldDirection);
-			t.WorldUp = new Vector3(WorldUp);
-			t.WorldSide = new Vector3(WorldSide);
-			t.TriggerType = TriggerType;
-			t.TrackIndex = TrackIndex;
+			TrackFollower t = new TrackFollower(currentHost, Train, Car)
+			{
+				LastTrackElement = LastTrackElement,
+				TrackPosition = TrackPosition,
+				WorldPosition = new Vector3(WorldPosition),
+				WorldDirection = new Vector3(WorldDirection),
+				WorldUp = new Vector3(WorldUp),
+				WorldSide = new Vector3(WorldSide),
+				TriggerType = TriggerType,
+				TrackIndex = TrackIndex
+			};
 			return t;
 		}
 
@@ -216,8 +218,8 @@ namespace OpenBveApi.Routes
 						double h = s * p;
 						double b = s / System.Math.Abs(r);
 						double f = 2.0 * r * r * (1.0 - System.Math.Cos(b));
-						double c = (double)System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
-						double a = 0.5 * (double)System.Math.Sign(r) * b;
+						double c = System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
+						double a = 0.5 * System.Math.Sign(r) * b;
 						Vector3 D = new Vector3(currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.X, 0.0, currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Z);
 						D.Normalize();
 						D.Rotate(Vector3.Down, a);
