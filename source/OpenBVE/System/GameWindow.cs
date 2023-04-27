@@ -260,8 +260,13 @@ namespace OpenBve
 				TimeElapsed = RealTimeElapsed * TimeFactor;
 				if (loadComplete && !firstFrame)
 				{
-					//Our current in-game time is equal to or greater than the startup time, but the first frame has not yet been processed
-					//Therefore, reset the timer to zero as time consuming texture loads may cause us to be late at the first station
+					/*
+					 * Our current in-game time is equal to or greater than the startup time, but the first frame has not yet been processed
+					 * Therefore, reset the timer to zero as time consuming texture loads may cause us to be late at the first station
+					 *
+					 * Also update the viewing distances in case of jumps etc.
+					 */
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					RealTimeElapsed = 0.0;
 					TimeElapsed = 0.0;
 					firstFrame = true;
@@ -571,32 +576,9 @@ namespace OpenBve
 			// starting time and track position
 			Program.CurrentRoute.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
-			int PlayerFirstStationIndex = -1;
+			int PlayerFirstStationIndex = Program.CurrentRoute.PlayerFirstStationIndex;
 			double PlayerFirstStationPosition;
-			int os = -1;
-			bool f = false;
-			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
-			{
-				if (!String.IsNullOrEmpty(Program.CurrentRoute.InitialStationName))
-				{
-					if (Program.CurrentRoute.InitialStationName.ToLowerInvariant() == Program.CurrentRoute.Stations[i].Name.ToLowerInvariant())
-					{
-						PlayerFirstStationIndex = i;
-					}
-				}
-				if (Program.CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | Program.CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerStop & Program.CurrentRoute.Stations[i].Stops.Length != 0)
-				{
-					if (f == false)
-					{
-						os = i;
-						f = true;
-					}
-				}
-			}
-			if (PlayerFirstStationIndex == -1)
-			{
-				PlayerFirstStationIndex = os == -1 ? 0 : os;
-			}
+			
 			{
 				int s = Program.CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 				if (s >= 0)
@@ -782,6 +764,17 @@ namespace OpenBve
 				{
 					p = OtherFirstStationPosition;
 				}
+				if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+				{
+					/*
+					 * Flip the train if running in reverse direction
+					 * We also need to add the length of the train so that the driver car is actually positioned on the platform
+					 *
+					 * Position on routes not specificially designed for reverse running may well be wrong, but that's life
+					 */
+					Program.TrainManager.Trains[i].Reverse(true, true);
+					p += Program.TrainManager.Trains[i].Length;
+				}
 				for (int j = 0; j < Program.TrainManager.Trains[i].Cars.Length; j++)
 				{
 					Program.TrainManager.Trains[i].Cars[j].Move(p);
@@ -802,8 +795,18 @@ namespace OpenBve
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 			Program.Renderer.UpdateVisibility(true);
-			Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
-			Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
+			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+			{
+				double reverse = 180 / 57.2957795130824;
+				Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(2.5, 1.5, 15), 0.3 + reverse, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
+				Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(3.0, 2.5, 0.0), 0.3 + reverse, 0.0, 0.0, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.Cars.Length - 1].TrackPosition, 1.0);
+			}
+			else
+			{
+				Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
+				Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
+			}
+			
 			// signalling sections
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 			{
@@ -929,6 +932,10 @@ namespace OpenBve
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
+			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+			{
+				Program.Renderer.Camera.Alignment.Yaw = 180 / 57.2957795130824;
+			}
 			switch (Interface.CurrentOptions.InitialViewpoint)
 			{
 				case 0:

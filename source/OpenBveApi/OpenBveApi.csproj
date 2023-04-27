@@ -164,6 +164,7 @@
     <Compile Include="Routes\RouteInterface.cs" />
     <Compile Include="Routes\StaticBackground.cs" />
     <Compile Include="Routes\Track.cs" />
+    <Compile Include="Routes\Track.Direction.cs" />
     <Compile Include="Routes\Track.TrackElement.cs" />
     <Compile Include="Routes\Track.TrackFollower.cs" />
     <Compile Include="Runtime\ElapseProxy.cs" />

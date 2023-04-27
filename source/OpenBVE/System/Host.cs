@@ -590,7 +590,7 @@ namespace OpenBve {
 						TrainBase train = Program.TrainManager.Trains[i];
 						int c = train.Cars.Length - 1;
 						double z = train.Cars[c].RearAxle.Follower.TrackPosition - train.Cars[c].RearAxle.Position - 0.5 * train.Cars[c].Length;
-						if (z >= baseTrain.FrontCarTrackPosition() & z < bestLocation)
+						if (z >= baseTrain.FrontCarTrackPosition & z < bestLocation)
 						{
 							bestLocation = z;
 							closestTrain = Program.TrainManager.Trains[i];

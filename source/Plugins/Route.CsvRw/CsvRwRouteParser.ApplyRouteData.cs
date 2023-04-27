@@ -417,7 +417,15 @@ namespace CsvRwRouteParser
 					int s = Data.Blocks[i].Station;
 					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
 					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(0.0, s);
+					if (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
+					{
+						CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, 0.0, s);
+					}
+					else
+					{
+						CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(CurrentRoute, 0.0, s);
+					}
+					
 					double dx, dy = 3.0;
 					if (CurrentRoute.Stations[s].OpenLeftDoors && !CurrentRoute.Stations[s].OpenRightDoors)
 					{
@@ -942,7 +950,15 @@ namespace CsvRwRouteParser
 						double d = p - (k + Data.FirstUsedBlock) * Data.BlockInterval;
 						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(Plugin.CurrentHost, CurrentRoute, d, i);
+						if (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
+						{
+							CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationStartEvent(CurrentRoute, d, i);
+						}
+						else
+						{
+							CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(Plugin.CurrentHost, CurrentRoute, d, i);
+						}
+						
 					}
 				}
 			}
@@ -1066,8 +1082,21 @@ namespace CsvRwRouteParser
 			}
 			if (CurrentRoute.Stations.Length != 0)
 			{
-				CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type = StationType.Terminal;
+				if (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
+				{
+					CurrentRoute.Stations[0].Type = StationType.Terminal;
+					if (CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type == StationType.Terminal)
+					{
+						CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type = StationType.Normal;
+					}
+				}
+				else
+				{
+					CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type = StationType.Terminal;
+				}
+				
 			}
+			
 			if (CurrentRoute.Tracks[0].Elements.Length != 0)
 			{
 				int n = CurrentRoute.Tracks[0].Elements.Length - 1;

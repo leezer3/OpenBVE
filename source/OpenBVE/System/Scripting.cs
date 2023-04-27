@@ -212,8 +212,8 @@ namespace OpenBve
             public static double trackDistance(TrainBase Train, double TrackPosition)
             {
                 if (Train == null) return 0.0;
-                double t0 = Train.FrontCarTrackPosition();
-                double t1 = Train.RearCarTrackPosition();
+                double t0 = Train.FrontCarTrackPosition;
+                double t1 = Train.RearCarTrackPosition;
                 return TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
             }
 

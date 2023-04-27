@@ -433,8 +433,8 @@ namespace RouteViewer {
 						break;
 					case Instructions.TrainTrackDistance:
 						if (Train != null) {
-							double t0 = Train.FrontCarTrackPosition();
-							double t1 = Train.RearCarTrackPosition();
+							double t0 = Train.FrontCarTrackPosition;
+							double t1 = Train.RearCarTrackPosition;
 							Function.Stack[s] = TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;

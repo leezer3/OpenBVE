@@ -12,5 +12,12 @@ namespace LibRender2.Camera
 		public Vector3 BottomLeft;
 		/// <summary>The relative top right vector</summary>
 		public Vector3 TopRight;
+
+		/// <summary>Reverses the camera restriction</summary>
+		public void Reverse()
+		{
+			AbsoluteBottomLeft.Rotate(Vector3.Forward, 3.14159);
+			AbsoluteTopRight.Rotate(Vector3.Forward, 3.14159);
+		}
 	}
 }

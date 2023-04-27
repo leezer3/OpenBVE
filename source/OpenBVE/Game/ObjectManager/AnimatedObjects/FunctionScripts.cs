@@ -433,8 +433,8 @@ namespace OpenBve {
 						break;
 					case Instructions.TrainTrackDistance:
 						if (Train != null) {
-							double t0 = Train.FrontCarTrackPosition();
-							double t1 = Train.RearCarTrackPosition();
+							double t0 = Train.FrontCarTrackPosition;
+							double t1 = Train.RearCarTrackPosition;
 							Function.Stack[s] = TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
@@ -1219,7 +1219,7 @@ namespace OpenBve {
 								stationIdx = Train.LastStation;
 							}
 							int n = Program.CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
-							double p0 = Train.FrontCarTrackPosition();
+							double p0 = Train.FrontCarTrackPosition;
 							double p1;
 							if (Program.CurrentRoute.Stations[stationIdx].Stops.Length > 0)
 							{
@@ -1257,7 +1257,7 @@ namespace OpenBve {
 							}
 							
 							int n = Program.CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
-							double p0 = Train.FrontCarTrackPosition();
+							double p0 = Train.FrontCarTrackPosition;
 							double p1;
 							if (Program.CurrentRoute.Stations[stationIdx].Stops.Length > 0)
 							{
@@ -1307,7 +1307,7 @@ namespace OpenBve {
 							else
 							{
 								int n = Program.CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
-								double p0 = Train.FrontCarTrackPosition();
+								double p0 = Train.FrontCarTrackPosition;
 								double p1;
 								if (Program.CurrentRoute.Stations[stationIdx].Stops.Length > 0)
 								{

@@ -383,7 +383,7 @@ namespace OpenBve.Graphics.Renderers
 					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
 					{
 						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain.NumberOfCars);
-						double p0 = PlayerTrain.FrontCarTrackPosition();
+						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;
 						if (m < 0)
@@ -421,7 +421,7 @@ namespace OpenBve.Graphics.Renderers
 					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
 					{
 						
-						double p0 = PlayerTrain.FrontCarTrackPosition();
+						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = 0.0;
 						for (int i = stationIndex; i < Program.CurrentRoute.Stations.Length; i++)
 						{
@@ -459,7 +459,7 @@ namespace OpenBve.Graphics.Renderers
 					else
 					{
 						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain.NumberOfCars);
-						double p0 = PlayerTrain.FrontCarTrackPosition();
+						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;
 						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)

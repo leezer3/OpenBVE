@@ -13,6 +13,9 @@ namespace OpenBveApi.Routes
 		/// <summary>The rail gauge for this track</summary>
 		public double RailGauge = 1.435;
 
+		/// <summary>The default direction of travel on this track</summary>
+		public TrackDirection Direction;
+
 		/// <summary>Gets the innacuracy (Gauge spread and track bounce) for a given track position and routefile innacuracy value</summary>
 		/// <param name="position">The track position</param>
 		/// <param name="inaccuracy">The openBVE innacuaracy value</param>
@@ -254,10 +257,10 @@ namespace OpenBveApi.Routes
 							double bestT = d.NormSquared();
 							int bestJ = 0;
 							int n = 1000;
-							double a = 1.0 / (double) n * (Elements[i + 1].StartingTrackPosition - Elements[i].StartingTrackPosition);
+							double a = 1.0 / n * (Elements[i + 1].StartingTrackPosition - Elements[i].StartingTrackPosition);
 							for (int j = 1; j < n - 1; j++)
 							{
-								follower.UpdateAbsolute(Elements[i + 1].StartingTrackPosition - (double) j * a, true, false);
+								follower.UpdateAbsolute(Elements[i + 1].StartingTrackPosition - j * a, true, false);
 								d = Elements[i + 1].WorldPosition - follower.WorldPosition;
 								double t = d.NormSquared();
 								if (t < bestT)
@@ -271,7 +274,7 @@ namespace OpenBveApi.Routes
 								}
 							}
 
-							double s = (double) bestJ * a;
+							double s = bestJ * a;
 							for (int j = i + 1; j < Elements.Length; j++)
 							{
 								Elements[j].StartingTrackPosition -= s;
@@ -311,7 +314,7 @@ namespace OpenBveApi.Routes
 								bestJ = 0;
 								for (int j = -1; j <= 1; j++)
 								{
-									double g = (double) j * originalAngle;
+									double g = j * originalAngle;
 									Elements[i] = originalTrackElement;
 									Elements[i].WorldDirection.Rotate(Vector3.Down, g);
 									Elements[i].WorldUp.Rotate(Vector3.Down, g);
@@ -329,7 +332,7 @@ namespace OpenBveApi.Routes
 								}
 
 								{
-									double newAngle = (double) bestJ * originalAngle;
+									double newAngle = bestJ * originalAngle;
 									Elements[i] = originalTrackElement;
 									Elements[i].WorldDirection.Rotate(Vector3.Down, newAngle);
 									Elements[i].WorldUp.Rotate(Vector3.Down, newAngle);
@@ -343,10 +346,10 @@ namespace OpenBveApi.Routes
 								bestT = d.NormSquared();
 								bestJ = 0;
 								n = 1000;
-								a = 1.0 / (double) n * (Elements[i + 1].StartingTrackPosition - Elements[i].StartingTrackPosition);
+								a = 1.0 / n * (Elements[i + 1].StartingTrackPosition - Elements[i].StartingTrackPosition);
 								for (int j = 1; j < n - 1; j++)
 								{
-									follower.UpdateAbsolute(Elements[i + 1].StartingTrackPosition - (double) j * a, true, false);
+									follower.UpdateAbsolute(Elements[i + 1].StartingTrackPosition - j * a, true, false);
 									d = Elements[i + 1].WorldPosition - follower.WorldPosition;
 									double t = d.NormSquared();
 									if (t < bestT)
@@ -360,7 +363,7 @@ namespace OpenBveApi.Routes
 									}
 								}
 
-								s = (double) bestJ * a;
+								s = bestJ * a;
 								for (int j = i + 1; j < Elements.Length; j++)
 								{
 									Elements[j].StartingTrackPosition -= s;

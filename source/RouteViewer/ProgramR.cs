@@ -237,6 +237,10 @@ namespace RouteViewer
 
 		// jump to station
 		private static void JumpToStation(int Direction) {
+			if (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
+			{
+				Direction = -Direction;
+			}
 			if (Direction < 0) {
 				for (int i = CurrentRoute.Stations.Length - 1; i >= 0; i--) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
@@ -244,7 +248,7 @@ namespace RouteViewer
 						if (p < Program.Renderer.CameraTrackFollower.TrackPosition - 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							break;
 						}
 					}
@@ -256,7 +260,7 @@ namespace RouteViewer
 						if (p > Program.Renderer.CameraTrackFollower.TrackPosition + 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							break;
 						}
 					}
@@ -266,7 +270,7 @@ namespace RouteViewer
 
 		internal static void UpdateGraphicsSettings()
 		{
-			Renderer.Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Renderer.Camera.ForwardViewingDistance = Interface.CurrentOptions.ViewingDistance;
 			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
 			if (CurrentRouteFile != null)
 			{
@@ -330,13 +334,13 @@ namespace RouteViewer
 				Renderer.Camera.AlignmentDirection.Position.Y = 0.0;
 				if (MouseButton == 1)
 				{
-					Renderer.Camera.AlignmentDirection.Yaw = 0.025 * (double) (previousMouseState.X - currentMouseState.X);
-					Renderer.Camera.AlignmentDirection.Pitch = 0.025 * (double)(previousMouseState.Y - currentMouseState.Y);
+					Renderer.Camera.AlignmentDirection.Yaw = 0.025 * (previousMouseState.X - currentMouseState.X);
+					Renderer.Camera.AlignmentDirection.Pitch = 0.025 * (previousMouseState.Y - currentMouseState.Y);
 				}
 				else if (MouseButton == 2)
 				{
-					Renderer.Camera.AlignmentDirection.Position.X = 0.1 * (double)(previousMouseState.X - currentMouseState.X);
-					Renderer.Camera.AlignmentDirection.Position.Y = 0.1 * (double)(previousMouseState.Y - currentMouseState.Y);
+					Renderer.Camera.AlignmentDirection.Position.X = 0.1 * (previousMouseState.X - currentMouseState.X);
+					Renderer.Camera.AlignmentDirection.Position.Y = 0.1 * (previousMouseState.Y - currentMouseState.Y);
 				}
 				
 			}
@@ -351,7 +355,7 @@ namespace RouteViewer
 			LoadRoute();
 			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 			CurrentlyLoading = false;
-			Renderer.Camera.Reset();
+			Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 			UpdateCaption();
 		}
 
@@ -405,7 +409,7 @@ namespace RouteViewer
 						}
 						else
 						{
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
@@ -447,7 +451,7 @@ namespace RouteViewer
 						if (canLoad && LoadRoute())
 						{
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
@@ -478,7 +482,7 @@ namespace RouteViewer
 								MessageBox.Show("No plugins found capable of loading routefile: " +Environment.NewLine + CurrentRouteFile);
 							}
 							
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							CurrentRouteFile = null;
@@ -542,11 +546,11 @@ namespace RouteViewer
 					break;
 				case Key.W:
 				case Key.Keypad9:
-					Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse ? -speedModified : speedModified);
 					break;
 				case Key.S:
 				case Key.Keypad3:
-					Renderer.Camera.AlignmentDirection.TrackPosition = -CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.AlignmentDirection.TrackPosition = -CameraProperties.ExteriorTopSpeed * (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse ? -speedModified : speedModified);
 					break;
 				case Key.Left:
 					Renderer.Camera.AlignmentDirection.Yaw = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
@@ -585,7 +589,7 @@ namespace RouteViewer
 					JumpToStation(-1);
 					break;
 				case Key.Keypad5:
-					Renderer.Camera.Reset();
+					Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 					Renderer.UpdateViewport();
 					World.UpdateAbsoluteCamera(0.0);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
@@ -682,12 +686,12 @@ namespace RouteViewer
 								{
 									if (direction != 0)
 									{
-										value = Program.Renderer.CameraTrackFollower.TrackPosition + (double)direction * value;
+										value = Program.Renderer.CameraTrackFollower.TrackPosition + direction * value;
 									}
 
 									Program.Renderer.CameraTrackFollower.UpdateAbsolute(value, true, false);
 									Renderer.Camera.Alignment.TrackPosition = value;
-									Renderer.Camera.Reset();
+									Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 									World.UpdateAbsoluteCamera(0.0);
 									Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 								}

@@ -45,14 +45,14 @@ namespace OpenBve
 					// with other trains
 					if (Trains[i].State == TrainState.Available)
 					{
-						double a = Trains[i].FrontCarTrackPosition();
-						double b = Trains[i].RearCarTrackPosition();
+						double a = Trains[i].FrontCarTrackPosition;
+						double b = Trains[i].RearCarTrackPosition;
 						for (int j = i + 1; j < Trains.Length; j++)
 						{
 							if (Trains[j].State == TrainState.Available)
 							{
-								double c = Trains[j].FrontCarTrackPosition();
-								double d = Trains[j].RearCarTrackPosition();
+								double c = Trains[j].FrontCarTrackPosition;
+								double d = Trains[j].RearCarTrackPosition;
 								if (a > d & b < c)
 								{
 									if (a > c)

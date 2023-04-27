@@ -151,7 +151,7 @@ namespace TrainManager.SafetySystems
 			try
 			{
 				AbstractTrain closestTrain = TrainManagerBase.currentHost.ClosestTrain(this.Train);
-				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition(), closestTrain.RearCarTrackPosition() - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
+				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition, closestTrain.RearCarTrackPosition - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
 			}
 			catch
 			{
