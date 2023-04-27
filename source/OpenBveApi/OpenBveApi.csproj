@@ -45,14 +45,14 @@
     <OutputPath>..\..\bin_debug\</OutputPath>
     <DocumentationFile>..\..\bin_debug\OpenBveApi.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>..\..\bin_release\</OutputPath>
     <DocumentationFile>..\..\bin_release\OpenBveApi.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

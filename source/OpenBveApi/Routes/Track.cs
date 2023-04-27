@@ -114,7 +114,7 @@ namespace OpenBveApi.Routes
 				{
 					int q = i / subdivisions;
 					
-					double r = (double) m / (double) subdivisions;
+					double r = m / (double) subdivisions;
 					double p = (1.0 - r) * Elements[q].StartingTrackPosition + r * Elements[q + 1].StartingTrackPosition;
 					follower.UpdateAbsolute(-1.0, true, false);
 					follower.UpdateAbsolute(p, true, false);

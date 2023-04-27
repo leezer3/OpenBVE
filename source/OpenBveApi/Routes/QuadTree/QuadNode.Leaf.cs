@@ -138,9 +138,8 @@ namespace OpenBveApi.Routes
 					 * The node is visible and is either added to the list of visible nodes if
 					 * a leaf node, or recursively processed for all children if an internal node.
 					 * */
-					if (node is QuadInternalNode)
+					if (node is QuadInternalNode intern)
 					{
-						QuadInternalNode intern = (QuadInternalNode)node;
 						for (int i = 0; i < intern.Children.Length; i++)
 						{
 							CreateVisibilityList(intern.Children[i], nodes, viewingDistance);

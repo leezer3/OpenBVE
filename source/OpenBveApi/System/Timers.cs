@@ -61,7 +61,7 @@ namespace OpenBveApi
 			}
 			long time = 0;
 			QueryPerformanceCounter(ref time); //gets the number of ticks elapsed, pulled from the cloop
-			double elapsedTime = (double) (time - _previousElapsedTime)/(double) _ticksPerSecond;
+			double elapsedTime = (time - _previousElapsedTime)/(double) _ticksPerSecond;
 			//gets the total elapsed ticks by subtracting the current number of ticks from the last elapsed number of ticks.  it then divides it by ticks per second to get the actual amount of time that has passed.
 			_previousElapsedTime = time; //sets the previous elapsed ticks for the next calculation
 			return elapsedTime;

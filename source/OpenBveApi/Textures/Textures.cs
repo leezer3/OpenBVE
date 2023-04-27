@@ -332,8 +332,7 @@ namespace OpenBveApi.Textures {
 			if (ReferenceEquals(this, obj)) return true;
 			if (ReferenceEquals(this, null)) return false;
 			if (ReferenceEquals(obj, null)) return false;
-			if (!(obj is Texture)) return false;
-			Texture x = (Texture) obj;
+			if (!(obj is Texture x)) return false;
 			if (MultipleFrames != x.MultipleFrames) return false;
 			if (Origin != x.Origin) return false;
 			if (MySize.X != x.MySize.X) return false;

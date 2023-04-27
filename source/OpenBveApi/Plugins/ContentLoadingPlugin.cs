@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OpenBveApi
+﻿namespace OpenBveApi
 {
 	/// <summary>Represents a plugin for loading content.</summary>
 	public class ContentLoadingPlugin

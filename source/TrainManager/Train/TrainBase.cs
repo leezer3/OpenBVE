@@ -49,7 +49,7 @@ namespace TrainManager.Trains
 		/// <summary>The plugin used by this train.</summary>
 		public Plugin Plugin;
 		/// <summary>The driver body</summary>
-		public DriverBody DriverBody;
+		public readonly DriverBody DriverBody;
 		/// <summary>Whether the train has currently derailed</summary>
 		public bool Derailed;
 		/// <summary>Stores the previous route speed limit</summary>
@@ -106,6 +106,7 @@ namespace TrainManager.Trains
 				
 			Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 			Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
+			DriverBody = new DriverBody(this);
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>

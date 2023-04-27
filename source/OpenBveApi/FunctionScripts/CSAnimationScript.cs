@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using CSScriptLibrary;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -87,9 +85,9 @@ namespace OpenBveApi.FunctionScripting {
 				foreach (var method in scriptType.GetMethods().Where(m => m.Name == "ExecuteScript" && m.ReturnType == typeof(double))) {
 					Type[][] invokeTypes = {
 						// The original interface
-						new Type[] {typeof(AbstractTrain), typeof(Vector3), typeof(double), typeof(int), typeof(bool), typeof(double) },
+						new[] {typeof(AbstractTrain), typeof(Vector3), typeof(double), typeof(int), typeof(bool), typeof(double) },
 						// The full interface
-						new Type[] {typeof(AbstractTrain), typeof(int), typeof(Vector3), typeof(double), typeof(int), typeof(bool), typeof(double), typeof(int) }
+						new[] {typeof(AbstractTrain), typeof(int), typeof(Vector3), typeof(double), typeof(int), typeof(bool), typeof(double), typeof(int) }
 					};
 					for (int i = 0; i < invokeTypes.Length; i++) {
 						if (method.GetParameters().Select(p => p.ParameterType).SequenceEqual(invokeTypes[i])) {

@@ -381,7 +381,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost) { Train = null, Car = null };
+			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			if (Program.CurrentRoute.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right

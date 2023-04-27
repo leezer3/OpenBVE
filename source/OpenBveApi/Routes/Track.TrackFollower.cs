@@ -40,7 +40,7 @@ namespace OpenBveApi.Routes
 		/// <summary>The train the follower is attached to, or a null reference</summary>
 		public AbstractTrain Train;
 		/// <summary>The car the follower is attached to, or a null reference</summary>
-		public AbstractCar Car;
+		public readonly AbstractCar Car;
 		/// <summary>The track index the follower is currently following</summary>
 		public int TrackIndex;
 		/// <summary>The station index at the current location</summary>
