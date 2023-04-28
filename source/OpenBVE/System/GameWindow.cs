@@ -774,6 +774,11 @@ namespace OpenBve
 					 */
 					Program.TrainManager.Trains[i].Reverse(true, true);
 					p += Program.TrainManager.Trains[i].Length;
+					if (Program.TrainManager.Trains[i].IsPlayerTrain)
+					{
+						// HACK!
+						Program.TrainManager.Trains[i].Station = PlayerFirstStationIndex;
+					}
 				}
 				for (int j = 0; j < Program.TrainManager.Trains[i].Cars.Length; j++)
 				{

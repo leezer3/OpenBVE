@@ -402,7 +402,7 @@ namespace OpenBve
 							powerstart = lim - 2.5;
 							powerend = lim - 1.5;
 						}
-						if (this.BrakeMode)
+						if (BrakeMode)
 						{
 							brakestart = powerend;
 						}

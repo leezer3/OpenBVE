@@ -1057,7 +1057,7 @@ namespace TrainManager.Trains
 		/// <param name="shouldIncrement">Whether to increase or decrease the camera car index</param>
 		public void ChangeCameraCar(bool shouldIncrement)
 		{
-			if (CurrentDirection == TrackDirection.Reverse)
+			if (CurrentDirection != TrackDirection.Reverse)
 			{
 				// If in the reverse direction, the last car is Car0 and the direction of increase is reversed
 				shouldIncrement = !shouldIncrement;

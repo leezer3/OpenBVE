@@ -521,7 +521,7 @@ namespace RouteManager2
 				int idx = Tracks[0].Direction == TrackDirection.Forwards ? Stations.Length - 1 : 0;
 				bool f = false;
 				int os = -1;
-				if (Tracks[0].Direction == TrackDirection.Forwards)
+				if (Tracks[0].Direction != TrackDirection.Forwards)
 				{
 					for (int i = Stations.Length -1; i > 0; i--)
 					{

@@ -222,11 +222,11 @@ namespace TrainManager.Trains
 									string b = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
 									if (StationDistanceToStopPoint < -0.1)
 									{
-										s += Translations.GetInterfaceString("message_delimiter") + Translations.GetInterfaceString("message_station_overrun");
+										s += Translations.GetInterfaceString("message_delimiter") + Translations.GetInterfaceString(CurrentDirection == TrackDirection.Forwards ? "message_station_overrun" : "message_station_underrun");
 									}
 									else if (StationDistanceToStopPoint > 0.1)
 									{
-										s += Translations.GetInterfaceString("message_delimiter") + Translations.GetInterfaceString("message_station_underrun");
+										s += Translations.GetInterfaceString("message_delimiter") + Translations.GetInterfaceString(CurrentDirection == TrackDirection.Forwards ? "message_station_underrun" : "message_station_overrun");
 									}
 
 									double d = Math.Abs(StationDistanceToStopPoint);
