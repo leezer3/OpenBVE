@@ -930,10 +930,9 @@ namespace OpenBve
 										//Otherwise, check if we can move down to the previous POI
 										if (Game.ApplyPointOfInterest(-1, true))
 										{
-											if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Track &
-												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyBy &
-												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyByZooming)
+											if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 											{
+												SaveCameraSettings();
 												Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 												MessageManager.AddMessage(Translations.GetInterfaceString("notification_track"),
 													MessageDependency.CameraView, GameMode.Expert,
@@ -971,10 +970,9 @@ namespace OpenBve
 										//Otherwise, check if we can move up to the next POI
 										if (Game.ApplyPointOfInterest(1, true))
 										{
-											if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Track &
-												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyBy &
-												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyByZooming)
+											if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 											{
+												SaveCameraSettings();
 												Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 												MessageManager.AddMessage(Translations.GetInterfaceString("notification_track"),
 													MessageDependency.CameraView, GameMode.Expert,
