@@ -485,9 +485,10 @@ namespace TrainManager.Car
 		/// <summary>Changes the currently visible car section</summary>
 		/// <param name="newCarSection">The type of new car section to display</param>
 		/// <param name="trainVisible">Whether the train is visible</param>
-		public void ChangeCarSection(CarSectionType newCarSection, bool trainVisible = false)
+		/// <param name="forceChange">Whether to force a show / rehide</param>
+		public void ChangeCarSection(CarSectionType newCarSection, bool trainVisible = false, bool forceChange = false)
 		{
-			if(CurrentCarSection == (int)newCarSection)
+			if(CurrentCarSection == (int)newCarSection && !forceChange)
 			{
 				return;
 			}

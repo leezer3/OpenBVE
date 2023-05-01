@@ -424,7 +424,8 @@ namespace OpenBve.Graphics.Renderers
 				if (TouchElement.Element.internalObject == pickedObject)
 				{
 					Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
-					Car.ChangeCarSection(CarSectionType.Interior);
+					// Force a show / hide of the car sections to ensure that the touch stack is correctly updated
+					Car.ChangeCarSection(CarSectionType.Interior, false, true);
 
 					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && Car.Sounds.Touch != null &&  x < Car.Sounds.Touch.Length))
 					{
