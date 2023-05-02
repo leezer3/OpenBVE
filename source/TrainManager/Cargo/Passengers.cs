@@ -68,14 +68,7 @@ namespace TrainManager.Cargo
 			if (Ratio > 0.0)
 			{
 				double threshold = 1.0 / Ratio;
-				if (Math.Abs(CurrentSpeedDifference) > threshold)
-				{
-					Damaged = true;
-				}
-				else
-				{
-					Damaged = false;
-				}
+				Damaged = Math.Abs(CurrentSpeedDifference) > threshold;
 			}
 			else
 			{

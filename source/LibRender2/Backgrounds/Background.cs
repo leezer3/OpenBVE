@@ -21,23 +21,17 @@ namespace LibRender2.Backgrounds
 		/// <param name="Scale">The scale</param>
 		public void Render(BackgroundHandle Data, float Scale)
 		{
-			DynamicBackground dynamicBackground = Data as DynamicBackground;
-			StaticBackground staticBackground = Data as StaticBackground;
-			BackgroundObject backgroundObject = Data as BackgroundObject;
-
-			if (dynamicBackground != null)
+			switch (Data)
 			{
-				RenderDynamicBackground(dynamicBackground, Scale);
-			}
-
-			if (staticBackground != null)
-			{
-				RenderStaticBackground(staticBackground, Scale);
-			}
-
-			if (backgroundObject != null)
-			{
-				RenderBackgroundObject(backgroundObject);
+				case DynamicBackground dynamicBackground:
+					RenderDynamicBackground(dynamicBackground, Scale);
+					break;
+				case StaticBackground staticBackground:
+					RenderStaticBackground(staticBackground, Scale);
+					break;
+				case BackgroundObject backgroundObject:
+					RenderBackgroundObject(backgroundObject);
+					break;
 			}
 		}
 
@@ -47,23 +41,17 @@ namespace LibRender2.Backgrounds
 		/// <param name="Scale">The scale</param>
 		public void Render(BackgroundHandle Data, float Alpha, float Scale)
 		{
-			DynamicBackground dynamicBackground = Data as DynamicBackground;
-			StaticBackground staticBackground = Data as StaticBackground;
-			BackgroundObject backgroundObject = Data as BackgroundObject;
-
-			if (dynamicBackground != null)
+			switch (Data)
 			{
-				RenderDynamicBackground(dynamicBackground, Alpha, Scale);
-			}
-
-			if (staticBackground != null)
-			{
-				RenderStaticBackground(staticBackground, Alpha, Scale);
-			}
-
-			if (backgroundObject != null)
-			{
-				RenderBackgroundObject(backgroundObject);
+				case DynamicBackground dynamicBackground:
+					RenderDynamicBackground(dynamicBackground, Alpha, Scale);
+					break;
+				case StaticBackground staticBackground:
+					RenderStaticBackground(staticBackground, Alpha, Scale);
+					break;
+				case BackgroundObject backgroundObject:
+					RenderBackgroundObject(backgroundObject);
+					break;
 			}
 		}
 

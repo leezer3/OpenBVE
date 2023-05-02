@@ -56,11 +56,7 @@ namespace LibRender2.Primitives
 		{
 			get
 			{
-				if (CanScroll)
-				{
-					return new Vector2(Size.X, Size.Y - 12);
-				}
-				return Size;
+				return CanScroll ? new Vector2(Size.X, Size.Y - 12) : Size;
 			}
 		}
 
