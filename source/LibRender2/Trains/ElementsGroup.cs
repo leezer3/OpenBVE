@@ -39,11 +39,21 @@ namespace LibRender2.Trains
 			{
 				for (int j = 0; j < Elements[i].States.Length; j++)
 				{
-					Vector3 translation = Elements[i].States[j].Translation.ExtractTranslation();
-					translation.X -= pos.X * 2;
-					translation.Z += pos.Z * 2;
-					Elements[i].States[j].Translation = Matrix4D.CreateTranslation(translation);
+					Elements[i].States[j].Reverse(pos);
 
+				}
+			}
+
+			if (TouchElements == null)
+			{
+				return;
+			}
+			
+			for (int i = 0; i < TouchElements.Length; i++)
+			{
+				for (int j = 0; j < TouchElements[i].Element.States.Length; j++)
+				{
+					TouchElements[i].Element.States[j].Reverse(pos);
 				}
 			}
 		}
