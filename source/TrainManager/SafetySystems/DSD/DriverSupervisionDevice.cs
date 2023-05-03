@@ -1,5 +1,6 @@
-﻿using OpenBveApi.Trains;
+﻿using OpenBveApi.Interface;
 using SoundManager;
+using TrainManager.Car;
 
 namespace TrainManager.SafetySystems
 {
@@ -7,7 +8,7 @@ namespace TrainManager.SafetySystems
 	public class DriverSupervisionDevice
 	{
 		/// <summary>Holds a reference to the base car</summary>
-		private readonly AbstractCar baseCar;
+		private readonly CarBase baseCar;
 		/// <summary>The update timer</summary>
 		private double Timer;
 		/// <summary>The time after which the DSD will intervene</summary>
@@ -22,14 +23,21 @@ namespace TrainManager.SafetySystems
 		public bool LoopingAlarm;
 		/// <summary>The sound played when the device is reset</summary>
 		public CarSound ResetSound;
+		/// <summary>The required stop time to reset the DSD</summary>
+		public double RequiredStopTime;
+		/// <summary>The mode of the DSD</summary>
+		public DriverSupervisionDeviceMode Mode;
 
-		public DriverSupervisionDevice(AbstractCar Car, DriverSupervisionDeviceTypes type, double interventionTime)
+		private double StopTimer;
+
+		public DriverSupervisionDevice(CarBase Car, DriverSupervisionDeviceTypes type, double interventionTime, double requiredStopTime)
 		{
 			baseCar = Car;
 			Type = type;
 			InterventionTime = interventionTime;
 			TriggerSound = new CarSound();
 			ResetSound = new CarSound();
+			RequiredStopTime = requiredStopTime;
 		}
 
 		public void Update(double TimeElapsed)
@@ -40,13 +48,104 @@ namespace TrainManager.SafetySystems
 				Triggered = true;
 				TriggerSound.Play(baseCar, LoopingAlarm);
 			}
+
+			if (Triggered)
+			{
+				switch (Type)
+				{
+					case DriverSupervisionDeviceTypes.CutsPower:
+						baseCar.baseTrain.Handles.Power.ApplySafetyState(0);
+						break;
+					case DriverSupervisionDeviceTypes.ApplyBrake:
+						baseCar.baseTrain.Handles.Power.ApplySafetyState(0);
+						baseCar.baseTrain.Handles.Brake.ApplySafetyState(baseCar.baseTrain.Handles.Brake.MaximumNotch);
+						break;
+					case DriverSupervisionDeviceTypes.ApplyEmergencyBrake:
+						baseCar.baseTrain.Handles.Power.ApplySafetyState(0);
+						baseCar.baseTrain.Handles.Brake.ApplySafetyState(baseCar.baseTrain.Handles.Brake.MaximumNotch + 1);
+						break;
+				}
+
+				if (RequiredStopTime != 0 && baseCar.Specs.PerceivedSpeed == 0)
+				{
+					StopTimer += TimeElapsed;
+				}
+			}
 		}
 
-		public void Reset()
+		private void AttemptReset()
 		{
-			TriggerSound.Stop();
-			Timer = 0.0;
-			Triggered = false;
+			Timer = 0;
+			if (Triggered && StopTimer >= RequiredStopTime)
+			{
+				TriggerSound.Stop();
+				Timer = 0.0;
+				Triggered = false;
+				StopTimer = 0;
+			}
+		}
+
+		public void ControlDown(Translations.Command Control)
+		{
+			switch (Mode)
+			{
+				case DriverSupervisionDeviceMode.Power:
+					if (Control >= Translations.Command.PowerIncrease && Control <= Translations.Command.PowerFullAxis)
+					{
+						AttemptReset();
+					}
+					break;
+				case DriverSupervisionDeviceMode.Brake:
+					if (Control >= Translations.Command.BrakeIncrease && Control <= Translations.Command.BrakeFullAxis)
+					{
+						AttemptReset();
+					}
+					break;
+				case DriverSupervisionDeviceMode.AnyHandle:
+					if ((Control >= Translations.Command.PowerIncrease && Control <= Translations.Command.PowerFullAxis) || (Control >= Translations.Command.BrakeIncrease && Control <= Translations.Command.BrakeFullAxis))
+					{
+						AttemptReset();
+					}
+					break;
+				case DriverSupervisionDeviceMode.HeldKey:
+				case DriverSupervisionDeviceMode.Independant:
+					if (Control == Translations.Command.DriverSupervisionDevice)
+					{
+						AttemptReset();
+					}
+					break;
+			}
+		}
+
+		public void ControlUp(Translations.Command Control)
+		{
+			switch (Mode)
+			{
+				case DriverSupervisionDeviceMode.Power:
+					if (Control >= Translations.Command.PowerIncrease && Control <= Translations.Command.PowerFullAxis)
+					{
+						AttemptReset();
+					}
+					break;
+				case DriverSupervisionDeviceMode.Brake:
+					if (Control >= Translations.Command.BrakeIncrease && Control <= Translations.Command.BrakeFullAxis)
+					{
+						AttemptReset();
+					}
+					break;
+				case DriverSupervisionDeviceMode.AnyHandle:
+					if ((Control >= Translations.Command.PowerIncrease && Control <= Translations.Command.PowerFullAxis) || (Control >= Translations.Command.BrakeIncrease && Control <= Translations.Command.BrakeFullAxis))
+					{
+						AttemptReset();
+					}
+					break;
+				case DriverSupervisionDeviceMode.Independant:
+					if (Control == Translations.Command.DriverSupervisionDevice)
+					{
+						AttemptReset();
+					}
+					break;
+			}
 		}
 	}
 }
