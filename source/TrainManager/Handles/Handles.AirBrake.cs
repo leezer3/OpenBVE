@@ -1,4 +1,5 @@
-﻿using OpenBveApi;
+using OpenBveApi;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using RouteManager2.MessageManager;
@@ -104,6 +105,11 @@ namespace TrainManager.Handles
 				if (!TrainManagerBase.CurrentOptions.Accessibility) return;
 				TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			}
+		}
+
+		public override void ApplySafetyState(int newState)
+		{
+			safetyState = Math.Max(safetyState, newState);
 		}
 
 		public override string GetNotchDescription(out MessageColor color)
