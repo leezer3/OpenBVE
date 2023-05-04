@@ -16,6 +16,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -420,7 +421,43 @@ namespace Train.OpenBve
 								NumberOfShots = shots
 							};
 						}
-
+						break;
+					case "driversupervisiondevice":
+						DriverSupervisionDeviceTypes driverSupervisionType = DriverSupervisionDeviceTypes.None;
+						double interventionTime = 0;
+						double requiredStopTime = 0;
+						bool loopingAlarm = false;
+						foreach (XmlNode cc in c.ChildNodes)
+						{
+							switch (cc.Name.ToLowerInvariant())
+							{
+								case "interventiontime":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out activationTime))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "type":
+									if (!Enum.TryParse(cc.InnerText, true, out driverSupervisionType))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice type was invalid for Car " + Car + " in XML file " + fileName);
+									} 
+									break; 
+								case "requiredstoptime":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out requiredStopTime))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice required stop time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "loopingalarm":
+									if (cc.InnerText.ToLowerInvariant() == "1" || cc.InnerText.ToLowerInvariant() == "true")
+									{
+										loopingAlarm = true;
+									}
+									break;
+							}
+						}
+						Train.Cars[Car].DSD = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, interventionTime, requiredStopTime, loopingAlarm);
 						break;
 					case "visiblefrominterior":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")

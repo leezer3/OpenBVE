@@ -20,7 +20,7 @@ namespace TrainManager.SafetySystems
 		/// <summary>The sound played when the device is triggered</summary>
 		public CarSound TriggerSound;
 		/// <summary>Whether the alarm is to loop</summary>
-		public bool LoopingAlarm;
+		public readonly bool LoopingAlarm;
 		/// <summary>The sound played when the device is reset</summary>
 		public CarSound ResetSound;
 		/// <summary>The required stop time to reset the DSD</summary>
@@ -30,7 +30,7 @@ namespace TrainManager.SafetySystems
 
 		private double StopTimer;
 
-		public DriverSupervisionDevice(CarBase Car, DriverSupervisionDeviceTypes type, double interventionTime, double requiredStopTime)
+		public DriverSupervisionDevice(CarBase Car, DriverSupervisionDeviceTypes type, double interventionTime, double requiredStopTime, bool loopingAlarm)
 		{
 			baseCar = Car;
 			Type = type;
@@ -38,6 +38,7 @@ namespace TrainManager.SafetySystems
 			TriggerSound = new CarSound();
 			ResetSound = new CarSound();
 			RequiredStopTime = requiredStopTime;
+			LoopingAlarm = loopingAlarm;
 		}
 
 		public void Update(double TimeElapsed)
@@ -82,6 +83,7 @@ namespace TrainManager.SafetySystems
 				Timer = 0.0;
 				Triggered = false;
 				StopTimer = 0;
+				ResetSound.Play(baseCar, false);
 			}
 		}
 
