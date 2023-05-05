@@ -1,7 +1,5 @@
 ﻿using System;
 using Prism.Mvvm;
-using TrainManager.Car;
-using TrainManager.SafetySystems;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -10,18 +8,43 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal class Device : BindableBase, ICloneable
 	{
+		internal enum AtsModes
+		{
+			None = -1,
+			AtsSn = 0,
+			AtsSnP = 1
+		}
+
+		internal enum AtcModes
+		{
+			None = 0,
+			Manual = 1,
+			Automatic = 2
+		}
+
+		internal enum PassAlarmModes
+		{
+			None = 0,
+			Single = 1,
+			Looping = 2
+		}
+
+		internal enum DoorModes
+		{
+			SemiAutomatic = 0,
+			Automatic = 1,
+			Manual = 2
+		}
+
 		private AtsModes ats;
 		private AtcModes atc;
 		private bool eb;
 		private bool constSpeed;
 		private bool holdBrake;
-		private ReadhesionDeviceType reAdhesionDevice;
 		private double loadCompensatingDevice;
-		private PassAlarmType passAlarm;
-		private DoorMode doorOpenMode;
-		private DoorMode doorCloseMode;
-		private double doorWidth;
-		private double doorMaxTolerance;
+		private PassAlarmModes passAlarm;
+		private DoorModes doorOpenMode;
+		private DoorModes doorCloseMode;
 
 		internal AtsModes Ats
 		{
@@ -83,18 +106,6 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal ReadhesionDeviceType ReAdhesionDevice
-		{
-			get
-			{
-				return reAdhesionDevice;
-			}
-			set
-			{
-				SetProperty(ref reAdhesionDevice, value);
-			}
-		}
-
 		internal double LoadCompensatingDevice
 		{
 			get
@@ -107,7 +118,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal PassAlarmType PassAlarm
+		internal PassAlarmModes PassAlarm
 		{
 			get
 			{
@@ -119,7 +130,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal DoorMode DoorOpenMode
+		internal DoorModes DoorOpenMode
 		{
 			get
 			{
@@ -131,7 +142,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal DoorMode DoorCloseMode
+		internal DoorModes DoorCloseMode
 		{
 			get
 			{
@@ -143,30 +154,6 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double DoorWidth
-		{
-			get
-			{
-				return doorWidth;
-			}
-			set
-			{
-				SetProperty(ref doorWidth, value);
-			}
-		}
-
-		internal double DoorMaxTolerance
-		{
-			get
-			{
-				return doorMaxTolerance;
-			}
-			set
-			{
-				SetProperty(ref doorMaxTolerance, value);
-			}
-		}
-
 		internal Device()
 		{
 			Ats = AtsModes.AtsSn;
@@ -174,13 +161,10 @@ namespace TrainEditor2.Models.Trains
 			Eb = false;
 			ConstSpeed = false;
 			HoldBrake = false;
-			ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 			LoadCompensatingDevice = 0.0;
-			PassAlarm = PassAlarmType.None;
-			DoorOpenMode = DoorMode.AutomaticManualOverride;
-			DoorCloseMode = DoorMode.AutomaticManualOverride;
-			DoorWidth = 1000.0;
-			DoorMaxTolerance = 0.0;
+			PassAlarm = PassAlarmModes.None;
+			DoorOpenMode = DoorModes.SemiAutomatic;
+			DoorCloseMode = DoorModes.SemiAutomatic;
 		}
 
 		public object Clone()

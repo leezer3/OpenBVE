@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
+using OpenBveApi.World;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 
@@ -16,8 +17,8 @@ namespace TrainEditor2.Models.Trains
 	internal class Train : BindableBase, ICloneable
 	{
 		private Handle handle;
-		private Cab cab;
 		private Device device;
+		private int initialDriverCar;
 
 		internal Handle Handle
 		{
@@ -28,18 +29,6 @@ namespace TrainEditor2.Models.Trains
 			set
 			{
 				SetProperty(ref handle, value);
-			}
-		}
-
-		internal Cab Cab
-		{
-			get
-			{
-				return cab;
-			}
-			set
-			{
-				SetProperty(ref cab, value);
 			}
 		}
 
@@ -55,14 +44,26 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal int InitialDriverCar
+		{
+			get
+			{
+				return initialDriverCar;
+			}
+			set
+			{
+				SetProperty(ref initialDriverCar, value);
+			}
+		}
+
 		internal ObservableCollection<Car> Cars;
 		internal ObservableCollection<Coupler> Couplers;
 
 		internal Train()
 		{
 			Handle = new Handle();
-			Cab = new Cab();
 			Device = new Device();
+			InitialDriverCar = 0;
 			Cars = new ObservableCollection<Car>();
 			Couplers = new ObservableCollection<Coupler>();
 		}
@@ -72,7 +73,6 @@ namespace TrainEditor2.Models.Trains
 			return new Train
 			{
 				Handle = (Handle)Handle.Clone(),
-				Cab = (Cab)Cab.Clone(),
 				Device = (Device)Device.Clone(),
 				Cars = new ObservableCollection<Car>(Cars.Select(c => (Car)c.Clone())),
 				Couplers = new ObservableCollection<Coupler>(Couplers.Select(c => (Coupler)c.Clone()))
@@ -85,14 +85,14 @@ namespace TrainEditor2.Models.Trains
 		{
 			foreach (Car car in Cars)
 			{
-				for (int i = car.Delay.DelayPower.Count; i < Handle.PowerNotches; i++)
+				for (int i = car.Delay.Power.Count; i < Handle.PowerNotches; i++)
 				{
-					car.Delay.DelayPower.Add(new Delay.Entry());
+					car.Delay.Power.Add(new Delay.Entry());
 				}
 
-				for (int i = car.Delay.DelayPower.Count - 1; i >= Handle.PowerNotches; i--)
+				for (int i = car.Delay.Power.Count - 1; i >= Handle.PowerNotches; i--)
 				{
-					car.Delay.DelayPower.RemoveAt(i);
+					car.Delay.Power.RemoveAt(i);
 				}
 			}
 
@@ -114,14 +114,14 @@ namespace TrainEditor2.Models.Trains
 		{
 			foreach (Car car in Cars)
 			{
-				for (int i = car.Delay.DelayBrake.Count; i < Handle.BrakeNotches; i++)
+				for (int i = car.Delay.Brake.Count; i < Handle.BrakeNotches; i++)
 				{
-					car.Delay.DelayBrake.Add(new Delay.Entry());
+					car.Delay.Brake.Add(new Delay.Entry());
 				}
 
-				for (int i = car.Delay.DelayBrake.Count - 1; i >= Handle.BrakeNotches; i--)
+				for (int i = car.Delay.Brake.Count - 1; i >= Handle.BrakeNotches; i--)
 				{
-					car.Delay.DelayBrake.RemoveAt(i);
+					car.Delay.Brake.RemoveAt(i);
 				}
 			}
 		}
@@ -130,14 +130,14 @@ namespace TrainEditor2.Models.Trains
 		{
 			foreach (Car car in Cars)
 			{
-				for (int i = car.Delay.DelayLocoBrake.Count; i < Handle.LocoBrakeNotches; i++)
+				for (int i = car.Delay.LocoBrake.Count; i < Handle.LocoBrakeNotches; i++)
 				{
-					car.Delay.DelayLocoBrake.Add(new Delay.Entry());
+					car.Delay.LocoBrake.Add(new Delay.Entry());
 				}
 
-				for (int i = car.Delay.DelayLocoBrake.Count - 1; i >= Handle.LocoBrakeNotches; i--)
+				for (int i = car.Delay.LocoBrake.Count - 1; i >= Handle.LocoBrakeNotches; i--)
 				{
-					car.Delay.DelayLocoBrake.RemoveAt(i);
+					car.Delay.LocoBrake.RemoveAt(i);
 				}
 			}
 		}
@@ -146,19 +146,19 @@ namespace TrainEditor2.Models.Trains
 
 		#region Acceleration
 
-		private double GetDeceleration(MotorCar car, double velocity)
+		private Quantity.Acceleration GetDeceleration(MotorCar car, Quantity.Velocity velocity)
 		{
 			const double AccelerationDueToGravity = 9.80665;
 			const double AirDensity = 1.22497705587732;
 
-			velocity /= 3.6;
-			double mass = car.Mass * 1000.0;
-			double frontalArea = Cars.IndexOf(car) == 0 ? car.ExposedFrontalArea : car.UnexposedFrontalArea;
+			double v = velocity.ToDefaultUnit().Value;
+			double mass = car.Mass.ToDefaultUnit().Value;
+			Quantity.Area frontalArea = Cars.IndexOf(car) == 0 ? car.ExposedFrontalArea : car.UnexposedFrontalArea;
 
-			double f = frontalArea * car.Performance.AerodynamicDragCoefficient * AirDensity / (2.0 * mass);
-			double a = AccelerationDueToGravity * car.Performance.CoefficientOfRollingResistance + f * Math.Pow(velocity, 2.0);
+			double f = frontalArea.ToDefaultUnit().Value * car.Performance.AerodynamicDragCoefficient * AirDensity / (2.0 * mass);
+			double a = AccelerationDueToGravity * car.Performance.CoefficientOfRollingResistance + f * Math.Pow(v, 2.0);
 
-			return a * 3.6;
+			return new Quantity.Acceleration(a);
 		}
 
 		private void DrawAccelerationCurve(System.Drawing.Graphics g, MotorCar car, Acceleration.Entry entry, bool selected)
@@ -168,16 +168,17 @@ namespace TrainEditor2.Models.Trains
 
 			for (int x = 0; x < car.Acceleration.ImageWidth; x++)
 			{
-				double velocity = car.Acceleration.XtoVelocity(x);
-				double acceleration;
+				Quantity.Velocity velocity = car.Acceleration.XtoVelocity(x);
+				Quantity.Acceleration acceleration = car.Acceleration.GetAcceleration(entry, velocity);
 
 				if (car.Acceleration.Resistance)
 				{
-					acceleration = Math.Max(car.Acceleration.GetAcceleration(entry, velocity) - GetDeceleration(car, velocity), 0.0);
-				}
-				else
-				{
-					acceleration = car.Acceleration.GetAcceleration(entry, velocity);
+					acceleration -= GetDeceleration(car, velocity);
+
+					if (acceleration.ToDefaultUnit().Value < 0.0)
+					{
+						acceleration = new Quantity.Acceleration();
+					}
 				}
 
 				int y = (int)Math.Round(car.Acceleration.AccelerationToY(acceleration));
@@ -202,8 +203,8 @@ namespace TrainEditor2.Models.Trains
 
 			// points
 			{
-				double v1 = entry.V1;
-				double a1 = entry.A1;
+				Quantity.Velocity v1 = entry.V1;
+				Quantity.Acceleration a1 = entry.A1;
 
 				if (car.Acceleration.Resistance)
 				{
@@ -215,8 +216,8 @@ namespace TrainEditor2.Models.Trains
 
 				g.FillEllipse(new SolidBrush(color), new Rectangle(x1 - 2, y1 - 2, 5, 5));
 
-				double v2 = entry.V2;
-				double a2 = car.Acceleration.GetAcceleration(entry, v2);
+				Quantity.Velocity v2 = entry.V2;
+				Quantity.Acceleration a2 = car.Acceleration.GetAcceleration(entry, v2);
 
 				if (car.Acceleration.Resistance)
 				{
@@ -239,8 +240,8 @@ namespace TrainEditor2.Models.Trains
 
 				for (int x = 0; x < car.Acceleration.ImageWidth; x++)
 				{
-					double velocity = car.Acceleration.XtoVelocity(x);
-					double acceleration = GetDeceleration(car, velocity);
+					Quantity.Velocity velocity = car.Acceleration.XtoVelocity(x);
+					Quantity.Acceleration acceleration = GetDeceleration(car, velocity);
 
 					int y = (int)Math.Round(car.Acceleration.AccelerationToY(acceleration));
 
@@ -272,7 +273,7 @@ namespace TrainEditor2.Models.Trains
 			// vertical grid
 			for (double v = 0.0; v < car.Acceleration.MaxVelocity; v += 10.0)
 			{
-				float x = (float)car.Acceleration.VelocityToX(v);
+				float x = (float)car.Acceleration.VelocityToX(new Quantity.Velocity(v, car.Acceleration.VelocityUnit));
 				g.DrawLine(grayPen, new PointF(x, 0.0f), new PointF(x, car.Acceleration.ImageHeight));
 				g.DrawString(v.ToString("0", culture), font, grayBrush, new PointF(x, 1.0f));
 			}
@@ -280,7 +281,7 @@ namespace TrainEditor2.Models.Trains
 			// horizontal grid
 			for (double a = 0.0; a < car.Acceleration.MaxAcceleration; a += 1.0)
 			{
-				float y = (float)car.Acceleration.AccelerationToY(a);
+				float y = (float)car.Acceleration.AccelerationToY(new Quantity.Acceleration(a, car.Acceleration.AccelerationUnit));
 				g.DrawLine(grayPen, new PointF(0.0f, y), new PointF(car.Acceleration.ImageWidth, y));
 				g.DrawString(a.ToString("0", culture), font, grayBrush, new PointF(1.0f, y));
 			}

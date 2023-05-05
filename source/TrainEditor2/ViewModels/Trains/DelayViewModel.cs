@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using OpenBveApi.World;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -15,7 +16,17 @@ namespace TrainEditor2.ViewModels.Trains
 				get;
 			}
 
+			internal ReactiveProperty<Unit.Time> UpUnit
+			{
+				get;
+			}
+
 			internal ReactiveProperty<string> Down
+			{
+				get;
+			}
+
+			internal ReactiveProperty<Unit.Time> DownUnit
 			{
 				get;
 			}
@@ -27,8 +38,8 @@ namespace TrainEditor2.ViewModels.Trains
 				Up = entry
 					.ToReactivePropertyAsSynchronized(
 						x => x.Up,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Time(double.Parse(x, NumberStyles.Float, culture), entry.Up.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -40,13 +51,21 @@ namespace TrainEditor2.ViewModels.Trains
 
 						return message;
 					})
+					.AddTo(disposable);
+
+				UpUnit = entry
+					.ToReactivePropertyAsSynchronized(
+						x => x.Up,
+						x => x.UnitValue,
+						x => entry.Up.ToNewUnit(x)
+					)
 					.AddTo(disposable);
 
 				Down = entry
 					.ToReactivePropertyAsSynchronized(
 						x => x.Down,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Time(double.Parse(x, NumberStyles.Float, culture), entry.Down.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -59,38 +78,39 @@ namespace TrainEditor2.ViewModels.Trains
 						return message;
 					})
 					.AddTo(disposable);
+
+				DownUnit = entry
+					.ToReactivePropertyAsSynchronized(
+						x => x.Down,
+						x => x.UnitValue,
+						x => entry.Down.ToNewUnit(x)
+					)
+					.AddTo(disposable);
 			}
 		}
 
-		internal ReadOnlyReactiveCollection<EntryViewModel> DelayPower
+		internal ReadOnlyReactiveCollection<EntryViewModel> Power
 		{
 			get;
 		}
 
-		internal ReadOnlyReactiveCollection<EntryViewModel> DelayBrake
+		internal ReadOnlyReactiveCollection<EntryViewModel> Brake
 		{
 			get;
 		}
 
-		internal ReadOnlyReactiveCollection<EntryViewModel> DelayLocoBrake
-		{
-			get;
-		}
-
-		internal ReadOnlyReactiveCollection<EntryViewModel> DelayElectricBrake
+		internal ReadOnlyReactiveCollection<EntryViewModel> LocoBrake
 		{
 			get;
 		}
 
 		internal DelayViewModel(Delay delay)
 		{
-			DelayPower = delay.DelayPower.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
+			Power = delay.Power.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
 
-			DelayBrake = delay.DelayBrake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
+			Brake = delay.Brake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
 
-			DelayLocoBrake = delay.DelayLocoBrake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
-
-			DelayElectricBrake = delay.DelayElectricBrake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
+			LocoBrake = delay.LocoBrake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
 		}
 	}
 }

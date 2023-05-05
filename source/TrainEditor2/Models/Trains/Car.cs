@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.World;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
@@ -11,8 +12,8 @@ namespace TrainEditor2.Models.Trains
 		internal class Bogie : BindableBase, ICloneable
 		{
 			private bool definedAxles;
-			private double frontAxle;
-			private double rearAxle;
+			private Quantity.Length frontAxle;
+			private Quantity.Length rearAxle;
 			private bool reversed;
 			private string _object;
 
@@ -28,7 +29,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double FrontAxle
+			internal Quantity.Length FrontAxle
 			{
 				get
 				{
@@ -40,7 +41,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double RearAxle
+			internal Quantity.Length RearAxle
 			{
 				get
 				{
@@ -82,28 +83,81 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		private double mass;
-		private double length;
-		private double width;
-		private double height;
-		private double centerOfGravityHeight;
+		internal class Door : BindableBase, ICloneable
+		{
+			private Quantity.Length width;
+			private Quantity.Length maxTolerance;
+
+			internal Quantity.Length Width
+			{
+				get
+				{
+					return width;
+				}
+				set
+				{
+					SetProperty(ref width, value);
+				}
+			}
+
+			internal Quantity.Length MaxTolerance
+			{
+				get
+				{
+					return maxTolerance;
+				}
+				set
+				{
+					SetProperty(ref maxTolerance, value);
+				}
+			}
+
+			internal Door()
+			{
+				Width = new Quantity.Length(1000.0, UnitOfLength.Millimeter);
+				MaxTolerance = new Quantity.Length(0.0, UnitOfLength.Millimeter);
+			}
+
+			public object Clone()
+			{
+				return MemberwiseClone();
+			}
+		}
+
+		internal enum ReAdhesionDevices
+		{
+			None = -1,
+			TypeA = 0,
+			TypeB = 1,
+			TypeC = 2,
+			TypeD = 3
+		}
+
+		private Quantity.Mass mass;
+		private Quantity.Length length;
+		private Quantity.Length width;
+		private Quantity.Length height;
+		private Quantity.Length centerOfGravityHeight;
 		private bool definedAxles;
-		private double frontAxle;
-		private double rearAxle;
+		private Quantity.Length frontAxle;
+		private Quantity.Length rearAxle;
 		private Bogie frontBogie;
 		private Bogie rearBogie;
-		private double exposedFrontalArea;
-		private double unexposedFrontalArea;
+		private Quantity.Area exposedFrontalArea;
+		private Quantity.Area unexposedFrontalArea;
 		private Performance performance;
 		private Delay delay;
-		private Move move;
+		private Jerk jerk;
 		private Brake brake;
 		private Pressure pressure;
 		private bool reversed;
 		private string _object;
 		private bool loadingSway;
+		private Door leftDoor;
+		private Door rightDoor;
+		private ReAdhesionDevices reAdhesionDevice;
 
-		internal double Mass
+		internal Quantity.Mass Mass
 		{
 			get
 			{
@@ -115,7 +169,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Length
+		internal Quantity.Length Length
 		{
 			get
 			{
@@ -127,7 +181,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Width
+		internal Quantity.Length Width
 		{
 			get
 			{
@@ -139,7 +193,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Height
+		internal Quantity.Length Height
 		{
 			get
 			{
@@ -151,7 +205,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double CenterOfGravityHeight
+		internal Quantity.Length CenterOfGravityHeight
 		{
 			get
 			{
@@ -175,7 +229,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double FrontAxle
+		internal Quantity.Length FrontAxle
 		{
 			get
 			{
@@ -187,7 +241,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double RearAxle
+		internal Quantity.Length RearAxle
 		{
 			get
 			{
@@ -223,7 +277,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double ExposedFrontalArea
+		internal Quantity.Area ExposedFrontalArea
 		{
 			get
 			{
@@ -235,7 +289,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double UnexposedFrontalArea
+		internal Quantity.Area UnexposedFrontalArea
 		{
 			get
 			{
@@ -271,15 +325,15 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal Move Move
+		internal Jerk Jerk
 		{
 			get
 			{
-				return move;
+				return jerk;
 			}
 			set
 			{
-				SetProperty(ref move, value);
+				SetProperty(ref jerk, value);
 			}
 		}
 
@@ -343,28 +397,67 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal Door LeftDoor
+		{
+			get
+			{
+				return leftDoor;
+			}
+			set
+			{
+				SetProperty(ref leftDoor, value);
+			}
+		}
+
+		internal Door RightDoor
+		{
+			get
+			{
+				return rightDoor;
+			}
+			set
+			{
+				SetProperty(ref rightDoor, value);
+			}
+		}
+
+		internal ReAdhesionDevices ReAdhesionDevice
+		{
+			get
+			{
+				return reAdhesionDevice;
+			}
+			set
+			{
+				SetProperty(ref reAdhesionDevice, value);
+			}
+		}
+
 		internal Car()
 		{
-			Mass = 40.0;
-			Length = 20.0;
-			Width = 2.6;
-			Height = 3.2;
-			CenterOfGravityHeight = 1.5;
+			Mass = new Quantity.Mass(40.0, UnitOfWeight.MetricTonnes);
+			Length = new Quantity.Length(20.0);
+			Width = new Quantity.Length(2.6);
+			Height = new Quantity.Length(3.2);
+			CenterOfGravityHeight = new Quantity.Length(1.5);
 			DefinedAxles = false;
-			FrontAxle = 8.0;
-			RearAxle = -8.0;
+			FrontAxle = new Quantity.Length(8.0);
+			RearAxle = new Quantity.Length(-8.0);
 			FrontBogie = new Bogie();
 			RearBogie = new Bogie();
-			ExposedFrontalArea = 5.0;
-			UnexposedFrontalArea = 1.6;
+			ExposedFrontalArea = new Quantity.Area(5.0);
+			UnexposedFrontalArea = new Quantity.Area(1.6);
 			Performance = new Performance();
 			Delay = new Delay();
-			Move = new Move();
+			Jerk = new Jerk();
 			Brake = new Brake();
 			Pressure = new Pressure();
 			Reversed = false;
 			Object = string.Empty;
 			LoadingSway = false;
+			LeftDoor = new Door();
+			RightDoor = new Door();
+			ReAdhesionDevice = ReAdhesionDevices.TypeA;
 		}
 
 		public virtual object Clone()
@@ -374,14 +467,16 @@ namespace TrainEditor2.Models.Trains
 			car.RearBogie = (Bogie)RearBogie.Clone();
 			car.Performance = (Performance)Performance.Clone();
 			car.Delay = (Delay)Delay.Clone();
-			car.Move = (Move)Move.Clone();
+			car.Jerk = (Jerk)Jerk.Clone();
 			car.Brake = (Brake)Brake.Clone();
 			car.Pressure = (Pressure)Pressure.Clone();
+			car.LeftDoor = (Door)LeftDoor.Clone();
+			car.RightDoor = (Door)RightDoor.Clone();
 			return car;
 		}
 	}
 
-	internal class MotorCar : Car
+	internal abstract class MotorCar : Car
 	{
 		private Acceleration acceleration;
 		private Motor motor;
@@ -416,32 +511,6 @@ namespace TrainEditor2.Models.Trains
 			Motor = new Motor();
 		}
 
-		internal MotorCar(TrailerCar car)
-		{
-			Mass = car.Mass;
-			Length = car.Length;
-			Width = car.Width;
-			Height = car.Height;
-			CenterOfGravityHeight = car.CenterOfGravityHeight;
-			DefinedAxles = car.DefinedAxles;
-			FrontAxle = car.FrontAxle;
-			RearAxle = car.RearAxle;
-			FrontBogie = car.FrontBogie;
-			RearBogie = car.RearBogie;
-			ExposedFrontalArea = car.ExposedFrontalArea;
-			UnexposedFrontalArea = car.UnexposedFrontalArea;
-			Performance = car.Performance;
-			Delay = car.Delay;
-			Move = car.Move;
-			Brake = car.Brake;
-			Pressure = car.Pressure;
-			Reversed = car.Reversed;
-			Object = car.Object;
-			LoadingSway = car.LoadingSway;
-			Acceleration = new Acceleration();
-			Motor = new Motor();
-		}
-
 		public override object Clone()
 		{
 			MotorCar car = (MotorCar)base.Clone();
@@ -451,13 +520,32 @@ namespace TrainEditor2.Models.Trains
 		}
 	}
 
-	internal class TrailerCar : Car
+	internal abstract class TrailerCar : Car
 	{
-		internal TrailerCar()
+	}
+
+	internal class ControlledMotorCar : MotorCar
+	{
+		private Cab cab;
+
+		internal Cab Cab
 		{
+			get
+			{
+				return cab;
+			}
+			set
+			{
+				SetProperty(ref cab, value);
+			}
 		}
 
-		internal TrailerCar(MotorCar car)
+		internal ControlledMotorCar()
+		{
+			Cab = new EmbeddedCab();
+		}
+
+		public ControlledMotorCar(MotorCar car)
 		{
 			Mass = car.Mass;
 			Length = car.Length;
@@ -473,7 +561,213 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = car.UnexposedFrontalArea;
 			Performance = car.Performance;
 			Delay = car.Delay;
-			Move = car.Move;
+			Jerk = car.Jerk;
+			Brake = car.Brake;
+			Pressure = car.Pressure;
+			Reversed = car.Reversed;
+			Object = car.Object;
+			LoadingSway = car.LoadingSway;
+			Acceleration = car.Acceleration;
+			Motor = car.Motor;
+			Cab = new EmbeddedCab();
+		}
+
+		public ControlledMotorCar(ControlledTrailerCar car)
+		{
+			Mass = car.Mass;
+			Length = car.Length;
+			Width = car.Width;
+			Height = car.Height;
+			CenterOfGravityHeight = car.CenterOfGravityHeight;
+			DefinedAxles = car.DefinedAxles;
+			FrontAxle = car.FrontAxle;
+			RearAxle = car.RearAxle;
+			FrontBogie = car.FrontBogie;
+			RearBogie = car.RearBogie;
+			ExposedFrontalArea = car.ExposedFrontalArea;
+			UnexposedFrontalArea = car.UnexposedFrontalArea;
+			Performance = car.Performance;
+			Delay = car.Delay;
+			Jerk = car.Jerk;
+			Brake = car.Brake;
+			Pressure = car.Pressure;
+			Reversed = car.Reversed;
+			Object = car.Object;
+			LoadingSway = car.LoadingSway;
+			Acceleration = new Acceleration();
+			Motor = new Motor();
+			Cab = car.Cab;
+		}
+
+		public override object Clone()
+		{
+			ControlledMotorCar car = (ControlledMotorCar)base.Clone();
+			car.Cab = (Cab)Cab.Clone();
+			return car;
+		}
+	}
+
+	internal class UncontrolledMotorCar : MotorCar
+	{
+		internal UncontrolledMotorCar()
+		{
+		}
+
+		internal UncontrolledMotorCar(MotorCar car)
+		{
+			Mass = car.Mass;
+			Length = car.Length;
+			Width = car.Width;
+			Height = car.Height;
+			CenterOfGravityHeight = car.CenterOfGravityHeight;
+			DefinedAxles = car.DefinedAxles;
+			FrontAxle = car.FrontAxle;
+			RearAxle = car.RearAxle;
+			FrontBogie = car.FrontBogie;
+			RearBogie = car.RearBogie;
+			ExposedFrontalArea = car.ExposedFrontalArea;
+			UnexposedFrontalArea = car.UnexposedFrontalArea;
+			Performance = car.Performance;
+			Delay = car.Delay;
+			Jerk = car.Jerk;
+			Brake = car.Brake;
+			Pressure = car.Pressure;
+			Reversed = car.Reversed;
+			Object = car.Object;
+			LoadingSway = car.LoadingSway;
+			Acceleration = car.Acceleration;
+			Motor = car.Motor;
+		}
+
+		internal UncontrolledMotorCar(Car car)
+		{
+			Mass = car.Mass;
+			Length = car.Length;
+			Width = car.Width;
+			Height = car.Height;
+			CenterOfGravityHeight = car.CenterOfGravityHeight;
+			DefinedAxles = car.DefinedAxles;
+			FrontAxle = car.FrontAxle;
+			RearAxle = car.RearAxle;
+			FrontBogie = car.FrontBogie;
+			RearBogie = car.RearBogie;
+			ExposedFrontalArea = car.ExposedFrontalArea;
+			UnexposedFrontalArea = car.UnexposedFrontalArea;
+			Performance = car.Performance;
+			Delay = car.Delay;
+			Jerk = car.Jerk;
+			Brake = car.Brake;
+			Pressure = car.Pressure;
+			Reversed = car.Reversed;
+			Object = car.Object;
+			LoadingSway = car.LoadingSway;
+			Acceleration = new Acceleration();
+			Motor = new Motor();
+		}
+	}
+
+	internal class ControlledTrailerCar : TrailerCar
+	{
+		private Cab cab;
+
+		internal Cab Cab
+		{
+			get
+			{
+				return cab;
+			}
+			set
+			{
+				SetProperty(ref cab, value);
+			}
+		}
+
+		internal ControlledTrailerCar()
+		{
+			Cab = new EmbeddedCab();
+		}
+
+		internal ControlledTrailerCar(ControlledMotorCar car)
+		{
+			Mass = car.Mass;
+			Length = car.Length;
+			Width = car.Width;
+			Height = car.Height;
+			CenterOfGravityHeight = car.CenterOfGravityHeight;
+			DefinedAxles = car.DefinedAxles;
+			FrontAxle = car.FrontAxle;
+			RearAxle = car.RearAxle;
+			FrontBogie = car.FrontBogie;
+			RearBogie = car.RearBogie;
+			ExposedFrontalArea = car.ExposedFrontalArea;
+			UnexposedFrontalArea = car.UnexposedFrontalArea;
+			Performance = car.Performance;
+			Delay = car.Delay;
+			Jerk = car.Jerk;
+			Brake = car.Brake;
+			Pressure = car.Pressure;
+			Reversed = car.Reversed;
+			Object = car.Object;
+			LoadingSway = car.LoadingSway;
+			Cab = car.Cab;
+		}
+
+		internal ControlledTrailerCar(Car car)
+		{
+			Mass = car.Mass;
+			Length = car.Length;
+			Width = car.Width;
+			Height = car.Height;
+			CenterOfGravityHeight = car.CenterOfGravityHeight;
+			DefinedAxles = car.DefinedAxles;
+			FrontAxle = car.FrontAxle;
+			RearAxle = car.RearAxle;
+			FrontBogie = car.FrontBogie;
+			RearBogie = car.RearBogie;
+			ExposedFrontalArea = car.ExposedFrontalArea;
+			UnexposedFrontalArea = car.UnexposedFrontalArea;
+			Performance = car.Performance;
+			Delay = car.Delay;
+			Jerk = car.Jerk;
+			Brake = car.Brake;
+			Pressure = car.Pressure;
+			Reversed = car.Reversed;
+			Object = car.Object;
+			LoadingSway = car.LoadingSway;
+			Cab = new EmbeddedCab();
+		}
+
+		public override object Clone()
+		{
+			ControlledTrailerCar car = (ControlledTrailerCar)base.Clone();
+			car.Cab = (Cab)Cab.Clone();
+			return car;
+		}
+	}
+
+	internal class UncontrolledTrailerCar : TrailerCar
+	{
+		internal UncontrolledTrailerCar()
+		{
+		}
+
+		internal UncontrolledTrailerCar(Car car)
+		{
+			Mass = car.Mass;
+			Length = car.Length;
+			Width = car.Width;
+			Height = car.Height;
+			CenterOfGravityHeight = car.CenterOfGravityHeight;
+			DefinedAxles = car.DefinedAxles;
+			FrontAxle = car.FrontAxle;
+			RearAxle = car.RearAxle;
+			FrontBogie = car.FrontBogie;
+			RearBogie = car.RearBogie;
+			ExposedFrontalArea = car.ExposedFrontalArea;
+			UnexposedFrontalArea = car.UnexposedFrontalArea;
+			Performance = car.Performance;
+			Delay = car.Delay;
+			Jerk = car.Jerk;
 			Brake = car.Brake;
 			Pressure = car.Pressure;
 			Reversed = car.Reversed;

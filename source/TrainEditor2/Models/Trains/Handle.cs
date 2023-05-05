@@ -1,6 +1,5 @@
 ﻿using System;
 using Prism.Mvvm;
-using TrainManager.Handles;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -9,7 +8,28 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal class Handle : BindableBase, ICloneable
 	{
-		private HandleType handleType;
+		internal enum HandleTypes
+		{
+			Separate = 0,
+			Combined = 1
+		}
+
+		internal enum EbHandleBehaviour
+		{
+			NoAction = 0,
+			PowerNeutral = 1,
+			ReverserNeutral = 2,
+			PowerReverserNeutral = 3
+		}
+
+		internal enum LocoBrakeType
+		{
+			Combined = 0,
+			Independent = 1,
+			Blocking = 2
+		}
+
+		private HandleTypes handleType;
 		private int powerNotches;
 		private int brakeNotches;
 		private int powerNotchReduceSteps;
@@ -19,7 +39,7 @@ namespace TrainEditor2.Models.Trains
 		private int driverPowerNotches;
 		private int driverBrakeNotches;
 
-		internal HandleType HandleType
+		internal HandleTypes HandleType
 		{
 			get
 			{
@@ -129,7 +149,7 @@ namespace TrainEditor2.Models.Trains
 
 		internal Handle()
 		{
-			HandleType = HandleType.TwinHandle;
+			HandleType = HandleTypes.Separate;
 			PowerNotches = 8;
 			BrakeNotches = 8;
 			PowerNotchReduceSteps = 0;

@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToThis(ThisViewModel y)
+		private IDisposable BindToThis(ThisViewModel _this)
 		{
 			CompositeDisposable thisDisposable = new CompositeDisposable();
 
-			y.Resolution
+			_this.Resolution
 				.BindTo(
 					textBoxThisResolution,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.Resolution
+			_this.Resolution
 				.BindToErrorProvider(errorProvider, textBoxThisResolution)
 				.AddTo(thisDisposable);
 
-			y.Left
+			_this.Left
 				.BindTo(
 					textBoxThisLeft,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,14 +50,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.Left
+			_this.Left
 				.BindToErrorProvider(errorProvider, textBoxThisLeft)
 				.AddTo(thisDisposable);
 
-			y.Right
+			_this.Right
 				.BindTo(
 					textBoxThisRight,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -70,14 +70,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.Right
+			_this.Right
 				.BindToErrorProvider(errorProvider, textBoxThisRight)
 				.AddTo(thisDisposable);
 
-			y.Top
+			_this.Top
 				.BindTo(
 					textBoxThisTop,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -90,14 +90,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.Top
+			_this.Top
 				.BindToErrorProvider(errorProvider, textBoxThisTop)
 				.AddTo(thisDisposable);
 
-			y.Bottom
+			_this.Bottom
 				.BindTo(
 					textBoxThisBottom,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -110,14 +110,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.Bottom
+			_this.Bottom
 				.BindToErrorProvider(errorProvider, textBoxThisBottom)
 				.AddTo(thisDisposable);
 
-			y.DaytimeImage
+			_this.DaytimeImage
 				.BindTo(
 					textBoxThisDaytimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -130,10 +130,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.NighttimeImage
+			_this.NighttimeImage
 				.BindTo(
 					textBoxThisNighttimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -146,10 +146,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.TransparentColor
+			_this.TransparentColor
 				.BindTo(
 					textBoxThisTransparentColor,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -162,14 +162,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.TransparentColor
+			_this.TransparentColor
 				.BindToErrorProvider(errorProvider, textBoxThisTransparentColor)
 				.AddTo(thisDisposable);
 
-			y.CenterX
+			_this.CenterX
 				.BindTo(
 					textBoxThisCenterX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -182,14 +182,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.CenterX
+			_this.CenterX
 				.BindToErrorProvider(errorProvider, textBoxThisCenterX)
 				.AddTo(thisDisposable);
 
-			y.CenterY
+			_this.CenterY
 				.BindTo(
 					textBoxThisCenterY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -202,14 +202,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.CenterY
+			_this.CenterY
 				.BindToErrorProvider(errorProvider, textBoxThisCenterY)
 				.AddTo(thisDisposable);
 
-			y.OriginX
+			_this.OriginX
 				.BindTo(
 					textBoxThisOriginX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -222,14 +222,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.OriginX
+			_this.OriginX
 				.BindToErrorProvider(errorProvider, textBoxThisOriginX)
 				.AddTo(thisDisposable);
 
-			y.OriginY
+			_this.OriginY
 				.BindTo(
 					textBoxThisOriginY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -242,7 +242,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(thisDisposable);
 
-			y.OriginY
+			_this.OriginY
 				.BindToErrorProvider(errorProvider, textBoxThisOriginY)
 				.AddTo(thisDisposable);
 

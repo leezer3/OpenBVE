@@ -1,21 +1,17 @@
-﻿using System.Globalization;
-using Reactive.Bindings;
+﻿using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
-using TrainManager.Car;
-using TrainManager.SafetySystems;
 
 namespace TrainEditor2.ViewModels.Trains
 {
 	internal class DeviceViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<AtsModes> Ats
+		internal ReactiveProperty<Device.AtsModes> Ats
 		{
 			get;
 		}
 
-		internal ReactiveProperty<AtcModes> Atc
+		internal ReactiveProperty<Device.AtcModes> Atc
 		{
 			get;
 		}
@@ -35,40 +31,23 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<ReadhesionDeviceType> ReAdhesionDevice
+		internal ReactiveProperty<Device.PassAlarmModes> PassAlarm
 		{
 			get;
 		}
 
-		internal ReactiveProperty<PassAlarmType> PassAlarm
+		internal ReactiveProperty<Device.DoorModes> DoorOpenMode
 		{
 			get;
 		}
 
-		internal ReactiveProperty<DoorMode> DoorOpenMode
-		{
-			get;
-		}
-
-		internal ReactiveProperty<DoorMode> DoorCloseMode
-		{
-			get;
-		}
-
-		internal ReactiveProperty<string> DoorWidth
-		{
-			get;
-		}
-
-		internal ReactiveProperty<string> DoorMaxTolerance
+		internal ReactiveProperty<Device.DoorModes> DoorCloseMode
 		{
 			get;
 		}
 
 		internal DeviceViewModel(Device device, Handle handle)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			Ats = device
 				.ToReactivePropertyAsSynchronized(x => x.Ats)
 				.AddTo(disposable);
@@ -98,10 +77,6 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
-			ReAdhesionDevice = device
-				.ToReactivePropertyAsSynchronized(x => x.ReAdhesionDevice)
-				.AddTo(disposable);
-
 			PassAlarm = device
 				.ToReactivePropertyAsSynchronized(x => x.PassAlarm)
 				.AddTo(disposable);
@@ -112,42 +87,6 @@ namespace TrainEditor2.ViewModels.Trains
 
 			DoorCloseMode = device
 				.ToReactivePropertyAsSynchronized(x => x.DoorCloseMode)
-				.AddTo(disposable);
-
-			DoorWidth = device
-				.ToReactivePropertyAsSynchronized(
-					x => x.DoorWidth,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
-				.AddTo(disposable);
-
-			DoorMaxTolerance = device
-				.ToReactivePropertyAsSynchronized(
-					x => x.DoorMaxTolerance,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 		}
 	}

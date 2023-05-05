@@ -1,106 +1,132 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
+using TrainEditor2.Extensions;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToTrain(TrainViewModel x)
+		private IDisposable BindToTrain(TrainViewModel train)
 		{
 			CompositeDisposable trainDisposable = new CompositeDisposable();
-
 			CompositeDisposable handleDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable deviceDisposable = new CompositeDisposable().AddTo(trainDisposable);
-			CompositeDisposable cabDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable carDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable couplerDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-			x.Cars
+			train.Cars
 				.CollectionChangedAsObservable()
 				.ToReadOnlyReactivePropertySlim()
 				.Subscribe(_ =>
 				{
-					int index = comboBoxDriverCar.SelectedIndex;
+					int index = comboBoxInitialDriverCar.SelectedIndex;
 
-					comboBoxDriverCar.Items.Clear();
-					comboBoxDriverCar.Items.AddRange(Enumerable.Range(0, x.Cars.Count).OfType<object>().ToArray());
+					comboBoxInitialDriverCar.Items.Clear();
+					comboBoxInitialDriverCar.Items.AddRange(Enumerable.Range(0, train.Cars.Count).OfType<object>().ToArray());
 
-					if (index < comboBoxDriverCar.Items.Count)
+					if (index < comboBoxInitialDriverCar.Items.Count)
 					{
-						comboBoxDriverCar.SelectedIndex = index;
+						comboBoxInitialDriverCar.SelectedIndex = index;
 					}
 					else
 					{
-						comboBoxDriverCar.SelectedIndex = comboBoxDriverCar.Items.Count - 1;
+						comboBoxInitialDriverCar.SelectedIndex = comboBoxInitialDriverCar.Items.Count - 1;
 					}
 				})
 				.AddTo(trainDisposable);
 
-			x.Handle
-				.Subscribe(y =>
+			train.Handle
+				.Subscribe(x =>
 				{
 					handleDisposable.Dispose();
 					handleDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-					BindToHandle(y).AddTo(handleDisposable);
+					BindToHandle(x).AddTo(handleDisposable);
 				})
 				.AddTo(trainDisposable);
 
-			x.Device
-				.Subscribe(y =>
+			train.Device
+				.Subscribe(x =>
 				{
 					deviceDisposable.Dispose();
 					deviceDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-					BindToDevice(y).AddTo(deviceDisposable);
+					BindToDevice(x).AddTo(deviceDisposable);
 				})
 				.AddTo(trainDisposable);
 
-			x.Cab
-				.Subscribe(y =>
-				{
-					cabDisposable.Dispose();
-					cabDisposable = new CompositeDisposable().AddTo(trainDisposable);
-
-					BindToCab(y).AddTo(cabDisposable);
-				})
+			train.InitialDriverCar
+				.BindTo(
+					comboBoxInitialDriverCar,
+					z => z.SelectedIndex,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxInitialDriverCar.SelectedIndexChanged += h,
+							h => comboBoxInitialDriverCar.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(trainDisposable);
 
-			x.SelectedCar
-				.Subscribe(y =>
+			train.InitialDriverCar
+				.BindToErrorProvider(errorProvider, comboBoxInitialDriverCar)
+				.AddTo(trainDisposable);
+
+			train.SelectedCar
+				.Subscribe(x =>
 				{
 					carDisposable.Dispose();
 					carDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-					if (y != null)
+					if (x != null)
 					{
-						BindToCar(y).AddTo(carDisposable);
+						BindToCar(x).AddTo(carDisposable);
 					}
 				})
 				.AddTo(trainDisposable);
 
-			x.SelectedCar
+			train.SelectedCar
 				.BindTo(
 					checkBoxIsMotorCar,
-					y => y.Checked,
-					y => y is MotorCarViewModel
+					x => x.Checked,
+					x => x is MotorCarViewModel
 				)
 				.AddTo(trainDisposable);
 
-			x.SelectedCoupler
-				.Subscribe(y =>
+			train.SelectedCar
+				.BindTo(
+					checkBoxIsControlledCar,
+					x => x.Checked,
+					x => x is ControlledMotorCarViewModel || x is ControlledTrailerCarViewModel
+				)
+				.AddTo(trainDisposable);
+
+			train.SelectedCar
+				.BindTo(
+					groupBoxCab,
+					x => x.Enabled,
+					x => x is ControlledMotorCarViewModel || x is ControlledTrailerCarViewModel
+				)
+				.AddTo(trainDisposable);
+
+			train.SelectedCoupler
+				.Subscribe(x =>
 				{
 					couplerDisposable.Dispose();
 					couplerDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-					if (y != null)
+					if (x != null)
 					{
-						BindToCoupler(y).AddTo(couplerDisposable);
+						BindToCoupler(x).AddTo(couplerDisposable);
 					}
 				})
 				.AddTo(trainDisposable);

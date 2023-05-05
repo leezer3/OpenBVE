@@ -1,9 +1,8 @@
-﻿using System;
-using OpenBveApi.Trains;
+﻿using OpenBveApi.Trains;
 
 namespace TrainEditor2.Simulation.TrainManager
 {
-	public partial class TrainManager
+	public static partial class TrainManager
 	{
 		internal class Train : AbstractTrain
 		{
@@ -11,7 +10,7 @@ namespace TrainEditor2.Simulation.TrainManager
 
 			internal Train()
 			{
-				Car = new Car();
+				Car = new Car(this);
 			}
 
 			public override void Dispose()

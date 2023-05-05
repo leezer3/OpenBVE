@@ -144,6 +144,8 @@
     <Compile Include="Objects\Parsers\ObjParsers.cs" />
     <Compile Include="Objects\Parsers\XParsers.cs" />
     <Compile Include="Plugins\ContentLoadingPlugin.cs" />
+    <Compile Include="World\UnitConversions\Area.cs" />
+    <Compile Include="World\UnitConversions\Quantity.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -234,6 +236,7 @@
     <Compile Include="Train\TrainState.cs" />
     <Compile Include="Train\TrainStopState.cs" />
     <Compile Include="Train\TravelDirection.cs" />
+    <Compile Include="World\UnitConversions\Unit.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />

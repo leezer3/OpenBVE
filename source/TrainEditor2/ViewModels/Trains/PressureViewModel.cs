@@ -1,168 +1,96 @@
-﻿using System;
-using System.Globalization;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 
 namespace TrainEditor2.ViewModels.Trains
 {
 	internal class PressureViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<string> BrakeCylinderServiceMaximumPressure
+		internal ReadOnlyReactivePropertySlim<CompressorViewModel> Compressor
 		{
 			get;
 		}
 
-		internal ReactiveProperty<string> BrakeCylinderEmergencyMaximumPressure
+		internal ReadOnlyReactivePropertySlim<MainReservoirViewModel> MainReservoir
 		{
 			get;
 		}
 
-		internal ReactiveProperty<string> MainReservoirMinimumPressure
+		internal ReadOnlyReactivePropertySlim<AuxiliaryReservoirViewModel> AuxiliaryReservoir
 		{
 			get;
 		}
 
-		internal ReactiveProperty<string> MainReservoirMaximumPressure
+		internal ReadOnlyReactivePropertySlim<EqualizingReservoirViewModel> EqualizingReservoir
 		{
 			get;
 		}
 
-		internal ReactiveProperty<string> BrakePipeNormalPressure
+		internal ReadOnlyReactivePropertySlim<BrakePipeViewModel> BrakePipe
+		{
+			get;
+		}
+
+		internal ReadOnlyReactivePropertySlim<StraightAirPipeViewModel> StraightAirPipe
+		{
+			get;
+		}
+
+		internal ReadOnlyReactivePropertySlim<BrakeCylinderViewModel> BrakeCylinder
 		{
 			get;
 		}
 
 		internal PressureViewModel(Pressure pressure)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			BrakeCylinderServiceMaximumPressure = pressure
-				.ToReactivePropertyAsSynchronized(
-					x => x.BrakeCylinderServiceMaximumPressure,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
+			Compressor = pressure
+				.ObserveProperty(x => x.Compressor)
+				.Do(_ => Compressor?.Value.Dispose())
+				.Select(x => new CompressorViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			BrakeCylinderEmergencyMaximumPressure = pressure
-				.ToReactivePropertyAsSynchronized(
-					x => x.BrakeCylinderEmergencyMaximumPressure,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
+			MainReservoir = pressure
+				.ObserveProperty(x => x.MainReservoir)
+				.Do(_ => MainReservoir?.Value.Dispose())
+				.Select(x => new MainReservoirViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			MainReservoirMinimumPressure = pressure
-				.ToReactivePropertyAsSynchronized(
-					x => x.MainReservoirMinimumPressure,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
-
-					return message;
-				})
+			AuxiliaryReservoir = pressure
+				.ObserveProperty(x => x.AuxiliaryReservoir)
+				.Do(_ => AuxiliaryReservoir?.Value.Dispose())
+				.Select(x => new AuxiliaryReservoirViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			MainReservoirMaximumPressure = pressure
-				.ToReactivePropertyAsSynchronized(
-					x => x.MainReservoirMaximumPressure,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
-
-					return message;
-				})
+			EqualizingReservoir = pressure
+				.ObserveProperty(x => x.EqualizingReservoir)
+				.Do(_ => EqualizingReservoir?.Value.Dispose())
+				.Select(x => new EqualizingReservoirViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			BrakePipeNormalPressure = pressure
-				.ToReactivePropertyAsSynchronized(
-					x => x.BrakePipeNormalPressure,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
-
-					return message;
-				})
+			BrakePipe = pressure
+				.ObserveProperty(x => x.BrakePipe)
+				.Do(_ => BrakePipe?.Value.Dispose())
+				.Select(x => new BrakePipeViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			BrakeCylinderServiceMaximumPressure
-				.SetValidateNotifyError(x =>
-				{
-					double service;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.Positive, out service, out message))
-					{
-						double emergency;
-
-						if (Utilities.TryParse(BrakeCylinderEmergencyMaximumPressure.Value, NumberRange.Positive, out emergency) && service > emergency)
-						{
-							return "The BrakeCylinderEmergencyMaximumPressure is required to be greater than or equal to BrakeCylinderServiceMaximumPressure.";
-						}
-					}
-
-					return message;
-				})
-				.Subscribe(_ => BrakeCylinderEmergencyMaximumPressure.ForceValidate())
+			StraightAirPipe = pressure
+				.ObserveProperty(x => x.StraightAirPipe)
+				.Do(_ => StraightAirPipe?.Value.Dispose())
+				.Select(x => new StraightAirPipeViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			BrakeCylinderServiceMaximumPressure.ObserveHasErrors
-				.ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.DistinctUntilChanged)
-				.Where(x => !x)
-				.Subscribe(_ => BrakeCylinderServiceMaximumPressure.ForceNotify())
-				.AddTo(disposable);
-
-			BrakeCylinderEmergencyMaximumPressure
-				.SetValidateNotifyError(x =>
-				{
-					double emergency;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.Positive, out emergency, out message))
-					{
-						double service;
-
-						if (Utilities.TryParse(BrakeCylinderServiceMaximumPressure.Value, NumberRange.Positive, out service) && emergency < service)
-						{
-							return "The BrakeCylinderEmergencyMaximumPressure is required to be greater than or equal to BrakeCylinderServiceMaximumPressure.";
-						}
-					}
-
-					return message;
-				})
-				.Subscribe(_ => BrakeCylinderServiceMaximumPressure.ForceValidate())
-				.AddTo(disposable);
-
-			BrakeCylinderEmergencyMaximumPressure.ObserveHasErrors
-				.ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.DistinctUntilChanged)
-				.Where(x => !x)
-				.Subscribe(_ => BrakeCylinderEmergencyMaximumPressure.ForceNotify())
+			BrakeCylinder = pressure
+				.ObserveProperty(x => x.BrakeCylinder)
+				.Do(_ => BrakeCylinder?.Value.Dispose())
+				.Select(x => new BrakeCylinderViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 		}
 	}

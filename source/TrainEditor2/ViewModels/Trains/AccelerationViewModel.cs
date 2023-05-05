@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Reactive.Linq;
+using OpenBveApi.World;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -19,7 +21,17 @@ namespace TrainEditor2.ViewModels.Trains
 				get;
 			}
 
+			internal ReactiveProperty<Unit.Acceleration> A0_Unit
+			{
+				get;
+			}
+
 			internal ReactiveProperty<string> A1
+			{
+				get;
+			}
+
+			internal ReactiveProperty<Unit.Acceleration> A1_Unit
 			{
 				get;
 			}
@@ -29,7 +41,17 @@ namespace TrainEditor2.ViewModels.Trains
 				get;
 			}
 
+			internal ReactiveProperty<Unit.Velocity> V1_Unit
+			{
+				get;
+			}
+
 			internal ReactiveProperty<string> V2
+			{
+				get;
+			}
+
+			internal ReactiveProperty<Unit.Velocity> V2_Unit
 			{
 				get;
 			}
@@ -46,8 +68,8 @@ namespace TrainEditor2.ViewModels.Trains
 				A0 = entry
 					.ToReactivePropertyAsSynchronized(
 						x => x.A0,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Acceleration(double.Parse(x, NumberStyles.Float, culture), entry.A0.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -59,13 +81,21 @@ namespace TrainEditor2.ViewModels.Trains
 
 						return message;
 					})
+					.AddTo(disposable);
+
+				A0_Unit = entry
+					.ToReactivePropertyAsSynchronized(
+						x => x.A0,
+						x => x.UnitValue,
+						x => entry.A0.ToNewUnit(x)
+					)
 					.AddTo(disposable);
 
 				A1 = entry
 					.ToReactivePropertyAsSynchronized(
 						x => x.A1,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Acceleration(double.Parse(x, NumberStyles.Float, culture), entry.A1.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -77,13 +107,21 @@ namespace TrainEditor2.ViewModels.Trains
 
 						return message;
 					})
+					.AddTo(disposable);
+
+				A1_Unit = entry
+					.ToReactivePropertyAsSynchronized(
+						x => x.A1,
+						x => x.UnitValue,
+						x => entry.A1.ToNewUnit(x)
+					)
 					.AddTo(disposable);
 
 				V1 = entry
 					.ToReactivePropertyAsSynchronized(
 						x => x.V1,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Velocity(double.Parse(x, NumberStyles.Float, culture), entry.V1.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -97,11 +135,19 @@ namespace TrainEditor2.ViewModels.Trains
 					})
 					.AddTo(disposable);
 
+				V1_Unit = entry
+					.ToReactivePropertyAsSynchronized(
+						x => x.V1,
+						x => x.UnitValue,
+						x => entry.V1.ToNewUnit(x)
+					)
+					.AddTo(disposable);
+
 				V2 = entry
 					.ToReactivePropertyAsSynchronized(
 						x => x.V2,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Velocity(double.Parse(x, NumberStyles.Float, culture), entry.V2.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -113,6 +159,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 						return message;
 					})
+					.AddTo(disposable);
+
+				V2_Unit = entry
+					.ToReactivePropertyAsSynchronized(
+						x => x.V2,
+						x => x.UnitValue,
+						x => entry.V2.ToNewUnit(x)
+					)
 					.AddTo(disposable);
 
 				E = entry
@@ -146,6 +200,16 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 
 		internal ReadOnlyReactivePropertySlim<EntryViewModel> SelectedEntry
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Velocity> VelocityUnit
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Acceleration> AccelerationUnit
 		{
 			get;
 		}
@@ -261,6 +325,14 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
+			VelocityUnit = acceleration
+				.ToReactivePropertyAsSynchronized(x => x.VelocityUnit)
+				.AddTo(disposable);
+
+			AccelerationUnit = acceleration
+				.ToReactivePropertyAsSynchronized(x => x.AccelerationUnit)
+				.AddTo(disposable);
+
 			MinVelocity = acceleration
 				.ToReactivePropertyAsSynchronized(
 					x => x.MinVelocity,
@@ -299,13 +371,13 @@ namespace TrainEditor2.ViewModels.Trains
 
 			NowVelocity = acceleration
 				.ObserveProperty(x => x.NowVelocity)
-				.Select(x => $"{x} km/h")
+				.Select(x => $"{x} {Unit.GetRewords(acceleration.VelocityUnit).First()}")
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
 			NowAcceleration = acceleration
 				.ObserveProperty(x => x.NowAcceleration)
-				.Select(x => $"{x} km/h/s")
+				.Select(x => $"{x} {Unit.GetRewords(acceleration.AccelerationUnit).First()}")
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 

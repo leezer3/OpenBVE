@@ -1,6 +1,7 @@
 using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.World;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -10,14 +11,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToCoupler(CouplerViewModel y)
+		private IDisposable BindToCoupler(CouplerViewModel coupler)
 		{
 			CompositeDisposable couplerDisposable = new CompositeDisposable();
 
-			y.Min
+			coupler.Min
 				.BindTo(
 					textBoxCouplerMin,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +31,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(couplerDisposable);
 
-			y.Min
+			coupler.Min
 				.BindToErrorProvider(errorProvider, textBoxCouplerMin)
 				.AddTo(couplerDisposable);
 
-			y.Max
+			coupler.MinUnit
+				.BindTo(
+					comboBoxCouplerMinUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCouplerMinUnit.SelectedIndexChanged += h,
+							h => comboBoxCouplerMinUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(couplerDisposable);
+
+			coupler.Max
 				.BindTo(
 					textBoxCouplerMax,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,14 +67,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(couplerDisposable);
 
-			y.Max
+			coupler.Max
 				.BindToErrorProvider(errorProvider, textBoxCouplerMax)
 				.AddTo(couplerDisposable);
 
-			y.Object
+			coupler.MaxUnit
+				.BindTo(
+					comboBoxCouplerMaxUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCouplerMaxUnit.SelectedIndexChanged += h,
+							h => comboBoxCouplerMaxUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(couplerDisposable);
+
+			coupler.Object
 				.BindTo(
 					textBoxCouplerObject,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -69,8 +102,6 @@ namespace TrainEditor2.Views
 						.ToUnit()
 				)
 				.AddTo(couplerDisposable);
-
-			
 
 			return couplerDisposable;
 		}

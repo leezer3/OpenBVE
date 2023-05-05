@@ -1,103 +1,169 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
-using TrainManager.Car;
-using TrainManager.Motor;
-using TrainManager.Trains;
 
 namespace TrainEditor2.Simulation.TrainManager
 {
-	public partial class TrainManager
+	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal class Car : CarBase
+		internal class Car : AbstractCar
 		{
+			private readonly Train baseTrain;
+			internal CarSpecs Specs;
+			internal CarSounds Sounds;
 
-			public Car() : base(null, 0)
+			internal Car(Train baseTrain)
 			{
-				Sounds = new CarSounds();
-				Specs.IsMotorCar = true;
-			}
-
-			public Car(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient) : base(train, index, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient)
-			{
-				throw new NotSupportedException("Should not be called in TrainEditor2");
-			}
-
-			public Car(TrainBase train, int index) : base(train, index)
-			{
-				throw new NotSupportedException("Should not be called in TrainEditor2");
+				this.baseTrain = baseTrain;
 			}
 
 			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
 			internal void InitializeCarSounds()
 			{
-				Sounds.Run = new Dictionary<int, CarSound>();
-				Sounds.Flange = new Dictionary<int, CarSound>();
+				Sounds.Run = new CarSound[] { };
+				Sounds.RunVolume = new double[] { };
 			}
 
 			internal void UpdateRunSounds(double TimeElapsed, int RunIndex)
 			{
-				if (Sounds.Run == null || Sounds.Run.Count == 0)
+				if (Sounds.Run == null || Sounds.Run.Length == 0)
 				{
 					return;
 				}
 
 				const double factor = 0.04; // 90 km/h -> m/s -> 1/x
-				double speed = Math.Abs(CurrentSpeed);
+				double speed = Math.Abs(Specs.CurrentSpeed);
 				double pitch = speed * factor;
 				double baseGain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
 
-				for (int i = 0; i < Sounds.Run.Count; i++)
+				for (int j = 0; j < Sounds.Run.Length; j++)
 				{
-					int key = Sounds.Run.ElementAt(i).Key;
-					if (key == RunIndex)
+					if (j == RunIndex)
 					{
-						Sounds.Run[key].TargetVolume += 3.0 * TimeElapsed;
+						Sounds.RunVolume[j] += 3.0 * TimeElapsed;
 
-						if (Sounds.Run[key].TargetVolume > 1.0)
+						if (Sounds.RunVolume[j] > 1.0)
 						{
-							Sounds.Run[key].TargetVolume = 1.0;
+							Sounds.RunVolume[j] = 1.0;
 						}
 					}
 					else
 					{
-						Sounds.Run[key].TargetVolume -= 3.0 * TimeElapsed;
+						Sounds.RunVolume[j] -= 3.0 * TimeElapsed;
 
-						if (Sounds.Run[key].TargetVolume < 0.0)
+						if (Sounds.RunVolume[j] < 0.0)
 						{
-							Sounds.Run[key].TargetVolume = 0.0;
+							Sounds.RunVolume[j] = 0.0;
 						}
 					}
 
-					double gain = baseGain * Sounds.Run[key].TargetVolume;
+					double gain = baseGain * Sounds.RunVolume[j];
 
-					if (Sounds.Run[key].IsPlaying)
+					if (Program.SoundApi.IsPlaying(Sounds.Run[j].Source))
 					{
 						if (pitch > 0.01 & gain > 0.001)
 						{
-							Sounds.Run[key].Source.Pitch = pitch;
-							Sounds.Run[key].Source.Volume = gain;
+							Sounds.Run[j].Source.Pitch = pitch;
+							Sounds.Run[j].Source.Volume = gain;
 						}
 						else
 						{
-							Sounds.Run[key].Stop();
+							Sounds.Run[j].Stop();
 						}
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						Sounds.Run[key].Play(pitch, gain, this, true);
+						SoundBuffer buffer = Sounds.Run[j].Buffer;
+
+						if (buffer != null)
+						{
+							Sounds.Run[j].Play(pitch, gain, baseTrain.Car, true);
+						}
 					}
 				}
 			}
 
+			internal void UpdateMotorSounds(bool[] isPlayPowerTables, bool[] isPlayBrakeTables)
+			{
+				float speed = (float)Math.Abs(Specs.CurrentPerceivedSpeed);
+				int oDir = Sounds.Motor.CurrentAccelerationDirection;
+				int nDir = Math.Sign(Specs.CurrentAccelerationOutput);
 
+				if (oDir > 0 & nDir <= 0)
+				{
+					foreach (MotorSound.Table table in Sounds.Motor.PowerTables)
+					{
+						Program.SoundApi.StopSound(table.PlayingSource);
+						table.PlayingSource = null;
+						table.PlayingBuffer = null;
+					}
+				}
+				else if (oDir < 0 & nDir >= 0)
+				{
+					foreach (MotorSound.Table table in Sounds.Motor.BrakeTables)
+					{
+						Program.SoundApi.StopSound(table.PlayingSource);
+						table.PlayingSource = null;
+						table.PlayingBuffer = null;
+					}
+				}
+
+				if (nDir != 0)
+				{
+					MotorSound.Table[] tables = nDir > 0 ? Sounds.Motor.PowerTables : Sounds.Motor.BrakeTables;
+					bool[] isPlayTables = nDir > 0 ? isPlayPowerTables : isPlayBrakeTables;
+
+					for (int i = 0; i < tables.Length; i++)
+					{
+						MotorSound.Table table = tables[i];
+						MotorSound.Entry entry = table.GetEntry(speed);
+
+						if (!isPlayTables[i])
+						{
+							entry.Buffer = null;
+						}
+
+						if (entry.Buffer != table.PlayingBuffer)
+						{
+							Program.SoundApi.StopSound(table.PlayingSource);
+							if (entry.Buffer != null)
+							{
+								table.PlayingSource = Program.SoundApi.PlaySound(entry.Buffer, entry.Pitch, entry.Gain, Sounds.Motor.Position, baseTrain, true);
+								table.PlayingBuffer = entry.Buffer;
+							}
+							else
+							{
+								table.PlayingSource = null;
+								table.PlayingBuffer = null;
+							}
+						}
+						else if (entry.Buffer != null)
+						{
+							if (table.PlayingSource != null)
+							{
+								table.PlayingSource.Pitch = entry.Pitch;
+								table.PlayingSource.Volume = entry.Gain;
+							}
+						}
+						else
+						{
+							Program.SoundApi.StopSound(table.PlayingSource);
+							table.PlayingSource = null;
+							table.PlayingBuffer = null;
+						}
+					}
+				}
+
+				Sounds.Motor.CurrentAccelerationDirection = nDir;
+			}
 
 			internal void ApplySounds()
 			{
+				InitializeCarSounds();
+
 				//Default sound positions and radii
 				double mediumRadius = 10.0;
 
@@ -107,30 +173,58 @@ namespace TrainEditor2.Simulation.TrainManager
 				// run sound
 				foreach (var element in RunSounds)
 				{
+					int n = Sounds.Run.Length;
+
+					if (element.Key >= n)
+					{
+						Array.Resize(ref Sounds.Run, element.Key + 1);
+
+						for (int h = n; h < element.Key; h++)
+						{
+							Sounds.Run[h] = new CarSound();
+						}
+					}
+
 					Sounds.Run[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center);
 				}
-				
+
+				Sounds.RunVolume = new double[Sounds.Run.Length];
+
+
 				// motor sound
 				Sounds.Motor.Position = center;
-				if (Sounds.Motor is BVEMotorSound motorSound)
+
+				foreach (MotorSound.Table table in Sounds.Motor.PowerTables)
 				{
-					for (int i = 0; i < motorSound.Tables.Length; i++)
+					table.PlayingBuffer = null;
+					table.PlayingSource = null;
+
+					foreach (MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
 					{
-						motorSound.Tables[i].Buffer = null;
-						motorSound.Tables[i].Source = null;
+						MotorElement element = MotorSounds.FirstOrDefault(x => x.Key == vertex.Y);
 
-						for (int j = 0; j < motorSound.Tables[i].Entries.Length; j++)
+						if (element != null)
 						{
-							MotorElement element = MotorSounds.FirstOrDefault(x => x.Key == motorSound.Tables[i].Entries[j].SoundIndex);
-
-							if (element != null)
-							{
-								motorSound.Tables[i].Entries[j].Buffer = Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius);
-							}
+							vertex.Z = Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius);
 						}
 					}
 				}
-				
+
+				foreach (MotorSound.Table table in Sounds.Motor.BrakeTables)
+				{
+					table.PlayingBuffer = null;
+					table.PlayingSource = null;
+
+					foreach (MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
+					{
+						MotorElement element = MotorSounds.FirstOrDefault(x => x.Key == vertex.Y);
+
+						if (element != null)
+						{
+							vertex.Z = Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius);
+						}
+					}
+				}
 			}
 		}
 	}

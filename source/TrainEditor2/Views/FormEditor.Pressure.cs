@@ -1,117 +1,91 @@
 ﻿using System;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
-using TrainEditor2.Extensions;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToPressure(PressureViewModel z)
+		private IDisposable BindToPressure(PressureViewModel pressure)
 		{
 			CompositeDisposable pressureDisposable = new CompositeDisposable();
+			CompositeDisposable compressorDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+			CompositeDisposable mainReservoirDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+			CompositeDisposable auxiliaryReservoirDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+			CompositeDisposable equalizingReservoirDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+			CompositeDisposable brakePipeDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+			CompositeDisposable straightAirPipeDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+			CompositeDisposable brakeCylinderDisposable = new CompositeDisposable().AddTo(pressureDisposable);
 
-			z.BrakeCylinderServiceMaximumPressure
-				.BindTo(
-					textBoxBrakeCylinderServiceMaximumPressure,
-					w => w.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxBrakeCylinderServiceMaximumPressure.TextChanged += h,
-							h => textBoxBrakeCylinderServiceMaximumPressure.TextChanged -= h
-						)
-						.ToUnit()
-				)
+			pressure.Compressor
+				.Subscribe(x =>
+				{
+					compressorDisposable.Dispose();
+					compressorDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+
+					BindToCompressor(x).AddTo(compressorDisposable);
+				})
 				.AddTo(pressureDisposable);
 
-			z.BrakeCylinderServiceMaximumPressure
-				.BindToErrorProvider(errorProvider, textBoxBrakeCylinderServiceMaximumPressure)
+			pressure.MainReservoir
+				.Subscribe(x =>
+				{
+					mainReservoirDisposable.Dispose();
+					mainReservoirDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+
+					BindToMainReservoir(x).AddTo(mainReservoirDisposable);
+				})
 				.AddTo(pressureDisposable);
 
-			z.BrakeCylinderEmergencyMaximumPressure
-				.BindTo(
-					textBoxBrakeCylinderEmergencyMaximumPressure,
-					w => w.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxBrakeCylinderEmergencyMaximumPressure.TextChanged += h,
-							h => textBoxBrakeCylinderEmergencyMaximumPressure.TextChanged -= h
-						)
-						.ToUnit()
-				)
+			pressure.AuxiliaryReservoir
+				.Subscribe(x =>
+				{
+					auxiliaryReservoirDisposable.Dispose();
+					auxiliaryReservoirDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+
+					BindToAuxiliaryReservoir(x).AddTo(auxiliaryReservoirDisposable);
+				})
 				.AddTo(pressureDisposable);
 
-			z.BrakeCylinderEmergencyMaximumPressure
-				.BindToErrorProvider(errorProvider, textBoxBrakeCylinderEmergencyMaximumPressure)
+			pressure.EqualizingReservoir
+				.Subscribe(x =>
+				{
+					equalizingReservoirDisposable.Dispose();
+					equalizingReservoirDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+
+					BindToEqualizingReservoir(x).AddTo(equalizingReservoirDisposable);
+				})
 				.AddTo(pressureDisposable);
 
-			z.MainReservoirMinimumPressure
-				.BindTo(
-					textBoxMainReservoirMinimumPressure,
-					w => w.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxMainReservoirMinimumPressure.TextChanged += h,
-							h => textBoxMainReservoirMinimumPressure.TextChanged -= h
-						)
-						.ToUnit()
-				)
+			pressure.BrakePipe
+				.Subscribe(x =>
+				{
+					brakePipeDisposable.Dispose();
+					brakePipeDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+
+					BindToBrakePipe(x).AddTo(brakePipeDisposable);
+				})
 				.AddTo(pressureDisposable);
 
-			z.MainReservoirMinimumPressure
-				.BindToErrorProvider(errorProvider, textBoxMainReservoirMinimumPressure)
+			pressure.StraightAirPipe
+				.Subscribe(x =>
+				{
+					straightAirPipeDisposable.Dispose();
+					straightAirPipeDisposable = new CompositeDisposable().AddTo(pressureDisposable);
+
+					BindToStraightAirPipe(x).AddTo(straightAirPipeDisposable);
+				})
 				.AddTo(pressureDisposable);
 
-			z.MainReservoirMaximumPressure
-				.BindTo(
-					textBoxMainReservoirMaximumPressure,
-					w => w.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxMainReservoirMaximumPressure.TextChanged += h,
-							h => textBoxMainReservoirMaximumPressure.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(pressureDisposable);
+			pressure.BrakeCylinder
+				.Subscribe(x =>
+				{
+					brakeCylinderDisposable.Dispose();
+					brakeCylinderDisposable = new CompositeDisposable().AddTo(pressureDisposable);
 
-			z.MainReservoirMaximumPressure
-				.BindToErrorProvider(errorProvider, textBoxMainReservoirMaximumPressure)
-				.AddTo(pressureDisposable);
-
-			z.BrakePipeNormalPressure
-				.BindTo(
-					textBoxBrakePipeNormalPressure,
-					w => w.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxBrakePipeNormalPressure.TextChanged += h,
-							h => textBoxBrakePipeNormalPressure.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(pressureDisposable);
-
-			z.BrakePipeNormalPressure
-				.BindToErrorProvider(errorProvider, textBoxBrakePipeNormalPressure)
+					BindToBrakeCylinder(x).AddTo(brakeCylinderDisposable);
+				})
 				.AddTo(pressureDisposable);
 
 			return pressureDisposable;

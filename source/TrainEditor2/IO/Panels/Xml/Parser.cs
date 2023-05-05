@@ -32,17 +32,17 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement panelNode in panelNodes)
 			{
-				ParsePanelNode(fileName, panelNode, panel);
+				Parse(fileName, panelNode, panel);
 			}
 		}
 
-		private static void ParsePanelNode(string fileName, XElement parent, Panel panel)
+		internal static void Parse(string fileName, XElement parent, Panel panel)
 		{
 			foreach (XElement sectionNode in parent.Elements())
 			{
 				switch (sectionNode.Name.LocalName.ToLowerInvariant())
 				{
-					case "This":
+					case "this":
 						ParseThisNode(fileName, sectionNode, panel.This);
 						break;
 					case "screen":
@@ -115,7 +115,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						{
 							//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
 							//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-							Interface.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given at line " + lineNumber.ToString(culture) + " in " + fileName);
+							Interface.AddMessage(MessageType.Error, false, $"A panel resolution of less than 100px was given at line {lineNumber.ToString(culture)} in {fileName}");
 						}
 
 						break;
@@ -632,7 +632,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(needle.NighttimeImage))
 							{
-								Interface.AddMessage(MessageType.Warning, true, "FileName " + needle.NighttimeImage + " could not be found in " + key + " in " + section + " at line " + lineNumber.ToString(culture) + " in " + fileName);
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {needle.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 						break;
@@ -891,7 +891,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 						if (Path.ContainsInvalidChars(value))
 						{
-							Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + key + " in " + section + " at line " + lineNumber.ToString(culture) + " in " + fileName);
+							Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
 						else
 						{
@@ -1676,7 +1676,7 @@ namespace TrainEditor2.IO.Panels.Xml
 			{
 				if (childNode.Name.LocalName.ToLowerInvariant() != "entry")
 				{
-					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
+					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber} in {fileName}");
 				}
 				else
 				{
@@ -1720,7 +1720,7 @@ namespace TrainEditor2.IO.Panels.Xml
 			{
 				if (childNode.Name.LocalName.ToLowerInvariant() != "entry")
 				{
-					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
+					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber} in {fileName}");
 				}
 				else
 				{

@@ -104,7 +104,7 @@ namespace RouteManager2.Events
 					double pitch = 1.0;
 					double gain = 1.0;
 					//In order to play for all cars, we need to create a clone of the buffer, as 1 buffer can only be playing in a single location
-					SoundBuffer buffer = this.AllCars ? SoundBuffer.Clone() : SoundBuffer;
+					object buffer = this.AllCars ? SoundBuffer.Clone() : SoundBuffer;
 					if (buffer != null)
 					{
 						if (this.Dynamic)
@@ -121,7 +121,7 @@ namespace RouteManager2.Events
 						{
 							if (AllCars || triggerType != EventTriggerType.RearCarRearAxle)
 							{
-								currentHost.PlaySound(buffer, pitch, gain, Position, trackFollower.Car, false);
+								currentHost.PlaySound((SoundBuffer)buffer, pitch, gain, Position, trackFollower.Car, false);
 							}
 						}
 					}

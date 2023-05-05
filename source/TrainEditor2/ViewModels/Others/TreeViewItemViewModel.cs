@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Reactive.Linq;
+﻿using System.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Models.Others;
@@ -15,7 +12,17 @@ namespace TrainEditor2.ViewModels.Others
 			get;
 		}
 
+		internal TreeViewItemViewModel Parent
+		{
+			get;
+		}
+
 		internal ReadOnlyReactivePropertySlim<string> Title
+		{
+			get;
+		}
+
+		internal ReactiveProperty<bool> Checked
 		{
 			get;
 		}
@@ -30,13 +37,19 @@ namespace TrainEditor2.ViewModels.Others
 			get;
 		}
 
-		internal TreeViewItemViewModel(TreeViewItemModel item)
+		internal TreeViewItemViewModel(TreeViewItemModel item, TreeViewItemViewModel parent)
 		{
 			Model = item;
+
+			Parent = parent;
 
 			Title = item
 				.ObserveProperty(x => x.Title)
 				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			Checked = item
+				.ToReactivePropertyAsSynchronized(x => x.Checked)
 				.AddTo(disposable);
 
 			Tag = item
@@ -45,18 +58,7 @@ namespace TrainEditor2.ViewModels.Others
 				.AddTo(disposable);
 
 			Children = item.Children
-				.ToReadOnlyReactiveCollection(x => new TreeViewItemViewModel(x))
-				.AddTo(disposable);
-
-			new[]
-				{
-					Children.CollectionChangedAsObservable().OfType<object>(),
-					Children.ObserveElementObservableProperty(x => x.Title).OfType<object>(),
-					Children.ObserveElementObservableProperty(x => x.Tag).OfType<object>(),
-					Children.ObserveElementProperty(x => x.Children).OfType<object>()
-				}
-				.Merge()
-				.Subscribe(_ => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Children))))
+				.ToReadOnlyReactiveCollection(x => new TreeViewItemViewModel(x, this))
 				.AddTo(disposable);
 		}
 

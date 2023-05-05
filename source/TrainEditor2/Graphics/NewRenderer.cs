@@ -11,7 +11,6 @@ namespace TrainEditor2.Graphics
 		public override void Initialize()
 		{
 			base.Initialize();
-
 			GL.Disable(EnableCap.CullFace);
 		}
 

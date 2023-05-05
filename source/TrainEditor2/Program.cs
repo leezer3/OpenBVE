@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reactive.Concurrency;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
@@ -8,9 +8,9 @@ using SoundManager;
 using TrainEditor2.Audio;
 using TrainEditor2.Graphics;
 using TrainEditor2.Systems;
+using TrainEditor2.Systems.Functions;
+using TrainEditor2.ViewModels;
 using TrainEditor2.Views;
-using TrainManager;
-using TrainManager = TrainEditor2.Simulation.TrainManager.TrainManager;
 
 namespace TrainEditor2
 {
@@ -25,8 +25,6 @@ namespace TrainEditor2
 		internal static NewRenderer Renderer;
 
 		internal static SoundApi SoundApi;
-
-		internal static Simulation.TrainManager.TrainManager TrainManager;
 
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
@@ -54,22 +52,22 @@ namespace TrainEditor2
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 
 			SoundApi = new SoundApi(CurrentHost);
-			SoundApi.Initialize(SoundRange.Medium);
-
-			string error;
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, null, Renderer))
+			
+			if (!Plugins.LoadPlugins())
 			{
 				SoundApi.DeInitialize();
-				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			
-			TrainManager = new Simulation.TrainManager.TrainManager(CurrentHost, null, null, FileSystem);
+
+			AppViewModel app = new AppViewModel();
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new FormEditor());
+			Application.Run(new FormEditor(app));
 
-			CurrentHost.UnloadPlugins(out error);
+			app.Dispose();
+
+			Plugins.UnloadPlugins();
 			SoundApi.DeInitialize();
 
 			Interface.SaveOptions();

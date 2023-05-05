@@ -1,669 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using OpenTK;
+using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
+using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using OpenBveApi.World;
+using OpenTK.Graphics.OpenGL;
 using Prism.Mvvm;
+using SoundManager;
 using TrainEditor2.Extensions;
-using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
-using TrainManager.Motor;
+using TrainEditor2.Simulation.TrainManager;
+using TrainEditor2.Systems;
 
 namespace TrainEditor2.Models.Trains
 {
 	internal partial class Motor : BindableBase, ICloneable
 	{
-		internal class Vertex : BindableBase, ICloneable
-		{
-			private double x;
-			private double y;
-			private bool selected;
-			private bool isOrigin;
+		private static CultureInfo Culture => CultureInfo.InvariantCulture;
 
-			internal double X
-			{
-				get
-				{
-					return x;
-				}
-				set
-				{
-					SetProperty(ref x, value);
-				}
-			}
+		private TreeViewItemModel selectedTreeItem;
 
-			internal double Y
-			{
-				get
-				{
-					return y;
-				}
-				set
-				{
-					SetProperty(ref y, value);
-				}
-			}
-
-			internal bool Selected
-			{
-				get
-				{
-					return selected;
-				}
-				set
-				{
-					SetProperty(ref selected, value);
-				}
-			}
-
-			internal bool IsOrigin
-			{
-				get
-				{
-					return isOrigin;
-				}
-				set
-				{
-					SetProperty(ref isOrigin, value);
-				}
-			}
-
-			internal Vertex(double x, double y)
-			{
-				X = x;
-				Y = y;
-				Selected = false;
-				IsOrigin = false;
-			}
-
-			public object Clone()
-			{
-				return MemberwiseClone();
-			}
-		}
-
-		internal class Line : BindableBase, ICloneable
-		{
-			private int leftID;
-			private int rightID;
-			private bool selected;
-
-			internal int LeftID
-			{
-				get
-				{
-					return leftID;
-				}
-				private set
-				{
-					SetProperty(ref leftID, value);
-				}
-			}
-
-			internal int RightID
-			{
-				get
-				{
-					return rightID;
-				}
-				private set
-				{
-					SetProperty(ref rightID, value);
-				}
-			}
-
-			internal bool Selected
-			{
-				get
-				{
-					return selected;
-				}
-				set
-				{
-					SetProperty(ref selected, value);
-				}
-			}
-
-			internal Line(int leftID, int rightID)
-			{
-				LeftID = leftID;
-				RightID = rightID;
-				Selected = false;
-			}
-
-			public object Clone()
-			{
-				return MemberwiseClone();
-			}
-		}
-
-		internal class Area : BindableBase, ICloneable
-		{
-			private double leftX;
-			private double rightX;
-			private int index;
-			private bool tbd;
-
-			internal double LeftX
-			{
-				get
-				{
-					return leftX;
-				}
-				set
-				{
-					SetProperty(ref leftX, value);
-				}
-			}
-
-			internal double RightX
-			{
-				get
-				{
-					return rightX;
-				}
-				set
-				{
-					SetProperty(ref rightX, value);
-				}
-			}
-
-			internal int Index
-			{
-				get
-				{
-					return index;
-				}
-				private set
-				{
-					SetProperty(ref index, value);
-				}
-			}
-
-			internal bool TBD
-			{
-				get
-				{
-					return tbd;
-				}
-				set
-				{
-					SetProperty(ref tbd, value);
-				}
-			}
-
-			internal Area(double leftX, double rightX, int index)
-			{
-				LeftX = leftX;
-				RightX = rightX;
-				Index = index;
-				TBD = false;
-			}
-
-			public object Clone()
-			{
-				return MemberwiseClone();
-			}
-		}
-
-		internal class VertexLibrary : ObservableDictionary<int, Vertex>, ICloneable
-		{
-			private int lastID;
-
-			internal VertexLibrary()
-			{
-				lastID = -1;
-			}
-
-			internal void Add(Vertex vertex)
-			{
-				if (this.Any(v => v.Value.X == vertex.X))
-				{
-					int id = this.First(v => v.Value.X == vertex.X).Key;
-					base[id] = vertex;
-				}
-				else
-				{
-					Add(++lastID, vertex);
-				}
-			}
-
-			public object Clone()
-			{
-				VertexLibrary vertices = new VertexLibrary
-				{
-					lastID = lastID
-				};
-
-				foreach (KeyValuePair<int, Vertex> vertex in this)
-				{
-					vertices.Add(vertex.Key, (Vertex)vertex.Value.Clone());
-				}
-
-				return vertices;
-			}
-		}
-
-		internal class Track : ICloneable
-		{
-			internal VertexLibrary PitchVertices;
-			internal ObservableCollection<Line> PitchLines;
-
-			internal VertexLibrary VolumeVertices;
-			internal ObservableCollection<Line> VolumeLines;
-
-			internal ObservableCollection<Area> SoundIndices;
-
-			internal Track()
-			{
-				PitchVertices = new VertexLibrary();
-				PitchLines = new ObservableCollection<Line>();
-
-				VolumeVertices = new VertexLibrary();
-				VolumeLines = new ObservableCollection<Line>();
-
-				SoundIndices = new ObservableCollection<Area>();
-			}
-
-			public object Clone()
-			{
-				Track track = (Track)MemberwiseClone();
-
-				track.PitchVertices = (VertexLibrary)PitchVertices.Clone();
-				track.PitchLines = new ObservableCollection<Line>(PitchLines.Select(l => (Line)l.Clone()));
-
-				track.VolumeVertices = (VertexLibrary)VolumeVertices.Clone();
-				track.VolumeLines = new ObservableCollection<Line>(VolumeLines.Select(l => (Line)l.Clone()));
-
-				track.SoundIndices = new ObservableCollection<Area>(SoundIndices.Select(a => (Area)a.Clone()));
-
-				return track;
-			}
-
-			internal static Track EntriesToTrack(BVEMotorSoundTableEntry[] entries)
-			{
-				Track track = new Track();
-
-				for (int i = 0; i < entries.Length; i++)
-				{
-					double velocity = 0.2 * i;
-
-					if (track.PitchVertices.Count >= 2)
-					{
-						KeyValuePair<int, Vertex>[] leftVertices = new KeyValuePair<int, Vertex>[] { track.PitchVertices.ElementAt(track.PitchVertices.Count - 2), track.PitchVertices.Last() };
-						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
-
-						if (f(velocity) == entries[i].Pitch)
-						{
-							track.PitchVertices.Remove(leftVertices[1].Key);
-						}
-					}
-
-					track.PitchVertices.Add(new Vertex(velocity, 0.01 * Math.Round(100.0 * entries[i].Pitch)));
-
-					if (track.VolumeVertices.Count >= 2)
-					{
-						KeyValuePair<int, Vertex>[] leftVertices = new KeyValuePair<int, Vertex>[] { track.VolumeVertices.ElementAt(track.VolumeVertices.Count - 2), track.VolumeVertices.Last() };
-						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
-
-						if (f(velocity) == entries[i].Gain)
-						{
-							track.VolumeVertices.Remove(leftVertices[1].Key);
-						}
-					}
-
-					track.VolumeVertices.Add(new Vertex(velocity, 0.01 * Math.Round(100.0 * entries[i].Gain)));
-
-					if (track.SoundIndices.Any())
-					{
-						Area leftArea = track.SoundIndices.Last();
-
-						if (entries[i].SoundIndex != leftArea.Index)
-						{
-							leftArea.RightX = velocity - 0.2;
-							track.SoundIndices.Add(new Area(velocity, velocity, entries[i].SoundIndex));
-						}
-						else
-						{
-							leftArea.RightX = velocity;
-						}
-					}
-					else
-					{
-						track.SoundIndices.Add(new Area(velocity, velocity, entries[i].SoundIndex));
-					}
-				}
-
-				for (int j = 0; j < track.PitchVertices.Count - 1; j++)
-				{
-					track.PitchLines.Add(new Line(track.PitchVertices.ElementAt(j).Key, track.PitchVertices.ElementAt(j + 1).Key));
-				}
-
-				for (int j = 0; j < track.VolumeVertices.Count - 1; j++)
-				{
-					track.VolumeLines.Add(new Line(track.VolumeVertices.ElementAt(j).Key, track.VolumeVertices.ElementAt(j + 1).Key));
-				}
-
-				if (track.SoundIndices.Any())
-				{
-					Area lastArea = track.SoundIndices.Last();
-
-					if (lastArea.LeftX == lastArea.RightX)
-					{
-						lastArea.RightX += 0.2;
-					}
-				}
-
-				return track;
-			}
-
-			internal static BVEMotorSoundTableEntry[] TrackToEntries(Track track)
-			{
-				int n = 0;
-
-				if (track.PitchVertices.Any())
-				{
-					n = Math.Max(n, (int)Math.Round(5.0 * track.PitchVertices.Last().Value.X));
-				}
-
-				if (track.VolumeVertices.Any())
-				{
-					n = Math.Max(n, (int)Math.Round(5.0 * track.VolumeVertices.Last().Value.X));
-				}
-
-				BVEMotorSoundTableEntry[] entries = Enumerable.Repeat(new BVEMotorSoundTableEntry { SoundIndex = -1, Pitch = 100.0f, Gain = 128.0f }, n + 1).ToArray();
-
-				for (int i = 0; i < entries.Length; i++)
-				{
-					double velocity = 0.2 * i;
-
-					Line pitchLine = track.PitchLines.FirstOrDefault(l => track.PitchVertices[l.LeftID].X <= velocity && track.PitchVertices[l.RightID].X >= velocity);
-
-					if (pitchLine != null)
-					{
-						Vertex left = track.PitchVertices[pitchLine.LeftID];
-						Vertex right = track.PitchVertices[pitchLine.RightID];
-
-						Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
-
-						entries[i].Pitch = (float)(0.01 * Math.Round(100.0 * Math.Max(f(velocity), 0.0)));
-					}
-
-					Line volumeLine = track.VolumeLines.FirstOrDefault(l => track.VolumeVertices[l.LeftID].X <= velocity && track.VolumeVertices[l.RightID].X >= velocity);
-
-					if (volumeLine != null)
-					{
-						Vertex left = track.VolumeVertices[volumeLine.LeftID];
-						Vertex right = track.VolumeVertices[volumeLine.RightID];
-
-						Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
-
-						entries[i].Gain = (float)(0.01 * Math.Round(100.0 * Math.Max(f(velocity), 0.0)));
-					}
-
-					Area area = track.SoundIndices.FirstOrDefault(a => a.LeftX <= velocity && a.RightX >= velocity);
-
-					if (area != null)
-					{
-						entries[i].SoundIndex = area.Index;
-					}
-				}
-
-				return entries;
-			}
-
-			internal static BVEMotorSoundTable EntriesToMotorSoundTable(BVEMotorSoundTableEntry[] entries)
-			{
-				BVEMotorSoundTable table = new BVEMotorSoundTable
-				{
-					Entries = new BVEMotorSoundTableEntry[entries.Length]
-				};
-
-				for (int i = 0; i < entries.Length; i++)
-				{
-					table.Entries[i].Pitch = (float)(0.01 * entries[i].Pitch);
-					table.Entries[i].Gain = (float)Math.Pow(0.0078125 * entries[i].Gain, 0.25);
-					table.Entries[i].SoundIndex = entries[i].SoundIndex;
-				}
-
-				return table;
-			}
-		}
-
-		internal enum TrackInfo
-		{
-			Power1,
-			Power2,
-			Brake1,
-			Brake2
-		}
-
-		internal enum InputMode
-		{
-			Pitch,
-			Volume,
-			SoundIndex
-		}
-
-		internal enum ToolMode
-		{
-			Select,
-			Move,
-			Dot,
-			Line
-		}
-
-		internal enum SimulationState
-		{
-			Disable,
-			Stopped,
-			Paused,
-			Started
-		}
-
-		internal class TrackState : ICloneable
-		{
-			internal TrackInfo Info
-			{
-				get;
-				private set;
-			}
-
-			internal Track Track
-			{
-				get;
-				private set;
-			}
-
-			internal TrackState(TrackInfo info, Track track)
-			{
-				Info = info;
-				Track = track;
-			}
-
-			public object Clone()
-			{
-				TrackState state = (TrackState)MemberwiseClone();
-				state.Track = (Track)Track.Clone();
-				return state;
-			}
-		}
-
-		internal class SelectedRange
-		{
-			internal Box2d Range
-			{
-				get;
-				private set;
-			}
-
-			internal Vertex[] SelectedVertices
-			{
-				get;
-				private set;
-			}
-
-			internal Line[] SelectedLines
-			{
-				get;
-				private set;
-			}
-
-			private SelectedRange(Box2d range, Vertex[] selectedVertices, Line[] selectedLines)
-			{
-				Range = range;
-				SelectedVertices = selectedVertices;
-				SelectedLines = selectedLines;
-			}
-
-			internal static SelectedRange CreateSelectedRange(VertexLibrary vertices, ObservableCollection<Line> lines, double leftX, double rightX, double topY, double bottomY)
-			{
-				Func<Vertex, bool> conditionVertex = v => v.X >= leftX && v.X <= rightX && v.Y >= bottomY && v.Y <= topY;
-
-				Vertex[] selectedVertices = vertices.Values.Where(v => conditionVertex(v)).ToArray();
-				Line[] selectedLines = lines.Where(l => selectedVertices.Any(v => v.X == vertices[l.LeftID].X) && selectedVertices.Any(v => v.X == vertices[l.RightID].X)).ToArray();
-
-				return new SelectedRange(new Box2d(leftX, topY, rightX, bottomY), selectedVertices, selectedLines);
-			}
-		}
-
-		private readonly CultureInfo culture;
-
-		private MessageBox messageBox;
-		private ToolTipModel toolTipVertexPitch;
-		private ToolTipModel toolTipVertexVolume;
-		private InputEventModel.ModifierKeys currentModifierKeys;
-		private InputEventModel.CursorType currentCursorType;
-
-		private TrackInfo selectedTrackInfo;
 		private int selectedSoundIndex;
-		private Track copyTrack;
-		private double minVelocity;
-		private double maxVelocity;
+
+		private Unit.Velocity velocityUnit;
+
+		private Quantity.Velocity minVelocity;
+		private Quantity.Velocity maxVelocity;
 		private double minPitch;
 		private double maxPitch;
 		private double minVolume;
 		private double maxVolume;
-		private double nowVelocity;
+		private Quantity.Velocity nowVelocity;
 		private double nowPitch;
 		private double nowVolume;
 
 		private InputMode currentInputMode;
-		private ToolMode currentToolMode;
+
+		private static int glControlWidth;
+		private static int glControlHeight;
+		private bool isRefreshGlControl;
+
 		private SimulationState currentSimState;
-
-		private double lastMousePosX;
-		private double lastMousePosY;
-
-		private bool isMoving;
-		private Area previewArea;
-		private SelectedRange selectedRange;
-		private Vertex hoveredVertexPitch;
-		private Vertex hoveredVertexVolume;
-
 		private int runIndex;
-		private bool isPlayTrack1;
-		private bool isPlayTrack2;
 		private bool isLoop;
 		private bool isConstant;
-		private double acceleration;
-		private double startSpeed;
-		private double endSpeed;
+		private Quantity.Acceleration acceleration;
+		private Quantity.Velocity startSpeed;
+		private Quantity.Velocity endSpeed;
+		private Quantity.Velocity currentSimSpeed;
 
 		private DateTime startTime;
 		private double oldElapsedTime;
-		private double nowSpeed;
 
-		private int glControlWidth;
-		private int glControlHeight;
-		private bool isRefreshGlControl;
+		private double FactorVelocity => GlControlWidth / (MaxVelocity - MinVelocity);
+		private double FactorPitch => -GlControlHeight / (MaxPitch - MinPitch);
+		private double FactorVolume => -GlControlHeight / (MaxVolume - MinVolume);
+
+		internal ObservableCollection<TreeViewItemModel> TreeItems;
 
 		internal ObservableCollection<Track> Tracks;
-		internal ObservableCollection<TrackState> PrevTrackStates;
-		internal ObservableCollection<TrackState> NextTrackStates;
 
-		internal MessageBox MessageBox
+		internal TreeViewItemModel SelectedTreeItem
 		{
 			get
 			{
-				return messageBox;
+				return selectedTreeItem;
 			}
 			set
 			{
-				SetProperty(ref messageBox, value);
-			}
-		}
-
-		internal ToolTipModel ToolTipVertexPitch
-		{
-			get
-			{
-				return toolTipVertexPitch;
-			}
-			set
-			{
-				SetProperty(ref toolTipVertexPitch, value);
-			}
-		}
-
-		internal ToolTipModel ToolTipVertexVolume
-		{
-			get
-			{
-				return toolTipVertexVolume;
-			}
-			set
-			{
-				SetProperty(ref toolTipVertexVolume, value);
-			}
-		}
-
-		internal InputEventModel.ModifierKeys CurrentModifierKeys
-		{
-			get
-			{
-				return currentModifierKeys;
-			}
-			set
-			{
-				SetProperty(ref currentModifierKeys, value);
-			}
-		}
-
-		internal InputEventModel.CursorType CurrentCursorType
-		{
-			get
-			{
-				return currentCursorType;
-			}
-			set
-			{
-				SetProperty(ref currentCursorType, value);
-			}
-		}
-
-		internal TrackInfo SelectedTrackInfo
-		{
-			get
-			{
-				return selectedTrackInfo;
-			}
-			set
-			{
-				SetProperty(ref selectedTrackInfo, value);
-			}
-		}
-
-		internal Track SelectedTrack
-		{
-			get
-			{
-				return Tracks[(int)SelectedTrackInfo];
-			}
-			set
-			{
-				Tracks[(int)SelectedTrackInfo] = value;
+				SetProperty(ref selectedTreeItem, value);
 			}
 		}
 
@@ -679,15 +90,26 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal Track CopyTrack
+		internal Unit.Velocity VelocityUnit
 		{
 			get
 			{
-				return copyTrack;
+				return velocityUnit;
 			}
 			set
 			{
-				SetProperty(ref copyTrack, value);
+				SetProperty(ref velocityUnit, value);
+
+				minVelocity = minVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+				maxVelocity = maxVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+				nowVelocity = nowVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(NowVelocity)));
+				startSpeed = startSpeed.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(StartSpeed)));
+				endSpeed = endSpeed.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(EndSpeed)));
 			}
 		}
 
@@ -695,11 +117,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return minVelocity;
+				return minVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref minVelocity, value);
+				SetProperty(ref minVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -707,11 +129,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return maxVelocity;
+				return maxVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref maxVelocity, value);
+				SetProperty(ref maxVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -767,11 +189,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return nowVelocity;
+				return nowVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref nowVelocity, value);
+				SetProperty(ref nowVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -811,15 +233,45 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal ToolMode CurrentToolMode
+		internal static int GlControlWidth
 		{
 			get
 			{
-				return currentToolMode;
+				return glControlWidth;
 			}
 			set
 			{
-				SetProperty(ref currentToolMode, value);
+				if (value > 0)
+				{
+					glControlWidth = value;
+				}
+			}
+		}
+
+		internal static int GlControlHeight
+		{
+			get
+			{
+				return glControlHeight;
+			}
+			set
+			{
+				if (value > 0)
+				{
+					glControlHeight = value;
+				}
+			}
+		}
+
+		internal bool IsRefreshGlControl
+		{
+			get
+			{
+				return isRefreshGlControl;
+			}
+			set
+			{
+				SetProperty(ref isRefreshGlControl, value);
 			}
 		}
 
@@ -847,30 +299,6 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal bool IsPlayTrack1
-		{
-			get
-			{
-				return isPlayTrack1;
-			}
-			set
-			{
-				SetProperty(ref isPlayTrack1, value);
-			}
-		}
-
-		internal bool IsPlayTrack2
-		{
-			get
-			{
-				return isPlayTrack2;
-			}
-			set
-			{
-				SetProperty(ref isPlayTrack2, value);
-			}
-		}
-
 		internal bool IsLoop
 		{
 			get
@@ -895,7 +323,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Acceleration
+		internal Quantity.Acceleration Acceleration
 		{
 			get
 			{
@@ -911,11 +339,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return startSpeed;
+				return startSpeed.Value;
 			}
 			set
 			{
-				SetProperty(ref startSpeed, value);
+				SetProperty(ref startSpeed, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -923,71 +351,24 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return endSpeed;
+				return endSpeed.Value;
 			}
 			set
 			{
-				SetProperty(ref endSpeed, value);
-			}
-		}
-
-		internal int GlControlWidth
-		{
-			get
-			{
-				return glControlWidth;
-			}
-			set
-			{
-				SetProperty(ref glControlWidth, value);
-			}
-		}
-
-		internal int GlControlHeight
-		{
-			get
-			{
-				return glControlHeight;
-			}
-			set
-			{
-				SetProperty(ref glControlHeight, value);
-			}
-		}
-
-		internal bool IsRefreshGlControl
-		{
-			get
-			{
-				return isRefreshGlControl;
-			}
-			set
-			{
-				SetProperty(ref isRefreshGlControl, value);
+				SetProperty(ref endSpeed, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
 		internal Motor()
 		{
-			culture = CultureInfo.InvariantCulture;
-
-			MessageBox = new MessageBox();
-			ToolTipVertexPitch = new ToolTipModel();
-			ToolTipVertexVolume = new ToolTipModel();
-			CurrentCursorType = InputEventModel.CursorType.Arrow;
-
 			Tracks = new ObservableCollection<Track>();
 
-			for (int i = 0; i < 4; i++)
-			{
-				Tracks.Add(new Track());
-			}
+			TreeItems = new ObservableCollection<TreeViewItemModel>();
+			CreateTreeItem();
 
-			SelectedTrackInfo = TrackInfo.Power1;
 			SelectedSoundIndex = -1;
 
-			PrevTrackStates = new ObservableCollection<TrackState>();
-			NextTrackStates = new ObservableCollection<TrackState>();
+			VelocityUnit = Unit.Velocity.KilometerPerHour;
 
 			MinVelocity = 0.0;
 			MaxVelocity = 40.0;
@@ -1000,26 +381,659 @@ namespace TrainEditor2.Models.Trains
 
 			CurrentSimState = SimulationState.Stopped;
 			RunIndex = -1;
-			IsPlayTrack1 = IsPlayTrack2 = true;
-			Acceleration = 2.6;
+			Acceleration = new Quantity.Acceleration(2.6, Unit.Acceleration.KilometerPerHourPerSecond);
 			StartSpeed = 0.0;
 			EndSpeed = 160.0;
+		}
 
-			GlControlWidth = 568;
-			GlControlHeight = 593;
+		internal void CreateTreeItem()
+		{
+			TreeItems.Clear();
+			TreeViewItemModel treeItem = new TreeViewItemModel(null) { Title = "Tracks" };
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = "Power" });
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = "Brake" });
+			treeItem.Children[0].Children.AddRange(Tracks.Where(x => x.Type == TrackType.Power).Select((x, i) => new TreeViewItemModel(treeItem) { Title = i.ToString(Culture), Tag = x }));
+			treeItem.Children[1].Children.AddRange(Tracks.Where(x => x.Type == TrackType.Brake).Select((x, i) => new TreeViewItemModel(treeItem) { Title = i.ToString(Culture), Tag = x }));
+			TreeItems.Add(treeItem);
+		}
+
+		private void RenameTreeViewItem(ObservableCollection<TreeViewItemModel> items)
+		{
+			for (int i = 0; i < items.Count; i++)
+			{
+				items[i].Title = i.ToString(Culture);
+			}
+		}
+
+		internal void UpTrack()
+		{
+			TreeViewItemModel parentTreeItem = SelectedTreeItem.Parent;
+			Track currentTrack = (Track)SelectedTreeItem.Tag;
+			int currentIndex = Tracks.IndexOf(currentTrack);
+			int currentTreeIndex = parentTreeItem.Children.IndexOf(SelectedTreeItem);
+
+			Track prevTrack = Tracks.Take(currentIndex).Last(x => x.Type == currentTrack.Type);
+			int prevIndex = Tracks.IndexOf(prevTrack);
+
+			Tracks.Move(currentIndex, prevIndex);
+			parentTreeItem.Children.Move(currentTreeIndex, currentTreeIndex - 1);
+			RenameTreeViewItem(parentTreeItem.Children);
+		}
+
+		internal void DownTrack()
+		{
+			TreeViewItemModel parentTreeItem = SelectedTreeItem.Parent;
+			Track currentTrack = (Track)SelectedTreeItem.Tag;
+			int currentIndex = Tracks.IndexOf(currentTrack);
+			int currentTreeIndex = parentTreeItem.Children.IndexOf(SelectedTreeItem);
+
+			Track nextTrack = Tracks.Skip(currentIndex + 1).First(x => x.Type == currentTrack.Type);
+			int nextIndex = Tracks.IndexOf(nextTrack);
+
+			Tracks.Move(currentIndex, nextIndex);
+			parentTreeItem.Children.Move(currentTreeIndex, currentTreeIndex + 1);
+			RenameTreeViewItem(parentTreeItem.Children);
+		}
+
+		internal void AddTrack()
+		{
+			TreeViewItemModel parentTreeItem = SelectedTreeItem.Tag is Track ? SelectedTreeItem.Parent : SelectedTreeItem;
+			Track track = new Track(this) { Type = TreeItems[0].Children.IndexOf(parentTreeItem) == 0 ? TrackType.Power : TrackType.Brake };
+
+			Tracks.Add(track);
+			parentTreeItem.Children.Add(new TreeViewItemModel(parentTreeItem) { Title = parentTreeItem.Children.Count.ToString(Culture), Tag = track });
+			SelectedTreeItem = parentTreeItem.Children.Last();
+		}
+
+		internal void RemoveTrack()
+		{
+			TreeViewItemModel parentTreeItem = SelectedTreeItem.Parent;
+			Track track = (Track)SelectedTreeItem.Tag;
+
+			Tracks.Remove(track);
+
+			parentTreeItem.Children.Remove(SelectedTreeItem);
+			RenameTreeViewItem(parentTreeItem.Children);
+
+			SelectedTreeItem = null;
+		}
+
+		internal void CopyTrack()
+		{
+			TreeViewItemModel parentTreeItem = SelectedTreeItem.Parent;
+			Track track = (Track)((Track)SelectedTreeItem.Tag).Clone();
+			Tracks.Add(track);
+
+			parentTreeItem.Children.Add(new TreeViewItemModel(parentTreeItem) { Title = parentTreeItem.Children.Count.ToString(Culture), Tag = track });
+			SelectedTreeItem = parentTreeItem.Children.Last();
+		}
+
+		internal void ApplyTrackType()
+		{
+			TreeViewItemModel currentTreeItem = SelectedTreeItem;
+			TreeViewItemModel parentTreeItem = currentTreeItem.Parent;
+			Track currentTrack = (Track)currentTreeItem.Tag;
+			int currentIndex = Tracks.IndexOf(currentTrack);
+
+			Tracks.Move(currentIndex, Tracks.Count - 1);
+			parentTreeItem.Children.Remove(currentTreeItem);
+
+			TreeViewItemModel newTreeItem = new TreeViewItemModel(TreeItems[0].Children[(int)currentTrack.Type]) { Tag = currentTrack };
+			TreeItems[0].Children[(int)currentTrack.Type].Children.Add(newTreeItem);
+
+			RenameTreeViewItem(TreeItems[0].Children[0].Children);
+			RenameTreeViewItem(TreeItems[0].Children[1].Children);
+
+			SelectedTreeItem = newTreeItem;
+		}
+
+		private Quantity.Velocity XtoVelocity(double x)
+		{
+			return new Quantity.Velocity(MinVelocity + x / FactorVelocity, VelocityUnit);
+		}
+
+		private double YtoPitch(double y)
+		{
+			return MinPitch + (y - GlControlHeight) / FactorPitch;
+		}
+
+		private double YtoVolume(double y)
+		{
+			return MinVolume + (y - GlControlHeight) / FactorVolume;
+		}
+
+		private double VelocityToX(Quantity.Velocity v)
+		{
+			return (v - minVelocity).ToNewUnit(VelocityUnit).Value * FactorVelocity;
+		}
+
+		private double PitchToY(double p)
+		{
+			return GlControlHeight + (p - MinPitch) * FactorPitch;
+		}
+
+		private double VolumeToY(double v)
+		{
+			return GlControlHeight + (v - MinVolume) * FactorVolume;
+		}
+
+		internal void ZoomIn()
+		{
+			Utilities.ZoomIn(ref minVelocity, ref maxVelocity);
+
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+
+			switch (CurrentInputMode)
+			{
+				case InputMode.Pitch:
+					Utilities.ZoomIn(ref minPitch, ref maxPitch);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
+					break;
+				case InputMode.Volume:
+					Utilities.ZoomIn(ref minVolume, ref maxVolume);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
+					break;
+			}
+		}
+
+		internal void ZoomOut()
+		{
+			Utilities.ZoomOut(ref minVelocity, ref maxVelocity);
+
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+
+			switch (CurrentInputMode)
+			{
+				case InputMode.Pitch:
+					Utilities.ZoomOut(ref minPitch, ref maxPitch);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
+					break;
+				case InputMode.Volume:
+					Utilities.ZoomOut(ref minVolume, ref maxVolume);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
+					break;
+			}
+		}
+
+		internal void Reset()
+		{
+			Utilities.Reset(new Quantity.Velocity(0.5 * 40.0, VelocityUnit), ref minVelocity, ref maxVelocity);
+
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+
+			switch (CurrentInputMode)
+			{
+				case InputMode.Pitch:
+					Utilities.Reset(0.5 * 400.0, ref minPitch, ref maxPitch);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
+					break;
+				case InputMode.Volume:
+					Utilities.Reset(0.5 * 256.0, ref minVolume, ref maxVolume);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
+					break;
+			}
+		}
+
+		internal void MoveLeft()
+		{
+			Utilities.MoveNegative(ref minVelocity, ref maxVelocity);
+
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+		}
+
+		internal void MoveRight()
+		{
+			Utilities.MovePositive(ref minVelocity, ref maxVelocity);
+
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+		}
+
+		internal void MoveBottom()
+		{
+			switch (CurrentInputMode)
+			{
+				case InputMode.Pitch:
+					Utilities.MoveNegative(ref minPitch, ref maxPitch);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
+					break;
+				case InputMode.Volume:
+					Utilities.MoveNegative(ref minVolume, ref maxVolume);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
+					break;
+			}
+		}
+
+		internal void MoveTop()
+		{
+			switch (CurrentInputMode)
+			{
+				case InputMode.Pitch:
+					Utilities.MovePositive(ref minPitch, ref maxPitch);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
+					break;
+				case InputMode.Volume:
+					Utilities.MovePositive(ref minVolume, ref maxVolume);
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
+					break;
+			}
+		}
+
+		internal void MouseMove(InputEventModel.EventArgs e)
+		{
+			NowVelocity = XtoVelocity(e.X).Value;
+			NowPitch = YtoPitch(e.Y);
+			NowVolume = YtoVolume(e.Y);
+
+			(SelectedTreeItem.Tag as Track)?.MouseMove(e);
+		}
+
+		private static void UpdateViewport(RenderingMode renderingMode, Vector2 point, Vector2 delta)
+		{
+			GL.Viewport(0, 0, GlControlWidth, GlControlHeight);
+
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.LoadIdentity();
+
+			if (renderingMode == RenderingMode.Select)
+			{
+				if (delta.X <= 0.0 || delta.Y <= 0.0)
+				{
+					return;
+				}
+
+				GL.Translate((GlControlWidth - 2.0 * point.X) / delta.X, (GlControlHeight - 2.0 * point.Y) / delta.Y, 0);
+				GL.Scale(GlControlWidth / delta.X, GlControlHeight / delta.Y, 1.0);
+			}
+		}
+
+		private void CreateMatrix(out Matrix4D projPitch, out Matrix4D projVolume, out Matrix4D projString, out Matrix4D lookPitch, out Matrix4D lookVolume)
+		{
+			Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0, out projPitch);
+			Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0, out projVolume);
+			Matrix4D.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0, out projString);
+			lookPitch = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), new Vector3(0, 1, 0));
+			lookVolume = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), new Vector3(0, 1, 0));
+		}
+
+		internal void DrawGlControl()
+		{
+			UpdateViewport(RenderingMode.Render, Vector2.Null, Vector2.Null);
+
+			GL.ClearColor(Color.Black);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			Matrix4D projPitch, projVolume, projString, lookPitch, lookVolume;
+			CreateMatrix(out projPitch, out projVolume, out projString, out lookPitch, out lookVolume);
+
+			// vertical grid
+			{
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
+
+				GL.Begin(PrimitiveType.Lines);
+
+				for (double v = 0.0; v < MaxVelocity; v += 10.0)
+				{
+					GL.Color4(Color.DimGray);
+					GL.Vertex2(v, 0.0);
+					GL.Vertex2(v, float.MaxValue);
+				}
+
+				GL.End();
+
+				Program.Renderer.CurrentProjectionMatrix = projString;
+				Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
+
+				for (double v = 0.0; v < MaxVelocity; v += 10.0)
+				{
+					Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", Culture), new Vector2((int)VelocityToX(new Quantity.Velocity(v, VelocityUnit)) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+				}
+
+				GL.Disable(EnableCap.Texture2D);
+			}
+
+			// horizontal grid
+			{
+				switch (CurrentInputMode)
+				{
+					case InputMode.Pitch:
+						unsafe
+						{
+							GL.MatrixMode(MatrixMode.Projection);
+							double* matrixPointer = &projPitch.Row0.X;
+							GL.LoadMatrix(matrixPointer);
+							GL.MatrixMode(MatrixMode.Modelview);
+							matrixPointer = &lookPitch.Row0.X;
+							GL.LoadMatrix(matrixPointer);
+						}
+
+						GL.Begin(PrimitiveType.Lines);
+
+						for (double p = 0.0; p < MaxPitch; p += 100.0)
+						{
+							GL.Color4(Color.DimGray);
+							GL.Vertex2(MinVelocity, p);
+							GL.Vertex2(MaxVelocity, p);
+						}
+
+						GL.End();
+
+						Program.Renderer.CurrentProjectionMatrix = projString;
+						Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
+
+						for (double p = 0.0; p < MaxPitch; p += 100.0)
+						{
+							Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, p.ToString("0", Culture), new Vector2(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+						}
+
+						GL.Disable(EnableCap.Texture2D);
+						break;
+					case InputMode.Volume:
+						unsafe
+						{
+							GL.MatrixMode(MatrixMode.Projection);
+							double* matrixPointer = &projVolume.Row0.X;
+							GL.LoadMatrix(matrixPointer);
+							GL.MatrixMode(MatrixMode.Modelview);
+							matrixPointer = &lookVolume.Row0.X;
+							GL.LoadMatrix(matrixPointer);
+						}
+
+						GL.Begin(PrimitiveType.Lines);
+
+						for (double v = 0.0; v < MaxVolume; v += 128.0)
+						{
+							GL.Color4(Color.DimGray);
+							GL.Vertex2(MinVelocity, v);
+							GL.Vertex2(MaxVelocity, v);
+						}
+
+						GL.End();
+
+						Program.Renderer.CurrentProjectionMatrix = projString;
+						Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
+
+						for (double v = 0.0; v < MaxVolume; v += 128.0)
+						{
+							Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", Culture), new Vector2(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+						}
+
+						GL.Disable(EnableCap.Texture2D);
+						break;
+				}
+			}
+
+			if (SelectedTreeItem != null)
+			{
+				Track selectedTrack = SelectedTreeItem.Tag as Track;
+
+				if (selectedTrack != null)
+				{
+					selectedTrack.DrawGlControl(projPitch, projVolume, lookPitch, lookVolume, false);
+				}
+				else
+				{
+					IEnumerable<Track> selectedTracks;
+
+					if (SelectedTreeItem == TreeItems[0])
+					{
+						selectedTracks = SelectedTreeItem.Children.SelectMany(x => x.Children).Where(x => x.Checked).Select(x => x.Tag).Cast<Track>();
+					}
+					else
+					{
+						selectedTracks = SelectedTreeItem.Children.Where(x => x.Checked).Select(x => x.Tag).Cast<Track>();
+					}
+
+					foreach (Track track in selectedTracks)
+					{
+						track.DrawGlControl(projPitch, projVolume, lookPitch, lookVolume, true);
+					}
+				}
+			}
+
+			// simulation speed
+			if (CurrentSimState == SimulationState.Started || CurrentSimState == SimulationState.Paused)
+			{
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
+
+				GL.LineWidth(3.0f);
+				GL.Begin(PrimitiveType.Lines);
+
+				GL.Color4(Color.White);
+				GL.Vertex2(currentSimSpeed.Value, 0.0);
+				GL.Vertex2(currentSimSpeed.Value, float.MaxValue);
+
+				GL.End();
+			}
+
+			IsRefreshGlControl = false;
+		}
+
+		internal void StartSimulation()
+		{
+			try
+			{
+				CreateCar();
+			}
+			catch (Exception e)
+			{
+				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
+				CurrentSimState = SimulationState.Disable;
+				return;
+			}
+
+			if (TrainManager.PlayerTrain == null)
+			{
+				Interface.AddMessage(MessageType.Error, false, "Failed to create train.");
+				CurrentSimState = SimulationState.Disable;
+				return;
+			}
+
+			oldElapsedTime = 0;
+			startTime = DateTime.Now;
+
+			if (CurrentSimState != SimulationState.Paused)
+			{
+				currentSimSpeed = startSpeed;
+			}
+
+			CurrentSimState = SimulationState.Started;
+		}
+
+		internal void PauseSimulation()
+		{
+			DisposeCar();
+			CurrentSimState = SimulationState.Paused;
+		}
+
+		internal void StopSimulation()
+		{
+			DisposeCar();
+			CurrentSimState = SimulationState.Stopped;
+			IsRefreshGlControl = true;
+		}
+
+		private void CreateCar()
+		{
+			DisposeCar();
+
+			TrainManager.PlayerTrain = new TrainManager.Train();
+			TrainManager.PlayerTrain.Car.Sounds.Motor.PowerTables = Tracks.Where(x => x.Type == TrackType.Power).Select(x => Track.TrackToMotorSoundTable(x, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
+			TrainManager.PlayerTrain.Car.Sounds.Motor.BrakeTables = Tracks.Where(x => x.Type == TrackType.Brake).Select(x => Track.TrackToMotorSoundTable(x, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
+			TrainManager.PlayerTrain.Car.ApplySounds();
+		}
+
+		internal void RunSimulation()
+		{
+			if (TrainManager.PlayerTrain == null)
+			{
+				return;
+			}
+
+			double nowElapsedTime = (DateTime.Now - startTime).TotalSeconds;
+
+			if (oldElapsedTime == 0.0)
+			{
+				oldElapsedTime = nowElapsedTime;
+			}
+
+			double deltaTime = nowElapsedTime - oldElapsedTime;
+
+			Quantity.Acceleration outputAcceleration = Math.Sign((endSpeed - startSpeed).Value) * Acceleration;
+
+			currentSimSpeed += new Quantity.Velocity(outputAcceleration.ToDefaultUnit().Value * deltaTime);
+			Quantity.Velocity minSpeed = endSpeed >= startSpeed ? startSpeed : endSpeed;
+			Quantity.Velocity maxSpeed = endSpeed >= startSpeed ? endSpeed : startSpeed;
+
+			if (IsLoop)
+			{
+				if (currentSimSpeed < minSpeed)
+				{
+					currentSimSpeed = maxSpeed;
+					outputAcceleration = new Quantity.Acceleration(0.0);
+				}
+
+				if (currentSimSpeed > maxSpeed)
+				{
+					currentSimSpeed = minSpeed;
+					outputAcceleration = new Quantity.Acceleration(0.0);
+				}
+
+				if (IsConstant)
+				{
+					currentSimSpeed = startSpeed;
+					outputAcceleration = Math.Sign((endSpeed - startSpeed).Value) * acceleration;
+				}
+			}
+			else
+			{
+				if (currentSimSpeed < minSpeed || currentSimSpeed > maxSpeed)
+				{
+					StopSimulation();
+					return;
+				}
+			}
+
+			TrainManager.PlayerTrain.Car.Specs.CurrentSpeed = TrainManager.PlayerTrain.Car.Specs.CurrentPerceivedSpeed = currentSimSpeed.ToDefaultUnit().Value;
+			TrainManager.PlayerTrain.Car.Specs.CurrentAccelerationOutput = outputAcceleration.ToDefaultUnit().Value;
+
+			TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
+
+			TrainManager.PlayerTrain.Car.UpdateMotorSounds(TreeItems[0].Children[0].Children.Select(x => x.Checked).ToArray(), TreeItems[0].Children[1].Children.Select(x => x.Checked).ToArray());
+
+			Program.SoundApi.Update(deltaTime, SoundModels.Inverse);
+
+			oldElapsedTime = nowElapsedTime;
+
+			DrawSimulation();
+		}
+
+		private void DrawSimulation()
+		{
+			Quantity.Velocity rangeVelocity = maxVelocity - minVelocity;
+
+			if (startSpeed <= endSpeed)
+			{
+				if (currentSimSpeed < minVelocity || currentSimSpeed > maxVelocity)
+				{
+					minVelocity = new Quantity.Velocity(10.0 * Math.Round(0.1 * currentSimSpeed.Value), VelocityUnit);
+
+					if (minVelocity.Value < 0.0)
+					{
+						minVelocity = new Quantity.Velocity(0.0, VelocityUnit);
+					}
+
+					maxVelocity = minVelocity + rangeVelocity;
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+
+					return;
+				}
+			}
+			else
+			{
+				if (currentSimSpeed < minVelocity || currentSimSpeed > maxVelocity)
+				{
+					maxVelocity = new Quantity.Velocity(10.0 * Math.Round(0.1 * currentSimSpeed.Value), VelocityUnit);
+
+					if (maxVelocity < rangeVelocity)
+					{
+						maxVelocity = rangeVelocity;
+					}
+
+					minVelocity = maxVelocity - rangeVelocity;
+
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+
+					return;
+				}
+			}
+
+			IsRefreshGlControl = true;
+		}
+
+		private void DisposeCar()
+		{
+			if (TrainManager.PlayerTrain != null)
+			{
+				TrainManager.PlayerTrain.Dispose();
+				TrainManager.PlayerTrain = null;
+			}
 		}
 
 		public object Clone()
 		{
 			Motor motor = (Motor)MemberwiseClone();
-			motor.MessageBox = new MessageBox();
-			ToolTipVertexPitch = new ToolTipModel();
-			ToolTipVertexVolume = new ToolTipModel();
-			motor.previewArea = null;
-			motor.selectedRange = null;
-			motor.Tracks = new ObservableCollection<Track>(Tracks.Select(x => (Track)x.Clone()));
-			motor.PrevTrackStates = new ObservableCollection<TrackState>(PrevTrackStates.Select(x => (TrackState)x.Clone()));
-			motor.NextTrackStates = new ObservableCollection<TrackState>(NextTrackStates.Select(x => (TrackState)x.Clone()));
+			motor.Tracks = new ObservableCollection<Track>(Tracks.Select(x =>
+			{
+				Track track = (Track)x.Clone();
+				track.BaseMotor = motor;
+				return track;
+			}));
+			motor.CreateTreeItem();
+			motor.SelectedTreeItem = null;
 			return motor;
 		}
 	}

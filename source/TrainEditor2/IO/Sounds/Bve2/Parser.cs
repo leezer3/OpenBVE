@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -15,37 +15,37 @@ namespace TrainEditor2.IO.Sounds.Bve2
 		{
 			sound = new Sound();
 
-			CheckFile<BuzzerElement, BuzzerKey>(sound.SoundElements, trainFolder, "Adjust.wav", BuzzerKey.Correct);
-			CheckFile<BrakeElement, BrakeKey>(sound.SoundElements, trainFolder, "Brake.wav", BrakeKey.BpDecomp);
-			CheckFile<OthersElement, OthersKey>(sound.SoundElements, trainFolder, "Halt.wav", OthersKey.Halt);
-			CheckFile<PrimaryHornElement, HornKey>(sound.SoundElements, trainFolder, "Klaxon.wav", HornKey.Loop);
-			CheckFile<PrimaryHornElement, HornKey>(sound.SoundElements, trainFolder, "Klaxon0.wav", HornKey.Loop);
-			CheckFile<SecondaryHornElement, HornKey>(sound.SoundElements, trainFolder, "Klaxon1.wav", HornKey.Loop);
-			CheckFile<MusicHornElement, HornKey>(sound.SoundElements, trainFolder, "Klaxon2.wav", HornKey.Loop);
-			CheckFile<PilotLampElement, PilotLampKey>(sound.SoundElements, trainFolder, "Leave.wav", PilotLampKey.On);
-			CheckFile<BrakeElement, BrakeKey>(sound.SoundElements, trainFolder, "Air.wav", BrakeKey.BcRelease);
-			CheckFile<BrakeElement, BrakeKey>(sound.SoundElements, trainFolder, "AirHigh.wav", BrakeKey.BcReleaseHigh);
-			CheckFile<BrakeElement, BrakeKey>(sound.SoundElements, trainFolder, "AirZero.wav", BrakeKey.BcReleaseFull);
-			CheckFile<CompressorElement, CompressorKey>(sound.SoundElements, trainFolder, "CpEnd.wav", CompressorKey.Release);
-			CheckFile<CompressorElement, CompressorKey>(sound.SoundElements, trainFolder, "CpLoop.wav", CompressorKey.Loop);
-			CheckFile<CompressorElement, CompressorKey>(sound.SoundElements, trainFolder, "CpStart.wav", CompressorKey.Attack);
-			CheckFile<DoorElement, DoorKey>(sound.SoundElements, trainFolder, "DoorClsL.wav", DoorKey.CloseLeft);
-			CheckFile<DoorElement, DoorKey>(sound.SoundElements, trainFolder, "DoorClsR.wav", DoorKey.CloseRight);
-			CheckFile<DoorElement, DoorKey>(sound.SoundElements, trainFolder, "DoorCls.wav", DoorKey.CloseLeft);
-			CheckFile<DoorElement, DoorKey>(sound.SoundElements, trainFolder, "DoorCls.wav", DoorKey.CloseRight);
-			CheckFile<DoorElement, DoorKey>(sound.SoundElements, trainFolder, "DoorOpnL.wav", DoorKey.OpenLeft);
-			CheckFile<DoorElement, DoorKey>(sound.SoundElements, trainFolder, "DoorOpnR.wav", DoorKey.OpenRight);
-			CheckFile<DoorElement, DoorKey>(sound.SoundElements, trainFolder, "DoorOpn.wav", DoorKey.OpenLeft);
-			CheckFile<DoorElement, DoorKey>(sound.SoundElements, trainFolder, "DoorOpn.wav", DoorKey.OpenRight);
-			CheckFile<BrakeElement, BrakeKey>(sound.SoundElements, trainFolder, "EmrBrake.wav", BrakeKey.Emergency);
+			CheckFile<BuzzerElement, SoundKey.Buzzer>(sound.SoundElements, trainFolder, "Adjust.wav", SoundKey.Buzzer.Correct);
+			CheckFile<BrakeElement, SoundKey.Brake>(sound.SoundElements, trainFolder, "Brake.wav", SoundKey.Brake.BpDecomp);
+			CheckFile<OthersElement, SoundKey.Others>(sound.SoundElements, trainFolder, "Halt.wav", SoundKey.Others.Halt);
+			CheckFile<PrimaryHornElement, SoundKey.Horn>(sound.SoundElements, trainFolder, "Klaxon.wav", SoundKey.Horn.Loop);
+			CheckFile<PrimaryHornElement, SoundKey.Horn>(sound.SoundElements, trainFolder, "Klaxon0.wav", SoundKey.Horn.Loop);
+			CheckFile<SecondaryHornElement, SoundKey.Horn>(sound.SoundElements, trainFolder, "Klaxon1.wav", SoundKey.Horn.Loop);
+			CheckFile<MusicHornElement, SoundKey.Horn>(sound.SoundElements, trainFolder, "Klaxon2.wav", SoundKey.Horn.Loop);
+			CheckFile<PilotLampElement, SoundKey.PilotLamp>(sound.SoundElements, trainFolder, "Leave.wav", SoundKey.PilotLamp.On);
+			CheckFile<BrakeElement, SoundKey.Brake>(sound.SoundElements, trainFolder, "Air.wav", SoundKey.Brake.BcRelease);
+			CheckFile<BrakeElement, SoundKey.Brake>(sound.SoundElements, trainFolder, "AirHigh.wav", SoundKey.Brake.BcReleaseHigh);
+			CheckFile<BrakeElement, SoundKey.Brake>(sound.SoundElements, trainFolder, "AirZero.wav", SoundKey.Brake.BcReleaseFull);
+			CheckFile<CompressorElement, SoundKey.Compressor>(sound.SoundElements, trainFolder, "CpEnd.wav", SoundKey.Compressor.Release);
+			CheckFile<CompressorElement, SoundKey.Compressor>(sound.SoundElements, trainFolder, "CpLoop.wav", SoundKey.Compressor.Loop);
+			CheckFile<CompressorElement, SoundKey.Compressor>(sound.SoundElements, trainFolder, "CpStart.wav", SoundKey.Compressor.Attack);
+			CheckFile<DoorElement, SoundKey.Door>(sound.SoundElements, trainFolder, "DoorClsL.wav", SoundKey.Door.CloseLeft);
+			CheckFile<DoorElement, SoundKey.Door>(sound.SoundElements, trainFolder, "DoorClsR.wav", SoundKey.Door.CloseRight);
+			CheckFile<DoorElement, SoundKey.Door>(sound.SoundElements, trainFolder, "DoorCls.wav", SoundKey.Door.CloseLeft);
+			CheckFile<DoorElement, SoundKey.Door>(sound.SoundElements, trainFolder, "DoorCls.wav", SoundKey.Door.CloseRight);
+			CheckFile<DoorElement, SoundKey.Door>(sound.SoundElements, trainFolder, "DoorOpnL.wav", SoundKey.Door.OpenLeft);
+			CheckFile<DoorElement, SoundKey.Door>(sound.SoundElements, trainFolder, "DoorOpnR.wav", SoundKey.Door.OpenRight);
+			CheckFile<DoorElement, SoundKey.Door>(sound.SoundElements, trainFolder, "DoorOpn.wav", SoundKey.Door.OpenLeft);
+			CheckFile<DoorElement, SoundKey.Door>(sound.SoundElements, trainFolder, "DoorOpn.wav", SoundKey.Door.OpenRight);
+			CheckFile<BrakeElement, SoundKey.Brake>(sound.SoundElements, trainFolder, "EmrBrake.wav", SoundKey.Brake.Emergency);
 			CheckFiles<FlangeElement>(sound.SoundElements, trainFolder, "Flange", ".wav");
-			CheckFile<OthersElement, OthersKey>(sound.SoundElements, trainFolder, "Loop.wav", OthersKey.Noise);
+			CheckFile<OthersElement, SoundKey.Others>(sound.SoundElements, trainFolder, "Loop.wav", SoundKey.Others.Noise);
 			CheckFile<FrontSwitchElement, int>(sound.SoundElements, trainFolder, "Point.wav", 0);
 
-			CheckFile<OthersElement, OthersKey>(sound.SoundElements, trainFolder, "Rub.wav", OthersKey.Shoe);
+			CheckFile<OthersElement, SoundKey.Others>(sound.SoundElements, trainFolder, "Rub.wav", SoundKey.Others.Shoe);
 			CheckFiles<RunElement>(sound.SoundElements, trainFolder, "Run", ".wav");
-			CheckFile<SuspensionElement, SuspensionKey>(sound.SoundElements, trainFolder, "SpringL.wav", SuspensionKey.Left);
-			CheckFile<SuspensionElement, SuspensionKey>(sound.SoundElements, trainFolder, "SpringR.wav", SuspensionKey.Right);
+			CheckFile<SuspensionElement, SoundKey.Suspension>(sound.SoundElements, trainFolder, "SpringL.wav", SoundKey.Suspension.Left);
+			CheckFile<SuspensionElement, SoundKey.Suspension>(sound.SoundElements, trainFolder, "SpringR.wav", SoundKey.Suspension.Right);
 			CheckFiles<MotorElement>(sound.SoundElements, trainFolder, "Motor", ".wav");
 
 			sound.SoundElements = new ObservableCollection<SoundElement>(sound.SoundElements.GroupBy(x => new { Type = x.GetType(), x.Key }).Select(x => x.First()));
@@ -85,7 +85,7 @@ namespace TrainEditor2.IO.Sounds.Bve2
 						{
 							if (n >= 0)
 							{
-								elements.Add(new T { Key = n, FilePath = file });
+								elements.Add(new T { Key = n, FilePath = a });
 							}
 						}
 					}

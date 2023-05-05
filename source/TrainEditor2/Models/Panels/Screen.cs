@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Panels
 {
-	internal class Screen : BindableBase,ICloneable
+	internal class Screen : BindableBase, ICloneable
 	{
 		private int number;
 		private int layer;

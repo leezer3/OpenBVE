@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using OpenBveApi.World;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -9,6 +10,11 @@ namespace TrainEditor2.ViewModels.Trains
 	internal class PerformanceViewModel : BaseViewModel
 	{
 		internal ReactiveProperty<string> Deceleration
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Acceleration> DecelerationUnit
 		{
 			get;
 		}
@@ -35,8 +41,8 @@ namespace TrainEditor2.ViewModels.Trains
 			Deceleration = performance
 				.ToReactivePropertyAsSynchronized(
 					x => x.Deceleration,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Acceleration(double.Parse(x, NumberStyles.Float, culture), performance.Deceleration.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -48,6 +54,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			DecelerationUnit = performance
+				.ToReactivePropertyAsSynchronized(
+					x => x.Deceleration,
+					x => x.UnitValue,
+					x => performance.Deceleration.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 
 			CoefficientOfStaticFriction = performance

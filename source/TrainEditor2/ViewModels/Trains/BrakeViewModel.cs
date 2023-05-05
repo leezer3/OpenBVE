@@ -1,15 +1,15 @@
 ﻿using System.Globalization;
+using OpenBveApi.World;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
-using TrainManager.BrakeSystems;
 
 namespace TrainEditor2.ViewModels.Trains
 {
 	internal class BrakeViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<BrakeSystemType> BrakeType
+		internal ReactiveProperty<Brake.BrakeTypes> BrakeType
 		{
 			get;
 		}
@@ -19,12 +19,17 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<EletropneumaticBrakeType> BrakeControlSystem
+		internal ReactiveProperty<Brake.BrakeControlSystems> BrakeControlSystem
 		{
 			get;
 		}
 
 		internal ReactiveProperty<string> BrakeControlSpeed
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Velocity> BrakeControlSpeedUnit
 		{
 			get;
 		}
@@ -48,8 +53,8 @@ namespace TrainEditor2.ViewModels.Trains
 			BrakeControlSpeed = brake
 				.ToReactivePropertyAsSynchronized(
 					x => x.BrakeControlSpeed,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Velocity(double.Parse(x, NumberStyles.Float, culture), brake.BrakeControlSpeed.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -61,6 +66,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			BrakeControlSpeedUnit = brake
+				.ToReactivePropertyAsSynchronized(
+					x => x.BrakeControlSpeed,
+					x => x.UnitValue,
+					x => brake.BrakeControlSpeed.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 		}
 	}

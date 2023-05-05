@@ -11,75 +11,39 @@ using OpenBveApi.Interface;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.IO.IntermediateFile;
-using TrainEditor2.IO.Panels.Bve4;
-using TrainEditor2.IO.Panels.Xml;
-using TrainEditor2.IO.Sounds.Bve2;
-using TrainEditor2.IO.Sounds.Bve4;
-using TrainEditor2.IO.Sounds.Xml;
-using TrainEditor2.IO.Trains.ExtensionsCfg;
-using TrainEditor2.IO.Trains.TrainDat;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
+using TouchElement = TrainEditor2.Models.Panels.TouchElement;
 
 namespace TrainEditor2.Models
 {
 	internal class App : BindableBase
 	{
-		internal enum TrainFileType
-		{
-			OldFormat
-		}
-
-		internal enum PanelFileType
-		{
-			Panel2Cfg,
-			PanelXml
-		}
-
-		internal enum SoundFileType
-		{
-			NoSettingFile,
-			SoundCfg,
-			SoundXml
-		}
-
 		private readonly CultureInfo culture;
 
 		private string saveLocation;
 		private string currentLanguageCode;
 
 		private Train train;
-		private Panel panel;
 		private Sound sound;
 
 		private MessageBox messageBox;
 		private OpenFileDialog openFileDialog;
 		private SaveFileDialog saveFileDialog;
 
-		private TrainFileType currentTrainFileType;
-		private PanelFileType currentPanelFileType;
-		private SoundFileType currentSoundFileType;
+		private ImportTrainFile importTrainFile;
+		private ImportPanelFile importPanelFile;
+		private ImportSoundFile importSoundFile;
 
-		private string trainDatImportLocation;
-		private string trainDatExportLocation;
-		private string extensionsCfgImportLocation;
-		private string extensionsCfgExportLocation;
-		private string panel2CfgImportLocation;
-		private string panel2CfgExportLocation;
-		private string panelXmlImportLocation;
-		private string panelXmlExportLocation;
-		private string trainFolderImportLocation;
-		private string soundCfgImportLocation;
-		private string soundCfgExportLocation;
-		private string soundXmlImportLocation;
-		private string soundXmlExportLocation;
+		private ExportTrainFile exportTrainFile;
+		private ExportPanelFile exportPanelFile;
+		private ExportSoundFile exportSoundFile;
 
-		private TreeViewItemModel item;
-		private TreeViewItemModel selectedItem;
+		private TreeViewItemModel selectedTreeItem;
 
 		internal string SaveLocation
 		{
@@ -114,18 +78,6 @@ namespace TrainEditor2.Models
 			set
 			{
 				SetProperty(ref train, value);
-			}
-		}
-
-		internal Panel Panel
-		{
-			get
-			{
-				return panel;
-			}
-			set
-			{
-				SetProperty(ref panel, value);
 			}
 		}
 
@@ -177,221 +129,91 @@ namespace TrainEditor2.Models
 			}
 		}
 
-		internal TrainFileType CurrentTrainFileType
+		internal ImportTrainFile ImportTrainFile
 		{
 			get
 			{
-				return currentTrainFileType;
+				return importTrainFile;
 			}
 			set
 			{
-				SetProperty(ref currentTrainFileType, value);
+				SetProperty(ref importTrainFile, value);
 			}
 		}
 
-		internal PanelFileType CurrentPanelFileType
+		internal ImportPanelFile ImportPanelFile
 		{
 			get
 			{
-				return currentPanelFileType;
+				return importPanelFile;
 			}
 			set
 			{
-				SetProperty(ref currentPanelFileType, value);
+				SetProperty(ref importPanelFile, value);
 			}
 		}
 
-		internal SoundFileType CurrentSoundFileType
+		internal ImportSoundFile ImportSoundFile
 		{
 			get
 			{
-				return currentSoundFileType;
+				return importSoundFile;
 			}
 			set
 			{
-				SetProperty(ref currentSoundFileType, value);
+				SetProperty(ref importSoundFile, value);
 			}
 		}
 
-		internal string TrainDatImportLocation
+		internal ExportTrainFile ExportTrainFile
 		{
 			get
 			{
-				return trainDatImportLocation;
+				return exportTrainFile;
 			}
 			set
 			{
-				SetProperty(ref trainDatImportLocation, value);
+				SetProperty(ref exportTrainFile, value);
 			}
 		}
 
-		internal string TrainDatExportLocation
+		internal ExportPanelFile ExportPanelFile
 		{
 			get
 			{
-				return trainDatExportLocation;
+				return exportPanelFile;
 			}
 			set
 			{
-				SetProperty(ref trainDatExportLocation, value);
+				SetProperty(ref exportPanelFile, value);
 			}
 		}
 
-		internal string ExtensionsCfgImportLocation
+		internal ExportSoundFile ExportSoundFile
 		{
 			get
 			{
-				return extensionsCfgImportLocation;
+				return exportSoundFile;
 			}
 			set
 			{
-				SetProperty(ref extensionsCfgImportLocation, value);
+				SetProperty(ref exportSoundFile, value);
 			}
 		}
 
-		internal string ExtensionsCfgExportLocation
+		internal TreeViewItemModel SelectedTreeItem
 		{
 			get
 			{
-				return extensionsCfgExportLocation;
+				return selectedTreeItem;
 			}
 			set
 			{
-				SetProperty(ref extensionsCfgExportLocation, value);
+				SetProperty(ref selectedTreeItem, value);
 			}
 		}
 
-		internal string Panel2CfgImportLocation
-		{
-			get
-			{
-				return panel2CfgImportLocation;
-			}
-			set
-			{
-				SetProperty(ref panel2CfgImportLocation, value);
-			}
-		}
-
-		internal string Panel2CfgExportLocation
-		{
-			get
-			{
-				return panel2CfgExportLocation;
-			}
-			set
-			{
-				SetProperty(ref panel2CfgExportLocation, value);
-			}
-		}
-
-		internal string PanelXmlImportLocation
-		{
-			get
-			{
-				return panelXmlImportLocation;
-			}
-			set
-			{
-				SetProperty(ref panelXmlImportLocation, value);
-			}
-		}
-
-		internal string PanelXmlExportLocation
-		{
-			get
-			{
-				return panelXmlExportLocation;
-			}
-			set
-			{
-				SetProperty(ref panelXmlExportLocation, value);
-			}
-		}
-
-		internal string TrainFolderImportLocation
-		{
-			get
-			{
-				return trainFolderImportLocation;
-			}
-			set
-			{
-				SetProperty(ref trainFolderImportLocation, value);
-			}
-		}
-
-		internal string SoundCfgImportLocation
-		{
-			get
-			{
-				return soundCfgImportLocation;
-			}
-			set
-			{
-				SetProperty(ref soundCfgImportLocation, value);
-			}
-		}
-
-		internal string SoundCfgExportLocation
-		{
-			get
-			{
-				return soundCfgExportLocation;
-			}
-			set
-			{
-				SetProperty(ref soundCfgExportLocation, value);
-			}
-		}
-
-		internal string SoundXmlImportLocation
-		{
-			get
-			{
-				return soundXmlImportLocation;
-			}
-			set
-			{
-				SetProperty(ref soundXmlImportLocation, value);
-			}
-		}
-
-		internal string SoundXmlExportLocation
-		{
-			get
-			{
-				return soundXmlExportLocation;
-			}
-			set
-			{
-				SetProperty(ref soundXmlExportLocation, value);
-			}
-		}
-
-		internal TreeViewItemModel Item
-		{
-			get
-			{
-				return item;
-			}
-			set
-			{
-				SetProperty(ref item, value);
-			}
-		}
-
-		internal TreeViewItemModel SelectedItem
-		{
-			get
-			{
-				return selectedItem;
-			}
-			set
-			{
-				SetProperty(ref selectedItem, value);
-			}
-		}
+		internal ObservableCollection<TreeViewItemModel> TreeItems;
 
 		internal ObservableCollection<ListViewItemModel> VisibleLogMessages;
 
@@ -405,25 +227,36 @@ namespace TrainEditor2.Models
 			OpenFileDialog = new OpenFileDialog();
 			SaveFileDialog = new SaveFileDialog();
 
+			ImportTrainFile = new ImportTrainFile(this);
+			ImportPanelFile = new ImportPanelFile(this);
+			ImportSoundFile = new ImportSoundFile(this);
+
+			ExportTrainFile = new ExportTrainFile(this);
+			ExportPanelFile = new ExportPanelFile(this);
+			ExportSoundFile = new ExportSoundFile(this);
+
+			TreeItems = new ObservableCollection<TreeViewItemModel>();
+
 			VisibleLogMessages = new ObservableCollection<ListViewItemModel>();
 
 			CreateNewFile();
 		}
 
-		internal void CreateItem()
+		internal void CreateTreeItem()
 		{
-			item = new TreeViewItemModel(null) { Title = Utilities.GetInterfaceString("tree_cars", "train") };
-			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "general") });
-			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "cars") });
-			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "couplers") });
-			item.Children[1].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars.Select((x, i) => new TreeViewItemModel(Item.Children[1]) { Title = i.ToString(culture), Tag = x }));
-			item.Children[2].Children = new ObservableCollection<TreeViewItemModel>(Train.Couplers.Select((x, i) => new TreeViewItemModel(Item.Children[2]) { Title = i.ToString(culture), Tag = x }));
-			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Item)));
+			TreeItems.Clear();
+			TreeViewItemModel treeItem = new TreeViewItemModel(null) { Title = Utilities.GetInterfaceString("tree_cars", "train") };
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = Utilities.GetInterfaceString("tree_cars", "general") });
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = Utilities.GetInterfaceString("tree_cars", "cars") });
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = Utilities.GetInterfaceString("tree_cars", "couplers") });
+			treeItem.Children[1].Children.AddRange(Train.Cars.Select((x, i) => new TreeViewItemModel(treeItem.Children[1]) { Title = i.ToString(culture), Tag = x }));
+			treeItem.Children[2].Children.AddRange(Train.Couplers.Select((x, i) => new TreeViewItemModel(treeItem.Children[2]) { Title = i.ToString(culture), Tag = x }));
+			TreeItems.Add(treeItem);
 		}
 
 		internal void CreateNewFile()
 		{
-			if (Train != null || Panel != null || Sound != null)
+			if (Train != null || Sound != null)
 			{
 				MessageBox = new MessageBox
 				{
@@ -450,14 +283,14 @@ namespace TrainEditor2.Models
 			SaveLocation = string.Empty;
 
 			train = new Train();
-			train.Cars.Add(new MotorCar());
+			train.Cars.Add(new ControlledMotorCar());
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
-
-			Panel = new Panel();
 
 			Sound = new Sound();
 
-			CreateItem();
+			CreateTreeItem();
+
+			SelectedTreeItem = null;
 		}
 
 		internal void OpenFile()
@@ -499,19 +332,41 @@ namespace TrainEditor2.Models
 
 			try
 			{
-				IntermediateFile.Parse(SaveLocation, out train, out panel, out sound);
+				IntermediateFile.Parse(SaveLocation, out train, out sound);
 
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
 
-				CreateItem();
+				CreateTreeItem();
 
-				Panel.CreateTreeItem();
-				Panel.SelectedTreeItem = Panel.TreeItem;
+				foreach (Motor motor in Train.Cars.OfType<MotorCar>().Select(x => x.Motor))
+				{
+					motor.CreateTreeItem();
+				}
+
+				foreach (Panel panel in Train.Cars.OfType<ControlledMotorCar>().Select(x => x.Cab).OfType<EmbeddedCab>().Select(x => x.Panel))
+				{
+					panel.CreateTreeItem();
+
+					foreach (TouchElement touch in panel.Screens.SelectMany(x => x.TouchElements))
+					{
+						touch.CreateTreeItem();
+					}
+				}
+
+				foreach (Panel panel in Train.Cars.OfType<ControlledTrailerCar>().Select(x => x.Cab).OfType<EmbeddedCab>().Select(x => x.Panel))
+				{
+					panel.CreateTreeItem();
+
+					foreach (TouchElement touch in panel.Screens.SelectMany(x => x.TouchElements))
+					{
+						touch.CreateTreeItem();
+					}
+				}
 
 				Sound.CreateTreeItem();
-				Sound.SelectedTreeItem = Sound.TreeItem;
+
+				SelectedTreeItem = null;
 			}
 			catch (Exception e)
 			{
@@ -549,7 +404,6 @@ namespace TrainEditor2.Models
 				SaveLocation = string.Empty;
 
 				train = null;
-				panel = null;
 				sound = null;
 
 				CreateNewFile();
@@ -566,7 +420,7 @@ namespace TrainEditor2.Models
 
 			try
 			{
-				IntermediateFile.Write(saveLocation, Train, Panel, Sound);
+				IntermediateFile.Write(saveLocation, Train, Sound);
 
 				SystemSounds.Asterisk.Play();
 			}
@@ -601,7 +455,7 @@ namespace TrainEditor2.Models
 
 			try
 			{
-				IntermediateFile.Write(saveLocation, Train, Panel, Sound);
+				IntermediateFile.Write(saveLocation, Train, Sound);
 			}
 			catch (Exception e)
 			{
@@ -615,182 +469,6 @@ namespace TrainEditor2.Models
 				};
 
 				SaveLocation = string.Empty;
-			}
-		}
-
-		internal void ImportFiles()
-		{
-			try
-			{
-				switch (CurrentTrainFileType)
-				{
-					case TrainFileType.OldFormat:
-						if (!string.IsNullOrEmpty(TrainDatImportLocation))
-						{
-							TrainDat.Parse(TrainDatImportLocation, out train);
-							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
-						}
-
-						if (!string.IsNullOrEmpty(ExtensionsCfgImportLocation))
-						{
-							ExtensionsCfg.Parse(ExtensionsCfgImportLocation, Train);
-						}
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-
-				CreateItem();
-			}
-			catch (Exception e)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
-			}
-
-			try
-			{
-				switch (CurrentPanelFileType)
-				{
-					case PanelFileType.Panel2Cfg:
-						if (!string.IsNullOrEmpty(Panel2CfgImportLocation))
-						{
-							PanelCfgBve4.Parse(Panel2CfgImportLocation, out panel);
-							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
-						}
-						break;
-					case PanelFileType.PanelXml:
-						if (!string.IsNullOrEmpty(PanelXmlImportLocation))
-						{
-							PanelCfgXml.Parse(PanelXmlImportLocation, out panel);
-							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
-						}
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-
-				Panel.CreateTreeItem();
-				Panel.SelectedTreeItem = Panel.TreeItem;
-			}
-			catch (Exception e)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
-			}
-
-			try
-			{
-				switch (CurrentSoundFileType)
-				{
-					case SoundFileType.NoSettingFile:
-						if (!string.IsNullOrEmpty(TrainFolderImportLocation))
-						{
-							SoundCfgBve2.Parse(TrainFolderImportLocation, out sound);
-							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
-						}
-						break;
-					case SoundFileType.SoundCfg:
-						if (!string.IsNullOrEmpty(SoundCfgImportLocation))
-						{
-							SoundCfgBve4.Parse(SoundCfgImportLocation, out sound);
-							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
-						}
-						break;
-					case SoundFileType.SoundXml:
-						if (!string.IsNullOrEmpty(SoundXmlImportLocation))
-						{
-							SoundCfgXml.Parse(SoundXmlImportLocation, out sound);
-							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
-						}
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-
-				Sound.CreateTreeItem();
-				Sound.SelectedTreeItem = Sound.TreeItem;
-			}
-			catch (Exception e)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
-			}
-		}
-
-		internal void ExportFiles()
-		{
-			try
-			{
-				switch (CurrentTrainFileType)
-				{
-					case TrainFileType.OldFormat:
-						if (!string.IsNullOrEmpty(TrainDatExportLocation))
-						{
-							TrainDat.Write(TrainDatExportLocation, Train);
-						}
-
-						if (!string.IsNullOrEmpty(ExtensionsCfgExportLocation))
-						{
-							ExtensionsCfg.Write(ExtensionsCfgExportLocation, Train);
-						}
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-			catch (Exception e)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
-			}
-
-			try
-			{
-				switch (CurrentPanelFileType)
-				{
-					case PanelFileType.Panel2Cfg:
-						if (!string.IsNullOrEmpty(Panel2CfgExportLocation))
-						{
-							PanelCfgBve4.Write(Panel2CfgExportLocation, Panel);
-						}
-						break;
-					case PanelFileType.PanelXml:
-						if (!string.IsNullOrEmpty(PanelXmlExportLocation))
-						{
-							PanelCfgXml.Write(PanelXmlExportLocation, Panel);
-						}
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-			catch (Exception e)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
-			}
-
-			try
-			{
-				switch (CurrentSoundFileType)
-				{
-					case SoundFileType.NoSettingFile:
-						break;
-					case SoundFileType.SoundCfg:
-						if (!string.IsNullOrEmpty(SoundCfgExportLocation))
-						{
-							SoundCfgBve4.Write(SoundCfgExportLocation, Sound);
-						}
-						break;
-					case SoundFileType.SoundXml:
-						if (!string.IsNullOrEmpty(SoundXmlExportLocation))
-						{
-							SoundCfgXml.Write(SoundXmlExportLocation, Sound);
-						}
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-			catch (Exception e)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 			}
 		}
 
@@ -816,7 +494,21 @@ namespace TrainEditor2.Models
 				builder.AppendLine(message);
 			}
 
-			File.WriteAllText(SaveFileDialog.FileName, builder.ToString());
+			try
+			{
+				File.WriteAllText(SaveFileDialog.FileName, builder.ToString());
+			}
+			catch (Exception e)
+			{
+				MessageBox = new MessageBox
+				{
+					Title = @"Output logs...",
+					Icon = BaseDialog.DialogIcon.Error,
+					Button = BaseDialog.DialogButton.Ok,
+					Text = e.Message,
+					IsOpen = true
+				};
+			}
 		}
 
 		private void RenameTreeViewItem(ObservableCollection<TreeViewItemModel> items)
@@ -829,97 +521,178 @@ namespace TrainEditor2.Models
 
 		internal void UpCar()
 		{
-			int index = Train.Cars.IndexOf((Car)SelectedItem.Tag);
+			int index = Train.Cars.IndexOf((Car)SelectedTreeItem.Tag);
 			Train.Cars.Move(index, index - 1);
 
-			Item.Children[1].Children.Move(index, index - 1);
-			RenameTreeViewItem(Item.Children[1].Children);
+			TreeItems[0].Children[1].Children.Move(index, index - 1);
+			RenameTreeViewItem(TreeItems[0].Children[1].Children);
 		}
 
 		internal void DownCar()
 		{
-			int index = Train.Cars.IndexOf((Car)SelectedItem.Tag);
+			int index = Train.Cars.IndexOf((Car)SelectedTreeItem.Tag);
 			Train.Cars.Move(index, index + 1);
 
-			Item.Children[1].Children.Move(index, index + 1);
-			RenameTreeViewItem(Item.Children[1].Children);
+			TreeItems[0].Children[1].Children.Move(index, index + 1);
+			RenameTreeViewItem(TreeItems[0].Children[1].Children);
 		}
 
 		internal void AddCar()
 		{
-			Train.Cars.Add(new TrailerCar());
+			Train.Cars.Add(new UncontrolledTrailerCar());
 			Train.Couplers.Add(new Coupler());
 
 			Train.ApplyPowerNotchesToCar();
 			Train.ApplyBrakeNotchesToCar();
 			Train.ApplyLocoBrakeNotchesToCar();
 
-			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
-			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
-			SelectedItem = Item.Children[1].Children.Last();
+			TreeItems[0].Children[1].Children.Add(new TreeViewItemModel(TreeItems[0].Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
+			TreeItems[0].Children[2].Children.Add(new TreeViewItemModel(TreeItems[0].Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
+			SelectedTreeItem = TreeItems[0].Children[1].Children.Last();
 		}
 
 		internal void RemoveCar()
 		{
-			int index = Train.Cars.IndexOf((Car)SelectedItem.Tag);
+			int index = Train.Cars.IndexOf((Car)SelectedTreeItem.Tag);
 			Train.Cars.RemoveAt(index);
 			Train.Couplers.RemoveAt(index == 0 ? 0 : index - 1);
 
-			Item.Children[1].Children.RemoveAt(index);
-			Item.Children[2].Children.RemoveAt(index == 0 ? 0 : index - 1);
-			RenameTreeViewItem(Item.Children[1].Children);
-			RenameTreeViewItem(Item.Children[2].Children);
+			TreeItems[0].Children[1].Children.RemoveAt(index);
+			TreeItems[0].Children[2].Children.RemoveAt(index == 0 ? 0 : index - 1);
+			RenameTreeViewItem(TreeItems[0].Children[1].Children);
+			RenameTreeViewItem(TreeItems[0].Children[2].Children);
 
-			SelectedItem = null;
+			SelectedTreeItem = null;
 		}
 
 		internal void CopyCar()
 		{
-			Train.Cars.Add((Car)((Car)SelectedItem.Tag).Clone());
+			Train.Cars.Add((Car)((Car)SelectedTreeItem.Tag).Clone());
 			Train.Couplers.Add(new Coupler());
 
-			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
-			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
-			SelectedItem = Item.Children[1].Children.Last();
+			TreeItems[0].Children[1].Children.Add(new TreeViewItemModel(TreeItems[0].Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
+			TreeItems[0].Children[2].Children.Add(new TreeViewItemModel(TreeItems[0].Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
+			SelectedTreeItem = TreeItems[0].Children[1].Children.Last();
 		}
 
 		internal void UpCoupler()
 		{
-			int index = Train.Couplers.IndexOf((Coupler)SelectedItem.Tag);
+			int index = Train.Couplers.IndexOf((Coupler)SelectedTreeItem.Tag);
 			Train.Couplers.Move(index, index - 1);
 
-			Item.Children[2].Children.Move(index, index - 1);
-			RenameTreeViewItem(Item.Children[2].Children);
+			TreeItems[0].Children[2].Children.Move(index, index - 1);
+			RenameTreeViewItem(TreeItems[0].Children[2].Children);
 		}
 
 		internal void DownCoupler()
 		{
-			int index = Train.Couplers.IndexOf((Coupler)SelectedItem.Tag);
+			int index = Train.Couplers.IndexOf((Coupler)SelectedTreeItem.Tag);
 			Train.Couplers.Move(index, index + 1);
 
-			Item.Children[2].Children.Move(index, index + 1);
-			RenameTreeViewItem(Item.Children[2].Children);
+			TreeItems[0].Children[2].Children.Move(index, index + 1);
+			RenameTreeViewItem(TreeItems[0].Children[2].Children);
 		}
 
-		internal void ChangeCarClass(int carIndex)
+		internal void ChangeBaseCarClass()
 		{
-			MotorCar motorCar = Train.Cars[carIndex] as MotorCar;
-			TrailerCar trailerCar = Train.Cars[carIndex] as TrailerCar;
+			int index = Train.Cars.IndexOf((Car)SelectedTreeItem.Tag);
 
-			if (motorCar != null)
+			if (Train.Cars[index] is MotorCar)
 			{
-				Train.Cars[carIndex] = new TrailerCar(motorCar);
+				ControlledMotorCar controlledMotorCar = Train.Cars[index] as ControlledMotorCar;
+
+				if (controlledMotorCar != null)
+				{
+					Train.Cars[index] = new ControlledTrailerCar(controlledMotorCar);
+				}
+				else
+				{
+					Train.Cars[index] = new UncontrolledTrailerCar(Train.Cars[index]);
+				}
 			}
-
-			if (trailerCar != null)
+			else
 			{
-				Train.Cars[carIndex] = new MotorCar(trailerCar);
+				ControlledTrailerCar controlledTrailerCar = Train.Cars[index] as ControlledTrailerCar;
+
+				if (controlledTrailerCar != null)
+				{
+					Train.Cars[index] = new ControlledMotorCar(controlledTrailerCar);
+				}
+				else
+				{
+					Train.Cars[index] = new UncontrolledMotorCar(Train.Cars[index]);
+				}
 
 				Train.ApplyPowerNotchesToCar();
 			}
 
-			Item.Children[1].Children[carIndex].Tag = Train.Cars[carIndex];
-			OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedItem)));
+			TreeItems[0].Children[1].Children[index].Tag = Train.Cars[index];
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedTreeItem)));
+		}
+
+		internal void ChangeControlledCarClass()
+		{
+			int index = Train.Cars.IndexOf((Car)SelectedTreeItem.Tag);
+
+			MotorCar motorCar = Train.Cars[index] as MotorCar;
+
+			if (motorCar != null)
+			{
+				if (motorCar is ControlledMotorCar)
+				{
+					Train.Cars[index] = new UncontrolledMotorCar(motorCar);
+				}
+				else
+				{
+					Train.Cars[index] = new ControlledMotorCar(motorCar);
+				}
+			}
+			else
+			{
+				if (Train.Cars[index] is ControlledTrailerCar)
+				{
+					Train.Cars[index] = new UncontrolledTrailerCar(Train.Cars[index]);
+				}
+				else
+				{
+					Train.Cars[index] = new ControlledTrailerCar(Train.Cars[index]);
+				}
+			}
+
+			TreeItems[0].Children[1].Children[index].Tag = Train.Cars[index];
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedTreeItem)));
+		}
+
+		internal void ChangeCabClass()
+		{
+			ControlledMotorCar controlledMotorCar = SelectedTreeItem.Tag as ControlledMotorCar;
+			ControlledTrailerCar controlledTrailerCar = SelectedTreeItem.Tag as ControlledTrailerCar;
+
+			if (controlledMotorCar != null)
+			{
+				if (controlledMotorCar.Cab is EmbeddedCab)
+				{
+					controlledMotorCar.Cab = new ExternalCab(controlledMotorCar.Cab);
+				}
+				else
+				{
+					controlledMotorCar.Cab = new EmbeddedCab(controlledMotorCar.Cab);
+				}
+			}
+
+			if (controlledTrailerCar != null)
+			{
+				if (controlledTrailerCar.Cab is EmbeddedCab)
+				{
+					controlledTrailerCar.Cab = new ExternalCab(controlledTrailerCar.Cab);
+				}
+				else
+				{
+					controlledTrailerCar.Cab = new EmbeddedCab(controlledTrailerCar.Cab);
+				}
+			}
+
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedTreeItem)));
 		}
 
 		private string GetMessageTypeString(MessageType type)
@@ -943,7 +716,7 @@ namespace TrainEditor2.Models
 			VisibleLogMessages
 				.Add(new ListViewItemModel
 				{
-					Texts = new ObservableCollection<string>(new[] { GetMessageTypeString(message.Type), message.Text }),
+					SubItems = new ObservableCollection<ListViewSubItemModel>(new[] { new ListViewSubItemModel { Text = GetMessageTypeString(message.Type) }, new ListViewSubItemModel { Text = message.Text } }),
 					ImageIndex = (int)message.Type,
 					Tag = message
 				});
@@ -969,7 +742,7 @@ namespace TrainEditor2.Models
 							.Where(x => x.Type == type)
 							.Select(x => new ListViewItemModel
 							{
-								Texts = new ObservableCollection<string>(new[] { GetMessageTypeString(x.Type), x.Text }),
+								SubItems = new ObservableCollection<ListViewSubItemModel>(new[] { new ListViewSubItemModel { Text = GetMessageTypeString(x.Type) }, new ListViewSubItemModel { Text = x.Text } }),
 								ImageIndex = (int)x.Type,
 								Tag = x
 							})

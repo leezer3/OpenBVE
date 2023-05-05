@@ -1,30 +1,32 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.World;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
+using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToCar(CarViewModel y)
+		private IDisposable BindToCar(CarViewModel car)
 		{
 			CompositeDisposable carDisposable = new CompositeDisposable();
 
 			CompositeDisposable performanceDisposable = new CompositeDisposable().AddTo(carDisposable);
-			CompositeDisposable moveDisposable = new CompositeDisposable().AddTo(carDisposable);
 			CompositeDisposable brakeDisposable = new CompositeDisposable().AddTo(carDisposable);
 			CompositeDisposable pressureDisposable = new CompositeDisposable().AddTo(carDisposable);
 			CompositeDisposable accelerationDisposable = new CompositeDisposable().AddTo(carDisposable);
 			CompositeDisposable motorDisposable = new CompositeDisposable().AddTo(carDisposable);
+			CompositeDisposable cabDisposable = new CompositeDisposable().AddTo(carDisposable);
 
-			y.Mass
+			car.Mass
 				.BindTo(
 					textBoxMass,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -37,14 +39,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.Mass
+			car.Mass
 				.BindToErrorProvider(errorProvider, textBoxMass)
 				.AddTo(carDisposable);
 
-			y.Length
+			car.MassUnit
+				.BindTo(
+					comboBoxMassUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfWeight)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxMassUnit.SelectedIndexChanged += h,
+							h => comboBoxMassUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.Length
 				.BindTo(
 					textBoxLength,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -57,14 +75,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.Length
+			car.Length
 				.BindToErrorProvider(errorProvider, textBoxLength)
 				.AddTo(carDisposable);
 
-			y.Width
+			car.LengthUnit
+				.BindTo(
+					comboBoxLengthUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxLengthUnit.SelectedIndexChanged += h,
+							h => comboBoxLengthUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.Width
 				.BindTo(
 					textBoxWidth,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -77,14 +111,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.Width
+			car.Width
 				.BindToErrorProvider(errorProvider, textBoxLength)
 				.AddTo(carDisposable);
 
-			y.Height
+			car.WidthUnit
+				.BindTo(
+					comboBoxWidthUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxWidthUnit.SelectedIndexChanged += h,
+							h => comboBoxWidthUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.Height
 				.BindTo(
 					textBoxHeight,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -97,14 +147,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.Height
+			car.Height
 				.BindToErrorProvider(errorProvider, textBoxHeight)
 				.AddTo(carDisposable);
 
-			y.CenterOfGravityHeight
+			car.HeightUnit
+				.BindTo(
+					comboBoxHeightUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxHeightUnit.SelectedIndexChanged += h,
+							h => comboBoxHeightUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.CenterOfGravityHeight
 				.BindTo(
 					textBoxCenterOfMassHeight,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -117,14 +183,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.CenterOfGravityHeight
+			car.CenterOfGravityHeight
 				.BindToErrorProvider(errorProvider, textBoxCenterOfMassHeight)
 				.AddTo(carDisposable);
 
-			y.DefinedAxles
+			car.CenterOfGravityHeightUnit
+				.BindTo(
+					comboBoxCenterOfMassHeightUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCenterOfMassHeightUnit.SelectedIndexChanged += h,
+							h => comboBoxCenterOfMassHeightUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.DefinedAxles
 				.BindTo(
 					checkBoxDefinedAxles,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -137,17 +219,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.DefinedAxles
+			car.DefinedAxles
 				.BindTo(
 					groupBoxAxles,
-					z => z.Enabled
+					x => x.Enabled
 				)
 				.AddTo(carDisposable);
 
-			y.FrontAxle
+			car.FrontAxle
 				.BindTo(
 					textBoxFrontAxle,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -160,14 +242,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.FrontAxle
+			car.FrontAxle
 				.BindToErrorProvider(errorProvider, textBoxFrontAxle)
 				.AddTo(carDisposable);
 
-			y.RearAxle
+			car.FrontAxleUnit
+				.BindTo(
+					comboBoxFrontAxleUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxFrontAxleUnit.SelectedIndexChanged += h,
+							h => comboBoxFrontAxleUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.RearAxle
 				.BindTo(
 					textBoxRearAxle,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -180,14 +278,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.RearAxle
+			car.RearAxle
 				.BindToErrorProvider(errorProvider, textBoxRearAxle)
 				.AddTo(carDisposable);
 
-			y.ExposedFrontalArea
+			car.RearAxleUnit
+				.BindTo(
+					comboBoxRearAxleUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxRearAxleUnit.SelectedIndexChanged += h,
+							h => comboBoxRearAxleUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.ExposedFrontalArea
 				.BindTo(
 					textBoxExposedFrontalArea,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -200,14 +314,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.ExposedFrontalArea
+			car.ExposedFrontalArea
 				.BindToErrorProvider(errorProvider, textBoxExposedFrontalArea)
 				.AddTo(carDisposable);
 
-			y.UnexposedFrontalArea
+			car.ExposedFrontalAreaUnit
+				.BindTo(
+					comboBoxExposedFrontalAreaUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfArea)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxExposedFrontalAreaUnit.SelectedIndexChanged += h,
+							h => comboBoxExposedFrontalAreaUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.UnexposedFrontalArea
 				.BindTo(
 					textBoxUnexposedFrontalArea,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -220,54 +350,60 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.UnexposedFrontalArea
+			car.UnexposedFrontalArea
 				.BindToErrorProvider(errorProvider, textBoxUnexposedFrontalArea)
 				.AddTo(carDisposable);
 
-			y.Performance
-				.Subscribe(z =>
+			car.UnexposedFrontalAreaUnit
+				.BindTo(
+					comboBoxUnexposedFrontalAreaUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfArea)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxUnexposedFrontalAreaUnit.SelectedIndexChanged += h,
+							h => comboBoxUnexposedFrontalAreaUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			car.Performance
+				.Subscribe(x =>
 				{
 					performanceDisposable.Dispose();
 					performanceDisposable = new CompositeDisposable().AddTo(carDisposable);
 
-					BindToPerformance(z).AddTo(performanceDisposable);
+					BindToPerformance(x).AddTo(performanceDisposable);
 				})
 				.AddTo(carDisposable);
 
-			y.Move
-				.Subscribe(z =>
-				{
-					moveDisposable.Dispose();
-					moveDisposable = new CompositeDisposable().AddTo(carDisposable);
-
-					BindToMove(z).AddTo(moveDisposable);
-				})
-				.AddTo(carDisposable);
-
-			y.Brake
-				.Subscribe(z =>
+			car.Brake
+				.Subscribe(x =>
 				{
 					brakeDisposable.Dispose();
 					brakeDisposable = new CompositeDisposable().AddTo(carDisposable);
 
-					BindToBrake(z).AddTo(brakeDisposable);
+					BindToBrake(x).AddTo(brakeDisposable);
 				})
 				.AddTo(carDisposable);
 
-			y.Pressure
-				.Subscribe(z =>
+			car.Pressure
+				.Subscribe(x =>
 				{
 					pressureDisposable.Dispose();
 					pressureDisposable = new CompositeDisposable().AddTo(carDisposable);
 
-					BindToPressure(z).AddTo(pressureDisposable);
+					BindToPressure(x).AddTo(pressureDisposable);
 				})
 				.AddTo(carDisposable);
 
-			y.Reversed
+			car.Reversed
 				.BindTo(
 					checkBoxReversed,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -280,10 +416,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.Object
+			car.Object
 				.BindTo(
 					textBoxObject,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -296,10 +432,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			y.LoadingSway
+			car.LoadingSway
 				.BindTo(
 					checkBoxLoadingSway,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -312,25 +448,96 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
-			MotorCarViewModel motorCar = y as MotorCarViewModel;
+			car.ReAdhesionDevice
+				.BindTo(
+					comboBoxReAdhesionDevice,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Car.ReAdhesionDevices)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxReAdhesionDevice.SelectedIndexChanged += h,
+							h => comboBoxReAdhesionDevice.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			MotorCarViewModel motorCar = car as MotorCarViewModel;
 
 			motorCar?.Acceleration
-				.Subscribe(z =>
+				.Subscribe(x =>
 				{
 					accelerationDisposable.Dispose();
 					accelerationDisposable = new CompositeDisposable().AddTo(carDisposable);
 
-					BindToAcceleration(z).AddTo(accelerationDisposable);
+					BindToAcceleration(x).AddTo(accelerationDisposable);
 				})
 				.AddTo(carDisposable);
 
 			motorCar?.Motor
-				.Subscribe(z =>
+				.Subscribe(x =>
 				{
 					motorDisposable.Dispose();
 					motorDisposable = new CompositeDisposable().AddTo(carDisposable);
 
-					BindToMotor(z).AddTo(motorDisposable);
+					BindToMotor(x).AddTo(motorDisposable);
+				})
+				.AddTo(carDisposable);
+
+			ControlledMotorCarViewModel controlledMotorCar = car as ControlledMotorCarViewModel;
+			ControlledTrailerCarViewModel controlledTrailerCar = car as ControlledTrailerCarViewModel;
+
+			controlledMotorCar?.Cab
+				.BindTo(
+					checkBoxIsEmbeddedCab,
+					x => x.Checked,
+					x => x is EmbeddedCabViewModel
+				)
+				.AddTo(carDisposable);
+
+			controlledMotorCar?.Cab
+				.BindTo(
+					groupBoxExternalCab,
+					x => x.Enabled,
+					x => x is ExternalCabViewModel
+				)
+				.AddTo(carDisposable);
+
+			controlledMotorCar?.Cab
+				.Subscribe(x =>
+				{
+					cabDisposable.Dispose();
+					cabDisposable = new CompositeDisposable().AddTo(carDisposable);
+
+					BindToCab(x).AddTo(cabDisposable);
+				})
+				.AddTo(carDisposable);
+
+			controlledTrailerCar?.Cab
+				.BindTo(
+					checkBoxIsEmbeddedCab,
+					x => x.Checked,
+					x => x is EmbeddedCabViewModel
+				)
+				.AddTo(carDisposable);
+
+			controlledTrailerCar?.Cab
+				.BindTo(
+					groupBoxExternalCab,
+					x => x.Enabled,
+					x => x is ExternalCabViewModel
+				)
+				.AddTo(carDisposable);
+
+			controlledTrailerCar?.Cab
+				.Subscribe(x =>
+				{
+					cabDisposable.Dispose();
+					cabDisposable = new CompositeDisposable().AddTo(carDisposable);
+
+					BindToCab(x).AddTo(cabDisposable);
 				})
 				.AddTo(carDisposable);
 

@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToLinearGauge(LinearGaugeElementViewModel y)
+		private IDisposable BindToLinearGauge(LinearGaugeElementViewModel linearGauge)
 		{
 			CompositeDisposable linearGaugeDisposable = new CompositeDisposable();
 
-			y.LocationX
+			linearGauge.LocationX
 				.BindTo(
 					textBoxLinearGaugeLocationX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.LocationX
+			linearGauge.LocationX
 				.BindToErrorProvider(errorProvider, textBoxLinearGaugeLocationX)
 				.AddTo(linearGaugeDisposable);
 
-			y.LocationY
+			linearGauge.LocationY
 				.BindTo(
 					textBoxLinearGaugeLocationY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,17 +50,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.LocationY
+			linearGauge.LocationY
 				.BindToErrorProvider(errorProvider, textBoxLinearGaugeLocationY)
 				.AddTo(linearGaugeDisposable);
 
-			y.Layer
+			linearGauge.Layer
 				.BindTo(
 					numericUpDownLinearGaugeLayer,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownLinearGaugeLayer.ValueChanged += h,
@@ -70,10 +70,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.DaytimeImage
+			linearGauge.DaytimeImage
 				.BindTo(
 					textBoxLinearGaugeDaytimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -86,10 +86,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.NighttimeImage
+			linearGauge.NighttimeImage
 				.BindTo(
 					textBoxLinearGaugeNighttimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -102,10 +102,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.TransparentColor
+			linearGauge.TransparentColor
 				.BindTo(
 					textBoxLinearGaugeTransparentColor,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -118,14 +118,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.TransparentColor
+			linearGauge.TransparentColor
 				.BindToErrorProvider(errorProvider, textBoxLinearGaugeTransparentColor)
 				.AddTo(linearGaugeDisposable);
 
-			y.Minimum
+			linearGauge.Minimum
 				.BindTo(
 					textBoxLinearGaugeMinimum,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -138,14 +138,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.Minimum
+			linearGauge.Minimum
 				.BindToErrorProvider(errorProvider, textBoxLinearGaugeMinimum)
 				.AddTo(linearGaugeDisposable);
 
-			y.Maximum
+			linearGauge.Maximum
 				.BindTo(
 					textBoxLinearGaugeMaximum,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -158,17 +158,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.Maximum
+			linearGauge.Maximum
 				.BindToErrorProvider(errorProvider, textBoxLinearGaugeMaximum)
 				.AddTo(linearGaugeDisposable);
 
-			y.DirectionX
+			linearGauge.DirectionX
 				.BindTo(
 					numericUpDownLinearGaugeDirectionX,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownLinearGaugeDirectionX.ValueChanged += h,
@@ -178,13 +178,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.DirectionY
+			linearGauge.DirectionY
 				.BindTo(
 					numericUpDownLinearGaugeDirectionY,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownLinearGaugeDirectionY.ValueChanged += h,
@@ -194,13 +194,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(linearGaugeDisposable);
 
-			y.Width
+			linearGauge.Width
 				.BindTo(
 					numericUpDownLinearGaugeWidth,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownLinearGaugeWidth.ValueChanged += h,

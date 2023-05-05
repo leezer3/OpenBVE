@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using OpenBveApi.World;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
@@ -12,10 +13,10 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal class Entry : BindableBase, ICloneable
 		{
-			private double up;
-			private double down;
+			private Quantity.Time up;
+			private Quantity.Time down;
 
-			internal double Up
+			internal Quantity.Time Up
 			{
 				get
 				{
@@ -27,7 +28,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double Down
+			internal Quantity.Time Down
 			{
 				get
 				{
@@ -45,24 +46,21 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal ObservableCollection<Entry> DelayPower;
-		internal ObservableCollection<Entry> DelayBrake;
-		internal ObservableCollection<Entry> DelayLocoBrake;
-		internal ObservableCollection<Entry> DelayElectricBrake;
+		internal ObservableCollection<Entry> Power;
+		internal ObservableCollection<Entry> Brake;
+		internal ObservableCollection<Entry> LocoBrake;
 
 		internal Delay()
 		{
-			DelayPower = new ObservableCollection<Entry>();
-			DelayBrake = new ObservableCollection<Entry>();
-			DelayLocoBrake = new ObservableCollection<Entry>();
-			DelayElectricBrake = new ObservableCollection<Entry>();
+			Power = new ObservableCollection<Entry>();
+			Brake = new ObservableCollection<Entry>();
+			LocoBrake = new ObservableCollection<Entry>();
 
 			for (int i = 0; i < 8; i++)
 			{
-				DelayPower.Add(new Entry());
-				DelayBrake.Add(new Entry());
-				DelayLocoBrake.Add(new Entry());
-				DelayElectricBrake.Add(new Entry());
+				Power.Add(new Entry());
+				Brake.Add(new Entry());
+				LocoBrake.Add(new Entry());
 			}
 		}
 
@@ -70,10 +68,9 @@ namespace TrainEditor2.Models.Trains
 		{
 			return new Delay
 			{
-				DelayPower = new ObservableCollection<Entry>(DelayPower.Select(x => (Entry)x.Clone())),
-				DelayBrake = new ObservableCollection<Entry>(DelayBrake.Select(x => (Entry)x.Clone())),
-				DelayLocoBrake = new ObservableCollection<Entry>(DelayLocoBrake.Select(x => (Entry)x.Clone())),
-				DelayElectricBrake = new ObservableCollection<Entry>(DelayElectricBrake.Select(x => (Entry)x.Clone()))
+				Power = new ObservableCollection<Entry>(Power.Select(x => (Entry)x.Clone())),
+				Brake = new ObservableCollection<Entry>(Brake.Select(x => (Entry)x.Clone())),
+				LocoBrake = new ObservableCollection<Entry>(LocoBrake.Select(x => (Entry)x.Clone()))
 			};
 		}
 	}

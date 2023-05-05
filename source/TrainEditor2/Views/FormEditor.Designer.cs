@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace TrainEditor2.Views
 {
@@ -50,7 +50,13 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemSaveAs = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparatorSave = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripMenuItemImport = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemImportTrain = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemImportPanel = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemImportSound = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemExportTrain = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemExportPanel = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemExportSound = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparatorExport = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripComboBoxLanguage = new System.Windows.Forms.ToolStripComboBox();
@@ -74,6 +80,8 @@ namespace TrainEditor2.Views
 			this.listViewSound = new System.Windows.Forms.ListView();
 			this.panelSoundSettingEdit = new System.Windows.Forms.Panel();
 			this.groupBoxSoundEntry = new System.Windows.Forms.GroupBox();
+			this.buttonSoundUp = new System.Windows.Forms.Button();
+			this.buttonSoundDown = new System.Windows.Forms.Button();
 			this.buttonSoundRemove = new System.Windows.Forms.Button();
 			this.groupBoxSoundKey = new System.Windows.Forms.GroupBox();
 			this.numericUpDownSoundKeyIndex = new System.Windows.Forms.NumericUpDown();
@@ -102,6 +110,8 @@ namespace TrainEditor2.Views
 			this.listViewPanel = new System.Windows.Forms.ListView();
 			this.panelPanelNavi = new System.Windows.Forms.Panel();
 			this.panelPanelNaviCmd = new System.Windows.Forms.Panel();
+			this.buttonPanelUp = new System.Windows.Forms.Button();
+			this.buttonPanelDown = new System.Windows.Forms.Button();
 			this.buttonPanelCopy = new System.Windows.Forms.Button();
 			this.buttonPanelAdd = new System.Windows.Forms.Button();
 			this.buttonPanelRemove = new System.Windows.Forms.Button();
@@ -323,26 +333,30 @@ namespace TrainEditor2.Views
 			this.labelTouchLocationX = new System.Windows.Forms.Label();
 			this.tabPageCoupler = new System.Windows.Forms.TabPage();
 			this.groupBoxCouplerGeneral = new System.Windows.Forms.GroupBox();
+			this.comboBoxCouplerMaxUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCouplerMinUnit = new System.Windows.Forms.ComboBox();
 			this.buttonCouplerObject = new System.Windows.Forms.Button();
 			this.textBoxCouplerObject = new System.Windows.Forms.TextBox();
 			this.labelCouplerObject = new System.Windows.Forms.Label();
-			this.labelCouplerMaxUnit = new System.Windows.Forms.Label();
 			this.textBoxCouplerMax = new System.Windows.Forms.TextBox();
 			this.labelCouplerMax = new System.Windows.Forms.Label();
-			this.labelCouplerMinUnit = new System.Windows.Forms.Label();
 			this.textBoxCouplerMin = new System.Windows.Forms.TextBox();
 			this.labelCouplerMin = new System.Windows.Forms.Label();
 			this.tabPageMotor = new System.Windows.Forms.TabPage();
-			this.panelMotorSound = new System.Windows.Forms.Panel();
+			this.splitContainerMotor = new System.Windows.Forms.SplitContainer();
+			this.treeViewMotor = new System.Windows.Forms.TreeView();
+			this.panelMoterNavi = new System.Windows.Forms.Panel();
+			this.buttonMotorCopy = new System.Windows.Forms.Button();
+			this.buttonMotorRemove = new System.Windows.Forms.Button();
+			this.buttonMotorAdd = new System.Windows.Forms.Button();
+			this.buttonMotorUp = new System.Windows.Forms.Button();
+			this.buttonMotorDown = new System.Windows.Forms.Button();
 			this.toolStripContainerDrawArea = new System.Windows.Forms.ToolStripContainer();
 			this.glControlMotor = new OpenTK.GLControl();
 			this.toolStripToolBar = new System.Windows.Forms.ToolStrip();
 			this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonRedo = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparatorRedo = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripButtonTearingOff = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonCopy = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonPaste = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonCleanup = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparatorEdit = new System.Windows.Forms.ToolStripSeparator();
@@ -351,14 +365,6 @@ namespace TrainEditor2.Views
 			this.toolStripButtonDot = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonLine = new System.Windows.Forms.ToolStripButton();
 			this.panelMotorSetting = new System.Windows.Forms.Panel();
-			this.groupBoxDirect = new System.Windows.Forms.GroupBox();
-			this.buttonDirectDot = new System.Windows.Forms.Button();
-			this.buttonDirectMove = new System.Windows.Forms.Button();
-			this.textBoxDirectY = new System.Windows.Forms.TextBox();
-			this.labelDirectY = new System.Windows.Forms.Label();
-			this.labelDirectXUnit = new System.Windows.Forms.Label();
-			this.textBoxDirectX = new System.Windows.Forms.TextBox();
-			this.labelDirectX = new System.Windows.Forms.Label();
 			this.groupBoxPlay = new System.Windows.Forms.GroupBox();
 			this.buttonStop = new System.Windows.Forms.Button();
 			this.buttonPause = new System.Windows.Forms.Button();
@@ -371,13 +377,18 @@ namespace TrainEditor2.Views
 			this.labelMotorAreaUnit = new System.Windows.Forms.Label();
 			this.textBoxMotorAreaRight = new System.Windows.Forms.TextBox();
 			this.labelMotorAccel = new System.Windows.Forms.Label();
-			this.labelMotorAccelUnit = new System.Windows.Forms.Label();
 			this.textBoxMotorAccel = new System.Windows.Forms.TextBox();
 			this.groupBoxSource = new System.Windows.Forms.GroupBox();
 			this.numericUpDownRunIndex = new System.Windows.Forms.NumericUpDown();
 			this.labelRun = new System.Windows.Forms.Label();
-			this.checkBoxTrack2 = new System.Windows.Forms.CheckBox();
-			this.checkBoxTrack1 = new System.Windows.Forms.CheckBox();
+			this.groupBoxDirect = new System.Windows.Forms.GroupBox();
+			this.buttonDirectDot = new System.Windows.Forms.Button();
+			this.buttonDirectMove = new System.Windows.Forms.Button();
+			this.textBoxDirectY = new System.Windows.Forms.TextBox();
+			this.labelDirectY = new System.Windows.Forms.Label();
+			this.labelDirectXUnit = new System.Windows.Forms.Label();
+			this.textBoxDirectX = new System.Windows.Forms.TextBox();
+			this.labelDirectX = new System.Windows.Forms.Label();
 			this.groupBoxView = new System.Windows.Forms.GroupBox();
 			this.buttonMotorReset = new System.Windows.Forms.Button();
 			this.buttonMotorZoomOut = new System.Windows.Forms.Button();
@@ -396,30 +407,16 @@ namespace TrainEditor2.Views
 			this.labelMotorMinVelocityUnit = new System.Windows.Forms.Label();
 			this.textBoxMotorMinVelocity = new System.Windows.Forms.TextBox();
 			this.labelMotorMinVelocity = new System.Windows.Forms.Label();
-			this.statusStripStatus = new System.Windows.Forms.StatusStrip();
-			this.toolStripStatusLabelY = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelX = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelTool = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelMode = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelTrack = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelType = new System.Windows.Forms.ToolStripStatusLabel();
+			this.groupBoxTrack = new System.Windows.Forms.GroupBox();
+			this.comboBoxTrackType = new System.Windows.Forms.ComboBox();
+			this.labelTrackType = new System.Windows.Forms.Label();
 			this.menuStripMotor = new System.Windows.Forms.MenuStrip();
 			this.toolStripMenuItemEdit = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemUndo = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemRedo = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparatorUndo = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItemTearingOff = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemCopy = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemPaste = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemCleanup = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemPower = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemPowerTrack1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemPowerTrack2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemBrake = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemBrakeTrack1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemBrakeTrack2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemInput = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemPitch = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemVolume = new System.Windows.Forms.ToolStripMenuItem();
@@ -430,10 +427,20 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemMove = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemDot = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemLine = new System.Windows.Forms.ToolStripMenuItem();
+			this.statusStripStatus = new System.Windows.Forms.StatusStrip();
+			this.toolStripStatusLabelY = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelX = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelTool = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelMode = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelType = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tabPageAccel = new System.Windows.Forms.TabPage();
 			this.pictureBoxAccel = new System.Windows.Forms.PictureBox();
 			this.panelAccel = new System.Windows.Forms.Panel();
 			this.groupBoxPreview = new System.Windows.Forms.GroupBox();
+			this.comboBoxAccelYUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxAccelXUnit = new System.Windows.Forms.ComboBox();
+			this.labelAccelYUnit = new System.Windows.Forms.Label();
+			this.labelAccelXUnit = new System.Windows.Forms.Label();
 			this.buttonAccelReset = new System.Windows.Forms.Button();
 			this.buttonAccelZoomOut = new System.Windows.Forms.Button();
 			this.buttonAccelZoomIn = new System.Windows.Forms.Button();
@@ -455,87 +462,39 @@ namespace TrainEditor2.Views
 			this.labelAccelX = new System.Windows.Forms.Label();
 			this.checkBoxSubtractDeceleration = new System.Windows.Forms.CheckBox();
 			this.groupBoxParameter = new System.Windows.Forms.GroupBox();
-			this.labeAccelA0Unit = new System.Windows.Forms.Label();
+			this.comboBoxAccelV2Unit = new System.Windows.Forms.ComboBox();
+			this.comboBoxAccelV1Unit = new System.Windows.Forms.ComboBox();
+			this.comboBoxAccelA1Unit = new System.Windows.Forms.ComboBox();
+			this.comboBoxAccelA0Unit = new System.Windows.Forms.ComboBox();
 			this.textBoxAccelA0 = new System.Windows.Forms.TextBox();
 			this.labelAccelA0 = new System.Windows.Forms.Label();
-			this.labelAccelA1Unit = new System.Windows.Forms.Label();
 			this.textBoxAccelA1 = new System.Windows.Forms.TextBox();
 			this.labelAccelA1 = new System.Windows.Forms.Label();
-			this.labelAccelV1Unit = new System.Windows.Forms.Label();
 			this.textBoxAccelV1 = new System.Windows.Forms.TextBox();
 			this.labelAccelV1 = new System.Windows.Forms.Label();
-			this.labelAccelV2Unit = new System.Windows.Forms.Label();
 			this.textBoxAccelV2 = new System.Windows.Forms.TextBox();
 			this.labelAccelV2 = new System.Windows.Forms.Label();
 			this.textBoxAccelE = new System.Windows.Forms.TextBox();
 			this.labelAccelE = new System.Windows.Forms.Label();
 			this.groupBoxNotch = new System.Windows.Forms.GroupBox();
 			this.comboBoxNotch = new System.Windows.Forms.ComboBox();
-			this.tabPageCar = new System.Windows.Forms.TabPage();
-			this.groupBoxPressure = new System.Windows.Forms.GroupBox();
-			this.labelBrakePipeNormalPressureUnit = new System.Windows.Forms.Label();
-			this.textBoxBrakePipeNormalPressure = new System.Windows.Forms.TextBox();
-			this.labelBrakePipeNormalPressure = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderServiceMaximumPressureUnit = new System.Windows.Forms.Label();
-			this.labelMainReservoirMaximumPressureUnit = new System.Windows.Forms.Label();
-			this.labelMainReservoirMinimumPressureUnit = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit = new System.Windows.Forms.Label();
-			this.textBoxMainReservoirMaximumPressure = new System.Windows.Forms.TextBox();
-			this.textBoxMainReservoirMinimumPressure = new System.Windows.Forms.TextBox();
-			this.textBoxBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.TextBox();
-			this.textBoxBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.TextBox();
-			this.labelMainReservoirMaximumPressure = new System.Windows.Forms.Label();
-			this.labelMainReservoirMinimumPressure = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.Label();
-			this.groupBoxBrake = new System.Windows.Forms.GroupBox();
-			this.textBoxBrakeControlSpeed = new System.Windows.Forms.TextBox();
-			this.labelBrakeControlSpeedUnit = new System.Windows.Forms.Label();
-			this.comboBoxBrakeControlSystem = new System.Windows.Forms.ComboBox();
-			this.comboBoxLocoBrakeType = new System.Windows.Forms.ComboBox();
-			this.comboBoxBrakeType = new System.Windows.Forms.ComboBox();
-			this.labelLocoBrakeType = new System.Windows.Forms.Label();
-			this.labelBrakeType = new System.Windows.Forms.Label();
-			this.labelBrakeControlSpeed = new System.Windows.Forms.Label();
-			this.labelBrakeControlSystem = new System.Windows.Forms.Label();
-			this.groupBoxMove = new System.Windows.Forms.GroupBox();
-			this.labelBrakeCylinderDownUnit = new System.Windows.Forms.Label();
-			this.textBoxBrakeCylinderDown = new System.Windows.Forms.TextBox();
-			this.labelBrakeCylinderUpUnit = new System.Windows.Forms.Label();
-			this.textBoxBrakeCylinderUp = new System.Windows.Forms.TextBox();
-			this.labelJerkBrakeDownUnit = new System.Windows.Forms.Label();
-			this.textBoxJerkBrakeDown = new System.Windows.Forms.TextBox();
-			this.labelJerkBrakeUpUnit = new System.Windows.Forms.Label();
-			this.textBoxJerkBrakeUp = new System.Windows.Forms.TextBox();
-			this.labelJerkPowerDownUnit = new System.Windows.Forms.Label();
-			this.textBoxJerkPowerDown = new System.Windows.Forms.TextBox();
-			this.labelJerkPowerUpUnit = new System.Windows.Forms.Label();
-			this.textBoxJerkPowerUp = new System.Windows.Forms.TextBox();
-			this.labelJerkPowerUp = new System.Windows.Forms.Label();
-			this.labelJerkPowerDown = new System.Windows.Forms.Label();
-			this.labelJerkBrakeUp = new System.Windows.Forms.Label();
-			this.labelJerkBrakeDown = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderUp = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderDown = new System.Windows.Forms.Label();
-			this.groupBoxDelay = new System.Windows.Forms.GroupBox();
-			this.buttonDelayLocoBrakeSet = new System.Windows.Forms.Button();
-			this.buttonDelayBrakeSet = new System.Windows.Forms.Button();
-			this.buttonDelayPowerSet = new System.Windows.Forms.Button();
-			this.labelDelayLocoBrake = new System.Windows.Forms.Label();
-			this.labelDelayBrake = new System.Windows.Forms.Label();
-			this.labelDelayPower = new System.Windows.Forms.Label();
-			this.groupBoxPerformance = new System.Windows.Forms.GroupBox();
-			this.textBoxAerodynamicDragCoefficient = new System.Windows.Forms.TextBox();
-			this.textBoxCoefficientOfRollingResistance = new System.Windows.Forms.TextBox();
-			this.textBoxCoefficientOfStaticFriction = new System.Windows.Forms.TextBox();
-			this.labelDecelerationUnit = new System.Windows.Forms.Label();
-			this.textBoxDeceleration = new System.Windows.Forms.TextBox();
-			this.labelAerodynamicDragCoefficient = new System.Windows.Forms.Label();
-			this.labelCoefficientOfStaticFriction = new System.Windows.Forms.Label();
-			this.labelDeceleration = new System.Windows.Forms.Label();
-			this.labelCoefficientOfRollingResistance = new System.Windows.Forms.Label();
+			this.tabPageCar1 = new System.Windows.Forms.TabPage();
 			this.groupBoxCarGeneral = new System.Windows.Forms.GroupBox();
-			this.labelUnexposedFrontalAreaUnit = new System.Windows.Forms.Label();
+			this.comboBoxUnexposedFrontalAreaUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxExposedFrontalAreaUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCenterOfMassHeightUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxHeightUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxWidthUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxLengthUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxMassUnit = new System.Windows.Forms.ComboBox();
+			this.buttonRightDoorSet = new System.Windows.Forms.Button();
+			this.buttonLeftDoorSet = new System.Windows.Forms.Button();
+			this.checkBoxIsControlledCar = new System.Windows.Forms.CheckBox();
+			this.comboBoxReAdhesionDevice = new System.Windows.Forms.ComboBox();
+			this.labelIsControlledCar = new System.Windows.Forms.Label();
+			this.labelReAdhesionDevice = new System.Windows.Forms.Label();
+			this.labelRightDoor = new System.Windows.Forms.Label();
+			this.labelLeftDoor = new System.Windows.Forms.Label();
 			this.textBoxUnexposedFrontalArea = new System.Windows.Forms.TextBox();
 			this.labelUnexposedFrontalArea = new System.Windows.Forms.Label();
 			this.labelRearBogie = new System.Windows.Forms.Label();
@@ -547,13 +506,7 @@ namespace TrainEditor2.Views
 			this.checkBoxDefinedAxles = new System.Windows.Forms.CheckBox();
 			this.checkBoxIsMotorCar = new System.Windows.Forms.CheckBox();
 			this.buttonObjectOpen = new System.Windows.Forms.Button();
-			this.labelExposedFrontalAreaUnit = new System.Windows.Forms.Label();
-			this.labelCenterOfMassHeightUnit = new System.Windows.Forms.Label();
 			this.labelLoadingSway = new System.Windows.Forms.Label();
-			this.labelHeightUnit = new System.Windows.Forms.Label();
-			this.labelWidthUnit = new System.Windows.Forms.Label();
-			this.labelLengthUnit = new System.Windows.Forms.Label();
-			this.labelMassUnit = new System.Windows.Forms.Label();
 			this.textBoxMass = new System.Windows.Forms.TextBox();
 			this.textBoxLength = new System.Windows.Forms.TextBox();
 			this.textBoxWidth = new System.Windows.Forms.TextBox();
@@ -564,8 +517,8 @@ namespace TrainEditor2.Views
 			this.labelObject = new System.Windows.Forms.Label();
 			this.labelReversed = new System.Windows.Forms.Label();
 			this.groupBoxAxles = new System.Windows.Forms.GroupBox();
-			this.labelRearAxleUnit = new System.Windows.Forms.Label();
-			this.labelFrontAxleUnit = new System.Windows.Forms.Label();
+			this.comboBoxRearAxleUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxFrontAxleUnit = new System.Windows.Forms.ComboBox();
 			this.textBoxRearAxle = new System.Windows.Forms.TextBox();
 			this.textBoxFrontAxle = new System.Windows.Forms.TextBox();
 			this.labelRearAxle = new System.Windows.Forms.Label();
@@ -578,44 +531,168 @@ namespace TrainEditor2.Views
 			this.labelLength = new System.Windows.Forms.Label();
 			this.labelMass = new System.Windows.Forms.Label();
 			this.labelIsMotorCar = new System.Windows.Forms.Label();
+			this.groupBoxCab = new System.Windows.Forms.GroupBox();
+			this.comboBoxCabZUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCabYUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCabXUnit = new System.Windows.Forms.ComboBox();
+			this.groupBoxExternalCab = new System.Windows.Forms.GroupBox();
+			this.buttonCabFileNameOpen = new System.Windows.Forms.Button();
+			this.groupBoxCameraRestriction = new System.Windows.Forms.GroupBox();
+			this.comboBoxCameraRestrictionDownUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionUpUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionRightUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionLeftUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionBackwardsUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionForwardsUnit = new System.Windows.Forms.ComboBox();
+			this.checkBoxCameraRestrictionDefinedDown = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedDown = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionDown = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionDown = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedUp = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedUp = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionUp = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionUp = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedRight = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedRight = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionRight = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionRight = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedLeft = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedLeft = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionLeft = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionLeft = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedBackwards = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedBackwards = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionBackwards = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionBackwards = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedForwards = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedForwards = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionForwards = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionForwards = new System.Windows.Forms.Label();
+			this.textBoxCabFileName = new System.Windows.Forms.TextBox();
+			this.labelCabFileName = new System.Windows.Forms.Label();
+			this.checkBoxIsEmbeddedCab = new System.Windows.Forms.CheckBox();
+			this.labelIsEmbeddedCab = new System.Windows.Forms.Label();
+			this.textBoxCabZ = new System.Windows.Forms.TextBox();
+			this.textBoxCabY = new System.Windows.Forms.TextBox();
+			this.textBoxCabX = new System.Windows.Forms.TextBox();
+			this.labelCabZ = new System.Windows.Forms.Label();
+			this.labelCabY = new System.Windows.Forms.Label();
+			this.labelCabX = new System.Windows.Forms.Label();
+			this.groupBoxPressure = new System.Windows.Forms.GroupBox();
+			this.groupBoxBrakeCylinder = new System.Windows.Forms.GroupBox();
+			this.comboBoxBrakeCylinderReleaseRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakeCylinderEmergencyRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit = new System.Windows.Forms.ComboBox();
+			this.textBoxBrakeCylinderReleaseRate = new System.Windows.Forms.TextBox();
+			this.labelBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.Label();
+			this.labelBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.Label();
+			this.textBoxBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.TextBox();
+			this.textBoxBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.TextBox();
+			this.labelBrakeCylinderEmergencyRate = new System.Windows.Forms.Label();
+			this.labelBrakeCylinderReleaseRate = new System.Windows.Forms.Label();
+			this.textBoxBrakeCylinderEmergencyRate = new System.Windows.Forms.TextBox();
+			this.groupBoxStraightAirPipe = new System.Windows.Forms.GroupBox();
+			this.comboBoxStraightAirPipeReleaseRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxStraightAirPipeEmergencyRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxStraightAirPipeServiceRateUnit = new System.Windows.Forms.ComboBox();
+			this.labelStraightAirPipeReleaseRate = new System.Windows.Forms.Label();
+			this.textBoxStraightAirPipeReleaseRate = new System.Windows.Forms.TextBox();
+			this.labelStraightAirPipeEmergencyRate = new System.Windows.Forms.Label();
+			this.textBoxStraightAirPipeEmergencyRate = new System.Windows.Forms.TextBox();
+			this.labelStraightAirPipeServiceRate = new System.Windows.Forms.Label();
+			this.textBoxStraightAirPipeServiceRate = new System.Windows.Forms.TextBox();
+			this.groupBoxBrakePipe = new System.Windows.Forms.GroupBox();
+			this.comboBoxBrakePipeEmergencyRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakePipeServiceRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakePipeChargeRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakePipeNormalPressureUnit = new System.Windows.Forms.ComboBox();
+			this.labelBrakePipeEmergencyRate = new System.Windows.Forms.Label();
+			this.textBoxBrakePipeEmergencyRate = new System.Windows.Forms.TextBox();
+			this.labelBrakePipeServiceRate = new System.Windows.Forms.Label();
+			this.textBoxBrakePipeServiceRate = new System.Windows.Forms.TextBox();
+			this.labelBrakePipeChargeRate = new System.Windows.Forms.Label();
+			this.textBoxBrakePipeChargeRate = new System.Windows.Forms.TextBox();
+			this.labelBrakePipeNormalPressure = new System.Windows.Forms.Label();
+			this.textBoxBrakePipeNormalPressure = new System.Windows.Forms.TextBox();
+			this.groupBoxEqualizingReservoir = new System.Windows.Forms.GroupBox();
+			this.comboBoxEqualizingReservoirEmergencyRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxEqualizingReservoirServiceRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxEqualizingReservoirChargeRateUnit = new System.Windows.Forms.ComboBox();
+			this.labelEqualizingReservoirEmergencyRate = new System.Windows.Forms.Label();
+			this.textBoxEqualizingReservoirEmergencyRate = new System.Windows.Forms.TextBox();
+			this.labelEqualizingReservoirServiceRate = new System.Windows.Forms.Label();
+			this.textBoxEqualizingReservoirServiceRate = new System.Windows.Forms.TextBox();
+			this.labelEqualizingReservoirChargeRate = new System.Windows.Forms.Label();
+			this.textBoxEqualizingReservoirChargeRate = new System.Windows.Forms.TextBox();
+			this.groupBoxAuxiliaryReservoir = new System.Windows.Forms.GroupBox();
+			this.comboBoxAuxiliaryReservoirChargeRateUnit = new System.Windows.Forms.ComboBox();
+			this.labelAuxiliaryReservoirChargeRate = new System.Windows.Forms.Label();
+			this.textBoxAuxiliaryReservoirChargeRate = new System.Windows.Forms.TextBox();
+			this.groupBoxMainReservoir = new System.Windows.Forms.GroupBox();
+			this.comboBoxMainReservoirMaximumPressureUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxMainReservoirMinimumPressureUnit = new System.Windows.Forms.ComboBox();
+			this.labelMainReservoirMaximumPressure = new System.Windows.Forms.Label();
+			this.labelMainReservoirMinimumPressure = new System.Windows.Forms.Label();
+			this.textBoxMainReservoirMaximumPressure = new System.Windows.Forms.TextBox();
+			this.textBoxMainReservoirMinimumPressure = new System.Windows.Forms.TextBox();
+			this.groupBoxCompressor = new System.Windows.Forms.GroupBox();
+			this.comboBoxCompressorRateUnit = new System.Windows.Forms.ComboBox();
+			this.labelCompressorRate = new System.Windows.Forms.Label();
+			this.textBoxCompressorRate = new System.Windows.Forms.TextBox();
+			this.groupBoxBrake = new System.Windows.Forms.GroupBox();
+			this.comboBoxBrakeControlSpeedUnit = new System.Windows.Forms.ComboBox();
+			this.textBoxBrakeControlSpeed = new System.Windows.Forms.TextBox();
+			this.comboBoxBrakeControlSystem = new System.Windows.Forms.ComboBox();
+			this.comboBoxLocoBrakeType = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakeType = new System.Windows.Forms.ComboBox();
+			this.labelLocoBrakeType = new System.Windows.Forms.Label();
+			this.labelBrakeType = new System.Windows.Forms.Label();
+			this.labelBrakeControlSpeed = new System.Windows.Forms.Label();
+			this.labelBrakeControlSystem = new System.Windows.Forms.Label();
+			this.groupBoxJerk = new System.Windows.Forms.GroupBox();
+			this.buttonJerkBrakeSet = new System.Windows.Forms.Button();
+			this.buttonJerkPowerSet = new System.Windows.Forms.Button();
+			this.labelJerkPower = new System.Windows.Forms.Label();
+			this.labelJerkBrake = new System.Windows.Forms.Label();
+			this.groupBoxPerformance = new System.Windows.Forms.GroupBox();
+			this.comboBoxDecelerationUnit = new System.Windows.Forms.ComboBox();
+			this.textBoxAerodynamicDragCoefficient = new System.Windows.Forms.TextBox();
+			this.textBoxCoefficientOfRollingResistance = new System.Windows.Forms.TextBox();
+			this.textBoxCoefficientOfStaticFriction = new System.Windows.Forms.TextBox();
+			this.textBoxDeceleration = new System.Windows.Forms.TextBox();
+			this.labelAerodynamicDragCoefficient = new System.Windows.Forms.Label();
+			this.labelCoefficientOfStaticFriction = new System.Windows.Forms.Label();
+			this.labelDeceleration = new System.Windows.Forms.Label();
+			this.labelCoefficientOfRollingResistance = new System.Windows.Forms.Label();
+			this.groupBoxDelay = new System.Windows.Forms.GroupBox();
+			this.buttonDelayLocoBrakeSet = new System.Windows.Forms.Button();
+			this.buttonDelayBrakeSet = new System.Windows.Forms.Button();
+			this.buttonDelayPowerSet = new System.Windows.Forms.Button();
+			this.labelDelayLocoBrake = new System.Windows.Forms.Label();
+			this.labelDelayBrake = new System.Windows.Forms.Label();
+			this.labelDelayPower = new System.Windows.Forms.Label();
 			this.tabPageTrain = new System.Windows.Forms.TabPage();
+			this.groupBoxTrainGeneral = new System.Windows.Forms.GroupBox();
+			this.comboBoxInitialDriverCar = new System.Windows.Forms.ComboBox();
+			this.labelInitialDriverCar = new System.Windows.Forms.Label();
 			this.groupBoxDevice = new System.Windows.Forms.GroupBox();
-			this.labelDoorMaxToleranceUnit = new System.Windows.Forms.Label();
-			this.textBoxDoorMaxTolerance = new System.Windows.Forms.TextBox();
-			this.labelDoorWidthUnit = new System.Windows.Forms.Label();
-			this.textBoxDoorWidth = new System.Windows.Forms.TextBox();
 			this.comboBoxDoorCloseMode = new System.Windows.Forms.ComboBox();
 			this.comboBoxDoorOpenMode = new System.Windows.Forms.ComboBox();
 			this.comboBoxPassAlarm = new System.Windows.Forms.ComboBox();
-			this.comboBoxReAdhesionDevice = new System.Windows.Forms.ComboBox();
 			this.comboBoxAtc = new System.Windows.Forms.ComboBox();
 			this.comboBoxAts = new System.Windows.Forms.ComboBox();
 			this.checkBoxHoldBrake = new System.Windows.Forms.CheckBox();
 			this.checkBoxEb = new System.Windows.Forms.CheckBox();
 			this.checkBoxConstSpeed = new System.Windows.Forms.CheckBox();
-			this.labelDoorMaxTolerance = new System.Windows.Forms.Label();
-			this.labelDoorWidth = new System.Windows.Forms.Label();
 			this.labelDoorCloseMode = new System.Windows.Forms.Label();
 			this.labelDoorOpenMode = new System.Windows.Forms.Label();
 			this.labelPassAlarm = new System.Windows.Forms.Label();
-			this.labelReAdhesionDevice = new System.Windows.Forms.Label();
 			this.labelHoldBrake = new System.Windows.Forms.Label();
 			this.labelConstSpeed = new System.Windows.Forms.Label();
 			this.labelEb = new System.Windows.Forms.Label();
 			this.labelAtc = new System.Windows.Forms.Label();
 			this.labelAts = new System.Windows.Forms.Label();
-			this.groupBoxCab = new System.Windows.Forms.GroupBox();
-			this.comboBoxDriverCar = new System.Windows.Forms.ComboBox();
-			this.labelCabZUnit = new System.Windows.Forms.Label();
-			this.textBoxCabZ = new System.Windows.Forms.TextBox();
-			this.labelCabYUnit = new System.Windows.Forms.Label();
-			this.textBoxCabY = new System.Windows.Forms.TextBox();
-			this.labelCabXUnit = new System.Windows.Forms.Label();
-			this.textBoxCabX = new System.Windows.Forms.TextBox();
-			this.labelDriverCar = new System.Windows.Forms.Label();
-			this.labelCabZ = new System.Windows.Forms.Label();
-			this.labelCabY = new System.Windows.Forms.Label();
-			this.labelCabX = new System.Windows.Forms.Label();
 			this.groupBoxHandle = new System.Windows.Forms.GroupBox();
 			this.numericUpDownLocoBrakeNotches = new System.Windows.Forms.NumericUpDown();
 			this.labelLocoBrakeNotches = new System.Windows.Forms.Label();
@@ -636,8 +713,11 @@ namespace TrainEditor2.Views
 			this.comboBoxHandleType = new System.Windows.Forms.ComboBox();
 			this.labelHandleType = new System.Windows.Forms.Label();
 			this.tabControlEditor = new System.Windows.Forms.TabControl();
-			this.buttonDelayElectricBrake = new System.Windows.Forms.Button();
-			this.labelDelayElectricBrake = new System.Windows.Forms.Label();
+			this.tabPageCar2 = new System.Windows.Forms.TabPage();
+			this.groupBoxUnit = new System.Windows.Forms.GroupBox();
+			this.comboBoxMotorXUnit = new System.Windows.Forms.ComboBox();
+			this.labelMotorXUnit = new System.Windows.Forms.Label();
+			this.comboBoxMotorAccelUnit = new System.Windows.Forms.ComboBox();
 			this.panelCars.SuspendLayout();
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
@@ -703,37 +783,52 @@ namespace TrainEditor2.Views
 			this.tabPageCoupler.SuspendLayout();
 			this.groupBoxCouplerGeneral.SuspendLayout();
 			this.tabPageMotor.SuspendLayout();
-			this.panelMotorSound.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainerMotor)).BeginInit();
+			this.splitContainerMotor.Panel1.SuspendLayout();
+			this.splitContainerMotor.Panel2.SuspendLayout();
+			this.splitContainerMotor.SuspendLayout();
+			this.panelMoterNavi.SuspendLayout();
 			this.toolStripContainerDrawArea.ContentPanel.SuspendLayout();
 			this.toolStripContainerDrawArea.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainerDrawArea.SuspendLayout();
 			this.toolStripToolBar.SuspendLayout();
 			this.panelMotorSetting.SuspendLayout();
-			this.groupBoxDirect.SuspendLayout();
 			this.groupBoxPlay.SuspendLayout();
 			this.groupBoxArea.SuspendLayout();
 			this.groupBoxSource.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownRunIndex)).BeginInit();
+			this.groupBoxDirect.SuspendLayout();
 			this.groupBoxView.SuspendLayout();
-			this.statusStripStatus.SuspendLayout();
+			this.groupBoxTrack.SuspendLayout();
 			this.menuStripMotor.SuspendLayout();
+			this.statusStripStatus.SuspendLayout();
 			this.tabPageAccel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxAccel)).BeginInit();
 			this.panelAccel.SuspendLayout();
 			this.groupBoxPreview.SuspendLayout();
 			this.groupBoxParameter.SuspendLayout();
 			this.groupBoxNotch.SuspendLayout();
-			this.tabPageCar.SuspendLayout();
-			this.groupBoxPressure.SuspendLayout();
-			this.groupBoxBrake.SuspendLayout();
-			this.groupBoxMove.SuspendLayout();
-			this.groupBoxDelay.SuspendLayout();
-			this.groupBoxPerformance.SuspendLayout();
+			this.tabPageCar1.SuspendLayout();
 			this.groupBoxCarGeneral.SuspendLayout();
 			this.groupBoxAxles.SuspendLayout();
-			this.tabPageTrain.SuspendLayout();
-			this.groupBoxDevice.SuspendLayout();
 			this.groupBoxCab.SuspendLayout();
+			this.groupBoxExternalCab.SuspendLayout();
+			this.groupBoxCameraRestriction.SuspendLayout();
+			this.groupBoxPressure.SuspendLayout();
+			this.groupBoxBrakeCylinder.SuspendLayout();
+			this.groupBoxStraightAirPipe.SuspendLayout();
+			this.groupBoxBrakePipe.SuspendLayout();
+			this.groupBoxEqualizingReservoir.SuspendLayout();
+			this.groupBoxAuxiliaryReservoir.SuspendLayout();
+			this.groupBoxMainReservoir.SuspendLayout();
+			this.groupBoxCompressor.SuspendLayout();
+			this.groupBoxBrake.SuspendLayout();
+			this.groupBoxJerk.SuspendLayout();
+			this.groupBoxPerformance.SuspendLayout();
+			this.groupBoxDelay.SuspendLayout();
+			this.tabPageTrain.SuspendLayout();
+			this.groupBoxTrainGeneral.SuspendLayout();
+			this.groupBoxDevice.SuspendLayout();
 			this.groupBoxHandle.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLocoBrakeNotches)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverBrakeNotches)).BeginInit();
@@ -742,6 +837,8 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).BeginInit();
 			this.tabControlEditor.SuspendLayout();
+			this.tabPageCar2.SuspendLayout();
+			this.groupBoxUnit.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// panelCars
@@ -751,7 +848,7 @@ namespace TrainEditor2.Views
 			this.panelCars.Dock = System.Windows.Forms.DockStyle.Left;
 			this.panelCars.Location = new System.Drawing.Point(0, 24);
 			this.panelCars.Name = "panelCars";
-			this.panelCars.Size = new System.Drawing.Size(200, 696);
+			this.panelCars.Size = new System.Drawing.Size(200, 744);
 			this.panelCars.TabIndex = 10;
 			// 
 			// treeViewCars
@@ -760,7 +857,7 @@ namespace TrainEditor2.Views
 			this.treeViewCars.HideSelection = false;
 			this.treeViewCars.Location = new System.Drawing.Point(0, 0);
 			this.treeViewCars.Name = "treeViewCars";
-			this.treeViewCars.Size = new System.Drawing.Size(200, 624);
+			this.treeViewCars.Size = new System.Drawing.Size(200, 672);
 			this.treeViewCars.TabIndex = 2;
 			// 
 			// panelCarsNavi
@@ -771,7 +868,7 @@ namespace TrainEditor2.Views
 			this.panelCarsNavi.Controls.Add(this.buttonCarsUp);
 			this.panelCarsNavi.Controls.Add(this.buttonCarsDown);
 			this.panelCarsNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelCarsNavi.Location = new System.Drawing.Point(0, 624);
+			this.panelCarsNavi.Location = new System.Drawing.Point(0, 672);
 			this.panelCarsNavi.Name = "panelCarsNavi";
 			this.panelCarsNavi.Size = new System.Drawing.Size(200, 72);
 			this.panelCarsNavi.TabIndex = 3;
@@ -891,17 +988,65 @@ namespace TrainEditor2.Views
 			// 
 			// toolStripMenuItemImport
 			// 
+			this.toolStripMenuItemImport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemImportTrain,
+            this.toolStripMenuItemImportPanel,
+            this.toolStripMenuItemImportSound});
 			this.toolStripMenuItemImport.Name = "toolStripMenuItemImport";
 			this.toolStripMenuItemImport.Size = new System.Drawing.Size(200, 22);
-			this.toolStripMenuItemImport.Text = "Import...";
-			this.toolStripMenuItemImport.Click += new System.EventHandler(this.ToolStripMenuItemImport_Click);
+			this.toolStripMenuItemImport.Text = "Import";
+			// 
+			// toolStripMenuItemImportTrain
+			// 
+			this.toolStripMenuItemImportTrain.Name = "toolStripMenuItemImportTrain";
+			this.toolStripMenuItemImportTrain.Size = new System.Drawing.Size(107, 22);
+			this.toolStripMenuItemImportTrain.Text = "Train...";
+			this.toolStripMenuItemImportTrain.Click += new System.EventHandler(this.ToolStripMenuItemImportTrain_Click);
+			// 
+			// toolStripMenuItemImportPanel
+			// 
+			this.toolStripMenuItemImportPanel.Name = "toolStripMenuItemImportPanel";
+			this.toolStripMenuItemImportPanel.Size = new System.Drawing.Size(107, 22);
+			this.toolStripMenuItemImportPanel.Text = "Panel...";
+			this.toolStripMenuItemImportPanel.Click += new System.EventHandler(this.ToolStripMenuItemImportPanel_Click);
+			// 
+			// toolStripMenuItemImportSound
+			// 
+			this.toolStripMenuItemImportSound.Name = "toolStripMenuItemImportSound";
+			this.toolStripMenuItemImportSound.Size = new System.Drawing.Size(107, 22);
+			this.toolStripMenuItemImportSound.Text = "Sound...";
+			this.toolStripMenuItemImportSound.Click += new System.EventHandler(this.ToolStripMenuItemImportSound_Click);
 			// 
 			// toolStripMenuItemExport
 			// 
+			this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemExportTrain,
+            this.toolStripMenuItemExportPanel,
+            this.toolStripMenuItemExportSound});
 			this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
 			this.toolStripMenuItemExport.Size = new System.Drawing.Size(200, 22);
-			this.toolStripMenuItemExport.Text = "Export...";
-			this.toolStripMenuItemExport.Click += new System.EventHandler(this.ToolStripMenuItemExport_Click);
+			this.toolStripMenuItemExport.Text = "Export";
+			// 
+			// toolStripMenuItemExportTrain
+			// 
+			this.toolStripMenuItemExportTrain.Name = "toolStripMenuItemExportTrain";
+			this.toolStripMenuItemExportTrain.Size = new System.Drawing.Size(107, 22);
+			this.toolStripMenuItemExportTrain.Text = "Train...";
+			this.toolStripMenuItemExportTrain.Click += new System.EventHandler(this.ToolStripMenuItemExportTrain_Click);
+			// 
+			// toolStripMenuItemExportPanel
+			// 
+			this.toolStripMenuItemExportPanel.Name = "toolStripMenuItemExportPanel";
+			this.toolStripMenuItemExportPanel.Size = new System.Drawing.Size(107, 22);
+			this.toolStripMenuItemExportPanel.Text = "Panel...";
+			this.toolStripMenuItemExportPanel.Click += new System.EventHandler(this.ToolStripMenuItemExportPanel_Click);
+			// 
+			// toolStripMenuItemExportSound
+			// 
+			this.toolStripMenuItemExportSound.Name = "toolStripMenuItemExportSound";
+			this.toolStripMenuItemExportSound.Size = new System.Drawing.Size(107, 22);
+			this.toolStripMenuItemExportSound.Text = "Sound...";
+			this.toolStripMenuItemExportSound.Click += new System.EventHandler(this.ToolStripMenuItemExportSound_Click);
 			// 
 			// toolStripSeparatorExport
 			// 
@@ -942,7 +1087,7 @@ namespace TrainEditor2.Views
 			this.tabPageStatus.Controls.Add(this.menuStripStatus);
 			this.tabPageStatus.Location = new System.Drawing.Point(4, 22);
 			this.tabPageStatus.Name = "tabPageStatus";
-			this.tabPageStatus.Size = new System.Drawing.Size(792, 670);
+			this.tabPageStatus.Size = new System.Drawing.Size(792, 686);
 			this.tabPageStatus.TabIndex = 6;
 			this.tabPageStatus.Text = "Status (0)";
 			this.tabPageStatus.UseVisualStyleBackColor = true;
@@ -958,7 +1103,7 @@ namespace TrainEditor2.Views
 			this.listViewStatus.Location = new System.Drawing.Point(0, 24);
 			this.listViewStatus.MultiSelect = false;
 			this.listViewStatus.Name = "listViewStatus";
-			this.listViewStatus.Size = new System.Drawing.Size(792, 608);
+			this.listViewStatus.Size = new System.Drawing.Size(792, 622);
 			this.listViewStatus.TabIndex = 0;
 			this.listViewStatus.UseCompatibleStateImageBehavior = false;
 			this.listViewStatus.View = System.Windows.Forms.View.Details;
@@ -975,9 +1120,9 @@ namespace TrainEditor2.Views
 			// 
 			this.panelStatusNavi.Controls.Add(this.buttonOutputLogs);
 			this.panelStatusNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelStatusNavi.Location = new System.Drawing.Point(0, 632);
+			this.panelStatusNavi.Location = new System.Drawing.Point(0, 646);
 			this.panelStatusNavi.Name = "panelStatusNavi";
-			this.panelStatusNavi.Size = new System.Drawing.Size(792, 38);
+			this.panelStatusNavi.Size = new System.Drawing.Size(792, 40);
 			this.panelStatusNavi.TabIndex = 4;
 			// 
 			// buttonOutputLogs
@@ -1034,7 +1179,7 @@ namespace TrainEditor2.Views
 			this.tabPageSound.Location = new System.Drawing.Point(4, 22);
 			this.tabPageSound.Name = "tabPageSound";
 			this.tabPageSound.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageSound.Size = new System.Drawing.Size(792, 670);
+			this.tabPageSound.Size = new System.Drawing.Size(792, 686);
 			this.tabPageSound.TabIndex = 0;
 			this.tabPageSound.Text = "Sound settings";
 			this.tabPageSound.UseVisualStyleBackColor = true;
@@ -1046,7 +1191,7 @@ namespace TrainEditor2.Views
 			this.panelSoundSetting.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelSoundSetting.Location = new System.Drawing.Point(3, 3);
 			this.panelSoundSetting.Name = "panelSoundSetting";
-			this.panelSoundSetting.Size = new System.Drawing.Size(786, 664);
+			this.panelSoundSetting.Size = new System.Drawing.Size(786, 680);
 			this.panelSoundSetting.TabIndex = 0;
 			// 
 			// splitContainerSound
@@ -1062,7 +1207,7 @@ namespace TrainEditor2.Views
 			// splitContainerSound.Panel2
 			// 
 			this.splitContainerSound.Panel2.Controls.Add(this.listViewSound);
-			this.splitContainerSound.Size = new System.Drawing.Size(570, 664);
+			this.splitContainerSound.Size = new System.Drawing.Size(570, 680);
 			this.splitContainerSound.SplitterDistance = 190;
 			this.splitContainerSound.TabIndex = 2;
 			// 
@@ -1072,7 +1217,7 @@ namespace TrainEditor2.Views
 			this.treeViewSound.HideSelection = false;
 			this.treeViewSound.Location = new System.Drawing.Point(0, 0);
 			this.treeViewSound.Name = "treeViewSound";
-			this.treeViewSound.Size = new System.Drawing.Size(190, 664);
+			this.treeViewSound.Size = new System.Drawing.Size(190, 680);
 			this.treeViewSound.TabIndex = 0;
 			// 
 			// listViewSound
@@ -1083,7 +1228,7 @@ namespace TrainEditor2.Views
 			this.listViewSound.Location = new System.Drawing.Point(0, 0);
 			this.listViewSound.MultiSelect = false;
 			this.listViewSound.Name = "listViewSound";
-			this.listViewSound.Size = new System.Drawing.Size(376, 664);
+			this.listViewSound.Size = new System.Drawing.Size(376, 680);
 			this.listViewSound.TabIndex = 0;
 			this.listViewSound.UseCompatibleStateImageBehavior = false;
 			this.listViewSound.View = System.Windows.Forms.View.Details;
@@ -1094,26 +1239,46 @@ namespace TrainEditor2.Views
 			this.panelSoundSettingEdit.Dock = System.Windows.Forms.DockStyle.Right;
 			this.panelSoundSettingEdit.Location = new System.Drawing.Point(570, 0);
 			this.panelSoundSettingEdit.Name = "panelSoundSettingEdit";
-			this.panelSoundSettingEdit.Size = new System.Drawing.Size(216, 664);
+			this.panelSoundSettingEdit.Size = new System.Drawing.Size(216, 680);
 			this.panelSoundSettingEdit.TabIndex = 1;
 			// 
 			// groupBoxSoundEntry
 			// 
 			this.groupBoxSoundEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundUp);
+			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundDown);
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundRemove);
 			this.groupBoxSoundEntry.Controls.Add(this.groupBoxSoundKey);
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundAdd);
 			this.groupBoxSoundEntry.Controls.Add(this.groupBoxSoundValue);
-			this.groupBoxSoundEntry.Location = new System.Drawing.Point(8, 320);
+			this.groupBoxSoundEntry.Location = new System.Drawing.Point(8, 304);
 			this.groupBoxSoundEntry.Name = "groupBoxSoundEntry";
-			this.groupBoxSoundEntry.Size = new System.Drawing.Size(200, 336);
+			this.groupBoxSoundEntry.Size = new System.Drawing.Size(200, 368);
 			this.groupBoxSoundEntry.TabIndex = 6;
 			this.groupBoxSoundEntry.TabStop = false;
 			this.groupBoxSoundEntry.Text = "Edit entry";
 			// 
+			// buttonSoundUp
+			// 
+			this.buttonSoundUp.Location = new System.Drawing.Point(8, 304);
+			this.buttonSoundUp.Name = "buttonSoundUp";
+			this.buttonSoundUp.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundUp.TabIndex = 5;
+			this.buttonSoundUp.Text = "Up";
+			this.buttonSoundUp.UseVisualStyleBackColor = true;
+			// 
+			// buttonSoundDown
+			// 
+			this.buttonSoundDown.Location = new System.Drawing.Point(8, 336);
+			this.buttonSoundDown.Name = "buttonSoundDown";
+			this.buttonSoundDown.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundDown.TabIndex = 6;
+			this.buttonSoundDown.Text = "Down";
+			this.buttonSoundDown.UseVisualStyleBackColor = true;
+			// 
 			// buttonSoundRemove
 			// 
-			this.buttonSoundRemove.Location = new System.Drawing.Point(72, 304);
+			this.buttonSoundRemove.Location = new System.Drawing.Point(136, 304);
 			this.buttonSoundRemove.Name = "buttonSoundRemove";
 			this.buttonSoundRemove.Size = new System.Drawing.Size(56, 24);
 			this.buttonSoundRemove.TabIndex = 4;
@@ -1135,7 +1300,7 @@ namespace TrainEditor2.Views
 			// 
 			this.numericUpDownSoundKeyIndex.Location = new System.Drawing.Point(136, 16);
 			this.numericUpDownSoundKeyIndex.Maximum = new decimal(new int[] {
-            256,
+            1024,
             0,
             0,
             0});
@@ -1154,7 +1319,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonSoundAdd
 			// 
-			this.buttonSoundAdd.Location = new System.Drawing.Point(8, 304);
+			this.buttonSoundAdd.Location = new System.Drawing.Point(72, 304);
 			this.buttonSoundAdd.Name = "buttonSoundAdd";
 			this.buttonSoundAdd.Size = new System.Drawing.Size(56, 24);
 			this.buttonSoundAdd.TabIndex = 3;
@@ -1327,7 +1492,7 @@ namespace TrainEditor2.Views
 			this.tabPagePanel.Controls.Add(this.tabControlPanel);
 			this.tabPagePanel.Location = new System.Drawing.Point(4, 22);
 			this.tabPagePanel.Name = "tabPagePanel";
-			this.tabPagePanel.Size = new System.Drawing.Size(792, 670);
+			this.tabPagePanel.Size = new System.Drawing.Size(792, 686);
 			this.tabPagePanel.TabIndex = 2;
 			this.tabPagePanel.Text = "Panel settings";
 			this.tabPagePanel.UseVisualStyleBackColor = true;
@@ -1346,7 +1511,7 @@ namespace TrainEditor2.Views
 			// 
 			this.splitContainerPanel.Panel2.Controls.Add(this.listViewPanel);
 			this.splitContainerPanel.Panel2.Controls.Add(this.panelPanelNavi);
-			this.splitContainerPanel.Size = new System.Drawing.Size(472, 670);
+			this.splitContainerPanel.Size = new System.Drawing.Size(472, 686);
 			this.splitContainerPanel.SplitterDistance = 157;
 			this.splitContainerPanel.TabIndex = 1;
 			// 
@@ -1356,7 +1521,7 @@ namespace TrainEditor2.Views
 			this.treeViewPanel.HideSelection = false;
 			this.treeViewPanel.Location = new System.Drawing.Point(0, 0);
 			this.treeViewPanel.Name = "treeViewPanel";
-			this.treeViewPanel.Size = new System.Drawing.Size(157, 670);
+			this.treeViewPanel.Size = new System.Drawing.Size(157, 686);
 			this.treeViewPanel.TabIndex = 0;
 			// 
 			// listViewPanel
@@ -1367,7 +1532,7 @@ namespace TrainEditor2.Views
 			this.listViewPanel.Location = new System.Drawing.Point(0, 0);
 			this.listViewPanel.MultiSelect = false;
 			this.listViewPanel.Name = "listViewPanel";
-			this.listViewPanel.Size = new System.Drawing.Size(311, 598);
+			this.listViewPanel.Size = new System.Drawing.Size(311, 614);
 			this.listViewPanel.TabIndex = 1;
 			this.listViewPanel.UseCompatibleStateImageBehavior = false;
 			this.listViewPanel.View = System.Windows.Forms.View.Details;
@@ -1376,25 +1541,45 @@ namespace TrainEditor2.Views
 			// 
 			this.panelPanelNavi.Controls.Add(this.panelPanelNaviCmd);
 			this.panelPanelNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelPanelNavi.Location = new System.Drawing.Point(0, 598);
+			this.panelPanelNavi.Location = new System.Drawing.Point(0, 614);
 			this.panelPanelNavi.Name = "panelPanelNavi";
 			this.panelPanelNavi.Size = new System.Drawing.Size(311, 72);
 			this.panelPanelNavi.TabIndex = 0;
 			// 
 			// panelPanelNaviCmd
 			// 
+			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelUp);
+			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelDown);
 			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelCopy);
 			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelAdd);
 			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelRemove);
 			this.panelPanelNaviCmd.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelPanelNaviCmd.Location = new System.Drawing.Point(176, 0);
+			this.panelPanelNaviCmd.Location = new System.Drawing.Point(112, 0);
 			this.panelPanelNaviCmd.Name = "panelPanelNaviCmd";
-			this.panelPanelNaviCmd.Size = new System.Drawing.Size(135, 72);
+			this.panelPanelNaviCmd.Size = new System.Drawing.Size(199, 72);
 			this.panelPanelNaviCmd.TabIndex = 7;
+			// 
+			// buttonPanelUp
+			// 
+			this.buttonPanelUp.Location = new System.Drawing.Point(8, 8);
+			this.buttonPanelUp.Name = "buttonPanelUp";
+			this.buttonPanelUp.Size = new System.Drawing.Size(56, 24);
+			this.buttonPanelUp.TabIndex = 7;
+			this.buttonPanelUp.Text = "Up";
+			this.buttonPanelUp.UseVisualStyleBackColor = true;
+			// 
+			// buttonPanelDown
+			// 
+			this.buttonPanelDown.Location = new System.Drawing.Point(8, 40);
+			this.buttonPanelDown.Name = "buttonPanelDown";
+			this.buttonPanelDown.Size = new System.Drawing.Size(56, 24);
+			this.buttonPanelDown.TabIndex = 8;
+			this.buttonPanelDown.Text = "Down";
+			this.buttonPanelDown.UseVisualStyleBackColor = true;
 			// 
 			// buttonPanelCopy
 			// 
-			this.buttonPanelCopy.Location = new System.Drawing.Point(8, 40);
+			this.buttonPanelCopy.Location = new System.Drawing.Point(72, 40);
 			this.buttonPanelCopy.Name = "buttonPanelCopy";
 			this.buttonPanelCopy.Size = new System.Drawing.Size(56, 24);
 			this.buttonPanelCopy.TabIndex = 6;
@@ -1403,7 +1588,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonPanelAdd
 			// 
-			this.buttonPanelAdd.Location = new System.Drawing.Point(8, 8);
+			this.buttonPanelAdd.Location = new System.Drawing.Point(72, 8);
 			this.buttonPanelAdd.Name = "buttonPanelAdd";
 			this.buttonPanelAdd.Size = new System.Drawing.Size(56, 24);
 			this.buttonPanelAdd.TabIndex = 4;
@@ -1412,7 +1597,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonPanelRemove
 			// 
-			this.buttonPanelRemove.Location = new System.Drawing.Point(72, 8);
+			this.buttonPanelRemove.Location = new System.Drawing.Point(136, 8);
 			this.buttonPanelRemove.Name = "buttonPanelRemove";
 			this.buttonPanelRemove.Size = new System.Drawing.Size(56, 24);
 			this.buttonPanelRemove.TabIndex = 2;
@@ -1435,7 +1620,7 @@ namespace TrainEditor2.Views
 			this.tabControlPanel.Multiline = true;
 			this.tabControlPanel.Name = "tabControlPanel";
 			this.tabControlPanel.SelectedIndex = 0;
-			this.tabControlPanel.Size = new System.Drawing.Size(320, 670);
+			this.tabControlPanel.Size = new System.Drawing.Size(320, 686);
 			this.tabControlPanel.TabIndex = 0;
 			// 
 			// tabPageThis
@@ -1464,7 +1649,7 @@ namespace TrainEditor2.Views
 			this.tabPageThis.Location = new System.Drawing.Point(4, 40);
 			this.tabPageThis.Name = "tabPageThis";
 			this.tabPageThis.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageThis.Size = new System.Drawing.Size(312, 626);
+			this.tabPageThis.Size = new System.Drawing.Size(312, 642);
 			this.tabPageThis.TabIndex = 0;
 			this.tabPageThis.Text = "This";
 			this.tabPageThis.UseVisualStyleBackColor = true;
@@ -1726,7 +1911,7 @@ namespace TrainEditor2.Views
 			this.tabPageScreen.Location = new System.Drawing.Point(4, 40);
 			this.tabPageScreen.Name = "tabPageScreen";
 			this.tabPageScreen.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageScreen.Size = new System.Drawing.Size(312, 626);
+			this.tabPageScreen.Size = new System.Drawing.Size(312, 642);
 			this.tabPageScreen.TabIndex = 1;
 			this.tabPageScreen.Text = "Screen";
 			this.tabPageScreen.UseVisualStyleBackColor = true;
@@ -1734,6 +1919,11 @@ namespace TrainEditor2.Views
 			// numericUpDownScreenLayer
 			// 
 			this.numericUpDownScreenLayer.Location = new System.Drawing.Point(136, 32);
+			this.numericUpDownScreenLayer.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownScreenLayer.Name = "numericUpDownScreenLayer";
 			this.numericUpDownScreenLayer.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownScreenLayer.TabIndex = 31;
@@ -1741,6 +1931,11 @@ namespace TrainEditor2.Views
 			// numericUpDownScreenNumber
 			// 
 			this.numericUpDownScreenNumber.Location = new System.Drawing.Point(136, 8);
+			this.numericUpDownScreenNumber.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownScreenNumber.Name = "numericUpDownScreenNumber";
 			this.numericUpDownScreenNumber.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownScreenNumber.TabIndex = 30;
@@ -1781,7 +1976,7 @@ namespace TrainEditor2.Views
 			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampTransparentColor);
 			this.tabPagePilotLamp.Location = new System.Drawing.Point(4, 40);
 			this.tabPagePilotLamp.Name = "tabPagePilotLamp";
-			this.tabPagePilotLamp.Size = new System.Drawing.Size(312, 626);
+			this.tabPagePilotLamp.Size = new System.Drawing.Size(312, 642);
 			this.tabPagePilotLamp.TabIndex = 2;
 			this.tabPagePilotLamp.Text = "PilotLamp";
 			this.tabPagePilotLamp.UseVisualStyleBackColor = true;
@@ -1799,6 +1994,11 @@ namespace TrainEditor2.Views
 			// numericUpDownPilotLampLayer
 			// 
 			this.numericUpDownPilotLampLayer.Location = new System.Drawing.Point(136, 184);
+			this.numericUpDownPilotLampLayer.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownPilotLampLayer.Name = "numericUpDownPilotLampLayer";
 			this.numericUpDownPilotLampLayer.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownPilotLampLayer.TabIndex = 34;
@@ -1992,7 +2192,7 @@ namespace TrainEditor2.Views
 			this.tabPageNeedle.Controls.Add(this.labelNeedleTransparentColor);
 			this.tabPageNeedle.Location = new System.Drawing.Point(4, 40);
 			this.tabPageNeedle.Name = "tabPageNeedle";
-			this.tabPageNeedle.Size = new System.Drawing.Size(312, 626);
+			this.tabPageNeedle.Size = new System.Drawing.Size(312, 642);
 			this.tabPageNeedle.TabIndex = 3;
 			this.tabPageNeedle.Text = "Needle";
 			this.tabPageNeedle.UseVisualStyleBackColor = true;
@@ -2088,6 +2288,11 @@ namespace TrainEditor2.Views
 			// numericUpDownNeedleLayer
 			// 
 			this.numericUpDownNeedleLayer.Location = new System.Drawing.Point(136, 600);
+			this.numericUpDownNeedleLayer.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownNeedleLayer.Name = "numericUpDownNeedleLayer";
 			this.numericUpDownNeedleLayer.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownNeedleLayer.TabIndex = 83;
@@ -2460,7 +2665,7 @@ namespace TrainEditor2.Views
 			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberTransparentColor);
 			this.tabPageDigitalNumber.Location = new System.Drawing.Point(4, 40);
 			this.tabPageDigitalNumber.Name = "tabPageDigitalNumber";
-			this.tabPageDigitalNumber.Size = new System.Drawing.Size(312, 626);
+			this.tabPageDigitalNumber.Size = new System.Drawing.Size(312, 642);
 			this.tabPageDigitalNumber.TabIndex = 4;
 			this.tabPageDigitalNumber.Text = "DigitalNumber";
 			this.tabPageDigitalNumber.UseVisualStyleBackColor = true;
@@ -2478,6 +2683,11 @@ namespace TrainEditor2.Views
 			// numericUpDownDigitalNumberLayer
 			// 
 			this.numericUpDownDigitalNumberLayer.Location = new System.Drawing.Point(136, 208);
+			this.numericUpDownDigitalNumberLayer.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownDigitalNumberLayer.Name = "numericUpDownDigitalNumberLayer";
 			this.numericUpDownDigitalNumberLayer.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownDigitalNumberLayer.TabIndex = 85;
@@ -2485,6 +2695,11 @@ namespace TrainEditor2.Views
 			// numericUpDownDigitalNumberInterval
 			// 
 			this.numericUpDownDigitalNumberInterval.Location = new System.Drawing.Point(136, 184);
+			this.numericUpDownDigitalNumberInterval.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownDigitalNumberInterval.Name = "numericUpDownDigitalNumberInterval";
 			this.numericUpDownDigitalNumberInterval.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownDigitalNumberInterval.TabIndex = 84;
@@ -2663,7 +2878,7 @@ namespace TrainEditor2.Views
 			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeSubject);
 			this.tabPageDigitalGauge.Location = new System.Drawing.Point(4, 40);
 			this.tabPageDigitalGauge.Name = "tabPageDigitalGauge";
-			this.tabPageDigitalGauge.Size = new System.Drawing.Size(312, 626);
+			this.tabPageDigitalGauge.Size = new System.Drawing.Size(312, 642);
 			this.tabPageDigitalGauge.TabIndex = 5;
 			this.tabPageDigitalGauge.Text = "DigitalGauge";
 			this.tabPageDigitalGauge.UseVisualStyleBackColor = true;
@@ -2681,6 +2896,11 @@ namespace TrainEditor2.Views
 			// numericUpDownDigitalGaugeLayer
 			// 
 			this.numericUpDownDigitalGaugeLayer.Location = new System.Drawing.Point(136, 280);
+			this.numericUpDownDigitalGaugeLayer.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownDigitalGaugeLayer.Name = "numericUpDownDigitalGaugeLayer";
 			this.numericUpDownDigitalGaugeLayer.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownDigitalGaugeLayer.TabIndex = 87;
@@ -2895,7 +3115,7 @@ namespace TrainEditor2.Views
 			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeSubject);
 			this.tabPageLinearGauge.Location = new System.Drawing.Point(4, 40);
 			this.tabPageLinearGauge.Name = "tabPageLinearGauge";
-			this.tabPageLinearGauge.Size = new System.Drawing.Size(312, 626);
+			this.tabPageLinearGauge.Size = new System.Drawing.Size(312, 642);
 			this.tabPageLinearGauge.TabIndex = 6;
 			this.tabPageLinearGauge.Text = "LinearGauge";
 			this.tabPageLinearGauge.UseVisualStyleBackColor = true;
@@ -2981,6 +3201,11 @@ namespace TrainEditor2.Views
 			// numericUpDownLinearGaugeLayer
 			// 
 			this.numericUpDownLinearGaugeLayer.Location = new System.Drawing.Point(136, 336);
+			this.numericUpDownLinearGaugeLayer.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownLinearGaugeLayer.Name = "numericUpDownLinearGaugeLayer";
 			this.numericUpDownLinearGaugeLayer.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownLinearGaugeLayer.TabIndex = 96;
@@ -2988,6 +3213,11 @@ namespace TrainEditor2.Views
 			// numericUpDownLinearGaugeWidth
 			// 
 			this.numericUpDownLinearGaugeWidth.Location = new System.Drawing.Point(136, 312);
+			this.numericUpDownLinearGaugeWidth.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownLinearGaugeWidth.Name = "numericUpDownLinearGaugeWidth";
 			this.numericUpDownLinearGaugeWidth.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownLinearGaugeWidth.TabIndex = 95;
@@ -3185,7 +3415,7 @@ namespace TrainEditor2.Views
 			this.tabPageTimetable.Controls.Add(this.groupBoxTimetableLocation);
 			this.tabPageTimetable.Location = new System.Drawing.Point(4, 40);
 			this.tabPageTimetable.Name = "tabPageTimetable";
-			this.tabPageTimetable.Size = new System.Drawing.Size(312, 626);
+			this.tabPageTimetable.Size = new System.Drawing.Size(312, 642);
 			this.tabPageTimetable.TabIndex = 7;
 			this.tabPageTimetable.Text = "Timetable";
 			this.tabPageTimetable.UseVisualStyleBackColor = true;
@@ -3203,6 +3433,11 @@ namespace TrainEditor2.Views
 			// numericUpDownTimetableLayer
 			// 
 			this.numericUpDownTimetableLayer.Location = new System.Drawing.Point(136, 160);
+			this.numericUpDownTimetableLayer.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownTimetableLayer.Name = "numericUpDownTimetableLayer";
 			this.numericUpDownTimetableLayer.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownTimetableLayer.TabIndex = 103;
@@ -3321,7 +3556,7 @@ namespace TrainEditor2.Views
 			this.tabPageTouch.Controls.Add(this.groupBoxTouchLocation);
 			this.tabPageTouch.Location = new System.Drawing.Point(4, 40);
 			this.tabPageTouch.Name = "tabPageTouch";
-			this.tabPageTouch.Size = new System.Drawing.Size(312, 626);
+			this.tabPageTouch.Size = new System.Drawing.Size(312, 642);
 			this.tabPageTouch.TabIndex = 8;
 			this.tabPageTouch.Text = "Touch";
 			this.tabPageTouch.UseVisualStyleBackColor = true;
@@ -3329,16 +3564,21 @@ namespace TrainEditor2.Views
 			// numericUpDownTouchLayer
 			// 
 			this.numericUpDownTouchLayer.Location = new System.Drawing.Point(136, 216);
+			this.numericUpDownTouchLayer.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownTouchLayer.Name = "numericUpDownTouchLayer";
 			this.numericUpDownTouchLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownTouchLayer.TabIndex = 108;
+			this.numericUpDownTouchLayer.TabIndex = 111;
 			// 
 			// labelTouchLayer
 			// 
 			this.labelTouchLayer.Location = new System.Drawing.Point(8, 216);
 			this.labelTouchLayer.Name = "labelTouchLayer";
 			this.labelTouchLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchLayer.TabIndex = 109;
+			this.labelTouchLayer.TabIndex = 110;
 			this.labelTouchLayer.Text = "Layer:";
 			this.labelTouchLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
@@ -3347,7 +3587,7 @@ namespace TrainEditor2.Views
 			this.buttonTouchSoundCommand.Location = new System.Drawing.Point(136, 192);
 			this.buttonTouchSoundCommand.Name = "buttonTouchSoundCommand";
 			this.buttonTouchSoundCommand.Size = new System.Drawing.Size(48, 19);
-			this.buttonTouchSoundCommand.TabIndex = 107;
+			this.buttonTouchSoundCommand.TabIndex = 109;
 			this.buttonTouchSoundCommand.Text = "Set...";
 			this.buttonTouchSoundCommand.UseVisualStyleBackColor = true;
 			this.buttonTouchSoundCommand.Click += new System.EventHandler(this.ButtonTouchSoundCommand_Click);
@@ -3357,13 +3597,18 @@ namespace TrainEditor2.Views
 			this.labelTouchSoundCommand.Location = new System.Drawing.Point(8, 192);
 			this.labelTouchSoundCommand.Name = "labelTouchSoundCommand";
 			this.labelTouchSoundCommand.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchSoundCommand.TabIndex = 106;
+			this.labelTouchSoundCommand.TabIndex = 108;
 			this.labelTouchSoundCommand.Text = "Sound and Command:";
 			this.labelTouchSoundCommand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// numericUpDownTouchJumpScreen
 			// 
 			this.numericUpDownTouchJumpScreen.Location = new System.Drawing.Point(136, 168);
+			this.numericUpDownTouchJumpScreen.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownTouchJumpScreen.Name = "numericUpDownTouchJumpScreen";
 			this.numericUpDownTouchJumpScreen.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownTouchJumpScreen.TabIndex = 105;
@@ -3472,20 +3717,20 @@ namespace TrainEditor2.Views
 			this.tabPageCoupler.Controls.Add(this.groupBoxCouplerGeneral);
 			this.tabPageCoupler.Location = new System.Drawing.Point(4, 22);
 			this.tabPageCoupler.Name = "tabPageCoupler";
-			this.tabPageCoupler.Size = new System.Drawing.Size(792, 670);
+			this.tabPageCoupler.Size = new System.Drawing.Size(792, 686);
 			this.tabPageCoupler.TabIndex = 7;
 			this.tabPageCoupler.Text = "Coupler settings";
 			this.tabPageCoupler.UseVisualStyleBackColor = true;
 			// 
 			// groupBoxCouplerGeneral
 			// 
+			this.groupBoxCouplerGeneral.Controls.Add(this.comboBoxCouplerMaxUnit);
+			this.groupBoxCouplerGeneral.Controls.Add(this.comboBoxCouplerMinUnit);
 			this.groupBoxCouplerGeneral.Controls.Add(this.buttonCouplerObject);
 			this.groupBoxCouplerGeneral.Controls.Add(this.textBoxCouplerObject);
 			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerObject);
-			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerMaxUnit);
 			this.groupBoxCouplerGeneral.Controls.Add(this.textBoxCouplerMax);
 			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerMax);
-			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerMinUnit);
 			this.groupBoxCouplerGeneral.Controls.Add(this.textBoxCouplerMin);
 			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerMin);
 			this.groupBoxCouplerGeneral.Location = new System.Drawing.Point(8, 8);
@@ -3495,9 +3740,27 @@ namespace TrainEditor2.Views
 			this.groupBoxCouplerGeneral.TabStop = false;
 			this.groupBoxCouplerGeneral.Text = "General";
 			// 
+			// comboBoxCouplerMaxUnit
+			// 
+			this.comboBoxCouplerMaxUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCouplerMaxUnit.FormattingEnabled = true;
+			this.comboBoxCouplerMaxUnit.Location = new System.Drawing.Point(120, 40);
+			this.comboBoxCouplerMaxUnit.Name = "comboBoxCouplerMaxUnit";
+			this.comboBoxCouplerMaxUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCouplerMaxUnit.TabIndex = 57;
+			// 
+			// comboBoxCouplerMinUnit
+			// 
+			this.comboBoxCouplerMinUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCouplerMinUnit.FormattingEnabled = true;
+			this.comboBoxCouplerMinUnit.Location = new System.Drawing.Point(120, 16);
+			this.comboBoxCouplerMinUnit.Name = "comboBoxCouplerMinUnit";
+			this.comboBoxCouplerMinUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCouplerMinUnit.TabIndex = 56;
+			// 
 			// buttonCouplerObject
 			// 
-			this.buttonCouplerObject.Location = new System.Drawing.Point(134, 88);
+			this.buttonCouplerObject.Location = new System.Drawing.Point(128, 88);
 			this.buttonCouplerObject.Name = "buttonCouplerObject";
 			this.buttonCouplerObject.Size = new System.Drawing.Size(56, 19);
 			this.buttonCouplerObject.TabIndex = 30;
@@ -3507,32 +3770,23 @@ namespace TrainEditor2.Views
 			// 
 			// textBoxCouplerObject
 			// 
-			this.textBoxCouplerObject.Location = new System.Drawing.Point(60, 64);
+			this.textBoxCouplerObject.Location = new System.Drawing.Point(64, 64);
 			this.textBoxCouplerObject.Name = "textBoxCouplerObject";
-			this.textBoxCouplerObject.Size = new System.Drawing.Size(130, 19);
+			this.textBoxCouplerObject.Size = new System.Drawing.Size(120, 19);
 			this.textBoxCouplerObject.TabIndex = 29;
 			// 
 			// labelCouplerObject
 			// 
 			this.labelCouplerObject.Location = new System.Drawing.Point(8, 64);
 			this.labelCouplerObject.Name = "labelCouplerObject";
-			this.labelCouplerObject.Size = new System.Drawing.Size(46, 16);
+			this.labelCouplerObject.Size = new System.Drawing.Size(48, 16);
 			this.labelCouplerObject.TabIndex = 28;
 			this.labelCouplerObject.Text = "Object:";
 			this.labelCouplerObject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelCouplerMaxUnit
-			// 
-			this.labelCouplerMaxUnit.Location = new System.Drawing.Point(116, 40);
-			this.labelCouplerMaxUnit.Name = "labelCouplerMaxUnit";
-			this.labelCouplerMaxUnit.Size = new System.Drawing.Size(16, 16);
-			this.labelCouplerMaxUnit.TabIndex = 27;
-			this.labelCouplerMaxUnit.Text = "m";
-			this.labelCouplerMaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxCouplerMax
 			// 
-			this.textBoxCouplerMax.Location = new System.Drawing.Point(60, 40);
+			this.textBoxCouplerMax.Location = new System.Drawing.Point(64, 40);
 			this.textBoxCouplerMax.Name = "textBoxCouplerMax";
 			this.textBoxCouplerMax.Size = new System.Drawing.Size(48, 19);
 			this.textBoxCouplerMax.TabIndex = 26;
@@ -3541,23 +3795,14 @@ namespace TrainEditor2.Views
 			// 
 			this.labelCouplerMax.Location = new System.Drawing.Point(8, 40);
 			this.labelCouplerMax.Name = "labelCouplerMax";
-			this.labelCouplerMax.Size = new System.Drawing.Size(32, 16);
+			this.labelCouplerMax.Size = new System.Drawing.Size(48, 16);
 			this.labelCouplerMax.TabIndex = 25;
 			this.labelCouplerMax.Text = "Max:";
 			this.labelCouplerMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelCouplerMinUnit
-			// 
-			this.labelCouplerMinUnit.Location = new System.Drawing.Point(116, 16);
-			this.labelCouplerMinUnit.Name = "labelCouplerMinUnit";
-			this.labelCouplerMinUnit.Size = new System.Drawing.Size(16, 16);
-			this.labelCouplerMinUnit.TabIndex = 24;
-			this.labelCouplerMinUnit.Text = "m";
-			this.labelCouplerMinUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxCouplerMin
 			// 
-			this.textBoxCouplerMin.Location = new System.Drawing.Point(60, 16);
+			this.textBoxCouplerMin.Location = new System.Drawing.Point(64, 16);
 			this.textBoxCouplerMin.Name = "textBoxCouplerMin";
 			this.textBoxCouplerMin.Size = new System.Drawing.Size(48, 19);
 			this.textBoxCouplerMin.TabIndex = 23;
@@ -3566,33 +3811,110 @@ namespace TrainEditor2.Views
 			// 
 			this.labelCouplerMin.Location = new System.Drawing.Point(8, 16);
 			this.labelCouplerMin.Name = "labelCouplerMin";
-			this.labelCouplerMin.Size = new System.Drawing.Size(32, 16);
+			this.labelCouplerMin.Size = new System.Drawing.Size(48, 16);
 			this.labelCouplerMin.TabIndex = 22;
 			this.labelCouplerMin.Text = "Min:";
 			this.labelCouplerMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// tabPageMotor
 			// 
-			this.tabPageMotor.Controls.Add(this.panelMotorSound);
+			this.tabPageMotor.Controls.Add(this.splitContainerMotor);
 			this.tabPageMotor.Location = new System.Drawing.Point(4, 22);
 			this.tabPageMotor.Name = "tabPageMotor";
 			this.tabPageMotor.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageMotor.Size = new System.Drawing.Size(792, 670);
+			this.tabPageMotor.Size = new System.Drawing.Size(792, 718);
 			this.tabPageMotor.TabIndex = 1;
 			this.tabPageMotor.Text = "Motor sound settings";
 			this.tabPageMotor.UseVisualStyleBackColor = true;
 			// 
-			// panelMotorSound
+			// splitContainerMotor
 			// 
-			this.panelMotorSound.Controls.Add(this.toolStripContainerDrawArea);
-			this.panelMotorSound.Controls.Add(this.panelMotorSetting);
-			this.panelMotorSound.Controls.Add(this.statusStripStatus);
-			this.panelMotorSound.Controls.Add(this.menuStripMotor);
-			this.panelMotorSound.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelMotorSound.Location = new System.Drawing.Point(3, 3);
-			this.panelMotorSound.Name = "panelMotorSound";
-			this.panelMotorSound.Size = new System.Drawing.Size(786, 664);
-			this.panelMotorSound.TabIndex = 5;
+			this.splitContainerMotor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainerMotor.Location = new System.Drawing.Point(3, 3);
+			this.splitContainerMotor.Name = "splitContainerMotor";
+			// 
+			// splitContainerMotor.Panel1
+			// 
+			this.splitContainerMotor.Panel1.Controls.Add(this.treeViewMotor);
+			this.splitContainerMotor.Panel1.Controls.Add(this.panelMoterNavi);
+			// 
+			// splitContainerMotor.Panel2
+			// 
+			this.splitContainerMotor.Panel2.Controls.Add(this.toolStripContainerDrawArea);
+			this.splitContainerMotor.Panel2.Controls.Add(this.panelMotorSetting);
+			this.splitContainerMotor.Panel2.Controls.Add(this.menuStripMotor);
+			this.splitContainerMotor.Panel2.Controls.Add(this.statusStripStatus);
+			this.splitContainerMotor.Size = new System.Drawing.Size(786, 712);
+			this.splitContainerMotor.SplitterDistance = 200;
+			this.splitContainerMotor.TabIndex = 6;
+			// 
+			// treeViewMotor
+			// 
+			this.treeViewMotor.CheckBoxes = true;
+			this.treeViewMotor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeViewMotor.HideSelection = false;
+			this.treeViewMotor.Location = new System.Drawing.Point(0, 0);
+			this.treeViewMotor.Name = "treeViewMotor";
+			this.treeViewMotor.Size = new System.Drawing.Size(200, 640);
+			this.treeViewMotor.TabIndex = 5;
+			// 
+			// panelMoterNavi
+			// 
+			this.panelMoterNavi.Controls.Add(this.buttonMotorCopy);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorRemove);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorAdd);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorUp);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorDown);
+			this.panelMoterNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelMoterNavi.Location = new System.Drawing.Point(0, 640);
+			this.panelMoterNavi.Name = "panelMoterNavi";
+			this.panelMoterNavi.Size = new System.Drawing.Size(200, 72);
+			this.panelMoterNavi.TabIndex = 4;
+			// 
+			// buttonMotorCopy
+			// 
+			this.buttonMotorCopy.Location = new System.Drawing.Point(72, 40);
+			this.buttonMotorCopy.Name = "buttonMotorCopy";
+			this.buttonMotorCopy.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorCopy.TabIndex = 5;
+			this.buttonMotorCopy.Text = "Copy";
+			this.buttonMotorCopy.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorRemove
+			// 
+			this.buttonMotorRemove.Location = new System.Drawing.Point(136, 8);
+			this.buttonMotorRemove.Name = "buttonMotorRemove";
+			this.buttonMotorRemove.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorRemove.TabIndex = 3;
+			this.buttonMotorRemove.Text = "Remove";
+			this.buttonMotorRemove.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorAdd
+			// 
+			this.buttonMotorAdd.Location = new System.Drawing.Point(72, 8);
+			this.buttonMotorAdd.Name = "buttonMotorAdd";
+			this.buttonMotorAdd.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorAdd.TabIndex = 2;
+			this.buttonMotorAdd.Text = "Add";
+			this.buttonMotorAdd.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorUp
+			// 
+			this.buttonMotorUp.Location = new System.Drawing.Point(8, 8);
+			this.buttonMotorUp.Name = "buttonMotorUp";
+			this.buttonMotorUp.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorUp.TabIndex = 0;
+			this.buttonMotorUp.Text = "Up";
+			this.buttonMotorUp.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorDown
+			// 
+			this.buttonMotorDown.Location = new System.Drawing.Point(8, 40);
+			this.buttonMotorDown.Name = "buttonMotorDown";
+			this.buttonMotorDown.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorDown.TabIndex = 1;
+			this.buttonMotorDown.Text = "Down";
+			this.buttonMotorDown.UseVisualStyleBackColor = true;
 			// 
 			// toolStripContainerDrawArea
 			// 
@@ -3600,11 +3922,11 @@ namespace TrainEditor2.Views
 			// toolStripContainerDrawArea.ContentPanel
 			// 
 			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.glControlMotor);
-			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(568, 593);
+			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(364, 641);
 			this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
 			this.toolStripContainerDrawArea.Name = "toolStripContainerDrawArea";
-			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(568, 618);
+			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(364, 666);
 			this.toolStripContainerDrawArea.TabIndex = 4;
 			this.toolStripContainerDrawArea.Text = "toolStripContainer1";
 			// 
@@ -3618,7 +3940,7 @@ namespace TrainEditor2.Views
 			this.glControlMotor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.glControlMotor.Location = new System.Drawing.Point(0, 0);
 			this.glControlMotor.Name = "glControlMotor";
-			this.glControlMotor.Size = new System.Drawing.Size(568, 593);
+			this.glControlMotor.Size = new System.Drawing.Size(364, 641);
 			this.glControlMotor.TabIndex = 0;
 			this.glControlMotor.VSync = false;
 			this.glControlMotor.Load += new System.EventHandler(this.GlControlMotor_Load);
@@ -3629,6 +3951,7 @@ namespace TrainEditor2.Views
 			this.glControlMotor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseMove);
 			this.glControlMotor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseUp);
 			this.glControlMotor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.GlControlMotor_PreviewKeyDown);
+			this.glControlMotor.Resize += new System.EventHandler(this.GlControlMotor_Resize);
 			// 
 			// toolStripToolBar
 			// 
@@ -3637,9 +3960,6 @@ namespace TrainEditor2.Views
             this.toolStripButtonUndo,
             this.toolStripButtonRedo,
             this.toolStripSeparatorRedo,
-            this.toolStripButtonTearingOff,
-            this.toolStripButtonCopy,
-            this.toolStripButtonPaste,
             this.toolStripButtonCleanup,
             this.toolStripButtonDelete,
             this.toolStripSeparatorEdit,
@@ -3649,7 +3969,7 @@ namespace TrainEditor2.Views
             this.toolStripButtonLine});
 			this.toolStripToolBar.Location = new System.Drawing.Point(3, 0);
 			this.toolStripToolBar.Name = "toolStripToolBar";
-			this.toolStripToolBar.Size = new System.Drawing.Size(275, 25);
+			this.toolStripToolBar.Size = new System.Drawing.Size(206, 25);
 			this.toolStripToolBar.TabIndex = 0;
 			// 
 			// toolStripButtonUndo
@@ -3672,30 +3992,6 @@ namespace TrainEditor2.Views
 			// 
 			this.toolStripSeparatorRedo.Name = "toolStripSeparatorRedo";
 			this.toolStripSeparatorRedo.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolStripButtonTearingOff
-			// 
-			this.toolStripButtonTearingOff.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonTearingOff.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonTearingOff.Name = "toolStripButtonTearingOff";
-			this.toolStripButtonTearingOff.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonTearingOff.Text = "Cut (Ctrl+X)";
-			// 
-			// toolStripButtonCopy
-			// 
-			this.toolStripButtonCopy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonCopy.Name = "toolStripButtonCopy";
-			this.toolStripButtonCopy.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonCopy.Text = "Copy (Ctrl+C)";
-			// 
-			// toolStripButtonPaste
-			// 
-			this.toolStripButtonPaste.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonPaste.Name = "toolStripButtonPaste";
-			this.toolStripButtonPaste.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonPaste.Text = "Paste (Ctrl+V)";
 			// 
 			// toolStripButtonCleanup
 			// 
@@ -3752,107 +4048,34 @@ namespace TrainEditor2.Views
 			// 
 			// panelMotorSetting
 			// 
-			this.panelMotorSetting.Controls.Add(this.groupBoxDirect);
+			this.panelMotorSetting.Controls.Add(this.groupBoxUnit);
 			this.panelMotorSetting.Controls.Add(this.groupBoxPlay);
+			this.panelMotorSetting.Controls.Add(this.groupBoxDirect);
 			this.panelMotorSetting.Controls.Add(this.groupBoxView);
+			this.panelMotorSetting.Controls.Add(this.groupBoxTrack);
 			this.panelMotorSetting.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelMotorSetting.Location = new System.Drawing.Point(568, 24);
+			this.panelMotorSetting.Location = new System.Drawing.Point(364, 24);
 			this.panelMotorSetting.Name = "panelMotorSetting";
-			this.panelMotorSetting.Size = new System.Drawing.Size(218, 618);
+			this.panelMotorSetting.Size = new System.Drawing.Size(218, 666);
 			this.panelMotorSetting.TabIndex = 3;
-			// 
-			// groupBoxDirect
-			// 
-			this.groupBoxDirect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBoxDirect.Controls.Add(this.buttonDirectDot);
-			this.groupBoxDirect.Controls.Add(this.buttonDirectMove);
-			this.groupBoxDirect.Controls.Add(this.textBoxDirectY);
-			this.groupBoxDirect.Controls.Add(this.labelDirectY);
-			this.groupBoxDirect.Controls.Add(this.labelDirectXUnit);
-			this.groupBoxDirect.Controls.Add(this.textBoxDirectX);
-			this.groupBoxDirect.Controls.Add(this.labelDirectX);
-			this.groupBoxDirect.Location = new System.Drawing.Point(8, 254);
-			this.groupBoxDirect.Name = "groupBoxDirect";
-			this.groupBoxDirect.Size = new System.Drawing.Size(200, 96);
-			this.groupBoxDirect.TabIndex = 2;
-			this.groupBoxDirect.TabStop = false;
-			this.groupBoxDirect.Text = "Direct input";
-			// 
-			// buttonDirectDot
-			// 
-			this.buttonDirectDot.Location = new System.Drawing.Point(8, 64);
-			this.buttonDirectDot.Name = "buttonDirectDot";
-			this.buttonDirectDot.Size = new System.Drawing.Size(56, 24);
-			this.buttonDirectDot.TabIndex = 22;
-			this.buttonDirectDot.UseVisualStyleBackColor = true;
-			// 
-			// buttonDirectMove
-			// 
-			this.buttonDirectMove.Location = new System.Drawing.Point(72, 64);
-			this.buttonDirectMove.Name = "buttonDirectMove";
-			this.buttonDirectMove.Size = new System.Drawing.Size(56, 24);
-			this.buttonDirectMove.TabIndex = 21;
-			this.buttonDirectMove.UseVisualStyleBackColor = true;
-			// 
-			// textBoxDirectY
-			// 
-			this.textBoxDirectY.Location = new System.Drawing.Point(112, 40);
-			this.textBoxDirectY.Name = "textBoxDirectY";
-			this.textBoxDirectY.Size = new System.Drawing.Size(40, 19);
-			this.textBoxDirectY.TabIndex = 19;
-			// 
-			// labelDirectY
-			// 
-			this.labelDirectY.Location = new System.Drawing.Point(8, 40);
-			this.labelDirectY.Name = "labelDirectY";
-			this.labelDirectY.Size = new System.Drawing.Size(96, 16);
-			this.labelDirectY.TabIndex = 18;
-			this.labelDirectY.Text = "y coordinate:";
-			this.labelDirectY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDirectXUnit
-			// 
-			this.labelDirectXUnit.Location = new System.Drawing.Point(160, 16);
-			this.labelDirectXUnit.Name = "labelDirectXUnit";
-			this.labelDirectXUnit.Size = new System.Drawing.Size(32, 16);
-			this.labelDirectXUnit.TabIndex = 17;
-			this.labelDirectXUnit.Text = "km/h";
-			this.labelDirectXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// textBoxDirectX
-			// 
-			this.textBoxDirectX.Location = new System.Drawing.Point(112, 16);
-			this.textBoxDirectX.Name = "textBoxDirectX";
-			this.textBoxDirectX.Size = new System.Drawing.Size(40, 19);
-			this.textBoxDirectX.TabIndex = 16;
-			// 
-			// labelDirectX
-			// 
-			this.labelDirectX.Location = new System.Drawing.Point(8, 16);
-			this.labelDirectX.Name = "labelDirectX";
-			this.labelDirectX.Size = new System.Drawing.Size(96, 16);
-			this.labelDirectX.TabIndex = 15;
-			this.labelDirectX.Text = "x coordinate:";
-			this.labelDirectX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// groupBoxPlay
 			// 
-			this.groupBoxPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxPlay.Controls.Add(this.buttonStop);
 			this.groupBoxPlay.Controls.Add(this.buttonPause);
 			this.groupBoxPlay.Controls.Add(this.buttonPlay);
 			this.groupBoxPlay.Controls.Add(this.groupBoxArea);
 			this.groupBoxPlay.Controls.Add(this.groupBoxSource);
-			this.groupBoxPlay.Location = new System.Drawing.Point(8, 359);
+			this.groupBoxPlay.Location = new System.Drawing.Point(8, 424);
 			this.groupBoxPlay.Name = "groupBoxPlay";
-			this.groupBoxPlay.Size = new System.Drawing.Size(200, 248);
+			this.groupBoxPlay.Size = new System.Drawing.Size(200, 233);
 			this.groupBoxPlay.TabIndex = 1;
 			this.groupBoxPlay.TabStop = false;
 			this.groupBoxPlay.Text = "Playback setting";
 			// 
 			// buttonStop
 			// 
-			this.buttonStop.Location = new System.Drawing.Point(136, 216);
+			this.buttonStop.Location = new System.Drawing.Point(136, 200);
 			this.buttonStop.Name = "buttonStop";
 			this.buttonStop.Size = new System.Drawing.Size(56, 24);
 			this.buttonStop.TabIndex = 4;
@@ -3860,7 +4083,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonPause
 			// 
-			this.buttonPause.Location = new System.Drawing.Point(72, 216);
+			this.buttonPause.Location = new System.Drawing.Point(72, 200);
 			this.buttonPause.Name = "buttonPause";
 			this.buttonPause.Size = new System.Drawing.Size(56, 24);
 			this.buttonPause.TabIndex = 3;
@@ -3868,7 +4091,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonPlay
 			// 
-			this.buttonPlay.Location = new System.Drawing.Point(8, 216);
+			this.buttonPlay.Location = new System.Drawing.Point(8, 200);
 			this.buttonPlay.Name = "buttonPlay";
 			this.buttonPlay.Size = new System.Drawing.Size(56, 24);
 			this.buttonPlay.TabIndex = 2;
@@ -3876,6 +4099,7 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxArea
 			// 
+			this.groupBoxArea.Controls.Add(this.comboBoxMotorAccelUnit);
 			this.groupBoxArea.Controls.Add(this.checkBoxMotorConstant);
 			this.groupBoxArea.Controls.Add(this.checkBoxMotorLoop);
 			this.groupBoxArea.Controls.Add(this.buttonMotorSwap);
@@ -3883,9 +4107,8 @@ namespace TrainEditor2.Views
 			this.groupBoxArea.Controls.Add(this.labelMotorAreaUnit);
 			this.groupBoxArea.Controls.Add(this.textBoxMotorAreaRight);
 			this.groupBoxArea.Controls.Add(this.labelMotorAccel);
-			this.groupBoxArea.Controls.Add(this.labelMotorAccelUnit);
 			this.groupBoxArea.Controls.Add(this.textBoxMotorAccel);
-			this.groupBoxArea.Location = new System.Drawing.Point(8, 88);
+			this.groupBoxArea.Location = new System.Drawing.Point(8, 72);
 			this.groupBoxArea.Name = "groupBoxArea";
 			this.groupBoxArea.Size = new System.Drawing.Size(184, 120);
 			this.groupBoxArea.TabIndex = 1;
@@ -3952,15 +4175,6 @@ namespace TrainEditor2.Views
 			this.labelMotorAccel.Text = "Acceleration:";
 			this.labelMotorAccel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelMotorAccelUnit
-			// 
-			this.labelMotorAccelUnit.Location = new System.Drawing.Point(128, 64);
-			this.labelMotorAccelUnit.Name = "labelMotorAccelUnit";
-			this.labelMotorAccelUnit.Size = new System.Drawing.Size(44, 16);
-			this.labelMotorAccelUnit.TabIndex = 1;
-			this.labelMotorAccelUnit.Text = "km/h/s";
-			this.labelMotorAccelUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
 			// textBoxMotorAccel
 			// 
 			this.textBoxMotorAccel.Location = new System.Drawing.Point(88, 64);
@@ -3972,11 +4186,9 @@ namespace TrainEditor2.Views
 			// 
 			this.groupBoxSource.Controls.Add(this.numericUpDownRunIndex);
 			this.groupBoxSource.Controls.Add(this.labelRun);
-			this.groupBoxSource.Controls.Add(this.checkBoxTrack2);
-			this.groupBoxSource.Controls.Add(this.checkBoxTrack1);
 			this.groupBoxSource.Location = new System.Drawing.Point(8, 16);
 			this.groupBoxSource.Name = "groupBoxSource";
-			this.groupBoxSource.Size = new System.Drawing.Size(184, 64);
+			this.groupBoxSource.Size = new System.Drawing.Size(184, 48);
 			this.groupBoxSource.TabIndex = 0;
 			this.groupBoxSource.TabStop = false;
 			this.groupBoxSource.Text = "Sound source setting";
@@ -3985,7 +4197,7 @@ namespace TrainEditor2.Views
 			// 
 			this.numericUpDownRunIndex.Location = new System.Drawing.Point(112, 16);
 			this.numericUpDownRunIndex.Maximum = new decimal(new int[] {
-            256,
+            1024,
             0,
             0,
             0});
@@ -4012,29 +4224,81 @@ namespace TrainEditor2.Views
 			this.labelRun.Text = "Running sound:";
 			this.labelRun.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// checkBoxTrack2
+			// groupBoxDirect
 			// 
-			this.checkBoxTrack2.AutoSize = true;
-			this.checkBoxTrack2.Location = new System.Drawing.Point(96, 40);
-			this.checkBoxTrack2.Name = "checkBoxTrack2";
-			this.checkBoxTrack2.Size = new System.Drawing.Size(59, 16);
-			this.checkBoxTrack2.TabIndex = 2;
-			this.checkBoxTrack2.Text = "Track2";
-			this.checkBoxTrack2.UseVisualStyleBackColor = true;
+			this.groupBoxDirect.Controls.Add(this.buttonDirectDot);
+			this.groupBoxDirect.Controls.Add(this.buttonDirectMove);
+			this.groupBoxDirect.Controls.Add(this.textBoxDirectY);
+			this.groupBoxDirect.Controls.Add(this.labelDirectY);
+			this.groupBoxDirect.Controls.Add(this.labelDirectXUnit);
+			this.groupBoxDirect.Controls.Add(this.textBoxDirectX);
+			this.groupBoxDirect.Controls.Add(this.labelDirectX);
+			this.groupBoxDirect.Location = new System.Drawing.Point(8, 320);
+			this.groupBoxDirect.Name = "groupBoxDirect";
+			this.groupBoxDirect.Size = new System.Drawing.Size(200, 96);
+			this.groupBoxDirect.TabIndex = 2;
+			this.groupBoxDirect.TabStop = false;
+			this.groupBoxDirect.Text = "Direct input";
 			// 
-			// checkBoxTrack1
+			// buttonDirectDot
 			// 
-			this.checkBoxTrack1.AutoSize = true;
-			this.checkBoxTrack1.Location = new System.Drawing.Point(8, 40);
-			this.checkBoxTrack1.Name = "checkBoxTrack1";
-			this.checkBoxTrack1.Size = new System.Drawing.Size(59, 16);
-			this.checkBoxTrack1.TabIndex = 1;
-			this.checkBoxTrack1.Text = "Track1";
-			this.checkBoxTrack1.UseVisualStyleBackColor = true;
+			this.buttonDirectDot.Location = new System.Drawing.Point(8, 64);
+			this.buttonDirectDot.Name = "buttonDirectDot";
+			this.buttonDirectDot.Size = new System.Drawing.Size(56, 24);
+			this.buttonDirectDot.TabIndex = 22;
+			this.buttonDirectDot.UseVisualStyleBackColor = true;
+			// 
+			// buttonDirectMove
+			// 
+			this.buttonDirectMove.Location = new System.Drawing.Point(72, 64);
+			this.buttonDirectMove.Name = "buttonDirectMove";
+			this.buttonDirectMove.Size = new System.Drawing.Size(56, 24);
+			this.buttonDirectMove.TabIndex = 21;
+			this.buttonDirectMove.UseVisualStyleBackColor = true;
+			// 
+			// textBoxDirectY
+			// 
+			this.textBoxDirectY.Location = new System.Drawing.Point(112, 40);
+			this.textBoxDirectY.Name = "textBoxDirectY";
+			this.textBoxDirectY.Size = new System.Drawing.Size(40, 19);
+			this.textBoxDirectY.TabIndex = 19;
+			// 
+			// labelDirectY
+			// 
+			this.labelDirectY.Location = new System.Drawing.Point(8, 40);
+			this.labelDirectY.Name = "labelDirectY";
+			this.labelDirectY.Size = new System.Drawing.Size(96, 16);
+			this.labelDirectY.TabIndex = 18;
+			this.labelDirectY.Text = "y coordinate:";
+			this.labelDirectY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDirectXUnit
+			// 
+			this.labelDirectXUnit.Location = new System.Drawing.Point(160, 16);
+			this.labelDirectXUnit.Name = "labelDirectXUnit";
+			this.labelDirectXUnit.Size = new System.Drawing.Size(32, 16);
+			this.labelDirectXUnit.TabIndex = 17;
+			this.labelDirectXUnit.Text = "km/h";
+			this.labelDirectXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// textBoxDirectX
+			// 
+			this.textBoxDirectX.Location = new System.Drawing.Point(112, 16);
+			this.textBoxDirectX.Name = "textBoxDirectX";
+			this.textBoxDirectX.Size = new System.Drawing.Size(40, 19);
+			this.textBoxDirectX.TabIndex = 16;
+			// 
+			// labelDirectX
+			// 
+			this.labelDirectX.Location = new System.Drawing.Point(8, 16);
+			this.labelDirectX.Name = "labelDirectX";
+			this.labelDirectX.Size = new System.Drawing.Size(96, 16);
+			this.labelDirectX.TabIndex = 15;
+			this.labelDirectX.Text = "x coordinate:";
+			this.labelDirectX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// groupBoxView
 			// 
-			this.groupBoxView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxView.Controls.Add(this.buttonMotorReset);
 			this.groupBoxView.Controls.Add(this.buttonMotorZoomOut);
 			this.groupBoxView.Controls.Add(this.buttonMotorZoomIn);
@@ -4052,7 +4316,7 @@ namespace TrainEditor2.Views
 			this.groupBoxView.Controls.Add(this.labelMotorMinVelocityUnit);
 			this.groupBoxView.Controls.Add(this.textBoxMotorMinVelocity);
 			this.groupBoxView.Controls.Add(this.labelMotorMinVelocity);
-			this.groupBoxView.Location = new System.Drawing.Point(8, 54);
+			this.groupBoxView.Location = new System.Drawing.Point(8, 120);
 			this.groupBoxView.Name = "groupBoxView";
 			this.groupBoxView.Size = new System.Drawing.Size(200, 192);
 			this.groupBoxView.TabIndex = 0;
@@ -4197,6 +4461,169 @@ namespace TrainEditor2.Views
 			this.labelMotorMinVelocity.Text = "x-min(Velocity):";
 			this.labelMotorMinVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
+			// groupBoxTrack
+			// 
+			this.groupBoxTrack.Controls.Add(this.comboBoxTrackType);
+			this.groupBoxTrack.Controls.Add(this.labelTrackType);
+			this.groupBoxTrack.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxTrack.Name = "groupBoxTrack";
+			this.groupBoxTrack.Size = new System.Drawing.Size(200, 48);
+			this.groupBoxTrack.TabIndex = 3;
+			this.groupBoxTrack.TabStop = false;
+			this.groupBoxTrack.Text = "Track setting";
+			// 
+			// comboBoxTrackType
+			// 
+			this.comboBoxTrackType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxTrackType.FormattingEnabled = true;
+			this.comboBoxTrackType.Items.AddRange(new object[] {
+            "Power",
+            "Brake"});
+			this.comboBoxTrackType.Location = new System.Drawing.Point(112, 16);
+			this.comboBoxTrackType.Name = "comboBoxTrackType";
+			this.comboBoxTrackType.Size = new System.Drawing.Size(81, 20);
+			this.comboBoxTrackType.TabIndex = 6;
+			// 
+			// labelTrackType
+			// 
+			this.labelTrackType.Location = new System.Drawing.Point(8, 16);
+			this.labelTrackType.Name = "labelTrackType";
+			this.labelTrackType.Size = new System.Drawing.Size(96, 16);
+			this.labelTrackType.TabIndex = 5;
+			this.labelTrackType.Text = "Track type:";
+			this.labelTrackType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// menuStripMotor
+			// 
+			this.menuStripMotor.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemEdit,
+            this.toolStripMenuItemInput,
+            this.toolStripMenuItemTool});
+			this.menuStripMotor.Location = new System.Drawing.Point(0, 0);
+			this.menuStripMotor.Name = "menuStripMotor";
+			this.menuStripMotor.Size = new System.Drawing.Size(582, 24);
+			this.menuStripMotor.TabIndex = 0;
+			this.menuStripMotor.Text = "menuStrip1";
+			// 
+			// toolStripMenuItemEdit
+			// 
+			this.toolStripMenuItemEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemUndo,
+            this.toolStripMenuItemRedo,
+            this.toolStripSeparatorUndo,
+            this.toolStripMenuItemCleanup,
+            this.toolStripMenuItemDelete});
+			this.toolStripMenuItemEdit.Name = "toolStripMenuItemEdit";
+			this.toolStripMenuItemEdit.Size = new System.Drawing.Size(52, 20);
+			this.toolStripMenuItemEdit.Text = "Edit(&E)";
+			// 
+			// toolStripMenuItemUndo
+			// 
+			this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
+			this.toolStripMenuItemUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+			this.toolStripMenuItemUndo.Size = new System.Drawing.Size(149, 22);
+			this.toolStripMenuItemUndo.Text = "Undo(&U)";
+			// 
+			// toolStripMenuItemRedo
+			// 
+			this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
+			this.toolStripMenuItemRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
+			this.toolStripMenuItemRedo.Size = new System.Drawing.Size(149, 22);
+			this.toolStripMenuItemRedo.Text = "Redo(&R)";
+			// 
+			// toolStripSeparatorUndo
+			// 
+			this.toolStripSeparatorUndo.Name = "toolStripSeparatorUndo";
+			this.toolStripSeparatorUndo.Size = new System.Drawing.Size(146, 6);
+			// 
+			// toolStripMenuItemCleanup
+			// 
+			this.toolStripMenuItemCleanup.Name = "toolStripMenuItemCleanup";
+			this.toolStripMenuItemCleanup.Size = new System.Drawing.Size(149, 22);
+			this.toolStripMenuItemCleanup.Text = "Cleanup";
+			// 
+			// toolStripMenuItemDelete
+			// 
+			this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
+			this.toolStripMenuItemDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+			this.toolStripMenuItemDelete.Size = new System.Drawing.Size(149, 22);
+			this.toolStripMenuItemDelete.Text = "Delete(&D)";
+			// 
+			// toolStripMenuItemInput
+			// 
+			this.toolStripMenuItemInput.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemPitch,
+            this.toolStripMenuItemVolume,
+            this.toolStripMenuItemIndex});
+			this.toolStripMenuItemInput.Name = "toolStripMenuItemInput";
+			this.toolStripMenuItemInput.Size = new System.Drawing.Size(53, 20);
+			this.toolStripMenuItemInput.Text = "Input(I)";
+			// 
+			// toolStripMenuItemPitch
+			// 
+			this.toolStripMenuItemPitch.Name = "toolStripMenuItemPitch";
+			this.toolStripMenuItemPitch.Size = new System.Drawing.Size(181, 22);
+			this.toolStripMenuItemPitch.Text = "Pitch(&P)";
+			// 
+			// toolStripMenuItemVolume
+			// 
+			this.toolStripMenuItemVolume.Name = "toolStripMenuItemVolume";
+			this.toolStripMenuItemVolume.Size = new System.Drawing.Size(181, 22);
+			this.toolStripMenuItemVolume.Text = "Volume(&V)";
+			// 
+			// toolStripMenuItemIndex
+			// 
+			this.toolStripMenuItemIndex.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripComboBoxIndex});
+			this.toolStripMenuItemIndex.Name = "toolStripMenuItemIndex";
+			this.toolStripMenuItemIndex.Size = new System.Drawing.Size(181, 22);
+			this.toolStripMenuItemIndex.Text = "Sound source index(&I)";
+			// 
+			// toolStripComboBoxIndex
+			// 
+			this.toolStripComboBoxIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.toolStripComboBoxIndex.Name = "toolStripComboBoxIndex";
+			this.toolStripComboBoxIndex.Size = new System.Drawing.Size(121, 20);
+			// 
+			// toolStripMenuItemTool
+			// 
+			this.toolStripMenuItemTool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelect,
+            this.toolStripMenuItemMove,
+            this.toolStripMenuItemDot,
+            this.toolStripMenuItemLine});
+			this.toolStripMenuItemTool.Name = "toolStripMenuItemTool";
+			this.toolStripMenuItemTool.Size = new System.Drawing.Size(54, 20);
+			this.toolStripMenuItemTool.Text = "Tool(&T)";
+			// 
+			// toolStripMenuItemSelect
+			// 
+			this.toolStripMenuItemSelect.Name = "toolStripMenuItemSelect";
+			this.toolStripMenuItemSelect.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.A)));
+			this.toolStripMenuItemSelect.Size = new System.Drawing.Size(151, 22);
+			this.toolStripMenuItemSelect.Text = "Select(&S)";
+			// 
+			// toolStripMenuItemMove
+			// 
+			this.toolStripMenuItemMove.Name = "toolStripMenuItemMove";
+			this.toolStripMenuItemMove.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
+			this.toolStripMenuItemMove.Size = new System.Drawing.Size(151, 22);
+			this.toolStripMenuItemMove.Text = "Move(&M)";
+			// 
+			// toolStripMenuItemDot
+			// 
+			this.toolStripMenuItemDot.Name = "toolStripMenuItemDot";
+			this.toolStripMenuItemDot.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
+			this.toolStripMenuItemDot.Size = new System.Drawing.Size(151, 22);
+			this.toolStripMenuItemDot.Text = "Dot(&D)";
+			// 
+			// toolStripMenuItemLine
+			// 
+			this.toolStripMenuItemLine.Name = "toolStripMenuItemLine";
+			this.toolStripMenuItemLine.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+			this.toolStripMenuItemLine.Size = new System.Drawing.Size(151, 22);
+			this.toolStripMenuItemLine.Text = "Line(&L)";
+			// 
 			// statusStripStatus
 			// 
 			this.statusStripStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -4204,12 +4631,11 @@ namespace TrainEditor2.Views
             this.toolStripStatusLabelX,
             this.toolStripStatusLabelTool,
             this.toolStripStatusLabelMode,
-            this.toolStripStatusLabelTrack,
             this.toolStripStatusLabelType});
 			this.statusStripStatus.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.statusStripStatus.Location = new System.Drawing.Point(0, 642);
+			this.statusStripStatus.Location = new System.Drawing.Point(0, 690);
 			this.statusStripStatus.Name = "statusStripStatus";
-			this.statusStripStatus.Size = new System.Drawing.Size(786, 22);
+			this.statusStripStatus.Size = new System.Drawing.Size(582, 22);
 			this.statusStripStatus.TabIndex = 1;
 			this.statusStripStatus.Text = "statusStrip1";
 			// 
@@ -4253,16 +4679,6 @@ namespace TrainEditor2.Views
 			this.toolStripStatusLabelMode.Size = new System.Drawing.Size(36, 17);
 			this.toolStripStatusLabelMode.Text = "Mode";
 			// 
-			// toolStripStatusLabelTrack
-			// 
-			this.toolStripStatusLabelTrack.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelTrack.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelTrack.Name = "toolStripStatusLabelTrack";
-			this.toolStripStatusLabelTrack.Size = new System.Drawing.Size(38, 17);
-			this.toolStripStatusLabelTrack.Text = "Track";
-			// 
 			// toolStripStatusLabelType
 			// 
 			this.toolStripStatusLabelType.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -4273,238 +4689,13 @@ namespace TrainEditor2.Views
 			this.toolStripStatusLabelType.Size = new System.Drawing.Size(34, 17);
 			this.toolStripStatusLabelType.Text = "Type";
 			// 
-			// menuStripMotor
-			// 
-			this.menuStripMotor.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemEdit,
-            this.toolStripMenuItemView,
-            this.toolStripMenuItemInput,
-            this.toolStripMenuItemTool});
-			this.menuStripMotor.Location = new System.Drawing.Point(0, 0);
-			this.menuStripMotor.Name = "menuStripMotor";
-			this.menuStripMotor.Size = new System.Drawing.Size(786, 24);
-			this.menuStripMotor.TabIndex = 0;
-			this.menuStripMotor.Text = "menuStrip1";
-			// 
-			// toolStripMenuItemEdit
-			// 
-			this.toolStripMenuItemEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemUndo,
-            this.toolStripMenuItemRedo,
-            this.toolStripSeparatorUndo,
-            this.toolStripMenuItemTearingOff,
-            this.toolStripMenuItemCopy,
-            this.toolStripMenuItemPaste,
-            this.toolStripMenuItemCleanup,
-            this.toolStripMenuItemDelete});
-			this.toolStripMenuItemEdit.Name = "toolStripMenuItemEdit";
-			this.toolStripMenuItemEdit.Size = new System.Drawing.Size(52, 20);
-			this.toolStripMenuItemEdit.Text = "Edit(&E)";
-			// 
-			// toolStripMenuItemUndo
-			// 
-			this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
-			this.toolStripMenuItemUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.toolStripMenuItemUndo.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemUndo.Text = "Undo(&U)";
-			// 
-			// toolStripMenuItemRedo
-			// 
-			this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
-			this.toolStripMenuItemRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.toolStripMenuItemRedo.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemRedo.Text = "Redo(&R)";
-			// 
-			// toolStripSeparatorUndo
-			// 
-			this.toolStripSeparatorUndo.Name = "toolStripSeparatorUndo";
-			this.toolStripSeparatorUndo.Size = new System.Drawing.Size(149, 6);
-			// 
-			// toolStripMenuItemTearingOff
-			// 
-			this.toolStripMenuItemTearingOff.Name = "toolStripMenuItemTearingOff";
-			this.toolStripMenuItemTearingOff.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.toolStripMenuItemTearingOff.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemTearingOff.Text = "Cut(&T)";
-			// 
-			// toolStripMenuItemCopy
-			// 
-			this.toolStripMenuItemCopy.Name = "toolStripMenuItemCopy";
-			this.toolStripMenuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.toolStripMenuItemCopy.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemCopy.Text = "Copy(&C)";
-			// 
-			// toolStripMenuItemPaste
-			// 
-			this.toolStripMenuItemPaste.Name = "toolStripMenuItemPaste";
-			this.toolStripMenuItemPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.toolStripMenuItemPaste.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemPaste.Text = "Paste(&P)";
-			// 
-			// toolStripMenuItemCleanup
-			// 
-			this.toolStripMenuItemCleanup.Name = "toolStripMenuItemCleanup";
-			this.toolStripMenuItemCleanup.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemCleanup.Text = "Cleanup";
-			// 
-			// toolStripMenuItemDelete
-			// 
-			this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
-			this.toolStripMenuItemDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-			this.toolStripMenuItemDelete.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemDelete.Text = "Delete(&D)";
-			// 
-			// toolStripMenuItemView
-			// 
-			this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPower,
-            this.toolStripMenuItemBrake});
-			this.toolStripMenuItemView.Name = "toolStripMenuItemView";
-			this.toolStripMenuItemView.Size = new System.Drawing.Size(58, 20);
-			this.toolStripMenuItemView.Text = "View(&V)";
-			// 
-			// toolStripMenuItemPower
-			// 
-			this.toolStripMenuItemPower.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPowerTrack1,
-            this.toolStripMenuItemPowerTrack2});
-			this.toolStripMenuItemPower.Name = "toolStripMenuItemPower";
-			this.toolStripMenuItemPower.Size = new System.Drawing.Size(116, 22);
-			this.toolStripMenuItemPower.Text = "Power(&P)";
-			// 
-			// toolStripMenuItemPowerTrack1
-			// 
-			this.toolStripMenuItemPowerTrack1.Name = "toolStripMenuItemPowerTrack1";
-			this.toolStripMenuItemPowerTrack1.Size = new System.Drawing.Size(119, 22);
-			this.toolStripMenuItemPowerTrack1.Text = "Track1(&1)";
-			// 
-			// toolStripMenuItemPowerTrack2
-			// 
-			this.toolStripMenuItemPowerTrack2.Name = "toolStripMenuItemPowerTrack2";
-			this.toolStripMenuItemPowerTrack2.Size = new System.Drawing.Size(119, 22);
-			this.toolStripMenuItemPowerTrack2.Text = "Track2(&2)";
-			// 
-			// toolStripMenuItemBrake
-			// 
-			this.toolStripMenuItemBrake.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemBrakeTrack1,
-            this.toolStripMenuItemBrakeTrack2});
-			this.toolStripMenuItemBrake.Name = "toolStripMenuItemBrake";
-			this.toolStripMenuItemBrake.Size = new System.Drawing.Size(116, 22);
-			this.toolStripMenuItemBrake.Text = "Brake(&B)";
-			// 
-			// toolStripMenuItemBrakeTrack1
-			// 
-			this.toolStripMenuItemBrakeTrack1.Name = "toolStripMenuItemBrakeTrack1";
-			this.toolStripMenuItemBrakeTrack1.Size = new System.Drawing.Size(119, 22);
-			this.toolStripMenuItemBrakeTrack1.Text = "Track1(&1)";
-			// 
-			// toolStripMenuItemBrakeTrack2
-			// 
-			this.toolStripMenuItemBrakeTrack2.Name = "toolStripMenuItemBrakeTrack2";
-			this.toolStripMenuItemBrakeTrack2.Size = new System.Drawing.Size(119, 22);
-			this.toolStripMenuItemBrakeTrack2.Text = "Track2(&2)";
-			// 
-			// toolStripMenuItemInput
-			// 
-			this.toolStripMenuItemInput.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPitch,
-            this.toolStripMenuItemVolume,
-            this.toolStripMenuItemIndex});
-			this.toolStripMenuItemInput.Name = "toolStripMenuItemInput";
-			this.toolStripMenuItemInput.Size = new System.Drawing.Size(53, 20);
-			this.toolStripMenuItemInput.Text = "Input(I)";
-			// 
-			// toolStripMenuItemPitch
-			// 
-			this.toolStripMenuItemPitch.Name = "toolStripMenuItemPitch";
-			this.toolStripMenuItemPitch.Size = new System.Drawing.Size(181, 22);
-			this.toolStripMenuItemPitch.Text = "Pitch(&P)";
-			// 
-			// toolStripMenuItemVolume
-			// 
-			this.toolStripMenuItemVolume.Name = "toolStripMenuItemVolume";
-			this.toolStripMenuItemVolume.Size = new System.Drawing.Size(181, 22);
-			this.toolStripMenuItemVolume.Text = "Volume(&V)";
-			// 
-			// toolStripMenuItemIndex
-			// 
-			this.toolStripMenuItemIndex.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripComboBoxIndex});
-			this.toolStripMenuItemIndex.Name = "toolStripMenuItemIndex";
-			this.toolStripMenuItemIndex.Size = new System.Drawing.Size(181, 22);
-			this.toolStripMenuItemIndex.Text = "Sound source index(&I)";
-			// 
-			// toolStripComboBoxIndex
-			// 
-			this.toolStripComboBoxIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.toolStripComboBoxIndex.Items.AddRange(new object[] {
-            "None",
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15"});
-			this.toolStripComboBoxIndex.Name = "toolStripComboBoxIndex";
-			this.toolStripComboBoxIndex.Size = new System.Drawing.Size(121, 20);
-			// 
-			// toolStripMenuItemTool
-			// 
-			this.toolStripMenuItemTool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelect,
-            this.toolStripMenuItemMove,
-            this.toolStripMenuItemDot,
-            this.toolStripMenuItemLine});
-			this.toolStripMenuItemTool.Name = "toolStripMenuItemTool";
-			this.toolStripMenuItemTool.Size = new System.Drawing.Size(54, 20);
-			this.toolStripMenuItemTool.Text = "Tool(&T)";
-			// 
-			// toolStripMenuItemSelect
-			// 
-			this.toolStripMenuItemSelect.Name = "toolStripMenuItemSelect";
-			this.toolStripMenuItemSelect.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.A)));
-			this.toolStripMenuItemSelect.Size = new System.Drawing.Size(151, 22);
-			this.toolStripMenuItemSelect.Text = "Select(&S)";
-			// 
-			// toolStripMenuItemMove
-			// 
-			this.toolStripMenuItemMove.Name = "toolStripMenuItemMove";
-			this.toolStripMenuItemMove.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
-			this.toolStripMenuItemMove.Size = new System.Drawing.Size(151, 22);
-			this.toolStripMenuItemMove.Text = "Move(&M)";
-			// 
-			// toolStripMenuItemDot
-			// 
-			this.toolStripMenuItemDot.Name = "toolStripMenuItemDot";
-			this.toolStripMenuItemDot.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
-			this.toolStripMenuItemDot.Size = new System.Drawing.Size(151, 22);
-			this.toolStripMenuItemDot.Text = "Dot(&D)";
-			// 
-			// toolStripMenuItemLine
-			// 
-			this.toolStripMenuItemLine.Name = "toolStripMenuItemLine";
-			this.toolStripMenuItemLine.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-			this.toolStripMenuItemLine.Size = new System.Drawing.Size(151, 22);
-			this.toolStripMenuItemLine.Text = "Line(&L)";
-			// 
 			// tabPageAccel
 			// 
 			this.tabPageAccel.Controls.Add(this.pictureBoxAccel);
 			this.tabPageAccel.Controls.Add(this.panelAccel);
 			this.tabPageAccel.Location = new System.Drawing.Point(4, 22);
 			this.tabPageAccel.Name = "tabPageAccel";
-			this.tabPageAccel.Size = new System.Drawing.Size(792, 670);
+			this.tabPageAccel.Size = new System.Drawing.Size(792, 718);
 			this.tabPageAccel.TabIndex = 5;
 			this.tabPageAccel.Text = "Acceleration settings";
 			this.tabPageAccel.UseVisualStyleBackColor = true;
@@ -4514,7 +4705,7 @@ namespace TrainEditor2.Views
 			this.pictureBoxAccel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBoxAccel.Location = new System.Drawing.Point(0, 0);
 			this.pictureBoxAccel.Name = "pictureBoxAccel";
-			this.pictureBoxAccel.Size = new System.Drawing.Size(576, 670);
+			this.pictureBoxAccel.Size = new System.Drawing.Size(576, 718);
 			this.pictureBoxAccel.TabIndex = 1;
 			this.pictureBoxAccel.TabStop = false;
 			this.pictureBoxAccel.MouseEnter += new System.EventHandler(this.PictureBoxAccel_MouseEnter);
@@ -4528,11 +4719,15 @@ namespace TrainEditor2.Views
 			this.panelAccel.Dock = System.Windows.Forms.DockStyle.Right;
 			this.panelAccel.Location = new System.Drawing.Point(576, 0);
 			this.panelAccel.Name = "panelAccel";
-			this.panelAccel.Size = new System.Drawing.Size(216, 670);
+			this.panelAccel.Size = new System.Drawing.Size(216, 718);
 			this.panelAccel.TabIndex = 0;
 			// 
 			// groupBoxPreview
 			// 
+			this.groupBoxPreview.Controls.Add(this.comboBoxAccelYUnit);
+			this.groupBoxPreview.Controls.Add(this.comboBoxAccelXUnit);
+			this.groupBoxPreview.Controls.Add(this.labelAccelYUnit);
+			this.groupBoxPreview.Controls.Add(this.labelAccelXUnit);
 			this.groupBoxPreview.Controls.Add(this.buttonAccelReset);
 			this.groupBoxPreview.Controls.Add(this.buttonAccelZoomOut);
 			this.groupBoxPreview.Controls.Add(this.buttonAccelZoomIn);
@@ -4555,14 +4750,50 @@ namespace TrainEditor2.Views
 			this.groupBoxPreview.Controls.Add(this.checkBoxSubtractDeceleration);
 			this.groupBoxPreview.Location = new System.Drawing.Point(8, 216);
 			this.groupBoxPreview.Name = "groupBoxPreview";
-			this.groupBoxPreview.Size = new System.Drawing.Size(200, 232);
+			this.groupBoxPreview.Size = new System.Drawing.Size(200, 280);
 			this.groupBoxPreview.TabIndex = 2;
 			this.groupBoxPreview.TabStop = false;
 			this.groupBoxPreview.Text = "Preview";
 			// 
+			// comboBoxAccelYUnit
+			// 
+			this.comboBoxAccelYUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAccelYUnit.FormattingEnabled = true;
+			this.comboBoxAccelYUnit.Location = new System.Drawing.Point(88, 80);
+			this.comboBoxAccelYUnit.Name = "comboBoxAccelYUnit";
+			this.comboBoxAccelYUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxAccelYUnit.TabIndex = 63;
+			// 
+			// comboBoxAccelXUnit
+			// 
+			this.comboBoxAccelXUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAccelXUnit.FormattingEnabled = true;
+			this.comboBoxAccelXUnit.Location = new System.Drawing.Point(88, 56);
+			this.comboBoxAccelXUnit.Name = "comboBoxAccelXUnit";
+			this.comboBoxAccelXUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxAccelXUnit.TabIndex = 62;
+			// 
+			// labelAccelYUnit
+			// 
+			this.labelAccelYUnit.Location = new System.Drawing.Point(8, 80);
+			this.labelAccelYUnit.Name = "labelAccelYUnit";
+			this.labelAccelYUnit.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelYUnit.TabIndex = 44;
+			this.labelAccelYUnit.Text = "Y unit:";
+			this.labelAccelYUnit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelXUnit
+			// 
+			this.labelAccelXUnit.Location = new System.Drawing.Point(8, 56);
+			this.labelAccelXUnit.Name = "labelAccelXUnit";
+			this.labelAccelXUnit.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelXUnit.TabIndex = 43;
+			this.labelAccelXUnit.Text = "X unit:";
+			this.labelAccelXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
 			// buttonAccelReset
 			// 
-			this.buttonAccelReset.Location = new System.Drawing.Point(136, 200);
+			this.buttonAccelReset.Location = new System.Drawing.Point(136, 248);
 			this.buttonAccelReset.Name = "buttonAccelReset";
 			this.buttonAccelReset.Size = new System.Drawing.Size(56, 24);
 			this.buttonAccelReset.TabIndex = 42;
@@ -4570,7 +4801,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonAccelZoomOut
 			// 
-			this.buttonAccelZoomOut.Location = new System.Drawing.Point(72, 200);
+			this.buttonAccelZoomOut.Location = new System.Drawing.Point(72, 248);
 			this.buttonAccelZoomOut.Name = "buttonAccelZoomOut";
 			this.buttonAccelZoomOut.Size = new System.Drawing.Size(56, 24);
 			this.buttonAccelZoomOut.TabIndex = 41;
@@ -4578,7 +4809,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonAccelZoomIn
 			// 
-			this.buttonAccelZoomIn.Location = new System.Drawing.Point(8, 200);
+			this.buttonAccelZoomIn.Location = new System.Drawing.Point(8, 248);
 			this.buttonAccelZoomIn.Name = "buttonAccelZoomIn";
 			this.buttonAccelZoomIn.Size = new System.Drawing.Size(56, 24);
 			this.buttonAccelZoomIn.TabIndex = 40;
@@ -4586,7 +4817,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelYValue
 			// 
-			this.labelAccelYValue.Location = new System.Drawing.Point(88, 80);
+			this.labelAccelYValue.Location = new System.Drawing.Point(88, 128);
 			this.labelAccelYValue.Name = "labelAccelYValue";
 			this.labelAccelYValue.Size = new System.Drawing.Size(104, 16);
 			this.labelAccelYValue.TabIndex = 39;
@@ -4595,7 +4826,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelXValue
 			// 
-			this.labelAccelXValue.Location = new System.Drawing.Point(88, 56);
+			this.labelAccelXValue.Location = new System.Drawing.Point(88, 104);
 			this.labelAccelXValue.Name = "labelAccelXValue";
 			this.labelAccelXValue.Size = new System.Drawing.Size(104, 16);
 			this.labelAccelXValue.TabIndex = 38;
@@ -4604,7 +4835,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelXmaxUnit
 			// 
-			this.labelAccelXmaxUnit.Location = new System.Drawing.Point(144, 128);
+			this.labelAccelXmaxUnit.Location = new System.Drawing.Point(144, 176);
 			this.labelAccelXmaxUnit.Name = "labelAccelXmaxUnit";
 			this.labelAccelXmaxUnit.Size = new System.Drawing.Size(48, 16);
 			this.labelAccelXmaxUnit.TabIndex = 37;
@@ -4613,7 +4844,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelXminUnit
 			// 
-			this.labelAccelXminUnit.Location = new System.Drawing.Point(144, 104);
+			this.labelAccelXminUnit.Location = new System.Drawing.Point(144, 152);
 			this.labelAccelXminUnit.Name = "labelAccelXminUnit";
 			this.labelAccelXminUnit.Size = new System.Drawing.Size(48, 16);
 			this.labelAccelXminUnit.TabIndex = 36;
@@ -4622,7 +4853,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelYmaxUnit
 			// 
-			this.labelAccelYmaxUnit.Location = new System.Drawing.Point(144, 176);
+			this.labelAccelYmaxUnit.Location = new System.Drawing.Point(144, 224);
 			this.labelAccelYmaxUnit.Name = "labelAccelYmaxUnit";
 			this.labelAccelYmaxUnit.Size = new System.Drawing.Size(48, 16);
 			this.labelAccelYmaxUnit.TabIndex = 35;
@@ -4631,7 +4862,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelYminUnit
 			// 
-			this.labelAccelYminUnit.Location = new System.Drawing.Point(144, 152);
+			this.labelAccelYminUnit.Location = new System.Drawing.Point(144, 200);
 			this.labelAccelYminUnit.Name = "labelAccelYminUnit";
 			this.labelAccelYminUnit.Size = new System.Drawing.Size(48, 16);
 			this.labelAccelYminUnit.TabIndex = 34;
@@ -4640,35 +4871,35 @@ namespace TrainEditor2.Views
 			// 
 			// textBoxAccelYmax
 			// 
-			this.textBoxAccelYmax.Location = new System.Drawing.Point(88, 176);
+			this.textBoxAccelYmax.Location = new System.Drawing.Point(88, 224);
 			this.textBoxAccelYmax.Name = "textBoxAccelYmax";
 			this.textBoxAccelYmax.Size = new System.Drawing.Size(48, 19);
 			this.textBoxAccelYmax.TabIndex = 25;
 			// 
 			// textBoxAccelYmin
 			// 
-			this.textBoxAccelYmin.Location = new System.Drawing.Point(88, 152);
+			this.textBoxAccelYmin.Location = new System.Drawing.Point(88, 200);
 			this.textBoxAccelYmin.Name = "textBoxAccelYmin";
 			this.textBoxAccelYmin.Size = new System.Drawing.Size(48, 19);
 			this.textBoxAccelYmin.TabIndex = 24;
 			// 
 			// textBoxAccelXmax
 			// 
-			this.textBoxAccelXmax.Location = new System.Drawing.Point(88, 128);
+			this.textBoxAccelXmax.Location = new System.Drawing.Point(88, 176);
 			this.textBoxAccelXmax.Name = "textBoxAccelXmax";
 			this.textBoxAccelXmax.Size = new System.Drawing.Size(48, 19);
 			this.textBoxAccelXmax.TabIndex = 23;
 			// 
 			// textBoxAccelXmin
 			// 
-			this.textBoxAccelXmin.Location = new System.Drawing.Point(88, 104);
+			this.textBoxAccelXmin.Location = new System.Drawing.Point(88, 152);
 			this.textBoxAccelXmin.Name = "textBoxAccelXmin";
 			this.textBoxAccelXmin.Size = new System.Drawing.Size(48, 19);
 			this.textBoxAccelXmin.TabIndex = 22;
 			// 
 			// labelAccelYmax
 			// 
-			this.labelAccelYmax.Location = new System.Drawing.Point(8, 176);
+			this.labelAccelYmax.Location = new System.Drawing.Point(8, 224);
 			this.labelAccelYmax.Name = "labelAccelYmax";
 			this.labelAccelYmax.Size = new System.Drawing.Size(72, 16);
 			this.labelAccelYmax.TabIndex = 8;
@@ -4677,7 +4908,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelYmin
 			// 
-			this.labelAccelYmin.Location = new System.Drawing.Point(8, 152);
+			this.labelAccelYmin.Location = new System.Drawing.Point(8, 200);
 			this.labelAccelYmin.Name = "labelAccelYmin";
 			this.labelAccelYmin.Size = new System.Drawing.Size(72, 16);
 			this.labelAccelYmin.TabIndex = 7;
@@ -4686,7 +4917,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelXmax
 			// 
-			this.labelAccelXmax.Location = new System.Drawing.Point(8, 128);
+			this.labelAccelXmax.Location = new System.Drawing.Point(8, 176);
 			this.labelAccelXmax.Name = "labelAccelXmax";
 			this.labelAccelXmax.Size = new System.Drawing.Size(72, 16);
 			this.labelAccelXmax.TabIndex = 6;
@@ -4695,7 +4926,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelXmin
 			// 
-			this.labelAccelXmin.Location = new System.Drawing.Point(8, 104);
+			this.labelAccelXmin.Location = new System.Drawing.Point(8, 152);
 			this.labelAccelXmin.Name = "labelAccelXmin";
 			this.labelAccelXmin.Size = new System.Drawing.Size(72, 16);
 			this.labelAccelXmin.TabIndex = 5;
@@ -4704,7 +4935,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelY
 			// 
-			this.labelAccelY.Location = new System.Drawing.Point(8, 80);
+			this.labelAccelY.Location = new System.Drawing.Point(8, 128);
 			this.labelAccelY.Name = "labelAccelY";
 			this.labelAccelY.Size = new System.Drawing.Size(72, 16);
 			this.labelAccelY.TabIndex = 4;
@@ -4713,7 +4944,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelAccelX
 			// 
-			this.labelAccelX.Location = new System.Drawing.Point(8, 56);
+			this.labelAccelX.Location = new System.Drawing.Point(8, 104);
 			this.labelAccelX.Name = "labelAccelX";
 			this.labelAccelX.Size = new System.Drawing.Size(72, 16);
 			this.labelAccelX.TabIndex = 3;
@@ -4731,16 +4962,16 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxParameter
 			// 
-			this.groupBoxParameter.Controls.Add(this.labeAccelA0Unit);
+			this.groupBoxParameter.Controls.Add(this.comboBoxAccelV2Unit);
+			this.groupBoxParameter.Controls.Add(this.comboBoxAccelV1Unit);
+			this.groupBoxParameter.Controls.Add(this.comboBoxAccelA1Unit);
+			this.groupBoxParameter.Controls.Add(this.comboBoxAccelA0Unit);
 			this.groupBoxParameter.Controls.Add(this.textBoxAccelA0);
 			this.groupBoxParameter.Controls.Add(this.labelAccelA0);
-			this.groupBoxParameter.Controls.Add(this.labelAccelA1Unit);
 			this.groupBoxParameter.Controls.Add(this.textBoxAccelA1);
 			this.groupBoxParameter.Controls.Add(this.labelAccelA1);
-			this.groupBoxParameter.Controls.Add(this.labelAccelV1Unit);
 			this.groupBoxParameter.Controls.Add(this.textBoxAccelV1);
 			this.groupBoxParameter.Controls.Add(this.labelAccelV1);
-			this.groupBoxParameter.Controls.Add(this.labelAccelV2Unit);
 			this.groupBoxParameter.Controls.Add(this.textBoxAccelV2);
 			this.groupBoxParameter.Controls.Add(this.labelAccelV2);
 			this.groupBoxParameter.Controls.Add(this.textBoxAccelE);
@@ -4752,14 +4983,41 @@ namespace TrainEditor2.Views
 			this.groupBoxParameter.TabStop = false;
 			this.groupBoxParameter.Text = "Parameter";
 			// 
-			// labeAccelA0Unit
+			// comboBoxAccelV2Unit
 			// 
-			this.labeAccelA0Unit.Location = new System.Drawing.Point(144, 16);
-			this.labeAccelA0Unit.Name = "labeAccelA0Unit";
-			this.labeAccelA0Unit.Size = new System.Drawing.Size(48, 16);
-			this.labeAccelA0Unit.TabIndex = 33;
-			this.labeAccelA0Unit.Text = "km/h/s";
-			this.labeAccelA0Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.comboBoxAccelV2Unit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAccelV2Unit.FormattingEnabled = true;
+			this.comboBoxAccelV2Unit.Location = new System.Drawing.Point(144, 88);
+			this.comboBoxAccelV2Unit.Name = "comboBoxAccelV2Unit";
+			this.comboBoxAccelV2Unit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxAccelV2Unit.TabIndex = 61;
+			// 
+			// comboBoxAccelV1Unit
+			// 
+			this.comboBoxAccelV1Unit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAccelV1Unit.FormattingEnabled = true;
+			this.comboBoxAccelV1Unit.Location = new System.Drawing.Point(144, 64);
+			this.comboBoxAccelV1Unit.Name = "comboBoxAccelV1Unit";
+			this.comboBoxAccelV1Unit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxAccelV1Unit.TabIndex = 60;
+			// 
+			// comboBoxAccelA1Unit
+			// 
+			this.comboBoxAccelA1Unit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAccelA1Unit.FormattingEnabled = true;
+			this.comboBoxAccelA1Unit.Location = new System.Drawing.Point(144, 40);
+			this.comboBoxAccelA1Unit.Name = "comboBoxAccelA1Unit";
+			this.comboBoxAccelA1Unit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxAccelA1Unit.TabIndex = 59;
+			// 
+			// comboBoxAccelA0Unit
+			// 
+			this.comboBoxAccelA0Unit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAccelA0Unit.FormattingEnabled = true;
+			this.comboBoxAccelA0Unit.Location = new System.Drawing.Point(144, 16);
+			this.comboBoxAccelA0Unit.Name = "comboBoxAccelA0Unit";
+			this.comboBoxAccelA0Unit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxAccelA0Unit.TabIndex = 58;
 			// 
 			// textBoxAccelA0
 			// 
@@ -4777,15 +5035,6 @@ namespace TrainEditor2.Views
 			this.labelAccelA0.Text = "a0:";
 			this.labelAccelA0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelAccelA1Unit
-			// 
-			this.labelAccelA1Unit.Location = new System.Drawing.Point(144, 40);
-			this.labelAccelA1Unit.Name = "labelAccelA1Unit";
-			this.labelAccelA1Unit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelA1Unit.TabIndex = 30;
-			this.labelAccelA1Unit.Text = "km/h/s";
-			this.labelAccelA1Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxAccelA1
 			// 
 			this.textBoxAccelA1.Location = new System.Drawing.Point(88, 40);
@@ -4802,15 +5051,6 @@ namespace TrainEditor2.Views
 			this.labelAccelA1.Text = "a1:";
 			this.labelAccelA1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelAccelV1Unit
-			// 
-			this.labelAccelV1Unit.Location = new System.Drawing.Point(144, 64);
-			this.labelAccelV1Unit.Name = "labelAccelV1Unit";
-			this.labelAccelV1Unit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelV1Unit.TabIndex = 27;
-			this.labelAccelV1Unit.Text = "km/h";
-			this.labelAccelV1Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxAccelV1
 			// 
 			this.textBoxAccelV1.Location = new System.Drawing.Point(88, 64);
@@ -4826,15 +5066,6 @@ namespace TrainEditor2.Views
 			this.labelAccelV1.TabIndex = 25;
 			this.labelAccelV1.Text = "v1:";
 			this.labelAccelV1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelAccelV2Unit
-			// 
-			this.labelAccelV2Unit.Location = new System.Drawing.Point(144, 88);
-			this.labelAccelV2Unit.Name = "labelAccelV2Unit";
-			this.labelAccelV2Unit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelV2Unit.TabIndex = 24;
-			this.labelAccelV2Unit.Text = "km/h";
-			this.labelAccelV2Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxAccelV2
 			// 
@@ -4887,624 +5118,34 @@ namespace TrainEditor2.Views
 			this.comboBoxNotch.Size = new System.Drawing.Size(72, 20);
 			this.comboBoxNotch.TabIndex = 0;
 			// 
-			// tabPageCar
-			// 
-			this.tabPageCar.Controls.Add(this.groupBoxPressure);
-			this.tabPageCar.Controls.Add(this.groupBoxBrake);
-			this.tabPageCar.Controls.Add(this.groupBoxMove);
-			this.tabPageCar.Controls.Add(this.groupBoxDelay);
-			this.tabPageCar.Controls.Add(this.groupBoxPerformance);
-			this.tabPageCar.Controls.Add(this.groupBoxCarGeneral);
-			this.tabPageCar.Location = new System.Drawing.Point(4, 22);
-			this.tabPageCar.Name = "tabPageCar";
-			this.tabPageCar.Size = new System.Drawing.Size(792, 670);
-			this.tabPageCar.TabIndex = 4;
-			this.tabPageCar.Text = "Car settings";
-			this.tabPageCar.UseVisualStyleBackColor = true;
-			// 
-			// groupBoxPressure
-			// 
-			this.groupBoxPressure.Controls.Add(this.labelBrakePipeNormalPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.textBoxBrakePipeNormalPressure);
-			this.groupBoxPressure.Controls.Add(this.labelBrakePipeNormalPressure);
-			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderServiceMaximumPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMaximumPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMinimumPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.textBoxMainReservoirMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.textBoxMainReservoirMinimumPressure);
-			this.groupBoxPressure.Controls.Add(this.textBoxBrakeCylinderEmergencyMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.textBoxBrakeCylinderServiceMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMinimumPressure);
-			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderServiceMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressure);
-			this.groupBoxPressure.Location = new System.Drawing.Point(288, 440);
-			this.groupBoxPressure.Name = "groupBoxPressure";
-			this.groupBoxPressure.Size = new System.Drawing.Size(448, 144);
-			this.groupBoxPressure.TabIndex = 33;
-			this.groupBoxPressure.TabStop = false;
-			this.groupBoxPressure.Text = "Pressure";
-			// 
-			// labelBrakePipeNormalPressureUnit
-			// 
-			this.labelBrakePipeNormalPressureUnit.Location = new System.Drawing.Point(408, 112);
-			this.labelBrakePipeNormalPressureUnit.Name = "labelBrakePipeNormalPressureUnit";
-			this.labelBrakePipeNormalPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelBrakePipeNormalPressureUnit.TabIndex = 39;
-			this.labelBrakePipeNormalPressureUnit.Text = "kPa";
-			this.labelBrakePipeNormalPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxBrakePipeNormalPressure
-			// 
-			this.textBoxBrakePipeNormalPressure.Location = new System.Drawing.Point(248, 112);
-			this.textBoxBrakePipeNormalPressure.Name = "textBoxBrakePipeNormalPressure";
-			this.textBoxBrakePipeNormalPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxBrakePipeNormalPressure.TabIndex = 38;
-			// 
-			// labelBrakePipeNormalPressure
-			// 
-			this.labelBrakePipeNormalPressure.Location = new System.Drawing.Point(8, 112);
-			this.labelBrakePipeNormalPressure.Name = "labelBrakePipeNormalPressure";
-			this.labelBrakePipeNormalPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelBrakePipeNormalPressure.TabIndex = 37;
-			this.labelBrakePipeNormalPressure.Text = "BrakePipeNormalPressure:";
-			this.labelBrakePipeNormalPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeCylinderServiceMaximumPressureUnit
-			// 
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Location = new System.Drawing.Point(408, 16);
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Name = "labelBrakeCylinderServiceMaximumPressureUnit";
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelBrakeCylinderServiceMaximumPressureUnit.TabIndex = 32;
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Text = "kPa";
-			this.labelBrakeCylinderServiceMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelMainReservoirMaximumPressureUnit
-			// 
-			this.labelMainReservoirMaximumPressureUnit.Location = new System.Drawing.Point(408, 88);
-			this.labelMainReservoirMaximumPressureUnit.Name = "labelMainReservoirMaximumPressureUnit";
-			this.labelMainReservoirMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelMainReservoirMaximumPressureUnit.TabIndex = 36;
-			this.labelMainReservoirMaximumPressureUnit.Text = "kPa";
-			this.labelMainReservoirMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelMainReservoirMinimumPressureUnit
-			// 
-			this.labelMainReservoirMinimumPressureUnit.Location = new System.Drawing.Point(408, 64);
-			this.labelMainReservoirMinimumPressureUnit.Name = "labelMainReservoirMinimumPressureUnit";
-			this.labelMainReservoirMinimumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelMainReservoirMinimumPressureUnit.TabIndex = 35;
-			this.labelMainReservoirMinimumPressureUnit.Text = "kPa";
-			this.labelMainReservoirMinimumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelBrakeCylinderEmergencyMaximumPressureUnit
-			// 
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Location = new System.Drawing.Point(408, 40);
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Name = "labelBrakeCylinderEmergencyMaximumPressureUnit";
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.TabIndex = 34;
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Text = "kPa";
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxMainReservoirMaximumPressure
-			// 
-			this.textBoxMainReservoirMaximumPressure.Location = new System.Drawing.Point(248, 88);
-			this.textBoxMainReservoirMaximumPressure.Name = "textBoxMainReservoirMaximumPressure";
-			this.textBoxMainReservoirMaximumPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxMainReservoirMaximumPressure.TabIndex = 34;
-			// 
-			// textBoxMainReservoirMinimumPressure
-			// 
-			this.textBoxMainReservoirMinimumPressure.Location = new System.Drawing.Point(248, 64);
-			this.textBoxMainReservoirMinimumPressure.Name = "textBoxMainReservoirMinimumPressure";
-			this.textBoxMainReservoirMinimumPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxMainReservoirMinimumPressure.TabIndex = 33;
-			// 
-			// textBoxBrakeCylinderEmergencyMaximumPressure
-			// 
-			this.textBoxBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(248, 40);
-			this.textBoxBrakeCylinderEmergencyMaximumPressure.Name = "textBoxBrakeCylinderEmergencyMaximumPressure";
-			this.textBoxBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxBrakeCylinderEmergencyMaximumPressure.TabIndex = 32;
-			// 
-			// textBoxBrakeCylinderServiceMaximumPressure
-			// 
-			this.textBoxBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(248, 16);
-			this.textBoxBrakeCylinderServiceMaximumPressure.Name = "textBoxBrakeCylinderServiceMaximumPressure";
-			this.textBoxBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxBrakeCylinderServiceMaximumPressure.TabIndex = 31;
-			// 
-			// labelMainReservoirMaximumPressure
-			// 
-			this.labelMainReservoirMaximumPressure.Location = new System.Drawing.Point(8, 88);
-			this.labelMainReservoirMaximumPressure.Name = "labelMainReservoirMaximumPressure";
-			this.labelMainReservoirMaximumPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelMainReservoirMaximumPressure.TabIndex = 11;
-			this.labelMainReservoirMaximumPressure.Text = "MainReservoirMaximumPressure:";
-			this.labelMainReservoirMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelMainReservoirMinimumPressure
-			// 
-			this.labelMainReservoirMinimumPressure.Location = new System.Drawing.Point(8, 64);
-			this.labelMainReservoirMinimumPressure.Name = "labelMainReservoirMinimumPressure";
-			this.labelMainReservoirMinimumPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelMainReservoirMinimumPressure.TabIndex = 10;
-			this.labelMainReservoirMinimumPressure.Text = "MainReservoirMinimumPressure:";
-			this.labelMainReservoirMinimumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeCylinderServiceMaximumPressure
-			// 
-			this.labelBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(8, 16);
-			this.labelBrakeCylinderServiceMaximumPressure.Name = "labelBrakeCylinderServiceMaximumPressure";
-			this.labelBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelBrakeCylinderServiceMaximumPressure.TabIndex = 9;
-			this.labelBrakeCylinderServiceMaximumPressure.Text = "BrakeCylinderServiceMaximumPressure:";
-			this.labelBrakeCylinderServiceMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeCylinderEmergencyMaximumPressure
-			// 
-			this.labelBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(8, 40);
-			this.labelBrakeCylinderEmergencyMaximumPressure.Name = "labelBrakeCylinderEmergencyMaximumPressure";
-			this.labelBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelBrakeCylinderEmergencyMaximumPressure.TabIndex = 8;
-			this.labelBrakeCylinderEmergencyMaximumPressure.Text = "BrakeCylinderEmergencyMaximumPressure:";
-			this.labelBrakeCylinderEmergencyMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// groupBoxBrake
-			// 
-			this.groupBoxBrake.Controls.Add(this.textBoxBrakeControlSpeed);
-			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSpeedUnit);
-			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeControlSystem);
-			this.groupBoxBrake.Controls.Add(this.comboBoxLocoBrakeType);
-			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeType);
-			this.groupBoxBrake.Controls.Add(this.labelLocoBrakeType);
-			this.groupBoxBrake.Controls.Add(this.labelBrakeType);
-			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSpeed);
-			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSystem);
-			this.groupBoxBrake.Location = new System.Drawing.Point(288, 312);
-			this.groupBoxBrake.Name = "groupBoxBrake";
-			this.groupBoxBrake.Size = new System.Drawing.Size(448, 120);
-			this.groupBoxBrake.TabIndex = 4;
-			this.groupBoxBrake.TabStop = false;
-			this.groupBoxBrake.Text = "Brake";
-			// 
-			// textBoxBrakeControlSpeed
-			// 
-			this.textBoxBrakeControlSpeed.Location = new System.Drawing.Point(136, 88);
-			this.textBoxBrakeControlSpeed.Name = "textBoxBrakeControlSpeed";
-			this.textBoxBrakeControlSpeed.Size = new System.Drawing.Size(264, 19);
-			this.textBoxBrakeControlSpeed.TabIndex = 31;
-			// 
-			// labelBrakeControlSpeedUnit
-			// 
-			this.labelBrakeControlSpeedUnit.Location = new System.Drawing.Point(408, 88);
-			this.labelBrakeControlSpeedUnit.Name = "labelBrakeControlSpeedUnit";
-			this.labelBrakeControlSpeedUnit.Size = new System.Drawing.Size(32, 16);
-			this.labelBrakeControlSpeedUnit.TabIndex = 32;
-			this.labelBrakeControlSpeedUnit.Text = "km/h";
-			this.labelBrakeControlSpeedUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// comboBoxBrakeControlSystem
-			// 
-			this.comboBoxBrakeControlSystem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxBrakeControlSystem.FormattingEnabled = true;
-			this.comboBoxBrakeControlSystem.Items.AddRange(new object[] {
-            "None",
-            "Closing electromagnetic valve",
-            "Delay-including control"});
-			this.comboBoxBrakeControlSystem.Location = new System.Drawing.Point(136, 64);
-			this.comboBoxBrakeControlSystem.Name = "comboBoxBrakeControlSystem";
-			this.comboBoxBrakeControlSystem.Size = new System.Drawing.Size(264, 20);
-			this.comboBoxBrakeControlSystem.TabIndex = 17;
-			// 
-			// comboBoxLocoBrakeType
-			// 
-			this.comboBoxLocoBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxLocoBrakeType.FormattingEnabled = true;
-			this.comboBoxLocoBrakeType.Items.AddRange(new object[] {
-            "Not fitted",
-            "Notched air brake",
-            "Air brake with partial release"});
-			this.comboBoxLocoBrakeType.Location = new System.Drawing.Point(136, 40);
-			this.comboBoxLocoBrakeType.Name = "comboBoxLocoBrakeType";
-			this.comboBoxLocoBrakeType.Size = new System.Drawing.Size(264, 20);
-			this.comboBoxLocoBrakeType.TabIndex = 16;
-			// 
-			// comboBoxBrakeType
-			// 
-			this.comboBoxBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxBrakeType.FormattingEnabled = true;
-			this.comboBoxBrakeType.Items.AddRange(new object[] {
-            "Electromagnetic straight air brake",
-            "Electro-pneumatic air brake without brake pipe",
-            "Air brake with partial release feature"});
-			this.comboBoxBrakeType.Location = new System.Drawing.Point(136, 16);
-			this.comboBoxBrakeType.Name = "comboBoxBrakeType";
-			this.comboBoxBrakeType.Size = new System.Drawing.Size(264, 20);
-			this.comboBoxBrakeType.TabIndex = 15;
-			// 
-			// labelLocoBrakeType
-			// 
-			this.labelLocoBrakeType.Location = new System.Drawing.Point(8, 40);
-			this.labelLocoBrakeType.Name = "labelLocoBrakeType";
-			this.labelLocoBrakeType.Size = new System.Drawing.Size(120, 16);
-			this.labelLocoBrakeType.TabIndex = 8;
-			this.labelLocoBrakeType.Text = "LocoBrakeType:";
-			this.labelLocoBrakeType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeType
-			// 
-			this.labelBrakeType.Location = new System.Drawing.Point(8, 16);
-			this.labelBrakeType.Name = "labelBrakeType";
-			this.labelBrakeType.Size = new System.Drawing.Size(120, 16);
-			this.labelBrakeType.TabIndex = 7;
-			this.labelBrakeType.Text = "BrakeType:";
-			this.labelBrakeType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeControlSpeed
-			// 
-			this.labelBrakeControlSpeed.Location = new System.Drawing.Point(8, 88);
-			this.labelBrakeControlSpeed.Name = "labelBrakeControlSpeed";
-			this.labelBrakeControlSpeed.Size = new System.Drawing.Size(120, 16);
-			this.labelBrakeControlSpeed.TabIndex = 6;
-			this.labelBrakeControlSpeed.Text = "BrakeControlSpeed:";
-			this.labelBrakeControlSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeControlSystem
-			// 
-			this.labelBrakeControlSystem.Location = new System.Drawing.Point(8, 64);
-			this.labelBrakeControlSystem.Name = "labelBrakeControlSystem";
-			this.labelBrakeControlSystem.Size = new System.Drawing.Size(120, 16);
-			this.labelBrakeControlSystem.TabIndex = 5;
-			this.labelBrakeControlSystem.Text = "BrakeControlSystem:";
-			this.labelBrakeControlSystem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// groupBoxMove
-			// 
-			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderDownUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxBrakeCylinderDown);
-			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderUpUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxBrakeCylinderUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkBrakeDownUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxJerkBrakeDown);
-			this.groupBoxMove.Controls.Add(this.labelJerkBrakeUpUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxJerkBrakeUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkPowerDownUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxJerkPowerDown);
-			this.groupBoxMove.Controls.Add(this.labelJerkPowerUpUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxJerkPowerUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkPowerUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkPowerDown);
-			this.groupBoxMove.Controls.Add(this.labelJerkBrakeUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkBrakeDown);
-			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderUp);
-			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderDown);
-			this.groupBoxMove.Location = new System.Drawing.Point(288, 136);
-			this.groupBoxMove.Name = "groupBoxMove";
-			this.groupBoxMove.Size = new System.Drawing.Size(448, 168);
-			this.groupBoxMove.TabIndex = 3;
-			this.groupBoxMove.TabStop = false;
-			this.groupBoxMove.Text = "Move";
-			// 
-			// labelBrakeCylinderDownUnit
-			// 
-			this.labelBrakeCylinderDownUnit.Location = new System.Drawing.Point(376, 136);
-			this.labelBrakeCylinderDownUnit.Name = "labelBrakeCylinderDownUnit";
-			this.labelBrakeCylinderDownUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelBrakeCylinderDownUnit.TabIndex = 31;
-			this.labelBrakeCylinderDownUnit.Text = "kPa/s";
-			this.labelBrakeCylinderDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxBrakeCylinderDown
-			// 
-			this.textBoxBrakeCylinderDown.Location = new System.Drawing.Point(184, 136);
-			this.textBoxBrakeCylinderDown.Name = "textBoxBrakeCylinderDown";
-			this.textBoxBrakeCylinderDown.Size = new System.Drawing.Size(184, 19);
-			this.textBoxBrakeCylinderDown.TabIndex = 30;
-			// 
-			// labelBrakeCylinderUpUnit
-			// 
-			this.labelBrakeCylinderUpUnit.Location = new System.Drawing.Point(376, 112);
-			this.labelBrakeCylinderUpUnit.Name = "labelBrakeCylinderUpUnit";
-			this.labelBrakeCylinderUpUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelBrakeCylinderUpUnit.TabIndex = 29;
-			this.labelBrakeCylinderUpUnit.Text = "kPa/s";
-			this.labelBrakeCylinderUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxBrakeCylinderUp
-			// 
-			this.textBoxBrakeCylinderUp.Location = new System.Drawing.Point(184, 112);
-			this.textBoxBrakeCylinderUp.Name = "textBoxBrakeCylinderUp";
-			this.textBoxBrakeCylinderUp.Size = new System.Drawing.Size(184, 19);
-			this.textBoxBrakeCylinderUp.TabIndex = 28;
-			// 
-			// labelJerkBrakeDownUnit
-			// 
-			this.labelJerkBrakeDownUnit.Location = new System.Drawing.Point(376, 88);
-			this.labelJerkBrakeDownUnit.Name = "labelJerkBrakeDownUnit";
-			this.labelJerkBrakeDownUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelJerkBrakeDownUnit.TabIndex = 27;
-			this.labelJerkBrakeDownUnit.Text = "1/100 m/s³";
-			this.labelJerkBrakeDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxJerkBrakeDown
-			// 
-			this.textBoxJerkBrakeDown.Location = new System.Drawing.Point(184, 88);
-			this.textBoxJerkBrakeDown.Name = "textBoxJerkBrakeDown";
-			this.textBoxJerkBrakeDown.Size = new System.Drawing.Size(184, 19);
-			this.textBoxJerkBrakeDown.TabIndex = 26;
-			// 
-			// labelJerkBrakeUpUnit
-			// 
-			this.labelJerkBrakeUpUnit.Location = new System.Drawing.Point(376, 64);
-			this.labelJerkBrakeUpUnit.Name = "labelJerkBrakeUpUnit";
-			this.labelJerkBrakeUpUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelJerkBrakeUpUnit.TabIndex = 25;
-			this.labelJerkBrakeUpUnit.Text = "1/100 m/s³";
-			this.labelJerkBrakeUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxJerkBrakeUp
-			// 
-			this.textBoxJerkBrakeUp.Location = new System.Drawing.Point(184, 64);
-			this.textBoxJerkBrakeUp.Name = "textBoxJerkBrakeUp";
-			this.textBoxJerkBrakeUp.Size = new System.Drawing.Size(184, 19);
-			this.textBoxJerkBrakeUp.TabIndex = 24;
-			// 
-			// labelJerkPowerDownUnit
-			// 
-			this.labelJerkPowerDownUnit.Location = new System.Drawing.Point(376, 40);
-			this.labelJerkPowerDownUnit.Name = "labelJerkPowerDownUnit";
-			this.labelJerkPowerDownUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelJerkPowerDownUnit.TabIndex = 23;
-			this.labelJerkPowerDownUnit.Text = "1/100 m/s³";
-			this.labelJerkPowerDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxJerkPowerDown
-			// 
-			this.textBoxJerkPowerDown.Location = new System.Drawing.Point(184, 40);
-			this.textBoxJerkPowerDown.Name = "textBoxJerkPowerDown";
-			this.textBoxJerkPowerDown.Size = new System.Drawing.Size(184, 19);
-			this.textBoxJerkPowerDown.TabIndex = 22;
-			// 
-			// labelJerkPowerUpUnit
-			// 
-			this.labelJerkPowerUpUnit.Location = new System.Drawing.Point(376, 16);
-			this.labelJerkPowerUpUnit.Name = "labelJerkPowerUpUnit";
-			this.labelJerkPowerUpUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelJerkPowerUpUnit.TabIndex = 21;
-			this.labelJerkPowerUpUnit.Text = "1/100 m/s³";
-			this.labelJerkPowerUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxJerkPowerUp
-			// 
-			this.textBoxJerkPowerUp.Location = new System.Drawing.Point(184, 16);
-			this.textBoxJerkPowerUp.Name = "textBoxJerkPowerUp";
-			this.textBoxJerkPowerUp.Size = new System.Drawing.Size(184, 19);
-			this.textBoxJerkPowerUp.TabIndex = 20;
-			// 
-			// labelJerkPowerUp
-			// 
-			this.labelJerkPowerUp.Location = new System.Drawing.Point(8, 16);
-			this.labelJerkPowerUp.Name = "labelJerkPowerUp";
-			this.labelJerkPowerUp.Size = new System.Drawing.Size(168, 16);
-			this.labelJerkPowerUp.TabIndex = 6;
-			this.labelJerkPowerUp.Text = "JerkPowerUp:";
-			this.labelJerkPowerUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelJerkPowerDown
-			// 
-			this.labelJerkPowerDown.Location = new System.Drawing.Point(8, 40);
-			this.labelJerkPowerDown.Name = "labelJerkPowerDown";
-			this.labelJerkPowerDown.Size = new System.Drawing.Size(168, 16);
-			this.labelJerkPowerDown.TabIndex = 5;
-			this.labelJerkPowerDown.Text = "JerkPowerDown:";
-			this.labelJerkPowerDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelJerkBrakeUp
-			// 
-			this.labelJerkBrakeUp.Location = new System.Drawing.Point(8, 64);
-			this.labelJerkBrakeUp.Name = "labelJerkBrakeUp";
-			this.labelJerkBrakeUp.Size = new System.Drawing.Size(168, 16);
-			this.labelJerkBrakeUp.TabIndex = 4;
-			this.labelJerkBrakeUp.Text = "JerkBrakeUp:";
-			this.labelJerkBrakeUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelJerkBrakeDown
-			// 
-			this.labelJerkBrakeDown.Location = new System.Drawing.Point(8, 88);
-			this.labelJerkBrakeDown.Name = "labelJerkBrakeDown";
-			this.labelJerkBrakeDown.Size = new System.Drawing.Size(168, 16);
-			this.labelJerkBrakeDown.TabIndex = 3;
-			this.labelJerkBrakeDown.Text = "JerkBrakeDown:";
-			this.labelJerkBrakeDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeCylinderUp
-			// 
-			this.labelBrakeCylinderUp.Location = new System.Drawing.Point(8, 112);
-			this.labelBrakeCylinderUp.Name = "labelBrakeCylinderUp";
-			this.labelBrakeCylinderUp.Size = new System.Drawing.Size(168, 16);
-			this.labelBrakeCylinderUp.TabIndex = 2;
-			this.labelBrakeCylinderUp.Text = "BrakeCylinderUp:";
-			this.labelBrakeCylinderUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeCylinderDown
-			// 
-			this.labelBrakeCylinderDown.Location = new System.Drawing.Point(8, 136);
-			this.labelBrakeCylinderDown.Name = "labelBrakeCylinderDown";
-			this.labelBrakeCylinderDown.Size = new System.Drawing.Size(168, 16);
-			this.labelBrakeCylinderDown.TabIndex = 1;
-			this.labelBrakeCylinderDown.Text = "BrakeCylinderDown:";
-			this.labelBrakeCylinderDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// groupBoxDelay
-			// 
-			this.groupBoxDelay.Controls.Add(this.buttonDelayLocoBrakeSet);
-			this.groupBoxDelay.Controls.Add(this.buttonDelayBrakeSet);
-			this.groupBoxDelay.Controls.Add(this.buttonDelayPowerSet);
-			this.groupBoxDelay.Controls.Add(this.labelDelayLocoBrake);
-			this.groupBoxDelay.Controls.Add(this.labelDelayBrake);
-			this.groupBoxDelay.Controls.Add(this.labelDelayPower);
-			this.groupBoxDelay.Controls.Add(this.buttonDelayElectricBrake);
-			this.groupBoxDelay.Controls.Add(this.labelDelayElectricBrake);
-			this.groupBoxDelay.Location = new System.Drawing.Point(8, 480);
-			this.groupBoxDelay.Name = "groupBoxDelay";
-			this.groupBoxDelay.Size = new System.Drawing.Size(272, 120);
-			this.groupBoxDelay.TabIndex = 2;
-			this.groupBoxDelay.TabStop = false;
-			this.groupBoxDelay.Text = "Delay";
-			// 
-			// buttonDelayLocoBrakeSet
-			// 
-			this.buttonDelayLocoBrakeSet.Location = new System.Drawing.Point(160, 64);
-			this.buttonDelayLocoBrakeSet.Name = "buttonDelayLocoBrakeSet";
-			this.buttonDelayLocoBrakeSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDelayLocoBrakeSet.TabIndex = 37;
-			this.buttonDelayLocoBrakeSet.Text = "Set...";
-			this.buttonDelayLocoBrakeSet.UseVisualStyleBackColor = true;
-			this.buttonDelayLocoBrakeSet.Click += new System.EventHandler(this.ButtonDelayLocoBrakeSet_Click);
-			// 
-			// buttonDelayBrakeSet
-			// 
-			this.buttonDelayBrakeSet.Location = new System.Drawing.Point(160, 40);
-			this.buttonDelayBrakeSet.Name = "buttonDelayBrakeSet";
-			this.buttonDelayBrakeSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDelayBrakeSet.TabIndex = 35;
-			this.buttonDelayBrakeSet.Text = "Set...";
-			this.buttonDelayBrakeSet.UseVisualStyleBackColor = true;
-			this.buttonDelayBrakeSet.Click += new System.EventHandler(this.ButtonDelayBrakeSet_Click);
-			// 
-			// buttonDelayPowerSet
-			// 
-			this.buttonDelayPowerSet.Location = new System.Drawing.Point(160, 16);
-			this.buttonDelayPowerSet.Name = "buttonDelayPowerSet";
-			this.buttonDelayPowerSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDelayPowerSet.TabIndex = 33;
-			this.buttonDelayPowerSet.Text = "Set...";
-			this.buttonDelayPowerSet.UseVisualStyleBackColor = true;
-			this.buttonDelayPowerSet.Click += new System.EventHandler(this.ButtonDelayPowerSet_Click);
-			// 
-			// labelDelayLocoBrake
-			// 
-			this.labelDelayLocoBrake.Location = new System.Drawing.Point(8, 64);
-			this.labelDelayLocoBrake.Name = "labelDelayLocoBrake";
-			this.labelDelayLocoBrake.Size = new System.Drawing.Size(144, 16);
-			this.labelDelayLocoBrake.TabIndex = 6;
-			this.labelDelayLocoBrake.Text = "LocoBrake:";
-			this.labelDelayLocoBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDelayBrake
-			// 
-			this.labelDelayBrake.Location = new System.Drawing.Point(8, 40);
-			this.labelDelayBrake.Name = "labelDelayBrake";
-			this.labelDelayBrake.Size = new System.Drawing.Size(144, 16);
-			this.labelDelayBrake.TabIndex = 4;
-			this.labelDelayBrake.Text = "Brake:";
-			this.labelDelayBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDelayPower
-			// 
-			this.labelDelayPower.Location = new System.Drawing.Point(8, 16);
-			this.labelDelayPower.Name = "labelDelayPower";
-			this.labelDelayPower.Size = new System.Drawing.Size(144, 16);
-			this.labelDelayPower.TabIndex = 2;
-			this.labelDelayPower.Text = "Power:";
-			this.labelDelayPower.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// groupBoxPerformance
-			// 
-			this.groupBoxPerformance.Controls.Add(this.textBoxAerodynamicDragCoefficient);
-			this.groupBoxPerformance.Controls.Add(this.textBoxCoefficientOfRollingResistance);
-			this.groupBoxPerformance.Controls.Add(this.textBoxCoefficientOfStaticFriction);
-			this.groupBoxPerformance.Controls.Add(this.labelDecelerationUnit);
-			this.groupBoxPerformance.Controls.Add(this.textBoxDeceleration);
-			this.groupBoxPerformance.Controls.Add(this.labelAerodynamicDragCoefficient);
-			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfStaticFriction);
-			this.groupBoxPerformance.Controls.Add(this.labelDeceleration);
-			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfRollingResistance);
-			this.groupBoxPerformance.Location = new System.Drawing.Point(288, 8);
-			this.groupBoxPerformance.Name = "groupBoxPerformance";
-			this.groupBoxPerformance.Size = new System.Drawing.Size(448, 120);
-			this.groupBoxPerformance.TabIndex = 1;
-			this.groupBoxPerformance.TabStop = false;
-			this.groupBoxPerformance.Text = "Performance";
-			// 
-			// textBoxAerodynamicDragCoefficient
-			// 
-			this.textBoxAerodynamicDragCoefficient.Location = new System.Drawing.Point(184, 88);
-			this.textBoxAerodynamicDragCoefficient.Name = "textBoxAerodynamicDragCoefficient";
-			this.textBoxAerodynamicDragCoefficient.Size = new System.Drawing.Size(184, 19);
-			this.textBoxAerodynamicDragCoefficient.TabIndex = 25;
-			// 
-			// textBoxCoefficientOfRollingResistance
-			// 
-			this.textBoxCoefficientOfRollingResistance.Location = new System.Drawing.Point(184, 64);
-			this.textBoxCoefficientOfRollingResistance.Name = "textBoxCoefficientOfRollingResistance";
-			this.textBoxCoefficientOfRollingResistance.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCoefficientOfRollingResistance.TabIndex = 24;
-			// 
-			// textBoxCoefficientOfStaticFriction
-			// 
-			this.textBoxCoefficientOfStaticFriction.Location = new System.Drawing.Point(184, 40);
-			this.textBoxCoefficientOfStaticFriction.Name = "textBoxCoefficientOfStaticFriction";
-			this.textBoxCoefficientOfStaticFriction.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCoefficientOfStaticFriction.TabIndex = 23;
-			// 
-			// labelDecelerationUnit
-			// 
-			this.labelDecelerationUnit.Location = new System.Drawing.Point(376, 16);
-			this.labelDecelerationUnit.Name = "labelDecelerationUnit";
-			this.labelDecelerationUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelDecelerationUnit.TabIndex = 22;
-			this.labelDecelerationUnit.Text = "km/h/s";
-			this.labelDecelerationUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxDeceleration
-			// 
-			this.textBoxDeceleration.Location = new System.Drawing.Point(184, 16);
-			this.textBoxDeceleration.Name = "textBoxDeceleration";
-			this.textBoxDeceleration.Size = new System.Drawing.Size(184, 19);
-			this.textBoxDeceleration.TabIndex = 20;
-			// 
-			// labelAerodynamicDragCoefficient
-			// 
-			this.labelAerodynamicDragCoefficient.Location = new System.Drawing.Point(8, 88);
-			this.labelAerodynamicDragCoefficient.Name = "labelAerodynamicDragCoefficient";
-			this.labelAerodynamicDragCoefficient.Size = new System.Drawing.Size(168, 16);
-			this.labelAerodynamicDragCoefficient.TabIndex = 5;
-			this.labelAerodynamicDragCoefficient.Text = "AerodynamicDragCoefficient:";
-			this.labelAerodynamicDragCoefficient.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCoefficientOfStaticFriction
-			// 
-			this.labelCoefficientOfStaticFriction.Location = new System.Drawing.Point(8, 40);
-			this.labelCoefficientOfStaticFriction.Name = "labelCoefficientOfStaticFriction";
-			this.labelCoefficientOfStaticFriction.Size = new System.Drawing.Size(168, 16);
-			this.labelCoefficientOfStaticFriction.TabIndex = 4;
-			this.labelCoefficientOfStaticFriction.Text = "CoefficientOfStaticFriction:";
-			this.labelCoefficientOfStaticFriction.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDeceleration
-			// 
-			this.labelDeceleration.Location = new System.Drawing.Point(8, 16);
-			this.labelDeceleration.Name = "labelDeceleration";
-			this.labelDeceleration.Size = new System.Drawing.Size(168, 16);
-			this.labelDeceleration.TabIndex = 3;
-			this.labelDeceleration.Text = "Deceleration:";
-			this.labelDeceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCoefficientOfRollingResistance
-			// 
-			this.labelCoefficientOfRollingResistance.Location = new System.Drawing.Point(8, 64);
-			this.labelCoefficientOfRollingResistance.Name = "labelCoefficientOfRollingResistance";
-			this.labelCoefficientOfRollingResistance.Size = new System.Drawing.Size(168, 16);
-			this.labelCoefficientOfRollingResistance.TabIndex = 2;
-			this.labelCoefficientOfRollingResistance.Text = "CoefficientOfRollingResistance:";
-			this.labelCoefficientOfRollingResistance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// tabPageCar1
+			// 
+			this.tabPageCar1.Controls.Add(this.groupBoxCarGeneral);
+			this.tabPageCar1.Controls.Add(this.groupBoxCab);
+			this.tabPageCar1.Location = new System.Drawing.Point(4, 22);
+			this.tabPageCar1.Name = "tabPageCar1";
+			this.tabPageCar1.Size = new System.Drawing.Size(792, 686);
+			this.tabPageCar1.TabIndex = 4;
+			this.tabPageCar1.Text = "Car settings (1)";
+			this.tabPageCar1.UseVisualStyleBackColor = true;
 			// 
 			// groupBoxCarGeneral
 			// 
-			this.groupBoxCarGeneral.Controls.Add(this.labelUnexposedFrontalAreaUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxUnexposedFrontalAreaUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxExposedFrontalAreaUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxCenterOfMassHeightUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxHeightUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxWidthUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxLengthUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxMassUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.buttonRightDoorSet);
+			this.groupBoxCarGeneral.Controls.Add(this.buttonLeftDoorSet);
+			this.groupBoxCarGeneral.Controls.Add(this.checkBoxIsControlledCar);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxReAdhesionDevice);
+			this.groupBoxCarGeneral.Controls.Add(this.labelIsControlledCar);
+			this.groupBoxCarGeneral.Controls.Add(this.labelReAdhesionDevice);
+			this.groupBoxCarGeneral.Controls.Add(this.labelRightDoor);
+			this.groupBoxCarGeneral.Controls.Add(this.labelLeftDoor);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxUnexposedFrontalArea);
 			this.groupBoxCarGeneral.Controls.Add(this.labelUnexposedFrontalArea);
 			this.groupBoxCarGeneral.Controls.Add(this.labelRearBogie);
@@ -5516,13 +5157,7 @@ namespace TrainEditor2.Views
 			this.groupBoxCarGeneral.Controls.Add(this.checkBoxDefinedAxles);
 			this.groupBoxCarGeneral.Controls.Add(this.checkBoxIsMotorCar);
 			this.groupBoxCarGeneral.Controls.Add(this.buttonObjectOpen);
-			this.groupBoxCarGeneral.Controls.Add(this.labelExposedFrontalAreaUnit);
-			this.groupBoxCarGeneral.Controls.Add(this.labelCenterOfMassHeightUnit);
 			this.groupBoxCarGeneral.Controls.Add(this.labelLoadingSway);
-			this.groupBoxCarGeneral.Controls.Add(this.labelHeightUnit);
-			this.groupBoxCarGeneral.Controls.Add(this.labelWidthUnit);
-			this.groupBoxCarGeneral.Controls.Add(this.labelLengthUnit);
-			this.groupBoxCarGeneral.Controls.Add(this.labelMassUnit);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxMass);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxLength);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxWidth);
@@ -5543,19 +5178,152 @@ namespace TrainEditor2.Views
 			this.groupBoxCarGeneral.Controls.Add(this.labelIsMotorCar);
 			this.groupBoxCarGeneral.Location = new System.Drawing.Point(8, 8);
 			this.groupBoxCarGeneral.Name = "groupBoxCarGeneral";
-			this.groupBoxCarGeneral.Size = new System.Drawing.Size(272, 464);
+			this.groupBoxCarGeneral.Size = new System.Drawing.Size(280, 560);
 			this.groupBoxCarGeneral.TabIndex = 0;
 			this.groupBoxCarGeneral.TabStop = false;
 			this.groupBoxCarGeneral.Text = "General";
 			// 
-			// labelUnexposedFrontalAreaUnit
+			// comboBoxUnexposedFrontalAreaUnit
 			// 
-			this.labelUnexposedFrontalAreaUnit.Location = new System.Drawing.Point(216, 184);
-			this.labelUnexposedFrontalAreaUnit.Name = "labelUnexposedFrontalAreaUnit";
-			this.labelUnexposedFrontalAreaUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelUnexposedFrontalAreaUnit.TabIndex = 38;
-			this.labelUnexposedFrontalAreaUnit.Text = "m²";
-			this.labelUnexposedFrontalAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.comboBoxUnexposedFrontalAreaUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxUnexposedFrontalAreaUnit.FormattingEnabled = true;
+			this.comboBoxUnexposedFrontalAreaUnit.Location = new System.Drawing.Point(216, 184);
+			this.comboBoxUnexposedFrontalAreaUnit.Name = "comboBoxUnexposedFrontalAreaUnit";
+			this.comboBoxUnexposedFrontalAreaUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxUnexposedFrontalAreaUnit.TabIndex = 61;
+			// 
+			// comboBoxExposedFrontalAreaUnit
+			// 
+			this.comboBoxExposedFrontalAreaUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxExposedFrontalAreaUnit.FormattingEnabled = true;
+			this.comboBoxExposedFrontalAreaUnit.Location = new System.Drawing.Point(216, 160);
+			this.comboBoxExposedFrontalAreaUnit.Name = "comboBoxExposedFrontalAreaUnit";
+			this.comboBoxExposedFrontalAreaUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxExposedFrontalAreaUnit.TabIndex = 60;
+			// 
+			// comboBoxCenterOfMassHeightUnit
+			// 
+			this.comboBoxCenterOfMassHeightUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCenterOfMassHeightUnit.FormattingEnabled = true;
+			this.comboBoxCenterOfMassHeightUnit.Location = new System.Drawing.Point(216, 136);
+			this.comboBoxCenterOfMassHeightUnit.Name = "comboBoxCenterOfMassHeightUnit";
+			this.comboBoxCenterOfMassHeightUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCenterOfMassHeightUnit.TabIndex = 59;
+			// 
+			// comboBoxHeightUnit
+			// 
+			this.comboBoxHeightUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxHeightUnit.FormattingEnabled = true;
+			this.comboBoxHeightUnit.Location = new System.Drawing.Point(216, 112);
+			this.comboBoxHeightUnit.Name = "comboBoxHeightUnit";
+			this.comboBoxHeightUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxHeightUnit.TabIndex = 58;
+			// 
+			// comboBoxWidthUnit
+			// 
+			this.comboBoxWidthUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxWidthUnit.FormattingEnabled = true;
+			this.comboBoxWidthUnit.Location = new System.Drawing.Point(216, 88);
+			this.comboBoxWidthUnit.Name = "comboBoxWidthUnit";
+			this.comboBoxWidthUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxWidthUnit.TabIndex = 57;
+			// 
+			// comboBoxLengthUnit
+			// 
+			this.comboBoxLengthUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxLengthUnit.FormattingEnabled = true;
+			this.comboBoxLengthUnit.Location = new System.Drawing.Point(216, 64);
+			this.comboBoxLengthUnit.Name = "comboBoxLengthUnit";
+			this.comboBoxLengthUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxLengthUnit.TabIndex = 56;
+			// 
+			// comboBoxMassUnit
+			// 
+			this.comboBoxMassUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMassUnit.FormattingEnabled = true;
+			this.comboBoxMassUnit.Location = new System.Drawing.Point(216, 40);
+			this.comboBoxMassUnit.Name = "comboBoxMassUnit";
+			this.comboBoxMassUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMassUnit.TabIndex = 55;
+			// 
+			// buttonRightDoorSet
+			// 
+			this.buttonRightDoorSet.Location = new System.Drawing.Point(160, 480);
+			this.buttonRightDoorSet.Name = "buttonRightDoorSet";
+			this.buttonRightDoorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonRightDoorSet.TabIndex = 54;
+			this.buttonRightDoorSet.Text = "Set...";
+			this.buttonRightDoorSet.UseVisualStyleBackColor = true;
+			this.buttonRightDoorSet.Click += new System.EventHandler(this.ButtonRightDoorSet_Click);
+			// 
+			// buttonLeftDoorSet
+			// 
+			this.buttonLeftDoorSet.Location = new System.Drawing.Point(160, 456);
+			this.buttonLeftDoorSet.Name = "buttonLeftDoorSet";
+			this.buttonLeftDoorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonLeftDoorSet.TabIndex = 53;
+			this.buttonLeftDoorSet.Text = "Set...";
+			this.buttonLeftDoorSet.UseVisualStyleBackColor = true;
+			this.buttonLeftDoorSet.Click += new System.EventHandler(this.ButtonLeftDoorSet_Click);
+			// 
+			// checkBoxIsControlledCar
+			// 
+			this.checkBoxIsControlledCar.Location = new System.Drawing.Point(160, 528);
+			this.checkBoxIsControlledCar.Name = "checkBoxIsControlledCar";
+			this.checkBoxIsControlledCar.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxIsControlledCar.TabIndex = 52;
+			this.checkBoxIsControlledCar.UseVisualStyleBackColor = true;
+			// 
+			// comboBoxReAdhesionDevice
+			// 
+			this.comboBoxReAdhesionDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxReAdhesionDevice.FormattingEnabled = true;
+			this.comboBoxReAdhesionDevice.Items.AddRange(new object[] {
+            "None",
+            "Type A (instant)",
+            "Type B (slow)",
+            "Type C (medium)",
+            "Type D (fast)"});
+			this.comboBoxReAdhesionDevice.Location = new System.Drawing.Point(160, 504);
+			this.comboBoxReAdhesionDevice.Name = "comboBoxReAdhesionDevice";
+			this.comboBoxReAdhesionDevice.Size = new System.Drawing.Size(112, 20);
+			this.comboBoxReAdhesionDevice.TabIndex = 16;
+			// 
+			// labelIsControlledCar
+			// 
+			this.labelIsControlledCar.Location = new System.Drawing.Point(8, 528);
+			this.labelIsControlledCar.Name = "labelIsControlledCar";
+			this.labelIsControlledCar.Size = new System.Drawing.Size(144, 16);
+			this.labelIsControlledCar.TabIndex = 51;
+			this.labelIsControlledCar.Text = "IsControlledCar:";
+			this.labelIsControlledCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelReAdhesionDevice
+			// 
+			this.labelReAdhesionDevice.Location = new System.Drawing.Point(8, 504);
+			this.labelReAdhesionDevice.Name = "labelReAdhesionDevice";
+			this.labelReAdhesionDevice.Size = new System.Drawing.Size(144, 16);
+			this.labelReAdhesionDevice.TabIndex = 5;
+			this.labelReAdhesionDevice.Text = "ReAdhesionDevice:";
+			this.labelReAdhesionDevice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelRightDoor
+			// 
+			this.labelRightDoor.Location = new System.Drawing.Point(8, 480);
+			this.labelRightDoor.Name = "labelRightDoor";
+			this.labelRightDoor.Size = new System.Drawing.Size(144, 16);
+			this.labelRightDoor.TabIndex = 41;
+			this.labelRightDoor.Text = "RightDoor:";
+			this.labelRightDoor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLeftDoor
+			// 
+			this.labelLeftDoor.Location = new System.Drawing.Point(8, 456);
+			this.labelLeftDoor.Name = "labelLeftDoor";
+			this.labelLeftDoor.Size = new System.Drawing.Size(144, 16);
+			this.labelLeftDoor.TabIndex = 39;
+			this.labelLeftDoor.Text = "LeftDoor:";
+			this.labelLeftDoor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// textBoxUnexposedFrontalArea
 			// 
@@ -5645,31 +5413,13 @@ namespace TrainEditor2.Views
 			// 
 			// buttonObjectOpen
 			// 
-			this.buttonObjectOpen.Location = new System.Drawing.Point(208, 432);
+			this.buttonObjectOpen.Location = new System.Drawing.Point(216, 432);
 			this.buttonObjectOpen.Name = "buttonObjectOpen";
 			this.buttonObjectOpen.Size = new System.Drawing.Size(56, 19);
 			this.buttonObjectOpen.TabIndex = 3;
 			this.buttonObjectOpen.Text = "Open...";
 			this.buttonObjectOpen.UseVisualStyleBackColor = true;
 			this.buttonObjectOpen.Click += new System.EventHandler(this.ButtonObjectOpen_Click);
-			// 
-			// labelExposedFrontalAreaUnit
-			// 
-			this.labelExposedFrontalAreaUnit.Location = new System.Drawing.Point(216, 160);
-			this.labelExposedFrontalAreaUnit.Name = "labelExposedFrontalAreaUnit";
-			this.labelExposedFrontalAreaUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelExposedFrontalAreaUnit.TabIndex = 27;
-			this.labelExposedFrontalAreaUnit.Text = "m²";
-			this.labelExposedFrontalAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelCenterOfMassHeightUnit
-			// 
-			this.labelCenterOfMassHeightUnit.Location = new System.Drawing.Point(216, 136);
-			this.labelCenterOfMassHeightUnit.Name = "labelCenterOfMassHeightUnit";
-			this.labelCenterOfMassHeightUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelCenterOfMassHeightUnit.TabIndex = 24;
-			this.labelCenterOfMassHeightUnit.Text = "m";
-			this.labelCenterOfMassHeightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelLoadingSway
 			// 
@@ -5679,42 +5429,6 @@ namespace TrainEditor2.Views
 			this.labelLoadingSway.TabIndex = 11;
 			this.labelLoadingSway.Text = "LoadingSway:";
 			this.labelLoadingSway.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelHeightUnit
-			// 
-			this.labelHeightUnit.Location = new System.Drawing.Point(216, 112);
-			this.labelHeightUnit.Name = "labelHeightUnit";
-			this.labelHeightUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelHeightUnit.TabIndex = 23;
-			this.labelHeightUnit.Text = "m";
-			this.labelHeightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelWidthUnit
-			// 
-			this.labelWidthUnit.Location = new System.Drawing.Point(216, 88);
-			this.labelWidthUnit.Name = "labelWidthUnit";
-			this.labelWidthUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelWidthUnit.TabIndex = 22;
-			this.labelWidthUnit.Text = "m";
-			this.labelWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelLengthUnit
-			// 
-			this.labelLengthUnit.Location = new System.Drawing.Point(216, 64);
-			this.labelLengthUnit.Name = "labelLengthUnit";
-			this.labelLengthUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelLengthUnit.TabIndex = 21;
-			this.labelLengthUnit.Text = "m";
-			this.labelLengthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelMassUnit
-			// 
-			this.labelMassUnit.Location = new System.Drawing.Point(216, 40);
-			this.labelMassUnit.Name = "labelMassUnit";
-			this.labelMassUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelMassUnit.TabIndex = 20;
-			this.labelMassUnit.Text = "1000 kg";
-			this.labelMassUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxMass
 			// 
@@ -5762,7 +5476,7 @@ namespace TrainEditor2.Views
 			// 
 			this.textBoxObject.Location = new System.Drawing.Point(160, 408);
 			this.textBoxObject.Name = "textBoxObject";
-			this.textBoxObject.Size = new System.Drawing.Size(104, 19);
+			this.textBoxObject.Size = new System.Drawing.Size(112, 19);
 			this.textBoxObject.TabIndex = 13;
 			// 
 			// labelObject
@@ -5785,36 +5499,36 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxAxles
 			// 
-			this.groupBoxAxles.Controls.Add(this.labelRearAxleUnit);
-			this.groupBoxAxles.Controls.Add(this.labelFrontAxleUnit);
+			this.groupBoxAxles.Controls.Add(this.comboBoxRearAxleUnit);
+			this.groupBoxAxles.Controls.Add(this.comboBoxFrontAxleUnit);
 			this.groupBoxAxles.Controls.Add(this.textBoxRearAxle);
 			this.groupBoxAxles.Controls.Add(this.textBoxFrontAxle);
 			this.groupBoxAxles.Controls.Add(this.labelRearAxle);
 			this.groupBoxAxles.Controls.Add(this.labelFrontAxle);
 			this.groupBoxAxles.Location = new System.Drawing.Point(8, 232);
 			this.groupBoxAxles.Name = "groupBoxAxles";
-			this.groupBoxAxles.Size = new System.Drawing.Size(256, 72);
+			this.groupBoxAxles.Size = new System.Drawing.Size(264, 72);
 			this.groupBoxAxles.TabIndex = 8;
 			this.groupBoxAxles.TabStop = false;
 			this.groupBoxAxles.Text = "Axles";
 			// 
-			// labelRearAxleUnit
+			// comboBoxRearAxleUnit
 			// 
-			this.labelRearAxleUnit.Location = new System.Drawing.Point(208, 40);
-			this.labelRearAxleUnit.Name = "labelRearAxleUnit";
-			this.labelRearAxleUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelRearAxleUnit.TabIndex = 26;
-			this.labelRearAxleUnit.Text = "m";
-			this.labelRearAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.comboBoxRearAxleUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxRearAxleUnit.FormattingEnabled = true;
+			this.comboBoxRearAxleUnit.Location = new System.Drawing.Point(208, 40);
+			this.comboBoxRearAxleUnit.Name = "comboBoxRearAxleUnit";
+			this.comboBoxRearAxleUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxRearAxleUnit.TabIndex = 57;
 			// 
-			// labelFrontAxleUnit
+			// comboBoxFrontAxleUnit
 			// 
-			this.labelFrontAxleUnit.Location = new System.Drawing.Point(208, 16);
-			this.labelFrontAxleUnit.Name = "labelFrontAxleUnit";
-			this.labelFrontAxleUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelFrontAxleUnit.TabIndex = 25;
-			this.labelFrontAxleUnit.Text = "m";
-			this.labelFrontAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.comboBoxFrontAxleUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxFrontAxleUnit.FormattingEnabled = true;
+			this.comboBoxFrontAxleUnit.Location = new System.Drawing.Point(208, 16);
+			this.comboBoxFrontAxleUnit.Name = "comboBoxFrontAxleUnit";
+			this.comboBoxFrontAxleUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxFrontAxleUnit.TabIndex = 56;
 			// 
 			// textBoxRearAxle
 			// 
@@ -5920,82 +5634,1420 @@ namespace TrainEditor2.Views
 			this.labelIsMotorCar.Text = "IsMotorCar:";
 			this.labelIsMotorCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
+			// groupBoxCab
+			// 
+			this.groupBoxCab.Controls.Add(this.comboBoxCabZUnit);
+			this.groupBoxCab.Controls.Add(this.comboBoxCabYUnit);
+			this.groupBoxCab.Controls.Add(this.comboBoxCabXUnit);
+			this.groupBoxCab.Controls.Add(this.groupBoxExternalCab);
+			this.groupBoxCab.Controls.Add(this.checkBoxIsEmbeddedCab);
+			this.groupBoxCab.Controls.Add(this.labelIsEmbeddedCab);
+			this.groupBoxCab.Controls.Add(this.textBoxCabZ);
+			this.groupBoxCab.Controls.Add(this.textBoxCabY);
+			this.groupBoxCab.Controls.Add(this.textBoxCabX);
+			this.groupBoxCab.Controls.Add(this.labelCabZ);
+			this.groupBoxCab.Controls.Add(this.labelCabY);
+			this.groupBoxCab.Controls.Add(this.labelCabX);
+			this.groupBoxCab.Location = new System.Drawing.Point(296, 8);
+			this.groupBoxCab.Name = "groupBoxCab";
+			this.groupBoxCab.Size = new System.Drawing.Size(272, 504);
+			this.groupBoxCab.TabIndex = 1;
+			this.groupBoxCab.TabStop = false;
+			this.groupBoxCab.Text = "Cab";
+			// 
+			// comboBoxCabZUnit
+			// 
+			this.comboBoxCabZUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCabZUnit.FormattingEnabled = true;
+			this.comboBoxCabZUnit.Location = new System.Drawing.Point(200, 64);
+			this.comboBoxCabZUnit.Name = "comboBoxCabZUnit";
+			this.comboBoxCabZUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCabZUnit.TabIndex = 58;
+			// 
+			// comboBoxCabYUnit
+			// 
+			this.comboBoxCabYUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCabYUnit.FormattingEnabled = true;
+			this.comboBoxCabYUnit.Location = new System.Drawing.Point(200, 40);
+			this.comboBoxCabYUnit.Name = "comboBoxCabYUnit";
+			this.comboBoxCabYUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCabYUnit.TabIndex = 57;
+			// 
+			// comboBoxCabXUnit
+			// 
+			this.comboBoxCabXUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCabXUnit.FormattingEnabled = true;
+			this.comboBoxCabXUnit.Location = new System.Drawing.Point(200, 16);
+			this.comboBoxCabXUnit.Name = "comboBoxCabXUnit";
+			this.comboBoxCabXUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCabXUnit.TabIndex = 56;
+			// 
+			// groupBoxExternalCab
+			// 
+			this.groupBoxExternalCab.Controls.Add(this.buttonCabFileNameOpen);
+			this.groupBoxExternalCab.Controls.Add(this.groupBoxCameraRestriction);
+			this.groupBoxExternalCab.Controls.Add(this.textBoxCabFileName);
+			this.groupBoxExternalCab.Controls.Add(this.labelCabFileName);
+			this.groupBoxExternalCab.Location = new System.Drawing.Point(8, 112);
+			this.groupBoxExternalCab.Name = "groupBoxExternalCab";
+			this.groupBoxExternalCab.Size = new System.Drawing.Size(256, 384);
+			this.groupBoxExternalCab.TabIndex = 31;
+			this.groupBoxExternalCab.TabStop = false;
+			this.groupBoxExternalCab.Text = "ExternalCab";
+			// 
+			// buttonCabFileNameOpen
+			// 
+			this.buttonCabFileNameOpen.Location = new System.Drawing.Point(192, 40);
+			this.buttonCabFileNameOpen.Name = "buttonCabFileNameOpen";
+			this.buttonCabFileNameOpen.Size = new System.Drawing.Size(56, 19);
+			this.buttonCabFileNameOpen.TabIndex = 35;
+			this.buttonCabFileNameOpen.Text = "Open...";
+			this.buttonCabFileNameOpen.UseVisualStyleBackColor = true;
+			this.buttonCabFileNameOpen.Click += new System.EventHandler(this.ButtonCabFileNameOpen_Click);
+			// 
+			// groupBoxCameraRestriction
+			// 
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionDownUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionUpUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionRightUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionLeftUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionBackwardsUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionForwardsUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedDown);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedDown);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionDown);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDown);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedUp);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedUp);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionUp);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionUp);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedRight);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedRight);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionRight);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionRight);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedLeft);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedLeft);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionLeft);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionLeft);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedBackwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedBackwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionBackwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionBackwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedForwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedForwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionForwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionForwards);
+			this.groupBoxCameraRestriction.Location = new System.Drawing.Point(8, 64);
+			this.groupBoxCameraRestriction.Name = "groupBoxCameraRestriction";
+			this.groupBoxCameraRestriction.Size = new System.Drawing.Size(240, 312);
+			this.groupBoxCameraRestriction.TabIndex = 34;
+			this.groupBoxCameraRestriction.TabStop = false;
+			this.groupBoxCameraRestriction.Text = "CameraRestriction";
+			// 
+			// comboBoxCameraRestrictionDownUnit
+			// 
+			this.comboBoxCameraRestrictionDownUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionDownUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionDownUnit.Location = new System.Drawing.Point(184, 280);
+			this.comboBoxCameraRestrictionDownUnit.Name = "comboBoxCameraRestrictionDownUnit";
+			this.comboBoxCameraRestrictionDownUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionDownUnit.TabIndex = 62;
+			// 
+			// comboBoxCameraRestrictionUpUnit
+			// 
+			this.comboBoxCameraRestrictionUpUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionUpUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionUpUnit.Location = new System.Drawing.Point(184, 232);
+			this.comboBoxCameraRestrictionUpUnit.Name = "comboBoxCameraRestrictionUpUnit";
+			this.comboBoxCameraRestrictionUpUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionUpUnit.TabIndex = 61;
+			// 
+			// comboBoxCameraRestrictionRightUnit
+			// 
+			this.comboBoxCameraRestrictionRightUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionRightUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionRightUnit.Location = new System.Drawing.Point(184, 184);
+			this.comboBoxCameraRestrictionRightUnit.Name = "comboBoxCameraRestrictionRightUnit";
+			this.comboBoxCameraRestrictionRightUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionRightUnit.TabIndex = 60;
+			// 
+			// comboBoxCameraRestrictionLeftUnit
+			// 
+			this.comboBoxCameraRestrictionLeftUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionLeftUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionLeftUnit.Location = new System.Drawing.Point(184, 136);
+			this.comboBoxCameraRestrictionLeftUnit.Name = "comboBoxCameraRestrictionLeftUnit";
+			this.comboBoxCameraRestrictionLeftUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionLeftUnit.TabIndex = 59;
+			// 
+			// comboBoxCameraRestrictionBackwardsUnit
+			// 
+			this.comboBoxCameraRestrictionBackwardsUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionBackwardsUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionBackwardsUnit.Location = new System.Drawing.Point(184, 88);
+			this.comboBoxCameraRestrictionBackwardsUnit.Name = "comboBoxCameraRestrictionBackwardsUnit";
+			this.comboBoxCameraRestrictionBackwardsUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionBackwardsUnit.TabIndex = 58;
+			// 
+			// comboBoxCameraRestrictionForwardsUnit
+			// 
+			this.comboBoxCameraRestrictionForwardsUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionForwardsUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionForwardsUnit.Location = new System.Drawing.Point(184, 40);
+			this.comboBoxCameraRestrictionForwardsUnit.Name = "comboBoxCameraRestrictionForwardsUnit";
+			this.comboBoxCameraRestrictionForwardsUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionForwardsUnit.TabIndex = 57;
+			// 
+			// checkBoxCameraRestrictionDefinedDown
+			// 
+			this.checkBoxCameraRestrictionDefinedDown.Location = new System.Drawing.Point(128, 256);
+			this.checkBoxCameraRestrictionDefinedDown.Name = "checkBoxCameraRestrictionDefinedDown";
+			this.checkBoxCameraRestrictionDefinedDown.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedDown.TabIndex = 56;
+			this.checkBoxCameraRestrictionDefinedDown.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedDown
+			// 
+			this.labelCameraRestrictionDefinedDown.Location = new System.Drawing.Point(8, 256);
+			this.labelCameraRestrictionDefinedDown.Name = "labelCameraRestrictionDefinedDown";
+			this.labelCameraRestrictionDefinedDown.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedDown.TabIndex = 55;
+			this.labelCameraRestrictionDefinedDown.Text = "DefinedDown:";
+			this.labelCameraRestrictionDefinedDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCameraRestrictionDown
+			// 
+			this.textBoxCameraRestrictionDown.Location = new System.Drawing.Point(128, 280);
+			this.textBoxCameraRestrictionDown.Name = "textBoxCameraRestrictionDown";
+			this.textBoxCameraRestrictionDown.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionDown.TabIndex = 53;
+			// 
+			// labelCameraRestrictionDown
+			// 
+			this.labelCameraRestrictionDown.Location = new System.Drawing.Point(8, 280);
+			this.labelCameraRestrictionDown.Name = "labelCameraRestrictionDown";
+			this.labelCameraRestrictionDown.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDown.TabIndex = 52;
+			this.labelCameraRestrictionDown.Text = "Down:";
+			this.labelCameraRestrictionDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedUp
+			// 
+			this.checkBoxCameraRestrictionDefinedUp.Location = new System.Drawing.Point(128, 208);
+			this.checkBoxCameraRestrictionDefinedUp.Name = "checkBoxCameraRestrictionDefinedUp";
+			this.checkBoxCameraRestrictionDefinedUp.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedUp.TabIndex = 51;
+			this.checkBoxCameraRestrictionDefinedUp.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedUp
+			// 
+			this.labelCameraRestrictionDefinedUp.Location = new System.Drawing.Point(8, 208);
+			this.labelCameraRestrictionDefinedUp.Name = "labelCameraRestrictionDefinedUp";
+			this.labelCameraRestrictionDefinedUp.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedUp.TabIndex = 50;
+			this.labelCameraRestrictionDefinedUp.Text = "DefinedUp:";
+			this.labelCameraRestrictionDefinedUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCameraRestrictionUp
+			// 
+			this.textBoxCameraRestrictionUp.Location = new System.Drawing.Point(128, 232);
+			this.textBoxCameraRestrictionUp.Name = "textBoxCameraRestrictionUp";
+			this.textBoxCameraRestrictionUp.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionUp.TabIndex = 48;
+			// 
+			// labelCameraRestrictionUp
+			// 
+			this.labelCameraRestrictionUp.Location = new System.Drawing.Point(8, 232);
+			this.labelCameraRestrictionUp.Name = "labelCameraRestrictionUp";
+			this.labelCameraRestrictionUp.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionUp.TabIndex = 47;
+			this.labelCameraRestrictionUp.Text = "Up:";
+			this.labelCameraRestrictionUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedRight
+			// 
+			this.checkBoxCameraRestrictionDefinedRight.Location = new System.Drawing.Point(128, 160);
+			this.checkBoxCameraRestrictionDefinedRight.Name = "checkBoxCameraRestrictionDefinedRight";
+			this.checkBoxCameraRestrictionDefinedRight.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedRight.TabIndex = 46;
+			this.checkBoxCameraRestrictionDefinedRight.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedRight
+			// 
+			this.labelCameraRestrictionDefinedRight.Location = new System.Drawing.Point(8, 160);
+			this.labelCameraRestrictionDefinedRight.Name = "labelCameraRestrictionDefinedRight";
+			this.labelCameraRestrictionDefinedRight.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedRight.TabIndex = 45;
+			this.labelCameraRestrictionDefinedRight.Text = "DefinedRight:";
+			this.labelCameraRestrictionDefinedRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCameraRestrictionRight
+			// 
+			this.textBoxCameraRestrictionRight.Location = new System.Drawing.Point(128, 184);
+			this.textBoxCameraRestrictionRight.Name = "textBoxCameraRestrictionRight";
+			this.textBoxCameraRestrictionRight.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionRight.TabIndex = 43;
+			// 
+			// labelCameraRestrictionRight
+			// 
+			this.labelCameraRestrictionRight.Location = new System.Drawing.Point(8, 184);
+			this.labelCameraRestrictionRight.Name = "labelCameraRestrictionRight";
+			this.labelCameraRestrictionRight.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionRight.TabIndex = 42;
+			this.labelCameraRestrictionRight.Text = "Right:";
+			this.labelCameraRestrictionRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedLeft
+			// 
+			this.checkBoxCameraRestrictionDefinedLeft.Location = new System.Drawing.Point(128, 112);
+			this.checkBoxCameraRestrictionDefinedLeft.Name = "checkBoxCameraRestrictionDefinedLeft";
+			this.checkBoxCameraRestrictionDefinedLeft.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedLeft.TabIndex = 41;
+			this.checkBoxCameraRestrictionDefinedLeft.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedLeft
+			// 
+			this.labelCameraRestrictionDefinedLeft.Location = new System.Drawing.Point(8, 112);
+			this.labelCameraRestrictionDefinedLeft.Name = "labelCameraRestrictionDefinedLeft";
+			this.labelCameraRestrictionDefinedLeft.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedLeft.TabIndex = 40;
+			this.labelCameraRestrictionDefinedLeft.Text = "DefinedLeft:";
+			this.labelCameraRestrictionDefinedLeft.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCameraRestrictionLeft
+			// 
+			this.textBoxCameraRestrictionLeft.Location = new System.Drawing.Point(128, 136);
+			this.textBoxCameraRestrictionLeft.Name = "textBoxCameraRestrictionLeft";
+			this.textBoxCameraRestrictionLeft.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionLeft.TabIndex = 38;
+			// 
+			// labelCameraRestrictionLeft
+			// 
+			this.labelCameraRestrictionLeft.Location = new System.Drawing.Point(8, 136);
+			this.labelCameraRestrictionLeft.Name = "labelCameraRestrictionLeft";
+			this.labelCameraRestrictionLeft.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionLeft.TabIndex = 37;
+			this.labelCameraRestrictionLeft.Text = "Left:";
+			this.labelCameraRestrictionLeft.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedBackwards
+			// 
+			this.checkBoxCameraRestrictionDefinedBackwards.Location = new System.Drawing.Point(128, 64);
+			this.checkBoxCameraRestrictionDefinedBackwards.Name = "checkBoxCameraRestrictionDefinedBackwards";
+			this.checkBoxCameraRestrictionDefinedBackwards.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedBackwards.TabIndex = 36;
+			this.checkBoxCameraRestrictionDefinedBackwards.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedBackwards
+			// 
+			this.labelCameraRestrictionDefinedBackwards.Location = new System.Drawing.Point(8, 64);
+			this.labelCameraRestrictionDefinedBackwards.Name = "labelCameraRestrictionDefinedBackwards";
+			this.labelCameraRestrictionDefinedBackwards.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedBackwards.TabIndex = 35;
+			this.labelCameraRestrictionDefinedBackwards.Text = "DefinedBackwards:";
+			this.labelCameraRestrictionDefinedBackwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCameraRestrictionBackwards
+			// 
+			this.textBoxCameraRestrictionBackwards.Location = new System.Drawing.Point(128, 88);
+			this.textBoxCameraRestrictionBackwards.Name = "textBoxCameraRestrictionBackwards";
+			this.textBoxCameraRestrictionBackwards.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionBackwards.TabIndex = 33;
+			// 
+			// labelCameraRestrictionBackwards
+			// 
+			this.labelCameraRestrictionBackwards.Location = new System.Drawing.Point(8, 88);
+			this.labelCameraRestrictionBackwards.Name = "labelCameraRestrictionBackwards";
+			this.labelCameraRestrictionBackwards.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionBackwards.TabIndex = 32;
+			this.labelCameraRestrictionBackwards.Text = "Backwards:";
+			this.labelCameraRestrictionBackwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedForwards
+			// 
+			this.checkBoxCameraRestrictionDefinedForwards.Location = new System.Drawing.Point(128, 16);
+			this.checkBoxCameraRestrictionDefinedForwards.Name = "checkBoxCameraRestrictionDefinedForwards";
+			this.checkBoxCameraRestrictionDefinedForwards.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedForwards.TabIndex = 31;
+			this.checkBoxCameraRestrictionDefinedForwards.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedForwards
+			// 
+			this.labelCameraRestrictionDefinedForwards.Location = new System.Drawing.Point(8, 16);
+			this.labelCameraRestrictionDefinedForwards.Name = "labelCameraRestrictionDefinedForwards";
+			this.labelCameraRestrictionDefinedForwards.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedForwards.TabIndex = 9;
+			this.labelCameraRestrictionDefinedForwards.Text = "DefinedForwards:";
+			this.labelCameraRestrictionDefinedForwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCameraRestrictionForwards
+			// 
+			this.textBoxCameraRestrictionForwards.Location = new System.Drawing.Point(128, 40);
+			this.textBoxCameraRestrictionForwards.Name = "textBoxCameraRestrictionForwards";
+			this.textBoxCameraRestrictionForwards.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionForwards.TabIndex = 7;
+			// 
+			// labelCameraRestrictionForwards
+			// 
+			this.labelCameraRestrictionForwards.Location = new System.Drawing.Point(8, 40);
+			this.labelCameraRestrictionForwards.Name = "labelCameraRestrictionForwards";
+			this.labelCameraRestrictionForwards.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionForwards.TabIndex = 6;
+			this.labelCameraRestrictionForwards.Text = "Forwards:";
+			this.labelCameraRestrictionForwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCabFileName
+			// 
+			this.textBoxCabFileName.Location = new System.Drawing.Point(136, 16);
+			this.textBoxCabFileName.Name = "textBoxCabFileName";
+			this.textBoxCabFileName.Size = new System.Drawing.Size(112, 19);
+			this.textBoxCabFileName.TabIndex = 33;
+			// 
+			// labelCabFileName
+			// 
+			this.labelCabFileName.Location = new System.Drawing.Point(8, 16);
+			this.labelCabFileName.Name = "labelCabFileName";
+			this.labelCabFileName.Size = new System.Drawing.Size(120, 16);
+			this.labelCabFileName.TabIndex = 32;
+			this.labelCabFileName.Text = "Filename:";
+			this.labelCabFileName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxIsEmbeddedCab
+			// 
+			this.checkBoxIsEmbeddedCab.Location = new System.Drawing.Point(144, 88);
+			this.checkBoxIsEmbeddedCab.Name = "checkBoxIsEmbeddedCab";
+			this.checkBoxIsEmbeddedCab.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxIsEmbeddedCab.TabIndex = 30;
+			this.checkBoxIsEmbeddedCab.UseVisualStyleBackColor = true;
+			// 
+			// labelIsEmbeddedCab
+			// 
+			this.labelIsEmbeddedCab.Location = new System.Drawing.Point(8, 88);
+			this.labelIsEmbeddedCab.Name = "labelIsEmbeddedCab";
+			this.labelIsEmbeddedCab.Size = new System.Drawing.Size(128, 16);
+			this.labelIsEmbeddedCab.TabIndex = 10;
+			this.labelIsEmbeddedCab.Text = "IsEmbeddedCab:";
+			this.labelIsEmbeddedCab.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCabZ
+			// 
+			this.textBoxCabZ.Location = new System.Drawing.Point(144, 64);
+			this.textBoxCabZ.Name = "textBoxCabZ";
+			this.textBoxCabZ.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCabZ.TabIndex = 8;
+			// 
+			// textBoxCabY
+			// 
+			this.textBoxCabY.Location = new System.Drawing.Point(144, 40);
+			this.textBoxCabY.Name = "textBoxCabY";
+			this.textBoxCabY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCabY.TabIndex = 6;
+			// 
+			// textBoxCabX
+			// 
+			this.textBoxCabX.Location = new System.Drawing.Point(144, 16);
+			this.textBoxCabX.Name = "textBoxCabX";
+			this.textBoxCabX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCabX.TabIndex = 4;
+			// 
+			// labelCabZ
+			// 
+			this.labelCabZ.Location = new System.Drawing.Point(8, 64);
+			this.labelCabZ.Name = "labelCabZ";
+			this.labelCabZ.Size = new System.Drawing.Size(128, 16);
+			this.labelCabZ.TabIndex = 2;
+			this.labelCabZ.Text = "Z:";
+			this.labelCabZ.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCabY
+			// 
+			this.labelCabY.Location = new System.Drawing.Point(8, 40);
+			this.labelCabY.Name = "labelCabY";
+			this.labelCabY.Size = new System.Drawing.Size(128, 16);
+			this.labelCabY.TabIndex = 1;
+			this.labelCabY.Text = "Y:";
+			this.labelCabY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCabX
+			// 
+			this.labelCabX.Location = new System.Drawing.Point(8, 16);
+			this.labelCabX.Name = "labelCabX";
+			this.labelCabX.Size = new System.Drawing.Size(128, 16);
+			this.labelCabX.TabIndex = 0;
+			this.labelCabX.Text = "X:";
+			this.labelCabX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxPressure
+			// 
+			this.groupBoxPressure.Controls.Add(this.groupBoxBrakeCylinder);
+			this.groupBoxPressure.Controls.Add(this.groupBoxStraightAirPipe);
+			this.groupBoxPressure.Controls.Add(this.groupBoxBrakePipe);
+			this.groupBoxPressure.Controls.Add(this.groupBoxEqualizingReservoir);
+			this.groupBoxPressure.Controls.Add(this.groupBoxAuxiliaryReservoir);
+			this.groupBoxPressure.Controls.Add(this.groupBoxMainReservoir);
+			this.groupBoxPressure.Controls.Add(this.groupBoxCompressor);
+			this.groupBoxPressure.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxPressure.Name = "groupBoxPressure";
+			this.groupBoxPressure.Size = new System.Drawing.Size(304, 672);
+			this.groupBoxPressure.TabIndex = 33;
+			this.groupBoxPressure.TabStop = false;
+			this.groupBoxPressure.Text = "Pressure";
+			// 
+			// groupBoxBrakeCylinder
+			// 
+			this.groupBoxBrakeCylinder.Controls.Add(this.comboBoxBrakeCylinderReleaseRateUnit);
+			this.groupBoxBrakeCylinder.Controls.Add(this.comboBoxBrakeCylinderEmergencyRateUnit);
+			this.groupBoxBrakeCylinder.Controls.Add(this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit);
+			this.groupBoxBrakeCylinder.Controls.Add(this.comboBoxBrakeCylinderServiceMaximumPressureUnit);
+			this.groupBoxBrakeCylinder.Controls.Add(this.textBoxBrakeCylinderReleaseRate);
+			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderServiceMaximumPressure);
+			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressure);
+			this.groupBoxBrakeCylinder.Controls.Add(this.textBoxBrakeCylinderServiceMaximumPressure);
+			this.groupBoxBrakeCylinder.Controls.Add(this.textBoxBrakeCylinderEmergencyMaximumPressure);
+			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderEmergencyRate);
+			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderReleaseRate);
+			this.groupBoxBrakeCylinder.Controls.Add(this.textBoxBrakeCylinderEmergencyRate);
+			this.groupBoxBrakeCylinder.Location = new System.Drawing.Point(8, 544);
+			this.groupBoxBrakeCylinder.Name = "groupBoxBrakeCylinder";
+			this.groupBoxBrakeCylinder.Size = new System.Drawing.Size(288, 120);
+			this.groupBoxBrakeCylinder.TabIndex = 46;
+			this.groupBoxBrakeCylinder.TabStop = false;
+			this.groupBoxBrakeCylinder.Text = "BrakeCylinder";
+			// 
+			// comboBoxBrakeCylinderReleaseRateUnit
+			// 
+			this.comboBoxBrakeCylinderReleaseRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeCylinderReleaseRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakeCylinderReleaseRateUnit.Location = new System.Drawing.Point(232, 88);
+			this.comboBoxBrakeCylinderReleaseRateUnit.Name = "comboBoxBrakeCylinderReleaseRateUnit";
+			this.comboBoxBrakeCylinderReleaseRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeCylinderReleaseRateUnit.TabIndex = 59;
+			// 
+			// comboBoxBrakeCylinderEmergencyRateUnit
+			// 
+			this.comboBoxBrakeCylinderEmergencyRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeCylinderEmergencyRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakeCylinderEmergencyRateUnit.Location = new System.Drawing.Point(232, 64);
+			this.comboBoxBrakeCylinderEmergencyRateUnit.Name = "comboBoxBrakeCylinderEmergencyRateUnit";
+			this.comboBoxBrakeCylinderEmergencyRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeCylinderEmergencyRateUnit.TabIndex = 58;
+			// 
+			// comboBoxBrakeCylinderEmergencyMaximumPressureUnit
+			// 
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.FormattingEnabled = true;
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.Name = "comboBoxBrakeCylinderEmergencyMaximumPressureUnit";
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.TabIndex = 57;
+			// 
+			// comboBoxBrakeCylinderServiceMaximumPressureUnit
+			// 
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.FormattingEnabled = true;
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.Name = "comboBoxBrakeCylinderServiceMaximumPressureUnit";
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.TabIndex = 57;
+			// 
+			// textBoxBrakeCylinderReleaseRate
+			// 
+			this.textBoxBrakeCylinderReleaseRate.Location = new System.Drawing.Point(176, 88);
+			this.textBoxBrakeCylinderReleaseRate.Name = "textBoxBrakeCylinderReleaseRate";
+			this.textBoxBrakeCylinderReleaseRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxBrakeCylinderReleaseRate.TabIndex = 30;
+			// 
+			// labelBrakeCylinderServiceMaximumPressure
+			// 
+			this.labelBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(8, 16);
+			this.labelBrakeCylinderServiceMaximumPressure.Name = "labelBrakeCylinderServiceMaximumPressure";
+			this.labelBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(160, 16);
+			this.labelBrakeCylinderServiceMaximumPressure.TabIndex = 9;
+			this.labelBrakeCylinderServiceMaximumPressure.Text = "ServiceMaximumPressure:";
+			this.labelBrakeCylinderServiceMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeCylinderEmergencyMaximumPressure
+			// 
+			this.labelBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(8, 40);
+			this.labelBrakeCylinderEmergencyMaximumPressure.Name = "labelBrakeCylinderEmergencyMaximumPressure";
+			this.labelBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(160, 16);
+			this.labelBrakeCylinderEmergencyMaximumPressure.TabIndex = 8;
+			this.labelBrakeCylinderEmergencyMaximumPressure.Text = "EmergencyMaximumPressure:";
+			this.labelBrakeCylinderEmergencyMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxBrakeCylinderServiceMaximumPressure
+			// 
+			this.textBoxBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(176, 16);
+			this.textBoxBrakeCylinderServiceMaximumPressure.Name = "textBoxBrakeCylinderServiceMaximumPressure";
+			this.textBoxBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(48, 19);
+			this.textBoxBrakeCylinderServiceMaximumPressure.TabIndex = 31;
+			// 
+			// textBoxBrakeCylinderEmergencyMaximumPressure
+			// 
+			this.textBoxBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(176, 40);
+			this.textBoxBrakeCylinderEmergencyMaximumPressure.Name = "textBoxBrakeCylinderEmergencyMaximumPressure";
+			this.textBoxBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(48, 19);
+			this.textBoxBrakeCylinderEmergencyMaximumPressure.TabIndex = 32;
+			// 
+			// labelBrakeCylinderEmergencyRate
+			// 
+			this.labelBrakeCylinderEmergencyRate.Location = new System.Drawing.Point(8, 64);
+			this.labelBrakeCylinderEmergencyRate.Name = "labelBrakeCylinderEmergencyRate";
+			this.labelBrakeCylinderEmergencyRate.Size = new System.Drawing.Size(160, 16);
+			this.labelBrakeCylinderEmergencyRate.TabIndex = 2;
+			this.labelBrakeCylinderEmergencyRate.Text = "EmergencyRate:";
+			this.labelBrakeCylinderEmergencyRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeCylinderReleaseRate
+			// 
+			this.labelBrakeCylinderReleaseRate.Location = new System.Drawing.Point(8, 88);
+			this.labelBrakeCylinderReleaseRate.Name = "labelBrakeCylinderReleaseRate";
+			this.labelBrakeCylinderReleaseRate.Size = new System.Drawing.Size(160, 16);
+			this.labelBrakeCylinderReleaseRate.TabIndex = 1;
+			this.labelBrakeCylinderReleaseRate.Text = "ReleaseRate:";
+			this.labelBrakeCylinderReleaseRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxBrakeCylinderEmergencyRate
+			// 
+			this.textBoxBrakeCylinderEmergencyRate.Location = new System.Drawing.Point(176, 64);
+			this.textBoxBrakeCylinderEmergencyRate.Name = "textBoxBrakeCylinderEmergencyRate";
+			this.textBoxBrakeCylinderEmergencyRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxBrakeCylinderEmergencyRate.TabIndex = 28;
+			// 
+			// groupBoxStraightAirPipe
+			// 
+			this.groupBoxStraightAirPipe.Controls.Add(this.comboBoxStraightAirPipeReleaseRateUnit);
+			this.groupBoxStraightAirPipe.Controls.Add(this.comboBoxStraightAirPipeEmergencyRateUnit);
+			this.groupBoxStraightAirPipe.Controls.Add(this.comboBoxStraightAirPipeServiceRateUnit);
+			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeReleaseRate);
+			this.groupBoxStraightAirPipe.Controls.Add(this.textBoxStraightAirPipeReleaseRate);
+			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeEmergencyRate);
+			this.groupBoxStraightAirPipe.Controls.Add(this.textBoxStraightAirPipeEmergencyRate);
+			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeServiceRate);
+			this.groupBoxStraightAirPipe.Controls.Add(this.textBoxStraightAirPipeServiceRate);
+			this.groupBoxStraightAirPipe.Location = new System.Drawing.Point(8, 440);
+			this.groupBoxStraightAirPipe.Name = "groupBoxStraightAirPipe";
+			this.groupBoxStraightAirPipe.Size = new System.Drawing.Size(288, 96);
+			this.groupBoxStraightAirPipe.TabIndex = 45;
+			this.groupBoxStraightAirPipe.TabStop = false;
+			this.groupBoxStraightAirPipe.Text = "StraightAirPipe";
+			// 
+			// comboBoxStraightAirPipeReleaseRateUnit
+			// 
+			this.comboBoxStraightAirPipeReleaseRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxStraightAirPipeReleaseRateUnit.FormattingEnabled = true;
+			this.comboBoxStraightAirPipeReleaseRateUnit.Location = new System.Drawing.Point(232, 64);
+			this.comboBoxStraightAirPipeReleaseRateUnit.Name = "comboBoxStraightAirPipeReleaseRateUnit";
+			this.comboBoxStraightAirPipeReleaseRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxStraightAirPipeReleaseRateUnit.TabIndex = 64;
+			// 
+			// comboBoxStraightAirPipeEmergencyRateUnit
+			// 
+			this.comboBoxStraightAirPipeEmergencyRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxStraightAirPipeEmergencyRateUnit.FormattingEnabled = true;
+			this.comboBoxStraightAirPipeEmergencyRateUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxStraightAirPipeEmergencyRateUnit.Name = "comboBoxStraightAirPipeEmergencyRateUnit";
+			this.comboBoxStraightAirPipeEmergencyRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxStraightAirPipeEmergencyRateUnit.TabIndex = 63;
+			// 
+			// comboBoxStraightAirPipeServiceRateUnit
+			// 
+			this.comboBoxStraightAirPipeServiceRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxStraightAirPipeServiceRateUnit.FormattingEnabled = true;
+			this.comboBoxStraightAirPipeServiceRateUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxStraightAirPipeServiceRateUnit.Name = "comboBoxStraightAirPipeServiceRateUnit";
+			this.comboBoxStraightAirPipeServiceRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxStraightAirPipeServiceRateUnit.TabIndex = 62;
+			// 
+			// labelStraightAirPipeReleaseRate
+			// 
+			this.labelStraightAirPipeReleaseRate.Location = new System.Drawing.Point(8, 64);
+			this.labelStraightAirPipeReleaseRate.Name = "labelStraightAirPipeReleaseRate";
+			this.labelStraightAirPipeReleaseRate.Size = new System.Drawing.Size(160, 16);
+			this.labelStraightAirPipeReleaseRate.TabIndex = 61;
+			this.labelStraightAirPipeReleaseRate.Text = "ReleaseRate:";
+			this.labelStraightAirPipeReleaseRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxStraightAirPipeReleaseRate
+			// 
+			this.textBoxStraightAirPipeReleaseRate.Location = new System.Drawing.Point(176, 64);
+			this.textBoxStraightAirPipeReleaseRate.Name = "textBoxStraightAirPipeReleaseRate";
+			this.textBoxStraightAirPipeReleaseRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxStraightAirPipeReleaseRate.TabIndex = 59;
+			// 
+			// labelStraightAirPipeEmergencyRate
+			// 
+			this.labelStraightAirPipeEmergencyRate.Location = new System.Drawing.Point(8, 40);
+			this.labelStraightAirPipeEmergencyRate.Name = "labelStraightAirPipeEmergencyRate";
+			this.labelStraightAirPipeEmergencyRate.Size = new System.Drawing.Size(160, 16);
+			this.labelStraightAirPipeEmergencyRate.TabIndex = 58;
+			this.labelStraightAirPipeEmergencyRate.Text = "EmergencyRate:";
+			this.labelStraightAirPipeEmergencyRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxStraightAirPipeEmergencyRate
+			// 
+			this.textBoxStraightAirPipeEmergencyRate.Location = new System.Drawing.Point(176, 40);
+			this.textBoxStraightAirPipeEmergencyRate.Name = "textBoxStraightAirPipeEmergencyRate";
+			this.textBoxStraightAirPipeEmergencyRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxStraightAirPipeEmergencyRate.TabIndex = 56;
+			// 
+			// labelStraightAirPipeServiceRate
+			// 
+			this.labelStraightAirPipeServiceRate.Location = new System.Drawing.Point(8, 16);
+			this.labelStraightAirPipeServiceRate.Name = "labelStraightAirPipeServiceRate";
+			this.labelStraightAirPipeServiceRate.Size = new System.Drawing.Size(160, 16);
+			this.labelStraightAirPipeServiceRate.TabIndex = 55;
+			this.labelStraightAirPipeServiceRate.Text = "ServiceRate:";
+			this.labelStraightAirPipeServiceRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxStraightAirPipeServiceRate
+			// 
+			this.textBoxStraightAirPipeServiceRate.Location = new System.Drawing.Point(176, 16);
+			this.textBoxStraightAirPipeServiceRate.Name = "textBoxStraightAirPipeServiceRate";
+			this.textBoxStraightAirPipeServiceRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxStraightAirPipeServiceRate.TabIndex = 53;
+			// 
+			// groupBoxBrakePipe
+			// 
+			this.groupBoxBrakePipe.Controls.Add(this.comboBoxBrakePipeEmergencyRateUnit);
+			this.groupBoxBrakePipe.Controls.Add(this.comboBoxBrakePipeServiceRateUnit);
+			this.groupBoxBrakePipe.Controls.Add(this.comboBoxBrakePipeChargeRateUnit);
+			this.groupBoxBrakePipe.Controls.Add(this.comboBoxBrakePipeNormalPressureUnit);
+			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeEmergencyRate);
+			this.groupBoxBrakePipe.Controls.Add(this.textBoxBrakePipeEmergencyRate);
+			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeServiceRate);
+			this.groupBoxBrakePipe.Controls.Add(this.textBoxBrakePipeServiceRate);
+			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeChargeRate);
+			this.groupBoxBrakePipe.Controls.Add(this.textBoxBrakePipeChargeRate);
+			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeNormalPressure);
+			this.groupBoxBrakePipe.Controls.Add(this.textBoxBrakePipeNormalPressure);
+			this.groupBoxBrakePipe.Location = new System.Drawing.Point(8, 312);
+			this.groupBoxBrakePipe.Name = "groupBoxBrakePipe";
+			this.groupBoxBrakePipe.Size = new System.Drawing.Size(288, 120);
+			this.groupBoxBrakePipe.TabIndex = 44;
+			this.groupBoxBrakePipe.TabStop = false;
+			this.groupBoxBrakePipe.Text = "BrakePipe";
+			// 
+			// comboBoxBrakePipeEmergencyRateUnit
+			// 
+			this.comboBoxBrakePipeEmergencyRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakePipeEmergencyRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakePipeEmergencyRateUnit.Location = new System.Drawing.Point(232, 88);
+			this.comboBoxBrakePipeEmergencyRateUnit.Name = "comboBoxBrakePipeEmergencyRateUnit";
+			this.comboBoxBrakePipeEmergencyRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakePipeEmergencyRateUnit.TabIndex = 60;
+			// 
+			// comboBoxBrakePipeServiceRateUnit
+			// 
+			this.comboBoxBrakePipeServiceRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakePipeServiceRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakePipeServiceRateUnit.Location = new System.Drawing.Point(232, 64);
+			this.comboBoxBrakePipeServiceRateUnit.Name = "comboBoxBrakePipeServiceRateUnit";
+			this.comboBoxBrakePipeServiceRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakePipeServiceRateUnit.TabIndex = 59;
+			// 
+			// comboBoxBrakePipeChargeRateUnit
+			// 
+			this.comboBoxBrakePipeChargeRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakePipeChargeRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakePipeChargeRateUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxBrakePipeChargeRateUnit.Name = "comboBoxBrakePipeChargeRateUnit";
+			this.comboBoxBrakePipeChargeRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakePipeChargeRateUnit.TabIndex = 58;
+			// 
+			// comboBoxBrakePipeNormalPressureUnit
+			// 
+			this.comboBoxBrakePipeNormalPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakePipeNormalPressureUnit.FormattingEnabled = true;
+			this.comboBoxBrakePipeNormalPressureUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxBrakePipeNormalPressureUnit.Name = "comboBoxBrakePipeNormalPressureUnit";
+			this.comboBoxBrakePipeNormalPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakePipeNormalPressureUnit.TabIndex = 57;
+			// 
+			// labelBrakePipeEmergencyRate
+			// 
+			this.labelBrakePipeEmergencyRate.Location = new System.Drawing.Point(8, 88);
+			this.labelBrakePipeEmergencyRate.Name = "labelBrakePipeEmergencyRate";
+			this.labelBrakePipeEmergencyRate.Size = new System.Drawing.Size(160, 16);
+			this.labelBrakePipeEmergencyRate.TabIndex = 52;
+			this.labelBrakePipeEmergencyRate.Text = "EmergencyRate:";
+			this.labelBrakePipeEmergencyRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxBrakePipeEmergencyRate
+			// 
+			this.textBoxBrakePipeEmergencyRate.Location = new System.Drawing.Point(176, 88);
+			this.textBoxBrakePipeEmergencyRate.Name = "textBoxBrakePipeEmergencyRate";
+			this.textBoxBrakePipeEmergencyRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxBrakePipeEmergencyRate.TabIndex = 50;
+			// 
+			// labelBrakePipeServiceRate
+			// 
+			this.labelBrakePipeServiceRate.Location = new System.Drawing.Point(8, 64);
+			this.labelBrakePipeServiceRate.Name = "labelBrakePipeServiceRate";
+			this.labelBrakePipeServiceRate.Size = new System.Drawing.Size(160, 16);
+			this.labelBrakePipeServiceRate.TabIndex = 49;
+			this.labelBrakePipeServiceRate.Text = "ServiceRate:";
+			this.labelBrakePipeServiceRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxBrakePipeServiceRate
+			// 
+			this.textBoxBrakePipeServiceRate.Location = new System.Drawing.Point(176, 64);
+			this.textBoxBrakePipeServiceRate.Name = "textBoxBrakePipeServiceRate";
+			this.textBoxBrakePipeServiceRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxBrakePipeServiceRate.TabIndex = 47;
+			// 
+			// labelBrakePipeChargeRate
+			// 
+			this.labelBrakePipeChargeRate.Location = new System.Drawing.Point(8, 40);
+			this.labelBrakePipeChargeRate.Name = "labelBrakePipeChargeRate";
+			this.labelBrakePipeChargeRate.Size = new System.Drawing.Size(160, 16);
+			this.labelBrakePipeChargeRate.TabIndex = 46;
+			this.labelBrakePipeChargeRate.Text = "ChargeRate:";
+			this.labelBrakePipeChargeRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxBrakePipeChargeRate
+			// 
+			this.textBoxBrakePipeChargeRate.Location = new System.Drawing.Point(176, 40);
+			this.textBoxBrakePipeChargeRate.Name = "textBoxBrakePipeChargeRate";
+			this.textBoxBrakePipeChargeRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxBrakePipeChargeRate.TabIndex = 44;
+			// 
+			// labelBrakePipeNormalPressure
+			// 
+			this.labelBrakePipeNormalPressure.Location = new System.Drawing.Point(8, 16);
+			this.labelBrakePipeNormalPressure.Name = "labelBrakePipeNormalPressure";
+			this.labelBrakePipeNormalPressure.Size = new System.Drawing.Size(160, 16);
+			this.labelBrakePipeNormalPressure.TabIndex = 37;
+			this.labelBrakePipeNormalPressure.Text = "NormalPressure:";
+			this.labelBrakePipeNormalPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxBrakePipeNormalPressure
+			// 
+			this.textBoxBrakePipeNormalPressure.Location = new System.Drawing.Point(176, 16);
+			this.textBoxBrakePipeNormalPressure.Name = "textBoxBrakePipeNormalPressure";
+			this.textBoxBrakePipeNormalPressure.Size = new System.Drawing.Size(48, 19);
+			this.textBoxBrakePipeNormalPressure.TabIndex = 38;
+			// 
+			// groupBoxEqualizingReservoir
+			// 
+			this.groupBoxEqualizingReservoir.Controls.Add(this.comboBoxEqualizingReservoirEmergencyRateUnit);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.comboBoxEqualizingReservoirServiceRateUnit);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.comboBoxEqualizingReservoirChargeRateUnit);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirEmergencyRate);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.textBoxEqualizingReservoirEmergencyRate);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirServiceRate);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.textBoxEqualizingReservoirServiceRate);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirChargeRate);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.textBoxEqualizingReservoirChargeRate);
+			this.groupBoxEqualizingReservoir.Location = new System.Drawing.Point(8, 208);
+			this.groupBoxEqualizingReservoir.Name = "groupBoxEqualizingReservoir";
+			this.groupBoxEqualizingReservoir.Size = new System.Drawing.Size(288, 96);
+			this.groupBoxEqualizingReservoir.TabIndex = 43;
+			this.groupBoxEqualizingReservoir.TabStop = false;
+			this.groupBoxEqualizingReservoir.Text = "EqualizingReservoir";
+			// 
+			// comboBoxEqualizingReservoirEmergencyRateUnit
+			// 
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.FormattingEnabled = true;
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.Location = new System.Drawing.Point(232, 64);
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.Name = "comboBoxEqualizingReservoirEmergencyRateUnit";
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.TabIndex = 59;
+			// 
+			// comboBoxEqualizingReservoirServiceRateUnit
+			// 
+			this.comboBoxEqualizingReservoirServiceRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEqualizingReservoirServiceRateUnit.FormattingEnabled = true;
+			this.comboBoxEqualizingReservoirServiceRateUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxEqualizingReservoirServiceRateUnit.Name = "comboBoxEqualizingReservoirServiceRateUnit";
+			this.comboBoxEqualizingReservoirServiceRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxEqualizingReservoirServiceRateUnit.TabIndex = 58;
+			// 
+			// comboBoxEqualizingReservoirChargeRateUnit
+			// 
+			this.comboBoxEqualizingReservoirChargeRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEqualizingReservoirChargeRateUnit.FormattingEnabled = true;
+			this.comboBoxEqualizingReservoirChargeRateUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxEqualizingReservoirChargeRateUnit.Name = "comboBoxEqualizingReservoirChargeRateUnit";
+			this.comboBoxEqualizingReservoirChargeRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxEqualizingReservoirChargeRateUnit.TabIndex = 57;
+			// 
+			// labelEqualizingReservoirEmergencyRate
+			// 
+			this.labelEqualizingReservoirEmergencyRate.Location = new System.Drawing.Point(8, 64);
+			this.labelEqualizingReservoirEmergencyRate.Name = "labelEqualizingReservoirEmergencyRate";
+			this.labelEqualizingReservoirEmergencyRate.Size = new System.Drawing.Size(160, 16);
+			this.labelEqualizingReservoirEmergencyRate.TabIndex = 43;
+			this.labelEqualizingReservoirEmergencyRate.Text = "EmergencyRate:";
+			this.labelEqualizingReservoirEmergencyRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxEqualizingReservoirEmergencyRate
+			// 
+			this.textBoxEqualizingReservoirEmergencyRate.Location = new System.Drawing.Point(176, 64);
+			this.textBoxEqualizingReservoirEmergencyRate.Name = "textBoxEqualizingReservoirEmergencyRate";
+			this.textBoxEqualizingReservoirEmergencyRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxEqualizingReservoirEmergencyRate.TabIndex = 41;
+			// 
+			// labelEqualizingReservoirServiceRate
+			// 
+			this.labelEqualizingReservoirServiceRate.Location = new System.Drawing.Point(8, 40);
+			this.labelEqualizingReservoirServiceRate.Name = "labelEqualizingReservoirServiceRate";
+			this.labelEqualizingReservoirServiceRate.Size = new System.Drawing.Size(160, 16);
+			this.labelEqualizingReservoirServiceRate.TabIndex = 40;
+			this.labelEqualizingReservoirServiceRate.Text = "ServiceRate:";
+			this.labelEqualizingReservoirServiceRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxEqualizingReservoirServiceRate
+			// 
+			this.textBoxEqualizingReservoirServiceRate.Location = new System.Drawing.Point(176, 40);
+			this.textBoxEqualizingReservoirServiceRate.Name = "textBoxEqualizingReservoirServiceRate";
+			this.textBoxEqualizingReservoirServiceRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxEqualizingReservoirServiceRate.TabIndex = 38;
+			// 
+			// labelEqualizingReservoirChargeRate
+			// 
+			this.labelEqualizingReservoirChargeRate.Location = new System.Drawing.Point(8, 16);
+			this.labelEqualizingReservoirChargeRate.Name = "labelEqualizingReservoirChargeRate";
+			this.labelEqualizingReservoirChargeRate.Size = new System.Drawing.Size(160, 16);
+			this.labelEqualizingReservoirChargeRate.TabIndex = 37;
+			this.labelEqualizingReservoirChargeRate.Text = "ChargeRate:";
+			this.labelEqualizingReservoirChargeRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxEqualizingReservoirChargeRate
+			// 
+			this.textBoxEqualizingReservoirChargeRate.Location = new System.Drawing.Point(176, 16);
+			this.textBoxEqualizingReservoirChargeRate.Name = "textBoxEqualizingReservoirChargeRate";
+			this.textBoxEqualizingReservoirChargeRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxEqualizingReservoirChargeRate.TabIndex = 35;
+			// 
+			// groupBoxAuxiliaryReservoir
+			// 
+			this.groupBoxAuxiliaryReservoir.Controls.Add(this.comboBoxAuxiliaryReservoirChargeRateUnit);
+			this.groupBoxAuxiliaryReservoir.Controls.Add(this.labelAuxiliaryReservoirChargeRate);
+			this.groupBoxAuxiliaryReservoir.Controls.Add(this.textBoxAuxiliaryReservoirChargeRate);
+			this.groupBoxAuxiliaryReservoir.Location = new System.Drawing.Point(8, 152);
+			this.groupBoxAuxiliaryReservoir.Name = "groupBoxAuxiliaryReservoir";
+			this.groupBoxAuxiliaryReservoir.Size = new System.Drawing.Size(288, 48);
+			this.groupBoxAuxiliaryReservoir.TabIndex = 42;
+			this.groupBoxAuxiliaryReservoir.TabStop = false;
+			this.groupBoxAuxiliaryReservoir.Text = "AuxiliaryReservoir";
+			// 
+			// comboBoxAuxiliaryReservoirChargeRateUnit
+			// 
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.FormattingEnabled = true;
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.Name = "comboBoxAuxiliaryReservoirChargeRateUnit";
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.TabIndex = 57;
+			// 
+			// labelAuxiliaryReservoirChargeRate
+			// 
+			this.labelAuxiliaryReservoirChargeRate.Location = new System.Drawing.Point(8, 16);
+			this.labelAuxiliaryReservoirChargeRate.Name = "labelAuxiliaryReservoirChargeRate";
+			this.labelAuxiliaryReservoirChargeRate.Size = new System.Drawing.Size(160, 16);
+			this.labelAuxiliaryReservoirChargeRate.TabIndex = 34;
+			this.labelAuxiliaryReservoirChargeRate.Text = "ChargeRate:";
+			this.labelAuxiliaryReservoirChargeRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxAuxiliaryReservoirChargeRate
+			// 
+			this.textBoxAuxiliaryReservoirChargeRate.Location = new System.Drawing.Point(176, 16);
+			this.textBoxAuxiliaryReservoirChargeRate.Name = "textBoxAuxiliaryReservoirChargeRate";
+			this.textBoxAuxiliaryReservoirChargeRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAuxiliaryReservoirChargeRate.TabIndex = 32;
+			// 
+			// groupBoxMainReservoir
+			// 
+			this.groupBoxMainReservoir.Controls.Add(this.comboBoxMainReservoirMaximumPressureUnit);
+			this.groupBoxMainReservoir.Controls.Add(this.comboBoxMainReservoirMinimumPressureUnit);
+			this.groupBoxMainReservoir.Controls.Add(this.labelMainReservoirMaximumPressure);
+			this.groupBoxMainReservoir.Controls.Add(this.labelMainReservoirMinimumPressure);
+			this.groupBoxMainReservoir.Controls.Add(this.textBoxMainReservoirMaximumPressure);
+			this.groupBoxMainReservoir.Controls.Add(this.textBoxMainReservoirMinimumPressure);
+			this.groupBoxMainReservoir.Location = new System.Drawing.Point(8, 72);
+			this.groupBoxMainReservoir.Name = "groupBoxMainReservoir";
+			this.groupBoxMainReservoir.Size = new System.Drawing.Size(288, 72);
+			this.groupBoxMainReservoir.TabIndex = 41;
+			this.groupBoxMainReservoir.TabStop = false;
+			this.groupBoxMainReservoir.Text = "MainReservoir";
+			// 
+			// comboBoxMainReservoirMaximumPressureUnit
+			// 
+			this.comboBoxMainReservoirMaximumPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMainReservoirMaximumPressureUnit.FormattingEnabled = true;
+			this.comboBoxMainReservoirMaximumPressureUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxMainReservoirMaximumPressureUnit.Name = "comboBoxMainReservoirMaximumPressureUnit";
+			this.comboBoxMainReservoirMaximumPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMainReservoirMaximumPressureUnit.TabIndex = 57;
+			// 
+			// comboBoxMainReservoirMinimumPressureUnit
+			// 
+			this.comboBoxMainReservoirMinimumPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMainReservoirMinimumPressureUnit.FormattingEnabled = true;
+			this.comboBoxMainReservoirMinimumPressureUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxMainReservoirMinimumPressureUnit.Name = "comboBoxMainReservoirMinimumPressureUnit";
+			this.comboBoxMainReservoirMinimumPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMainReservoirMinimumPressureUnit.TabIndex = 56;
+			// 
+			// labelMainReservoirMaximumPressure
+			// 
+			this.labelMainReservoirMaximumPressure.Location = new System.Drawing.Point(8, 40);
+			this.labelMainReservoirMaximumPressure.Name = "labelMainReservoirMaximumPressure";
+			this.labelMainReservoirMaximumPressure.Size = new System.Drawing.Size(160, 16);
+			this.labelMainReservoirMaximumPressure.TabIndex = 11;
+			this.labelMainReservoirMaximumPressure.Text = "MaximumPressure:";
+			this.labelMainReservoirMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelMainReservoirMinimumPressure
+			// 
+			this.labelMainReservoirMinimumPressure.Location = new System.Drawing.Point(8, 16);
+			this.labelMainReservoirMinimumPressure.Name = "labelMainReservoirMinimumPressure";
+			this.labelMainReservoirMinimumPressure.Size = new System.Drawing.Size(160, 16);
+			this.labelMainReservoirMinimumPressure.TabIndex = 10;
+			this.labelMainReservoirMinimumPressure.Text = "MinimumPressure:";
+			this.labelMainReservoirMinimumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxMainReservoirMaximumPressure
+			// 
+			this.textBoxMainReservoirMaximumPressure.Location = new System.Drawing.Point(176, 40);
+			this.textBoxMainReservoirMaximumPressure.Name = "textBoxMainReservoirMaximumPressure";
+			this.textBoxMainReservoirMaximumPressure.Size = new System.Drawing.Size(48, 19);
+			this.textBoxMainReservoirMaximumPressure.TabIndex = 34;
+			// 
+			// textBoxMainReservoirMinimumPressure
+			// 
+			this.textBoxMainReservoirMinimumPressure.Location = new System.Drawing.Point(176, 16);
+			this.textBoxMainReservoirMinimumPressure.Name = "textBoxMainReservoirMinimumPressure";
+			this.textBoxMainReservoirMinimumPressure.Size = new System.Drawing.Size(48, 19);
+			this.textBoxMainReservoirMinimumPressure.TabIndex = 33;
+			// 
+			// groupBoxCompressor
+			// 
+			this.groupBoxCompressor.Controls.Add(this.comboBoxCompressorRateUnit);
+			this.groupBoxCompressor.Controls.Add(this.labelCompressorRate);
+			this.groupBoxCompressor.Controls.Add(this.textBoxCompressorRate);
+			this.groupBoxCompressor.Location = new System.Drawing.Point(8, 16);
+			this.groupBoxCompressor.Name = "groupBoxCompressor";
+			this.groupBoxCompressor.Size = new System.Drawing.Size(288, 48);
+			this.groupBoxCompressor.TabIndex = 40;
+			this.groupBoxCompressor.TabStop = false;
+			this.groupBoxCompressor.Text = "Compressor";
+			// 
+			// comboBoxCompressorRateUnit
+			// 
+			this.comboBoxCompressorRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCompressorRateUnit.FormattingEnabled = true;
+			this.comboBoxCompressorRateUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxCompressorRateUnit.Name = "comboBoxCompressorRateUnit";
+			this.comboBoxCompressorRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCompressorRateUnit.TabIndex = 57;
+			// 
+			// labelCompressorRate
+			// 
+			this.labelCompressorRate.Location = new System.Drawing.Point(8, 16);
+			this.labelCompressorRate.Name = "labelCompressorRate";
+			this.labelCompressorRate.Size = new System.Drawing.Size(160, 16);
+			this.labelCompressorRate.TabIndex = 31;
+			this.labelCompressorRate.Text = "Rate:";
+			this.labelCompressorRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxCompressorRate
+			// 
+			this.textBoxCompressorRate.Location = new System.Drawing.Point(176, 16);
+			this.textBoxCompressorRate.Name = "textBoxCompressorRate";
+			this.textBoxCompressorRate.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCompressorRate.TabIndex = 20;
+			// 
+			// groupBoxBrake
+			// 
+			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeControlSpeedUnit);
+			this.groupBoxBrake.Controls.Add(this.textBoxBrakeControlSpeed);
+			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeControlSystem);
+			this.groupBoxBrake.Controls.Add(this.comboBoxLocoBrakeType);
+			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeType);
+			this.groupBoxBrake.Controls.Add(this.labelLocoBrakeType);
+			this.groupBoxBrake.Controls.Add(this.labelBrakeType);
+			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSpeed);
+			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSystem);
+			this.groupBoxBrake.Location = new System.Drawing.Point(320, 136);
+			this.groupBoxBrake.Name = "groupBoxBrake";
+			this.groupBoxBrake.Size = new System.Drawing.Size(464, 120);
+			this.groupBoxBrake.TabIndex = 4;
+			this.groupBoxBrake.TabStop = false;
+			this.groupBoxBrake.Text = "Brake";
+			// 
+			// comboBoxBrakeControlSpeedUnit
+			// 
+			this.comboBoxBrakeControlSpeedUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeControlSpeedUnit.FormattingEnabled = true;
+			this.comboBoxBrakeControlSpeedUnit.Location = new System.Drawing.Point(408, 88);
+			this.comboBoxBrakeControlSpeedUnit.Name = "comboBoxBrakeControlSpeedUnit";
+			this.comboBoxBrakeControlSpeedUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeControlSpeedUnit.TabIndex = 58;
+			// 
+			// textBoxBrakeControlSpeed
+			// 
+			this.textBoxBrakeControlSpeed.Location = new System.Drawing.Point(136, 88);
+			this.textBoxBrakeControlSpeed.Name = "textBoxBrakeControlSpeed";
+			this.textBoxBrakeControlSpeed.Size = new System.Drawing.Size(264, 19);
+			this.textBoxBrakeControlSpeed.TabIndex = 31;
+			// 
+			// comboBoxBrakeControlSystem
+			// 
+			this.comboBoxBrakeControlSystem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeControlSystem.FormattingEnabled = true;
+			this.comboBoxBrakeControlSystem.Items.AddRange(new object[] {
+            "None",
+            "Closing electromagnetic valve",
+            "Delay-including control"});
+			this.comboBoxBrakeControlSystem.Location = new System.Drawing.Point(136, 64);
+			this.comboBoxBrakeControlSystem.Name = "comboBoxBrakeControlSystem";
+			this.comboBoxBrakeControlSystem.Size = new System.Drawing.Size(264, 20);
+			this.comboBoxBrakeControlSystem.TabIndex = 17;
+			// 
+			// comboBoxLocoBrakeType
+			// 
+			this.comboBoxLocoBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxLocoBrakeType.FormattingEnabled = true;
+			this.comboBoxLocoBrakeType.Items.AddRange(new object[] {
+            "Not fitted",
+            "Notched air brake",
+            "Air brake with partial release"});
+			this.comboBoxLocoBrakeType.Location = new System.Drawing.Point(136, 40);
+			this.comboBoxLocoBrakeType.Name = "comboBoxLocoBrakeType";
+			this.comboBoxLocoBrakeType.Size = new System.Drawing.Size(264, 20);
+			this.comboBoxLocoBrakeType.TabIndex = 16;
+			// 
+			// comboBoxBrakeType
+			// 
+			this.comboBoxBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeType.FormattingEnabled = true;
+			this.comboBoxBrakeType.Items.AddRange(new object[] {
+            "Electromagnetic straight air brake",
+            "Electro-pneumatic air brake without brake pipe",
+            "Air brake with partial release feature"});
+			this.comboBoxBrakeType.Location = new System.Drawing.Point(136, 16);
+			this.comboBoxBrakeType.Name = "comboBoxBrakeType";
+			this.comboBoxBrakeType.Size = new System.Drawing.Size(264, 20);
+			this.comboBoxBrakeType.TabIndex = 15;
+			// 
+			// labelLocoBrakeType
+			// 
+			this.labelLocoBrakeType.Location = new System.Drawing.Point(8, 40);
+			this.labelLocoBrakeType.Name = "labelLocoBrakeType";
+			this.labelLocoBrakeType.Size = new System.Drawing.Size(120, 16);
+			this.labelLocoBrakeType.TabIndex = 8;
+			this.labelLocoBrakeType.Text = "LocoBrakeType:";
+			this.labelLocoBrakeType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeType
+			// 
+			this.labelBrakeType.Location = new System.Drawing.Point(8, 16);
+			this.labelBrakeType.Name = "labelBrakeType";
+			this.labelBrakeType.Size = new System.Drawing.Size(120, 16);
+			this.labelBrakeType.TabIndex = 7;
+			this.labelBrakeType.Text = "BrakeType:";
+			this.labelBrakeType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeControlSpeed
+			// 
+			this.labelBrakeControlSpeed.Location = new System.Drawing.Point(8, 88);
+			this.labelBrakeControlSpeed.Name = "labelBrakeControlSpeed";
+			this.labelBrakeControlSpeed.Size = new System.Drawing.Size(120, 16);
+			this.labelBrakeControlSpeed.TabIndex = 6;
+			this.labelBrakeControlSpeed.Text = "BrakeControlSpeed:";
+			this.labelBrakeControlSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeControlSystem
+			// 
+			this.labelBrakeControlSystem.Location = new System.Drawing.Point(8, 64);
+			this.labelBrakeControlSystem.Name = "labelBrakeControlSystem";
+			this.labelBrakeControlSystem.Size = new System.Drawing.Size(120, 16);
+			this.labelBrakeControlSystem.TabIndex = 5;
+			this.labelBrakeControlSystem.Text = "BrakeControlSystem:";
+			this.labelBrakeControlSystem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxJerk
+			// 
+			this.groupBoxJerk.Controls.Add(this.buttonJerkBrakeSet);
+			this.groupBoxJerk.Controls.Add(this.buttonJerkPowerSet);
+			this.groupBoxJerk.Controls.Add(this.labelJerkPower);
+			this.groupBoxJerk.Controls.Add(this.labelJerkBrake);
+			this.groupBoxJerk.Location = new System.Drawing.Point(320, 264);
+			this.groupBoxJerk.Name = "groupBoxJerk";
+			this.groupBoxJerk.Size = new System.Drawing.Size(112, 72);
+			this.groupBoxJerk.TabIndex = 3;
+			this.groupBoxJerk.TabStop = false;
+			this.groupBoxJerk.Text = "Jerk";
+			// 
+			// buttonJerkBrakeSet
+			// 
+			this.buttonJerkBrakeSet.Location = new System.Drawing.Point(56, 40);
+			this.buttonJerkBrakeSet.Name = "buttonJerkBrakeSet";
+			this.buttonJerkBrakeSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonJerkBrakeSet.TabIndex = 35;
+			this.buttonJerkBrakeSet.Text = "Set...";
+			this.buttonJerkBrakeSet.UseVisualStyleBackColor = true;
+			this.buttonJerkBrakeSet.Click += new System.EventHandler(this.ButtonJerkBrakeSet_Click);
+			// 
+			// buttonJerkPowerSet
+			// 
+			this.buttonJerkPowerSet.Location = new System.Drawing.Point(56, 16);
+			this.buttonJerkPowerSet.Name = "buttonJerkPowerSet";
+			this.buttonJerkPowerSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonJerkPowerSet.TabIndex = 34;
+			this.buttonJerkPowerSet.Text = "Set...";
+			this.buttonJerkPowerSet.UseVisualStyleBackColor = true;
+			this.buttonJerkPowerSet.Click += new System.EventHandler(this.ButtonJerkPowerSet_Click);
+			// 
+			// labelJerkPower
+			// 
+			this.labelJerkPower.Location = new System.Drawing.Point(8, 16);
+			this.labelJerkPower.Name = "labelJerkPower";
+			this.labelJerkPower.Size = new System.Drawing.Size(40, 16);
+			this.labelJerkPower.TabIndex = 6;
+			this.labelJerkPower.Text = "Power:";
+			this.labelJerkPower.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelJerkBrake
+			// 
+			this.labelJerkBrake.Location = new System.Drawing.Point(8, 40);
+			this.labelJerkBrake.Name = "labelJerkBrake";
+			this.labelJerkBrake.Size = new System.Drawing.Size(40, 16);
+			this.labelJerkBrake.TabIndex = 4;
+			this.labelJerkBrake.Text = "Brake:";
+			this.labelJerkBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxPerformance
+			// 
+			this.groupBoxPerformance.Controls.Add(this.comboBoxDecelerationUnit);
+			this.groupBoxPerformance.Controls.Add(this.textBoxAerodynamicDragCoefficient);
+			this.groupBoxPerformance.Controls.Add(this.textBoxCoefficientOfRollingResistance);
+			this.groupBoxPerformance.Controls.Add(this.textBoxCoefficientOfStaticFriction);
+			this.groupBoxPerformance.Controls.Add(this.textBoxDeceleration);
+			this.groupBoxPerformance.Controls.Add(this.labelAerodynamicDragCoefficient);
+			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfStaticFriction);
+			this.groupBoxPerformance.Controls.Add(this.labelDeceleration);
+			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfRollingResistance);
+			this.groupBoxPerformance.Location = new System.Drawing.Point(320, 8);
+			this.groupBoxPerformance.Name = "groupBoxPerformance";
+			this.groupBoxPerformance.Size = new System.Drawing.Size(432, 120);
+			this.groupBoxPerformance.TabIndex = 1;
+			this.groupBoxPerformance.TabStop = false;
+			this.groupBoxPerformance.Text = "Performance";
+			// 
+			// comboBoxDecelerationUnit
+			// 
+			this.comboBoxDecelerationUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxDecelerationUnit.FormattingEnabled = true;
+			this.comboBoxDecelerationUnit.Location = new System.Drawing.Point(376, 16);
+			this.comboBoxDecelerationUnit.Name = "comboBoxDecelerationUnit";
+			this.comboBoxDecelerationUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxDecelerationUnit.TabIndex = 58;
+			// 
+			// textBoxAerodynamicDragCoefficient
+			// 
+			this.textBoxAerodynamicDragCoefficient.Location = new System.Drawing.Point(184, 88);
+			this.textBoxAerodynamicDragCoefficient.Name = "textBoxAerodynamicDragCoefficient";
+			this.textBoxAerodynamicDragCoefficient.Size = new System.Drawing.Size(184, 19);
+			this.textBoxAerodynamicDragCoefficient.TabIndex = 25;
+			// 
+			// textBoxCoefficientOfRollingResistance
+			// 
+			this.textBoxCoefficientOfRollingResistance.Location = new System.Drawing.Point(184, 64);
+			this.textBoxCoefficientOfRollingResistance.Name = "textBoxCoefficientOfRollingResistance";
+			this.textBoxCoefficientOfRollingResistance.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCoefficientOfRollingResistance.TabIndex = 24;
+			// 
+			// textBoxCoefficientOfStaticFriction
+			// 
+			this.textBoxCoefficientOfStaticFriction.Location = new System.Drawing.Point(184, 40);
+			this.textBoxCoefficientOfStaticFriction.Name = "textBoxCoefficientOfStaticFriction";
+			this.textBoxCoefficientOfStaticFriction.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCoefficientOfStaticFriction.TabIndex = 23;
+			// 
+			// textBoxDeceleration
+			// 
+			this.textBoxDeceleration.Location = new System.Drawing.Point(184, 16);
+			this.textBoxDeceleration.Name = "textBoxDeceleration";
+			this.textBoxDeceleration.Size = new System.Drawing.Size(184, 19);
+			this.textBoxDeceleration.TabIndex = 20;
+			// 
+			// labelAerodynamicDragCoefficient
+			// 
+			this.labelAerodynamicDragCoefficient.Location = new System.Drawing.Point(8, 88);
+			this.labelAerodynamicDragCoefficient.Name = "labelAerodynamicDragCoefficient";
+			this.labelAerodynamicDragCoefficient.Size = new System.Drawing.Size(168, 16);
+			this.labelAerodynamicDragCoefficient.TabIndex = 5;
+			this.labelAerodynamicDragCoefficient.Text = "AerodynamicDragCoefficient:";
+			this.labelAerodynamicDragCoefficient.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCoefficientOfStaticFriction
+			// 
+			this.labelCoefficientOfStaticFriction.Location = new System.Drawing.Point(8, 40);
+			this.labelCoefficientOfStaticFriction.Name = "labelCoefficientOfStaticFriction";
+			this.labelCoefficientOfStaticFriction.Size = new System.Drawing.Size(168, 16);
+			this.labelCoefficientOfStaticFriction.TabIndex = 4;
+			this.labelCoefficientOfStaticFriction.Text = "CoefficientOfStaticFriction:";
+			this.labelCoefficientOfStaticFriction.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDeceleration
+			// 
+			this.labelDeceleration.Location = new System.Drawing.Point(8, 16);
+			this.labelDeceleration.Name = "labelDeceleration";
+			this.labelDeceleration.Size = new System.Drawing.Size(168, 16);
+			this.labelDeceleration.TabIndex = 3;
+			this.labelDeceleration.Text = "Deceleration:";
+			this.labelDeceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCoefficientOfRollingResistance
+			// 
+			this.labelCoefficientOfRollingResistance.Location = new System.Drawing.Point(8, 64);
+			this.labelCoefficientOfRollingResistance.Name = "labelCoefficientOfRollingResistance";
+			this.labelCoefficientOfRollingResistance.Size = new System.Drawing.Size(168, 16);
+			this.labelCoefficientOfRollingResistance.TabIndex = 2;
+			this.labelCoefficientOfRollingResistance.Text = "CoefficientOfRollingResistance:";
+			this.labelCoefficientOfRollingResistance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxDelay
+			// 
+			this.groupBoxDelay.Controls.Add(this.buttonDelayLocoBrakeSet);
+			this.groupBoxDelay.Controls.Add(this.buttonDelayBrakeSet);
+			this.groupBoxDelay.Controls.Add(this.buttonDelayPowerSet);
+			this.groupBoxDelay.Controls.Add(this.labelDelayLocoBrake);
+			this.groupBoxDelay.Controls.Add(this.labelDelayBrake);
+			this.groupBoxDelay.Controls.Add(this.labelDelayPower);
+			this.groupBoxDelay.Location = new System.Drawing.Point(320, 344);
+			this.groupBoxDelay.Name = "groupBoxDelay";
+			this.groupBoxDelay.Size = new System.Drawing.Size(152, 96);
+			this.groupBoxDelay.TabIndex = 2;
+			this.groupBoxDelay.TabStop = false;
+			this.groupBoxDelay.Text = "Delay";
+			// 
+			// buttonDelayLocoBrakeSet
+			// 
+			this.buttonDelayLocoBrakeSet.Location = new System.Drawing.Point(96, 64);
+			this.buttonDelayLocoBrakeSet.Name = "buttonDelayLocoBrakeSet";
+			this.buttonDelayLocoBrakeSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDelayLocoBrakeSet.TabIndex = 37;
+			this.buttonDelayLocoBrakeSet.Text = "Set...";
+			this.buttonDelayLocoBrakeSet.UseVisualStyleBackColor = true;
+			this.buttonDelayLocoBrakeSet.Click += new System.EventHandler(this.ButtonDelayLocoBrakeSet_Click);
+			// 
+			// buttonDelayBrakeSet
+			// 
+			this.buttonDelayBrakeSet.Location = new System.Drawing.Point(96, 40);
+			this.buttonDelayBrakeSet.Name = "buttonDelayBrakeSet";
+			this.buttonDelayBrakeSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDelayBrakeSet.TabIndex = 35;
+			this.buttonDelayBrakeSet.Text = "Set...";
+			this.buttonDelayBrakeSet.UseVisualStyleBackColor = true;
+			this.buttonDelayBrakeSet.Click += new System.EventHandler(this.ButtonDelayBrakeSet_Click);
+			// 
+			// buttonDelayPowerSet
+			// 
+			this.buttonDelayPowerSet.Location = new System.Drawing.Point(96, 16);
+			this.buttonDelayPowerSet.Name = "buttonDelayPowerSet";
+			this.buttonDelayPowerSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDelayPowerSet.TabIndex = 33;
+			this.buttonDelayPowerSet.Text = "Set...";
+			this.buttonDelayPowerSet.UseVisualStyleBackColor = true;
+			this.buttonDelayPowerSet.Click += new System.EventHandler(this.ButtonDelayPowerSet_Click);
+			// 
+			// labelDelayLocoBrake
+			// 
+			this.labelDelayLocoBrake.Location = new System.Drawing.Point(8, 64);
+			this.labelDelayLocoBrake.Name = "labelDelayLocoBrake";
+			this.labelDelayLocoBrake.Size = new System.Drawing.Size(80, 16);
+			this.labelDelayLocoBrake.TabIndex = 6;
+			this.labelDelayLocoBrake.Text = "LocoBrake:";
+			this.labelDelayLocoBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDelayBrake
+			// 
+			this.labelDelayBrake.Location = new System.Drawing.Point(8, 40);
+			this.labelDelayBrake.Name = "labelDelayBrake";
+			this.labelDelayBrake.Size = new System.Drawing.Size(80, 16);
+			this.labelDelayBrake.TabIndex = 4;
+			this.labelDelayBrake.Text = "Brake:";
+			this.labelDelayBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDelayPower
+			// 
+			this.labelDelayPower.Location = new System.Drawing.Point(8, 16);
+			this.labelDelayPower.Name = "labelDelayPower";
+			this.labelDelayPower.Size = new System.Drawing.Size(80, 16);
+			this.labelDelayPower.TabIndex = 2;
+			this.labelDelayPower.Text = "Power:";
+			this.labelDelayPower.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
 			// tabPageTrain
 			// 
+			this.tabPageTrain.Controls.Add(this.groupBoxTrainGeneral);
 			this.tabPageTrain.Controls.Add(this.groupBoxDevice);
-			this.tabPageTrain.Controls.Add(this.groupBoxCab);
 			this.tabPageTrain.Controls.Add(this.groupBoxHandle);
 			this.tabPageTrain.Location = new System.Drawing.Point(4, 22);
 			this.tabPageTrain.Name = "tabPageTrain";
-			this.tabPageTrain.Size = new System.Drawing.Size(792, 670);
+			this.tabPageTrain.Size = new System.Drawing.Size(792, 686);
 			this.tabPageTrain.TabIndex = 3;
 			this.tabPageTrain.Text = "Train settings";
 			this.tabPageTrain.UseVisualStyleBackColor = true;
 			// 
+			// groupBoxTrainGeneral
+			// 
+			this.groupBoxTrainGeneral.Controls.Add(this.comboBoxInitialDriverCar);
+			this.groupBoxTrainGeneral.Controls.Add(this.labelInitialDriverCar);
+			this.groupBoxTrainGeneral.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxTrainGeneral.Name = "groupBoxTrainGeneral";
+			this.groupBoxTrainGeneral.Size = new System.Drawing.Size(424, 48);
+			this.groupBoxTrainGeneral.TabIndex = 3;
+			this.groupBoxTrainGeneral.TabStop = false;
+			this.groupBoxTrainGeneral.Text = "General";
+			// 
+			// comboBoxInitialDriverCar
+			// 
+			this.comboBoxInitialDriverCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxInitialDriverCar.FormattingEnabled = true;
+			this.comboBoxInitialDriverCar.Location = new System.Drawing.Point(192, 16);
+			this.comboBoxInitialDriverCar.Name = "comboBoxInitialDriverCar";
+			this.comboBoxInitialDriverCar.Size = new System.Drawing.Size(216, 20);
+			this.comboBoxInitialDriverCar.TabIndex = 3;
+			// 
+			// labelInitialDriverCar
+			// 
+			this.labelInitialDriverCar.Location = new System.Drawing.Point(8, 16);
+			this.labelInitialDriverCar.Name = "labelInitialDriverCar";
+			this.labelInitialDriverCar.Size = new System.Drawing.Size(176, 16);
+			this.labelInitialDriverCar.TabIndex = 2;
+			this.labelInitialDriverCar.Text = "InitialDriverCar:";
+			this.labelInitialDriverCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
 			// groupBoxDevice
 			// 
-			this.groupBoxDevice.Controls.Add(this.labelDoorMaxToleranceUnit);
-			this.groupBoxDevice.Controls.Add(this.textBoxDoorMaxTolerance);
-			this.groupBoxDevice.Controls.Add(this.labelDoorWidthUnit);
-			this.groupBoxDevice.Controls.Add(this.textBoxDoorWidth);
 			this.groupBoxDevice.Controls.Add(this.comboBoxDoorCloseMode);
 			this.groupBoxDevice.Controls.Add(this.comboBoxDoorOpenMode);
 			this.groupBoxDevice.Controls.Add(this.comboBoxPassAlarm);
-			this.groupBoxDevice.Controls.Add(this.comboBoxReAdhesionDevice);
 			this.groupBoxDevice.Controls.Add(this.comboBoxAtc);
 			this.groupBoxDevice.Controls.Add(this.comboBoxAts);
 			this.groupBoxDevice.Controls.Add(this.checkBoxHoldBrake);
 			this.groupBoxDevice.Controls.Add(this.checkBoxEb);
 			this.groupBoxDevice.Controls.Add(this.checkBoxConstSpeed);
-			this.groupBoxDevice.Controls.Add(this.labelDoorMaxTolerance);
-			this.groupBoxDevice.Controls.Add(this.labelDoorWidth);
 			this.groupBoxDevice.Controls.Add(this.labelDoorCloseMode);
 			this.groupBoxDevice.Controls.Add(this.labelDoorOpenMode);
 			this.groupBoxDevice.Controls.Add(this.labelPassAlarm);
-			this.groupBoxDevice.Controls.Add(this.labelReAdhesionDevice);
 			this.groupBoxDevice.Controls.Add(this.labelHoldBrake);
 			this.groupBoxDevice.Controls.Add(this.labelConstSpeed);
 			this.groupBoxDevice.Controls.Add(this.labelEb);
 			this.groupBoxDevice.Controls.Add(this.labelAtc);
 			this.groupBoxDevice.Controls.Add(this.labelAts);
-			this.groupBoxDevice.Location = new System.Drawing.Point(432, 8);
+			this.groupBoxDevice.Location = new System.Drawing.Point(440, 8);
 			this.groupBoxDevice.Name = "groupBoxDevice";
-			this.groupBoxDevice.Size = new System.Drawing.Size(336, 288);
+			this.groupBoxDevice.Size = new System.Drawing.Size(312, 216);
 			this.groupBoxDevice.TabIndex = 2;
 			this.groupBoxDevice.TabStop = false;
 			this.groupBoxDevice.Text = "Device";
-			// 
-			// labelDoorMaxToleranceUnit
-			// 
-			this.labelDoorMaxToleranceUnit.Location = new System.Drawing.Point(304, 256);
-			this.labelDoorMaxToleranceUnit.Name = "labelDoorMaxToleranceUnit";
-			this.labelDoorMaxToleranceUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelDoorMaxToleranceUnit.TabIndex = 23;
-			this.labelDoorMaxToleranceUnit.Text = "mm";
-			this.labelDoorMaxToleranceUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxDoorMaxTolerance
-			// 
-			this.textBoxDoorMaxTolerance.Location = new System.Drawing.Point(128, 256);
-			this.textBoxDoorMaxTolerance.Name = "textBoxDoorMaxTolerance";
-			this.textBoxDoorMaxTolerance.Size = new System.Drawing.Size(168, 19);
-			this.textBoxDoorMaxTolerance.TabIndex = 22;
-			// 
-			// labelDoorWidthUnit
-			// 
-			this.labelDoorWidthUnit.Location = new System.Drawing.Point(304, 232);
-			this.labelDoorWidthUnit.Name = "labelDoorWidthUnit";
-			this.labelDoorWidthUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelDoorWidthUnit.TabIndex = 21;
-			this.labelDoorWidthUnit.Text = "mm";
-			this.labelDoorWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxDoorWidth
-			// 
-			this.textBoxDoorWidth.Location = new System.Drawing.Point(128, 232);
-			this.textBoxDoorWidth.Name = "textBoxDoorWidth";
-			this.textBoxDoorWidth.Size = new System.Drawing.Size(168, 19);
-			this.textBoxDoorWidth.TabIndex = 20;
 			// 
 			// comboBoxDoorCloseMode
 			// 
@@ -6005,7 +7057,7 @@ namespace TrainEditor2.Views
             "Semi-automatic",
             "Automatic",
             "Manual"});
-			this.comboBoxDoorCloseMode.Location = new System.Drawing.Point(128, 208);
+			this.comboBoxDoorCloseMode.Location = new System.Drawing.Point(128, 184);
 			this.comboBoxDoorCloseMode.Name = "comboBoxDoorCloseMode";
 			this.comboBoxDoorCloseMode.Size = new System.Drawing.Size(168, 20);
 			this.comboBoxDoorCloseMode.TabIndex = 19;
@@ -6018,7 +7070,7 @@ namespace TrainEditor2.Views
             "Semi-automatic",
             "Automatic",
             "Manual"});
-			this.comboBoxDoorOpenMode.Location = new System.Drawing.Point(128, 184);
+			this.comboBoxDoorOpenMode.Location = new System.Drawing.Point(128, 160);
 			this.comboBoxDoorOpenMode.Name = "comboBoxDoorOpenMode";
 			this.comboBoxDoorOpenMode.Size = new System.Drawing.Size(168, 20);
 			this.comboBoxDoorOpenMode.TabIndex = 18;
@@ -6031,25 +7083,10 @@ namespace TrainEditor2.Views
             "None",
             "Single",
             "Looping"});
-			this.comboBoxPassAlarm.Location = new System.Drawing.Point(128, 160);
+			this.comboBoxPassAlarm.Location = new System.Drawing.Point(128, 136);
 			this.comboBoxPassAlarm.Name = "comboBoxPassAlarm";
 			this.comboBoxPassAlarm.Size = new System.Drawing.Size(168, 20);
 			this.comboBoxPassAlarm.TabIndex = 17;
-			// 
-			// comboBoxReAdhesionDevice
-			// 
-			this.comboBoxReAdhesionDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxReAdhesionDevice.FormattingEnabled = true;
-			this.comboBoxReAdhesionDevice.Items.AddRange(new object[] {
-            "None",
-            "Type A (instant)",
-            "Type B (slow)",
-            "Type C (medium)",
-            "Type D (fast)"});
-			this.comboBoxReAdhesionDevice.Location = new System.Drawing.Point(128, 136);
-			this.comboBoxReAdhesionDevice.Name = "comboBoxReAdhesionDevice";
-			this.comboBoxReAdhesionDevice.Size = new System.Drawing.Size(168, 20);
-			this.comboBoxReAdhesionDevice.TabIndex = 16;
 			// 
 			// comboBoxAtc
 			// 
@@ -6101,27 +7138,9 @@ namespace TrainEditor2.Views
 			this.checkBoxConstSpeed.TabIndex = 11;
 			this.checkBoxConstSpeed.UseVisualStyleBackColor = true;
 			// 
-			// labelDoorMaxTolerance
-			// 
-			this.labelDoorMaxTolerance.Location = new System.Drawing.Point(8, 256);
-			this.labelDoorMaxTolerance.Name = "labelDoorMaxTolerance";
-			this.labelDoorMaxTolerance.Size = new System.Drawing.Size(112, 16);
-			this.labelDoorMaxTolerance.TabIndex = 10;
-			this.labelDoorMaxTolerance.Text = "DoorMaxTolerance:";
-			this.labelDoorMaxTolerance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDoorWidth
-			// 
-			this.labelDoorWidth.Location = new System.Drawing.Point(8, 232);
-			this.labelDoorWidth.Name = "labelDoorWidth";
-			this.labelDoorWidth.Size = new System.Drawing.Size(112, 16);
-			this.labelDoorWidth.TabIndex = 9;
-			this.labelDoorWidth.Text = "DoorWidth:";
-			this.labelDoorWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
 			// labelDoorCloseMode
 			// 
-			this.labelDoorCloseMode.Location = new System.Drawing.Point(8, 208);
+			this.labelDoorCloseMode.Location = new System.Drawing.Point(8, 184);
 			this.labelDoorCloseMode.Name = "labelDoorCloseMode";
 			this.labelDoorCloseMode.Size = new System.Drawing.Size(112, 16);
 			this.labelDoorCloseMode.TabIndex = 8;
@@ -6130,7 +7149,7 @@ namespace TrainEditor2.Views
 			// 
 			// labelDoorOpenMode
 			// 
-			this.labelDoorOpenMode.Location = new System.Drawing.Point(8, 184);
+			this.labelDoorOpenMode.Location = new System.Drawing.Point(8, 160);
 			this.labelDoorOpenMode.Name = "labelDoorOpenMode";
 			this.labelDoorOpenMode.Size = new System.Drawing.Size(112, 16);
 			this.labelDoorOpenMode.TabIndex = 7;
@@ -6139,21 +7158,12 @@ namespace TrainEditor2.Views
 			// 
 			// labelPassAlarm
 			// 
-			this.labelPassAlarm.Location = new System.Drawing.Point(8, 160);
+			this.labelPassAlarm.Location = new System.Drawing.Point(8, 136);
 			this.labelPassAlarm.Name = "labelPassAlarm";
 			this.labelPassAlarm.Size = new System.Drawing.Size(112, 16);
 			this.labelPassAlarm.TabIndex = 6;
 			this.labelPassAlarm.Text = "PassAlarm:";
 			this.labelPassAlarm.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelReAdhesionDevice
-			// 
-			this.labelReAdhesionDevice.Location = new System.Drawing.Point(8, 136);
-			this.labelReAdhesionDevice.Name = "labelReAdhesionDevice";
-			this.labelReAdhesionDevice.Size = new System.Drawing.Size(112, 16);
-			this.labelReAdhesionDevice.TabIndex = 5;
-			this.labelReAdhesionDevice.Text = "ReAdhesionDevice:";
-			this.labelReAdhesionDevice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// labelHoldBrake
 			// 
@@ -6200,119 +7210,6 @@ namespace TrainEditor2.Views
 			this.labelAts.Text = "Ats:";
 			this.labelAts.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// groupBoxCab
-			// 
-			this.groupBoxCab.Controls.Add(this.comboBoxDriverCar);
-			this.groupBoxCab.Controls.Add(this.labelCabZUnit);
-			this.groupBoxCab.Controls.Add(this.textBoxCabZ);
-			this.groupBoxCab.Controls.Add(this.labelCabYUnit);
-			this.groupBoxCab.Controls.Add(this.textBoxCabY);
-			this.groupBoxCab.Controls.Add(this.labelCabXUnit);
-			this.groupBoxCab.Controls.Add(this.textBoxCabX);
-			this.groupBoxCab.Controls.Add(this.labelDriverCar);
-			this.groupBoxCab.Controls.Add(this.labelCabZ);
-			this.groupBoxCab.Controls.Add(this.labelCabY);
-			this.groupBoxCab.Controls.Add(this.labelCabX);
-			this.groupBoxCab.Location = new System.Drawing.Point(8, 256);
-			this.groupBoxCab.Name = "groupBoxCab";
-			this.groupBoxCab.Size = new System.Drawing.Size(416, 120);
-			this.groupBoxCab.TabIndex = 1;
-			this.groupBoxCab.TabStop = false;
-			this.groupBoxCab.Text = "Cab";
-			// 
-			// comboBoxDriverCar
-			// 
-			this.comboBoxDriverCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxDriverCar.FormattingEnabled = true;
-			this.comboBoxDriverCar.Location = new System.Drawing.Point(192, 88);
-			this.comboBoxDriverCar.Name = "comboBoxDriverCar";
-			this.comboBoxDriverCar.Size = new System.Drawing.Size(184, 20);
-			this.comboBoxDriverCar.TabIndex = 10;
-			// 
-			// labelCabZUnit
-			// 
-			this.labelCabZUnit.Location = new System.Drawing.Point(384, 64);
-			this.labelCabZUnit.Name = "labelCabZUnit";
-			this.labelCabZUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabZUnit.TabIndex = 9;
-			this.labelCabZUnit.Text = "mm";
-			this.labelCabZUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxCabZ
-			// 
-			this.textBoxCabZ.Location = new System.Drawing.Point(192, 64);
-			this.textBoxCabZ.Name = "textBoxCabZ";
-			this.textBoxCabZ.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCabZ.TabIndex = 8;
-			// 
-			// labelCabYUnit
-			// 
-			this.labelCabYUnit.Location = new System.Drawing.Point(384, 40);
-			this.labelCabYUnit.Name = "labelCabYUnit";
-			this.labelCabYUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabYUnit.TabIndex = 7;
-			this.labelCabYUnit.Text = "mm";
-			this.labelCabYUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxCabY
-			// 
-			this.textBoxCabY.Location = new System.Drawing.Point(192, 40);
-			this.textBoxCabY.Name = "textBoxCabY";
-			this.textBoxCabY.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCabY.TabIndex = 6;
-			// 
-			// labelCabXUnit
-			// 
-			this.labelCabXUnit.Location = new System.Drawing.Point(384, 16);
-			this.labelCabXUnit.Name = "labelCabXUnit";
-			this.labelCabXUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabXUnit.TabIndex = 5;
-			this.labelCabXUnit.Text = "mm";
-			this.labelCabXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxCabX
-			// 
-			this.textBoxCabX.Location = new System.Drawing.Point(192, 16);
-			this.textBoxCabX.Name = "textBoxCabX";
-			this.textBoxCabX.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCabX.TabIndex = 4;
-			// 
-			// labelDriverCar
-			// 
-			this.labelDriverCar.Location = new System.Drawing.Point(8, 88);
-			this.labelDriverCar.Name = "labelDriverCar";
-			this.labelDriverCar.Size = new System.Drawing.Size(176, 16);
-			this.labelDriverCar.TabIndex = 3;
-			this.labelDriverCar.Text = "DriverCar:";
-			this.labelDriverCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCabZ
-			// 
-			this.labelCabZ.Location = new System.Drawing.Point(8, 64);
-			this.labelCabZ.Name = "labelCabZ";
-			this.labelCabZ.Size = new System.Drawing.Size(176, 16);
-			this.labelCabZ.TabIndex = 2;
-			this.labelCabZ.Text = "Z:";
-			this.labelCabZ.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCabY
-			// 
-			this.labelCabY.Location = new System.Drawing.Point(8, 40);
-			this.labelCabY.Name = "labelCabY";
-			this.labelCabY.Size = new System.Drawing.Size(176, 16);
-			this.labelCabY.TabIndex = 1;
-			this.labelCabY.Text = "Y:";
-			this.labelCabY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCabX
-			// 
-			this.labelCabX.Location = new System.Drawing.Point(8, 16);
-			this.labelCabX.Name = "labelCabX";
-			this.labelCabX.Size = new System.Drawing.Size(176, 16);
-			this.labelCabX.TabIndex = 0;
-			this.labelCabX.Text = "X:";
-			this.labelCabX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
 			// groupBoxHandle
 			// 
 			this.groupBoxHandle.Controls.Add(this.numericUpDownLocoBrakeNotches);
@@ -6333,9 +7230,9 @@ namespace TrainEditor2.Views
 			this.groupBoxHandle.Controls.Add(this.labelPowerNotches);
 			this.groupBoxHandle.Controls.Add(this.comboBoxHandleType);
 			this.groupBoxHandle.Controls.Add(this.labelHandleType);
-			this.groupBoxHandle.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxHandle.Location = new System.Drawing.Point(8, 64);
 			this.groupBoxHandle.Name = "groupBoxHandle";
-			this.groupBoxHandle.Size = new System.Drawing.Size(416, 240);
+			this.groupBoxHandle.Size = new System.Drawing.Size(424, 240);
 			this.groupBoxHandle.TabIndex = 0;
 			this.groupBoxHandle.TabStop = false;
 			this.groupBoxHandle.Text = "Handle";
@@ -6343,6 +7240,11 @@ namespace TrainEditor2.Views
 			// numericUpDownLocoBrakeNotches
 			// 
 			this.numericUpDownLocoBrakeNotches.Location = new System.Drawing.Point(192, 208);
+			this.numericUpDownLocoBrakeNotches.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownLocoBrakeNotches.Name = "numericUpDownLocoBrakeNotches";
 			this.numericUpDownLocoBrakeNotches.Size = new System.Drawing.Size(216, 19);
 			this.numericUpDownLocoBrakeNotches.TabIndex = 17;
@@ -6404,6 +7306,11 @@ namespace TrainEditor2.Views
 			// numericUpDownDriverBrakeNotches
 			// 
 			this.numericUpDownDriverBrakeNotches.Location = new System.Drawing.Point(192, 136);
+			this.numericUpDownDriverBrakeNotches.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownDriverBrakeNotches.Name = "numericUpDownDriverBrakeNotches";
 			this.numericUpDownDriverBrakeNotches.Size = new System.Drawing.Size(216, 19);
 			this.numericUpDownDriverBrakeNotches.TabIndex = 11;
@@ -6420,6 +7327,11 @@ namespace TrainEditor2.Views
 			// numericUpDownDriverPowerNotches
 			// 
 			this.numericUpDownDriverPowerNotches.Location = new System.Drawing.Point(192, 112);
+			this.numericUpDownDriverPowerNotches.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownDriverPowerNotches.Name = "numericUpDownDriverPowerNotches";
 			this.numericUpDownDriverPowerNotches.Size = new System.Drawing.Size(216, 19);
 			this.numericUpDownDriverPowerNotches.TabIndex = 9;
@@ -6436,6 +7348,11 @@ namespace TrainEditor2.Views
 			// numericUpDownPowerNotchReduceSteps
 			// 
 			this.numericUpDownPowerNotchReduceSteps.Location = new System.Drawing.Point(192, 88);
+			this.numericUpDownPowerNotchReduceSteps.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownPowerNotchReduceSteps.Name = "numericUpDownPowerNotchReduceSteps";
 			this.numericUpDownPowerNotchReduceSteps.Size = new System.Drawing.Size(216, 19);
 			this.numericUpDownPowerNotchReduceSteps.TabIndex = 7;
@@ -6452,6 +7369,11 @@ namespace TrainEditor2.Views
 			// numericUpDownBrakeNotches
 			// 
 			this.numericUpDownBrakeNotches.Location = new System.Drawing.Point(192, 64);
+			this.numericUpDownBrakeNotches.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownBrakeNotches.Name = "numericUpDownBrakeNotches";
 			this.numericUpDownBrakeNotches.Size = new System.Drawing.Size(216, 19);
 			this.numericUpDownBrakeNotches.TabIndex = 5;
@@ -6468,6 +7390,11 @@ namespace TrainEditor2.Views
 			// numericUpDownPowerNotches
 			// 
 			this.numericUpDownPowerNotches.Location = new System.Drawing.Point(192, 40);
+			this.numericUpDownPowerNotches.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownPowerNotches.Name = "numericUpDownPowerNotches";
 			this.numericUpDownPowerNotches.Size = new System.Drawing.Size(216, 19);
 			this.numericUpDownPowerNotches.TabIndex = 3;
@@ -6487,10 +7414,7 @@ namespace TrainEditor2.Views
 			this.comboBoxHandleType.FormattingEnabled = true;
 			this.comboBoxHandleType.Items.AddRange(new object[] {
             "Separated",
-            "Combined",
-			"Separated (Interlocked)",
-			"Separated (Reverser Interlocked)",
-			});
+            "Combined"});
 			this.comboBoxHandleType.Location = new System.Drawing.Point(192, 16);
 			this.comboBoxHandleType.Name = "comboBoxHandleType";
 			this.comboBoxHandleType.Size = new System.Drawing.Size(216, 20);
@@ -6508,45 +7432,79 @@ namespace TrainEditor2.Views
 			// tabControlEditor
 			// 
 			this.tabControlEditor.AllowDrop = true;
+			this.tabControlEditor.Controls.Add(this.tabPageStatus);
 			this.tabControlEditor.Controls.Add(this.tabPageTrain);
-			this.tabControlEditor.Controls.Add(this.tabPageCar);
+			this.tabControlEditor.Controls.Add(this.tabPageCar1);
+			this.tabControlEditor.Controls.Add(this.tabPageCar2);
 			this.tabControlEditor.Controls.Add(this.tabPageAccel);
 			this.tabControlEditor.Controls.Add(this.tabPageMotor);
-			this.tabControlEditor.Controls.Add(this.tabPageCoupler);
 			this.tabControlEditor.Controls.Add(this.tabPagePanel);
+			this.tabControlEditor.Controls.Add(this.tabPageCoupler);
 			this.tabControlEditor.Controls.Add(this.tabPageSound);
-			this.tabControlEditor.Controls.Add(this.tabPageStatus);
 			this.tabControlEditor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControlEditor.Location = new System.Drawing.Point(200, 24);
 			this.tabControlEditor.Name = "tabControlEditor";
 			this.tabControlEditor.SelectedIndex = 0;
-			this.tabControlEditor.Size = new System.Drawing.Size(800, 696);
+			this.tabControlEditor.Size = new System.Drawing.Size(800, 744);
 			this.tabControlEditor.TabIndex = 9;
 			// 
-			// buttonDelayElectricBrake
+			// tabPageCar2
 			// 
-			this.buttonDelayElectricBrake.Location = new System.Drawing.Point(160, 90);
-			this.buttonDelayElectricBrake.Name = "buttonDelayElectricBrake";
-			this.buttonDelayElectricBrake.Size = new System.Drawing.Size(48, 21);
-			this.buttonDelayElectricBrake.TabIndex = 39;
-			this.buttonDelayElectricBrake.Text = "Set...";
-			this.buttonDelayElectricBrake.UseVisualStyleBackColor = true;
-			this.buttonDelayElectricBrake.Click += new System.EventHandler(this.buttonDelayElectricBrake_Click);
+			this.tabPageCar2.Controls.Add(this.groupBoxPressure);
+			this.tabPageCar2.Controls.Add(this.groupBoxBrake);
+			this.tabPageCar2.Controls.Add(this.groupBoxDelay);
+			this.tabPageCar2.Controls.Add(this.groupBoxPerformance);
+			this.tabPageCar2.Controls.Add(this.groupBoxJerk);
+			this.tabPageCar2.Location = new System.Drawing.Point(4, 22);
+			this.tabPageCar2.Name = "tabPageCar2";
+			this.tabPageCar2.Size = new System.Drawing.Size(792, 686);
+			this.tabPageCar2.TabIndex = 8;
+			this.tabPageCar2.Text = "Car settings (2)";
+			this.tabPageCar2.UseVisualStyleBackColor = true;
 			// 
-			// labelDelayElectricBrake
+			// groupBoxUnit
 			// 
-			this.labelDelayElectricBrake.Location = new System.Drawing.Point(8, 90);
-			this.labelDelayElectricBrake.Name = "labelDelayElectricBrake";
-			this.labelDelayElectricBrake.Size = new System.Drawing.Size(144, 17);
-			this.labelDelayElectricBrake.TabIndex = 38;
-			this.labelDelayElectricBrake.Text = "Electric Brake:";
-			this.labelDelayElectricBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.groupBoxUnit.Controls.Add(this.comboBoxMotorXUnit);
+			this.groupBoxUnit.Controls.Add(this.labelMotorXUnit);
+			this.groupBoxUnit.Location = new System.Drawing.Point(8, 64);
+			this.groupBoxUnit.Name = "groupBoxUnit";
+			this.groupBoxUnit.Size = new System.Drawing.Size(200, 48);
+			this.groupBoxUnit.TabIndex = 4;
+			this.groupBoxUnit.TabStop = false;
+			this.groupBoxUnit.Text = "Unit setting";
+			// 
+			// comboBoxMotorXUnit
+			// 
+			this.comboBoxMotorXUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMotorXUnit.FormattingEnabled = true;
+			this.comboBoxMotorXUnit.Location = new System.Drawing.Point(112, 16);
+			this.comboBoxMotorXUnit.Name = "comboBoxMotorXUnit";
+			this.comboBoxMotorXUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMotorXUnit.TabIndex = 66;
+			// 
+			// labelMotorXUnit
+			// 
+			this.labelMotorXUnit.Location = new System.Drawing.Point(8, 16);
+			this.labelMotorXUnit.Name = "labelMotorXUnit";
+			this.labelMotorXUnit.Size = new System.Drawing.Size(96, 16);
+			this.labelMotorXUnit.TabIndex = 64;
+			this.labelMotorXUnit.Text = "X unit:";
+			this.labelMotorXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// comboBoxMotorAccelUnit
+			// 
+			this.comboBoxMotorAccelUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMotorAccelUnit.FormattingEnabled = true;
+			this.comboBoxMotorAccelUnit.Location = new System.Drawing.Point(128, 64);
+			this.comboBoxMotorAccelUnit.Name = "comboBoxMotorAccelUnit";
+			this.comboBoxMotorAccelUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMotorAccelUnit.TabIndex = 67;
 			// 
 			// FormEditor
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1000, 720);
+			this.ClientSize = new System.Drawing.Size(1000, 768);
 			this.Controls.Add(this.tabControlEditor);
 			this.Controls.Add(this.panelCars);
 			this.Controls.Add(this.menuStripMenu);
@@ -6558,6 +7516,7 @@ namespace TrainEditor2.Views
 			this.Load += new System.EventHandler(this.FormEditor_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEditor_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormEditor_KeyUp);
+			this.Resize += new System.EventHandler(this.FormEditor_Resize);
 			this.panelCars.ResumeLayout(false);
 			this.panelCarsNavi.ResumeLayout(false);
 			this.menuStripMenu.ResumeLayout(false);
@@ -6647,8 +7606,12 @@ namespace TrainEditor2.Views
 			this.groupBoxCouplerGeneral.ResumeLayout(false);
 			this.groupBoxCouplerGeneral.PerformLayout();
 			this.tabPageMotor.ResumeLayout(false);
-			this.panelMotorSound.ResumeLayout(false);
-			this.panelMotorSound.PerformLayout();
+			this.splitContainerMotor.Panel1.ResumeLayout(false);
+			this.splitContainerMotor.Panel2.ResumeLayout(false);
+			this.splitContainerMotor.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainerMotor)).EndInit();
+			this.splitContainerMotor.ResumeLayout(false);
+			this.panelMoterNavi.ResumeLayout(false);
 			this.toolStripContainerDrawArea.ContentPanel.ResumeLayout(false);
 			this.toolStripContainerDrawArea.TopToolStripPanel.ResumeLayout(false);
 			this.toolStripContainerDrawArea.TopToolStripPanel.PerformLayout();
@@ -6657,20 +7620,20 @@ namespace TrainEditor2.Views
 			this.toolStripToolBar.ResumeLayout(false);
 			this.toolStripToolBar.PerformLayout();
 			this.panelMotorSetting.ResumeLayout(false);
-			this.groupBoxDirect.ResumeLayout(false);
-			this.groupBoxDirect.PerformLayout();
 			this.groupBoxPlay.ResumeLayout(false);
 			this.groupBoxArea.ResumeLayout(false);
 			this.groupBoxArea.PerformLayout();
 			this.groupBoxSource.ResumeLayout(false);
-			this.groupBoxSource.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownRunIndex)).EndInit();
+			this.groupBoxDirect.ResumeLayout(false);
+			this.groupBoxDirect.PerformLayout();
 			this.groupBoxView.ResumeLayout(false);
 			this.groupBoxView.PerformLayout();
-			this.statusStripStatus.ResumeLayout(false);
-			this.statusStripStatus.PerformLayout();
+			this.groupBoxTrack.ResumeLayout(false);
 			this.menuStripMotor.ResumeLayout(false);
 			this.menuStripMotor.PerformLayout();
+			this.statusStripStatus.ResumeLayout(false);
+			this.statusStripStatus.PerformLayout();
 			this.tabPageAccel.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxAccel)).EndInit();
 			this.panelAccel.ResumeLayout(false);
@@ -6679,25 +7642,41 @@ namespace TrainEditor2.Views
 			this.groupBoxParameter.ResumeLayout(false);
 			this.groupBoxParameter.PerformLayout();
 			this.groupBoxNotch.ResumeLayout(false);
-			this.tabPageCar.ResumeLayout(false);
-			this.groupBoxPressure.ResumeLayout(false);
-			this.groupBoxPressure.PerformLayout();
-			this.groupBoxBrake.ResumeLayout(false);
-			this.groupBoxBrake.PerformLayout();
-			this.groupBoxMove.ResumeLayout(false);
-			this.groupBoxMove.PerformLayout();
-			this.groupBoxDelay.ResumeLayout(false);
-			this.groupBoxPerformance.ResumeLayout(false);
-			this.groupBoxPerformance.PerformLayout();
+			this.tabPageCar1.ResumeLayout(false);
 			this.groupBoxCarGeneral.ResumeLayout(false);
 			this.groupBoxCarGeneral.PerformLayout();
 			this.groupBoxAxles.ResumeLayout(false);
 			this.groupBoxAxles.PerformLayout();
-			this.tabPageTrain.ResumeLayout(false);
-			this.groupBoxDevice.ResumeLayout(false);
-			this.groupBoxDevice.PerformLayout();
 			this.groupBoxCab.ResumeLayout(false);
 			this.groupBoxCab.PerformLayout();
+			this.groupBoxExternalCab.ResumeLayout(false);
+			this.groupBoxExternalCab.PerformLayout();
+			this.groupBoxCameraRestriction.ResumeLayout(false);
+			this.groupBoxCameraRestriction.PerformLayout();
+			this.groupBoxPressure.ResumeLayout(false);
+			this.groupBoxBrakeCylinder.ResumeLayout(false);
+			this.groupBoxBrakeCylinder.PerformLayout();
+			this.groupBoxStraightAirPipe.ResumeLayout(false);
+			this.groupBoxStraightAirPipe.PerformLayout();
+			this.groupBoxBrakePipe.ResumeLayout(false);
+			this.groupBoxBrakePipe.PerformLayout();
+			this.groupBoxEqualizingReservoir.ResumeLayout(false);
+			this.groupBoxEqualizingReservoir.PerformLayout();
+			this.groupBoxAuxiliaryReservoir.ResumeLayout(false);
+			this.groupBoxAuxiliaryReservoir.PerformLayout();
+			this.groupBoxMainReservoir.ResumeLayout(false);
+			this.groupBoxMainReservoir.PerformLayout();
+			this.groupBoxCompressor.ResumeLayout(false);
+			this.groupBoxCompressor.PerformLayout();
+			this.groupBoxBrake.ResumeLayout(false);
+			this.groupBoxBrake.PerformLayout();
+			this.groupBoxJerk.ResumeLayout(false);
+			this.groupBoxPerformance.ResumeLayout(false);
+			this.groupBoxPerformance.PerformLayout();
+			this.groupBoxDelay.ResumeLayout(false);
+			this.tabPageTrain.ResumeLayout(false);
+			this.groupBoxTrainGeneral.ResumeLayout(false);
+			this.groupBoxDevice.ResumeLayout(false);
 			this.groupBoxHandle.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLocoBrakeNotches)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverBrakeNotches)).EndInit();
@@ -6706,6 +7685,8 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).EndInit();
 			this.tabControlEditor.ResumeLayout(false);
+			this.tabPageCar2.ResumeLayout(false);
+			this.groupBoxUnit.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -6738,10 +7719,6 @@ namespace TrainEditor2.Views
 		private TabControl tabControlEditor;
 		private TabPage tabPageTrain;
 		private GroupBox groupBoxDevice;
-		private Label labelDoorMaxToleranceUnit;
-		private TextBox textBoxDoorMaxTolerance;
-		private Label labelDoorWidthUnit;
-		private TextBox textBoxDoorWidth;
 		private ComboBox comboBoxDoorCloseMode;
 		private ComboBox comboBoxDoorOpenMode;
 		private ComboBox comboBoxPassAlarm;
@@ -6751,8 +7728,6 @@ namespace TrainEditor2.Views
 		private CheckBox checkBoxHoldBrake;
 		private CheckBox checkBoxEb;
 		private CheckBox checkBoxConstSpeed;
-		private Label labelDoorMaxTolerance;
-		private Label labelDoorWidth;
 		private Label labelDoorCloseMode;
 		private Label labelDoorOpenMode;
 		private Label labelPassAlarm;
@@ -6763,14 +7738,9 @@ namespace TrainEditor2.Views
 		private Label labelAtc;
 		private Label labelAts;
 		private GroupBox groupBoxCab;
-		private ComboBox comboBoxDriverCar;
-		private Label labelCabZUnit;
 		private TextBox textBoxCabZ;
-		private Label labelCabYUnit;
 		private TextBox textBoxCabY;
-		private Label labelCabXUnit;
 		private TextBox textBoxCabX;
-		private Label labelDriverCar;
 		private Label labelCabZ;
 		private Label labelCabY;
 		private Label labelCabX;
@@ -6793,15 +7763,10 @@ namespace TrainEditor2.Views
 		private Label labelPowerNotches;
 		private ComboBox comboBoxHandleType;
 		private Label labelHandleType;
-		private TabPage tabPageCar;
+		private TabPage tabPageCar1;
 		private GroupBox groupBoxPressure;
-		private Label labelBrakePipeNormalPressureUnit;
 		private TextBox textBoxBrakePipeNormalPressure;
 		private Label labelBrakePipeNormalPressure;
-		private Label labelBrakeCylinderServiceMaximumPressureUnit;
-		private Label labelMainReservoirMaximumPressureUnit;
-		private Label labelMainReservoirMinimumPressureUnit;
-		private Label labelBrakeCylinderEmergencyMaximumPressureUnit;
 		private TextBox textBoxMainReservoirMaximumPressure;
 		private TextBox textBoxMainReservoirMinimumPressure;
 		private TextBox textBoxBrakeCylinderEmergencyMaximumPressure;
@@ -6812,7 +7777,6 @@ namespace TrainEditor2.Views
 		private Label labelBrakeCylinderEmergencyMaximumPressure;
 		private GroupBox groupBoxBrake;
 		private TextBox textBoxBrakeControlSpeed;
-		private Label labelBrakeControlSpeedUnit;
 		private ComboBox comboBoxBrakeControlSystem;
 		private ComboBox comboBoxLocoBrakeType;
 		private ComboBox comboBoxBrakeType;
@@ -6820,25 +7784,13 @@ namespace TrainEditor2.Views
 		private Label labelBrakeType;
 		private Label labelBrakeControlSpeed;
 		private Label labelBrakeControlSystem;
-		private GroupBox groupBoxMove;
-		private Label labelBrakeCylinderDownUnit;
-		private TextBox textBoxBrakeCylinderDown;
-		private Label labelBrakeCylinderUpUnit;
-		private TextBox textBoxBrakeCylinderUp;
-		private Label labelJerkBrakeDownUnit;
-		private TextBox textBoxJerkBrakeDown;
-		private Label labelJerkBrakeUpUnit;
-		private TextBox textBoxJerkBrakeUp;
-		private Label labelJerkPowerDownUnit;
-		private TextBox textBoxJerkPowerDown;
-		private Label labelJerkPowerUpUnit;
-		private TextBox textBoxJerkPowerUp;
-		private Label labelJerkPowerUp;
-		private Label labelJerkPowerDown;
-		private Label labelJerkBrakeUp;
-		private Label labelJerkBrakeDown;
-		private Label labelBrakeCylinderUp;
-		private Label labelBrakeCylinderDown;
+		private GroupBox groupBoxJerk;
+		private TextBox textBoxBrakeCylinderReleaseRate;
+		private TextBox textBoxBrakeCylinderEmergencyRate;
+		private Label labelJerkPower;
+		private Label labelJerkBrake;
+		private Label labelBrakeCylinderEmergencyRate;
+		private Label labelBrakeCylinderReleaseRate;
 		private GroupBox groupBoxDelay;
 		private Button buttonDelayLocoBrakeSet;
 		private Button buttonDelayBrakeSet;
@@ -6850,14 +7802,14 @@ namespace TrainEditor2.Views
 		private TextBox textBoxAerodynamicDragCoefficient;
 		private TextBox textBoxCoefficientOfRollingResistance;
 		private TextBox textBoxCoefficientOfStaticFriction;
-		private Label labelDecelerationUnit;
 		private TextBox textBoxDeceleration;
 		private Label labelAerodynamicDragCoefficient;
 		private Label labelCoefficientOfStaticFriction;
 		private Label labelDeceleration;
 		private Label labelCoefficientOfRollingResistance;
 		private GroupBox groupBoxCarGeneral;
-		private Label labelUnexposedFrontalAreaUnit;
+		private Label labelRightDoor;
+		private Label labelLeftDoor;
 		private TextBox textBoxUnexposedFrontalArea;
 		private Label labelUnexposedFrontalArea;
 		private Label labelRearBogie;
@@ -6869,13 +7821,7 @@ namespace TrainEditor2.Views
 		private CheckBox checkBoxDefinedAxles;
 		private CheckBox checkBoxIsMotorCar;
 		private Button buttonObjectOpen;
-		private Label labelExposedFrontalAreaUnit;
-		private Label labelCenterOfMassHeightUnit;
 		private Label labelLoadingSway;
-		private Label labelHeightUnit;
-		private Label labelWidthUnit;
-		private Label labelLengthUnit;
-		private Label labelMassUnit;
 		private TextBox textBoxMass;
 		private TextBox textBoxLength;
 		private TextBox textBoxWidth;
@@ -6886,8 +7832,6 @@ namespace TrainEditor2.Views
 		private Label labelObject;
 		private Label labelReversed;
 		private GroupBox groupBoxAxles;
-		private Label labelRearAxleUnit;
-		private Label labelFrontAxleUnit;
 		private TextBox textBoxRearAxle;
 		private TextBox textBoxFrontAxle;
 		private Label labelRearAxle;
@@ -6925,16 +7869,12 @@ namespace TrainEditor2.Views
 		private Label labelAccelX;
 		private CheckBox checkBoxSubtractDeceleration;
 		private GroupBox groupBoxParameter;
-		private Label labeAccelA0Unit;
 		private TextBox textBoxAccelA0;
 		private Label labelAccelA0;
-		private Label labelAccelA1Unit;
 		private TextBox textBoxAccelA1;
 		private Label labelAccelA1;
-		private Label labelAccelV1Unit;
 		private TextBox textBoxAccelV1;
 		private Label labelAccelV1;
-		private Label labelAccelV2Unit;
 		private TextBox textBoxAccelV2;
 		private Label labelAccelV2;
 		private TextBox textBoxAccelE;
@@ -6942,16 +7882,20 @@ namespace TrainEditor2.Views
 		private GroupBox groupBoxNotch;
 		private ComboBox comboBoxNotch;
 		private TabPage tabPageMotor;
-		private Panel panelMotorSound;
+		private SplitContainer splitContainerMotor;
+		private TreeView treeViewMotor;
+		private Panel panelMoterNavi;
+		private Button buttonMotorCopy;
+		private Button buttonMotorRemove;
+		private Button buttonMotorAdd;
+		private Button buttonMotorUp;
+		private Button buttonMotorDown;
 		private ToolStripContainer toolStripContainerDrawArea;
 		private OpenTK.GLControl glControlMotor;
 		private ToolStrip toolStripToolBar;
 		private ToolStripButton toolStripButtonUndo;
 		private ToolStripButton toolStripButtonRedo;
 		private ToolStripSeparator toolStripSeparatorRedo;
-		private ToolStripButton toolStripButtonTearingOff;
-		private ToolStripButton toolStripButtonCopy;
-		private ToolStripButton toolStripButtonPaste;
 		private ToolStripButton toolStripButtonCleanup;
 		private ToolStripButton toolStripButtonDelete;
 		private ToolStripSeparator toolStripSeparatorEdit;
@@ -6960,14 +7904,6 @@ namespace TrainEditor2.Views
 		private ToolStripButton toolStripButtonDot;
 		private ToolStripButton toolStripButtonLine;
 		private Panel panelMotorSetting;
-		private GroupBox groupBoxDirect;
-		private Button buttonDirectDot;
-		private Button buttonDirectMove;
-		private TextBox textBoxDirectY;
-		private Label labelDirectY;
-		private Label labelDirectXUnit;
-		private TextBox textBoxDirectX;
-		private Label labelDirectX;
 		private GroupBox groupBoxPlay;
 		private Button buttonStop;
 		private Button buttonPause;
@@ -6980,13 +7916,18 @@ namespace TrainEditor2.Views
 		private Label labelMotorAreaUnit;
 		private TextBox textBoxMotorAreaRight;
 		private Label labelMotorAccel;
-		private Label labelMotorAccelUnit;
 		private TextBox textBoxMotorAccel;
 		private GroupBox groupBoxSource;
 		private NumericUpDown numericUpDownRunIndex;
 		private Label labelRun;
-		private CheckBox checkBoxTrack2;
-		private CheckBox checkBoxTrack1;
+		private GroupBox groupBoxDirect;
+		private Button buttonDirectDot;
+		private Button buttonDirectMove;
+		private TextBox textBoxDirectY;
+		private Label labelDirectY;
+		private Label labelDirectXUnit;
+		private TextBox textBoxDirectX;
+		private Label labelDirectX;
 		private GroupBox groupBoxView;
 		private Button buttonMotorReset;
 		private Button buttonMotorZoomOut;
@@ -7005,30 +7946,16 @@ namespace TrainEditor2.Views
 		private Label labelMotorMinVelocityUnit;
 		private TextBox textBoxMotorMinVelocity;
 		private Label labelMotorMinVelocity;
-		private StatusStrip statusStripStatus;
-		private ToolStripStatusLabel toolStripStatusLabelY;
-		private ToolStripStatusLabel toolStripStatusLabelX;
-		private ToolStripStatusLabel toolStripStatusLabelTool;
-		private ToolStripStatusLabel toolStripStatusLabelMode;
-		private ToolStripStatusLabel toolStripStatusLabelTrack;
-		private ToolStripStatusLabel toolStripStatusLabelType;
+		private GroupBox groupBoxTrack;
+		private ComboBox comboBoxTrackType;
+		private Label labelTrackType;
 		private MenuStrip menuStripMotor;
 		private ToolStripMenuItem toolStripMenuItemEdit;
 		private ToolStripMenuItem toolStripMenuItemUndo;
 		private ToolStripMenuItem toolStripMenuItemRedo;
 		private ToolStripSeparator toolStripSeparatorUndo;
-		private ToolStripMenuItem toolStripMenuItemTearingOff;
-		private ToolStripMenuItem toolStripMenuItemCopy;
-		private ToolStripMenuItem toolStripMenuItemPaste;
 		private ToolStripMenuItem toolStripMenuItemCleanup;
 		private ToolStripMenuItem toolStripMenuItemDelete;
-		private ToolStripMenuItem toolStripMenuItemView;
-		private ToolStripMenuItem toolStripMenuItemPower;
-		private ToolStripMenuItem toolStripMenuItemPowerTrack1;
-		private ToolStripMenuItem toolStripMenuItemPowerTrack2;
-		private ToolStripMenuItem toolStripMenuItemBrake;
-		private ToolStripMenuItem toolStripMenuItemBrakeTrack1;
-		private ToolStripMenuItem toolStripMenuItemBrakeTrack2;
 		private ToolStripMenuItem toolStripMenuItemInput;
 		private ToolStripMenuItem toolStripMenuItemPitch;
 		private ToolStripMenuItem toolStripMenuItemVolume;
@@ -7039,15 +7966,19 @@ namespace TrainEditor2.Views
 		private ToolStripMenuItem toolStripMenuItemMove;
 		private ToolStripMenuItem toolStripMenuItemDot;
 		private ToolStripMenuItem toolStripMenuItemLine;
+		private StatusStrip statusStripStatus;
+		private ToolStripStatusLabel toolStripStatusLabelY;
+		private ToolStripStatusLabel toolStripStatusLabelX;
+		private ToolStripStatusLabel toolStripStatusLabelTool;
+		private ToolStripStatusLabel toolStripStatusLabelMode;
+		private ToolStripStatusLabel toolStripStatusLabelType;
 		private TabPage tabPageCoupler;
 		private GroupBox groupBoxCouplerGeneral;
 		private Button buttonCouplerObject;
 		private TextBox textBoxCouplerObject;
 		private Label labelCouplerObject;
-		private Label labelCouplerMaxUnit;
 		private TextBox textBoxCouplerMax;
 		private Label labelCouplerMax;
-		private Label labelCouplerMinUnit;
 		private TextBox textBoxCouplerMin;
 		private Label labelCouplerMin;
 		private TabPage tabPagePanel;
@@ -7259,6 +8190,8 @@ namespace TrainEditor2.Views
 		private Label labelTimetableLocationY;
 		private Label labelTimetableLocationX;
 		private TabPage tabPageTouch;
+		private NumericUpDown numericUpDownTouchLayer;
+		private Label labelTouchLayer;
 		private Button buttonTouchSoundCommand;
 		private Label labelTouchSoundCommand;
 		private NumericUpDown numericUpDownTouchJumpScreen;
@@ -7313,9 +8246,137 @@ namespace TrainEditor2.Views
 		private ToolStripMenuItem toolStripMenuItemWarning;
 		private ToolStripMenuItem toolStripMenuItemInfo;
 		private ToolStripMenuItem toolStripMenuItemClear;
-		private NumericUpDown numericUpDownTouchLayer;
-		private Label labelTouchLayer;
-		private Button buttonDelayElectricBrake;
-		private Label labelDelayElectricBrake;
+		private Button buttonPanelUp;
+		private Button buttonPanelDown;
+		private Button buttonSoundUp;
+		private Button buttonSoundDown;
+		private ToolStripMenuItem toolStripMenuItemImportTrain;
+		private ToolStripMenuItem toolStripMenuItemImportPanel;
+		private ToolStripMenuItem toolStripMenuItemImportSound;
+		private ToolStripMenuItem toolStripMenuItemExportTrain;
+		private ToolStripMenuItem toolStripMenuItemExportPanel;
+		private ToolStripMenuItem toolStripMenuItemExportSound;
+		private TabPage tabPageCar2;
+		private GroupBox groupBoxTrainGeneral;
+		private ComboBox comboBoxInitialDriverCar;
+		private Label labelInitialDriverCar;
+		private CheckBox checkBoxIsControlledCar;
+		private Label labelIsControlledCar;
+		private CheckBox checkBoxIsEmbeddedCab;
+		private Label labelIsEmbeddedCab;
+		private GroupBox groupBoxExternalCab;
+		private TextBox textBoxCabFileName;
+		private Label labelCabFileName;
+		private GroupBox groupBoxCameraRestriction;
+		private Button buttonCabFileNameOpen;
+		private TextBox textBoxCameraRestrictionForwards;
+		private Label labelCameraRestrictionForwards;
+		private CheckBox checkBoxCameraRestrictionDefinedForwards;
+		private Label labelCameraRestrictionDefinedForwards;
+		private CheckBox checkBoxCameraRestrictionDefinedBackwards;
+		private Label labelCameraRestrictionDefinedBackwards;
+		private TextBox textBoxCameraRestrictionBackwards;
+		private Label labelCameraRestrictionBackwards;
+		private CheckBox checkBoxCameraRestrictionDefinedLeft;
+		private Label labelCameraRestrictionDefinedLeft;
+		private TextBox textBoxCameraRestrictionLeft;
+		private Label labelCameraRestrictionLeft;
+		private CheckBox checkBoxCameraRestrictionDefinedRight;
+		private Label labelCameraRestrictionDefinedRight;
+		private TextBox textBoxCameraRestrictionRight;
+		private Label labelCameraRestrictionRight;
+		private CheckBox checkBoxCameraRestrictionDefinedUp;
+		private Label labelCameraRestrictionDefinedUp;
+		private TextBox textBoxCameraRestrictionUp;
+		private Label labelCameraRestrictionUp;
+		private CheckBox checkBoxCameraRestrictionDefinedDown;
+		private Label labelCameraRestrictionDefinedDown;
+		private TextBox textBoxCameraRestrictionDown;
+		private Label labelCameraRestrictionDown;
+		private Button buttonRightDoorSet;
+		private Button buttonLeftDoorSet;
+		private Button buttonJerkBrakeSet;
+		private Button buttonJerkPowerSet;
+		private GroupBox groupBoxCompressor;
+		private TextBox textBoxCompressorRate;
+		private Label labelCompressorRate;
+		private GroupBox groupBoxMainReservoir;
+		private GroupBox groupBoxAuxiliaryReservoir;
+		private Label labelAuxiliaryReservoirChargeRate;
+		private TextBox textBoxAuxiliaryReservoirChargeRate;
+		private GroupBox groupBoxEqualizingReservoir;
+		private Label labelEqualizingReservoirChargeRate;
+		private TextBox textBoxEqualizingReservoirChargeRate;
+		private Label labelEqualizingReservoirEmergencyRate;
+		private TextBox textBoxEqualizingReservoirEmergencyRate;
+		private Label labelEqualizingReservoirServiceRate;
+		private TextBox textBoxEqualizingReservoirServiceRate;
+		private GroupBox groupBoxBrakePipe;
+		private Label labelBrakePipeEmergencyRate;
+		private TextBox textBoxBrakePipeEmergencyRate;
+		private Label labelBrakePipeServiceRate;
+		private TextBox textBoxBrakePipeServiceRate;
+		private Label labelBrakePipeChargeRate;
+		private TextBox textBoxBrakePipeChargeRate;
+		private GroupBox groupBoxStraightAirPipe;
+		private Label labelStraightAirPipeReleaseRate;
+		private TextBox textBoxStraightAirPipeReleaseRate;
+		private Label labelStraightAirPipeEmergencyRate;
+		private TextBox textBoxStraightAirPipeEmergencyRate;
+		private Label labelStraightAirPipeServiceRate;
+		private TextBox textBoxStraightAirPipeServiceRate;
+		private GroupBox groupBoxBrakeCylinder;
+		private ComboBox comboBoxMassUnit;
+		private ComboBox comboBoxCenterOfMassHeightUnit;
+		private ComboBox comboBoxHeightUnit;
+		private ComboBox comboBoxWidthUnit;
+		private ComboBox comboBoxLengthUnit;
+		private ComboBox comboBoxRearAxleUnit;
+		private ComboBox comboBoxFrontAxleUnit;
+		private ComboBox comboBoxCabZUnit;
+		private ComboBox comboBoxCabYUnit;
+		private ComboBox comboBoxCabXUnit;
+		private ComboBox comboBoxCameraRestrictionDownUnit;
+		private ComboBox comboBoxCameraRestrictionUpUnit;
+		private ComboBox comboBoxCameraRestrictionRightUnit;
+		private ComboBox comboBoxCameraRestrictionLeftUnit;
+		private ComboBox comboBoxCameraRestrictionBackwardsUnit;
+		private ComboBox comboBoxCameraRestrictionForwardsUnit;
+		private ComboBox comboBoxCouplerMaxUnit;
+		private ComboBox comboBoxCouplerMinUnit;
+		private ComboBox comboBoxBrakeCylinderEmergencyMaximumPressureUnit;
+		private ComboBox comboBoxBrakeCylinderServiceMaximumPressureUnit;
+		private ComboBox comboBoxBrakePipeNormalPressureUnit;
+		private ComboBox comboBoxMainReservoirMaximumPressureUnit;
+		private ComboBox comboBoxMainReservoirMinimumPressureUnit;
+		private ComboBox comboBoxEqualizingReservoirEmergencyRateUnit;
+		private ComboBox comboBoxEqualizingReservoirServiceRateUnit;
+		private ComboBox comboBoxEqualizingReservoirChargeRateUnit;
+		private ComboBox comboBoxAuxiliaryReservoirChargeRateUnit;
+		private ComboBox comboBoxCompressorRateUnit;
+		private ComboBox comboBoxBrakeCylinderReleaseRateUnit;
+		private ComboBox comboBoxBrakeCylinderEmergencyRateUnit;
+		private ComboBox comboBoxStraightAirPipeReleaseRateUnit;
+		private ComboBox comboBoxStraightAirPipeEmergencyRateUnit;
+		private ComboBox comboBoxStraightAirPipeServiceRateUnit;
+		private ComboBox comboBoxBrakePipeEmergencyRateUnit;
+		private ComboBox comboBoxBrakePipeServiceRateUnit;
+		private ComboBox comboBoxBrakePipeChargeRateUnit;
+		private ComboBox comboBoxAccelYUnit;
+		private ComboBox comboBoxAccelXUnit;
+		private Label labelAccelYUnit;
+		private Label labelAccelXUnit;
+		private ComboBox comboBoxAccelV2Unit;
+		private ComboBox comboBoxAccelV1Unit;
+		private ComboBox comboBoxAccelA1Unit;
+		private ComboBox comboBoxAccelA0Unit;
+		private ComboBox comboBoxBrakeControlSpeedUnit;
+		private ComboBox comboBoxDecelerationUnit;
+		private ComboBox comboBoxUnexposedFrontalAreaUnit;
+		private ComboBox comboBoxExposedFrontalAreaUnit;
+		private GroupBox groupBoxUnit;
+		private ComboBox comboBoxMotorXUnit;
+		private Label labelMotorXUnit;
+		private ComboBox comboBoxMotorAccelUnit;
 	}
 }

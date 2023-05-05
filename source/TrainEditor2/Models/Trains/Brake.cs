@@ -1,6 +1,6 @@
 ﻿using System;
+using OpenBveApi.World;
 using Prism.Mvvm;
-using TrainManager.BrakeSystems;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -9,6 +9,13 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal class Brake : BindableBase, ICloneable
 	{
+		internal enum BrakeTypes
+		{
+			ElectromagneticStraightAirBrake = 0,
+			ElectricCommandBrake = 1,
+			AutomaticAirBrake = 2
+		}
+
 		internal enum LocoBrakeTypes
 		{
 			NotFitted = 0,
@@ -16,12 +23,19 @@ namespace TrainEditor2.Models.Trains
 			AutomaticAirBrake = 2
 		}
 
-		private BrakeSystemType brakeType;
-		private LocoBrakeTypes locoBrakeType;
-		private EletropneumaticBrakeType brakeControlSystem;
-		private double brakeControlSpeed;
+		internal enum BrakeControlSystems
+		{
+			None = 0,
+			ClosingElectromagneticValve = 1,
+			DelayIncludingSystem = 2
+		}
 
-		internal BrakeSystemType BrakeType
+		private BrakeTypes brakeType;
+		private LocoBrakeTypes locoBrakeType;
+		private BrakeControlSystems brakeControlSystem;
+		private Quantity.Velocity brakeControlSpeed;
+
+		internal BrakeTypes BrakeType
 		{
 			get
 			{
@@ -45,7 +59,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal EletropneumaticBrakeType BrakeControlSystem
+		internal BrakeControlSystems BrakeControlSystem
 		{
 			get
 			{
@@ -57,7 +71,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double BrakeControlSpeed
+		internal Quantity.Velocity BrakeControlSpeed
 		{
 			get
 			{
@@ -71,10 +85,10 @@ namespace TrainEditor2.Models.Trains
 
 		internal Brake()
 		{
-			BrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
+			BrakeType = BrakeTypes.ElectromagneticStraightAirBrake;
 			LocoBrakeType = LocoBrakeTypes.NotFitted;
-			BrakeControlSystem = EletropneumaticBrakeType.None;
-			BrakeControlSpeed = 0.0;
+			BrakeControlSystem = BrakeControlSystems.None;
+			BrakeControlSpeed = new Quantity.Velocity(0.0, Unit.Velocity.KilometerPerHour);
 		}
 
 		public object Clone()

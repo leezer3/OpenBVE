@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml;
@@ -7,7 +6,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using TrainEditor2.Extensions;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Systems;
 using Path = OpenBveApi.Path;
@@ -53,7 +51,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<BrakeElement, BrakeKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<BrakeElement, SoundKey.Brake>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "brakehandle":
 							if (!sectionNode.HasElements)
@@ -62,7 +60,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<BrakeHandleElement, BrakeHandleKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<BrakeHandleElement, SoundKey.BrakeHandle>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "breaker":
 							if (!sectionNode.HasElements)
@@ -71,11 +69,11 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<BreakerElement, BreakerKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<BreakerElement, SoundKey.Breaker>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "buzzer":
 							{
-								BuzzerElement buzzer = new BuzzerElement { Key = BuzzerKey.Correct };
+								BuzzerElement buzzer = new BuzzerElement { Key = SoundKey.Buzzer.Correct };
 								ParseNode(basePath, sectionNode, buzzer);
 								sound.SoundElements.Add(buzzer);
 							}
@@ -87,7 +85,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<CompressorElement, CompressorKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<CompressorElement, SoundKey.Compressor>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "door":
 							if (!sectionNode.HasElements)
@@ -96,7 +94,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<DoorElement, DoorKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<DoorElement, SoundKey.Door>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "flange":
 							if (!sectionNode.HasElements)
@@ -109,7 +107,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 							break;
 						case "halt":
 							{
-								OthersElement others = new OthersElement { Key = OthersKey.Halt };
+								OthersElement others = new OthersElement { Key = SoundKey.Others.Halt };
 								ParseNode(basePath, sectionNode, others);
 								sound.SoundElements.Add(others);
 							}
@@ -127,15 +125,15 @@ namespace TrainEditor2.IO.Sounds.Xml
 								{
 									case "primary":
 										//Primary horn
-										ParseArrayNode<PrimaryHornElement, HornKey>(basePath, keyNode, sound.SoundElements);
+										ParseArrayNode<PrimaryHornElement, SoundKey.Horn>(basePath, keyNode, sound.SoundElements);
 										break;
 									case "secondary":
 										//Secondary horn
-										ParseArrayNode<SecondaryHornElement, HornKey>(basePath, keyNode, sound.SoundElements);
+										ParseArrayNode<SecondaryHornElement, SoundKey.Horn>(basePath, keyNode, sound.SoundElements);
 										break;
 									case "music":
 										//Music horn
-										ParseArrayNode<MusicHornElement, HornKey>(basePath, keyNode, sound.SoundElements);
+										ParseArrayNode<MusicHornElement, SoundKey.Horn>(basePath, keyNode, sound.SoundElements);
 										break;
 									default:
 										Interface.AddMessage(MessageType.Error, false, $"Declaration {keyNode.Name.LocalName} is unsupported in a {sectionNode.Name.LocalName} node at line {((IXmlLineInfo)keyNode).LineNumber}.");
@@ -146,7 +144,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 						case "loop":
 						case "noise":
 							{
-								OthersElement others = new OthersElement { Key = OthersKey.Noise };
+								OthersElement others = new OthersElement { Key = SoundKey.Others.Noise };
 								ParseNode(basePath, sectionNode, others);
 								sound.SoundElements.Add(others);
 							}
@@ -159,7 +157,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<MasterControllerElement, MasterControllerKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<MasterControllerElement, SoundKey.MasterController>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "motor":
 							if (!sectionNode.HasElements)
@@ -177,7 +175,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<PilotLampElement, PilotLampKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<PilotLampElement, SoundKey.PilotLamp>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "pointfrontaxle":
 						case "switchfrontaxle":
@@ -207,7 +205,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<ReverserElement, ReverserKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<ReverserElement, SoundKey.Reverser>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "run":
 							if (!sectionNode.HasElements)
@@ -221,7 +219,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 						case "shoe":
 						case "rub":
 							{
-								OthersElement others = new OthersElement { Key = OthersKey.Shoe };
+								OthersElement others = new OthersElement { Key = SoundKey.Others.Shoe };
 								ParseNode(basePath, sectionNode, others);
 								sound.SoundElements.Add(others);
 							}
@@ -234,7 +232,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<SuspensionElement, SuspensionKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<SuspensionElement, SoundKey.Suspension>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "requeststop":
 							if (!sectionNode.HasElements)
@@ -243,7 +241,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 								break;
 							}
 
-							ParseArrayNode<RequestStopElement, RequestStopKey>(basePath, sectionNode, sound.SoundElements);
+							ParseArrayNode<RequestStopElement, SoundKey.RequestStop>(basePath, sectionNode, sound.SoundElements);
 							break;
 						case "touch":
 							if (!sectionNode.HasElements)
@@ -362,17 +360,17 @@ namespace TrainEditor2.IO.Sounds.Xml
 			}
 		}
 
-		private static void ParseArrayNode<T, U>(string basePath, XElement parentNode, ICollection<SoundElement> elements) where T : SoundElement<U>, new()
+		private static void ParseArrayNode<T, U>(string basePath, XElement parentNode, ICollection<SoundElement> elements) where T : SoundElement<U>, new() where U : struct
 		{
 			foreach (XElement childNode in parentNode.Elements())
 			{
-				U[] keys = Enum.GetValues(typeof(U)).OfType<U>().Where(x => ((Enum)(object)x).GetStringValues().Any(y => y.Equals(childNode.Name.LocalName, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+				U key;
 
-				if (keys.Any())
+				if (SoundKey.TryParse(childNode.Name.LocalName, true, out key))
 				{
 					T element = new T
 					{
-						Key = keys.First()
+						Key = key
 					};
 
 					ParseNode(basePath, childNode, element);
