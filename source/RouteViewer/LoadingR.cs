@@ -222,40 +222,19 @@ namespace RouteViewer {
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			double FirstStationPosition = 0.0;
-			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
-			{
-				for (int i = Program.CurrentRoute.Stations.Length - 1; i > 0; i--) {
-					if (Program.CurrentRoute.Stations[i].Stops.Length != 0) {
-						FirstStationPosition = Program.CurrentRoute.Stations[i].Stops[Program.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
-						if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0) {
-							if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0) {
-								Game.SecondsSinceMidnight = 0.0;
-							} else {
-								Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].DepartureTime - Program.CurrentRoute.Stations[i].StopTime;
-							}
+			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++) {
+				if (Program.CurrentRoute.Stations[i].Stops.Length != 0) {
+					FirstStationPosition = Program.CurrentRoute.Stations[i].Stops[Program.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
+					if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0) {
+						if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0) {
+							Game.SecondsSinceMidnight = 0.0;
 						} else {
-							Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].ArrivalTime;
+							Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].DepartureTime - Program.CurrentRoute.Stations[i].StopTime;
 						}
-						break;
+					} else {
+						Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].ArrivalTime;
 					}
-				}
-			}
-			else
-			{
-				for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++) {
-					if (Program.CurrentRoute.Stations[i].Stops.Length != 0) {
-						FirstStationPosition = Program.CurrentRoute.Stations[i].Stops[Program.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
-						if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0) {
-							if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0) {
-								Game.SecondsSinceMidnight = 0.0;
-							} else {
-								Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].DepartureTime - Program.CurrentRoute.Stations[i].StopTime;
-							}
-						} else {
-							Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].ArrivalTime;
-						}
-						break;
-					}
+					break;
 				}
 			}
 			// initialize camera
