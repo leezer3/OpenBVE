@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Objects;
+﻿using LibRender2.Cursors;
+using OpenBveApi.Objects;
 
 namespace LibRender2.Trains
 {
@@ -13,5 +14,7 @@ namespace LibRender2.Trains
 		public int[] SoundIndices;
 		/// <summary>The control indicies associated with the object</summary>
 		public int[] ControlIndices;
+		/// <summary>The cursor texture</summary>
+		public MouseCursor MouseCursor;
 	}
 }

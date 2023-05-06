@@ -14,7 +14,6 @@ using LibRender2.Overlays;
 using LibRender2.Screens;
 using LibRender2.Trains;
 using LibRender2.Viewports;
-using OpenBve;
 using OpenBve.Graphics;
 using OpenBve.Input;
 using OpenBveApi.Colors;
@@ -35,6 +34,7 @@ using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
 using Control = OpenBveApi.Interface.Control;
+using MouseCursor = LibRender2.Cursors.MouseCursor;
 
 namespace OpenBve
 {
@@ -507,20 +507,36 @@ namespace OpenBve
 
 			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
-				Cursor.Status Status;
-				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out Status))
+				MouseCursor.Status Status;
+				MouseCursor newCursor;
+				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out Status, out newCursor))
 				{
-					if (Cursors.CurrentCursor != null)
+					if (newCursor != null)
 					{
 						switch (Status)
 						{
-							case OpenBve.Cursor.Status.Default:
+							case MouseCursor.Status.Default:
+								Cursor = newCursor.MyCursor;
+								break;
+							case MouseCursor.Status.Plus:
+								Cursor = newCursor.MyCursorPlus;
+								break;
+							case MouseCursor.Status.Minus:
+								Cursor = newCursor.MyCursorMinus;
+								break;
+						}
+					}
+					else if (Cursors.CurrentCursor != null)
+					{
+						switch (Status)
+						{
+							case MouseCursor.Status.Default:
 								Cursor = Cursors.CurrentCursor;
 								break;
-							case OpenBve.Cursor.Status.Plus:
+							case MouseCursor.Status.Plus:
 								Cursor = Cursors.CurrentCursorPlus;
 								break;
-							case OpenBve.Cursor.Status.Minus:
+							case MouseCursor.Status.Minus:
 								Cursor = Cursors.CurrentCursorMinus;
 								break;
 						}
@@ -528,7 +544,7 @@ namespace OpenBve
 				}
 				else
 				{
-					Cursor = MouseCursor.Default;
+					Cursor = OpenTK.MouseCursor.Default;
 				}
 			}
 		}

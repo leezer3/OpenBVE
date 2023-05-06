@@ -9,94 +9,9 @@ using OpenTK;
 
 namespace OpenBve
 {
-	internal class Cursor
-	{
-		internal readonly string FileName;
-		internal readonly MouseCursor MyCursor;
-		internal readonly MouseCursor MyCursorPlus;
-		internal readonly MouseCursor MyCursorMinus;
-		internal readonly Image Image;
-
-		internal Cursor(string fileName, Bitmap image)
-		{
-			FileName = fileName;
-			Image = image;
-
-			var thisAssembly = Assembly.GetExecutingAssembly();
-			using (var stream = thisAssembly.GetManifestResourceStream("OpenBve.plus.png"))
-			{
-				if (stream != null)
-				{
-					Bitmap Plus = new Bitmap(stream);
-					using (var g = System.Drawing.Graphics.FromImage(Plus))
-					{
-						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
-						var data = Plus.LockBits(new Rectangle(0, 0, Plus.Width, Plus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-						MyCursorPlus = new MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
-						Plus.UnlockBits(data);
-					}
-				}
-				else
-				{
-					Bitmap Plus = new Bitmap(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "Cursors\\Symbols\\plus.png"));
-					using (var g = System.Drawing.Graphics.FromImage(Plus))
-					{
-						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
-						var data = Plus.LockBits(new Rectangle(0, 0, Plus.Width, Plus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-						MyCursorPlus = new MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
-						Plus.UnlockBits(data);
-					}
-				}
-			}
-			using (var stream = thisAssembly.GetManifestResourceStream("OpenBve.minus.png"))
-			{
-				if (stream != null)
-				{
-					Bitmap Minus = new Bitmap(stream);
-					using (var g = System.Drawing.Graphics.FromImage(Minus))
-					{
-						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
-						var data = Minus.LockBits(new Rectangle(0, 0, Minus.Width, Minus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-						MyCursorMinus = new MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
-						Minus.UnlockBits(data);
-					}
-				}
-				else
-				{
-					Bitmap Minus = new Bitmap(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "Cursors\\Symbols\\minus.png"));
-					using (var g = System.Drawing.Graphics.FromImage(Minus))
-					{
-						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
-						var data = Minus.LockBits(new Rectangle(0, 0, Minus.Width, Minus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-						MyCursorMinus = new MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
-						Minus.UnlockBits(data);
-					}
-				}
-			}
-
-			{
-				var data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-				MyCursor = new MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
-				image.UnlockBits(data);
-			}
-		}
-
-		internal enum Status
-		{
-			Default,
-			Plus,
-			Minus
-		}
-
-		public override string ToString()
-		{
-			return FileName;
-		}
-	}
-
 	internal static class Cursors
 	{
-		internal static readonly List<Cursor> CursorList = new List<Cursor>();
+		internal static readonly List<LibRender2.Cursors.MouseCursor> CursorList = new List<LibRender2.Cursors.MouseCursor>();
 		internal static MouseCursor CurrentCursor;
 		internal static MouseCursor CurrentCursorPlus;
 		internal static MouseCursor CurrentCursorMinus;
@@ -122,13 +37,13 @@ namespace OpenBve
 						if (File.EndsWith("scroll.png", StringComparison.InvariantCultureIgnoreCase))
 						{
 							Bitmap Image = new Bitmap(Fs);
-							Cursor c = new Cursor(Path.GetFileName(File), Image);
+							LibRender2.Cursors.MouseCursor c = new LibRender2.Cursors.MouseCursor(Program.Renderer, Path.GetFileName(File), Image);
 							ScrollCursor = c.MyCursor;
 						}
 						else
 						{
 							Bitmap Image = new Bitmap(Fs);
-							CursorList.Add(new Cursor(Path.GetFileName(File), Image));	
+							CursorList.Add(new LibRender2.Cursors.MouseCursor(Program.Renderer, Path.GetFileName(File), Image));	
 						}
 						
 						
@@ -149,7 +64,7 @@ namespace OpenBve
 				if (stream != null)
 				{
 					Bitmap Image = new Bitmap(stream);
-					CursorList.Add(new Cursor("nk.png", Image));
+					CursorList.Add(new LibRender2.Cursors.MouseCursor(Program.Renderer, "nk.png", Image));
 				}
 			}
 			Interface.CurrentOptions.CursorFileName = "nk.png";
@@ -183,7 +98,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			Cursor c = comboboxCursor.Items[i] as Cursor;
+			LibRender2.Cursors.MouseCursor c = comboboxCursor.Items[i] as LibRender2.Cursors.MouseCursor;
 			if (c == null)
 			{
 				return;

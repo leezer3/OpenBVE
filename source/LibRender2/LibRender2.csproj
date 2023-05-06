@@ -53,6 +53,7 @@
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestriction.cs" />
+    <Compile Include="Cursors\Cursor.cs" />
     <Compile Include="Fog\Fog.cs" />
     <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Loading\Loading.cs" />

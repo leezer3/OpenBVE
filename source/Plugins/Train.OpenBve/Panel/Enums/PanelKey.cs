@@ -56,6 +56,7 @@ namespace Train.OpenBve
 		SoundEntries,
 		Command,
 		CommandEntries,
-		CommandOption
+		CommandOption,
+		Cursor
 	}
 }
