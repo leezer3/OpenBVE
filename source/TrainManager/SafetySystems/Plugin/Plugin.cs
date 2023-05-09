@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -542,6 +543,18 @@ namespace TrainManager.SafetySystems
 
 		/// <summary>Called when a virtual key is released.</summary>
 		public abstract void KeyUp(VirtualKeys key);
+
+		/// <summary>Called when a virtual key is pressed.</summary>
+		public virtual void RawKeyDown(Key key)
+		{
+			// Ignored other than by .Net plugins
+		}
+
+		/// <summary>Called when a virtual key is released.</summary>
+		public virtual void RawKeyUp(Key key)
+		{
+			// Ignored other than by .Net plugins
+		}
 
 		/// <summary>Called when a touch event occurs.</summary>
 		public virtual void TouchEvent(int groupIndex, int commandIndex)

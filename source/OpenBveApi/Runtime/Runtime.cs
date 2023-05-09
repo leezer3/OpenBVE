@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Colors;
+using OpenBveApi.Input;
 
 namespace OpenBveApi.Runtime {
 	
@@ -120,12 +121,23 @@ namespace OpenBveApi.Runtime {
 		/// <summary>Is called when the plugin should perform the AI.</summary>
 		/// <param name="data">The AI data.</param>
 		void PerformAI(AIData data);
+	}
+
+	/// <summary>Represents the runtime interface for performing train functions using raw data</summary>
+	public interface IRawRuntime : IRuntime
+	{
+		/// <summary>Called when a raw key is pressed</summary>
+		/// <param name="key">The key</param>
+		void RawKeyDown(Key key);
+
+		/// <summary>Called when a raw key is released</summary>
+		/// <param name="key">The key</param>
+		void RawKeyUp(Key key);
 
 		/// <summary>Called when the host generates a touch event</summary>
 		/// <param name="groupIndex">The group index of the touch event</param>
 		/// <param name="commandIndex">The command index of the touch event</param>
 		void TouchEvent(int groupIndex, int commandIndex);
-
 	}
 
 }

@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
@@ -43,7 +44,21 @@ namespace TrainManager.SafetySystems
 		/// <summary>The absolute on-disk path of the train's folder</summary>
 		private readonly string TrainFolder;
 
-		private readonly IRuntime Api;
+		private readonly IRuntime BaseApi;
+
+		private IRuntime Api
+		{
+			get
+			{
+				if (RawApi != null)
+				{
+					return RawApi;
+				}
+				return BaseApi;
+			}
+		}
+
+		private readonly IRawRuntime RawApi;
 
 		/// <summary>An array containing all of the plugin's current sound handles</summary>
 		private SoundHandleEx[] SoundHandles;
@@ -57,7 +72,7 @@ namespace TrainManager.SafetySystems
 		/// <param name="trainFolder">The absolute on-disk path of the train's folder</param>
 		/// <param name="api">The base OpenBVE runtime interface</param>
 		/// <param name="train">The base train</param>
-		internal NetPlugin(string pluginFile, string trainFolder, IRuntime api, TrainBase train)
+		internal NetPlugin(string pluginFile, string trainFolder, object api, TrainBase train)
 		{
 			PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			PluginValid = true;
@@ -74,7 +89,15 @@ namespace TrainManager.SafetySystems
 			LastException = null;
 			PluginFolder = System.IO.Path.GetDirectoryName(pluginFile);
 			TrainFolder = trainFolder;
-			Api = api;
+			if (api is IRawRuntime rawRuntime)
+			{
+				RawApi = rawRuntime;
+			}
+			else if(api is IRuntime runtime)
+			{
+				BaseApi = runtime;
+			}
+			
 			SoundHandles = new SoundHandleEx[16];
 			SoundHandlesCount = 0;
 		}
@@ -339,7 +362,47 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			Api.TouchEvent(groupIndex, commandIndex);
+			if (RawApi != null)
+			{
+				RawApi.TouchEvent(groupIndex, commandIndex);
+			}
+			
+#if !DEBUG
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+#endif
+		}
+
+		public override void RawKeyDown(Key key)
+		{
+#if !DEBUG
+			try {
+#endif
+			if (RawApi != null)
+			{
+				RawApi.RawKeyDown(key);
+			}
+			
+#if !DEBUG
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+#endif
+		}
+
+		public override void RawKeyUp(Key key)
+		{
+#if !DEBUG
+			try {
+#endif
+			if (RawApi != null)
+			{
+				RawApi.RawKeyUp(key);
+			}
+			
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;
