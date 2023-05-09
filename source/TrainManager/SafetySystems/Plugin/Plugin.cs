@@ -543,6 +543,12 @@ namespace TrainManager.SafetySystems
 		/// <summary>Called when a virtual key is released.</summary>
 		public abstract void KeyUp(VirtualKeys key);
 
+		/// <summary>Called when a touch event occurs.</summary>
+		public virtual void TouchEvent(int groupIndex, int commandIndex)
+		{
+			// Ignored other than by .Net plugins
+		}
+
 		/// <summary>Called when a horn is played or stopped.</summary>
 		public abstract void HornBlow(HornTypes type);
 

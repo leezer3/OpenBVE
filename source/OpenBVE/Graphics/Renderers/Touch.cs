@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
@@ -390,6 +390,10 @@ namespace OpenBve.Graphics.Renderers
 			{
 				foreach (int index in TouchElement.ControlIndices)
 				{
+					if (Interface.CurrentControls[index].DigitalState != DigitalControlState.Pressed && TrainManager.PlayerTrain.Plugin != null)
+					{
+						TrainManager.PlayerTrain.Plugin.TouchEvent(add, index);
+					}
 					Interface.CurrentControls[index].AnalogState = 1.0;
 					Interface.CurrentControls[index].DigitalState = DigitalControlState.Pressed;
 					MainLoop.AddControlRepeat(index);

@@ -334,6 +334,20 @@ namespace TrainManager.SafetySystems
 #endif
 		}
 
+		public override void TouchEvent(int groupIndex, int commandIndex)
+		{
+#if !DEBUG
+			try {
+#endif
+			Api.TouchEvent(groupIndex, commandIndex);
+#if !DEBUG
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+#endif
+		}
+
 		/// <summary>May be called from a .Net plugin, in order to add a message to the in-game display</summary>
 		/// <param name="Message">The message to display</param>
 		/// <param name="Color">The color in which to display the message</param>

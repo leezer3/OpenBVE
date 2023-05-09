@@ -121,6 +121,11 @@ namespace OpenBveApi.Runtime {
 		/// <param name="data">The AI data.</param>
 		void PerformAI(AIData data);
 
+		/// <summary>Called when the host generates a touch event</summary>
+		/// <param name="groupIndex">The group index of the touch event</param>
+		/// <param name="commandIndex">The command index of the touch event</param>
+		void TouchEvent(int groupIndex, int commandIndex);
+
 	}
 
 }
