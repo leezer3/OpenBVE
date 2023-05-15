@@ -68,6 +68,8 @@ namespace TrainManager.SafetySystems
 		private bool StationsLoaded;
 		/// <summary>Holds the plugin specific AI class</summary>
 		internal PluginAI AI;
+		/// <summary>Whether the plugin is blocking input</summary>
+		public bool BlockingInput;
 
 		// --- functions ---
 		/// <summary>Called to load and initialize the plugin.</summary>
@@ -176,6 +178,7 @@ namespace TrainManager.SafetySystems
 			this.PluginMessage = data.DebugMessage;
 			this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
 			this.Train.SafetySystems.Headlights.SetState(data.HeadlightState);
+			this.BlockingInput = data.BlockingInput;
 			DisableTimeAcceleration = data.DisableTimeAcceleration;
 			if (Train.IsPlayerTrain)
 			{
