@@ -25,7 +25,7 @@ namespace TrainEditor2.IO.Trains.Xml
 				new XElement("Version", editorVersion.ToString()),
 				WriteHandleNode(train.Handle),
 				WriteDeviceNode(train.Device),
-				new XElement("InitialDriverCar", train.InitialDriverCar.ToString(culture)),
+				new XElement("DriverCar", train.InitialDriverCar.ToString(culture)),
 				WriteCarsNode(fileName, train.Cars, train.Couplers)
 			);
 			openBVE.Add(trainNode);
@@ -76,7 +76,7 @@ namespace TrainEditor2.IO.Trains.Xml
 			XElement carNode = new XElement("Car");
 
 			carNode.Add(
-				new XElement("IsMotorCar", car is MotorCar),
+				new XElement("MotorCar", car is MotorCar),
 				car.Mass.ToXElement("Mass"),
 				car.Length.ToXElement("Length"),
 				car.Width.ToXElement("Width"),
@@ -124,7 +124,7 @@ namespace TrainEditor2.IO.Trains.Xml
 
 			Cab cab = (car as ControlledMotorCar)?.Cab ?? (car as ControlledTrailerCar)?.Cab;
 
-			carNode.Add(new XElement("IsControlledCar", cab != null));
+			carNode.Add(new XElement("ControlledCar", cab != null));
 
 			if (cab != null)
 			{

@@ -139,8 +139,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			Car car;
 
-			bool isMotorCar = (bool)parent.Element("IsMotorCar");
-			bool isControlledCar = parent.Element("Cab") != null && (bool)parent.Element("IsControlledCar");
+			bool isMotorCar = (bool)parent.Element("MotorCar");
+			bool isControlledCar = parent.Element("Cab") != null && (bool)parent.Element("ControlledCar");
 
 			if (isMotorCar)
 			{

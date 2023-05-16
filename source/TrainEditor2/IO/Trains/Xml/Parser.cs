@@ -360,48 +360,7 @@ namespace TrainEditor2.IO.Trains.Xml
 
 			return handle;
 		}
-
-		private static void ParseCarsNode(string fileName, XElement parent, ICollection<Car> cars, ICollection<Coupler> couplers)
-		{
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "car":
-						cars.Add(ParseCarNode(fileName, keyNode));
-						break;
-					case "coupler":
-						if (cars.Any())
-						{
-							couplers.Add(ParseCouplerNode(fileName, keyNode));
-						}
-						else
-						{
-							Interface.AddMessage(MessageType.Error, false, $"You cannot define {key} before defining the first car in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			for (int i = cars.Count; i < couplers.Count + 1; i++)
-			{
-				cars.Add(new UncontrolledTrailerCar());
-			}
-
-			for (int i = couplers.Count; i < cars.Count - 1; i++)
-			{
-				couplers.Add(new Coupler());
-			}
-		}
-
+		
 		private static Car ParseCarNode(string fileName, XElement parent)
 		{
 			Car car;
@@ -421,7 +380,7 @@ namespace TrainEditor2.IO.Trains.Xml
 
 				switch (key.ToLowerInvariant())
 				{
-					case "ismotorcar":
+					case "motorcar":
 						if (value.Any())
 						{
 							if (!bool.TryParse(value, out isMotorCar))
@@ -430,7 +389,7 @@ namespace TrainEditor2.IO.Trains.Xml
 							}
 						}
 						break;
-					case "iscontrolledcar":
+					case "controlledcar":
 						if (value.Any())
 						{
 							if (!bool.TryParse(value, out isControlledCar))
@@ -749,8 +708,8 @@ namespace TrainEditor2.IO.Trains.Xml
 							Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in uncontrolled car at line {lineNumber.ToString(culture)} in XML file {fileName}");
 						}
 						break;
-					case "ismotorcar":
-					case "iscontrolledcar":
+					case "motorcar":
+					case "controlledcar":
 						// Ignore
 						break;
 					default:

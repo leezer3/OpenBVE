@@ -73,7 +73,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			XElement carNode = new XElement("Car");
 
 			carNode.Add(
-				new XElement("IsMotorCar", car is MotorCar),
+				new XElement("MotorCar", car is MotorCar),
 				car.Mass.ToXElement("Mass"),
 				car.Length.ToXElement("Length"),
 				car.Width.ToXElement("Width"),
@@ -111,7 +111,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			Cab cab = (car as ControlledMotorCar)?.Cab ?? (car as ControlledTrailerCar)?.Cab;
 
-			carNode.Add(new XElement("IsControlledCar", cab != null));
+			carNode.Add(new XElement("ControlledCar", cab != null));
 
 			if (cab != null)
 			{
