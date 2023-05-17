@@ -528,6 +528,7 @@ namespace TrainEditor2.Views
 
 		private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
 		{
+			Program.Renderer.DeInitialize();
 			Close();
 		}
 

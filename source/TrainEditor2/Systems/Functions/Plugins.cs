@@ -5,8 +5,10 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 
 namespace TrainEditor2.Systems.Functions
 {
@@ -105,6 +107,8 @@ namespace TrainEditor2.Systems.Functions
 					bool iTexture = false;
 					bool iObject = false;
 					bool iRuntime = false;
+					bool iRoute = false;
+					bool iTrain = false;
 
 					foreach (Type type in types)
 					{
@@ -132,6 +136,16 @@ namespace TrainEditor2.Systems.Functions
 						{
 							iRuntime = true;
 						}
+
+						if (typeof(RouteInterface).IsAssignableFrom(type))
+						{
+							iRoute = true;
+						}
+
+						if (typeof(TrainInterface).IsAssignableFrom(type))
+						{
+							iTrain = true;
+						}
 					}
 
 					if (plugin.Sound != null)
@@ -139,7 +153,7 @@ namespace TrainEditor2.Systems.Functions
 						plugin.Load();
 						list.Add(plugin);
 					}
-					else if (!iTexture && !iObject && !iRuntime)
+					else if (!iTexture && !iObject && !iRuntime && !iRoute && !iTrain)
 					{
 						builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
 						builder.AppendLine();

@@ -69,7 +69,7 @@ namespace TrainEditor2
 
 			Plugins.UnloadPlugins();
 			SoundApi.DeInitialize();
-
+			Renderer.DeInitialize();
 			Interface.SaveOptions();
 		}
 	}

@@ -64,9 +64,9 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static Motor.Track ParseMotorTrackNode(string fileName, XElement parent, Motor baseMotor, Motor.TrackType trackType)
 		{
-			List<TrainManager.MotorSound.Vertex<float>> pitchVertices = new List<TrainManager.MotorSound.Vertex<float>>();
-			List<TrainManager.MotorSound.Vertex<float>> volumeVertices = new List<TrainManager.MotorSound.Vertex<float>>();
-			List<TrainManager.MotorSound.Vertex<int, SoundBuffer>> soundIndexVertices = new List<TrainManager.MotorSound.Vertex<int, SoundBuffer>>();
+			List<TrainEditor.MotorSound.Vertex<float>> pitchVertices = new List<TrainEditor.MotorSound.Vertex<float>>();
+			List<TrainEditor.MotorSound.Vertex<float>> volumeVertices = new List<TrainEditor.MotorSound.Vertex<float>>();
+			List<TrainEditor.MotorSound.Vertex<int, SoundBuffer>> soundIndexVertices = new List<TrainEditor.MotorSound.Vertex<int, SoundBuffer>>();
 
 			string section = parent.Name.LocalName;
 
@@ -92,10 +92,10 @@ namespace TrainEditor2.IO.Trains.Xml
 				}
 			}
 
-			return Motor.Track.MotorSoundTableToTrack(baseMotor, trackType, new TrainManager.MotorSound.Table { PitchVertices = pitchVertices.OrderBy(x=>x.X.ToDefaultUnit().Value).ToArray(), GainVertices = volumeVertices.OrderBy(x => x.X.ToDefaultUnit().Value).ToArray(), BufferVertices = soundIndexVertices.OrderBy(x => x.X.ToDefaultUnit().Value).ToArray() }, x => x, x => x);
+			return Motor.Track.MotorSoundTableToTrack(baseMotor, trackType, new TrainEditor.MotorSound.Table { PitchVertices = pitchVertices.OrderBy(x=>x.X.ToDefaultUnit().Value).ToArray(), GainVertices = volumeVertices.OrderBy(x => x.X.ToDefaultUnit().Value).ToArray(), BufferVertices = soundIndexVertices.OrderBy(x => x.X.ToDefaultUnit().Value).ToArray() }, x => x, x => x);
 		}
 
-		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainManager.MotorSound.Vertex<float>> vertices)
+		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainEditor.MotorSound.Vertex<float>> vertices)
 		{
 			string section = parent.Name.LocalName;
 
@@ -131,7 +131,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						}
 						else
 						{
-							vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = new Quantity.VelocityF(x, xUnit), Y = y });
+							vertices.Add(new TrainEditor.MotorSound.Vertex<float> { X = new Quantity.VelocityF(x, xUnit), Y = y });
 						}
 					}
 					else
@@ -142,7 +142,7 @@ namespace TrainEditor2.IO.Trains.Xml
 			}
 		}
 
-		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainManager.MotorSound.Vertex<int, SoundBuffer>> vertices)
+		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainEditor.MotorSound.Vertex<int, SoundBuffer>> vertices)
 		{
 			string section = parent.Name.LocalName;
 
@@ -184,7 +184,7 @@ namespace TrainEditor2.IO.Trains.Xml
 								y = -1;
 							}
 
-							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = new Quantity.VelocityF(x, xUnit), Y = y });
+							vertices.Add(new TrainEditor.MotorSound.Vertex<int, SoundBuffer> { X = new Quantity.VelocityF(x, xUnit), Y = y });
 						}
 					}
 					else

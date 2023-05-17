@@ -7,6 +7,7 @@ using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Trains;
+using TrainManager.Car;
 
 namespace TrainEditor2.Views
 {
@@ -454,7 +455,7 @@ namespace TrainEditor2.Views
 					x => x.SelectedIndex,
 					BindingMode.TwoWay,
 					x => (int)x,
-					x => (Car.ReAdhesionDevices)x,
+					x => (ReadhesionDeviceType)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxReAdhesionDevice.SelectedIndexChanged += h,

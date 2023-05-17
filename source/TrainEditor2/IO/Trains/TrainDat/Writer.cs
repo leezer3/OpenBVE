@@ -6,6 +6,7 @@ using System.Text;
 using OpenBveApi.World;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Simulation.TrainManager;
+using TrainManager.Motor;
 
 namespace TrainEditor2.IO.Trains.TrainDat
 {
@@ -119,12 +120,12 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{firstMotorCar.LeftDoor.Width.ToNewUnit(UnitOfLength.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; DoorWidth");
 			builder.AppendLine($"{firstMotorCar.LeftDoor.MaxTolerance.ToNewUnit(UnitOfLength.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; DoorMaxTolerance");
 
-			TrainManager.MotorSound.Table[] powerTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y)).ToArray();
-			TrainManager.MotorSound.Table[] brakeTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y)).ToArray();
+			TrainEditor.MotorSound.Table[] powerTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y)).ToArray();
+			TrainEditor.MotorSound.Table[] brakeTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y)).ToArray();
 
 			for (int i = 0; i < 4; i++)
 			{
-				TrainManager.MotorSound.Table table = null;
+				TrainEditor.MotorSound.Table table = null;
 
 				switch (i)
 				{
@@ -152,9 +153,9 @@ namespace TrainEditor2.IO.Trains.TrainDat
 				}
 
 				float maxSpeed = 0.0f;
-				TrainManager.MotorSound.Vertex<float> lastPitchVertex = table.PitchVertices.LastOrDefault();
-				TrainManager.MotorSound.Vertex<float> lastGainVertex = table.GainVertices.LastOrDefault();
-				TrainManager.MotorSound.Vertex<int> lastBufferVertex = table.BufferVertices.LastOrDefault();
+				TrainEditor.MotorSound.Vertex<float> lastPitchVertex = table.PitchVertices.LastOrDefault();
+				TrainEditor.MotorSound.Vertex<float> lastGainVertex = table.GainVertices.LastOrDefault();
+				TrainEditor.MotorSound.Vertex<int> lastBufferVertex = table.BufferVertices.LastOrDefault();
 
 				if (lastPitchVertex != null)
 				{
@@ -173,7 +174,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 				for (float j = 0.0f; j < maxSpeed; j += 0.2f)
 				{
-					TrainManager.MotorSound.Entry entry = table.GetEntry(j / 3.6f);
+					BVEMotorSoundTableEntry entry = table.GetEntry(j / 3.6f);
 
 					builder.Append(entry.SoundIndex.ToString(culture) + ",");
 					builder.Append(entry.Pitch.ToString(culture) + ",");

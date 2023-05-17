@@ -3,11 +3,12 @@ using System.Linq;
 using OpenBveApi.Math;
 using OpenBveApi.World;
 using SoundManager;
+using TrainManager.Motor;
 
 namespace TrainEditor2.Simulation.TrainManager
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public static partial class TrainEditor
 	{
 		internal struct MotorSound
 		{
@@ -33,15 +34,7 @@ namespace TrainEditor2.Simulation.TrainManager
 					return vertex;
 				}
 			}
-
-			internal struct Entry
-			{
-				internal double Pitch;
-				internal double Gain;
-				internal int SoundIndex;
-				internal SoundBuffer Buffer;
-			}
-
+			
 			internal class Table : ICloneable
 			{
 				internal Vertex<float>[] PitchVertices;
@@ -79,12 +72,12 @@ namespace TrainEditor2.Simulation.TrainManager
 					return left.Y + (right.Y - left.Y) * (x - left.X) / (right.X - left.X);
 				}
 
-				internal Entry GetEntry(float speed)
+				internal BVEMotorSoundTableEntry GetEntry(float speed)
 				{
 					float pitch = GetVertex(PitchVertices, new Quantity.VelocityF(speed));
 					float gain = GetVertex(GainVertices, new Quantity.VelocityF(speed));
 					Tuple<int, SoundBuffer> buffer = GetVertex(BufferVertices, new Quantity.VelocityF(speed));
-					return new Entry { Pitch = pitch, Gain = gain, SoundIndex = buffer.Item1, Buffer = buffer.Item2 };
+					return new BVEMotorSoundTableEntry { Pitch = pitch, Gain = gain, SoundIndex = buffer.Item1, Buffer = buffer.Item2 };
 				}
 
 				public object Clone()

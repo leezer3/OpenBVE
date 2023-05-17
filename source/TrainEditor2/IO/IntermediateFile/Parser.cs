@@ -14,6 +14,8 @@ using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
+using TrainManager.Car;
+using Coupler = TrainEditor2.Models.Trains.Coupler;
 
 namespace TrainEditor2.IO.IntermediateFile
 {
@@ -214,7 +216,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				car.LeftDoor.MaxTolerance = car.RightDoor.MaxTolerance = new Quantity.Length((double)parent.XPathSelectElement("../../Device/DoorMaxTolerance"), UnitOfLength.Millimeter);
 			}
 
-			car.ReAdhesionDevice = (Car.ReAdhesionDevices)Enum.Parse(typeof(Car.ReAdhesionDevices), fileVersion > FileVersion.v1700 ? (string)parent.Element("ReAdhesionDevice") : (string)parent.XPathSelectElement("../../Device/ReAdhesionDevice"));
+			car.ReAdhesionDevice = (ReadhesionDeviceType)Enum.Parse(typeof(ReadhesionDeviceType), fileVersion > FileVersion.v1700 ? (string)parent.Element("ReAdhesionDevice") : (string)parent.XPathSelectElement("../../Device/ReAdhesionDevice"));
 
 			MotorCar motorCar = car as MotorCar;
 

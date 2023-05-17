@@ -754,9 +754,9 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private static TrainManager.MotorSound.Vertex<float>[] LineToMotorSoundVertices(VertexLibrary library, IEnumerable<Line> lines, Func<double, double> yConverter, double _default)
+			private static TrainEditor.MotorSound.Vertex<float>[] LineToMotorSoundVertices(VertexLibrary library, IEnumerable<Line> lines, Func<double, double> yConverter, double _default)
 			{
-				List<TrainManager.MotorSound.Vertex<float>> vertices = new List<TrainManager.MotorSound.Vertex<float>>();
+				List<TrainEditor.MotorSound.Vertex<float>> vertices = new List<TrainEditor.MotorSound.Vertex<float>>();
 				lines = lines.OrderBy(x => library[x.LeftID].X.ToDefaultUnit().Value).ToArray();
 
 				for (int i = 0; i < lines.Count(); i++)
@@ -775,12 +775,12 @@ namespace TrainEditor2.Models.Trains
 
 							if (newPoint > prevRight.X)
 							{
-								vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (Quantity.VelocityF)newPoint, Y = (float)yConverter(_default) });
+								vertices.Add(new TrainEditor.MotorSound.Vertex<float> { X = (Quantity.VelocityF)newPoint, Y = (float)yConverter(_default) });
 							}
 						}
 					}
 
-					TrainManager.MotorSound.Vertex<float> existLeft = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)left.X, true));
+					TrainEditor.MotorSound.Vertex<float> existLeft = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)left.X, true));
 
 					if (existLeft != null)
 					{
@@ -788,10 +788,10 @@ namespace TrainEditor2.Models.Trains
 					}
 					else
 					{
-						vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (Quantity.VelocityF)left.X, Y = (float)yConverter(left.Y) });
+						vertices.Add(new TrainEditor.MotorSound.Vertex<float> { X = (Quantity.VelocityF)left.X, Y = (float)yConverter(left.Y) });
 					}
 
-					TrainManager.MotorSound.Vertex<float> existRight = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)right.X, true));
+					TrainEditor.MotorSound.Vertex<float> existRight = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)right.X, true));
 
 					if (existRight != null)
 					{
@@ -799,7 +799,7 @@ namespace TrainEditor2.Models.Trains
 					}
 					else
 					{
-						vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (Quantity.VelocityF)right.X, Y = (float)yConverter(right.Y) });
+						vertices.Add(new TrainEditor.MotorSound.Vertex<float> { X = (Quantity.VelocityF)right.X, Y = (float)yConverter(right.Y) });
 					}
 
 					// Adds a point with a default value if it is not connected to the next line.
@@ -813,7 +813,7 @@ namespace TrainEditor2.Models.Trains
 
 							if (newPoint < nextLeft.X)
 							{
-								vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (Quantity.VelocityF)newPoint, Y = (float)yConverter(_default) });
+								vertices.Add(new TrainEditor.MotorSound.Vertex<float> { X = (Quantity.VelocityF)newPoint, Y = (float)yConverter(_default) });
 							}
 						}
 					}
@@ -822,9 +822,9 @@ namespace TrainEditor2.Models.Trains
 				return vertices.ToArray();
 			}
 
-			private static TrainManager.MotorSound.Vertex<int, SoundBuffer>[] IndexToMotorSoundVertices(IEnumerable<Area> areas, int _default)
+			private static TrainEditor.MotorSound.Vertex<int, SoundBuffer>[] IndexToMotorSoundVertices(IEnumerable<Area> areas, int _default)
 			{
-				List<TrainManager.MotorSound.Vertex<int, SoundBuffer>> vertices = new List<TrainManager.MotorSound.Vertex<int, SoundBuffer>>();
+				List<TrainEditor.MotorSound.Vertex<int, SoundBuffer>> vertices = new List<TrainEditor.MotorSound.Vertex<int, SoundBuffer>>();
 				areas = areas.OrderBy(x => x.LeftX.ToDefaultUnit().Value).ToArray();
 
 				for (int i = 0; i < areas.Count(); i++)
@@ -838,11 +838,11 @@ namespace TrainEditor2.Models.Trains
 
 						if (newPoint > areas.ElementAt(i - 1).RightX)
 						{
-							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)newPoint, Y = _default });
+							vertices.Add(new TrainEditor.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)newPoint, Y = _default });
 						}
 					}
 
-					TrainManager.MotorSound.Vertex<int, SoundBuffer> existLeft = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)area.LeftX, true));
+					TrainEditor.MotorSound.Vertex<int, SoundBuffer> existLeft = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)area.LeftX, true));
 
 					if (existLeft != null)
 					{
@@ -850,10 +850,10 @@ namespace TrainEditor2.Models.Trains
 					}
 					else
 					{
-						vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)area.LeftX, Y = area.Index });
+						vertices.Add(new TrainEditor.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)area.LeftX, Y = area.Index });
 					}
 
-					TrainManager.MotorSound.Vertex<int, SoundBuffer> existRight = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)area.RightX, true));
+					TrainEditor.MotorSound.Vertex<int, SoundBuffer> existRight = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)area.RightX, true));
 
 					if (existRight != null)
 					{
@@ -861,7 +861,7 @@ namespace TrainEditor2.Models.Trains
 					}
 					else
 					{
-						vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)area.RightX, Y = area.Index });
+						vertices.Add(new TrainEditor.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)area.RightX, Y = area.Index });
 					}
 
 					// Adds a point with a default value if it is not connected to the next area.
@@ -871,7 +871,7 @@ namespace TrainEditor2.Models.Trains
 
 						if (newPoint < areas.ElementAt(i + 1).LeftX)
 						{
-							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)newPoint, Y = _default });
+							vertices.Add(new TrainEditor.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)newPoint, Y = _default });
 						}
 					}
 				}
@@ -879,9 +879,9 @@ namespace TrainEditor2.Models.Trains
 				return vertices.ToArray();
 			}
 
-			internal static TrainManager.MotorSound.Table TrackToMotorSoundTable(Track track, Func<double, double> pitchConverter, Func<double, double> volumeConverter)
+			internal static TrainEditor.MotorSound.Table TrackToMotorSoundTable(Track track, Func<double, double> pitchConverter, Func<double, double> volumeConverter)
 			{
-				return new TrainManager.MotorSound.Table
+				return new TrainEditor.MotorSound.Table
 				{
 					PitchVertices = LineToMotorSoundVertices(track.PitchVertices, track.PitchLines, pitchConverter, 100.0),
 					GainVertices = LineToMotorSoundVertices(track.VolumeVertices, track.VolumeLines, volumeConverter, 128),
@@ -889,11 +889,11 @@ namespace TrainEditor2.Models.Trains
 				};
 			}
 
-			internal static Track MotorSoundTableToTrack(Motor baseMotor, TrackType type, TrainManager.MotorSound.Table table, Func<double, double> pitchConverter, Func<double, double> volumeConverter)
+			internal static Track MotorSoundTableToTrack(Motor baseMotor, TrackType type, TrainEditor.MotorSound.Table table, Func<double, double> pitchConverter, Func<double, double> volumeConverter)
 			{
 				Track track = new Track(baseMotor) { Type = type };
 
-				foreach (TrainManager.MotorSound.Vertex<float> vertex in table.PitchVertices)
+				foreach (TrainEditor.MotorSound.Vertex<float> vertex in table.PitchVertices)
 				{
 					Quantity.Velocity nextX = (Quantity.Velocity)vertex.X;
 					double nextY = pitchConverter(vertex.Y);
@@ -912,7 +912,7 @@ namespace TrainEditor2.Models.Trains
 					track.PitchVertices.Add(new Vertex(nextX, nextY));
 				}
 
-				foreach (TrainManager.MotorSound.Vertex<float> vertex in table.GainVertices)
+				foreach (TrainEditor.MotorSound.Vertex<float> vertex in table.GainVertices)
 				{
 					Quantity.Velocity nextX = (Quantity.Velocity)vertex.X;
 					double nextY = volumeConverter(vertex.Y);
@@ -931,7 +931,7 @@ namespace TrainEditor2.Models.Trains
 					track.VolumeVertices.Add(new Vertex(nextX, nextY));
 				}
 
-				foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
+				foreach (TrainEditor.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
 				{
 					Quantity.Velocity nextX = (Quantity.Velocity)vertex.X;
 

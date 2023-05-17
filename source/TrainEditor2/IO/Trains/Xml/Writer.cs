@@ -87,9 +87,13 @@ namespace TrainEditor2.IO.Trains.Xml
 			if (car.DefinedAxles)
 			{
 				carNode.Add(
-					new XElement("Axles",
-						new XAttribute("Unit", $"{car.FrontAxle.UnitValue}, {car.RearAxle.UnitValue}"),
-						$"{car.FrontAxle.Value.ToString(culture)}, {car.RearAxle.Value.ToString(culture)}"
+					new XElement("FrontAxle",
+						new XAttribute("Unit", $"{car.FrontAxle.UnitValue}"),
+						$"{car.FrontAxle.Value.ToString(culture)}"
+					),
+					new XElement("RearAxle",
+						new XAttribute("Unit", $"{car.RearAxle.UnitValue}"),
+						$"{car.RearAxle.Value.ToString(culture)}"
 					)
 				);
 			}
@@ -141,9 +145,13 @@ namespace TrainEditor2.IO.Trains.Xml
 			if (bogie.DefinedAxles)
 			{
 				bogieNode.Add(
-					new XElement("Axles",
-						new XAttribute("Unit", $"{bogie.FrontAxle.UnitValue}, {bogie.RearAxle.UnitValue}"),
-						$"{bogie.FrontAxle.Value.ToString(culture)}, {bogie.RearAxle.Value.ToString(culture)}"
+					new XElement("FrontAxle",
+						new XAttribute("Unit", $"{bogie.FrontAxle.UnitValue}"),
+						$"{bogie.FrontAxle.Value.ToString(culture)}"
+					),
+					new XElement("RearAxle",
+						new XAttribute("Unit", $"{bogie.RearAxle.UnitValue}"),
+						$"{bogie.RearAxle.Value.ToString(culture)}"
 					)
 				);
 			}
@@ -286,7 +294,7 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			return new XElement(nodeName,
 				door.Width.ToXElement("Width"),
-				door.MaxTolerance.ToXElement("MaxTolerance")
+				door.MaxTolerance.ToXElement("Tolerance")
 			);
 		}
 
@@ -301,8 +309,8 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteMotorNode(Motor motor)
 		{
-			TrainManager.MotorSound.Table[] powerTables = motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y)).ToArray();
-			TrainManager.MotorSound.Table[] brakeTables = motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x,  y => y, y => y)).ToArray();
+			TrainEditor.MotorSound.Table[] powerTables = motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y)).ToArray();
+			TrainEditor.MotorSound.Table[] brakeTables = motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x,  y => y, y => y)).ToArray();
 
 			return new XElement("Motor",
 				new XElement("PowerTracks", powerTables.Select(WriteTrackNode)),
@@ -310,7 +318,7 @@ namespace TrainEditor2.IO.Trains.Xml
 			);
 		}
 
-		private static XElement WriteTrackNode(TrainManager.MotorSound.Table table)
+		private static XElement WriteTrackNode(TrainEditor.MotorSound.Table table)
 		{
 			return new XElement("Track",
 				new XElement("Pitch", table.PitchVertices.Select(WriteVertexNode)),
@@ -319,7 +327,7 @@ namespace TrainEditor2.IO.Trains.Xml
 			);
 		}
 
-		private static XElement WriteVertexNode<T>(TrainManager.MotorSound.Vertex<T> vertex) where T : struct, IConvertible
+		private static XElement WriteVertexNode<T>(TrainEditor.MotorSound.Vertex<T> vertex) where T : struct, IConvertible
 		{
 			return new XElement("Vertex",
 				new XAttribute("Unit", vertex.X.UnitValue),

@@ -10,6 +10,8 @@ using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Simulation.TrainManager;
 using TrainEditor2.Systems;
+using TrainManager.Car;
+using Coupler = TrainEditor2.Models.Trains.Coupler;
 
 namespace TrainEditor2.IO.Trains.TrainDat
 {
@@ -102,34 +104,34 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			Quantity.Area exposedFrontalArea = new Quantity.Area(5.0);
 			Quantity.Area unexposedFrontalArea = new Quantity.Area(1.6);
 			Car.Door door = new Car.Door();
-			Car.ReAdhesionDevices reAdhesionDevice = Car.ReAdhesionDevices.TypeA;
+			ReadhesionDeviceType reAdhesionDevice = ReadhesionDeviceType.TypeA;
 
-			TrainManager.MotorSound.Table[] PowerTables = new TrainManager.MotorSound.Table[2];
-			TrainManager.MotorSound.Table[] BrakeTables = new TrainManager.MotorSound.Table[2];
+			TrainEditor.MotorSound.Table[] PowerTables = new TrainEditor.MotorSound.Table[2];
+			TrainEditor.MotorSound.Table[] BrakeTables = new TrainEditor.MotorSound.Table[2];
 			for (int i = 0; i < 2; i++)
 			{
-				PowerTables[i] = new TrainManager.MotorSound.Table
+				PowerTables[i] = new TrainEditor.MotorSound.Table
 				{
-					PitchVertices = new TrainManager.MotorSound.Vertex<float>[16],
-					GainVertices = new TrainManager.MotorSound.Vertex<float>[16],
-					BufferVertices = new TrainManager.MotorSound.Vertex<int, SoundBuffer>[16]
+					PitchVertices = new TrainEditor.MotorSound.Vertex<float>[16],
+					GainVertices = new TrainEditor.MotorSound.Vertex<float>[16],
+					BufferVertices = new TrainEditor.MotorSound.Vertex<int, SoundBuffer>[16]
 				};
-				BrakeTables[i] = new TrainManager.MotorSound.Table
+				BrakeTables[i] = new TrainEditor.MotorSound.Table
 				{
-					PitchVertices = new TrainManager.MotorSound.Vertex<float>[16],
-					GainVertices = new TrainManager.MotorSound.Vertex<float>[16],
-					BufferVertices = new TrainManager.MotorSound.Vertex<int, SoundBuffer>[16]
+					PitchVertices = new TrainEditor.MotorSound.Vertex<float>[16],
+					GainVertices = new TrainEditor.MotorSound.Vertex<float>[16],
+					BufferVertices = new TrainEditor.MotorSound.Vertex<int, SoundBuffer>[16]
 				};
 
 				for (int j = 0; j < 16; j++)
 				{
 					Quantity.VelocityF x = new Quantity.VelocityF(0.2f * j, Unit.Velocity.KilometerPerHour);
-					PowerTables[i].PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 100.0f };
-					PowerTables[i].GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 128.0f };
-					PowerTables[i].BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
-					BrakeTables[i].PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 100.0f };
-					BrakeTables[i].GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 128.0f };
-					BrakeTables[i].BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
+					PowerTables[i].PitchVertices[j] = new TrainEditor.MotorSound.Vertex<float> { X = x, Y = 100.0f };
+					PowerTables[i].GainVertices[j] = new TrainEditor.MotorSound.Vertex<float> { X = x, Y = 128.0f };
+					PowerTables[i].BufferVertices[j] = new TrainEditor.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
+					BrakeTables[i].PitchVertices[j] = new TrainEditor.MotorSound.Vertex<float> { X = x, Y = 100.0f };
+					BrakeTables[i].GainVertices[j] = new TrainEditor.MotorSound.Vertex<float> { X = x, Y = 128.0f };
+					BrakeTables[i].BufferVertices[j] = new TrainEditor.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
 				}
 			}
 
@@ -755,7 +757,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 5:
 										if (b >= -1 & b <= 3)
 										{
-											reAdhesionDevice = (Car.ReAdhesionDevices)b;
+											reAdhesionDevice = (ReadhesionDeviceType)b;
 										}
 										break;
 									case 6:
@@ -805,7 +807,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 					case "#motor_b1":
 					case "#motor_b2":
 						{
-							TrainManager.MotorSound.Table table = PowerTables[0];
+							TrainEditor.MotorSound.Table table = PowerTables[0];
 
 							switch (lines[i].ToLowerInvariant())
 							{
@@ -830,9 +832,9 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									for (int j = u; j < 2 * u; j++)
 									{
 										Quantity.VelocityF x = new Quantity.VelocityF(0.2f * j, Unit.Velocity.KilometerPerHour);
-										table.PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 100.0f };
-										table.GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 128.0f };
-										table.BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
+										table.PitchVertices[j] = new TrainEditor.MotorSound.Vertex<float> { X = x, Y = 100.0f };
+										table.GainVertices[j] = new TrainEditor.MotorSound.Vertex<float> { X = x, Y = 128.0f };
+										table.BufferVertices[j] = new TrainEditor.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
 									}
 								}
 

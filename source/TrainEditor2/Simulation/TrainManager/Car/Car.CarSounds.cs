@@ -3,7 +3,7 @@
 namespace TrainEditor2.Simulation.TrainManager
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static partial class TrainManager
+	public static partial class TrainEditor
 	{
 		/// <summary>The set of sounds attached to a car</summary>
 		internal struct CarSounds

@@ -11,6 +11,8 @@ using OpenBveApi.Math;
 using OpenBveApi.World;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
+using TrainManager.Car;
+using Coupler = TrainEditor2.Models.Trains.Coupler;
 using Path = OpenBveApi.Path;
 
 namespace TrainEditor2.IO.Trains.Xml
@@ -151,17 +153,24 @@ namespace TrainEditor2.IO.Trains.Xml
 							}
 						}
 						break;
-					case "cars":
-						if (!keyNode.HasElements)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"An empty list of {key} was defined in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							break;
-						}
-
-						ParseCarsNode(fileName, keyNode, train.Cars, train.Couplers);
-						break;
 					case "car":
-						train.Cars.Add(ParseCarNode(fileName, keyNode));
+						if (keyNode.HasElements)
+						{
+							train.Cars.Add(ParseCarNode(fileName, keyNode));
+						}
+						else
+						{
+							string dir = System.IO.Path.GetDirectoryName(fileName);
+							string newFileName = Path.CombineFile(dir, value);
+							XDocument xml = XDocument.Load(newFileName, LoadOptions.SetLineInfo);
+							List<XElement> carNodes = xml.XPathSelectElements("/openBVE/Car").ToList();
+							if (carNodes.Count != 1)
+							{
+								Interface.AddMessage(MessageType.Error, false, $"Expected a single car node in child car file {value} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								break;
+							}
+							train.Cars.Add(ParseCarNode(newFileName, carNodes[0]));
+						}
 						break;
 					case "coupler":
 						train.Couplers.Add(ParseCouplerNode(fileName, keyNode));
@@ -507,39 +516,27 @@ namespace TrainEditor2.IO.Trains.Xml
 							}
 						}
 						break;
-					case "axles":
+					case "frontaxle":
+					case "rearaxle":
 						if (value.Any())
 						{
-							string[] values = value.Split(',');
-							string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
-
-							if (values.Length == 2)
+							Quantity.Length result;
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
-								double front, rear;
-								UnitOfLength frontUnit = UnitOfLength.Meter, rearUnit = UnitOfLength.Meter;
-
-								if (!NumberFormats.TryParseDoubleVb6(values[0], out front) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out frontUnit))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Front must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[1], out rear) || unitValues != null && unitValues.Length > 1 && !Unit.TryParse(unitValues[1], true, out rearUnit))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Rear must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else if (new Quantity.Length(front, frontUnit) <= new Quantity.Length(rear, rearUnit))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Rear is expected to be less than Front in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else
-								{
-									car.DefinedAxles = true;
-									car.FrontAxle = new Quantity.Length(front, frontUnit);
-									car.RearAxle = new Quantity.Length(rear, rearUnit);
-								}
+								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								Interface.AddMessage(MessageType.Error, false, $"Exactly two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								if (key.ToLowerInvariant() == "frontaxle")
+								{
+									car.FrontAxle = result;
+								}
+								else
+								{
+									car.RearAxle = result;
+								}
+
+								car.DefinedAxles = true;
 							}
 						}
 						break;
@@ -644,6 +641,10 @@ namespace TrainEditor2.IO.Trains.Xml
 							}
 						}
 						break;
+					case "doors":
+						car.LeftDoor = ParseDoorNode(fileName, keyNode);
+						car.RightDoor = ParseDoorNode(fileName, keyNode);
+						break;
 					case "leftdoor":
 						car.LeftDoor = ParseDoorNode(fileName, keyNode);
 						break;
@@ -653,20 +654,15 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "readhesiondevice":
 						if (value.Any())
 						{
-							int result;
+							ReadhesionDeviceType result;
 
-							if (!NumberFormats.TryParseIntVb6(value, out result) || result < 0)
+							if (!Enum.TryParse(value, out result))
 							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								Interface.AddMessage(MessageType.Error, false, $"Unrecognised ReAdhesionDevice value in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								break;
 							}
-							else if (!Enum.IsDefined(typeof(Car.ReAdhesionDevices), result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a defined number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								car.ReAdhesionDevice = (Car.ReAdhesionDevices)result;
-							}
+
+							car.ReAdhesionDevice = result;
 						}
 						break;
 					case "acceleration":
@@ -737,39 +733,27 @@ namespace TrainEditor2.IO.Trains.Xml
 
 				switch (key.ToLowerInvariant())
 				{
-					case "axles":
+					case "frontaxle":
+					case "rearaxle":
 						if (value.Any())
 						{
-							string[] values = value.Split(',');
-							string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
-
-							if (values.Length == 2)
+							Quantity.Length result;
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
-								double front, rear;
-								UnitOfLength frontUnit = UnitOfLength.Meter, rearUnit = UnitOfLength.Meter;
-
-								if (!NumberFormats.TryParseDoubleVb6(values[0], out front) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out frontUnit))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Front must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[1], out rear) || unitValues != null && unitValues.Length > 1 && !Unit.TryParse(unitValues[1], true, out rearUnit))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Rear must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else if (new Quantity.Length(front, frontUnit) <= new Quantity.Length(rear, rearUnit))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Rear is expected to be less than Front in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else
-								{
-									bogie.DefinedAxles = true;
-									bogie.FrontAxle = new Quantity.Length(front, frontUnit);
-									bogie.RearAxle = new Quantity.Length(rear, rearUnit);
-								}
+								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								Interface.AddMessage(MessageType.Error, false, $"Exactly two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								if (key.ToLowerInvariant() == "frontaxle")
+								{
+									bogie.FrontAxle = result;
+								}
+								else
+								{
+									bogie.RearAxle = result;
+								}
+
+								bogie.DefinedAxles = true;
 							}
 						}
 						break;
@@ -1024,7 +1008,7 @@ namespace TrainEditor2.IO.Trains.Xml
 							}
 						}
 						break;
-					case "maxtolerance":
+					case "tolerance":
 						if (value.Any())
 						{
 							Quantity.Length result;

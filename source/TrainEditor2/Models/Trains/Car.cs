@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.World;
 using Prism.Mvvm;
+using TrainManager.Car;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -123,16 +124,7 @@ namespace TrainEditor2.Models.Trains
 				return MemberwiseClone();
 			}
 		}
-
-		internal enum ReAdhesionDevices
-		{
-			None = -1,
-			TypeA = 0,
-			TypeB = 1,
-			TypeC = 2,
-			TypeD = 3
-		}
-
+		
 		private Quantity.Mass mass;
 		private Quantity.Length length;
 		private Quantity.Length width;
@@ -155,7 +147,7 @@ namespace TrainEditor2.Models.Trains
 		private bool loadingSway;
 		private Door leftDoor;
 		private Door rightDoor;
-		private ReAdhesionDevices reAdhesionDevice;
+		private ReadhesionDeviceType reAdhesionDevice;
 
 		internal Quantity.Mass Mass
 		{
@@ -421,7 +413,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal ReAdhesionDevices ReAdhesionDevice
+		internal ReadhesionDeviceType ReAdhesionDevice
 		{
 			get
 			{
@@ -457,7 +449,7 @@ namespace TrainEditor2.Models.Trains
 			LoadingSway = false;
 			LeftDoor = new Door();
 			RightDoor = new Door();
-			ReAdhesionDevice = ReAdhesionDevices.TypeA;
+			ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 		}
 
 		public virtual object Clone()

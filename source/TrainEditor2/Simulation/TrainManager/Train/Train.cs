@@ -2,7 +2,7 @@
 
 namespace TrainEditor2.Simulation.TrainManager
 {
-	public static partial class TrainManager
+	public static partial class TrainEditor
 	{
 		internal class Train : AbstractTrain
 		{

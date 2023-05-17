@@ -862,7 +862,7 @@ namespace TrainEditor2.Models.Trains
 				return;
 			}
 
-			if (TrainManager.PlayerTrain == null)
+			if (TrainEditor.PlayerTrain == null)
 			{
 				Interface.AddMessage(MessageType.Error, false, "Failed to create train.");
 				CurrentSimState = SimulationState.Disable;
@@ -897,15 +897,15 @@ namespace TrainEditor2.Models.Trains
 		{
 			DisposeCar();
 
-			TrainManager.PlayerTrain = new TrainManager.Train();
-			TrainManager.PlayerTrain.Car.Sounds.Motor.PowerTables = Tracks.Where(x => x.Type == TrackType.Power).Select(x => Track.TrackToMotorSoundTable(x, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
-			TrainManager.PlayerTrain.Car.Sounds.Motor.BrakeTables = Tracks.Where(x => x.Type == TrackType.Brake).Select(x => Track.TrackToMotorSoundTable(x, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
-			TrainManager.PlayerTrain.Car.ApplySounds();
+			TrainEditor.PlayerTrain = new TrainEditor.Train();
+			TrainEditor.PlayerTrain.Car.Sounds.Motor.PowerTables = Tracks.Where(x => x.Type == TrackType.Power).Select(x => Track.TrackToMotorSoundTable(x, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
+			TrainEditor.PlayerTrain.Car.Sounds.Motor.BrakeTables = Tracks.Where(x => x.Type == TrackType.Brake).Select(x => Track.TrackToMotorSoundTable(x, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
+			TrainEditor.PlayerTrain.Car.ApplySounds();
 		}
 
 		internal void RunSimulation()
 		{
-			if (TrainManager.PlayerTrain == null)
+			if (TrainEditor.PlayerTrain == null)
 			{
 				return;
 			}
@@ -954,12 +954,12 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			TrainManager.PlayerTrain.Car.Specs.CurrentSpeed = TrainManager.PlayerTrain.Car.Specs.CurrentPerceivedSpeed = currentSimSpeed.ToDefaultUnit().Value;
-			TrainManager.PlayerTrain.Car.Specs.CurrentAccelerationOutput = outputAcceleration.ToDefaultUnit().Value;
+			TrainEditor.PlayerTrain.Car.Specs.CurrentSpeed = TrainEditor.PlayerTrain.Car.Specs.CurrentPerceivedSpeed = currentSimSpeed.ToDefaultUnit().Value;
+			TrainEditor.PlayerTrain.Car.Specs.CurrentAccelerationOutput = outputAcceleration.ToDefaultUnit().Value;
 
-			TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
+			TrainEditor.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
 
-			TrainManager.PlayerTrain.Car.UpdateMotorSounds(TreeItems[0].Children[0].Children.Select(x => x.Checked).ToArray(), TreeItems[0].Children[1].Children.Select(x => x.Checked).ToArray());
+			TrainEditor.PlayerTrain.Car.UpdateMotorSounds(TreeItems[0].Children[0].Children.Select(x => x.Checked).ToArray(), TreeItems[0].Children[1].Children.Select(x => x.Checked).ToArray());
 
 			Program.SoundApi.Update(deltaTime, SoundModels.Inverse);
 
@@ -1016,10 +1016,10 @@ namespace TrainEditor2.Models.Trains
 
 		private void DisposeCar()
 		{
-			if (TrainManager.PlayerTrain != null)
+			if (TrainEditor.PlayerTrain != null)
 			{
-				TrainManager.PlayerTrain.Dispose();
-				TrainManager.PlayerTrain = null;
+				TrainEditor.PlayerTrain.Dispose();
+				TrainEditor.PlayerTrain = null;
 			}
 		}
 
