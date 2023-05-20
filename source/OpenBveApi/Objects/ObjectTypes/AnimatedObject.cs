@@ -116,40 +116,43 @@ namespace OpenBveApi.Objects
 		/// <returns>The new object</returns>
 		public AnimatedObject Clone()
 		{
-			AnimatedObject Result = new AnimatedObject(currentHost) { States = States.Select(x => (ObjectState)x.Clone()).ToArray() };
+			AnimatedObject Result = new AnimatedObject(currentHost)
+			{
+				States = States.Select(x => (ObjectState)x.Clone()).ToArray(),
+				TrackFollowerFunction = TrackFollowerFunction?.Clone(),
+				FrontAxlePosition = this.FrontAxlePosition,
+				RearAxlePosition = this.RearAxlePosition,
+				StateFunction = StateFunction?.Clone(),
+				CurrentState = this.CurrentState,
+				TranslateZDirection = this.TranslateZDirection,
+				TranslateYDirection = this.TranslateYDirection,
+				TranslateXDirection = this.TranslateXDirection,
+				TranslateXFunction = TranslateXFunction?.Clone(),
+				TranslateYFunction = TranslateYFunction?.Clone(),
+				TranslateZFunction = TranslateZFunction?.Clone(),
+				RotateXDirection = this.RotateXDirection,
+				RotateYDirection = this.RotateYDirection,
+				RotateZDirection = this.RotateZDirection,
+				RotateXFunction = RotateXFunction?.Clone(),
+				RotateXDamping = RotateXDamping?.Clone(),
+				RotateYFunction = RotateYFunction?.Clone(),
+				RotateYDamping = RotateYDamping?.Clone(),
+				RotateZFunction = RotateZFunction?.Clone(),
+				RotateZDamping = RotateZDamping?.Clone(),
+				ScaleXFunction = ScaleXFunction?.Clone(),
+				ScaleYFunction = ScaleYFunction?.Clone(),
+				ScaleZFunction = ScaleZFunction?.Clone(),
+				TextureShiftXDirection = this.TextureShiftXDirection,
+				TextureShiftYDirection = this.TextureShiftYDirection,
+				TextureShiftXFunction = TextureShiftXFunction?.Clone(),
+				TextureShiftYFunction = TextureShiftYFunction?.Clone(),
+				LEDClockwiseWinding = this.LEDClockwiseWinding,
+				LEDInitialAngle = this.LEDInitialAngle,
+				LEDLastAngle = this.LEDLastAngle,
+				SectionIndex = this.SectionIndex,
+				IsPartOfTrain = false // will be set by the CarSection load if appropriate
+			};
 
-			Result.TrackFollowerFunction = TrackFollowerFunction?.Clone();
-			Result.FrontAxlePosition = this.FrontAxlePosition;
-			Result.RearAxlePosition = this.RearAxlePosition;
-			Result.StateFunction = StateFunction?.Clone();
-			Result.CurrentState = this.CurrentState;
-			Result.TranslateZDirection = this.TranslateZDirection;
-			Result.TranslateYDirection = this.TranslateYDirection;
-			Result.TranslateXDirection = this.TranslateXDirection;
-			Result.TranslateXFunction = TranslateXFunction?.Clone();
-			Result.TranslateYFunction = TranslateYFunction?.Clone();
-			Result.TranslateZFunction = TranslateZFunction?.Clone();
-			Result.RotateXDirection = this.RotateXDirection;
-			Result.RotateYDirection = this.RotateYDirection;
-			Result.RotateZDirection = this.RotateZDirection;
-			Result.RotateXFunction = RotateXFunction?.Clone();
-			Result.RotateXDamping = RotateXDamping?.Clone();
-			Result.RotateYFunction = RotateYFunction?.Clone();
-			Result.RotateYDamping = RotateYDamping?.Clone();
-			Result.RotateZFunction = RotateZFunction?.Clone();
-			Result.RotateZDamping = RotateZDamping?.Clone();
-			Result.ScaleXFunction = ScaleXFunction?.Clone();
-			Result.ScaleYFunction = ScaleYFunction?.Clone();
-			Result.ScaleZFunction = ScaleZFunction?.Clone();
-			Result.TextureShiftXDirection = this.TextureShiftXDirection;
-			Result.TextureShiftYDirection = this.TextureShiftYDirection;
-			Result.TextureShiftXFunction = TextureShiftXFunction?.Clone();
-			Result.TextureShiftYFunction = TextureShiftYFunction?.Clone();
-			Result.LEDClockwiseWinding = this.LEDClockwiseWinding;
-			Result.LEDInitialAngle = this.LEDInitialAngle;
-			Result.LEDLastAngle = this.LEDLastAngle;
-			Result.SectionIndex = this.SectionIndex;
-			Result.IsPartOfTrain = false; // will be set by the CarSection load if appropriate
 			if (this.LEDVectors != null)
 			{
 				Result.LEDVectors = new Vector3[this.LEDVectors.Length];
@@ -729,14 +732,7 @@ namespace OpenBveApi.Objects
 			{
 				if (Show)
 				{
-					if (Camera != null)
-					{
-						currentHost.ShowObject(internalObject, ObjectType.Overlay);
-					}
-					else
-					{
-						currentHost.ShowObject(internalObject, ObjectType.Dynamic);
-					}
+					currentHost.ShowObject(internalObject, Camera != null ? ObjectType.Overlay : ObjectType.Dynamic);
 				}
 				else
 				{

@@ -49,8 +49,8 @@ namespace OpenBve
 				//Ignore messages triggered during a jump & dummy stations
 				return;
 			}
-			GameMessage gm = message as GameMessage;
-			if (gm != null && (gm.Depencency == MessageDependency.StationArrival || gm.Depencency == MessageDependency.StationDeparture))
+
+			if (message is GameMessage gm && (gm.Depencency == MessageDependency.StationArrival || gm.Depencency == MessageDependency.StationDeparture))
 			{
 				if (Program.CurrentRoute.Stations[TrainManagerBase.PlayerTrain.Station].Dummy)
 				{
@@ -75,8 +75,7 @@ namespace OpenBve
 			{
 				for (int i = TextualMessages.Count -1; i >= 0; i--)
 				{
-					var c = TextualMessages[i] as GameMessage;
-					if (c != null && (c.Depencency == MessageDependency.SectionLimit || c.Depencency == MessageDependency.RouteLimit))
+					if (TextualMessages[i] is GameMessage c && (c.Depencency == MessageDependency.SectionLimit || c.Depencency == MessageDependency.RouteLimit))
 					{
 						TextualMessages.RemoveAt(i);
 					}
@@ -84,8 +83,7 @@ namespace OpenBve
 			}
 			for (int i = 0; i < TextualMessages.Count; i++)
 			{
-				var c = TextualMessages[i] as GameMessage;
-				if (m != null && c != null)
+				if (m != null && TextualMessages[i] is GameMessage c)
 				{
 					if ((m.Depencency == MessageDependency.SectionLimit || m.Depencency == MessageDependency.RouteLimit) && c.Depencency == MessageDependency.PassedRedSignal)
 					{

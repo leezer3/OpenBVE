@@ -118,7 +118,7 @@ namespace Texture.Tga
 								binReader.BaseStream.Seek(-18, SeekOrigin.End);
 								//Read the signature string to it's textual representation
 								var Signature = System.Text.Encoding.ASCII.GetString(binReader.ReadBytes(16)).TrimEnd('\0');
-								if (String.CompareOrdinal(Signature, "TRUEVISION-XFILE") == 0)
+								if (string.CompareOrdinal(Signature, "TRUEVISION-XFILE") == 0)
 								{
 									//This is a new TGA format file, so we must read the footer information
 									NewTGA = true;
@@ -132,10 +132,6 @@ namespace Texture.Tga
 									binReader.ReadBytes(16);
 									//Read the reserved character
 									ReservedCharacter = System.Text.Encoding.ASCII.GetString(binReader.ReadBytes(1)).TrimEnd('\0');
-								}
-								else
-								{
-									//This is an old TGA format file
 								}
 							}
 							catch
@@ -153,15 +149,7 @@ namespace Texture.Tga
 								//ImageID Length
 								ImageIDLength = binReader.ReadByte();
 								//Byte showing the color map type ==> Either none or has a color map
-								var ColorMapByte = binReader.ReadByte();
-								if (ColorMapByte == 0)
-								{
-									HasColorMap = false;
-								}
-								else
-								{
-									HasColorMap = true;
-								}
+								HasColorMap = binReader.ReadByte() != 0;
 								//Byte showing the image type
 								ImageType = (ImageTypes)binReader.ReadByte();
 								//16-bit integer showing the first entry in the color map
@@ -190,8 +178,7 @@ namespace Texture.Tga
 								// load ImageID value if any
 								if (ImageIDLength > 0)
 								{
-									byte[] ImageIDValueBytes = binReader.ReadBytes(ImageIDLength);
-									ImageID = System.Text.Encoding.ASCII.GetString(ImageIDValueBytes).TrimEnd('\0');
+									ImageID = System.Text.Encoding.ASCII.GetString(binReader.ReadBytes(ImageIDLength)).TrimEnd('\0');
 								}
 							}
 							catch
@@ -268,7 +255,7 @@ namespace Texture.Tga
 									//Reset seek position to the start of the extension area
 									binReader.BaseStream.Seek(ExtensionAreaOffset, SeekOrigin.Begin);
 									//Get the size of the extension area
-									ExtensionAreaSize = (int)binReader.ReadInt16();
+									ExtensionAreaSize = binReader.ReadInt16();
 									//Skip the author name- We don't need this
 									binReader.ReadBytes(41);
 									//Skip the author comments- We don't need this
@@ -297,14 +284,14 @@ namespace Texture.Tga
 									var b = (int)binReader.ReadByte();
 									var g = (int)binReader.ReadByte();
 									ExtensionAreaKeyColor = Color.FromArgb(a, r, g, b);
-									PixelAspectRatioNumerator = (int)binReader.ReadInt16();
-									PixelAspectRatioDenominator = (int)binReader.ReadInt16();
-									GammaNumerator = (int)binReader.ReadInt16();
-									GammaDenominator = (int)binReader.ReadInt16();
+									PixelAspectRatioNumerator = binReader.ReadInt16();
+									PixelAspectRatioDenominator = binReader.ReadInt16();
+									GammaNumerator = binReader.ReadInt16();
+									GammaDenominator = binReader.ReadInt16();
 									ColorCorrectionOffset = binReader.ReadInt32();
 									PostageStampOffset = binReader.ReadInt32();
 									ScanLineOffset = binReader.ReadInt32();
-									AttributesType = (int)binReader.ReadByte();
+									AttributesType = binReader.ReadByte();
 									//If a scan line table offset is included, read this
 									if (ScanLineOffset > 0)
 									{
@@ -320,10 +307,10 @@ namespace Texture.Tga
 										binReader.BaseStream.Seek(ColorCorrectionOffset, SeekOrigin.Begin);
 										for (int i = 0; i < 256; i++)
 										{
-											a = (int)binReader.ReadInt16();
-											r = (int)binReader.ReadInt16();
-											b = (int)binReader.ReadInt16();
-											g = (int)binReader.ReadInt16();
+											a = binReader.ReadInt16();
+											r = binReader.ReadInt16();
+											b = binReader.ReadInt16();
+											g = binReader.ReadInt16();
 											ColorCorrectionTable.Add(Color.FromArgb(a, r, g, b));
 										}
 									}
@@ -338,9 +325,9 @@ namespace Texture.Tga
 								//We should now have all the data required to read our image into memory
 
 								//Calculate the stride value
-								var stride = (((int)ImageWidth * (int)PixelDepth + 31) & ~31) >> 3;
+								var stride = ((ImageWidth * PixelDepth + 31) & ~31) >> 3;
 								//Calculate the padding value
-								var padding = stride - ((((int)ImageWidth * (int)PixelDepth) + 7) / 8);
+								var padding = stride - (((ImageWidth * PixelDepth) + 7) / 8);
 								//Next, load the image data into memory
 
 								//Create the padding array, as stride must be a multiple of 4
@@ -372,10 +359,10 @@ namespace Texture.Tga
 								binReader.BaseStream.Seek(ImageDataOffset, SeekOrigin.Begin);
 
 								//Size in bytes for each row
-								int ImageRowByteSize = (int)ImageWidth * ((int)(PixelDepth / 8));
+								int ImageRowByteSize = ImageWidth * (PixelDepth / 8);
 
 								//Size in bytes for whole image
-								int ImageByteSize = ImageRowByteSize * (int)ImageHeight;
+								int ImageByteSize = ImageRowByteSize * ImageHeight;
 
 								if (ImageType == ImageTypes.CompressedColorMapped || ImageType == ImageTypes.CompressedRGB || ImageType == ImageTypes.CompressedGreyscale)
 								{
@@ -389,7 +376,7 @@ namespace Texture.Tga
 										var PixelCount = ((Packet >> 0) & ((1 << 7) - 1)) + 1;
 										if (PacketType == 1)
 										{
-											byte[] Pixel = binReader.ReadBytes((int)PixelDepth / 8);
+											byte[] Pixel = binReader.ReadBytes(PixelDepth / 8);
 											for (int i = 0; i < PixelCount; i++)
 											{
 
@@ -411,7 +398,7 @@ namespace Texture.Tga
 										}
 										else
 										{
-											int BytesToRead = PixelCount * (int)((int)PixelDepth / 8);
+											int BytesToRead = PixelCount * (PixelDepth / 8);
 											for (int i = 0; i < BytesToRead; i++)
 											{
 												row.Add(binReader.ReadByte());
@@ -433,7 +420,7 @@ namespace Texture.Tga
 								}
 								else
 								{
-									for (int i = 0; i < (int)ImageHeight; i++)
+									for (int i = 0; i < ImageHeight; i++)
 									{
 										for (int j = 0; j < ImageRowByteSize; j++)
 										{
@@ -497,7 +484,7 @@ namespace Texture.Tga
 								//Convert the byte array into a bitmap
 
 								//First, calculate the stride
-								var Stride = (((int)ImageWidth * (int)PixelDepth + 31) & ~31) >> 3;
+								var Stride = ((ImageWidth * PixelDepth + 31) & ~31) >> 3;
 								//We now need to calculate the pixel depth from the image attributes
 								PixelFormat CurrentPixelFormat = PixelFormat.Undefined;
 								switch (PixelDepth)
@@ -573,7 +560,7 @@ namespace Texture.Tga
 								}
 								//Create a pinned GC handle to our new byte array
 								ByteArrayHandle = GCHandle.Alloc(ImageData, GCHandleType.Pinned);
-								bitmap = new Bitmap((int)ImageWidth, (int)ImageHeight, Stride, CurrentPixelFormat, ByteArrayHandle.AddrOfPinnedObject());
+								bitmap = new Bitmap(ImageWidth, ImageHeight, Stride, CurrentPixelFormat, ByteArrayHandle.AddrOfPinnedObject());
 								//Free it again
 								ByteArrayHandle.Free();
 								//Load color map

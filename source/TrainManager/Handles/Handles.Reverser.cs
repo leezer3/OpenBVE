@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using SoundManager;
 using TrainManager.Trains;
 
@@ -47,6 +48,10 @@ namespace TrainManager.Handles
 			int r = Relative ? a + Value : Value;
 			if (r < -1) r = -1;
 			if (r > 1) r = 1;
+			if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+			{
+				r = 0 - r;
+			}
 			if (a != r)
 			{
 				Driver = (ReverserPosition)r;
@@ -78,11 +83,21 @@ namespace TrainManager.Handles
 				switch (Driver)
 				{
 					case ReverserPosition.Reverse:
+						if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+						{
+							color = MessageColor.Blue;
+							return Translations.QuickReferences.HandleForward;
+						}
 						color = MessageColor.Orange;
 						return Translations.QuickReferences.HandleBackward;
 					case ReverserPosition.Neutral:
 						return Translations.QuickReferences.HandleNeutral;
 					case ReverserPosition.Forwards:
+						if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+						{
+							color = MessageColor.Orange;
+							return Translations.QuickReferences.HandleBackward;
+						}
 						color = MessageColor.Blue;
 						return Translations.QuickReferences.HandleForward;
 				}
@@ -92,11 +107,21 @@ namespace TrainManager.Handles
 				switch (Driver)
 				{
 					case ReverserPosition.Reverse:
+						if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+						{
+							color = MessageColor.Blue;
+							return NotchDescriptions[1];
+						}
 						color = MessageColor.Orange;
 						return NotchDescriptions[2];
 					case ReverserPosition.Neutral:
 						return NotchDescriptions[0];
 					case ReverserPosition.Forwards:
+						if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+						{
+							color = MessageColor.Orange;
+							return NotchDescriptions[2];
+						}
 						color = MessageColor.Blue;
 						return NotchDescriptions[1];
 				}

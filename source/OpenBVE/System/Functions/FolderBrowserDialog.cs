@@ -135,9 +135,11 @@ namespace OpenBve
 		// Wrap an IWin32Window around an IntPtr
 		private class WindowWrapper : IWin32Window
 		{
-			private readonly IntPtr _handle;
-			public WindowWrapper(IntPtr handle) { _handle = handle; }
-			public IntPtr Handle => _handle;
+			public WindowWrapper(IntPtr handle) { Handle = handle; }
+			public IntPtr Handle
+			{
+				get;
+			}
 		}
 	}
 }

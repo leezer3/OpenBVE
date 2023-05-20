@@ -59,6 +59,10 @@ namespace OpenBveApi.Runtime
 		[DataMember] 
 		private int MyHeadlightState;
 
+		/// <summary>Whether input from the host application is being blocked</summary>
+		[DataMember] 
+		private bool MyBlockingInput;
+
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="vehicle">The state of the train.</param>
 		/// <param name="precedingVehicle">The state of the preceding train, or a null reference if there is no preceding train.</param>
@@ -85,6 +89,7 @@ namespace OpenBveApi.Runtime
 			this.MyLanguageCode = languageCode;
 			this.CurrentDestination = destination;
 			this.MyHeadlightState = headlightState;
+			this.MyBlockingInput = false; // Host application always unblocks input, must be set by plugin each frame to avoid deadlocking
 		}
 
 
@@ -212,7 +217,7 @@ namespace OpenBveApi.Runtime
 			}
 		}
 
-		/// <summary>Gets the destination variable as set by the plugin</summary>
+		/// <summary>Gets the headlight state variable as set by the plugin</summary>
 		public int HeadlightState
 		{
 			get
@@ -222,6 +227,19 @@ namespace OpenBveApi.Runtime
 			set
 			{
 				this.MyHeadlightState = value;
+			}
+		}
+
+		/// <summary>Gets the input blocking state as set by the plugin</summary>
+		public bool BlockingInput
+		{
+			get
+			{
+				return this.MyBlockingInput;
+			}
+			set
+			{
+				this.MyBlockingInput = value;
 			}
 		}
 	}

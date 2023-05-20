@@ -23,9 +23,8 @@ namespace LibRender2.Trains
 			Groups = new ElementsGroup[1];
 			Groups[0] = new ElementsGroup();
 			VisibleFromInterior = visibleFromInterior;
-			if (Object is StaticObject)
+			if (Object is StaticObject s)
 			{
-				StaticObject s = (StaticObject) Object;
 				Groups[0].Elements = new AnimatedObject[1];
 				Groups[0].Elements[0] = new AnimatedObject(Host)
 				{
@@ -35,9 +34,8 @@ namespace LibRender2.Trains
 				};
 				currentHost.CreateDynamicObject(ref Groups[0].Elements[0].internalObject);
 			}
-			else if (Object is AnimatedObjectCollection)
+			else if (Object is AnimatedObjectCollection a)
 			{
-				AnimatedObjectCollection a = (AnimatedObjectCollection)Object;
 				Groups[0].Elements = new AnimatedObject[a.Objects.Length];
 				for (int h = 0; h < a.Objects.Length; h++)
 				{

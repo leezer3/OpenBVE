@@ -748,7 +748,7 @@ namespace MechanikRouteParser
 						};
 						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
 						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(0, s);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(Plugin.CurrentRoute, 0, s);
 					}
 					else
 					{

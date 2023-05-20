@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
@@ -43,7 +44,21 @@ namespace TrainManager.SafetySystems
 		/// <summary>The absolute on-disk path of the train's folder</summary>
 		private readonly string TrainFolder;
 
-		private readonly IRuntime Api;
+		private readonly IRuntime BaseApi;
+
+		private IRuntime Api
+		{
+			get
+			{
+				if (RawApi != null)
+				{
+					return RawApi;
+				}
+				return BaseApi;
+			}
+		}
+
+		private readonly IRawRuntime RawApi;
 
 		/// <summary>An array containing all of the plugin's current sound handles</summary>
 		private SoundHandleEx[] SoundHandles;
@@ -57,7 +72,7 @@ namespace TrainManager.SafetySystems
 		/// <param name="trainFolder">The absolute on-disk path of the train's folder</param>
 		/// <param name="api">The base OpenBVE runtime interface</param>
 		/// <param name="train">The base train</param>
-		internal NetPlugin(string pluginFile, string trainFolder, IRuntime api, TrainBase train)
+		internal NetPlugin(string pluginFile, string trainFolder, object api, TrainBase train)
 		{
 			PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			PluginValid = true;
@@ -74,7 +89,15 @@ namespace TrainManager.SafetySystems
 			LastException = null;
 			PluginFolder = System.IO.Path.GetDirectoryName(pluginFile);
 			TrainFolder = trainFolder;
-			Api = api;
+			if (api is IRawRuntime rawRuntime)
+			{
+				RawApi = rawRuntime;
+			}
+			else if(api is IRuntime runtime)
+			{
+				BaseApi = runtime;
+			}
+			
 			SoundHandles = new SoundHandleEx[16];
 			SoundHandlesCount = 0;
 		}
@@ -82,7 +105,7 @@ namespace TrainManager.SafetySystems
 		// --- functions ---
 		public override bool Load(VehicleSpecs specs, InitializationModes mode)
 		{
-			LoadProperties properties = new LoadProperties(PluginFolder, TrainFolder, PlaySound, PlaySound, AddInterfaceMessage, AddScore, OpenDoors, CloseDoors);
+			LoadProperties properties = new LoadProperties(PluginFolder, TrainFolder, PlayMultiCarSound, PlayCarSound, PlayMultiCarSound, AddInterfaceMessage, AddScore, OpenDoors, CloseDoors);
 			bool success;
 			try
 			{
@@ -334,6 +357,60 @@ namespace TrainManager.SafetySystems
 #endif
 		}
 
+		public override void TouchEvent(int groupIndex, int commandIndex)
+		{
+#if !DEBUG
+			try {
+#endif
+			if (RawApi != null)
+			{
+				RawApi.TouchEvent(groupIndex, commandIndex);
+			}
+			
+#if !DEBUG
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+#endif
+		}
+
+		public override void RawKeyDown(Key key)
+		{
+#if !DEBUG
+			try {
+#endif
+			if (RawApi != null)
+			{
+				RawApi.RawKeyDown(key);
+			}
+			
+#if !DEBUG
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+#endif
+		}
+
+		public override void RawKeyUp(Key key)
+		{
+#if !DEBUG
+			try {
+#endif
+			if (RawApi != null)
+			{
+				RawApi.RawKeyUp(key);
+			}
+			
+#if !DEBUG
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+#endif
+		}
+
 		/// <summary>May be called from a .Net plugin, in order to add a message to the in-game display</summary>
 		/// <param name="Message">The message to display</param>
 		/// <param name="Color">The color in which to display the message</param>
@@ -371,7 +448,7 @@ namespace TrainManager.SafetySystems
 		/// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
 		/// <param name="looped">Whether the sound is looped</param>
 		/// <returns>The sound handle, or null if not successful</returns>
-		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped)
+		internal SoundHandleEx PlayMultiCarSound(int index, double volume, double pitch, bool looped)
 		{
 			if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(index) && Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer != null)
 			{
@@ -396,7 +473,7 @@ namespace TrainManager.SafetySystems
 		/// <param name="looped">Whether the sound is looped</param>
 		/// <param name="CarIndex">The index of the car which is to emit the sound</param>
 		/// <returns>The sound handle, or null if not successful</returns>
-		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped, int CarIndex)
+		internal SoundHandleEx PlayCarSound(int index, double volume, double pitch, bool looped, int CarIndex)
 		{
 			if (CarIndex < 0 || CarIndex >= Train.Cars.Length)
 			{
@@ -435,6 +512,23 @@ namespace TrainManager.SafetySystems
 			SoundHandles[SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[CarIndex].Sounds.Plugin[index].Source);
 			SoundHandlesCount++;
 			return SoundHandles[SoundHandlesCount - 1];
+		}
+
+		/// <summary>May be called from a .Net plugin, in order to play a sound from multiple cars of a train</summary>
+		/// <param name="index">The plugin-based of the sound to play</param>
+		/// <param name="volume">The volume of the sound- A volume of 1.0 represents nominal volume</param>
+		/// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
+		/// <param name="looped">Whether the sound is looped</param>
+		/// <param name="CarIndicies">The index of the cars which are to emit the sound</param>
+		/// <returns>The sound handle, or null if not successful</returns>
+		internal SoundHandleEx[] PlayMultiCarSound(int index, double volume, double pitch, bool looped, int[] CarIndicies)
+		{
+			SoundHandleEx[] soundHandles = new SoundHandleEx[CarIndicies.Length];
+			for (int i = 0; i < CarIndicies.Length; i++)
+			{
+				soundHandles[i] = PlayCarSound(index, volume, pitch, looped, CarIndicies[i]);
+			}
+			return soundHandles;
 		}
 	}
 }

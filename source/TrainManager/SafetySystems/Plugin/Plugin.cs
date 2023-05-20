@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -67,6 +68,8 @@ namespace TrainManager.SafetySystems
 		private bool StationsLoaded;
 		/// <summary>Holds the plugin specific AI class</summary>
 		internal PluginAI AI;
+		/// <summary>Whether the plugin is blocking input</summary>
+		public bool BlockingInput;
 
 		// --- functions ---
 		/// <summary>Called to load and initialize the plugin.</summary>
@@ -151,7 +154,7 @@ namespace TrainManager.SafetySystems
 			try
 			{
 				AbstractTrain closestTrain = TrainManagerBase.currentHost.ClosestTrain(this.Train);
-				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition(), closestTrain.RearCarTrackPosition() - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
+				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition, closestTrain.RearCarTrackPosition - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
 			}
 			catch
 			{
@@ -175,6 +178,7 @@ namespace TrainManager.SafetySystems
 			this.PluginMessage = data.DebugMessage;
 			this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
 			this.Train.SafetySystems.Headlights.SetState(data.HeadlightState);
+			this.BlockingInput = data.BlockingInput;
 			DisableTimeAcceleration = data.DisableTimeAcceleration;
 			if (Train.IsPlayerTrain)
 			{
@@ -542,6 +546,24 @@ namespace TrainManager.SafetySystems
 
 		/// <summary>Called when a virtual key is released.</summary>
 		public abstract void KeyUp(VirtualKeys key);
+
+		/// <summary>Called when a virtual key is pressed.</summary>
+		public virtual void RawKeyDown(Key key)
+		{
+			// Ignored other than by .Net plugins
+		}
+
+		/// <summary>Called when a virtual key is released.</summary>
+		public virtual void RawKeyUp(Key key)
+		{
+			// Ignored other than by .Net plugins
+		}
+
+		/// <summary>Called when a touch event occurs.</summary>
+		public virtual void TouchEvent(int groupIndex, int commandIndex)
+		{
+			// Ignored other than by .Net plugins
+		}
 
 		/// <summary>Called when a horn is played or stopped.</summary>
 		public abstract void HornBlow(HornTypes type);

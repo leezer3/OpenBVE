@@ -140,7 +140,7 @@ namespace OpenBve {
 			}
 		}
 		
-		private void listviewInputDevice_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void listviewInputDevice_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			if (listviewInputDevice.SelectedIndices.Count == 1)
 			{

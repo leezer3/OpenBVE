@@ -212,14 +212,14 @@ namespace RouteManager2.SignalManager
 					aspect = Aspects[CurrentAspect].Number;
 				}
 
-				double position = train.FrontCarTrackPosition();
+				double position = train.FrontCarTrackPosition;
 				double distance = TrackPosition - position;
 				return new SignalData(aspect, distance);
 			}
 			else
 			{
 				int aspect = Aspects[CurrentAspect].Number;
-				double position = train.FrontCarTrackPosition();
+				double position = train.FrontCarTrackPosition;
 				double distance = TrackPosition - position;
 				return new SignalData(aspect, distance);
 			}

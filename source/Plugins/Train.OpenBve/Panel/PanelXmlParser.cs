@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using LibRender2.Cursors;
 using LibRender2.Trains;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
@@ -427,6 +429,7 @@ namespace Train.OpenBve
 							List<int> SoundIndices = new List<int>();
 							List<CommandEntry> CommandEntries = new List<CommandEntry>();
 							CommandEntry CommandEntry = new CommandEntry();
+							Bitmap cursorTexture = null;
 							int Layer = 0;
 
 							foreach (XElement KeyNode in SectionElement.Elements())
@@ -562,9 +565,20 @@ namespace Train.OpenBve
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
+									case PanelKey.Cursor:
+										string File = Path.CombineFile(Train.TrainFolder, Value);
+										if (System.IO.File.Exists(File))
+										{
+											cursorTexture = (Bitmap)Bitmap.FromFile(File);
+										}
+										break;
 								}
 							}
 							CreateTouchElement(CarSection.Groups[GroupIndex], Location, Size, JumpScreen, SoundIndices.ToArray(), CommandEntries.ToArray(), new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+							if (cursorTexture != null)
+							{
+								CarSection.Groups[GroupIndex].TouchElements[CarSection.Groups[GroupIndex].TouchElements.Length - 1].MouseCursor = new MouseCursor(Plugin.Renderer, string.Empty, cursorTexture);
+							}
 						}
 						break;
 					case PanelSections.PilotLamp:

@@ -171,6 +171,7 @@
     <Compile Include="Graphics\HUD\HUD.Image.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
+    <Compile Include="Graphics\HUD\HUD.Subject.cs" />
     <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>

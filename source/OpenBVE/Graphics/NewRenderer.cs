@@ -111,8 +111,7 @@ namespace OpenBve.Graphics
 			switch (CurrentViewportMode)
 			{
 				case ViewportMode.Scenery:
-					BackgroundObject b = Program.CurrentRoute.CurrentBackground as BackgroundObject;
-					double cd = b != null ? Math.Max(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, b.ClipDistance) : Program.CurrentRoute.CurrentBackground.BackgroundImageDistance;
+					double cd = Program.CurrentRoute.CurrentBackground is BackgroundObject b ? Math.Max(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, b.ClipDistance) : Program.CurrentRoute.CurrentBackground.BackgroundImageDistance;
 					CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.5, cd);
 					break;
 				case ViewportMode.Cab:

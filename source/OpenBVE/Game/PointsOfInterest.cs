@@ -1,5 +1,4 @@
 ﻿using System;
-using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using RouteManager2.MessageManager;
@@ -71,7 +70,7 @@ namespace OpenBve
 			World.UpdateAbsoluteCamera(0.0);
 			if (Program.CurrentRoute.PointsOfInterest[j].Text != null)
 			{
-				double n = 3.0 + 0.5 * Math.Sqrt((double) Program.CurrentRoute.PointsOfInterest[j].Text.Length);
+				double n = 3.0 + 0.5 * Math.Sqrt(Program.CurrentRoute.PointsOfInterest[j].Text.Length);
 				MessageManager.AddMessage(Program.CurrentRoute.PointsOfInterest[j].Text, MessageDependency.PointOfInterest, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + n, null);
 			}
 			return true;

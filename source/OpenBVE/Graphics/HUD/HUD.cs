@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenBveApi.Sounds;
 using SoundManager;
 
 namespace OpenBve
@@ -76,7 +75,10 @@ namespace OpenBve
 										case "subject":
 											if (Arguments.Length == 1)
 											{
-												CurrentHudElements[Length - 1].Subject = Arguments[0];
+												if (!Enum.TryParse(Arguments[0], true, out CurrentHudElements[Length - 1].Subject))
+												{
+													MessageBox.Show("Unknown HUD Subject supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+												}
 											}
 											else
 											{
@@ -530,7 +532,7 @@ namespace OpenBve
 												}
 												else
 												{
-													CurrentHudElements[Length - 1].Transition = (HUD.Transition) n;
+													CurrentHudElements[Length - 1].Transition = (Transition) n;
 												}
 											}
 											else

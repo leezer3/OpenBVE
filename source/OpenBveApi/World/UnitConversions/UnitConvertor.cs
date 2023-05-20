@@ -18,12 +18,12 @@ namespace OpenBveApi.World
 		/// <summary>
 		/// Dictionary of functions to convert from the base unit type into a specific type.
 		/// </summary>
-		static ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>> ConversionsTo = new ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>>();
+		static readonly ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>> ConversionsTo = new ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>>();
 
 		/// <summary>
 		/// Dictionary of functions to convert from the specified type into the base unit type.
 		/// </summary>
-		static ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>> ConversionsFrom = new ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>>();
+		static readonly ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>> ConversionsFrom = new ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>>();
 
 		/// <summary>
 		/// Converts a value from one unit type to another.
@@ -60,9 +60,9 @@ namespace OpenBveApi.World
 		protected static void RegisterConversion(TUnitType convertToUnit, Func<TValueType, TValueType> conversionTo, Func<TValueType, TValueType> conversionFrom)
 		{
 			if (!ConversionsTo.TryAdd(convertToUnit, conversionTo))
-				throw new ArgumentException("Already exists", "convertToUnit");
+				throw new ArgumentException(@"Already exists", "convertToUnit");
 			if (!ConversionsFrom.TryAdd(convertToUnit, conversionFrom))
-				throw new ArgumentException("Already exists", "convertToUnit");
+				throw new ArgumentException(@"Already exists", "convertToUnit");
 		}
 	}
 }

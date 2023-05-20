@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OpenBveApi.Objects
+﻿namespace OpenBveApi.Objects
 {
 	/// <summary>The exporter for any given model</summary>
 	/// <remarks>Some exporters use a different handing / origin for texture co-ordinates and vertices</remarks>

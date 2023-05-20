@@ -20,14 +20,13 @@ namespace OpenBve.Graphics.Renderers
 		/// <param name="TimeElapsed">The time elapsed</param>
 		private void RenderHUDElement(HUD.Element Element, double TimeElapsed)
 		{
-			if (PlayerTrain == null)
+			if (PlayerTrain == null || (int)Element.Subject < 100 && Interface.CurrentOptions.GameMode == GameMode.Developer)
 			{
 				return;
 			}
 			TrainDoorState LeftDoors = PlayerTrain.GetDoorsState(true, false);
 			TrainDoorState RightDoors = PlayerTrain.GetDoorsState(false, true);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string Command = Element.Subject.ToLowerInvariant();
 			// default
 			double w, h;
 			if (Element.CenterMiddle.BackgroundTexture != null)
@@ -69,13 +68,13 @@ namespace OpenBve.Graphics.Renderers
 			const double speed = 1.0;
 			MessageColor sc = MessageColor.None;
 			string t;
-			switch (Command)
+			switch (Element.Subject)
 			{
-				case "reverser":
+				case HUDSubject.Reverser:
 					t = PlayerTrain.Handles.Reverser.GetNotchDescription(out sc);
 					Element.TransitionState = 0.0;
 					break;
-				case "power":
+				case HUDSubject.Power:
 					if (PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 					{
 						return;
@@ -83,7 +82,7 @@ namespace OpenBve.Graphics.Renderers
 					t = PlayerTrain.Handles.Power.GetNotchDescription(out sc);
 					Element.TransitionState = 0.0;
 					break;
-				case "single":
+				case HUDSubject.Single:
 					if (PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 					{
 						return;
@@ -91,7 +90,7 @@ namespace OpenBve.Graphics.Renderers
 					t = PlayerTrain.Handles.Power.GetNotchDescription(out sc);
 					Element.TransitionState = 0.0;
 					break;
-				case "brake":
+				case HUDSubject.Brake:
 					if (PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 					{
 						return;
@@ -99,7 +98,7 @@ namespace OpenBve.Graphics.Renderers
 					t = PlayerTrain.Handles.Brake.GetNotchDescription(out sc);
 					Element.TransitionState = 0.0;
 					break;
-				case "locobrake":
+				case HUDSubject.LocoBrake:
 					if (!PlayerTrain.Handles.HasLocoBrake)
 					{
 						return;
@@ -107,8 +106,8 @@ namespace OpenBve.Graphics.Renderers
 					t = PlayerTrain.Handles.LocoBrake.GetNotchDescription(out sc);
 					Element.TransitionState = 0.0;
 					break;
-				case "doorsleft":
-				case "doorsright":
+				case HUDSubject.DoorsLeft:
+				case HUDSubject.DoorsRight:
 				{
 					if ((LeftDoors & TrainDoorState.AllClosed) == 0 | (RightDoors & TrainDoorState.AllClosed) == 0)
 					{
@@ -120,7 +119,7 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					}
-					TrainDoorState Doors = Command == "doorsleft" ? LeftDoors : RightDoors;
+					TrainDoorState Doors = Element.Subject == HUDSubject.DoorsLeft ? LeftDoors : RightDoors;
 					if ((Doors & TrainDoorState.Mixed) != 0)
 					{
 						sc = MessageColor.Orange;
@@ -137,27 +136,27 @@ namespace OpenBve.Graphics.Renderers
 					{
 						sc = MessageColor.Blue;
 					}
-					t = Command == "doorsleft" ? Translations.QuickReferences.DoorsLeft : Translations.QuickReferences.DoorsRight;
+					t = Element.Subject == HUDSubject.DoorsLeft ? Translations.QuickReferences.DoorsLeft : Translations.QuickReferences.DoorsRight;
 				} break;
-				case "stopleft":
-				case "stopright":
-				case "stopnone":
+				case HUDSubject.StopLeft:
+				case HUDSubject.StopRight:
+				case HUDSubject.StopNone:
 				{
 					int s = PlayerTrain.Station;
 					if (s >= 0 && Program.CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert)
 					{
 						bool cond;
-						if (Command == "stopleft")
+						switch (Element.Subject)
 						{
-							cond = Program.CurrentRoute.Stations[s].OpenLeftDoors;
-						}
-						else if (Command == "stopright")
-						{
-							cond = Program.CurrentRoute.Stations[s].OpenRightDoors;
-						}
-						else
-						{
-							cond = !Program.CurrentRoute.Stations[s].OpenLeftDoors & !Program.CurrentRoute.Stations[s].OpenRightDoors;
+							case HUDSubject.StopLeft:
+								cond = Program.CurrentRoute.Stations[s].OpenLeftDoors;
+								break;
+							case HUDSubject.StopRight:
+								cond = Program.CurrentRoute.Stations[s].OpenRightDoors;
+								break;
+							default:
+								cond = !Program.CurrentRoute.Stations[s].OpenLeftDoors & !Program.CurrentRoute.Stations[s].OpenRightDoors;
+								break;
 						}
 						if (PlayerTrain.StationState == TrainStopState.Pending & cond)
 						{
@@ -177,9 +176,9 @@ namespace OpenBve.Graphics.Renderers
 					}
 					t = Element.Text;
 				} break;
-				case "stoplefttick":
-				case "stoprighttick":
-				case "stopnonetick":
+				case HUDSubject.StopLeftTick:
+				case HUDSubject.StopRightTick:
+				case HUDSubject.StopNoneTick:
 				{
 					int s = PlayerTrain.Station;
 					if (s >= 0 && Program.CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert && !Program.CurrentRoute.Stations[s].Dummy)
@@ -188,12 +187,12 @@ namespace OpenBve.Graphics.Renderers
 						if (c >= 0)
 						{
 							bool cond;
-							switch (Command)
+							switch (Element.Subject)
 							{
-								case "stoplefttick":
+								case HUDSubject.StopLeftTick:
 									cond = Program.CurrentRoute.Stations[s].OpenLeftDoors;
 									break;
-								case "stoprighttick":
+								case HUDSubject.StopRightTick:
 									cond = Program.CurrentRoute.Stations[s].OpenRightDoors;
 									break;
 								default:
@@ -283,7 +282,7 @@ namespace OpenBve.Graphics.Renderers
 					}
 					t = Element.Text;
 				} break;
-				case "clock":
+				case HUDSubject.Clock:
 				{
 					int hours = (int)Math.Floor(Program.CurrentRoute.SecondsSinceMidnight);
 					int seconds = hours % 60; hours /= 60;
@@ -301,7 +300,7 @@ namespace OpenBve.Graphics.Renderers
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					}
 				} break;
-				case "gradient":
+				case HUDSubject.Gradient:
 					if (renderer.OptionGradient == NewRenderer.GradientDisplayMode.Percentage)
 					{
 						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
@@ -358,7 +357,7 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
-				case "speed":
+				case HUDSubject.Speed:
 					if (renderer.OptionSpeed == NewRenderer.SpeedDisplayMode.Kmph)
 					{
 						double kmph = Math.Abs(PlayerTrain.CurrentSpeed) * 3.6;
@@ -380,11 +379,11 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
-				case "dist_next_station":
+				case HUDSubject.DistNextStation:
 					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
 					{
 						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain.NumberOfCars);
-						double p0 = PlayerTrain.FrontCarTrackPosition();
+						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;
 						if (m < 0)
@@ -418,11 +417,11 @@ namespace OpenBve.Graphics.Renderers
 						t = String.Empty;
 					}
 					break;
-				case "dist_next_station2":
+				case HUDSubject.DistNextStation2:
 					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
 					{
 						
-						double p0 = PlayerTrain.FrontCarTrackPosition();
+						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = 0.0;
 						for (int i = stationIndex; i < Program.CurrentRoute.Stations.Length; i++)
 						{
@@ -460,7 +459,7 @@ namespace OpenBve.Graphics.Renderers
 					else
 					{
 						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain.NumberOfCars);
-						double p0 = PlayerTrain.FrontCarTrackPosition();
+						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;
 						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
@@ -493,7 +492,7 @@ namespace OpenBve.Graphics.Renderers
 						}
 					}
 					break;
-				case "fps":
+				case HUDSubject.FPS:
 					int fps = (int)Math.Round(Program.Renderer.FrameRate);
 					t = fps.ToString(Culture) + " fps";
 					if (renderer.OptionFrameRates)
@@ -506,7 +505,7 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
-				case "ai":
+				case HUDSubject.AI:
 					t = "A.I.";
 					if (PlayerTrain.AI != null)
 					{
@@ -518,7 +517,7 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
-				case "score":
+				case HUDSubject.Score:
 					if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 					{
 						t = Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture);
@@ -576,18 +575,18 @@ namespace OpenBve.Graphics.Renderers
 				 */
 				switch (Element.Subject)
 				{
-					case "reverser":
+					case HUDSubject.Reverser:
 						w = Math.Max(w, PlayerTrain.Handles.Reverser.MaxWidth);
 						// NOTE: X-Pos will never need to be changed as this comes first
 						break;
-					case "power":
+					case HUDSubject.Power:
 						w = Math.Max(w, PlayerTrain.Handles.Power.MaxWidth);
 						if (PlayerTrain.Handles.Reverser.MaxWidth > 48)
 						{
 							x += (PlayerTrain.Handles.Reverser.MaxWidth - 48);
 						}
 						break;
-					case "brake":
+					case HUDSubject.Brake:
 						w = Math.Max(w, PlayerTrain.Handles.Brake.MaxWidth);
 						if (PlayerTrain.Handles.Reverser.MaxWidth > 48)
 						{
@@ -598,14 +597,14 @@ namespace OpenBve.Graphics.Renderers
 							x += (PlayerTrain.Handles.Power.MaxWidth - 48);
 						}
 						break;
-					case "single":
+					case HUDSubject.Single:
 						w = Math.Max(Math.Max(w, PlayerTrain.Handles.Power.MaxWidth), PlayerTrain.Handles.Brake.MaxWidth);
 						if (PlayerTrain.Handles.Reverser.MaxWidth > 48)
 						{
 							x += PlayerTrain.Handles.Reverser.MaxWidth - 48;
 						}
 						break;
-					case "locobrake":
+					case HUDSubject.LocoBrake:
 						w = Math.Max(w, PlayerTrain.Handles.LocoBrake.MaxWidth);
 						if (PlayerTrain.Handles.Reverser.MaxWidth > 48)
 						{

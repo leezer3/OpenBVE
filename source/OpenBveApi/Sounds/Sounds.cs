@@ -79,7 +79,7 @@ namespace OpenBveApi.Sounds {
 		/// <summary>Gets the duration of the sound in seconds.</summary>
 		public double Duration {
 			get {
-				return (double)(8.0 * this.MyBytes[0].Length / this.MyBitsPerSample) / (double)this.MySampleRate;
+				return 8.0 * this.MyBytes[0].Length / this.MyBitsPerSample / this.MySampleRate;
 			}
 		}
 		// --- operators ---

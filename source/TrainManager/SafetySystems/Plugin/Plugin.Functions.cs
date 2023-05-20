@@ -222,6 +222,23 @@ namespace TrainManager.Trains
 
 				foreach (Type type in types)
 				{
+					// IRawRuntime first as IRuntime is assignable from it
+					if (typeof(IRawRuntime).IsAssignableFrom(type))
+					{
+						if (type.FullName == null)
+						{
+							//Should never happen, but static code inspection suggests that it's possible....
+							throw new InvalidOperationException();
+						}
+						IRawRuntime api = assembly.CreateInstance(type.FullName) as IRawRuntime;
+						Plugin = new NetPlugin(pluginFile, trainFolder, api, this);
+						if (Plugin.Load(vehicleSpecs(), mode))
+						{
+							return true;
+						}
+						Plugin = null;
+						return false;
+					}
 					if (typeof(IRuntime).IsAssignableFrom(type))
 					{
 						if (type.FullName == null)
@@ -229,18 +246,14 @@ namespace TrainManager.Trains
 							//Should never happen, but static code inspection suggests that it's possible....
 							throw new InvalidOperationException();
 						}
-
 						IRuntime api = assembly.CreateInstance(type.FullName) as IRuntime;
 						Plugin = new NetPlugin(pluginFile, trainFolder, api, this);
 						if (Plugin.Load(vehicleSpecs(), mode))
 						{
 							return true;
 						}
-						else
-						{
-							Plugin = null;
-							return false;
-						}
+						Plugin = null;
+						return false;
 					}
 				}
 

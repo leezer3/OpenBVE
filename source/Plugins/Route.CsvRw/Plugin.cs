@@ -37,9 +37,9 @@ namespace CsvRwRouteParser
 		    CurrentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
-		    if (trainManagerReference is TrainManagerBase)
+		    if (trainManagerReference is TrainManagerBase _base)
 		    {
-			    TrainManager = (TrainManagerBase)trainManagerReference;
+			    TrainManager = _base;
 		    }
 	    }
 

@@ -1,7 +1,9 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
+using OpenBveApi.Interface;
 
 namespace OpenBve.UserInterface
 {
+	/// <summary>Basic class to show logs</summary>
 	public partial class formViewLog : Form
 	{
 		/// <summary>Constructor</summary>
@@ -9,18 +11,22 @@ namespace OpenBve.UserInterface
 		public formViewLog(string text)
 		{
 			InitializeComponent();
-			var originalTitle = this.Text;
-			this.Text += " (Loading...)";
+			SetText(text);
+		}
 
-			this.Shown += (sender, e) => {
+		private void SetText(string text)
+		{
+			var originalTitle = Text;
+			Text += Translations.GetInterfaceString("message_loading");
+			Shown += (sender, e) => {
 				textBoxLog.Text = text;
-				this.Text = originalTitle;
+				Text = originalTitle;
 			};
 		}
 
 		private void buttonClose_Click(object sender, System.EventArgs e)
 		{
-			this.Close();
+			Close();
 		}
 	}
 }

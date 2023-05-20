@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -159,29 +158,20 @@ namespace OpenBve.Graphics.Renderers
 					Color128 tc = Element.TextColor.CreateTextColor(sc, 1.0f);
 					Color128 oc = Element.OverlayColor.CreateBackColor(sc, 1.0f);
 					// left background
-					if (Left.BackgroundTexture != null)
+					if (Program.CurrentHost.LoadTexture(ref Left.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						if (Program.CurrentHost.LoadTexture(ref Left.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
-						{
-							renderer.Rectangle.Draw(Left.BackgroundTexture, new Vector2(x, y), bc);
-						}
+						renderer.Rectangle.Draw(Left.BackgroundTexture, new Vector2(x, y), bc);
 					}
 					// right background
-					if (Right.BackgroundTexture != null)
+					if (Program.CurrentHost.LoadTexture(ref Right.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						if (Program.CurrentHost.LoadTexture(ref Right.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
-						{
-							renderer.Rectangle.Draw(Right.BackgroundTexture, new Vector2(x + w - Right.BackgroundTexture.Width, y), bc);
-						}
+						renderer.Rectangle.Draw(Right.BackgroundTexture, new Vector2(x + w - Right.BackgroundTexture.Width, y), bc);
 					}
 					// middle background
-					if (Middle.BackgroundTexture != null)
+					if (Program.CurrentHost.LoadTexture(ref Middle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						if (Program.CurrentHost.LoadTexture(ref Middle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
-						{
-							double v = Middle.BackgroundTexture.Height;
-							renderer.Rectangle.Draw(Middle.BackgroundTexture, new Vector2(x + lw, y), new Vector2(w - lw - rw, v), bc);
-						}
+						double v = Middle.BackgroundTexture.Height;
+						renderer.Rectangle.Draw(Middle.BackgroundTexture, new Vector2(x + lw, y), new Vector2(w - lw - rw, v), bc);
 					}
 					{ // text
 						string t = CurrentLampCollection.Lamps[j].Text;
@@ -194,29 +184,20 @@ namespace OpenBve.Graphics.Renderers
 						renderer.OpenGlString.Draw(Element.Font, t, new Vector2(p, q), TextAlignment.TopLeft, tc, Element.TextShadow);
 					}
 					// left overlay
-					if (Left.OverlayTexture != null)
+					if (Program.CurrentHost.LoadTexture(ref Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						if (Program.CurrentHost.LoadTexture(ref Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
-						{
-							renderer.Rectangle.Draw(Left.OverlayTexture, new Vector2(x, y), oc);
-						}
+						renderer.Rectangle.Draw(Left.OverlayTexture, new Vector2(x, y), oc);
 					}
 					// right overlay
-					if (Right.OverlayTexture != null)
+					if (Program.CurrentHost.LoadTexture(ref Right.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						if (Program.CurrentHost.LoadTexture(ref Right.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
-						{
-							renderer.Rectangle.Draw(Right.OverlayTexture, new Vector2(x + w - Right.OverlayTexture.Width, y), oc);
-						}
+						renderer.Rectangle.Draw(Right.OverlayTexture, new Vector2(x + w - Right.OverlayTexture.Width, y), oc);
 					}
 					// middle overlay
-					if (Middle.OverlayTexture != null)
+					if (Program.CurrentHost.LoadTexture(ref Middle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						if (Program.CurrentHost.LoadTexture(ref Middle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
-						{
-							double v = Middle.OverlayTexture.Height;
-							renderer.Rectangle.Draw(Middle.OverlayTexture, new Vector2(x + lw, y), new Vector2(w - lw - rw, v), oc);
-						}
+						double v = Middle.OverlayTexture.Height;
+						renderer.Rectangle.Draw(Middle.OverlayTexture, new Vector2(x + lw, y), new Vector2(w - lw - rw, v), oc);
 					}
 				}
 				y += Element.Value2;

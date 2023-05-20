@@ -139,7 +139,7 @@ namespace OpenBve {
 			if ((CurrentHost.Platform == HostPlatform.GNULinux || CurrentHost.Platform == HostPlatform.FreeBSD) && (getuid() == 0 || geteuid() == 0))
 			{
 				MessageBox.Show(
-					"You are currently running as the root user, or via the sudo command." + System.Environment.NewLine +
+					"You are currently running as the root user, or via the sudo command." + Environment.NewLine +
 					"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 

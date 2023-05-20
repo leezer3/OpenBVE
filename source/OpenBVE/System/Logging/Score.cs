@@ -49,9 +49,9 @@ namespace OpenBve
 				{
 					double x = Game.ScoreLogs[i].Time;
 					int h = (int)Math.Floor(x / 3600.0);
-					x -= (double)h * 3600.0;
+					x -= h * 3600.0;
 					int m = (int)Math.Floor(x / 60.0);
-					x -= (double)m * 60.0;
+					x -= m * 60.0;
 					int s = (int)Math.Floor(x);
 					Lines[j][0] = h.ToString("00", Culture) + ":" + m.ToString("00", Culture) + ":" + s.ToString("00", Culture);
 				}
@@ -91,10 +91,10 @@ namespace OpenBve
 				Builder.Append('═', TotalWidth);
 				Builder.Append("╣\n");
 				{
-					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
+					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
-					int index = (int)Math.Floor(ratio * (double)Translations.RatingsCount);
+					int index = (int)Math.Floor(ratio * Translations.RatingsCount);
 					if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
 					string s;
 					switch (Interface.CurrentOptions.PreviousGameMode) {

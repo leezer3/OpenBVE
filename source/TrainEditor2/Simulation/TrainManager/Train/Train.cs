@@ -19,16 +19,6 @@ namespace TrainEditor2.Simulation.TrainManager
 				Program.SoundApi.StopAllSounds(this);
 				Car = null;
 			}
-
-			public override double FrontCarTrackPosition()
-			{
-				throw new NotImplementedException();
-			}
-
-			public override double RearCarTrackPosition()
-			{
-				throw new NotImplementedException();
-			}
 		}
 	}
 }

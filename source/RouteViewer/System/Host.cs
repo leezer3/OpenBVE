@@ -497,7 +497,7 @@ namespace RouteViewer
 					{
 						int c = Program.TrainManager.Trains[i].Cars.Length - 1;
 						double z = Program.TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - Program.TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * Program.TrainManager.Trains[i].Cars[c].Length;
-						if (z >= baseTrain.FrontCarTrackPosition() & z < bestLocation)
+						if (z >= baseTrain.FrontCarTrackPosition & z < bestLocation)
 						{
 							bestLocation = z;
 							closestTrain = Program.TrainManager.Trains[i];

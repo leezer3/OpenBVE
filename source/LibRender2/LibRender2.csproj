@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
@@ -53,6 +53,7 @@
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestriction.cs" />
+    <Compile Include="Cursors\Cursor.cs" />
     <Compile Include="Fog\Fog.cs" />
     <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Loading\Loading.cs" />

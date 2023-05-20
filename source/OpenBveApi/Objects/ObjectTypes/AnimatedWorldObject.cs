@@ -37,19 +37,19 @@ namespace OpenBveApi.Objects
 				{
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 				}
-				if (!base.Visible)
+				if (!Visible)
 				{
 					currentHost.ShowObject(Object.internalObject, ObjectType.Dynamic);
-					base.Visible = true;
+					Visible = true;
 				}
 			}
 			else
 			{
 				Object.SecondsSinceLastUpdate += TimeElapsed;
-				if (base.Visible)
+				if (Visible)
 				{
 					currentHost.HideObject(Object.internalObject);
-					base.Visible = false;
+					Visible = false;
 				}
 			}
 		}

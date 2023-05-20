@@ -334,9 +334,9 @@ namespace LibRender2.Cameras
 		}
 
 		/// <summary>Unconditionally resets the camera</summary>
-		public void Reset()
+		public void Reset(bool ReverseDirection)
 		{
-			Alignment.Yaw = 0.0;
+			Alignment.Yaw = ReverseDirection ? 180 / 57.2957795130824 : 0;
 			Alignment.Pitch = 0.0;
 			Alignment.Roll = 0.0;
 			Alignment.Position = new Vector3(0.0, 2.5, 0.0);

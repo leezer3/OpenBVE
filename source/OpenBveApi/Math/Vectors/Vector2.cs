@@ -42,7 +42,7 @@ namespace OpenBveApi.Math {
 		public static bool TryParse(string[] arguments, out Vector2 v)
 		{
 			bool success = arguments.Length == 2;
-			v.X = 0; v.Y = 0;; 
+			v.X = 0; v.Y = 0; 
 			for (int i = 0; i < arguments.Length; i++)
 			{
 				switch (i)

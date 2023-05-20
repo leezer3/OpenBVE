@@ -77,7 +77,7 @@ namespace OpenBveApi.Routes
 						double far = Root.Rectangle.Far;
 						while (true)
 						{
-							if (node is QuadTreePopulatedLeafNode)
+							if (node is QuadTreePopulatedLeafNode leaf)
 							{
 								// populated leaf node
 								Vector3 quadPosition = new Vector3(
@@ -85,7 +85,6 @@ namespace OpenBveApi.Routes
 									objectState.WorldPosition.Y,
 									objectState.WorldPosition.Z - 0.5 * (near + far)
 								);
-								QuadTreePopulatedLeafNode leaf = (QuadTreePopulatedLeafNode)node;
 								if (leaf.StaticObjectCount == leaf.Objects.Length)
 								{
 									Array.Resize(ref leaf.Objects, leaf.Objects.Length << 1);
@@ -98,10 +97,9 @@ namespace OpenBveApi.Routes
 								break;
 							}
 
-							if (node is QuadInternalNode)
+							if (node is QuadInternalNode intern)
 							{
 								// internal node
-								QuadInternalNode intern = (QuadInternalNode)node;
 								int index;
 								double centerX = 0.5 * (left + right);
 								double centerZ = 0.5 * (near + far);

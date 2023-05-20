@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text;
 using OpenBveApi;
 using OpenBveApi.Colors;

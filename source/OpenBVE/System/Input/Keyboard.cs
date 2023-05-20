@@ -22,6 +22,12 @@ namespace OpenBve
 				Game.Menu.PushMenu(MenuType.Quit);
 				return;
 			}
+
+			if (TrainManager.PlayerTrain.Plugin != null)
+			{
+				TrainManager.PlayerTrain.Plugin.RawKeyDown((OpenBveApi.Input.Key)e.Key);
+			}
+
 			BlockKeyRepeat = true;
 			//Check for modifiers
 			if (e.Shift) CurrentKeyboardModifier |= KeyboardModifier.Shift;
@@ -91,6 +97,11 @@ namespace OpenBve
 				//if the menu select key is also mapped in-game
 				Program.Renderer.CurrentInterface = InterfaceType.Normal;
 				return;
+			}
+
+			if (TrainManager.PlayerTrain.Plugin != null)
+			{
+				TrainManager.PlayerTrain.Plugin.RawKeyUp((OpenBveApi.Input.Key)e.Key);
 			}
 			//We don't need to check for modifiers on key up
 			BlockKeyRepeat = true;

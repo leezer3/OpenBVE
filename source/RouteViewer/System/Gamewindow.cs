@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -39,6 +40,7 @@ namespace RouteViewer
 	        {
 		        currentlyLoading = false;
 	        }
+	        
         }
 
         //This renders the frame

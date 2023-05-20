@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using RouteManager2.SignalManager;
 
@@ -37,7 +36,7 @@ namespace CsvRwRouteParser
 			/*
 			 * HMMSIM
 			 */
-			internal Dictionary<string, int> RailKeys = new Dictionary<string, int>();
+			internal readonly Dictionary<string, int> RailKeys = new Dictionary<string, int>();
 
 			/// <summary>Creates any missing blocks</summary>
 			/// <param name="ToIndex">The block index to process until</param>

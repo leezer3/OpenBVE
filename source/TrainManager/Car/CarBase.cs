@@ -242,20 +242,50 @@ namespace TrainManager.Car
 			get;
 		}
 
-		public override void Reverse()
+		public override void Reverse(bool flipInterior = false)
 		{
 			// reverse axle positions
 			double temp = FrontAxle.Position;
 			FrontAxle.Position = -RearAxle.Position;
 			RearAxle.Position = -temp;
-			int idxToReverse = HasInteriorView ? 1 : 0;
-			if (CarSections != null && CarSections.Length > 0)
+			if (flipInterior)
 			{
-				foreach (AnimatedObject animatedObject in CarSections[idxToReverse].Groups[0].Elements)
+				if (CarSections != null && CarSections.Length > 0)
 				{
-					animatedObject.Reverse();
+					for (int i = 0; i < CarSections.Length; i++)
+					{
+						if (CarSections[i].Type == ObjectType.Overlay)
+						{
+							for (int j = 0; j < CarSections[i].Groups.Length; j++)
+							{
+								CarSections[i].Groups[j].Reverse(Driver);
+							}
+						}
+						else
+						{
+							foreach (AnimatedObject animatedObject in CarSections[i].Groups[0].Elements)
+							{
+								animatedObject.Reverse();
+							}	
+						}
+						
+					}
 				}
+				Driver = new Vector3(-Driver.X, Driver.Y, -Driver.Z);
+				CameraRestriction.Reverse();
 			}
+			else
+			{
+				int idxToReverse = HasInteriorView ? 1 : 0;
+				if (CarSections != null && CarSections.Length > 0)
+				{
+					foreach (AnimatedObject animatedObject in CarSections[idxToReverse].Groups[0].Elements)
+					{
+						animatedObject.Reverse();
+					}
+				}	
+			}
+			
 
 			Bogie b = RearBogie;
 			RearBogie = FrontBogie;
@@ -264,10 +294,8 @@ namespace TrainManager.Car
 			RearBogie.Reverse();
 			FrontBogie.FrontAxle.Follower.UpdateAbsolute(FrontAxle.Position + FrontBogie.FrontAxle.Position, true, false);
 			FrontBogie.RearAxle.Follower.UpdateAbsolute(FrontAxle.Position + FrontBogie.RearAxle.Position, true, false);
-
 			RearBogie.FrontAxle.Follower.UpdateAbsolute(RearAxle.Position + RearBogie.FrontAxle.Position, true, false);
 			RearBogie.RearAxle.Follower.UpdateAbsolute(RearAxle.Position + RearBogie.RearAxle.Position, true, false);
-
 		}
 
 		public override void OpenDoors(bool Left, bool Right)
@@ -457,9 +485,10 @@ namespace TrainManager.Car
 		/// <summary>Changes the currently visible car section</summary>
 		/// <param name="newCarSection">The type of new car section to display</param>
 		/// <param name="trainVisible">Whether the train is visible</param>
-		public void ChangeCarSection(CarSectionType newCarSection, bool trainVisible = false)
+		/// <param name="forceChange">Whether to force a show / rehide</param>
+		public void ChangeCarSection(CarSectionType newCarSection, bool trainVisible = false, bool forceChange = false)
 		{
-			if(CurrentCarSection == (int)newCarSection)
+			if(CurrentCarSection == (int)newCarSection && !forceChange)
 			{
 				return;
 			}

@@ -227,13 +227,13 @@ namespace ObjectViewer {
 		            Renderer.Camera.AbsoluteUp = MouseCameraUp;
 		            Renderer.Camera.AbsoluteSide = MouseCameraSide;
                     {
-                        double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
+                        double dx = 0.0025 * (previousMouseState.X - currentMouseState.X);
                         Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, dx);
                         Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, dx);
                         Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, dx);
                     }
                     {
-                        double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
+                        double dy = 0.0025 * (previousMouseState.Y - currentMouseState.Y);
                         Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, dy);
                         Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, dy);
                     }
@@ -241,17 +241,17 @@ namespace ObjectViewer {
 	            else if(MouseButton == 2)
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
-                    double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
+                    double dx = -0.025 * (currentMouseState.X - previousMouseState.X);
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
-                    double dy = 0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
+                    double dy = 0.025 * (currentMouseState.Y - previousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dy * Renderer.Camera.AbsoluteUp;
 	            }
 	            else
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
-                    double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
+                    double dx = -0.025 * (currentMouseState.X - previousMouseState.X);
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
-                    double dz = -0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
+                    double dz = -0.025 * (currentMouseState.Y - previousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dz * Renderer.Camera.AbsoluteDirection;
 	            }
 	        }
