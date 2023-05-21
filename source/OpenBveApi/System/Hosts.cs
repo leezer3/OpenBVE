@@ -135,22 +135,22 @@ namespace OpenBveApi.Hosts {
 		private struct UName
 		{
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string sysname;
+			internal readonly string sysname;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string nodename;
+			private readonly string nodename;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string release;
+			private readonly string release;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string version;
+			private readonly string version;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-			public string machine;
+			private readonly string machine;
 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1024)]
-			public string extraJustInCase;
+			private readonly string extraJustInCase;
 
 		}
 
@@ -422,9 +422,10 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Creates a static object within the world of the host application, and returns the ObjectManager ID</summary>
 		/// <param name="Prototype">The prototype (un-transformed) static object</param>
+		/// <param name="Position">The world position</param>
 		/// <param name="LocalTransformation">
-		/// <para>The local transformation to apply in order to rotate the model</para>
-		/// <para>NOTE: Only used for object disposal calcs</para>
+		///     <para>The local transformation to apply in order to rotate the model</para>
+		///     <para>NOTE: Only used for object disposal calcs</para>
 		/// </param>
 		/// <param name="Rotate">The rotation matrix to apply</param>
 		/// <param name="Translate">The translation matrix to apply</param>
@@ -434,7 +435,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="TrackPosition">The absolute route based track position</param>
 		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
 			return -1;
 		}
@@ -631,7 +632,8 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Adds a marker texture to the host application's display</summary>
 		/// <param name="MarkerTexture">The texture to add</param>
-		public virtual void AddMarker(Texture MarkerTexture)
+		/// <param name="Size">The size to draw</param>
+		public virtual void AddMarker(Texture MarkerTexture, Vector2 Size)
 		{
 
 		}

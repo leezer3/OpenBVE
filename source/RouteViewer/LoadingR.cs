@@ -110,6 +110,11 @@ namespace RouteViewer {
 			try
 			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				if (Folder == null)
+				{
+					// Unlikely to work, but attempt to make the best of it
+					return Application.StartupPath;
+				}
 				string candidate = null;
 				while (true)
 				{
@@ -126,7 +131,6 @@ namespace RouteViewer {
 						candidate = Folder;
 					}
 
-					// ReSharper disable once AssignNullToNotNullAttribute
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
 					if (Info == null)
 					{
@@ -217,11 +221,9 @@ namespace RouteViewer {
 			Program.CurrentRoute.UpdateAllSections();
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			// int FirstStationIndex = -1;
 			double FirstStationPosition = 0.0;
 			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++) {
 				if (Program.CurrentRoute.Stations[i].Stops.Length != 0) {
-					// FirstStationIndex = i;
 					FirstStationPosition = Program.CurrentRoute.Stations[i].Stops[Program.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
 					if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0) {
 						if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0) {

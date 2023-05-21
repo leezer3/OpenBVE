@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using LibRender2.Camera;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 
 namespace LibRender2.Cameras
@@ -15,13 +17,7 @@ namespace LibRender2.Cameras
 		/// <summary>The current viewing distance in the backward direction.</summary>
 		public double BackwardViewingDistance;
 		/// <summary>The current viewing distance</summary>
-		public double ViewingDistance
-		{
-			get
-			{
-				return Math.Max(ForwardViewingDistance, BackwardViewingDistance);
-			}
-		}
+		public double ViewingDistance => Math.Max(ForwardViewingDistance, BackwardViewingDistance);
 
 		/// <summary>The extra viewing distance used for determining visibility of animated objects.</summary>
 		public double ExtraViewingDistance;
@@ -44,6 +40,11 @@ namespace LibRender2.Cameras
 			}
 			set
 			{
+				if (value == absolutePosition)
+				{
+					return;
+				}
+				Renderer.UpdateVisibility(false);
 				absolutePosition = value;
 				TranslationMatrix = Matrix4D.CreateTranslation(-value.X, -value.Y, value.Z);
 			}
@@ -57,7 +58,18 @@ namespace LibRender2.Cameras
 		/// <summary>The current relative camera alignment</summary>
 		public CameraAlignment Alignment;
 		/// <summary>The current relative camera Direction</summary>
-		public CameraAlignment AlignmentDirection;
+		public CameraAlignment AlignmentDirection
+		{
+			get
+			{
+				return alignmentDirection;
+			}
+			set
+			{
+				Renderer.UpdateVisibility(true);
+				alignmentDirection = value;
+			}
+		}
 		/// <summary>The current relative camera Speed</summary>
 		public CameraAlignment AlignmentSpeed;
 		/// <summary>The current camera movement speed</summary>
@@ -72,20 +84,43 @@ namespace LibRender2.Cameras
 		public const double ExteriorTopAngularSpeed = 10.0;
 		/// <summary>The top speed when zooming in or out</summary>
 		public const double ZoomTopSpeed = 2.0;
+
 		/// <summary>The current camera mode</summary>
-		public CameraViewMode CurrentMode;
+		public CameraViewMode CurrentMode
+		{
+			get
+			{
+				return currentMode;
+			}
+			set
+			{
+				if (currentMode == value)
+				{
+					return;
+				}
+				currentMode = value;
+				Renderer.UpdateVisibility(true);
+			}
+		}
 		/// <summary>The current camera restriction mode</summary>
 		public CameraRestrictionMode CurrentRestriction = CameraRestrictionMode.NotAvailable;
 		/// <summary>The saved exterior camera alignment</summary>
 		public CameraAlignment SavedExterior;
 		/// <summary>The saved track camera alignment</summary>
 		public CameraAlignment SavedTrack;
-
+		/// <summary>The current quad tree leaf node</summary>
+		public QuadTreeLeafNode QuadTreeLeaf;
+		
 		private Vector3 absolutePosition;
+		private CameraAlignment alignmentDirection;
 
+		private CameraViewMode currentMode;
 		internal CameraProperties(BaseRenderer renderer)
 		{
 			Renderer = renderer;
+			alignmentDirection = new CameraAlignment();
+			Alignment = new CameraAlignment();
+			AlignmentSpeed = new CameraAlignment();
 		}
 
 		/// <summary>Tests whether the camera may move further in the current direction</summary>
@@ -299,9 +334,9 @@ namespace LibRender2.Cameras
 		}
 
 		/// <summary>Unconditionally resets the camera</summary>
-		public void Reset()
+		public void Reset(bool ReverseDirection)
 		{
-			Alignment.Yaw = 0.0;
+			Alignment.Yaw = ReverseDirection ? 180 / 57.2957795130824 : 0;
 			Alignment.Pitch = 0.0;
 			Alignment.Roll = 0.0;
 			Alignment.Position = new Vector3(0.0, 2.5, 0.0);
@@ -309,6 +344,121 @@ namespace LibRender2.Cameras
 			AlignmentDirection = new CameraAlignment();
 			AlignmentSpeed = new CameraAlignment();
 			VerticalViewingAngle = OriginalVerticalViewingAngle;
+		}
+
+		public void UpdateQuadTreeLeaf()
+		{
+			/*
+			 * Find the leaf node the camera is currently in.
+			 * */
+			QuadTreeLeafNode currentLeaf;
+			Renderer.VisibleObjects.quadTree.GetLeafNode(AbsolutePosition, out currentLeaf);
+			
+			/*
+			 * Check if the leaf node the camera is in has changed.
+			 * */
+			if (currentLeaf != QuadTreeLeaf)
+			{
+				if (currentLeaf != null)
+				{
+					/*
+					 * The camera is within the bounds of a leaf node.
+					 * 
+					 * Find leaf nodes that were visible before but are not any longer.
+					 * */
+					if (QuadTreeLeaf?.VisibleLeafNodes != null && currentLeaf.VisibleLeafNodes != null)
+					{
+						for (int i = 0; i < QuadTreeLeaf?.VisibleLeafNodes.Length; i++)
+						{
+							bool remove = true;
+							for (int j = 0; j < currentLeaf.VisibleLeafNodes.Length; j++)
+							{
+								if (QuadTreeLeaf?.VisibleLeafNodes[i] == currentLeaf.VisibleLeafNodes[j])
+								{
+									remove = false;
+									break;
+								}
+							}
+
+							if (remove)
+							{
+								/*
+								 * This leaf node is not visible any longer. Remove its
+								 * associated objects from the renderer.
+								 * */
+								for (int j = 0; j < QuadTreeLeaf?.VisibleLeafNodes[i].Objects.Length; j++)
+								{
+									Renderer.currentHost.HideObject(QuadTreeLeaf?.VisibleLeafNodes[i].Objects[j]);
+								}
+							}
+						}
+					}
+
+					/*
+					 * Find leaf nodes that are visible now but were not before.
+					 * */
+					if (currentLeaf.VisibleLeafNodes != null)
+					{
+						for (int i = 0; i < currentLeaf.VisibleLeafNodes.Length; i++)
+						{
+							bool add = true;
+							if (QuadTreeLeaf?.VisibleLeafNodes != null)
+							{
+								for (int j = 0; j < QuadTreeLeaf?.VisibleLeafNodes.Length; j++)
+								{
+									if (currentLeaf.VisibleLeafNodes[i] == QuadTreeLeaf?.VisibleLeafNodes[j])
+									{
+										add = false;
+										break;
+									}
+								}
+							}
+
+							if (add)
+							{
+								/*
+								 * This leaf node has become visible. Add all
+								 * its faces to the renderer.
+								 * */
+								for (int j = 0; j < currentLeaf.VisibleLeafNodes[i].Objects.Length; j++)
+								{
+									if (currentLeaf.VisibleLeafNodes[i].Objects[j] == null)
+									{
+										continue;
+									}
+									Renderer.currentHost.ShowObject(currentLeaf.VisibleLeafNodes[i].Objects[j], ObjectType.Static);
+								}
+							}
+						}
+					}
+					
+				}
+				else if (QuadTreeLeaf != null)
+				{
+					/*
+					 * Before, the camera was inside the bounds of
+					 * a leaf node, but now, it is not anymore.
+					 * Remove the transparent faces associated
+					 * to the old leaf node from the renderer.
+					 * */
+					for (int i = 0; i < QuadTreeLeaf.VisibleLeafNodes.Length; i++)
+					{
+						for (int j = 0; j < QuadTreeLeaf.VisibleLeafNodes[i].Objects.Length; j++)
+						{
+							if (QuadTreeLeaf.VisibleLeafNodes[i].Objects[j] == null)
+							{
+								continue;
+							}
+							Renderer.currentHost.HideObject(QuadTreeLeaf.VisibleLeafNodes[i].Objects[j]);
+						}
+					}
+				}
+			}
+
+			/*
+			 * Apply the found leaf node.
+			 * */
+			QuadTreeLeaf = currentLeaf;
 		}
 	}
 }

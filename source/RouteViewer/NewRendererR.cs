@@ -1,11 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
-using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
@@ -175,6 +174,8 @@ namespace RouteViewer
 
 			// world layer
 			// opaque face
+			
+			
 			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
@@ -197,15 +198,20 @@ namespace RouteViewer
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
-
-			foreach (FaceState face in VisibleObjects.OpaqueFaces)
+			List<FaceState> opaqueFaces, alphaFaces;
+			lock (VisibleObjects.LockObject)
+			{
+				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				alphaFaces = VisibleObjects.GetSortedPolygons();
+			}
+			
+			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
 			}
 
 			// alpha face
 			ResetOpenGlState();
-			VisibleObjects.SortPolygonsInAlphaFaces();
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
@@ -213,7 +219,7 @@ namespace RouteViewer
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					face.Draw();
 				}
@@ -224,7 +230,7 @@ namespace RouteViewer
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 					{
@@ -240,7 +246,7 @@ namespace RouteViewer
 				GL.DepthMask(false);
 				bool additive = false;
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 					{
@@ -526,13 +532,13 @@ namespace RouteViewer
 
 				for(int i = 0; i < Marker.MarkerTextures.Length; i++)
 				{
-					if (Program.CurrentHost.LoadTexture(ref Marker.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(ref Marker.MarkerTextures[i].Texture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						int w = Marker.MarkerTextures[i].Width;
-						int h = Marker.MarkerTextures[i].Height;
+						double w = Marker.MarkerTextures[i].Size.X == 0 ? Marker.MarkerTextures[i].Texture.Width : Marker.MarkerTextures[i].Size.X;
+						double h = Marker.MarkerTextures[i].Size.Y == 0 ? Marker.MarkerTextures[i].Texture.Height : Marker.MarkerTextures[i].Size.Y;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						Rectangle.Draw(Marker.MarkerTextures[i], new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
-						y += h + 8;
+						Rectangle.Draw(Marker.MarkerTextures[i].Texture, new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
+						y += (int)h + 8;
 					}
 				}
 			}
@@ -540,8 +546,14 @@ namespace RouteViewer
 			if (!Program.CurrentlyLoading)
 			{
 				string[][] keys;
+				int totalObjects = 0;
+				lock (VisibleObjects.LockObject)
+				{
+					totalObjects += VisibleObjects.Objects.Count;
+					totalObjects += ObjectManager.AnimatedWorldObjectsUsed;
+				}
 
-				if (VisibleObjects.Objects.Count == 0 && ObjectManager.AnimatedWorldObjectsUsed == 0)
+				if (totalObjects == 0)
 				{
 					keys = new[] { new[] { "F7" }, new[] { "F8" } };
 					Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
@@ -620,7 +632,8 @@ namespace RouteViewer
 
 					// info
 					double x = 0.5 * Screen.Width - 256.0;
-					OpenGlString.Draw(Fonts.SmallFont, $"Position: {GetLengthString(Camera.Alignment.TrackPosition)} (X={GetLengthString(Camera.Alignment.Position.X)}, Y={GetLengthString(Camera.Alignment.Position.Y)}), Orientation: (Yaw={(Camera.Alignment.Yaw * 57.2957795130824).ToString("0.00", culture)}°, Pitch={(Camera.Alignment.Pitch * 57.2957795130824).ToString("0.00", culture)}°, Roll={(Camera.Alignment.Roll * 57.2957795130824).ToString("0.00", culture)}°)", new Vector2((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
+					double Yaw = Camera.Alignment.Yaw * 57.2957795130824;
+					OpenGlString.Draw(Fonts.SmallFont, $"Position: {GetLengthString(Camera.Alignment.TrackPosition)} (X={GetLengthString(Camera.Alignment.Position.X)}, Y={GetLengthString(Camera.Alignment.Position.Y)}), Orientation: (Yaw={Yaw.ToString("0.00", culture)}°, Pitch={(Camera.Alignment.Pitch * 57.2957795130824).ToString("0.00", culture)}°, Roll={(Camera.Alignment.Roll * 57.2957795130824).ToString("0.00", culture)}°)", new Vector2((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Adhesion={(100.0 * CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}" + " , Rain intensity= " + CameraTrackFollower.RainIntensity +"%", new Vector2((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)x, 40), TextAlignment.TopLeft, Color128.White, true);
 
@@ -629,65 +642,64 @@ namespace RouteViewer
 
 					if (stationIndex >= 0)
 					{
-						StringBuilder t = new StringBuilder();
-						t.Append(Program.CurrentRoute.Stations[stationIndex].Name);
+						string s = Program.CurrentRoute.Stations[stationIndex].Name;
 
 						if (Program.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
 						{
-							t.Append($", Arrival: {GetTime(Program.CurrentRoute.Stations[stationIndex].ArrivalTime)}");
+							s+= $", Arrival: {GetTime(Program.CurrentRoute.Stations[stationIndex].ArrivalTime)}";
 						}
 
 						if (Program.CurrentRoute.Stations[stationIndex].DepartureTime >= 0.0)
 						{
-							t.Append($", Departure: {GetTime(Program.CurrentRoute.Stations[stationIndex].DepartureTime)}");
+							s += $", Departure: {GetTime(Program.CurrentRoute.Stations[stationIndex].DepartureTime)}";
 						}
 
 						if (Program.CurrentRoute.Stations[stationIndex].OpenLeftDoors & Program.CurrentRoute.Stations[stationIndex].OpenRightDoors)
 						{
-							t.Append(", [L][R]");
+							s += ", [L][R]";
 						}
 						else if (Program.CurrentRoute.Stations[stationIndex].OpenLeftDoors)
 						{
-							t.Append(", [L][-]");
+							s += ", [L][-]";
 						}
 						else if (Program.CurrentRoute.Stations[stationIndex].OpenRightDoors)
 						{
-							t.Append(", [-][R]");
+							s += ", [-][R]";
 						}
 						else
 						{
-							t.Append(", [-][-]");
+							s += ", [-][-]";
 						}
 
 						switch (Program.CurrentRoute.Stations[stationIndex].StopMode)
 						{
 							case StationStopMode.AllStop:
-								t.Append(", Stop");
+								s += ", Stop";
 								break;
 							case StationStopMode.AllPass:
-								t.Append(", Pass");
+								s += ", Pass";
 								break;
 							case StationStopMode.PlayerStop:
-								t.Append(", Player stops - others pass");
+								s += ", Player stops - others pass";
 								break;
 							case StationStopMode.PlayerPass:
-								t.Append(", Player passes - others stop");
+								s += ", Player passes - others stop";
 								break;
 						}
 
 						switch (Program.CurrentRoute.Stations[stationIndex].Type)
 						{
 							case StationType.ChangeEnds:
-								t.Append(", Change ends");
+								s += ", Change ends";
 								break;
 							case StationType.Jump:
-								t.Append(", then Jumps to " + Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[stationIndex].JumpIndex].Name);
+								s += ", then Jumps to " + Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[stationIndex].JumpIndex].Name;
 								break;
 						}
 
-						t.Append(", Ratio=").Append((100.0 * Program.CurrentRoute.Stations[stationIndex].PassengerRatio).ToString("0", culture)).Append("%");
+						s += ", Ratio=" + (100.0 * Program.CurrentRoute.Stations[stationIndex].PassengerRatio).ToString("0", culture) + "%";
 
-						OpenGlString.Draw(Fonts.SmallFont, t.ToString(), new Vector2((int)x, 60), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, s, new Vector2((int)x, 60), TextAlignment.TopLeft, Color128.White, true);
 					}
 
 					if (Interface.LogMessages.Count == 1)
@@ -723,11 +735,15 @@ namespace RouteViewer
 					if (RenderStatsOverlay)
 					{
 						Keys.Render(4, Screen.Height - 126, 116, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
-						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+						lock (VisibleObjects.LockObject)
+						{
+							OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+						}
+						
 					}
 				}
 			}
@@ -766,15 +782,15 @@ namespace RouteViewer
 			}
 
 			values[Program.CurrentRoute.UnitOfLength.Length - 1] = Value / Program.CurrentRoute.UnitOfLength[Program.CurrentRoute.UnitOfLength.Length - 1];
-			StringBuilder builder = new StringBuilder();
+			string s = string.Empty;
 
 			for (int i = 0; i < values.Length - 1; i++)
 			{
-				builder.Append(values[i].ToString(culture) + ":");
+				s += values[i].ToString(culture) + ":";
 			}
 
-			builder.Append(values[values.Length - 1].ToString("0.00", culture));
-			return builder.ToString();
+			s += values[values.Length - 1].ToString("0.00", culture);
+			return s;
 		}
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)

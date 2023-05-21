@@ -7,6 +7,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using TrainManager.Handles;
 using TrainManager.Trains;
+using TrainManager.Car.Systems;
 
 namespace ObjectViewer {
 	internal static class FunctionScripts {
@@ -41,11 +42,8 @@ namespace ObjectViewer {
 						Function.Stack[s] = Function.Stack[s - 1];
 						s++; break;
 					case Instructions.StackSwap:
-						{
-							double a = Function.Stack[s - 1];
-							Function.Stack[s - 1] = Function.Stack[s - 2];
-							Function.Stack[s - 2] = a;
-						} break;
+						(Function.Stack[s - 1], Function.Stack[s - 2]) = (Function.Stack[s - 2], Function.Stack[s - 1]);
+						break;
 						// math
 					case Instructions.MathPlus:
 						Function.Stack[s - 2] += Function.Stack[s - 1];
@@ -292,6 +290,13 @@ namespace ObjectViewer {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.TrainLength:
+						if (Train != null) {
+							Function.Stack[s] = Train.Length;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					case Instructions.TrainSpeed:
 						if (Train != null) {
 							Function.Stack[s] = Train.Cars[CarIndex].CurrentSpeed;
@@ -430,8 +435,8 @@ namespace ObjectViewer {
 						break;
 					case Instructions.TrainTrackDistance:
 						if (Train != null) {
-							double t0 = Train.FrontCarTrackPosition();
-							double t1 = Train.RearCarTrackPosition();
+							double t0 = Train.FrontCarTrackPosition;
+							double t1 = Train.RearCarTrackPosition;
 							Function.Stack[s] = TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
@@ -745,6 +750,14 @@ namespace ObjectViewer {
 					case Instructions.StationAdjustAlarm:
 						//Not currently supported in viewers
 						Function.Stack[s] = 0.0;
+						s++; break;
+					case Instructions.Headlights:
+						if (Train != null)
+						{
+							Function.Stack[s] = Train.SafetySystems.Headlights.CurrentState;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
 						s++; break;
 					// handles
 					case Instructions.ReverserNotch:
@@ -1075,6 +1088,59 @@ namespace ObjectViewer {
 						}
 						s++;
 						break;
+					case Instructions.WheelSlip:
+						if (Train != null) {
+							Function.Stack[s] = Train.Cars[CarIndex].FrontAxle.CurrentWheelSlip ? 1 : 0;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.WheelSlipCar:
+						if (Train == null) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length) {
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.CurrentWheelSlip ? 1 : 0;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.Sanders:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders)
+							{
+								Function.Stack[s] = sanders.Active ? 1 : 0;
+							}
+							else
+							{
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.SandLevel:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders)
+							{
+								Function.Stack[s] = sanders.SandLevel;
+							}
+							else
+							{
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.SandShots:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.NumberOfShots;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						} 
+						s++; break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}

@@ -47,8 +47,6 @@ namespace OpenBve
 			Program.CurrentRoute.Atmosphere = new Atmosphere();
 			Program.CurrentRoute.LightDefinitions = new LightDefinition[] { };
 			Program.CurrentRoute.BufferTrackPositions = new double[] { };
-			//Messages = new Message[] { };
-			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.PrecedingTrainTimeDeltas = new double[] { };
 			Interface.CurrentOptions.PrecedingTrainSpeedLimit = double.PositiveInfinity;

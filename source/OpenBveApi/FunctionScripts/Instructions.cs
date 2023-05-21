@@ -17,14 +17,14 @@
 		StackCopy, StackSwap,
 		MathRandom, MathRandomInt,
 		TimeSecondsSinceMidnight, TimeHourDigit, TimeMinuteDigit, TimeSecondDigit, CameraDistance, CameraXDistance, CameraYDistance, CameraZDistance,CameraView,
-		TrainCars, TrainCarNumber, TrainDestination, PlayerTrain,
+		TrainCars, TrainCarNumber, TrainDestination, PlayerTrain, TrainLength,
 		TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
 		TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, CurveRadiusOfCar, FrontAxleCurveRadius, FrontAxleCurveRadiusOfCar, RearAxleCurveRadius, RearAxleCurveRadiusOfCar, CurveCant, CurveCantOfCar, Pitch, PitchOfCar, Odometer, OdometerOfCar, BrightnessOfCar,
 		Doors, DoorsIndex,
 		LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 		LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
-		LeftDoorButton, RightDoorButton, PilotLamp,
+		LeftDoorButton, RightDoorButton, PilotLamp, Headlights,
 		ReverserNotch, PowerNotch, PowerNotches, LocoBrakeNotch, LocoBrakeNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon, PrimaryKlaxon, SecondaryKlaxon, MusicKlaxon,
 		HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 		BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
@@ -34,7 +34,9 @@
 		RouteLimit,
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition,
-		WheelRadius, WheelRadiusOfCar
+		WheelRadius, WheelRadiusOfCar,
+		WheelSlip, WheelSlipCar,
+		Sanders, SandLevel, SandShots
 #pragma warning restore CS1591
 			
 		}

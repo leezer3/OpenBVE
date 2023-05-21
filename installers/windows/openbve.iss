@@ -130,6 +130,7 @@ begin
     DataDirPage.Values[0] := GetPreviousData('DataDir0', ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Railway'));
     DataDirPage.Values[1] := GetPreviousData('DataDir1', ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Train'));
     DataDirPage.Values[2] := GetPreviousData('DataDir2', ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Other'));
+    ResultCode_Net4 := 0;
 end;
 
 procedure RegisterPreviousData(PreviousDataKey: Integer);
@@ -198,9 +199,11 @@ FileLines: TArrayOfString;
   //Determine whether the component is installed. 
     if RegQueryDWordValue(GetHKLM(),'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'Release',Installed) then begin
       if Installed >= 394254 then begin
+        Log('.Net Framework 4 not detected- Launching web installer.');
         use_Net4:=1;
       end else begin
         use_Net4:=0;
+        Log('.Net Framework 4 is already installed, skipping.');
       end;
     end;
     begin
@@ -212,44 +215,69 @@ FileLines: TArrayOfString;
         begin
         IntToStr(ResultCode_Net4)
         // handle success if necessary; ResultCode contains the exit code
+        Log('.Net Install completed sucessfully');
         end
       else begin
         // handle failure if necessary; ResultCode contains the error code;
+        Log('.Net Install failed with error code ' + IntToStr(ResultCode_Net4));
       end;
+      
     end;
-      //OpenBVE filesystem.cfg
-      if (UsagePage.SelectedValueIndex = 0) then
+      if (UsagePage = nil) or (DataDirPage = nil) then
+      // Speculative, issue with something on re-install?: https://github.com/leezer3/OpenBVE/issues/806
       begin
-        CreateDir(ExpandConstant('{userappdata}\{#MyAppName}'));
-        ForceDirectories(ExpandConstant('{{userappdata}\{#MyAppName}\Settings'));
-        FileCopy(ExpandConstant('{app}\filesystem_appdata.cfg'), ExpandConstant('{userappdata}\{#MyAppName}\Settings\filesystem.cfg'), True);
-        DeleteFile(ExpandConstant('{app}\filesystem_programfolder.cfg'));
-        DataDirPage.Values[0] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Railway');
-        DataDirPage.Values[1] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Train');
-      end;
-      if (UsagePage.SelectedValueIndex = 1) then
-      begin
-        ForceDirectories(ExpandConstant('{app}\UserData\Settings'));
-        FileCopy(ExpandConstant('{app}\filesystem_programfolder.cfg'), ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), True);
-        DeleteFile(ExpandConstant('{app}\filesystem_appdata.cfg'));
-        DataDirPage.Values[0] := ExpandConstant('{app}\UserData');
-
-      end;
-      if (UsagePage.SelectedValueIndex = 2) then
-      begin
-        ForceDirectories(ExpandConstant('{app}\UserData\Settings'));
-        //Load filesystem.cfg
-        LoadStringsFromFile(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), FileLines);
-        FileLines[2]:='InitialRoute = '+DataDirPage.Values[0];
-        FileLines[3]:='InitialTrain = '+DataDirPage.Values[1];
-        FileLines[4]:='RoutePackageInstall = '+DataDirPage.Values[0];
-        FileLines[5]:='TrainPackageInstall = '+DataDirPage.Values[1];
-        //Save filesystem.cfg
-        SaveStringsToUTF8File(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'),FileLines,false);
-      end;
-        ForceDirectories(DataDirPage.Values[0]);
-        ForceDirectories(DataDirPage.Values[1])
-
+        Log('Either DataDirPage or UsagePage was null. This should not happen....');
+      end
+      else begin
+        //OpenBVE filesystem.cfg
+        if (UsagePage.SelectedValueIndex = 0) then
+        begin
+          Log('Using the AppData folder to store all settings, routes and trains');
+          try
+            CreateDir(ExpandConstant('{userappdata}\{#MyAppName}'));
+            ForceDirectories(ExpandConstant('{{userappdata}\{#MyAppName}\Settings'));
+            FileCopy(ExpandConstant('{app}\filesystem_appdata.cfg'), ExpandConstant('{userappdata}\{#MyAppName}\Settings\filesystem.cfg'), True);
+            DeleteFile(ExpandConstant('{app}\filesystem_programfolder.cfg'));
+            DataDirPage.Values[0] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Railway');
+            DataDirPage.Values[1] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Train');
+          except
+            Log('Unexpected error occured whilst creating initial settings');
+          end;
+        end;
+        if (UsagePage.SelectedValueIndex = 1) then
+        begin
+          Log('Using the UserData folder to store all settings, routes and trains'); 
+          try
+            ForceDirectories(ExpandConstant('{app}\UserData\Settings'));
+            FileCopy(ExpandConstant('{app}\filesystem_programfolder.cfg'), ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), True);
+            DeleteFile(ExpandConstant('{app}\filesystem_appdata.cfg'));
+            DataDirPage.Values[0] := ExpandConstant('{app}\UserData');
+          except
+            Log('Unexpected error occured whilst creating initial settings');
+          end;
+        end;
+        if (UsagePage.SelectedValueIndex = 2) then
+        begin
+          Log('Using Custom Folders to store all settings, routes and trains');
+          try
+            ForceDirectories(ExpandConstant('{app}\UserData\Settings'));
+            //Load filesystem.cfg
+            LoadStringsFromFile(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), FileLines);
+            FileLines[2]:='InitialRoute = '+DataDirPage.Values[0];
+            FileLines[3]:='InitialTrain = '+DataDirPage.Values[1];
+            FileLines[4]:='RoutePackageInstall = '+DataDirPage.Values[0];
+            FileLines[5]:='TrainPackageInstall = '+DataDirPage.Values[1];
+            //Save filesystem.cfg
+            SaveStringsToUTF8File(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'),FileLines,false);
+          except
+            Log('Unexpected error occured whilst creating initial settings');
+          end;
+        end;
+          Log('Creating RouteInstall directory ' + DataDirPage.Values[0]);
+          ForceDirectories(DataDirPage.Values[0]);
+          Log('Creating TrainInstall directory ' + DataDirPage.Values[1]);
+          ForceDirectories(DataDirPage.Values[1])
+        end;
     end;
 end;
 

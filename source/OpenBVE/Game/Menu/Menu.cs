@@ -33,8 +33,8 @@ namespace OpenBve
 	{
 		// components of the semi-transparent screen overlay
 		private readonly Color128 overlayColor = new Color128(0.0f, 0.0f, 0.0f, 0.2f);
-		private readonly Color128 backgroundColor = new Color128(0.0f, 0.0f, 0.0f, 1.0f);
-		private readonly Color128 highlightColor = new Color128(1.0f, 0.69f, 0.0f, 1.0f);
+		private readonly Color128 backgroundColor = Color128.Black;
+		private readonly Color128 highlightColor = Color128.Orange;
 		private readonly Color128 folderHighlightColor = new Color128(0.0f, 0.69f, 1.0f, 1.0f);
 		private readonly Color128 routeHighlightColor = new Color128(0.0f, 1.0f, 0.69f, 1.0f);
 		// text colours
@@ -56,7 +56,7 @@ namespace OpenBve
 		private const int SelectionNone = -1;
 
 		private double lastTimeElapsed;
-		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
+		private static readonly string currentDatabaseFile = Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
 
 		/********************
 			MENU SYSTEM FIELDS
@@ -75,13 +75,8 @@ namespace OpenBve
 		private double topItemY;           // the top edge of top item
 		private int visibleItems;       // the number of visible items
 										// properties (to allow read-only access to some fields)
-		internal int LineHeight
-		{
-			get
-			{
-				return lineHeight;
-			}
-		}
+		internal int LineHeight => lineHeight;
+
 		internal OpenGlFont MenuFont
 		{
 			get
@@ -105,13 +100,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Returns the current menu instance (If applicable)</summary>
-		public static Menu Instance
-		{
-			get
-			{
-				return instance;
-			}
-		}
+		public static Menu Instance => instance;
 
 		/********************
 			MENU SYSTEM METHODS
@@ -274,14 +263,7 @@ namespace OpenBve
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				if (Program.Joysticks.AttachedJoysticks[device] is AbstractRailDriver)
-				{
-					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.RailDriver;
-				}
-				else
-				{
-					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.Joystick;
-				}
+				Interface.CurrentControls[CustomControlIdx].Method = Program.Joysticks.AttachedJoysticks[device] is AbstractRailDriver ? ControlMethod.RailDriver : ControlMethod.Joystick;
 				Interface.CurrentControls[CustomControlIdx].Device = device;
 				Interface.CurrentControls[CustomControlIdx].Component = component;
 				Interface.CurrentControls[CustomControlIdx].Element = element;
@@ -336,6 +318,18 @@ namespace OpenBve
 			}
 		}
 
+
+		internal void DragFile(object sender, OpenTK.Input.FileDropEventArgs e)
+		{
+			if (Menus[CurrMenu].Type == MenuType.PackageInstall)
+			{
+				currentFile = e.FileName;
+				if (!packageWorkerThread.IsBusy)
+				{
+					packageWorkerThread.RunWorkerAsync();
+				}
+			}
+		}
 
 		/// <summary>Processes a mouse move event</summary>
 		/// <param name="x">The screen-relative x coordinate of the move event</param>
@@ -784,9 +778,8 @@ namespace OpenBve
 								break;
 						}
 					}
-					else if (menu.Items[menu.Selection] is MenuOption)
+					else if (menu.Items[menu.Selection] is MenuOption opt)
 					{
-						MenuOption opt = menu.Items[menu.Selection] as MenuOption;
 						opt.Flip();
 					}
 					break;
@@ -856,7 +849,7 @@ namespace OpenBve
 				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, menuYmin /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + MenuItemBorderX, em + MenuItemBorderY * 2), highlightColor);
 			}
 			if (menu.TopItem > 0)
-				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Vector2(itemX, menuYmin),
+				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, menuYmin),
 					menu.Align, ColourDimmed, false);
 			// draw the items
 			double itemY = topItemY;
@@ -937,7 +930,7 @@ namespace OpenBve
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)
-				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Vector2(itemX, itemY),
+				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, itemY),
 					menu.Align, ColourDimmed, false);
 			switch (menu.Type)
 			{
@@ -978,26 +971,12 @@ namespace OpenBve
 							{
 								Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 								Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-								if (menu.Type == MenuType.RouteList)
-								{
-									Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
-								}
-								else
-								{
-									Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
-								}
+								Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString("start_train_choose") : Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
 							}
 							else
 							{
 								Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-								if (menu.Type == MenuType.RouteList)
-								{
-									Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
-								}
-								else
-								{
-									Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
-								}
+								Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString("start_train_choose") : Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White);
 							}
 							break;
 						case RouteState.Error:
@@ -1078,8 +1057,6 @@ namespace OpenBve
 		/// Also sets the menu size</summary>
 		private void PositionMenu()
 		{
-			//			int i;
-
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
 				return;
 

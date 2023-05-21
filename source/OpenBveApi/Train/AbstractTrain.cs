@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Routes;
+using System;
 
 namespace OpenBveApi.Trains
 {
@@ -42,30 +41,22 @@ namespace OpenBveApi.Trains
 		public double TimetableDelta;
 		/// <summary>A string storing the absolute on-disk path to the current train folder</summary>
 		public string TrainFolder;
-		/// <summary>Gets the track position of the front car</summary>
-		public abstract double FrontCarTrackPosition();
 
+		/// <summary>Gets the track position of the front car</summary>
+		public virtual double FrontCarTrackPosition => 0;
+		
 		/// <summary>Gets the track position of the rear car</summary>
-		public abstract double RearCarTrackPosition();
+		public virtual double RearCarTrackPosition => 0;
 
 		/// <summary>Returns true if this is the player driven train</summary>
-		public virtual bool IsPlayerTrain
-		{
-			get
-			{
-				//An abstract train in and of itself cannot be the player train
-				return false;
-			}
-		}
+		/// <remarks>NOTE: An abstract train in and of itself cannot be the player train</remarks>
+		public virtual bool IsPlayerTrain => false;
 
 		/// <summary>Returns the number of cars in this train</summary>
-		public virtual int NumberOfCars
-		{
-			get
-			{
-				return 0;
-			}
-		}
+		public virtual int NumberOfCars => 0;
+
+		/// <summary>Gets the length of the train</summary>
+		public virtual double Length => 0;
 
 		/// <summary>Updates the train</summary>
 		/// <param name="TimeElapsed">The time elapsed since the last call to update</param>
@@ -91,7 +82,7 @@ namespace OpenBveApi.Trains
 		}
 
 		/// <summary>Call this method to reverse (flip) the entire train</summary>
-		public virtual void Reverse()
+		public virtual void Reverse(bool FlipInterior = false, bool FlipDriver = false)
 		{
 
 		}

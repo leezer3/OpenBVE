@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using OpenBveApi.Colors;
-using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -48,21 +47,21 @@ namespace RouteViewer {
 			Program.CurrentRoute.Stations = new RouteStation[] { };
 			Program.CurrentRoute.Sections = new Section[] { };
 			Program.CurrentRoute.BufferTrackPositions = new double[] { };
-			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
 			Interface.CurrentOptions.TrainName = "";
 			Interface.CurrentOptions.TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			Program.CurrentRoute.PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
-			Program.CurrentRoute.CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
-			Program.CurrentRoute.NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
-			Program.CurrentRoute.NoFogStart = (float)Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + 200.0f;
-			Program.CurrentRoute.NoFogEnd = 2.0f * Program.CurrentRoute.NoFogStart;
+			Program.CurrentRoute.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
+			Program.CurrentRoute.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
+			Program.CurrentRoute.PreviousFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
+			Program.CurrentRoute.CurrentFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
+			Program.CurrentRoute.NextFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
 			Program.Renderer.InfoTotalTriangles = 0;
 			Program.Renderer.InfoTotalTriangleStrip = 0;
 			Program.Renderer.InfoTotalQuads = 0;
 			Program.Renderer.InfoTotalQuadStrip = 0;
 			Program.Renderer.InfoTotalPolygon = 0;
+			Program.Renderer.VisibleObjects.quadTree.Clear();
 			// object manager
 			Program.Renderer.InitializeVisibility();
 			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
@@ -116,9 +115,9 @@ namespace RouteViewer {
 				Program.Renderer.Camera.Alignment.TrackPosition = t;
 				World.UpdateAbsoluteCamera(0.0);
 				return true;
-			} else {
-				return false;
 			}
+
+			return false;
 		}
 
 	}

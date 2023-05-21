@@ -49,17 +49,11 @@ namespace OpenBve
 				}
 				l--;
 			}
-			if (splitHeader.Length >= 2)
-			{
-				/*
-				 * Pull out the text encoding of our file
-				 */
-				Encoding = TextEncoding.ParseEncoding(splitHeader[1]);
-			}
-			else
-			{
-				Encoding = Encoding.UTF8;
-			}
+
+			/*
+			 * Pull out the text encoding of our file
+			 */
+			Encoding = splitHeader.Length >= 2 ? TextEncoding.ParseEncoding(splitHeader[1]) : Encoding.UTF8;
 		}
 	}
 }

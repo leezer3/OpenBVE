@@ -32,7 +32,7 @@ namespace OpenBveApi.Input
     /// <summary>
     /// The available keyboard keys.
     /// </summary>
-    public enum Key : int
+    public enum Key
     {
         /// <summary>A key outside the known keys.</summary>
         Unknown = 0,

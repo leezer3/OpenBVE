@@ -1,8 +1,35 @@
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2023, odaykufan, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//Please note that this plugin is based upon code originally released into into the public domain by Odaykufan:
+//http://web.archive.org/web/20140225072517/http://odakyufan.zxq.net:80/odakyufanats/index.html
+
 using System;
 using System.Collections.Generic;
 using OpenBveApi.Runtime;
 
-namespace Plugin {
+namespace OpenBveAts {
 	/// <summary>Represents ATS-P.</summary>
 	internal class AtsP : Device {
 		
@@ -45,9 +72,7 @@ namespace Plugin {
 			/// <summary>The brake pattern, or System.Double.MaxValue.</summary>
 			internal double BrakePattern;
 			/// <summary>The speed limit at the point of danger, or System.Double.MaxValue.</summary>
-			internal double TargetSpeed;
-			/// <summary>The current gradient.</summary>
-			internal double Gradient;
+			private double TargetSpeed;
 			// --- constructors ---
 			/// <summary>Creates a new pattern.</summary>
 			/// <param name="device">A reference to the underlying ATS-P device.</param>
@@ -57,13 +82,11 @@ namespace Plugin {
 				this.WarningPattern = double.MaxValue;
 				this.BrakePattern = double.MaxValue;
 				this.TargetSpeed = double.MaxValue;
-				this.Gradient = 0.0;
 			}
 			// --- functions ---
 			/// <summary>Updates the pattern.</summary>
 			/// <param name="system">The current ATS-P system.</param>
-			/// <param name="data">The elapse data.</param>
-			internal void Perform(AtsP system, ElapseData data) {
+			internal void Perform(AtsP system) {
 				if (this.Position == double.MaxValue | this.TargetSpeed == double.MaxValue) {
 					this.WarningPattern = double.MaxValue;
 					this.BrakePattern = double.MaxValue;
@@ -71,9 +94,7 @@ namespace Plugin {
 					this.WarningPattern = this.TargetSpeed - this.Device.PatternSpeedDifference;
 					this.BrakePattern = Math.Max(this.TargetSpeed, this.Device.ReleaseSpeed);
 				} else {
-					const double earthGravity = 9.81;
-                    double accelerationDueToGravity = earthGravity * this.Gradient / Math.Sqrt(1.0 + this.Gradient * this.Gradient);
-					double deceleration = this.Device.DesignDeceleration + accelerationDueToGravity;
+					double deceleration = this.Device.DesignDeceleration;
 					double distance = this.Position - system.Position;
 					/*
 					 * Calculate the warning pattern.
@@ -91,11 +112,7 @@ namespace Plugin {
 					 * */
 					{
 						double sqrtTerm = 2.0 * deceleration * distance + this.TargetSpeed * this.TargetSpeed;
-						if (sqrtTerm <= 0.0) {
-							this.BrakePattern = this.TargetSpeed;
-						} else {
-							this.BrakePattern = Math.Max(Math.Sqrt(sqrtTerm), TargetSpeed);
-						}
+						this.BrakePattern = sqrtTerm <= 0.0 ? this.TargetSpeed : Math.Max(Math.Sqrt(sqrtTerm), TargetSpeed);
 						if (this.BrakePattern < this.Device.ReleaseSpeed) {
 							this.BrakePattern = this.Device.ReleaseSpeed;
 						}
@@ -122,18 +139,12 @@ namespace Plugin {
 				this.Position = position;
 				this.TargetSpeed = speed;
 			}
-			/// <summary>Sets the gradient.</summary>
-			/// <param name="gradient">The gradient.</param>
-			internal void SetGradient(double gradient) {
-				this.Gradient = gradient;
-			}
 			/// <summary>Clears the pattern.</summary>
 			internal void Clear() {
 				this.Position = double.MaxValue;
 				this.WarningPattern = double.MaxValue;
 				this.BrakePattern = double.MaxValue;
 				this.TargetSpeed = double.MaxValue;
-				this.Gradient = 0.0;
 			}
 		}
 		
@@ -177,7 +188,7 @@ namespace Plugin {
 		private double Position;
 		
 		/// <summary>A list of all compatibility temporary speed limits in the route.</summary>
-		private List<CompatibilityLimit> CompatibilityLimits;
+		private readonly List<CompatibilityLimit> CompatibilityLimits;
 		
 		/// <summary>The element in the CompatibilityLimits list that holds the last speed limit.</summary>
 		private int CompatibilityLimitPointer;
@@ -186,16 +197,16 @@ namespace Plugin {
 		// --- patterns ---
 		
 		/// <summary>The signal pattern.</summary>
-		private Pattern SignalPattern;
+		private readonly Pattern SignalPattern;
 		
 		/// <summary>The compatibility temporary pattern.</summary>
-		private Pattern CompatibilityTemporaryPattern;
+		private readonly Pattern CompatibilityTemporaryPattern;
 
 		/// <summary>The compatibility permanent pattern.</summary>
-		private Pattern CompatibilityPermanentPattern;
+		private readonly Pattern CompatibilityPermanentPattern;
 
 		/// <summary>A list of all patterns.</summary>
-		private Pattern[] Patterns;
+		private readonly Pattern[] Patterns;
 		
 		
 		// --- parameters ---
@@ -235,13 +246,12 @@ namespace Plugin {
 			this.SignalPattern = new Pattern(this);
 			this.CompatibilityTemporaryPattern = new Pattern(this);
 			this.CompatibilityPermanentPattern = new Pattern(this);
-			List<Pattern> patterns = new List<Pattern>
+			Patterns = new[]
 			{
 				this.SignalPattern,
 				this.CompatibilityTemporaryPattern,
 				this.CompatibilityPermanentPattern
 			};
-			this.Patterns = patterns.ToArray();
 		}
 		
 		
@@ -313,12 +323,9 @@ namespace Plugin {
 		
 		/// <summary>Is called when the system should initialize.</summary>
 		/// <param name="mode">The initialization mode.</param>
-		internal override void Initialize(InitializationModes mode) {
-			if (mode == InitializationModes.OffEmergency) {
-				this.State = States.Suppressed;
-			} else {
-				this.State = States.Standby;
-			}
+		internal override void Initialize(InitializationModes mode)
+		{
+			this.State = mode == InitializationModes.OffEmergency ? States.Suppressed : States.Standby;
 			foreach (Pattern pattern in this.Patterns) {
 				if (Math.Abs(this.Train.State.Speed.MetersPerSecond) >= pattern.WarningPattern) {
 					pattern.Clear();
@@ -369,7 +376,7 @@ namespace Plugin {
 					bool warning = false;
 					UpdateCompatibilityTemporarySpeedPattern();
 					foreach (Pattern pattern in this.Patterns) {
-						pattern.Perform(this, data);
+						pattern.Perform(this);
 						if (Math.Abs(data.Vehicle.Speed.MetersPerSecond) >= pattern.WarningPattern) {
 							warning = true;
 						}
@@ -548,7 +555,7 @@ namespace Plugin {
 				case -16777213:
 					// --- compatibility temporary pattern ---
 					{
-						double limit = (double)(beacon.Optional & 4095) / 3.6;
+						double limit = (beacon.Optional & 4095) / 3.6;
 						double position = (beacon.Optional >> 12);
 						CompatibilityLimit item = new CompatibilityLimit(limit, position);
 						if (!this.CompatibilityLimits.Contains(item)) {

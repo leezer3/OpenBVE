@@ -7,11 +7,11 @@ namespace TrainManager.Car
 	public class WindscreenWiper
 	{
 		/// <summary>The car sound played when 20% or less drops are visible</summary>
-		public CarSound DryWipeSound;
+		public CarSound DryWipeSound = new CarSound();
 		/// <summary>The car sound played when 20% or more drops are visible</summary>
-		public CarSound WetWipeSound;
+		public CarSound WetWipeSound = new CarSound();
 		/// <summary>The car sound played when the wipers are activated or deactivated</summary>
-		public CarSound SwitchSound;
+		public CarSound SwitchSound = new CarSound();
 		/// <summary>The time for which the wiper pauses at the hold position</summary>
 		internal double HoldTime;
 		/// <summary>The wiper rest position</summary>

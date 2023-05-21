@@ -32,6 +32,37 @@ namespace OpenBveApi.Math {
 			this.X = v.X;
 			this.Y = v.Y;
 		}
+
+		/// <summary>Parses a Vector2 from a list of strings</summary>
+		/// <param name="arguments">The list of strings</param>
+		/// <param name="v">The out Vector</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Vector3.
+		/// If any part fails parsing, it will be set to zero</remarks>
+		public static bool TryParse(string[] arguments, out Vector2 v)
+		{
+			bool success = arguments.Length == 2;
+			v.X = 0; v.Y = 0; 
+			for (int i = 0; i < arguments.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(arguments[i], out v.X))
+						{
+							success = false;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(arguments[i], out v.Y))
+						{
+							success = false;
+						}
+						break;
+				}
+			}
+			return success;
+		}
 		
 		
 		// --- arithmetic operators ---
@@ -373,7 +404,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Represents a vector pointing down.</summary>
 		public static readonly Vector2 Down = new Vector2(0.0, 1.0);
 
-		/// <summary>Represents a vector pointing right.</summary>
+		/// <summary>Represents a unary vector.</summary>
 		public static readonly Vector2 One = new Vector2(1.0, 1.0);
 
 		/// <summary>Returns the representation of the vector in string format</summary>

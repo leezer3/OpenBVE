@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -67,6 +68,8 @@ namespace TrainManager.SafetySystems
 		private bool StationsLoaded;
 		/// <summary>Holds the plugin specific AI class</summary>
 		internal PluginAI AI;
+		/// <summary>Whether the plugin is blocking input</summary>
+		public bool BlockingInput;
 
 		// --- functions ---
 		/// <summary>Called to load and initialize the plugin.</summary>
@@ -127,7 +130,21 @@ namespace TrainManager.SafetySystems
 			double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;
 			double bpPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakePipe.CurrentPressure;
 			double sapPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.straightAirPipe.CurrentPressure;
-			VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, this.Train.Cars[0].FrontAxle.Follower);
+			bool wheelSlip = false;
+			for (int i = 0; i < this.Train.Cars.Length; i++)
+			{
+				if (this.Train.Cars[i].FrontAxle.CurrentWheelSlip)
+				{
+					/*
+					 * Find out if any car in the train is experincing wheelslip
+					 * Remember that only motor cars may experience wheelslip, and there is no
+					 * set position of these within the train, hence it's easier to just check all
+					 */
+					wheelSlip = true;
+					break;
+				}
+			}
+			VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, wheelSlip, this.Train.Cars[0].FrontAxle.Follower);
 			/*
 			 * Prepare the preceding vehicle state.
 			 * */
@@ -137,7 +154,7 @@ namespace TrainManager.SafetySystems
 			try
 			{
 				AbstractTrain closestTrain = TrainManagerBase.currentHost.ClosestTrain(this.Train);
-				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition(), closestTrain.RearCarTrackPosition() - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
+				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition, closestTrain.RearCarTrackPosition - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
 			}
 			catch
 			{
@@ -154,12 +171,14 @@ namespace TrainManager.SafetySystems
 			double totalTime = TrainManagerBase.currentHost.InGameTime;
 			double elapsedTime = TrainManagerBase.currentHost.InGameTime - LastTime;
 
-			ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, TrainManagerBase.Renderer.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
+			ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, this.Train.SafetySystems.Headlights.CurrentState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, TrainManagerBase.Renderer.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
 			ElapseData inputDevicePluginData = data;
 			LastTime = TrainManagerBase.currentHost.InGameTime;
 			Elapse(ref data);
 			this.PluginMessage = data.DebugMessage;
 			this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
+			this.Train.SafetySystems.Headlights.SetState(data.HeadlightState);
+			this.BlockingInput = data.BlockingInput;
 			DisableTimeAcceleration = data.DisableTimeAcceleration;
 			if (Train.IsPlayerTrain)
 			{
@@ -311,7 +330,7 @@ namespace TrainManager.SafetySystems
 					else
 					{
 						this.Train.Handles.EmergencyBrake.Release();
-						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
+						Train.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 					}
 				}
 				else if (handles.BrakeNotch == 3)
@@ -528,6 +547,24 @@ namespace TrainManager.SafetySystems
 		/// <summary>Called when a virtual key is released.</summary>
 		public abstract void KeyUp(VirtualKeys key);
 
+		/// <summary>Called when a virtual key is pressed.</summary>
+		public virtual void RawKeyDown(Key key)
+		{
+			// Ignored other than by .Net plugins
+		}
+
+		/// <summary>Called when a virtual key is released.</summary>
+		public virtual void RawKeyUp(Key key)
+		{
+			// Ignored other than by .Net plugins
+		}
+
+		/// <summary>Called when a touch event occurs.</summary>
+		public virtual void TouchEvent(int groupIndex, int commandIndex)
+		{
+			// Ignored other than by .Net plugins
+		}
+
 		/// <summary>Called when a horn is played or stopped.</summary>
 		public abstract void HornBlow(HornTypes type);
 
@@ -613,11 +650,6 @@ namespace TrainManager.SafetySystems
 					if (signal.Aspect == 0) break;
 					sectionIndex++;
 				}
-
-				if (sectionIndex >= TrainManagerBase.CurrentRoute.Sections.Length)
-				{
-					signal = new SignalData(-1, double.MaxValue);
-				}
 			}
 
 			if (sectionIndex >= 0)
@@ -648,12 +680,13 @@ namespace TrainManager.SafetySystems
 		protected abstract void SetBeacon(BeaconData beacon);
 
 		/// <summary>Updates the AI.</summary>
+		/// <param name="timeElapsed">The elapsed time</param>
 		/// <returns>The AI response.</returns>
-		public AIResponse UpdateAI()
+		public AIResponse UpdateAI(double timeElapsed)
 		{
 			if (this.SupportsAI != AISupport.None)
 			{
-				AIData data = new AIData(GetHandles());
+				AIData data = new AIData(GetHandles(), timeElapsed);
 				this.PerformAI(data);
 				if (data.Response != AIResponse.None)
 				{

@@ -61,8 +61,7 @@ namespace OpenBve {
 				{
 					for (int j = 0; j < Program.CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						StationStartEvent sse = Program.CurrentRoute.Tracks[0].Elements[i].Events[j] as StationStartEvent;
-						if (sse != null && Program.CurrentRoute.Stations[sse.StationIndex].Name != string.Empty && !Program.CurrentRoute.Stations[sse.StationIndex].Dummy)
+						if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent sse && Program.CurrentRoute.Stations[sse.StationIndex].Name != string.Empty && !Program.CurrentRoute.Stations[sse.StationIndex].Dummy)
 						{
 							if (Limit == -1.0) Limit = LastLimit;
 							// update station
@@ -81,9 +80,9 @@ namespace OpenBve {
 								x = Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
 								x -= 86400.0 * Math.Floor(x / 86400.0);
 								int hours = (int) Math.Floor(x / 3600.0);
-								x -= 3600.0 * (double) hours;
+								x -= 3600.0 * hours;
 								int minutes = (int) Math.Floor(x / 60.0);
-								x -= 60.0 * (double) minutes;
+								x -= 60.0 * minutes;
 								int seconds = (int) Math.Floor(x);
 								Stations[n].Arrival.Hour = hours != LastArrivalHours ? hours.ToString("00", Culture) : "";
 								Stations[n].Arrival.Minute = minutes.ToString("00", Culture);
@@ -102,9 +101,9 @@ namespace OpenBve {
 								x = Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime;
 								x -= 86400.0 * Math.Floor(x / 86400.0);
 								int hours = (int) Math.Floor(x / 3600.0);
-								x -= 3600.0 * (double) hours;
+								x -= 3600.0 * hours;
 								int minutes = (int) Math.Floor(x / 60.0);
-								x -= 60.0 * (double) minutes;
+								x -= 60.0 * minutes;
 								int seconds = (int) Math.Floor(x);
 								Stations[n].Departure.Hour = hours != LastDepartureHours ? hours.ToString("00", Culture) : "";
 								Stations[n].Departure.Minute = minutes.ToString("00", Culture);
@@ -147,9 +146,9 @@ namespace OpenBve {
 									{
 										x -= LastTime;
 										int hours = (int) Math.Floor(x / 3600.0);
-										x -= 3600.0 * (double) hours;
+										x -= 3600.0 * hours;
 										int minutes = (int) Math.Floor(x / 60.0);
-										x -= 60.0 * (double) minutes;
+										x -= 60.0 * minutes;
 										int seconds = (int) Math.Floor(x);
 										Tracks[m].Time.Hour = hours != 0 ? hours.ToString("0", Culture) : "";
 										Tracks[m].Time.Minute = minutes != 0 ? minutes.ToString("00", Culture) : "";
@@ -191,8 +190,7 @@ namespace OpenBve {
 
 						if (n >= 1)
 						{
-							LimitChangeEvent lce = Program.CurrentRoute.Tracks[0].Elements[i].Events[j] as LimitChangeEvent;
-							if (lce != null)
+							if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is LimitChangeEvent lce)
 							{
 								if (lce.NextSpeedLimit != double.PositiveInfinity & lce.NextSpeedLimit > Limit) Limit = lce.NextSpeedLimit;
 							}
@@ -329,7 +327,7 @@ namespace OpenBve {
 								totalsize += sizes[j];
 							}
 
-							float space = (stationnamewidth - totalsize) / (float) (t.Length - 1);
+							float space = (stationnamewidth - totalsize) / (t.Length - 1);
 							float x = 0.0f;
 							for (int j = 0; j < t.Length; j++)
 							{
@@ -468,8 +466,8 @@ namespace OpenBve {
 					}
 
 					// measure
-					w = (int) Math.Ceiling((double) (x5 + 1));
-					h = (int) Math.Ceiling((double) (y0 + 18 * (Stations.Length + 1) + 4));
+					w = (int) Math.Ceiling(x5 + 1);
+					h = (int) Math.Ceiling(y0 + 18 * (Stations.Length + 1) + 4);
 					// description
 					if (k == 0)
 					{
@@ -477,7 +475,7 @@ namespace OpenBve {
 						s = g.MeasureString(t, f, w - 16);
 						descriptionwidth = s.Width;
 						descriptionheight = s.Height + 2;
-						h += (int) Math.Ceiling((double) s.Height) + 4;
+						h += (int) Math.Ceiling(s.Height) + 4;
 					}
 					f.Dispose();
 					fs.Dispose();

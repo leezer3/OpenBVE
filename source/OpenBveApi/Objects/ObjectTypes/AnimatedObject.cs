@@ -1,10 +1,7 @@
-using System.IO;
 using System.Linq;
-using CSScriptLibrary;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -20,6 +17,12 @@ namespace OpenBveApi.Objects
 		public AnimationScript StateFunction;
 		/// <summary>The index of the current state</summary>
 		public int CurrentState;
+		/// <summary>The function script controlling scaling in the X direction</summary>
+		public AnimationScript ScaleXFunction;
+		/// <summary>The function script controlling scaling in the Y direction</summary>
+		public AnimationScript ScaleYFunction;
+		/// <summary>The function script controlling scaling in the Z direction</summary>
+		public AnimationScript ScaleZFunction;
 		/// <summary>A 3D vector describing the direction taken when TranslateXFunction is called</summary>
 		public Vector3 TranslateXDirection;
 		/// <summary>A 3D vector describing the direction taken when TranslateXYFunction is called</summary>
@@ -113,37 +116,43 @@ namespace OpenBveApi.Objects
 		/// <returns>The new object</returns>
 		public AnimatedObject Clone()
 		{
-			AnimatedObject Result = new AnimatedObject(currentHost) { States = States.Select(x => (ObjectState)x.Clone()).ToArray() };
+			AnimatedObject Result = new AnimatedObject(currentHost)
+			{
+				States = States.Select(x => (ObjectState)x.Clone()).ToArray(),
+				TrackFollowerFunction = TrackFollowerFunction?.Clone(),
+				FrontAxlePosition = this.FrontAxlePosition,
+				RearAxlePosition = this.RearAxlePosition,
+				StateFunction = StateFunction?.Clone(),
+				CurrentState = this.CurrentState,
+				TranslateZDirection = this.TranslateZDirection,
+				TranslateYDirection = this.TranslateYDirection,
+				TranslateXDirection = this.TranslateXDirection,
+				TranslateXFunction = TranslateXFunction?.Clone(),
+				TranslateYFunction = TranslateYFunction?.Clone(),
+				TranslateZFunction = TranslateZFunction?.Clone(),
+				RotateXDirection = this.RotateXDirection,
+				RotateYDirection = this.RotateYDirection,
+				RotateZDirection = this.RotateZDirection,
+				RotateXFunction = RotateXFunction?.Clone(),
+				RotateXDamping = RotateXDamping?.Clone(),
+				RotateYFunction = RotateYFunction?.Clone(),
+				RotateYDamping = RotateYDamping?.Clone(),
+				RotateZFunction = RotateZFunction?.Clone(),
+				RotateZDamping = RotateZDamping?.Clone(),
+				ScaleXFunction = ScaleXFunction?.Clone(),
+				ScaleYFunction = ScaleYFunction?.Clone(),
+				ScaleZFunction = ScaleZFunction?.Clone(),
+				TextureShiftXDirection = this.TextureShiftXDirection,
+				TextureShiftYDirection = this.TextureShiftYDirection,
+				TextureShiftXFunction = TextureShiftXFunction?.Clone(),
+				TextureShiftYFunction = TextureShiftYFunction?.Clone(),
+				LEDClockwiseWinding = this.LEDClockwiseWinding,
+				LEDInitialAngle = this.LEDInitialAngle,
+				LEDLastAngle = this.LEDLastAngle,
+				SectionIndex = this.SectionIndex,
+				IsPartOfTrain = false // will be set by the CarSection load if appropriate
+			};
 
-			Result.TrackFollowerFunction = TrackFollowerFunction?.Clone();
-			Result.FrontAxlePosition = this.FrontAxlePosition;
-			Result.RearAxlePosition = this.RearAxlePosition;
-			Result.StateFunction = StateFunction?.Clone();
-			Result.CurrentState = this.CurrentState;
-			Result.TranslateZDirection = this.TranslateZDirection;
-			Result.TranslateYDirection = this.TranslateYDirection;
-			Result.TranslateXDirection = this.TranslateXDirection;
-			Result.TranslateXFunction = TranslateXFunction?.Clone();
-			Result.TranslateYFunction = TranslateYFunction?.Clone();
-			Result.TranslateZFunction = TranslateZFunction?.Clone();
-			Result.RotateXDirection = this.RotateXDirection;
-			Result.RotateYDirection = this.RotateYDirection;
-			Result.RotateZDirection = this.RotateZDirection;
-			Result.RotateXFunction = RotateXFunction?.Clone();
-			Result.RotateXDamping = RotateXDamping?.Clone();
-			Result.RotateYFunction = RotateYFunction?.Clone();
-			Result.RotateYDamping = RotateYDamping?.Clone();
-			Result.RotateZFunction = RotateZFunction?.Clone();
-			Result.RotateZDamping = RotateZDamping?.Clone();
-			Result.TextureShiftXDirection = this.TextureShiftXDirection;
-			Result.TextureShiftYDirection = this.TextureShiftYDirection;
-			Result.TextureShiftXFunction = TextureShiftXFunction?.Clone();
-			Result.TextureShiftYFunction = TextureShiftYFunction?.Clone();
-			Result.LEDClockwiseWinding = this.LEDClockwiseWinding;
-			Result.LEDInitialAngle = this.LEDInitialAngle;
-			Result.LEDLastAngle = this.LEDLastAngle;
-			Result.SectionIndex = this.SectionIndex;
-			Result.IsPartOfTrain = false; // will be set by the CarSection load if appropriate
 			if (this.LEDVectors != null)
 			{
 				Result.LEDVectors = new Vector3[this.LEDVectors.Length];
@@ -174,6 +183,7 @@ namespace OpenBveApi.Objects
 		{
 			if (this.StateFunction != null) return false;
 			if (this.TrackFollowerFunction != null) return false;
+			if (this.ScaleXFunction != null | this.ScaleYFunction != null | this.ScaleZFunction != null) return false;
 			if (this.TranslateXFunction != null | this.TranslateYFunction != null | this.TranslateZFunction != null) return false;
 			if (this.RotateXFunction != null | this.RotateYFunction != null | this.RotateZFunction != null) return false;
 			if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
@@ -338,6 +348,34 @@ namespace OpenBveApi.Objects
 				}
 			}
 
+			bool scaleX = ScaleXFunction != null;
+			bool scaleY = ScaleYFunction != null;
+			bool scaleZ = ScaleZFunction != null;
+			Vector3 scale = Vector3.One;
+			if (scaleX)
+			{
+				scale.X = ScaleXFunction.LastResult;
+				if (UpdateFunctions)
+				{
+					scale.X = ScaleXFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+				}
+			}
+			if (scaleY)
+			{
+				scale.Y = ScaleYFunction.LastResult;
+				if (UpdateFunctions)
+				{
+					scale.Y = ScaleYFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+				}
+			}
+			if (scaleZ)
+			{
+				scale.Z = ScaleZFunction.LastResult;
+				if (UpdateFunctions)
+				{
+					scale.Z = ScaleZFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+				}
+			}
 			// texture shift
 			bool shiftx = TextureShiftXFunction != null;
 			bool shifty = TextureShiftYFunction != null;
@@ -657,6 +695,16 @@ namespace OpenBveApi.Objects
 				internalObject.Rotate *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateZDirection.X, RotateZDirection.Y, -RotateZDirection.Z), 2.0 * System.Math.PI - radianZ);
 			}
 
+			// scale
+			if (scaleX | scaleY | scaleZ)
+			{
+				Matrix4D scaleM = Matrix4D.Identity;
+				scaleM.Row0 *= scale.X;
+				scaleM.Row1 *= scale.Y;
+				scaleM.Row2 *= scale.Z;
+				internalObject.Scale = scaleM;
+			}
+
 			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D)
 			{
 				internalObject.Rotate *= States[CurrentState].Translation * Matrix4D.CreateTranslation(-Position.X, -Position.Y, Position.Z);
@@ -684,14 +732,7 @@ namespace OpenBveApi.Objects
 			{
 				if (Show)
 				{
-					if (Camera != null)
-					{
-						currentHost.ShowObject(internalObject, ObjectType.Overlay);
-					}
-					else
-					{
-						currentHost.ShowObject(internalObject, ObjectType.Dynamic);
-					}
+					currentHost.ShowObject(internalObject, Camera != null ? ObjectType.Overlay : ObjectType.Dynamic);
 				}
 				else
 				{
@@ -763,6 +804,7 @@ namespace OpenBveApi.Objects
 			{
 				var o = this.Clone();
 				currentHost.CreateDynamicObject(ref o.internalObject);
+				o.SectionIndex = SectionIndex;
 				AnimatedWorldObject currentObject = new AnimatedWorldObject(currentHost)
 				{
 					Position = Position,

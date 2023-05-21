@@ -81,16 +81,13 @@ namespace OpenBve
 						spd = Math.Round(spd * 3.6);
 						lim = Math.Round(lim * 3.6);
 						remove = spd <= lim;
-						string s = InternalText, t;
 						if (Interface.CurrentOptions.SpeedConversionFactor != 0.0)
 						{
 							spd = Math.Round(spd * Interface.CurrentOptions.SpeedConversionFactor);
 							lim = Math.Round(lim * Interface.CurrentOptions.SpeedConversionFactor);
 						}
-						t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
-						s = s.Replace("[speed]", t);
-						t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
-						s = s.Replace("[limit]", t);
+						string s = InternalText.Replace("[speed]", spd.ToString(System.Globalization.CultureInfo.InvariantCulture));
+						s = s.Replace("[limit]", lim.ToString(System.Globalization.CultureInfo.InvariantCulture));
 						s = s.Replace("[unit]", Interface.CurrentOptions.UnitOfSpeed);
 						MessageToDisplay = s;
 					} break;

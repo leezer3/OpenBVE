@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Security;
 using System.Threading;
 using System.Windows.Forms;
 using Path = OpenBveApi.Path;
@@ -350,6 +352,16 @@ namespace CarXmlConvertor
 		{
 			TabbedList newLines = new TabbedList();
 			newLines.Add("<Train>");
+			try
+			{
+				FileVersionInfo programVersion = FileVersionInfo.GetVersionInfo("OpenBve.exe");
+				newLines.Add("<ConvertorVersion>" + programVersion.FileVersion + "</ConvertorVersion>");
+			}
+			catch
+			{
+				// Ignore- Most likely the convertor has been copied elsewhere
+			}
+			newLines.Add("<DriverCar>" + ConvertTrainDat.DriverCar + "</DriverCar>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
 			{
 				if (SingleFile)
@@ -387,12 +399,12 @@ namespace CarXmlConvertor
 			{
 				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
 			}
-
+			newLines.Add("<HeadlightStates>1</HeadlightStates>");
 			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
 			if (File.Exists(trainTxt))
 			{
-				string desc = File.ReadAllText(trainTxt);
-				newLines.Add("<Description>" + desc + "</Description>");
+				string desc = File.ReadAllText(trainTxt, OpenBveApi.TextEncoding.GetSystemEncodingFromFile(trainTxt));
+				newLines.Add("<Description>" + SecurityElement.Escape(desc) + "</Description>");
 			}
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");
@@ -487,7 +499,7 @@ namespace CarXmlConvertor
 				newLines.Add("<Object>" + CarInfos[i].Object + "</Object>");
 			}
 			newLines.Add("<Reversed>" + CarInfos[i].Reversed + "</Reversed>");
-			newLines.Add("<LoadingSway>" + CarInfos[i].Reversed + "</LoadingSway>");
+			newLines.Add("<LoadingSway>" + CarInfos[i].LoadingSway + "</LoadingSway>");
 			if (CarInfos[i].FrontBogie.AxlesDefined || !string.IsNullOrEmpty(CarInfos[i].FrontBogie.Object))
 			{
 				newLines.Add("<FrontBogie>");
@@ -569,7 +581,6 @@ namespace CarXmlConvertor
 			newLines.Add("<Width>" + ConvertTrainDat.DoorWidth / 1000.0 + "</Width>");
 			newLines.Add("<Tolerance>" + ConvertTrainDat.DoorTolerance / 1000.0 + "</Tolerance>");
 			newLines.Add("</Doors>");
-			newLines.Add("<LoadingSway>" + CarInfos[i].LoadingSway + "</LoadingSway>");
 			newLines.Add("</Car>");
 			if (i < Couplers.Length)
 			{
@@ -619,7 +630,7 @@ namespace CarXmlConvertor
 			{
 				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
 			}
-
+			newLines.Add("<HeadlightStates>1</HeadlightStates>");
 			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
 			if (File.Exists(trainTxt))
 			{

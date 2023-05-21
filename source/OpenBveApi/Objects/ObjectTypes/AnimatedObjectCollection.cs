@@ -67,7 +67,7 @@ namespace OpenBveApi.Objects
 								mat *= transformationMatrix;
 								double zOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
 								
-								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
 							}
 							else
 							{
@@ -96,8 +96,12 @@ namespace OpenBveApi.Objects
 					{
 						continue;
 					}
-					(Sounds[i] as WorldSound)?.CreateSound(Position + Sounds[i].Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
-					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+
+					Vector3 v = Sounds[i].Position;
+					v.Rotate(LocalTransformation);
+					v.Rotate(WorldTransformation);
+					(Sounds[i] as WorldSound)?.CreateSound(Position + v, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
+					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
 				}
 			}
 

@@ -1264,6 +1264,7 @@ namespace Train.OpenBve
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
+			Train.SafetySystems.Headlights = new LightSource(1);
 			switch (Plugin.CurrentOptions.TrainStart)
 			{
 				// starting mode
@@ -1368,8 +1369,6 @@ namespace Train.OpenBve
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
 				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
-				Train.Cars[i].FrontAxle.Follower.Car = Train.Cars[i];
-				Train.Cars[i].RearAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].FrontAxle.Position = AxleDistance;
 				Train.Cars[i].RearAxle.Position = -AxleDistance;
 				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
@@ -1387,11 +1386,15 @@ namespace Train.OpenBve
 				Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
 			}
 
+			Plugin.MotorSoundTables = Tables;
+			Plugin.AccelerationCurves = AccelerationCurves;
+			Plugin.MaximumAcceleration = MaximumAcceleration;
+
 			// assign motor/trailer-specific settings
 			for (int i = 0; i < Cars; i++) {
 				Train.Cars[i].ConstSpeed = new CarConstSpeed(Train.Cars[i]);
 				Train.Cars[i].HoldBrake = new CarHoldBrake(Train.Cars[i]);
-				Train.Cars[i].ReAdhesionDevice = new CarReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
+				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
 				if (Train.Cars[i].Specs.IsMotorCar) {
 					// motor car
 					Train.Cars[i].EmptyMass = MotorCarMass;
@@ -1401,17 +1404,11 @@ namespace Train.OpenBve
 					{
 						Train.Cars[i].Specs.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
-					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
-					
-					// motor sound
-					Train.Cars[i].Sounds.Motor = new BVEMotorSound(Train.Cars[i], 18.0, Tables);
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;
 					Train.Cars[i].CargoMass = 0;
 					Train.Cars[i].Specs.AccelerationCurves = new AccelerationCurve[] { };
-					Train.Cars[i].Specs.AccelerationCurveMaximum = 0.0;
-					Train.Cars[i].Sounds.Motor = new BVEMotorSound(Train.Cars[i], 18.0);
 				}
 			}
 			// driver

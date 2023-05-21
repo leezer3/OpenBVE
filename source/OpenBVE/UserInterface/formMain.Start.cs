@@ -90,7 +90,7 @@ namespace OpenBve
 			currentRouteFolder = Folder;
 			try
 			{
-				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
+				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !string.IsNullOrEmpty(Folder) && Folder.Length > 2)
 				{
 					//BUG: Mono's filesystem watcher can exceed the OS-X handles limit on some systems
 					//Triggered by NWM which has 600+ files in the route folder
@@ -277,8 +277,7 @@ namespace OpenBve
 										continue;
 									}
 
-									string error;
-									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 									{
 										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 									}
@@ -372,8 +371,7 @@ namespace OpenBve
 		{
 			if (listviewRouteFiles.SelectedItems.Count == 1)
 			{
-				string t = listviewRouteFiles.SelectedItems[0].Tag as string;
-				if (t != null)
+				if (listviewRouteFiles.SelectedItems[0].Tag is string t)
 				{
 					if (t.Length == 0 || Directory.Exists(t))
 					{
@@ -391,8 +389,7 @@ namespace OpenBve
 					listviewRouteFiles_DoubleClick(null, null);
 					break;
 				case Keys.Back:
-					string t = listviewRouteFiles.Tag as string;
-					if (t != null)
+					if (listviewRouteFiles.Tag is string t)
 					{
 						if (t.Length == 0 || Directory.Exists(t))
 						{
@@ -407,8 +404,7 @@ namespace OpenBve
 		{
 			if (listViewRoutePackages.SelectedItems.Count == 1)
 			{
-				string t = listViewRoutePackages.SelectedItems[0].Tag as string;
-				if (t != null)
+				if (listViewRoutePackages.SelectedItems[0].Tag is string t)
 				{
 					if (t.Length == 0 || Directory.Exists(t))
 					{
@@ -794,8 +790,11 @@ namespace OpenBve
 							}
 							else
 							{
-								groupboxTrainDetails.Visible = false;
-								buttonStart.Enabled = false;
+								lock (previewLock)
+								{
+									groupboxTrainDetails.Visible = false;
+									buttonStart.Enabled = false;
+								}
 							}
 						}
 						catch
@@ -808,8 +807,7 @@ namespace OpenBve
 		}
 		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e)
 		{
-			string error;
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -868,8 +866,7 @@ namespace OpenBve
 
 		private void listViewTrainPackages_DoubleClick(object sender, EventArgs e)
 		{
-			string error;
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -956,8 +953,11 @@ namespace OpenBve
 							}
 							else
 							{
-								groupboxTrainDetails.Visible = false;
-								buttonStart.Enabled = false;
+								lock (previewLock)
+								{
+									groupboxTrainDetails.Visible = false;
+									buttonStart.Enabled = false;
+								}
 							}
 						}
 						catch
@@ -988,14 +988,18 @@ namespace OpenBve
 		private void listviewTrainRecently_SelectedIndexChanged(object sender, EventArgs e) {
 			if (listviewTrainRecently.SelectedItems.Count == 1) {
 				string t = listviewTrainRecently.SelectedItems[0].Tag as string;
-				if (t != null) {
-					if (Directory.Exists(t)) {
-						string File = Path.CombineFile(t, "train.dat");
-						if (System.IO.File.Exists(File)) {
-							Result.TrainFolder = t;
-							ShowTrain(false);
-							if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
-						}
+				if (t == null || !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+				{
+					return;
+				}
+
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(t))
+					{
+						Result.TrainFolder = t;
+						ShowTrain(false);
+						if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
 					}
 				}
 			}
@@ -1188,14 +1192,14 @@ namespace OpenBve
 
 		private void PreviewLoadRoute(LaunchParameters result)
 		{
-			string error; //ignored in this case, background thread
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
 
 			Game.Reset(false);
 
+			// ReSharper disable once AssignNullToNotNullAttribute - Already checked when loading plugins
 			RouteInterface routeInterface = Program.CurrentHost.Plugins.Select(x => x.Route).FirstOrDefault(x => x != null && x.CanLoadRoute(result.RouteFile));
 
 			if (routeInterface == null)
@@ -1409,14 +1413,14 @@ namespace OpenBve
 		{
 			lock (previewLock)
 			{
-				string error; //ignored in this case, background thread
-				if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+				if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 				{
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
 
 				bool canLoad = false;
 				Image trainImage = null;
+				// ReSharper disable once PossibleNullReferenceException - Already checked when loading plugins
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
 					if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))
@@ -1425,7 +1429,17 @@ namespace OpenBve
 						trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(Result.TrainFolder);
 						if (!UserSelectedEncoding)
 						{
-							Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
+							string descriptionFile = Path.CombineFile(Result.TrainFolder, "train.txt");
+							if (!File.Exists(descriptionFile))
+							{
+								descriptionFile = Path.CombineFile(Result.TrainFolder, "readme.txt");
+							}
+
+							if (!File.Exists(descriptionFile))
+							{
+								descriptionFile = Path.CombineFile(Result.TrainFolder, "read me.txt");
+							}
+							Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(descriptionFile);
 							comboboxTrainEncoding.Tag = new object();
 							comboboxTrainEncoding.SelectedIndex = 0;
 							comboboxTrainEncoding.Items[0] = $"{Result.TrainEncoding.EncodingName} - {Result.TrainEncoding.CodePage}";

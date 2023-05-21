@@ -82,7 +82,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
@@ -530,14 +529,7 @@ namespace AssimpNET.Obj
 			}
 
 			// Set active material, if one set
-			if (Model.CurrentMaterial != null)
-			{
-				face.Material = Model.CurrentMaterial;
-			}
-			else
-			{
-				face.Material = Model.DefaultMaterial;
-			}
+			face.Material = Model.CurrentMaterial ?? Model.DefaultMaterial;
 
 			// Create a default object, if nothing is there
 			if (Model.Current == null)

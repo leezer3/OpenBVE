@@ -1,8 +1,4 @@
-#pragma warning disable 0660 // Defines == or != but does not override Object.Equals
-#pragma warning disable 0661 // Defines == or != but does not override Object.GetHashCode
-
 using System;
-using LibRender2.Camera;
 using LibRender2.Cameras;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
@@ -20,28 +16,28 @@ namespace OpenBve {
 		internal static void InitializeCameraRestriction() {
 			if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On) {
 				Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-				UpdateAbsoluteCamera(0.0);
+				UpdateAbsoluteCamera();
 				if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 					Program.Renderer.Camera.Alignment = new CameraAlignment();
 					Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-					UpdateAbsoluteCamera(0.0);
+					UpdateAbsoluteCamera();
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 						Program.Renderer.Camera.Alignment.Position.Z = 0.8;
-						UpdateAbsoluteCamera(0.0);
+						UpdateAbsoluteCamera();
 						Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
 						if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 							Program.Renderer.Camera.Alignment.Position.X = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.X + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.X);
 							Program.Renderer.Camera.Alignment.Position.Y = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.Y + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.Y);
 							Program.Renderer.Camera.Alignment.Position.Z = 0.0;
-							UpdateAbsoluteCamera(0.0);
+							UpdateAbsoluteCamera();
 							if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 								Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.X, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
 								Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Y, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
 							} else {
 								Program.Renderer.Camera.Alignment.Position.Z = 0.8;
-								UpdateAbsoluteCamera(0.0);
+								UpdateAbsoluteCamera();
 								Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
 								if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 									Program.Renderer.Camera.Alignment = new CameraAlignment();
@@ -49,7 +45,7 @@ namespace OpenBve {
 							}
 						}
 					}
-					UpdateAbsoluteCamera(0.0);
+					UpdateAbsoluteCamera();
 				}
 			}
 		}
@@ -71,7 +67,7 @@ namespace OpenBve {
 		
 
 		// update absolute camera
-		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
+		internal static void UpdateAbsoluteCamera(double TimeElapsed = 0.0) {
 			// zoom
 			double zm = Program.Renderer.Camera.Alignment.Zoom;
 			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Zoom, Program.Renderer.Camera.AlignmentDirection.Zoom, ref Program.Renderer.Camera.AlignmentSpeed.Zoom, TimeElapsed, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);

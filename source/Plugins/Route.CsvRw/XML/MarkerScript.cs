@@ -46,6 +46,7 @@ namespace CsvRwRouteParser
 						Texture EarlyTexture = null, Texture = null, LateTexture = null;
 						double EarlyTime = 0.0, LateTime = 0.0, TimeOut = Double.PositiveInfinity;
 						MessageColor EarlyColor = MessageColor.White, OnTimeColor = MessageColor.White, LateColor = MessageColor.White;
+						Vector2 messageSize = Vector2.Null;
 						foreach (XmlNode c in n.ChildNodes)
 						{
 							switch (c.Name.ToLowerInvariant())
@@ -211,6 +212,22 @@ namespace CsvRwRouteParser
 								case "trains":
 									Trains = c.InnerText.Split(';');
 									break;
+								case "size":
+									if (iM)
+									{
+										string[] Arguments = c.InnerText.Split(',');
+										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out messageSize.X))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Message size X " + Arguments[0] + " is invalid.");
+											messageSize.X = 0.0;
+										}
+										if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out messageSize.Y))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Message size X " + Arguments[1] + " is invalid.");
+											messageSize.Y = 0.0;
+										}
+									}
+									break;
 							}
 
 						}
@@ -316,6 +333,7 @@ namespace CsvRwRouteParser
 						}
 						if (iM)
 						{
+							t.Size = messageSize;
 							Message = t;
 						}
 						else

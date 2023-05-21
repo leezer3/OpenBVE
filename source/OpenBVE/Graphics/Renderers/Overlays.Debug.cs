@@ -1,9 +1,9 @@
 using System;
-using System.Drawing;
 using TrainManager.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using SoundManager;
 using TrainManager.Handles;
 
@@ -16,7 +16,7 @@ namespace OpenBve.Graphics.Renderers
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
-			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
+			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), Color128.SemiTransparentGrey);
 			// actual handles
 			{
 				string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "F" : "N");
@@ -49,7 +49,15 @@ namespace OpenBve.Graphics.Renderers
 			}
 			// safety handles
 			{
-				string t = "safety: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "F" : "N");
+				string t = "safety: ";
+				if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+				{
+					t += (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "F" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "B" : "N");
+				}
+				else
+				{
+					t += (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "F" : "N");
+				}
 				if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Safety ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Safety != 0 ? "B" + TrainManager.PlayerTrain.Handles.Brake.Safety.ToString(Culture) : TrainManager.PlayerTrain.Handles.HoldBrake.Actual ? "HLD" : TrainManager.PlayerTrain.Handles.Power.Safety != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Safety.ToString(Culture) : "N");
@@ -80,7 +88,16 @@ namespace OpenBve.Graphics.Renderers
 			}
 			// driver handles
 			{
-				string t = "driver: " + (TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Forwards ? "F" : "N");
+				string t = "driver: ";
+				if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+				{
+					t += (TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Reverse ? "F" : TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Forwards ? "B" : "N");
+				}
+				else
+				{
+					t += (TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Forwards ? "F" : "N");
+				}
+					
 				if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Driver != 0 ? "B" + TrainManager.PlayerTrain.Handles.Brake.Driver.ToString(Culture) : TrainManager.PlayerTrain.Handles.HoldBrake.Driver ? "HLD" : TrainManager.PlayerTrain.Handles.Power.Driver != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Driver.ToString(Culture) : "N");
@@ -148,7 +165,7 @@ namespace OpenBve.Graphics.Renderers
 				"speed: " + (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) * 3.6).ToString("0.00", Culture) + " km/h",
 				"power (car " + car.ToString(Culture) +  "): " + (TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration < 0.0 ? TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration * Math.Sign(TrainManager.PlayerTrain.Cars[car].CurrentSpeed) : TrainManager.PlayerTrain.Cars[car].Specs.MotorAcceleration * (double)TrainManager.PlayerTrain.Handles.Reverser.Actual).ToString("0.0000", Culture) + " m/s²",
 				"acceleration: " + TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration.ToString("0.0000", Culture) + " m/s²",
-				"position: " + TrainManager.PlayerTrain.FrontCarTrackPosition().ToString("0.00", Culture) + " m",
+				"position: " + TrainManager.PlayerTrain.FrontCarTrackPosition.ToString("0.00", Culture) + " m",
 				"rain intensity: " + rainIntensity,
 				"elevation: " + (Program.CurrentRoute.Atmosphere.InitialElevation + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.WorldPosition.Y).ToString("0.00", Culture) + " m",
 				"temperature: " + (airTemperature - 273.15).ToString("0.00", Culture) + " °C",
@@ -193,6 +210,7 @@ namespace OpenBve.Graphics.Renderers
 				"bvets hacks: " + (Interface.CurrentOptions.EnableBveTsHacks ? "enabled" : "disabled"),
 				"time acceleration: " + MainLoop.TimeFactor + "x",
 				"viewing distance: " + Interface.CurrentOptions.ViewingDistance + "m",
+				"visibility mode: " + Interface.CurrentOptions.ObjectDisposalMode + (Interface.CurrentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree ? ", leaf size " + Interface.CurrentOptions.QuadTreeLeafSize + "m" : string.Empty),
 				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
 				"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
 				Game.InfoDebugString ?? ""
@@ -231,7 +249,7 @@ namespace OpenBve.Graphics.Renderers
 		private void RenderATSDebugOverlay()
 		{
 			// debug
-			renderer.Rectangle.Draw(null, new Vector2(0.0f, 0.0f), new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
+			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), Color128.SemiTransparentGrey);
 			string[] Lines;
 			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
 			{
@@ -370,7 +388,7 @@ namespace OpenBve.Graphics.Renderers
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2((float)w, (float)h), Color128.Black);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.straightAirPipe.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
-					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), new Color128(0.0f, 0.75f, 1.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), Color128.DeepSkyBlue);
 				}
 				y += h + 8.0;
 			}

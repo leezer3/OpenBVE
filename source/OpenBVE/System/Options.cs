@@ -25,10 +25,8 @@ namespace OpenBve
 			internal MotionBlurMode MotionBlur;
 			/// <summary>Whether duplicate verticies are culled during loading</summary>
 			internal bool ObjectOptimizationVertexCulling;
-			
 			/// <summary>Whether collisions between trains are enabled</summary>
 			internal bool Collisions;
-			
 			/// <summary>Whether the black-box data logger is enabled</summary>
 			internal bool BlackBox;
 			/// <summary>Whether joystick support is enabled</summary>
@@ -78,7 +76,6 @@ namespace OpenBve
 			internal bool PreferNativeBackend = true;
 			/// <summary>Stores whether the RailDriver speed display is in MPH (true) or KPH (false)</summary>
 			internal bool RailDriverMPH;
-			
 			/// <summary>The list of enable Input Device Plugins</summary>
 			internal string[] EnableInputDevicePlugins;
 			/// <summary>The time in seconds after which the mouse cursor is hidden</summary>
@@ -102,6 +99,8 @@ namespace OpenBve
 			internal bool KioskMode;
 			/// <summary>The timer before AI controls are enabled in kiosk mode</summary>
 			internal double KioskModeTimer; //5 minutes by default set in ctor
+
+			internal bool DailyBuildUpdates;
 			/*
 			 * Note: The following options were (are) used by the Managed Content system, and are currently non-functional
 			 */
@@ -129,6 +128,7 @@ namespace OpenBve
 				this.AnisotropicFilteringMaximum = 0;
 				this.AntiAliasingLevel = 0;
 				this.ViewingDistance = 600;
+				this.QuadTreeLeafSize = 60;
 				this.MotionBlur = MotionBlurMode.None;
 				this.Toppling = true;
 				this.Collisions = true;
@@ -182,6 +182,7 @@ namespace OpenBve
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
+				this.DailyBuildUpdates = false;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
@@ -356,6 +357,16 @@ namespace OpenBve
 										case "font":
 											Interface.CurrentOptions.Font = Value;
 											break;
+										case "dailybuildupdates":
+											if (Value == "true" || Value == "1")
+											{
+												Interface.CurrentOptions.DailyBuildUpdates = true;
+											}
+											else
+											{
+												Interface.CurrentOptions.DailyBuildUpdates = false;
+											}
+											break;
 									} break;
 								case "display":
 									switch (Key)
@@ -501,6 +512,17 @@ namespace OpenBve
 													if (a >= 100 && a <= 10000)
 													{
 														Interface.CurrentOptions.ViewingDistance = a;
+													}
+												}
+											} break;
+										case "quadleafsize":
+											{
+												int a;
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												{
+													if (a >= 50 && a <= 500)
+													{
+														Interface.CurrentOptions.QuadTreeLeafSize = a;
 													}
 												}
 											} break;
@@ -872,6 +894,7 @@ namespace OpenBve
 			Builder.AppendLine("kioskModeTimer = " + CurrentOptions.KioskModeTimer);
 			Builder.AppendLine("accessibility = " + (CurrentOptions.Accessibility ? "true" : "false"));
 			Builder.AppendLine("font = " + CurrentOptions.Font);
+			Builder.AppendLine("dailybuildupdates = " + (CurrentOptions.DailyBuildUpdates ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[display]");
 			Builder.AppendLine("preferNativeBackend = " + (CurrentOptions.PreferNativeBackend ? "true" : "false"));
@@ -909,6 +932,7 @@ namespace OpenBve
 			Builder.AppendLine("transparencyMode = " + ((int)CurrentOptions.TransparencyMode).ToString(Culture));
 			Builder.AppendLine("oldtransparencymode = " + (CurrentOptions.OldTransparencyMode ? "true" : "false"));
 			Builder.AppendLine("viewingDistance = " + CurrentOptions.ViewingDistance.ToString(Culture));
+			Builder.AppendLine("quadLeafSize = " + CurrentOptions.QuadTreeLeafSize.ToString(Culture));
 			{
 				string t; switch (CurrentOptions.MotionBlur)
 				{

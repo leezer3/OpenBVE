@@ -1,5 +1,16 @@
-﻿// ReSharper disable UnusedMember.Global
-namespace Plugin
+﻿/*
+ * Copyright (C) 1999, 2000 NVIDIA Corporation
+ * This file is provided without support, instruction, or implied warranty of any
+ * kind.  NVIDIA makes no guarantee of its fitness for a particular purpose and is
+ * not liable under any circumstances for any damages or loss whatsoever arising
+ * from the use or inability to use this file or items derived from it.
+ *
+ * Converted to C#, assorted changes to make compatible with openBVE texture loading
+ * Also some minor enum conversion & cleanup
+ */
+
+// ReSharper disable UnusedMember.Global
+namespace Texture.Dds
 {
 	/// <summary>Various pixel formats/compressors used by the DDS image.</summary>
 	internal enum PixelFormat

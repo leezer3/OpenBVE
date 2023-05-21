@@ -64,6 +64,11 @@ namespace OpenBve.Formats.DirectX
 		AnimationSet,
 
 		//Source: Mesquioa zipped txt
-		VertexDuplicationIndices
+		VertexDuplicationIndices,
+
+		//Special case handler
+		//Not actually a block, just the key of the root block
+		TextureKey
+
 	}
 }

@@ -32,8 +32,8 @@ namespace LibRender2.Primitives
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
 		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
-		/// <param name="wrapMode">The OpenGL texture wrapping mode to use</param>
-		public void DrawAlpha(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp)
+		/// <param name="wrapMode">A wrap mode if overriding that of the texture</param>
+		public void DrawAlpha(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
 		{
 			renderer.UnsetBlendFunc();
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
@@ -46,14 +46,36 @@ namespace LibRender2.Primitives
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 		}
 
+		/// <summary>Draws a simple 2D rectangle using two-pass alpha blending, using the texture size.</summary>
+		/// <param name="texture">The texture, or a null reference.</param>
+		/// <param name="point">The top-left coordinates in pixels.</param>
+		/// <param name="color">The color, or a null reference.</param>
+		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
+		public void DrawAlpha(Texture texture, Vector2 point, Color128? color = null, Vector2? textureCoordinates = null)
+		{
+			if (texture == null)
+			{
+				return;
+			}
+			renderer.UnsetBlendFunc();
+			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+			GL.DepthMask(true);
+			Draw(texture, point, texture.Size, color, textureCoordinates);
+			renderer.SetBlendFunc();
+			renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
+			GL.DepthMask(false);
+			Draw(texture, point, texture.Size, color, textureCoordinates);
+			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+		}
+
 		/// <summary>Draws a simple 2D rectangle.</summary>
 		/// <param name="texture">The texture, or a null reference.</param>
 		/// <param name="point">The top-left coordinates in pixels.</param>
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
 		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
-		/// <param name="wrapMode">The OpenGL texture wrapping mode to use</param>
-		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp)
+		/// <param name="wrapMode">A wrap mode if overriding that of the texture</param>
+		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
 		{
 			if (renderer.AvailableNewRenderer && Shader != null)
 			{
@@ -72,7 +94,35 @@ namespace LibRender2.Primitives
 			}
 		}
 
-		private void DrawImmediate(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2? textureCoordinates = null, OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp)
+		/// <summary>Draws a simple 2D rectangle, using the texture size.</summary>
+		/// <param name="texture">The texture, or a null reference.</param>
+		/// <param name="point">The top-left coordinates in pixels.</param>
+		/// <param name="color">The color, or a null reference.</param>
+		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
+		public void Draw(Texture texture, Vector2 point, Color128? color = null, Vector2? textureCoordinates = null)
+		{
+			if (texture == null)
+			{
+				return;
+			}
+			if (renderer.AvailableNewRenderer && Shader != null)
+			{
+				if (textureCoordinates == null)
+				{
+					DrawWithShader(texture, point, texture.Size, color, Vector2.One);
+				}
+				else
+				{
+					DrawWithShader(texture, point, texture.Size, color, (Vector2)textureCoordinates);
+				}
+			}
+			else
+			{
+				DrawImmediate(texture, point, texture.Size, color, textureCoordinates);	
+			}
+		}
+
+		private void DrawImmediate(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
 		{
 			renderer.LastBoundTexture = null;
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
@@ -92,7 +142,12 @@ namespace LibRender2.Primitives
 				}
 
 			}
-			if (texture == null || !renderer.currentHost.LoadTexture(ref texture, wrapMode))
+
+			if (wrapMode == null)
+			{
+				wrapMode = OpenGlTextureWrapMode.ClampClamp;
+			}
+			if (texture == null || !renderer.currentHost.LoadTexture(ref texture, (OpenGlTextureWrapMode)wrapMode))
 			{
 				GL.Disable(EnableCap.Texture2D);
 
@@ -152,13 +207,18 @@ namespace LibRender2.Primitives
 			GL.PopMatrix();
 		}
 
-		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp)
+		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode? wrapMode = null)
 		{
 			Shader.Activate();
-			if (texture != null && renderer.currentHost.LoadTexture(ref texture, wrapMode))
+			if (wrapMode == null)
+			{
+				wrapMode = OpenGlTextureWrapMode.ClampClamp;
+			}
+
+			if (texture != null && renderer.currentHost.LoadTexture(ref texture, (OpenGlTextureWrapMode)wrapMode))
 			{
 				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)wrapMode].Name);
-				renderer.LastBoundTexture = texture.OpenGlTextures[(int) wrapMode];
+				renderer.LastBoundTexture = texture.OpenGlTextures[(int)wrapMode];
 			}
 			else
 			{
@@ -167,7 +227,7 @@ namespace LibRender2.Primitives
 			
 			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
-			Shader.SetColor(color == null ? Color128.White : color.Value);
+			Shader.SetColor(color ?? Color128.White);
 			Shader.SetPoint(point);
 			Shader.SetSize(size);
 			Shader.SetCoordinates(coordinates);

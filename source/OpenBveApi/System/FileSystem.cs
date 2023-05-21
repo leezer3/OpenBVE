@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using OpenBveApi.Hosts;
 
 // ReSharper disable PossibleNullReferenceException
@@ -22,11 +23,8 @@ namespace OpenBveApi.FileSystem {
 		/// <summary>The location of the application data, including, among others, Compatibility, Flags and Languages.</summary>
 		public string DataFolder;
 		
-		/// <summary>The locations of managed content.</summary>
-		internal string[] ManagedContentFolders;
-
 		/// <summary>Gets the package database folder</summary>
-		public string PackageDatabaseFolder => OpenBveApi.Path.CombineDirectory(SettingsFolder, "PackageDatabase");
+		public string PackageDatabaseFolder => Path.CombineDirectory(SettingsFolder, "PackageDatabase");
 
 		/// <summary>The location where to save user settings, including settings.cfg and controls.cfg.</summary>
 		public string SettingsFolder;
@@ -55,6 +53,9 @@ namespace OpenBveApi.FileSystem {
 		/// <summary>The location to which Loksim3D packages will be installed</summary>
 		public string LoksimPackageInstallationDirectory;
 
+		/// <summary>The Loksim3D data directory</summary>
+		public string LoksimDataDirectory;
+
 		/// <summary>Any lines loaded from the filesystem.cfg which were not understood</summary>
 		internal string[] NotUnderstoodLines;
 
@@ -62,6 +63,7 @@ namespace OpenBveApi.FileSystem {
 		internal int Version;
 
 		/// <summary>The host application</summary>
+		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
 		private readonly HostInterface currentHost;
 		
 		
@@ -74,7 +76,7 @@ namespace OpenBveApi.FileSystem {
 			string assemblyFile = Assembly.GetEntryAssembly().Location;
 			string assemblyFolder = System.IO.Path.GetDirectoryName(assemblyFile);
 			//This copy of openBVE is a special string, and should not be localised
-			string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve");
+			string userDataFolder = Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve");
 			if (currentHost != null && currentHost.Platform != HostPlatform.MicrosoftWindows)
 			{
 				/*
@@ -86,7 +88,7 @@ namespace OpenBveApi.FileSystem {
 					int i = 0;
 					while (File.Exists(userDataFolder))
 					{
-						userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve-" + i);
+						userDataFolder = Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve-" + i);
 						i++;
 						if (i == 10)
 						{
@@ -96,17 +98,32 @@ namespace OpenBveApi.FileSystem {
 					}
 				}
 			}
-			this.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
-			this.ManagedContentFolders = new string[] { OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent") };
-			this.SettingsFolder = OpenBveApi.Path.CombineDirectory(userDataFolder, "Settings");
-			this.InitialRouteFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway"), "Route");
-			this.RouteInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
-			this.InitialTrainFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
-			this.TrainInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
-			this.OtherInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Other");
-			this.LoksimPackageInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent"), "Loksim3D");
-			this.RestartProcess = assemblyFile;
-			this.RestartArguments = string.Empty;
+			DataFolder = Path.CombineDirectory(assemblyFolder, "Data");
+			SettingsFolder = Path.CombineDirectory(userDataFolder, "Settings");
+			InitialRouteFolder = Path.CombineDirectory(Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway"), "Route");
+			RouteInstallationDirectory = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
+			InitialTrainFolder = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
+			TrainInstallationDirectory = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
+			OtherInstallationDirectory = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "LegacyContent"), "Other");
+			LoksimPackageInstallationDirectory = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "ManagedContent"), "Loksim3D");
+			if (currentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				try
+				{
+					RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Loksim-Group\\Install");
+					LoksimDataDirectory = key.GetValue("InstallDataDirPath").ToString();
+				}
+				catch
+				{
+					LoksimDataDirectory = LoksimPackageInstallationDirectory; // minor fudge
+				}
+			}
+			else
+			{
+				LoksimDataDirectory = LoksimPackageInstallationDirectory; // FIXME: Should this be saved on non Win-32 platforms??
+			}
+			RestartProcess = assemblyFile;
+			RestartArguments = string.Empty;
 		}
 		
 		
@@ -123,11 +140,11 @@ namespace OpenBveApi.FileSystem {
 				}
 			}
 			string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-			string configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "filesystem.cfg");
+			string configFile = Path.CombineFile(Path.CombineDirectory(Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "filesystem.cfg");
 			if (File.Exists(configFile)) {
 				return FromConfigurationFile(configFile, Host);
 			}
-			configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve"), "Settings"), "filesystem.cfg");
+			configFile = Path.CombineFile(Path.CombineDirectory(Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenBve"), "Settings"), "filesystem.cfg");
 			if (File.Exists(configFile))
 			{
 				return FromConfigurationFile(configFile, Host);
@@ -139,7 +156,7 @@ namespace OpenBveApi.FileSystem {
 		/// <summary>Saves the current file system configuration to disk</summary>
 		public void SaveCurrentFileSystemConfiguration()
 		{
-			string file = OpenBveApi.Path.CombineFile(this.SettingsFolder, "FileSystem.cfg");
+			string file = Path.CombineFile(SettingsFolder, "FileSystem.cfg");
 			StringBuilder newLines = new StringBuilder();
 			newLines.AppendLine("Version=1");
 			try
@@ -174,46 +191,46 @@ namespace OpenBveApi.FileSystem {
 				{
 					//Create a new filesystem.cfg file using the current filesystem setup as a base
 					//Where does the Debian package point it's filesystem.cfg to??
-					newLines.AppendLine("Data=" + this.DataFolder);
-					newLines.AppendLine("Settings=" + this.SettingsFolder);
-					newLines.AppendLine("InitialRoute=" + this.InitialRouteFolder);
-					newLines.AppendLine("InitialTrain=" + this.InitialTrainFolder);
-					newLines.AppendLine("RestartProcess=" + this.RestartProcess);
-					newLines.AppendLine("RestartArguments=" + this.RestartArguments);
+					newLines.AppendLine("Data=" + DataFolder);
+					newLines.AppendLine("Settings=" + SettingsFolder);
+					newLines.AppendLine("InitialRoute=" + InitialRouteFolder);
+					newLines.AppendLine("InitialTrain=" + InitialTrainFolder);
+					newLines.AppendLine("RestartProcess=" + RestartProcess);
+					newLines.AppendLine("RestartArguments=" + RestartArguments);
 				}
-				if (this.RouteInstallationDirectory != null &&
-					Directory.Exists(this.RouteInstallationDirectory))
+				if (RouteInstallationDirectory != null &&
+					Directory.Exists(RouteInstallationDirectory))
 				{
-					newLines.AppendLine("RoutePackageInstall=" + ReplacePath(this.RouteInstallationDirectory));
+					newLines.AppendLine("RoutePackageInstall=" + ReplacePath(RouteInstallationDirectory));
 				}
 
-				if (this.TrainInstallationDirectory != null &&
-					Directory.Exists(this.TrainInstallationDirectory))
+				if (TrainInstallationDirectory != null &&
+					Directory.Exists(TrainInstallationDirectory))
 				{
-					newLines.AppendLine("TrainPackageInstall=" + ReplacePath(this.TrainInstallationDirectory));
+					newLines.AppendLine("TrainPackageInstall=" + ReplacePath(TrainInstallationDirectory));
 				}
-				if (this.OtherInstallationDirectory != null &&
-					Directory.Exists(this.OtherInstallationDirectory))
+				if (OtherInstallationDirectory != null &&
+					Directory.Exists(OtherInstallationDirectory))
 				{
-					newLines.AppendLine("OtherPackageInstall=" + ReplacePath(this.OtherInstallationDirectory));
+					newLines.AppendLine("OtherPackageInstall=" + ReplacePath(OtherInstallationDirectory));
 				}
-				if (this.LoksimPackageInstallationDirectory != null &&
-					Directory.Exists(this.LoksimPackageInstallationDirectory))
+				if (LoksimPackageInstallationDirectory != null &&
+					Directory.Exists(LoksimPackageInstallationDirectory))
 				{
-					newLines.AppendLine("LoksimPackageInstall=" + ReplacePath(this.LoksimPackageInstallationDirectory));
+					newLines.AppendLine("LoksimPackageInstall=" + ReplacePath(LoksimPackageInstallationDirectory));
 				}
-				if (this.NotUnderstoodLines != null && this.NotUnderstoodLines.Length != 0)
+				if (NotUnderstoodLines != null && NotUnderstoodLines.Length != 0)
 				{
-					for (int i = 0; i < this.NotUnderstoodLines.Length; i++)
+					for (int i = 0; i < NotUnderstoodLines.Length; i++)
 					{
-						newLines.Append(this.NotUnderstoodLines[i]);
+						newLines.Append(NotUnderstoodLines[i]);
 					}
 				}
-				System.IO.File.WriteAllText(file, newLines.ToString(), new System.Text.UTF8Encoding(true));
+				File.WriteAllText(file, newLines.ToString(), new UTF8Encoding(true));
 			}
 			catch
 			{
-				
+				// ignored
 			}
 		}
 
@@ -231,35 +248,58 @@ namespace OpenBveApi.FileSystem {
 			}
 			catch
 			{
+				// ignored
 			}
 			return line;
 		}
 
 		/// <summary>Creates all folders in the file system that can later be written to.</summary>
 		public void CreateFileSystem() {
-			try {
-				Directory.CreateDirectory(this.SettingsFolder);
-			} catch { }
-			foreach (string folder in this.ManagedContentFolders) {
-				try {
-					Directory.CreateDirectory(folder);
-				} catch { }
+			try
+			{
+				if (!string.IsNullOrEmpty(SettingsFolder) && !Directory.Exists(SettingsFolder))
+				{
+					Directory.CreateDirectory(SettingsFolder);
+				}
 			}
-			try {
-				Directory.CreateDirectory(this.InitialRouteFolder);
-			} catch { }
-			try {
-				Directory.CreateDirectory(this.InitialTrainFolder);
-			} catch { }
+			catch(Exception ex)
+			{
+				AppendToLogFile("Failed to create the Settings Folder with exception " + ex);
+			}
+
+			try
+			{
+				if (!string.IsNullOrEmpty(InitialRouteFolder) && !Directory.Exists(InitialRouteFolder))
+				{
+					Directory.CreateDirectory(InitialRouteFolder);
+				}
+				
+			}
+			catch(Exception ex)
+			{
+				AppendToLogFile("Failed to create the Initial Route Folder with exception " + ex);
+			}
+
+			try
+			{
+				if (!string.IsNullOrEmpty(InitialTrainFolder) && !Directory.Exists(InitialTrainFolder))
+				{
+					Directory.CreateDirectory(InitialTrainFolder);
+				}
+			}
+			catch(Exception ex)
+			{
+				AppendToLogFile("Failed to create the Initial Train Folder with exception " + ex);
+			}
 		}
 		
 		/// <summary>Gets the data folder or any specified subfolder thereof.</summary>
 		/// <param name="subfolders">The subfolders.</param>
 		/// <returns>The data folder or a subfolder thereof.</returns>
 		public string GetDataFolder(params string[] subfolders) {
-			string folder = this.DataFolder;
+			string folder = DataFolder;
 			foreach (string subfolder in subfolders) {
-				folder = OpenBveApi.Path.CombineDirectory(folder, subfolder);
+				folder = Path.CombineDirectory(folder, subfolder);
 			}
 			return folder;
 		}
@@ -292,21 +332,17 @@ namespace OpenBveApi.FileSystem {
 								system.DataFolder = GetAbsolutePath(value, true);
 								if (!Directory.Exists(system.DataFolder))
 								{
-									system.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
+									system.DataFolder = Path.CombineDirectory(assemblyFolder, "Data");
 									if (!Directory.Exists(system.DataFolder))
 									{
-										//If we are unable to find the data folder, this is a critical error, as it contains all sorts of essential stuff.....
-										MessageBox.Show(@"Critical error:" + Environment.NewLine + @"Unable to find the openBVE data folder.....", @"openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										//If we are still unable to find the default data folder, this is a critical error, as it contains all sorts of essential stuff.....
+										MessageBox.Show(@"Unable to find the OpenBVE Data folder." + Environment.NewLine +
+										                @"OpenBVE will now exit as the Data folder is required for normal operation." + Environment.NewLine + Environment.NewLine +
+										                @"Please consider reinstalling OpenBVE.", @"Critical Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										Environment.Exit(0);
 									}
 								}
-								break;
-							case "managedcontent":
-								system.ManagedContentFolders = value.Split(new[] { ',' });
-								for (int i = 0; i < system.ManagedContentFolders.Length; i++)
-								{
-									system.ManagedContentFolders[i] = GetAbsolutePath(system.ManagedContentFolders[i].Trim(new char[] { }), true);
-								}
+
 								break;
 							case "version":
 								int v;
@@ -314,17 +350,17 @@ namespace OpenBveApi.FileSystem {
 								{
 									system.AppendToLogFile("WARNING: Invalid filesystem.cfg version detected.");
 								}
+
 								if (v <= 1)
 								{
 									//Silently upgrade to the current config version
 									system.Version = 1;
 									break;
 								}
-								if (v > 1)
-								{
-									system.AppendToLogFile("WARNING: A newer filesystem.cfg version " + v + " was detected. The current version is 1.");
-									system.Version = v;
-								}
+
+								system.AppendToLogFile("WARNING: A newer filesystem.cfg version " + v + " was detected. The current version is 1.");
+								system.Version = v;
+
 								break;
 							case "settings":
 								string folder = GetAbsolutePath(value, true);
@@ -343,7 +379,7 @@ namespace OpenBveApi.FileSystem {
 										}
 
 										string settingsFile = Path.CombineFile(folder, "1.5.0\\options.cfg");
-										using (FileStream fs = File.OpenWrite(settingsFile))
+										using (FileStream unused = File.OpenWrite(settingsFile))
 										{
 											//Write test
 										}
@@ -353,8 +389,9 @@ namespace OpenBveApi.FileSystem {
 										value = value.Replace("$[AssemblyFolder]", "$[ApplicationData]");
 										folder = GetAbsolutePath(value, true);
 									}
-									
+
 								}
+
 								system.SettingsFolder = folder;
 								break;
 							case "initialroute":
@@ -386,6 +423,7 @@ namespace OpenBveApi.FileSystem {
 								{
 									system.NotUnderstoodLines = new string[0];
 								}
+
 								int l = system.NotUnderstoodLines.Length;
 								Array.Resize(ref system.NotUnderstoodLines, system.NotUnderstoodLines.Length + 1);
 								system.NotUnderstoodLines[l] = line;
@@ -395,7 +433,10 @@ namespace OpenBveApi.FileSystem {
 					}
 				}
 			}
-			catch { }
+			catch
+			{
+				// ignored
+			}
 			return system;
 		}
 
@@ -422,19 +463,29 @@ namespace OpenBveApi.FileSystem {
 		
 		/// <summary>Clears the log file.</summary>
 		public void ClearLogFile(string version) {
-			try {
-				string file = System.IO.Path.Combine(this.SettingsFolder, "log.txt");
-				System.IO.File.WriteAllText(file, @"openBVE Log: " + DateTime.Now + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new System.Text.UTF8Encoding(true));
-			} catch { }
+			try
+			{
+				string file = System.IO.Path.Combine(SettingsFolder, "log.txt");
+				File.WriteAllText(file, @"OpenBVE Log: " + DateTime.Now + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new UTF8Encoding(true));
+			}
+			catch
+			{
+				//  ignored
+			}
 		}
 
 		/// <summary>Appends the specified text to the log file.</summary>
 		/// <param name="text">The text.</param>
 		public void AppendToLogFile(string text) {
-			try {
-				string file = System.IO.Path.Combine(this.SettingsFolder, "log.txt");
-				System.IO.File.AppendAllText(file, DateTime.Now.ToString("HH:mm:ss") + @"  " + text + Environment.NewLine, new System.Text.UTF8Encoding(false));
-			} catch { }
+			try
+			{
+				string file = System.IO.Path.Combine(SettingsFolder, "log.txt");
+				File.AppendAllText(file, DateTime.Now.ToString("HH:mm:ss") + @"  " + text + Environment.NewLine, new UTF8Encoding(false));
+			}
+			catch
+			{
+				// ignored
+			}
 		}
 	}
 }

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
-using OpenBveApi.Sounds;
+using OpenBveApi.Math;
 using SoundManager;
 
 namespace OpenBve
@@ -75,7 +75,10 @@ namespace OpenBve
 										case "subject":
 											if (Arguments.Length == 1)
 											{
-												CurrentHudElements[Length - 1].Subject = Arguments[0];
+												if (!Enum.TryParse(Arguments[0], true, out CurrentHudElements[Length - 1].Subject))
+												{
+													MessageBox.Show("Unknown HUD Subject supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+												}
 											}
 											else
 											{
@@ -83,26 +86,9 @@ namespace OpenBve
 											}
 											break;
 										case "position":
-											if (Arguments.Length == 2)
+											if (!Vector2.TryParse(Arguments, out CurrentHudElements[Length - 1].Position))
 											{
-												float x, y;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x))
-												{
-													MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y))
-												{
-													MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else
-												{
-													CurrentHudElements[Length - 1].Position.X = x;
-													CurrentHudElements[Length - 1].Position.Y = y;
-												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+												MessageBox.Show("Invalid Vector2 supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "alignment":
@@ -546,7 +532,7 @@ namespace OpenBve
 												}
 												else
 												{
-													CurrentHudElements[Length - 1].Transition = (HUD.Transition) n;
+													CurrentHudElements[Length - 1].Transition = (Transition) n;
 												}
 											}
 											else

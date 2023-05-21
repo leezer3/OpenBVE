@@ -41,9 +41,7 @@ namespace OpenBve.UserInterface
 					if (j.Calibration[i].Maximum < j.Calibration[i].Minimum)
 					{
 						//If calibration min and max are reversed flip them
-						int t = j.Calibration[i].Maximum;
-						j.Calibration[i].Maximum = j.Calibration[i].Minimum;
-						j.Calibration[i].Minimum = t;
+						(j.Calibration[i].Maximum, j.Calibration[i].Minimum) = (j.Calibration[i].Minimum, j.Calibration[i].Maximum);
 					}
 					if (j.Calibration[i].Maximum == j.Calibration[i].Minimum)
 					{

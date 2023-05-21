@@ -2,7 +2,6 @@
 using LibRender2.Screens;
 using OpenTK.Input;
 using OpenBveApi.Interface;
-using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -17,12 +16,18 @@ namespace OpenBve
 				MainLoop.kioskModeTimer = 0;
 				TrainManager.PlayerTrain.AI = null;
 			}
-			if (Loading.Complete == true && e.Key == OpenTK.Input.Key.F4 && e.Alt == true)
+			if (Loading.Complete && e.Key == Key.F4 && e.Alt)
 			{
 				// Catch standard ALT + F4 quit and push confirmation prompt
 				Game.Menu.PushMenu(MenuType.Quit);
 				return;
 			}
+
+			if (TrainManager.PlayerTrain.Plugin != null)
+			{
+				TrainManager.PlayerTrain.Plugin.RawKeyDown((OpenBveApi.Input.Key)e.Key);
+			}
+
 			BlockKeyRepeat = true;
 			//Check for modifiers
 			if (e.Shift) CurrentKeyboardModifier |= KeyboardModifier.Shift;
@@ -63,9 +68,14 @@ namespace OpenBve
 					}
 				}
 			}
-			// Attempt to reset handle spring
-			TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-			TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			
+			if (TrainManager.PlayerTrain != null)
+			{
+				// Attempt to reset handle spring
+				TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+				TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			}
+			
 			
 			BlockKeyRepeat = false;
 			//Remember to reset the keyboard modifier after we're done, else it repeats.....
@@ -88,6 +98,11 @@ namespace OpenBve
 				Program.Renderer.CurrentInterface = InterfaceType.Normal;
 				return;
 			}
+
+			if (TrainManager.PlayerTrain.Plugin != null)
+			{
+				TrainManager.PlayerTrain.Plugin.RawKeyUp((OpenBveApi.Input.Key)e.Key);
+			}
 			//We don't need to check for modifiers on key up
 			BlockKeyRepeat = true;
 			//Traverse the controls array
@@ -109,8 +124,11 @@ namespace OpenBve
 			}
 
 			// Attempt to reset handle spring
-			TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-			TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			if (TrainManager.PlayerTrain != null)
+			{
+				TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+				TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			}
 			BlockKeyRepeat = false;
 		}
 	}

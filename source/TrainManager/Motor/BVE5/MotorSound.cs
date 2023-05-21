@@ -37,12 +37,17 @@ namespace TrainManager.Motor
 				BVE5MotorSoundTableEntry nextEntry = MotorSoundTable[0];
 				for (int i = 0; i < MotorSoundTable.Length; i++)
 				{
-					if (MotorSoundTable[i].Speed <= speed && MotorSoundTable[i + 1].Speed >= speed)
+					double nextSpeed = MotorSoundTable[i].Speed;
+					if (i < MotorSoundTable.Length - 1)
+					{
+						nextSpeed = MotorSoundTable[i + 1].Speed;
+					}
+					if (MotorSoundTable[i].Speed <= speed && nextSpeed >= speed)
 					{
 						break;
 					}
 					entry = MotorSoundTable[i];
-					if (i < MotorSoundTable.Length)
+					if (i < MotorSoundTable.Length - 1)
 					{
 						nextEntry = MotorSoundTable[i + 1];
 					}
@@ -52,7 +57,7 @@ namespace TrainManager.Motor
 				int maxSounds = Math.Max(entry.Sounds.Length, SoundSources.Length);
 				for (int i = 0; i < maxSounds; i++)
 				{
-					if (i > entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
+					if (i > entry.Sounds.Length - 1 || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
 					{
 						TrainManagerBase.currentHost.StopSound(SoundSources[i]);
 					}
@@ -101,7 +106,12 @@ namespace TrainManager.Motor
 				BVE5MotorSoundTableEntry nextEntry = BrakeSoundTable[0];
 				for (int i = 0; i < BrakeSoundTable.Length; i++)
 				{
-					if (BrakeSoundTable[i].Speed <= speed && BrakeSoundTable[i + 1].Speed >= speed)
+					double nextSpeed = BrakeSoundTable[i].Speed;
+					if (i < BrakeSoundTable.Length - 1)
+					{
+						nextSpeed = BrakeSoundTable[i + 1].Speed;
+					}
+					if (BrakeSoundTable[i].Speed <= speed && nextSpeed >= speed)
 					{
 						break;
 					}

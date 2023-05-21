@@ -166,8 +166,7 @@ namespace OpenBve {
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			if (File.Exists(path) || Directory.Exists(path)) {
-				Texture data;
-				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
+				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out var data)) {
 					handle = data;
 					if (loadTexture)
 					{
@@ -296,10 +295,8 @@ namespace OpenBve {
 						try {
 							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
 								try {
-									UnifiedObject unifiedObject;
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out unifiedObject)) {
-										StaticObject staticObject = unifiedObject as StaticObject;
-										if (staticObject != null)
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out var unifiedObject)) {
+										if (unifiedObject is StaticObject staticObject)
 										{
 											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 											Object = staticObject;
@@ -346,18 +343,20 @@ namespace OpenBve {
 								{
 									UnifiedObject obj;
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+										if (obj == null)
+										{
+											continue;
+										}
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 										Object = obj;
 
-										StaticObject staticObject = Object as StaticObject;
-										if (staticObject != null)
+										if (Object is StaticObject staticObject)
 										{
 											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
 											return true;
 										}
 
-										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
-										if (aoc != null)
+										if (Object is AnimatedObjectCollection aoc)
 										{
 											AnimatedObjectCollectionCache.Add(path, aoc);
 										}
@@ -392,9 +391,9 @@ namespace OpenBve {
 			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, LocalTransformation, Rotate, Translate, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)
@@ -515,9 +514,9 @@ namespace OpenBve {
 			return TrackFollowingObjectParser.ParseTrackFollowingObject(objectPath, tfoFile);
 		}
 
-		public override void AddMarker(Texture MarkerTexture)
+		public override void AddMarker(Texture MarkerTexture, Vector2 Size)
 		{
-			Program.Renderer.Marker.AddMarker(MarkerTexture);
+			Program.Renderer.Marker.AddMarker(MarkerTexture, Size);
 		}
 
 		public override void RemoveMarker(Texture MarkerTexture)
@@ -561,7 +560,7 @@ namespace OpenBve {
 			{
 				Value = Score,
 				Color = Color,
-				RendererPosition = new Vector2(0, 0),
+				RendererPosition = Vector2.Null,
 				RendererAlpha = 0.0,
 				Text = Message,
 				Timeout = Timeout
@@ -591,7 +590,7 @@ namespace OpenBve {
 						TrainBase train = Program.TrainManager.Trains[i];
 						int c = train.Cars.Length - 1;
 						double z = train.Cars[c].RearAxle.Follower.TrackPosition - train.Cars[c].RearAxle.Position - 0.5 * train.Cars[c].Length;
-						if (z >= baseTrain.FrontCarTrackPosition() & z < bestLocation)
+						if (z >= baseTrain.FrontCarTrackPosition & z < bestLocation)
 						{
 							bestLocation = z;
 							closestTrain = Program.TrainManager.Trains[i];

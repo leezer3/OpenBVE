@@ -83,7 +83,7 @@ namespace CsvRwRouteParser
 							else
 							{
 								string f = Path.CombineFile(ObjectPath, Arguments[0]);
-								if (!System.IO.File.Exists(f))
+								if (!File.Exists(f))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								}
@@ -807,7 +807,7 @@ namespace CsvRwRouteParser
 					if (Command == StructureCommand.Object)
 					{
 						IsHmmsim = true;
-						Data.AccurateObjectDisposal = true;
+						Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
 					}
 					if (commandIndices[0] < 0)
 					{
@@ -878,7 +878,7 @@ namespace CsvRwRouteParser
 								}
 
 								string f = Path.CombineFile(ObjectPath, Arguments[0]);
-								if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0].ToLowerInvariant() == "back_mthigh.bmp" || Arguments[0].ToLowerInvariant() == "bg_fine.bmp"))
+								if (!File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0].ToLowerInvariant() == "back_mthigh.bmp" || Arguments[0].ToLowerInvariant() == "bg_fine.bmp"))
 								{
 									//Default background textures supplied with Uchibo for BVE1 / BVE2, so map to something that's not totally black
 									f = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
@@ -898,7 +898,7 @@ namespace CsvRwRouteParser
 									}
 								}
 
-								if (!System.IO.File.Exists(f))
+								if (!File.Exists(f))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								}
@@ -1031,7 +1031,7 @@ namespace CsvRwRouteParser
 							else
 							{
 								string f = Path.CombineFile(ObjectPath, Arguments[0]);
-								if (!System.IO.File.Exists(f))
+								if (!File.Exists(f))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								}
@@ -1066,7 +1066,7 @@ namespace CsvRwRouteParser
 						{
 							path = Path.CombineFile(System.IO.Path.GetDirectoryName(ObjectPath), Arguments[0]);
 						}
-						if (System.IO.File.Exists(path))
+						if (File.Exists(path))
 						{
 							LightDefinition[] newLightDefinition;
 							if (DynamicLightParser.ReadLightingXML(path, out newLightDefinition))

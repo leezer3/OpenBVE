@@ -9,6 +9,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
 using RouteManager2;
+using TrainManager;
 using TrainManager.Car;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
@@ -85,48 +86,65 @@ namespace OpenBve {
 		/// <summary>Gets the absolute Railway folder for a given route file</summary>
 		/// <returns>The absolute on-disk path of the railway folder</returns>
 		internal static string GetRailwayFolder(string RouteFile) {
-			try {
+			try
+			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
-				
-				while (true) {
-					string Subfolder = OpenBveApi.Path.CombineDirectory(Folder, "Railway");
-					if (System.IO.Directory.Exists(Subfolder)) {
-						if (System.IO.Directory.EnumerateDirectories(Subfolder).Any() || System.IO.Directory.EnumerateFiles(Subfolder).Any())
+
+				while (true)
+				{
+					string Subfolder = Path.CombineDirectory(Folder, "Railway");
+					if (Directory.Exists(Subfolder))
+					{
+						if (Directory.EnumerateDirectories(Subfolder).Any() || Directory.EnumerateFiles(Subfolder).Any())
 						{
 							//HACK: Ignore completely empty directories
 							//Doesn't handle wrong directories, or those with stuff missing, TODO.....
 							Program.FileSystem.AppendToLogFile(Subfolder + " : Railway folder found.");
 							return Subfolder;
 						}
+
 						Program.FileSystem.AppendToLogFile(Subfolder + " : Railway folder candidate rejected- Directory empty.");
 					}
+
 					if (Folder == null) continue;
-					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+					DirectoryInfo Info = Directory.GetParent(Folder);
 					if (Info == null) break;
 					Folder = Info.FullName;
 				}
-			} catch { }
+			}
+			catch
+			{
+				// ignored
+			}
 			
-			//If the Route, Object and Sound folders exist, but are not in a railway folder.....
+			// If the Route, Object and Sound folders exist, but are not in a railway folder.....
 			try
 			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				if (Folder == null)
+				{
+					// Unlikely to work, but attempt to make the best of it
+					Program.FileSystem.AppendToLogFile("The route file appears to be stored on a root path- Returning the " + Translations.GetInterfaceString("program_title") + " startup path.");
+					return Application.StartupPath;
+				}
 				string candidate = null;
 				while (true)
 				{
-					string RouteFolder = OpenBveApi.Path.CombineDirectory(Folder, "Route");
-					string ObjectFolder = OpenBveApi.Path.CombineDirectory(Folder, "Object");
-					string SoundFolder = OpenBveApi.Path.CombineDirectory(Folder, "Sound");
-					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder) && System.IO.Directory.Exists(SoundFolder))
+					string RouteFolder = Path.CombineDirectory(Folder, "Route");
+					string ObjectFolder = Path.CombineDirectory(Folder, "Object");
+					string SoundFolder = Path.CombineDirectory(Folder, "Sound");
+					if (Directory.Exists(RouteFolder) && Directory.Exists(ObjectFolder) && Directory.Exists(SoundFolder))
 					{
 						Program.FileSystem.AppendToLogFile(Folder + " : Railway folder found.");
 						return Folder;
 					}
-					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder))
+
+					if (Directory.Exists(RouteFolder) && Directory.Exists(ObjectFolder))
 					{
 						candidate = Folder;
 					}
-					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+
+					DirectoryInfo Info = Directory.GetParent(Folder);
 					if (Info == null)
 					{
 						if (candidate != null)
@@ -134,13 +152,18 @@ namespace OpenBve {
 							Program.FileSystem.AppendToLogFile(Folder + " : The best candidate for the Railway folder has been selected- Sound folder not detected.");
 							return candidate;
 						}
+
 						break;
 					}
+
 					Folder = Info.FullName;
 				}
 			}
-			catch { }
-			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the openBVE startup path.");
+			catch
+			{
+				// ignored
+			}
+			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the " + Translations.GetInterfaceString("program_title") + " startup path.");
 			return Application.StartupPath;
 		}
 
@@ -293,8 +316,8 @@ namespace OpenBve {
 		private static void LoadEverythingThreaded() {
 			
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
-			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
-			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
+			string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
+			string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 			Game.Reset(true);
 			Game.MinimalisticSimulation = true;
 			// screen
@@ -319,7 +342,7 @@ namespace OpenBve {
 					}
 					var currentError = Translations.GetInterfaceString("errors_critical_file");
 					currentError = currentError.Replace("[file]", System.IO.Path.GetFileName(CurrentRouteFile));
-					MessageBox.Show(currentError, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(currentError, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + Program.CurrentHost.Plugins[i].Route.LastException.Message);
 					CrashHandler.LoadingCrash(Program.CurrentHost.Plugins[i].Route.LastException.Message, false);
 					Program.RestartArguments = " ";
@@ -329,16 +352,16 @@ namespace OpenBve {
 				}
 			}
 
-			TrainManager.Derailments = Interface.CurrentOptions.Derailments;
-			TrainManager.Toppling = Interface.CurrentOptions.Toppling;
-			TrainManager.CurrentRoute = Program.CurrentRoute;
+			TrainManagerBase.Derailments = Interface.CurrentOptions.Derailments;
+			TrainManagerBase.Toppling = Interface.CurrentOptions.Toppling;
+			TrainManagerBase.CurrentRoute = Program.CurrentRoute;
 			if (!loaded)
 			{
 				throw new Exception("No plugins capable of loading routefile " + CurrentRouteFile + " were found.");
 			}
 			Thread createIllustrations = new Thread(Program.CurrentRoute.Information.LoadInformation) {IsBackground = true};
 			createIllustrations.Start();
-			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
 			if (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0) {
 				double t = Program.CurrentRoute.BogusPreTrainInstructions[0].Time;
@@ -358,7 +381,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost) { Train = null, Car = null };
+			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			if (Program.CurrentRoute.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right
@@ -366,7 +389,7 @@ namespace OpenBve {
 			}
 			Program.FileSystem.AppendToLogFile("Route file loaded successfully.");
 			// initialize trains
-			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			Thread.Sleep(1); if (Cancel) return;
 			Program.TrainManager.Trains = new TrainBase[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < Program.TrainManager.Trains.Length; k++)
 			{
@@ -380,7 +403,7 @@ namespace OpenBve {
 				}
 				
 			}
-			TrainManager.PlayerTrain = Program.TrainManager.Trains[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length];
+			TrainManagerBase.PlayerTrain = Program.TrainManager.Trains[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length];
 
 
 
@@ -404,8 +427,8 @@ namespace OpenBve {
 					if (Game.InitialReversedConsist)
 					{
 						currentTrain.Reverse();
-						TrainManager.PlayerTrain.CameraCar = currentTrain.DriverCar;
-						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+						TrainManagerBase.PlayerTrain.CameraCar = currentTrain.DriverCar;
+						Program.Renderer.Camera.CurrentRestriction = TrainManagerBase.PlayerTrain.Cars[TrainManagerBase.PlayerTrain.DriverCar].CameraRestrictionMode;
 					}
 				} else if (currentTrain.State != TrainState.Bogus) {
 					TrainBase train = currentTrain as TrainBase;
@@ -416,7 +439,7 @@ namespace OpenBve {
 				}
 			}
 			// finished created objects
-			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			Thread.Sleep(1); if (Cancel) return;
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
 			// update sections
 			if (Program.CurrentRoute.Sections.Length > 0) {

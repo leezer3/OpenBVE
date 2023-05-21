@@ -131,7 +131,7 @@ namespace OpenBve {
 			}
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
-			Sounds = new Sounds();
+			Sounds = new Sounds(CurrentHost);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			
 			//Platform specific startup checks
@@ -139,7 +139,7 @@ namespace OpenBve {
 			if ((CurrentHost.Platform == HostPlatform.GNULinux || CurrentHost.Platform == HostPlatform.FreeBSD) && (getuid() == 0 || geteuid() == 0))
 			{
 				MessageBox.Show(
-					"You are currently running as the root user, or via the sudo command." + System.Environment.NewLine +
+					"You are currently running as the root user, or via the sudo command." + Environment.NewLine +
 					"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 
@@ -183,7 +183,7 @@ namespace OpenBve {
 				string error;
 				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
 				{
-					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
 				Game.Reset(false);
@@ -205,7 +205,7 @@ namespace OpenBve {
 
 				if (!CurrentHost.UnloadPlugins(out error))
 				{
-					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				if (!loaded)
 				{
@@ -349,6 +349,10 @@ namespace OpenBve {
 					MessageBox.Show(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
+			else
+			{
+				Deinitialize();
+			}
 		}
 
 		
@@ -382,7 +386,8 @@ namespace OpenBve {
 		{
 			string error;
 			Program.CurrentHost.UnloadPlugins(out error);
-			Sounds.Deinitialize();
+			Sounds.DeInitialize();
+			Renderer.DeInitialize();
 			if (currentGameWindow != null)
 			{
 				currentGameWindow.Dispose();

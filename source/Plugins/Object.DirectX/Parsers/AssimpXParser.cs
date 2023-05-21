@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.IO;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
@@ -48,7 +49,18 @@ namespace Plugin
 			try
 			{
 #endif
-				XFileParser parser = new XFileParser(System.IO.File.ReadAllBytes(FileName));
+			byte[] buffer = System.IO.File.ReadAllBytes(FileName);
+				if (buffer.Length < 16 || buffer[0] != 120 | buffer[1] != 111 | buffer[2] != 102 | buffer[3] != 32)
+				{
+					// Object is actually a single line text file containing relative path to the 'real' X
+					// Found in BRSigs\Night
+					string relativePath = System.Text.Encoding.ASCII.GetString(buffer);
+					if (!OpenBveApi.Path.ContainsInvalidChars(relativePath))
+					{
+						return ReadObject(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), relativePath));
+					}
+				}
+				XFileParser parser = new XFileParser(buffer);
 				Scene scene = parser.GetImportedData();
 
 				StaticObject obj = new StaticObject(Plugin.currentHost);
@@ -90,14 +102,18 @@ namespace Plugin
 						rootMatrix = new Matrix4D(scene.RootNode.TrafoMatrix);
 					}
 
+					SetReferenceMaterials(scene, ref scene.RootNode);
+
 					foreach (var mesh in scene.RootNode.Meshes)
 					{
 						MeshBuilder(ref obj, ref builder, mesh);
 					}
 
 					// Children Node
-					foreach (var node in scene.RootNode.Children)
+					for (int i = 0; i < scene.RootNode.Children.Count; i++)
 					{
+						Node node = scene.RootNode.Children[i];
+						SetReferenceMaterials(scene, ref node);
 						ChildrenNode(ref obj, ref builder, node);
 					}
 				}
@@ -120,6 +136,28 @@ namespace Plugin
 				return null;
 			}
 #endif
+		}
+
+		private static void SetReferenceMaterials(Scene scene, ref Node node)
+		{
+			foreach (var mesh in node.Meshes)
+			{
+				for (int i = 0; i < mesh.Materials.Count; i++)
+				{
+					if (mesh.Materials[i].IsReference)
+					{
+						for (int j = 0; j < scene.GlobalMaterials.Count; j++)
+						{
+							if (scene.GlobalMaterials[j].Name == mesh.Materials[i].Name)
+							{
+								mesh.Materials[i] = scene.GlobalMaterials[j];
+								break;
+							}
+						}
+					}
+				}
+			}
+			
 		}
 
 		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
@@ -149,11 +187,10 @@ namespace Plugin
 				{
 					throw new Exception("fVerts must be greater than zero");
 				}
-				MeshFace f = new MeshFace();
-				f.Vertices = new MeshFaceVertex[fVerts];
+				MeshFace f = new MeshFace(fVerts);
 				for (int j = 0; j < fVerts; j++)
 				{
-					f.Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];
+					f.Vertices[j].Index = (int)mesh.PosFaces[i].Indices[j];
 				}
 				builder.Faces.Add(f);
 			}

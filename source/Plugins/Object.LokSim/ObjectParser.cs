@@ -283,13 +283,11 @@ namespace Plugin
 										{
 											//Defines the verticies in this face
 											//**NOTE**: A vertex may appear in multiple faces with different texture co-ordinates
-											if (childNode.Attributes["Points"] != null)
+											if (childNode.Attributes["Points"] != null && !string.IsNullOrEmpty(childNode.Attributes["Points"].Value))
 											{
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
 												//Add 1 to the length of the face array
-												MeshFace f = new MeshFace();
-												//Create the vertex array for the face
-												f.Vertices = new MeshFaceVertex[Verticies.Length];
+												MeshFace f = new MeshFace(Verticies.Length);
 												//Run through the vertices list and grab from the temp array
 
 												int smallestX = TextureWidth;
@@ -307,7 +305,7 @@ namespace Plugin
 													//Set coordinates
 													Builder.Vertices.Add(new Vertex(tempVertices[currentVertex].Coordinates));
 													//Set the vertex index
-													f.Vertices[j].Index = (ushort)(Builder.Vertices.Count - 1);
+													f.Vertices[j].Index = Builder.Vertices.Count - 1;
 													//Set the normals
 													f.Vertices[j].Normal = tempNormals[currentVertex];
 													//Now deal with the texture

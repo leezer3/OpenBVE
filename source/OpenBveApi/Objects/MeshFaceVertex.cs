@@ -9,7 +9,7 @@ namespace OpenBveApi.Objects
 	{
 		/// <summary>A reference to an element in the Vertex array of the contained Mesh structure.</summary>
 		[CLSCompliant(false)]
-		public ushort Index;
+		public int Index;
 		/// <summary>The normal to be used at the vertex.</summary>
 		public Vector3 Normal;
 
@@ -17,8 +17,8 @@ namespace OpenBveApi.Objects
 		/// <param name="Index">The index to the vertex</param>
 		public MeshFaceVertex(int Index)
 		{
-			this.Index = (ushort) Index;
-			this.Normal = new Vector3(0.0f, 0.0f, 0.0f);
+			this.Index = Index;
+			this.Normal = Vector3.Zero;
 		}
 
 		/// <summary>Creates a new MeshFaceVertex with the specified normal vector</summary>
@@ -26,7 +26,7 @@ namespace OpenBveApi.Objects
 		/// <param name="Normal">The normal to use</param>
 		public MeshFaceVertex(int Index, Vector3 Normal)
 		{
-			this.Index = (ushort) Index;
+			this.Index = Index;
 			this.Normal = Normal;
 		}
 

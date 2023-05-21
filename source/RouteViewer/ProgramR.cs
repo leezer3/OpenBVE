@@ -20,6 +20,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2.Overlays;
@@ -27,7 +28,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
-using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace RouteViewer
 {
@@ -74,7 +74,7 @@ namespace RouteViewer
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 			FileSystem.CreateFileSystem();
-			Sounds = new Sounds();
+			Sounds = new Sounds(CurrentHost);
 			Options.LoadOptions();
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
@@ -87,7 +87,7 @@ namespace RouteViewer
 			}
 			
 			// command line arguments
-			StringBuilder objectsToLoad = new StringBuilder();
+			string objectsToLoad = string.Empty;
 			if (args.Length != 0)
 			{
 				for (int i = 0; i < args.Length; i++)
@@ -100,7 +100,7 @@ namespace RouteViewer
 							{
 								if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
 								{
-									objectsToLoad.Append(args[i] + " ");
+									objectsToLoad += args[i] + " ";
 									continue;
 								}
 
@@ -141,7 +141,7 @@ namespace RouteViewer
 				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
 				if (System.IO.File.Exists(File))
 				{
-					System.Diagnostics.Process.Start(File, objectsToLoad.ToString());
+					System.Diagnostics.Process.Start(File, objectsToLoad);
 					if (string.IsNullOrEmpty(CurrentRouteFile))
 					{
 						//We only supplied objects, so launch Object Viewer instead
@@ -175,7 +175,7 @@ namespace RouteViewer
 			processCommandLineArgs = true;
 			currentGameWindow.Run();
 			//Unload
-			Sounds.Deinitialize();
+			Sounds.DeInitialize();
 		}
 		
 		// load route
@@ -203,6 +203,8 @@ namespace RouteViewer
 				result = false;
 				CurrentRouteFile = null;
 			}
+
+			Renderer.Camera.QuadTreeLeaf = null;
 			Renderer.Lighting.Initialize();
 			Renderer.InitializeVisibility();
 			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
@@ -235,6 +237,10 @@ namespace RouteViewer
 
 		// jump to station
 		private static void JumpToStation(int Direction) {
+			if (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
+			{
+				Direction = -Direction;
+			}
 			if (Direction < 0) {
 				for (int i = CurrentRoute.Stations.Length - 1; i >= 0; i--) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
@@ -242,7 +248,7 @@ namespace RouteViewer
 						if (p < Program.Renderer.CameraTrackFollower.TrackPosition - 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							break;
 						}
 					}
@@ -254,7 +260,7 @@ namespace RouteViewer
 						if (p > Program.Renderer.CameraTrackFollower.TrackPosition + 0.1) {
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							break;
 						}
 					}
@@ -264,6 +270,8 @@ namespace RouteViewer
 
 		internal static void UpdateGraphicsSettings()
 		{
+			Renderer.Camera.ForwardViewingDistance = Interface.CurrentOptions.ViewingDistance;
+			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
 			if (CurrentRouteFile != null)
 			{
 				Program.CurrentlyLoading = true;
@@ -277,9 +285,9 @@ namespace RouteViewer
 					Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 					Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Renderer.Camera.AlignmentSpeed = new CameraAlignment();
-					Renderer.UpdateVisibility(a.TrackPosition, true);
 					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				}
+				Renderer.UpdateViewingDistances(Interface.CurrentOptions.ViewingDistance);
 				Program.CurrentlyLoading = false;
 			}
 		}
@@ -326,13 +334,13 @@ namespace RouteViewer
 				Renderer.Camera.AlignmentDirection.Position.Y = 0.0;
 				if (MouseButton == 1)
 				{
-					Renderer.Camera.AlignmentDirection.Yaw = 0.025 * (double) (previousMouseState.X - currentMouseState.X);
-					Renderer.Camera.AlignmentDirection.Pitch = 0.025 * (double)(previousMouseState.Y - currentMouseState.Y);
+					Renderer.Camera.AlignmentDirection.Yaw = 0.025 * (previousMouseState.X - currentMouseState.X);
+					Renderer.Camera.AlignmentDirection.Pitch = 0.025 * (previousMouseState.Y - currentMouseState.Y);
 				}
 				else if (MouseButton == 2)
 				{
-					Renderer.Camera.AlignmentDirection.Position.X = 0.1 * (double)(previousMouseState.X - currentMouseState.X);
-					Renderer.Camera.AlignmentDirection.Position.Y = 0.1 * (double)(previousMouseState.Y - currentMouseState.Y);
+					Renderer.Camera.AlignmentDirection.Position.X = 0.1 * (previousMouseState.X - currentMouseState.X);
+					Renderer.Camera.AlignmentDirection.Position.Y = 0.1 * (previousMouseState.Y - currentMouseState.Y);
 				}
 				
 			}
@@ -347,7 +355,7 @@ namespace RouteViewer
 			LoadRoute();
 			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 			CurrentlyLoading = false;
-			Renderer.Camera.Reset();
+			Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 			UpdateCaption();
 		}
 
@@ -369,6 +377,10 @@ namespace RouteViewer
 					AltPressed = true;
 					break;
 				case Key.F5:
+					if (CurrentlyLoading)
+					{
+						return;
+					}
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
 						
@@ -385,19 +397,19 @@ namespace RouteViewer
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 						}
-						Renderer.Initialize();
+						Renderer.Reset();
 						CameraAlignment a = Renderer.Camera.Alignment;
 						if (LoadRoute(bitmap))
 						{
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
-							Renderer.UpdateVisibility(a.TrackPosition, true);
+							//Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
 						else
 						{
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
@@ -408,11 +420,13 @@ namespace RouteViewer
 						{
 							bitmap.Dispose();
 						}
+						GCSettings.LargeObjectHeapCompactionMode =  GCLargeObjectHeapCompactionMode.CompactOnce; 
+						GC.Collect();
 						
 					}
 					break;
 				case Key.F7:
-					if (CurrentlyLoading == true)
+					if (CurrentlyLoading)
 					{
 						break;
 					}
@@ -437,7 +451,7 @@ namespace RouteViewer
 						if (canLoad && LoadRoute())
 						{
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
@@ -468,7 +482,7 @@ namespace RouteViewer
 								MessageBox.Show("No plugins found capable of loading routefile: " +Environment.NewLine + CurrentRouteFile);
 							}
 							
-							Renderer.Camera.Reset();
+							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
 							CurrentRouteFile = null;
@@ -489,7 +503,7 @@ namespace RouteViewer
 					Dialog.Dispose();
 					break;
 				case Key.F8:
-					if (Program.CurrentlyLoading == true)
+					if (CurrentlyLoading)
 					{
 						//Don't allow the user to update the settings during loading, bad idea..
 						break;
@@ -532,11 +546,11 @@ namespace RouteViewer
 					break;
 				case Key.W:
 				case Key.Keypad9:
-					Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse ? -speedModified : speedModified);
 					break;
 				case Key.S:
 				case Key.Keypad3:
-					Renderer.Camera.AlignmentDirection.TrackPosition = -CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.AlignmentDirection.TrackPosition = -CameraProperties.ExteriorTopSpeed * (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse ? -speedModified : speedModified);
 					break;
 				case Key.Left:
 					Renderer.Camera.AlignmentDirection.Yaw = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
@@ -575,7 +589,7 @@ namespace RouteViewer
 					JumpToStation(-1);
 					break;
 				case Key.Keypad5:
-					Renderer.Camera.Reset();
+					Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 					Renderer.UpdateViewport();
 					World.UpdateAbsoluteCamera(0.0);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
@@ -672,12 +686,12 @@ namespace RouteViewer
 								{
 									if (direction != 0)
 									{
-										value = Program.Renderer.CameraTrackFollower.TrackPosition + (double)direction * value;
+										value = Program.Renderer.CameraTrackFollower.TrackPosition + direction * value;
 									}
 
 									Program.Renderer.CameraTrackFollower.UpdateAbsolute(value, true, false);
 									Renderer.Camera.Alignment.TrackPosition = value;
-									Renderer.Camera.Reset();
+									Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 									World.UpdateAbsoluteCamera(0.0);
 									Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 								}

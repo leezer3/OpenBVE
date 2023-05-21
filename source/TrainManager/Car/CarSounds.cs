@@ -22,7 +22,7 @@ namespace TrainManager.Car
 		/// <summary>The right spring sound</summary>
 		public CarSound SpringR;
 		/// <summary>The sounds triggered by the train's plugin</summary>
-		public CarSound[] Plugin;
+		public Dictionary<int, CarSound> Plugin = new Dictionary<int, CarSound>();
 		/// <summary>The sounds triggered by a request stop</summary>
 		public CarSound[] RequestStop;
 		/// <summary>The current pitch of the flange sounds</summary>

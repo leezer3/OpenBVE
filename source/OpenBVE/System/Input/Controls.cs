@@ -72,12 +72,7 @@ namespace OpenBve
 				}
 				Builder.Append("\n");
 			}
-			string File;
-			if (FileOrNull == null) {
-				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
-			} else {
-				File = FileOrNull;
-			}
+			string File = FileOrNull ?? OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 

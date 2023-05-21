@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using DavyKager;
-using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Overlays;
 using LibRender2.Screens;
@@ -19,6 +17,8 @@ using RouteManager2.Stations;
 using TrainManager;
 using TrainManager.Handles;
 using TrainManager.Car;
+using TrainManager.Car.Systems;
+using OpenBveApi.Routes;
 
 namespace OpenBve
 {
@@ -152,6 +152,7 @@ namespace OpenBve
 			}
 			//If we are currently blocking key repeat events from firing, return
 			if (BlockKeyRepeat) return;
+			if (TrainManagerBase.PlayerTrain.Plugin != null && TrainManagerBase.PlayerTrain.Plugin.BlockingInput) return;
 			switch (Program.Renderer.CurrentInterface)
 			{
 				case InterfaceType.Pause:
@@ -850,8 +851,17 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraExterior:
 										// camera: exterior
-										MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+										if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+										{
+											MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.Cars.Length - TrainManager.PlayerTrain.CameraCar), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+										}
+										else
+										{
+											MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+										}
+										
 										SaveCameraSettings();
 										Program.Renderer.Camera.CurrentMode = CameraViewMode.Exterior;
 										RestoreCameraSettings();
@@ -918,21 +928,15 @@ namespace OpenBve
 										//If we are in the exterior train view, shift down one car until we hit the last car
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 										{
-											if (TrainManager.PlayerTrain.CameraCar < TrainManager.PlayerTrain.Cars.Length - 1)
-											{
-												TrainManager.PlayerTrain.CameraCar++;
-												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
-												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
-											}
+											TrainManager.PlayerTrain.ChangeCameraCar(false);
 											return;
 										}
 										//Otherwise, check if we can move down to the previous POI
 										if (Game.ApplyPointOfInterest(-1, true))
 										{
-											if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Track &
-												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyBy &
-												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyByZooming)
+											if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 											{
+												SaveCameraSettings();
 												Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 												MessageManager.AddMessage(Translations.GetInterfaceString("notification_track"),
 													MessageDependency.CameraView, GameMode.Expert,
@@ -964,21 +968,15 @@ namespace OpenBve
 										//If we are in the exterior train view, shift up one car until we hit index 0
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 										{
-											if (TrainManager.PlayerTrain.CameraCar > 0)
-											{
-												TrainManager.PlayerTrain.CameraCar--;
-												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
-												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
-											}
+											TrainManagerBase.PlayerTrain.ChangeCameraCar(true);
 											return;
 										}
 										//Otherwise, check if we can move up to the next POI
 										if (Game.ApplyPointOfInterest(1, true))
 										{
-											if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Track &
-												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyBy &
-												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyByZooming)
+											if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 											{
+												SaveCameraSettings();
 												Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 												MessageManager.AddMessage(Translations.GetInterfaceString("notification_track"),
 													MessageDependency.CameraView, GameMode.Expert,
@@ -1015,7 +1013,7 @@ namespace OpenBve
 											Program.Renderer.Camera.Alignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
 												0.0);
 										}
-										Program.Renderer.Camera.Alignment.Yaw = 0.0;
+										Program.Renderer.Camera.Alignment.Yaw = TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse ? 180 / 57.2957795130824 : 0;
 										Program.Renderer.Camera.Alignment.Pitch = 0.0;
 										Program.Renderer.Camera.Alignment.Roll = 0.0;
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Track)
@@ -1084,14 +1082,7 @@ namespace OpenBve
 												}
 												break;
 											default:
-												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
-												{
-													Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
-												}
-												else
-												{
-													Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.Off;
-												}
+												Program.Renderer.Camera.CurrentRestriction = Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off ? TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode : CameraRestrictionMode.Off;
 												World.InitializeCameraRestriction();
 												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
 												{
@@ -1462,10 +1453,10 @@ namespace OpenBve
 												if (TrainManager.PlayerTrain.Plugin != null)
 												{
 													TrainManager.PlayerTrain.Plugin.HornBlow(j == 0
-														? OpenBveApi.Runtime.HornTypes.Primary
+														? HornTypes.Primary
 														: j == 1
-															? OpenBveApi.Runtime.HornTypes.Secondary
-															: OpenBveApi.Runtime.HornTypes.Music);
+															? HornTypes.Secondary
+															: HornTypes.Music);
 												}
 											}
 										}
@@ -1563,6 +1554,21 @@ namespace OpenBve
 									case Translations.Command.GearDown:
 									case Translations.Command.RaisePantograph:
 									case Translations.Command.LowerPantograph:
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(
+												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+
+										break;
+									case Translations.Command.Headlights:
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(
+												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+										TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();
+										break;
 									case Translations.Command.MainBreaker:
 										if (TrainManager.PlayerTrain.Plugin != null)
 										{
@@ -1581,6 +1587,21 @@ namespace OpenBve
 											//Also inform the plugin that these keys have been pressed
 											TrainManager.PlayerTrain.Plugin.KeyDown(
 												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+										break;
+									case Translations.Command.Sanders:
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(
+												Translations.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+
+										for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
+										{
+											if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
+											{
+												sanders.Toggle();
+											}
 										}
 										break;
 									case Translations.Command.TimetableToggle:
@@ -1846,21 +1867,21 @@ namespace OpenBve
 									Program.CurrentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
 									break;
 								case Translations.Command.AccessibilityNextSignal:
-									Section nextSection = TrainManagerBase.CurrentRoute.NextSection(TrainManagerBase.PlayerTrain.FrontCarTrackPosition());
+									Section nextSection = TrainManagerBase.CurrentRoute.NextSection(TrainManagerBase.PlayerTrain.FrontCarTrackPosition);
 									if (nextSection != null)
 									{
-										double tPos = nextSection.TrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition();
+										double tPos = nextSection.TrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition;
 										string st = Translations.GetInterfaceString("message_route_nextsection_aspect").Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[aspect]", nextSection.CurrentAspect.ToString());
 										Program.CurrentHost.AddMessage(st, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
 									}
 									break; 
 								case Translations.Command.AccessibilityNextStation:
-									RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(TrainManagerBase.PlayerTrain.FrontCarTrackPosition());
+									RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(TrainManagerBase.PlayerTrain.FrontCarTrackPosition);
 									if (nextStation != null)
 									{
 										//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
 										//Aspect announce to be triggered via a separate keybind
-										double tPos = nextStation.DefaultTrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition();
+										double tPos = nextStation.DefaultTrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition;
 										string stt = Translations.GetInterfaceString("message_route_nextstation").Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
 										Program.CurrentHost.AddMessage(stt, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
 										nextStation.AccessibilityAnnounced = true;
@@ -1969,6 +1990,22 @@ namespace OpenBve
 										break;
 									case Translations.Command.RailDriverSpeedUnits:
 										Interface.CurrentOptions.RailDriverMPH = !Interface.CurrentOptions.RailDriverMPH;
+										break;
+									case Translations.Command.Sanders:
+										for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
+										{
+											if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
+											{
+												if (sanders.Type == SandersType.PressAndHold)
+												{
+													sanders.Toggle();
+												}
+											}
+										}
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.Sanders);
+										}
 										break;
 								}
 							}

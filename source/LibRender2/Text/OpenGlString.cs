@@ -53,9 +53,8 @@ namespace LibRender2.Text
 
 				for (int i = 0; i < text.Length; i++)
 				{
-					Texture texture;
 					OpenGlFontChar data;
-					i += font.GetCharacterData(text, i, out texture, out data) - 1;
+					i += font.GetCharacterData(text, i, out _, out data) - 1;
 					width += data.TypographicSize.X;
 				}
 
@@ -81,9 +80,8 @@ namespace LibRender2.Text
 
 				for (int i = 0; i < text.Length; i++)
 				{
-					Texture texture;
 					OpenGlFontChar data;
-					i += font.GetCharacterData(text, i, out texture, out data) - 1;
+					i += font.GetCharacterData(text, i, out _, out data) - 1;
 
 					if (data.TypographicSize.Y > height)
 					{

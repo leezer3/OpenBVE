@@ -64,7 +64,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Faces[mf + i] = Faces[i];
 					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
 					{
-						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+						Object.Mesh.Faces[mf + i].Vertices[j].Index += mv;
 					}
 
 					Object.Mesh.Faces[mf + i].Material += (ushort) mm;
@@ -166,6 +166,12 @@ namespace OpenBveApi.Objects
 				Vertices[i].Coordinates.Y += y;
 				Vertices[i].Coordinates.Z += z;
 			}
+		}
+
+		/// <summary>Scales the MeshBuilder by the given value</summary>
+		public void ApplyScale(Vector3 scale)
+		{
+			ApplyScale(scale.X, scale.Y, scale.Z);
 		}
 
 		/// <summary>Scales the MeshBuilder by the given values</summary>
@@ -308,6 +314,18 @@ namespace OpenBveApi.Objects
 						Faces[j].Vertices[k].Normal -= d * n;
 						Faces[j].Vertices[k].Normal.Normalize();
 					}
+				}
+			}
+		}
+
+		/// <summary>Applies a color to all materials in the MeshBuilder</summary>
+		public void ApplyColor(Color32 color, bool emissive) {
+			for (int i = 0; i < Materials.Length; i++) {
+				if (emissive) {
+					Materials[i].EmissiveColor = (Color24)color;
+					Materials[i].Flags |= MaterialFlags.Emissive;
+				} else {
+					Materials[i].Color = color;
 				}
 			}
 		}

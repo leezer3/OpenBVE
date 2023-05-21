@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender2.Text;
+using LibRender2.Textures;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
@@ -14,10 +15,10 @@ namespace LibRender2.Loadings
 		private readonly BaseRenderer renderer;
 
 		// the components of the screen background color
-		private readonly Color128 bkg = new Color128(0.5f, 0.5f, 0.5f, 1.0f);
+		private readonly Color128 bkg = Color128.Grey;
 
 		// the openBVE yellow
-		private static readonly Color128 ColourProgressBar = new Color128(1.00f, 0.69f, 0.00f, 1.00f);
+		private static readonly Color128 ColourProgressBar = Color128.Orange;
 
 		// the percentage to lower the logo centre from the screen top (currently set at the golden ratio)
 		private const double logoCentreYFactor = 0.381966;
@@ -64,13 +65,13 @@ namespace LibRender2.Loadings
 			}
 		}
 
-		/// <summary>Sets the loading screen background to a custom image</summary>
-		public void SetLoadingBkg(string fileName)
+		/// <summary>Called when loading is complete</summary>
+		public void CompleteLoading()
 		{
-			renderer.TextureManager.RegisterTexture(fileName, out TextureLoadingBkg);
-			customLoadScreen = true;
+			TextureManager.UnloadTexture(ref TextureLoadingBkg);
 		}
 
+		/// <summary>Sets the loading screen background to a custom image</summary>
 		public void SetLoadingBkg(Texture texture)
 		{
 			if (customLoadScreen || texture == null)
@@ -91,7 +92,6 @@ namespace LibRender2.Loadings
 
 			// BACKGROUND IMAGE
 			int fontHeight = (int)Font.FontSize;
-			int logoBottom;
 			//int versionTop;
 			int halfWidth = renderer.Screen.Width / 2;
 
@@ -100,17 +100,15 @@ namespace LibRender2.Loadings
 				int bkgHeight, bkgWidth;
 
 				// stretch the background image to fit at least one screen dimension
-				double ratio = TextureLoadingBkg.Width / (double)TextureLoadingBkg.Height;
-
-				if (renderer.Screen.Width / ratio > renderer.Screen.Height) // if screen ratio is shorter than bkg...
+				if (renderer.Screen.Width / TextureLoadingBkg.AspectRatio > renderer.Screen.Height) // if screen ratio is shorter than bkg...
 				{
 					bkgHeight = renderer.Screen.Height; // set height to screen height
-					bkgWidth = (int)(renderer.Screen.Height * ratio); // and scale width proprtionally
+					bkgWidth = (int)(renderer.Screen.Height * TextureLoadingBkg.AspectRatio); // and scale width proprtionally
 				}
 				else // if screen ratio is wider than bkg...
 				{
 					bkgWidth = renderer.Screen.Width; // set width to screen width
-					bkgHeight = (int)(renderer.Screen.Width / ratio); // and scale height accordingly
+					bkgHeight = (int)(renderer.Screen.Width / TextureLoadingBkg.AspectRatio); // and scale height accordingly
 				}
 
 				// draw the background image down from the top screen edge
@@ -121,11 +119,11 @@ namespace LibRender2.Loadings
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
 			if (!customLoadScreen)
 			{
-				if (renderer.ProgramLogo != null && renderer.LoadLogo())
+				if (showLogo && renderer.ProgramLogo != null && renderer.LoadLogo())
 				{
 					// place the centre of the logo at from the screen top
 					int logoTop = (int)(renderer.Screen.Height * logoCentreYFactor - renderer.ProgramLogo.Height / 2.0);
-					renderer.Rectangle.DrawAlpha(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), new Vector2(renderer.ProgramLogo.Width, renderer.ProgramLogo.Height), Color128.White);
+					renderer.Rectangle.DrawAlpha(renderer.ProgramLogo, new Vector2((renderer.Screen.Width - renderer.ProgramLogo.Width) / 2.0, logoTop), Color128.White);
 				}
 			}
 			// ReSharper disable once RedundantIfElseBlock
@@ -136,7 +134,7 @@ namespace LibRender2.Loadings
 
 			if (showProgress)
 			{
-				logoBottom = renderer.Screen.Height / 2;
+				int logoBottom = renderer.Screen.Height / 2;
 
 				// take the height remaining below the logo and divide in 3 horiz. parts
 				int blankHeight = (renderer.Screen.Height - logoBottom) / 3;

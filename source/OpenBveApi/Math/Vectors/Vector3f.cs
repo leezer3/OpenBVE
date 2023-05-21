@@ -73,7 +73,7 @@ namespace OpenBveApi.Math {
 		{
 			bool success = true;
 			v.X = 0; v.Y = 0; v.Z = 0; //Don't generate a new struct- Important in parsing objects with large numbers of verts
-			string[] splitString = stringToParse.Split(new char[] { separator });
+			string[] splitString = stringToParse.Split(separator);
 			int i;
 			for (i = 0; i < splitString.Length; i++)
 			{

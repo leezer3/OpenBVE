@@ -149,7 +149,11 @@ namespace TrainManager.Trains
 			foreach (var Car in Cars)
 			{
 				Car.UpdateRunSounds(TimeElapsed);
-				Car.Sounds.Motor.Update(TimeElapsed);
+				if (Car.Sounds.Motor != null)
+				{
+					Car.Sounds.Motor.Update(TimeElapsed);
+				}
+				
 			}
 
 			// infrequent updates

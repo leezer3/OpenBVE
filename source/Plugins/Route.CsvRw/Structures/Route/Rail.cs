@@ -21,12 +21,6 @@ namespace CsvRwRouteParser
 		internal bool IsDriveable;
 
 		/// <summary>Gets the mid point of the rail</summary>
-		internal Vector2 MidPoint
-		{
-			get
-			{
-				return new Vector2(RailEnd - RailStart);
-			}
-		}
+		internal Vector2 MidPoint => new Vector2(RailEnd - RailStart);
 	}
 }

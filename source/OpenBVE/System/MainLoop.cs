@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using DavyKager;
+using LibRender2.Cameras;
 using LibRender2.Screens;
 using OpenBve.Input;
 using OpenBveApi.Hosts;
@@ -35,24 +36,12 @@ namespace OpenBve
 		internal static double timeSinceLastMouseEvent;
 
 		internal static LaunchParameters currentResult;
-		//		internal static formRouteInformation RouteInformationForm;
-		//		internal static Thread RouteInfoThread;
-		//		internal static bool RouteInfoActive
-		//		{
-		//			get
-		//			{
-		//				return RouteInformationForm != null && RouteInformationForm.IsHandleCreated && RouteInformationForm.Visible;
-		//			}
-		//		}
-
-
-		//		internal static AppDomain RouteInfoFormDomain;
 
 		private static double kioskModeTimer;
 
 		internal static void StartLoopEx(LaunchParameters result)
 		{
-			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
+			Program.Sounds.Initialize(Interface.CurrentOptions.SoundRange);
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				Tolk.Load();
@@ -99,14 +88,8 @@ namespace OpenBve
 					Interface.CurrentOptions.WindowHeight = result.Height;
 				}
 			}
-			if (Interface.CurrentOptions.IsUseNewRenderer)
-			{
-				Program.FileSystem.AppendToLogFile("Using openGL 3.0 (new) renderer");
-			}
-			else
-			{
-				Program.FileSystem.AppendToLogFile("Using openGL 1.2 (old) renderer");
-			}
+
+			Program.FileSystem.AppendToLogFile(Interface.CurrentOptions.IsUseNewRenderer ? "Using openGL 3.0 (new) renderer" : "Using openGL 1.2 (old) renderer");
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
 				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
@@ -522,7 +505,7 @@ namespace OpenBve
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					Program.Renderer.Camera.Alignment = TrainManagerBase.PlayerTrain.Cars[TrainManagerBase.PlayerTrain.CameraCar].InteriorCamera;
+					Program.Renderer.Camera.Alignment = TrainManagerBase.PlayerTrain.Cars[TrainManagerBase.PlayerTrain.CameraCar].InteriorCamera ?? TrainManagerBase.PlayerTrain.Cars[TrainManagerBase.PlayerTrain.DriverCar].InteriorCamera ?? new CameraAlignment();
 					break;
 				case CameraViewMode.Exterior:
 					Program.Renderer.Camera.Alignment = Program.Renderer.Camera.SavedExterior;

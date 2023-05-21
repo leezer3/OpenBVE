@@ -40,7 +40,7 @@ namespace TrainEditor2
 
 			try
 			{
-				FileSystem = FileSystem.FromCommandLineArgs(new string[0], null);
+				FileSystem = FileSystem.FromCommandLineArgs(new string[0], CurrentHost);
 				FileSystem.CreateFileSystem();
 			}
 			catch (Exception ex)
@@ -53,13 +53,13 @@ namespace TrainEditor2
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 
-			SoundApi = new SoundApi();
-			SoundApi.Initialize(CurrentHost, SoundRange.Medium);
+			SoundApi = new SoundApi(CurrentHost);
+			SoundApi.Initialize(SoundRange.Medium);
 
 			string error;
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, null, Renderer))
 			{
-				SoundApi.Deinitialize();
+				SoundApi.DeInitialize();
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
@@ -70,7 +70,7 @@ namespace TrainEditor2
 			Application.Run(new FormEditor());
 
 			CurrentHost.UnloadPlugins(out error);
-			SoundApi.Deinitialize();
+			SoundApi.DeInitialize();
 
 			Interface.SaveOptions();
 		}

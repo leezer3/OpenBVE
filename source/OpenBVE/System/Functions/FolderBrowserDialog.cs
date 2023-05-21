@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -18,8 +18,8 @@ namespace OpenBve
 		/// </summary>
 		public string InitialDirectory
 		{
-			get { return string.IsNullOrEmpty(_initialDirectory) ? Environment.CurrentDirectory : _initialDirectory; }
-			set { _initialDirectory = value; }
+			get => string.IsNullOrEmpty(_initialDirectory) ? Environment.CurrentDirectory : _initialDirectory;
+			set => _initialDirectory = value;
 		}
 
 		/// <summary>
@@ -27,14 +27,14 @@ namespace OpenBve
 		/// </summary>
 		public string Title
 		{
-			get { return _title ?? "Select a folder"; }
-			set { _title = value; }
+			get => _title ?? "Select a folder";
+			set => _title = value;
 		}
 
 		/// <summary>
 		/// The selected filename
 		/// </summary>
-		public string FileName { get { return _fileName; } }
+		public string FileName => _fileName;
 
 		/// <summary>
 		/// Shows the dialog
@@ -135,9 +135,11 @@ namespace OpenBve
 		// Wrap an IWin32Window around an IntPtr
 		private class WindowWrapper : IWin32Window
 		{
-			private readonly IntPtr _handle;
-			public WindowWrapper(IntPtr handle) { _handle = handle; }
-			public IntPtr Handle { get { return _handle; } }
+			public WindowWrapper(IntPtr handle) { Handle = handle; }
+			public IntPtr Handle
+			{
+				get;
+			}
 		}
 	}
 }

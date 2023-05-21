@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Hosts;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
 namespace RouteManager2.MessageManager.MessageTypes
@@ -21,7 +22,7 @@ namespace RouteManager2.MessageManager.MessageTypes
 		{
 			QueueForRemoval = false;
 
-			currentHost.AddMarker(texture);
+			currentHost.AddMarker(texture, Vector2.Null);
 		}
 
 		public override void Update()

@@ -20,6 +20,10 @@
 		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 		private readonly PlayCarSoundDelegate MyPlayCarSound;
 
+		/// <summary>The callback function for playing car-based  sounds.</summary>
+		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
+		private readonly PlayMultipleCarSoundDelegate MyPlayMultipleCarSound;
+
 		/// <summary>The callback function for adding interface messages.</summary>
 		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 		private readonly AddInterfaceMessageDelegate MyAddInterfaceMessage;
@@ -89,6 +93,15 @@
 			}
 		}
 
+		/// <summary>Gets the callback function for playing sounds.</summary>
+		public PlayMultipleCarSoundDelegate PlayMultipleCarSound
+		{
+			get
+			{
+				return this.MyPlayMultipleCarSound;
+			}
+		}
+
 		/// <summary>Gets the callback function for opening the train doors</summary>
 		public OpenDoorsDelegate OpenDoors
 		{
@@ -151,6 +164,31 @@
 			}
 		}
 
+		/*
+		 * DetailManager.dll reconstructs the LoadProperties in order to pass it through to child plugins
+		 * This isn't necessarily supported, but other people may do something similar with a shipped API
+		 * so keep around the old constructors
+		 * https://github.com/leezer3/OpenBVE/issues/813
+		 */
+
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="pluginFolder">The absolute path to the plugin folder.</param>
+		/// <param name="trainFolder">The absolute path to the train folder.</param>
+		/// <param name="playSound">The callback function for playing sounds.</param>
+		/// <param name="playCarSound">The callback function for playing car-based sounds.</param>
+		/// <param name="addMessage">The callback function for adding interface messages.</param>
+		/// <param name="addScore">The callback function for adding scores.</param>
+		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, PlayCarSoundDelegate playCarSound, AddInterfaceMessageDelegate addMessage, AddScoreDelegate addScore)
+		{
+			this.MyPluginFolder = pluginFolder;
+			this.MyTrainFolder = trainFolder;
+			this.MyPlaySound = playSound;
+			this.MyPlayCarSound = playCarSound;
+			this.MyAddInterfaceMessage = addMessage;
+			this.MyAddScore = addScore;
+			this.MyFailureReason = null;
+		}
+
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="pluginFolder">The absolute path to the plugin folder.</param>
 		/// <param name="trainFolder">The absolute path to the train folder.</param>
@@ -166,6 +204,30 @@
 			this.MyTrainFolder = trainFolder;
 			this.MyPlaySound = playSound;
 			this.MyPlayCarSound = playCarSound;
+			this.MyAddInterfaceMessage = addMessage;
+			this.MyAddScore = addScore;
+			this.MyOpenDoors = openDoors;
+			this.MyCloseDoors = closeDoors;
+			this.MyFailureReason = null;
+		}
+
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="pluginFolder">The absolute path to the plugin folder.</param>
+		/// <param name="trainFolder">The absolute path to the train folder.</param>
+		/// <param name="playSound">The callback function for playing sounds.</param>
+		/// <param name="playCarSound">The callback function for playing car-based sounds.</param>
+		/// <param name="playMultiCarSound">The callback function for playing a sound on multiple cars</param>
+		/// <param name="addMessage">The callback function for adding interface messages.</param>
+		/// <param name="addScore">The callback function for adding scores.</param>
+		/// <param name="openDoors">The callback function for opening the train doors</param>
+		/// <param name="closeDoors">The callback function for closing the train doors</param>
+		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, PlayCarSoundDelegate playCarSound, PlayMultipleCarSoundDelegate playMultiCarSound, AddInterfaceMessageDelegate addMessage, AddScoreDelegate addScore, OpenDoorsDelegate openDoors, CloseDoorsDelegate closeDoors)
+		{
+			this.MyPluginFolder = pluginFolder;
+			this.MyTrainFolder = trainFolder;
+			this.MyPlaySound = playSound;
+			this.MyPlayCarSound = playCarSound;
+			this.MyPlayMultipleCarSound = playMultiCarSound;
 			this.MyAddInterfaceMessage = addMessage;
 			this.MyAddScore = addScore;
 			this.MyOpenDoors = openDoors;

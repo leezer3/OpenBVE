@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using OpenBveApi.Hosts;
@@ -124,11 +125,12 @@ namespace TrainManager.SafetySystems {
 			if (externalCrashed)
 			{
 				//Yuck
-				for (int i = 0; i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length; i++)
+				for (int i = 0; i < Train.Cars[Train.DriverCar].Sounds.Plugin.Count; i++)
 				{
-					if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].IsPlaying)
+					int k = Train.Cars[Train.DriverCar].Sounds.Plugin.ElementAt(i).Key;
+					if (Train.Cars[Train.DriverCar].Sounds.Plugin[k].IsPlaying)
 					{
-						Train.Cars[Train.DriverCar].Sounds.Plugin[i].Stop();
+						Train.Cars[Train.DriverCar].Sounds.Plugin[k].Stop();
 					}
 				}
 				Train.UnloadPlugin();
@@ -154,14 +156,14 @@ namespace TrainManager.SafetySystems {
 					{
 						if (Sound[i] == SoundInstructions.Stop)
 						{
-							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								Train.Cars[Train.DriverCar].Sounds.Plugin[i].Stop();
 							}
 						}
 						else if (Sound[i] > SoundInstructions.Stop & Sound[i] <= SoundInstructions.PlayLooping)
 						{
-							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer;
 								if (buffer != null)
@@ -180,7 +182,7 @@ namespace TrainManager.SafetySystems {
 						}
 						else if (Sound[i] == SoundInstructions.PlayOnce)
 						{
-							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer;
 								if (buffer != null)

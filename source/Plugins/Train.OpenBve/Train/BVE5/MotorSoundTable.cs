@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,10 +24,27 @@ namespace Train.OpenBve
 			// temp working lists
 			SortedDictionary<double, BVE5MotorSoundTableEntry> motorSoundTable = new SortedDictionary<double, BVE5MotorSoundTableEntry>();
 			SortedDictionary<double, BVE5MotorSoundTableEntry> brakeSoundTable = new SortedDictionary<double, BVE5MotorSoundTableEntry>();
-			ParsePitchTable(motorSoundPitch, ref motorSoundTable);
-			ParseVolumeTable(motorSoundGain, ref motorSoundTable);
-			ParsePitchTable(brakeSoundPitch, ref brakeSoundTable);
-			ParseVolumeTable(brakeSoundGain, ref brakeSoundTable);
+			if (File.Exists(motorSoundPitch) && File.Exists(motorSoundGain))
+			{
+				ParsePitchTable(motorSoundPitch, ref motorSoundTable);
+				ParseVolumeTable(motorSoundGain, ref motorSoundTable);
+			}
+			else
+			{
+				Plugin.currentHost.AddMessage("Missing BVE5 MotorSound table file.");
+			}
+
+			if (File.Exists(brakeSoundPitch) && File.Exists(brakeSoundGain))
+			{
+				ParsePitchTable(brakeSoundPitch, ref brakeSoundTable);
+				ParseVolumeTable(brakeSoundGain, ref brakeSoundTable);
+			}
+			else
+			{
+				Plugin.currentHost.AddMessage("Missing BVE5 BrakeSound table file.");
+			}
+			
+			
 			Array.Resize(ref motorSound.MotorSoundTable, motorSoundTable.Count);
 			for (int i = 0; i < motorSoundTable.Count; i++)
 			{
@@ -110,8 +127,7 @@ namespace Train.OpenBve
 				}
 				else
 				{
-					BVE5MotorSoundTableEntry newEntry = new BVE5MotorSoundTableEntry();
-					newEntry.Speed = speed;
+					BVE5MotorSoundTableEntry newEntry = new BVE5MotorSoundTableEntry(speed);
 					double[] pitchValues = setPoints.ElementAt(i).Value;
 					Array.Resize(ref newEntry.Sounds, pitchValues.Length);
 					for (int k = 0; k < pitchValues.Length; k++)
@@ -196,8 +212,7 @@ namespace Train.OpenBve
 				}
 				else
 				{
-					BVE5MotorSoundTableEntry newEntry = new BVE5MotorSoundTableEntry();
-					newEntry.Speed = speed;
+					BVE5MotorSoundTableEntry newEntry = new BVE5MotorSoundTableEntry(speed);
 					double[] gainValues = setPoints.ElementAt(i).Value;
 					Array.Resize(ref newEntry.Sounds, gainValues.Length);
 					for (int k = 0; k < gainValues.Length; k++)

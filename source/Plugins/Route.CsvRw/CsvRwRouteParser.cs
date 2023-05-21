@@ -60,11 +60,10 @@ namespace CsvRwRouteParser {
 			}
 
 			RoutePatchDatabaseParser.LoadRoutePatchDatabase(ref availableRoutefilePatches);
-
+			Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Legacy;
 			RouteData Data = new RouteData
 			{
 				BlockInterval = 25.0,
-				AccurateObjectDisposal = false,
 				FirstUsedBlock = -1,
 				Blocks = new List<Block>()
 			};
@@ -184,6 +183,7 @@ namespace CsvRwRouteParser {
 			
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
+			CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			CurrentRoute.Stations = new RouteStation[] { };
 			Data.RequestStops = new StopRequest[] { };
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / Expressions.Length;

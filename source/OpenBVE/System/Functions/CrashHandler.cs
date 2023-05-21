@@ -37,7 +37,7 @@ namespace OpenBve
                     MessageBox.Show("An unsupported joystick is connected: \n \n Too many axis. \n \n Please unplug all USB joysticks & gamepads and try again.");
                     Environment.Exit(0);
                 }
-                MessageBox.Show("Unhandled exception:\n\n" + ex.Message);
+                MessageBox.Show("Unhandled exception:\n\n" + ex.Message, "OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 LogCrash(ex + Environment.StackTrace);
 
             }
@@ -45,7 +45,7 @@ namespace OpenBve
             {
                 try
                 {
-                    MessageBox.Show("A fatal exception occured inside the UnhandledExceptionHandler: \n\n"
+                    MessageBox.Show("A fatal exception occured inside the UnhandledExceptionHandler:" + Environment.NewLine + Environment.NewLine
                         + exc.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         LogCrash(exc + Environment.StackTrace);
                 }
@@ -68,15 +68,14 @@ namespace OpenBve
 	        }
             try
             {
-                MessageBox.Show("An unhandled Windows Forms Exception occured." + Environment.NewLine + Environment.NewLine + "Please consider reporting this using the CrashLog found under the \"Report Problem\" button in the main menu.");
+                MessageBox.Show("An unhandled Windows Forms Exception occured. \r\n\r\n OpenBVE will now exit. Please consider reporting this with the \"Report Problem\" button on the bottom left of the main menu.", "OpenBVE Crashed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 LogCrash(t.Exception + Environment.NewLine + Environment.StackTrace);
             }
             catch (Exception exc)
             {
                 try
                 {
-                    MessageBox.Show("A fatal exception occured inside the UIThreadException handler",
-                        "Fatal Windows Forms Error", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Stop);
+                    MessageBox.Show("Fatal Error: A fatal exception occured inside the UIThreadException handler");
                         LogCrash(exc + Environment.StackTrace);
                 }
                 finally
@@ -235,14 +234,8 @@ namespace OpenBve
                 {
                     outputFile.WriteLine(Program.CurrentRoute.Information.ErrorsAndWarnings);
                 }
-                if (Train)
-                {
-                    outputFile.WriteLine("The current train plugin caused the following exception: ");
-                }
-                else
-                {
-                    outputFile.WriteLine("The current routefile caused the following exception: ");
-                }
+
+                outputFile.WriteLine(Train ? "The current train plugin caused the following exception: " : "The current routefile caused the following exception: ");
                 outputFile.WriteLine(ExceptionText);
                 double MemoryUsed;
                 using (Process proc = Process.GetCurrentProcess())

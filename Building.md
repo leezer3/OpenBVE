@@ -8,17 +8,17 @@ This file is a WIP set of instructions for building openBVE from source.
 
 #### When to use .NET Framework
 
-- Visual Studio 2017 or later, x86 or x64
-- .NET Framework 4.7.2 or later, x86 or x64
+- Visual Studio 2017 or later
+- .NET Framework 4.7.2 or later
 
 #### When to use Mono
 
-- Mono 5.20.1 or later, x86 or x64
+- Mono 5.20.1 or later
 - NuGet client 2.16 or later
 
 ### Linux
 
-- Mono 5.20.1 or later, x86 or x64
+- Mono 5.20.1 or later
 - NuGet client 2.16 or later
 - OpenAL
 - GNU Make
@@ -50,6 +50,19 @@ echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/local/lib/nuget.exe "$@"' | sudo tee
 sudo chmod 755 /usr/local/bin/nuget
 ```
 
+### Required Mono Components
+
+NOTE: Depending on the install type you select, Mono will not install all components by default. These are required:
+
+- mono-runtime
+- libmono-corlib4.5-cil
+- libmono-system-drawing4.0-cil
+- libmono-system-windows-forms4.0-cil
+- libmono-system4.0-cil
+- libmono-system-xml-linq4.0-cil
+- libmono-i18n4.0-all
+- libmono-microsoft-csharp4.0-cil
+
 #### Required Additional System Libraries
 
 - libusb-1.0
@@ -59,7 +72,7 @@ sudo chmod 755 /usr/local/bin/nuget
 
 ### Mac
 
-- Mono 5.20.1 or later, x86 only
+- Mono 5.20.1 or later
 - NuGet client 2.16 or later
 - OpenAL
 - GNU Make

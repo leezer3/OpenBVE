@@ -28,7 +28,15 @@ namespace OpenBveApi {
 		/// <param name="allowQueryStr">If a part similar to a URL query string at the end of the path should be preserved.</param>
 		/// <returns>A platform-specific absolute path to the specified directory.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
-		public static string CombineDirectory(string absolute, string relative, bool allowQueryStr = false) {
+		public static string CombineDirectory(string absolute, string relative, bool allowQueryStr) {
+			if (string.IsNullOrEmpty(absolute))
+			{
+				throw new ArgumentException("The absolute path was empty.");
+			}
+			if (string.IsNullOrEmpty(relative))
+			{
+				throw new ArgumentException("The relative path was empty.");
+			}
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string directory = CombineDirectory(absolute, relative.Substring(0, index).TrimEnd());
@@ -126,6 +134,14 @@ namespace OpenBveApi {
 		/// <returns>Whether the operation succeeded and the specified file was found.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
 		public static string CombineFile(string absolute, string relative) {
+			if (string.IsNullOrEmpty(absolute))
+			{
+				throw new ArgumentException("The absolute path was empty.");
+			}
+			if (string.IsNullOrEmpty(relative))
+			{
+				throw new ArgumentException("The relative path was empty.");
+			}
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string file = CombineFile(absolute, relative.Substring(0, index).TrimEnd());
@@ -227,6 +243,17 @@ namespace OpenBveApi {
 		{
 			char[] a = System.IO.Path.GetInvalidFileNameChars();
 			char[] b = System.IO.Path.GetInvalidPathChars();
+
+			if (!IsAbsolutePath(Expression))
+			{
+				if (Expression.IndexOfAny(InvalidPathChars) != -1)
+				{
+					// Check our platform independant list first
+					return true;
+				}
+			}
+			
+
 			for (int i = 0; i < Expression.Length; i++)
 			{
 				for (int j = 0; j < a.Length; j++)

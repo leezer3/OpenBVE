@@ -54,7 +54,7 @@ namespace RouteViewer
                             if (j >= 0)
                             {
                                 Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-                                Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+                                Value = Lines[i].Substring(j + 1).TrimStart();
                             }
                             else
                             {
@@ -87,8 +87,27 @@ namespace RouteViewer
 										case "isusenewrenderer":
 											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
-									}
-									break;
+										case "viewingdistance":
+											{
+												int a;
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
+													a = 600;
+												}
+												Interface.CurrentOptions.ViewingDistance = a;
+											} break;
+										case "quadleafsize":
+											{
+												int a;
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												{
+													if (a >= 50 && a <= 500)
+													{
+														Interface.CurrentOptions.QuadTreeLeafSize = a;
+													}
+												}
+												Interface.CurrentOptions.QuadTreeLeafSize = a;
+											} break;
+					                } break;
 								case "quality":
 									switch (Key) {
 										case "interpolation":
@@ -132,34 +151,13 @@ namespace RouteViewer
 									switch(Key)
 									{
 										case "showlogo":
-											if(Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingLogo = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingLogo = false;
-											}
+											Interface.CurrentOptions.LoadingLogo = Value.Trim().ToLowerInvariant() == "true";
 											break;
 										case "showprogressbar":
-											if (Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingProgressBar = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingProgressBar = false;
-											}
+											Interface.CurrentOptions.LoadingProgressBar = Value.Trim().ToLowerInvariant() == "true";
 											break;
 										case "showbackground":
-											if (Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingBackground = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingBackground = false;
-											}
+											Interface.CurrentOptions.LoadingBackground = Value.Trim().ToLowerInvariant() == "true";
 											break;
 
 									}
@@ -187,6 +185,8 @@ namespace RouteViewer
                 Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
                 Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
                 Builder.AppendLine("isUseNewRenderer = " + (Interface.CurrentOptions.IsUseNewRenderer ? "true" : "false"));
+                Builder.AppendLine("viewingdistance = " + Interface.CurrentOptions.ViewingDistance);
+                Builder.AppendLine("quadleafsize = " + Interface.CurrentOptions.QuadTreeLeafSize);
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {
@@ -215,7 +215,7 @@ namespace RouteViewer
             }
             catch
             {
-                MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
+                MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
                                 "Please check you have write permission.");
             }
         }

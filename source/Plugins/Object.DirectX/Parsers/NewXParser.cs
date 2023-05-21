@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,10 +40,21 @@ namespace Plugin
 		internal static StaticObject ReadObject(string FileName, Encoding Encoding)
 		{
 			rootMatrix = Matrix4D.NoTransformation;
-			currentFolder = System.IO.Path.GetDirectoryName(FileName);
+			currentFolder = Path.GetDirectoryName(FileName);
 			currentFile = FileName;
-			byte[] Data = System.IO.File.ReadAllBytes(FileName);
+			byte[] Data = File.ReadAllBytes(FileName);
 			
+			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
+			{
+				// Object is actually a single line text file containing relative path to the 'real' X
+				// Found in BRSigs\Night
+				string relativePath = Encoding.ASCII.GetString(Data);
+				if (!OpenBveApi.Path.ContainsInvalidChars(relativePath))
+				{
+					return ReadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), relativePath), Encoding);
+				}
+			}
+
 			// floating-point format
 			int FloatingPointSize;
 			if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50)
@@ -150,6 +162,8 @@ namespace Plugin
 		private static int currentLevel = 0;
 		private static int transformStart = 0;
 
+		private static readonly Dictionary<string, Material> rootMaterials = new Dictionary<string, Material>();
+
 		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
 			Block subBlock;
@@ -158,6 +172,7 @@ namespace Plugin
 				default:
 					return;
 				case TemplateID.Template:
+					// ReSharper disable once UnusedVariable
 					string GUID = block.ReadString();
 					/*
 					 * Valid Microsoft templates are listed here:
@@ -170,7 +185,9 @@ namespace Plugin
 					 */
 					return;
 				case TemplateID.Header:
+					// ReSharper disable once UnusedVariable
 					int majorVersion = block.ReadUInt16();
+					// ReSharper disable once UnusedVariable
 					int minorVersion = block.ReadUInt16();
 					int flags = block.ReadUInt16();
 					switch (flags)
@@ -254,7 +271,7 @@ namespace Plugin
 						builder.Apply(ref obj);
 						builder = new MeshBuilder(Plugin.currentHost);
 					}
-					int nVerts = block.ReadUInt16();
+					int nVerts = block.ReadUInt();
 					if (nVerts == 0)
 					{
 						//Some null objects contain an empty mesh
@@ -264,7 +281,7 @@ namespace Plugin
 					{
 						builder.Vertices.Add(new Vertex(new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle())));
 					}
-					int nFaces = block.ReadUInt16();
+					int nFaces = block.ReadUInt();
 					if (nFaces == 0)
 					{
 						try
@@ -295,16 +312,17 @@ namespace Plugin
 					}
 					for (int i = 0; i < nFaces; i++)
 					{
-						int fVerts = block.ReadUInt16();
-						if (nFaces == 0)
+						int fVerts = block.ReadUInt();
+						if (fVerts == 0)
 						{
-							throw new Exception("fVerts must be greater than zero");
+							// Assuming here that a face must contain vertices
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "fVerts was declared as zero");
+							break;
 						}
-						MeshFace f = new MeshFace();
-						f.Vertices = new MeshFaceVertex[fVerts];
+						MeshFace f = new MeshFace(fVerts);
 						for (int j = 0; j < fVerts; j++)
 						{
-							f.Vertices[j].Index = block.ReadUInt16();
+							f.Vertices[j].Index = block.ReadUInt();
 						}
 						builder.Faces.Add(f);
 					}
@@ -316,12 +334,12 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.MeshMaterialList:
-					int nMaterials = block.ReadUInt16();
-					int nFaceIndices = block.ReadUInt16();
+					int nMaterials = block.ReadUInt();
+					int nFaceIndices = block.ReadUInt();
 					if (nFaceIndices == 1 && builder.Faces.Count > 1)
 					{
 						//Single material for all faces
-						int globalMaterial = block.ReadUInt16();
+						int globalMaterial = block.ReadUInt();
 						for (int i = 0; i < builder.Faces.Count; i++)
 						{
 							MeshFace f = builder.Faces[i];
@@ -333,7 +351,7 @@ namespace Plugin
 					{
 						for (int i = 0; i < nFaceIndices; i++)
 						{
-							int fMaterial = block.ReadUInt16();
+							int fMaterial = block.ReadUInt();
 							MeshFace f = builder.Faces[i];
 							f.Material = (ushort) (fMaterial + 1);
 							builder.Faces[i] = f;
@@ -345,7 +363,7 @@ namespace Plugin
 					}
 					for (int i = 0; i < nMaterials; i++)
 					{
-						subBlock = block.ReadSubBlock(TemplateID.Material);
+						subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 					break;
@@ -363,7 +381,21 @@ namespace Plugin
 						builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
 						builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
 					}
-					
+					if (currentLevel == 0)
+					{
+						// Key based material definitions
+						if (!string.IsNullOrEmpty(block.Label))
+						{
+							if (rootMaterials.ContainsKey(block.Label))
+							{
+								rootMaterials[block.Label] = builder.Materials[m];
+							}
+							else
+							{
+								rootMaterials.Add(block.Label, builder.Materials[m]);	
+							}
+						}
+					}
 					if (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock(TemplateID.TextureFilename);
@@ -396,54 +428,71 @@ namespace Plugin
 						material.DaytimeTexture = null;
 					}
 
-					if (!System.IO.File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
+					if (!File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
 						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + material.DaytimeTexture + " was not found in file " + currentFile);
 						material.DaytimeTexture = null;
 					}
 					break;
 				case TemplateID.MeshTextureCoords:
-					int nCoords = block.ReadUInt16();
+					int nCoords = block.ReadUInt();
 					for (int i = 0; i < nCoords; i++)
 					{
 						builder.Vertices[i].TextureCoordinates = new Vector2(block.ReadSingle(), block.ReadSingle());
 					}
 					break;
 				case TemplateID.MeshNormals:
-					int nNormals = block.ReadUInt16();
+					int nNormals = block.ReadUInt();
 					Vector3[] normals = new Vector3[nNormals];
 					for (int i = 0; i < nNormals; i++)
 					{
 						normals[i] = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 						normals[i].Normalize();
 					}
-					int nFaceNormals = block.ReadUInt16();
+					int nFaceNormals = block.ReadUInt();
 					if (nFaceNormals != builder.Faces.Count)
 					{
 						throw new Exception("nFaceNormals must match the number of faces in the mesh");
 					}
 					for (int i = 0; i < nFaceNormals; i++)
 					{
-						int nVertexNormals = block.ReadUInt16();
+						int nVertexNormals = block.ReadUInt();
 						if (nVertexNormals != builder.Faces[i].Vertices.Length)
 						{
 							throw new Exception("nVertexNormals must match the number of verticies in the face");
 						}
 						for (int j = 0; j < nVertexNormals; j++)
 						{
-							builder.Faces[i].Vertices[j].Normal = normals[block.ReadUInt16()];
+							builder.Faces[i].Vertices[j].Normal = normals[block.ReadUInt()];
 						}
 					}
 					break;
 				case TemplateID.MeshVertexColors:
-					int nVertexColors = block.ReadUInt16();
+					int nVertexColors = block.ReadUInt();
 					for (int i = 0; i < nVertexColors; i++)
 					{
-						builder.Vertices[i] = new ColoredVertex((Vertex)builder.Vertices[i], new Color128(block.ReadSingle(), block.ReadSingle(), block.ReadSingle()));
+						int idx = block.ReadUInt();
+						if (idx >= builder.Vertices.Count)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MeshVertexColors index " + idx +  " should be less than nVertices in Mesh " + block.Label);
+							continue;
+						}
+						ColoredVertex c = builder.Vertices[idx] as ColoredVertex;
+						if (c != null)
+						{
+							c.Color.R = block.ReadSingle();
+							c.Color.G = block.ReadSingle();
+							c.Color.B = block.ReadSingle();
+							c.Color.A = block.ReadSingle();
+						}
+						else
+						{
+							builder.Vertices[idx] = new ColoredVertex((Vertex)builder.Vertices[idx], new Color128(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), block.ReadSingle()));
+						}
 					}
 					break;
 				case TemplateID.MeshFaceWraps:
-					int nMeshFaceWraps = block.ReadUInt16();
+					int nMeshFaceWraps = block.ReadUInt();
 					if (nMeshFaceWraps != builder.Faces.Count)
 					{
 						throw new Exception("nMeshFaceWraps must match the number of faces in the mesh");
@@ -453,6 +502,19 @@ namespace Plugin
 					 * The current engine only supports clamping on a per-texture basis & this was discontinued in
 					 * later versions of DirectX so just validate this is structurally valid and ignore for the minute
 					 */
+					break;
+				case TemplateID.TextureKey:
+					if (string.IsNullOrEmpty(block.Label))
+					{
+						break;
+					}
+					int ml = builder.Materials.Length;
+					Array.Resize(ref builder.Materials, ml + 1);
+					builder.Materials[ml] = new Material();
+					if (rootMaterials.ContainsKey(block.Label))
+					{
+						builder.Materials[ml] = rootMaterials[block.Label];
+					}
 					break;
 			}
 		}
