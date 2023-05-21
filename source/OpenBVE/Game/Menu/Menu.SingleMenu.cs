@@ -610,8 +610,8 @@ namespace OpenBve
 						if (Program.CurrentRoute.Switches == null || Program.CurrentRoute.Switches.Count == 0)
 						{
 							Items = new MenuEntry[2];
-							Items[0] = new MenuCaption("No Switches!");
-							Items[2] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+							Items[0] = new MenuCaption("No Available Switches.");
+							Items[1] = new MenuCommand(Translations.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
 						}
 						else if (Program.CurrentRoute.Switches.Count == 1)
 						{
@@ -675,6 +675,9 @@ namespace OpenBve
 							}
 							previousFound:
 
+							// sensible number of decimal places please
+							distanceToNextSwitch = Math.Round(distanceToNextSwitch, 2, MidpointRounding.AwayFromZero);
+							distanceToPreviousSwitch = Math.Round(distanceToPreviousSwitch, 2, MidpointRounding.AwayFromZero);
 							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-Overlay.png"), new TextureParameters(null, null), out switchMainPictureBox.Texture);
 							if (nextSwitch != Guid.Empty && previousSwitch != Guid.Empty)
 							{
@@ -720,7 +723,7 @@ namespace OpenBve
 								// Previous switch is valid, next is not
 								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[previousSwitch].Type == SwitchType.LeftHanded, true);
 								Items = new MenuEntry[5];
-								Items[0] = new MenuCaption(Translations.GetInterfaceString(Program.CurrentRoute.Switches[nextSwitch].Name));
+								Items[0] = new MenuCaption(Translations.GetInterfaceString(Program.CurrentRoute.Switches[previousSwitch].Name));
 								Items[1] = new MenuCaption("Distance: " + distanceToPreviousSwitch + "m");
 								Items[2] = new MenuCaption("Current Setting: " + Program.CurrentRoute.Switches[previousSwitch].CurrentlySetTrack);
 								Items[3] = new MenuCommand("Toggle!", MenuTag.Yes, 0);
