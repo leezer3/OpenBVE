@@ -8,15 +8,18 @@ namespace RouteManager2.Events
 	{
 		/// <summary>The GUID of the switch</summary>
 		public readonly Guid Index;
+		/// <summary>The track position of the switch</summary>
+		public readonly double TrackPosition;
 
 		private readonly int triggerDirection;
 
 		private readonly CurrentRoute currentRoute;
 
-		public SwitchEvent(Guid idx, int direction, CurrentRoute route)
+		public SwitchEvent(Guid idx, int direction, double trackPosition, CurrentRoute route)
 		{
 			Index = idx;
 			triggerDirection = direction;
+			TrackPosition = trackPosition;
 			currentRoute = route;
 		}
 

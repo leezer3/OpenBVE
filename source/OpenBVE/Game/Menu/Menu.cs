@@ -2,6 +2,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -43,7 +44,9 @@ namespace OpenBve
 		private static readonly Color128 ColourHighlight = Color128.Black;
 		private static readonly Color128 ColourNormal = Color128.White;
 		private static readonly Picturebox LogoPictureBox = new Picturebox(Program.Renderer);
-
+		internal static List<Guid> nextSwitches = new List<Guid>();
+		internal static List<Guid> previousSwitches = new List<Guid>();
+		internal static bool switchesFound = false;
 		
 
 		// some sizes and constants
@@ -775,6 +778,20 @@ namespace OpenBve
 								}
 
 								menu.Items[2].Text = "Current Setting: " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
+								switchesFound = false; // as switch has been toggled, need to recalculate switches along route
+								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								break;
+							case MenuTag.PreviousSwitch:
+								Guid previousGuid = previousSwitches[0];
+								previousSwitches.RemoveAt(0);
+								nextSwitches.Insert(0, previousGuid);
+								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								break;
+							case MenuTag.NextSwitch:
+								Guid nextGuid = nextSwitches[0];
+								nextSwitches.RemoveAt(0);
+								previousSwitches.Insert(0, nextGuid);
+								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 						}
 					}
