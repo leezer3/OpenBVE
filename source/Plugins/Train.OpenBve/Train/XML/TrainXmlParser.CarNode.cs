@@ -565,8 +565,8 @@ namespace Train.OpenBve
 						// We couldn't find any valid XML, so return false
 						throw new System.IO.InvalidDataException();
 					}
-					IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
-					if (DocumentElements != null && DocumentElements.Count() != 0)
+					List<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated").ToList();
+					if (DocumentElements != null && DocumentElements.Count != 0)
 					{
 						string t = Train.TrainFolder;
 						Train.TrainFolder = currentPath;
@@ -578,8 +578,8 @@ namespace Train.OpenBve
 						}
 						return;
 					}
-					DocumentElements = CurrentXML.Root.Elements("Panel");
-					if (DocumentElements != null  && DocumentElements.Count() != 0)
+					DocumentElements = CurrentXML.Root.Elements("Panel").ToList();
+					if (DocumentElements != null && DocumentElements.Count != 0)
 					{
 						string t = Train.TrainFolder;
 						Train.TrainFolder = currentPath;

@@ -55,10 +55,10 @@ namespace Train.OpenBve
 				throw new InvalidDataException(FileName + " does not appear to be a valid XML file.");
 			}
 
-			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("Panel");
+			List<XElement> DocumentElements = CurrentXML.Root.Elements("Panel").ToList();
 
 			// Check this file actually contains OpenBVE panel definition elements
-			if (DocumentElements == null || !DocumentElements.Any())
+			if (DocumentElements == null || DocumentElements.Count == 0)
 			{
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException(FileName + " is not a valid PanelXML file.");
