@@ -66,10 +66,11 @@ namespace Train.OpenBve
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
-						switch (Section.ToLowerInvariant()) {
+						PanelSections Section;
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Section);
+						switch (Section) {
 								// panel
-							case "this":
+							case PanelSections.This:
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('='); if (j >= 0)
 									{
