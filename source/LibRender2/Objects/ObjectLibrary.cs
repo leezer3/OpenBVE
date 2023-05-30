@@ -176,14 +176,14 @@ namespace LibRender2.Objects
 					if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
 					{
 						Texture nighttimeTexture; 
-						if (TextureManager.textureCache.ContainsKey(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin))
+						if (TextureManager.textureCache.ContainsKey(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin))
 						{
-							nighttimeTexture = TextureManager.textureCache[State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin];
+							nighttimeTexture = TextureManager.textureCache[State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin];
 						}
 						else
 						{
-							State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin.GetTexture(out nighttimeTexture);
-							TextureManager.textureCache.Add(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin, nighttimeTexture);
+							State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin.GetTexture(out nighttimeTexture);
+							TextureManager.textureCache.Add(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin, nighttimeTexture);
 						}
 						TextureTransparencyType transparencyType = nighttimeTexture.GetTransparencyType();
 						if (transparencyType == TextureTransparencyType.Alpha)

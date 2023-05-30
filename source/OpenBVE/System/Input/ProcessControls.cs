@@ -152,7 +152,13 @@ namespace OpenBve
 			}
 			//If we are currently blocking key repeat events from firing, return
 			if (BlockKeyRepeat) return;
-			if (TrainManagerBase.PlayerTrain.Plugin != null && TrainManagerBase.PlayerTrain.Plugin.BlockingInput) return;
+			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
+			{
+				// IRawInput allows train plugins to take control of the keyboard
+				// However, if in pause / menu, this could lockup & the train may be null in the GL3 menu
+				if (TrainManagerBase.PlayerTrain.Plugin != null && TrainManagerBase.PlayerTrain.Plugin.BlockingInput) return;
+			}
+			
 			switch (Program.Renderer.CurrentInterface)
 			{
 				case InterfaceType.Pause:

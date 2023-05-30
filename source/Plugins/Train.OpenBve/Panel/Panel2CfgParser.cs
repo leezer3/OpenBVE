@@ -66,10 +66,11 @@ namespace Train.OpenBve
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
-						switch (Section.ToLowerInvariant()) {
+						PanelSections Section;
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Section);
+						switch (Section) {
 								// panel
-							case "this":
+							case PanelSections.This:
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('='); if (j >= 0)
 									{
@@ -1434,8 +1435,8 @@ namespace Train.OpenBve
 										int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
 										double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
 										//Create both a drop and a snowflake at the same position, the windscreen code will determine which is shown
-										int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
-										int panelFlakeIndex = CreateElement(ref Car.CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
+										int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
+										int panelFlakeIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
 										string f = drop + " raindrop";
 										string f2 = drop + " snowflake";
 										try

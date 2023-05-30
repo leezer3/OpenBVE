@@ -55,10 +55,10 @@ namespace Train.OpenBve
 				throw new InvalidDataException(FileName + " does not appear to be a valid XML file.");
 			}
 
-			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("Panel");
+			List<XElement> DocumentElements = CurrentXML.Root.Elements("Panel").ToList();
 
 			// Check this file actually contains OpenBVE panel definition elements
-			if (DocumentElements == null || !DocumentElements.Any())
+			if (DocumentElements == null || DocumentElements.Count == 0)
 			{
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException(FileName + " is not a valid PanelXML file.");
@@ -131,18 +131,6 @@ namespace Train.OpenBve
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
-										if (Plugin.CurrentOptions.EnableBveTsHacks)
-										{
-											switch ((int)PanelRight)
-											{
-												case 1696:
-													if (PanelResolution == 1024 && trainName == "TOQ2000CN1EXP10" || trainName == "TOQ8500CS8EXP10")
-													{
-														PanelRight = 1024;
-													}
-													break;
-											}
-										}
 										break;
 									case PanelKey.Top:
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelTop))
@@ -157,7 +145,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -173,7 +160,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -210,63 +196,6 @@ namespace Train.OpenBve
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												}
-												if (Plugin.CurrentOptions.EnableBveTsHacks)
-												{
-													switch ((int)PanelCenter.Y)
-													{
-														case 180:
-															switch (trainName.ToUpperInvariant())
-															{
-																case "LT_C69_77":
-																case "LT_C69_77_V2":
-																	// Broken initial zoom
-																	PanelCenter.Y = 350;
-																	break;
-															}
-															break;
-														case 200:
-															switch (trainName.ToUpperInvariant())
-															{
-																case "HM05":
-																	// Broken initial zoom
-																	PanelCenter.Y = 350;
-																	break;
-															}
-															break;
-														case 229:
-															if (PanelBottom == 768 && PanelResolution == 1024)
-															{
-																// Martin Finken's BVE4 trams: Broken initial zoom
-																PanelCenter.Y = 350;
-															}
-															break;
-														case 255:
-															if (PanelBottom == 1024 && PanelResolution == 1024)
-															{
-																switch (trainName.ToUpperInvariant())
-																{
-																	case "PARIS_MF67":
-																	case "PARIS_MF88":
-																	case "PARIS_MP73":
-																	case "PARIS_MP89":
-																	case "PARIS_MP89AUTO":
-																	case "LT1938":
-																	case "LT1973 UNREFURB":
-																		// Broken initial zoom
-																		PanelCenter.Y = 350;
-																		break;
-																	case "LT_A60_62":
-																	case "LT1972 MKII":
-																		// Broken initial zoom and black patch at bottom of panel
-																		PanelCenter.Y = 350;
-																		PanelBottom = 792;
-																		break;
-																}
-															}
-															break;
-													}
-
-												}
 											}
 											else
 											{
@@ -288,19 +217,6 @@ namespace Train.OpenBve
 												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOrigin.Y))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (Plugin.CurrentOptions.EnableBveTsHacks)
-												{
-													switch (trainName)
-													{
-														case "8171BETA":
-															if (PanelResolution == 768 && PanelOrigin.Y == 256)
-															{
-																// 81-71: Bust panel origin means a flying cab....
-																PanelOrigin.Y = 0;
-															}
-															break;
-													}
 												}
 											}
 											else
@@ -472,11 +388,11 @@ namespace Train.OpenBve
 												string b = Value.Substring(k + 1).TrimStart();
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Size.X))
 												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "SizeX is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												}
 												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Size.Y))
 												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "SizeY is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												}
 											}
 											else
@@ -622,7 +538,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -638,7 +553,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -747,7 +661,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -763,7 +676,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1023,7 +935,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1039,7 +950,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1139,7 +1049,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1155,7 +1064,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1210,35 +1118,6 @@ namespace Train.OpenBve
 								if (wday > 0 & hday > 0)
 								{
 									int numFrames = hday / Interval;
-									if (Plugin.CurrentOptions.EnableBveTsHacks)
-									{
-										/*
-										 * With hacks enabled, the final frame does not necessarily need to be
-										 * completely within the confines of the texture
-										 * e.g. LT_C69_77
-										 * https://github.com/leezer3/OpenBVE/issues/247
-										 */
-										switch (Subject)
-										{
-											case "power":
-												if (Train.Handles.Power.MaximumNotch > numFrames)
-												{
-													numFrames = Train.Handles.Power.MaximumNotch;
-												}
-												break;
-											case "brake":
-												int b = Train.Handles.Brake.MaximumNotch + 2;
-												if (Train.Handles.HasHoldBrake)
-												{
-													b++;
-												}
-												if (b > numFrames)
-												{
-													numFrames = b;
-												}
-												break;
-										}
-									}
 									Texture[] tday = new Texture[numFrames];
 									Texture[] tnight;
 									for (int k = 0; k < numFrames; k++)
