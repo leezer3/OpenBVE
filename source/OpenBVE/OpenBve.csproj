@@ -223,6 +223,8 @@
     <Compile Include="System\Input\JoystickManager\JoystickManager64.cs" />
     <Compile Include="System\Input\JoystickManager\RailDriver\AbstractRailDriver.cs" />
     <Compile Include="System\Input\JoystickManager\StandardJoystick.cs" />
+    <Compile Include="System\Input\ProcessControls.Analog.cs" />
+    <Compile Include="System\Input\ProcessControls.Digital.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
