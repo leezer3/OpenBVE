@@ -1180,15 +1180,13 @@ namespace OpenBve
 							}
 							else
 							{
-								TimeFactor = TimeFactor == 1
-									? Interface.CurrentOptions.TimeAccelerationFactor
-									: 1;
+								TimeFactor = TimeFactor == 1 ? Interface.CurrentOptions.TimeAccelerationFactor : 1;
 								MessageManager.AddMessage(
 									TimeFactor.ToString(
 										System.Globalization.CultureInfo.InvariantCulture) + "x",
 									MessageDependency.None, GameMode.Expert,
 									MessageColor.White,
-									Program.CurrentRoute.SecondsSinceMidnight + 5.0 * (double)TimeFactor, null);
+									Program.CurrentRoute.SecondsSinceMidnight + 5.0 * TimeFactor, null);
 							}
 						}
 

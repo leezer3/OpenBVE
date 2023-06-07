@@ -578,8 +578,7 @@ namespace OpenBve {
 
 		private void comboBoxFont_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			FontFamily font = comboBoxFont.Items[comboBoxFont.SelectedIndex] as FontFamily;
-			if (font != null)
+			if (comboBoxFont.Items[comboBoxFont.SelectedIndex] is FontFamily font)
 			{
 				string oldFont = Interface.CurrentOptions.Font;
 				try

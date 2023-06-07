@@ -372,9 +372,9 @@ namespace OpenBve {
 			Renderer.Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Renderer.Camera.VerticalViewingAngle) * Renderer.Screen.AspectRatio);
 			Renderer.Camera.OriginalVerticalViewingAngle = Renderer.Camera.VerticalViewingAngle;
 			Renderer.Camera.ExtraViewingDistance = 50.0;
-			Renderer.Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Renderer.Camera.ForwardViewingDistance = Interface.CurrentOptions.ViewingDistance;
 			Renderer.Camera.BackwardViewingDistance = 0.0;
-			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			string programVersion = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
 			FileSystem.ClearLogFile(programVersion);

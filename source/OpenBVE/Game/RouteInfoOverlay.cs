@@ -1,6 +1,5 @@
 ﻿using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;

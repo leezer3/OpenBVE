@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using LibRender2.Cameras;
-using LibRender2.Overlays;
 using LibRender2.Screens;
 using LibRender2.Trains;
 using LibRender2.Viewports;
@@ -9,16 +8,9 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Runtime;
-using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using RouteManager2.MessageManager;
-using RouteManager2.SignalManager;
-using RouteManager2.Stations;
 using TrainManager;
-using TrainManager.Handles;
-using TrainManager.Car;
-using TrainManager.Car.Systems;
-using OpenBveApi.Routes;
 
 namespace OpenBve
 {

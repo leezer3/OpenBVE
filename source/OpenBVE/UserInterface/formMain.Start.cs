@@ -812,8 +812,7 @@ namespace OpenBve
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
 			if (listviewTrainFolders.SelectedItems.Count == 1) {
-				string t = listviewTrainFolders.SelectedItems[0].Tag as string;
-				if (t != null) {
+				if (listviewTrainFolders.SelectedItems[0].Tag is string t) {
 					if (t.Length == 0)
 					{
 						//Pop up to parent directory
@@ -871,8 +870,7 @@ namespace OpenBve
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
 			if (listViewTrainPackages.SelectedItems.Count == 1) {
-				string t = listViewTrainPackages.SelectedItems[0].Tag as string;
-				if (t != null) {
+				if (listViewTrainPackages.SelectedItems[0].Tag is string t) {
 					if (t.Length == 0)
 					{
 						//Pop up to parent directory
@@ -975,8 +973,7 @@ namespace OpenBve
 					listviewTrainFolders_DoubleClick(null, null);
 					break;
 				case Keys.Back:
-					string t = listviewTrainFolders.Tag as string;
-					if (t != null) {
+					if (listviewTrainFolders.Tag is string t) {
 						if (t.Length == 0 || Directory.Exists(t)) {
 							textboxTrainFolder.Text = t;
 						}

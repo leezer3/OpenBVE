@@ -158,15 +158,10 @@ namespace OpenBve
 								double a = Control.AnalogState;
 								int p =
 									(int)
-									Math.Round(a *
-									           (double)
-									           TrainManager.PlayerTrain.Handles.Power.MaximumNotch);
+									Math.Round(a * TrainManager.PlayerTrain.Handles.Power.MaximumNotch);
 								int b =
 									(int)
-									Math.Round(-a *
-									           ((double)
-									            TrainManager.PlayerTrain.Handles.Brake.MaximumNotch +
-									            2));
+									Math.Round(-a * (TrainManager.PlayerTrain.Handles.Brake.MaximumNotch + 2.0));
 								if (p < 0) p = 0;
 								if (b < 0) b = 0;
 								bool q = b == 1;
@@ -192,15 +187,11 @@ namespace OpenBve
 								double a = Control.AnalogState;
 								int p =
 									(int)
-									Math.Round(a *
-									           (double)
-									           TrainManager.PlayerTrain.Handles.Power.MaximumNotch);
+									Math.Round(a * TrainManager.PlayerTrain.Handles.Power.MaximumNotch);
 								int b =
 									(int)
 									Math.Round(-a *
-									           ((double)
-									            TrainManager.PlayerTrain.Handles.Brake.MaximumNotch +
-									            1));
+									           (TrainManager.PlayerTrain.Handles.Brake.MaximumNotch + 1.0));
 								if (p < 0) p = 0;
 								if (b < 0) b = 0;
 								if (b <= TrainManager.PlayerTrain.Handles.Brake.MaximumNotch)
