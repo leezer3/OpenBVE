@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
+using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -269,7 +270,7 @@ namespace ObjectViewer {
 			    {
 				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
 				    {
-					    string currentTrainFolder = System.IO.Path.GetDirectoryName(Files[i]);
+					    string currentTrainFolder = Path.GetDirectoryName(Files[i]);
 					    bool canLoad = false;
 					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
@@ -316,7 +317,7 @@ namespace ObjectViewer {
 				    else
 				    {
 					    UnifiedObject o;
-					    if (CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o))
+					    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out o))
 					    {
 						    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
 					    }
@@ -375,7 +376,7 @@ namespace ObjectViewer {
 								if(f[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
 								{
 									// only check to see if it's a train if this is a specified filetype, else we'll start loading the full train from an object in it's folder
-									currentTrainFolder = System.IO.Path.GetDirectoryName(f[i]);
+									currentTrainFolder = Path.GetDirectoryName(f[i]);
 								}
 								for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					            {

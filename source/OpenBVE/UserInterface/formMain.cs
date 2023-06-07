@@ -208,7 +208,7 @@ namespace OpenBve {
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedRoutes[i])) continue;
 				string RouteFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
-				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				string RoutePath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (string.IsNullOrEmpty(RouteFileName) || string.IsNullOrEmpty(RoutePath)) continue;
 				ListViewItem Item = listviewRouteRecently.Items.Add(RouteFileName);
 				string extension = System.IO.Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
@@ -258,7 +258,7 @@ namespace OpenBve {
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
 				string TrainFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
-				string TrainPath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				string TrainPath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				if (string.IsNullOrEmpty(TrainFileName) || string.IsNullOrEmpty(TrainPath)) continue;
 				ListViewItem Item = listviewTrainRecently.Items.Add(TrainFileName);
 				Item.ImageKey = @"train";

@@ -78,7 +78,7 @@ namespace RouteManager2.SignalManager
 			speedLimits = new[] { 0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity };
 			XmlDocument currentXML = new XmlDocument();
 			currentXML.Load(fileName);
-			string currentPath = System.IO.Path.GetDirectoryName(fileName);
+			string currentPath = Path.GetDirectoryName(fileName);
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNode node = currentXML.SelectSingleNode("/openBVE/CompatibilitySignals/SignalSetName");

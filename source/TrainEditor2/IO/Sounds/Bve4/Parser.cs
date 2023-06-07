@@ -21,7 +21,7 @@ namespace TrainEditor2.IO.Sounds.Bve4
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			List<string> lines = File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)).ToList();
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			for (int i = lines.Count - 1; i >= 0; i--)
 			{

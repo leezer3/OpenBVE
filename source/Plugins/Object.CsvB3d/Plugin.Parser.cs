@@ -1106,7 +1106,7 @@ namespace Plugin
 									} else {
 										try
 										{
-											tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+											tday = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 										}
 										catch
 										{
@@ -1130,7 +1130,7 @@ namespace Plugin
 												if (Arguments[0].StartsWith("swiss1/", StringComparison.InvariantCultureIgnoreCase))
 												{
 													Arguments[0] = Arguments[0].Substring(7);
-													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													tday = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 													if (System.IO.File.Exists(tday))
 													{
 														hackFound = true;
@@ -1140,7 +1140,7 @@ namespace Plugin
 												if (Arguments[0].StartsWith("/U5/", StringComparison.InvariantCultureIgnoreCase))
 												{
 													Arguments[0] = Arguments[0].Substring(4);
-													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													tday = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 													if (System.IO.File.Exists(tday))
 													{
 														hackFound = true;
@@ -1150,7 +1150,7 @@ namespace Plugin
 												if (Arguments[0].StartsWith("U5/", StringComparison.InvariantCultureIgnoreCase))
 												{
 													Arguments[0] = Arguments[0].Substring(3);
-													tday = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													tday = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 													if (System.IO.File.Exists(tday))
 													{
 														hackFound = true;
@@ -1177,7 +1177,7 @@ namespace Plugin
 											bool ignoreAsInvalid = false;
 											try
 											{
-												tnight = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
+												tnight = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[1]);
 											}
 											catch
 											{
@@ -1217,7 +1217,7 @@ namespace Plugin
 								{
 									try
 									{
-										lightmap = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										lightmap = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 									}
 									catch
 									{

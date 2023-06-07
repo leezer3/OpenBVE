@@ -1791,7 +1791,7 @@ namespace CsvRwRouteParser
 				}
 					break;
 				case TrackCommand.StationXML:
-					string fn = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+					string fn = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 					if (!System.IO.File.Exists(fn))
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Station XML file " + fn + " not found in Track.StationXML at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);

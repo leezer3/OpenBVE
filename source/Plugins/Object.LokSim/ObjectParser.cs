@@ -47,7 +47,7 @@ namespace Plugin
 		/// <returns>The object loaded.</returns>
 		internal static StaticObject ReadObject(string FileName, Vector3 Rotation)
 		{
-			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
+			string BaseDir = Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
 			//Initialise the object
 			StaticObject Object = new StaticObject(Plugin.currentHost);

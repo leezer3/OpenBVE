@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using LibRender2.Trains;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -90,13 +91,13 @@ namespace Train.OpenBve
 						{
 							try
 							{
-								string childFile = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+								string childFile = Path.CombineFile(currentPath, c.InnerText);
 								XmlDocument childXML = new XmlDocument();
 								childXML.Load(childFile);
 								XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Brake");
 								//We need to save and restore the current path to make relative paths within the child file work correctly
 								string savedPath = currentPath;
-								currentPath = System.IO.Path.GetDirectoryName(childFile);
+								currentPath = Path.GetDirectoryName(childFile);
 								ParseBrakeNode(childNodes[0], fileName, Car, ref Train);
 								currentPath = savedPath;
 							}
@@ -185,7 +186,7 @@ namespace Train.OpenBve
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Car " + Car + " in XML file " + fileName);
 							break;
 						}
-						string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+						string f = Path.CombineFile(currentPath, c.InnerText);
 						if (System.IO.File.Exists(f))
 						{
 							Plugin.currentHost.LoadObject(f, Encoding.Default, out CarObjects[Car]);
@@ -236,7 +237,7 @@ namespace Train.OpenBve
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie object path for Car " + Car + " in XML file " + fileName);
 											break;
 										}
-										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
+										string fb = Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
 											Plugin.currentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2]);
@@ -279,7 +280,7 @@ namespace Train.OpenBve
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie object path for Car " + Car + " in XML file " + fileName);
 											break;
 										}
-										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
+										string fb = Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
 											Plugin.currentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2 + 1]);
@@ -329,7 +330,7 @@ namespace Train.OpenBve
 						Train.Cars[Car].CarSections = new CarSection[1];
 						Train.Cars[Car].CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true);
 
-						string cv = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+						string cv = Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Interior view file was invalid for Car " + Car + " in XML file " + fileName);
@@ -442,16 +443,16 @@ namespace Train.OpenBve
 											switch (sc.Name.ToLowerInvariant())
 											{
 												case "powerfreq":
-													powerFreq = OpenBveApi.Path.CombineFile(currentPath, sc.InnerText);
+													powerFreq = Path.CombineFile(currentPath, sc.InnerText);
 													break;
 												case "powervol":
-													powerVol = OpenBveApi.Path.CombineFile(currentPath, sc.InnerText);
+													powerVol = Path.CombineFile(currentPath, sc.InnerText);
 													break;
 												case "brakefreq":
-													brakeFreq = OpenBveApi.Path.CombineFile(currentPath, sc.InnerText);
+													brakeFreq = Path.CombineFile(currentPath, sc.InnerText);
 													break;
 												case "brakevol":
-													brakeVol = OpenBveApi.Path.CombineFile(currentPath, sc.InnerText);
+													brakeVol = Path.CombineFile(currentPath, sc.InnerText);
 													break;
 											}
 										}
@@ -592,7 +593,7 @@ namespace Train.OpenBve
 				else if (interiorFile.ToLowerInvariant().EndsWith(".cfg"))
 				{
 					//Only supports panel2.cfg format
-					Plugin.Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Train.Cars[Train.DriverCar]);
+					Plugin.Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), Path.GetDirectoryName(interiorFile), Train.Cars[Train.DriverCar]);
 					Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))

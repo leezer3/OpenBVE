@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBve.Graphics;
 using OpenBve.Input;
+using OpenBveApi;
 using OpenTK;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -212,13 +213,13 @@ namespace OpenBve {
 					throw new Exception("No plugins capable of loading routefile " + result.RouteFile + " were found.");
 				}
 				if (!string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
-					folder = System.IO.Path.GetDirectoryName(result.RouteFile);
+					folder = Path.GetDirectoryName(result.RouteFile);
 					while (true) {
-						string trainFolder = OpenBveApi.Path.CombineDirectory(folder, "Train");
+						string trainFolder = Path.CombineDirectory(folder, "Train");
 						if (System.IO.Directory.Exists(trainFolder)) {
 							try
 							{
-								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
+								folder = Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
 							}
 							catch (Exception ex)
 							{
@@ -228,7 +229,7 @@ namespace OpenBve {
 								}
 							}
 							if (System.IO.Directory.Exists(folder)) {
-								file = OpenBveApi.Path.CombineFile(folder, "train.dat");
+								file = Path.CombineFile(folder, "train.dat");
 								if (System.IO.File.Exists(file)) {
 									result.TrainFolder = folder;
 									result.TrainEncoding = System.Text.Encoding.UTF8;
@@ -384,8 +385,7 @@ namespace OpenBve {
 		/// <summary>Deinitializes the program.</summary>
 		private static void Deinitialize()
 		{
-			string error;
-			Program.CurrentHost.UnloadPlugins(out error);
+			Program.CurrentHost.UnloadPlugins(out _);
 			Sounds.DeInitialize();
 			Renderer.DeInitialize();
 			if (currentGameWindow != null)

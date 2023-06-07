@@ -1061,10 +1061,10 @@ namespace CsvRwRouteParser
 						 * We'll try first relative to the routefile (as per Route.DynamicLight)
 						 * and if not found there relative to the object path
 						 */
-						string path = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						string path = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 						if (!File.Exists(path))
 						{
-							path = Path.CombineFile(System.IO.Path.GetDirectoryName(ObjectPath), Arguments[0]);
+							path = Path.CombineFile(Path.GetDirectoryName(ObjectPath), Arguments[0]);
 						}
 						if (File.Exists(path))
 						{

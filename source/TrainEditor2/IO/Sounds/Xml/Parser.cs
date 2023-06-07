@@ -22,7 +22,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 
 			XDocument xml = XDocument.Load(fileName, LoadOptions.SetLineInfo);
 			List<XElement> carSoundNodes = xml.XPathSelectElements("/openBVE/CarSounds").ToList();
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			if (!carSoundNodes.Any())
 			{

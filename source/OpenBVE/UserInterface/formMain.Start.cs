@@ -1256,7 +1256,7 @@ namespace OpenBve
 						int i;
 						for (i = 0; i < f.Length; i++)
 						{
-							string g = Path.CombineFile(System.IO.Path.GetDirectoryName(Result.RouteFile),
+							string g = Path.CombineFile(Path.GetDirectoryName(Result.RouteFile),
 								System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile) + f[i]);
 							if (File.Exists(g))
 							{

@@ -87,7 +87,7 @@ namespace TrainEditor2.IO.Panels.Xml
 		private static void ParseThisNode(string fileName, XElement parent, This This)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
 
@@ -395,7 +395,7 @@ namespace TrainEditor2.IO.Panels.Xml
 		{
 			pilotLamp = new PilotLampElement();
 			CultureInfo culture = CultureInfo.InvariantCulture;
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
 
@@ -521,7 +521,7 @@ namespace TrainEditor2.IO.Panels.Xml
 		{
 			needle = new NeedleElement();
 			CultureInfo culture = CultureInfo.InvariantCulture;
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
 
@@ -831,7 +831,7 @@ namespace TrainEditor2.IO.Panels.Xml
 		{
 			digitalNumber = new DigitalNumberElement();
 			CultureInfo culture = CultureInfo.InvariantCulture;
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
 
@@ -1144,7 +1144,7 @@ namespace TrainEditor2.IO.Panels.Xml
 		{
 			linearGauge = new LinearGaugeElement();
 			CultureInfo culture = CultureInfo.InvariantCulture;
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
 

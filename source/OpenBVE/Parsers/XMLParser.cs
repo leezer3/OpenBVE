@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Xml;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -31,10 +32,10 @@ namespace OpenBve
                         string objectPath;
                         try
                         {
-                            var fn = System.IO.Path.GetDirectoryName(fileName);
+                            var fn = Path.GetDirectoryName(fileName);
 							var InnerNode = node.SelectSingleNode("filename").InnerText;
                             InnerNode = InnerNode.Trim(new char[] { });
-                            objectPath = OpenBveApi.Path.CombineFile(fn, InnerNode);
+                            objectPath = Path.CombineFile(fn, InnerNode);
                         }
                         catch (Exception)
                         {

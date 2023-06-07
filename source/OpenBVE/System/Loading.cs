@@ -88,7 +88,7 @@ namespace OpenBve {
 		internal static string GetRailwayFolder(string RouteFile) {
 			try
 			{
-				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				string Folder = Path.GetDirectoryName(RouteFile);
 
 				while (true)
 				{
@@ -120,7 +120,7 @@ namespace OpenBve {
 			// If the Route, Object and Sound folders exist, but are not in a railway folder.....
 			try
 			{
-				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				string Folder = Path.GetDirectoryName(RouteFile);
 				if (Folder == null)
 				{
 					// Unlikely to work, but attempt to make the best of it
@@ -177,7 +177,7 @@ namespace OpenBve {
 			
 			string Folder;
 			try {
-				Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				Folder = Path.GetDirectoryName(RouteFile);
 				if (Interface.CurrentOptions.TrainName[0] == '$') {
 					Folder = Path.CombineDirectory(Folder, Interface.CurrentOptions.TrainName);
 					if (Directory.Exists(Folder)) {

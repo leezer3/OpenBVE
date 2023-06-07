@@ -130,7 +130,7 @@ namespace Plugin
 				}
 			}
 
-			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
+			string BaseDir = Path.GetDirectoryName(FileName);
 
 			GruppenObject[] CurrentObjects = new GruppenObject[0];
 			//Check for null

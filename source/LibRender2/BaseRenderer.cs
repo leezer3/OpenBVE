@@ -380,7 +380,7 @@ namespace LibRender2
 			}
 
 			// ReSharper disable once PossibleNullReferenceException
-			string openGLdll = Path.CombineFile(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
+			string openGLdll = Path.CombineFile(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
 
 			if (File.Exists(openGLdll))
 			{
