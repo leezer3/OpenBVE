@@ -11,7 +11,7 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-		private static void ProcessAnalogControl(double TimeElapsed, Control Control)
+		private static void ProcessAnalogControl(double TimeElapsed, ref Control Control)
 		{
 			// analog control
 			if (Control.AnalogState != 0.0)

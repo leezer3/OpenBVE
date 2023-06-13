@@ -22,7 +22,7 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-		private static void ProcessDigitalControl(double TimeElapsed, Control Control)
+		private static void ProcessDigitalControl(double TimeElapsed, ref Control Control)
 		{
 			bool lookahead = false;
 			bool returnToCab = false;

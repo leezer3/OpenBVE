@@ -215,11 +215,11 @@ namespace OpenBve
 						if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.AnalogHalf |
 							Interface.CurrentControls[i].InheritedType == Translations.CommandType.AnalogFull)
 						{
-							ProcessAnalogControl(TimeElapsed, Interface.CurrentControls[i]);
+							ProcessAnalogControl(TimeElapsed, ref Interface.CurrentControls[i]);
 						}
 						else if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.Digital)
 						{
-							ProcessDigitalControl(TimeElapsed, Interface.CurrentControls[i]);
+							ProcessDigitalControl(TimeElapsed, ref Interface.CurrentControls[i]);
 						}
 					}
 					break;
