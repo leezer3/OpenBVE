@@ -434,6 +434,7 @@ namespace OpenBve {
 					TrainBase train = currentTrain as TrainBase;
 					currentTrain.AI = new Game.SimpleHumanDriverAI(train, Interface.CurrentOptions.PrecedingTrainSpeedLimit);
 					currentTrain.TimetableDelta = Program.CurrentRoute.PrecedingTrainTimeDeltas[k];
+					// ReSharper disable once PossibleNullReferenceException - Will always succeed 
 					train.Specs.DoorOpenMode = DoorMode.Manual;
 					train.Specs.DoorCloseMode = DoorMode.Manual;
 				}

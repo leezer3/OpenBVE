@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using LibRender2.Screens;
 using OpenBveApi.Graphics;
 using OpenTK;
@@ -28,15 +29,22 @@ namespace OpenBve
 				switch (type)
 				{
 					case MenuOptionType.ScreenResolution:
-						ScreenResolution[] castEntries = entries as ScreenResolution[];
-						for (int i = 0; i < castEntries.Length; i++)
+						if (entries is ScreenResolution[] castEntries)
 						{
-							if (castEntries[i].Width == Program.Renderer.Screen.Width && castEntries[i].Height == Program.Renderer.Screen.Height)
+							for (int i = 0; i < castEntries.Length; i++)
 							{
-								CurrentlySelectedOption = i;
-								return;
+								if (castEntries[i].Width == Program.Renderer.Screen.Width && castEntries[i].Height == Program.Renderer.Screen.Height)
+								{
+									CurrentlySelectedOption = i;
+									return;
+								}
 							}
 						}
+						else
+						{
+							throw new InvalidDataException("Entries must be a list of screen resolutions");
+						}
+
 						break;
 					case MenuOptionType.FullScreen:
 						CurrentlySelectedOption = Interface.CurrentOptions.FullscreenMode ? 0 : 1;
@@ -109,7 +117,10 @@ namespace OpenBve
 				switch (Type)
 				{
 					case MenuOptionType.ScreenResolution:
-						ScreenResolution res = CurrentOption as ScreenResolution;
+						if (!(CurrentOption is ScreenResolution res))
+						{
+							return;
+						}
 						Program.Renderer.Screen.Width = (int)(res.Width * DisplayDevice.Default.ScaleFactor.X);
 						Program.Renderer.Screen.Height = (int)(res.Height * DisplayDevice.Default.ScaleFactor.Y);
 						Program.currentGameWindow.Width = (int)(res.Width * DisplayDevice.Default.ScaleFactor.X);

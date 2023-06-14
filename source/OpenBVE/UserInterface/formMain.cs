@@ -176,8 +176,9 @@ namespace OpenBve {
 			{
 				flags = Directory.GetFiles(flagsFolder);
 			}
-			catch (Exception)
+			catch
 			{
+				//ignored- not currently used either, hangover from the initial managed content system
 			}
 	#pragma warning restore 0219
 			// route selection

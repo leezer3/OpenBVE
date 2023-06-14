@@ -1441,7 +1441,7 @@ namespace OpenBve
 				if (MonoDialog.ShowDialog() == DialogResult.OK)
 				{
 					lastSelectedFolder = MonoDialog.SelectedPath;
-					folder = Directory.GetParent(MonoDialog.SelectedPath).ToString();
+					folder = Directory.GetParent(MonoDialog.SelectedPath)?.ToString();
 					folderDisplay = MonoDialog.SelectedPath;
 					files = Directory.GetFiles(folderDisplay, "*.*", SearchOption.AllDirectories);
 					DialogOK = true;
@@ -1456,14 +1456,14 @@ namespace OpenBve
 				{
 					DialogOK = true;
 					lastSelectedFolder = dialog.FileName;
-					folder = Directory.GetParent(dialog.FileName).ToString();
+					folder = Directory.GetParent(dialog.FileName)?.ToString();
 					folderDisplay = dialog.FileName;
 					files = Directory.GetFiles(dialog.FileName, "*.*", SearchOption.AllDirectories);
 				}
 
 			}
 
-			if (DialogOK && files.Length != 0)
+			if (DialogOK && files.Length != 0 && folder != null)
 			{
 
 				filesToPackageBox.Text += folderDisplay + Environment.NewLine;
