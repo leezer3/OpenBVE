@@ -259,7 +259,6 @@
     <Compile Include="UserInterface\formAbout.Designer.cs">
       <DependentUpon>formAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parsers\XMLParser.cs" />
     <Compile Include="System\Functions\Extensions.cs" />
     <Compile Include="System\Input\ControlRepeats.cs" />
     <Compile Include="System\Input\Keyboard.cs" />
