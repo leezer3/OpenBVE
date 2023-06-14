@@ -19,7 +19,6 @@ namespace OpenBve
 		/// <param name="FileOrNull">An absolute file path if we are exporting the controls, or a null reference to save to the default configuration location</param>
 		/// <param name="controlsToSave">The list of controls to save</param>
 		internal static void SaveControls(string FileOrNull, Control[] controlsToSave) {
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 			Builder.AppendLine("; Current control configuration");
 			Builder.AppendLine("; =============================");

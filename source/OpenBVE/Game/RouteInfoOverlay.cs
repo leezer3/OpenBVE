@@ -111,12 +111,6 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Returns whether the Route Information display is currently showing on screen</summary>
-		public bool IsActive()
-		{
-			return currentState != state.none;
-		}
-
 		/********************
 			PRIVATE METHODS
 		*********************/
