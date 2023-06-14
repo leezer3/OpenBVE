@@ -49,7 +49,7 @@ namespace OpenBve
 						spd = Math.Round(spd * 3.6);
 						lim = Math.Round(lim * 3.6);
 						remove = spd < lim;
-						string s = InternalText, t;
+						string s = InternalText;
 						if (lim == double.PositiveInfinity)
 						{
 							s = s.Replace("[limit]", "unlimited");
@@ -62,7 +62,7 @@ namespace OpenBve
 								spd = Math.Round(spd * Interface.CurrentOptions.SpeedConversionFactor);
 								lim = Math.Round(lim * Interface.CurrentOptions.SpeedConversionFactor);
 							}
-							t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							string t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
 							s = s.Replace("[speed]", t);
 							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
 							s = s.Replace("[limit]", t);

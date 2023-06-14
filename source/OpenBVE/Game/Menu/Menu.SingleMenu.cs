@@ -65,10 +65,8 @@ namespace OpenBve
 			public SingleMenu(MenuType menuType, int data = 0, double MaxWidth = 0)
 			{
 				Type = menuType;
-				int i, menuItem;
+				int i;
 				int jump = 0;
-				Vector2 size;
-
 				Align = TextAlignment.TopMiddle;
 				Height = Width = 0;
 				Selection = 0;                      // defaults to first menu item
@@ -433,7 +431,7 @@ namespace OpenBve
 						break;
 					case MenuType.JumpToStation:    // list of stations to jump to
 													// count the number of available stations
-						menuItem = 0;
+						int menuItem = 0;
 						for (i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 							if (Program.CurrentRoute.Stations[i].PlayerStops() & Program.CurrentRoute.Stations[i].Stops.Length > 0)
 								menuItem++;
@@ -609,7 +607,7 @@ namespace OpenBve
 					{
 						continue;
 					}
-					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
+					Vector2 size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
 					if (Items[i].Icon != null)
 					{
 						size.X += size.Y * 1.25;
