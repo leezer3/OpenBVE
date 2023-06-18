@@ -279,25 +279,33 @@ namespace TrainManager.Trains
 				return false;
 			}
 
-			if (TrainManagerBase.currentHost.Platform != HostPlatform.MicrosoftWindows | IntPtr.Size != 4)
+			switch (TrainManagerBase.currentHost.Platform)
 			{
-				if (TrainManagerBase.currentHost.Platform == HostPlatform.MicrosoftWindows && IntPtr.Size != 4)
-				{
-					//We can't load the plugin directly on x64 Windows, so use the proxy interface
-					Plugin = new ProxyPlugin(pluginFile, this);
-					if (Plugin.Load(vehicleSpecs(), mode))
+				case HostPlatform.WINE:
+					if (IntPtr.Size != 4)
 					{
-						return true;
+						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "WINE does not support the WCF plugin proxy- Please use the 32-bit version of OpenBVE to load this train plugin.");
+						return false;
 					}
+					break;
+				case HostPlatform.MicrosoftWindows:
+					if (IntPtr.Size != 4)
+					{
+						//We can't load the plugin directly on x64 Windows, so use the proxy interface
+						Plugin = new ProxyPlugin(pluginFile, this);
+						if (Plugin.Load(vehicleSpecs(), mode))
+						{
+							return true;
+						}
 
-					Plugin = null;
-					TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " failed to load.");
-					return false;
-				}
-
-				//WINE doesn't seem to like the WCF proxy :(
-				TrainManagerBase.currentHost.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on Microsoft Windows or compatible.");
-				return false;
+						Plugin = null;
+						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " failed to load.");
+						return false;
+					}
+					break;
+				default:
+					TrainManagerBase.currentHost.AddMessage(MessageType.Warning, false, "Legacy Win32 train plugins " + pluginTitle + " can only be used on Microsoft Windows or compatible.");
+					break;
 			}
 
 			if (TrainManagerBase.currentHost.Platform == HostPlatform.MicrosoftWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
@@ -311,12 +319,10 @@ namespace TrainManager.Trains
 			{
 				return true;
 			}
-			else
-			{
-				Plugin = null;
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString("program_title") + ".");
-				return false;
-			}
+
+			Plugin = null;
+			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString("program_title") + ".");
+			return false;
 		}
 
 		/// <summary>Loads the default plugin for the specified train.</summary>
