@@ -64,5 +64,10 @@ namespace OpenBve.Input
 		{
 			return Guid;
 		}
+
+		public override string ToString()
+		{
+			return "GUID: " + Guid + ", Name: " + Name + ", Buttons: " + ButtonCount() + ", Axis: " + AxisCount() + ", Hats: " + HatCount();
+		}
 	}
 }

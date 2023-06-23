@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using PIEHid32Net;
 
 namespace OpenBve.Input
@@ -87,6 +87,11 @@ namespace OpenBve.Input
 		/// <param name="error">The error</param>
 		public void HandlePIEHidError(PIEDevice sourceDevices, int error)
 		{
+		}
+
+		public override string ToString()
+		{
+			return "GUID: " + Guid + ", Name: " + Name;
 		}
 	}
 

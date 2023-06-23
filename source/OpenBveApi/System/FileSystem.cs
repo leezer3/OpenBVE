@@ -476,11 +476,19 @@ namespace OpenBveApi.FileSystem {
 
 		/// <summary>Appends the specified text to the log file.</summary>
 		/// <param name="text">The text.</param>
-		public void AppendToLogFile(string text) {
+		public void AppendToLogFile(string text, bool addTimestamp = true) {
 			try
 			{
 				string file = System.IO.Path.Combine(SettingsFolder, "log.txt");
-				File.AppendAllText(file, DateTime.Now.ToString("HH:mm:ss") + @"  " + text + Environment.NewLine, new UTF8Encoding(false));
+				if (addTimestamp)
+				{
+					File.AppendAllText(file, DateTime.Now.ToString("HH:mm:ss") + @"  " + text + Environment.NewLine, new UTF8Encoding(false));
+				}
+				else
+				{
+					File.AppendAllText(file, text + Environment.NewLine, new UTF8Encoding(false));	
+				}
+				
 			}
 			catch
 			{
