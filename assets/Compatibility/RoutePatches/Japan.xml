@@ -59,6 +59,9 @@
 	</Patch>
 	<!-- Hakone- Tozan Railway -->
 	<!-- Viewing distance is required to stop terrain re-appearing on sharp curves -->
+	<!-- NOTE: Couple of glitches due to the ObjectVisibility setting, however do not enable this as it causes others -->
+	<!-- https://github.com/leezer3/OpenBVE/issues/907 -->
+	<!-- v0.6-->
 	<Patch>
 		<Hash>3404C2FA1D32366C0B5FEEAFCEF9EA842AECE937F469CBCD82D6E2424418176D</Hash>
 		<FileName>1.csv</FileName>
@@ -73,6 +76,15 @@
 		<Expression Number="747">.Sta 出山信号場(着);;C;0;0;0;0;;;0; </Expression>
 		<Expression Number="1098">.Sta 大平台(着);;C;0;1;1;0;;25;50;</Expression>
 		<Expression Number="1292">.Sta 上大平台信号場(着);;C;0;0;0;0;;;0;</Expression>
+		<ViewingDistance>250</ViewingDistance>
+	</Patch>
+	<!-- v0.6b-->
+	<Patch>
+		<Hash>6BB6E15B46CA9E46E6235C764A7FF5D1EA13AED145130BA8D96DA40529AA333F</Hash>
+		<FileName>1.csv</FileName>
+		<Expression Number="748">.Sta 出山信号場(着);;C;0;0;0;0;;;0;</Expression>
+		<Expression Number="1099">.Sta 大平台(着);;C;0;1;1;0;;25;50;</Expression>
+		<Expression Number="1293">.Sta 上大平台信号場(着);;C;0;0;0;0;;;0;</Expression>
 		<ViewingDistance>250</ViewingDistance>
 	</Patch>
 	<!-- cyber_blue_liner -->
