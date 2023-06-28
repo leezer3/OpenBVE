@@ -74,19 +74,23 @@ namespace OpenBveApi.Textures {
 		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
 		public Texture(int width, int height, int bitsPerPixel, byte[] bytes, Color24[] palette)
 		{
+			/*
 			if (bitsPerPixel != 32)
 			{
 				throw new ArgumentException("The number of bits per pixel is supported.");
 			}
+			*/
 
 			if (bytes == null)
 			{
 				throw new ArgumentNullException("bytes");
 			}
 
-			if (bytes.Length != 4 * width * height)
+			int expectedLength = 3 * width * height; 
+
+			if (bytes.Length != expectedLength)
 			{
-				throw new ArgumentException("The data bytes are not of the expected length.");
+				//throw new ArgumentException("The data bytes are not of the expected length.");
 			}
 
 			this.MySize.X = width;
@@ -368,23 +372,32 @@ namespace OpenBveApi.Textures {
 			}
 
 			knownTransparencyType = true;
-			for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
+			switch (BitsPerPixel)
 			{
-				if (this.MyBytes[CurrentFrame][i] != 255)
-				{
-					for (int j = i; j < this.MyBytes[CurrentFrame].Length; j += 4)
+				case 24:
+					transparencyType = TextureTransparencyType.Opaque;
+					return TextureTransparencyType.Opaque;
+				case 32:
+					for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
 					{
-						if (this.MyBytes[CurrentFrame][j] != 0 & this.MyBytes[CurrentFrame][j] != 255)
+						if (this.MyBytes[CurrentFrame][i] != 255)
 						{
-							transparencyType = TextureTransparencyType.Alpha;
-							return TextureTransparencyType.Alpha;
+							for (int j = i; j < this.MyBytes[CurrentFrame].Length; j += 4)
+							{
+								if (this.MyBytes[CurrentFrame][j] != 0 & this.MyBytes[CurrentFrame][j] != 255)
+								{
+									transparencyType = TextureTransparencyType.Alpha;
+									return TextureTransparencyType.Alpha;
+								}
+							}
+
+							transparencyType = TextureTransparencyType.Partial;
+							return TextureTransparencyType.Partial;
 						}
 					}
-
-					transparencyType = TextureTransparencyType.Partial;
-					return TextureTransparencyType.Partial;
-				}
+					break;
 			}
+			
 
 			transparencyType = TextureTransparencyType.Opaque;
 			return TextureTransparencyType.Opaque;

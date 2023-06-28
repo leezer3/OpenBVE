@@ -145,7 +145,9 @@ namespace OpenBveApi.Textures {
 				return new Texture(texture.Width, texture.Height, 32, ApplyTransparentColor(texture.Bytes, texture.Width, texture.Height, color.Value), texture.Palette);
 
 			}
-		    throw new NotSupportedException();
+
+			return texture;
+			//throw new NotSupportedException();
 		}
 
 		private static byte[] ApplyTransparentColor(byte[] source, int width, int height, Color24 color)

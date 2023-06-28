@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using NAudio.Wave;
 using NLayer.NAudioSupport;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 
@@ -96,18 +96,18 @@ namespace Plugin
 			{
 				using (BinaryReader reader = new BinaryReader(stream))
 				{
-					BinaryReaderExtensions.Endianness endianness;
+					Endianness endianness;
 					uint headerCkID = reader.ReadUInt32();
 
 					// "RIFF"
 					if (headerCkID == 0x46464952)
 					{
-						endianness = BinaryReaderExtensions.Endianness.Little;
+						endianness = Endianness.Little;
 					}
 					// "RIFX"
 					else if (headerCkID == 0x58464952)
 					{
-						endianness = BinaryReaderExtensions.Endianness.Big;
+						endianness = Endianness.Big;
 					}
 					else
 					{
@@ -190,7 +190,7 @@ namespace Plugin
 			}
 		}
 
-		private static Sound WaveLoadFromStream(BinaryReader reader, BinaryReaderExtensions.Endianness endianness, uint fileSize)
+		private static Sound WaveLoadFromStream(BinaryReader reader, Endianness endianness, uint fileSize)
 		{
 			long stopPosition = Math.Min(fileSize, reader.BaseStream.Length);
 			WaveFormatEx format = null;
@@ -587,49 +587,6 @@ namespace Plugin
 			}
 
 			return new Sound(samplesPerSec, bytesPerSample * 8, newBuffers);
-		}
-	}
-
-	internal static class BinaryReaderExtensions
-	{
-		/// <summary>Represents the endianness of an integer.</summary>
-		internal enum Endianness
-		{
-			/// <summary>Represents little endian byte order, i.e. least-significant byte first.</summary>
-			Little = 0,
-
-			/// <summary>Represents big endian byte order, i.e. most-significant byte first.</summary>
-			Big = 1
-		}
-
-		private static byte[] Reverse(this byte[] bytes, Endianness endianness)
-		{
-			if (BitConverter.IsLittleEndian ^ endianness == Endianness.Little)
-			{
-				return bytes.Reverse().ToArray();
-			}
-
-			return bytes;
-		}
-
-		internal static ushort ReadUInt16(this BinaryReader reader, Endianness endianness)
-		{
-			return BitConverter.ToUInt16(reader.ReadBytes(sizeof(ushort)).Reverse(endianness), 0);
-		}
-
-		internal static short ReadInt16(this BinaryReader reader, Endianness endianness)
-		{
-			return BitConverter.ToInt16(reader.ReadBytes(sizeof(short)).Reverse(endianness), 0);
-		}
-
-		internal static uint ReadUInt32(this BinaryReader reader, Endianness endianness)
-		{
-			return BitConverter.ToUInt32(reader.ReadBytes(sizeof(uint)).Reverse(endianness), 0);
-		}
-
-		internal static int ReadInt32(this BinaryReader reader, Endianness endianness)
-		{
-			return BitConverter.ToInt32(reader.ReadBytes(sizeof(int)).Reverse(endianness), 0);
 		}
 	}
 }

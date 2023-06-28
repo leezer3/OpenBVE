@@ -9,6 +9,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using Plugin.BMP;
 using Plugin.GIF;
+using Plugin.PNG;
 
 namespace Plugin {
 	public partial class Plugin {
@@ -72,7 +73,18 @@ namespace Plugin {
 								return true;
 							}
 						}
-						
+					}
+
+					if (Encoding.ASCII.GetString(buffer, 1, 3) == "PNG")
+					{
+						using (PngDecoder decoder = new PngDecoder())
+						{
+							if (decoder.Read(file))
+							{
+								texture = new Texture(decoder.Width, decoder.Height, decoder.BytesPerPixel * 8, decoder.pixelBuffer, null);
+								return true;
+							}
+						}
 					}
 				}
 			}

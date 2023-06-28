@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using OpenBveApi;
 using OpenBveApi.Hosts;
+using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 
 namespace Plugin
@@ -29,18 +31,18 @@ namespace Plugin
 			{
 				using (BinaryReader reader = new BinaryReader(stream))
 				{
-					BinaryReaderExtensions.Endianness endianness;
+					Endianness endianness;
 					uint headerCkID = reader.ReadUInt32();
 
 					// "RIFF"
 					if (headerCkID == 0x46464952)
 					{
-						endianness = BinaryReaderExtensions.Endianness.Little;
+						endianness = Endianness.Little;
 					}
 					// "RIFX"
 					else if (headerCkID == 0x58464952)
 					{
-						endianness = BinaryReaderExtensions.Endianness.Big;
+						endianness = Endianness.Big;
 					}
 					else
 					{

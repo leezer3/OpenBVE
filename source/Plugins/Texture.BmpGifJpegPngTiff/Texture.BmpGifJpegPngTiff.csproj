@@ -71,6 +71,11 @@
       <DependentUpon>Plugin.cs</DependentUpon>
     </Compile>
     <Compile Include="Plugin.cs" />
+    <Compile Include="PNG\ChunkType.cs" />
+    <Compile Include="PNG\ColorType.cs" />
+    <Compile Include="PNG\InterlaceMethod.cs" />
+    <Compile Include="PNG\PngDecoder.cs" />
+    <Compile Include="PNG\ScanlineFilterAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
