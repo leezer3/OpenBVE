@@ -178,6 +178,7 @@ namespace Plugin.PNG
 							Plugin.CurrentHost.ReportProblem(ProblemType.InvalidOperation, "Chunk should have been followed by it's CRC- Decoder error or truncated data in PNG file " + fileName);
 							return false;
 						}
+						//FIXME: Actually calculate the CRC
 						currentChunk++;
 					}
 
@@ -243,6 +244,7 @@ namespace Plugin.PNG
 
 										if (ColorType == ColorType.Palleted)
 										{
+											// Iterate through the scanline pixel index bytes, pulling out the appropriate color from the pallette
 											for (int px = 0; px < scanline.Length; px++)
 											{
 												pixelBuffer[pixelsOffset] = colorPalette.Colors[scanline[px]].R;
@@ -257,8 +259,6 @@ namespace Plugin.PNG
 											Buffer.BlockCopy(scanline, 0, pixelBuffer, pixelsOffset, scanline.Length);
 											pixelsOffset += scanline.Length;
 										}
-										
-										
 										Buffer.BlockCopy(scanline, 0, previousScanline, 0, scanline.Length);
 										break;
 									case InterlaceMethod.Adam7:

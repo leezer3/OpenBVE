@@ -1,5 +1,6 @@
 ﻿namespace Plugin.PNG
 {
+	/// <summary>The available scanline filter algorithms</summary>
 	internal enum ScanlineFilterAlgorithm : byte
 	{
 		/// <summary>Each byte is unchanged</summary>
