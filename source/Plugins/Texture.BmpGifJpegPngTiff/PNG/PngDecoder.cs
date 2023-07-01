@@ -53,6 +53,8 @@ namespace Plugin.PNG
 		internal byte[] idatBuffer;
 		/// <summary>Buffer for the chunk bytes</summary>
 		internal byte[] chunkBuffer;
+		/// <summary>The color palette in use</summary>
+		internal Palette colorPalette;
 
 		internal byte filterMethod;
 		/// <summary>The interlacing method</summary>
@@ -124,6 +126,7 @@ namespace Plugin.PNG
 
 								switch (ColorType)
 								{
+									case ColorType.Palleted: // each filtered byte becomes a pallete index
 									case ColorType.Grayscale:
 										BytesPerPixel = 1;
 										break;
@@ -141,10 +144,15 @@ namespace Plugin.PNG
 								pixelBuffer = new byte[Width * Height * 8];
 								break;
 							case ChunkType.PLTE:
-								Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "This decoder does not currently support PLTE chunks in PNG file " + fileName);
+								colorPalette = new Palette(chunkBuffer);
 								return false;
 							case ChunkType.tRNS:
-								Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "This decoder does not currently support tRNS chunks in PNG file " + fileName);
+								if (colorPalette == null)
+								{
+									Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "The tRNS chunk must be preceeded by a PLTE chunk in PNG file " + fileName);
+									return false;
+								}
+								colorPalette.SetAlphaValues(chunkBuffer);
 								return false;
 							case ChunkType.IDAT:
 								// IDAT chunks contain image data
@@ -232,8 +240,25 @@ namespace Plugin.PNG
 												}
 											}
 										}
-										Buffer.BlockCopy(scanline, 0, pixelBuffer, pixelsOffset, scanline.Length);
-										pixelsOffset += scanline.Length;
+
+										if (ColorType == ColorType.Palleted)
+										{
+											for (int px = 0; px < scanline.Length; px++)
+											{
+												pixelBuffer[pixelsOffset] = colorPalette.Colors[scanline[px]].R;
+												pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].G;
+												pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].B;
+												pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].A;
+											}
+										}
+										else
+										{
+											// just copy raw data into the pixel buffer
+											Buffer.BlockCopy(scanline, 0, pixelBuffer, pixelsOffset, scanline.Length);
+											pixelsOffset += scanline.Length;
+										}
+										
+										
 										Buffer.BlockCopy(scanline, 0, previousScanline, 0, scanline.Length);
 										break;
 									case InterlaceMethod.Adam7:
@@ -243,12 +268,8 @@ namespace Plugin.PNG
 										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid interlacing method in PNG file " + fileName);
 										return false;
 								}
-								
 							}
-
-							
 						}
-						
 					}
 					
 					return true;
