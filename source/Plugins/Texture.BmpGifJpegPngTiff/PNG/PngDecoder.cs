@@ -141,7 +141,7 @@ namespace Plugin.PNG
 										return false;
 								}
 
-								pixelBuffer = new byte[Width * Height * 8];
+								pixelBuffer = new byte[Width * Height * BytesPerPixel];
 								break;
 							case ChunkType.PLTE:
 								colorPalette = new Palette(chunkBuffer);

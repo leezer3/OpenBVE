@@ -130,7 +130,7 @@ namespace CsvRwRouteParser
 											Texture texture;
 											if (Plugin.CurrentHost.LoadTexture(Files[i], null, out texture))
 											{
-												if (texture.BitsPerPixel == 32)
+												if (texture.PixelFormat == PixelFormat.RGBAlpha)
 												{
 													texture.InvertLightness();
 												}

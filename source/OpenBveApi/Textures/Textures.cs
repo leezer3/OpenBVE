@@ -12,8 +12,8 @@ namespace OpenBveApi.Textures {
 	{
 		/// <summary>The size of the texture in pixels</summary>
 		private Vector2 MySize;
-		/// <summary>The number of bits per pixel. Must be 32.</summary>
-		private readonly int MyBitsPerPixel;
+		/// <summary>The pixel format of the texture.</summary>
+		private readonly PixelFormat MyPixelFormat;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
 		private readonly byte[][] MyBytes;
 		/// <summary>The restricted color palette for this texture, or a null reference if the texture was 24/ 32 bit originally</summary>
@@ -66,36 +66,27 @@ namespace OpenBveApi.Textures {
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="width">The width of the texture in pixels.</param>
 		/// <param name="height">The height of the texture in pixels.</param>
-		/// <param name="bitsPerPixel">The number of bits per pixel. Must be 32.</param>
+		/// <param name="pixelFormat">The pixel format.</param>
 		/// <param name="bytes">The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</param>
 		/// <param name="palette">The original color pallete of the image (Before upsampling to 32-bit RGBA)</param>
 		/// <exception cref="System.ArgumentException">Raised when the number of bits per pixel is not 32.</exception>
 		/// <exception cref="System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
 		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
-		public Texture(int width, int height, int bitsPerPixel, byte[] bytes, Color24[] palette)
+		public Texture(int width, int height, PixelFormat pixelFormat, byte[] bytes, Color24[] palette)
 		{
-			/*
-			if (bitsPerPixel != 32)
-			{
-				throw new ArgumentException("The number of bits per pixel is supported.");
-			}
-			*/
-
 			if (bytes == null)
 			{
 				throw new ArgumentNullException("bytes");
 			}
 
-			int expectedLength = 3 * width * height; 
-
-			if (bytes.Length != expectedLength)
+			if (bytes.Length != width * height * (int)pixelFormat)
 			{
-				//throw new ArgumentException("The data bytes are not of the expected length.");
+				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
 
 			this.MySize.X = width;
 			this.MySize.Y = height;
-			this.MyBitsPerPixel = bitsPerPixel;
+			this.MyPixelFormat = pixelFormat;
 			this.MyBytes = new byte[1][];
 			this.MyBytes[0] = bytes;
 			this.MyPalette = palette;
@@ -104,25 +95,20 @@ namespace OpenBveApi.Textures {
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="width">The width of the texture in pixels.</param>
 		/// <param name="height">The height of the texture in pixels.</param>
-		/// <param name="bitsPerPixel">The number of bits per pixel. Must be 32.</param>
+		/// <param name="pixelFormat">The pixel format.</param>
 		/// <param name="bytes">The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</param>
 		/// <param name="frameInterval">The frame interval</param>
 		/// <exception cref="System.ArgumentException">Raised when the number of bits per pixel is not 32.</exception>
 		/// <exception cref="System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
 		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
-		public Texture(int width, int height, int bitsPerPixel, byte[][] bytes, double frameInterval)
+		public Texture(int width, int height, PixelFormat pixelFormat, byte[][] bytes, double frameInterval)
 		{
-			if (bitsPerPixel != 32)
-			{
-				throw new ArgumentException("The number of bits per pixel is supported.");
-			}
-
 			if (bytes == null)
 			{
 				throw new ArgumentNullException("bytes");
 			}
 
-			if (bytes[0].Length != 4 * width * height)
+			if (bytes[0].Length != width * height * (int)pixelFormat)
 			{
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
@@ -130,7 +116,7 @@ namespace OpenBveApi.Textures {
 			this.Origin = new ByteArrayOrigin(width, height, bytes, frameInterval);
 			this.MySize.X = width;
 			this.MySize.Y = height;
-			this.MyBitsPerPixel = bitsPerPixel;
+			this.MyPixelFormat = pixelFormat;
 			this.MyBytes = bytes;
 			this.MyPalette = null;
 			this.MultipleFrames = true;
@@ -240,22 +226,10 @@ namespace OpenBveApi.Textures {
 		}
 
 		/// <summary>Gets the number of bits per pixel.</summary>
-		public int BitsPerPixel
-		{
-			get
-			{
-				return this.MyBitsPerPixel;
-			}
-		}
+		public PixelFormat PixelFormat => this.MyPixelFormat;
 
 		/// <summary>Gets the restricted color palette for this texture, or a null reference if not applicable</summary>
-		public Color24[] Palette
-		{
-			get
-			{
-				return this.MyPalette;
-			}
-		}
+		public Color24[] Palette => this.MyPalette;
 
 		/// <summary>Gets the texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
 		public byte[] Bytes
@@ -297,7 +271,7 @@ namespace OpenBveApi.Textures {
 			if (a.Origin != b.Origin) return false;
 			if (a.MySize.X != b.MySize.X) return false;
 			if (a.MySize.Y != b.MySize.Y) return false;
-			if (a.MyBitsPerPixel != b.MyBitsPerPixel) return false;
+			if (a.MyPixelFormat != b.MyPixelFormat) return false;
 			if (a.MyBytes.Length != b.MyBytes.Length) return false;
 			for (int i = 0; i < a.MyBytes.Length; i++)
 			{
@@ -319,7 +293,7 @@ namespace OpenBveApi.Textures {
 			if (a.Origin != b.Origin) return true;
 			if (a.MySize.X != b.MySize.X) return true;
 			if (a.MySize.Y != b.MySize.Y) return true;
-			if (a.MyBitsPerPixel != b.MyBitsPerPixel) return true;
+			if (a.MyPixelFormat != b.MyPixelFormat) return true;
 			if (a.MyBytes.Length != b.MyBytes.Length) return true;
 			for (int i = 0; i < a.MyBytes.Length; i++)
 			{
@@ -341,7 +315,7 @@ namespace OpenBveApi.Textures {
 			if (Origin != x.Origin) return false;
 			if (MySize.X != x.MySize.X) return false;
 			if (MySize.Y != x.MySize.Y) return false;
-			if (MyBitsPerPixel != x.MyBitsPerPixel) return false;
+			if (MyPixelFormat != x.MyPixelFormat) return false;
 			if (MyBytes.Length != x.MyBytes.Length) return false;
 			for (int i = 0; i < MyBytes.Length; i++)
 			{
@@ -372,12 +346,12 @@ namespace OpenBveApi.Textures {
 			}
 
 			knownTransparencyType = true;
-			switch (BitsPerPixel)
+			switch (PixelFormat)
 			{
-				case 24:
+				case PixelFormat.RGB:
 					transparencyType = TextureTransparencyType.Opaque;
 					return TextureTransparencyType.Opaque;
-				case 32:
+				case PixelFormat.RGBAlpha:
 					for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
 					{
 						if (this.MyBytes[CurrentFrame][i] != 255)

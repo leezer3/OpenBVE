@@ -45,14 +45,14 @@ namespace OpenBveApi.Textures {
 		    if (region.Left < 0 || region.Top < 0 || region.Width <= 0 || region.Height <= 0 || region.Left + region.Width > texture.Width || region.Top + region.Height > texture.Height) {
 		        throw new ArgumentException();
 		    }
-		    if (texture.BitsPerPixel == 24 | texture.BitsPerPixel == 32) {
+		    if (texture.PixelFormat == PixelFormat.RGB | texture.PixelFormat == PixelFormat.RGBAlpha) {
 		        int width = texture.Width;
 		        byte[] bytes = texture.Bytes;
 		        int clipLeft = region.Left;
 		        int clipTop = region.Top;
 		        int clipWidth = region.Width;
 		        int clipHeight = region.Height;
-		        if (texture.BitsPerPixel == 24) {
+		        if (texture.PixelFormat == PixelFormat.RGB) {
 		            byte[] newBytes = new byte[3 * clipWidth * clipHeight];
 		            int i = 0;
 		            for (int y = 0; y < clipHeight; y++) {
@@ -65,7 +65,7 @@ namespace OpenBveApi.Textures {
 		                    j += 3;
 		                }
 		            }
-		            return new Texture(clipWidth, clipHeight, 24, newBytes, texture.Palette);
+		            return new Texture(clipWidth, clipHeight, PixelFormat.RGB, newBytes, texture.Palette);
 		        } else {
 		            byte[] newBytes = new byte[4 * clipWidth * clipHeight];
 		            int i = 0;
@@ -80,7 +80,7 @@ namespace OpenBveApi.Textures {
 		                    j += 4;
 		                }
 		            }
-		            return new Texture(clipWidth, clipHeight, 32, newBytes, texture.Palette);
+		            return new Texture(clipWidth, clipHeight, PixelFormat.RGBAlpha, newBytes, texture.Palette);
 		        }
 		    }
 		    throw new NotSupportedException();
@@ -129,7 +129,7 @@ namespace OpenBveApi.Textures {
 						break;
 				}
 			}
-			if (texture.BitsPerPixel == 32)
+			if (texture.PixelFormat == PixelFormat.RGBAlpha)
 			{
 				if (texture.MultipleFrames)
 				{
@@ -140,9 +140,9 @@ namespace OpenBveApi.Textures {
 						texture.CurrentFrame++;
 					}
 
-					return new Texture(texture.Width, texture.Height, 32, newFrames, texture.FrameInterval);
+					return new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, newFrames, texture.FrameInterval);
 				}
-				return new Texture(texture.Width, texture.Height, 32, ApplyTransparentColor(texture.Bytes, texture.Width, texture.Height, color.Value), texture.Palette);
+				return new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentColor(texture.Bytes, texture.Width, texture.Height, color.Value), texture.Palette);
 
 			}
 

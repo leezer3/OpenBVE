@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using OpenBveApi.Colors;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace OpenBveApi.Textures
 {
@@ -42,7 +43,7 @@ namespace OpenBveApi.Textures
 			 * then convert it to 32-bit BGRA.
 			 * */
 			Color24[] p = null;
-			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
+			if (bitmap.PixelFormat != System.Drawing.Imaging.PixelFormat.Format32bppArgb && bitmap.PixelFormat != System.Drawing.Imaging.PixelFormat.Format24bppRgb)
 			{
 				/* Only store the color palette data for
 				 * textures using a restricted palette
@@ -56,9 +57,9 @@ namespace OpenBveApi.Textures
 				}
 			}
 
-			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
+			if (bitmap.PixelFormat != System.Drawing.Imaging.PixelFormat.Format32bppArgb)
 			{
-				Bitmap compatibleBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
+				Bitmap compatibleBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 				System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(compatibleBitmap);
 				graphics.DrawImage(bitmap, rect, rect, GraphicsUnit.Pixel);
 				graphics.Dispose();
@@ -90,7 +91,7 @@ namespace OpenBveApi.Textures
 					raw[i + 2] = temp;
 				}
 
-				texture = new Texture(width, height, 32, raw, p);
+				texture = new Texture(width, height, PixelFormat.RGBAlpha, raw, p);
 				texture = texture.ApplyParameters(this.Parameters);
 				return true;
 			}

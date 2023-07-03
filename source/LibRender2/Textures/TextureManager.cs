@@ -9,6 +9,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using InterpolationMode = OpenBveApi.Graphics.InterpolationMode;
+using PixelFormat = OpenBveApi.Textures.PixelFormat;
 
 namespace LibRender2.Textures
 {
@@ -345,18 +346,17 @@ namespace LibRender2.Textures
 
 					if (handle.Transparency == TextureTransparencyType.Opaque)
 					{
-						switch (texture.BitsPerPixel)
+						switch (texture.PixelFormat)
 						{
-							case 24:
-								// 24-bit RGB opaque- send as is
+							case PixelFormat.RGB:
+								// send as is
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
 									PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
 									PixelType.UnsignedByte, texture.Bytes);
 								break;
-							case 32:
-								// 32-bit RGBA
+							case PixelFormat.RGBAlpha:
 								/*
 								* If the texture is fully opaque, the alpha channel is not used.
 								* If the graphics driver and card support 24-bits per channel,
@@ -395,16 +395,16 @@ namespace LibRender2.Textures
 					}
 					else
 					{
-						switch (texture.BitsPerPixel)
+						switch (texture.PixelFormat)
 						{
-							case 3:
+							case PixelFormat.RGB:
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.Rgba8,
+									PixelInternalFormat.Rgb,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
 									PixelType.UnsignedByte, texture.Bytes);
 								break;
-							case 32:
+							case PixelFormat.RGBAlpha:
 								/*
 						 * The texture uses its alpha channel, so send the bitmap data
 						 * in 32-bits per channel as-is.
@@ -502,7 +502,7 @@ namespace LibRender2.Textures
 				return texture;
 			}
 
-			if (texture.BitsPerPixel != 32)
+			if (texture.PixelFormat != PixelFormat.RGBAlpha)
 			{
 				throw new NotSupportedException("The number of bits per pixel is not supported.");
 			}
@@ -567,7 +567,7 @@ namespace LibRender2.Textures
 				}
 			}
 
-			Texture result = new Texture(width, height, 32, bytes, texture.Palette);
+			Texture result = new Texture(width, height, PixelFormat.RGBAlpha, bytes, texture.Palette);
 			return result;
 		}
 

@@ -220,6 +220,7 @@
     <Compile Include="System\Timers.cs" />
     <Compile Include="Textures\Textures.ByteArrayOrigin.cs" />
     <Compile Include="Textures\Textures.ImageSizeMode.cs" />
+    <Compile Include="Textures\Textures.PixelFormat.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
     <Compile Include="Train\Axle.cs" />
