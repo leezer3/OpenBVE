@@ -350,6 +350,8 @@ namespace LibRender2.Textures
 						{
 							case PixelFormat.RGB:
 								// send as is
+								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
 									PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
