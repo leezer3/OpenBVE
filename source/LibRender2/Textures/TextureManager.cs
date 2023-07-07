@@ -348,6 +348,17 @@ namespace LibRender2.Textures
 					{
 						switch (texture.PixelFormat)
 						{
+							case PixelFormat.Grayscale:
+								// send as is to the luminance channel [NOTE: deprecated in GL4]
+								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.Luminance,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.Luminance,
+									PixelType.UnsignedByte, texture.Bytes);
+
+								break;
 							case PixelFormat.RGB:
 								// send as is
 								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
@@ -399,11 +410,13 @@ namespace LibRender2.Textures
 					{
 						switch (texture.PixelFormat)
 						{
-							case PixelFormat.RGB:
+							case PixelFormat.GrayscaleAlpha:
+								// NOTE: luminance is deprecated in GL4
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.Rgb,
+									PixelInternalFormat.LuminanceAlpha,
 									texture.Width, texture.Height, 0,
-									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
+									OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
 									PixelType.UnsignedByte, texture.Bytes);
 								break;
 							case PixelFormat.RGBAlpha:
