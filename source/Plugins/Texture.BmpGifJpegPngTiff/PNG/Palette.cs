@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2023, Christopher Lees, The OpenBVE Project
 //
@@ -40,6 +40,7 @@ namespace Plugin.PNG
 			{
 				// The PLTE chunk contains colors without alpha values
 				Colors[i % 3] = new Color32(chunkBytes[i], chunkBytes[i + 1], chunkBytes[i + 2], 255);
+				Colors[i / 3] = new Color32(chunkBytes[i], chunkBytes[i + 1], chunkBytes[i + 2], 255);
 			}
 		}
 

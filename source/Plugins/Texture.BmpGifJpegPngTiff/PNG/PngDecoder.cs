@@ -141,11 +141,12 @@ namespace Plugin.PNG
 										return false;
 								}
 
-								pixelBuffer = new byte[Width * Height * BytesPerPixel];
+								pixelBuffer = ColorType != ColorType.Palleted ? new byte[Width * Height * BytesPerPixel] : new byte[Width * Height * 4];
+								
 								break;
 							case ChunkType.PLTE:
 								colorPalette = new Palette(chunkBuffer);
-								return false;
+								break;
 							case ChunkType.tRNS:
 								if (colorPalette == null)
 								{
@@ -247,7 +248,7 @@ namespace Plugin.PNG
 											// Iterate through the scanline pixel index bytes, pulling out the appropriate color from the pallette
 											for (int px = 0; px < scanline.Length; px++)
 											{
-												pixelBuffer[pixelsOffset] = colorPalette.Colors[scanline[px]].R;
+												pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].R;
 												pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].G;
 												pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].B;
 												pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].A;
@@ -271,7 +272,12 @@ namespace Plugin.PNG
 							}
 						}
 					}
-					
+
+					if (ColorType == ColorType.Palleted)
+					{
+						// need the final bpp to reflect what we've converted the image to, not the bpp in the file used whilst loading
+						BytesPerPixel = 4;
+					}
 					return true;
 				}
 			}
