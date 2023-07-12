@@ -195,51 +195,48 @@ namespace Plugin.PNG
 						chunkDataStream.Seek(2, SeekOrigin.Begin);
 
 						int pixelsOffset = 0;
-						byte[] scanline = new byte[Width * BytesPerPixel];
-						byte[] previousScanline = new byte[scanline.Length];
-						
+
 						using (DeflateStream deflate = new DeflateStream(chunkDataStream, CompressionMode.Decompress))
 						{
-							for (int i = 0; i < Height; i++)
+							switch (interlaceMethod)
 							{
-								ScanlineFilterAlgorithm scanlineFilterAlgorithm = (ScanlineFilterAlgorithm)deflate.ReadByte();
-								if (deflate.Read(scanline, 0, scanline.Length) != scanline.Length)
-								{
-									Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "Insufficient data decompressed from IDAT chunk in PNG file " + fileName);
-									return false;
-								}
-
-								switch (interlaceMethod)
-								{
-									case InterlaceMethod.Disabled:
-										if (scanlineFilterAlgorithm != ScanlineFilterAlgorithm.None)
+								case InterlaceMethod.Disabled:
+									byte[] scanline = new byte[Width * BytesPerPixel];
+									byte[] previousScanline = new byte[scanline.Length];
+									for (int i = 0; i < Height; i++)
+									{
+										ScanlineFilterAlgorithm scanlineFilterAlgorithm = (ScanlineFilterAlgorithm)deflate.ReadByte();
+										if (deflate.Read(scanline, 0, scanline.Length) != scanline.Length)
 										{
-											for (int x = 0; x < scanline.Length; x++)
+											Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "Insufficient data decompressed from IDAT chunk in PNG file " + fileName);
+											return false;
+										}
+										
+										for (int x = 0; x < scanline.Length; x++)
+										{
+											// ReSharper disable once TooWideLocalVariableScope
+											byte leftByte, upByte, upLeftByte;
+											switch (scanlineFilterAlgorithm)
 											{
-												// ReSharper disable once TooWideLocalVariableScope
-												byte leftByte, upByte, upLeftByte;
-												switch (scanlineFilterAlgorithm)
-												{
-													case ScanlineFilterAlgorithm.Sub:
-														leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
-														scanline[x] = (byte)((scanline[x] + leftByte) % 256);
-														break;
-													case ScanlineFilterAlgorithm.Up:
-														upByte = previousScanline[x];
-														scanline[x] = (byte)((scanline[x] + upByte) % 256);
-														break;
-													case ScanlineFilterAlgorithm.Average:
-														leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
-														upByte = previousScanline[x];
-														scanline[x] = (byte)((scanline[x] + ((leftByte + upByte) >> 1)) % 256);
-														break;
-													case ScanlineFilterAlgorithm.Paeth:
-														leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
-														upByte = previousScanline[x];
-														upLeftByte = x >= BytesPerPixel ? previousScanline[x - BytesPerPixel] : (byte)0;
-														scanline[x] = (byte)((scanline[x] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
-														break;
-												}
+												case ScanlineFilterAlgorithm.Sub:
+													leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
+													scanline[x] = (byte)((scanline[x] + leftByte) % 256);
+													break;
+												case ScanlineFilterAlgorithm.Up:
+													upByte = previousScanline[x];
+													scanline[x] = (byte)((scanline[x] + upByte) % 256);
+													break;
+												case ScanlineFilterAlgorithm.Average:
+													leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
+													upByte = previousScanline[x];
+													scanline[x] = (byte)((scanline[x] + ((leftByte + upByte) >> 1)) % 256);
+													break;
+												case ScanlineFilterAlgorithm.Paeth:
+													leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
+													upByte = previousScanline[x];
+													upLeftByte = x >= BytesPerPixel ? previousScanline[x - BytesPerPixel] : (byte)0;
+													scanline[x] = (byte)((scanline[x] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
+													break;
 											}
 										}
 
@@ -260,15 +257,83 @@ namespace Plugin.PNG
 											Buffer.BlockCopy(scanline, 0, pixelBuffer, pixelsOffset, scanline.Length);
 											pixelsOffset += scanline.Length;
 										}
+
 										Buffer.BlockCopy(scanline, 0, previousScanline, 0, scanline.Length);
-										break;
+									}
+									break;
 									case InterlaceMethod.Adam7:
-										Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "This decoder does not currently support " + interlaceMethod + " in PNG file " + fileName);
-										return false;
+										byte[] data;
+										using (MemoryStream ms = new MemoryStream())
+										{
+											/*
+											 * Entire datastream needs to be decoded for filters to work correctly,
+											 * as some use data from previous passes
+											 */
+											deflate.CopyTo(ms);
+											data = ms.ToArray();
+										}
+
+										int currentByte = 0; // current absolute byte decoded to
+										var previousRowStartByte = -1;
+										for (int currentPass = 0; currentPass < 7; currentPass++)
+										{
+											int numberOfScanlines = Adam7.GetNumberOfScanlinesForPass(Height, currentPass);
+											int pixelsPerScanline = Adam7.GetNumberOfPixelsInScanline(Width, currentPass);
+											if (numberOfScanlines <= 0 || pixelsPerScanline <= 0)
+											{
+												// nothing to be decoded this pass [valid as per spec]
+												continue;
+											}
+											
+											for (int currentScanline = 0; currentScanline < numberOfScanlines; currentScanline++)
+											{
+												ScanlineFilterAlgorithm scanlineFilterAlgorithm = (ScanlineFilterAlgorithm)data[currentByte++];
+												int rowStartByte = currentByte;
+
+												for (var j = 0; j < pixelsPerScanline; j++)
+												{
+													Vector2 pixelIndex = Adam7.GetPixelIndexForScanlineInPass(currentPass, currentScanline, j);
+													for (var k = 0; k < BytesPerPixel; k++)
+													{
+														int relativeRowByte = j * BytesPerPixel + k; // relative index of byte within line
+														// ReSharper disable once TooWideLocalVariableScope
+														byte leftByte, upByte, upLeftByte;
+														switch (scanlineFilterAlgorithm)
+														{
+															case ScanlineFilterAlgorithm.Sub:
+																leftByte = relativeRowByte >= BytesPerPixel ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
+																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + leftByte) % 256);
+																break;
+															case ScanlineFilterAlgorithm.Up:
+																upByte = data[previousRowStartByte + relativeRowByte];
+																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + upByte) % 256);
+																break;
+															case ScanlineFilterAlgorithm.Average:
+																leftByte = relativeRowByte >= BytesPerPixel ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
+																upByte = data[previousRowStartByte + relativeRowByte];
+																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + ((leftByte + upByte) >> 1)) % 256);
+																break;
+															case ScanlineFilterAlgorithm.Paeth:
+																leftByte = relativeRowByte - BytesPerPixel >= 0 ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
+																upByte = data[previousRowStartByte + relativeRowByte];
+																upLeftByte = relativeRowByte >= BytesPerPixel ? data[previousRowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
+																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
+																break;
+														}
+														
+														currentByte++;
+														int start = (int)(Width * BytesPerPixel * pixelIndex.Y + pixelIndex.X * BytesPerPixel);
+														pixelBuffer[start + k] = data[rowStartByte + j * BytesPerPixel + k];
+													}
+												}
+												previousRowStartByte = rowStartByte;
+
+											}
+										}
+										break;
 									default:
 										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid interlacing method in PNG file " + fileName);
 										return false;
-								}
 							}
 						}
 					}

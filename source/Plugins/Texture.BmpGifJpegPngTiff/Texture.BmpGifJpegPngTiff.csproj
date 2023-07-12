@@ -71,6 +71,7 @@
       <DependentUpon>Plugin.cs</DependentUpon>
     </Compile>
     <Compile Include="Plugin.cs" />
+    <Compile Include="PNG\Adam7.cs" />
     <Compile Include="PNG\ChunkType.cs" />
     <Compile Include="PNG\ColorType.cs" />
     <Compile Include="PNG\InterlaceMethod.cs" />
