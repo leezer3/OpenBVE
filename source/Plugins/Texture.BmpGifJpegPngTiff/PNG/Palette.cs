@@ -39,7 +39,6 @@ namespace Plugin.PNG
 			for (int i = 0; i < chunkBytes.Length; i+= 3)
 			{
 				// The PLTE chunk contains colors without alpha values
-				Colors[i % 3] = new Color32(chunkBytes[i], chunkBytes[i + 1], chunkBytes[i + 2], 255);
 				Colors[i / 3] = new Color32(chunkBytes[i], chunkBytes[i + 1], chunkBytes[i + 2], 255);
 			}
 		}
