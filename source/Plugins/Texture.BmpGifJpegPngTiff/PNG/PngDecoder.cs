@@ -141,6 +141,7 @@ namespace Plugin.PNG
 								}
 								ColorType = (ColorType)chunkBuffer[9];
 								CompressionMethod = chunkBuffer[10];
+								// Appears to be ignored in practice as each scanline must have a filter byte set
 								filterMethod = chunkBuffer[11];
 								interlaceMethod = (InterlaceMethod)chunkBuffer[12];
 
@@ -193,6 +194,9 @@ namespace Plugin.PNG
 									Buffer.BlockCopy(chunkBuffer, 0, idatBuffer, idatLength, chunkBuffer.Length);
 								}
 								break;
+							case ChunkType.CgBI:
+								Plugin.CurrentHost.ReportProblem(ProblemType.InvalidOperation, "CgBI encoded PNGs are not supported by this decoder in PNG file " + fileName);
+								return false;
 						}
 						// Chunk is followed by it's CRC
 						byte[] crcBytes = new byte[4];
@@ -407,8 +411,9 @@ namespace Plugin.PNG
 																upByte = data[previousRowStartByte + relativeRowByte];
 																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + ((leftByte + upByte) >> 1)) % 256);
 																break;
-
 															case ScanlineFilterAlgorithm.Paeth:
+																// NOTE: For Paeth filtered Row0 in any given pass, the previous scanline must be all zeroes
+																// e.g. NWM_Open\Common\buildm0.png
 																leftByte = relativeRowByte - BytesPerPixel >= 0 ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
 																upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + relativeRowByte];
 																upLeftByte = currentScanline == 0 ? (byte)0 : relativeRowByte >= BytesPerPixel ? data[previousRowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;	
@@ -519,6 +524,10 @@ namespace Plugin.PNG
 			}
 		}
 
+		/// <summary>Predicts the Paeth value for any given byte</summary>
+		/// <param name="a">The left byte</param>
+		/// <param name="b">The upper byte</param>
+		/// <param name="c">The upper left byte</param>
 		private int PaethPredictor(int a, int b, int c)
 		{
 			int p = a + b - c;
@@ -529,6 +538,7 @@ namespace Plugin.PNG
 			return pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
 		}
 
+		/// <summary>Reads the chunk type from the signature bytes</summary>
 		private ChunkType ReadChunkType(byte[] headerData)
 		{
 			string chunkSignature = Encoding.ASCII.GetString(headerData, 4, 4);

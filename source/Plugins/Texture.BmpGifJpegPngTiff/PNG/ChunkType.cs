@@ -34,5 +34,7 @@
 		tRNS,
 		/// <summary>Compressed textual data</summary>
 		zTXt,
+		/// <summary>Apple proprietary PNG for iPhone</summary>
+		CgBI
 	}
 }
