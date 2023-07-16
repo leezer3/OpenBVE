@@ -407,10 +407,11 @@ namespace Plugin.PNG
 																upByte = data[previousRowStartByte + relativeRowByte];
 																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + ((leftByte + upByte) >> 1)) % 256);
 																break;
+
 															case ScanlineFilterAlgorithm.Paeth:
 																leftByte = relativeRowByte - BytesPerPixel >= 0 ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
-																upByte = data[previousRowStartByte + relativeRowByte];
-																upLeftByte = relativeRowByte >= BytesPerPixel ? data[previousRowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
+																upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + relativeRowByte];
+																upLeftByte = currentScanline == 0 ? (byte)0 : relativeRowByte >= BytesPerPixel ? data[previousRowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;	
 																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
 																break;
 														}
