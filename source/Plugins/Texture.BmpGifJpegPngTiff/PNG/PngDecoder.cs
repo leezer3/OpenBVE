@@ -500,7 +500,7 @@ namespace Plugin.PNG
 													else
 													{
 														int start = (int)(Width * BytesPerPixel * pixelIndex.Y + pixelIndex.X * BytesPerPixel);
-														Array.Copy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
+														Buffer.BlockCopy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
 													}
 												}
 												previousRowStartByte = rowStartByte;
