@@ -382,15 +382,15 @@ namespace Plugin.PNG
 												// nothing to be decoded this pass [valid as per spec]
 												continue;
 											}
-											
+
 											for (int currentScanline = 0; currentScanline < numberOfScanlines; currentScanline++)
 											{
 												ScanlineFilterAlgorithm scanlineFilterAlgorithm = (ScanlineFilterAlgorithm)data[currentByte++];
 												int rowStartByte = currentByte;
-
 												for (int j = 0; j < pixelsPerScanline; j++)
 												{
-													Vector2 pixelIndex = Adam7.GetPixelIndexForScanlineInPass(currentPass, currentScanline, j);
+													int pixelX, pixelY; // using two ints as opposed to Vector2 is c. 10% faster
+													Adam7.GetPixelIndexForScanlineInPass(currentPass, currentScanline, j, out pixelX, out pixelY);
 													for (int k = 0; k < BytesPerPixel; k++)
 													{
 														int relativeRowByte = j * BytesPerPixel + k; // relative index of byte within line
@@ -426,7 +426,7 @@ namespace Plugin.PNG
 													if (ColorType == ColorType.Palleted)
 													{
 														// we're always converting to 4bpp in the output, but need the native bpp to find our position in the array, so don't actually set it
-														int start = (int)(Width * 4 * pixelIndex.Y + pixelIndex.X * 4);
+														int start = (int)(Width * 4 * pixelY + pixelX * 4);
 														switch (BitDepth)
 														{
 															case 1:
@@ -447,7 +447,7 @@ namespace Plugin.PNG
 																		pixelBuffer[start++] = colorPalette.Colors[0].A;
 																	}
 
-																	if (pixelIndex.X + currentBit >= Width)
+																	if (pixelX + currentBit >= Width)
 																	{
 																		// A single byte contains 8px, but the image may not be of a multiple of this
 																		break;
@@ -499,7 +499,7 @@ namespace Plugin.PNG
 													}
 													else
 													{
-														int start = (int)(Width * BytesPerPixel * pixelIndex.Y + pixelIndex.X * BytesPerPixel);
+														int start = (int)(Width * BytesPerPixel * pixelY + pixelX * BytesPerPixel);
 														Buffer.BlockCopy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
 													}
 												}
