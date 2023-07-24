@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -1292,7 +1291,7 @@ namespace Plugin
 								{
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument B in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Color textColor = Color.FromArgb(r, g, b);
+								Color24 textColor = new Color24((byte)r, (byte)g, (byte)b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
 									Builder.Materials[j].TextColor = textColor;
@@ -1331,7 +1330,7 @@ namespace Plugin
 								{
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument B in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Color backgroundColor = Color.FromArgb(r, g, b);
+								Color24 backgroundColor = new Color24((byte)r, (byte)g, (byte)b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
 									Builder.Materials[j].BackgroundColor = backgroundColor;

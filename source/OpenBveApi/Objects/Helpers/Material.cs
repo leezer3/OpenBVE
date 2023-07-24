@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using OpenBveApi.Colors;
+﻿using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
@@ -34,9 +33,9 @@ namespace OpenBveApi.Objects
 		/// <summary></summary>
 		public string Key;
 		/// <summary>The color of the text to overlay</summary>
-		public Color TextColor;
+		public Color24 TextColor;
 		/// <summary>The background color for the text</summary>
-		public Color BackgroundColor;
+		public Color24 BackgroundColor;
 		/// <summary>The font to use for the text</summary>
 		public string Font;
 		/// <summary>The text padding to apply</summary>
@@ -52,8 +51,8 @@ namespace OpenBveApi.Objects
 			this.NighttimeTexture = null;
 			this.BlendMode = MeshMaterialBlendMode.Normal;
 			this.GlowAttenuationData = 0;
-			this.TextColor = System.Drawing.Color.Black;
-			this.BackgroundColor = System.Drawing.Color.White;
+			this.TextColor = Color24.Black;
+			this.BackgroundColor = Color24.White;
 			this.TextPadding = new Vector2(0, 0);
 			this.Font = "Arial";
 			this.WrapMode = null;
@@ -70,8 +69,8 @@ namespace OpenBveApi.Objects
 			this.NighttimeTexture = null;
 			this.BlendMode = MeshMaterialBlendMode.Normal;
 			this.GlowAttenuationData = 0;
-			this.TextColor = System.Drawing.Color.Black;
-			this.BackgroundColor = System.Drawing.Color.White;
+			this.TextColor = Color24.Black;
+			this.BackgroundColor = Color24.White;
 			this.TextPadding = new Vector2(0, 0);
 			this.Font = "Arial";
 			this.WrapMode = null;
