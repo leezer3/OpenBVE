@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -422,24 +421,24 @@ namespace Train.OpenBve
 		    return string.Empty;
 	    }
 
-	    public override Image GetImage(string trainPath)
+	    public override string GetImage(string trainPath)
 	    {
 		    try
 		    {
 			    string imageFile = Path.CombineFile(trainPath, "train.png");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 			    imageFile  = Path.CombineFile(trainPath, "train.gif");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 			    imageFile  = Path.CombineFile(trainPath, "train.bmp");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 		    }
 		    catch (Exception ex)
